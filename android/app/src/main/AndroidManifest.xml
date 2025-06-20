@@ -1,6 +1,7 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.app.caravella">
     <application
-        android:label="org_app_split"
+        android:label="Caravella"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

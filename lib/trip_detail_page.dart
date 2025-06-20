@@ -76,7 +76,7 @@ class _TripDetailPageState extends State<TripDetailPage> {
             const SizedBox(height: 8),
             Text('${loc.get('participants')}: ${_trip.participants.join(", ")}'),
             const SizedBox(height: 16),
-            Text(loc.get('expenses') + ':', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text('${loc.get('expenses')}:', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             Expanded(
               child: _trip.expenses.isEmpty
@@ -88,7 +88,7 @@ class _TripDetailPageState extends State<TripDetailPage> {
                         return ListTile(
                           title: Text(expense.description),
                           subtitle: Text('${loc.get('paid_by')}: ${expense.paidBy}\n${loc.get('date')}: ${expense.date.day}/${expense.date.month}/${expense.date.year}'),
-                          trailing: Text('\u20ac ${expense.amount.toStringAsFixed(2)}'),
+                          trailing: Text('€${expense.amount.toStringAsFixed(2)}'),
                         );
                       },
                     ),
@@ -152,7 +152,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   String? _category;
   double? _amount;
   String? _paidBy;
-  DateTime _date = DateTime.now();
+  final DateTime _date = DateTime.now();
 
   @override
   Widget build(BuildContext context) {

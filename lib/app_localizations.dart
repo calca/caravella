@@ -5,7 +5,7 @@ class AppLocalizations {
 
   static const supportedLocales = ['en', 'it'];
 
-  static Map<String, Map<String, String>> _localizedValues = {
+  static final Map<String, Map<String, String>> _localizedValues = {
     'en': {
       'app_title': 'Caravella',
       'trip_history': 'Trip history',

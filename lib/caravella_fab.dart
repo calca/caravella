@@ -6,12 +6,13 @@ import 'app_localizations.dart';
 class CaravellaFab extends StatelessWidget {
   final void Function()? onRefresh;
   final AppLocalizations localizations;
-  const CaravellaFab({Key? key, this.onRefresh, required this.localizations}) : super(key: key);
+  const CaravellaFab({super.key, this.onRefresh, required this.localizations});
 
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton.extended(
       onPressed: () async {
+        final navigator = Navigator.of(context);
         final result = await showModalBottomSheet<int>(
           context: context,
           builder: (context) => Column(
@@ -21,27 +22,27 @@ class CaravellaFab extends StatelessWidget {
                 leading: const Icon(Icons.history),
                 title: Text(localizations.get('history')),
                 onTap: () {
-                  Navigator.of(context).pop(0);
+                  navigator.pop(0);
                 },
               ),
               ListTile(
                 leading: const Icon(Icons.add),
                 title: Text(localizations.get('add_trip')),
                 onTap: () {
-                  Navigator.of(context).pop(1);
+                  navigator.pop(1);
                 },
               ),
             ],
           ),
         );
         if (result == 0) {
-          Navigator.of(context).push(
+          navigator.push(
             MaterialPageRoute(
               builder: (context) => HistoryPage(localizations: localizations),
             ),
           );
         } else if (result == 1) {
-          final addResult = await Navigator.of(context).push(
+          final addResult = await navigator.push(
             MaterialPageRoute(
               builder: (context) => AddTripPage(localizations: localizations),
             ),

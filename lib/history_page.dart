@@ -44,14 +44,13 @@ class _HistoryPageState extends State<HistoryPage> {
                 child: ListTile(
                   title: Text(trip.title),
                   subtitle: Text(
-                    loc.get('from_to', params: {
+                    "${loc.get('from_to', params: {
                       'start': '${trip.startDate.day}/${trip.startDate.month}/${trip.startDate.year}',
                       'end': '${trip.endDate.day}/${trip.endDate.month}/${trip.endDate.year}'
-                    }) + '\n' +
-                    loc.get('participants') + ': ' + trip.participants.join(", ")
+                    })}\n${loc.get('participants')}: ${trip.participants.join(", ")}",
                   ),
                   trailing: Text(
-                    loc.get('expenses') + ': ${trip.expenses.length}',
+                    "${loc.get('expenses')}: ${trip.expenses.length}",
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   onTap: () {
