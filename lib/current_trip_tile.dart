@@ -6,7 +6,8 @@ import 'add_trip_page.dart';
 
 class CurrentTripTile extends StatelessWidget {
   final AppLocalizations localizations;
-  const CurrentTripTile({super.key, required this.localizations});
+  final VoidCallback? onTripAdded;
+  const CurrentTripTile({super.key, required this.localizations, this.onTripAdded});
 
   Future<Trip?> _getCurrentTrip() async {
     final trips = await TripsStorage.readTrips();
@@ -57,12 +58,16 @@ class CurrentTripTile extends StatelessWidget {
                       foregroundColor: Colors.white,
                       elevation: 2,
                     ),
-                    onPressed: () {
-                      Navigator.of(context).push(
+                    onPressed: () async {
+                      final result = await Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => AddTripPage(localizations: localizations),
+                          builder: (context) => AddTripPage(
+                            localizations: localizations,
+                            onTripDeleted: onTripAdded, // callback per refresh dopo delete
+                          ),
                         ),
                       );
+                      if (result == true && onTripAdded != null) onTripAdded!();
                     },
                     child: const Text(
                       '+',
@@ -158,8 +163,8 @@ class CurrentTripTile extends StatelessWidget {
                                       );
                                       if (idx != -1) {
                                         trips[idx].expenses.add(expense);
-                                        await TripsStorage.writeTrips(trips);
-                                        (context as Element).markNeedsBuild();
+                                        await TripsStorage.writeTrips(trips); // Salva su file JSON
+                                        if (onTripAdded != null) onTripAdded!(); // Aggiorna la home
                                       }
                                     },
                                     localizations: localizations,

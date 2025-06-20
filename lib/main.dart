@@ -53,7 +53,12 @@ class _CaravellaHomePageState extends State<CaravellaHomePage> {
             },
           ),
           Center(
-            child: CurrentTripTile(localizations: loc),
+            child: CurrentTripTile(
+              localizations: loc,
+              onTripAdded: () {
+                setState(() {});
+              },
+            ),
           ),
         ],
       ),

@@ -5,7 +5,8 @@ import 'app_localizations.dart';
 class AddTripPage extends StatefulWidget {
   final Trip? trip;
   final AppLocalizations localizations;
-  const AddTripPage({super.key, this.trip, required this.localizations});
+  final VoidCallback? onTripDeleted;
+  const AddTripPage({super.key, this.trip, required this.localizations, this.onTripDeleted});
 
   @override
   State<AddTripPage> createState() => _AddTripPageState();
@@ -94,7 +95,46 @@ class _AddTripPageState extends State<AddTripPage> {
   Widget build(BuildContext context) {
     final loc = widget.localizations;
     return Scaffold(
-      appBar: AppBar(title: Text(loc.get('add_trip'))),
+      appBar: AppBar(
+        title: Text(widget.trip == null ? loc.get('add_trip') : loc.get('edit_trip')),
+        actions: [
+          if (widget.trip != null)
+            IconButton(
+              icon: const Icon(Icons.delete),
+              tooltip: loc.get('delete'),
+              onPressed: () async {
+                final confirm = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text(loc.get('delete_trip')),
+                    content: Text(loc.get('delete_trip_confirm')),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        child: Text(loc.get('cancel')),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(true),
+                        child: Text(loc.get('delete')),
+                      ),
+                    ],
+                  ),
+                );
+                if (confirm == true) {
+                  final trips = await TripsStorage.readTrips();
+                  trips.removeWhere((v) =>
+                    v.title == widget.trip!.title &&
+                    v.startDate == widget.trip!.startDate &&
+                    v.endDate == widget.trip!.endDate
+                  );
+                  await TripsStorage.writeTrips(trips);
+                  if (mounted) Navigator.of(context).pop(true);
+                  if (widget.onTripDeleted != null) widget.onTripDeleted!();
+                }
+              },
+            ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
