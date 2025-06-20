@@ -63,7 +63,9 @@ class CurrentTripTile extends StatelessWidget {
                         MaterialPageRoute(
                           builder: (context) => AddTripPage(
                             localizations: localizations,
-                            onTripDeleted: onTripAdded, // callback per refresh dopo delete
+                            onTripDeleted: () {
+                              if (onTripAdded != null) onTripAdded!();
+                            },
                           ),
                         ),
                       );

@@ -13,20 +13,35 @@ class TripDetailPage extends StatefulWidget {
 }
 
 class _TripDetailPageState extends State<TripDetailPage> {
-  late Trip _trip;
+  Trip? _trip;
+  bool _deleted = false;
 
   @override
   void initState() {
     super.initState();
-    _trip = widget.trip;
+    _loadTrip();
+  }
+
+  Future<void> _loadTrip() async {
+    final trips = await TripsStorage.readTrips();
+    final idx = trips.indexWhere(
+      (t) => t.title == widget.trip.title && t.startDate == widget.trip.startDate && t.endDate == widget.trip.endDate,
+    );
+    setState(() {
+      _trip = idx != -1 ? trips[idx] : null;
+      _deleted = idx == -1;
+    });
+    if (_deleted && mounted) {
+      Navigator.of(context).pop(true); // Torna in home e aggiorna
+    }
   }
 
   Future<void> _refreshTrip() async {
     final trips = await TripsStorage.readTrips();
     final idx = trips.indexWhere((v) =>
-      v.title == _trip.title &&
-      v.startDate == _trip.startDate &&
-      v.endDate == _trip.endDate
+      v.title == _trip!.title &&
+      v.startDate == _trip!.startDate &&
+      v.endDate == _trip!.endDate
     );
     if (idx != -1) {
       setState(() {
@@ -37,10 +52,17 @@ class _TripDetailPageState extends State<TripDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (_deleted) {
+      return const SizedBox.shrink();
+    }
+    final trip = _trip;
+    if (trip == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
     final loc = widget.localizations;
     return Scaffold(
       appBar: AppBar(
-        title: Text(_trip.title),
+        title: Text(trip.title),
         actions: [
           IconButton(
             icon: const Icon(Icons.edit),
@@ -49,8 +71,11 @@ class _TripDetailPageState extends State<TripDetailPage> {
               final result = await Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => AddTripPage(
-                    trip: _trip,
+                    trip: trip,
                     localizations: loc,
+                    onTripDeleted: () async {
+                      await _loadTrip();
+                    },
                   ),
                 ),
               );
@@ -68,23 +93,23 @@ class _TripDetailPageState extends State<TripDetailPage> {
           children: [
             Text(
               loc.get('period', params: {
-                'start': '${_trip.startDate.day}/${_trip.startDate.month}/${_trip.startDate.year}',
-                'end': '${_trip.endDate.day}/${_trip.endDate.month}/${_trip.endDate.year}'
+                'start': '${trip.startDate.day}/${trip.startDate.month}/${trip.startDate.year}',
+                'end': '${trip.endDate.day}/${trip.endDate.month}/${trip.endDate.year}'
               }),
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            Text('${loc.get('participants')}: ${_trip.participants.join(", ")}'),
+            Text('${loc.get('participants')}: ${trip.participants.join(", ")}'),
             const SizedBox(height: 16),
             Text('${loc.get('expenses')}:', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             Expanded(
-              child: _trip.expenses.isEmpty
+              child: trip.expenses.isEmpty
                   ? Text(loc.get('no_expenses'))
                   : ListView.builder(
-                      itemCount: _trip.expenses.length,
+                      itemCount: trip.expenses.length,
                       itemBuilder: (context, i) {
-                        final expense = _trip.expenses[i];
+                        final expense = trip.expenses[i];
                         return ListTile(
                           title: Text(expense.description),
                           subtitle: Text('${loc.get('paid_by')}: ${expense.paidBy}\n${loc.get('date')}: ${expense.date.day}/${expense.date.month}/${expense.date.year}'),
@@ -109,13 +134,13 @@ class _TripDetailPageState extends State<TripDetailPage> {
                       top: 24,
                     ),
                     child: AddExpenseSheet(
-                      participants: _trip.participants,
+                      participants: trip.participants,
                       onExpenseAdded: (expense) async {
                         final trips = await TripsStorage.readTrips();
                         final idx = trips.indexWhere((v) =>
-                          v.title == _trip.title &&
-                          v.startDate == _trip.startDate &&
-                          v.endDate == _trip.endDate
+                          v.title == trip.title &&
+                          v.startDate == trip.startDate &&
+                          v.endDate == trip.endDate
                         );
                         if (idx != -1) {
                           trips[idx].expenses.add(expense);

@@ -30,8 +30,34 @@ class CaravellaHomePage extends StatefulWidget {
   State<CaravellaHomePage> createState() => _CaravellaHomePageState();
 }
 
-class _CaravellaHomePageState extends State<CaravellaHomePage> {
+class _CaravellaHomePageState extends State<CaravellaHomePage> with WidgetsBindingObserver {
   String _locale = 'en';
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      setState(() {}); // Ricarica i dati dallo storage quando si torna in foreground
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Ricarica i dati ogni volta che la pagina torna visibile
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
