@@ -1,4 +1,4 @@
-package com.example.org_app_split
+package org.app.caravella
 
 import io.flutter.embedding.android.FlutterActivity
 
