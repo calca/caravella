@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'trips_storage.dart';
+import 'app_localizations.dart';
 
 class AddTripPage extends StatefulWidget {
   final Trip? trip;
-  const AddTripPage({super.key, this.trip});
+  final AppLocalizations localizations;
+  const AddTripPage({super.key, this.trip, required this.localizations});
 
   @override
   State<AddTripPage> createState() => _AddTripPageState();
@@ -90,8 +92,9 @@ class _AddTripPageState extends State<AddTripPage> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = widget.localizations;
     return Scaffold(
-      appBar: AppBar(title: const Text('Add trip')),
+      appBar: AppBar(title: Text(loc.get('add_trip'))),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -100,28 +103,28 @@ class _AddTripPageState extends State<AddTripPage> {
             children: [
               TextFormField(
                 controller: _titleController,
-                decoration: const InputDecoration(labelText: 'Trip title'),
-                validator: (v) => v == null || v.isEmpty ? 'Enter a title' : null,
+                decoration: InputDecoration(labelText: loc.get('trip_title')),
+                validator: (v) => v == null || v.isEmpty ? loc.get('enter_title') : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _participantsController,
-                decoration: const InputDecoration(
-                  labelText: 'Participants (comma separated)',
+                decoration: InputDecoration(
+                  labelText: loc.get('participants_hint'),
                 ),
-                validator: (v) => v == null || v.isEmpty ? 'Enter at least one participant' : null,
+                validator: (v) => v == null || v.isEmpty ? loc.get('enter_participant') : null,
               ),
               const SizedBox(height: 16),
               Row(
                 children: [
                   Expanded(
                     child: Text(_startDate == null
-                        ? 'Start date not selected'
-                        : 'Start: 	${_startDate!.day}/${_startDate!.month}/${_startDate!.year}'),
+                        ? loc.get('start_date_not_selected')
+                        : '${loc.get('select_start')}: ${_startDate!.day}/${_startDate!.month}/${_startDate!.year}'),
                   ),
                   TextButton(
                     onPressed: () => _pickDate(context, true),
-                    child: const Text('Select start'),
+                    child: Text(loc.get('select_start')),
                   ),
                 ],
               ),
@@ -129,19 +132,19 @@ class _AddTripPageState extends State<AddTripPage> {
                 children: [
                   Expanded(
                     child: Text(_endDate == null
-                        ? 'End date not selected'
-                        : 'End: ${_endDate!.day}/${_endDate!.month}/${_endDate!.year}'),
+                        ? loc.get('end_date_not_selected')
+                        : '${loc.get('select_end')}: ${_endDate!.day}/${_endDate!.month}/${_endDate!.year}'),
                   ),
                   TextButton(
                     onPressed: () => _pickDate(context, false),
-                    child: const Text('Select end'),
+                    child: Text(loc.get('select_end')),
                   ),
                 ],
               ),
               const SizedBox(height: 32),
               ElevatedButton(
                 onPressed: _saveTrip,
-                child: const Text('Save'),
+                child: Text(loc.get('save')),
               ),
             ],
           ),

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'trips_storage.dart';
 import 'add_trip_page.dart';
+import 'app_localizations.dart';
 
 class TripDetailPage extends StatefulWidget {
   final Trip trip;
-  const TripDetailPage({super.key, required this.trip});
+  final AppLocalizations localizations;
+  const TripDetailPage({super.key, required this.trip, required this.localizations});
 
   @override
   State<TripDetailPage> createState() => _TripDetailPageState();
@@ -35,18 +37,20 @@ class _TripDetailPageState extends State<TripDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = widget.localizations;
     return Scaffold(
       appBar: AppBar(
         title: Text(_trip.title),
         actions: [
           IconButton(
             icon: const Icon(Icons.edit),
-            tooltip: 'Edit',
+            tooltip: loc.get('edit'),
             onPressed: () async {
               final result = await Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => AddTripPage(
                     trip: _trip,
+                    localizations: loc,
                   ),
                 ),
               );
@@ -63,25 +67,28 @@ class _TripDetailPageState extends State<TripDetailPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Period: ${_trip.startDate.day}/${_trip.startDate.month}/${_trip.startDate.year} - ${_trip.endDate.day}/${_trip.endDate.month}/${_trip.endDate.year}',
+              loc.get('period', params: {
+                'start': '${_trip.startDate.day}/${_trip.startDate.month}/${_trip.startDate.year}',
+                'end': '${_trip.endDate.day}/${_trip.endDate.month}/${_trip.endDate.year}'
+              }),
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            Text('Participants: ${_trip.participants.join(", ")}'),
+            Text('${loc.get('participants')}: ${_trip.participants.join(", ")}'),
             const SizedBox(height: 16),
-            const Text('Expenses:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(loc.get('expenses') + ':', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             Expanded(
               child: _trip.expenses.isEmpty
-                  ? const Text('No expenses')
+                  ? Text(loc.get('no_expenses'))
                   : ListView.builder(
                       itemCount: _trip.expenses.length,
                       itemBuilder: (context, i) {
                         final expense = _trip.expenses[i];
                         return ListTile(
                           title: Text(expense.description),
-                          subtitle: Text('Paid by: ${expense.paidBy}\nDate: ${expense.date.day}/${expense.date.month}/${expense.date.year}'),
-                          trailing: Text('€ ${expense.amount.toStringAsFixed(2)}'),
+                          subtitle: Text('${loc.get('paid_by')}: ${expense.paidBy}\n${loc.get('date')}: ${expense.date.day}/${expense.date.month}/${expense.date.year}'),
+                          trailing: Text('\u20ac ${expense.amount.toStringAsFixed(2)}'),
                         );
                       },
                     ),
@@ -89,7 +96,7 @@ class _TripDetailPageState extends State<TripDetailPage> {
             const SizedBox(height: 24),
             ElevatedButton.icon(
               icon: const Icon(Icons.add),
-              label: const Text('Add expense'),
+              label: Text(loc.get('add_expense')),
               onPressed: () async {
                 await showModalBottomSheet(
                   context: context,
@@ -116,6 +123,7 @@ class _TripDetailPageState extends State<TripDetailPage> {
                           await _refreshTrip();
                         }
                       },
+                      localizations: loc,
                     ),
                   ),
                 );
@@ -132,7 +140,8 @@ class _TripDetailPageState extends State<TripDetailPage> {
 class AddExpenseSheet extends StatefulWidget {
   final List<String> participants;
   final void Function(Expense) onExpenseAdded;
-  const AddExpenseSheet({super.key, required this.participants, required this.onExpenseAdded});
+  final AppLocalizations localizations;
+  const AddExpenseSheet({super.key, required this.participants, required this.onExpenseAdded, required this.localizations});
 
   @override
   State<AddExpenseSheet> createState() => _AddExpenseSheetState();
@@ -147,30 +156,31 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = widget.localizations;
     return SingleChildScrollView(
       child: Form(
         key: _formKey,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Add expense', style: Theme.of(context).textTheme.titleLarge),
+            Text(loc.get('add_expense'), style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 16),
             TextFormField(
-              decoration: const InputDecoration(labelText: 'Category'),
-              validator: (v) => v == null || v.isEmpty ? 'Required' : null,
+              decoration: InputDecoration(labelText: loc.get('category')),
+              validator: (v) => v == null || v.isEmpty ? loc.get('required') : null,
               onSaved: (v) => _category = v,
             ),
             TextFormField(
-              decoration: const InputDecoration(labelText: 'Amount'),
+              decoration: InputDecoration(labelText: loc.get('amount')),
               keyboardType: TextInputType.numberWithOptions(decimal: true),
-              validator: (v) => v == null || double.tryParse(v) == null ? 'Invalid amount' : null,
+              validator: (v) => v == null || double.tryParse(v) == null ? loc.get('invalid_amount') : null,
               onSaved: (v) => _amount = double.tryParse(v ?? ''),
             ),
             DropdownButtonFormField<String>(
-              decoration: const InputDecoration(labelText: 'Paid by'),
+              decoration: InputDecoration(labelText: loc.get('paid_by')),
               items: widget.participants.map((p) => DropdownMenuItem(value: p, child: Text(p))).toList(),
               onChanged: (v) => _paidBy = v,
-              validator: (v) => v == null ? 'Required' : null,
+              validator: (v) => v == null ? loc.get('required') : null,
             ),
             const SizedBox(height: 24),
             Row(
@@ -178,7 +188,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
               children: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Cancel'),
+                  child: Text(loc.get('cancel')),
                 ),
                 const SizedBox(width: 8),
                 ElevatedButton(
@@ -195,7 +205,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                       Navigator.of(context).pop();
                     }
                   },
-                  child: const Text('Save'),
+                  child: Text(loc.get('save')),
                 ),
               ],
             ),

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'history_page.dart';
 import 'add_trip_page.dart';
+import 'app_localizations.dart';
 
 class CaravellaFab extends StatelessWidget {
   final void Function()? onRefresh;
-  const CaravellaFab({Key? key, this.onRefresh}) : super(key: key);
+  final AppLocalizations localizations;
+  const CaravellaFab({Key? key, this.onRefresh, required this.localizations}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,14 +19,14 @@ class CaravellaFab extends StatelessWidget {
             children: [
               ListTile(
                 leading: const Icon(Icons.history),
-                title: const Text('History'),
+                title: Text(localizations.get('history')),
                 onTap: () {
                   Navigator.of(context).pop(0);
                 },
               ),
               ListTile(
                 leading: const Icon(Icons.add),
-                title: const Text('Add trip'),
+                title: Text(localizations.get('add_trip')),
                 onTap: () {
                   Navigator.of(context).pop(1);
                 },
@@ -35,13 +37,13 @@ class CaravellaFab extends StatelessWidget {
         if (result == 0) {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => const HistoryPage(),
+              builder: (context) => HistoryPage(localizations: localizations),
             ),
           );
         } else if (result == 1) {
           final addResult = await Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => const AddTripPage(),
+              builder: (context) => AddTripPage(localizations: localizations),
             ),
           );
           if (addResult == true && onRefresh != null) {

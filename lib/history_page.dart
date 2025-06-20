@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'trips_storage.dart';
 import 'trip_detail_page.dart';
+import 'app_localizations.dart';
 
 class HistoryPage extends StatefulWidget {
-  const HistoryPage({super.key});
+  final AppLocalizations localizations;
+  const HistoryPage({super.key, required this.localizations});
 
   @override
   State<HistoryPage> createState() => _HistoryPageState();
@@ -20,8 +22,9 @@ class _HistoryPageState extends State<HistoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = widget.localizations;
     return Scaffold(
-      appBar: AppBar(title: const Text('Trip history')),
+      appBar: AppBar(title: Text(loc.get('trip_history'))),
       body: FutureBuilder<List<Trip>>(
         future: _tripsFuture,
         builder: (context, snapshot) {
@@ -29,7 +32,7 @@ class _HistoryPageState extends State<HistoryPage> {
             return const Center(child: CircularProgressIndicator());
           }
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No trips found'));
+            return Center(child: Text(loc.get('no_trips_found')));
           }
           final trips = snapshot.data!;
           return ListView.builder(
@@ -41,16 +44,20 @@ class _HistoryPageState extends State<HistoryPage> {
                 child: ListTile(
                   title: Text(trip.title),
                   subtitle: Text(
-                    'From ${trip.startDate.day}/${trip.startDate.month}/${trip.startDate.year} to ${trip.endDate.day}/${trip.endDate.month}/${trip.endDate.year}\nParticipants: ${trip.participants.join(", ")}',
+                    loc.get('from_to', params: {
+                      'start': '${trip.startDate.day}/${trip.startDate.month}/${trip.startDate.year}',
+                      'end': '${trip.endDate.day}/${trip.endDate.month}/${trip.endDate.year}'
+                    }) + '\n' +
+                    loc.get('participants') + ': ' + trip.participants.join(", ")
                   ),
                   trailing: Text(
-                    'Expenses: ${trip.expenses.length}',
+                    loc.get('expenses') + ': ${trip.expenses.length}',
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => TripDetailPage(trip: trip),
+                        builder: (context) => TripDetailPage(trip: trip, localizations: widget.localizations),
                       ),
                     );
                   },

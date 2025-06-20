@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'trip_detail_page.dart';
 import 'trips_storage.dart';
+import 'app_localizations.dart';
 
 class CurrentTripTile extends StatelessWidget {
-  const CurrentTripTile({super.key});
+  final AppLocalizations localizations;
+  const CurrentTripTile({super.key, required this.localizations});
 
   Future<Trip?> _getCurrentTrip() async {
     final trips = await TripsStorage.readTrips();
@@ -37,7 +39,7 @@ class CurrentTripTile extends StatelessWidget {
                   ),
                 ],
               ),
-              child: const Text('No trip found', style: TextStyle(fontSize: 18)),
+              child: Text(localizations.get('no_trip_found'), style: const TextStyle(fontSize: 18)),
             ),
           );
         }
@@ -50,7 +52,7 @@ class CurrentTripTile extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => TripDetailPage(trip: trip),
+                      builder: (context) => TripDetailPage(trip: trip, localizations: localizations),
                     ),
                   );
                 },
@@ -80,9 +82,9 @@ class CurrentTripTile extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 12),
-                      const Text(
-                        'Total spent:',
-                        style: TextStyle(
+                      Text(
+                        localizations.get('total_spent'),
+                        style: const TextStyle(
                           fontSize: 16,
                           color: Colors.black54,
                         ),
@@ -102,7 +104,7 @@ class CurrentTripTile extends StatelessWidget {
                           ),
                           IconButton(
                             icon: const Icon(Icons.add_circle, color: Colors.deepPurple, size: 32),
-                            tooltip: 'Add expense',
+                            tooltip: localizations.get('add_expense'),
                             onPressed: () async {
                               await showModalBottomSheet(
                                 context: context,
@@ -129,6 +131,7 @@ class CurrentTripTile extends StatelessWidget {
                                         (context as Element).markNeedsBuild();
                                       }
                                     },
+                                    localizations: localizations,
                                   ),
                                 ),
                               );
