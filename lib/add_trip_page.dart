@@ -73,7 +73,8 @@ class _AddTripPageState extends State<AddTripPage> {
           endDate: _endDate!,
         );
         await TripsStorage.writeTrips(trips);
-        if (mounted) Navigator.of(context).pop(true);
+        if (!context.mounted) return;
+        Navigator.of(context).pop(true);
         return;
       }
     }
@@ -88,7 +89,8 @@ class _AddTripPageState extends State<AddTripPage> {
     final trips = await TripsStorage.readTrips();
     trips.add(newTrip);
     await TripsStorage.writeTrips(trips);
-    if (mounted) Navigator.of(context).pop(true);
+    if (!context.mounted) return;
+    Navigator.of(context).pop(true);
   }
 
   @override
