@@ -38,6 +38,10 @@ class AppLocalizations {
       'required': 'Required',
       'invalid_amount': 'Invalid amount',
       'no_expenses': 'No expenses',
+      'delete': 'Delete',
+      'delete_trip': 'Delete trip',
+      'delete_trip_confirm': 'Are you sure you want to delete this trip?',
+      'edit_trip': 'Edit trip',
     },
     'it': {
       'app_title': 'Caravella',
@@ -71,6 +75,10 @@ class AppLocalizations {
       'required': 'Obbligatorio',
       'invalid_amount': 'Importo non valido',
       'no_expenses': 'Nessuna spesa',
+      'delete': 'Elimina',
+      'delete_trip': 'Elimina viaggio',
+      'delete_trip_confirm': 'Sei sicuro di voler eliminare questo viaggio?',
+      'edit_trip': 'Modifica viaggio',
     },
   };
 
