@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'viaggio_detail_page.dart';
-import 'history_page.dart';
-import 'viaggi_storage.dart';
+import 'caravella_fab.dart';
+import 'viaggio_corrente_tile.dart';
 
 void main() {
   runApp(const CaravellaApp());
@@ -69,94 +68,14 @@ class _CaravellaHomePageState extends State<CaravellaHomePage> {
             fit: BoxFit.cover,
           ),
           Center(
-            child: GestureDetector(
-              onTap: () {
-                // Qui serve un Viaggio di esempio o reale, per ora mostro un placeholder
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => ViaggioDetailPage(
-                      viaggio: Viaggio(
-                        titolo: 'Viaggio in Sicilia',
-                        spese: [],
-                        partecipanti: ['Mario', 'Luca'],
-                        dataInizio: DateTime(2025, 6, 1),
-                        dataFine: DateTime(2025, 6, 10),
-                      ),
-                    ),
-                  ),
-                );
-              },
-              child: Container(
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.7),
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
-                      'Nome viaggio: Viaggio in Sicilia',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    SizedBox(height: 12),
-                    Text(
-                      'Totale speso:',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black54,
-                      ),
-                    ),
-                    Text(
-                      '€ 1.234,56',
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.deepPurple,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            child: const ViaggioCorrenteTile(),
           ),
         ],
       ),
-      floatingActionButton: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          FloatingActionButton.extended(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const HistoryPage(),
-                ),
-              );
-            },
-            label: const Text('Storico'),
-            icon: const Icon(Icons.history),
-            heroTag: 'history',
-          ),
-          const SizedBox(height: 12),
-          FloatingActionButton(
-            onPressed: () {},
-            tooltip: 'Increment',
-            child: const Icon(Icons.add),
-            heroTag: 'add',
-          ),
-        ],
+      floatingActionButton: CaravellaFab(
+        onRefresh: () {
+          setState(() {});
+        },
       ),
     );
   }
