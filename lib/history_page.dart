@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'viaggi_storage.dart';
-import 'viaggio_detail_page.dart';
+import 'trips_storage.dart';
+import 'trip_detail_page.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
@@ -10,47 +10,47 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
-  late Future<List<Viaggio>> _viaggiFuture;
+  late Future<List<Trip>> _tripsFuture;
 
   @override
   void initState() {
     super.initState();
-    _viaggiFuture = ViaggiStorage.readViaggi();
+    _tripsFuture = TripsStorage.readTrips();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Storico viaggi')),
-      body: FutureBuilder<List<Viaggio>>(
-        future: _viaggiFuture,
+      appBar: AppBar(title: const Text('Trip history')),
+      body: FutureBuilder<List<Trip>>(
+        future: _tripsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('Nessun viaggio presente'));
+            return const Center(child: Text('No trips found'));
           }
-          final viaggi = snapshot.data!;
+          final trips = snapshot.data!;
           return ListView.builder(
-            itemCount: viaggi.length,
+            itemCount: trips.length,
             itemBuilder: (context, index) {
-              final viaggio = viaggi[index];
+              final trip = trips[index];
               return Card(
                 margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: ListTile(
-                  title: Text(viaggio.titolo),
+                  title: Text(trip.title),
                   subtitle: Text(
-                    'Dal ${viaggio.dataInizio.day}/${viaggio.dataInizio.month}/${viaggio.dataInizio.year} al ${viaggio.dataFine.day}/${viaggio.dataFine.month}/${viaggio.dataFine.year}\nPartecipanti: ${viaggio.partecipanti.join(", ")}',
+                    'From ${trip.startDate.day}/${trip.startDate.month}/${trip.startDate.year} to ${trip.endDate.day}/${trip.endDate.month}/${trip.endDate.year}\nParticipants: ${trip.participants.join(", ")}',
                   ),
                   trailing: Text(
-                    'Spese: ${viaggio.spese.length}',
+                    'Expenses: ${trip.expenses.length}',
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => ViaggioDetailPage(viaggio: viaggio),
+                        builder: (context) => TripDetailPage(trip: trip),
                       ),
                     );
                   },

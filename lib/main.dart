@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'caravella_fab.dart';
-import 'viaggio_corrente_tile.dart';
+import 'current_trip_tile.dart';
 
 void main() {
   runApp(const CaravellaApp());
@@ -68,7 +68,7 @@ class _CaravellaHomePageState extends State<CaravellaHomePage> {
             fit: BoxFit.cover,
           ),
           Center(
-            child: const ViaggioCorrenteTile(),
+            child: const CurrentTripTile(),
           ),
         ],
       ),
