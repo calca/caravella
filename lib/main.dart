@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'caravella_fab.dart';
 import 'current_trip_tile.dart';
 import 'app_localizations.dart';
@@ -31,12 +32,26 @@ class CaravellaHomePage extends StatefulWidget {
 }
 
 class _CaravellaHomePageState extends State<CaravellaHomePage> with WidgetsBindingObserver {
-  String _locale = 'en';
+  String _locale = 'it';
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _loadLocale();
+  }
+
+  Future<void> _loadLocale() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedLocale = prefs.getString('selected_locale');
+    setState(() {
+      _locale = savedLocale ?? 'it';
+    });
+  }
+
+  Future<void> _saveLocale(String locale) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('selected_locale', locale);
   }
 
   @override
@@ -48,14 +63,13 @@ class _CaravellaHomePageState extends State<CaravellaHomePage> with WidgetsBindi
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      setState(() {}); // Ricarica i dati dallo storage quando si torna in foreground
+      setState(() {});
     }
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Ricarica i dati ogni volta che la pagina torna visibile
     setState(() {});
   }
 
@@ -72,7 +86,8 @@ class _CaravellaHomePageState extends State<CaravellaHomePage> with WidgetsBindi
           ),
           LanguageSelector(
             locale: _locale,
-            onChanged: (value) {
+            onChanged: (value) async {
+              await _saveLocale(value);
               setState(() {
                 _locale = value;
               });
