@@ -86,9 +86,9 @@ class _AddTripPageState extends State<AddTripPage> {
       startDate: _startDate!,
       endDate: _endDate!,
     );
-    final trips = await TripsStorage.readTrips();
-    trips.add(newTrip);
-    await TripsStorage.writeTrips(trips);
+    final trips2 = await TripsStorage.readTrips();
+    trips2.add(newTrip);
+    await TripsStorage.writeTrips(trips2);
     if (!context.mounted) return;
     Navigator.of(context).pop(true);
   }
@@ -130,7 +130,8 @@ class _AddTripPageState extends State<AddTripPage> {
                     v.endDate == widget.trip!.endDate
                   );
                   await TripsStorage.writeTrips(trips);
-                  if (mounted) Navigator.of(context).pop(true);
+                  if (!context.mounted) return;
+                  Navigator.of(context).pop(true);
                   if (widget.onTripDeleted != null) widget.onTripDeleted!();
                 }
               },
