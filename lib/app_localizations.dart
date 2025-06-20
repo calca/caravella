@@ -9,7 +9,7 @@ class AppLocalizations {
     'en': {
       'app_title': 'Caravella',
       'trip_history': 'Trip history',
-      'no_trips_found': 'No trips found',
+      'no_trips_found': 'Where do you want to go?',
       'expenses': 'Expenses',
       'participants': 'Participants',
       'from_to': 'From {start} to {end}',
@@ -42,7 +42,7 @@ class AppLocalizations {
     'it': {
       'app_title': 'Caravella',
       'trip_history': 'Storico viaggi',
-      'no_trips_found': 'Nessun viaggio trovato',
+      'no_trips_found': 'Dove vuoi andare?',
       'expenses': 'Spese',
       'participants': 'Partecipanti',
       'from_to': 'Dal {start} al {end}',

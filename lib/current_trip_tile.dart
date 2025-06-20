@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'trip_detail_page.dart';
 import 'trips_storage.dart';
 import 'app_localizations.dart';
+import 'add_trip_page.dart';
 
 class CurrentTripTile extends StatelessWidget {
   final AppLocalizations localizations;
@@ -39,7 +40,37 @@ class CurrentTripTile extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Text(localizations.get('no_trip_found'), style: const TextStyle(fontSize: 18)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      localizations.get('no_trips_found'),
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: const CircleBorder(),
+                      padding: const EdgeInsets.all(12),
+                      backgroundColor: Colors.deepPurple,
+                      foregroundColor: Colors.white,
+                      elevation: 2,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => AddTripPage(localizations: localizations),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      '+',
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         }

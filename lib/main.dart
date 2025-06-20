@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'caravella_fab.dart';
 import 'current_trip_tile.dart';
 import 'app_localizations.dart';
+import 'language_selector.dart';
 
 void main() {
   runApp(const CaravellaApp());
@@ -43,27 +44,13 @@ class _CaravellaHomePageState extends State<CaravellaHomePage> {
             'assets/images/viaggio_bg.jpg',
             fit: BoxFit.cover,
           ),
-          // Language selector in top-right corner with semi-transparent background
-          Positioned(
-            top: 32,
-            right: 24,
-            child: DropdownButton<String>(
-              value: _locale,
-              underline: const SizedBox(),
-              dropdownColor: Colors.white,
-              style: const TextStyle(color: Colors.black),
-              items: const [
-                DropdownMenuItem(value: 'en', child: Text('EN', style: TextStyle(color: Colors.black))),
-                DropdownMenuItem(value: 'it', child: Text('ITA', style: TextStyle(color: Colors.black))),
-              ],
-              onChanged: (value) {
-                if (value != null) {
-                  setState(() {
-                    _locale = value;
-                  });
-                }
-              },
-            ),
+          LanguageSelector(
+            locale: _locale,
+            onChanged: (value) {
+              setState(() {
+                _locale = value;
+              });
+            },
           ),
           Center(
             child: CurrentTripTile(localizations: loc),
