@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'viaggio_detail_page.dart';
+import 'history_page.dart';
+import 'viaggi_storage.dart';
 
 void main() {
   runApp(const CaravellaApp());
@@ -68,9 +71,18 @@ class _CaravellaHomePageState extends State<CaravellaHomePage> {
           Center(
             child: GestureDetector(
               onTap: () {
+                // Qui serve un Viaggio di esempio o reale, per ora mostro un placeholder
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => const ViaggioDetailPage(),
+                    builder: (context) => ViaggioDetailPage(
+                      viaggio: Viaggio(
+                        titolo: 'Viaggio in Sicilia',
+                        spese: [],
+                        partecipanti: ['Mario', 'Luca'],
+                        dataInizio: DateTime(2025, 6, 1),
+                        dataFine: DateTime(2025, 6, 10),
+                      ),
+                    ),
                   ),
                 );
               },
@@ -122,26 +134,29 @@ class _CaravellaHomePageState extends State<CaravellaHomePage> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
-    );
-  }
-}
-
-class ViaggioDetailPage extends StatelessWidget {
-  const ViaggioDetailPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Dettaglio Viaggio'),
-      ),
-      body: const Center(
-        child: Text('Qui andranno i dettagli del viaggio.'),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton.extended(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const HistoryPage(),
+                ),
+              );
+            },
+            label: const Text('Storico'),
+            icon: const Icon(Icons.history),
+            heroTag: 'history',
+          ),
+          const SizedBox(height: 12),
+          FloatingActionButton(
+            onPressed: () {},
+            tooltip: 'Increment',
+            child: const Icon(Icons.add),
+            heroTag: 'add',
+          ),
+        ],
       ),
     );
   }
