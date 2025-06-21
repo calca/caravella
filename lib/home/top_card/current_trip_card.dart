@@ -36,10 +36,8 @@ class CurrentTripCard extends StatelessWidget {
             Center(
               child: Text(
                 '€ ${trip.expenses.fold<double>(0, (sum, s) => sum + s.amount).toStringAsFixed(2)}',
-                style: Theme.of(context)
-                    .textTheme
-                    .displayLarge
-                    ?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+                style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                    fontWeight: FontWeight.bold, color: Colors.white),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -51,7 +49,10 @@ class CurrentTripCard extends StatelessWidget {
                     color: Theme.of(context).colorScheme.primary, size: 20),
                 const SizedBox(width: 4),
                 Text('${trip.participants.length} ${loc.get('participants')}',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white)),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(color: Colors.white)),
               ],
             ),
             const SizedBox(height: 16),
@@ -68,7 +69,10 @@ class CurrentTripCard extends StatelessWidget {
                         'end':
                             '${trip.endDate.day}/${trip.endDate.month}/${trip.endDate.year}'
                       })}',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(color: Colors.white),
                 ),
               ],
             ),
