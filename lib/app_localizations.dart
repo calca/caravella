@@ -39,6 +39,12 @@ class AppLocalizations {
       'cancel': 'Cancel',
       'ok': 'OK',
       'from_to': 'From {start} to {end}',
+      'add_expense': 'Add expense',
+      'category': 'Category',
+      'amount': 'Amount',
+      'paid_by': 'Paid by',
+      'required': 'Required',
+      'invalid_amount': 'Invalid amount',
     },
     'it': {
       'app_title': 'Caravella',
@@ -73,6 +79,12 @@ class AppLocalizations {
       'cancel': 'Annulla',
       'ok': 'OK',
       'from_to': 'Dal {start} al {end}',
+      'add_expense': 'Aggiungi spesa',
+      'category': 'Categoria',
+      'amount': 'Importo',
+      'paid_by': 'Pagato da',
+      'required': 'Obbligatorio',
+      'invalid_amount': 'Importo non valido',
     },
   };
 
