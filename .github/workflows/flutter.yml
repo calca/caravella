@@ -1,4 +1,4 @@
-name: Flutter CI
+name: Android CI
 
 on:
   push:
@@ -34,12 +34,12 @@ jobs:
         run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
       - name: Rename APK
         run: |
-          mv build/app/outputs/flutter-apk/app-release.apk org_app_split-${{ env.VERSION }}-${{ env.DATE }}.apk
+          mv build/app/outputs/flutter-apk/app-release.apk org_app_caravella-${{ env.VERSION }}-${{ env.DATE }}.apk
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: org_app_split-apk
-          path: org_app_split-*.apk
+          name: org_app_caravella-apk
+          path: org_app_caravella-*.apk
 
   release:
     if: github.event_name == 'release'
@@ -63,10 +63,10 @@ jobs:
         run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
       - name: Rename APK
         run: |
-          mv build/app/outputs/flutter-apk/app-release.apk org_app_split-${{ env.VERSION }}-${{ env.DATE }}.apk
+          mv build/app/outputs/flutter-apk/app-release.apk org_app_caravella-${{ env.VERSION }}-${{ env.DATE }}.apk
       - name: Upload APK to Release
         uses: softprops/action-gh-release@v2
         with:
-          files: org_app_split-*.apk
+          files: org_app_caravella-*.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
