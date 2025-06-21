@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../app_localizations.dart';
+import '../../app_localizations.dart';
 
 class NoTripCard extends StatelessWidget {
   final AppLocalizations loc;
@@ -17,7 +17,7 @@ class NoTripCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(32),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.25), // ombra nera più visibile
+            color: Colors.black.withValues(alpha: 0.25), // ombra nera più visibile
             blurRadius: 32,
             spreadRadius: 4,
             offset: const Offset(0, 12),
@@ -50,5 +50,3 @@ class NoTripCard extends StatelessWidget {
     );
   }
 }
-
-// Rimuovi i vecchi file duplicati dalla cartella home/

@@ -23,6 +23,7 @@ class AppLocalizations {
       'license_link': 'View MIT License on GitHub',
       'license_section': 'License',
       'latest_expenses': 'Latest expenses',
+      'add_trip': 'Add trip',
     },
     'it': {
       'app_title': 'Caravella',
@@ -41,6 +42,7 @@ class AppLocalizations {
       'license_link': 'Visualizza licenza MIT',
       'license_section': 'Licenza',
       'latest_expenses': 'Le ultime spese',
+      'add_trip': 'Aggiungi un viaggio',
     },
   };
 

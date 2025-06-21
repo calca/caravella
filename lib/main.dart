@@ -4,10 +4,9 @@ import 'themes/caravella_themes.dart';
 import 'app_localizations.dart';
 import 'add_trip_page.dart';
 import 'trips_storage.dart';
-import 'home/caravella_bottom_bar.dart';
-import 'home/no_trip_card.dart';
-import 'home/current_trip_card.dart';
-import 'home/trip_expenses_list.dart';
+import 'home/trip_section.dart';
+import 'home/top_card/no_trip_card.dart';
+import 'home/top_card/current_trip_card.dart';
 
 void main() {
   runApp(const CaravellaApp());
@@ -120,49 +119,11 @@ class _CaravellaHomePageState extends State<CaravellaHomePage> with WidgetsBindi
                       ),
                       // Lista task/viaggi
                       Expanded(
-                        child: _currentTrip == null
-                            ? Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset(
-                                      'assets/images/home/no_travels.png',
-                                      width: 180,
-                                      height: 180,
-                                      fit: BoxFit.contain,
-                                    ),
-                                    const SizedBox(height: 24),
-                                  ],
-                                ),
-                              )
-                            : Container(
-                                margin: const EdgeInsets.only(top: 12),
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.95),
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(32),
-                                    topRight: Radius.circular(32),
-                                  ),
-                                ),
-                                child: Column(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(loc.get('latest_expenses'), style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(height: 16),
-                                    // Lista task/viaggi/spese/partecipanti
-                                    TripExpensesList(currentTrip: _currentTrip, loc: loc),
-                                    // Bottom bar stile floating
-                                    CaravellaBottomBar(loc: loc, onTripAdded: _refresh, currentTrip: _currentTrip),
-                                  ],
-                                ),
-                              ),
+                        child: TripSection(
+                          currentTrip: _currentTrip,
+                          loc: loc,
+                          onTripAdded: _refresh,
+                        ),
                       ),
                     ],
                   ),
