@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 class LanguageSettingTile extends StatelessWidget {
   final String locale;
   final ValueChanged<String> onChanged;
-  const LanguageSettingTile({required this.locale, required this.onChanged});
+  const LanguageSettingTile(
+      {super.key, required this.locale, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,7 @@ class LanguageSettingTile extends StatelessWidget {
 
 class LanguageSelectorSheet extends StatelessWidget {
   final String selected;
-  const LanguageSelectorSheet({required this.selected});
+  const LanguageSelectorSheet({super.key, required this.selected});
 
   @override
   Widget build(BuildContext context) {
