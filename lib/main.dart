@@ -181,8 +181,7 @@ class _CaravellaHomePageState extends State<CaravellaHomePage>
                                   final result =
                                       await Navigator.of(context).push(
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          AddTripPage(localizations: loc),
+                                      builder: (context) => AddTripPage(),
                                     ),
                                   );
                                   if (result == true) _refresh();
@@ -190,7 +189,7 @@ class _CaravellaHomePageState extends State<CaravellaHomePage>
                                 opacity: 0.5,
                               )
                             : CurrentTripCard(
-                                trip: _currentTrip!, loc: loc, opacity: 0.5),
+                                trip: _currentTrip!, opacity: 0.5),
                       ),
                       // Lista task/viaggi
                       Expanded(

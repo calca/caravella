@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'trips_storage.dart';
 import 'add_trip_page.dart';
 import 'app_localizations.dart';
+import 'state/locale_notifier.dart';
 
 class TripDetailPage extends StatefulWidget {
   final Trip trip;
-  final AppLocalizations localizations;
-  const TripDetailPage({super.key, required this.trip, required this.localizations});
+  const TripDetailPage({super.key, required this.trip});
 
   @override
   State<TripDetailPage> createState() => _TripDetailPageState();
@@ -25,7 +25,10 @@ class _TripDetailPageState extends State<TripDetailPage> {
   Future<void> _loadTrip() async {
     final trips = await TripsStorage.readTrips();
     final idx = trips.indexWhere(
-      (t) => t.title == widget.trip.title && t.startDate == widget.trip.startDate && t.endDate == widget.trip.endDate,
+      (t) =>
+          t.title == widget.trip.title &&
+          t.startDate == widget.trip.startDate &&
+          t.endDate == widget.trip.endDate,
     );
     setState(() {
       _trip = idx != -1 ? trips[idx] : null;
@@ -39,10 +42,9 @@ class _TripDetailPageState extends State<TripDetailPage> {
   Future<void> _refreshTrip() async {
     final trips = await TripsStorage.readTrips();
     final idx = trips.indexWhere((v) =>
-      v.title == _trip!.title &&
-      v.startDate == _trip!.startDate &&
-      v.endDate == _trip!.endDate
-    );
+        v.title == _trip!.title &&
+        v.startDate == _trip!.startDate &&
+        v.endDate == _trip!.endDate);
     if (idx != -1) {
       setState(() {
         _trip = trips[idx];
@@ -59,7 +61,8 @@ class _TripDetailPageState extends State<TripDetailPage> {
     if (trip == null) {
       return const Center(child: CircularProgressIndicator());
     }
-    final loc = widget.localizations;
+    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
+    final loc = AppLocalizations(locale);
     return Scaffold(
       appBar: AppBar(
         title: Text(trip.title),
@@ -71,12 +74,10 @@ class _TripDetailPageState extends State<TripDetailPage> {
               final result = await Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => AddTripPage(
-                    trip: trip,
-                    localizations: loc,
-                    onTripDeleted: () async {
-                      await _loadTrip();
-                    },
-                  ),
+                      trip: trip,
+                      onTripDeleted: () async {
+                        await _loadTrip();
+                      }),
                 ),
               );
               if (result == true && context.mounted) {
@@ -93,15 +94,19 @@ class _TripDetailPageState extends State<TripDetailPage> {
           children: [
             Text(
               loc.get('period', params: {
-                'start': '${trip.startDate.day}/${trip.startDate.month}/${trip.startDate.year}',
-                'end': '${trip.endDate.day}/${trip.endDate.month}/${trip.endDate.year}'
+                'start':
+                    '${trip.startDate.day}/${trip.startDate.month}/${trip.startDate.year}',
+                'end':
+                    '${trip.endDate.day}/${trip.endDate.month}/${trip.endDate.year}'
               }),
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text('${loc.get('participants')}: ${trip.participants.join(", ")}'),
             const SizedBox(height: 16),
-            Text('${loc.get('expenses')}:', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text('${loc.get('expenses')}:',
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             Expanded(
               child: trip.expenses.isEmpty
@@ -112,8 +117,10 @@ class _TripDetailPageState extends State<TripDetailPage> {
                         final expense = trip.expenses[i];
                         return ListTile(
                           title: Text(expense.description),
-                          subtitle: Text('${loc.get('paid_by')}: ${expense.paidBy}\n${loc.get('date')}: ${expense.date.day}/${expense.date.month}/${expense.date.year}'),
-                          trailing: Text('€${expense.amount.toStringAsFixed(2)}'),
+                          subtitle: Text(
+                              '${loc.get('paid_by')}: ${expense.paidBy}\n${loc.get('date')}: ${expense.date.day}/${expense.date.month}/${expense.date.year}'),
+                          trailing:
+                              Text('€${expense.amount.toStringAsFixed(2)}'),
                         );
                       },
                     ),
@@ -138,17 +145,15 @@ class _TripDetailPageState extends State<TripDetailPage> {
                       onExpenseAdded: (expense) async {
                         final trips = await TripsStorage.readTrips();
                         final idx = trips.indexWhere((v) =>
-                          v.title == trip.title &&
-                          v.startDate == trip.startDate &&
-                          v.endDate == trip.endDate
-                        );
+                            v.title == trip.title &&
+                            v.startDate == trip.startDate &&
+                            v.endDate == trip.endDate);
                         if (idx != -1) {
                           trips[idx].expenses.add(expense);
                           await TripsStorage.writeTrips(trips);
                           await _refreshTrip();
                         }
                       },
-                      localizations: loc,
                     ),
                   ),
                 );
@@ -165,8 +170,8 @@ class _TripDetailPageState extends State<TripDetailPage> {
 class AddExpenseSheet extends StatefulWidget {
   final List<String> participants;
   final void Function(Expense) onExpenseAdded;
-  final AppLocalizations localizations;
-  const AddExpenseSheet({super.key, required this.participants, required this.onExpenseAdded, required this.localizations});
+  const AddExpenseSheet(
+      {super.key, required this.participants, required this.onExpenseAdded});
 
   @override
   State<AddExpenseSheet> createState() => _AddExpenseSheetState();
@@ -181,29 +186,36 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final loc = widget.localizations;
+    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
+    final loc = AppLocalizations(locale);
     return SingleChildScrollView(
       child: Form(
         key: _formKey,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(loc.get('add_expense'), style: Theme.of(context).textTheme.titleLarge),
+            Text(loc.get('add_expense'),
+                style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 16),
             TextFormField(
               decoration: InputDecoration(labelText: loc.get('category')),
-              validator: (v) => v == null || v.isEmpty ? loc.get('required') : null,
+              validator: (v) =>
+                  v == null || v.isEmpty ? loc.get('required') : null,
               onSaved: (v) => _category = v,
             ),
             TextFormField(
               decoration: InputDecoration(labelText: loc.get('amount')),
               keyboardType: TextInputType.numberWithOptions(decimal: true),
-              validator: (v) => v == null || double.tryParse(v) == null ? loc.get('invalid_amount') : null,
+              validator: (v) => v == null || double.tryParse(v) == null
+                  ? loc.get('invalid_amount')
+                  : null,
               onSaved: (v) => _amount = double.tryParse(v ?? ''),
             ),
             DropdownButtonFormField<String>(
               decoration: InputDecoration(labelText: loc.get('paid_by')),
-              items: widget.participants.map((p) => DropdownMenuItem(value: p, child: Text(p))).toList(),
+              items: widget.participants
+                  .map((p) => DropdownMenuItem(value: p, child: Text(p)))
+                  .toList(),
               onChanged: (v) => _paidBy = v,
               validator: (v) => v == null ? loc.get('required') : null,
             ),

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'trips_storage.dart';
 import 'app_localizations.dart';
+import 'state/locale_notifier.dart';
 
 class AddTripPage extends StatefulWidget {
   final Trip? trip;
-  final AppLocalizations localizations;
   final VoidCallback? onTripDeleted;
-  const AddTripPage({super.key, this.trip, required this.localizations, this.onTripDeleted});
+  const AddTripPage({super.key, this.trip, this.onTripDeleted});
 
   @override
   State<AddTripPage> createState() => _AddTripPageState();
@@ -30,13 +30,26 @@ class _AddTripPageState extends State<AddTripPage> {
     }
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Forza rebuild su cambio locale
+    if (mounted) setState(() {});
+  }
+
   Future<void> _pickDate(BuildContext context, bool isStart) async {
+    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
+    final loc = AppLocalizations(locale);
     final now = DateTime.now();
     final picked = await showDatePicker(
       context: context,
-      initialDate: now,
+      initialDate: isStart ? (_startDate ?? now) : (_endDate ?? now),
       firstDate: DateTime(now.year - 5),
       lastDate: DateTime(now.year + 5),
+      helpText: isStart ? loc.get('select_start') : loc.get('select_end'),
+      cancelText: loc.get('cancel'),
+      confirmText: loc.get('ok'),
+      locale: Locale(locale),
     );
     if (picked != null) {
       setState(() {
@@ -50,7 +63,9 @@ class _AddTripPageState extends State<AddTripPage> {
   }
 
   Future<void> _saveTrip() async {
-    if (!_formKey.currentState!.validate() || _startDate == null || _endDate == null) return;
+    if (!_formKey.currentState!.validate() ||
+        _startDate == null ||
+        _endDate == null) return;
     final participants = _participantsController.text
         .split(',')
         .map((e) => e.trim())
@@ -60,10 +75,9 @@ class _AddTripPageState extends State<AddTripPage> {
       // EDIT: update existing trip
       final trips = await TripsStorage.readTrips();
       final idx = trips.indexWhere((v) =>
-        v.title == widget.trip!.title &&
-        v.startDate == widget.trip!.startDate &&
-        v.endDate == widget.trip!.endDate
-      );
+          v.title == widget.trip!.title &&
+          v.startDate == widget.trip!.startDate &&
+          v.endDate == widget.trip!.endDate);
       if (idx != -1) {
         trips[idx] = Trip(
           title: _titleController.text,
@@ -95,10 +109,14 @@ class _AddTripPageState extends State<AddTripPage> {
 
   @override
   Widget build(BuildContext context) {
-    final loc = widget.localizations;
+    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
+    final loc = AppLocalizations(locale);
+    // For debug: print all keys for this locale
+    // print(AppLocalizations._localizedValues[locale]?.keys);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.trip == null ? loc.get('add_trip') : loc.get('edit_trip'),
+        title: Text(
+          widget.trip == null ? loc.get('add_trip') : loc.get('edit_trip'),
           style: Theme.of(context).appBarTheme.titleTextStyle,
         ),
         actions: [
@@ -127,10 +145,9 @@ class _AddTripPageState extends State<AddTripPage> {
                 if (confirm == true) {
                   final trips = await TripsStorage.readTrips();
                   trips.removeWhere((v) =>
-                    v.title == widget.trip!.title &&
-                    v.startDate == widget.trip!.startDate &&
-                    v.endDate == widget.trip!.endDate
-                  );
+                      v.title == widget.trip!.title &&
+                      v.startDate == widget.trip!.startDate &&
+                      v.endDate == widget.trip!.endDate);
                   await TripsStorage.writeTrips(trips);
                   if (!context.mounted) return;
                   Navigator.of(context).pop(true);
@@ -150,28 +167,31 @@ class _AddTripPageState extends State<AddTripPage> {
             children: [
               TextFormField(
                 controller: _titleController,
-                decoration: InputDecoration(labelText: loc.get('trip_title')),
-                validator: (v) => v == null || v.isEmpty ? loc.get('enter_title') : null,
+                decoration: InputDecoration(labelText: loc.get('trip_title', params: {})),
+                validator: (v) =>
+                    v == null || v.isEmpty ? loc.get('enter_title', params: {}) : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _participantsController,
                 decoration: InputDecoration(
-                  labelText: loc.get('participants_hint'),
+                  labelText: loc.get('participants_hint', params: {}),
                 ),
-                validator: (v) => v == null || v.isEmpty ? loc.get('enter_participant') : null,
+                validator: (v) => v == null || v.isEmpty
+                    ? loc.get('enter_participant', params: {})
+                    : null,
               ),
               const SizedBox(height: 16),
               Row(
                 children: [
                   Expanded(
                     child: Text(_startDate == null
-                        ? loc.get('start_date_not_selected')
-                        : '${loc.get('select_start')}: ${_startDate!.day}/${_startDate!.month}/${_startDate!.year}'),
+                        ? loc.get('start_date_not_selected', params: {})
+                        : '${loc.get('select_start', params: {})}: \\${_startDate!.day}/${_startDate!.month}/${_startDate!.year}'),
                   ),
                   TextButton(
                     onPressed: () => _pickDate(context, true),
-                    child: Text(loc.get('select_start')),
+                    child: Text(loc.get('select_start', params: {})),
                   ),
                 ],
               ),
@@ -179,19 +199,19 @@ class _AddTripPageState extends State<AddTripPage> {
                 children: [
                   Expanded(
                     child: Text(_endDate == null
-                        ? loc.get('end_date_not_selected')
-                        : '${loc.get('select_end')}: ${_endDate!.day}/${_endDate!.month}/${_endDate!.year}'),
+                        ? loc.get('end_date_not_selected', params: {})
+                        : '${loc.get('select_end', params: {})}: \\${_endDate!.day}/${_endDate!.month}/${_endDate!.year}'),
                   ),
                   TextButton(
                     onPressed: () => _pickDate(context, false),
-                    child: Text(loc.get('select_end')),
+                    child: Text(loc.get('select_end', params: {})),
                   ),
                 ],
               ),
               const SizedBox(height: 32),
               ElevatedButton(
                 onPressed: _saveTrip,
-                child: Text(loc.get('save')),
+                child: Text(loc.get('save', params: {})),
               ),
             ],
           ),

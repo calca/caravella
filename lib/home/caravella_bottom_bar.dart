@@ -49,8 +49,7 @@ class CaravellaBottomBar extends StatelessWidget {
                       onPressed: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) =>
-                                HistoryPage(localizations: loc),
+                            builder: (context) => const HistoryPage(),
                           ),
                         );
                       },
@@ -113,7 +112,6 @@ class CaravellaBottomBar extends StatelessWidget {
                                 onTripAdded();
                               }
                             },
-                            localizations: loc,
                           ),
                         ),
                       );

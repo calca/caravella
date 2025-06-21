@@ -3,10 +3,10 @@ import 'trips_storage.dart';
 import 'trip_detail_page.dart';
 import 'app_localizations.dart';
 import 'add_trip_page.dart';
+import 'state/locale_notifier.dart';
 
 class HistoryPage extends StatefulWidget {
-  final AppLocalizations localizations;
-  const HistoryPage({super.key, required this.localizations});
+  const HistoryPage({super.key});
 
   @override
   State<HistoryPage> createState() => _HistoryPageState();
@@ -23,14 +23,15 @@ class _HistoryPageState extends State<HistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final loc = widget.localizations;
+    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
+    final loc = AppLocalizations(locale);
     return Scaffold(
       appBar: AppBar(title: Text(loc.get('trip_history'))),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final result = await Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => AddTripPage(localizations: loc),
+              builder: (context) => AddTripPage(),
             ),
           );
           if (result == true) {
@@ -62,9 +63,11 @@ class _HistoryPageState extends State<HistoryPage> {
                   title: Text(trip.title),
                   subtitle: Text(
                     "${loc.get('from_to', params: {
-                      'start': '${trip.startDate.day}/${trip.startDate.month}/${trip.startDate.year}',
-                      'end': '${trip.endDate.day}/${trip.endDate.month}/${trip.endDate.year}'
-                    })}\n${loc.get('participants')}: ${trip.participants.join(", ")}",
+                          'start':
+                              '${trip.startDate.day}/${trip.startDate.month}/${trip.startDate.year}',
+                          'end':
+                              '${trip.endDate.day}/${trip.endDate.month}/${trip.endDate.year}'
+                        })}\n${loc.get('participants')}: ${trip.participants.join(", ")}",
                   ),
                   trailing: Text(
                     "${loc.get('expenses')}: ${trip.expenses.length}",
@@ -73,7 +76,7 @@ class _HistoryPageState extends State<HistoryPage> {
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => TripDetailPage(trip: trip, localizations: widget.localizations),
+                        builder: (context) => TripDetailPage(trip: trip),
                       ),
                     );
                   },
