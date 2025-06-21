@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'trips_storage.dart';
 import 'trip_detail_page.dart';
 import 'app_localizations.dart';
+import 'add_trip_page.dart';
 
 class HistoryPage extends StatefulWidget {
   final AppLocalizations localizations;
@@ -25,6 +26,22 @@ class _HistoryPageState extends State<HistoryPage> {
     final loc = widget.localizations;
     return Scaffold(
       appBar: AppBar(title: Text(loc.get('trip_history'))),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final result = await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => AddTripPage(localizations: loc),
+            ),
+          );
+          if (result == true) {
+            setState(() {
+              _tripsFuture = TripsStorage.readTrips();
+            });
+          }
+        },
+        tooltip: loc.get('add_trip'),
+        child: const Icon(Icons.add),
+      ),
       body: FutureBuilder<List<Trip>>(
         future: _tripsFuture,
         builder: (context, snapshot) {
