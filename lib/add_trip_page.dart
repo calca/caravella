@@ -167,9 +167,11 @@ class _AddTripPageState extends State<AddTripPage> {
             children: [
               TextFormField(
                 controller: _titleController,
-                decoration: InputDecoration(labelText: loc.get('trip_title', params: {})),
-                validator: (v) =>
-                    v == null || v.isEmpty ? loc.get('enter_title', params: {}) : null,
+                decoration: InputDecoration(
+                    labelText: loc.get('trip_title', params: {})),
+                validator: (v) => v == null || v.isEmpty
+                    ? loc.get('enter_title', params: {})
+                    : null,
               ),
               const SizedBox(height: 16),
               TextFormField(

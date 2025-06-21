@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'themes/caravella_themes.dart';
 import 'app_localizations.dart';
@@ -89,6 +90,12 @@ class _CaravellaAppState extends State<CaravellaApp> {
           theme: CaravellaThemes.light,
           darkTheme: CaravellaThemes.dark,
           themeMode: _themeMode,
+          supportedLocales: const [Locale('it'), Locale('en')],
+          localizationsDelegates: [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
           home: CaravellaHomePage(title: 'Caravella'),
         ),
       ),
