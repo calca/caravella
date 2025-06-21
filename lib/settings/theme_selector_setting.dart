@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'setting_selector.dart';
 
 class ThemeSelectorSetting extends StatefulWidget {
   const ThemeSelectorSetting({super.key});
@@ -53,23 +54,20 @@ class _ThemeSelectorSettingState extends State<ThemeSelectorSetting> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(Icons.brightness_6, color: Theme.of(context).colorScheme.primary),
-        const SizedBox(width: 8),
-        Text('Tema:', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-        const SizedBox(width: 8),
-        DropdownButton<ThemeMode>(
-          value: _themeMode,
-          underline: const SizedBox(),
-          items: const [
-            DropdownMenuItem(value: ThemeMode.system, child: Text('Automatico')),
-            DropdownMenuItem(value: ThemeMode.light, child: Text('Chiaro')),
-            DropdownMenuItem(value: ThemeMode.dark, child: Text('Scuro')),
-          ],
-          onChanged: _onChanged,
-        ),
-      ],
+    return SettingSelector(
+      icon: Icons.brightness_6,
+      label: 'Tema:',
+      selector: DropdownButton<ThemeMode>(
+        value: _themeMode,
+        underline: const SizedBox(),
+        isExpanded: true,
+        items: const [
+          DropdownMenuItem(value: ThemeMode.system, child: Text('Automatico')),
+          DropdownMenuItem(value: ThemeMode.light, child: Text('Chiaro')),
+          DropdownMenuItem(value: ThemeMode.dark, child: Text('Scuro')),
+        ],
+        onChanged: _onChanged,
+      ),
     );
   }
 }
@@ -89,5 +87,6 @@ class ThemeModeNotifier extends InheritedWidget {
   }
 
   @override
-  bool updateShouldNotify(ThemeModeNotifier oldWidget) => themeMode != oldWidget.themeMode;
+  bool updateShouldNotify(ThemeModeNotifier oldWidget) =>
+      themeMode != oldWidget.themeMode;
 }

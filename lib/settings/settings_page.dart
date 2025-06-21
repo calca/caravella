@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'language_selector_sheet.dart';
+import 'language_selector_setting.dart';
 import 'theme_selector_setting.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -17,37 +17,12 @@ class SettingsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            InkWell(
-              borderRadius: BorderRadius.circular(8),
-              onTap: () async {
-                final selected = await showModalBottomSheet<String>(
-                  context: context,
-                  builder: (context) => LanguageSelectorSheet(selected: localizations.locale),
-                );
-                if (selected != null && selected != localizations.locale) {
-                  Navigator.of(context).pop(selected);
-                }
+            // --- Language selector (aligned with theme selector) ---
+            LanguageSelectorSetting(
+              locale: localizations.locale,
+              onChanged: (selected) {
+                Navigator.of(context).pop(selected);
               },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Row(
-                  children: [
-                    Icon(Icons.language, color: Theme.of(context).colorScheme.primary),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Lingua:',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      localizations.locale == 'it' ? 'Italiano' : 'English',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const Spacer(),
-                    Icon(Icons.arrow_drop_down, color: Theme.of(context).colorScheme.primary),
-                  ],
-                ),
-              ),
             ),
             const SizedBox(height: 16),
             // --- Theme selector ---
@@ -61,7 +36,8 @@ class SettingsPage extends StatelessWidget {
               child: Card(
                 elevation: 0,
                 color: Theme.of(context).colorScheme.surface.withOpacity(0.95),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)),
                 child: Padding(
                   padding: const EdgeInsets.all(20),
                   child: Column(
@@ -69,27 +45,43 @@ class SettingsPage extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.info_outline, color: Theme.of(context).colorScheme.primary),
+                          Icon(Icons.info_outline,
+                              color: Theme.of(context).colorScheme.primary),
                           const SizedBox(width: 8),
-                          Text(localizations.get('about'), style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+                          Text(localizations.get('about'),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(fontWeight: FontWeight.bold)),
                         ],
                       ),
                       const SizedBox(height: 12),
-                      Text('Caravella v0.0.3', style: Theme.of(context).textTheme.bodyMedium),
+                      Text('Caravella v0.0.3',
+                          style: Theme.of(context).textTheme.bodyMedium),
                       const SizedBox(height: 4),
-                      Text('Developed by calca', style: Theme.of(context).textTheme.bodyMedium),
+                      Text('Developed by calca',
+                          style: Theme.of(context).textTheme.bodyMedium),
                       const SizedBox(height: 20),
                       Row(
                         children: [
-                          Icon(Icons.link, color: Theme.of(context).colorScheme.primary),
+                          Icon(Icons.link,
+                              color: Theme.of(context).colorScheme.primary),
                           const SizedBox(width: 8),
-                          Text(localizations.get('links'), style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+                          Text(localizations.get('links'),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(fontWeight: FontWeight.bold)),
                         ],
                       ),
                       const SizedBox(height: 8),
                       TextButton.icon(
-                        icon: Icon(Icons.person, size: 20, color: Theme.of(context).colorScheme.primary),
-                        label: Text('GitHub: calca', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+                        icon: Icon(Icons.person,
+                            size: 20,
+                            color: Theme.of(context).colorScheme.primary),
+                        label: Text('GitHub: calca',
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary)),
                         onPressed: () => _launchUrl('https://github.com/calca'),
                         style: TextButton.styleFrom(
                           alignment: Alignment.centerLeft,
@@ -99,9 +91,14 @@ class SettingsPage extends StatelessWidget {
                         ),
                       ),
                       TextButton.icon(
-                        icon: Icon(Icons.code, size: 20, color: Theme.of(context).colorScheme.primary),
-                        label: Text('Repository: github.com/calca/caravella', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
-                        onPressed: () => _launchUrl('https://github.com/calca/caravella'),
+                        icon: Icon(Icons.code,
+                            size: 20,
+                            color: Theme.of(context).colorScheme.primary),
+                        label: Text('Repository: github.com/calca/caravella',
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary)),
+                        onPressed: () =>
+                            _launchUrl('https://github.com/calca/caravella'),
                         style: TextButton.styleFrom(
                           alignment: Alignment.centerLeft,
                           padding: EdgeInsets.zero,
@@ -110,27 +107,41 @@ class SettingsPage extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 8),
-                      Text(localizations.get('contribute'), style: Theme.of(context).textTheme.bodySmall),
+                      Text(localizations.get('contribute'),
+                          style: Theme.of(context).textTheme.bodySmall),
                       const SizedBox(height: 20),
                       Row(
                         children: [
-                          Icon(Icons.description, color: Theme.of(context).colorScheme.primary),
+                          Icon(Icons.description,
+                              color: Theme.of(context).colorScheme.primary),
                           const SizedBox(width: 8),
-                          Text(localizations.get('license_section'), style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+                          Text(localizations.get('license_section'),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(fontWeight: FontWeight.bold)),
                         ],
                       ),
                       const SizedBox(height: 8),
-                      Text(localizations.get('license_hint'), style: Theme.of(context).textTheme.bodySmall),
+                      Text(localizations.get('license_hint'),
+                          style: Theme.of(context).textTheme.bodySmall),
                       InkWell(
                         borderRadius: BorderRadius.circular(8),
-                        onTap: () => _launchUrl('https://github.com/calca/caravella/blob/main/LICENSE'),
+                        onTap: () => _launchUrl(
+                            'https://github.com/calca/caravella/blob/main/LICENSE'),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 6),
                           child: Row(
                             children: [
-                              Icon(Icons.open_in_new, size: 20, color: Theme.of(context).colorScheme.primary),
+                              Icon(Icons.open_in_new,
+                                  size: 20,
+                                  color: Theme.of(context).colorScheme.primary),
                               const SizedBox(width: 8),
-                              Text(localizations.get('license_link'), style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+                              Text(localizations.get('license_link'),
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary)),
                             ],
                           ),
                         ),
