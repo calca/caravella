@@ -29,7 +29,7 @@ class CurrentTripCard extends StatelessWidget {
               style: Theme.of(context)
                   .textTheme
                   .titleLarge
-                  ?.copyWith(fontWeight: FontWeight.bold),
+                  ?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
               textAlign: TextAlign.left,
             ),
             const SizedBox(height: 20),
@@ -39,7 +39,7 @@ class CurrentTripCard extends StatelessWidget {
                 style: Theme.of(context)
                     .textTheme
                     .displayLarge
-                    ?.copyWith(fontWeight: FontWeight.bold),
+                    ?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -51,7 +51,7 @@ class CurrentTripCard extends StatelessWidget {
                     color: Theme.of(context).colorScheme.primary, size: 20),
                 const SizedBox(width: 4),
                 Text('${trip.participants.length} ${loc.get('participants')}',
-                    style: Theme.of(context).textTheme.bodyMedium),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white)),
               ],
             ),
             const SizedBox(height: 16),
@@ -68,7 +68,7 @@ class CurrentTripCard extends StatelessWidget {
                         'end':
                             '${trip.endDate.day}/${trip.endDate.month}/${trip.endDate.year}'
                       })}',
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white),
                 ),
               ],
             ),
