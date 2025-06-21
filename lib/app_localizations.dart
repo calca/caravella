@@ -45,6 +45,11 @@ class AppLocalizations {
       'settings': 'Settings',
       'about': 'About',
       'settings_hint': 'Configure your preferences here.',
+      'license': 'License',
+      'license_mit': 'MIT License',
+      'license_hint': 'This app is released under the MIT license.',
+      'license_link': 'View MIT License on GitHub',
+      'license_section': 'License',
     },
     'it': {
       'app_title': 'Caravella',
@@ -85,6 +90,11 @@ class AppLocalizations {
       'settings': 'Impostazioni',
       'about': 'Info',
       'settings_hint': 'Configura le tue preferenze qui.',
+      'license': 'Licenza',
+      'license_mit': 'Licenza MIT',
+      'license_hint': 'Questa app è distribuita con licenza MIT.',
+      'license_link': 'Visualizza licenza MIT',
+      'license_section': 'Licenza',
     },
   };
 

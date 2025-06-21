@@ -70,9 +70,9 @@ class CaravellaFab extends StatelessWidget {
           );
         }
       },
-      child: const Icon(Icons.flight_takeoff),
       backgroundColor: Theme.of(context).colorScheme.primary,
       foregroundColor: Theme.of(context).colorScheme.onPrimary,
+      child: const Icon(Icons.flight_takeoff),
     );
   }
 }

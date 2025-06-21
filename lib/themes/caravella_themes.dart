@@ -22,7 +22,7 @@ class CaravellaThemes {
     colorScheme: ColorScheme.fromSeed(seedColor: seed, brightness: Brightness.dark),
     scaffoldBackgroundColor: const Color(0xFF181A20),
     appBarTheme: AppBarTheme(
-      backgroundColor: seed.withOpacity(0.9),
+      backgroundColor: seed.withValues(alpha: 0.9),
       foregroundColor: Colors.white,
     ),
     floatingActionButtonTheme: FloatingActionButtonThemeData(

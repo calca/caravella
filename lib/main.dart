@@ -83,8 +83,8 @@ class _CaravellaHomePageState extends State<CaravellaHomePage> with WidgetsBindi
             'assets/images/viaggio_bg.jpg',
             fit: BoxFit.cover,
             color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.black.withOpacity(0.4)
-                : Colors.white.withOpacity(0.1),
+                ? Colors.black.withValues(alpha: 0.4)
+                : Colors.white.withValues(alpha: 0.1),
             colorBlendMode: BlendMode.darken,
           ),
           LanguageSelector(
