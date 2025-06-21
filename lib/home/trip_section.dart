@@ -29,7 +29,10 @@ class TripSection extends StatelessWidget {
             width: double.infinity,
             margin: const EdgeInsets.only(top: 12),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface.withValues(alpha: opacity),
+              color: Theme.of(context)
+                  .colorScheme
+                  .surface
+                  .withValues(alpha: opacity),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(32),
                 topRight: Radius.circular(32),
@@ -39,13 +42,20 @@ class TripSection extends StatelessWidget {
               children: [
                 if (currentTrip != null)
                   Padding(
-                    padding: const EdgeInsets.only(top: 28, left: 16, right: 16, bottom: 12), // Maggiore distanza dal top
+                    padding: const EdgeInsets.only(
+                        top: 28,
+                        left: 16,
+                        right: 16,
+                        bottom: 12), // Maggiore distanza dal top
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           loc.get('latest_expenses'),
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleLarge
+                              ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         IconButton(
                           icon: const Icon(Icons.open_in_new),
@@ -53,7 +63,8 @@ class TripSection extends StatelessWidget {
                           onPressed: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => TripDetailPage(trip: currentTrip!),
+                                builder: (context) =>
+                                    TripDetailPage(trip: currentTrip!),
                               ),
                             );
                           },
@@ -84,7 +95,8 @@ class TripSection extends StatelessWidget {
           left: 0,
           right: 0,
           bottom: 0,
-          child: CaravellaBottomBar(loc: loc, onTripAdded: onTripAdded, currentTrip: currentTrip),
+          child: CaravellaBottomBar(
+              loc: loc, onTripAdded: onTripAdded, currentTrip: currentTrip),
         ),
       ],
     );

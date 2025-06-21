@@ -38,6 +38,7 @@ class AppLocalizations {
       'delete_trip_confirm': 'Are you sure you want to delete this trip?',
       'cancel': 'Cancel',
       'ok': 'OK',
+      'from_to': 'From {start} to {end}',
     },
     'it': {
       'app_title': 'Caravella',
@@ -71,6 +72,7 @@ class AppLocalizations {
       'delete_trip_confirm': 'Sei sicuro di voler eliminare questo viaggio?',
       'cancel': 'Annulla',
       'ok': 'OK',
+      'from_to': 'Dal {start} al {end}',
     },
   };
 

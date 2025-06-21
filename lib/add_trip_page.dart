@@ -65,7 +65,18 @@ class _AddTripPageState extends State<AddTripPage> {
   Future<void> _saveTrip() async {
     if (!_formKey.currentState!.validate() ||
         _startDate == null ||
-        _endDate == null) return;
+        _endDate == null) {
+      // Mostra un messaggio di errore se le date non sono selezionate
+      if (_startDate == null || _endDate == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Seleziona sia la data di inizio che di fine'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      return;
+    }
     final participants = _participantsController.text
         .split(',')
         .map((e) => e.trim())
