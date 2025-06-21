@@ -3,6 +3,7 @@ import '../app_localizations.dart';
 import '../trips_storage.dart';
 import 'trip_expenses_list.dart';
 import 'caravella_bottom_bar.dart';
+import '../trip_detail_page.dart';
 
 class TripSection extends StatelessWidget {
   final Trip? currentTrip;
@@ -38,13 +39,24 @@ class TripSection extends StatelessWidget {
               children: [
                 if (currentTrip != null)
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    padding: const EdgeInsets.only(top: 28, left: 16, right: 16, bottom: 12), // Maggiore distanza dal top
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           loc.get('latest_expenses'),
                           style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.open_in_new),
+                          tooltip: loc.get('trip_detail'),
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => TripDetailPage(trip: currentTrip!),
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),
