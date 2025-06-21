@@ -36,17 +36,21 @@ class LanguageSelectorSheet extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          ListTile(
-            leading: const Icon(Icons.language),
-            title: const Text('Italiano'),
-            selected: selected == 'it',
+          InkWell(
             onTap: () => Navigator.of(context).pop('it'),
+            child: ListTile(
+              leading: const Icon(Icons.language),
+              title: const Text('Italiano'),
+              selected: selected == 'it',
+            ),
           ),
-          ListTile(
-            leading: const Icon(Icons.language),
-            title: const Text('English'),
-            selected: selected == 'en',
+          InkWell(
             onTap: () => Navigator.of(context).pop('en'),
+            child: ListTile(
+              leading: const Icon(Icons.language),
+              title: const Text('English'),
+              selected: selected == 'en',
+            ),
           ),
         ],
       ),

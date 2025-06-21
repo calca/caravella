@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'language_selector_sheet.dart';
+import 'theme_selector_setting.dart';
 
 class SettingsPage extends StatelessWidget {
   final AppLocalizations localizations;
@@ -48,6 +49,9 @@ class SettingsPage extends StatelessWidget {
                 ),
               ),
             ),
+            const SizedBox(height: 16),
+            // --- Theme selector ---
+            const ThemeSelectorSetting(),
             const SizedBox(height: 24),
             Divider(height: 1, thickness: 1),
             const SizedBox(height: 32),
