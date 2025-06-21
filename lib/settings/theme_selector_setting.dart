@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'setting_selector.dart';
+import '../state/theme_mode_notifier.dart';
 
 class ThemeSelectorSetting extends StatefulWidget {
   const ThemeSelectorSetting({super.key});
@@ -12,34 +12,9 @@ class _ThemeSelectorSettingState extends State<ThemeSelectorSetting> {
   ThemeMode? _themeMode;
 
   @override
-  void initState() {
-    super.initState();
-    _loadTheme();
-  }
-
-  Future<void> _loadTheme() async {
-    final prefs = await SharedPreferences.getInstance();
-    final themeString = prefs.getString('theme_mode') ?? 'system';
-    setState(() {
-      switch (themeString) {
-        case 'light':
-          _themeMode = ThemeMode.light;
-          break;
-        case 'dark':
-          _themeMode = ThemeMode.dark;
-          break;
-        default:
-          _themeMode = ThemeMode.system;
-      }
-    });
-  }
-
-  Future<void> _saveTheme(ThemeMode mode) async {
-    final prefs = await SharedPreferences.getInstance();
-    String value = 'system';
-    if (mode == ThemeMode.light) value = 'light';
-    if (mode == ThemeMode.dark) value = 'dark';
-    await prefs.setString('theme_mode', value);
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _themeMode = ThemeModeNotifier.of(context)?.themeMode ?? ThemeMode.system;
   }
 
   void _onChanged(ThemeMode? mode) {
@@ -47,8 +22,6 @@ class _ThemeSelectorSettingState extends State<ThemeSelectorSetting> {
     setState(() {
       _themeMode = mode;
     });
-    _saveTheme(mode);
-    // Notifica l'app del cambio tema
     ThemeModeNotifier.of(context)?.changeTheme(mode);
   }
 
@@ -70,23 +43,4 @@ class _ThemeSelectorSettingState extends State<ThemeSelectorSetting> {
       ),
     );
   }
-}
-
-class ThemeModeNotifier extends InheritedWidget {
-  final ThemeMode themeMode;
-  final void Function(ThemeMode) changeTheme;
-  const ThemeModeNotifier({
-    super.key,
-    required this.themeMode,
-    required this.changeTheme,
-    required super.child,
-  });
-
-  static ThemeModeNotifier? of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<ThemeModeNotifier>();
-  }
-
-  @override
-  bool updateShouldNotify(ThemeModeNotifier oldWidget) =>
-      themeMode != oldWidget.themeMode;
 }

@@ -8,7 +8,11 @@ import '../settings/settings_page.dart';
 class CaravellaBottomBar extends StatelessWidget {
   final AppLocalizations loc;
   final VoidCallback onTripAdded;
-  const CaravellaBottomBar({super.key, required this.loc, required this.onTripAdded, this.currentTrip});
+  const CaravellaBottomBar(
+      {super.key,
+      required this.loc,
+      required this.onTripAdded,
+      this.currentTrip});
   final Trip? currentTrip;
 
   @override
@@ -25,7 +29,10 @@ class CaravellaBottomBar extends StatelessWidget {
               // Sinistra: history + settings
               Container(
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.08),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .surface
+                      .withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(32),
                   boxShadow: [
                     BoxShadow(
@@ -42,7 +49,8 @@ class CaravellaBottomBar extends StatelessWidget {
                       onPressed: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => HistoryPage(localizations: loc),
+                            builder: (context) =>
+                                HistoryPage(localizations: loc),
                           ),
                         );
                       },
@@ -52,7 +60,7 @@ class CaravellaBottomBar extends StatelessWidget {
                       onPressed: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => SettingsPage(localizations: loc),
+                            builder: (context) => const SettingsPage(),
                           ),
                         );
                       },
@@ -64,7 +72,10 @@ class CaravellaBottomBar extends StatelessWidget {
               if (currentTrip != null)
                 Container(
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.8),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.8),
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
@@ -93,10 +104,9 @@ class CaravellaBottomBar extends StatelessWidget {
                             onExpenseAdded: (expense) async {
                               final trips = await TripsStorage.readTrips();
                               final idx = trips.indexWhere((v) =>
-                                v.title == currentTrip!.title &&
-                                v.startDate == currentTrip!.startDate &&
-                                v.endDate == currentTrip!.endDate
-                              );
+                                  v.title == currentTrip!.title &&
+                                  v.startDate == currentTrip!.startDate &&
+                                  v.endDate == currentTrip!.endDate);
                               if (idx != -1) {
                                 trips[idx].expenses.add(expense);
                                 await TripsStorage.writeTrips(trips);

@@ -3,13 +3,17 @@ import '../app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'language_selector_setting.dart';
 import 'theme_selector_setting.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../state/locale_notifier.dart';
 
 class SettingsPage extends StatelessWidget {
-  final AppLocalizations localizations;
-  const SettingsPage({super.key, required this.localizations});
+  final void Function(String)? onLocaleChanged;
+  const SettingsPage({super.key, this.onLocaleChanged});
 
   @override
   Widget build(BuildContext context) {
+    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
+    final localizations = AppLocalizations(locale);
     return Scaffold(
       appBar: AppBar(title: Text(localizations.get('settings'))),
       body: Padding(
@@ -21,7 +25,10 @@ class SettingsPage extends StatelessWidget {
             LanguageSelectorSetting(
               locale: localizations.locale,
               onChanged: (selected) {
-                Navigator.of(context).pop(selected);
+                LocaleNotifier.of(context)?.changeLocale(selected);
+                if (onLocaleChanged != null) {
+                  onLocaleChanged!(selected);
+                }
               },
             ),
             const SizedBox(height: 16),
