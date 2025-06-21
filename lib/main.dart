@@ -4,6 +4,7 @@ import 'caravella_fab.dart';
 import 'current_trip_tile.dart';
 import 'app_localizations.dart';
 import 'language_selector.dart';
+import 'themes/caravella_themes.dart';
 
 void main() {
   runApp(const CaravellaApp());
@@ -16,9 +17,9 @@ class CaravellaApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Caravella',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
+      theme: CaravellaThemes.light,
+      darkTheme: CaravellaThemes.dark,
+      themeMode: ThemeMode.system,
       home: const CaravellaHomePage(title: 'Caravella'),
     );
   }
@@ -81,6 +82,10 @@ class _CaravellaHomePageState extends State<CaravellaHomePage> with WidgetsBindi
           Image.asset(
             'assets/images/viaggio_bg.jpg',
             fit: BoxFit.cover,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.black.withOpacity(0.4)
+                : Colors.white.withOpacity(0.1),
+            colorBlendMode: BlendMode.darken,
           ),
           LanguageSelector(
             locale: _locale,

@@ -42,6 +42,9 @@ class AppLocalizations {
       'delete_trip': 'Delete trip',
       'delete_trip_confirm': 'Are you sure you want to delete this trip?',
       'edit_trip': 'Edit trip',
+      'settings': 'Settings',
+      'about': 'About',
+      'settings_hint': 'Configure your preferences here.',
     },
     'it': {
       'app_title': 'Caravella',
@@ -79,6 +82,9 @@ class AppLocalizations {
       'delete_trip': 'Elimina viaggio',
       'delete_trip_confirm': 'Sei sicuro di voler eliminare questo viaggio?',
       'edit_trip': 'Modifica viaggio',
+      'settings': 'Impostazioni',
+      'about': 'Info',
+      'settings_hint': 'Configura le tue preferenze qui.',
     },
   };
 

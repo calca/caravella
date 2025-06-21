@@ -31,11 +31,11 @@ class CurrentTripTile extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: Colors.white.withAlpha(179),
+                color: Theme.of(context).colorScheme.surface.withOpacity(0.9),
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withAlpha(26),
+                    color: Theme.of(context).shadowColor.withOpacity(0.1),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -47,15 +47,17 @@ class CurrentTripTile extends StatelessWidget {
                   Expanded(
                     child: Text(
                       localizations.get('no_trips_found'),
-                      style: const TextStyle(fontSize: 18),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                     ),
                   ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       shape: const CircleBorder(),
                       padding: const EdgeInsets.all(12),
-                      backgroundColor: Colors.deepPurple,
-                      foregroundColor: Colors.white,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
                       elevation: 2,
                     ),
                     onPressed: () async {
@@ -63,9 +65,7 @@ class CurrentTripTile extends StatelessWidget {
                         MaterialPageRoute(
                           builder: (context) => AddTripPage(
                             localizations: localizations,
-                            onTripDeleted: () {
-                              if (onTripAdded != null) onTripAdded!();
-                            },
+                            onTripDeleted: onTripAdded, // callback per refresh dopo delete
                           ),
                         ),
                       );
@@ -97,11 +97,11 @@ class CurrentTripTile extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
-                    color: Colors.white.withAlpha(179),
+                    color: Theme.of(context).colorScheme.surface.withOpacity(0.9),
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withAlpha(26),
+                        color: Theme.of(context).shadowColor.withOpacity(0.1),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
@@ -113,18 +113,16 @@ class CurrentTripTile extends StatelessWidget {
                     children: [
                       Text(
                         trip.title,
-                        style: const TextStyle(
-                          fontSize: 22,
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black87,
                         ),
                       ),
                       const SizedBox(height: 12),
                       Text(
                         localizations.get('total_spent'),
-                        style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.black54,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                         ),
                       ),
                       Row(
@@ -133,15 +131,14 @@ class CurrentTripTile extends StatelessWidget {
                           Expanded(
                             child: Text(
                               '\u20ac ${totalAmount.toStringAsFixed(2)}',
-                              style: const TextStyle(
-                                fontSize: 28,
+                              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                color: Theme.of(context).colorScheme.primary,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.deepPurple,
                               ),
                             ),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.add_circle, color: Colors.deepPurple, size: 32),
+                            icon: Icon(Icons.add_circle, color: Theme.of(context).colorScheme.primary, size: 32),
                             tooltip: localizations.get('add_expense'),
                             onPressed: () async {
                               await showModalBottomSheet(

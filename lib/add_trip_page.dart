@@ -98,7 +98,9 @@ class _AddTripPageState extends State<AddTripPage> {
     final loc = widget.localizations;
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.trip == null ? loc.get('add_trip') : loc.get('edit_trip')),
+        title: Text(widget.trip == null ? loc.get('add_trip') : loc.get('edit_trip'),
+          style: Theme.of(context).appBarTheme.titleTextStyle,
+        ),
         actions: [
           if (widget.trip != null)
             IconButton(
