@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../app_localizations.dart';
+import 'top_card_box_decoration.dart';
 
 class NoTripCard extends StatelessWidget {
   final AppLocalizations loc;
@@ -9,21 +10,8 @@ class NoTripCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: MediaQuery.of(context).size.height * 0.45, // più grande
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.0), // completamente trasparente
-        borderRadius: BorderRadius.circular(32),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.25), // ombra nera più visibile
-            blurRadius: 32,
-            spreadRadius: 4,
-            offset: const Offset(0, 12),
-          ),
-        ],
-      ),
+    return TopCardBoxDecoration(
+      opacity: opacity,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
         child: Column(

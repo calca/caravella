@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'app_localizations.dart';
+import '../app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatelessWidget {

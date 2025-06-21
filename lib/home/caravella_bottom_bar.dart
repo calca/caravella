@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../history_page.dart';
-import '../settings_page.dart';
 import '../app_localizations.dart';
 import '../trip_detail_page.dart';
 import '../trips_storage.dart';
+import '../settings/settings_page.dart';
 
 class CaravellaBottomBar extends StatelessWidget {
   final AppLocalizations loc;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../app_localizations.dart';
 import '../../trips_storage.dart';
+import 'top_card_box_decoration.dart';
 
 class CurrentTripCard extends StatelessWidget {
   final Trip trip;
@@ -10,20 +11,8 @@ class CurrentTripCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: MediaQuery.of(context).size.height * 1 / 3,
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface.withValues(alpha: opacity),
-        borderRadius: BorderRadius.circular(32),
-        boxShadow: [
-          BoxShadow(
-            color: Theme.of(context).shadowColor.withValues(alpha: 0.08),
-            blurRadius: 16,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
+    return TopCardBoxDecoration(
+      opacity: opacity,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
         child: Column(
