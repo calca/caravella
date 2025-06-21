@@ -34,8 +34,8 @@ class TripExpensesList extends StatelessWidget {
                   )
                 : ListView.separated(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: currentTrip!.expenses.length > 5
-                        ? 5
+                    itemCount: currentTrip!.expenses.length > 3
+                        ? 3
                         : currentTrip!.expenses.length,
                     separatorBuilder: (_, __) => const SizedBox(height: 12),
                     itemBuilder: (context, i) {
