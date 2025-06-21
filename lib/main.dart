@@ -62,9 +62,7 @@ class _CaravellaHomePageState extends State<CaravellaHomePage> with WidgetsBindi
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      setState(() {});
-    }
+    // Rimosso l'aggiornamento automatico su resume
   }
 
   @override
