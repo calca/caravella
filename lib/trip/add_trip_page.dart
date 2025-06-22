@@ -16,7 +16,8 @@ class AddTripPage extends StatefulWidget {
 class _AddTripPageState extends State<AddTripPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _participantsController = TextEditingController();
+  final List<String> _participants = [];
+  final TextEditingController _participantController = TextEditingController();
   DateTime? _startDate;
   DateTime? _endDate;
   String _currency = '€'; // Default euro
@@ -26,7 +27,7 @@ class _AddTripPageState extends State<AddTripPage> {
     super.initState();
     if (widget.trip != null) {
       _titleController.text = widget.trip!.title;
-      _participantsController.text = widget.trip!.participants.join(', ');
+      _participants.addAll(widget.trip!.participants);
       _startDate = widget.trip!.startDate;
       _endDate = widget.trip!.endDate;
       _currency = widget.trip!.currency;
@@ -80,11 +81,15 @@ class _AddTripPageState extends State<AddTripPage> {
       }
       return;
     }
-    final participants = _participantsController.text
-        .split(',')
-        .map((e) => e.trim())
-        .where((e) => e.isNotEmpty)
-        .toList();
+    if (_participants.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Aggiungi almeno un partecipante'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
     if (widget.trip != null) {
       // EDIT: update existing trip
       final trips = await TripsStorage.readTrips();
@@ -96,7 +101,7 @@ class _AddTripPageState extends State<AddTripPage> {
         trips[idx] = Trip(
           title: _titleController.text,
           expenses: trips[idx].expenses, // keep expenses
-          participants: participants,
+          participants: _participants,
           startDate: _startDate!,
           endDate: _endDate!,
           currency: _currency,
@@ -111,7 +116,7 @@ class _AddTripPageState extends State<AddTripPage> {
     final newTrip = Trip(
       title: _titleController.text,
       expenses: [],
-      participants: participants,
+      participants: _participants,
       startDate: _startDate!,
       endDate: _endDate!,
       currency: _currency,
@@ -181,58 +186,151 @@ class _AddTripPageState extends State<AddTripPage> {
           key: _formKey,
           child: ListView(
             children: [
-              TextFormField(
-                controller: _titleController,
-                decoration: InputDecoration(
-                    labelText: loc.get('trip_title', params: {})),
-                validator: (v) => v == null || v.isEmpty
-                    ? loc.get('enter_title', params: {})
-                    : null,
-              ),
-              const SizedBox(height: 16),
-              // Selettore valuta
-              CurrencySelector(
-                value: _currency,
-                onChanged: (val) {
-                  if (val != null) setState(() => _currency = val);
-                },
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _participantsController,
-                decoration: InputDecoration(
-                  labelText: loc.get('participants_hint', params: {}),
+              Card(
+                elevation: 2,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextFormField(
+                        controller: _titleController,
+                        decoration: InputDecoration(
+                            labelText: loc.get('trip_title', params: {})),
+                        validator: (v) => v == null || v.isEmpty
+                            ? loc.get('enter_title', params: {})
+                            : null,
+                      ),
+                      const SizedBox(height: 16),
+                      CurrencySelector(
+                        value: _currency,
+                        onChanged: (val) {
+                          if (val != null) setState(() => _currency = val);
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-                validator: (v) => v == null || v.isEmpty
-                    ? loc.get('enter_participant', params: {})
-                    : null,
               ),
               const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(_startDate == null
-                        ? loc.get('start_date_not_selected', params: {})
-                        : '${loc.get('select_start', params: {})}: ${_startDate!.day}/${_startDate!.month}/${_startDate!.year}'),
+              Card(
+                elevation: 2,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(loc.get('participants'), style: Theme.of(context).textTheme.titleMedium),
+                          IconButton(
+                            icon: const Icon(Icons.add),
+                            tooltip: loc.get('add_participant'),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: Text(loc.get('add_participant')),
+                                  content: TextField(
+                                    controller: _participantController,
+                                    autofocus: true,
+                                    decoration: InputDecoration(
+                                      labelText: loc.get('participant_name'),
+                                    ),
+                                    onSubmitted: (val) {
+                                      if (val.trim().isNotEmpty) {
+                                        setState(() {
+                                          _participants.add(val.trim());
+                                          _participantController.clear();
+                                        });
+                                        Navigator.of(context).pop();
+                                      }
+                                    },
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.of(context).pop(),
+                                      child: Text(loc.get('cancel')),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        final val = _participantController.text.trim();
+                                        if (val.isNotEmpty) {
+                                          setState(() {
+                                            _participants.add(val);
+                                            _participantController.clear();
+                                          });
+                                          Navigator.of(context).pop();
+                                        }
+                                      },
+                                      child: Text(loc.get('add')),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      if (_participants.isEmpty)
+                        Text(loc.get('no_participants'), style: Theme.of(context).textTheme.bodySmall),
+                      ..._participants.map((p) => ListTile(
+                            title: Text(p),
+                            trailing: IconButton(
+                              icon: const Icon(Icons.delete_outline),
+                              onPressed: () {
+                                setState(() {
+                                  _participants.remove(p);
+                                });
+                              },
+                            ),
+                          )),
+                    ],
                   ),
-                  TextButton(
-                    onPressed: () => _pickDate(context, true),
-                    child: Text(loc.get('select_start', params: {})),
-                  ),
-                ],
+                ),
               ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(_endDate == null
-                        ? loc.get('end_date_not_selected', params: {})
-                        : '${loc.get('select_end', params: {})}: ${_endDate!.day}/${_endDate!.month}/${_endDate!.year}'),
+              const SizedBox(height: 16),
+              Card(
+                elevation: 2,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(_startDate == null
+                                ? loc.get('start_date_not_selected', params: {})
+                                : '${loc.get('select_start', params: {})}: ${_startDate!.day}/${_startDate!.month}/${_startDate!.year}'),
+                          ),
+                          TextButton(
+                            onPressed: () => _pickDate(context, true),
+                            child: Text(loc.get('select_start', params: {})),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(_endDate == null
+                                ? loc.get('end_date_not_selected', params: {})
+                                : '${loc.get('select_end', params: {})}: ${_endDate!.day}/${_endDate!.month}/${_endDate!.year}'),
+                          ),
+                          TextButton(
+                            onPressed: () => _pickDate(context, false),
+                            child: Text(loc.get('select_end', params: {})),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  TextButton(
-                    onPressed: () => _pickDate(context, false),
-                    child: Text(loc.get('select_end', params: {})),
-                  ),
-                ],
+                ),
               ),
               const SizedBox(height: 32),
               ElevatedButton(
