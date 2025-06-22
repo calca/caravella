@@ -22,7 +22,10 @@ class Trip {
   factory Trip.fromJson(Map<String, dynamic> json) {
     return Trip(
       title: json['title'],
-      expenses: (json['expenses'] as List<dynamic>?)?.map((e) => Expense.fromJson(e)).toList() ?? [],
+      expenses: (json['expenses'] as List<dynamic>?)
+              ?.map((e) => Expense.fromJson(e))
+              .toList() ??
+          [],
       participants: List<String>.from(json['participants'] ?? []),
       startDate: DateTime.parse(json['startDate']),
       endDate: DateTime.parse(json['endDate']),

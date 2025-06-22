@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 class CurrencySelector extends StatelessWidget {
   final String value;
   final ValueChanged<String?> onChanged;
-  const CurrencySelector({super.key, required this.value, required this.onChanged});
+  const CurrencySelector(
+      {super.key, required this.value, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {

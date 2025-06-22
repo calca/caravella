@@ -75,14 +75,7 @@ class CaravellaBottomBar extends StatelessWidget {
                         .primary
                         .withValues(alpha: 0.8),
                     shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color:
-                            Theme.of(context).shadowColor.withValues(alpha: 20),
-                        blurRadius: 12,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
+                    // boxShadow rimossa per look flat
                   ),
                   child: IconButton(
                     icon: const Icon(Icons.add, size: 28),
