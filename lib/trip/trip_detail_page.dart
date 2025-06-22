@@ -208,6 +208,20 @@ class _TripDetailPageState extends State<TripDetailPage> {
                           await _refreshTrip();
                         }
                       },
+                      onCategoryAdded: (newCategory) async {
+                        final trips = await TripsStorage.readTrips();
+                        final idx = trips.indexWhere((v) =>
+                            v.title == trip.title &&
+                            v.startDate == trip.startDate &&
+                            v.endDate == trip.endDate);
+                        if (idx != -1) {
+                          if (!trips[idx].categories.contains(newCategory)) {
+                            trips[idx].categories.add(newCategory);
+                            await TripsStorage.writeTrips(trips);
+                            await _refreshTrip();
+                          }
+                        }
+                      },
                     ),
                   ),
                 );

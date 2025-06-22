@@ -106,6 +106,22 @@ class CaravellaBottomBar extends StatelessWidget {
                                 onTripAdded();
                               }
                             },
+                            onCategoryAdded: (newCategory) async {
+                              final trips = await TripsStorage.readTrips();
+                              final idx = trips.indexWhere((v) =>
+                                  v.title == currentTrip!.title &&
+                                  v.startDate == currentTrip!.startDate &&
+                                  v.endDate == currentTrip!.endDate);
+                              if (idx != -1) {
+                                if (!trips[idx]
+                                    .categories
+                                    .contains(newCategory)) {
+                                  trips[idx].categories.add(newCategory);
+                                  await TripsStorage.writeTrips(trips);
+                                  onTripAdded();
+                                }
+                              }
+                            },
                           ),
                         ),
                       );

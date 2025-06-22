@@ -8,12 +8,14 @@ class AddExpenseSheet extends StatefulWidget {
   final List<String> categories;
   final void Function(Expense) onExpenseAdded;
   final void Function()? onAddCategory;
+  final void Function(String)? onCategoryAdded;
   const AddExpenseSheet({
     super.key,
     required this.participants,
     required this.onExpenseAdded,
     this.categories = const [],
     this.onAddCategory,
+    this.onCategoryAdded,
   });
 
   @override
@@ -60,12 +62,16 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                   child: TextFormField(
                     controller: _amountController,
                     focusNode: _amountFocus,
-                    style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.bold),
+                    style: Theme.of(context)
+                        .textTheme
+                        .displayMedium
+                        ?.copyWith(fontWeight: FontWeight.bold),
                     decoration: InputDecoration(
                       labelText: loc.get('amount'),
                       labelStyle: Theme.of(context).textTheme.titleMedium,
                     ),
-                    keyboardType: TextInputType.numberWithOptions(decimal: true),
+                    keyboardType:
+                        TextInputType.numberWithOptions(decimal: true),
                     validator: (v) => v == null || double.tryParse(v) == null
                         ? loc.get('invalid_amount')
                         : null,
@@ -77,10 +83,14 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                   alignment: Alignment.bottomCenter,
                   child: Text(
                     // Mostra la currency del viaggio se disponibile
-                    (widget.categories.isNotEmpty && widget.categories.first.startsWith('€'))
+                    (widget.categories.isNotEmpty &&
+                            widget.categories.first.startsWith('€'))
                         ? widget.categories.first
                         : '€',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ),
               ],
@@ -97,9 +107,11 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 4.0),
                       child: ChoiceChip(
-                        label: Text(p, style: Theme.of(context).textTheme.bodyLarge),
+                        label: Text(p,
+                            style: Theme.of(context).textTheme.bodyLarge),
                         selected: _paidBy == p,
-                        selectedColor: Theme.of(context).colorScheme.primaryContainer,
+                        selectedColor:
+                            Theme.of(context).colorScheme.primaryContainer,
                         onSelected: (selected) {
                           setState(() {
                             _paidBy = selected ? p : null;
@@ -132,11 +144,17 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                         children: widget.categories.isNotEmpty
                             ? widget.categories.map((cat) {
                                 return Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 4.0),
                                   child: ChoiceChip(
-                                    label: Text(cat, style: Theme.of(context).textTheme.bodyLarge),
+                                    label: Text(cat,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge),
                                     selected: _category == cat,
-                                    selectedColor: Theme.of(context).colorScheme.primaryContainer,
+                                    selectedColor: Theme.of(context)
+                                        .colorScheme
+                                        .primaryContainer,
                                     onSelected: (selected) {
                                       setState(() {
                                         _category = selected ? cat : null;
@@ -147,9 +165,12 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                               }).toList()
                             : [
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 4.0),
                                   child: Text(loc.get('no_categories'),
-                                      style: Theme.of(context).textTheme.bodySmall),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall),
                                 ),
                               ],
                       ),
@@ -198,6 +219,9 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                       setState(() {
                         widget.categories.add(newCategory);
                       });
+                      if (widget.onCategoryAdded != null) {
+                        widget.onCategoryAdded!(newCategory);
+                      }
                     }
                   },
                 ),
