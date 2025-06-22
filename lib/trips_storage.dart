@@ -8,6 +8,7 @@ class Trip {
   final List<String> participants;
   final DateTime startDate;
   final DateTime endDate;
+  final String currency; // Nuovo campo
 
   Trip({
     required this.title,
@@ -15,6 +16,7 @@ class Trip {
     required this.participants,
     required this.startDate,
     required this.endDate,
+    required this.currency, // Nuovo campo obbligatorio
   });
 
   factory Trip.fromJson(Map<String, dynamic> json) {
@@ -24,6 +26,7 @@ class Trip {
       participants: List<String>.from(json['participants'] ?? []),
       startDate: DateTime.parse(json['startDate']),
       endDate: DateTime.parse(json['endDate']),
+      currency: json['currency'] ?? '€', // Default a euro se mancante
     );
   }
 
@@ -33,6 +36,7 @@ class Trip {
         'participants': participants,
         'startDate': startDate.toIso8601String(),
         'endDate': endDate.toIso8601String(),
+        'currency': currency,
       };
 }
 
@@ -92,3 +96,5 @@ class TripsStorage {
     await file.writeAsString(jsonEncode(jsonList));
   }
 }
+
+// RIMUOVO CurrencySelector da qui: ora è in widgets/currency_selector.dart

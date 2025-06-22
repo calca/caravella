@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../trips_storage.dart';
 import '../app_localizations.dart';
 import '../state/locale_notifier.dart';
+import '../widgets/currency_selector.dart';
 
 class AddTripPage extends StatefulWidget {
   final Trip? trip;
@@ -18,6 +19,7 @@ class _AddTripPageState extends State<AddTripPage> {
   final TextEditingController _participantsController = TextEditingController();
   DateTime? _startDate;
   DateTime? _endDate;
+  String _currency = '€'; // Default euro
 
   @override
   void initState() {
@@ -27,6 +29,7 @@ class _AddTripPageState extends State<AddTripPage> {
       _participantsController.text = widget.trip!.participants.join(', ');
       _startDate = widget.trip!.startDate;
       _endDate = widget.trip!.endDate;
+      _currency = widget.trip!.currency;
     }
   }
 
@@ -96,6 +99,7 @@ class _AddTripPageState extends State<AddTripPage> {
           participants: participants,
           startDate: _startDate!,
           endDate: _endDate!,
+          currency: _currency,
         );
         await TripsStorage.writeTrips(trips);
         if (!mounted) return;
@@ -110,6 +114,7 @@ class _AddTripPageState extends State<AddTripPage> {
       participants: participants,
       startDate: _startDate!,
       endDate: _endDate!,
+      currency: _currency,
     );
     final trips = await TripsStorage.readTrips();
     trips.add(newTrip);
@@ -183,6 +188,14 @@ class _AddTripPageState extends State<AddTripPage> {
                 validator: (v) => v == null || v.isEmpty
                     ? loc.get('enter_title', params: {})
                     : null,
+              ),
+              const SizedBox(height: 16),
+              // Selettore valuta
+              CurrencySelector(
+                value: _currency,
+                onChanged: (val) {
+                  if (val != null) setState(() => _currency = val);
+                },
               ),
               const SizedBox(height: 16),
               TextFormField(
