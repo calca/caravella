@@ -13,14 +13,13 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
-  late Future<List<Trip>> _tripsFuture;
   List<Trip> _allTrips = [];
   List<Trip> _filteredTrips = [];
   String _periodFilter = 'all';
+  bool _loading = true;
   final List<Map<String, dynamic>> _periodOptions = [
     {'key': 'all', 'label': 'Tutti'},
     {'key': 'last12', 'label': 'Ultimi 12 mesi'},
-    {'key': 'thisYear', 'label': 'Solo 2025'},
     {'key': 'future', 'label': 'Futuri'},
     {'key': 'past', 'label': 'Passati'},
   ];
@@ -28,10 +27,16 @@ class _HistoryPageState extends State<HistoryPage> {
   @override
   void initState() {
     super.initState();
-    _tripsFuture = TripsStorage.readTrips().then((trips) {
+    _loadTrips();
+  }
+
+  Future<void> _loadTrips() async {
+    setState(() => _loading = true);
+    final trips = await TripsStorage.readTrips();
+    setState(() {
       _allTrips = trips;
       _filteredTrips = _applyFilter(trips);
-      return _filteredTrips;
+      _loading = false;
     });
   }
 
@@ -40,8 +45,6 @@ class _HistoryPageState extends State<HistoryPage> {
     switch (_periodFilter) {
       case 'last12':
         return trips.where((t) => t.startDate.isAfter(now.subtract(Duration(days: 365)))).toList();
-      case 'thisYear':
-        return trips.where((t) => t.startDate.year == 2025).toList();
       case 'future':
         return trips.where((t) => t.startDate.isAfter(now)).toList();
       case 'past':
@@ -153,11 +156,7 @@ class _HistoryPageState extends State<HistoryPage> {
             ),
           );
           if (result == true) {
-            final trips = await TripsStorage.readTrips();
-            setState(() {
-              _allTrips = trips;
-              _filteredTrips = _applyFilter(trips);
-            });
+            await _loadTrips();
           }
         },
         tooltip: loc.get('add_trip'),
@@ -192,166 +191,164 @@ class _HistoryPageState extends State<HistoryPage> {
             ),
           ),
           Expanded(
-            child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 350),
-              child: _filteredTrips.isEmpty
-                  ? Center(
-                      key: const ValueKey('empty'),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'assets/images/home/no_travels.png',
-                            width: 180,
-                            height: 180,
-                            fit: BoxFit.contain,
-                          ),
-                          const SizedBox(height: 16),
-                          Text(loc.get('no_trips_found'),
-                              style: Theme.of(context).textTheme.titleLarge),
-                          const SizedBox(height: 16),
-                          ElevatedButton.icon(
-                            icon: const Icon(Icons.add),
-                            label: Text(loc.get('add_trip')),
-                            onPressed: () async {
-                              final result = await Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => AddTripPage(),
+            child: _loading
+                ? const Center(child: CircularProgressIndicator())
+                : AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 350),
+                    child: _filteredTrips.isEmpty
+                        ? Center(
+                            key: const ValueKey('empty'),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  'assets/images/home/no_travels.png',
+                                  width: 180,
+                                  height: 180,
+                                  fit: BoxFit.contain,
                                 ),
-                              );
-                              if (result == true) {
-                                final trips = await TripsStorage.readTrips();
-                                setState(() {
-                                  _allTrips = trips;
-                                  _filteredTrips = _applyFilter(trips);
-                                });
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                    )
-                  : ListView.builder(
-                      key: const ValueKey('list'),
-                      itemCount: _filteredTrips.length,
-                      itemBuilder: (context, index) {
-                        final trip = _filteredTrips[index];
-                        final isFuture = trip.startDate.isAfter(now);
-                        final isPast = trip.endDate.isBefore(now);
-                        final isOngoing = !isFuture && !isPast;
-                        final total = trip.expenses.fold<double>(0, (sum, e) => sum + e.amount);
-                        final badgeColor = isFuture
-                            ? Colors.blueAccent
-                            : isPast
-                                ? Colors.grey
-                                : Colors.green;
-                        return Dismissible(
-                          key: ValueKey(trip.title + trip.startDate.toIso8601String()),
-                          direction: DismissDirection.endToStart,
-                          background: Container(
-                            alignment: Alignment.centerRight,
-                            padding: const EdgeInsets.symmetric(horizontal: 24),
-                            color: Colors.red,
-                            child: const Icon(Icons.delete, color: Colors.white),
-                          ),
-                          confirmDismiss: (_) async {
-                            final confirm = await showDialog<bool>(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                title: Text('Elimina viaggio'),
-                                content: Text('Vuoi davvero eliminare "${trip.title}"?'),
-                                actions: [
-                                  TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Annulla')),
-                                  TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Elimina')),
-                                ],
-                              ),
-                            );
-                            return confirm == true;
-                          },
-                          onDismissed: (_) => _deleteTrip(trip),
-                          child: GestureDetector(
-                            onLongPress: () => _showTripOptions(trip),
-                            child: Card(
-                              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                              color: Theme.of(context).colorScheme.surface,
-                              child: ListTile(
-                                leading: Icon(
-                                  isFuture
-                                      ? Icons.schedule
-                                      : isPast
-                                          ? Icons.history
-                                          : Icons.play_circle_fill,
-                                  color: badgeColor,
+                                const SizedBox(height: 16),
+                                Text(loc.get('no_trips_found'),
+                                    style: Theme.of(context).textTheme.titleLarge),
+                                const SizedBox(height: 16),
+                                ElevatedButton.icon(
+                                  icon: const Icon(Icons.add),
+                                  label: Text(loc.get('add_trip')),
+                                  onPressed: () async {
+                                    final result = await Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => AddTripPage(),
+                                      ),
+                                    );
+                                    if (result == true) {
+                                      await _loadTrips();
+                                    }
+                                  },
                                 ),
-                                title: Row(
-                                  children: [
-                                    Expanded(child: Text(trip.title)),
-                                    Container(
-                                      margin: const EdgeInsets.only(left: 8),
-                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                      decoration: BoxDecoration(
-                                        color: badgeColor.withOpacity(0.15),
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.people, size: 16, color: badgeColor),
-                                          const SizedBox(width: 2),
-                                          Text('${trip.participants.length}', style: TextStyle(color: badgeColor)),
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: const EdgeInsets.only(left: 8),
-                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                      decoration: BoxDecoration(
-                                        color: badgeColor.withOpacity(0.15),
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.receipt_long, size: 16, color: badgeColor),
-                                          const SizedBox(width: 2),
-                                          Text('${trip.expenses.length}', style: TextStyle(color: badgeColor)),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
+                              ],
+                            ),
+                          )
+                        : ListView.builder(
+                            key: const ValueKey('list'),
+                            itemCount: _filteredTrips.length,
+                            itemBuilder: (context, index) {
+                              final trip = _filteredTrips[index];
+                              final isFuture = trip.startDate.isAfter(now);
+                              final isPast = trip.endDate.isBefore(now);
+                              final isOngoing = !isFuture && !isPast;
+                              final total = trip.expenses.fold<double>(0, (sum, e) => sum + e.amount);
+                              final badgeColor = isFuture
+                                  ? Colors.blueAccent
+                                  : isPast
+                                      ? Colors.grey
+                                      : Colors.green;
+                              return Dismissible(
+                                key: ValueKey(trip.title + trip.startDate.toIso8601String()),
+                                direction: DismissDirection.endToStart,
+                                background: Container(
+                                  alignment: Alignment.centerRight,
+                                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                                  color: Colors.red,
+                                  child: const Icon(Icons.delete, color: Colors.white),
                                 ),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      loc.get('from_to', params: {
-                                        'start': '${trip.startDate.day}/${trip.startDate.month}/${trip.startDate.year}',
-                                        'end': '${trip.endDate.day}/${trip.endDate.month}/${trip.endDate.year}'
-                                      }),
-                                    ),
-                                    Text('${loc.get('participants')}: ${trip.participants.join(", ")}', style: Theme.of(context).textTheme.bodySmall),
-                                    const SizedBox(height: 4),
-                                    Row(
-                                      children: [
-                                        Icon(Icons.euro, size: 16, color: badgeColor),
-                                        const SizedBox(width: 2),
-                                        Text('${trip.currency} ${total.toStringAsFixed(2)}', style: TextStyle(color: badgeColor, fontWeight: FontWeight.bold)),
+                                confirmDismiss: (_) async {
+                                  final confirm = await showDialog<bool>(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: Text('Elimina viaggio'),
+                                      content: Text('Vuoi davvero eliminare "${trip.title}"?'),
+                                      actions: [
+                                        TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Annulla')),
+                                        TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Elimina')),
                                       ],
                                     ),
-                                  ],
-                                ),
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => TripDetailPage(trip: trip),
-                                    ),
                                   );
+                                  return confirm == true;
                                 },
-                              ),
-                            ),
+                                onDismissed: (_) => _deleteTrip(trip),
+                                child: GestureDetector(
+                                  onLongPress: () => _showTripOptions(trip),
+                                  child: Card(
+                                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                    color: Theme.of(context).colorScheme.surface,
+                                    child: ListTile(
+                                      leading: Icon(
+                                        isFuture
+                                            ? Icons.schedule
+                                            : isPast
+                                                ? Icons.history
+                                                : Icons.play_circle_fill,
+                                        color: badgeColor,
+                                      ),
+                                      title: Row(
+                                        children: [
+                                          Expanded(child: Text(trip.title)),
+                                          Container(
+                                            margin: const EdgeInsets.only(left: 8),
+                                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                            decoration: BoxDecoration(
+                                              color: badgeColor.withOpacity(0.15),
+                                              borderRadius: BorderRadius.circular(12),
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Icon(Icons.people, size: 16, color: badgeColor),
+                                                const SizedBox(width: 2),
+                                                Text('${trip.participants.length}', style: TextStyle(color: badgeColor)),
+                                              ],
+                                            ),
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.only(left: 8),
+                                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                            decoration: BoxDecoration(
+                                              color: badgeColor.withOpacity(0.15),
+                                              borderRadius: BorderRadius.circular(12),
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Icon(Icons.receipt_long, size: 16, color: badgeColor),
+                                                const SizedBox(width: 2),
+                                                Text('${trip.expenses.length}', style: TextStyle(color: badgeColor)),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      subtitle: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            loc.get('from_to', params: {
+                                              'start': '${trip.startDate.day}/${trip.startDate.month}/${trip.startDate.year}',
+                                              'end': '${trip.endDate.day}/${trip.endDate.month}/${trip.endDate.year}'
+                                            }),
+                                          ),
+                                          Text('${loc.get('participants')}: ${trip.participants.join(", ")}', style: Theme.of(context).textTheme.bodySmall),
+                                          const SizedBox(height: 4),
+                                          Row(
+                                            children: [
+                                              Icon(Icons.euro, size: 16, color: badgeColor),
+                                              const SizedBox(width: 2),
+                                              Text('${trip.currency} ${total.toStringAsFixed(2)}', style: TextStyle(color: badgeColor, fontWeight: FontWeight.bold)),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) => TripDetailPage(trip: trip),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
-            ),
+                  ),
           ),
         ],
       ),
