@@ -27,6 +27,17 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   String? _paidBy;
   final DateTime _date = DateTime.now();
   String? _paidByError;
+  final _amountController = TextEditingController();
+  final FocusNode _amountFocus = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    // Focus automatico su importo
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _amountFocus.requestFocus();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +58,13 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
               children: [
                 Expanded(
                   child: TextFormField(
-                    decoration: InputDecoration(labelText: loc.get('amount')),
+                    controller: _amountController,
+                    focusNode: _amountFocus,
+                    style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.bold),
+                    decoration: InputDecoration(
+                      labelText: loc.get('amount'),
+                      labelStyle: Theme.of(context).textTheme.titleMedium,
+                    ),
                     keyboardType: TextInputType.numberWithOptions(decimal: true),
                     validator: (v) => v == null || double.tryParse(v) == null
                         ? loc.get('invalid_amount')
@@ -55,37 +72,44 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                     onSaved: (v) => _amount = double.tryParse(v ?? ''),
                   ),
                 ),
-                const SizedBox(width: 12),
-                Text(
-                  // Mostra la currency del viaggio se disponibile
-                  (widget.categories.isNotEmpty && widget.categories.first.startsWith('€'))
-                      ? widget.categories.first
-                      : '€',
-                  style: Theme.of(context).textTheme.titleLarge,
+                const SizedBox(width: 8),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Text(
+                    // Mostra la currency del viaggio se disponibile
+                    (widget.categories.isNotEmpty && widget.categories.first.startsWith('€'))
+                        ? widget.categories.first
+                        : '€',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 16),
             // PAID BY
-            const SizedBox(height: 8),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: widget.participants.map((p) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                    child: ChoiceChip(
-                      label: Text(p),
-                      selected: _paidBy == p,
-                      onSelected: (selected) {
-                        setState(() {
-                          _paidBy = selected ? p : null;
-                          _paidByError = null;
-                        });
-                      },
-                    ),
-                  );
-                }).toList(),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: widget.participants.map((p) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      child: ChoiceChip(
+                        label: Text(p, style: Theme.of(context).textTheme.bodyLarge),
+                        selected: _paidBy == p,
+                        selectedColor: Theme.of(context).colorScheme.primaryContainer,
+                        onSelected: (selected) {
+                          setState(() {
+                            _paidBy = selected ? p : null;
+                            _paidByError = null;
+                          });
+                        },
+                      ),
+                    );
+                  }).toList(),
+                ),
               ),
             ),
             if (_paidByError != null)
@@ -95,48 +119,55 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
               ),
             const SizedBox(height: 16),
             // CATEGORIE
-            if (widget.categories.isNotEmpty) ...[
-              const SizedBox(height: 8),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: widget.categories.map((cat) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      child: ChoiceChip(
-                        label: Text(cat),
-                        selected: _category == cat,
-                        onSelected: (selected) {
-                          setState(() {
-                            _category = selected ? cat : null;
-                          });
-                        },
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: widget.categories.isNotEmpty
+                            ? widget.categories.map((cat) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                  child: ChoiceChip(
+                                    label: Text(cat, style: Theme.of(context).textTheme.bodyLarge),
+                                    selected: _category == cat,
+                                    selectedColor: Theme.of(context).colorScheme.primaryContainer,
+                                    onSelected: (selected) {
+                                      setState(() {
+                                        _category = selected ? cat : null;
+                                      });
+                                    },
+                                  ),
+                                );
+                              }).toList()
+                            : [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                  child: Text(loc.get('no_categories'),
+                                      style: Theme.of(context).textTheme.bodySmall),
+                                ),
+                              ],
                       ),
-                    );
-                  }).toList(),
+                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-            ] else ...[
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(loc.get('no_categories'),
-                        style: Theme.of(context).textTheme.bodySmall),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.add),
-                    tooltip: loc.get('add_category'),
-                    onPressed: () {
-                      if (widget.onAddCategory != null) {
-                        widget.onAddCategory!();
-                      }
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-            ],
+                IconButton(
+                  icon: const Icon(Icons.add),
+                  tooltip: loc.get('add_category'),
+                  onPressed: () {
+                    if (widget.onAddCategory != null) {
+                      widget.onAddCategory!();
+                    }
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
             // ...resto della UI (pulsanti salva/cancella)
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -178,5 +209,12 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _amountController.dispose();
+    _amountFocus.dispose();
+    super.dispose();
   }
 }
