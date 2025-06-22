@@ -10,6 +10,7 @@ class Trip {
   final DateTime endDate;
   final String currency; // Nuovo campo
   final List<String> categories;
+  final DateTime timestamp; // Nuovo campo timestamp
 
   Trip({
     required this.title,
@@ -19,7 +20,8 @@ class Trip {
     required this.endDate,
     required this.currency, // Nuovo campo obbligatorio
     this.categories = const [], // Default empty list
-  });
+    DateTime? timestamp, // opzionale, default a now
+  }) : timestamp = timestamp ?? DateTime.now();
 
   factory Trip.fromJson(Map<String, dynamic> json) {
     return Trip(
@@ -35,6 +37,9 @@ class Trip {
       categories: (json['categories'] is List)
           ? List<String>.from(json['categories'] ?? [])
           : [],
+      timestamp: json['timestamp'] != null
+          ? DateTime.parse(json['timestamp'])
+          : DateTime.now(),
     );
   }
 
@@ -46,6 +51,7 @@ class Trip {
         'endDate': endDate.toIso8601String(),
         'currency': currency,
         'categories': categories,
+        'timestamp': timestamp.toIso8601String(),
       };
 }
 
@@ -93,7 +99,10 @@ class TripsStorage {
       if (!await file.exists()) return [];
       final contents = await file.readAsString();
       final List<dynamic> jsonList = jsonDecode(contents);
-      return jsonList.map((e) => Trip.fromJson(e)).toList();
+      final trips = jsonList.map((e) => Trip.fromJson(e)).toList();
+      trips.sort((a, b) =>
+          b.timestamp.compareTo(a.timestamp)); // Ordina dal più recente
+      return trips;
     } catch (e) {
       return [];
     }

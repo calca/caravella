@@ -108,6 +108,7 @@ class _AddTripPageState extends State<AddTripPage> {
           endDate: _endDate!,
           currency: _currency,
           categories: _categories,
+          timestamp: trips[idx].timestamp, // mantieni il timestamp originale
         );
         await TripsStorage.writeTrips(trips);
         if (!mounted) return;
@@ -124,6 +125,7 @@ class _AddTripPageState extends State<AddTripPage> {
       endDate: _endDate!,
       currency: _currency,
       categories: _categories,
+      // timestamp: default a now
     );
     final trips = await TripsStorage.readTrips();
     trips.add(newTrip);
