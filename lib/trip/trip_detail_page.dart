@@ -42,11 +42,13 @@ class _TripDetailPageState extends State<TripDetailPage> {
   }
 
   Future<void> _refreshTrip() async {
+    final trip = _trip;
+    if (trip == null) return; // Evita null check operator su _trip
     final trips = await TripsStorage.readTrips();
     final idx = trips.indexWhere((v) =>
-        v.title == _trip!.title &&
-        v.startDate == _trip!.startDate &&
-        v.endDate == _trip!.endDate);
+        v.title == trip.title &&
+        v.startDate == trip.startDate &&
+        v.endDate == trip.endDate);
     if (idx != -1) {
       setState(() {
         _trip = trips[idx];
