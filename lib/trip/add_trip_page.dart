@@ -188,7 +188,8 @@ class _AddTripPageState extends State<AddTripPage> {
             children: [
               Card(
                 elevation: 2,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
@@ -210,11 +211,15 @@ class _AddTripPageState extends State<AddTripPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(loc.get('from'), style: Theme.of(context).textTheme.bodySmall),
+                                Text(loc.get('from'),
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall),
                                 TextButton.icon(
-                                  icon: const Icon(Icons.calendar_today, size: 18),
+                                  icon: const Icon(Icons.calendar_today,
+                                      size: 18),
                                   label: Text(_startDate == null
-                                      ? loc.get('start_date_not_selected', params: {})
+                                      ? loc.get('start_date_not_selected',
+                                          params: {})
                                       : '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}'),
                                   onPressed: () => _pickDate(context, true),
                                 ),
@@ -226,11 +231,15 @@ class _AddTripPageState extends State<AddTripPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(loc.get('to'), style: Theme.of(context).textTheme.bodySmall),
+                                Text(loc.get('to'),
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall),
                                 TextButton.icon(
-                                  icon: const Icon(Icons.calendar_today, size: 18),
+                                  icon: const Icon(Icons.calendar_today,
+                                      size: 18),
                                   label: Text(_endDate == null
-                                      ? loc.get('end_date_not_selected', params: {})
+                                      ? loc.get('end_date_not_selected',
+                                          params: {})
                                       : '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}'),
                                   onPressed: () => _pickDate(context, false),
                                 ),
@@ -246,16 +255,18 @@ class _AddTripPageState extends State<AddTripPage> {
               const SizedBox(height: 16),
               Card(
                 elevation: 2,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(loc.get('participants'), style: Theme.of(context).textTheme.titleMedium),
+                          Text(loc.get('participants'),
+                              style: Theme.of(context).textTheme.titleMedium),
+                          const Spacer(),
                           IconButton(
                             icon: const Icon(Icons.add),
                             tooltip: loc.get('add_participant'),
@@ -307,39 +318,109 @@ class _AddTripPageState extends State<AddTripPage> {
                       ),
                       const SizedBox(height: 8),
                       if (_participants.isEmpty)
-                        Text(loc.get('no_participants'), style: Theme.of(context).textTheme.bodySmall),
-                      ..._participants.map((p) => ListTile(
-                            title: Text(p),
-                            trailing: IconButton(
+                        Text(loc.get('no_participants'),
+                            style: Theme.of(context).textTheme.bodySmall),
+                      ..._participants.asMap().entries.map((entry) {
+                        final i = entry.key;
+                        final p = entry.value;
+                        return Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 0),
+                                child: Text(p,
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge),
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.edit),
+                              tooltip: loc.get('edit'),
+                              onPressed: () {
+                                final editController =
+                                    TextEditingController(text: p);
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text(loc.get('edit_participant')),
+                                    content: TextField(
+                                      controller: editController,
+                                      autofocus: true,
+                                      decoration: InputDecoration(
+                                        labelText: loc.get('participant_name'),
+                                      ),
+                                      onSubmitted: (val) {
+                                        if (val.trim().isNotEmpty) {
+                                          setState(() {
+                                            _participants[i] = val.trim();
+                                          });
+                                          Navigator.of(context).pop();
+                                        }
+                                      },
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(),
+                                        child: Text(loc.get('cancel')),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          final val =
+                                              editController.text.trim();
+                                          if (val.isNotEmpty) {
+                                            setState(() {
+                                              _participants[i] = val;
+                                            });
+                                            Navigator.of(context).pop();
+                                          }
+                                        },
+                                        child: Text(loc.get('save')),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                            IconButton(
                               icon: const Icon(Icons.delete_outline),
                               onPressed: () {
                                 setState(() {
-                                  _participants.remove(p);
+                                  _participants.removeAt(i);
                                 });
                               },
                             ),
-                          )),
+                          ],
+                        );
+                      }),
                     ],
                   ),
                 ),
               ),
               const SizedBox(height: 16),
-              // CurrencySelector spostato dopo i partecipanti
               Card(
                 elevation: 2,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(loc.get('currency'), style: Theme.of(context).textTheme.titleMedium),
-                      const SizedBox(height: 8),
-                      CurrencySelector(
-                        value: _currency,
-                        onChanged: (val) {
-                          if (val != null) setState(() => _currency = val);
-                        },
+                      Text(loc.get('currency'),
+                          style: Theme.of(context).textTheme.titleMedium),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: CurrencySelector(
+                            value: _currency,
+                            onChanged: (val) {
+                              if (val != null) setState(() => _currency = val);
+                            },
+                          ),
+                        ),
                       ),
                     ],
                   ),
