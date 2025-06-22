@@ -210,7 +210,7 @@ class _AddTripPageState extends State<AddTripPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(loc.get('select_start', params: {}), style: Theme.of(context).textTheme.bodySmall),
+                                Text(loc.get('from'), style: Theme.of(context).textTheme.bodySmall),
                                 TextButton.icon(
                                   icon: const Icon(Icons.calendar_today, size: 18),
                                   label: Text(_startDate == null
@@ -226,7 +226,7 @@ class _AddTripPageState extends State<AddTripPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(loc.get('select_end', params: {}), style: Theme.of(context).textTheme.bodySmall),
+                                Text(loc.get('to'), style: Theme.of(context).textTheme.bodySmall),
                                 TextButton.icon(
                                   icon: const Icon(Icons.calendar_today, size: 18),
                                   label: Text(_endDate == null
@@ -330,11 +330,18 @@ class _AddTripPageState extends State<AddTripPage> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: CurrencySelector(
-                    value: _currency,
-                    onChanged: (val) {
-                      if (val != null) setState(() => _currency = val);
-                    },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(loc.get('currency'), style: Theme.of(context).textTheme.titleMedium),
+                      const SizedBox(height: 8),
+                      CurrencySelector(
+                        value: _currency,
+                        onChanged: (val) {
+                          if (val != null) setState(() => _currency = val);
+                        },
+                      ),
+                    ],
                   ),
                 ),
               ),
