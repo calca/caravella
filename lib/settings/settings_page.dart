@@ -41,7 +41,10 @@ class SettingsPage extends StatelessWidget {
               widthFactor: 1.0,
               child: Card(
                 elevation: 0,
-                color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.95),
+                color: Theme.of(context)
+                    .colorScheme
+                    .surface
+                    .withValues(alpha: 0.95),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16)),
                 child: Padding(
