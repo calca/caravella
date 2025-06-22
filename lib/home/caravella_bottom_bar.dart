@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/trip/add_expense_sheet.dart';
-import '../history_page.dart';
+import '../trip/history_page.dart';
 import '../app_localizations.dart';
 import '../trips_storage.dart';
 import '../settings/settings_page.dart';

@@ -3,7 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'themes/caravella_themes.dart';
 import 'app_localizations.dart';
-import 'add_trip_page.dart';
+import 'trip/add_trip_page.dart';
 import 'trips_storage.dart';
 import 'home/trip_section.dart';
 import 'home/top_card/no_trip_card.dart';

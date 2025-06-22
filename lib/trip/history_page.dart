@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'trips_storage.dart';
+import '../trips_storage.dart';
 import 'trip_detail_page.dart';
-import 'app_localizations.dart';
+import '../app_localizations.dart';
 import 'add_trip_page.dart';
-import 'state/locale_notifier.dart';
+import '../state/locale_notifier.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});

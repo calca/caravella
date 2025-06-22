@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'trips_storage.dart';
-import 'app_localizations.dart';
-import 'state/locale_notifier.dart';
+import '../trips_storage.dart';
+import '../app_localizations.dart';
+import '../state/locale_notifier.dart';
 
 class AddTripPage extends StatefulWidget {
   final Trip? trip;

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/trip/add_expense_sheet.dart';
-import 'trips_storage.dart';
+import '../trips_storage.dart';
 import 'add_trip_page.dart';
-import 'app_localizations.dart';
-import 'state/locale_notifier.dart';
+import '../app_localizations.dart';
+import '../state/locale_notifier.dart';
 
 class TripDetailPage extends StatefulWidget {
   final Trip trip;
