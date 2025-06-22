@@ -46,7 +46,7 @@ class CurrentTripCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Icon(Icons.people,
-                    color: Theme.of(context).colorScheme.primary, size: 20),
+                    color: Colors.white, size: 20),
                 const SizedBox(width: 4),
                 Text('${trip.participants.length} ${loc.get('participants')}',
                     style: Theme.of(context)
@@ -60,7 +60,7 @@ class CurrentTripCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Icon(Icons.calendar_today,
-                    color: Theme.of(context).colorScheme.primary, size: 20),
+                    color: Colors.white, size: 20),
                 const SizedBox(width: 4),
                 Text(
                   loc.get('from_to', params: {
