@@ -94,21 +94,66 @@ class _TripDetailPageState extends State<TripDetailPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              loc.get('period', params: {
-                'start':
-                    '${trip.startDate.day}/${trip.startDate.month}/${trip.startDate.year}',
-                'end':
-                    '${trip.endDate.day}/${trip.endDate.month}/${trip.endDate.year}'
-              }),
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            // Card con info viaggio e totale speso
+            Card(
+              elevation: 3,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18)),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(trip.title,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleLarge
+                                  ?.copyWith(fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 8),
+                          Text(
+                            '${trip.startDate.day}/${trip.startDate.month}/${trip.startDate.year} - ${trip.endDate.day}/${trip.endDate.month}/${trip.endDate.year}',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                              '${loc.get('participants')}: ${trip.participants.join(", ")}',
+                              style: Theme.of(context).textTheme.bodyMedium),
+                        ],
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          '${trip.currency} ${trip.expenses.fold<double>(0, (sum, s) => sum + s.amount).toStringAsFixed(2)}',
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleLarge
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(loc.get('total_spent'),
+                            style: Theme.of(context).textTheme.bodySmall),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ),
-            const SizedBox(height: 8),
-            Text('${loc.get('participants')}: ${trip.participants.join(", ")}'),
-            const SizedBox(height: 16),
+            const SizedBox(height: 18),
             Text('${loc.get('expenses')}:',
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             Expanded(
               child: trip.expenses.isEmpty
