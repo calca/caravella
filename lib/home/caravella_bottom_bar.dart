@@ -30,8 +30,14 @@ class CaravellaBottomBar extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   color: Theme.of(context).brightness == Brightness.dark
-                      ? Theme.of(context).colorScheme.surface.withOpacity(0.32)
-                      : Theme.of(context).colorScheme.surface.withOpacity(0.85),
+                      ? Theme.of(context)
+                          .colorScheme
+                          .surface
+                          .withValues(alpha: 0.32)
+                      : Theme.of(context)
+                          .colorScheme
+                          .surface
+                          .withValues(alpha: 0.85),
                   borderRadius: BorderRadius.circular(32),
                   // Nessuna shadow per look più flat
                 ),
