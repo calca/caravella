@@ -22,6 +22,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   double? _amount;
   String? _paidBy;
   final DateTime _date = DateTime.now();
+  String? _paidByError;
 
   @override
   Widget build(BuildContext context) {
@@ -50,14 +51,41 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                   : null,
               onSaved: (v) => _amount = double.tryParse(v ?? ''),
             ),
-            DropdownButtonFormField<String>(
-              decoration: InputDecoration(labelText: loc.get('paid_by')),
-              items: widget.participants
-                  .map((p) => DropdownMenuItem(value: p, child: Text(p)))
-                  .toList(),
-              onChanged: (v) => _paidBy = v,
-              validator: (v) => v == null ? loc.get('required') : null,
+            const SizedBox(height: 16),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(loc.get('paid_by'), style: Theme.of(context).textTheme.bodyMedium),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: widget.participants.map((p) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                          child: ChoiceChip(
+                            label: Text(p),
+                            selected: _paidBy == p,
+                            onSelected: (selected) {
+                              setState(() {
+                                _paidBy = selected ? p : null;
+                                _paidByError = null;
+                              });
+                            },
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ],
             ),
+            if (_paidByError != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 4.0),
+                child: Text(_paidByError!, style: TextStyle(color: Colors.red)),
+              ),
             const SizedBox(height: 24),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -69,7 +97,10 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                 const SizedBox(width: 8),
                 ElevatedButton(
                   onPressed: () {
-                    if (_formKey.currentState!.validate()) {
+                    setState(() {
+                      _paidByError = _paidBy == null ? loc.get('required') : null;
+                    });
+                    if (_formKey.currentState!.validate() && _paidBy != null) {
                       _formKey.currentState!.save();
                       final expense = Expense(
                         description: _category ?? '',
