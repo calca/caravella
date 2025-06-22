@@ -35,7 +35,7 @@ class CurrentTripCard extends StatelessWidget {
             const SizedBox(height: 20),
             Center(
               child: Text(
-                '€ ${trip.expenses.fold<double>(0, (sum, s) => sum + s.amount).toStringAsFixed(2)}',
+                '${trip.currency} ${trip.expenses.fold<double>(0, (sum, s) => sum + s.amount).toStringAsFixed(2)}',
                 style: Theme.of(context).textTheme.displayLarge?.copyWith(
                     fontWeight: FontWeight.bold, color: Colors.white),
                 textAlign: TextAlign.center,

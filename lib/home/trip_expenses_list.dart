@@ -44,6 +44,10 @@ class TripExpensesList extends StatelessWidget {
                         title: expense.description,
                         coins: expense.amount.toInt(),
                         checked: true,
+                        paidBy: expense.paidBy,
+                        category: null,
+                        date: expense.date,
+                        currency: currentTrip!.currency,
                       );
                     },
                   )),
