@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../trips_storage.dart';
 import '../app_localizations.dart';
-import 'trip_amount_card.dart';
+import '../widgets/trip_amount_card.dart';
 
 class TripExpensesList extends StatelessWidget {
   final Trip? currentTrip;
