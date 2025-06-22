@@ -72,7 +72,6 @@ class TripSection extends StatelessWidget {
                       ],
                     ),
                   ),
-                if (currentTrip != null) const SizedBox(height: 16),
                 if (currentTrip == null)
                   Expanded(
                     child: Center(
