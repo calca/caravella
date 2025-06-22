@@ -203,11 +203,41 @@ class _AddTripPageState extends State<AddTripPage> {
                             : null,
                       ),
                       const SizedBox(height: 16),
-                      CurrencySelector(
-                        value: _currency,
-                        onChanged: (val) {
-                          if (val != null) setState(() => _currency = val);
-                        },
+                      // Sezione date compatta
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(loc.get('select_start', params: {}), style: Theme.of(context).textTheme.bodySmall),
+                                TextButton.icon(
+                                  icon: const Icon(Icons.calendar_today, size: 18),
+                                  label: Text(_startDate == null
+                                      ? loc.get('start_date_not_selected', params: {})
+                                      : '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}'),
+                                  onPressed: () => _pickDate(context, true),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(loc.get('select_end', params: {}), style: Theme.of(context).textTheme.bodySmall),
+                                TextButton.icon(
+                                  icon: const Icon(Icons.calendar_today, size: 18),
+                                  label: Text(_endDate == null
+                                      ? loc.get('end_date_not_selected', params: {})
+                                      : '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}'),
+                                  onPressed: () => _pickDate(context, false),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -294,41 +324,17 @@ class _AddTripPageState extends State<AddTripPage> {
                 ),
               ),
               const SizedBox(height: 16),
+              // CurrencySelector spostato dopo i partecipanti
               Card(
                 elevation: 2,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(_startDate == null
-                                ? loc.get('start_date_not_selected', params: {})
-                                : '${loc.get('select_start', params: {})}: ${_startDate!.day}/${_startDate!.month}/${_startDate!.year}'),
-                          ),
-                          TextButton(
-                            onPressed: () => _pickDate(context, true),
-                            child: Text(loc.get('select_start', params: {})),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(_endDate == null
-                                ? loc.get('end_date_not_selected', params: {})
-                                : '${loc.get('select_end', params: {})}: ${_endDate!.day}/${_endDate!.month}/${_endDate!.year}'),
-                          ),
-                          TextButton(
-                            onPressed: () => _pickDate(context, false),
-                            child: Text(loc.get('select_end', params: {})),
-                          ),
-                        ],
-                      ),
-                    ],
+                  child: CurrencySelector(
+                    value: _currency,
+                    onChanged: (val) {
+                      if (val != null) setState(() => _currency = val);
+                    },
                   ),
                 ),
               ),
