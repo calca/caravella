@@ -5,11 +5,13 @@ import '../state/locale_notifier.dart';
 
 class AddExpenseSheet extends StatefulWidget {
   final List<String> participants;
+  final List<String> categories;
   final void Function(Expense) onExpenseAdded;
   const AddExpenseSheet({
     super.key,
     required this.participants,
     required this.onExpenseAdded,
+    this.categories = const [],
   });
 
   @override
@@ -37,12 +39,42 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
             Text(loc.get('add_expense'),
                 style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 16),
-            TextFormField(
-              decoration: InputDecoration(labelText: loc.get('category')),
-              validator: (v) =>
-                  v == null || v.isEmpty ? loc.get('required') : null,
-              onSaved: (v) => _category = v,
-            ),
+            if (widget.categories.isNotEmpty) ...[
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(loc.get('category'),
+                    style: Theme.of(context).textTheme.bodyMedium),
+              ),
+              const SizedBox(height: 8),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: widget.categories.map((cat) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      child: ChoiceChip(
+                        label: Text(cat),
+                        selected: _category == cat,
+                        onSelected: (selected) {
+                          setState(() {
+                            _category = selected ? cat : null;
+                          });
+                        },
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+              const SizedBox(height: 16),
+            ] else ...[
+              TextFormField(
+                decoration: InputDecoration(labelText: loc.get('category')),
+                validator: (v) =>
+                    v == null || v.isEmpty ? loc.get('required') : null,
+                onSaved: (v) => _category = v,
+              ),
+              const SizedBox(height: 16),
+            ],
             TextFormField(
               decoration: InputDecoration(labelText: loc.get('amount')),
               keyboardType: TextInputType.numberWithOptions(decimal: true),
@@ -55,7 +87,8 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(loc.get('paid_by'), style: Theme.of(context).textTheme.bodyMedium),
+                Text(loc.get('paid_by'),
+                    style: Theme.of(context).textTheme.bodyMedium),
                 const SizedBox(width: 12),
                 Expanded(
                   child: SingleChildScrollView(
@@ -98,10 +131,16 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                 ElevatedButton(
                   onPressed: () {
                     setState(() {
-                      _paidByError = _paidBy == null ? loc.get('required') : null;
+                      _paidByError =
+                          _paidBy == null ? loc.get('required') : null;
                     });
-                    if (_formKey.currentState!.validate() && _paidBy != null) {
-                      _formKey.currentState!.save();
+                    if ((widget.categories.isNotEmpty
+                            ? _category != null
+                            : _formKey.currentState!.validate()) &&
+                        _paidBy != null) {
+                      if (widget.categories.isEmpty) {
+                        _formKey.currentState!.save();
+                      }
                       final expense = Expense(
                         description: _category ?? '',
                         amount: _amount ?? 0,

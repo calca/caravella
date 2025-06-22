@@ -9,6 +9,7 @@ class Trip {
   final DateTime startDate;
   final DateTime endDate;
   final String currency; // Nuovo campo
+  final List<String> categories;
 
   Trip({
     required this.title,
@@ -17,6 +18,7 @@ class Trip {
     required this.startDate,
     required this.endDate,
     required this.currency, // Nuovo campo obbligatorio
+    this.categories = const [], // Default empty list
   });
 
   factory Trip.fromJson(Map<String, dynamic> json) {
@@ -30,6 +32,9 @@ class Trip {
       startDate: DateTime.parse(json['startDate']),
       endDate: DateTime.parse(json['endDate']),
       currency: json['currency'] ?? '€', // Default a euro se mancante
+      categories: (json['categories'] is List)
+          ? List<String>.from(json['categories'] ?? [])
+          : [],
     );
   }
 
@@ -40,6 +45,7 @@ class Trip {
         'startDate': startDate.toIso8601String(),
         'endDate': endDate.toIso8601String(),
         'currency': currency,
+        'categories': categories,
       };
 }
 

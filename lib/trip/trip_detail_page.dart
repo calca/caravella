@@ -195,6 +195,7 @@ class _TripDetailPageState extends State<TripDetailPage> {
                     ),
                     child: AddExpenseSheet(
                       participants: trip.participants,
+                      categories: trip.categories,
                       onExpenseAdded: (expense) async {
                         final trips = await TripsStorage.readTrips();
                         final idx = trips.indexWhere((v) =>

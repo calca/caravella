@@ -21,6 +21,7 @@ class _AddTripPageState extends State<AddTripPage> {
   DateTime? _startDate;
   DateTime? _endDate;
   String _currency = '€'; // Default euro
+  final List<String> _categories = [];
 
   @override
   void initState() {
@@ -31,6 +32,7 @@ class _AddTripPageState extends State<AddTripPage> {
       _startDate = widget.trip!.startDate;
       _endDate = widget.trip!.endDate;
       _currency = widget.trip!.currency;
+      _categories.addAll(widget.trip!.categories);
     }
   }
 
@@ -105,6 +107,7 @@ class _AddTripPageState extends State<AddTripPage> {
           startDate: _startDate!,
           endDate: _endDate!,
           currency: _currency,
+          categories: _categories,
         );
         await TripsStorage.writeTrips(trips);
         if (!mounted) return;
@@ -120,6 +123,7 @@ class _AddTripPageState extends State<AddTripPage> {
       startDate: _startDate!,
       endDate: _endDate!,
       currency: _currency,
+      categories: _categories,
     );
     final trips = await TripsStorage.readTrips();
     trips.add(newTrip);
@@ -293,12 +297,14 @@ class _AddTripPageState extends State<AddTripPage> {
                                   ),
                                   actions: [
                                     TextButton(
-                                      onPressed: () => Navigator.of(context).pop(),
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
                                       child: Text(loc.get('cancel')),
                                     ),
                                     TextButton(
                                       onPressed: () {
-                                        final val = _participantController.text.trim();
+                                        final val =
+                                            _participantController.text.trim();
                                         if (val.isNotEmpty) {
                                           setState(() {
                                             _participants.add(val);
@@ -422,6 +428,157 @@ class _AddTripPageState extends State<AddTripPage> {
                           ),
                         ),
                       ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Card(
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(loc.get('categories'),
+                              style: Theme.of(context).textTheme.titleMedium),
+                          const Spacer(),
+                          IconButton(
+                            icon: const Icon(Icons.add),
+                            tooltip: loc.get('add_category'),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  final TextEditingController
+                                      categoryController =
+                                      TextEditingController();
+                                  return AlertDialog(
+                                    title: Text(loc.get('add_category')),
+                                    content: TextField(
+                                      controller: categoryController,
+                                      autofocus: true,
+                                      decoration: InputDecoration(
+                                        labelText: loc.get('category_name'),
+                                      ),
+                                      onSubmitted: (val) {
+                                        if (val.trim().isNotEmpty) {
+                                          setState(() {
+                                            _categories.add(val.trim());
+                                          });
+                                          Navigator.of(context).pop();
+                                        }
+                                      },
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(),
+                                        child: Text(loc.get('cancel')),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          final val =
+                                              categoryController.text.trim();
+                                          if (val.isNotEmpty) {
+                                            setState(() {
+                                              _categories.add(val);
+                                            });
+                                            Navigator.of(context).pop();
+                                          }
+                                        },
+                                        child: Text(loc.get('add')),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      if (_categories.isEmpty)
+                        Text(loc.get('no_categories'),
+                            style: Theme.of(context).textTheme.bodySmall),
+                      ..._categories.asMap().entries.map((entry) {
+                        final i = entry.key;
+                        final c = entry.value;
+                        return Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 0),
+                                child: Text(c,
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge),
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.edit),
+                              tooltip: loc.get('edit'),
+                              onPressed: () {
+                                final editController =
+                                    TextEditingController(text: c);
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text(loc.get('edit_category')),
+                                    content: TextField(
+                                      controller: editController,
+                                      autofocus: true,
+                                      decoration: InputDecoration(
+                                        labelText: loc.get('category_name'),
+                                      ),
+                                      onSubmitted: (val) {
+                                        if (val.trim().isNotEmpty) {
+                                          setState(() {
+                                            _categories[i] = val.trim();
+                                          });
+                                          Navigator.of(context).pop();
+                                        }
+                                      },
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(),
+                                        child: Text(loc.get('cancel')),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          final val =
+                                              editController.text.trim();
+                                          if (val.isNotEmpty) {
+                                            setState(() {
+                                              _categories[i] = val;
+                                            });
+                                            Navigator.of(context).pop();
+                                          }
+                                        },
+                                        child: Text(loc.get('save')),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete_outline),
+                              onPressed: () {
+                                setState(() {
+                                  _categories.removeAt(i);
+                                });
+                              },
+                            ),
+                          ],
+                        );
+                      }),
                     ],
                   ),
                 ),

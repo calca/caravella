@@ -93,6 +93,7 @@ class CaravellaBottomBar extends StatelessWidget {
                           ),
                           child: AddExpenseSheet(
                             participants: currentTrip!.participants,
+                            categories: currentTrip!.categories,
                             onExpenseAdded: (expense) async {
                               final trips = await TripsStorage.readTrips();
                               final idx = trips.indexWhere((v) =>
