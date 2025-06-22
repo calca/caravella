@@ -21,8 +21,7 @@ class TripAmountCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final Color surfaceGrey =
-        isDark ? Colors.grey.shade800 : Colors.grey.shade200;
-    final Color shadow = Theme.of(context).shadowColor.withOpacity(0.10);
+        isDark ? Colors.grey.shade900 : Colors.grey.shade50;
     final Color textColor = isDark ? Colors.white : Colors.black;
     final Color paidByColor =
         isDark ? Colors.grey.shade300 : Colors.grey.shade700;
@@ -30,15 +29,9 @@ class TripAmountCard extends StatelessWidget {
         isDark ? Colors.grey.shade400 : Colors.grey.shade600;
     return Container(
       decoration: BoxDecoration(
-        color: surfaceGrey, // Flat background adattivo
+        color: surfaceGrey, // Flat background ancora più light
         borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: shadow,
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        // Nessuna ombra
       ),
       padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
       child: Column(

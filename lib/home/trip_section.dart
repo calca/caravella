@@ -97,26 +97,12 @@ class TripSection extends StatelessWidget {
           right: 0,
           bottom: 0,
           child: Container(
-            decoration: const BoxDecoration(
-              color: Colors.transparent, // completamente trasparente
-              // Nessun bordo, nessuna ombra
-            ),
-            child: ClipRRect(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(18),
-                topRight: Radius.circular(18),
-              ),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                child: Container(
-                  color: Colors.white.withOpacity(0.0), // completamente trasparente
-                  child: CaravellaBottomBar(
-                    loc: loc,
-                    onTripAdded: onTripAdded,
-                    currentTrip: currentTrip,
-                  ),
-                ),
-              ),
+            // Nessun bordo, nessun blur, nessun bordo arrotondato
+            color: Colors.transparent,
+            child: CaravellaBottomBar(
+              loc: loc,
+              onTripAdded: onTripAdded,
+              currentTrip: currentTrip,
             ),
           ),
         ),
