@@ -71,9 +71,8 @@ class CaravellaBottomBar extends StatelessWidget {
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: Theme.of(context)
-                            .shadowColor
-                            .withValues(alpha: 0.08),
+                        color:
+                            Theme.of(context).shadowColor.withValues(alpha: 20),
                         blurRadius: 12,
                         offset: const Offset(0, 4),
                       ),

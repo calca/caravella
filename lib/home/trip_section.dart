@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import '../app_localizations.dart';
 import '../trips_storage.dart';
@@ -33,7 +31,7 @@ class TripSection extends StatelessWidget {
               color: Theme.of(context)
                   .colorScheme
                   .surface
-                  .withOpacity(sectionOpacity),
+                  .withValues(alpha: sectionOpacity),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(32),
                 topRight: Radius.circular(32),
@@ -44,10 +42,7 @@ class TripSection extends StatelessWidget {
                 if (currentTrip != null)
                   Padding(
                     padding: const EdgeInsets.only(
-                        top: 28,
-                        left: 16,
-                        right: 16,
-                        bottom: 12),
+                        top: 28, left: 16, right: 16, bottom: 12),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
