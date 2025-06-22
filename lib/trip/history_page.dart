@@ -109,13 +109,16 @@ class _HistoryPageState extends State<HistoryPage> {
       ),
     );
     if (action == 'edit') {
-      final result = await Navigator.of(context).push(
+      final resultFuture = Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => AddTripPage(trip: trip),
         ),
       );
+      // Wait for result after navigation
+      final result = await resultFuture;
       if (result == true) {
         final trips = await TripsStorage.readTrips();
+        if (!mounted) return;
         setState(() {
           _allTrips = trips;
           _filteredTrips = _applyFilter(trips);
@@ -123,7 +126,7 @@ class _HistoryPageState extends State<HistoryPage> {
       }
     } else if (action == 'duplicate') {
       final newTrip = Trip(
-        title: trip.title + ' (Copia)',
+        title: "${trip.title} (Copia)",
         expenses: [],
         participants: List<String>.from(trip.participants),
         startDate: trip.startDate,
@@ -235,7 +238,6 @@ class _HistoryPageState extends State<HistoryPage> {
                               final trip = _filteredTrips[index];
                               final isFuture = trip.startDate.isAfter(now);
                               final isPast = trip.endDate.isBefore(now);
-                              final isOngoing = !isFuture && !isPast;
                               final total = trip.expenses.fold<double>(0, (sum, e) => sum + e.amount);
                               final badgeColor = isFuture
                                   ? Colors.blueAccent
@@ -287,7 +289,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                             margin: const EdgeInsets.only(left: 8),
                                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                                             decoration: BoxDecoration(
-                                              color: badgeColor.withOpacity(0.15),
+                                              color: badgeColor.withValues(alpha: 0.15),
                                               borderRadius: BorderRadius.circular(12),
                                             ),
                                             child: Row(
@@ -302,7 +304,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                             margin: const EdgeInsets.only(left: 8),
                                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                                             decoration: BoxDecoration(
-                                              color: badgeColor.withOpacity(0.15),
+                                              color: badgeColor.withValues(alpha: 0.15),
                                               borderRadius: BorderRadius.circular(12),
                                             ),
                                             child: Row(
