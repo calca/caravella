@@ -27,9 +27,6 @@ class TripExpensesList extends StatelessWidget {
                           height: 120,
                           fit: BoxFit.contain,
                         ),
-                        const SizedBox(height: 16),
-                        Text(loc.get('no_expenses'),
-                            style: Theme.of(context).textTheme.titleMedium),
                       ],
                     ),
                   )
