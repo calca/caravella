@@ -4,6 +4,7 @@ import '../trips_storage.dart';
 import 'add_trip_page.dart';
 import '../app_localizations.dart';
 import '../state/locale_notifier.dart';
+import '../widgets/trip_amount_card.dart';
 
 class TripDetailPage extends StatefulWidget {
   final Trip trip;
@@ -116,12 +117,18 @@ class _TripDetailPageState extends State<TripDetailPage> {
                       itemCount: trip.expenses.length,
                       itemBuilder: (context, i) {
                         final expense = trip.expenses[i];
-                        return ListTile(
-                          title: Text(expense.description),
-                          subtitle: Text(
-                              '${loc.get('paid_by')}: ${expense.paidBy}\n${loc.get('date')}: ${expense.date.day}/${expense.date.month}/${expense.date.year}'),
-                          trailing:
-                              Text('€${expense.amount.toStringAsFixed(2)}'),
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 6, horizontal: 8),
+                          child: TripAmountCard(
+                            title: expense.description,
+                            coins: expense.amount.toInt(),
+                            checked: true,
+                            paidBy: expense.paidBy,
+                            category: null,
+                            date: expense.date,
+                            currency: trip.currency,
+                          ),
                         );
                       },
                     ),
