@@ -48,7 +48,7 @@ class CurrentTripCard extends StatelessWidget {
                 Icon(Icons.people,
                     color: Theme.of(context).colorScheme.primary, size: 20),
                 const SizedBox(width: 4),
-                Text('${trip.participants.length} ${loc.get('participants')}',
+                Text(trip.participants.length.toString() + ' ' + loc.get('participants'),
                     style: Theme.of(context)
                         .textTheme
                         .bodyMedium

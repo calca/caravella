@@ -200,7 +200,7 @@ class _AddTripPageState extends State<AddTripPage> {
                   Expanded(
                     child: Text(_startDate == null
                         ? loc.get('start_date_not_selected', params: {})
-                        : '${loc.get('select_start', params: {})}: \\${_startDate!.day}/${_startDate!.month}/${_startDate!.year}'),
+                        : '${loc.get('select_start', params: {})}: ${_startDate!.day}/${_startDate!.month}/${_startDate!.year}'),
                   ),
                   TextButton(
                     onPressed: () => _pickDate(context, true),
@@ -213,7 +213,7 @@ class _AddTripPageState extends State<AddTripPage> {
                   Expanded(
                     child: Text(_endDate == null
                         ? loc.get('end_date_not_selected', params: {})
-                        : '${loc.get('select_end', params: {})}: \\${_endDate!.day}/${_endDate!.month}/${_endDate!.year}'),
+                        : '${loc.get('select_end', params: {})}: ${_endDate!.day}/${_endDate!.month}/${_endDate!.year}'),
                   ),
                   TextButton(
                     onPressed: () => _pickDate(context, false),

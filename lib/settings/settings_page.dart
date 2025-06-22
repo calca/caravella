@@ -3,7 +3,6 @@ import '../app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'language_selector_setting.dart';
 import 'theme_selector_setting.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../state/locale_notifier.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -42,7 +41,7 @@ class SettingsPage extends StatelessWidget {
               widthFactor: 1.0,
               child: Card(
                 elevation: 0,
-                color: Theme.of(context).colorScheme.surface.withOpacity(0.95),
+                color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.95),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16)),
                 child: Padding(
