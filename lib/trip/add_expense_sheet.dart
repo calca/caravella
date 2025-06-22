@@ -7,11 +7,13 @@ class AddExpenseSheet extends StatefulWidget {
   final List<String> participants;
   final List<String> categories;
   final void Function(Expense) onExpenseAdded;
+  final void Function()? onAddCategory;
   const AddExpenseSheet({
     super.key,
     required this.participants,
     required this.onExpenseAdded,
     this.categories = const [],
+    this.onAddCategory,
   });
 
   @override
@@ -39,12 +41,61 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
             Text(loc.get('add_expense'),
                 style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 16),
-            if (widget.categories.isNotEmpty) ...[
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(loc.get('category'),
-                    style: Theme.of(context).textTheme.bodyMedium),
+            // IMPORTO + CURRENCY
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    decoration: InputDecoration(labelText: loc.get('amount')),
+                    keyboardType: TextInputType.numberWithOptions(decimal: true),
+                    validator: (v) => v == null || double.tryParse(v) == null
+                        ? loc.get('invalid_amount')
+                        : null,
+                    onSaved: (v) => _amount = double.tryParse(v ?? ''),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  // Mostra la currency del viaggio se disponibile
+                  (widget.categories.isNotEmpty && widget.categories.first.startsWith('€'))
+                      ? widget.categories.first
+                      : '€',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            // PAID BY
+            const SizedBox(height: 8),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: widget.participants.map((p) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    child: ChoiceChip(
+                      label: Text(p),
+                      selected: _paidBy == p,
+                      onSelected: (selected) {
+                        setState(() {
+                          _paidBy = selected ? p : null;
+                          _paidByError = null;
+                        });
+                      },
+                    ),
+                  );
+                }).toList(),
               ),
+            ),
+            if (_paidByError != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 4.0),
+                child: Text(_paidByError!, style: TextStyle(color: Colors.red)),
+              ),
+            const SizedBox(height: 16),
+            // CATEGORIE
+            if (widget.categories.isNotEmpty) ...[
               const SizedBox(height: 8),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -67,59 +118,26 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
               ),
               const SizedBox(height: 16),
             ] else ...[
-              TextFormField(
-                decoration: InputDecoration(labelText: loc.get('category')),
-                validator: (v) =>
-                    v == null || v.isEmpty ? loc.get('required') : null,
-                onSaved: (v) => _category = v,
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(loc.get('no_categories'),
+                        style: Theme.of(context).textTheme.bodySmall),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.add),
+                    tooltip: loc.get('add_category'),
+                    onPressed: () {
+                      if (widget.onAddCategory != null) {
+                        widget.onAddCategory!();
+                      }
+                    },
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
             ],
-            TextFormField(
-              decoration: InputDecoration(labelText: loc.get('amount')),
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
-              validator: (v) => v == null || double.tryParse(v) == null
-                  ? loc.get('invalid_amount')
-                  : null,
-              onSaved: (v) => _amount = double.tryParse(v ?? ''),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(loc.get('paid_by'),
-                    style: Theme.of(context).textTheme.bodyMedium),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: widget.participants.map((p) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          child: ChoiceChip(
-                            label: Text(p),
-                            selected: _paidBy == p,
-                            onSelected: (selected) {
-                              setState(() {
-                                _paidBy = selected ? p : null;
-                                _paidByError = null;
-                              });
-                            },
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            if (_paidByError != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 4.0),
-                child: Text(_paidByError!, style: TextStyle(color: Colors.red)),
-              ),
-            const SizedBox(height: 24),
+            // ...resto della UI (pulsanti salva/cancella)
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
