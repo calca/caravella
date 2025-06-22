@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import '../app_localizations.dart';
 import '../trips_storage.dart';
@@ -20,7 +22,6 @@ class TripSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double opacity = sectionOpacity;
     return Stack(
       children: [
         Align(
@@ -32,7 +33,7 @@ class TripSection extends StatelessWidget {
               color: Theme.of(context)
                   .colorScheme
                   .surface
-                  .withValues(alpha: opacity),
+                  .withOpacity(sectionOpacity),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(32),
                 topRight: Radius.circular(32),
@@ -46,7 +47,7 @@ class TripSection extends StatelessWidget {
                         top: 28,
                         left: 16,
                         right: 16,
-                        bottom: 12), // Maggiore distanza dal top
+                        bottom: 12),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -90,12 +91,34 @@ class TripSection extends StatelessWidget {
             ),
           ),
         ),
+        // CaravellaBottomBar sopra la lista, trasparente e con shadow
         Positioned(
           left: 0,
           right: 0,
           bottom: 0,
-          child: CaravellaBottomBar(
-              loc: loc, onTripAdded: onTripAdded, currentTrip: currentTrip),
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Colors.transparent, // completamente trasparente
+              // Nessun bordo, nessuna ombra
+            ),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(18),
+                topRight: Radius.circular(18),
+              ),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                child: Container(
+                  color: Colors.white.withOpacity(0.0), // completamente trasparente
+                  child: CaravellaBottomBar(
+                    loc: loc,
+                    onTripAdded: onTripAdded,
+                    currentTrip: currentTrip,
+                  ),
+                ),
+              ),
+            ),
+          ),
         ),
       ],
     );

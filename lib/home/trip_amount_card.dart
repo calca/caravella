@@ -19,13 +19,19 @@ class TripAmountCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color surfaceGrey = Colors.grey.shade200;
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+    final Color surfaceGrey =
+        isDark ? Colors.grey.shade800 : Colors.grey.shade200;
     final Color shadow = Theme.of(context).shadowColor.withOpacity(0.10);
+    final Color textColor = isDark ? Colors.white : Colors.black;
+    final Color paidByColor =
+        isDark ? Colors.grey.shade300 : Colors.grey.shade700;
+    final Color categoryColor =
+        isDark ? Colors.grey.shade400 : Colors.grey.shade600;
     return Container(
       decoration: BoxDecoration(
-        color: surfaceGrey, // Flat grey background
+        color: surfaceGrey, // Flat background adattivo
         borderRadius: BorderRadius.circular(18),
-        // No border
         boxShadow: [
           BoxShadow(
             color: shadow,
@@ -41,7 +47,6 @@ class TripAmountCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Removed the task icon
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,7 +55,7 @@ class TripAmountCard extends StatelessWidget {
                       title,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                            color: textColor,
                           ),
                     ),
                     if (paidBy != null && paidBy!.isNotEmpty) ...[
@@ -58,7 +63,7 @@ class TripAmountCard extends StatelessWidget {
                       Text(
                         paidBy!,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.grey.shade700,
+                              color: paidByColor,
                               fontSize: 12,
                             ),
                       ),
@@ -74,13 +79,12 @@ class TripAmountCard extends StatelessWidget {
                             .textTheme
                             .titleMedium
                             ?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black)),
+                                fontWeight: FontWeight.bold, color: textColor)),
                     const SizedBox(width: 2),
-                    const Text('€',
+                    Text('€',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                          color: textColor,
                           fontSize: 18,
                         )),
                   ],
@@ -93,13 +97,13 @@ class TripAmountCard extends StatelessWidget {
             Row(
               children: [
                 if (category != null) ...[
-                  Icon(Icons.category, size: 18, color: Colors.grey.shade600),
+                  Icon(Icons.category, size: 18, color: categoryColor),
                   const SizedBox(width: 4),
                   Text(category!,
                       style: Theme.of(context)
                           .textTheme
                           .bodySmall
-                          ?.copyWith(color: Colors.grey.shade600)),
+                          ?.copyWith(color: categoryColor)),
                   const SizedBox(width: 12),
                 ],
                 if (date != null) ...[
