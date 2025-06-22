@@ -159,9 +159,45 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                 IconButton(
                   icon: const Icon(Icons.add),
                   tooltip: loc.get('add_category'),
-                  onPressed: () {
-                    if (widget.onAddCategory != null) {
-                      widget.onAddCategory!();
+                  onPressed: () async {
+                    final controller = TextEditingController();
+                    final newCategory = await showDialog<String>(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text(loc.get('add_category')),
+                        content: TextField(
+                          controller: controller,
+                          autofocus: true,
+                          decoration: InputDecoration(
+                            labelText: loc.get('category_name'),
+                          ),
+                          onSubmitted: (val) {
+                            if (val.trim().isNotEmpty) {
+                              Navigator.of(context).pop(val.trim());
+                            }
+                          },
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: Text(loc.get('cancel')),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              final val = controller.text.trim();
+                              if (val.isNotEmpty) {
+                                Navigator.of(context).pop(val);
+                              }
+                            },
+                            child: Text(loc.get('add')),
+                          ),
+                        ],
+                      ),
+                    );
+                    if (newCategory != null && newCategory.isNotEmpty) {
+                      setState(() {
+                        widget.categories.add(newCategory);
+                      });
                     }
                   },
                 ),
