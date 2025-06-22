@@ -63,12 +63,10 @@ class CurrentTripCard extends StatelessWidget {
                     color: Theme.of(context).colorScheme.primary, size: 20),
                 const SizedBox(width: 4),
                 Text(
-                  '${loc.get('from_to', params: {
-                        'start':
-                            '${trip.startDate.day}/${trip.startDate.month}/${trip.startDate.year}',
-                        'end':
-                            '${trip.endDate.day}/${trip.endDate.month}/${trip.endDate.year}'
-                      })}',
+                  loc.get('from_to', params: {
+                        'start': '${trip.startDate.day}/${trip.startDate.month}/${trip.startDate.year}',
+                        'end': '${trip.endDate.day}/${trip.endDate.month}/${trip.endDate.year}'
+                      }),
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium
