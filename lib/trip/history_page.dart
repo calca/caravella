@@ -44,7 +44,10 @@ class _HistoryPageState extends State<HistoryPage> {
     final now = DateTime.now();
     switch (_periodFilter) {
       case 'last12':
-        return trips.where((t) => t.startDate.isAfter(now.subtract(Duration(days: 365)))).toList();
+        return trips
+            .where(
+                (t) => t.startDate.isAfter(now.subtract(Duration(days: 365))))
+            .toList();
       case 'future':
         return trips.where((t) => t.startDate.isAfter(now)).toList();
       case 'past':
@@ -68,13 +71,20 @@ class _HistoryPageState extends State<HistoryPage> {
         title: Text('Elimina viaggio'),
         content: Text('Vuoi davvero eliminare "${trip.title}"?'),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Annulla')),
-          TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Elimina')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Annulla')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Elimina')),
         ],
       ),
     );
     if (confirm == true) {
-      _allTrips.removeWhere((t) => t.title == trip.title && t.startDate == trip.startDate && t.endDate == trip.endDate);
+      _allTrips.removeWhere((t) =>
+          t.title == trip.title &&
+          t.startDate == trip.startDate &&
+          t.endDate == trip.endDate);
       await TripsStorage.writeTrips(_allTrips);
       setState(() {
         _filteredTrips = _applyFilter(_allTrips);
@@ -109,13 +119,11 @@ class _HistoryPageState extends State<HistoryPage> {
       ),
     );
     if (action == 'edit') {
-      final resultFuture = Navigator.of(context).push(
+      final result = await Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => AddTripPage(trip: trip),
         ),
       );
-      // Wait for result after navigation
-      final result = await resultFuture;
       if (result == true) {
         final trips = await TripsStorage.readTrips();
         if (!mounted) return;
@@ -212,13 +220,15 @@ class _HistoryPageState extends State<HistoryPage> {
                                 ),
                                 const SizedBox(height: 16),
                                 Text(loc.get('no_trips_found'),
-                                    style: Theme.of(context).textTheme.titleLarge),
+                                    style:
+                                        Theme.of(context).textTheme.titleLarge),
                                 const SizedBox(height: 16),
                                 ElevatedButton.icon(
                                   icon: const Icon(Icons.add),
                                   label: Text(loc.get('add_trip')),
                                   onPressed: () async {
-                                    final result = await Navigator.of(context).push(
+                                    final result =
+                                        await Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) => AddTripPage(),
                                       ),
@@ -238,30 +248,42 @@ class _HistoryPageState extends State<HistoryPage> {
                               final trip = _filteredTrips[index];
                               final isFuture = trip.startDate.isAfter(now);
                               final isPast = trip.endDate.isBefore(now);
-                              final total = trip.expenses.fold<double>(0, (sum, e) => sum + e.amount);
+                              final total = trip.expenses
+                                  .fold<double>(0, (sum, e) => sum + e.amount);
                               final badgeColor = isFuture
                                   ? Colors.blueAccent
                                   : isPast
                                       ? Colors.grey
                                       : Colors.green;
                               return Dismissible(
-                                key: ValueKey(trip.title + trip.startDate.toIso8601String()),
+                                key: ValueKey(trip.title +
+                                    trip.startDate.toIso8601String()),
                                 direction: DismissDirection.endToStart,
                                 background: Container(
                                   alignment: Alignment.centerRight,
-                                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 24),
                                   color: Colors.red,
-                                  child: const Icon(Icons.delete, color: Colors.white),
+                                  child: const Icon(Icons.delete,
+                                      color: Colors.white),
                                 ),
                                 confirmDismiss: (_) async {
                                   final confirm = await showDialog<bool>(
                                     context: context,
                                     builder: (context) => AlertDialog(
                                       title: Text('Elimina viaggio'),
-                                      content: Text('Vuoi davvero eliminare "${trip.title}"?'),
+                                      content: Text(
+                                          'Vuoi davvero eliminare "${trip.title}"?'),
                                       actions: [
-                                        TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Annulla')),
-                                        TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Elimina')),
+                                        TextButton(
+                                            onPressed: () =>
+                                                Navigator.of(context)
+                                                    .pop(false),
+                                            child: const Text('Annulla')),
+                                        TextButton(
+                                            onPressed: () =>
+                                                Navigator.of(context).pop(true),
+                                            child: const Text('Elimina')),
                                       ],
                                     ),
                                   );
@@ -271,8 +293,10 @@ class _HistoryPageState extends State<HistoryPage> {
                                 child: GestureDetector(
                                   onLongPress: () => _showTripOptions(trip),
                                   child: Card(
-                                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                    color: Theme.of(context).colorScheme.surface,
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 8),
+                                    color:
+                                        Theme.of(context).colorScheme.surface,
                                     child: ListTile(
                                       leading: Icon(
                                         isFuture
@@ -286,53 +310,83 @@ class _HistoryPageState extends State<HistoryPage> {
                                         children: [
                                           Expanded(child: Text(trip.title)),
                                           Container(
-                                            margin: const EdgeInsets.only(left: 8),
-                                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                            margin:
+                                                const EdgeInsets.only(left: 8),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 8, vertical: 2),
                                             decoration: BoxDecoration(
-                                              color: badgeColor.withValues(alpha: 0.15),
-                                              borderRadius: BorderRadius.circular(12),
+                                              color: badgeColor.withValues(
+                                                  alpha: 0.15),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
                                             ),
                                             child: Row(
                                               children: [
-                                                Icon(Icons.people, size: 16, color: badgeColor),
+                                                Icon(Icons.people,
+                                                    size: 16,
+                                                    color: badgeColor),
                                                 const SizedBox(width: 2),
-                                                Text('${trip.participants.length}', style: TextStyle(color: badgeColor)),
+                                                Text(
+                                                    '${trip.participants.length}',
+                                                    style: TextStyle(
+                                                        color: badgeColor)),
                                               ],
                                             ),
                                           ),
                                           Container(
-                                            margin: const EdgeInsets.only(left: 8),
-                                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                            margin:
+                                                const EdgeInsets.only(left: 8),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 8, vertical: 2),
                                             decoration: BoxDecoration(
-                                              color: badgeColor.withValues(alpha: 0.15),
-                                              borderRadius: BorderRadius.circular(12),
+                                              color: badgeColor.withValues(
+                                                  alpha: 0.15),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
                                             ),
                                             child: Row(
                                               children: [
-                                                Icon(Icons.receipt_long, size: 16, color: badgeColor),
+                                                Icon(Icons.receipt_long,
+                                                    size: 16,
+                                                    color: badgeColor),
                                                 const SizedBox(width: 2),
-                                                Text('${trip.expenses.length}', style: TextStyle(color: badgeColor)),
+                                                Text('${trip.expenses.length}',
+                                                    style: TextStyle(
+                                                        color: badgeColor)),
                                               ],
                                             ),
                                           ),
                                         ],
                                       ),
                                       subtitle: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             loc.get('from_to', params: {
-                                              'start': '${trip.startDate.day}/${trip.startDate.month}/${trip.startDate.year}',
-                                              'end': '${trip.endDate.day}/${trip.endDate.month}/${trip.endDate.year}'
+                                              'start':
+                                                  '${trip.startDate.day}/${trip.startDate.month}/${trip.startDate.year}',
+                                              'end':
+                                                  '${trip.endDate.day}/${trip.endDate.month}/${trip.endDate.year}'
                                             }),
                                           ),
-                                          Text('${loc.get('participants')}: ${trip.participants.join(", ")}', style: Theme.of(context).textTheme.bodySmall),
+                                          Text(
+                                              '${loc.get('participants')}: ${trip.participants.join(", ")}',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall),
                                           const SizedBox(height: 4),
                                           Row(
                                             children: [
-                                              Icon(Icons.euro, size: 16, color: badgeColor),
+                                              Icon(Icons.euro,
+                                                  size: 16, color: badgeColor),
                                               const SizedBox(width: 2),
-                                              Text('${trip.currency} ${total.toStringAsFixed(2)}', style: TextStyle(color: badgeColor, fontWeight: FontWeight.bold)),
+                                              Text(
+                                                  '${trip.currency} ${total.toStringAsFixed(2)}',
+                                                  style: TextStyle(
+                                                      color: badgeColor,
+                                                      fontWeight:
+                                                          FontWeight.bold)),
                                             ],
                                           ),
                                         ],
@@ -340,7 +394,8 @@ class _HistoryPageState extends State<HistoryPage> {
                                       onTap: () {
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
-                                            builder: (context) => TripDetailPage(trip: trip),
+                                            builder: (context) =>
+                                                TripDetailPage(trip: trip),
                                           ),
                                         );
                                       },
