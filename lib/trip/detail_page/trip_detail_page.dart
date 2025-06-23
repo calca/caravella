@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:org_app_caravella/trip/add_expense_sheet.dart';
+import 'tabs/expense_edit_page.dart';
 import '../../trips_storage.dart';
 import '../add_trip_page.dart';
 import '../../app_localizations.dart';
 import '../../state/locale_notifier.dart';
-import '../../widgets/trip_amount_card.dart';
 import 'tabs/expenses_tab.dart';
 import 'tabs/overview_tab.dart';
 import 'tabs/statistics_tab.dart';
@@ -188,48 +187,34 @@ class _TripDetailPageState extends State<TripDetailPage> {
               icon: const Icon(Icons.add),
               label: Text(loc.get('add_expense')),
               onPressed: () async {
-                await showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  builder: (context) => Padding(
-                    padding: EdgeInsets.only(
-                      bottom: MediaQuery.of(context).viewInsets.bottom,
-                      left: 16,
-                      right: 16,
-                      top: 24,
-                    ),
-                    child: AddExpenseSheet(
+                final result = await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ExpenseEditPage(
+                      expense: Expense(
+                        description: '',
+                        amount: 0,
+                        paidBy: trip.participants.isNotEmpty ? trip.participants.first : '',
+                        date: DateTime.now(),
+                        note: null,
+                      ),
                       participants: trip.participants,
                       categories: trip.categories,
-                      onExpenseAdded: (expense) async {
-                        final trips = await TripsStorage.readTrips();
-                        final idx = trips.indexWhere((v) =>
-                            v.title == trip.title &&
-                            v.startDate == trip.startDate &&
-                            v.endDate == trip.endDate);
-                        if (idx != -1) {
-                          trips[idx].expenses.add(expense);
-                          await TripsStorage.writeTrips(trips);
-                          await _refreshTrip();
-                        }
-                      },
-                      onCategoryAdded: (newCategory) async {
-                        final trips = await TripsStorage.readTrips();
-                        final idx = trips.indexWhere((v) =>
-                            v.title == trip.title &&
-                            v.startDate == trip.startDate &&
-                            v.endDate == trip.endDate);
-                        if (idx != -1) {
-                          if (!trips[idx].categories.contains(newCategory)) {
-                            trips[idx].categories.add(newCategory);
-                            await TripsStorage.writeTrips(trips);
-                            await _refreshTrip();
-                          }
-                        }
-                      },
+                      loc: loc,
                     ),
                   ),
                 );
+                if (result is ExpenseActionResult && result.updatedExpense != null) {
+                  final trips = await TripsStorage.readTrips();
+                  final idx = trips.indexWhere((v) =>
+                      v.title == trip.title &&
+                      v.startDate == trip.startDate &&
+                      v.endDate == trip.endDate);
+                  if (idx != -1) {
+                    trips[idx].expenses.add(result.updatedExpense!);
+                    await TripsStorage.writeTrips(trips);
+                    await _refreshTrip();
+                  }
+                }
               },
             ),
           ],

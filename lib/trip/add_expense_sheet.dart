@@ -33,6 +33,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   String? _paidByError;
   final _amountController = TextEditingController();
   final FocusNode _amountFocus = FocusNode();
+  final TextEditingController _noteController = TextEditingController();
 
   @override
   void initState() {
@@ -43,6 +44,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       _paidBy = widget.initialExpense!.paidBy;
       _date = widget.initialExpense!.date;
       _amountController.text = widget.initialExpense!.amount.toString();
+      _noteController.text = widget.initialExpense!.note ?? '';
     } else {
       _date = DateTime.now();
     }
@@ -62,9 +64,10 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(loc.get('add_expense'),
-                style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 16),
+            if (widget.initialExpense == null)
+              Text(loc.get('add_expense'),
+                  style: Theme.of(context).textTheme.titleLarge),
+            if (widget.initialExpense == null) const SizedBox(height: 16),
             // IMPORTO + CURRENCY
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -239,7 +242,25 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
               ],
             ),
             const SizedBox(height: 16),
-            // ...resto della UI (pulsanti salva/cancella)
+            if (widget.initialExpense != null) ...[
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(loc.get('note'),
+                    style: Theme.of(context).textTheme.titleMedium),
+              ),
+              const SizedBox(height: 8),
+              TextFormField(
+                controller: _noteController,
+                maxLines: 4,
+                minLines: 2,
+                decoration: InputDecoration(
+                  hintText: loc.get('note_hint'),
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
+            // ...pulsanti salva/cancella...
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -265,6 +286,9 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                         amount: _amount ?? 0,
                         paidBy: _paidBy ?? '',
                         date: _date ?? DateTime.now(),
+                        note: widget.initialExpense != null
+                            ? _noteController.text.trim()
+                            : null,
                       );
                       widget.onExpenseAdded(expense);
                       Navigator.of(context).pop();
@@ -285,6 +309,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   void dispose() {
     _amountController.dispose();
     _amountFocus.dispose();
+    _noteController.dispose();
     super.dispose();
   }
 }

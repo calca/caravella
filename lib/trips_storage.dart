@@ -60,12 +60,14 @@ class Expense {
   final double amount;
   final String paidBy;
   final DateTime date;
+  final String? note;
 
   Expense({
     required this.description,
     required this.amount,
     required this.paidBy,
     required this.date,
+    this.note,
   });
 
   factory Expense.fromJson(Map<String, dynamic> json) {
@@ -74,6 +76,7 @@ class Expense {
       amount: (json['amount'] as num).toDouble(),
       paidBy: json['paidBy'],
       date: DateTime.parse(json['date']),
+      note: json['note'],
     );
   }
 
@@ -82,6 +85,7 @@ class Expense {
         'amount': amount,
         'paidBy': paidBy,
         'date': date.toIso8601String(),
+        if (note != null) 'note': note,
       };
 }
 

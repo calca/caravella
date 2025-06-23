@@ -76,11 +76,14 @@ class _ExpenseEditPageState extends State<ExpenseEditPage> {
           ),
         ],
       ),
-      body: AddExpenseSheet(
-        participants: widget.participants,
-        categories: widget.categories,
-        initialExpense: _expense,
-        onExpenseAdded: _onSave,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        child: AddExpenseSheet(
+          participants: widget.participants,
+          categories: widget.categories,
+          initialExpense: _expense,
+          onExpenseAdded: _onSave,
+        ),
       ),
     );
   }
