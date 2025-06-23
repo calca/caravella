@@ -55,8 +55,7 @@ class TripAmountCard extends StatelessWidget {
                           ),
                     ),
                     if ((paidBy != null && paidBy!.isNotEmpty) ||
-                        category != null ||
-                        date != null)
+                        category != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0, right: 2.0),
                         child: Row(
@@ -91,47 +90,53 @@ class TripAmountCard extends StatelessWidget {
                                     ),
                               ),
                             ],
-                            if (date != null) ...[
-                              Expanded(
-                                  child: Container()), // push date to right
-                              Icon(Icons.calendar_today,
-                                  size: 13, color: textColor.withOpacity(0.7)),
-                              const SizedBox(width: 2),
-                              Text(
-                                '${date!.day.toString().padLeft(2, '0')}/${date!.month.toString().padLeft(2, '0')}/${date!.year}',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(
-                                      color: textColor,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                              ),
-                            ],
                           ],
                         ),
                       ),
                   ],
                 ),
               ),
-              // Amount e currency
-              Row(
+              // Amount e currency sulla stessa linea, allineati in basso, data sotto
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  if (coins > 0) ...[
-                    Text('$coins',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
-                            ?.copyWith(
-                                fontWeight: FontWeight.bold, color: textColor)),
-                    const SizedBox(width: 2),
-                    Text(currency,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: textColor,
-                          fontSize: 18,
-                        )),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Baseline(
+                        baselineType: TextBaseline.alphabetic,
+                        baseline: 24, // valore adatto per l'allineamento
+                        child: Text('$coins',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: textColor)),
+                      ),
+                      const SizedBox(width: 4),
+                      Baseline(
+                        baselineType: TextBaseline.alphabetic,
+                        baseline: 24, // stesso valore per currency
+                        child: Text(currency,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: textColor,
+                              fontSize: 13, // più piccolo dell'amount
+                            )),
+                      ),
+                    ],
+                  ),
+                  if (date != null) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      '${date!.day.toString().padLeft(2, '0')}/${date!.month.toString().padLeft(2, '0')}/${date!.year}',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: textColor,
+                            fontWeight: FontWeight.w500,
+                          ),
+                    ),
                   ],
                 ],
               ),
