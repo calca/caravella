@@ -22,7 +22,6 @@ class ExpenseEditPage extends StatefulWidget {
 
 class _ExpenseEditPageState extends State<ExpenseEditPage> {
   late Expense _expense;
-  bool _deleted = false;
 
   @override
   void initState() {
@@ -55,10 +54,8 @@ class _ExpenseEditPageState extends State<ExpenseEditPage> {
         ],
       ),
     );
+    if (!mounted) return;
     if (confirm == true) {
-      setState(() {
-        _deleted = true;
-      });
       Navigator.of(context).pop(ExpenseActionResult(deleted: true));
     }
   }
