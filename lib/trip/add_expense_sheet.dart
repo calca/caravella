@@ -9,6 +9,7 @@ class AddExpenseSheet extends StatefulWidget {
   final void Function(Expense) onExpenseAdded;
   final void Function()? onAddCategory;
   final void Function(String)? onCategoryAdded;
+  final Expense? initialExpense;
   const AddExpenseSheet({
     super.key,
     required this.participants,
@@ -16,6 +17,7 @@ class AddExpenseSheet extends StatefulWidget {
     this.categories = const [],
     this.onAddCategory,
     this.onCategoryAdded,
+    this.initialExpense,
   });
 
   @override
@@ -27,7 +29,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   String? _category;
   double? _amount;
   String? _paidBy;
-  final DateTime _date = DateTime.now();
+  DateTime? _date;
   String? _paidByError;
   final _amountController = TextEditingController();
   final FocusNode _amountFocus = FocusNode();
@@ -35,6 +37,15 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   @override
   void initState() {
     super.initState();
+    if (widget.initialExpense != null) {
+      _category = widget.initialExpense!.description;
+      _amount = widget.initialExpense!.amount;
+      _paidBy = widget.initialExpense!.paidBy;
+      _date = widget.initialExpense!.date;
+      _amountController.text = widget.initialExpense!.amount.toString();
+    } else {
+      _date = DateTime.now();
+    }
     // Focus automatico su importo
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _amountFocus.requestFocus();
@@ -253,7 +264,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                         description: _category ?? '',
                         amount: _amount ?? 0,
                         paidBy: _paidBy ?? '',
-                        date: _date,
+                        date: _date ?? DateTime.now(),
                       );
                       widget.onExpenseAdded(expense);
                       Navigator.of(context).pop();
