@@ -54,7 +54,9 @@ class TripAmountCard extends StatelessWidget {
                             color: textColor,
                           ),
                     ),
-                    if ((paidBy != null && paidBy!.isNotEmpty) || category != null || date != null)
+                    if ((paidBy != null && paidBy!.isNotEmpty) ||
+                        category != null ||
+                        date != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0, right: 2.0),
                         child: Row(
@@ -65,7 +67,10 @@ class TripAmountCard extends StatelessWidget {
                               const SizedBox(width: 2),
                               Text(
                                 paidBy!,
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(
                                       color: paidByColor,
                                       fontSize: 12,
                                     ),
@@ -73,22 +78,31 @@ class TripAmountCard extends StatelessWidget {
                               const SizedBox(width: 8),
                             ],
                             if (category != null) ...[
-                              Icon(Icons.category, size: 15, color: categoryColor),
+                              Icon(Icons.category,
+                                  size: 15, color: categoryColor),
                               const SizedBox(width: 2),
                               Text(
                                 category!,
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(
                                       color: categoryColor,
                                     ),
                               ),
                             ],
                             if (date != null) ...[
-                              Expanded(child: Container()), // push date to right
-                              Icon(Icons.calendar_today, size: 13, color: textColor.withOpacity(0.7)),
+                              Expanded(
+                                  child: Container()), // push date to right
+                              Icon(Icons.calendar_today,
+                                  size: 13, color: textColor.withOpacity(0.7)),
                               const SizedBox(width: 2),
                               Text(
                                 '${date!.day.toString().padLeft(2, '0')}/${date!.month.toString().padLeft(2, '0')}/${date!.year}',
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(
                                       color: textColor,
                                       fontWeight: FontWeight.w500,
                                     ),

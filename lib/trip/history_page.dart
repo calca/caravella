@@ -209,37 +209,41 @@ class _HistoryPageState extends State<HistoryPage> {
                     child: _filteredTrips.isEmpty
                         ? Center(
                             key: const ValueKey('empty'),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(
-                                  'assets/images/home/no_travels.png',
-                                  width: 180,
-                                  height: 180,
-                                  fit: BoxFit.contain,
-                                ),
-                                const SizedBox(height: 16),
-                                Text(loc.get('no_trips_found'),
-                                    style:
-                                        Theme.of(context).textTheme.titleLarge),
-                                const SizedBox(height: 16),
-                                ElevatedButton.icon(
-                                  icon: const Icon(Icons.add),
-                                  label: Text(loc.get('add_trip')),
-                                  onPressed: () async {
-                                    final result =
-                                        await Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => AddTripPage(),
+                            child: (_periodFilter == 'all')
+                                ? Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.asset(
+                                        'assets/images/home/no_travels.png',
+                                        width: 180,
+                                        height: 180,
+                                        fit: BoxFit.contain,
                                       ),
-                                    );
-                                    if (result == true) {
-                                      await _loadTrips();
-                                    }
-                                  },
-                                ),
-                              ],
-                            ),
+                                      const SizedBox(height: 16),
+                                      Text(loc.get('no_trips_found'),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleLarge),
+                                      const SizedBox(height: 16),
+                                      ElevatedButton.icon(
+                                        icon: const Icon(Icons.add),
+                                        label: Text(loc.get('add_trip')),
+                                        onPressed: () async {
+                                          final result =
+                                              await Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  AddTripPage(),
+                                            ),
+                                          );
+                                          if (result == true) {
+                                            await _loadTrips();
+                                          }
+                                        },
+                                      ),
+                                    ],
+                                  )
+                                : const SizedBox.shrink(),
                           )
                         : ListView.builder(
                             key: const ValueKey('list'),
