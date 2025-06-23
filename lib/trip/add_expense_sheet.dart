@@ -243,13 +243,12 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                       _paidByError =
                           _paidBy == null ? loc.get('required') : null;
                     });
+                    // Always save the form to update _amount
+                    _formKey.currentState!.save();
                     if ((widget.categories.isNotEmpty
                             ? _category != null
                             : _formKey.currentState!.validate()) &&
                         _paidBy != null) {
-                      if (widget.categories.isEmpty) {
-                        _formKey.currentState!.save();
-                      }
                       final expense = Expense(
                         description: _category ?? '',
                         amount: _amount ?? 0,
