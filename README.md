@@ -35,25 +35,6 @@ Caravella è un'app Flutter per la gestione di viaggi, spese e partecipanti, con
 - Usa le configurazioni VS Code in `.vscode/launch.json` per debug rapido su Android/iOS.
 - Hot reload e hot restart supportati.
 
-## Pubblicazione su GitHub
-1. Inizializza la repo (se non già fatto):
-   ```sh
-   git init
-   git add .
-   git commit -m "First commit"
-   git remote add origin https://github.com/<tuo-utente>/<nome-repo>.git
-   git push -u origin main
-   ```
-2. Aggiorna questo README con badge, screenshot e link alla repo.
-
-## Dipendenze principali
-- [Flutter](https://flutter.dev/)
-- [path_provider](https://pub.dev/packages/path_provider)
-- [flutter_launcher_icons](https://pub.dev/packages/flutter_launcher_icons)
-
 ## Licenza
 MIT
 
----
-
-> Progetto sviluppato da [TUO NOME] — 2025
