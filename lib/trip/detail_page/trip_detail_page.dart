@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/trip/add_expense_sheet.dart';
-import '../trips_storage.dart';
-import 'add_trip_page.dart';
-import '../app_localizations.dart';
-import '../state/locale_notifier.dart';
-import '../widgets/trip_amount_card.dart';
+import '../../trips_storage.dart';
+import '../add_trip_page.dart';
+import '../../app_localizations.dart';
+import '../../state/locale_notifier.dart';
+import '../../widgets/trip_amount_card.dart';
+import 'tabs/expenses_tab.dart';
+import 'tabs/overview_tab.dart';
+import 'tabs/statistics_tab.dart';
 
 class TripDetailPage extends StatefulWidget {
   final Trip trip;
@@ -141,9 +144,6 @@ class _TripDetailPageState extends State<TripDetailPage> {
                                 color: Theme.of(context).colorScheme.primary,
                               ),
                         ),
-                        const SizedBox(height: 4),
-                        Text(loc.get('total_spent'),
-                            style: Theme.of(context).textTheme.bodySmall),
                       ],
                     ),
                   ],
@@ -158,7 +158,8 @@ class _TripDetailPageState extends State<TripDetailPage> {
                   children: [
                     TabBar(
                       labelColor: Theme.of(context).colorScheme.primary,
-                      unselectedLabelColor: Theme.of(context).textTheme.bodyMedium?.color,
+                      unselectedLabelColor:
+                          Theme.of(context).textTheme.bodyMedium?.color,
                       tabs: [
                         Tab(text: loc.get('expenses')),
                         Tab(text: 'Overview'),
@@ -170,91 +171,11 @@ class _TripDetailPageState extends State<TripDetailPage> {
                       child: TabBarView(
                         children: [
                           // Tab 1: Spese
-                          trip.expenses.isEmpty
-                              ? Center(child: Text(loc.get('no_expenses')))
-                              : ListView.builder(
-                                  itemCount: trip.expenses.length,
-                                  itemBuilder: (context, i) {
-                                    final expense = trip.expenses[i];
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 6, horizontal: 8),
-                                      child: TripAmountCard(
-                                        title: expense.description,
-                                        coins: expense.amount.toInt(),
-                                        checked: true,
-                                        paidBy: expense.paidBy,
-                                        category: null,
-                                        date: expense.date,
-                                        currency: trip.currency,
-                                      ),
-                                    );
-                                  },
-                                ),
+                          ExpensesTab(trip: trip, loc: loc),
                           // Tab 2: Overview
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                            child: ListView(
-                              children: [
-                                Text('Spese per partecipante',
-                                    style: Theme.of(context).textTheme.titleMedium),
-                                const SizedBox(height: 8),
-                                ...trip.participants.map((p) {
-                                  final total = trip.expenses
-                                      .where((e) => e.paidBy == p)
-                                      .fold<double>(0, (sum, e) => sum + e.amount);
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 2),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(p, style: Theme.of(context).textTheme.bodyMedium),
-                                        Text('${trip.currency} ${total.toStringAsFixed(2)}',
-                                            style: Theme.of(context).textTheme.bodyMedium),
-                                      ],
-                                    ),
-                                  );
-                                }),
-                                const SizedBox(height: 18),
-                                Text('Spese per categoria',
-                                    style: Theme.of(context).textTheme.titleMedium),
-                                const SizedBox(height: 8),
-                                ...trip.categories.map((cat) {
-                                  final total = trip.expenses
-                                      .where((e) => e.description == cat)
-                                      .fold<double>(0, (sum, e) => sum + e.amount);
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 2),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(cat, style: Theme.of(context).textTheme.bodyMedium),
-                                        Text('${trip.currency} ${total.toStringAsFixed(2)}',
-                                            style: Theme.of(context).textTheme.bodyMedium),
-                                      ],
-                                    ),
-                                  );
-                                }),
-                                // Mostra eventuali spese senza categoria
-                                if (trip.expenses.any((e) => e.description.isEmpty || !trip.categories.contains(e.description)))
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 2),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text('—', style: Theme.of(context).textTheme.bodyMedium),
-                                        Text(
-                                          '${trip.currency} ${trip.expenses.where((e) => e.description.isEmpty || !trip.categories.contains(e.description)).fold<double>(0, (sum, e) => sum + e.amount).toStringAsFixed(2)}',
-                                          style: Theme.of(context).textTheme.bodyMedium,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                          // Tab 3: Statistiche (placeholder)
-                          Center(child: Text('Statistiche')), // TODO: contenuto reale
+                          OverviewTab(trip: trip),
+                          // Tab 3: Statistiche
+                          const StatisticsTab(),
                         ],
                       ),
                     ),

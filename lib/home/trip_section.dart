@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import '../app_localizations.dart';
 import '../trips_storage.dart';
 import 'trip_expenses_list.dart';
-import 'caravella_bottom_bar.dart';
-import '../trip/trip_detail_page.dart';
+import '../widgets/caravella_bottom_bar.dart';
+import '../trip/detail_page/trip_detail_page.dart';
 
 class TripSection extends StatelessWidget {
   final Trip? currentTrip;
