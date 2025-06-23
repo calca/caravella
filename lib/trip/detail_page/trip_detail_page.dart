@@ -183,42 +183,50 @@ class _TripDetailPageState extends State<TripDetailPage> {
               ),
             ),
             const SizedBox(height: 24),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.add, size: 28),
-              label: Text(loc.get('add_expense')),
-              onPressed: () async {
-                final result = await Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => ExpenseEditPage(
-                      expense: Expense(
-                        description: '',
-                        amount: 0,
-                        paidBy: trip.participants.isNotEmpty
-                            ? trip.participants.first
-                            : '',
-                        date: DateTime.now(),
-                        note: null,
+            Align(
+              alignment: Alignment.centerRight,
+              child: FloatingActionButton.extended(
+                heroTag: 'add-expense-fab',
+                onPressed: () async {
+                  final result = await Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ExpenseEditPage(
+                        expense: Expense(
+                          description: '',
+                          amount: 0,
+                          paidBy: trip.participants.isNotEmpty
+                              ? trip.participants.first
+                              : '',
+                          date: DateTime.now(),
+                          note: null,
+                        ),
+                        participants: trip.participants,
+                        categories: trip.categories,
+                        loc: loc,
                       ),
-                      participants: trip.participants,
-                      categories: trip.categories,
-                      loc: loc,
                     ),
-                  ),
-                );
-                if (result is ExpenseActionResult &&
-                    result.updatedExpense != null) {
-                  final trips = await TripsStorage.readTrips();
-                  final idx = trips.indexWhere((v) =>
-                      v.title == trip.title &&
-                      v.startDate == trip.startDate &&
-                      v.endDate == trip.endDate);
-                  if (idx != -1) {
-                    trips[idx].expenses.add(result.updatedExpense!);
-                    await TripsStorage.writeTrips(trips);
-                    await _refreshTrip();
+                  );
+                  if (result is ExpenseActionResult &&
+                      result.updatedExpense != null) {
+                    final trips = await TripsStorage.readTrips();
+                    final idx = trips.indexWhere((v) =>
+                        v.title == trip.title &&
+                        v.startDate == trip.startDate &&
+                        v.endDate == trip.endDate);
+                    if (idx != -1) {
+                      trips[idx].expenses.add(result.updatedExpense!);
+                      await TripsStorage.writeTrips(trips);
+                      await _refreshTrip();
+                    }
                   }
-                }
-              },
+                },
+                label: const Text('+',
+                    style:
+                        TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+                icon: const SizedBox.shrink(),
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Colors.white,
+              ),
             ),
           ],
         ),
