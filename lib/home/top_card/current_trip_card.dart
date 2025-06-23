@@ -34,11 +34,25 @@ class CurrentTripCard extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Center(
-              child: Text(
-                '${trip.currency} ${trip.expenses.fold<double>(0, (sum, s) => sum + s.amount).toStringAsFixed(2)}',
-                style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                    fontWeight: FontWeight.bold, color: Colors.white),
-                textAlign: TextAlign.center,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    trip.expenses.fold<double>(0, (sum, s) => sum + s.amount).toStringAsFixed(2),
+                    style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    trip.currency,
+                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 22, // più piccolo dell'amount
+                        ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 20),
