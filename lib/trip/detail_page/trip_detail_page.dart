@@ -184,7 +184,7 @@ class _TripDetailPageState extends State<TripDetailPage> {
             ),
             const SizedBox(height: 24),
             ElevatedButton.icon(
-              icon: const Icon(Icons.add),
+              icon: const Icon(Icons.add, size: 28),
               label: Text(loc.get('add_expense')),
               onPressed: () async {
                 final result = await Navigator.of(context).push(
