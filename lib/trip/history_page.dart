@@ -118,20 +118,9 @@ class _HistoryPageState extends State<HistoryPage> {
         ),
       ),
     );
+    if (!mounted) return;
     if (action == 'edit') {
-      final result = await Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => AddTripPage(trip: trip),
-        ),
-      );
-      if (result == true) {
-        final trips = await TripsStorage.readTrips();
-        if (!mounted) return;
-        setState(() {
-          _allTrips = trips;
-          _filteredTrips = _applyFilter(trips);
-        });
-      }
+      _navigateAndEditTrip(trip);
     } else if (action == 'duplicate') {
       final newTrip = Trip(
         title: "${trip.title} (Copia)",
@@ -149,6 +138,23 @@ class _HistoryPageState extends State<HistoryPage> {
       });
     } else if (action == 'delete') {
       await _deleteTrip(trip);
+    }
+  }
+
+  void _navigateAndEditTrip(Trip trip) async {
+    final result = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => AddTripPage(trip: trip),
+      ),
+    );
+    if (!mounted) return;
+    if (result == true) {
+      final trips = await TripsStorage.readTrips();
+      if (!mounted) return;
+      setState(() {
+        _allTrips = trips;
+        _filteredTrips = _applyFilter(trips);
+      });
     }
   }
 

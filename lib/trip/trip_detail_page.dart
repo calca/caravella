@@ -214,7 +214,7 @@ class _TripDetailPageState extends State<TripDetailPage> {
                                       ],
                                     ),
                                   );
-                                }).toList(),
+                                }),
                                 const SizedBox(height: 18),
                                 Text('Spese per categoria',
                                     style: Theme.of(context).textTheme.titleMedium),
@@ -234,7 +234,7 @@ class _TripDetailPageState extends State<TripDetailPage> {
                                       ],
                                     ),
                                   );
-                                }).toList(),
+                                }),
                                 // Mostra eventuali spese senza categoria
                                 if (trip.expenses.any((e) => e.description.isEmpty || !trip.categories.contains(e.description)))
                                   Padding(
