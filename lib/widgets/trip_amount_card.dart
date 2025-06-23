@@ -35,12 +35,13 @@ class TripAmountCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         // Nessuna ombra
       ),
-      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
                 child: Column(
@@ -53,20 +54,55 @@ class TripAmountCard extends StatelessWidget {
                             color: textColor,
                           ),
                     ),
-                    if (paidBy != null && paidBy!.isNotEmpty) ...[
-                      const SizedBox(height: 2),
-                      Text(
-                        paidBy!,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: paidByColor,
-                              fontSize: 12,
-                            ),
+                    if ((paidBy != null && paidBy!.isNotEmpty) || category != null || date != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4.0, right: 2.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            if (paidBy != null && paidBy!.isNotEmpty) ...[
+                              Icon(Icons.person, size: 15, color: paidByColor),
+                              const SizedBox(width: 2),
+                              Text(
+                                paidBy!,
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: paidByColor,
+                                      fontSize: 12,
+                                    ),
+                              ),
+                              const SizedBox(width: 8),
+                            ],
+                            if (category != null) ...[
+                              Icon(Icons.category, size: 15, color: categoryColor),
+                              const SizedBox(width: 2),
+                              Text(
+                                category!,
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: categoryColor,
+                                    ),
+                              ),
+                            ],
+                            if (date != null) ...[
+                              Expanded(child: Container()), // push date to right
+                              Icon(Icons.calendar_today, size: 13, color: textColor.withOpacity(0.7)),
+                              const SizedBox(width: 2),
+                              Text(
+                                '${date!.day.toString().padLeft(2, '0')}/${date!.month.toString().padLeft(2, '0')}/${date!.year}',
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: textColor,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                              ),
+                            ],
+                          ],
+                        ),
                       ),
-                    ],
                   ],
                 ),
               ),
+              // Amount e currency
               Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   if (coins > 0) ...[
                     Text('$coins',
@@ -87,33 +123,6 @@ class TripAmountCard extends StatelessWidget {
               ),
             ],
           ),
-          if (category != null || date != null) ...[
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                if (category != null) ...[
-                  Icon(Icons.category, size: 18, color: categoryColor),
-                  const SizedBox(width: 4),
-                  Text(category!,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(color: categoryColor)),
-                  const SizedBox(width: 12),
-                ],
-                if (date != null) ...[
-                  const Icon(Icons.calendar_today,
-                      size: 16, color: Colors.teal),
-                  const SizedBox(width: 4),
-                  Text('${date!.day}/${date!.month}/${date!.year}',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(color: Colors.teal)),
-                ],
-              ],
-            ),
-          ],
         ],
       ),
     );
