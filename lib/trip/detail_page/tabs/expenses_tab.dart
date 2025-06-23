@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../widgets/trip_amount_card.dart';
 import '../../../trips_storage.dart';
 import '../../../app_localizations.dart';
-import 'expense_edit_page.dart';
+import '../expense_edit_page.dart';
 
 class ExpensesTab extends StatefulWidget {
   final Trip trip;

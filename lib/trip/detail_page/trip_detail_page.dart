@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'tabs/expense_edit_page.dart';
+import 'expense_edit_page.dart';
 import '../../trips_storage.dart';
 import '../add_trip_page.dart';
 import '../../app_localizations.dart';
@@ -193,7 +193,9 @@ class _TripDetailPageState extends State<TripDetailPage> {
                       expense: Expense(
                         description: '',
                         amount: 0,
-                        paidBy: trip.participants.isNotEmpty ? trip.participants.first : '',
+                        paidBy: trip.participants.isNotEmpty
+                            ? trip.participants.first
+                            : '',
                         date: DateTime.now(),
                         note: null,
                       ),
@@ -203,7 +205,8 @@ class _TripDetailPageState extends State<TripDetailPage> {
                     ),
                   ),
                 );
-                if (result is ExpenseActionResult && result.updatedExpense != null) {
+                if (result is ExpenseActionResult &&
+                    result.updatedExpense != null) {
                   final trips = await TripsStorage.readTrips();
                   final idx = trips.indexWhere((v) =>
                       v.title == trip.title &&

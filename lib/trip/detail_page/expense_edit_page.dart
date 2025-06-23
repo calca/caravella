@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../trips_storage.dart';
-import '../../../app_localizations.dart';
-import '../../add_expense_sheet.dart';
-import 'expenses_tab.dart';
+import '../../trips_storage.dart';
+import '../../app_localizations.dart';
+import '../add_expense_sheet.dart';
+import 'tabs/expenses_tab.dart';
 
 class ExpenseEditPage extends StatefulWidget {
   final Expense expense;
