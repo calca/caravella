@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../trips_storage.dart';
+import '../../app_localizations.dart';
 import 'base_flat_card.dart';
 
 class TodaySpentCard extends StatelessWidget {
@@ -14,18 +15,44 @@ class TodaySpentCard extends StatelessWidget {
             e.date.month == DateTime.now().month &&
             e.date.day == DateTime.now().day)
         .fold<double>(0, (sum, e) => sum + e.amount);
+    // Localizzazione
+    final locale = Localizations.localeOf(context).languageCode;
+    final loc = AppLocalizations(locale);
+    final label = loc.get('today');
     return BaseFlatCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Speso oggi', style: Theme.of(context).textTheme.bodySmall),
-          const SizedBox(height: 6),
-          Text(
-            '${trip.currency} ${todayTotal.toStringAsFixed(2)}',
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge
-                ?.copyWith(fontWeight: FontWeight.bold),
+          Text(label, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold)),
+          const Spacer(),
+          Row(
+            children: [
+              const Spacer(),
+              Baseline(
+                baseline: 38, // valore empirico per displaySmall
+                baselineType: TextBaseline.alphabetic,
+                child: Text(
+                  '${todayTotal.round()}',
+                  style: Theme.of(context)
+                      .textTheme
+                      .displaySmall
+                      ?.copyWith(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.right,
+                ),
+              ),
+              const SizedBox(width: 4),
+              Baseline(
+                baseline: 44, // leggermente più in basso per la currency
+                baselineType: TextBaseline.alphabetic,
+                child: Text(
+                  trip.currency,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+              ),
+            ],
           ),
         ],
       ),
