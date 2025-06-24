@@ -73,9 +73,9 @@ class _TripDetailPageState extends State<TripDetailPage> {
     final loc = AppLocalizations(locale);
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      backgroundColor: colorScheme.surfaceVariant,
+      backgroundColor: colorScheme.surfaceContainerHighest,
       appBar: CaravellaAppBar(
-        backgroundColor: colorScheme.surfaceVariant,
+        backgroundColor: colorScheme.surfaceContainerHighest,
         actions: [
           IconButton(
             icon: const Icon(Icons.edit),
@@ -151,7 +151,7 @@ class _TripDetailPageState extends State<TripDetailPage> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
             decoration: BoxDecoration(
-              color: colorScheme.surfaceVariant,
+              color: colorScheme.surfaceContainerHighest,
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -223,7 +223,8 @@ class _TripDetailPageState extends State<TripDetailPage> {
                             ),
                             ButtonSegment(
                               value: 1,
-                              icon: const Icon(Icons.dashboard_customize_rounded),
+                              icon:
+                                  const Icon(Icons.dashboard_customize_rounded),
                             ),
                             ButtonSegment(
                               value: 2,
@@ -238,19 +239,25 @@ class _TripDetailPageState extends State<TripDetailPage> {
                           },
                           showSelectedIcon: false,
                           style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.resolveWith<Color?>((states) {
-                              if (states.contains(MaterialState.selected)) {
-                                return colorScheme.primary.withOpacity(0.15);
+                            backgroundColor:
+                                WidgetStateProperty.resolveWith<Color?>(
+                                    (states) {
+                              if (states.contains(WidgetState.selected)) {
+                                return colorScheme.primary
+                                    .withAlpha((0.15 * 255).toInt());
                               }
                               return Colors.transparent;
                             }),
-                            foregroundColor: MaterialStateProperty.all(
+                            foregroundColor: WidgetStateProperty.all(
                               colorScheme.onSurface,
                             ),
-                            shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                            shape: WidgetStateProperty.all(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(24)),
                             ),
-                            padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 12, vertical: 8)),
+                            padding: WidgetStateProperty.all(
+                                const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 8)),
                           ),
                         ),
                       ),

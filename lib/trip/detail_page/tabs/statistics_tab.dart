@@ -51,7 +51,9 @@ class StatisticsTab extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.bar_chart,
-                size: 48, color: theme.colorScheme.primary.withAlpha((0.3 * 255).toInt())),
+                size: 48,
+                color:
+                    theme.colorScheme.primary.withAlpha((0.3 * 255).toInt())),
             const SizedBox(height: 12),
             Text(loc.get('no_data'), style: theme.textTheme.bodyLarge),
           ],
@@ -66,7 +68,9 @@ class StatisticsTab extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.bar_chart,
-                size: 48, color: theme.colorScheme.primary.withAlpha((0.3 * 255).toInt())),
+                size: 48,
+                color:
+                    theme.colorScheme.primary.withAlpha((0.3 * 255).toInt())),
             const SizedBox(height: 12),
             Text(loc.get('no_data'), style: theme.textTheme.bodyLarge),
           ],

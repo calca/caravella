@@ -22,8 +22,6 @@ class TripAmountCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
-    final Color surfaceGrey =
-        isDark ? Colors.grey.shade900 : Colors.grey.shade50;
     final Color textColor = isDark ? Colors.white : Colors.black;
     final Color paidByColor =
         isDark ? Colors.grey.shade300 : Colors.grey.shade700;
