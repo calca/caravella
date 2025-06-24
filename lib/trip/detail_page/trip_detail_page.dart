@@ -174,7 +174,7 @@ class _TripDetailPageState extends State<TripDetailPage> {
                           // Tab 2: Overview
                           OverviewTab(trip: trip),
                           // Tab 3: Statistiche
-                          const StatisticsTab(),
+                          StatisticsTab(trip: trip),
                         ],
                       ),
                     ),

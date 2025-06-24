@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../app_localizations.dart';
 import '../../../trips_storage.dart';
 
 class OverviewTab extends StatelessWidget {
@@ -7,46 +8,86 @@ class OverviewTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final loc = AppLocalizations(Localizations.localeOf(context).languageCode);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: ListView(
         children: [
-          Text('Spese per partecipante',
-              style: Theme.of(context).textTheme.titleMedium),
+          // Card rimossa: solo sezioni partecipanti e categorie
+          const SizedBox(height: 8),
+          Text(loc.get('expenses_by_participant'),
+              style: theme.textTheme.titleMedium),
           const SizedBox(height: 8),
           ...trip.participants.map((p) {
             final total = trip.expenses
                 .where((e) => e.paidBy == p)
                 .fold<double>(0, (sum, e) => sum + e.amount);
             return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 2),
+              padding: const EdgeInsets.symmetric(vertical: 4),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(p, style: Theme.of(context).textTheme.bodyMedium),
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 14,
+                        backgroundColor:
+                            theme.colorScheme.primary.withOpacity(0.15),
+                        child: Text(p.isNotEmpty ? p[0].toUpperCase() : '?',
+                            style: theme.textTheme.bodyMedium),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(p, style: theme.textTheme.bodyMedium),
+                    ],
+                  ),
                   Text('${trip.currency} ${total.toStringAsFixed(2)}',
-                      style: Theme.of(context).textTheme.bodyMedium),
+                      style: theme.textTheme.bodyMedium),
                 ],
               ),
             );
           }),
           const SizedBox(height: 18),
-          Text('Spese per categoria',
-              style: Theme.of(context).textTheme.titleMedium),
+          Divider(),
+          const SizedBox(height: 18),
+          Text(loc.get('expenses_by_category'),
+              style: theme.textTheme.titleMedium),
           const SizedBox(height: 8),
           ...trip.categories.map((cat) {
             final total = trip.expenses
                 .where((e) => e.description == cat)
                 .fold<double>(0, (sum, e) => sum + e.amount);
             return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 2),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(cat, style: Theme.of(context).textTheme.bodyMedium),
-                  Text('${trip.currency} ${total.toStringAsFixed(2)}',
-                      style: Theme.of(context).textTheme.bodyMedium),
-                ],
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.secondary.withOpacity(0.08),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 6),
+                      child: Row(
+                        children: [
+                          Icon(Icons.label_outline,
+                              size: 18, color: theme.colorScheme.secondary),
+                          const SizedBox(width: 6),
+                          Text(cat, style: theme.textTheme.bodyMedium),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 6),
+                      child: Text(
+                          '${trip.currency} ${total.toStringAsFixed(2)}',
+                          style: theme.textTheme.bodyMedium),
+                    ),
+                  ],
+                ),
               ),
             );
           }),
@@ -54,14 +95,14 @@ class OverviewTab extends StatelessWidget {
               e.description.isEmpty ||
               !trip.categories.contains(e.description)))
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 2),
+              padding: const EdgeInsets.symmetric(vertical: 4),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('—', style: Theme.of(context).textTheme.bodyMedium),
+                  Text('—', style: theme.textTheme.bodyMedium),
                   Text(
                     '${trip.currency} ${trip.expenses.where((e) => e.description.isEmpty || !trip.categories.contains(e.description)).fold<double>(0, (sum, e) => sum + e.amount).toStringAsFixed(2)}',
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: theme.textTheme.bodyMedium,
                   ),
                 ],
               ),
