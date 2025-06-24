@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import '../../trips_storage.dart';
 import 'base_flat_card.dart';
 import '../../trip/detail_page/trip_detail_page.dart';
+import '../../app_localizations.dart';
 
 class TopPaidByCard extends StatelessWidget {
   final Trip trip;
-  const TopPaidByCard({required this.trip, super.key});
+  final AppLocalizations loc;
+  const TopPaidByCard({required this.trip, required this.loc, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,13 @@ class TopPaidByCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Top pagatori', style: Theme.of(context).textTheme.bodySmall),
+          Text(
+            loc.get('people'),
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall
+                ?.copyWith(fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 6),
           if (top.isEmpty)
             Text('-', style: Theme.of(context).textTheme.titleLarge)

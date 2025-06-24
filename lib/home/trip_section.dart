@@ -69,7 +69,8 @@ class TripSection extends StatelessWidget {
                           SizedBox(
                               width: cardWidth,
                               height: cardSize,
-                              child: TopPaidByCard(trip: currentTrip!)),
+                              child:
+                                  TopPaidByCard(trip: currentTrip!, loc: loc)),
                         ],
                       ),
                       SizedBox(height: verticalSpacing),
