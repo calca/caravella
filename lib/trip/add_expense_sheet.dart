@@ -3,14 +3,14 @@ import '../trips_storage.dart';
 import '../app_localizations.dart';
 import '../state/locale_notifier.dart';
 
-class AddExpenseSheet extends StatefulWidget {
+class AddExpenseComponent extends StatefulWidget {
   final List<String> participants;
   final List<String> categories;
   final void Function(Expense) onExpenseAdded;
   final void Function()? onAddCategory;
   final void Function(String)? onCategoryAdded;
   final Expense? initialExpense;
-  const AddExpenseSheet({
+  const AddExpenseComponent({
     super.key,
     required this.participants,
     required this.onExpenseAdded,
@@ -21,10 +21,10 @@ class AddExpenseSheet extends StatefulWidget {
   });
 
   @override
-  State<AddExpenseSheet> createState() => _AddExpenseSheetState();
+  State<AddExpenseComponent> createState() => _AddExpenseComponentState();
 }
 
-class _AddExpenseSheetState extends State<AddExpenseSheet> {
+class _AddExpenseComponentState extends State<AddExpenseComponent> {
   final _formKey = GlobalKey<FormState>();
   String? _category;
   double? _amount;

@@ -94,7 +94,7 @@ class CaravellaBottomBar extends StatelessWidget {
                               right: 16,
                               top: 24,
                             ),
-                            child: AddExpenseSheet(
+                            child: AddExpenseComponent(
                               participants: currentTrip!.participants,
                               categories: currentTrip!.categories,
                               onExpenseAdded: (expense) async {

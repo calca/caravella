@@ -75,7 +75,7 @@ class _ExpenseEditPageState extends State<ExpenseEditPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        child: AddExpenseSheet(
+        child: AddExpenseComponent(
           participants: widget.participants,
           categories: widget.categories,
           initialExpense: _expense,
