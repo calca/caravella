@@ -51,7 +51,7 @@ class StatisticsTab extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.bar_chart,
-                size: 48, color: theme.colorScheme.primary.withOpacity(0.3)),
+                size: 48, color: theme.colorScheme.primary.withAlpha((0.3 * 255).toInt())),
             const SizedBox(height: 12),
             Text(loc.get('no_data'), style: theme.textTheme.bodyLarge),
           ],
@@ -66,7 +66,7 @@ class StatisticsTab extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.bar_chart,
-                size: 48, color: theme.colorScheme.primary.withOpacity(0.3)),
+                size: 48, color: theme.colorScheme.primary.withAlpha((0.3 * 255).toInt())),
             const SizedBox(height: 12),
             Text(loc.get('no_data'), style: theme.textTheme.bodyLarge),
           ],
@@ -91,7 +91,7 @@ class StatisticsTab extends StatelessWidget {
           const SizedBox(height: 16),
           Container(
             decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withOpacity(0.06),
+              color: theme.colorScheme.primary.withAlpha((0.06 * 255).toInt()),
               borderRadius: BorderRadius.circular(16),
             ),
             padding: const EdgeInsets.all(12),
@@ -131,8 +131,9 @@ class StatisticsTab extends StatelessWidget {
                             showTitles: true,
                             getTitlesWidget: (value, meta) {
                               if (value.toInt() < 0 ||
-                                  value.toInt() >= last15.length)
+                                  value.toInt() >= last15.length) {
                                 return const SizedBox.shrink();
+                              }
                               final day = last15[value.toInt()].date;
                               return Padding(
                                 padding: const EdgeInsets.only(top: 4.0),
@@ -153,8 +154,9 @@ class StatisticsTab extends StatelessWidget {
                         touchTooltipData: BarTouchTooltipData(
                           tooltipBgColor: theme.colorScheme.surface,
                           getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                            if (group.x < 0 || group.x >= last15.length)
+                            if (group.x < 0 || group.x >= last15.length) {
                               return null;
+                            }
                             final e = last15[group.x];
                             return BarTooltipItem(
                               '${e.amount.toStringAsFixed(2)} ${trip.currency}\n${e.date.day}/${e.date.month}/${e.date.year}',

@@ -32,8 +32,8 @@ class OverviewTab extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 14,
-                        backgroundColor:
-                            theme.colorScheme.primary.withOpacity(0.15),
+                        backgroundColor: theme.colorScheme.primary
+                            .withAlpha((0.15 * 255).toInt()),
                         child: Text(p.isNotEmpty ? p[0].toUpperCase() : '?',
                             style: theme.textTheme.bodyMedium),
                       ),
@@ -61,7 +61,8 @@ class OverviewTab extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: Container(
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.secondary.withOpacity(0.08),
+                  color: theme.colorScheme.secondary
+                      .withAlpha((0.08 * 255).toInt()),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(

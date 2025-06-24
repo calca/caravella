@@ -7,21 +7,20 @@ class CaravellaAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double elevation;
 
   const CaravellaAppBar({
-    Key? key,
+    super.key,
     this.actions,
     this.leading,
     this.centerTitle = false,
     this.elevation = 0,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       elevation: elevation,
-      iconTheme:
-          IconThemeData(color: Theme.of(context).colorScheme.onBackground),
-      foregroundColor: Theme.of(context).colorScheme.onBackground,
+      iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onSurface),
+      foregroundColor: Theme.of(context).colorScheme.onSurface,
       centerTitle: centerTitle,
       title: null,
       leading: leading,

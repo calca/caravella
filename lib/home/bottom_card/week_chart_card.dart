@@ -73,8 +73,9 @@ class WeekChartCard extends StatelessWidget {
                     sideTitles: SideTitles(
                       showTitles: true,
                       getTitlesWidget: (value, meta) {
-                        if (value < 0 || value > 6)
+                        if (value < 0 || value > 6) {
                           return const SizedBox.shrink();
+                        }
                         final d = days[value.toInt()];
                         return Text('${d.day}',
                             style: Theme.of(context)
