@@ -164,13 +164,22 @@ class _CaravellaHomePageState extends State<CaravellaHomePage>
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset(
-            'assets/images/home/backgrounds/mountains.jpg',
-            fit: BoxFit.cover,
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.black.withValues(alpha: 0.5)
-                : Colors.white.withValues(alpha: 0.5),
-            colorBlendMode: BlendMode.darken,
+          // Fade-in per l'immagine di background
+          TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0, end: 1),
+            duration: const Duration(milliseconds: 700),
+            builder: (context, value, child) => Opacity(
+              opacity: value,
+              child: child,
+            ),
+            child: Image.asset(
+              'assets/images/home/backgrounds/mountains.jpg',
+              fit: BoxFit.cover,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.black.withValues(alpha: 0.5)
+                  : Colors.white.withValues(alpha: 0.5),
+              colorBlendMode: BlendMode.darken,
+            ),
           ),
           SafeArea(
             child: _loading
