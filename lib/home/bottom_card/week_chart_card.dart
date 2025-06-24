@@ -3,10 +3,12 @@ import 'package:fl_chart/fl_chart.dart';
 import '../../trips_storage.dart';
 import 'base_flat_card.dart';
 import '../../trip/detail_page/trip_detail_page.dart';
+import '../../app_localizations.dart';
 
 class WeekChartCard extends StatelessWidget {
   final Trip trip;
-  const WeekChartCard({required this.trip, super.key});
+  final AppLocalizations loc;
+  const WeekChartCard({required this.trip, required this.loc, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +24,7 @@ class WeekChartCard extends StatelessWidget {
           .fold<double>(0, (sum, e) => sum + e.amount);
       return total;
     });
+    final maxValue = data.reduce((a, b) => a > b ? a : b);
     return BaseFlatCard(
       onTap: () {
         Navigator.of(context).push(
@@ -34,22 +37,31 @@ class WeekChartCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Ultimi 7 giorni', style: Theme.of(context).textTheme.bodySmall),
-          SizedBox(
-            height: 60,
+          Text(
+            loc.get('last_week'),
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall
+                ?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 6),
+          Expanded(
             child: BarChart(
               BarChartData(
                 barGroups: List.generate(
-                    7,
-                    (i) => BarChartGroupData(
-                          x: i,
-                          barRods: [
-                            BarChartRodData(
-                                toY: data[i],
-                                color: Theme.of(context).colorScheme.primary,
-                                width: 10)
-                          ],
-                        )),
+                  7,
+                  (i) => BarChartGroupData(
+                    x: i,
+                    barRods: [
+                      BarChartRodData(
+                        toY: maxValue > 0 ? data[i] / maxValue : 0,
+                        color: Theme.of(context).colorScheme.primary,
+                        width: 10,
+                        borderRadius: BorderRadius.circular(4),
+                      )
+                    ],
+                  ),
+                ),
                 titlesData: FlTitlesData(
                   leftTitles:
                       AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -76,6 +88,7 @@ class WeekChartCard extends StatelessWidget {
                 gridData: FlGridData(show: false),
                 borderData: FlBorderData(show: false),
                 minY: 0,
+                maxY: 1,
               ),
             ),
           ),

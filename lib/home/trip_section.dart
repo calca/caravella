@@ -80,7 +80,8 @@ class TripSection extends StatelessWidget {
                           SizedBox(
                               width: cardWidth,
                               height: cardSize,
-                              child: WeekChartCard(trip: currentTrip!)),
+                              child:
+                                  WeekChartCard(trip: currentTrip!, loc: loc)),
                           SizedBox(width: 12),
                           SizedBox(
                               width: cardWidth,
