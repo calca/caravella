@@ -136,7 +136,8 @@ class _TripDetailPageState extends State<TripDetailPage> {
                   }
                 },
                 label: const Text('+',
-                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+                    style:
+                        TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
                 icon: const SizedBox.shrink(),
                 backgroundColor: Theme.of(context).colorScheme.primary,
                 foregroundColor: Colors.white,
@@ -212,47 +213,47 @@ class _TripDetailPageState extends State<TripDetailPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      for (var i = 0; i < 3; i++)
-                        Padding(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: i == 1 ? 16 : 0),
-                          child: GestureDetector(
-                            onTap: () => setState(() => _selectedTab = i),
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 220),
-                              curve: Curves.easeOutCubic,
-                              width: 48,
-                              height: 48,
-                              decoration: BoxDecoration(
-                                color: _selectedTab == i
-                                    ? colorScheme.primary.withOpacity(0.15)
-                                    : Colors.transparent,
-                                shape: BoxShape.circle,
-                              ),
-                              child: Center(
-                                child: AnimatedSwitcher(
-                                  duration: const Duration(milliseconds: 220),
-                                  transitionBuilder: (child, anim) =>
-                                      ScaleTransition(
-                                          scale: anim, child: child),
-                                  child: Icon(
-                                    i == 0
-                                        ? Icons.receipt_long_rounded
-                                        : i == 1
-                                            ? Icons.dashboard_customize_rounded
-                                            : Icons.bar_chart_rounded,
-                                    key: ValueKey(i == _selectedTab),
-                                    color: _selectedTab == i
-                                        ? colorScheme.primary
-                                        : colorScheme.onSurface
-                                            .withOpacity(0.5),
-                                    size: 30,
-                                  ),
-                                ),
-                              ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.6,
+                        child: SegmentedButton<int>(
+                          segments: [
+                            ButtonSegment(
+                              value: 0,
+                              icon: const Icon(Icons.receipt_long_rounded),
                             ),
+                            ButtonSegment(
+                              value: 1,
+                              icon: const Icon(Icons.dashboard_customize_rounded),
+                            ),
+                            ButtonSegment(
+                              value: 2,
+                              icon: const Icon(Icons.bar_chart_rounded),
+                            ),
+                          ],
+                          selected: <int>{_selectedTab},
+                          onSelectionChanged: (newSelection) {
+                            setState(() {
+                              _selectedTab = newSelection.first;
+                            });
+                          },
+                          showSelectedIcon: false,
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.resolveWith<Color?>((states) {
+                              if (states.contains(MaterialState.selected)) {
+                                return colorScheme.primary.withOpacity(0.15);
+                              }
+                              return Colors.transparent;
+                            }),
+                            foregroundColor: MaterialStateProperty.all(
+                              colorScheme.onSurface,
+                            ),
+                            shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                            ),
+                            padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 12, vertical: 8)),
                           ),
                         ),
+                      ),
                     ],
                   ),
                 ),
