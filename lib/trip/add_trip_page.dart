@@ -22,6 +22,7 @@ class _AddTripPageState extends State<AddTripPage> {
   DateTime? _endDate;
   String _currency = '€'; // Default euro
   final List<String> _categories = [];
+  String? _dateError;
 
   @override
   void initState() {
@@ -47,15 +48,36 @@ class _AddTripPageState extends State<AddTripPage> {
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
     final loc = AppLocalizations(locale);
     final now = DateTime.now();
+    final firstDate = DateTime(now.year - 5);
+    final lastDate = DateTime(now.year + 5);
+    DateTime? initialDate = isStart ? (_startDate ?? now) : (_endDate ?? now);
+    bool isSelectable(DateTime d) {
+      if (isStart && _endDate != null) return !d.isAfter(_endDate!);
+      if (!isStart && _startDate != null) return !d.isBefore(_startDate!);
+      return true;
+    }
+    // Se l'initialDate non è selezionabile, trova la prima data valida
+    if (!isSelectable(initialDate)) {
+      DateTime candidate = isStart ? lastDate : firstDate;
+      while (!isSelectable(candidate)) {
+        candidate = isStart ? candidate.subtract(const Duration(days: 1)) : candidate.add(const Duration(days: 1));
+        if (candidate.isBefore(firstDate) || candidate.isAfter(lastDate)) {
+          candidate = now;
+          break;
+        }
+      }
+      initialDate = candidate;
+    }
     final picked = await showDatePicker(
       context: context,
-      initialDate: isStart ? (_startDate ?? now) : (_endDate ?? now),
-      firstDate: DateTime(now.year - 5),
-      lastDate: DateTime(now.year + 5),
+      initialDate: initialDate,
+      firstDate: firstDate,
+      lastDate: lastDate,
       helpText: isStart ? loc.get('select_start') : loc.get('select_end'),
       cancelText: loc.get('cancel'),
       confirmText: loc.get('ok'),
       locale: Locale(locale),
+      selectableDayPredicate: isSelectable,
     );
     if (picked != null) {
       setState(() {
@@ -69,18 +91,37 @@ class _AddTripPageState extends State<AddTripPage> {
   }
 
   Future<void> _saveTrip() async {
+    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
+    final loc = AppLocalizations(locale);
+    setState(() {
+      _dateError = null;
+    });
     if (!_formKey.currentState!.validate() ||
         _startDate == null ||
         _endDate == null) {
-      // Mostra un messaggio di errore se le date non sono selezionate
       if (_startDate == null || _endDate == null) {
+        setState(() {
+          _dateError = loc.get('select_both_dates');
+        });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Seleziona sia la data di inizio che di fine'),
+            content: Text(loc.get('select_both_dates')),
             backgroundColor: Colors.red,
           ),
         );
       }
+      return;
+    }
+    if (_endDate!.isBefore(_startDate!)) {
+      setState(() {
+        _dateError = loc.get('end_date_after_start');
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(loc.get('end_date_after_start')),
+          backgroundColor: Colors.red,
+        ),
+      );
       return;
     }
     if (_participants.isEmpty) {
@@ -254,6 +295,14 @@ class _AddTripPageState extends State<AddTripPage> {
                           ),
                         ],
                       ),
+                      if (_dateError != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4.0),
+                          child: Text(
+                            _dateError!,
+                            style: TextStyle(color: Colors.red, fontSize: 13),
+                          ),
+                        ),
                     ],
                   ),
                 ),

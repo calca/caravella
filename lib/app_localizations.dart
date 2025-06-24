@@ -51,6 +51,8 @@ class AppLocalizations {
       'category_name': 'Category name',
       'note': 'Note',
       'note_hint': 'Add a note (optional)',
+      'select_both_dates': 'Select both start and end date',
+      'end_date_after_start': 'End date must be after start date',
     },
     'it': {
       'app_title': 'Caravella',
@@ -97,6 +99,9 @@ class AppLocalizations {
       'category_name': 'Nome categoria',
       'note': 'Note',
       'note_hint': 'Aggiungi una nota (opzionale)',
+      'select_both_dates': 'Seleziona sia la data di inizio che di fine',
+      'end_date_after_start':
+          'La data di fine deve essere successiva a quella di inizio',
     },
   };
 
