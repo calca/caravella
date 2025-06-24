@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../trips_storage.dart';
 import 'base_flat_card.dart';
+import '../../trip/detail_page/trip_detail_page.dart';
 
 class WeekChartCard extends StatelessWidget {
   final Trip trip;
@@ -22,6 +23,13 @@ class WeekChartCard extends StatelessWidget {
       return total;
     });
     return BaseFlatCard(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => TripDetailPage(trip: trip),
+          ),
+        );
+      },
       padding: const EdgeInsets.all(10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

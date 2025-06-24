@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../trips_storage.dart';
 import 'base_flat_card.dart';
+import '../../trip/detail_page/trip_detail_page.dart';
 
 class TopPaidByCard extends StatelessWidget {
   final Trip trip;
@@ -15,6 +16,13 @@ class TopPaidByCard extends StatelessWidget {
     final top = totals.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
     return BaseFlatCard(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => TripDetailPage(trip: trip),
+          ),
+        );
+      },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

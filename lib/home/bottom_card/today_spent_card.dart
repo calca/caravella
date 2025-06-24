@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../trips_storage.dart';
 import '../../app_localizations.dart';
 import 'base_flat_card.dart';
+import '../../trip/detail_page/trip_detail_page.dart';
 
 class TodaySpentCard extends StatelessWidget {
   final Trip trip;
@@ -20,10 +21,21 @@ class TodaySpentCard extends StatelessWidget {
     final loc = AppLocalizations(locale);
     final label = loc.get('today');
     return BaseFlatCard(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => TripDetailPage(trip: trip),
+          ),
+        );
+      },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold)),
+          Text(label,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(fontWeight: FontWeight.bold)),
           const Spacer(),
           Row(
             children: [

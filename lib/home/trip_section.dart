@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
 import '../app_localizations.dart';
 import '../trips_storage.dart';
 import '../widgets/caravella_bottom_bar.dart';
@@ -85,7 +84,7 @@ class TripSection extends StatelessWidget {
                           SizedBox(
                               width: cardWidth,
                               height: cardSize,
-                              child: InfoCard()),
+                              child: InfoCard(trip: currentTrip!)),
                         ],
                       ),
                     ],
