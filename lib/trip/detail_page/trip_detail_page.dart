@@ -20,6 +20,7 @@ class TripDetailPage extends StatefulWidget {
 class _TripDetailPageState extends State<TripDetailPage> {
   Trip? _trip;
   bool _deleted = false;
+  int _selectedTab = 0;
 
   @override
   void initState() {
@@ -96,92 +97,9 @@ class _TripDetailPageState extends State<TripDetailPage> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Flat info trip header (no Card)
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-              decoration: BoxDecoration(
-                color: colorScheme.surfaceVariant,
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(trip.title,
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleLarge
-                                ?.copyWith(fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 8),
-                        Text(
-                          '${trip.startDate.day}/${trip.startDate.month}/${trip.startDate.year} - ${trip.endDate.day}/${trip.endDate.month}/${trip.endDate.year}',
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                            '${loc.get('participants')}: ${trip.participants.join(", ")}',
-                            style: Theme.of(context).textTheme.bodyMedium),
-                      ],
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        '${trip.currency} ${trip.expenses.fold<double>(0, (sum, s) => sum + s.amount).toStringAsFixed(2)}',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 18),
-            DefaultTabController(
-              length: 3,
-              child: Expanded(
-                child: Column(
-                  children: [
-                    TabBar(
-                      labelColor: Theme.of(context).colorScheme.primary,
-                      unselectedLabelColor:
-                          Theme.of(context).textTheme.bodyMedium?.color,
-                      tabs: [
-                        Tab(text: loc.get('expenses')),
-                        Tab(text: 'Overview'),
-                        Tab(text: 'Statistiche'),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Expanded(
-                      child: TabBarView(
-                        children: [
-                          // Tab 1: Spese
-                          ExpensesTab(trip: trip, loc: loc),
-                          // Tab 2: Overview
-                          OverviewTab(trip: trip),
-                          // Tab 3: Statistiche
-                          StatisticsTab(trip: trip),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-            Align(
-              alignment: Alignment.centerRight,
+      floatingActionButton: _selectedTab == 0
+          ? Padding(
+              padding: const EdgeInsets.only(bottom: 24, right: 16),
               child: FloatingActionButton.extended(
                 heroTag: 'add-expense-fab',
                 onPressed: () async {
@@ -218,15 +136,159 @@ class _TripDetailPageState extends State<TripDetailPage> {
                   }
                 },
                 label: const Text('+',
-                    style:
-                        TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
                 icon: const SizedBox.shrink(),
                 backgroundColor: Theme.of(context).colorScheme.primary,
                 foregroundColor: Colors.white,
               ),
+            )
+          : null,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Flat info trip header (no Card)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceVariant,
             ),
-          ],
-        ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(trip.title,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleLarge
+                              ?.copyWith(fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 8),
+                      Text(
+                        '${trip.startDate.day}/${trip.startDate.month}/${trip.startDate.year} - ${trip.endDate.day}/${trip.endDate.month}/${trip.endDate.year}',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                          '${loc.get('participants')}: ${trip.participants.join(", ")}',
+                          style: Theme.of(context).textTheme.bodyMedium),
+                    ],
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      '${trip.currency} ${trip.expenses.fold<double>(0, (sum, s) => sum + s.amount).toStringAsFixed(2)}',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 18),
+          // Sezione tab a tutta larghezza, senza padding laterale
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.white
+                        : colorScheme.surface,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(32),
+                      topRight: Radius.circular(32),
+                    ),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      for (var i = 0; i < 3; i++)
+                        Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: i == 1 ? 16 : 0),
+                          child: GestureDetector(
+                            onTap: () => setState(() => _selectedTab = i),
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 220),
+                              curve: Curves.easeOutCubic,
+                              width: 48,
+                              height: 48,
+                              decoration: BoxDecoration(
+                                color: _selectedTab == i
+                                    ? colorScheme.primary.withOpacity(0.15)
+                                    : Colors.transparent,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Center(
+                                child: AnimatedSwitcher(
+                                  duration: const Duration(milliseconds: 220),
+                                  transitionBuilder: (child, anim) =>
+                                      ScaleTransition(
+                                          scale: anim, child: child),
+                                  child: Icon(
+                                    i == 0
+                                        ? Icons.receipt_long_rounded
+                                        : i == 1
+                                            ? Icons.dashboard_customize_rounded
+                                            : Icons.bar_chart_rounded,
+                                    key: ValueKey(i == _selectedTab),
+                                    color: _selectedTab == i
+                                        ? colorScheme.primary
+                                        : colorScheme.onSurface
+                                            .withOpacity(0.5),
+                                    size: 30,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                // Il contenuto dei tab ora ha lo stesso background e bordi inferiori arrotondati
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? Colors.white
+                          : colorScheme.surface,
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(18),
+                        bottomRight: Radius.circular(18),
+                      ),
+                    ),
+                    margin: const EdgeInsets.only(bottom: 0),
+                    padding: const EdgeInsets.only(
+                        top: 12, left: 0, right: 0, bottom: 0),
+                    child: Builder(
+                      builder: (context) {
+                        if (_selectedTab == 0) {
+                          return ExpensesTab(trip: trip, loc: loc);
+                        } else if (_selectedTab == 1) {
+                          return OverviewTab(trip: trip);
+                        } else {
+                          return StatisticsTab(trip: trip);
+                        }
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
