@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'language_selector_setting.dart';
 import 'theme_selector_setting.dart';
 import '../state/locale_notifier.dart';
+import '../widgets/caravella_app_bar.dart';
 
 class SettingsPage extends StatelessWidget {
   final void Function(String)? onLocaleChanged;
@@ -14,12 +15,7 @@ class SettingsPage extends StatelessWidget {
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
     final localizations = AppLocalizations(locale);
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        elevation: 0,
-        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onBackground),
-        foregroundColor: Theme.of(context).colorScheme.onBackground,
-      ),
+      appBar: CaravellaAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(

@@ -3,6 +3,7 @@ import '../../trips_storage.dart';
 import '../../app_localizations.dart';
 import '../add_expense_sheet.dart';
 import 'tabs/expenses_tab.dart';
+import '../../widgets/caravella_app_bar.dart';
 
 class ExpenseEditPage extends StatefulWidget {
   final Expense expense;
@@ -63,11 +64,7 @@ class _ExpenseEditPageState extends State<ExpenseEditPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        elevation: 0,
-        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onBackground),
-        foregroundColor: Theme.of(context).colorScheme.onBackground,
+      appBar: CaravellaAppBar(
         actions: [
           IconButton(
             icon: const Icon(Icons.delete),

@@ -4,6 +4,7 @@ import 'detail_page/trip_detail_page.dart';
 import '../app_localizations.dart';
 import 'add_trip_page.dart';
 import '../state/locale_notifier.dart';
+import '../widgets/caravella_app_bar.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
@@ -164,12 +165,7 @@ class _HistoryPageState extends State<HistoryPage> {
     final loc = AppLocalizations(locale);
     final now = DateTime.now();
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        elevation: 0,
-        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onBackground),
-        foregroundColor: Theme.of(context).colorScheme.onBackground,
-      ),
+      appBar: CaravellaAppBar(),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final result = await Navigator.of(context).push(

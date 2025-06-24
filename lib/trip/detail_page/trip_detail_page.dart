@@ -7,6 +7,7 @@ import '../../state/locale_notifier.dart';
 import 'tabs/expenses_tab.dart';
 import 'tabs/overview_tab.dart';
 import 'tabs/statistics_tab.dart';
+import '../../widgets/caravella_app_bar.dart';
 
 class TripDetailPage extends StatefulWidget {
   final Trip trip;
@@ -70,11 +71,7 @@ class _TripDetailPageState extends State<TripDetailPage> {
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
     final loc = AppLocalizations(locale);
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        elevation: 0,
-        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onBackground),
-        foregroundColor: Theme.of(context).colorScheme.onBackground,
+      appBar: CaravellaAppBar(
         actions: [
           IconButton(
             icon: const Icon(Icons.edit),

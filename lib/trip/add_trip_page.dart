@@ -3,6 +3,7 @@ import '../trips_storage.dart';
 import '../app_localizations.dart';
 import '../state/locale_notifier.dart';
 import '../widgets/currency_selector.dart';
+import '../widgets/caravella_app_bar.dart';
 
 class AddTripPage extends StatefulWidget {
   final Trip? trip;
@@ -56,11 +57,14 @@ class _AddTripPageState extends State<AddTripPage> {
       if (!isStart && _startDate != null) return !d.isBefore(_startDate!);
       return true;
     }
+
     // Se l'initialDate non è selezionabile, trova la prima data valida
     if (!isSelectable(initialDate)) {
       DateTime candidate = isStart ? lastDate : firstDate;
       while (!isSelectable(candidate)) {
-        candidate = isStart ? candidate.subtract(const Duration(days: 1)) : candidate.add(const Duration(days: 1));
+        candidate = isStart
+            ? candidate.subtract(const Duration(days: 1))
+            : candidate.add(const Duration(days: 1));
         if (candidate.isBefore(firstDate) || candidate.isAfter(lastDate)) {
           candidate = now;
           break;
@@ -182,11 +186,7 @@ class _AddTripPageState extends State<AddTripPage> {
     // For debug: print all keys for this locale
     // print(AppLocalizations._localizedValues[locale]?.keys);
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        elevation: 0,
-        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onBackground),
-        foregroundColor: Theme.of(context).colorScheme.onBackground,
+      appBar: CaravellaAppBar(
         actions: [
           if (widget.trip != null)
             IconButton(
