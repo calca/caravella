@@ -38,6 +38,7 @@ class CategoryCard extends StatelessWidget {
                 ?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 6),
+          const Spacer(),
           if (top.isEmpty)
             Text('-', style: Theme.of(context).textTheme.titleLarge)
           else
