@@ -41,7 +41,8 @@ class TripSection extends StatelessWidget {
         final double availableWidth = media.size.width - horizontalPadding;
         final double availableHeight =
             constraints.maxHeight - bottomBarHeight - verticalSpacing - 8;
-        final double cardWidth = (availableWidth - 12) / 2; // 12 è lo spacing tra le due card
+        final double cardWidth =
+            (availableWidth - 12) / 2; // 12 è lo spacing tra le due card
         final double cardSize = [
           cardWidth,
           (availableHeight - verticalSpacing) / 2
@@ -93,14 +94,7 @@ class TripSection extends StatelessWidget {
               )
             else
               Expanded(
-                child: Center(
-                  child: Image.asset(
-                    'assets/images/home/no_travels.png',
-                    width: 180,
-                    height: 180,
-                    fit: BoxFit.contain,
-                  ),
-                ),
+                child: Center(),
               ),
             Padding(
               padding: const EdgeInsets.only(bottom: 2),
