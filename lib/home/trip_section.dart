@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
 import '../app_localizations.dart';
 import '../trips_storage.dart';
-import 'trip_expenses_list.dart';
 import '../widgets/caravella_bottom_bar.dart';
-import '../trip/detail_page/trip_detail_page.dart';
+import 'bottom_card/today_spent_card.dart';
+import 'bottom_card/top_paid_by_card.dart';
+import 'bottom_card/week_chart_card.dart';
+import 'bottom_card/info_card.dart';
+
+// Estensione per controllare se una data è oggi
+extension DateTimeToday on DateTime {
+  bool isToday() {
+    final now = DateTime.now();
+    return year == now.year && month == now.month && day == now.day;
+  }
+}
 
 class TripSection extends StatelessWidget {
   final Trip? currentTrip;
@@ -20,88 +31,87 @@ class TripSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Align(
-          alignment: Alignment.topCenter,
-          child: Container(
-            width: double.infinity,
-            margin: const EdgeInsets.only(top: 12),
-            decoration: BoxDecoration(
-              color: Theme.of(context)
-                  .colorScheme
-                  .surface
-                  .withValues(alpha: sectionOpacity),
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(32),
-                topRight: Radius.circular(32),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final media = MediaQuery.of(context);
+        final double horizontalPadding = 12 * 2 + 12;
+        final double verticalSpacing = 12;
+        final double bottomBarHeight = 80;
+        final double availableWidth = media.size.width - horizontalPadding;
+        // Riduci leggermente lo spazio riservato alle card per lasciare più margine alla bottom bar
+        final double availableHeight = constraints.maxHeight - bottomBarHeight - verticalSpacing - 8; // 8px extra margine
+        final double cardSize = [
+          availableWidth / 2,
+          (availableHeight - verticalSpacing) / 2
+        ].reduce((a, b) => a < b ? a : b);
+
+        return Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            if (currentTrip != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 0, bottom: 4), // meno spazio sotto
+                child: SizedBox(
+                  height: cardSize * 2 + verticalSpacing,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                              width: cardSize,
+                              height: cardSize,
+                              child: TodaySpentCard(trip: currentTrip!)),
+                          const SizedBox(width: 12),
+                          SizedBox(
+                              width: cardSize,
+                              height: cardSize,
+                              child: TopPaidByCard(trip: currentTrip!)),
+                        ],
+                      ),
+                      SizedBox(height: verticalSpacing),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                              width: cardSize,
+                              height: cardSize,
+                              child: WeekChartCard(trip: currentTrip!)),
+                          const SizedBox(width: 12),
+                          SizedBox(
+                              width: cardSize,
+                              height: cardSize,
+                              child: InfoCard()),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            else
+              Expanded(
+                child: Center(
+                  child: Image.asset(
+                    'assets/images/home/no_travels.png',
+                    width: 180,
+                    height: 180,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+            // Spacer rimosso, la bottom bar è sempre visibile
+            Padding(
+              padding: const EdgeInsets.only(bottom: 2), // ulteriore margine
+              child: CaravellaBottomBar(
+                loc: loc,
+                onTripAdded: onTripAdded,
+                currentTrip: currentTrip,
               ),
             ),
-            child: Column(
-              children: [
-                if (currentTrip != null)
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        top: 28, left: 16, right: 16, bottom: 12),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          loc.get('latest_expenses'),
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleLarge
-                              ?.copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.open_in_new),
-                          tooltip: loc.get('trip_detail'),
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    TripDetailPage(trip: currentTrip!),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                if (currentTrip == null)
-                  Expanded(
-                    child: Center(
-                      child: Image.asset(
-                        'assets/images/home/no_travels.png',
-                        width: 180,
-                        height: 180,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  )
-                else
-                  TripExpensesList(currentTrip: currentTrip, loc: loc),
-                const SizedBox(height: 64), // Spazio per la bottom bar
-              ],
-            ),
-          ),
-        ),
-        // CaravellaBottomBar sopra la lista, trasparente e con shadow
-        Positioned(
-          left: 0,
-          right: 0,
-          bottom: 0,
-          child: Container(
-            // Nessun bordo, nessun blur, nessun bordo arrotondato
-            color: Colors.transparent,
-            child: CaravellaBottomBar(
-              loc: loc,
-              onTripAdded: onTripAdded,
-              currentTrip: currentTrip,
-            ),
-          ),
-        ),
-      ],
+          ],
+        );
+      },
     );
   }
 }
