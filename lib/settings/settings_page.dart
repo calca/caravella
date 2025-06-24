@@ -14,7 +14,12 @@ class SettingsPage extends StatelessWidget {
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
     final localizations = AppLocalizations(locale);
     return Scaffold(
-      appBar: AppBar(title: Text(localizations.get('settings'))),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 0,
+        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onBackground),
+        foregroundColor: Theme.of(context).colorScheme.onBackground,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(

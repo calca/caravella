@@ -64,7 +64,10 @@ class _ExpenseEditPageState extends State<ExpenseEditPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.loc.get('edit_expense')),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 0,
+        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onBackground),
+        foregroundColor: Theme.of(context).colorScheme.onBackground,
         actions: [
           IconButton(
             icon: const Icon(Icons.delete),

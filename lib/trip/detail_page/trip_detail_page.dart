@@ -71,7 +71,10 @@ class _TripDetailPageState extends State<TripDetailPage> {
     final loc = AppLocalizations(locale);
     return Scaffold(
       appBar: AppBar(
-        title: Text(trip.title),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 0,
+        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onBackground),
+        foregroundColor: Theme.of(context).colorScheme.onBackground,
         actions: [
           IconButton(
             icon: const Icon(Icons.edit),

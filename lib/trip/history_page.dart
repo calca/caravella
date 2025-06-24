@@ -164,7 +164,12 @@ class _HistoryPageState extends State<HistoryPage> {
     final loc = AppLocalizations(locale);
     final now = DateTime.now();
     return Scaffold(
-      appBar: AppBar(title: Text(loc.get('trip_history'))),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 0,
+        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onBackground),
+        foregroundColor: Theme.of(context).colorScheme.onBackground,
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final result = await Navigator.of(context).push(

@@ -183,10 +183,10 @@ class _AddTripPageState extends State<AddTripPage> {
     // print(AppLocalizations._localizedValues[locale]?.keys);
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          widget.trip == null ? loc.get('add_trip') : loc.get('edit_trip'),
-          style: Theme.of(context).appBarTheme.titleTextStyle,
-        ),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 0,
+        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onBackground),
+        foregroundColor: Theme.of(context).colorScheme.onBackground,
         actions: [
           if (widget.trip != null)
             IconButton(
