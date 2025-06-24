@@ -5,7 +5,7 @@ import '../widgets/caravella_bottom_bar.dart';
 import 'bottom_card/today_spent_card.dart';
 import 'bottom_card/top_paid_by_card.dart';
 import 'bottom_card/week_chart_card.dart';
-import 'bottom_card/info_card.dart';
+import 'bottom_card/category_card.dart';
 
 // Estensione per controllare se una data è oggi
 extension DateTimeToday on DateTime {
@@ -86,7 +86,8 @@ class TripSection extends StatelessWidget {
                           SizedBox(
                               width: cardWidth,
                               height: cardSize,
-                              child: InfoCard(trip: currentTrip!)),
+                              child:
+                                  CategoryCard(trip: currentTrip!, loc: loc)),
                         ],
                       ),
                     ],
