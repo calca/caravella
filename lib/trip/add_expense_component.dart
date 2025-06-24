@@ -261,14 +261,18 @@ class _AddExpenseComponentState extends State<AddExpenseComponent> {
               const SizedBox(height: 16),
             ],
             // ...pulsanti salva/cancella...
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                TextButton(
+                OutlinedButton(
                   onPressed: () => Navigator.of(context).pop(),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Theme.of(context).colorScheme.onSurface,
+                    side: BorderSide(color: Theme.of(context).colorScheme.outline),
+                  ),
                   child: Text(loc.get('cancel')),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(height: 8),
                 ElevatedButton(
                   onPressed: () {
                     setState(() {
@@ -294,6 +298,10 @@ class _AddExpenseComponentState extends State<AddExpenseComponent> {
                       Navigator.of(context).pop();
                     }
                   },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                  ),
                   child: Text(loc.get('save')),
                 ),
               ],
