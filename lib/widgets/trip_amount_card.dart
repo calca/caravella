@@ -31,7 +31,7 @@ class TripAmountCard extends StatelessWidget {
         isDark ? Colors.grey.shade400 : Colors.grey.shade600;
     return Container(
       decoration: BoxDecoration(
-        color: surfaceGrey, // Flat background ancora più light
+        color: Colors.transparent, // Background trasparente
         borderRadius: BorderRadius.circular(18),
         // Nessuna ombra
       ),
