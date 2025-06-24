@@ -34,14 +34,16 @@ class TripSection extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final media = MediaQuery.of(context);
-        final double horizontalPadding = 12 * 2 + 12;
+        // Padding coerente con la bottom bar (8px orizzontale)
+        final double horizontalPadding = 8 * 2; // left + right
         final double verticalSpacing = 12;
         final double bottomBarHeight = 80;
         final double availableWidth = media.size.width - horizontalPadding;
-        // Riduci leggermente lo spazio riservato alle card per lasciare più margine alla bottom bar
-        final double availableHeight = constraints.maxHeight - bottomBarHeight - verticalSpacing - 8; // 8px extra margine
+        final double availableHeight =
+            constraints.maxHeight - bottomBarHeight - verticalSpacing - 8;
+        final double cardWidth = (availableWidth - 12) / 2; // 12 è lo spacing tra le due card
         final double cardSize = [
-          availableWidth / 2,
+          cardWidth,
           (availableHeight - verticalSpacing) / 2
         ].reduce((a, b) => a < b ? a : b);
 
@@ -50,37 +52,37 @@ class TripSection extends StatelessWidget {
           children: [
             if (currentTrip != null)
               Padding(
-                padding: const EdgeInsets.only(top: 0, bottom: 4), // meno spazio sotto
+                padding: const EdgeInsets.only(top: 0, bottom: 4),
                 child: SizedBox(
                   height: cardSize * 2 + verticalSpacing,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SizedBox(
-                              width: cardSize,
+                              width: cardWidth,
                               height: cardSize,
                               child: TodaySpentCard(trip: currentTrip!)),
-                          const SizedBox(width: 12),
+                          SizedBox(width: 12),
                           SizedBox(
-                              width: cardSize,
+                              width: cardWidth,
                               height: cardSize,
                               child: TopPaidByCard(trip: currentTrip!)),
                         ],
                       ),
                       SizedBox(height: verticalSpacing),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SizedBox(
-                              width: cardSize,
+                              width: cardWidth,
                               height: cardSize,
                               child: WeekChartCard(trip: currentTrip!)),
-                          const SizedBox(width: 12),
+                          SizedBox(width: 12),
                           SizedBox(
-                              width: cardSize,
+                              width: cardWidth,
                               height: cardSize,
                               child: InfoCard()),
                         ],
@@ -100,9 +102,8 @@ class TripSection extends StatelessWidget {
                   ),
                 ),
               ),
-            // Spacer rimosso, la bottom bar è sempre visibile
             Padding(
-              padding: const EdgeInsets.only(bottom: 2), // ulteriore margine
+              padding: const EdgeInsets.only(bottom: 2),
               child: CaravellaBottomBar(
                 loc: loc,
                 onTripAdded: onTripAdded,

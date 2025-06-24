@@ -189,30 +189,37 @@ class _CaravellaHomePageState extends State<CaravellaHomePage>
                       // Card utente/viaggio in alto
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
-                        child: _currentTrip == null
-                            ? NoTripCard(
-                                loc: loc,
-                                onAddTrip: () async {
-                                  final result =
-                                      await Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => AddTripPage(),
-                                    ),
-                                  );
-                                  if (result == true) _refresh();
-                                },
-                                opacity: 0.5,
-                              )
-                            : CurrentTripCard(
-                                trip: _currentTrip!, opacity: 0.5),
+                            horizontal: 8, vertical: 2),
+                        child: IntrinsicHeight(
+                          child: _currentTrip == null
+                              ? NoTripCard(
+                                  loc: loc,
+                                  onAddTrip: () async {
+                                    final result =
+                                        await Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => AddTripPage(),
+                                      ),
+                                    );
+                                    if (result == true) _refresh();
+                                  },
+                                  opacity: 0.5,
+                                )
+                              : CurrentTripCard(
+                                  trip: _currentTrip!, opacity: 0.5),
+                        ),
                       ),
                       // Lista task/viaggi
                       Expanded(
-                        child: TripSection(
-                          currentTrip: _currentTrip,
-                          loc: loc,
-                          onTripAdded: _refresh,
+                        flex: 3, // ancora più spazio a TripSection
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8), // allineamento con bottom bar
+                          child: TripSection(
+                            currentTrip: _currentTrip,
+                            loc: loc,
+                            onTripAdded: _refresh,
+                          ),
                         ),
                       ),
                     ],
