@@ -23,14 +23,6 @@ class CurrentSettingsTab extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              localizations.get('settings_title'),
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineSmall
-                  ?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 24),
             LanguageSelectorSetting(
               locale: localizations.locale,
               onChanged: (selected) {
@@ -54,8 +46,8 @@ class CurrentSettingsTab extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 ),
                 onPressed: () async {
                   await _backupTrips(context, localizations);
@@ -69,13 +61,15 @@ class CurrentSettingsTab extends StatelessWidget {
                 icon: const Icon(Icons.file_upload),
                 label: Text(localizations.get('import')),
                 style: TextButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-                  foregroundColor: Theme.of(context).colorScheme.onSecondaryContainer,
+                  backgroundColor:
+                      Theme.of(context).colorScheme.secondaryContainer,
+                  foregroundColor:
+                      Theme.of(context).colorScheme.onSecondaryContainer,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 ),
                 onPressed: () async {
                   final result = await FilePicker.platform.pickFiles(
@@ -89,8 +83,7 @@ class CurrentSettingsTab extends StatelessWidget {
                     final confirm = await showDialog<bool>(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title:
-                            Text(localizations.get('import_confirm_title')),
+                        title: Text(localizations.get('import_confirm_title')),
                         content: Text(localizations.get(
                             'import_confirm_message',
                             params: {'file': fileName})),
@@ -131,8 +124,7 @@ class CurrentSettingsTab extends StatelessWidget {
                         );
                         Navigator.of(context)
                             .popUntil((route) => route.isFirst);
-                        final state =
-                            context.findAncestorStateOfType<State>();
+                        final state = context.findAncestorStateOfType<State>();
                         if (state != null && state.mounted) {
                           // ignore: invalid_use_of_protected_member
                           state.setState(() {});
@@ -141,8 +133,7 @@ class CurrentSettingsTab extends StatelessWidget {
                         if (!context.mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                              content:
-                                  Text(localizations.get('import_error'))),
+                              content: Text(localizations.get('import_error'))),
                         );
                       }
                     }
