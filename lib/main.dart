@@ -11,6 +11,8 @@ import 'home/top_card/current_trip_card.dart';
 import 'state/locale_notifier.dart';
 import 'state/theme_mode_notifier.dart';
 
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+
 void main() {
   runApp(const CaravellaApp());
 }
@@ -97,6 +99,7 @@ class _CaravellaAppState extends State<CaravellaApp> {
             GlobalCupertinoLocalizations.delegate,
           ],
           home: CaravellaHomePage(title: 'Caravella'),
+          navigatorObservers: [routeObserver],
         ),
       ),
     );
@@ -111,7 +114,7 @@ class CaravellaHomePage extends StatefulWidget {
 }
 
 class _CaravellaHomePageState extends State<CaravellaHomePage>
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, RouteAware {
   Trip? _currentTrip;
   bool _loading = true;
 
@@ -142,6 +145,7 @@ class _CaravellaHomePageState extends State<CaravellaHomePage>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    routeObserver.unsubscribe(this);
     super.dispose();
   }
 
@@ -153,7 +157,14 @@ class _CaravellaHomePageState extends State<CaravellaHomePage>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    setState(() {});
+    // Registra il RouteObserver per ricevere notifiche di pop
+    routeObserver.subscribe(this, ModalRoute.of(context)! as PageRoute);
+  }
+
+  @override
+  void didPopNext() {
+    // Aggiorna lo stato quando si torna su questa pagina
+    _refresh();
   }
 
   @override

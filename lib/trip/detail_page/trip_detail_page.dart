@@ -111,16 +111,15 @@ class _TripDetailPageState extends State<TripDetailPage> {
                       ),
                     ),
                   );
-                  if (result is ExpenseActionResult &&
-                      result.updatedExpense != null) {
+                  if (result is ExpenseActionResult && result.updatedExpense != null) {
                     final trips = await TripsStorage.readTrips();
                     final idx = trips.indexWhere((v) => v.id == trip.id);
                     if (idx != -1) {
                       trips[idx].expenses.add(result.updatedExpense!);
                       await TripsStorage.writeTrips(trips);
-                      await _refreshTrip();
                     }
                   }
+                  if (mounted) await _refreshTrip();
                 },
                 label: const Text('+',
                     style:
