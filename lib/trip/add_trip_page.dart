@@ -140,10 +140,7 @@ class _AddTripPageState extends State<AddTripPage> {
     if (widget.trip != null) {
       // EDIT: update existing trip
       final trips = await TripsStorage.readTrips();
-      final idx = trips.indexWhere((v) =>
-          v.title == widget.trip!.title &&
-          v.startDate == widget.trip!.startDate &&
-          v.endDate == widget.trip!.endDate);
+      final idx = trips.indexWhere((v) => v.id == widget.trip!.id);
       if (idx != -1) {
         trips[idx] = Trip(
           title: _titleController.text,
@@ -154,6 +151,7 @@ class _AddTripPageState extends State<AddTripPage> {
           currency: _currency,
           categories: _categories,
           timestamp: trips[idx].timestamp, // mantieni il timestamp originale
+          id: trips[idx].id, // mantieni l'id originale
         );
         await TripsStorage.writeTrips(trips);
         if (!mounted) return;
@@ -212,10 +210,7 @@ class _AddTripPageState extends State<AddTripPage> {
                 );
                 if (confirm == true) {
                   final trips = await TripsStorage.readTrips();
-                  trips.removeWhere((v) =>
-                      v.title == widget.trip!.title &&
-                      v.startDate == widget.trip!.startDate &&
-                      v.endDate == widget.trip!.endDate);
+                  trips.removeWhere((v) => v.id == widget.trip!.id);
                   await TripsStorage.writeTrips(trips);
                   if (!context.mounted) return;
                   Navigator.of(context).pop(true);

@@ -99,10 +99,8 @@ class CaravellaBottomBar extends StatelessWidget {
                               categories: currentTrip!.categories,
                               onExpenseAdded: (expense) async {
                                 final trips = await TripsStorage.readTrips();
-                                final idx = trips.indexWhere((v) =>
-                                    v.title == currentTrip!.title &&
-                                    v.startDate == currentTrip!.startDate &&
-                                    v.endDate == currentTrip!.endDate);
+                                final idx = trips
+                                    .indexWhere((v) => v.id == currentTrip!.id);
                                 if (idx != -1) {
                                   trips[idx].expenses.add(expense);
                                   await TripsStorage.writeTrips(trips);
@@ -111,10 +109,8 @@ class CaravellaBottomBar extends StatelessWidget {
                               },
                               onCategoryAdded: (newCategory) async {
                                 final trips = await TripsStorage.readTrips();
-                                final idx = trips.indexWhere((v) =>
-                                    v.title == currentTrip!.title &&
-                                    v.startDate == currentTrip!.startDate &&
-                                    v.endDate == currentTrip!.endDate);
+                                final idx = trips
+                                    .indexWhere((v) => v.id == currentTrip!.id);
                                 if (idx != -1) {
                                   if (!trips[idx]
                                       .categories

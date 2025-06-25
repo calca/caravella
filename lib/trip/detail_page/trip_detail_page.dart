@@ -30,6 +30,7 @@ class _TripDetailPageState extends State<TripDetailPage> {
 
   Future<void> _loadTrip() async {
     final trip = await TripsStorage.getTripById(widget.trip.id);
+    if (!mounted) return;
     setState(() {
       _trip = trip;
       _deleted = trip == null;
@@ -41,6 +42,7 @@ class _TripDetailPageState extends State<TripDetailPage> {
 
   Future<void> _refreshTrip() async {
     final trip = await TripsStorage.getTripById(_trip?.id ?? widget.trip.id);
+    if (!mounted) return;
     if (trip != null) {
       setState(() {
         _trip = trip;
@@ -112,10 +114,7 @@ class _TripDetailPageState extends State<TripDetailPage> {
                   if (result is ExpenseActionResult &&
                       result.updatedExpense != null) {
                     final trips = await TripsStorage.readTrips();
-                    final idx = trips.indexWhere((v) =>
-                        v.title == trip.title &&
-                        v.startDate == trip.startDate &&
-                        v.endDate == trip.endDate);
+                    final idx = trips.indexWhere((v) => v.id == trip.id);
                     if (idx != -1) {
                       trips[idx].expenses.add(result.updatedExpense!);
                       await TripsStorage.writeTrips(trips);

@@ -19,10 +19,12 @@ class _ExpensesTabState extends State<ExpensesTab> {
   @override
   void initState() {
     super.initState();
-    _expenses = List.from(widget.trip.expenses);
+    _expenses = List.from(widget.trip.expenses)
+      ..sort((a, b) => b.date.compareTo(a.date));
   }
 
   Future<void> _openEditPage(int i) async {
+    final expenseId = _expenses[i].id;
     final result = await Navigator.of(context).push<ExpenseActionResult>(
       MaterialPageRoute(
         builder: (context) => ExpenseEditPage(
@@ -36,23 +38,22 @@ class _ExpensesTabState extends State<ExpensesTab> {
     if (result != null) {
       if (result.deleted) {
         setState(() {
-          _expenses.removeAt(i);
+          _expenses.removeWhere((e) => e.id == expenseId);
         });
       } else if (result.updatedExpense != null) {
         setState(() {
-          _expenses[i] = result.updatedExpense!;
+          final idx = _expenses.indexWhere((e) => e.id == expenseId);
+          if (idx != -1) _expenses[idx] = result.updatedExpense!;
         });
       }
+      _expenses.sort((a, b) => b.date.compareTo(a.date));
       widget.trip.expenses
         ..clear()
         ..addAll(_expenses);
       final trips = await TripsStorage.readTrips();
-      final idx = trips.indexWhere((t) =>
-          t.title == widget.trip.title &&
-          t.startDate == widget.trip.startDate &&
-          t.endDate == widget.trip.endDate);
-      if (idx != -1) {
-        trips[idx] = widget.trip;
+      final tripIdx = trips.indexWhere((t) => t.id == widget.trip.id);
+      if (tripIdx != -1) {
+        trips[tripIdx] = widget.trip;
         await TripsStorage.writeTrips(trips);
       }
     }

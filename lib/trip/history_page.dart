@@ -82,10 +82,7 @@ class _HistoryPageState extends State<HistoryPage> {
       ),
     );
     if (confirm == true) {
-      _allTrips.removeWhere((t) =>
-          t.title == trip.title &&
-          t.startDate == trip.startDate &&
-          t.endDate == trip.endDate);
+      _allTrips.removeWhere((t) => t.id == trip.id);
       await TripsStorage.writeTrips(_allTrips);
       setState(() {
         _filteredTrips = _applyFilter(_allTrips);
