@@ -133,8 +133,7 @@ class TripsStorage {
       final contents = await file.readAsString();
       final List<dynamic> jsonList = jsonDecode(contents);
       final trips = jsonList.map((e) => Trip.fromJson(e)).toList();
-      trips.sort((a, b) =>
-          b.timestamp.compareTo(a.timestamp)); // Ordina dal più recente
+      trips.sort((a, b) => b.startDate.compareTo(a.startDate)); // Ordina dal più recente (startDate)
       return trips;
     } catch (e) {
       return [];
