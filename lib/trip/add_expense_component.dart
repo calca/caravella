@@ -75,50 +75,6 @@ class _AddExpenseComponentState extends State<AddExpenseComponent> {
               Text(loc.get('add_expense'),
                   style: Theme.of(context).textTheme.titleLarge),
             if (widget.initialExpense == null) const SizedBox(height: 16),
-            // DATA (solo icona + data, allineata a destra, tabbabile)
-            if (widget.initialExpense != null || (ModalRoute.of(context)?.settings.name == null))
-              Row(
-                children: [
-                  Expanded(child: Container()),
-                  InkWell(
-                    borderRadius: BorderRadius.circular(8),
-                    onTap: () async {
-                      final picked = await showDatePicker(
-                        context: context,
-                        initialDate: _date ?? DateTime.now(),
-                        firstDate: widget.tripStartDate ?? DateTime(2000),
-                        lastDate: widget.tripEndDate ?? DateTime(2100),
-                        helpText: loc.get('select_expense_date'),
-                        cancelText: loc.get('cancel'),
-                        confirmText: loc.get('ok'),
-                        locale: Locale(locale),
-                      );
-                      if (picked != null) {
-                        setState(() {
-                          _date = picked;
-                        });
-                      }
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            _date != null
-                                ? '${_date!.day.toString().padLeft(2, '0')}/${_date!.month.toString().padLeft(2, '0')}/${_date!.year}'
-                                : '',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500),
-                          ),
-                          const SizedBox(width: 6),
-                          Icon(Icons.event, size: 18, color: Theme.of(context).colorScheme.primary),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            const SizedBox(height: 16),
             // IMPORTO + CURRENCY
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -160,40 +116,6 @@ class _AddExpenseComponentState extends State<AddExpenseComponent> {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
-            // PAID BY
-            Align(
-              alignment: Alignment.centerLeft,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: widget.participants.map((p) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      child: ChoiceChip(
-                        label: Text(p,
-                            style: Theme.of(context).textTheme.bodyLarge),
-                        selected: _paidBy == p,
-                        selectedColor:
-                            Theme.of(context).colorScheme.primaryContainer,
-                        onSelected: (selected) {
-                          setState(() {
-                            _paidBy = selected ? p : null;
-                            _paidByError = null;
-                          });
-                        },
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ),
-            if (_paidByError != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 4.0),
-                child: Text(_paidByError!, style: TextStyle(color: Colors.red)),
-              ),
             const SizedBox(height: 16),
             // CATEGORIE
             Row(
@@ -242,9 +164,17 @@ class _AddExpenseComponentState extends State<AddExpenseComponent> {
                     ),
                   ),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  tooltip: loc.get('add_category'),
+                OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    backgroundColor:
+                        Theme.of(context).colorScheme.surfaceVariant,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    side: BorderSide(color: Colors.transparent),
+                    padding: const EdgeInsets.all(0),
+                    minimumSize: const Size(40, 40),
+                  ),
                   onPressed: () async {
                     final controller = TextEditingController();
                     final newCategory = await showDialog<String>(
@@ -289,10 +219,68 @@ class _AddExpenseComponentState extends State<AddExpenseComponent> {
                       }
                     }
                   },
+                  child: const Icon(Icons.add, size: 22),
                 ),
               ],
             ),
             const SizedBox(height: 16),
+            // DATA (bottone con data + icona, angoli arrotondati, sfondo grigio coerente col tema)
+            if (widget.initialExpense != null ||
+                (ModalRoute.of(context)?.settings.name != null))
+              Row(
+                children: [
+                  Expanded(child: Container()),
+                  OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor:
+                          Theme.of(context).colorScheme.surfaceVariant,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      side: BorderSide(color: Colors.transparent),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 12),
+                    ),
+                    onPressed: () async {
+                      final picked = await showDatePicker(
+                        context: context,
+                        initialDate: _date ?? DateTime.now(),
+                        firstDate: widget.tripStartDate ?? DateTime(2000),
+                        lastDate: widget.tripEndDate ?? DateTime(2100),
+                        helpText: loc.get('select_expense_date'),
+                        cancelText: loc.get('cancel'),
+                        confirmText: loc.get('ok'),
+                        locale: Locale(locale),
+                      );
+                      if (picked != null) {
+                        setState(() {
+                          _date = picked;
+                        });
+                      }
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          _date != null
+                              ? '${_date!.day.toString().padLeft(2, '0')}/${_date!.month.toString().padLeft(2, '0')}/${_date!.year}'
+                              : loc.get('select_expense_date_short'),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(fontWeight: FontWeight.w500),
+                        ),
+                        const SizedBox(width: 6),
+                        Icon(Icons.event,
+                            size: 18,
+                            color: Theme.of(context).colorScheme.primary),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            const SizedBox(height: 16),
+            // NOTE
             if (widget.initialExpense != null) ...[
               Align(
                 alignment: Alignment.centerLeft,

@@ -54,10 +54,19 @@ class ExpenseEditPage extends StatelessWidget {
     return Scaffold(
       appBar: CaravellaAppBar(
         actions: [
-          IconButton(
-            icon: const Icon(Icons.delete),
-            tooltip: loc.get('delete'),
+          OutlinedButton(
+            style: OutlinedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              side: BorderSide(color: Colors.transparent),
+              padding: const EdgeInsets.all(0),
+              minimumSize: const Size(40, 40),
+            ),
             onPressed: () => _onDelete(context),
+            child: Icon(Icons.delete,
+                color: Theme.of(context).colorScheme.primary),
           ),
         ],
       ),
