@@ -108,10 +108,13 @@ class _TripDetailPageState extends State<TripDetailPage> {
                         participants: trip.participants,
                         categories: trip.categories,
                         loc: loc,
+                        tripStartDate: trip.startDate,
+                        tripEndDate: trip.endDate,
                       ),
                     ),
                   );
-                  if (result is ExpenseActionResult && result.updatedExpense != null) {
+                  if (result is ExpenseActionResult &&
+                      result.updatedExpense != null) {
                     final trips = await TripsStorage.readTrips();
                     final idx = trips.indexWhere((v) => v.id == trip.id);
                     if (idx != -1) {

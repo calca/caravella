@@ -5,57 +5,45 @@ import '../add_expense_component.dart';
 import 'tabs/expenses_tab.dart';
 import '../../widgets/caravella_app_bar.dart';
 
-class ExpenseEditPage extends StatefulWidget {
+class ExpenseEditPage extends StatelessWidget {
   final Expense expense;
   final List<String> participants;
   final List<String> categories;
   final AppLocalizations loc;
-  const ExpenseEditPage(
-      {super.key,
-      required this.expense,
-      required this.participants,
-      required this.categories,
-      required this.loc});
+  final DateTime tripStartDate;
+  final DateTime tripEndDate;
+  const ExpenseEditPage({
+    super.key,
+    required this.expense,
+    required this.participants,
+    required this.categories,
+    required this.loc,
+    required this.tripStartDate,
+    required this.tripEndDate,
+  });
 
-  @override
-  State<ExpenseEditPage> createState() => _ExpenseEditPageState();
-}
-
-class _ExpenseEditPageState extends State<ExpenseEditPage> {
-  late Expense _expense;
-
-  @override
-  void initState() {
-    super.initState();
-    _expense = widget.expense;
-  }
-
-  void _onSave(Expense updated) {
-    setState(() {
-      _expense = updated;
-    });
+  void _onSave(BuildContext context, Expense updated) {
     Navigator.of(context).pop(ExpenseActionResult(updatedExpense: updated));
   }
 
-  void _onDelete() async {
+  void _onDelete(BuildContext context) async {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(widget.loc.get('delete_expense')),
-        content: Text(widget.loc.get('delete_expense_confirm')),
+        title: Text(loc.get('delete_expense')),
+        content: Text(loc.get('delete_expense_confirm')),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: Text(widget.loc.get('cancel')),
+            child: Text(loc.get('cancel')),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: Text(widget.loc.get('delete')),
+            child: Text(loc.get('delete')),
           ),
         ],
       ),
     );
-    if (!mounted) return;
     if (confirm == true) {
       Navigator.of(context).pop(ExpenseActionResult(deleted: true));
     }
@@ -68,18 +56,20 @@ class _ExpenseEditPageState extends State<ExpenseEditPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.delete),
-            tooltip: widget.loc.get('delete'),
-            onPressed: _onDelete,
+            tooltip: loc.get('delete'),
+            onPressed: () => _onDelete(context),
           ),
         ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         child: AddExpenseComponent(
-          participants: widget.participants,
-          categories: widget.categories,
-          initialExpense: _expense,
-          onExpenseAdded: _onSave,
+          participants: participants,
+          categories: categories,
+          initialExpense: expense,
+          onExpenseAdded: (updated) => _onSave(context, updated),
+          tripStartDate: tripStartDate,
+          tripEndDate: tripEndDate,
         ),
       ),
     );

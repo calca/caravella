@@ -97,6 +97,24 @@ class Expense {
         'date': date.toIso8601String(),
         if (note != null) 'note': note,
       };
+
+  Expense copyWith({
+    String? id,
+    String? description,
+    double? amount,
+    String? paidBy,
+    DateTime? date,
+    String? note,
+  }) {
+    return Expense(
+      id: id ?? this.id,
+      description: description ?? this.description,
+      amount: amount ?? this.amount,
+      paidBy: paidBy ?? this.paidBy,
+      date: date ?? this.date,
+      note: note ?? this.note,
+    );
+  }
 }
 
 class TripsStorage {
@@ -137,7 +155,8 @@ class TripsStorage {
     }
   }
 
-  static Future<Expense?> getExpenseById(String tripId, String expenseId) async {
+  static Future<Expense?> getExpenseById(
+      String tripId, String expenseId) async {
     final trip = await getTripById(tripId);
     if (trip == null) return null;
     try {

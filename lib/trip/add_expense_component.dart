@@ -10,6 +10,8 @@ class AddExpenseComponent extends StatefulWidget {
   final void Function()? onAddCategory;
   final void Function(String)? onCategoryAdded;
   final Expense? initialExpense;
+  final DateTime? tripStartDate;
+  final DateTime? tripEndDate;
   const AddExpenseComponent({
     super.key,
     required this.participants,
@@ -18,6 +20,8 @@ class AddExpenseComponent extends StatefulWidget {
     this.onAddCategory,
     this.onCategoryAdded,
     this.initialExpense,
+    this.tripStartDate,
+    this.tripEndDate,
   });
 
   @override
@@ -71,6 +75,50 @@ class _AddExpenseComponentState extends State<AddExpenseComponent> {
               Text(loc.get('add_expense'),
                   style: Theme.of(context).textTheme.titleLarge),
             if (widget.initialExpense == null) const SizedBox(height: 16),
+            // DATA (solo icona + data, allineata a destra, tabbabile)
+            if (widget.initialExpense != null || (ModalRoute.of(context)?.settings.name == null))
+              Row(
+                children: [
+                  Expanded(child: Container()),
+                  InkWell(
+                    borderRadius: BorderRadius.circular(8),
+                    onTap: () async {
+                      final picked = await showDatePicker(
+                        context: context,
+                        initialDate: _date ?? DateTime.now(),
+                        firstDate: widget.tripStartDate ?? DateTime(2000),
+                        lastDate: widget.tripEndDate ?? DateTime(2100),
+                        helpText: loc.get('select_expense_date'),
+                        cancelText: loc.get('cancel'),
+                        confirmText: loc.get('ok'),
+                        locale: Locale(locale),
+                      );
+                      if (picked != null) {
+                        setState(() {
+                          _date = picked;
+                        });
+                      }
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            _date != null
+                                ? '${_date!.day.toString().padLeft(2, '0')}/${_date!.month.toString().padLeft(2, '0')}/${_date!.year}'
+                                : '',
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500),
+                          ),
+                          const SizedBox(width: 6),
+                          Icon(Icons.event, size: 18, color: Theme.of(context).colorScheme.primary),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            const SizedBox(height: 16),
             // IMPORTO + CURRENCY
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,

@@ -32,6 +32,8 @@ class _ExpensesTabState extends State<ExpensesTab> {
           participants: widget.trip.participants,
           categories: widget.trip.categories,
           loc: widget.loc,
+          tripStartDate: widget.trip.startDate,
+          tripEndDate: widget.trip.endDate,
         ),
       ),
     );
