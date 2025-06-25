@@ -39,7 +39,9 @@ class CurrentTripCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    trip.expenses.fold<double>(0, (sum, s) => sum + (s.amount ?? 0)).toStringAsFixed(2),
+                    trip.expenses
+                        .fold<double>(0, (sum, s) => sum + (s.amount ?? 0))
+                        .toStringAsFixed(2),
                     style: Theme.of(context).textTheme.displayLarge?.copyWith(
                         fontWeight: FontWeight.bold, color: Colors.white),
                   ),
@@ -59,8 +61,7 @@ class CurrentTripCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Icon(Icons.people,
-                    color: Colors.white, size: 20),
+                Icon(Icons.people, color: Colors.white, size: 20),
                 const SizedBox(width: 4),
                 Text('${trip.participants.length} ${loc.get('participants')}',
                     style: Theme.of(context)
@@ -73,14 +74,15 @@ class CurrentTripCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Icon(Icons.calendar_today,
-                    color: Colors.white, size: 20),
+                Icon(Icons.calendar_today, color: Colors.white, size: 20),
                 const SizedBox(width: 4),
                 Text(
                   loc.get('from_to', params: {
-                        'start': '${trip.startDate.day}/${trip.startDate.month}/${trip.startDate.year}',
-                        'end': '${trip.endDate.day}/${trip.endDate.month}/${trip.endDate.year}'
-                      }),
+                    'start':
+                        '${trip.startDate.day}/${trip.startDate.month}/${trip.startDate.year}',
+                    'end':
+                        '${trip.endDate.day}/${trip.endDate.month}/${trip.endDate.year}'
+                  }),
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium

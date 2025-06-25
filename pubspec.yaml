@@ -40,8 +40,10 @@ dependencies:
   flutter_launcher_icons: ^0.14.4
   shared_preferences: ^2.5.3
   url_launcher: ^6.3.1
-  fl_chart: ^0.66.2
+  fl_chart: ^1.0.0
   uuid: ^4.2.2
+  share_plus: ^11.0.0
+  archive: ^4.0.7
 
 dev_dependencies:
   flutter_test:

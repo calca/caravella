@@ -5,6 +5,10 @@ import 'language_selector_setting.dart';
 import 'theme_selector_setting.dart';
 import '../state/locale_notifier.dart';
 import '../widgets/caravella_app_bar.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:archive/archive_io.dart';
 
 class SettingsPage extends StatelessWidget {
   final void Function(String)? onLocaleChanged;
@@ -34,6 +38,23 @@ class SettingsPage extends StatelessWidget {
             const SizedBox(height: 16),
             // --- Theme selector ---
             const ThemeSelectorSetting(),
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.backup),
+              label: Text(localizations.get('backup')),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              ),
+              onPressed: () async {
+                await _backupTrips(context, localizations);
+              },
+            ),
             const SizedBox(height: 24),
             Divider(height: 1, thickness: 1),
             const SizedBox(height: 32),
@@ -175,5 +196,33 @@ void _launchUrl(String url) async {
   } else {
     // Optionally show a snackbar or dialog if the URL can't be launched
     debugPrint('Could not launch $url');
+  }
+}
+
+Future<void> _backupTrips(BuildContext context, AppLocalizations loc) async {
+  try {
+    final dir = await getApplicationDocumentsDirectory();
+    final tripsFile = File('${dir.path}/trips.json');
+    if (!await tripsFile.exists()) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(loc.get('no_trips_to_backup'))),
+      );
+      return;
+    }
+    final zipEncoder = ZipFileEncoder();
+    final tempDir = await getTemporaryDirectory();
+    final zipPath = '${tempDir.path}/caravella_backup.zip';
+    zipEncoder.create(zipPath);
+    zipEncoder.addFile(tripsFile);
+    zipEncoder.close();
+    if (!context.mounted) return;
+    await Share.shareXFiles([XFile(zipPath)],
+        text: loc.get('backup_share_message'));
+  } catch (e) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(loc.get('backup_error'))),
+    );
   }
 }

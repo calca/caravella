@@ -109,7 +109,8 @@ class StatisticsTab extends StatelessWidget {
           const SizedBox(height: 4),
           Text(loc.get('expenses_trend_desc'),
               style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurface.withAlpha((0.7 * 255).toInt()))),
+                  color: theme.colorScheme.onSurface
+                      .withAlpha((0.7 * 255).toInt()))),
           const SizedBox(height: 16),
           Container(
             decoration: BoxDecoration(
@@ -117,7 +118,8 @@ class StatisticsTab extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: theme.colorScheme.primary.withAlpha((0.07 * 255).toInt()),
+                  color:
+                      theme.colorScheme.primary.withAlpha((0.07 * 255).toInt()),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
@@ -134,8 +136,10 @@ class StatisticsTab extends StatelessWidget {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            theme.colorScheme.primary.withAlpha((0.7 * 255).toInt()),
-                            theme.colorScheme.primary.withAlpha((0.2 * 255).toInt()),
+                            theme.colorScheme.primary
+                                .withAlpha((0.7 * 255).toInt()),
+                            theme.colorScheme.primary
+                                .withAlpha((0.2 * 255).toInt()),
                           ],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
@@ -204,7 +208,6 @@ class StatisticsTab extends StatelessWidget {
                       barTouchData: BarTouchData(
                         enabled: true,
                         touchTooltipData: BarTouchTooltipData(
-                          tooltipBgColor: theme.colorScheme.surface,
                           getTooltipItem: (group, groupIndex, rod, rodIndex) {
                             if (group.x < 0 || group.x >= last15.length) {
                               return null;
@@ -241,7 +244,8 @@ class StatisticsTab extends StatelessWidget {
                   loc.get('total_last_expenses',
                       params: {'n': last15.length.toString()}),
                   style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurface.withAlpha((0.7 * 255).toInt()))),
+                      color: theme.colorScheme.onSurface
+                          .withAlpha((0.7 * 255).toInt()))),
               const SizedBox(width: 8),
               Text('${trip.currency} ${total.toStringAsFixed(2)}',
                   style: theme.textTheme.titleMedium?.copyWith(

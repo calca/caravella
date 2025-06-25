@@ -57,7 +57,8 @@ class ExpenseEditPage extends StatelessWidget {
         actions: [
           OutlinedButton(
             style: OutlinedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+              backgroundColor:
+                  Theme.of(context).colorScheme.surfaceContainerHighest,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),

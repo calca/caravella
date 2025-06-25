@@ -116,6 +116,56 @@ class _AddExpenseComponentState extends State<AddExpenseComponent> {
               ],
             ),
             const SizedBox(height: 16),
+            // PAID BY (chip)
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: widget.participants.isNotEmpty
+                            ? widget.participants.map((p) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 4.0),
+                                  child: ChoiceChip(
+                                    label: Text(p,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge),
+                                    selected: _paidBy == p,
+                                    selectedColor: Theme.of(context)
+                                        .colorScheme
+                                        .primaryContainer,
+                                    onSelected: (selected) {
+                                      setState(() {
+                                        _paidBy = selected ? p : null;
+                                      });
+                                    },
+                                  ),
+                                );
+                              }).toList()
+                            : [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 4.0),
+                                  child: Text(loc.get('participants_label'),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall),
+                                ),
+                              ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
             // CATEGORIE
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,

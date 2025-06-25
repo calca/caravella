@@ -66,9 +66,14 @@ class AppLocalizations {
       'expenses_by_category': 'By category',
       'uncategorized': 'Uncategorized',
       'amount_with_currency': '{amount} {currency}',
+      'backup': 'Backup',
+      'no_trips_to_backup': 'No trips to backup',
+      'backup_error': 'Backup failed',
+      'backup_share_message': 'Here is your Caravella backup',
     },
     'it': {
       'app_title': 'Caravella',
+      'no_trips_found': 'Dove vuoi andare?',
       'participants_label': 'Partecipanti',
       'start_date_label': 'Data inizio',
       'end_date_label': 'Data fine',
@@ -125,6 +130,10 @@ class AppLocalizations {
       'expenses_by_category': 'Per categoria',
       'uncategorized': 'Senza categoria',
       'amount_with_currency': '{amount} {currency}',
+      'backup': 'Backup',
+      'no_trips_to_backup': 'Nessun viaggio da salvare',
+      'backup_error': 'Backup non riuscito',
+      'backup_share_message': 'Ecco il backup di Caravella',
     },
   };
 
