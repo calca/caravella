@@ -43,7 +43,10 @@ class _AddExpenseComponentState extends State<AddExpenseComponent> {
       _amount = widget.initialExpense!.amount;
       _paidBy = widget.initialExpense!.paidBy;
       _date = widget.initialExpense!.date;
-      _amountController.text = widget.initialExpense!.amount.toString();
+      // Se amount è null o 0, lascia il campo vuoto
+      _amountController.text = (widget.initialExpense!.amount == 0)
+          ? ''
+          : widget.initialExpense!.amount.toString();
       _noteController.text = widget.initialExpense!.note ?? '';
     } else {
       _date = DateTime.now();
@@ -268,7 +271,8 @@ class _AddExpenseComponentState extends State<AddExpenseComponent> {
                   onPressed: () => Navigator.of(context).pop(),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Theme.of(context).colorScheme.onSurface,
-                    side: BorderSide(color: Theme.of(context).colorScheme.outline),
+                    side: BorderSide(
+                        color: Theme.of(context).colorScheme.outline),
                   ),
                   child: Text(loc.get('cancel')),
                 ),
