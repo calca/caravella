@@ -8,35 +8,20 @@ class StatisticsTab extends StatelessWidget {
   const StatisticsTab({super.key, this.trip});
 
   List<FlSpot> _buildExpenseSpots(List<Expense> expenses) {
-    final sorted = List<Expense>.from(expenses)
-      ..sort((a, b) => a.date.compareTo(b.date));
-    final last15 =
-        sorted.length > 15 ? sorted.sublist(sorted.length - 15) : sorted;
-    double running = 0;
+    if (expenses.isEmpty) return [];
+    // Raggruppa per giorno
+    final Map<DateTime, double> dailyTotals = {};
+    for (final e in expenses) {
+      final day = DateTime(e.date.year, e.date.month, e.date.day);
+      dailyTotals[day] = (dailyTotals[day] ?? 0) + (e.amount ?? 0);
+    }
+    final sortedDays = dailyTotals.keys.toList()..sort();
+    final last15 = sortedDays.length > 15
+        ? sortedDays.sublist(sortedDays.length - 15)
+        : sortedDays;
     return List.generate(last15.length, (i) {
-      running += last15[i].amount;
-      return FlSpot(i.toDouble(), running);
-    });
-  }
-
-  List<BarChartGroupData> _buildExpenseBars(
-      List<Expense> expenses, Color barColor) {
-    final sorted = List<Expense>.from(expenses)
-      ..sort((a, b) => a.date.compareTo(b.date));
-    final last15 =
-        sorted.length > 15 ? sorted.sublist(sorted.length - 15) : sorted;
-    return List.generate(last15.length, (i) {
-      return BarChartGroupData(
-        x: i,
-        barRods: [
-          BarChartRodData(
-            toY: last15[i].amount,
-            color: barColor,
-            borderRadius: BorderRadius.circular(4),
-            width: 16,
-          ),
-        ],
-      );
+      final day = last15[i];
+      return FlSpot(i.toDouble(), dailyTotals[day]!);
     });
   }
 
@@ -61,13 +46,12 @@ class StatisticsTab extends StatelessWidget {
       );
     }
     final spots = _buildExpenseSpots(trip.expenses);
-    final bars = _buildExpenseBars(trip.expenses, theme.colorScheme.primary);
-    if (spots.isEmpty && bars.isEmpty) {
+    if (spots.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.bar_chart,
+            Icon(Icons.show_chart,
                 size: 48,
                 color:
                     theme.colorScheme.primary.withAlpha((0.3 * 255).toInt())),
@@ -77,28 +61,69 @@ class StatisticsTab extends StatelessWidget {
         ),
       );
     }
-    final sorted = List<Expense>.from(trip.expenses)
-      ..sort((a, b) => a.date.compareTo(b.date));
-    final last15 =
-        sorted.length > 15 ? sorted.sublist(sorted.length - 15) : sorted;
-    final total = last15.fold<double>(0, (sum, e) => sum + e.amount);
+    // Raggruppa per giorno e prendi gli ultimi 15 giorni
+    final Map<DateTime, double> dailyTotals = {};
+    for (final e in trip.expenses) {
+      final day = DateTime(e.date.year, e.date.month, e.date.day);
+      dailyTotals[day] = (dailyTotals[day] ?? 0) + (e.amount ?? 0);
+    }
+    final sortedDays = dailyTotals.keys.toList()..sort();
+    final last15 = sortedDays.length > 15
+        ? sortedDays.sublist(sortedDays.length - 15)
+        : sortedDays;
+    // Costruisci le barGroups per il grafico
+    final bars = List.generate(last15.length, (i) {
+      final day = last15[i];
+      return BarChartGroupData(x: i, barRods: [
+        BarChartRodData(
+          toY: dailyTotals[day]!,
+          gradient: LinearGradient(
+            colors: [
+              theme.colorScheme.primary.withOpacity(0.7),
+              theme.colorScheme.primary.withOpacity(0.2),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+          width: 18,
+          borderRadius: BorderRadius.circular(6),
+        ),
+      ]);
+    });
+    final total = bars.fold<double>(0, (sum, b) => sum + b.barRods.first.toY);
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(loc.get('expenses_trend_title'),
-              style: theme.textTheme.titleMedium),
+          Row(
+            children: [
+              Icon(Icons.trending_up,
+                  color: theme.colorScheme.primary, size: 28),
+              const SizedBox(width: 8),
+              Text(loc.get('expenses_trend_title'),
+                  style: theme.textTheme.titleMedium
+                      ?.copyWith(fontWeight: FontWeight.bold)),
+            ],
+          ),
           const SizedBox(height: 4),
           Text(loc.get('expenses_trend_desc'),
-              style: theme.textTheme.bodySmall),
+              style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurface.withOpacity(0.7))),
           const SizedBox(height: 16),
           Container(
             decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withAlpha((0.06 * 255).toInt()),
-              borderRadius: BorderRadius.circular(16),
+              color: theme.colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: theme.colorScheme.primary.withOpacity(0.07),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             child: Column(
               children: [
                 Row(
@@ -107,28 +132,49 @@ class StatisticsTab extends StatelessWidget {
                       width: 18,
                       height: 18,
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.primary,
+                        gradient: LinearGradient(
+                          colors: [
+                            theme.colorScheme.primary.withOpacity(0.7),
+                            theme.colorScheme.primary.withOpacity(0.2),
+                          ],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        ),
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
                     const SizedBox(width: 8),
                     Text(loc.get('expenses_trend_legend'),
-                        style: theme.textTheme.bodySmall),
+                        style: theme.textTheme.bodySmall
+                            ?.copyWith(fontWeight: FontWeight.w500)),
                   ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 12),
                 SizedBox(
                   height: 260,
                   child: BarChart(
                     BarChartData(
                       barGroups: bars,
                       alignment: BarChartAlignment.spaceBetween,
-                      gridData: FlGridData(show: true),
-                      borderData: FlBorderData(show: true),
+                      gridData: FlGridData(
+                          show: true,
+                          drawVerticalLine: false,
+                          horizontalInterval: 20,
+                          getDrawingHorizontalLine: (value) => FlLine(
+                              color: theme.dividerColor, strokeWidth: 0.5)),
+                      borderData: FlBorderData(show: false),
                       titlesData: FlTitlesData(
                         leftTitles: AxisTitles(
-                          sideTitles:
-                              SideTitles(showTitles: true, reservedSize: 40),
+                          sideTitles: SideTitles(
+                              showTitles: true,
+                              reservedSize: 40,
+                              getTitlesWidget: (value, meta) {
+                                if (value % 1 != 0)
+                                  return const SizedBox.shrink();
+                                return Text(
+                                    value == 0 ? '' : value.toStringAsFixed(0),
+                                    style: theme.textTheme.bodySmall);
+                              }),
                         ),
                         bottomTitles: AxisTitles(
                           sideTitles: SideTitles(
@@ -138,11 +184,12 @@ class StatisticsTab extends StatelessWidget {
                                   value.toInt() >= last15.length) {
                                 return const SizedBox.shrink();
                               }
-                              final day = last15[value.toInt()].date;
+                              final day = last15[value.toInt()];
                               return Padding(
                                 padding: const EdgeInsets.only(top: 4.0),
                                 child: Text('${day.day}/${day.month}',
-                                    style: theme.textTheme.bodySmall),
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                        fontWeight: FontWeight.w500)),
                               );
                             },
                             reservedSize: 32,
@@ -161,9 +208,17 @@ class StatisticsTab extends StatelessWidget {
                             if (group.x < 0 || group.x >= last15.length) {
                               return null;
                             }
-                            final e = last15[group.x];
+                            final day = last15[group.x.toInt()];
+                            final amount = dailyTotals[day] ?? 0;
                             return BarTooltipItem(
-                              '${e.amount.toStringAsFixed(2)} ${trip.currency}\n${e.date.day}/${e.date.month}/${e.date.year}',
+                              '${loc.get('expenses_trend_tooltip_amount', params: {
+                                    'amount': amount.toStringAsFixed(2),
+                                    'currency': trip.currency
+                                  })}\n${loc.get('expenses_trend_tooltip_date', params: {
+                                    'day': day.day.toString(),
+                                    'month': day.month.toString(),
+                                    'year': day.year.toString()
+                                  })}',
                               theme.textTheme.bodySmall!
                                   .copyWith(fontWeight: FontWeight.bold),
                             );
@@ -177,14 +232,15 @@ class StatisticsTab extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text(
                   loc.get('total_last_expenses',
                       params: {'n': last15.length.toString()}),
-                  style: theme.textTheme.bodyMedium),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurface.withOpacity(0.7))),
               const SizedBox(width: 8),
               Text('${trip.currency} ${total.toStringAsFixed(2)}',
                   style: theme.textTheme.titleMedium?.copyWith(

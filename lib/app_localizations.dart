@@ -55,6 +55,13 @@ class AppLocalizations {
       'note_hint': 'Add a note (optional)',
       'select_both_dates': 'Select both start and end date',
       'end_date_after_start': 'End date must be after start date',
+      // --- STATISTICS TAB ---
+      'expenses_trend_title': 'Expense trend',
+      'expenses_trend_desc': 'Track your daily expenses for the last 15 days.',
+      'expenses_trend_legend': 'Daily total',
+      'expenses_trend_tooltip_amount': '{amount} {currency}',
+      'expenses_trend_tooltip_date': '{day}/{month}/{year}',
+      'total_last_expenses': 'Total for last {n} days',
     },
     'it': {
       'app_title': 'Caravella',
@@ -65,7 +72,7 @@ class AppLocalizations {
       'participants_label': 'Partecipanti',
       'start_date_label': 'Data inizio',
       'end_date_label': 'Data fine',
-      'about': 'Info',
+      'about': 'Informazioni',
       'settings': 'Impostazioni',
       'license': 'Licenza',
       'license_mit': 'Licenza MIT',
@@ -106,6 +113,14 @@ class AppLocalizations {
       'select_both_dates': 'Seleziona sia la data di inizio che di fine',
       'end_date_after_start':
           'La data di fine deve essere successiva a quella di inizio',
+      // --- STATISTICS TAB ---
+      'expenses_trend_title': 'Andamento spese',
+      'expenses_trend_desc':
+          'Visualizza le spese giornaliere degli ultimi 15 giorni.',
+      'expenses_trend_legend': 'Totale giornaliero',
+      'expenses_trend_tooltip_amount': '{amount} {currency}',
+      'expenses_trend_tooltip_date': '{day}/{month}/{year}',
+      'total_last_expenses': 'Totale ultimi {n} giorni',
     },
   };
 
