@@ -62,13 +62,13 @@ class AppLocalizations {
       'expenses_trend_tooltip_amount': '{amount} {currency}',
       'expenses_trend_tooltip_date': '{day}/{month}/{year}',
       'total_last_expenses': 'Total for last {n} days',
+      'expenses_by_participant': 'By participant',
+      'expenses_by_category': 'By category',
+      'uncategorized': 'Uncategorized',
+      'amount_with_currency': '{amount} {currency}',
     },
     'it': {
       'app_title': 'Caravella',
-      'trip_history': 'Storico viaggi',
-      'no_trips_found': 'Dove vuoi andare?',
-      'expenses': 'Spese',
-      'participants': 'Partecipanti',
       'participants_label': 'Partecipanti',
       'start_date_label': 'Data inizio',
       'end_date_label': 'Data fine',
@@ -121,6 +121,10 @@ class AppLocalizations {
       'expenses_trend_tooltip_amount': '{amount} {currency}',
       'expenses_trend_tooltip_date': '{day}/{month}/{year}',
       'total_last_expenses': 'Totale ultimi {n} giorni',
+      'expenses_by_participant': 'Per partecipante',
+      'expenses_by_category': 'Per categoria',
+      'uncategorized': 'Senza categoria',
+      'amount_with_currency': '{amount} {currency}',
     },
   };
 
