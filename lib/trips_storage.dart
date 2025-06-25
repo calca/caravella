@@ -64,7 +64,7 @@ class Trip {
 class Expense {
   final String id; // UDID per la spesa
   final String description;
-  final double amount;
+  final double? amount;
   final String paidBy;
   final DateTime date;
   final String? note;
@@ -82,7 +82,8 @@ class Expense {
     return Expense(
       id: json['id'],
       description: json['description'],
-      amount: (json['amount'] as num).toDouble(),
+      amount:
+          json['amount'] != null ? (json['amount'] as num).toDouble() : null,
       paidBy: json['paidBy'],
       date: DateTime.parse(json['date']),
       note: json['note'],
@@ -92,7 +93,7 @@ class Expense {
   Map<String, dynamic> toJson() => {
         'id': id,
         'description': description,
-        'amount': amount,
+        if (amount != null) 'amount': amount,
         'paidBy': paidBy,
         'date': date.toIso8601String(),
         if (note != null) 'note': note,

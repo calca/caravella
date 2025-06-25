@@ -23,12 +23,12 @@ class OverviewTab extends StatelessWidget {
           ...trip.participants.map((p) {
             final total = trip.expenses
                 .where((e) => e.paidBy == p)
-                .fold<double>(0, (sum, e) => sum + e.amount);
+                .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: Container(
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withOpacity(0.06),
+                  color: theme.colorScheme.primary.withAlpha((0.06 * 255).toInt()),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Row(
@@ -79,12 +79,12 @@ class OverviewTab extends StatelessWidget {
           ...trip.categories.map((cat) {
             final total = trip.expenses
                 .where((e) => e.description == cat)
-                .fold<double>(0, (sum, e) => sum + e.amount);
+                .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: Container(
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.secondary.withOpacity(0.08),
+                  color: theme.colorScheme.secondary.withAlpha((0.08 * 255).toInt()),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -126,7 +126,7 @@ class OverviewTab extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: Container(
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.secondary.withOpacity(0.08),
+                  color: theme.colorScheme.secondary.withAlpha((0.08 * 255).toInt()),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -147,7 +147,7 @@ class OverviewTab extends StatelessWidget {
                               .where((e) =>
                                   e.description.isEmpty ||
                                   !trip.categories.contains(e.description))
-                              .fold<double>(0, (sum, e) => sum + e.amount)
+                              .fold<double>(0, (sum, e) => sum + (e.amount ?? 0))
                               .toStringAsFixed(2),
                           'currency': trip.currency
                         }),

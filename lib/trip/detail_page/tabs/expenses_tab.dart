@@ -76,7 +76,7 @@ class _ExpensesTabState extends State<ExpensesTab> {
             onTap: () => _openEditPage(i),
             child: TripAmountCard(
               title: expense.description,
-              coins: expense.amount.toInt(),
+              coins: (expense.amount ?? 0).toInt(),
               checked: true,
               paidBy: expense.paidBy,
               category: null,

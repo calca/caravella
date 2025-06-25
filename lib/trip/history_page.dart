@@ -257,7 +257,7 @@ class _HistoryPageState extends State<HistoryPage> {
                               final isFuture = trip.startDate.isAfter(now);
                               final isPast = trip.endDate.isBefore(now);
                               final total = trip.expenses
-                                  .fold<double>(0, (sum, e) => sum + e.amount);
+                                  .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
                               final badgeColor = isFuture
                                   ? Colors.blueAccent
                                   : isPast

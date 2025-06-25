@@ -79,8 +79,8 @@ class StatisticsTab extends StatelessWidget {
           toY: dailyTotals[day]!,
           gradient: LinearGradient(
             colors: [
-              theme.colorScheme.primary.withOpacity(0.7),
-              theme.colorScheme.primary.withOpacity(0.2),
+              theme.colorScheme.primary.withAlpha((0.7 * 255).toInt()),
+              theme.colorScheme.primary.withAlpha((0.2 * 255).toInt()),
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -109,7 +109,7 @@ class StatisticsTab extends StatelessWidget {
           const SizedBox(height: 4),
           Text(loc.get('expenses_trend_desc'),
               style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurface.withOpacity(0.7))),
+                  color: theme.colorScheme.onSurface.withAlpha((0.7 * 255).toInt()))),
           const SizedBox(height: 16),
           Container(
             decoration: BoxDecoration(
@@ -117,7 +117,7 @@ class StatisticsTab extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: theme.colorScheme.primary.withOpacity(0.07),
+                  color: theme.colorScheme.primary.withAlpha((0.07 * 255).toInt()),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
@@ -134,8 +134,8 @@ class StatisticsTab extends StatelessWidget {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            theme.colorScheme.primary.withOpacity(0.7),
-                            theme.colorScheme.primary.withOpacity(0.2),
+                            theme.colorScheme.primary.withAlpha((0.7 * 255).toInt()),
+                            theme.colorScheme.primary.withAlpha((0.2 * 255).toInt()),
                           ],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
@@ -169,8 +169,9 @@ class StatisticsTab extends StatelessWidget {
                               showTitles: true,
                               reservedSize: 40,
                               getTitlesWidget: (value, meta) {
-                                if (value % 1 != 0)
+                                if (value % 1 != 0) {
                                   return const SizedBox.shrink();
+                                }
                                 return Text(
                                     value == 0 ? '' : value.toStringAsFixed(0),
                                     style: theme.textTheme.bodySmall);
@@ -240,7 +241,7 @@ class StatisticsTab extends StatelessWidget {
                   loc.get('total_last_expenses',
                       params: {'n': last15.length.toString()}),
                   style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.7))),
+                      color: theme.colorScheme.onSurface.withAlpha((0.7 * 255).toInt()))),
               const SizedBox(width: 8),
               Text('${trip.currency} ${total.toStringAsFixed(2)}',
                   style: theme.textTheme.titleMedium?.copyWith(

@@ -13,7 +13,7 @@ class TopPaidByCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final Map<String, double> totals = {};
     for (final e in trip.expenses) {
-      totals[e.paidBy] = (totals[e.paidBy] ?? 0) + e.amount;
+      totals[e.paidBy] = (totals[e.paidBy] ?? 0) + (e.amount ?? 0);
     }
     final top = totals.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));

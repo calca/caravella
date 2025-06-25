@@ -34,7 +34,6 @@ class _AddExpenseComponentState extends State<AddExpenseComponent> {
   double? _amount;
   String? _paidBy;
   DateTime? _date;
-  String? _paidByError;
   final _amountController = TextEditingController();
   final FocusNode _amountFocus = FocusNode();
   final TextEditingController _noteController = TextEditingController();
@@ -167,7 +166,7 @@ class _AddExpenseComponentState extends State<AddExpenseComponent> {
                 OutlinedButton(
                   style: OutlinedButton.styleFrom(
                     backgroundColor:
-                        Theme.of(context).colorScheme.surfaceVariant,
+                        Theme.of(context).colorScheme.surfaceContainerHighest,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -233,7 +232,7 @@ class _AddExpenseComponentState extends State<AddExpenseComponent> {
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
                       backgroundColor:
-                          Theme.of(context).colorScheme.surfaceVariant,
+                          Theme.of(context).colorScheme.surfaceContainerHighest,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -315,10 +314,7 @@ class _AddExpenseComponentState extends State<AddExpenseComponent> {
                 const SizedBox(height: 8),
                 ElevatedButton(
                   onPressed: () {
-                    setState(() {
-                      _paidByError =
-                          _paidBy == null ? loc.get('required') : null;
-                    });
+                    setState(() {});
                     // Always save the form to update _amount
                     _formKey.currentState!.save();
                     if ((widget.categories.isNotEmpty

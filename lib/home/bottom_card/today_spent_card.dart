@@ -15,7 +15,7 @@ class TodaySpentCard extends StatelessWidget {
             e.date.year == DateTime.now().year &&
             e.date.month == DateTime.now().month &&
             e.date.day == DateTime.now().day)
-        .fold<double>(0, (sum, e) => sum + e.amount);
+        .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
     // Localizzazione
     final locale = Localizations.localeOf(context).languageCode;
     final loc = AppLocalizations(locale);

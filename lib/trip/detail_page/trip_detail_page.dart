@@ -170,7 +170,7 @@ class _TripDetailPageState extends State<TripDetailPage> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      '${trip.currency} ${trip.expenses.fold<double>(0, (sum, s) => sum + s.amount).toStringAsFixed(2)}',
+                      '${trip.currency} ${trip.expenses.fold<double>(0, (sum, s) => sum + (s.amount ?? 0)).toStringAsFixed(2)}',
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: Theme.of(context).colorScheme.primary,

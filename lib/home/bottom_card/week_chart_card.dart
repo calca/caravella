@@ -21,7 +21,7 @@ class WeekChartCard extends StatelessWidget {
               e.date.year == d.year &&
               e.date.month == d.month &&
               e.date.day == d.day)
-          .fold<double>(0, (sum, e) => sum + e.amount);
+          .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
       return total;
     });
     final maxValue = data.reduce((a, b) => a > b ? a : b);

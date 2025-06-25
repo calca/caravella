@@ -15,7 +15,7 @@ class CategoryCard extends StatelessWidget {
     final Map<String, double> totals = {};
     for (final e in trip.expenses) {
       final cat = e.description; // fallback: description usata come categoria
-      totals[cat] = (totals[cat] ?? 0) + e.amount;
+      totals[cat] = (totals[cat] ?? 0) + (e.amount ?? 0);
     }
     final top = totals.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));

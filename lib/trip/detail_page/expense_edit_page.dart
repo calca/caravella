@@ -45,6 +45,7 @@ class ExpenseEditPage extends StatelessWidget {
       ),
     );
     if (confirm == true) {
+      if (!context.mounted) return; // Fix use_build_context_synchronously
       Navigator.of(context).pop(ExpenseActionResult(deleted: true));
     }
   }
@@ -56,7 +57,7 @@ class ExpenseEditPage extends StatelessWidget {
         actions: [
           OutlinedButton(
             style: OutlinedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+              backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
