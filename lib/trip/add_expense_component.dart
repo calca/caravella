@@ -133,10 +133,17 @@ class _AddExpenseComponentState extends State<AddExpenseComponent> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 4.0),
                                   child: ChoiceChip(
-                                    label: Text(p,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge),
+                                    label: Text(
+                                      p,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge
+                                          ?.copyWith(
+                                            color: _paidBy == p
+                                                ? Theme.of(context).colorScheme.onPrimary
+                                                : Theme.of(context).colorScheme.onSurface,
+                                          ),
+                                    ),
                                     selected: _paidBy == p,
                                     selectedColor: Theme.of(context)
                                         .colorScheme
@@ -183,10 +190,17 @@ class _AddExpenseComponentState extends State<AddExpenseComponent> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 4.0),
                                   child: ChoiceChip(
-                                    label: Text(cat,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge),
+                                    label: Text(
+                                      cat,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge
+                                          ?.copyWith(
+                                            color: _category == cat
+                                                ? Theme.of(context).colorScheme.onPrimary
+                                                : Theme.of(context).colorScheme.onSurface,
+                                          ),
+                                    ),
                                     selected: _category == cat,
                                     selectedColor: Theme.of(context)
                                         .colorScheme

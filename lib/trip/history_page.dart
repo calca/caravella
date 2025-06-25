@@ -258,11 +258,7 @@ class _HistoryPageState extends State<HistoryPage> {
                               final isPast = trip.endDate.isBefore(now);
                               final total = trip.expenses.fold<double>(
                                   0, (sum, e) => sum + (e.amount ?? 0));
-                              final badgeColor = isFuture
-                                  ? Colors.blueAccent
-                                  : isPast
-                                      ? Colors.grey
-                                      : Colors.green;
+                              // Usa solo colori del tema
                               return Dismissible(
                                 key: ValueKey(trip.title +
                                     trip.startDate.toIso8601String()),
@@ -271,7 +267,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                   alignment: Alignment.centerRight,
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 24),
-                                  color: Colors.red,
+                                  color: Theme.of(context).colorScheme.error,
                                   child: const Icon(Icons.delete,
                                       color: Colors.white),
                                 ),
@@ -305,6 +301,11 @@ class _HistoryPageState extends State<HistoryPage> {
                                         horizontal: 16, vertical: 8),
                                     color:
                                         Theme.of(context).colorScheme.surface,
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      side: BorderSide.none,
+                                    ),
                                     child: ListTile(
                                       leading: Icon(
                                         isFuture
@@ -312,19 +313,32 @@ class _HistoryPageState extends State<HistoryPage> {
                                             : isPast
                                                 ? Icons.history
                                                 : Icons.play_circle_fill,
-                                        color: badgeColor,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
                                       ),
                                       title: Row(
                                         children: [
-                                          Expanded(child: Text(trip.title)),
+                                          Expanded(
+                                            child: Text(
+                                              trip.title,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleMedium
+                                                  ?.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                            ),
+                                          ),
                                           Container(
                                             margin:
                                                 const EdgeInsets.only(left: 8),
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 8, vertical: 2),
                                             decoration: BoxDecoration(
-                                              color: badgeColor.withValues(
-                                                  alpha: 0.15),
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .primaryContainer,
                                               borderRadius:
                                                   BorderRadius.circular(12),
                                             ),
@@ -332,12 +346,16 @@ class _HistoryPageState extends State<HistoryPage> {
                                               children: [
                                                 Icon(Icons.people,
                                                     size: 16,
-                                                    color: badgeColor),
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .onPrimary),
                                                 const SizedBox(width: 2),
                                                 Text(
                                                     '${trip.participants.length}',
                                                     style: TextStyle(
-                                                        color: badgeColor)),
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .onPrimary)),
                                               ],
                                             ),
                                           ),
@@ -347,8 +365,9 @@ class _HistoryPageState extends State<HistoryPage> {
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 8, vertical: 2),
                                             decoration: BoxDecoration(
-                                              color: badgeColor.withValues(
-                                                  alpha: 0.15),
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .primaryContainer,
                                               borderRadius:
                                                   BorderRadius.circular(12),
                                             ),
@@ -356,11 +375,15 @@ class _HistoryPageState extends State<HistoryPage> {
                                               children: [
                                                 Icon(Icons.receipt_long,
                                                     size: 16,
-                                                    color: badgeColor),
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .onPrimary),
                                                 const SizedBox(width: 2),
                                                 Text('${trip.expenses.length}',
                                                     style: TextStyle(
-                                                        color: badgeColor)),
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .onPrimary)),
                                               ],
                                             ),
                                           ),
@@ -386,13 +409,12 @@ class _HistoryPageState extends State<HistoryPage> {
                                           const SizedBox(height: 4),
                                           Row(
                                             children: [
-                                              Icon(Icons.euro,
-                                                  size: 16, color: badgeColor),
-                                              const SizedBox(width: 2),
                                               Text(
                                                   '${trip.currency} ${total.toStringAsFixed(2)}',
                                                   style: TextStyle(
-                                                      color: badgeColor,
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .primary,
                                                       fontWeight:
                                                           FontWeight.bold)),
                                             ],

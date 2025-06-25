@@ -1,33 +1,79 @@
 import 'package:flutter/material.dart';
 
 class CaravellaThemes {
-  static final Color seed = const Color(0xFF4FC3F7);
-
-  static final ThemeData light = ThemeData(
+  static final ColorScheme lightScheme = const ColorScheme(
     brightness: Brightness.light,
-    colorScheme: ColorScheme.fromSeed(seedColor: seed, brightness: Brightness.light),
-    scaffoldBackgroundColor: Colors.white,
-    appBarTheme: AppBarTheme(
-      backgroundColor: seed,
-      foregroundColor: Colors.white,
-    ),
-    floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: seed,
-      foregroundColor: Colors.white,
-    ),
+    primary: Colors.black,
+    onPrimary: Colors.white,
+    secondary: Colors.black,
+    onSecondary: Colors.white,
+    error: Colors.red,
+    onError: Colors.white,
+    background: Colors.white,
+    onBackground: Colors.black,
+    surface: Colors.white,
+    onSurface: Colors.black,
   );
 
-  static final ThemeData dark = ThemeData(
+  static final ColorScheme darkScheme = const ColorScheme(
     brightness: Brightness.dark,
-    colorScheme: ColorScheme.fromSeed(seedColor: seed, brightness: Brightness.dark),
-    scaffoldBackgroundColor: const Color(0xFF181A20),
-    appBarTheme: AppBarTheme(
-      backgroundColor: seed.withValues(alpha: 0.9),
+    primary: Colors.white,
+    onPrimary: Colors.black,
+    secondary: Colors.white,
+    onSecondary: Colors.black,
+    error: Colors.red,
+    onError: Colors.black,
+    background: Colors.black,
+    onBackground: Colors.white,
+    surface: Colors.black,
+    onSurface: Colors.white,
+  );
+
+  static final ThemeData light = ThemeData.from(
+    colorScheme: lightScheme,
+    textTheme: const TextTheme(
+      bodyLarge: TextStyle(color: Colors.black),
+      bodyMedium: TextStyle(color: Colors.black),
+      bodySmall: TextStyle(color: Colors.black54),
+      titleMedium: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+    ),
+  ).copyWith(
+    scaffoldBackgroundColor: Colors.white,
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Colors.white,
+      foregroundColor: Colors.black,
+      elevation: 0,
+    ),
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      backgroundColor: Colors.black,
       foregroundColor: Colors.white,
     ),
-    floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: seed,
-      foregroundColor: Colors.white,
+    dividerColor: Colors.black12,
+    cardColor: Colors.white,
+    iconTheme: const IconThemeData(color: Colors.black),
+  );
+
+  static final ThemeData dark = ThemeData.from(
+    colorScheme: darkScheme,
+    textTheme: const TextTheme(
+      bodyLarge: TextStyle(color: Colors.white),
+      bodyMedium: TextStyle(color: Colors.white),
+      bodySmall: TextStyle(color: Colors.white70),
+      titleMedium: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
     ),
+  ).copyWith(
+    scaffoldBackgroundColor: Colors.black,
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Colors.black,
+      foregroundColor: Colors.white,
+      elevation: 0,
+    ),
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      backgroundColor: Colors.white,
+      foregroundColor: Colors.black,
+    ),
+    dividerColor: Colors.white10,
+    cardColor: Colors.grey,
+    iconTheme: const IconThemeData(color: Colors.white),
   );
 }

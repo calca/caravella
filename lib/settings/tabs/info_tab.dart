@@ -35,8 +35,7 @@ class InfoTab extends StatelessWidget {
           const SizedBox(height: 24),
           Row(
             children: [
-              Icon(Icons.link,
-                  color: Theme.of(context).colorScheme.primary),
+              Icon(Icons.link, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: 8),
               Text(localizations.get('links'),
                   style: Theme.of(context)
@@ -50,8 +49,7 @@ class InfoTab extends StatelessWidget {
             icon: Icon(Icons.person,
                 size: 20, color: Theme.of(context).colorScheme.primary),
             label: Text('GitHub: calca',
-                style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary)),
+                style: TextStyle(color: Theme.of(context).colorScheme.primary)),
             onPressed: () => _launchUrl(context, 'https://github.com/calca'),
             style: TextButton.styleFrom(
               alignment: Alignment.centerLeft,
@@ -64,8 +62,7 @@ class InfoTab extends StatelessWidget {
             icon: Icon(Icons.code,
                 size: 20, color: Theme.of(context).colorScheme.primary),
             label: Text('Repository: github.com/calca/caravella',
-                style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary)),
+                style: TextStyle(color: Theme.of(context).colorScheme.primary)),
             onPressed: () =>
                 _launchUrl(context, 'https://github.com/calca/caravella'),
             style: TextButton.styleFrom(
@@ -96,14 +93,14 @@ class InfoTab extends StatelessWidget {
               style: Theme.of(context).textTheme.bodySmall),
           InkWell(
             borderRadius: BorderRadius.circular(8),
-            onTap: () => _launchUrl(context, 'https://github.com/calca/caravella/blob/main/LICENSE'),
+            onTap: () => _launchUrl(context,
+                'https://github.com/calca/caravella/blob/main/LICENSE'),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 6),
               child: Row(
                 children: [
                   Icon(Icons.open_in_new,
-                      size: 20,
-                      color: Theme.of(context).colorScheme.primary),
+                      size: 20, color: Theme.of(context).colorScheme.primary),
                   const SizedBox(width: 8),
                   Text(localizations.get('license_link'),
                       style: TextStyle(
