@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'package:uuid/uuid.dart';
 
 class Trip {
+  final String id; // UDID per il viaggio
   final String title;
   final List<Expense> expenses;
   final List<String> participants;
@@ -21,10 +23,13 @@ class Trip {
     required this.currency, // Nuovo campo obbligatorio
     this.categories = const [], // Default empty list
     DateTime? timestamp, // opzionale, default a now
-  }) : timestamp = timestamp ?? DateTime.now();
+    String? id, // opzionale, generato se mancante
+  })  : timestamp = timestamp ?? DateTime.now(),
+        id = id ?? const Uuid().v4();
 
   factory Trip.fromJson(Map<String, dynamic> json) {
     return Trip(
+      id: json['id'],
       title: json['title'],
       expenses: (json['expenses'] as List<dynamic>?)
               ?.map((e) => Expense.fromJson(e))
@@ -44,6 +49,7 @@ class Trip {
   }
 
   Map<String, dynamic> toJson() => {
+        'id': id,
         'title': title,
         'expenses': expenses.map((e) => e.toJson()).toList(),
         'participants': participants,
@@ -56,6 +62,7 @@ class Trip {
 }
 
 class Expense {
+  final String id; // UDID per la spesa
   final String description;
   final double amount;
   final String paidBy;
@@ -68,10 +75,12 @@ class Expense {
     required this.paidBy,
     required this.date,
     this.note,
-  });
+    String? id, // opzionale, generato se mancante
+  }) : id = id ?? const Uuid().v4();
 
   factory Expense.fromJson(Map<String, dynamic> json) {
     return Expense(
+      id: json['id'],
       description: json['description'],
       amount: (json['amount'] as num).toDouble(),
       paidBy: json['paidBy'],
@@ -81,6 +90,7 @@ class Expense {
   }
 
   Map<String, dynamic> toJson() => {
+        'id': id,
         'description': description,
         'amount': amount,
         'paidBy': paidBy,
@@ -116,6 +126,25 @@ class TripsStorage {
     final file = await _getFile();
     final jsonList = trips.map((v) => v.toJson()).toList();
     await file.writeAsString(jsonEncode(jsonList));
+  }
+
+  static Future<Trip?> getTripById(String id) async {
+    final trips = await readTrips();
+    try {
+      return trips.firstWhere((trip) => trip.id == id);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  static Future<Expense?> getExpenseById(String tripId, String expenseId) async {
+    final trip = await getTripById(tripId);
+    if (trip == null) return null;
+    try {
+      return trip.expenses.firstWhere((expense) => expense.id == expenseId);
+    } catch (_) {
+      return null;
+    }
   }
 }
 

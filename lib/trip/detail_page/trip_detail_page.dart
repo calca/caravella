@@ -29,16 +29,10 @@ class _TripDetailPageState extends State<TripDetailPage> {
   }
 
   Future<void> _loadTrip() async {
-    final trips = await TripsStorage.readTrips();
-    final idx = trips.indexWhere(
-      (t) =>
-          t.title == widget.trip.title &&
-          t.startDate == widget.trip.startDate &&
-          t.endDate == widget.trip.endDate,
-    );
+    final trip = await TripsStorage.getTripById(widget.trip.id);
     setState(() {
-      _trip = idx != -1 ? trips[idx] : null;
-      _deleted = idx == -1;
+      _trip = trip;
+      _deleted = trip == null;
     });
     if (_deleted && mounted) {
       Navigator.of(context).pop(true); // Torna in home e aggiorna
@@ -46,16 +40,10 @@ class _TripDetailPageState extends State<TripDetailPage> {
   }
 
   Future<void> _refreshTrip() async {
-    final trip = _trip;
-    if (trip == null) return; // Evita null check operator su _trip
-    final trips = await TripsStorage.readTrips();
-    final idx = trips.indexWhere((v) =>
-        v.title == trip.title &&
-        v.startDate == trip.startDate &&
-        v.endDate == trip.endDate);
-    if (idx != -1) {
+    final trip = await TripsStorage.getTripById(_trip?.id ?? widget.trip.id);
+    if (trip != null) {
       setState(() {
-        _trip = trips[idx];
+        _trip = trip;
       });
     }
   }
