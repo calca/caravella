@@ -9,6 +9,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:archive/archive_io.dart';
+import 'package:file_picker/file_picker.dart';
 
 class SettingsPage extends StatelessWidget {
   final void Function(String)? onLocaleChanged;
@@ -48,21 +49,119 @@ class SettingsPage extends StatelessWidget {
               // --- Theme selector ---
               const ThemeSelectorSetting(),
               const SizedBox(height: 24),
-              ElevatedButton.icon(
-                icon: const Icon(Icons.backup),
-                label: Text(localizations.get('backup')),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      icon: const Icon(Icons.backup),
+                      label: Text(localizations.get('backup')),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor:
+                            Theme.of(context).colorScheme.onPrimary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 12),
+                      ),
+                      onPressed: () async {
+                        await _backupTrips(context, localizations);
+                      },
+                    ),
                   ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                ),
-                onPressed: () async {
-                  await _backupTrips(context, localizations);
-                },
+                  const SizedBox(width: 12),
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.file_upload),
+                    label: Text(localizations.get('import')),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.secondary,
+                      foregroundColor:
+                          Theme.of(context).colorScheme.onSecondary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
+                    ),
+                    onPressed: () async {
+                      final result = await FilePicker.platform.pickFiles(
+                        type: FileType.custom,
+                        allowedExtensions: ['zip', 'json'],
+                      );
+                      if (!context.mounted) return;
+                      if (result != null && result.files.single.path != null) {
+                        final filePath = result.files.single.path!;
+                        final fileName = result.files.single.name;
+                        final confirm = await showDialog<bool>(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title:
+                                Text(localizations.get('import_confirm_title')),
+                            content: Text(localizations.get(
+                                'import_confirm_message',
+                                params: {'file': fileName})),
+                            actions: [
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(false),
+                                child: Text(localizations.get('cancel')),
+                              ),
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(true),
+                                child: Text(localizations.get('ok')),
+                              ),
+                            ],
+                          ),
+                        );
+                        if (confirm == true) {
+                          try {
+                            final dir =
+                                await getApplicationDocumentsDirectory();
+                            final destFile = File('${dir.path}/trips.json');
+                            if (filePath.endsWith('.zip')) {
+                              final bytes = await File(filePath).readAsBytes();
+                              final archive = ZipDecoder().decodeBytes(bytes);
+                              for (final file in archive) {
+                                if (file.name == 'trips.json') {
+                                  await destFile
+                                      .writeAsBytes(file.content as List<int>);
+                                  break;
+                                }
+                              }
+                            } else if (filePath.endsWith('.json')) {
+                              await File(filePath).copy(destFile.path);
+                            }
+                            if (!context.mounted) return;
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text(
+                                      localizations.get('import_success'))),
+                            );
+                            // Trigger reload of all data in the app
+                            Navigator.of(context)
+                                .popUntil((route) => route.isFirst);
+                            // Richiama il refresh della home
+                            final state =
+                                context.findAncestorStateOfType<State>();
+                            if (state != null && state.mounted) {
+                              // ignore: invalid_use_of_protected_member
+                              state.setState(() {});
+                            }
+                          } catch (e) {
+                            if (!context.mounted) return;
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text(
+                                      localizations.get('import_error'))),
+                            );
+                          }
+                        }
+                      }
+                    },
+                  ),
+                ],
               ),
               const SizedBox(height: 24),
               Divider(height: 1, thickness: 1),
@@ -121,8 +220,10 @@ class SettingsPage extends StatelessWidget {
                               color: Theme.of(context).colorScheme.primary),
                           label: Text('GitHub: calca',
                               style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary)),
-                          onPressed: () => _launchUrl('https://github.com/calca'),
+                                  color:
+                                      Theme.of(context).colorScheme.primary)),
+                          onPressed: () =>
+                              _launchUrl('https://github.com/calca'),
                           style: TextButton.styleFrom(
                             alignment: Alignment.centerLeft,
                             padding: EdgeInsets.zero,
@@ -136,7 +237,8 @@ class SettingsPage extends StatelessWidget {
                               color: Theme.of(context).colorScheme.primary),
                           label: Text('Repository: github.com/calca/caravella',
                               style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary)),
+                                  color:
+                                      Theme.of(context).colorScheme.primary)),
                           onPressed: () =>
                               _launchUrl('https://github.com/calca/caravella'),
                           style: TextButton.styleFrom(
@@ -175,7 +277,8 @@ class SettingsPage extends StatelessWidget {
                               children: [
                                 Icon(Icons.open_in_new,
                                     size: 20,
-                                    color: Theme.of(context).colorScheme.primary),
+                                    color:
+                                        Theme.of(context).colorScheme.primary),
                                 const SizedBox(width: 8),
                                 Text(localizations.get('license_link'),
                                     style: TextStyle(

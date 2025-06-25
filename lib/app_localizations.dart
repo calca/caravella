@@ -71,6 +71,12 @@ class AppLocalizations {
       'no_trips_to_backup': 'No trips to backup',
       'backup_error': 'Backup failed',
       'backup_share_message': 'Here is your Caravella backup',
+      'import': 'Import',
+      'import_confirm_title': 'Import data',
+      'import_confirm_message':
+          'Are you sure you want to overwrite all trips with the file "{file}"? This action cannot be undone.',
+      'import_success': 'Import successful! Data reloaded.',
+      'import_error': 'Import failed. Check the file format.',
     },
     'it': {
       'app_title': 'Caravella',
@@ -136,6 +142,12 @@ class AppLocalizations {
       'no_trips_to_backup': 'Nessun viaggio da salvare',
       'backup_error': 'Backup non riuscito',
       'backup_share_message': 'Ecco il backup di Caravella',
+      'import': 'Importa',
+      'import_confirm_title': 'Importa dati',
+      'import_confirm_message':
+          'Sicuro di voler sovrascrivere tutti i viaggi con il file "{file}"? L’operazione non è reversibile.',
+      'import_success': 'Import riuscito! Dati ricaricati.',
+      'import_error': 'Import fallito. Controlla il formato del file.',
     },
   };
 
