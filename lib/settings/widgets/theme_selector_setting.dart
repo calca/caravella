@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'setting_selector.dart';
-import '../state/theme_mode_notifier.dart';
+import '../../state/theme_mode_notifier.dart';
 
 class ThemeSelectorSetting extends StatefulWidget {
   const ThemeSelectorSetting({super.key});
