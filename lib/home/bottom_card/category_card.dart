@@ -20,48 +20,51 @@ class CategoryCard extends StatelessWidget {
     final top = totals.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
     return BaseFlatCard(
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => TripDetailPage(trip: trip),
-          ),
-        );
-      },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            loc.get('category'),
-            style: Theme.of(context)
-                .textTheme
-                .bodySmall
-                ?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 6),
-          const Spacer(),
-          if (top.isEmpty)
-            Text('-', style: Theme.of(context).textTheme.titleLarge)
-          else
-            ...top.take(2).map((e) => Padding(
-                  padding: const EdgeInsets.only(bottom: 2),
-                  child: Row(
-                    children: [
-                      Icon(Icons.category,
-                          size: 16,
-                          color: Theme.of(context).colorScheme.primary),
-                      const SizedBox(width: 4),
-                      Expanded(
-                          child: Text(e.key,
-                              style: Theme.of(context).textTheme.bodyMedium)),
-                      Text('${trip.currency} ${e.value.toStringAsFixed(2)}',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                )),
-        ],
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => TripDetailPage(trip: trip),
+            ),
+          );
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              loc.get('category'),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 6),
+            const Spacer(),
+            if (top.isEmpty)
+              Text('-', style: Theme.of(context).textTheme.titleLarge)
+            else
+              ...top.take(2).map((e) => Padding(
+                    padding: const EdgeInsets.only(bottom: 2),
+                    child: Row(
+                      children: [
+                        Icon(Icons.category,
+                            size: 16,
+                            color: Theme.of(context).colorScheme.primary),
+                        const SizedBox(width: 4),
+                        Expanded(
+                            child: Text(e.key,
+                                style: Theme.of(context).textTheme.bodyMedium)),
+                        Text('${trip.currency} ${e.value.toStringAsFixed(2)}',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                  )),
+          ],
+        ),
       ),
     );
   }

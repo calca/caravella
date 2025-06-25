@@ -26,74 +26,77 @@ class WeekChartCard extends StatelessWidget {
     });
     final maxValue = data.reduce((a, b) => a > b ? a : b);
     return BaseFlatCard(
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => TripDetailPage(trip: trip),
-          ),
-        );
-      },
       padding: const EdgeInsets.all(10.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            loc.get('last_week'),
-            style: Theme.of(context)
-                .textTheme
-                .bodySmall
-                ?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 6),
-          Expanded(
-            child: BarChart(
-              BarChartData(
-                barGroups: List.generate(
-                  7,
-                  (i) => BarChartGroupData(
-                    x: i,
-                    barRods: [
-                      BarChartRodData(
-                        toY: maxValue > 0 ? data[i] / maxValue : 0,
-                        color: Theme.of(context).colorScheme.primary,
-                        width: 10,
-                        borderRadius: BorderRadius.circular(4),
-                      )
-                    ],
-                  ),
-                ),
-                titlesData: FlTitlesData(
-                  leftTitles:
-                      AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  rightTitles:
-                      AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  topTitles:
-                      AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  bottomTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      getTitlesWidget: (value, meta) {
-                        if (value < 0 || value > 6) {
-                          return const SizedBox.shrink();
-                        }
-                        final d = days[value.toInt()];
-                        return Text('${d.day}',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall
-                                ?.copyWith(fontSize: 10));
-                      },
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => TripDetailPage(trip: trip),
+            ),
+          );
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              loc.get('last_week'),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 6),
+            Expanded(
+              child: BarChart(
+                BarChartData(
+                  barGroups: List.generate(
+                    7,
+                    (i) => BarChartGroupData(
+                      x: i,
+                      barRods: [
+                        BarChartRodData(
+                          toY: maxValue > 0 ? data[i] / maxValue : 0,
+                          color: Theme.of(context).colorScheme.primary,
+                          width: 10,
+                          borderRadius: BorderRadius.circular(4),
+                        )
+                      ],
                     ),
                   ),
+                  titlesData: FlTitlesData(
+                    leftTitles:
+                        AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    rightTitles:
+                        AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    topTitles:
+                        AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        getTitlesWidget: (value, meta) {
+                          if (value < 0 || value > 6) {
+                            return const SizedBox.shrink();
+                          }
+                          final d = days[value.toInt()];
+                          return Text('${d.day}',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(fontSize: 10));
+                        },
+                      ),
+                    ),
+                  ),
+                  gridData: FlGridData(show: false),
+                  borderData: FlBorderData(show: false),
+                  minY: 0,
+                  maxY: 1,
                 ),
-                gridData: FlGridData(show: false),
-                borderData: FlBorderData(show: false),
-                minY: 0,
-                maxY: 1,
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
