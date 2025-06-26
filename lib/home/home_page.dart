@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage>
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 2),
+                            horizontal: 8, vertical: 16), // Maggiore spazio verticale
                         child: IntrinsicHeight(
                           child: _currentTrip == null
                               ? NoTripCard(
@@ -114,8 +114,7 @@ class _HomePageState extends State<HomePage>
                                   },
                                   opacity: 0.5,
                                 )
-                              : CurrentTripCard(
-                                  trip: _currentTrip!, opacity: 0.5),
+                              : CurrentTripCard(trip: _currentTrip!),
                         ),
                       ),
                       Expanded(

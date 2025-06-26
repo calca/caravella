@@ -5,8 +5,7 @@ import '../../state/locale_notifier.dart';
 
 class CurrentTripCard extends StatelessWidget {
   final Trip trip;
-  final double opacity;
-  const CurrentTripCard({super.key, required this.trip, required this.opacity});
+  const CurrentTripCard({super.key, required this.trip});
 
   @override
   Widget build(BuildContext context) {
