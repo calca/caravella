@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
-import '../../../data/trips_storage.dart';
+import '../../../data/trip.dart';
 
 class OverviewTab extends StatelessWidget {
   final Trip trip;

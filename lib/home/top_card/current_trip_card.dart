@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../app_localizations.dart';
-import '../../data/trips_storage.dart';
+import '../../data/trip.dart';
 import '../../state/locale_notifier.dart';
 import 'top_card_box_decoration.dart';
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../app_localizations.dart';
+import '../data/trip.dart';
 import '../data/trips_storage.dart';
 import '../widgets/caravella_bottom_bar.dart';
 import 'bottom_card/today_spent_card.dart';

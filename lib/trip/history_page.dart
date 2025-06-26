@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../data/trip.dart';
 import '../data/trips_storage.dart';
 import 'detail_page/trip_detail_page.dart';
 import '../app_localizations.dart';

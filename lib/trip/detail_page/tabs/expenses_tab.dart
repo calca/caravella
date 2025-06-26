@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../data/expense.dart';
+import '../../../data/trip.dart';
 import '../../../widgets/trip_amount_card.dart';
 import '../../../data/trips_storage.dart';
 import '../../../app_localizations.dart';

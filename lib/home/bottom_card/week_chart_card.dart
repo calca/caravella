@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../../data/trips_storage.dart';
+import '../../data/trip.dart';
 import 'base_flat_card.dart';
 import '../../trip/detail_page/trip_detail_page.dart';
 import '../../app_localizations.dart';

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../data/expense.dart';
+import '../../data/trip.dart';
 import 'expense_edit_page.dart';
 import '../../data/trips_storage.dart';
 import '../add_trip_page.dart';

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'data/trip.dart';
 import 'themes/caravella_themes.dart';
 import 'app_localizations.dart';
 import 'trip/add_trip_page.dart';

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../data/trip.dart';
 import '../data/trips_storage.dart';
 import '../app_localizations.dart';
 import '../state/locale_notifier.dart';

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/trip/add_expense_component.dart';
+import '../data/trip.dart';
 import '../trip/history_page.dart';
 import '../app_localizations.dart';
 import '../data/trips_storage.dart';
