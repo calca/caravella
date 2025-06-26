@@ -71,26 +71,26 @@ jobs:
           files: org_app_caravella-*.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
-- name: Bump version and versionCode in pubspec.yaml
-  run: |
-    VERSION_LINE=$(grep '^version:' pubspec.yaml)
-    VERSION_FULL=$(echo "$VERSION_LINE" | sed 's/version: //')
-    VERSION_NUM=$(echo "$VERSION_FULL" | cut -d'+' -f1)
-    VERSION_CODE=$(echo "$VERSION_FULL" | cut -d'+' -f2)
-    # Increment patch version (es: 1.0.0 -> 1.0.1)
-    IFS='.' read -r MAJOR MINOR PATCH <<< "$(echo $VERSION_NUM)"
-    PATCH=$((PATCH + 1))
-    NEW_VERSION_NUM="$MAJOR.$MINOR.$PATCH"
-    NEW_CODE=$((VERSION_CODE + 1))
-    sed "s/^version: .*/version: $NEW_VERSION_NUM+$NEW_CODE/" pubspec.yaml > pubspec.yaml.tmp
-    mv pubspec.yaml.tmp pubspec.yaml
-    echo "Bumped version to $NEW_VERSION_NUM+$NEW_CODE"
-- name: Commit and push version bump
-  run: |
-    git config --global user.email "github-actions[bot]@users.noreply.github.com"
-    git config --global user.name "github-actions[bot]"
-    git add pubspec.yaml
-    git commit -m "Bump version to $NEW_VERSION_NUM+$NEW_CODE [skip ci]"
-    git push
-  env:
-    GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+      - name: Bump version and versionCode in pubspec.yaml
+        run: |
+          VERSION_LINE=$(grep '^version:' pubspec.yaml)
+          VERSION_FULL=$(echo "$VERSION_LINE" | sed 's/version: //')
+          VERSION_NUM=$(echo "$VERSION_FULL" | cut -d'+' -f1)
+          VERSION_CODE=$(echo "$VERSION_FULL" | cut -d'+' -f2)
+          # Increment patch version (es: 1.0.0 -> 1.0.1)
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$(echo $VERSION_NUM)"
+          PATCH=$((PATCH + 1))
+          NEW_VERSION_NUM="$MAJOR.$MINOR.$PATCH"
+          NEW_CODE=$((VERSION_CODE + 1))
+          sed "s/^version: .*/version: $NEW_VERSION_NUM+$NEW_CODE/" pubspec.yaml > pubspec.yaml.tmp
+          mv pubspec.yaml.tmp pubspec.yaml
+          echo "Bumped version to $NEW_VERSION_NUM+$NEW_CODE"
+      - name: Commit and push version bump
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git add pubspec.yaml
+          git commit -m "Bump version to $NEW_VERSION_NUM+$NEW_CODE [skip ci]"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
