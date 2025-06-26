@@ -132,7 +132,7 @@ class _AddTripPageState extends State<AddTripPage> {
     if (_participants.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Aggiungi almeno un partecipante'),
+          content: Text(loc.get('enter_participant')),
           backgroundColor: Colors.red,
         ),
       );
@@ -178,464 +178,430 @@ class _AddTripPageState extends State<AddTripPage> {
     Navigator.of(context).pop(true);
   }
 
+  void _unfocusAll() {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+      currentFocus.unfocus();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
     final loc = AppLocalizations(locale);
-    // For debug: print all keys for this locale
-    // print(AppLocalizations._localizedValues[locale]?.keys);
-    return Scaffold(
-      appBar: CaravellaAppBar(
-        actions: [
-          if (widget.trip != null)
-            IconButton(
-              icon: const Icon(Icons.delete),
-              tooltip: loc.get('delete'),
-              onPressed: () async {
-                final confirm = await showDialog<bool>(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: Text(loc.get('delete_trip')),
-                    content: Text(loc.get('delete_trip_confirm')),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(false),
-                        child: Text(loc.get('cancel')),
-                      ),
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(true),
-                        child: Text(loc.get('delete')),
-                      ),
-                    ],
-                  ),
-                );
-                if (confirm == true) {
-                  final trips = await TripsStorage.readTrips();
-                  trips.removeWhere((v) => v.id == widget.trip!.id);
-                  await TripsStorage.writeTrips(trips);
-                  if (!context.mounted) return;
-                  Navigator.of(context).pop(true);
-                  if (widget.onTripDeleted != null) {
-                    widget.onTripDeleted!();
+    return GestureDetector(
+      onTap: _unfocusAll,
+      behavior: HitTestBehavior.translucent,
+      child: Scaffold(
+        appBar: CaravellaAppBar(
+          actions: [
+            if (widget.trip != null)
+              IconButton(
+                icon: const Icon(Icons.delete),
+                tooltip: loc.get('delete'),
+                onPressed: () async {
+                  final confirm = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text(loc.get('delete_trip')),
+                      content: Text(loc.get('delete_trip_confirm')),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          child: Text(loc.get('cancel')),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(true),
+                          child: Text(loc.get('delete')),
+                        ),
+                      ],
+                    ),
+                  );
+                  if (confirm == true) {
+                    final trips = await TripsStorage.readTrips();
+                    trips.removeWhere((v) => v.id == widget.trip!.id);
+                    await TripsStorage.writeTrips(trips);
+                    if (!context.mounted) return;
+                    Navigator.of(context).pop(true);
+                    if (widget.onTripDeleted != null) {
+                      widget.onTripDeleted!();
+                    }
                   }
-                }
-              },
-            ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              Card(
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16)),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextFormField(
-                        controller: _titleController,
-                        decoration: InputDecoration(
-                            labelText: loc.get('trip_title', params: {})),
-                        validator: (v) => v == null || v.isEmpty
-                            ? loc.get('enter_title', params: {})
-                            : null,
-                      ),
-                      const SizedBox(height: 16),
-                      // Sezione date compatta
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(loc.get('from'),
-                                    style:
-                                        Theme.of(context).textTheme.bodySmall),
-                                TextButton.icon(
-                                  icon: const Icon(Icons.calendar_today,
-                                      size: 18),
-                                  label: Text(_startDate == null
-                                      ? loc.get('start_date_not_selected',
-                                          params: {})
-                                      : '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}'),
-                                  onPressed: () => _pickDate(context, true),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(loc.get('to'),
-                                    style:
-                                        Theme.of(context).textTheme.bodySmall),
-                                TextButton.icon(
-                                  icon: const Icon(Icons.calendar_today,
-                                      size: 18),
-                                  label: Text(_endDate == null
-                                      ? loc.get('end_date_not_selected',
-                                          params: {})
-                                      : '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}'),
-                                  onPressed: () => _pickDate(context, false),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      if (_dateError != null)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 4.0),
-                          child: Text(
-                            _dateError!,
-                            style: TextStyle(color: Colors.red, fontSize: 13),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
+                },
               ),
-              const SizedBox(height: 16),
-              Card(
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16)),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              children: [
+                // Titolo viaggio
+                TextFormField(
+                  controller: _titleController,
+                  decoration: InputDecoration(
+                    labelText: loc.get('trip_title'),
+                    border: const OutlineInputBorder(),
+                    contentPadding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  ),
+                  validator: (v) =>
+                      v == null || v.isEmpty ? loc.get('enter_title') : null,
+                ),
+                const SizedBox(height: 16),
+                // Sezione date compatta
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(loc.get('participants'),
-                              style: Theme.of(context).textTheme.titleMedium),
-                          const Spacer(),
-                          IconButton(
-                            icon: const Icon(Icons.add),
-                            tooltip: loc.get('add_participant'),
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: Text(loc.get('add_participant')),
-                                  content: TextField(
-                                    controller: _participantController,
-                                    autofocus: true,
-                                    decoration: InputDecoration(
-                                      labelText: loc.get('participant_name'),
-                                    ),
-                                    onSubmitted: (val) {
-                                      if (val.trim().isNotEmpty) {
-                                        setState(() {
-                                          _participants.add(val.trim());
-                                          _participantController.clear();
-                                        });
-                                        Navigator.of(context).pop();
-                                      }
-                                    },
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(),
-                                      child: Text(loc.get('cancel')),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        final val =
-                                            _participantController.text.trim();
-                                        if (val.isNotEmpty) {
-                                          setState(() {
-                                            _participants.add(val);
-                                            _participantController.clear();
-                                          });
-                                          Navigator.of(context).pop();
-                                        }
-                                      },
-                                      child: Text(loc.get('add')),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
+                          Text(loc.get('from'),
+                              style: Theme.of(context).textTheme.bodySmall),
+                          TextButton.icon(
+                            icon: const Icon(Icons.calendar_today, size: 18),
+                            label: Text(_startDate == null
+                                ? loc.get('start_date_not_selected')
+                                : '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}'),
+                            onPressed: () => _pickDate(context, true),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 8),
-                      if (_participants.isEmpty)
-                        Text(loc.get('no_participants'),
-                            style: Theme.of(context).textTheme.bodySmall),
-                      ..._participants.asMap().entries.map((entry) {
-                        final i = entry.key;
-                        final p = entry.value;
-                        return Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 0),
-                                child: Text(p,
-                                    style:
-                                        Theme.of(context).textTheme.bodyLarge),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(loc.get('to'),
+                              style: Theme.of(context).textTheme.bodySmall),
+                          TextButton.icon(
+                            icon: const Icon(Icons.calendar_today, size: 18),
+                            label: Text(_endDate == null
+                                ? loc.get('end_date_not_selected')
+                                : '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}'),
+                            onPressed: () => _pickDate(context, false),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                if (_dateError != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child: Text(
+                      _dateError!,
+                      style: TextStyle(color: Colors.red, fontSize: 13),
+                    ),
+                  ),
+                const SizedBox(height: 16),
+                // Partecipanti
+                Row(
+                  children: [
+                    Text(loc.get('participants'),
+                        style: Theme.of(context).textTheme.titleMedium),
+                    const Spacer(),
+                    IconButton(
+                      icon: const Icon(Icons.add),
+                      tooltip: loc.get('add_participant'),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text(loc.get('add_participant')),
+                            content: TextField(
+                              controller: _participantController,
+                              autofocus: true,
+                              decoration: InputDecoration(
+                                labelText: loc.get('participant_name'),
+                                hintText: loc.get('participant_name_hint'),
                               ),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.edit),
-                              tooltip: loc.get('edit'),
-                              onPressed: () {
-                                final editController =
-                                    TextEditingController(text: p);
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    title: Text(loc.get('edit_participant')),
-                                    content: TextField(
-                                      controller: editController,
-                                      autofocus: true,
-                                      decoration: InputDecoration(
-                                        labelText: loc.get('participant_name'),
-                                      ),
-                                      onSubmitted: (val) {
-                                        if (val.trim().isNotEmpty) {
-                                          setState(() {
-                                            _participants[i] = val.trim();
-                                          });
-                                          Navigator.of(context).pop();
-                                        }
-                                      },
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.of(context).pop(),
-                                        child: Text(loc.get('cancel')),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          final val =
-                                              editController.text.trim();
-                                          if (val.isNotEmpty) {
-                                            setState(() {
-                                              _participants[i] = val;
-                                            });
-                                            Navigator.of(context).pop();
-                                          }
-                                        },
-                                        child: Text(loc.get('save')),
-                                      ),
-                                    ],
-                                  ),
-                                );
+                              onSubmitted: (val) {
+                                if (val.trim().isNotEmpty) {
+                                  setState(() {
+                                    _participants.add(val.trim());
+                                    _participantController.clear();
+                                  });
+                                  Navigator.of(context).pop();
+                                }
                               },
                             ),
-                            IconButton(
-                              icon: const Icon(Icons.delete_outline),
-                              onPressed: () {
-                                setState(() {
-                                  _participants.removeAt(i);
-                                });
-                              },
-                            ),
-                          ],
-                        );
-                      }),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Card(
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16)),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(loc.get('currency'),
-                          style: Theme.of(context).textTheme.titleMedium),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: CurrencySelector(
-                            value: _currency,
-                            onChanged: (val) {
-                              if (val != null) setState(() => _currency = val);
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Card(
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16)),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(loc.get('categories'),
-                              style: Theme.of(context).textTheme.titleMedium),
-                          const Spacer(),
-                          IconButton(
-                            icon: const Icon(Icons.add),
-                            tooltip: loc.get('add_category'),
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  final TextEditingController
-                                      categoryController =
-                                      TextEditingController();
-                                  return AlertDialog(
-                                    title: Text(loc.get('add_category')),
-                                    content: TextField(
-                                      controller: categoryController,
-                                      autofocus: true,
-                                      decoration: InputDecoration(
-                                        labelText: loc.get('category_name'),
-                                      ),
-                                      onSubmitted: (val) {
-                                        if (val.trim().isNotEmpty) {
-                                          setState(() {
-                                            _categories.add(val.trim());
-                                          });
-                                          Navigator.of(context).pop();
-                                        }
-                                      },
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.of(context).pop(),
-                                        child: Text(loc.get('cancel')),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          final val =
-                                              categoryController.text.trim();
-                                          if (val.isNotEmpty) {
-                                            setState(() {
-                                              _categories.add(val);
-                                            });
-                                            Navigator.of(context).pop();
-                                          }
-                                        },
-                                        child: Text(loc.get('add')),
-                                      ),
-                                    ],
-                                  );
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: Text(loc.get('cancel')),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  final val = _participantController.text.trim();
+                                  if (val.isNotEmpty) {
+                                    setState(() {
+                                      _participants.add(val);
+                                      _participantController.clear();
+                                    });
+                                    Navigator.of(context).pop();
+                                  }
                                 },
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      if (_categories.isEmpty)
-                        Text(loc.get('no_categories'),
-                            style: Theme.of(context).textTheme.bodySmall),
-                      ..._categories.asMap().entries.map((entry) {
-                        final i = entry.key;
-                        final c = entry.value;
-                        return Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 0),
-                                child: Text(c,
-                                    style:
-                                        Theme.of(context).textTheme.bodyLarge),
+                                child: Text(loc.get('add')),
                               ),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.edit),
-                              tooltip: loc.get('edit'),
-                              onPressed: () {
-                                final editController =
-                                    TextEditingController(text: c);
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    title: Text(loc.get('edit_category')),
-                                    content: TextField(
-                                      controller: editController,
-                                      autofocus: true,
-                                      decoration: InputDecoration(
-                                        labelText: loc.get('category_name'),
-                                      ),
-                                      onSubmitted: (val) {
-                                        if (val.trim().isNotEmpty) {
-                                          setState(() {
-                                            _categories[i] = val.trim();
-                                          });
-                                          Navigator.of(context).pop();
-                                        }
-                                      },
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.of(context).pop(),
-                                        child: Text(loc.get('cancel')),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          final val =
-                                              editController.text.trim();
-                                          if (val.isNotEmpty) {
-                                            setState(() {
-                                              _categories[i] = val;
-                                            });
-                                            Navigator.of(context).pop();
-                                          }
-                                        },
-                                        child: Text(loc.get('save')),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.delete_outline),
-                              onPressed: () {
-                                setState(() {
-                                  _categories.removeAt(i);
-                                });
-                              },
-                            ),
-                          ],
+                            ],
+                          ),
                         );
-                      }),
-                    ],
-                  ),
+                      },
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 32),
-              ElevatedButton(
-                onPressed: _saveTrip,
-                child: Text(loc.get('save', params: {})),
-              ),
-            ],
+                const SizedBox(height: 8),
+                if (_participants.isEmpty)
+                  Text(loc.get('no_participants'),
+                      style: Theme.of(context).textTheme.bodySmall),
+                ..._participants.asMap().entries.map((entry) {
+                  final i = entry.key;
+                  final p = entry.value;
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 0),
+                          child: Text(p,
+                              style: Theme.of(context).textTheme.bodyLarge,
+                              semanticsLabel: loc.get(
+                                  'participant_name_semantics',
+                                  params: {'name': p})),
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.edit),
+                        tooltip: loc.get('edit_participant'),
+                        onPressed: () {
+                          final editController = TextEditingController(text: p);
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: Text(loc.get('edit_participant')),
+                              content: TextField(
+                                controller: editController,
+                                autofocus: true,
+                                decoration: InputDecoration(
+                                  labelText: loc.get('participant_name'),
+                                  hintText: loc.get('participant_name_hint'),
+                                ),
+                                onSubmitted: (val) {
+                                  if (val.trim().isNotEmpty) {
+                                    setState(() {
+                                      _participants[i] = val.trim();
+                                    });
+                                    Navigator.of(context).pop();
+                                  }
+                                },
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  child: Text(loc.get('cancel')),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    final val = editController.text.trim();
+                                    if (val.isNotEmpty) {
+                                      setState(() {
+                                        _participants[i] = val;
+                                      });
+                                      Navigator.of(context).pop();
+                                    }
+                                  },
+                                  child: Text(loc.get('save')),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete_outline),
+                        tooltip: loc.get('delete_participant'),
+                        onPressed: () {
+                          setState(() {
+                            _participants.removeAt(i);
+                          });
+                        },
+                      ),
+                    ],
+                  );
+                }),
+                const SizedBox(height: 16),
+                // Valuta
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(loc.get('currency'),
+                        style: Theme.of(context).textTheme.titleMedium),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: CurrencySelector(
+                          value: _currency,
+                          onChanged: (val) {
+                            if (val != null) setState(() => _currency = val);
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                // Categorie
+                Row(
+                  children: [
+                    Text(loc.get('categories'),
+                        style: Theme.of(context).textTheme.titleMedium),
+                    const Spacer(),
+                    IconButton(
+                      icon: const Icon(Icons.add),
+                      tooltip: loc.get('add_category'),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            final TextEditingController categoryController =
+                                TextEditingController();
+                            return AlertDialog(
+                              title: Text(loc.get('add_category')),
+                              content: TextField(
+                                controller: categoryController,
+                                autofocus: true,
+                                decoration: InputDecoration(
+                                  labelText: loc.get('category_name'),
+                                  hintText: loc.get('category_name_hint'),
+                                ),
+                                onSubmitted: (val) {
+                                  if (val.trim().isNotEmpty) {
+                                    setState(() {
+                                      _categories.add(val.trim());
+                                    });
+                                    Navigator.of(context).pop();
+                                  }
+                                },
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  child: Text(loc.get('cancel')),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    final val = categoryController.text.trim();
+                                    if (val.isNotEmpty) {
+                                      setState(() {
+                                        _categories.add(val);
+                                      });
+                                      Navigator.of(context).pop();
+                                    }
+                                  },
+                                  child: Text(loc.get('add')),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                if (_categories.isEmpty)
+                  Text(loc.get('no_categories'),
+                      style: Theme.of(context).textTheme.bodySmall),
+                ..._categories.asMap().entries.map((entry) {
+                  final i = entry.key;
+                  final c = entry.value;
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 0),
+                          child: Text(c,
+                              style: Theme.of(context).textTheme.bodyLarge,
+                              semanticsLabel: loc.get('category_name_semantics',
+                                  params: {'name': c})),
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.edit),
+                        tooltip: loc.get('edit_category'),
+                        onPressed: () {
+                          final editController = TextEditingController(text: c);
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: Text(loc.get('edit_category')),
+                              content: TextField(
+                                controller: editController,
+                                autofocus: true,
+                                decoration: InputDecoration(
+                                  labelText: loc.get('category_name'),
+                                  hintText: loc.get('category_name_hint'),
+                                ),
+                                onSubmitted: (val) {
+                                  if (val.trim().isNotEmpty) {
+                                    setState(() {
+                                      _categories[i] = val.trim();
+                                    });
+                                    Navigator.of(context).pop();
+                                  }
+                                },
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  child: Text(loc.get('cancel')),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    final val = editController.text.trim();
+                                    if (val.isNotEmpty) {
+                                      setState(() {
+                                        _categories[i] = val;
+                                      });
+                                      Navigator.of(context).pop();
+                                    }
+                                  },
+                                  child: Text(loc.get('save')),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete_outline),
+                        tooltip: loc.get('delete_category'),
+                        onPressed: () {
+                          setState(() {
+                            _categories.removeAt(i);
+                          });
+                        },
+                      ),
+                    ],
+                  );
+                }),
+                const SizedBox(height: 32),
+                ElevatedButton(
+                  onPressed: _saveTrip,
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(48),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                  ),
+                  child: Text(loc.get('save')),
+                ),
+              ],
+            ),
           ),
         ),
       ),
