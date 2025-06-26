@@ -57,4 +57,18 @@ class Trip {
         'categories': categories,
         'timestamp': timestamp.toIso8601String(),
       };
+
+  static Trip empty() {
+    return Trip(
+      title: '',
+      expenses: const [],
+      participants: const [],
+      startDate: DateTime.now(),
+      endDate: DateTime.now(),
+      currency: '€',
+      categories: const [],
+      timestamp: DateTime.now(),
+      id: 'empty',
+    );
+  }
 }

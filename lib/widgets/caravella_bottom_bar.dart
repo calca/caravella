@@ -11,12 +11,14 @@ class CaravellaBottomBar extends StatelessWidget {
   final VoidCallback onTripAdded;
   final Trip currentTrip;
   final bool zenMode;
+  final bool showAddButton;
   const CaravellaBottomBar({
     super.key,
     required this.loc,
     required this.onTripAdded,
     required this.currentTrip,
     this.zenMode = false,
+    this.showAddButton = true,
   });
 
   @override
@@ -36,21 +38,17 @@ class CaravellaBottomBar extends StatelessWidget {
                 if (!zenMode)
                   Container(
                     decoration: BoxDecoration(
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Theme.of(context)
-                              .colorScheme
-                              .surface
-                              .withValues(alpha: 0.32)
-                          : Theme.of(context)
-                              .colorScheme
-                              .surface
-                              .withValues(alpha: 0.85),
+                      color: Theme.of(context).colorScheme.surface.withOpacity(
+                          Theme.of(context).brightness == Brightness.dark
+                              ? 0.32
+                              : 0.85),
                       borderRadius: BorderRadius.circular(32),
                     ),
                     child: Row(
                       children: [
                         IconButton(
                           icon: const Icon(Icons.history),
+                          color: Theme.of(context).colorScheme.onSurface,
                           onPressed: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
@@ -61,6 +59,7 @@ class CaravellaBottomBar extends StatelessWidget {
                         ),
                         IconButton(
                           icon: const Icon(Icons.settings),
+                          color: Theme.of(context).colorScheme.onSurface,
                           onPressed: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
@@ -76,64 +75,68 @@ class CaravellaBottomBar extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .primary
-                              .withValues(alpha: 0.8),
-                          shape: BoxShape.circle,
-                        ),
-                        child: IconButton(
-                          icon: const Icon(Icons.add, size: 28),
-                          color: Colors.white,
-                          onPressed: () async {
-                            await showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              builder: (context) => Padding(
-                                padding: EdgeInsets.only(
-                                  bottom:
-                                      MediaQuery.of(context).viewInsets.bottom,
-                                  left: 16,
-                                  right: 16,
-                                  top: 24,
-                                ),
-                                child: AddExpenseComponent(
-                                  participants: currentTrip.participants,
-                                  categories: currentTrip.categories,
-                                  onExpenseAdded: (expense) async {
-                                    final trips =
-                                        await TripsStorage.readTrips();
-                                    final idx = trips.indexWhere(
-                                        (v) => v.id == currentTrip.id);
-                                    if (idx != -1) {
-                                      trips[idx].expenses.add(expense);
-                                      await TripsStorage.writeTrips(trips);
-                                      onTripAdded();
-                                    }
-                                  },
-                                  onCategoryAdded: (newCategory) async {
-                                    final trips =
-                                        await TripsStorage.readTrips();
-                                    final idx = trips.indexWhere(
-                                        (v) => v.id == currentTrip.id);
-                                    if (idx != -1) {
-                                      if (!trips[idx]
-                                          .categories
-                                          .contains(newCategory)) {
-                                        trips[idx].categories.add(newCategory);
+                      if (currentTrip.id.isNotEmpty && showAddButton)
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .withOpacity(0.8),
+                            shape: BoxShape.circle,
+                          ),
+                          child: IconButton(
+                            icon: const Icon(Icons.add, size: 28),
+                            color: Theme.of(context).colorScheme.onPrimary,
+                            onPressed: () async {
+                              await showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                builder: (context) => Padding(
+                                  padding: EdgeInsets.only(
+                                    bottom: MediaQuery.of(context)
+                                        .viewInsets
+                                        .bottom,
+                                    left: 16,
+                                    right: 16,
+                                    top: 24,
+                                  ),
+                                  child: AddExpenseComponent(
+                                    participants: currentTrip.participants,
+                                    categories: currentTrip.categories,
+                                    onExpenseAdded: (expense) async {
+                                      final trips =
+                                          await TripsStorage.readTrips();
+                                      final idx = trips.indexWhere(
+                                          (v) => v.id == currentTrip.id);
+                                      if (idx != -1) {
+                                        trips[idx].expenses.add(expense);
                                         await TripsStorage.writeTrips(trips);
                                         onTripAdded();
                                       }
-                                    }
-                                  },
+                                    },
+                                    onCategoryAdded: (newCategory) async {
+                                      final trips =
+                                          await TripsStorage.readTrips();
+                                      final idx = trips.indexWhere(
+                                          (v) => v.id == currentTrip.id);
+                                      if (idx != -1) {
+                                        if (!trips[idx]
+                                            .categories
+                                            .contains(newCategory)) {
+                                          trips[idx]
+                                              .categories
+                                              .add(newCategory);
+                                          await TripsStorage.writeTrips(trips);
+                                          onTripAdded();
+                                        }
+                                      }
+                                    },
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
-                      ),
                     ],
                   ),
                 ),

@@ -109,33 +109,40 @@ class _HomePageState extends State<HomePage> with RouteAware {
                       ),
                       if (_currentTrip == null)
                         Expanded(
-                          child: AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 400),
-                            transitionBuilder: (child, animation) =>
-                                FadeTransition(
-                              opacity: animation,
-                              child: child,
-                            ),
-                            child: Padding(
-                              key: ValueKey(_zenMode),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 16),
-                              child: IntrinsicHeight(
-                                child: NoTripCard(
-                                  loc: loc,
-                                  onAddTrip: () async {
-                                    final result =
-                                        await Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => AddTripPage(),
-                                      ),
-                                    );
-                                    if (result == true) _refresh();
-                                  },
-                                  opacity: 0.5,
+                          child: Column(
+                            children: [
+                              Expanded(
+                                child: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 16),
+                                    child: NoTripCard(
+                                      loc: loc,
+                                      onAddTrip: () async {
+                                        final result =
+                                            await Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) => AddTripPage(),
+                                          ),
+                                        );
+                                        if (result == true) _refresh();
+                                      },
+                                      opacity: 0.5,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 2),
+                                child: CaravellaBottomBar(
+                                  loc: loc,
+                                  onTripAdded: _refresh,
+                                  currentTrip: Trip.empty(),
+                                  zenMode: _zenMode,
+                                  showAddButton: false,
+                                ),
+                              ),
+                            ],
                           ),
                         )
                       else
