@@ -107,66 +107,46 @@ class _HomePageState extends State<HomePage> with RouteAware {
                           ],
                         ),
                       ),
-                      AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 400),
-                        transitionBuilder: (child, animation) => FadeTransition(
-                          opacity: animation,
-                          child: child,
-                        ),
-                        child: Padding(
-                          key: ValueKey(_zenMode),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 16),
-                          child: IntrinsicHeight(
-                            child: _currentTrip == null
-                                ? NoTripCard(
-                                    loc: loc,
-                                    onAddTrip: () async {
-                                      final result =
-                                          await Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) => AddTripPage(),
-                                        ),
-                                      );
-                                      if (result == true) _refresh();
-                                    },
-                                    opacity: 0.5,
-                                  )
-                                : CurrentTripCard(trip: _currentTrip!),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 400),
-                          transitionBuilder: (child, animation) =>
-                              FadeTransition(
-                            opacity: animation,
-                            child: child,
-                          ),
-                          child: _zenMode
-                              ? const SizedBox.shrink(key: ValueKey('zen'))
-                              : Padding(
-                                  key: const ValueKey('normal'),
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 8),
-                                  child: TripSection(
-                                    currentTrip: _currentTrip!,
-                                    loc: loc,
-                                    onTripAdded: _refresh,
-                                  ),
+                      if (_currentTrip == null)
+                        Expanded(
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 400),
+                            transitionBuilder: (child, animation) =>
+                                FadeTransition(
+                              opacity: animation,
+                              child: child,
+                            ),
+                            child: Padding(
+                              key: ValueKey(_zenMode),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 16),
+                              child: IntrinsicHeight(
+                                child: NoTripCard(
+                                  loc: loc,
+                                  onAddTrip: () async {
+                                    final result =
+                                        await Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => AddTripPage(),
+                                      ),
+                                    );
+                                    if (result == true) _refresh();
+                                  },
+                                  opacity: 0.5,
                                 ),
+                              ),
+                            ),
+                          ),
+                        )
+                      else
+                        Expanded(
+                          child: CurrentTripSection(
+                            trip: _currentTrip!,
+                            loc: loc,
+                            onTripAdded: _refresh,
+                            zenMode: _zenMode,
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 2),
-                        child: CaravellaBottomBar(
-                          loc: loc,
-                          onTripAdded: _refresh,
-                          currentTrip: _currentTrip!,
-                          zenMode: _zenMode,
-                        ),
-                      ),
                     ],
                   ),
           ),
@@ -174,6 +154,71 @@ class _HomePageState extends State<HomePage> with RouteAware {
       ),
       // bottomNavigationBar: _zenMode ? null : MainBottomBar(),
       // floatingActionButton: _zenMode ? null : MainFab(),
+    );
+  }
+}
+
+class CurrentTripSection extends StatelessWidget {
+  final Trip trip;
+  final AppLocalizations loc;
+  final VoidCallback onTripAdded;
+  final bool zenMode;
+  const CurrentTripSection({
+    super.key,
+    required this.trip,
+    required this.loc,
+    required this.onTripAdded,
+    required this.zenMode,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 400),
+          transitionBuilder: (child, animation) => FadeTransition(
+            opacity: animation,
+            child: child,
+          ),
+          child: Padding(
+            key: ValueKey(zenMode),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+            child: IntrinsicHeight(
+              child: CurrentTripCard(trip: trip),
+            ),
+          ),
+        ),
+        Expanded(
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 400),
+            transitionBuilder: (child, animation) => FadeTransition(
+              opacity: animation,
+              child: child,
+            ),
+            child: zenMode
+                ? const SizedBox.shrink(key: ValueKey('zen'))
+                : Padding(
+                    key: const ValueKey('normal'),
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: TripSection(
+                      currentTrip: trip,
+                      loc: loc,
+                      onTripAdded: onTripAdded,
+                    ),
+                  ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 2),
+          child: CaravellaBottomBar(
+            loc: loc,
+            onTripAdded: onTripAdded,
+            currentTrip: trip,
+            zenMode: zenMode,
+          ),
+        ),
+      ],
     );
   }
 }
