@@ -78,7 +78,7 @@ class OverviewTab extends StatelessWidget {
           const SizedBox(height: 8),
           ...trip.categories.map((cat) {
             final total = trip.expenses
-                .where((e) => e.description == cat)
+                .where((e) => e.category == cat)
                 .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 4),
@@ -121,8 +121,7 @@ class OverviewTab extends StatelessWidget {
             );
           }),
           if (trip.expenses.any((e) =>
-              e.description.isEmpty ||
-              !trip.categories.contains(e.description)))
+              e.category.isEmpty || !trip.categories.contains(e.category)))
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: Container(
@@ -147,8 +146,8 @@ class OverviewTab extends StatelessWidget {
                         loc.get('amount_with_currency', params: {
                           'amount': trip.expenses
                               .where((e) =>
-                                  e.description.isEmpty ||
-                                  !trip.categories.contains(e.description))
+                                  e.category.isEmpty ||
+                                  !trip.categories.contains(e.category))
                               .fold<double>(
                                   0, (sum, e) => sum + (e.amount ?? 0))
                               .toStringAsFixed(2),

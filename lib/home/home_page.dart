@@ -8,6 +8,7 @@ import '../home/top_card/no_trip_card.dart';
 import '../home/top_card/current_trip_card.dart';
 import '../state/locale_notifier.dart';
 import 'home_background.dart';
+import '../../main.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,16 +17,31 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage>
-    with WidgetsBindingObserver, RouteAware {
+class _HomePageState extends State<HomePage> with RouteAware {
   Trip? _currentTrip;
   bool _loading = true;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) => _loadLocaleAndTrip());
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)! as PageRoute);
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPopNext() {
+    _refresh();
   }
 
   Future<void> _loadLocaleAndTrip() async {
@@ -43,23 +59,6 @@ class _HomePageState extends State<HomePage>
   }
 
   void _refresh() => _loadLocaleAndTrip();
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // RouteObserver registration should be handled in main if needed
-  }
-
-  @override
-  void didPopNext() {
-    _refresh();
-  }
 
   @override
   Widget build(BuildContext context) {

@@ -42,7 +42,7 @@ class _AddExpenseComponentState extends State<AddExpenseComponent> {
   void initState() {
     super.initState();
     if (widget.initialExpense != null) {
-      _category = widget.initialExpense!.description;
+      _category = widget.initialExpense!.category;
       _amount = widget.initialExpense!.amount;
       _paidBy = widget.initialExpense!.paidBy;
       _date = widget.initialExpense!.date;
@@ -388,7 +388,7 @@ class _AddExpenseComponentState extends State<AddExpenseComponent> {
                             : _formKey.currentState!.validate()) &&
                         _paidBy != null) {
                       final expense = Expense(
-                        description: _category ?? '',
+                        category: _category ?? '',
                         amount: _amount ?? 0,
                         paidBy: _paidBy ?? '',
                         date: _date ?? DateTime.now(),

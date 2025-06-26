@@ -14,7 +14,7 @@ class CategoryCard extends StatelessWidget {
     // NOTA: Non esiste un campo 'category' su Expense, uso 'description' come fallback per raggruppare le spese.
     final Map<String, double> totals = {};
     for (final e in trip.expenses) {
-      final cat = e.description; // fallback: description usata come categoria
+      final cat = e.category; // fallback: description usata come categoria
       totals[cat] = (totals[cat] ?? 0) + (e.amount ?? 0);
     }
     final top = totals.entries.toList()
@@ -34,9 +34,7 @@ class CategoryCard extends StatelessWidget {
           children: [
             Text(
               loc.get('category'),
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 6),
             const Spacer(),
@@ -55,9 +53,7 @@ class CategoryCard extends StatelessWidget {
                             child: Text(e.key,
                                 style: Theme.of(context).textTheme.bodyMedium)),
                         Text('${trip.currency} ${e.value.toStringAsFixed(2)}',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium),
+                            style: Theme.of(context).textTheme.bodyMedium),
                       ],
                     ),
                   )),

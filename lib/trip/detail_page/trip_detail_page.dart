@@ -99,7 +99,7 @@ class _TripDetailPageState extends State<TripDetailPage> {
                     MaterialPageRoute(
                       builder: (context) => ExpenseEditPage(
                         expense: Expense(
-                          description: '',
+                          category: '',
                           amount: 0,
                           paidBy: trip.participants.isNotEmpty
                               ? trip.participants.first

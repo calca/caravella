@@ -77,7 +77,7 @@ class _ExpensesTabState extends State<ExpensesTab> {
           child: GestureDetector(
             onTap: () => _openEditPage(i),
             child: TripAmountCard(
-              title: expense.description,
+              title: expense.category,
               coins: (expense.amount ?? 0).toInt(),
               checked: true,
               paidBy: expense.paidBy,
