@@ -9,13 +9,13 @@ import '../settings/settings_page.dart';
 class CaravellaBottomBar extends StatelessWidget {
   final AppLocalizations loc;
   final VoidCallback onTripAdded;
-  final Trip? currentTrip;
+  final Trip currentTrip;
   final bool zenMode;
   const CaravellaBottomBar({
     super.key,
     required this.loc,
     required this.onTripAdded,
-    this.currentTrip,
+    required this.currentTrip,
     this.zenMode = false,
   });
 
@@ -72,69 +72,71 @@ class CaravellaBottomBar extends StatelessWidget {
                       ],
                     ),
                   ),
-                if (currentTrip != null)
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .primary
-                                .withValues(alpha: 0.8),
-                            shape: BoxShape.circle,
-                          ),
-                          child: IconButton(
-                            icon: const Icon(Icons.add, size: 28),
-                            color: Colors.white,
-                            onPressed: () async {
-                              await showModalBottomSheet(
-                                context: context,
-                                isScrollControlled: true,
-                                builder: (context) => Padding(
-                                  padding: EdgeInsets.only(
-                                    bottom: MediaQuery.of(context).viewInsets.bottom,
-                                    left: 16,
-                                    right: 16,
-                                    top: 24,
-                                  ),
-                                  child: AddExpenseComponent(
-                                    participants: currentTrip!.participants,
-                                    categories: currentTrip!.categories,
-                                    onExpenseAdded: (expense) async {
-                                      final trips = await TripsStorage.readTrips();
-                                      final idx = trips
-                                          .indexWhere((v) => v.id == currentTrip!.id);
-                                      if (idx != -1) {
-                                        trips[idx].expenses.add(expense);
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withValues(alpha: 0.8),
+                          shape: BoxShape.circle,
+                        ),
+                        child: IconButton(
+                          icon: const Icon(Icons.add, size: 28),
+                          color: Colors.white,
+                          onPressed: () async {
+                            await showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              builder: (context) => Padding(
+                                padding: EdgeInsets.only(
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom,
+                                  left: 16,
+                                  right: 16,
+                                  top: 24,
+                                ),
+                                child: AddExpenseComponent(
+                                  participants: currentTrip.participants,
+                                  categories: currentTrip.categories,
+                                  onExpenseAdded: (expense) async {
+                                    final trips =
+                                        await TripsStorage.readTrips();
+                                    final idx = trips.indexWhere(
+                                        (v) => v.id == currentTrip.id);
+                                    if (idx != -1) {
+                                      trips[idx].expenses.add(expense);
+                                      await TripsStorage.writeTrips(trips);
+                                      onTripAdded();
+                                    }
+                                  },
+                                  onCategoryAdded: (newCategory) async {
+                                    final trips =
+                                        await TripsStorage.readTrips();
+                                    final idx = trips.indexWhere(
+                                        (v) => v.id == currentTrip.id);
+                                    if (idx != -1) {
+                                      if (!trips[idx]
+                                          .categories
+                                          .contains(newCategory)) {
+                                        trips[idx].categories.add(newCategory);
                                         await TripsStorage.writeTrips(trips);
                                         onTripAdded();
                                       }
-                                    },
-                                    onCategoryAdded: (newCategory) async {
-                                      final trips = await TripsStorage.readTrips();
-                                      final idx = trips
-                                          .indexWhere((v) => v.id == currentTrip!.id);
-                                      if (idx != -1) {
-                                        if (!trips[idx]
-                                            .categories
-                                            .contains(newCategory)) {
-                                          trips[idx].categories.add(newCategory);
-                                          await TripsStorage.writeTrips(trips);
-                                          onTripAdded();
-                                        }
-                                      }
-                                    },
-                                  ),
+                                    }
+                                  },
                                 ),
-                              );
-                            },
-                          ),
+                              ),
+                            );
+                          },
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
+                ),
               ],
             ),
           ),

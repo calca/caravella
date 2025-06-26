@@ -15,7 +15,7 @@ extension DateTimeToday on DateTime {
 }
 
 class TripSection extends StatelessWidget {
-  final Trip? currentTrip;
+  final Trip currentTrip;
   final AppLocalizations loc;
   final VoidCallback onTripAdded;
   static const double sectionOpacity = 1;
@@ -50,48 +50,43 @@ class TripSection extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           children: [
             Expanded(
-              child: currentTrip != null
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 0, bottom: 4),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(
-                                  width: cardWidth,
-                                  height: cardSize,
-                                  child: TodaySpentCard(trip: currentTrip!)),
-                              SizedBox(width: 12),
-                              SizedBox(
-                                  width: cardWidth,
-                                  height: cardSize,
-                                  child: TopPaidByCard(
-                                      trip: currentTrip!, loc: loc)),
-                            ],
-                          ),
-                          SizedBox(height: verticalSpacing),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(
-                                  width: cardWidth,
-                                  height: cardSize,
-                                  child: WeekChartCard(
-                                      trip: currentTrip!, loc: loc)),
-                              SizedBox(width: 12),
-                              SizedBox(
-                                  width: cardWidth,
-                                  height: cardSize,
-                                  child: CategoryCard(
-                                      trip: currentTrip!, loc: loc)),
-                            ],
-                          ),
-                        ],
-                      ),
-                    )
-                  : Center(),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 0, bottom: 4),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                            width: cardWidth,
+                            height: cardSize,
+                            child: TodaySpentCard(trip: currentTrip)),
+                        SizedBox(width: 12),
+                        SizedBox(
+                            width: cardWidth,
+                            height: cardSize,
+                            child: TopPaidByCard(trip: currentTrip, loc: loc)),
+                      ],
+                    ),
+                    SizedBox(height: verticalSpacing),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                            width: cardWidth,
+                            height: cardSize,
+                            child: WeekChartCard(trip: currentTrip, loc: loc)),
+                        SizedBox(width: 12),
+                        SizedBox(
+                            width: cardWidth,
+                            height: cardSize,
+                            child: CategoryCard(trip: currentTrip, loc: loc)),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         );

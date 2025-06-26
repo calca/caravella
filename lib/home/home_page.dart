@@ -122,7 +122,8 @@ class _HomePageState extends State<HomePage> with RouteAware {
                                 ? NoTripCard(
                                     loc: loc,
                                     onAddTrip: () async {
-                                      final result = await Navigator.of(context).push(
+                                      final result =
+                                          await Navigator.of(context).push(
                                         MaterialPageRoute(
                                           builder: (context) => AddTripPage(),
                                         ),
@@ -138,7 +139,8 @@ class _HomePageState extends State<HomePage> with RouteAware {
                       Expanded(
                         child: AnimatedSwitcher(
                           duration: const Duration(milliseconds: 400),
-                          transitionBuilder: (child, animation) => FadeTransition(
+                          transitionBuilder: (child, animation) =>
+                              FadeTransition(
                             opacity: animation,
                             child: child,
                           ),
@@ -146,9 +148,10 @@ class _HomePageState extends State<HomePage> with RouteAware {
                               ? const SizedBox.shrink(key: ValueKey('zen'))
                               : Padding(
                                   key: const ValueKey('normal'),
-                                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 8),
                                   child: TripSection(
-                                    currentTrip: _currentTrip,
+                                    currentTrip: _currentTrip!,
                                     loc: loc,
                                     onTripAdded: _refresh,
                                   ),
@@ -160,7 +163,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
                         child: CaravellaBottomBar(
                           loc: loc,
                           onTripAdded: _refresh,
-                          currentTrip: _currentTrip,
+                          currentTrip: _currentTrip!,
                           zenMode: _zenMode,
                         ),
                       ),
