@@ -99,10 +99,11 @@ class _HomePageState extends State<HomePage> with RouteAware {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Switch(
-                              value: _zenMode,
-                              onChanged: _toggleZenMode,
-                            ),
+                            if (_currentTrip != null)
+                              Switch(
+                                value: _zenMode,
+                                onChanged: _toggleZenMode,
+                              ),
                           ],
                         ),
                       ),
