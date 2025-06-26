@@ -185,6 +185,12 @@ class _AddTripPageState extends State<AddTripPage> {
     }
   }
 
+  // --- UTILITY: Unfocus after dialog close ---
+  void _closeDialogAndUnfocus([dynamic result]) {
+    Navigator.of(context).pop(result);
+    Future.delayed(const Duration(milliseconds: 10), _unfocusAll);
+  }
+
   @override
   Widget build(BuildContext context) {
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
@@ -240,11 +246,10 @@ class _AddTripPageState extends State<AddTripPage> {
                 // Titolo viaggio
                 TextFormField(
                   controller: _titleController,
+                  style: Theme.of(context).textTheme.displayMedium?.copyWith(),
                   decoration: InputDecoration(
                     labelText: loc.get('trip_title'),
-                    border: const OutlineInputBorder(),
-                    contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    labelStyle: Theme.of(context).textTheme.titleMedium,
                   ),
                   validator: (v) =>
                       v == null || v.isEmpty ? loc.get('enter_title') : null,
@@ -324,24 +329,25 @@ class _AddTripPageState extends State<AddTripPage> {
                                     _participants.add(val.trim());
                                     _participantController.clear();
                                   });
-                                  Navigator.of(context).pop();
+                                  _closeDialogAndUnfocus();
                                 }
                               },
                             ),
                             actions: [
                               TextButton(
-                                onPressed: () => Navigator.of(context).pop(),
+                                onPressed: () => _closeDialogAndUnfocus(),
                                 child: Text(loc.get('cancel')),
                               ),
                               TextButton(
                                 onPressed: () {
-                                  final val = _participantController.text.trim();
+                                  final val =
+                                      _participantController.text.trim();
                                   if (val.isNotEmpty) {
                                     setState(() {
                                       _participants.add(val);
                                       _participantController.clear();
                                     });
-                                    Navigator.of(context).pop();
+                                    _closeDialogAndUnfocus();
                                   }
                                 },
                                 child: Text(loc.get('add')),
@@ -394,13 +400,13 @@ class _AddTripPageState extends State<AddTripPage> {
                                     setState(() {
                                       _participants[i] = val.trim();
                                     });
-                                    Navigator.of(context).pop();
+                                    _closeDialogAndUnfocus();
                                   }
                                 },
                               ),
                               actions: [
                                 TextButton(
-                                  onPressed: () => Navigator.of(context).pop(),
+                                  onPressed: () => _closeDialogAndUnfocus(),
                                   child: Text(loc.get('cancel')),
                                 ),
                                 TextButton(
@@ -410,7 +416,7 @@ class _AddTripPageState extends State<AddTripPage> {
                                       setState(() {
                                         _participants[i] = val;
                                       });
-                                      Navigator.of(context).pop();
+                                      _closeDialogAndUnfocus();
                                     }
                                   },
                                   child: Text(loc.get('save')),
@@ -483,13 +489,13 @@ class _AddTripPageState extends State<AddTripPage> {
                                     setState(() {
                                       _categories.add(val.trim());
                                     });
-                                    Navigator.of(context).pop();
+                                    _closeDialogAndUnfocus();
                                   }
                                 },
                               ),
                               actions: [
                                 TextButton(
-                                  onPressed: () => Navigator.of(context).pop(),
+                                  onPressed: () => _closeDialogAndUnfocus(),
                                   child: Text(loc.get('cancel')),
                                 ),
                                 TextButton(
@@ -499,7 +505,7 @@ class _AddTripPageState extends State<AddTripPage> {
                                       setState(() {
                                         _categories.add(val);
                                       });
-                                      Navigator.of(context).pop();
+                                      _closeDialogAndUnfocus();
                                     }
                                   },
                                   child: Text(loc.get('add')),
@@ -552,13 +558,13 @@ class _AddTripPageState extends State<AddTripPage> {
                                     setState(() {
                                       _categories[i] = val.trim();
                                     });
-                                    Navigator.of(context).pop();
+                                    _closeDialogAndUnfocus();
                                   }
                                 },
                               ),
                               actions: [
                                 TextButton(
-                                  onPressed: () => Navigator.of(context).pop(),
+                                  onPressed: () => _closeDialogAndUnfocus(),
                                   child: Text(loc.get('cancel')),
                                 ),
                                 TextButton(
@@ -568,7 +574,7 @@ class _AddTripPageState extends State<AddTripPage> {
                                       setState(() {
                                         _categories[i] = val;
                                       });
-                                      Navigator.of(context).pop();
+                                      _closeDialogAndUnfocus();
                                     }
                                   },
                                   child: Text(loc.get('save')),
