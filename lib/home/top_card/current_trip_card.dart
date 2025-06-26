@@ -13,26 +13,17 @@ class CurrentTripCard extends StatelessWidget {
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
     final loc = AppLocalizations(locale);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          const SizedBox(height: 16),
-          Text(
-            trip.title.isNotEmpty
-                ? trip.title[0].toUpperCase() + trip.title.substring(1)
-                : '',
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge
-                ?.copyWith(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
-            textAlign: TextAlign.left,
-          ),
-          const SizedBox(height: 20),
-          Center(
+          const SizedBox(height: 32), // Spazio extra in alto
+          // Totale spese a sinistra, con spazio sopra e sotto
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 24.0),
             child: Row(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
@@ -40,7 +31,8 @@ class CurrentTripCard extends StatelessWidget {
                       .fold<double>(0, (sum, s) => sum + (s.amount ?? 0))
                       .toStringAsFixed(2),
                   style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                      fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onSurface),
                 ),
                 const SizedBox(width: 4),
                 Text(
@@ -48,31 +40,49 @@ class CurrentTripCard extends StatelessWidget {
                   style: Theme.of(context).textTheme.displaySmall?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).colorScheme.onSurface,
-                        fontSize: 22, // più piccolo dell'amount
+                        fontSize: 22,
                       ),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 20),
+          // Titolo viaggio a destra
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Icon(Icons.people, color: Theme.of(context).colorScheme.onSurface, size: 20),
-              const SizedBox(width: 4),
-              Text('${trip.participants.length} ${loc.get('participants')}',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyMedium
-                      ?.copyWith(color: Theme.of(context).colorScheme.onSurface)),
+              Flexible(
+                child: Text(
+                  trip.title.isNotEmpty
+                      ? trip.title[0].toUpperCase() + trip.title.substring(1)
+                      : '',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onSurface),
+                  textAlign: TextAlign.right,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
+          // Partecipanti a destra
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Icon(Icons.calendar_today, color: Theme.of(context).colorScheme.onSurface, size: 20),
+              Text('${trip.participants.length}',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface)),
               const SizedBox(width: 4),
+              Icon(Icons.people,
+                  color: Theme.of(context).colorScheme.onSurface, size: 20),
+            ],
+          ),
+          const SizedBox(height: 8),
+          // Date viaggio a destra
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
               Text(
                 loc.get('from_to', params: {
                   'start':
@@ -84,10 +94,14 @@ class CurrentTripCard extends StatelessWidget {
                     .textTheme
                     .bodyMedium
                     ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                textAlign: TextAlign.right,
               ),
+              const SizedBox(width: 4),
+              Icon(Icons.calendar_today,
+                  color: Theme.of(context).colorScheme.onSurface, size: 20),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 8),
         ],
       ),
     );
