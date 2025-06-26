@@ -75,13 +75,20 @@ class _HomePageState extends State<HomePage>
               opacity: value,
               child: child,
             ),
-            child: Image.asset(
-              'assets/images/home/backgrounds/mountains.jpg',
-              fit: BoxFit.cover,
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.black.withAlpha(128)
-                  : Colors.white.withAlpha(128),
-              colorBlendMode: BlendMode.darken,
+            child: ColorFiltered(
+              colorFilter: const ColorFilter.matrix(<double>[
+                0.2126, 0.7152, 0.0722, 0, 0, // R
+                0.2126, 0.7152, 0.0722, 0, 0, // G
+                0.2126, 0.7152, 0.0722, 0, 0, // B
+                0, 0, 0, 1, 0, // A
+              ]),
+              child: Opacity(
+                opacity: 0.1,
+                child: Image.asset(
+                  'assets/images/home/backgrounds/mountains.jpg',
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
           ),
           SafeArea(
