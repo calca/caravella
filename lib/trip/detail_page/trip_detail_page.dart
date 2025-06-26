@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../data/expense.dart';
 import 'expense_edit_page.dart';
-import '../../trips_storage.dart';
+import '../../data/trips_storage.dart';
 import '../add_trip_page.dart';
 import '../../app_localizations.dart';
 import '../../state/locale_notifier.dart';

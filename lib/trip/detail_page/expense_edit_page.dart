@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../trips_storage.dart';
+import '../../data/expense.dart';
 import '../../app_localizations.dart';
 import '../add_expense_component.dart';
 import 'tabs/expenses_tab.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../trips_storage.dart';
+import '../data/expense.dart';
 import '../app_localizations.dart';
 import '../state/locale_notifier.dart';
 
@@ -140,8 +140,12 @@ class _AddExpenseComponentState extends State<AddExpenseComponent> {
                                           .bodyLarge
                                           ?.copyWith(
                                             color: _paidBy == p
-                                                ? Theme.of(context).colorScheme.onPrimary
-                                                : Theme.of(context).colorScheme.onSurface,
+                                                ? Theme.of(context)
+                                                    .colorScheme
+                                                    .onPrimary
+                                                : Theme.of(context)
+                                                    .colorScheme
+                                                    .onSurface,
                                           ),
                                     ),
                                     selected: _paidBy == p,
@@ -197,8 +201,12 @@ class _AddExpenseComponentState extends State<AddExpenseComponent> {
                                           .bodyLarge
                                           ?.copyWith(
                                             color: _category == cat
-                                                ? Theme.of(context).colorScheme.onPrimary
-                                                : Theme.of(context).colorScheme.onSurface,
+                                                ? Theme.of(context)
+                                                    .colorScheme
+                                                    .onPrimary
+                                                : Theme.of(context)
+                                                    .colorScheme
+                                                    .onSurface,
                                           ),
                                     ),
                                     selected: _category == cat,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../trips_storage.dart';
+import '../data/trips_storage.dart';
 import '../app_localizations.dart';
 import '../state/locale_notifier.dart';
 import '../widgets/currency_selector.dart';

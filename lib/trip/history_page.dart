@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../trips_storage.dart';
+import '../data/trips_storage.dart';
 import 'detail_page/trip_detail_page.dart';
 import '../app_localizations.dart';
 import 'add_trip_page.dart';

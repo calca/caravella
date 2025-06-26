@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../../../trips_storage.dart';
+import '../../../data/trips_storage.dart';
 import '../../../app_localizations.dart';
 
 class StatisticsTab extends StatelessWidget {

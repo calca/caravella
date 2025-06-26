@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:org_app_caravella/trip/add_expense_component.dart';
 import '../trip/history_page.dart';
 import '../app_localizations.dart';
-import '../trips_storage.dart';
+import '../data/trips_storage.dart';
 import '../settings/settings_page.dart';
 
 class CaravellaBottomBar extends StatelessWidget {
