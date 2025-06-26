@@ -17,8 +17,7 @@ class OverviewTab extends StatelessWidget {
           // Card rimossa: solo sezioni partecipanti e categorie
           const SizedBox(height: 8),
           Text(loc.get('expenses_by_participant'),
-              style: theme.textTheme.titleMedium
-                  ?.copyWith(fontWeight: FontWeight.bold)),
+              style: theme.textTheme.titleMedium?.copyWith()),
           const SizedBox(height: 8),
           ...trip.participants.map((p) {
             final total = trip.expenses

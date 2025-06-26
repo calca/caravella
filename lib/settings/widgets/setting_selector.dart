@@ -22,10 +22,7 @@ class SettingSelector extends StatelessWidget {
           const SizedBox(width: 8),
           Text(
             label,
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(),
           ),
           const SizedBox(width: 8),
           Expanded(child: selector),

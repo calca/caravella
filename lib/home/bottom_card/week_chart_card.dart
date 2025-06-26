@@ -41,10 +41,7 @@ class WeekChartCard extends StatelessWidget {
           children: [
             Text(
               loc.get('last_week'),
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall
-                  ?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w300),
             ),
             const SizedBox(height: 6),
             Expanded(
@@ -83,7 +80,7 @@ class WeekChartCard extends StatelessWidget {
                               style: Theme.of(context)
                                   .textTheme
                                   .bodySmall
-                                  ?.copyWith(fontSize: 10));
+                                  ?.copyWith(fontSize: 10, fontWeight: FontWeight.w300));
                         },
                       ),
                     ),

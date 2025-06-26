@@ -29,16 +29,17 @@ class CurrentTripCard extends StatelessWidget {
                 Text(
                   trip.expenses
                       .fold<double>(0, (sum, s) => sum + (s.amount ?? 0))
-                      .toStringAsFixed(2),
+                      .truncate()
+                      .toString(),
                   style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onSurface),
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontSize: 54, // font più grande
+                      ),
                 ),
                 const SizedBox(width: 4),
                 Text(
                   trip.currency,
                   style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                        fontWeight: FontWeight.bold,
                         color: Theme.of(context).colorScheme.onSurface,
                         fontSize: 22,
                       ),
@@ -56,7 +57,6 @@ class CurrentTripCard extends StatelessWidget {
                       ? trip.title[0].toUpperCase() + trip.title.substring(1)
                       : '',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
                       color: Theme.of(context).colorScheme.onSurface),
                   textAlign: TextAlign.right,
                   overflow: TextOverflow.ellipsis,
@@ -65,7 +65,7 @@ class CurrentTripCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 8),
           // Partecipanti a destra
           Row(
             mainAxisAlignment: MainAxisAlignment.end,

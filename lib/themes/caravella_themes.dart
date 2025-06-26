@@ -25,14 +25,25 @@ class CaravellaThemes {
     onSurface: Colors.white,
   );
 
-  static final ThemeData light = ThemeData.from(
+  static final ThemeData light = ThemeData(
     colorScheme: lightScheme,
-    textTheme: const TextTheme(
-      bodyLarge: TextStyle(color: Colors.black),
-      bodyMedium: TextStyle(color: Colors.black),
-      bodySmall: TextStyle(color: Colors.black54),
-      titleMedium: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+    fontFamily: 'Montserrat',
+    textTheme: ThemeData.light().textTheme.apply(
+      fontFamily: 'Montserrat',
+      bodyColor: Colors.black,
+      displayColor: Colors.black,
+    ).copyWith(
+      bodyLarge: const TextStyle(fontWeight: FontWeight.w300),
+      bodyMedium: const TextStyle(fontWeight: FontWeight.w300),
+      bodySmall: const TextStyle(fontWeight: FontWeight.w300),
+      titleLarge: const TextStyle(fontWeight: FontWeight.w300),
+      titleMedium: const TextStyle(fontWeight: FontWeight.w300),
+      titleSmall: const TextStyle(fontWeight: FontWeight.w300),
+      labelLarge: const TextStyle(fontWeight: FontWeight.w300),
+      labelMedium: const TextStyle(fontWeight: FontWeight.w300),
+      labelSmall: const TextStyle(fontWeight: FontWeight.w300),
     ),
+    useMaterial3: true,
   ).copyWith(
     scaffoldBackgroundColor: Colors.white,
     appBarTheme: const AppBarTheme(
@@ -49,14 +60,25 @@ class CaravellaThemes {
     iconTheme: const IconThemeData(color: Colors.black),
   );
 
-  static final ThemeData dark = ThemeData.from(
+  static final ThemeData dark = ThemeData(
     colorScheme: darkScheme,
-    textTheme: const TextTheme(
-      bodyLarge: TextStyle(color: Colors.white),
-      bodyMedium: TextStyle(color: Colors.white),
-      bodySmall: TextStyle(color: Colors.white70),
-      titleMedium: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+    fontFamily: 'Montserrat',
+    textTheme: ThemeData.dark().textTheme.apply(
+      fontFamily: 'Montserrat',
+      bodyColor: Colors.white,
+      displayColor: Colors.white,
+    ).copyWith(
+      bodyLarge: const TextStyle(fontWeight: FontWeight.w300),
+      bodyMedium: const TextStyle(fontWeight: FontWeight.w300),
+      bodySmall: const TextStyle(fontWeight: FontWeight.w300),
+      titleLarge: const TextStyle(fontWeight: FontWeight.w300),
+      titleMedium: const TextStyle(fontWeight: FontWeight.w300),
+      titleSmall: const TextStyle(fontWeight: FontWeight.w300),
+      labelLarge: const TextStyle(fontWeight: FontWeight.w300),
+      labelMedium: const TextStyle(fontWeight: FontWeight.w300),
+      labelSmall: const TextStyle(fontWeight: FontWeight.w300),
     ),
+    useMaterial3: true,
   ).copyWith(
     scaffoldBackgroundColor: Colors.black,
     appBarTheme: const AppBarTheme(

@@ -224,8 +224,7 @@ class StatisticsTab extends StatelessWidget {
                                     'month': day.month.toString(),
                                     'year': day.year.toString()
                                   })}',
-                              theme.textTheme.bodySmall!
-                                  .copyWith(fontWeight: FontWeight.bold),
+                              theme.textTheme.bodySmall!.copyWith(),
                             );
                           },
                         ),
@@ -250,7 +249,7 @@ class StatisticsTab extends StatelessWidget {
               const SizedBox(width: 8),
               Text('${trip.currency} ${total.toStringAsFixed(2)}',
                   style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
+                      // fontWeight: FontWeight.bold,
                       color: theme.colorScheme.primary)),
             ],
           ),

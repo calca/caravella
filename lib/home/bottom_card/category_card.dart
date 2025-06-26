@@ -36,8 +36,7 @@ class CategoryCard extends StatelessWidget {
               loc.get('category'),
               style: Theme.of(context)
                   .textTheme
-                  .bodySmall
-                  ?.copyWith(fontWeight: FontWeight.bold),
+                  .bodySmall,
             ),
             const SizedBox(height: 6),
             const Spacer(),
@@ -58,8 +57,7 @@ class CategoryCard extends StatelessWidget {
                         Text('${trip.currency} ${e.value.toStringAsFixed(2)}',
                             style: Theme.of(context)
                                 .textTheme
-                                .bodyMedium
-                                ?.copyWith(fontWeight: FontWeight.bold)),
+                                .bodyMedium),
                       ],
                     ),
                   )),

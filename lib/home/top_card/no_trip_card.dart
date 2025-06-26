@@ -6,7 +6,11 @@ class NoTripCard extends StatelessWidget {
   final AppLocalizations loc;
   final VoidCallback onAddTrip;
   final double opacity;
-  const NoTripCard({super.key, required this.loc, required this.onAddTrip, required this.opacity});
+  const NoTripCard(
+      {super.key,
+      required this.loc,
+      required this.onAddTrip,
+      required this.opacity});
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +25,9 @@ class NoTripCard extends StatelessWidget {
             Text(
               loc.get('no_trips_found'),
               style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                fontWeight: FontWeight.w900, // bold importante
-                color: Colors.white, // testo bianco
-              ),
+                    fontWeight: FontWeight.w300, // light
+                    color: Colors.white, // testo bianco
+                  ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),

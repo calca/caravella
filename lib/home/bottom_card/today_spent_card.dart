@@ -47,10 +47,7 @@ class TodaySpentCard extends StatelessWidget {
                   baselineType: TextBaseline.alphabetic,
                   child: Text(
                     '${todayTotal.round()}',
-                    style: Theme.of(context)
-                        .textTheme
-                        .displaySmall
-                        ?.copyWith(fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.displaySmall?.copyWith(),
                     textAlign: TextAlign.right,
                   ),
                 ),
@@ -60,10 +57,7 @@ class TodaySpentCard extends StatelessWidget {
                   baselineType: TextBaseline.alphabetic,
                   child: Text(
                     trip.currency,
-                    style: Theme.of(context)
-                        .textTheme
-                        .displaySmall
-                        ?.copyWith(fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.displaySmall?.copyWith(),
                     textAlign: TextAlign.right,
                   ),
                 ),

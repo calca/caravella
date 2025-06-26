@@ -82,10 +82,8 @@ class _AddExpenseComponentState extends State<AddExpenseComponent> {
                   child: TextFormField(
                     controller: _amountController,
                     focusNode: _amountFocus,
-                    style: Theme.of(context)
-                        .textTheme
-                        .displayMedium
-                        ?.copyWith(fontWeight: FontWeight.bold),
+                    style:
+                        Theme.of(context).textTheme.displayMedium?.copyWith(),
                     decoration: InputDecoration(
                       labelText: loc.get('amount'),
                       labelStyle: Theme.of(context).textTheme.titleMedium,
@@ -107,10 +105,7 @@ class _AddExpenseComponentState extends State<AddExpenseComponent> {
                             widget.categories.first.startsWith('€'))
                         ? widget.categories.first
                         : '€',
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(),
                   ),
                 ),
               ],
@@ -336,10 +331,8 @@ class _AddExpenseComponentState extends State<AddExpenseComponent> {
                           _date != null
                               ? '${_date!.day.toString().padLeft(2, '0')}/${_date!.month.toString().padLeft(2, '0')}/${_date!.year}'
                               : loc.get('select_expense_date_short'),
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall
-                              ?.copyWith(fontWeight: FontWeight.w500),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(),
                         ),
                         const SizedBox(width: 6),
                         Icon(Icons.event,
