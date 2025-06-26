@@ -2,14 +2,14 @@ import 'package:uuid/uuid.dart';
 
 class Expense {
   final String id; // UDID per la spesa
-  final String description;
+  final String category;
   final double? amount;
   final String paidBy;
   final DateTime date;
   final String? note;
 
   Expense({
-    required this.description,
+    required this.category,
     required this.amount,
     required this.paidBy,
     required this.date,
@@ -20,7 +20,7 @@ class Expense {
   factory Expense.fromJson(Map<String, dynamic> json) {
     return Expense(
       id: json['id'],
-      description: json['description'],
+      category: json['category'],
       amount:
           json['amount'] != null ? (json['amount'] as num).toDouble() : null,
       paidBy: json['paidBy'],
@@ -31,7 +31,7 @@ class Expense {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'description': description,
+        'category': category,
         if (amount != null) 'amount': amount,
         'paidBy': paidBy,
         'date': date.toIso8601String(),
@@ -40,7 +40,7 @@ class Expense {
 
   Expense copyWith({
     String? id,
-    String? description,
+    String? category,
     double? amount,
     String? paidBy,
     DateTime? date,
@@ -48,7 +48,7 @@ class Expense {
   }) {
     return Expense(
       id: id ?? this.id,
-      description: description ?? this.description,
+      category: category ?? this.category,
       amount: amount ?? this.amount,
       paidBy: paidBy ?? this.paidBy,
       date: date ?? this.date,
