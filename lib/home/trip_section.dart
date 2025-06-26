@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../app_localizations.dart';
 import '../data/trip.dart';
-import '../widgets/caravella_bottom_bar.dart';
 import 'bottom_card/today_spent_card.dart';
 import 'bottom_card/top_paid_by_card.dart';
 import 'bottom_card/week_chart_card.dart';
@@ -42,69 +41,57 @@ class TripSection extends StatelessWidget {
             constraints.maxHeight - bottomBarHeight - verticalSpacing - 8;
         final double cardWidth =
             (availableWidth - 12) / 2; // 12 è lo spacing tra le due card
-        final double cardSize = [
-          cardWidth,
-          (availableHeight - verticalSpacing) / 2
-        ].reduce((a, b) => a < b ? a : b);
+        final double cardHeight =
+            (availableHeight - verticalSpacing) / 2 * 1.55; // aumenta del 25%
+        final double cardSize =
+            [cardWidth, cardHeight].reduce((a, b) => a < b ? a : b);
 
         return Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            if (currentTrip != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 0, bottom: 4),
-                child: SizedBox(
-                  height: cardSize * 2 + verticalSpacing,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Expanded(
+              child: currentTrip != null
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 0, bottom: 4),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(
-                              width: cardWidth,
-                              height: cardSize,
-                              child: TodaySpentCard(trip: currentTrip!)),
-                          SizedBox(width: 12),
-                          SizedBox(
-                              width: cardWidth,
-                              height: cardSize,
-                              child:
-                                  TopPaidByCard(trip: currentTrip!, loc: loc)),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                  width: cardWidth,
+                                  height: cardSize,
+                                  child: TodaySpentCard(trip: currentTrip!)),
+                              SizedBox(width: 12),
+                              SizedBox(
+                                  width: cardWidth,
+                                  height: cardSize,
+                                  child: TopPaidByCard(
+                                      trip: currentTrip!, loc: loc)),
+                            ],
+                          ),
+                          SizedBox(height: verticalSpacing),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                  width: cardWidth,
+                                  height: cardSize,
+                                  child: WeekChartCard(
+                                      trip: currentTrip!, loc: loc)),
+                              SizedBox(width: 12),
+                              SizedBox(
+                                  width: cardWidth,
+                                  height: cardSize,
+                                  child: CategoryCard(
+                                      trip: currentTrip!, loc: loc)),
+                            ],
+                          ),
                         ],
                       ),
-                      SizedBox(height: verticalSpacing),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                              width: cardWidth,
-                              height: cardSize,
-                              child:
-                                  WeekChartCard(trip: currentTrip!, loc: loc)),
-                          SizedBox(width: 12),
-                          SizedBox(
-                              width: cardWidth,
-                              height: cardSize,
-                              child:
-                                  CategoryCard(trip: currentTrip!, loc: loc)),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              )
-            else
-              Expanded(
-                child: Center(),
-              ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 2),
-              child: CaravellaBottomBar(
-                loc: loc,
-                onTripAdded: onTripAdded,
-                currentTrip: currentTrip,
-              ),
+                    )
+                  : Center(),
             ),
           ],
         );
