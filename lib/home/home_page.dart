@@ -7,6 +7,7 @@ import '../home/trip_section.dart';
 import '../home/top_card/no_trip_card.dart';
 import '../home/top_card/current_trip_card.dart';
 import '../state/locale_notifier.dart';
+import 'home_background.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -68,29 +69,7 @@ class _HomePageState extends State<HomePage>
       body: Stack(
         fit: StackFit.expand,
         children: [
-          TweenAnimationBuilder<double>(
-            tween: Tween(begin: 0, end: 1),
-            duration: const Duration(milliseconds: 700),
-            builder: (context, value, child) => Opacity(
-              opacity: value,
-              child: child,
-            ),
-            child: ColorFiltered(
-              colorFilter: const ColorFilter.matrix(<double>[
-                0.2126, 0.7152, 0.0722, 0, 0, // R
-                0.2126, 0.7152, 0.0722, 0, 0, // G
-                0.2126, 0.7152, 0.0722, 0, 0, // B
-                0, 0, 0, 1, 0, // A
-              ]),
-              child: Opacity(
-                opacity: 0.1,
-                child: Image.asset(
-                  'assets/images/home/backgrounds/mountains.jpg',
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
+          const HomeBackground(),
           SafeArea(
             child: _loading
                 ? const Center(child: CircularProgressIndicator())
@@ -98,7 +77,8 @@ class _HomePageState extends State<HomePage>
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 16), // Maggiore spazio verticale
+                            horizontal: 8,
+                            vertical: 16), // Maggiore spazio verticale
                         child: IntrinsicHeight(
                           child: _currentTrip == null
                               ? NoTripCard(
