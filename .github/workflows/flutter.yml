@@ -77,7 +77,7 @@ jobs:
           VERSION_NUM=$(echo "$VERSION_LINE" | sed 's/version: //;s/+.*//')
           VERSION_CODE=$(echo "$VERSION_LINE" | sed 's/.*+//')
           NEW_CODE=$((VERSION_CODE+1))
-          sed -i "" "s/^version: .*/version: $VERSION_NUM+$NEW_CODE/" pubspec.yaml
+          sed "s/^version: .*/version: $VERSION_NUM+$NEW_CODE/" pubspec.yaml
           echo "Bumped versionCode to $NEW_CODE"
       - name: Set version from git tag
         run: |
@@ -85,5 +85,5 @@ jobs:
           VERSION_NUM=$(echo "$TAG_VERSION" | cut -d- -f1)
           VERSION_CODE=$(echo "$TAG_VERSION" | grep -oE '[0-9]+$')
           if [ -z "$VERSION_CODE" ]; then VERSION_CODE=1; fi
-          sed -i "" "s/^version: .*/version: $VERSION_NUM+$VERSION_CODE/" pubspec.yaml
+          sed "s/^version: .*/version: $VERSION_NUM+$VERSION_CODE/" pubspec.yaml
           echo "Set pubspec.yaml version to $VERSION_NUM+$VERSION_CODE from tag $TAG_VERSION"
