@@ -64,6 +64,7 @@ class _TripDetailPageState extends State<TripDetailPage> {
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
     final loc = AppLocalizations(locale);
     final colorScheme = Theme.of(context).colorScheme;
+    final hasExpenses = trip.expenses.isNotEmpty;
     return Scaffold(
       backgroundColor: colorScheme.surfaceContainerHighest,
       appBar: CaravellaAppBar(
@@ -211,15 +212,17 @@ class _TripDetailPageState extends State<TripDetailPage> {
                             ButtonSegment(
                               value: 0,
                               icon: const Icon(Icons.receipt_long_rounded),
+                              enabled: true,
                             ),
                             ButtonSegment(
                               value: 1,
-                              icon:
-                                  const Icon(Icons.dashboard_customize_rounded),
+                              icon: const Icon(Icons.dashboard_customize_rounded),
+                              enabled: hasExpenses,
                             ),
                             ButtonSegment(
                               value: 2,
                               icon: const Icon(Icons.bar_chart_rounded),
+                              enabled: hasExpenses,
                             ),
                           ],
                           selected: <int>{_selectedTab},
