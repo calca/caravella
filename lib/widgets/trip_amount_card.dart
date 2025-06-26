@@ -21,12 +21,9 @@ class TripAmountCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isDark = Theme.of(context).brightness == Brightness.dark;
-    final Color textColor = isDark ? Colors.white : Colors.black;
-    final Color paidByColor =
-        isDark ? Colors.grey.shade300 : Colors.grey.shade700;
-    final Color categoryColor =
-        isDark ? Colors.grey.shade400 : Colors.grey.shade600;
+    final Color textColor = Theme.of(context).colorScheme.onSurface;
+    final Color paidByColor = Theme.of(context).colorScheme.primary;
+    final Color categoryColor = Theme.of(context).colorScheme.secondary;
     return Container(
       decoration: BoxDecoration(
         color: Colors.transparent, // Background trasparente
@@ -48,7 +45,6 @@ class TripAmountCard extends StatelessWidget {
                     Text(
                       title,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
                             color: textColor,
                           ),
                     ),
@@ -109,9 +105,7 @@ class TripAmountCard extends StatelessWidget {
                             style: Theme.of(context)
                                 .textTheme
                                 .titleMedium
-                                ?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: textColor)),
+                                ?.copyWith(color: textColor)),
                       ),
                       const SizedBox(width: 4),
                       Baseline(
@@ -119,7 +113,6 @@ class TripAmountCard extends StatelessWidget {
                         baseline: 24, // stesso valore per currency
                         child: Text(currency,
                             style: TextStyle(
-                              fontWeight: FontWeight.bold,
                               color: textColor,
                               fontSize: 13, // più piccolo dell'amount
                             )),
@@ -132,7 +125,6 @@ class TripAmountCard extends StatelessWidget {
                       '${date!.day.toString().padLeft(2, '0')}/${date!.month.toString().padLeft(2, '0')}/${date!.year}',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: textColor,
-                            fontWeight: FontWeight.w500,
                           ),
                     ),
                   ],

@@ -20,10 +20,7 @@ class InfoTab extends StatelessWidget {
                   color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: 8),
               Text(localizations.get('about'),
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium
-                      ?.copyWith(fontWeight: FontWeight.bold)),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith()),
             ],
           ),
           const SizedBox(height: 10),
@@ -38,10 +35,7 @@ class InfoTab extends StatelessWidget {
               Icon(Icons.link, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: 8),
               Text(localizations.get('links'),
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleSmall
-                      ?.copyWith(fontWeight: FontWeight.bold)),
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith()),
             ],
           ),
           const SizedBox(height: 8),
@@ -82,10 +76,7 @@ class InfoTab extends StatelessWidget {
                   color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: 8),
               Text(localizations.get('license_section'),
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleSmall
-                      ?.copyWith(fontWeight: FontWeight.bold)),
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith()),
             ],
           ),
           const SizedBox(height: 8),

@@ -32,10 +32,7 @@ class TopPaidByCard extends StatelessWidget {
           children: [
             Text(
               loc.get('people'),
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall
-                  ?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(),
             ),
             const SizedBox(height: 6),
             const Spacer(),

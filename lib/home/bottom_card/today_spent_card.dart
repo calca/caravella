@@ -34,10 +34,7 @@ class TodaySpentCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(label,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodySmall
-                    ?.copyWith(fontWeight: FontWeight.bold)),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith()),
             const Spacer(),
             Row(
               children: [

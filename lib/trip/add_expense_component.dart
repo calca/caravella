@@ -202,6 +202,7 @@ class _AddExpenseComponentState extends State<AddExpenseComponent> {
                                                 : Theme.of(context)
                                                     .colorScheme
                                                     .onSurface,
+                                            fontWeight: FontWeight.w300,
                                           ),
                                     ),
                                     selected: _category == cat,
