@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../widgets/no_expense.dart';
 import '../../../data/expense.dart';
 import '../../../data/trip.dart';
 import '../../../widgets/trip_amount_card.dart';
@@ -66,7 +67,11 @@ class _ExpensesTabState extends State<ExpensesTab> {
   @override
   Widget build(BuildContext context) {
     if (_expenses.isEmpty) {
-      return Center(child: Text(widget.loc.get('no_expenses')));
+      return Center(
+        child: NoExpense(
+          semanticLabel: widget.loc.get('no_expense_label'),
+        ),
+      );
     }
     return ListView.builder(
       itemCount: _expenses.length,
