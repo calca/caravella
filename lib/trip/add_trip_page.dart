@@ -439,27 +439,6 @@ class _AddTripPageState extends State<AddTripPage> {
                   );
                 }),
                 const SizedBox(height: 16),
-                // Valuta
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(loc.get('currency'),
-                        style: Theme.of(context).textTheme.titleMedium),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: CurrencySelector(
-                          value: _currency,
-                          onChanged: (val) {
-                            if (val != null) setState(() => _currency = val);
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
                 // Categorie
                 Row(
                   children: [
@@ -596,13 +575,40 @@ class _AddTripPageState extends State<AddTripPage> {
                     ],
                   );
                 }),
+                const SizedBox(height: 16),
+                // Valuta
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(loc.get('currency'),
+                        style: Theme.of(context).textTheme.titleMedium),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: CurrencySelector(
+                          value: _currency,
+                          onChanged: (val) {
+                            if (val != null) setState(() => _currency = val);
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 32),
-                ElevatedButton(
+                TextButton(
                   onPressed: _saveTrip,
-                  style: ElevatedButton.styleFrom(
+                  style: TextButton.styleFrom(
                     minimumSize: const Size.fromHeight(48),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    textStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
                   ),
                   child: Text(loc.get('save')),
                 ),
