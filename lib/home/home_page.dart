@@ -93,20 +93,6 @@ class _HomePageState extends State<HomePage> with RouteAware {
                 ? const Center(child: CircularProgressIndicator())
                 : Column(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            if (_currentTrip != null)
-                              Switch(
-                                value: _zenMode,
-                                onChanged: _toggleZenMode,
-                              ),
-                          ],
-                        ),
-                      ),
                       if (_currentTrip == null)
                         Expanded(
                           child: Column(
@@ -151,6 +137,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
                             loc: loc,
                             onTripAdded: _refresh,
                             zenMode: _zenMode,
+                            onZenModeChanged: _toggleZenMode,
                           ),
                         ),
                     ],
@@ -169,18 +156,32 @@ class CurrentTripSection extends StatelessWidget {
   final AppLocalizations loc;
   final VoidCallback onTripAdded;
   final bool zenMode;
+  final ValueChanged<bool> onZenModeChanged;
   const CurrentTripSection({
     super.key,
     required this.trip,
     required this.loc,
     required this.onTripAdded,
     required this.zenMode,
+    required this.onZenModeChanged,
   });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Switch(
+                value: zenMode,
+                onChanged: onZenModeChanged,
+              ),
+            ],
+          ),
+        ),
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 400),
           transitionBuilder: (child, animation) => FadeTransition(
