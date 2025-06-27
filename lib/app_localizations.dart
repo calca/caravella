@@ -98,6 +98,9 @@ class AppLocalizations {
       'select_paid_by': 'Select who paid',
       'select_category': 'Select a category',
       'check_form': 'Check the form data',
+      'delete_expense': 'Delete expense',
+      'delete_expense_confirm': 'Are you sure you want to delete this expense?',
+      'delete': 'Delete',
     },
     'it': {
       'app_title': 'Caravella',
@@ -192,6 +195,9 @@ class AppLocalizations {
       'select_paid_by': 'Seleziona chi ha pagato',
       'select_category': 'Seleziona una categoria',
       'check_form': 'Controlla i dati inseriti',
+      'delete_expense': 'Elimina spesa',
+      'delete_expense_confirm': 'Sei sicuro di voler eliminare questa spesa?',
+      'delete': 'Elimina',
     },
   };
 

@@ -108,15 +108,16 @@ class InfoTab extends StatelessWidget {
 
 void _launchUrl(BuildContext context, String url) async {
   final uri = Uri.parse(url);
-  final can = await canLaunchUrl(uri);
-  if (!context.mounted) return;
-  if (can) {
-    await launchUrl(uri,
-        mode: LaunchMode.externalApplication, webOnlyWindowName: '_blank');
-  } else {
+  try {
+    await launchUrl(
+      uri,
+      mode: LaunchMode.platformDefault,
+    );
+  } catch (e) {
+    if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Impossibile aprire il link: $url')),
     );
-    debugPrint('Could not launch $url');
+    debugPrint('Could not launch $url: $e');
   }
 }
