@@ -31,34 +31,41 @@ class TodaySpentCard extends StatelessWidget {
           );
         },
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(label,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith()),
-            const Spacer(),
-            Row(
-              children: [
-                const Spacer(),
-                Baseline(
-                  baseline: 38, // valore empirico per displaySmall
-                  baselineType: TextBaseline.alphabetic,
-                  child: Text(
-                    '${todayTotal.round()}',
-                    style: Theme.of(context).textTheme.displaySmall?.copyWith(),
-                    textAlign: TextAlign.right,
+            Flexible(
+              child: Text(label,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith()),
+            ),
+            const SizedBox(height: 4),
+            Flexible(
+              child: Row(
+                children: [
+                  const Spacer(),
+                  Baseline(
+                    baseline: 38, // valore empirico per displaySmall
+                    baselineType: TextBaseline.alphabetic,
+                    child: Text(
+                      '${todayTotal.round()}',
+                      style:
+                          Theme.of(context).textTheme.displaySmall?.copyWith(),
+                      textAlign: TextAlign.right,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 4),
-                Baseline(
-                  baseline: 44, // leggermente più in basso per la currency
-                  baselineType: TextBaseline.alphabetic,
-                  child: Text(
-                    trip.currency,
-                    style: Theme.of(context).textTheme.displaySmall?.copyWith(),
-                    textAlign: TextAlign.right,
+                  const SizedBox(width: 4),
+                  Baseline(
+                    baseline: 44, // leggermente più in basso per la currency
+                    baselineType: TextBaseline.alphabetic,
+                    child: Text(
+                      trip.currency,
+                      style:
+                          Theme.of(context).textTheme.displaySmall?.copyWith(),
+                      textAlign: TextAlign.right,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
