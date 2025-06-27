@@ -87,6 +87,7 @@ class _CaravellaAppState extends State<CaravellaApp> {
           theme: CaravellaThemes.light,
           darkTheme: CaravellaThemes.dark,
           themeMode: _themeMode,
+          locale: Locale(_locale),
           supportedLocales: const [Locale('it'), Locale('en')],
           localizationsDelegates: [
             GlobalMaterialLocalizations.delegate,
