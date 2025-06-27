@@ -15,13 +15,13 @@ extension DateTimeToday on DateTime {
   }
 }
 
-class TripSection extends StatelessWidget {
+class HomeTripCards extends StatelessWidget {
   final Trip currentTrip;
   final AppLocalizations loc;
   final VoidCallback onTripAdded;
   static const double sectionOpacity = 1;
 
-  const TripSection({
+  const HomeTripCards({
     super.key,
     required this.currentTrip,
     required this.loc,

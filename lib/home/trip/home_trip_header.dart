@@ -3,9 +3,9 @@ import '../../app_localizations.dart';
 import '../../data/trip.dart';
 import '../../state/locale_notifier.dart';
 
-class CurrentTripCard extends StatelessWidget {
+class HomeTripCard extends StatelessWidget {
   final Trip trip;
-  const CurrentTripCard({super.key, required this.trip});
+  const HomeTripCard({super.key, required this.trip});
 
   @override
   Widget build(BuildContext context) {

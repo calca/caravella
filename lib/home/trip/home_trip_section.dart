@@ -6,13 +6,13 @@ import 'home_trip_cards.dart';
 import '../../widgets/caravella_bottom_bar.dart';
 import '../widgets/home_background.dart';
 
-class CurrentTripSection extends StatelessWidget {
+class HomeTripSection extends StatelessWidget {
   final Trip trip;
   final AppLocalizations loc;
   final VoidCallback onTripAdded;
   final bool zenMode;
   final ValueChanged<bool> onZenModeChanged;
-  const CurrentTripSection({
+  const HomeTripSection({
     super.key,
     required this.trip,
     required this.loc,
@@ -53,7 +53,7 @@ class CurrentTripSection extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                   child: IntrinsicHeight(
-                    child: CurrentTripCard(trip: trip),
+                    child: HomeTripCard(trip: trip),
                   ),
                 ),
               ),
@@ -69,7 +69,7 @@ class CurrentTripSection extends StatelessWidget {
                       : Padding(
                           key: const ValueKey('normal'),
                           padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: TripSection(
+                          child: HomeTripCards(
                             currentTrip: trip,
                             loc: loc,
                             onTripAdded: onTripAdded,

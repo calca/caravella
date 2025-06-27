@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
                   if (_currentTrip == null)
                     WelcomeSection(onTripAdded: _refresh)
                   else
-                    CurrentTripSection(
+                    HomeTripSection(
                       trip: _currentTrip!,
                       loc: loc,
                       onTripAdded: _refresh,
