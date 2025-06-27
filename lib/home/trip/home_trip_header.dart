@@ -18,11 +18,11 @@ class HomeTripCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           const SizedBox(height: 32), // Spazio extra in alto
-          // Totale spese a sinistra, con spazio sopra e sotto
+          // Totale spese a destra, con spazio sopra e sotto
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 24.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
@@ -48,7 +48,7 @@ class HomeTripCard extends StatelessWidget {
           ),
           // Titolo viaggio a destra
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Flexible(
                 child: Text(
@@ -67,21 +67,24 @@ class HomeTripCard extends StatelessWidget {
           const SizedBox(height: 8),
           // Partecipanti a destra
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              Icon(Icons.people,
+                  color: Theme.of(context).colorScheme.onSurface, size: 20),
+              const SizedBox(width: 4),
               Text('${trip.participants.length}',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onSurface)),
-              const SizedBox(width: 4),
-              Icon(Icons.people,
-                  color: Theme.of(context).colorScheme.onSurface, size: 20),
             ],
           ),
           const SizedBox(height: 8),
           // Date viaggio a destra
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              Icon(Icons.calendar_today,
+                  color: Theme.of(context).colorScheme.onSurface, size: 20),
+              const SizedBox(width: 4),
               Text(
                 loc.get('from_to', params: {
                   'start':
@@ -95,9 +98,6 @@ class HomeTripCard extends StatelessWidget {
                     ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                 textAlign: TextAlign.right,
               ),
-              const SizedBox(width: 4),
-              Icon(Icons.calendar_today,
-                  color: Theme.of(context).colorScheme.onSurface, size: 20),
             ],
           ),
           const SizedBox(height: 8),
