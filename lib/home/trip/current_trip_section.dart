@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../app_localizations.dart';
 import '../../data/trip.dart';
 import 'current_trip_card.dart';
-import 'trip_section.dart';
+import 'home_trip_cards.dart';
 import '../../widgets/caravella_bottom_bar.dart';
 import '../widgets/home_background.dart';
 
