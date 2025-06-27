@@ -103,9 +103,7 @@ class _TripDetailPageState extends State<TripDetailPage> {
                         expense: Expense(
                           category: '',
                           amount: 0,
-                          paidBy: trip.participants.isNotEmpty
-                              ? trip.participants.first
-                              : '',
+                          paidBy: '', // Nessun partecipante pre-selezionato
                           date: DateTime.now(),
                           note: null,
                         ),

@@ -81,6 +81,8 @@ class ExpenseEditPage extends StatelessWidget {
           onExpenseAdded: (updated) => _onSave(context, updated),
           tripStartDate: tripStartDate,
           tripEndDate: tripEndDate,
+          shouldAutoClose:
+              false, // Non chiudere automaticamente perché è la ExpenseEditPage che gestisce la navigazione
         ),
       ),
     );

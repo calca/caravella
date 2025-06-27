@@ -95,6 +95,9 @@ class AppLocalizations {
       'category_name_semantics': 'Category: {name}',
       'settings_tab': 'Settings',
       'info_tab': 'Info',
+      'select_paid_by': 'Select who paid',
+      'select_category': 'Select a category',
+      'check_form': 'Check the form data',
     },
     'it': {
       'app_title': 'Caravella',
@@ -186,6 +189,9 @@ class AppLocalizations {
       'currency': 'Valuta',
       'settings_tab': 'Impostazioni',
       'info_tab': 'Info',
+      'select_paid_by': 'Seleziona chi ha pagato',
+      'select_category': 'Seleziona una categoria',
+      'check_form': 'Controlla i dati inseriti',
     },
   };
 
