@@ -4,9 +4,9 @@ import '../app_localizations.dart';
 import '../data/trip.dart';
 import '../data/trips_storage.dart';
 import 'trip/current_trip_section.dart';
-import 'welcome/no_trip_section.dart';
 import '../state/locale_notifier.dart';
 import '../../main.dart';
+import 'welcome/welcome_section.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -87,7 +87,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
                 children: [
                   if (_currentTrip == null)
                     Expanded(
-                      child: NoTripSection(onTripAdded: _refresh),
+                      child: WelcomeSection(onTripAdded: _refresh),
                     )
                   else
                     Expanded(

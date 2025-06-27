@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../app_localizations.dart';
 
-class NoTripCard extends StatelessWidget {
+class WelcomeCard extends StatelessWidget {
   final AppLocalizations loc;
   final VoidCallback onAddTrip;
   final double opacity;
-  const NoTripCard(
+  const WelcomeCard(
       {super.key,
       required this.loc,
       required this.onAddTrip,

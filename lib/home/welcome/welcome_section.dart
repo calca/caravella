@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import '../../app_localizations.dart';
 import '../../trip/add_trip_page.dart';
 import '../../widgets/caravella_bottom_bar.dart';
-import 'no_trip_card.dart';
+import 'welcome_card.dart';
 import '../../data/trip.dart';
 import '../widgets/home_background.dart';
 import '../../state/locale_notifier.dart';
 
 typedef RefreshCallback = void Function();
 
-class NoTripSection extends StatelessWidget {
+class WelcomeSection extends StatelessWidget {
   final RefreshCallback? onTripAdded;
-  const NoTripSection({super.key, this.onTripAdded});
+  const WelcomeSection({super.key, this.onTripAdded});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class NoTripSection extends StatelessWidget {
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                  child: NoTripCard(
+                  child: WelcomeCard(
                     loc: loc,
                     onAddTrip: () async {
                       final result = await Navigator.of(context).push(
