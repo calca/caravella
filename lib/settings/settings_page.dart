@@ -13,7 +13,7 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
     final loc = AppLocalizations(locale);
-    
+
     return Scaffold(
       appBar: CaravellaAppBar(),
       body: DefaultTabController(
@@ -26,7 +26,10 @@ class SettingsPage extends StatelessWidget {
                 Tab(text: loc.get('info_tab')),
               ],
               labelColor: Theme.of(context).colorScheme.primary,
-              unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withAlpha((0.6 * 255).toInt()),
+              unselectedLabelColor: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withAlpha((0.6 * 255).toInt()),
               indicatorColor: Theme.of(context).colorScheme.primary,
             ),
             Expanded(
