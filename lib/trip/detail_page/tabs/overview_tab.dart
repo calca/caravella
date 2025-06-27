@@ -30,7 +30,8 @@ class OverviewTab extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 16,
-                    backgroundColor: theme.colorScheme.primary.withAlpha((0.1 * 255).toInt()),
+                    backgroundColor: theme.colorScheme.primary
+                        .withAlpha((0.1 * 255).toInt()),
                     child: Icon(
                       Icons.person,
                       size: 18,
@@ -61,7 +62,7 @@ class OverviewTab extends StatelessWidget {
           const SizedBox(height: 24),
           Text(loc.get('expenses_by_category'),
               style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w500,
               )),
           const SizedBox(height: 12),
           ...trip.categories.map((cat) {
@@ -75,7 +76,8 @@ class OverviewTab extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.secondary.withAlpha((0.1 * 255).toInt()),
+                      color: theme.colorScheme.secondary
+                          .withAlpha((0.1 * 255).toInt()),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(
@@ -114,7 +116,8 @@ class OverviewTab extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.outline.withAlpha((0.1 * 255).toInt()),
+                      color: theme.colorScheme.outline
+                          .withAlpha((0.1 * 255).toInt()),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(

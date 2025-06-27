@@ -162,8 +162,7 @@ class _TripDetailPageState extends State<TripDetailPage> {
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       const SizedBox(height: 4),
-                      Text(
-                          '${loc.get('participants')}: ${trip.participants.join(", ")}',
+                      Text(trip.participants.join(", "),
                           style: Theme.of(context).textTheme.bodyMedium),
                     ],
                   ),

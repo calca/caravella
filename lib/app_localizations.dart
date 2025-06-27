@@ -101,6 +101,13 @@ class AppLocalizations {
       'delete_expense': 'Delete expense',
       'delete_expense_confirm': 'Are you sure you want to delete this expense?',
       'delete': 'Delete',
+      'statistics_title': 'Statistics',
+      'no_expenses_for_statistics': 'No expenses available for statistics',
+      'daily_expenses_chart': 'Daily expenses chart',
+      'general_statistics': 'General statistics',
+      'total_expenses': 'Total expenses',
+      'average_expense': 'Average expense',
+      'highest_expense': 'Highest expense',
     },
     'it': {
       'app_title': 'Caravella',
@@ -198,6 +205,14 @@ class AppLocalizations {
       'delete_expense': 'Elimina spesa',
       'delete_expense_confirm': 'Sei sicuro di voler eliminare questa spesa?',
       'delete': 'Elimina',
+      'statistics_title': 'Statistiche',
+      'no_expenses_for_statistics':
+          'Nessuna spesa disponibile per le statistiche',
+      'daily_expenses_chart': 'Grafico spese giornaliere',
+      'general_statistics': 'Statistiche generali',
+      'total_expenses': 'Totale spese',
+      'average_expense': 'Spesa media',
+      'highest_expense': 'Spesa più alta',
     },
   };
 
