@@ -93,6 +93,8 @@ class AppLocalizations {
       'delete_category': 'Delete category',
       'participant_name_semantics': 'Participant: {name}',
       'category_name_semantics': 'Category: {name}',
+      'settings_tab': 'Settings',
+      'info_tab': 'Info',
     },
     'it': {
       'app_title': 'Caravella',
@@ -182,6 +184,8 @@ class AppLocalizations {
       'participant_name_semantics': 'Partecipante: {name}',
       'category_name_semantics': 'Categoria: {name}',
       'currency': 'Valuta',
+      'settings_tab': 'Impostazioni',
+      'info_tab': 'Info',
     },
   };
 
