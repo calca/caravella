@@ -23,71 +23,73 @@ class CurrentTripSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        const HomeBackground(),
-        Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Switch(
-                    value: zenMode,
-                    onChanged: onZenModeChanged,
-                  ),
-                ],
-              ),
-            ),
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 400),
-              transitionBuilder: (child, animation) => FadeTransition(
-                opacity: animation,
-                child: child,
-              ),
-              child: Padding(
-                key: ValueKey(zenMode),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                child: IntrinsicHeight(
-                  child: CurrentTripCard(trip: trip),
+    return Expanded(
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          const HomeBackground(),
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Switch(
+                      value: zenMode,
+                      onChanged: onZenModeChanged,
+                    ),
+                  ],
                 ),
               ),
-            ),
-            Expanded(
-              child: AnimatedSwitcher(
+              AnimatedSwitcher(
                 duration: const Duration(milliseconds: 400),
                 transitionBuilder: (child, animation) => FadeTransition(
                   opacity: animation,
                   child: child,
                 ),
-                child: zenMode
-                    ? const SizedBox.shrink(key: ValueKey('zen'))
-                    : Padding(
-                        key: const ValueKey('normal'),
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: TripSection(
-                          currentTrip: trip,
-                          loc: loc,
-                          onTripAdded: onTripAdded,
+                child: Padding(
+                  key: ValueKey(zenMode),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  child: IntrinsicHeight(
+                    child: CurrentTripCard(trip: trip),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 400),
+                  transitionBuilder: (child, animation) => FadeTransition(
+                    opacity: animation,
+                    child: child,
+                  ),
+                  child: zenMode
+                      ? const SizedBox.shrink(key: ValueKey('zen'))
+                      : Padding(
+                          key: const ValueKey('normal'),
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: TripSection(
+                            currentTrip: trip,
+                            loc: loc,
+                            onTripAdded: onTripAdded,
+                          ),
                         ),
-                      ),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 2),
-              child: CaravellaBottomBar(
-                loc: loc,
-                onTripAdded: onTripAdded,
-                currentTrip: trip,
-                showLeftButtons: !zenMode,
+              Padding(
+                padding: const EdgeInsets.only(bottom: 2),
+                child: CaravellaBottomBar(
+                  loc: loc,
+                  onTripAdded: onTripAdded,
+                  currentTrip: trip,
+                  showLeftButtons: !zenMode,
+                ),
               ),
-            ),
-          ],
-        ),
-      ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

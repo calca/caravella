@@ -3,10 +3,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../app_localizations.dart';
 import '../data/trip.dart';
 import '../data/trips_storage.dart';
-import 'trip/current_trip_section.dart';
 import '../state/locale_notifier.dart';
 import '../../main.dart';
 import 'welcome/welcome_section.dart';
+import 'trip/current_trip_section.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -86,18 +86,14 @@ class _HomePageState extends State<HomePage> with RouteAware {
             : Column(
                 children: [
                   if (_currentTrip == null)
-                    Expanded(
-                      child: WelcomeSection(onTripAdded: _refresh),
-                    )
+                    WelcomeSection(onTripAdded: _refresh)
                   else
-                    Expanded(
-                      child: CurrentTripSection(
-                        trip: _currentTrip!,
-                        loc: loc,
-                        onTripAdded: _refresh,
-                        zenMode: _zenMode,
-                        onZenModeChanged: _toggleZenMode,
-                      ),
+                    CurrentTripSection(
+                      trip: _currentTrip!,
+                      loc: loc,
+                      onTripAdded: _refresh,
+                      zenMode: _zenMode,
+                      onZenModeChanged: _toggleZenMode,
                     ),
                 ],
               ),

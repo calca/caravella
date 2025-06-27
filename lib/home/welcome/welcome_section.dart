@@ -17,7 +17,8 @@ class WelcomeSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final localeNotifier = LocaleNotifier.of(context);
     final loc = AppLocalizations(localeNotifier?.locale ?? 'it');
-    return Stack(
+    return Expanded(
+        child: Stack(
       fit: StackFit.expand,
       children: [
         const HomeBackground(),
@@ -55,6 +56,6 @@ class WelcomeSection extends StatelessWidget {
           ],
         ),
       ],
-    );
+    ));
   }
 }
