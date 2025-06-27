@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
 import '../../../data/trip.dart';
+import '../../../widgets/currency_display.dart';
 
 class OverviewTab extends StatelessWidget {
   final Trip trip;
@@ -55,13 +56,13 @@ class OverviewTab extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 6),
-                      child: Text(
-                        loc.get('amount_with_currency', params: {
-                          'amount': total.toStringAsFixed(2),
-                          'currency': trip.currency
-                        }),
-                        style: theme.textTheme.bodyMedium
-                            ?.copyWith(fontWeight: FontWeight.w500),
+                      child: CurrencyDisplay(
+                        value: total,
+                        currency: trip.currency,
+                        valueFontSize: 14.0,
+                        currencyFontSize: 10.0,
+                        alignment: MainAxisAlignment.end,
+                        showDecimals: true,
                       ),
                     ),
                   ],
@@ -106,13 +107,13 @@ class OverviewTab extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 6),
-                      child: Text(
-                        loc.get('amount_with_currency', params: {
-                          'amount': total.toStringAsFixed(2),
-                          'currency': trip.currency
-                        }),
-                        style: theme.textTheme.bodyMedium
-                            ?.copyWith(fontWeight: FontWeight.w500),
+                      child: CurrencyDisplay(
+                        value: total,
+                        currency: trip.currency,
+                        valueFontSize: 14.0,
+                        currencyFontSize: 10.0,
+                        alignment: MainAxisAlignment.end,
+                        showDecimals: true,
                       ),
                     ),
                   ],
@@ -142,19 +143,17 @@ class OverviewTab extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 6),
-                      child: Text(
-                        loc.get('amount_with_currency', params: {
-                          'amount': trip.expenses
-                              .where((e) =>
-                                  e.category.isEmpty ||
-                                  !trip.categories.contains(e.category))
-                              .fold<double>(
-                                  0, (sum, e) => sum + (e.amount ?? 0))
-                              .toStringAsFixed(2),
-                          'currency': trip.currency
-                        }),
-                        style: theme.textTheme.bodyMedium
-                            ?.copyWith(fontWeight: FontWeight.w500),
+                      child: CurrencyDisplay(
+                        value: trip.expenses
+                            .where((e) =>
+                                e.category.isEmpty ||
+                                !trip.categories.contains(e.category))
+                            .fold<double>(0, (sum, e) => sum + (e.amount ?? 0)),
+                        currency: trip.currency,
+                        valueFontSize: 14.0,
+                        currencyFontSize: 10.0,
+                        alignment: MainAxisAlignment.end,
+                        showDecimals: true,
                       ),
                     ),
                   ],

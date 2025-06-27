@@ -6,6 +6,7 @@ import '../app_localizations.dart';
 import 'add_trip_page.dart';
 import '../state/locale_notifier.dart';
 import '../widgets/caravella_app_bar.dart';
+import '../widgets/currency_display.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
@@ -402,22 +403,22 @@ class _HistoryPageState extends State<HistoryPage> {
                                                   '${trip.endDate.day}/${trip.endDate.month}/${trip.endDate.year}'
                                             }),
                                           ),
-                                          Text(
-                                              '${loc.get('participants')}: ${trip.participants.join(", ")}',
+                                          Text(trip.participants.join(", "),
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .bodySmall),
                                           const SizedBox(height: 4),
                                           Row(
                                             children: [
-                                              Text(
-                                                  '${trip.currency} ${total.toStringAsFixed(2)}',
-                                                  style: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .primary,
-                                                      fontWeight:
-                                                          FontWeight.bold)),
+                                              CurrencyDisplay(
+                                                value: total,
+                                                currency: trip.currency,
+                                                valueFontSize: 16.0,
+                                                currencyFontSize: 10.0,
+                                                alignment:
+                                                    MainAxisAlignment.start,
+                                                showDecimals: true,
+                                              ),
                                             ],
                                           ),
                                         ],

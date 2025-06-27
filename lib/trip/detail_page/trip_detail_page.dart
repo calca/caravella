@@ -8,6 +8,7 @@ import '../../app_localizations.dart';
 import '../../state/locale_notifier.dart';
 import 'tabs/expenses_tab.dart';
 import 'tabs/overview_tab.dart';
+import '../../widgets/currency_display.dart';
 import 'tabs/statistics_tab.dart';
 import '../../widgets/caravella_app_bar.dart';
 
@@ -172,12 +173,15 @@ class _TripDetailPageState extends State<TripDetailPage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(
-                      '${trip.currency} ${trip.expenses.fold<double>(0, (sum, s) => sum + (s.amount ?? 0)).toStringAsFixed(2)}',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            // fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
+                    CurrencyDisplay(
+                      value: trip.expenses
+                          .fold<double>(0, (sum, s) => sum + (s.amount ?? 0)),
+                      currency: trip.currency,
+                      valueFontSize: 20.0,
+                      currencyFontSize: 14.0,
+                      alignment: MainAxisAlignment.end,
+                      showDecimals: true,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ],
                 ),
@@ -216,7 +220,8 @@ class _TripDetailPageState extends State<TripDetailPage> {
                             ),
                             ButtonSegment(
                               value: 1,
-                              icon: const Icon(Icons.dashboard_customize_rounded),
+                              icon:
+                                  const Icon(Icons.dashboard_customize_rounded),
                               enabled: hasExpenses,
                             ),
                             ButtonSegment(

@@ -5,6 +5,9 @@ class CurrencyDisplay extends StatelessWidget {
   final String currency;
   final double valueFontSize;
   final double currencyFontSize;
+  final MainAxisAlignment alignment;
+  final bool showDecimals;
+  final Color? color;
 
   const CurrencyDisplay({
     super.key,
@@ -12,18 +15,24 @@ class CurrencyDisplay extends StatelessWidget {
     required this.currency,
     this.valueFontSize = 54.0,
     this.currencyFontSize = 22.0,
+    this.alignment = MainAxisAlignment.end,
+    this.showDecimals = false,
+    this.color,
   });
 
   @override
   Widget build(BuildContext context) {
+    final String formattedValue =
+        showDecimals ? value.toStringAsFixed(2) : value.truncate().toString();
+
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: alignment,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Text(
-          value.truncate().toString(),
+          formattedValue,
           style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface,
+                color: color ?? Theme.of(context).colorScheme.onSurface,
                 fontSize: valueFontSize,
               ),
         ),
@@ -31,7 +40,7 @@ class CurrencyDisplay extends StatelessWidget {
         Text(
           currency,
           style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface,
+                color: color ?? Theme.of(context).colorScheme.onSurface,
                 fontSize: currencyFontSize,
               ),
         ),

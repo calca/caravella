@@ -3,6 +3,7 @@ import '../../../data/trip.dart';
 import '../../../app_localizations.dart';
 import 'base_flat_card.dart';
 import '../../../trip/detail_page/trip_detail_page.dart';
+import '../../../widgets/currency_display.dart';
 
 class TodaySpentCard extends StatelessWidget {
   final Trip trip;
@@ -44,36 +45,11 @@ class TodaySpentCard extends StatelessWidget {
               child: Align(
                 alignment: Alignment
                     .bottomRight, // Allinea il totale in basso a destra
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Baseline(
-                      baseline: 38, // valore empirico per displaySmall
-                      baselineType: TextBaseline.alphabetic,
-                      child: Text(
-                        '${todayTotal.round()}',
-                        style: Theme.of(context)
-                            .textTheme
-                            .displaySmall
-                            ?.copyWith(),
-                        textAlign: TextAlign.right,
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    Baseline(
-                      baseline: 44, // leggermente più in basso per la currency
-                      baselineType: TextBaseline.alphabetic,
-                      child: Text(
-                        trip.currency,
-                        style: Theme.of(context)
-                            .textTheme
-                            .displaySmall
-                            ?.copyWith(),
-                        textAlign: TextAlign.right,
-                      ),
-                    ),
-                  ],
+                child: CurrencyDisplay(
+                  value: todayTotal,
+                  currency: trip.currency,
+                  valueFontSize: 24.0, // Più piccolo per le card
+                  currencyFontSize: 12.0, // Proporzionato
                 ),
               ),
             ),

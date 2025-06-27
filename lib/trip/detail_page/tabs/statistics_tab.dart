@@ -3,6 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import '../../../data/expense.dart';
 import '../../../data/trip.dart';
 import '../../../app_localizations.dart';
+import '../../../widgets/currency_display.dart';
 
 class StatisticsTab extends StatelessWidget {
   final Trip? trip;
@@ -247,10 +248,15 @@ class StatisticsTab extends StatelessWidget {
                       color: theme.colorScheme.onSurface
                           .withAlpha((0.7 * 255).toInt()))),
               const SizedBox(width: 8),
-              Text('${trip.currency} ${total.toStringAsFixed(2)}',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                      // fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.primary)),
+              CurrencyDisplay(
+                value: total,
+                currency: trip.currency,
+                valueFontSize: 16.0,
+                currencyFontSize: 12.0,
+                alignment: MainAxisAlignment.end,
+                showDecimals: true,
+                color: theme.colorScheme.primary,
+              ),
             ],
           ),
         ],

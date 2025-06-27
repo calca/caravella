@@ -3,6 +3,7 @@ import '../../../data/trip.dart';
 import 'base_flat_card.dart';
 import '../../../trip/detail_page/trip_detail_page.dart';
 import '../../../app_localizations.dart';
+import '../../../widgets/currency_display.dart';
 
 class TopPaidByCard extends StatelessWidget {
   final Trip trip;
@@ -59,12 +60,14 @@ class TopPaidByCard extends StatelessWidget {
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyMedium)),
-                              Text(
-                                  '${trip.currency} ${e.value.toStringAsFixed(2)}',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.copyWith()),
+                              CurrencyDisplay(
+                                value: e.value,
+                                currency: trip.currency,
+                                valueFontSize: 14.0, // Dimensione per le righe
+                                currencyFontSize: 10.0,
+                                alignment: MainAxisAlignment.start,
+                                showDecimals: true,
+                              ),
                             ],
                           ),
                         )),
