@@ -60,6 +60,55 @@ class _AddExpenseComponentState extends State<AddExpenseComponent> {
     });
   }
 
+  void _saveExpense() {
+    setState(() {});
+    // Always save the form to update _amount
+    _formKey.currentState!.save();
+    
+    // Applica la validazione completa prima di salvare
+    bool isFormValid = _formKey.currentState!.validate();
+    bool hasCategoryIfRequired = widget.categories.isNotEmpty ? _category != null : true;
+    bool hasPaidBy = _paidBy != null;
+    
+    if (isFormValid && hasCategoryIfRequired && hasPaidBy) {
+      final expense = Expense(
+        category: _category ?? '',
+        amount: _amount ?? 0,
+        paidBy: _paidBy ?? '',
+        date: _date ?? DateTime.now(),
+        note: widget.initialExpense != null
+            ? _noteController.text.trim()
+            : null,
+      );
+      widget.onExpenseAdded(expense);
+      Navigator.of(context).pop();
+    } else {
+      // Mostra un feedback visivo se la validazione fallisce
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(_getValidationMessage()),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
+    }
+  }
+
+  String _getValidationMessage() {
+    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
+    final loc = AppLocalizations(locale);
+    
+    if (_amount == null || _amount! <= 0) {
+      return loc.get('invalid_amount');
+    }
+    if (_paidBy == null) {
+      return loc.get('select_paid_by') ?? 'Seleziona chi ha pagato';
+    }
+    if (widget.categories.isNotEmpty && _category == null) {
+      return loc.get('select_category') ?? 'Seleziona una categoria';
+    }
+    return loc.get('check_form') ?? 'Controlla i dati inseriti';
+  }
+
   @override
   Widget build(BuildContext context) {
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
@@ -90,10 +139,12 @@ class _AddExpenseComponentState extends State<AddExpenseComponent> {
                     ),
                     keyboardType:
                         TextInputType.numberWithOptions(decimal: true),
+                    textInputAction: TextInputAction.done,
                     validator: (v) => v == null || double.tryParse(v) == null
                         ? loc.get('invalid_amount')
                         : null,
                     onSaved: (v) => _amount = double.tryParse(v ?? ''),
+                    onFieldSubmitted: (_) => _saveExpense(),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -379,27 +430,7 @@ class _AddExpenseComponentState extends State<AddExpenseComponent> {
                 ),
                 const SizedBox(height: 8),
                 ElevatedButton(
-                  onPressed: () {
-                    setState(() {});
-                    // Always save the form to update _amount
-                    _formKey.currentState!.save();
-                    if ((widget.categories.isNotEmpty
-                            ? _category != null
-                            : _formKey.currentState!.validate()) &&
-                        _paidBy != null) {
-                      final expense = Expense(
-                        category: _category ?? '',
-                        amount: _amount ?? 0,
-                        paidBy: _paidBy ?? '',
-                        date: _date ?? DateTime.now(),
-                        note: widget.initialExpense != null
-                            ? _noteController.text.trim()
-                            : null,
-                      );
-                      widget.onExpenseAdded(expense);
-                      Navigator.of(context).pop();
-                    }
-                  },
+                  onPressed: _saveExpense,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.primary,
                     foregroundColor: Theme.of(context).colorScheme.onPrimary,
