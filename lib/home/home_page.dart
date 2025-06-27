@@ -2,15 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../app_localizations.dart';
 import '../data/trip.dart';
-import '../trip/add_trip_page.dart';
 import '../data/trips_storage.dart';
-import '../home/trip_section.dart';
-import '../home/top_card/no_trip_card.dart';
-import '../home/top_card/current_trip_card.dart';
+import '../home/current_trip_section.dart';
+import '../home/no_trip_section.dart';
 import '../state/locale_notifier.dart';
-import 'home_background.dart';
 import '../../main.dart';
-import '../widgets/caravella_bottom_bar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -84,156 +80,28 @@ class _HomePageState extends State<HomePage> with RouteAware {
     final localeNotifier = LocaleNotifier.of(context);
     final loc = AppLocalizations(localeNotifier?.locale ?? 'it');
     return Scaffold(
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          const HomeBackground(),
-          SafeArea(
-            child: _loading
-                ? const Center(child: CircularProgressIndicator())
-                : Column(
-                    children: [
-                      if (_currentTrip == null)
-                        const Expanded(
-                          child: NoTripSection(),
-                        )
-                      else
-                        Expanded(
-                          child: CurrentTripSection(
-                            trip: _currentTrip!,
-                            loc: loc,
-                            onTripAdded: _refresh,
-                            zenMode: _zenMode,
-                            onZenModeChanged: _toggleZenMode,
-                          ),
-                        ),
-                    ],
-                  ),
-          ),
-        ],
+      body: SafeArea(
+        child: _loading
+            ? const Center(child: CircularProgressIndicator())
+            : Column(
+                children: [
+                  if (_currentTrip == null)
+                    Expanded(
+                      child: NoTripSection(onTripAdded: _refresh),
+                    )
+                  else
+                    Expanded(
+                      child: CurrentTripSection(
+                        trip: _currentTrip!,
+                        loc: loc,
+                        onTripAdded: _refresh,
+                        zenMode: _zenMode,
+                        onZenModeChanged: _toggleZenMode,
+                      ),
+                    ),
+                ],
+              ),
       ),
-    );
-  }
-}
-
-class CurrentTripSection extends StatelessWidget {
-  final Trip trip;
-  final AppLocalizations loc;
-  final VoidCallback onTripAdded;
-  final bool zenMode;
-  final ValueChanged<bool> onZenModeChanged;
-  const CurrentTripSection({
-    super.key,
-    required this.trip,
-    required this.loc,
-    required this.onTripAdded,
-    required this.zenMode,
-    required this.onZenModeChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Switch(
-                value: zenMode,
-                onChanged: onZenModeChanged,
-              ),
-            ],
-          ),
-        ),
-        AnimatedSwitcher(
-          duration: const Duration(milliseconds: 400),
-          transitionBuilder: (child, animation) => FadeTransition(
-            opacity: animation,
-            child: child,
-          ),
-          child: Padding(
-            key: ValueKey(zenMode),
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-            child: IntrinsicHeight(
-              child: CurrentTripCard(trip: trip),
-            ),
-          ),
-        ),
-        Expanded(
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 400),
-            transitionBuilder: (child, animation) => FadeTransition(
-              opacity: animation,
-              child: child,
-            ),
-            child: zenMode
-                ? const SizedBox.shrink(key: ValueKey('zen'))
-                : Padding(
-                    key: const ValueKey('normal'),
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: TripSection(
-                      currentTrip: trip,
-                      loc: loc,
-                      onTripAdded: onTripAdded,
-                    ),
-                  ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 2),
-          child: CaravellaBottomBar(
-            loc: loc,
-            onTripAdded: onTripAdded,
-            currentTrip: trip,
-            showLeftButtons: !zenMode,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class NoTripSection extends StatelessWidget {
-  const NoTripSection({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final localeNotifier = LocaleNotifier.of(context);
-    final loc = AppLocalizations(localeNotifier?.locale ?? 'it');
-    final state = context.findAncestorStateOfType<_HomePageState>();
-    return Column(
-      children: [
-        Expanded(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-              child: NoTripCard(
-                loc: loc,
-                onAddTrip: () async {
-                  final result = await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => AddTripPage(),
-                    ),
-                  );
-                  if (result == true) state?._refresh();
-                },
-                opacity: 0.5,
-              ),
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 2),
-          child: CaravellaBottomBar(
-            loc: loc,
-            onTripAdded: state?._refresh ?? () {},
-            currentTrip: Trip.empty(),
-            showAddButton: false,
-          ),
-        ),
-      ],
     );
   }
 }
