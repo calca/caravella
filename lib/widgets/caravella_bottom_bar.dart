@@ -38,8 +38,8 @@ class CaravellaBottomBar extends StatelessWidget {
                 if (showLeftButtons)
                   Container(
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surface.withOpacity(
-                          Theme.of(context).brightness == Brightness.dark
+                      color: Theme.of(context).colorScheme.surface.withValues(
+                          alpha: Theme.of(context).brightness == Brightness.dark
                               ? 0.32
                               : 0.85),
                       borderRadius: BorderRadius.circular(32),
@@ -81,7 +81,7 @@ class CaravellaBottomBar extends StatelessWidget {
                             color: Theme.of(context)
                                 .colorScheme
                                 .primary
-                                .withOpacity(0.8),
+                                .withValues(alpha: 0.8),
                             shape: BoxShape.circle,
                           ),
                           child: IconButton(
