@@ -94,41 +94,8 @@ class _HomePageState extends State<HomePage> with RouteAware {
                 : Column(
                     children: [
                       if (_currentTrip == null)
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Expanded(
-                                child: Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 16),
-                                    child: NoTripCard(
-                                      loc: loc,
-                                      onAddTrip: () async {
-                                        final result =
-                                            await Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) => AddTripPage(),
-                                          ),
-                                        );
-                                        if (result == true) _refresh();
-                                      },
-                                      opacity: 0.5,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 2),
-                                child: CaravellaBottomBar(
-                                  loc: loc,
-                                  onTripAdded: _refresh,
-                                  currentTrip: Trip.empty(),
-                                  showAddButton: false,
-                                ),
-                              ),
-                            ],
-                          ),
+                        const Expanded(
+                          child: NoTripSection(),
                         )
                       else
                         Expanded(
@@ -145,8 +112,6 @@ class _HomePageState extends State<HomePage> with RouteAware {
           ),
         ],
       ),
-      // bottomNavigationBar: _zenMode ? null : MainBottomBar(),
-      // floatingActionButton: _zenMode ? null : MainFab(),
     );
   }
 }
@@ -223,6 +188,49 @@ class CurrentTripSection extends StatelessWidget {
             onTripAdded: onTripAdded,
             currentTrip: trip,
             showLeftButtons: !zenMode,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class NoTripSection extends StatelessWidget {
+  const NoTripSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final localeNotifier = LocaleNotifier.of(context);
+    final loc = AppLocalizations(localeNotifier?.locale ?? 'it');
+    final state = context.findAncestorStateOfType<_HomePageState>();
+    return Column(
+      children: [
+        Expanded(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+              child: NoTripCard(
+                loc: loc,
+                onAddTrip: () async {
+                  final result = await Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => AddTripPage(),
+                    ),
+                  );
+                  if (result == true) state?._refresh();
+                },
+                opacity: 0.5,
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 2),
+          child: CaravellaBottomBar(
+            loc: loc,
+            onTripAdded: state?._refresh ?? () {},
+            currentTrip: Trip.empty(),
+            showAddButton: false,
           ),
         ),
       ],
