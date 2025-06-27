@@ -35,108 +35,56 @@ class HomeTripCards extends StatelessWidget {
         final media = MediaQuery.of(context);
         // Padding coerente con la bottom bar (8px orizzontale)
         final double horizontalPadding = 8 * 2; // left + right
-        final double verticalSpacing = 12;
         final double availableWidth = media.size.width - horizontalPadding;
-        final double availableHeight =
-            constraints.maxHeight - 16; // padding per il layout
-        final double cardWidth =
-            (availableWidth - 12) / 2; // 12 è lo spacing tra le due card
+        final double availableHeight = constraints.maxHeight - 16;
+        
+        // Calcola l'altezza ottimale per le card mantenendole sempre uguali
+        final double optimalCardHeight = math.max(
+          120.0, // Altezza minima per leggibilità
+          math.min(
+            180.0, // Altezza massima per evitare card troppo grandi
+            (availableHeight - 12) / 2, // Spazio disponibile diviso per 2 righe
+          ),
+        );
 
-        // Calculate the maximum possible card height based on available space
-        final double maxCardHeight = (availableHeight - verticalSpacing) / 2;
+        // Se lo spazio è troppo piccolo, usa scroll con altezza fissa
+        final bool useScrollableLayout = availableHeight < 280;
+        final double cardHeight = useScrollableLayout ? 120.0 : optimalCardHeight;
 
-        // Only apply minimum if we have enough space, otherwise use what's available
-        final double cardHeight = maxCardHeight > 100.0
-            ? math.max(100.0, maxCardHeight)
-            : math.max(80.0, maxCardHeight);
-
-        final double cardSize = math.min(cardWidth, cardHeight);
-
-        // If available height is too small, make it scrollable
-        if (availableHeight < 200) {
+        if (useScrollableLayout) {
           return SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 0, bottom: 4),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                          width: cardWidth,
-                          height:
-                              100.0, // Fixed smaller height for scrollable view
-                          child: TodaySpentCard(trip: currentTrip)),
-                      SizedBox(width: 12),
-                      SizedBox(
-                          width: cardWidth,
-                          height: 100.0,
-                          child: TopPaidByCard(trip: currentTrip, loc: loc)),
-                    ],
-                  ),
-                  SizedBox(height: verticalSpacing),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                          width: cardWidth,
-                          height: 100.0,
-                          child: WeekChartCard(trip: currentTrip, loc: loc)),
-                      SizedBox(width: 12),
-                      SizedBox(
-                          width: cardWidth,
-                          height: 100.0,
-                          child: CategoryCard(trip: currentTrip, loc: loc)),
-                    ],
-                  ),
-                ],
-              ),
+            padding: const EdgeInsets.only(top: 0, bottom: 4),
+            child: GridView.count(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisCount: 2,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+              childAspectRatio: (availableWidth - 12) / 2 / cardHeight,
+              children: [
+                TodaySpentCard(trip: currentTrip),
+                TopPaidByCard(trip: currentTrip, loc: loc),
+                WeekChartCard(trip: currentTrip, loc: loc),
+                CategoryCard(trip: currentTrip, loc: loc),
+              ],
             ),
           );
         }
 
-        return Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 0, bottom: 4),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                          width: cardWidth,
-                          height: cardSize,
-                          child: TodaySpentCard(trip: currentTrip)),
-                      SizedBox(width: 12),
-                      SizedBox(
-                          width: cardWidth,
-                          height: cardSize,
-                          child: TopPaidByCard(trip: currentTrip, loc: loc)),
-                    ],
-                  ),
-                  SizedBox(height: verticalSpacing),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                          width: cardWidth,
-                          height: cardSize,
-                          child: WeekChartCard(trip: currentTrip, loc: loc)),
-                      SizedBox(width: 12),
-                      SizedBox(
-                          width: cardWidth,
-                          height: cardSize,
-                          child: CategoryCard(trip: currentTrip, loc: loc)),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
+        return Padding(
+          padding: const EdgeInsets.only(top: 0, bottom: 4),
+          child: GridView.count(
+            crossAxisCount: 2,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+            childAspectRatio: (availableWidth - 12) / 2 / cardHeight,
+            children: [
+              TodaySpentCard(trip: currentTrip),
+              TopPaidByCard(trip: currentTrip, loc: loc),
+              WeekChartCard(trip: currentTrip, loc: loc),
+              CategoryCard(trip: currentTrip, loc: loc),
+            ],
+          ),
         );
       },
     );

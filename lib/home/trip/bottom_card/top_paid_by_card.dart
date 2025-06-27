@@ -28,6 +28,7 @@ class TopPaidByCard extends StatelessWidget {
           );
         },
         child: Column(
+          mainAxisSize: MainAxisSize.max, // Occupa tutto lo spazio verticale  
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -35,29 +36,36 @@ class TopPaidByCard extends StatelessWidget {
               style: Theme.of(context).textTheme.bodySmall?.copyWith(),
             ),
             const SizedBox(height: 6),
-            const Spacer(),
-            if (top.isEmpty)
-              Text('-', style: Theme.of(context).textTheme.titleLarge)
-            else
-              ...top.take(2).map((e) => Padding(
-                    padding: const EdgeInsets.only(bottom: 2),
-                    child: Row(
-                      children: [
-                        Icon(Icons.person,
-                            size: 16,
-                            color: Theme.of(context).colorScheme.primary),
-                        const SizedBox(width: 4),
-                        Expanded(
-                            child: Text(e.key,
-                                style: Theme.of(context).textTheme.bodyMedium)),
-                        Text('${trip.currency} ${e.value.toStringAsFixed(2)}',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith()),
-                      ],
-                    ),
-                  )),
+            Expanded( // Espande per occupare lo spazio rimanente
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end, // Allinea il contenuto in basso
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (top.isEmpty)
+                    Text('-', style: Theme.of(context).textTheme.titleLarge)
+                  else
+                    ...top.take(2).map((e) => Padding(
+                          padding: const EdgeInsets.only(bottom: 2),
+                          child: Row(
+                            children: [
+                              Icon(Icons.person,
+                                  size: 16,
+                                  color: Theme.of(context).colorScheme.primary),
+                              const SizedBox(width: 4),
+                              Expanded(
+                                  child: Text(e.key,
+                                      style: Theme.of(context).textTheme.bodyMedium)),
+                              Text('${trip.currency} ${e.value.toStringAsFixed(2)}',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith()),
+                            ],
+                          ),
+                        )),
+                ],
+              ),
+            ),
           ],
         ),
       ),
