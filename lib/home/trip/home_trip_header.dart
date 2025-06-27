@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../app_localizations.dart';
 import '../../data/trip.dart';
 import '../../state/locale_notifier.dart';
+import '../../widgets/currency_display.dart';
 
 class HomeTripCard extends StatelessWidget {
   final Trip trip;
@@ -21,29 +22,12 @@ class HomeTripCard extends StatelessWidget {
           // Totale spese a destra, con spazio sopra e sotto
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 24.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  trip.expenses
-                      .fold<double>(0, (sum, s) => sum + (s.amount ?? 0))
-                      .truncate()
-                      .toString(),
-                  style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface,
-                        fontSize: 54, // font più grande
-                      ),
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  trip.currency,
-                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface,
-                        fontSize: 22,
-                      ),
-                ),
-              ],
+            child: CurrencyDisplay(
+              value: trip.expenses
+                  .fold<double>(0, (sum, s) => sum + (s.amount ?? 0)),
+              currency: trip.currency,
+              valueFontSize: 54.0,
+              currencyFontSize: 22.0,
             ),
           ),
           // Titolo viaggio a destra

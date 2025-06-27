@@ -2,10 +2,10 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../../app_localizations.dart';
 import '../../data/trip.dart';
-import 'bottom_card/today_spent_card.dart';
-import 'bottom_card/top_paid_by_card.dart';
-import 'bottom_card/week_chart_card.dart';
-import 'bottom_card/category_card.dart';
+import 'cards/today_spent_card.dart';
+import 'cards/top_paid_by_card.dart';
+import 'cards/week_chart_card.dart';
+import 'cards/category_card.dart';
 
 // Estensione per controllare se una data è oggi
 extension DateTimeToday on DateTime {
@@ -37,7 +37,7 @@ class HomeTripCards extends StatelessWidget {
         final double horizontalPadding = 8 * 2; // left + right
         final double availableWidth = media.size.width - horizontalPadding;
         final double availableHeight = constraints.maxHeight - 16;
-        
+
         // Calcola l'altezza ottimale per le card mantenendole sempre uguali
         final double optimalCardHeight = math.max(
           120.0, // Altezza minima per leggibilità
@@ -49,7 +49,8 @@ class HomeTripCards extends StatelessWidget {
 
         // Se lo spazio è troppo piccolo, usa scroll con altezza fissa
         final bool useScrollableLayout = availableHeight < 280;
-        final double cardHeight = useScrollableLayout ? 120.0 : optimalCardHeight;
+        final double cardHeight =
+            useScrollableLayout ? 120.0 : optimalCardHeight;
 
         if (useScrollableLayout) {
           return SingleChildScrollView(
