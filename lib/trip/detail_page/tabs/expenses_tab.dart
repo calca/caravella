@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import '../../../widgets/no_expense.dart';
 import '../../../data/expense.dart';
 import '../../../data/trip.dart';
-import '../../../widgets/trip_amount_card.dart';
+import '../trip_amount_card.dart';
 import '../../../data/trips_storage.dart';
 import '../../../app_localizations.dart';
-import '../expense_edit_page.dart';
+import '../../../expense/expense_edit_page.dart';
 
 class ExpensesTab extends StatefulWidget {
   final Trip trip;
@@ -78,7 +78,7 @@ class _ExpensesTabState extends State<ExpensesTab> {
       itemBuilder: (context, i) {
         final expense = _expenses[i];
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
           child: GestureDetector(
             onTap: () => _openEditPage(i),
             child: TripAmountCard(

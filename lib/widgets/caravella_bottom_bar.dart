@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:org_app_caravella/trip/add_expense_component.dart';
+import 'package:org_app_caravella/expense/expense_form_component.dart';
 import '../data/trip.dart';
 import '../trip/history_page.dart';
 import '../app_localizations.dart';
@@ -100,7 +100,7 @@ class CaravellaBottomBar extends StatelessWidget {
                                     right: 16,
                                     top: 24,
                                   ),
-                                  child: AddExpenseComponent(
+                                  child: ExpenseFormComponent(
                                     participants: currentTrip.participants,
                                     categories: currentTrip.categories,
                                     onExpenseAdded: (expense) async {

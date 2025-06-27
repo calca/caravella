@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../data/expense.dart';
-import '../../app_localizations.dart';
-import '../add_expense_component.dart';
-import 'tabs/expenses_tab.dart';
-import '../../widgets/caravella_app_bar.dart';
+import '../data/expense.dart';
+import '../app_localizations.dart';
+import 'expense_form_component.dart';
+import '../trip/detail_page/tabs/expenses_tab.dart';
+import '../widgets/caravella_app_bar.dart';
 
 class ExpenseEditPage extends StatelessWidget {
   final Expense expense;
@@ -74,7 +74,7 @@ class ExpenseEditPage extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        child: AddExpenseComponent(
+        child: ExpenseFormComponent(
           participants: participants,
           categories: categories,
           initialExpense: expense,

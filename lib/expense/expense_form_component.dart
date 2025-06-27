@@ -3,7 +3,7 @@ import '../data/expense.dart';
 import '../app_localizations.dart';
 import '../state/locale_notifier.dart';
 
-class AddExpenseComponent extends StatefulWidget {
+class ExpenseFormComponent extends StatefulWidget {
   final List<String> participants;
   final List<String> categories;
   final void Function(Expense) onExpenseAdded;
@@ -15,7 +15,7 @@ class AddExpenseComponent extends StatefulWidget {
   final bool
       shouldAutoClose; // Nuovo parametro per gestire la chiusura automatica
 
-  const AddExpenseComponent({
+  const ExpenseFormComponent({
     super.key,
     required this.participants,
     required this.onExpenseAdded,
@@ -30,10 +30,10 @@ class AddExpenseComponent extends StatefulWidget {
   });
 
   @override
-  State<AddExpenseComponent> createState() => _AddExpenseComponentState();
+  State<ExpenseFormComponent> createState() => _ExpenseFormComponentState();
 }
 
-class _AddExpenseComponentState extends State<AddExpenseComponent> {
+class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   final _formKey = GlobalKey<FormState>();
   String? _category;
   double? _amount;
