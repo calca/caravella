@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
-import '../../app_localizations.dart';
-import '../../data/trip.dart';
-import '../../trip/detail_page/trip_detail_page.dart';
+import '../../../data/trip.dart';
 import 'base_flat_card.dart';
+import '../../../trip/detail_page/trip_detail_page.dart';
+import '../../../app_localizations.dart';
 
-class CategoryCard extends StatelessWidget {
+class TopPaidByCard extends StatelessWidget {
   final Trip trip;
   final AppLocalizations loc;
-  const CategoryCard({super.key, required this.trip, required this.loc});
+  const TopPaidByCard({required this.trip, required this.loc, super.key});
 
   @override
   Widget build(BuildContext context) {
-    // NOTA: Non esiste un campo 'category' su Expense, uso 'description' come fallback per raggruppare le spese.
     final Map<String, double> totals = {};
     for (final e in trip.expenses) {
-      final cat = e.category; // fallback: description usata come categoria
-      totals[cat] = (totals[cat] ?? 0) + (e.amount ?? 0);
+      totals[e.paidBy] = (totals[e.paidBy] ?? 0) + (e.amount ?? 0);
     }
     final top = totals.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
@@ -33,8 +31,8 @@ class CategoryCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              loc.get('category'),
-              style: Theme.of(context).textTheme.bodySmall,
+              loc.get('people'),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(),
             ),
             const SizedBox(height: 6),
             const Spacer(),
@@ -45,7 +43,7 @@ class CategoryCard extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 2),
                     child: Row(
                       children: [
-                        Icon(Icons.category,
+                        Icon(Icons.person,
                             size: 16,
                             color: Theme.of(context).colorScheme.primary),
                         const SizedBox(width: 4),
@@ -53,7 +51,10 @@ class CategoryCard extends StatelessWidget {
                             child: Text(e.key,
                                 style: Theme.of(context).textTheme.bodyMedium)),
                         Text('${trip.currency} ${e.value.toStringAsFixed(2)}',
-                            style: Theme.of(context).textTheme.bodyMedium),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith()),
                       ],
                     ),
                   )),
@@ -63,5 +64,3 @@ class CategoryCard extends StatelessWidget {
     );
   }
 }
-
-// InfoCard è stata rinominata e spostata in category_card.dart

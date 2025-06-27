@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../app_localizations.dart';
-import '../data/trip.dart';
+import '../../app_localizations.dart';
+import '../../data/trip.dart';
 import 'bottom_card/today_spent_card.dart';
 import 'bottom_card/top_paid_by_card.dart';
 import 'bottom_card/week_chart_card.dart';

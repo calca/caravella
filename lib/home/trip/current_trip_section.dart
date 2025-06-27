@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../app_localizations.dart';
-import '../data/trip.dart';
-import '../home/top_card/current_trip_card.dart';
-import '../home/trip_section.dart';
-import '../widgets/caravella_bottom_bar.dart';
-import 'home_background.dart';
+import '../../app_localizations.dart';
+import '../../data/trip.dart';
+import 'current_trip_card.dart';
+import 'trip_section.dart';
+import '../../widgets/caravella_bottom_bar.dart';
+import '../widgets/home_background.dart';
 
 class CurrentTripSection extends StatelessWidget {
   final Trip trip;

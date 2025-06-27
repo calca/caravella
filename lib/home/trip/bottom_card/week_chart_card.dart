@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../../data/trip.dart';
+import '../../../data/trip.dart';
 import 'base_flat_card.dart';
-import '../../trip/detail_page/trip_detail_page.dart';
-import '../../app_localizations.dart';
+import '../../../trip/detail_page/trip_detail_page.dart';
+import '../../../app_localizations.dart';
 
 class WeekChartCard extends StatelessWidget {
   final Trip trip;
@@ -41,7 +41,10 @@ class WeekChartCard extends StatelessWidget {
           children: [
             Text(
               loc.get('last_week'),
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w300),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(fontWeight: FontWeight.w300),
             ),
             const SizedBox(height: 6),
             Expanded(
@@ -80,7 +83,9 @@ class WeekChartCard extends StatelessWidget {
                               style: Theme.of(context)
                                   .textTheme
                                   .bodySmall
-                                  ?.copyWith(fontSize: 10, fontWeight: FontWeight.w300));
+                                  ?.copyWith(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w300));
                         },
                       ),
                     ),

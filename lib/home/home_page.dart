@@ -3,8 +3,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../app_localizations.dart';
 import '../data/trip.dart';
 import '../data/trips_storage.dart';
-import '../home/current_trip_section.dart';
-import '../home/no_trip_section.dart';
+import 'trip/current_trip_section.dart';
+import 'welcome/no_trip_section.dart';
 import '../state/locale_notifier.dart';
 import '../../main.dart';
 

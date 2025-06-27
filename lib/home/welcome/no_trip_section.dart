@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../app_localizations.dart';
-import '../trip/add_trip_page.dart';
-import '../widgets/caravella_bottom_bar.dart';
-import '../home/top_card/no_trip_card.dart';
-import '../data/trip.dart';
-import 'home_background.dart';
-import '../state/locale_notifier.dart';
+import '../../app_localizations.dart';
+import '../../trip/add_trip_page.dart';
+import '../../widgets/caravella_bottom_bar.dart';
+import 'no_trip_card.dart';
+import '../../data/trip.dart';
+import '../widgets/home_background.dart';
+import '../../state/locale_notifier.dart';
 
 typedef RefreshCallback = void Function();
 

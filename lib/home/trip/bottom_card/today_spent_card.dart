@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../data/trip.dart';
-import '../../app_localizations.dart';
+import '../../../data/trip.dart';
+import '../../../app_localizations.dart';
 import 'base_flat_card.dart';
-import '../../trip/detail_page/trip_detail_page.dart';
+import '../../../trip/detail_page/trip_detail_page.dart';
 
 class TodaySpentCard extends StatelessWidget {
   final Trip trip;
