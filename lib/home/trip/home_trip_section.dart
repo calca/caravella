@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../app_localizations.dart';
 import '../../data/trip.dart';
-import 'current_trip_card.dart';
+import 'home_trip_header.dart';
 import 'home_trip_cards.dart';
 import '../../widgets/caravella_bottom_bar.dart';
 import '../widgets/home_background.dart';

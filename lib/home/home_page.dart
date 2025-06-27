@@ -6,7 +6,7 @@ import '../data/trips_storage.dart';
 import '../state/locale_notifier.dart';
 import '../../main.dart';
 import 'welcome/welcome_section.dart';
-import 'trip/current_trip_section.dart';
+import 'trip/home_trip_section.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
