@@ -1,31 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../../../data/expense.dart';
+import 'dart:math' as math;
 import '../../../data/trip.dart';
 import '../../../app_localizations.dart';
-import '../../../widgets/currency_display.dart';
 
 class StatisticsTab extends StatelessWidget {
   final Trip? trip;
   const StatisticsTab({super.key, this.trip});
-
-  List<FlSpot> _buildExpenseSpots(List<Expense> expenses) {
-    if (expenses.isEmpty) return [];
-    // Raggruppa per giorno
-    final Map<DateTime, double> dailyTotals = {};
-    for (final e in expenses) {
-      final day = DateTime(e.date.year, e.date.month, e.date.day);
-      dailyTotals[day] = (dailyTotals[day] ?? 0) + (e.amount ?? 0);
-    }
-    final sortedDays = dailyTotals.keys.toList()..sort();
-    final last15 = sortedDays.length > 15
-        ? sortedDays.sublist(sortedDays.length - 15)
-        : sortedDays;
-    return List.generate(last15.length, (i) {
-      final day = last15[i];
-      return FlSpot(i.toDouble(), dailyTotals[day]!);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,219 +28,211 @@ class StatisticsTab extends StatelessWidget {
         ),
       );
     }
-    final spots = _buildExpenseSpots(trip.expenses);
-    if (spots.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.show_chart,
-                size: 48,
-                color:
-                    theme.colorScheme.primary.withAlpha((0.3 * 255).toInt())),
-            const SizedBox(height: 12),
-            Text(loc.get('no_data'), style: theme.textTheme.bodyLarge),
-          ],
-        ),
-      );
-    }
-    // Raggruppa per giorno e prendi gli ultimi 15 giorni
+    // Raggruppa per giorno per tutti i giorni del viaggio
     final Map<DateTime, double> dailyTotals = {};
     for (final e in trip.expenses) {
       final day = DateTime(e.date.year, e.date.month, e.date.day);
       dailyTotals[day] = (dailyTotals[day] ?? 0) + (e.amount ?? 0);
     }
-    final sortedDays = dailyTotals.keys.toList()..sort();
-    final last15 = sortedDays.length > 15
-        ? sortedDays.sublist(sortedDays.length - 15)
-        : sortedDays;
-    // Costruisci le barGroups per il grafico
-    final bars = List.generate(last15.length, (i) {
-      final day = last15[i];
-      return BarChartGroupData(x: i, barRods: [
-        BarChartRodData(
-          toY: dailyTotals[day]!,
-          gradient: LinearGradient(
-            colors: [
-              theme.colorScheme.primary.withAlpha((0.7 * 255).toInt()),
-              theme.colorScheme.primary.withAlpha((0.2 * 255).toInt()),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-          width: 18,
-          borderRadius: BorderRadius.circular(6),
-        ),
-      ]);
+
+    // Genera tutti i giorni del viaggio (dall'inizio alla fine)
+    final startDate =
+        DateTime(trip.startDate.year, trip.startDate.month, trip.startDate.day);
+    final endDate =
+        DateTime(trip.endDate.year, trip.endDate.month, trip.endDate.day);
+    final allDays = <DateTime>[];
+    for (var day = startDate;
+        day.isBefore(endDate.add(Duration(days: 1)));
+        day = day.add(Duration(days: 1))) {
+      allDays.add(day);
+      // Assicurati che ogni giorno abbia un valore (anche 0)
+      dailyTotals[day] = dailyTotals[day] ?? 0;
+    }
+    // Costruisci i punti per il grafico a linea con scala logaritmica
+    final lineSpots = List.generate(allDays.length, (i) {
+      final day = allDays[i];
+      final value = dailyTotals[day]!;
+      // Per la scala logaritmica, usiamo log(value + 1) per gestire i valori 0
+      final logValue = value > 0 ? math.log(value).toDouble() : 0.0;
+      return FlSpot(i.toDouble(), logValue);
     });
-    final total = bars.fold<double>(0, (sum, b) => sum + b.barRods.first.toY);
+
+    // Trova il valore massimo per determinare l'intervallo dell'asse Y
+    final maxValue = dailyTotals.values.where((v) => v > 0).isEmpty
+        ? 1.0
+        : dailyTotals.values.where((v) => v > 0).reduce(math.max);
+    final maxLogValue = maxValue > 0 ? math.log(maxValue).toDouble() : 0.0;
+
+    // Calcola i limiti per assicurare che tutto sia visibile
+    final paddedMaxLogValue =
+        maxLogValue > 0 ? maxLogValue * 1.1 : 1.0; // Aggiungiamo 10% di padding
     return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          // Calcola l'altezza massima del grafico (1/3 della pagina)
+          final maxChartHeight = constraints.maxHeight / 3;
+          final chartHeight = math.min(maxChartHeight, 240.0); // Max 240px
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Icons.trending_up,
-                  color: theme.colorScheme.primary, size: 28),
-              const SizedBox(width: 8),
-              Text(loc.get('expenses_trend_title'),
-                  style: theme.textTheme.titleMedium
-                      ?.copyWith(fontWeight: FontWeight.bold)),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Text(loc.get('expenses_trend_desc'),
-              style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurface
-                      .withAlpha((0.7 * 255).toInt()))),
-          const SizedBox(height: 16),
-          Container(
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color:
-                      theme.colorScheme.primary.withAlpha((0.07 * 255).toInt()),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 18,
-                      height: 18,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            theme.colorScheme.primary
-                                .withAlpha((0.7 * 255).toInt()),
-                            theme.colorScheme.primary
-                                .withAlpha((0.2 * 255).toInt()),
-                          ],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                        ),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(loc.get('expenses_trend_legend'),
-                        style: theme.textTheme.bodySmall
-                            ?.copyWith(fontWeight: FontWeight.w500)),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  height: 260,
-                  child: BarChart(
-                    BarChartData(
-                      barGroups: bars,
-                      alignment: BarChartAlignment.spaceBetween,
-                      gridData: FlGridData(
-                          show: true,
-                          drawVerticalLine: false,
-                          horizontalInterval: 20,
-                          getDrawingHorizontalLine: (value) => FlLine(
-                              color: theme.dividerColor, strokeWidth: 0.5)),
-                      borderData: FlBorderData(show: false),
-                      titlesData: FlTitlesData(
-                        leftTitles: AxisTitles(
-                          sideTitles: SideTitles(
+              Row(
+                children: [
+                  Icon(Icons.trending_up,
+                      color: theme.colorScheme.primary, size: 24),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(loc.get('expenses_trend_title'),
+                        style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w600, fontSize: 16)),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              // Grafico con altezza fissa e limitata
+              SizedBox(
+                height: chartHeight,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: SizedBox(
+                    width: allDays.length *
+                        40.0, // 40 pixel per giorno per dare spazio
+                    child: LineChart(
+                      LineChartData(
+                        lineBarsData: [
+                          LineChartBarData(
+                            spots: lineSpots,
+                            isCurved: true,
+                            color: theme.colorScheme.primary,
+                            barWidth: 3,
+                            isStrokeCapRound: true,
+                            dotData: FlDotData(
+                              show: true,
+                              getDotPainter: (spot, percent, barData, index) {
+                                return FlDotCirclePainter(
+                                  radius: 4,
+                                  color: theme.colorScheme.primary,
+                                  strokeWidth: 2,
+                                  strokeColor: theme.colorScheme.surface,
+                                );
+                              },
+                            ),
+                            belowBarData: BarAreaData(
+                              show: true,
+                              gradient: LinearGradient(
+                                colors: [
+                                  theme.colorScheme.primary
+                                      .withAlpha((0.3 * 255).toInt()),
+                                  theme.colorScheme.primary
+                                      .withAlpha((0.05 * 255).toInt()),
+                                ],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                              ),
+                            ),
+                          ),
+                        ],
+                        gridData: FlGridData(
+                            show: true,
+                            drawVerticalLine: true,
+                            horizontalInterval: paddedMaxLogValue > 3
+                                ? paddedMaxLogValue / 5
+                                : 1, // Intervallo dinamico
+                            verticalInterval: 1,
+                            getDrawingHorizontalLine: (value) => FlLine(
+                                color: theme.dividerColor, strokeWidth: 0.5),
+                            getDrawingVerticalLine: (value) => FlLine(
+                                color: theme.dividerColor
+                                    .withAlpha((0.3 * 255).toInt()),
+                                strokeWidth: 0.5)),
+                        borderData: FlBorderData(show: false),
+                        titlesData: FlTitlesData(
+                          leftTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                                showTitles: true,
+                                reservedSize: 50,
+                                interval: paddedMaxLogValue > 3
+                                    ? paddedMaxLogValue / 4
+                                    : 1, // Intervallo dinamico per le etichette
+                                getTitlesWidget: (value, meta) {
+                                  if (value <= 0)
+                                    return const SizedBox.shrink();
+                                  // Converti il valore logaritmico al valore reale
+                                  final realValue = math.exp(value);
+                                  if (realValue < 1)
+                                    return const SizedBox.shrink();
+                                  return Text(realValue.toStringAsFixed(0),
+                                      style: theme.textTheme.bodySmall);
+                                }),
+                          ),
+                          bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(
                               showTitles: true,
-                              reservedSize: 40,
+                              interval: 1,
                               getTitlesWidget: (value, meta) {
-                                if (value % 1 != 0) {
+                                if (value.toInt() < 0 ||
+                                    value.toInt() >= allDays.length) {
                                   return const SizedBox.shrink();
                                 }
-                                return Text(
-                                    value == 0 ? '' : value.toStringAsFixed(0),
-                                    style: theme.textTheme.bodySmall);
-                              }),
+                                final day = allDays[value.toInt()];
+                                return Padding(
+                                  padding: const EdgeInsets.only(top: 4.0),
+                                  child: Text('${day.day}/${day.month}',
+                                      style: theme.textTheme.bodySmall
+                                          ?.copyWith(
+                                              fontWeight: FontWeight.w500)),
+                                );
+                              },
+                              reservedSize: 32,
+                            ),
+                          ),
+                          rightTitles: AxisTitles(
+                              sideTitles: SideTitles(showTitles: false)),
+                          topTitles: AxisTitles(
+                              sideTitles: SideTitles(showTitles: false)),
                         ),
-                        bottomTitles: AxisTitles(
-                          sideTitles: SideTitles(
-                            showTitles: true,
-                            getTitlesWidget: (value, meta) {
-                              if (value.toInt() < 0 ||
-                                  value.toInt() >= last15.length) {
-                                return const SizedBox.shrink();
-                              }
-                              final day = last15[value.toInt()];
-                              return Padding(
-                                padding: const EdgeInsets.only(top: 4.0),
-                                child: Text('${day.day}/${day.month}',
-                                    style: theme.textTheme.bodySmall?.copyWith(
-                                        fontWeight: FontWeight.w500)),
-                              );
+                        lineTouchData: LineTouchData(
+                          enabled: true,
+                          touchTooltipData: LineTouchTooltipData(
+                            getTooltipItems: (touchedSpots) {
+                              return touchedSpots
+                                  .map((LineBarSpot touchedSpot) {
+                                if (touchedSpot.x < 0 ||
+                                    touchedSpot.x >= allDays.length) {
+                                  return null;
+                                }
+                                final day = allDays[touchedSpot.x.toInt()];
+                                // Mostra il valore reale, non quello logaritmico
+                                final amount = dailyTotals[day] ?? 0;
+                                return LineTooltipItem(
+                                  '${loc.get('expenses_trend_tooltip_amount', params: {
+                                        'amount': amount.toStringAsFixed(2),
+                                        'currency': trip.currency
+                                      })}\n${loc.get('expenses_trend_tooltip_date', params: {
+                                        'day': day.day.toString(),
+                                        'month': day.month.toString(),
+                                        'year': day.year.toString()
+                                      })}',
+                                  theme.textTheme.bodySmall!
+                                      .copyWith(color: Colors.white),
+                                );
+                              }).toList();
                             },
-                            reservedSize: 32,
                           ),
                         ),
-                        rightTitles: AxisTitles(
-                            sideTitles: SideTitles(showTitles: false)),
-                        topTitles: AxisTitles(
-                            sideTitles: SideTitles(showTitles: false)),
+                        minY: 0,
+                        maxY: paddedMaxLogValue,
                       ),
-                      barTouchData: BarTouchData(
-                        enabled: true,
-                        touchTooltipData: BarTouchTooltipData(
-                          getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                            if (group.x < 0 || group.x >= last15.length) {
-                              return null;
-                            }
-                            final day = last15[group.x.toInt()];
-                            final amount = dailyTotals[day] ?? 0;
-                            return BarTooltipItem(
-                              '${loc.get('expenses_trend_tooltip_amount', params: {
-                                    'amount': amount.toStringAsFixed(2),
-                                    'currency': trip.currency
-                                  })}\n${loc.get('expenses_trend_tooltip_date', params: {
-                                    'day': day.day.toString(),
-                                    'month': day.month.toString(),
-                                    'year': day.year.toString()
-                                  })}',
-                              theme.textTheme.bodySmall!.copyWith(),
-                            );
-                          },
-                        ),
-                      ),
-                      minY: 0,
                     ),
                   ),
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                  loc.get('total_last_expenses',
-                      params: {'n': last15.length.toString()}),
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurface
-                          .withAlpha((0.7 * 255).toInt()))),
-              const SizedBox(width: 8),
-              CurrencyDisplay(
-                value: total,
-                currency: trip.currency,
-                valueFontSize: 16.0,
-                currencyFontSize: 12.0,
-                alignment: MainAxisAlignment.end,
-                showDecimals: true,
-                color: theme.colorScheme.primary,
               ),
+              // Spazio aggiuntivo sotto il grafico per eventuali contenuti futuri
+              const SizedBox(height: 16),
             ],
-          ),
-        ],
+          );
+        },
       ),
     );
   }
