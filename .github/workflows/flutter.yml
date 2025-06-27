@@ -89,12 +89,19 @@ jobs:
           sed "s/^version: .*/version: $NEW_VERSION_NUM+$NEW_CODE/" pubspec.yaml > pubspec.yaml.tmp
           mv pubspec.yaml.tmp pubspec.yaml
           echo "Bumped version to $NEW_VERSION_NUM+$NEW_CODE"
+          echo "NEW_VERSION_NUM=$NEW_VERSION_NUM" >> $GITHUB_ENV
+          echo "NEW_CODE=$NEW_CODE" >> $GITHUB_ENV
       - name: Commit and push version bump
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
+          
+          # Assicurati di essere sul branch main
+          git checkout main
+          
+          # Commit e push
           git add pubspec.yaml
-          git commit -m "Bump version to $NEW_VERSION_NUM+$NEW_CODE [skip ci]"
-          git push
+          git commit -m "Bump version to $NEW_VERSION_NUM+$NEW_CODE [skip ci]" || echo "No changes to commit"
+          git push origin main
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
