@@ -10,14 +10,14 @@ class CaravellaBottomBar extends StatelessWidget {
   final AppLocalizations loc;
   final VoidCallback onTripAdded;
   final Trip currentTrip;
-  final bool zenMode;
+  final bool showLeftButtons;
   final bool showAddButton;
   const CaravellaBottomBar({
     super.key,
     required this.loc,
     required this.onTripAdded,
     required this.currentTrip,
-    this.zenMode = false,
+    this.showLeftButtons = true,
     this.showAddButton = true,
   });
 
@@ -35,7 +35,7 @@ class CaravellaBottomBar extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                if (!zenMode)
+                if (showLeftButtons)
                   Container(
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.surface.withOpacity(
