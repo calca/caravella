@@ -133,7 +133,7 @@ class _TripDetailPageState extends State<TripDetailPage> {
                         TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
                 icon: const SizedBox.shrink(),
                 backgroundColor: Theme.of(context).colorScheme.primary,
-                foregroundColor: Colors.white,
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
               ),
             )
           : null,
