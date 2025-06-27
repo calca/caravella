@@ -38,9 +38,11 @@ class CategoryCard extends StatelessWidget {
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 6),
-            Expanded( // Espande per occupare lo spazio rimanente
+            Expanded(
+              // Espande per occupare lo spazio rimanente
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.end, // Allinea il contenuto in basso
+                mainAxisAlignment:
+                    MainAxisAlignment.end, // Allinea il contenuto in basso
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (top.isEmpty)
@@ -56,9 +58,13 @@ class CategoryCard extends StatelessWidget {
                               const SizedBox(width: 4),
                               Expanded(
                                   child: Text(e.key,
-                                      style: Theme.of(context).textTheme.bodyMedium)),
-                              Text('${trip.currency} ${e.value.toStringAsFixed(2)}',
-                                  style: Theme.of(context).textTheme.bodyMedium),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium)),
+                              Text(
+                                  '${trip.currency} ${e.value.toStringAsFixed(2)}',
+                                  style:
+                                      Theme.of(context).textTheme.bodyMedium),
                             ],
                           ),
                         )),

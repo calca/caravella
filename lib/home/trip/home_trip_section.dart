@@ -35,9 +35,21 @@ class HomeTripSection extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Switch(
-                      value: zenMode,
-                      onChanged: onZenModeChanged,
+                    IconButton(
+                      onPressed: () => onZenModeChanged(!zenMode),
+                      icon: Icon(
+                        zenMode
+                            ? Icons.flight_outlined
+                            : Icons.flight_takeoff_outlined,
+                        color: zenMode
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withOpacity(0.6),
+                      ),
+                      tooltip:
+                          zenMode ? 'Disattiva zen mode' : 'Attiva zen mode',
                     ),
                   ],
                 ),

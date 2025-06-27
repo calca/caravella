@@ -32,15 +32,18 @@ class TodaySpentCard extends StatelessWidget {
         },
         child: Column(
           mainAxisSize: MainAxisSize.max, // Occupa tutto lo spazio verticale
-          mainAxisAlignment: MainAxisAlignment.spaceBetween, // Distribuisce lo spazio
+          mainAxisAlignment:
+              MainAxisAlignment.spaceBetween, // Distribuisce lo spazio
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(label,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith()),
             const SizedBox(height: 4),
-            Expanded( // Permette al contenuto di espandersi
+            Expanded(
+              // Permette al contenuto di espandersi
               child: Align(
-                alignment: Alignment.bottomRight, // Allinea il totale in basso a destra
+                alignment: Alignment
+                    .bottomRight, // Allinea il totale in basso a destra
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -50,8 +53,10 @@ class TodaySpentCard extends StatelessWidget {
                       baselineType: TextBaseline.alphabetic,
                       child: Text(
                         '${todayTotal.round()}',
-                        style:
-                            Theme.of(context).textTheme.displaySmall?.copyWith(),
+                        style: Theme.of(context)
+                            .textTheme
+                            .displaySmall
+                            ?.copyWith(),
                         textAlign: TextAlign.right,
                       ),
                     ),
@@ -61,8 +66,10 @@ class TodaySpentCard extends StatelessWidget {
                       baselineType: TextBaseline.alphabetic,
                       child: Text(
                         trip.currency,
-                        style:
-                            Theme.of(context).textTheme.displaySmall?.copyWith(),
+                        style: Theme.of(context)
+                            .textTheme
+                            .displaySmall
+                            ?.copyWith(),
                         textAlign: TextAlign.right,
                       ),
                     ),
