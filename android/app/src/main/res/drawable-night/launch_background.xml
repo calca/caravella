@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Splash screen per tema scuro -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background nero per tema scuro -->
+    <item android:drawable="@color/splash_background_dark" />
+
+    <!-- Logo chiaro per tema scuro -->
+    <item>
+        <bitmap
+            android:gravity="center"
+            android:src="@drawable/logo_light" />
+    </item>
+</layer-list>
