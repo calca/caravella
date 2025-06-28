@@ -259,8 +259,9 @@ class StatisticsTab extends StatelessWidget {
                       getTooltipItems: (touchedSpots) {
                         return touchedSpots.map((spot) {
                           final index = spot.x.toInt();
-                          if (index < 0 || index >= sortedEntries.length)
+                          if (index < 0 || index >= sortedEntries.length) {
                             return null;
+                          }
 
                           final date = sortedEntries[index].key;
                           final amount = sortedEntries[index].value;
@@ -320,7 +321,7 @@ class StatisticsTab extends StatelessWidget {
               ),
         ),
         const SizedBox(height: 16),
-        
+
         // Spesa media
         _buildFlatStatItem(
           context,
@@ -333,7 +334,7 @@ class StatisticsTab extends StatelessWidget {
             showDecimals: true,
           ),
         ),
-        
+
         if (maxExpense != null) ...[
           // Spesa più alta
           _buildFlatStatItem(
@@ -352,7 +353,8 @@ class StatisticsTab extends StatelessWidget {
     );
   }
 
-  Widget _buildFlatStatItem(BuildContext context, String title, Widget content) {
+  Widget _buildFlatStatItem(
+      BuildContext context, String title, Widget content) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
@@ -362,9 +364,9 @@ class StatisticsTab extends StatelessWidget {
           Text(
             title,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-              fontWeight: FontWeight.w500,
-            ),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w500,
+                ),
           ),
           content,
         ],

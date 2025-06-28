@@ -12,6 +12,7 @@ class CaravellaBottomBar extends StatelessWidget {
   final Trip currentTrip;
   final bool showLeftButtons;
   final bool showAddButton;
+  final Duration animationDuration;
   const CaravellaBottomBar({
     super.key,
     required this.loc,
@@ -19,6 +20,7 @@ class CaravellaBottomBar extends StatelessWidget {
     required this.currentTrip,
     this.showLeftButtons = true,
     this.showAddButton = true,
+    this.animationDuration = const Duration(milliseconds: 600),
   });
 
   @override
@@ -35,49 +37,82 @@ class CaravellaBottomBar extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                if (showLeftButtons)
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surface.withValues(
-                          alpha: Theme.of(context).brightness == Brightness.dark
-                              ? 0.32
-                              : 0.85),
-                      borderRadius: BorderRadius.circular(32),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Theme.of(context).shadowColor.withValues(alpha: 0.15),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.history),
-                          color: Theme.of(context).colorScheme.onSurface,
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const HistoryPage(),
+                // Left buttons con animazione fluida
+                AnimatedSwitcher(
+                  duration: animationDuration,
+                  transitionBuilder: (child, animation) {
+                    return FadeTransition(
+                      opacity: CurvedAnimation(
+                        parent: animation,
+                        curve: Curves.easeOutCubic,
+                      ),
+                      child: SlideTransition(
+                        position: Tween<Offset>(
+                          begin: const Offset(-0.3, 0),
+                          end: Offset.zero,
+                        ).animate(CurvedAnimation(
+                          parent: animation,
+                          curve: Curves.easeOutCubic,
+                        )),
+                        child: child,
+                      ),
+                    );
+                  },
+                  child: showLeftButtons
+                      ? Container(
+                          key: const ValueKey('left-buttons'),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .surface
+                                .withValues(
+                                    alpha: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? 0.32
+                                        : 0.85),
+                            borderRadius: BorderRadius.circular(32),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Theme.of(context)
+                                    .shadowColor
+                                    .withValues(alpha: 0.15),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
                               ),
-                            );
-                          },
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.settings),
-                          color: Theme.of(context).colorScheme.onSurface,
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const SettingsPage(),
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.history),
+                                color: Theme.of(context).colorScheme.onSurface,
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => const HistoryPage(),
+                                    ),
+                                  );
+                                },
                               ),
-                            );
-                          },
+                              IconButton(
+                                icon: const Icon(Icons.settings),
+                                color: Theme.of(context).colorScheme.onSurface,
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const SettingsPage(),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        )
+                      : const SizedBox(
+                          key: ValueKey('no-left-buttons'),
                         ),
-                      ],
-                    ),
-                  ),
+                ),
                 Expanded(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -92,7 +127,9 @@ class CaravellaBottomBar extends StatelessWidget {
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: Theme.of(context).shadowColor.withValues(alpha: 0.25),
+                                color: Theme.of(context)
+                                    .shadowColor
+                                    .withValues(alpha: 0.25),
                                 blurRadius: 12,
                                 offset: const Offset(0, 3),
                               ),
