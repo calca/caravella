@@ -12,7 +12,7 @@ class BaseFlatCard extends StatelessWidget {
     super.key,
     required this.child,
     this.padding = const EdgeInsets.all(14.0),
-    this.elevation = 0,
+    this.elevation = 2,
     this.color,
     this.borderRadius = const BorderRadius.all(Radius.circular(14)),
     this.onTap,
