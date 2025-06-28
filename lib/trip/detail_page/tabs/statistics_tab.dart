@@ -92,8 +92,25 @@ class StatisticsTab extends StatelessWidget {
     final sortedEntries = dailyStats.entries.toList()
       ..sort((a, b) => a.key.compareTo(b.key));
 
-    final maxAmount = dailyStats.values.reduce((a, b) => a > b ? a : b);
-    final minAmount = dailyStats.values
+    // Trova l'ultimo giorno con spese > 0
+    int lastDayWithExpenses = sortedEntries.length - 1;
+    for (int i = sortedEntries.length - 1; i >= 0; i--) {
+      if (sortedEntries[i].value > 0) {
+        lastDayWithExpenses = i;
+        break;
+      }
+    }
+
+    // Filtra per mostrare solo dall'inizio fino all'ultimo giorno con spese
+    final filteredEntries = sortedEntries.take(lastDayWithExpenses + 1).toList();
+
+    if (filteredEntries.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    final maxAmount = filteredEntries.map((e) => e.value).reduce((a, b) => a > b ? a : b);
+    final minAmount = filteredEntries
+        .map((e) => e.value)
         .where((v) => v > 0)
         .fold(double.infinity, (a, b) => a < b ? a : b);
 
@@ -120,24 +137,11 @@ class StatisticsTab extends StatelessWidget {
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: SizedBox(
-              width:
-                  (sortedEntries.length * 60.0).clamp(300.0, double.infinity),
+              width: _calculateChartWidth(context, filteredEntries.length),
               child: LineChart(
                 LineChartData(
                   gridData: FlGridData(
-                    show: true,
-                    drawVerticalLine: false,
-                    horizontalInterval:
-                        useLogScale ? null : _calculateInterval(maxAmount),
-                    getDrawingHorizontalLine: (value) {
-                      return FlLine(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .outline
-                            .withValues(alpha: 0.2),
-                        strokeWidth: 1,
-                      );
-                    },
+                    show: false, // Rimuove tutte le righe orizzontali
                   ),
                   titlesData: FlTitlesData(
                     show: true,
@@ -145,29 +149,8 @@ class StatisticsTab extends StatelessWidget {
                         sideTitles: SideTitles(showTitles: false)),
                     rightTitles: const AxisTitles(
                         sideTitles: SideTitles(showTitles: false)),
-                    leftTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 60,
-                        getTitlesWidget: (value, meta) {
-                          if (value <= 0) return const SizedBox.shrink();
-
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: CurrencyDisplay(
-                              value: value,
-                              currency: trip.currency,
-                              valueFontSize: 10,
-                              currencyFontSize: 8,
-                              showDecimals: false,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
+                    leftTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false)),
                     bottomTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
@@ -175,11 +158,11 @@ class StatisticsTab extends StatelessWidget {
                         interval: 1,
                         getTitlesWidget: (value, meta) {
                           final index = value.toInt();
-                          if (index < 0 || index >= sortedEntries.length) {
+                          if (index < 0 || index >= filteredEntries.length) {
                             return const SizedBox.shrink();
                           }
 
-                          final date = sortedEntries[index].key;
+                          final date = filteredEntries[index].key;
                           return Padding(
                             padding: const EdgeInsets.only(top: 8.0),
                             child: Text(
@@ -202,12 +185,6 @@ class StatisticsTab extends StatelessWidget {
                   borderData: FlBorderData(
                     show: true,
                     border: Border(
-                      left: BorderSide(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .outline
-                            .withValues(alpha: 0.3),
-                      ),
                       bottom: BorderSide(
                         color: Theme.of(context)
                             .colorScheme
@@ -217,13 +194,14 @@ class StatisticsTab extends StatelessWidget {
                     ),
                   ),
                   minX: 0,
-                  maxX: (sortedEntries.length - 1).toDouble(),
+                  maxX: (filteredEntries.length - 1).toDouble(),
                   minY:
                       useLogScale ? (minAmount > 0 ? minAmount * 0.5 : 0.1) : 0,
-                  maxY: useLogScale ? maxAmount * 1.5 : maxAmount * 1.1,
+                  maxY:
+                      useLogScale ? maxAmount * 1.5 : _calculateMaxY(maxAmount),
                   lineBarsData: [
                     LineChartBarData(
-                      spots: sortedEntries.asMap().entries.map((entry) {
+                      spots: filteredEntries.asMap().entries.map((entry) {
                         final value = entry.value.value;
                         final y = useLogScale && value > 0 ? value : value;
                         return FlSpot(entry.key.toDouble(), y);
@@ -259,12 +237,12 @@ class StatisticsTab extends StatelessWidget {
                       getTooltipItems: (touchedSpots) {
                         return touchedSpots.map((spot) {
                           final index = spot.x.toInt();
-                          if (index < 0 || index >= sortedEntries.length) {
+                          if (index < 0 || index >= filteredEntries.length) {
                             return null;
                           }
 
-                          final date = sortedEntries[index].key;
-                          final amount = sortedEntries[index].value;
+                          final date = filteredEntries[index].key;
+                          final amount = filteredEntries[index].value;
 
                           return LineTooltipItem(
                             '${date.day}/${date.month}\n${amount.toStringAsFixed(2)} ${trip.currency}',
@@ -290,14 +268,29 @@ class StatisticsTab extends StatelessWidget {
   }
 
   double _calculateInterval(double maxValue) {
-    if (maxValue <= 0) return 1;
+    if (maxValue <= 0) return 100;
 
-    final magnitude = (maxValue / 5).toString().length - 1;
-    final base = [1, 2, 5][(magnitude % 3)];
-    final multiplier =
-        [1, 10, 100, 1000, 10000, 100000][(magnitude / 3).floor()];
+    // Calcola un intervallo per avere esattamente 4 divisioni
+    if (maxValue <= 200) return 50;   // 0, 50, 100, 150, 200
+    if (maxValue <= 400) return 100;  // 0, 100, 200, 300, 400
+    if (maxValue <= 800) return 200;  // 0, 200, 400, 600, 800
+    if (maxValue <= 1000) return 250; // 0, 250, 500, 750, 1000
+    if (maxValue <= 2000) return 500; // 0, 500, 1000, 1500, 2000
+    
+    // Per valori maggiori, usa 1000
+    return 1000;
+  }
 
-    return (base * multiplier).toDouble();
+  double _calculateMaxY(double maxValue) {
+    if (maxValue <= 0) return 200;
+    
+    final interval = _calculateInterval(maxValue);
+    
+    // Trova il primo multiplo dell'intervallo che supera il valore massimo
+    final numberOfIntervals = (maxValue / interval).ceil();
+    
+    // Usa esattamente quello che serve
+    return numberOfIntervals * interval;
   }
 
   Widget _buildGeneralStats(BuildContext context, AppLocalizations loc) {
@@ -372,5 +365,22 @@ class StatisticsTab extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  double _calculateChartWidth(BuildContext context, int numberOfDays) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    const minDaysVisible = 15;
+    const padding = 32.0; // Padding laterale del SingleChildScrollView
+    
+    final availableWidth = screenWidth - padding;
+    
+    if (numberOfDays <= minDaysVisible) {
+      // Se ci sono 15 giorni o meno, usa tutta la larghezza disponibile
+      return availableWidth;
+    } else {
+      // Se ci sono più di 15 giorni, calcola la larghezza per mostrare esattamente 15 giorni inizialmente
+      final widthPerDay = availableWidth / minDaysVisible;
+      return widthPerDay * numberOfDays;
+    }
   }
 }

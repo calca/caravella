@@ -8,14 +8,14 @@ import '../state/locale_notifier.dart';
 import '../widgets/caravella_app_bar.dart';
 import '../widgets/currency_display.dart';
 
-class HistoryPage extends StatefulWidget {
-  const HistoryPage({super.key});
+class TripsHistoryPage extends StatefulWidget {
+  const TripsHistoryPage({super.key});
 
   @override
-  State<HistoryPage> createState() => _HistoryPageState();
+  State<TripsHistoryPage> createState() => _TripsHistoryPageState();
 }
 
-class _HistoryPageState extends State<HistoryPage> {
+class _TripsHistoryPageState extends State<TripsHistoryPage> {
   List<Trip> _allTrips = [];
   List<Trip> _filteredTrips = [];
   String _periodFilter = 'all';

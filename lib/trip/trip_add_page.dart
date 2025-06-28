@@ -6,16 +6,16 @@ import '../state/locale_notifier.dart';
 import '../widgets/currency_selector.dart';
 import '../widgets/caravella_app_bar.dart';
 
-class AddTripPage extends StatefulWidget {
+class TripAddPage extends StatefulWidget {
   final Trip? trip;
   final VoidCallback? onTripDeleted;
-  const AddTripPage({super.key, this.trip, this.onTripDeleted});
+  const TripAddPage({super.key, this.trip, this.onTripDeleted});
 
   @override
-  State<AddTripPage> createState() => _AddTripPageState();
+  State<TripAddPage> createState() => _TripAddPageState();
 }
 
-class _AddTripPageState extends State<AddTripPage> {
+class _TripAddPageState extends State<TripAddPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final List<String> _participants = [];
@@ -606,9 +606,10 @@ class _AddTripPageState extends State<AddTripPage> {
                     ),
                     foregroundColor: Theme.of(context).colorScheme.onPrimary,
                     backgroundColor: Theme.of(context).colorScheme.primary,
-                    textStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
+                    textStyle:
+                        Theme.of(context).textTheme.titleMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                            ),
                   ),
                   child: Text(loc.get('save')),
                 ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../app_localizations.dart';
-import '../../trip/add_trip_page.dart';
+import '../../trip/trip_add_page.dart';
 import '../../widgets/caravella_bottom_bar.dart';
 import 'welcome_card.dart';
 import '../../data/trip.dart';
@@ -34,7 +34,7 @@ class WelcomeSection extends StatelessWidget {
                     onAddTrip: () async {
                       final result = await Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => AddTripPage(),
+                          builder: (context) => TripAddPage(),
                         ),
                       );
                       if (result == true && onTripAdded != null) onTripAdded!();
