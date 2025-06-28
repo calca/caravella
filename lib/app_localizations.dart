@@ -108,6 +108,9 @@ class AppLocalizations {
       'total_expenses': 'Total expenses',
       'average_expense': 'Average expense',
       'highest_expense': 'Highest expense',
+      'settlement': 'Settlement',
+      'all_balanced': 'All accounts are balanced!',
+      'owes_to': '{from} owes {to}',
     },
     'it': {
       'app_title': 'Caravella',
@@ -213,6 +216,9 @@ class AppLocalizations {
       'total_expenses': 'Totale spese',
       'average_expense': 'Spesa media',
       'highest_expense': 'Spesa più alta',
+      'settlement': 'Pareggia',
+      'all_balanced': 'Tutti i conti sono pari!',
+      'owes_to': '{from} deve dare a {to}',
     },
   };
 

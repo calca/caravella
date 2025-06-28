@@ -18,7 +18,7 @@ class CategoriesPieChart extends StatelessWidget {
   Widget build(BuildContext context) {
     // Calcola i totali per categoria
     final Map<String, double> categoryTotals = {};
-    
+
     // Aggiungi le categorie definite
     for (final category in trip.categories) {
       final total = trip.expenses
@@ -31,9 +31,10 @@ class CategoriesPieChart extends StatelessWidget {
 
     // Aggiungi le spese non categorizzate
     final uncategorizedTotal = trip.expenses
-        .where((e) => e.category.isEmpty || !trip.categories.contains(e.category))
+        .where(
+            (e) => e.category.isEmpty || !trip.categories.contains(e.category))
         .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
-    
+
     if (uncategorizedTotal > 0) {
       categoryTotals[loc.get('uncategorized')] = uncategorizedTotal;
     }
@@ -70,7 +71,7 @@ class CategoriesPieChart extends StatelessWidget {
               ),
         ),
         const SizedBox(height: 16),
-        
+
         // Grafico a torta
         SizedBox(
           height: 200,
@@ -82,8 +83,10 @@ class CategoriesPieChart extends StatelessWidget {
               sections: sortedEntries.asMap().entries.map((entry) {
                 final index = entry.key;
                 final categoryEntry = entry.value;
-                final percentage = (categoryEntry.value / categoryTotals.values.reduce((a, b) => a + b)) * 100;
-                
+                final percentage = (categoryEntry.value /
+                        categoryTotals.values.reduce((a, b) => a + b)) *
+                    100;
+
                 return PieChartSectionData(
                   color: colors[index % colors.length],
                   value: categoryEntry.value,
@@ -106,9 +109,9 @@ class CategoriesPieChart extends StatelessWidget {
             ),
           ),
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Leggenda sotto il grafico
         Wrap(
           spacing: 16,
@@ -116,7 +119,7 @@ class CategoriesPieChart extends StatelessWidget {
           children: sortedEntries.asMap().entries.map((entry) {
             final index = entry.key;
             final categoryEntry = entry.value;
-            
+
             return Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -132,8 +135,8 @@ class CategoriesPieChart extends StatelessWidget {
                 Text(
                   categoryEntry.key,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
+                        fontWeight: FontWeight.w500,
+                      ),
                 ),
                 const SizedBox(width: 4),
                 CurrencyDisplay(
