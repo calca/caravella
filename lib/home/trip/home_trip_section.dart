@@ -24,15 +24,16 @@ class HomeTripSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    final dynamicTopOffset = (screenHeight * 0.35)
-        .clamp(220.0, 320.0); // 35% dell'altezza schermo, min 220px, max 320px
+    final isSmallScreen = screenHeight < 700;
+    final isMediumScreen = screenHeight >= 700 && screenHeight < 900;
 
     return Expanded(
       child: Stack(
         fit: StackFit.expand,
         children: [
           const HomeBackground(),
-          Column(
+          Flex(
+            direction: Axis.vertical,
             children: [
               // Zen mode toggle button - sempre visibile
               Padding(
@@ -60,53 +61,12 @@ class HomeTripSection extends StatelessWidget {
                 ),
               ),
 
-              // Area principale con animazione di scivolamento fluida
+              // Area principale con layout flessibile
               Expanded(
-                child: Stack(
-                  children: [
-                    // Card principale che scivola verso il centro
-                    AnimatedAlign(
-                      duration: const Duration(milliseconds: 600),
-                      curve: Curves.easeOutCubic,
-                      alignment:
-                          zenMode ? Alignment.center : Alignment.topCenter,
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 600),
-                        curve: Curves.easeOutCubic,
-                        margin: EdgeInsets.only(
-                          left: zenMode ? 24 : 8,
-                          right: zenMode ? 24 : 8,
-                          top: zenMode ? 0 : 16, // Maggiore spazio dall'alto
-                          bottom: zenMode ? 0 : 24, // Maggiore spazio dal basso
-                        ),
-                        child: IntrinsicHeight(
-                          child: HomeTripCard(trip: trip),
-                        ),
-                      ),
-                    ),
-
-                    // Cards area che scivola verso il basso quando zen mode
-                    AnimatedPositioned(
-                      duration: const Duration(milliseconds: 600),
-                      curve: Curves.easeOutCubic,
-                      top: zenMode
-                          ? screenHeight
-                          : dynamicTopOffset, // Spazio dinamico basato sul device
-                      left: 8,
-                      right: 8,
-                      bottom: zenMode ? -200 : 0, // Esce dalla parte inferiore
-                      child: AnimatedOpacity(
-                        duration: const Duration(milliseconds: 400),
-                        opacity: zenMode ? 0.0 : 1.0,
-                        child: HomeTripCards(
-                          currentTrip: trip,
-                          loc: loc,
-                          onTripAdded: onTripAdded,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                flex: 1,
+                child: zenMode
+                    ? _buildZenModeLayout()
+                    : _buildNormalModeLayout(isSmallScreen, isMediumScreen),
               ),
 
               // Bottom bar
@@ -125,6 +85,85 @@ class HomeTripSection extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildZenModeLayout() {
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 600),
+      transitionBuilder: (child, animation) {
+        return SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(0, 0.5),
+            end: Offset.zero,
+          ).animate(CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeOutCubic,
+          )),
+          child: FadeTransition(
+            opacity: animation,
+            child: child,
+          ),
+        );
+      },
+      child: Center(
+        key: const ValueKey('zen-card'),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+          child: HomeTripCard(trip: trip),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNormalModeLayout(bool isSmallScreen, bool isMediumScreen) {
+    return Flex(
+      direction: Axis.vertical,
+      children: [
+        // Header con hide animation
+        AnimatedOpacity(
+          duration: const Duration(milliseconds: 300),
+          opacity: zenMode ? 0.0 : 1.0,
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 8,
+              vertical: isSmallScreen ? 8 : 12,
+            ),
+            child: HomeTripCard(trip: trip),
+          ),
+        ),
+
+        // Spazio flessibile tra header e cards
+        Flexible(
+          flex: 0,
+          child:
+              SizedBox(height: isSmallScreen ? 8 : (isMediumScreen ? 16 : 24)),
+        ),
+
+        // Cards area con flex controllato
+        Expanded(
+          flex: isSmallScreen ? 3 : 4, // Più spazio per le cards
+          child: AnimatedOpacity(
+            duration: const Duration(milliseconds: 400),
+            opacity: zenMode ? 0.0 : 1.0,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: HomeTripCards(
+                currentTrip: trip,
+                loc: loc,
+                onTripAdded: onTripAdded,
+              ),
+            ),
+          ),
+        ),
+
+        // Spazio inferiore flessibile
+        Flexible(
+          flex: 0,
+          child:
+              SizedBox(height: isSmallScreen ? 8 : (isMediumScreen ? 12 : 16)),
+        ),
+      ],
     );
   }
 }
