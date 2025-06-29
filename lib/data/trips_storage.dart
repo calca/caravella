@@ -52,4 +52,26 @@ class TripsStorage {
       return null;
     }
   }
+
+  /// Restituisce tutti i viaggi validi per una data specifica
+  /// (dove la data è compresa tra startDate e endDate inclusi)
+  /// ordinati per startDate (dal più recente)
+  static Future<List<Trip>> currentTrips(DateTime date) async {
+    final trips = await readTrips();
+    final validTrips = trips.where((trip) {
+      final startDate = DateTime(
+          trip.startDate.year, trip.startDate.month, trip.startDate.day);
+      final endDate =
+          DateTime(trip.endDate.year, trip.endDate.month, trip.endDate.day);
+      final checkDate = DateTime(date.year, date.month, date.day);
+
+      return (checkDate.isAfter(startDate) ||
+              checkDate.isAtSameMomentAs(startDate)) &&
+          (checkDate.isBefore(endDate) || checkDate.isAtSameMomentAs(endDate));
+    }).toList();
+
+    // Ordina per startDate (dal più recente al più vecchio)
+    validTrips.sort((a, b) => b.startDate.compareTo(a.startDate));
+    return validTrips;
+  }
 }

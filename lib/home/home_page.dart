@@ -63,12 +63,10 @@ class _HomePageState extends State<HomePage> with RouteAware {
     setState(() {
       _loading = true;
     });
-    final trips = await TripsStorage.readTrips();
+    final trips = await TripsStorage.currentTrips(DateTime.now());
     if (!mounted) return;
     setState(() {
-      _currentTrip = trips.isNotEmpty
-          ? (trips..sort((a, b) => b.startDate.compareTo(a.startDate))).first
-          : null;
+      _currentTrip = trips.isNotEmpty ? trips.first : null;
       _loading = false;
     });
   }
