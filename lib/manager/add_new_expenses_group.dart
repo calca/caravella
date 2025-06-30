@@ -253,12 +253,12 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
             key: _formKey,
             child: ListView(
               children: [
-                // Titolo viaggio
+                // Nome gruppo
                 TextFormField(
                   controller: _titleController,
                   style: Theme.of(context).textTheme.displayMedium?.copyWith(),
                   decoration: InputDecoration(
-                    labelText: loc.get('trip_title'),
+                    labelText: loc.get('group_name'),
                     labelStyle: Theme.of(context).textTheme.titleMedium,
                   ),
                   validator: (v) =>
