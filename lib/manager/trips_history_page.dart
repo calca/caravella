@@ -3,7 +3,7 @@ import '../data/expense_group.dart';
 import '../../data/expense_group_storage.dart';
 import 'detail_page/trip_detail_page.dart';
 import '../app_localizations.dart';
-import 'trip_add_page.dart';
+import 'add_new_expenses_group.dart';
 import '../state/locale_notifier.dart';
 import '../widgets/caravella_app_bar.dart';
 import '../widgets/currency_display.dart';
@@ -145,7 +145,7 @@ class _TripsHistoryPageState extends State<TripsHistoryPage> {
   void _navigateAndEditTrip(ExpenseGroup trip) async {
     final result = await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => TripAddPage(trip: trip),
+        builder: (context) => AddNewExpensesGroupPage(trip: trip),
       ),
     );
     if (!mounted) return;
@@ -170,7 +170,7 @@ class _TripsHistoryPageState extends State<TripsHistoryPage> {
         onPressed: () async {
           final result = await Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => TripAddPage(),
+              builder: (context) => AddNewExpensesGroupPage(),
             ),
           );
           if (result == true) {
@@ -240,7 +240,7 @@ class _TripsHistoryPageState extends State<TripsHistoryPage> {
                                               await Navigator.of(context).push(
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  TripAddPage(),
+                                                  AddNewExpensesGroupPage(),
                                             ),
                                           );
                                           if (result == true) {

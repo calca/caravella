@@ -3,7 +3,7 @@ import '../../data/expense_details.dart';
 import '../../data/expense_group.dart';
 import '../../expense/expense_edit_page.dart';
 import '../../data/expense_group_storage.dart';
-import '../trip_add_page.dart';
+import '../add_new_expenses_group.dart';
 import '../../app_localizations.dart';
 import '../../state/locale_notifier.dart';
 import 'tabs/expenses_tab.dart';
@@ -92,7 +92,7 @@ class _TripDetailPageState extends State<TripDetailPage> {
             onPressed: () async {
               final result = await Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => TripAddPage(
+                  builder: (context) => AddNewExpensesGroupPage(
                       trip: trip,
                       onTripDeleted: () async {
                         await _loadTrip();

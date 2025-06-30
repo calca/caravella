@@ -6,16 +6,17 @@ import '../state/locale_notifier.dart';
 import '../widgets/currency_selector.dart';
 import '../widgets/caravella_app_bar.dart';
 
-class TripAddPage extends StatefulWidget {
+class AddNewExpensesGroupPage extends StatefulWidget {
   final ExpenseGroup? trip;
   final VoidCallback? onTripDeleted;
-  const TripAddPage({super.key, this.trip, this.onTripDeleted});
+  const AddNewExpensesGroupPage({super.key, this.trip, this.onTripDeleted});
 
   @override
-  State<TripAddPage> createState() => _TripAddPageState();
+  State<AddNewExpensesGroupPage> createState() =>
+      _AddNewExpensesGroupPageState();
 }
 
-class _TripAddPageState extends State<TripAddPage> {
+class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final List<String> _participants = [];
@@ -101,23 +102,31 @@ class _TripAddPageState extends State<TripAddPage> {
     setState(() {
       _dateError = null;
     });
-    if (!_formKey.currentState!.validate() ||
-        _startDate == null ||
-        _endDate == null) {
-      if (_startDate == null || _endDate == null) {
-        setState(() {
-          _dateError = loc.get('select_both_dates');
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(loc.get('select_both_dates')),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+
+    // Validazione del form (senza le date)
+    if (!_formKey.currentState!.validate()) {
       return;
     }
-    if (_endDate!.isBefore(_startDate!)) {
+
+    // Validazione delle date solo se entrambe sono state selezionate
+    if ((_startDate != null && _endDate == null) ||
+        (_startDate == null && _endDate != null)) {
+      setState(() {
+        _dateError = loc.get('select_both_dates');
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(loc.get('select_both_dates')),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    // Se entrambe le date sono specificate, controlla che l'ordine sia corretto
+    if (_startDate != null &&
+        _endDate != null &&
+        _endDate!.isBefore(_startDate!)) {
       setState(() {
         _dateError = loc.get('end_date_after_start');
       });
@@ -129,6 +138,7 @@ class _TripAddPageState extends State<TripAddPage> {
       );
       return;
     }
+
     if (_participants.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -262,7 +272,7 @@ class _TripAddPageState extends State<TripAddPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(loc.get('from'),
+                          Text(loc.get('start_date_optional'),
                               style: Theme.of(context).textTheme.bodySmall),
                           TextButton.icon(
                             icon: const Icon(Icons.calendar_today, size: 18),
@@ -279,7 +289,7 @@ class _TripAddPageState extends State<TripAddPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(loc.get('to'),
+                          Text(loc.get('end_date_optional'),
                               style: Theme.of(context).textTheme.bodySmall),
                           TextButton.icon(
                             icon: const Icon(Icons.calendar_today, size: 18),

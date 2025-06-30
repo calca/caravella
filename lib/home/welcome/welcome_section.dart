@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../app_localizations.dart';
-import '../../manager/trip_add_page.dart';
+import '../../manager/add_new_expenses_group.dart';
 import '../../state/locale_notifier.dart';
 import '../../settings/settings_page.dart';
 
@@ -88,7 +88,8 @@ class WelcomeSection extends StatelessWidget {
                             onTap: () async {
                               final result = await Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => TripAddPage(),
+                                  builder: (context) =>
+                                      AddNewExpensesGroupPage(),
                                 ),
                               );
                               if (result == true && onTripAdded != null) {
