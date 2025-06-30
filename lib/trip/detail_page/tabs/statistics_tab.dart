@@ -78,15 +78,16 @@ class StatisticsTab extends StatelessWidget {
     // Se non ci sono date definite, usa solo le date delle spese
     if (trip.startDate == null || trip.endDate == null) {
       for (final expense in trip.expenses) {
-        final date = DateTime(expense.date.year, expense.date.month, expense.date.day);
+        final date =
+            DateTime(expense.date.year, expense.date.month, expense.date.day);
         stats[date] = (stats[date] ?? 0.0) + (expense.amount ?? 0.0);
       }
       return stats;
     }
 
     // Inizializza tutti i giorni del viaggio con 0
-    DateTime currentDate =
-        DateTime(trip.startDate!.year, trip.startDate!.month, trip.startDate!.day);
+    DateTime currentDate = DateTime(
+        trip.startDate!.year, trip.startDate!.month, trip.startDate!.day);
     final endDate =
         DateTime(trip.endDate!.year, trip.endDate!.month, trip.endDate!.day);
 

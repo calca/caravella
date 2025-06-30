@@ -134,10 +134,10 @@ class ExpenseGroupStorage {
   static Future<List<ExpenseGroup>> getArchivedGroups() async {
     final trips = await _readAllGroups();
     final archivedTrips = trips.where((trip) => trip.archived).toList();
-    
+
     // Ordina per timestamp di creazione (dal più recente al più vecchio)
     archivedTrips.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-    
+
     return archivedTrips;
   }
 
@@ -155,10 +155,10 @@ class ExpenseGroupStorage {
   /// Restituisce TUTTI i gruppi (inclusi quelli archiviati) ordinati per timestamp di creazione (dal più recente)
   static Future<List<ExpenseGroup>> getAllGroups() async {
     final trips = await _readAllGroups();
-    
+
     // Ordina per timestamp di creazione (dal più recente al più vecchio)
     trips.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-    
+
     return trips;
   }
 }
