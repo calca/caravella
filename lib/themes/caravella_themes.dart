@@ -7,7 +7,7 @@ class CaravellaThemes {
   static const Color _primaryLight = Color(0xFFE2E8F0);
   static const Color _surfaceLight = Color(0xFFFAFAFA);
   static const Color _surfaceDark = Color(0xFF1A202C);
-  static const Color _backgroundLight = Color(0xFFF7FAFC);
+  static const Color _backgroundLight = Color(0xFFF5F5F5); // Nuovo background grigio chiaro
   static const Color _backgroundDark = Color(0xFF1A202C);
   static const Color _errorRed = Color(0xFFE53E3E);
 
