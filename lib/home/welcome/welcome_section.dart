@@ -17,7 +17,7 @@ class WelcomeSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final localeNotifier = LocaleNotifier.of(context);
     final loc = AppLocalizations(localeNotifier?.locale ?? 'it');
-    return Container(
+    return SizedBox(
       height: MediaQuery.of(context).size.height -
           120, // Altezza fissa meno spazio per header/padding
       child: Stack(
@@ -25,7 +25,7 @@ class WelcomeSection extends StatelessWidget {
           const HomeBackground(),
           Column(
             children: [
-              Container(
+              SizedBox(
                 height: MediaQuery.of(context).size.height -
                     200, // Altezza fissa per evitare conflitti con Expanded
                 child: Center(
@@ -40,8 +40,9 @@ class WelcomeSection extends StatelessWidget {
                             builder: (context) => TripAddPage(),
                           ),
                         );
-                        if (result == true && onTripAdded != null)
+                        if (result == true && onTripAdded != null) {
                           onTripAdded!();
+                        }
                       },
                       opacity: 0.5,
                     ),

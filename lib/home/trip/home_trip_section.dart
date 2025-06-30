@@ -3,7 +3,6 @@ import '../../app_localizations.dart';
 import '../../data/trip.dart';
 import 'home_trip_header.dart';
 import '../../widgets/caravella_bottom_bar.dart';
-import '../widgets/home_background.dart';
 
 class HomeTripSection extends StatelessWidget {
   final Trip trip;
@@ -23,13 +22,12 @@ class HomeTripSection extends StatelessWidget {
     final isSmallScreen = screenHeight < 700;
     final isMediumScreen = screenHeight >= 700 && screenHeight < 900;
 
-    return Container(
+    return SizedBox(
       height:
           screenHeight * 0.85, // Manteniamo l'altezza del container principale
       child: Stack(
         fit: StackFit.expand,
         children: [
-          const HomeBackground(),
           SingleChildScrollView(
             // Rendiamo l'intera colonna scrollabile
             child: Column(
