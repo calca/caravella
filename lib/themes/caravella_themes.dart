@@ -96,7 +96,8 @@ class CaravellaThemes {
         ),
     useMaterial3: true,
   ).copyWith(
-    scaffoldBackgroundColor: const Color(0xFF65CCED), // Background azzurro anche per dark mode
+    scaffoldBackgroundColor:
+        const Color(0xFF65CCED), // Background azzurro anche per dark mode
     appBarTheme: const AppBarTheme(
       backgroundColor: Color(0xFF65CCED), // AppBar azzurro anche per dark mode
       foregroundColor: Color(0xFF2D3748), // Testo grigio scuro per contrasto

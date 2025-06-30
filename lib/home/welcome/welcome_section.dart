@@ -17,76 +17,87 @@ class WelcomeSection extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
-    return Container(
+    return SizedBox(
       width: screenWidth,
-      constraints: BoxConstraints(
-        minHeight: screenHeight - 120,
-      ),
-      decoration: BoxDecoration(
-        image: const DecorationImage(
-          image: AssetImage('assets/images/home/welcome/welcome-logo.png'),
-          fit: BoxFit.contain,
-          alignment: Alignment.center,
+      height: screenHeight, // Occupa tutta l'altezza dello schermo
+      child: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/home/welcome/welcome-logo.png'),
+            fit: BoxFit.contain,
+            alignment: Alignment.center,
+          ),
         ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // Title Section
-            Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                loc.get('welcome_v3_title'),
-                style: theme.textTheme.headlineLarge?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 36,
-                  height: 1.2,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 48),
+          child: Column(
+            children: [
+              // Title Section - occupando 1/3 dello spazio verticale
+              Expanded(
+                flex: 2,
+                child: Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Text(
+                    loc.get('welcome_v3_title'),
+                    style: theme.textTheme.headlineLarge?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 36,
+                      height: 1.2,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
                 ),
-                textAlign: TextAlign.left,
               ),
-            ),
 
-            // Action Section
-            Align(
-              alignment: Alignment.centerRight,
-              child: Container(
-                width: 120,
-                height: 120,
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.onSurface,
-                  shape: BoxShape.circle,
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(60),
-                    onTap: () async {
-                      final result = await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => TripAddPage(),
-                        ),
-                      );
-                      if (result == true && onTripAdded != null) {
-                        onTripAdded!();
-                      }
-                    },
-                    child: Center(
-                      child: Text(
-                        loc.get('welcome_v3_cta'),
-                        style: theme.textTheme.titleLarge?.copyWith(
-                          color: theme.colorScheme.surface,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18,
+              // Spacer centrale - occupando 1/3 dello spazio (dove sta il logo)
+              const Expanded(
+                flex: 2,
+                child: SizedBox(), // Spazio per il logo di background
+              ),
+
+              // Action Section - occupando 1/3 dello spazio
+              Expanded(
+                flex: 2,
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: Container(
+                    width: 120,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.onSurface,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(60),
+                        onTap: () async {
+                          final result = await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => TripAddPage(),
+                            ),
+                          );
+                          if (result == true && onTripAdded != null) {
+                            onTripAdded!();
+                          }
+                        },
+                        child: Center(
+                          child: Text(
+                            loc.get('welcome_v3_cta'),
+                            style: theme.textTheme.titleLarge?.copyWith(
+                              color: theme.colorScheme.surface,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 18,
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
