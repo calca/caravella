@@ -57,13 +57,19 @@ class CaravellaThemes {
   // TextTheme base condiviso
   static TextTheme _createTextTheme(Color textColor) {
     return TextTheme(
+      headlineLarge: TextStyle(
+          fontWeight: FontWeight.w700,
+          color: textColor), // Bold per titoli principali
       bodyLarge: TextStyle(fontWeight: FontWeight.w300, color: textColor),
       bodyMedium: TextStyle(fontWeight: FontWeight.w300, color: textColor),
       bodySmall: TextStyle(fontWeight: FontWeight.w300, color: textColor),
-      titleLarge: TextStyle(fontWeight: FontWeight.w300, color: textColor),
+      titleLarge: TextStyle(
+          fontWeight: FontWeight.w600,
+          color: textColor), // Semi-bold per pulsanti
       titleMedium: TextStyle(fontWeight: FontWeight.w300, color: textColor),
       titleSmall: TextStyle(fontWeight: FontWeight.w300, color: textColor),
-      labelLarge: TextStyle(fontWeight: FontWeight.w300, color: textColor),
+      labelLarge: TextStyle(
+          fontWeight: FontWeight.w600, color: textColor), // Semi-bold per label
       labelMedium: TextStyle(fontWeight: FontWeight.w300, color: textColor),
       labelSmall: TextStyle(fontWeight: FontWeight.w300, color: textColor),
     ).apply(fontFamily: 'Montserrat');

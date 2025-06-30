@@ -52,7 +52,6 @@ class WelcomeSection extends StatelessWidget {
                   child: Text(
                     loc.get('welcome_v3_title'),
                     style: theme.textTheme.headlineLarge?.copyWith(
-                      fontWeight: FontWeight.w700,
                       fontSize: 36,
                       height: 1.2,
                     ),
@@ -101,8 +100,6 @@ class WelcomeSection extends StatelessWidget {
                                 loc.get('welcome_v3_cta'),
                                 style: theme.textTheme.titleLarge?.copyWith(
                                   color: theme.colorScheme.surface,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 18,
                                 ),
                               ),
                             ),
@@ -126,8 +123,6 @@ class WelcomeSection extends StatelessWidget {
                           loc.get('settings_tab').toUpperCase(),
                           style: theme.textTheme.labelLarge?.copyWith(
                             color: theme.colorScheme.onSurface,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
                             letterSpacing: 1.2,
                           ),
                         ),
