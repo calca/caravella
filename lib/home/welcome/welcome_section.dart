@@ -17,45 +17,50 @@ class WelcomeSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final localeNotifier = LocaleNotifier.of(context);
     final loc = AppLocalizations(localeNotifier?.locale ?? 'it');
-    return Expanded(
-        child: Stack(
-      fit: StackFit.expand,
-      children: [
-        const HomeBackground(),
-        Column(
-          children: [
-            Expanded(
-              child: Center(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                  child: WelcomeCard(
-                    loc: loc,
-                    onAddTrip: () async {
-                      final result = await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => TripAddPage(),
-                        ),
-                      );
-                      if (result == true && onTripAdded != null) onTripAdded!();
-                    },
-                    opacity: 0.5,
+    return Container(
+      height: MediaQuery.of(context).size.height -
+          120, // Altezza fissa meno spazio per header/padding
+      child: Stack(
+        children: [
+          const HomeBackground(),
+          Column(
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height -
+                    200, // Altezza fissa per evitare conflitti con Expanded
+                child: Center(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                    child: WelcomeCard(
+                      loc: loc,
+                      onAddTrip: () async {
+                        final result = await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => TripAddPage(),
+                          ),
+                        );
+                        if (result == true && onTripAdded != null)
+                          onTripAdded!();
+                      },
+                      opacity: 0.5,
+                    ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 2),
-              child: CaravellaBottomBar(
-                loc: loc,
-                onTripAdded: onTripAdded ?? () {},
-                currentTrip: Trip.empty(),
-                showAddButton: false,
+              Padding(
+                padding: const EdgeInsets.only(bottom: 2),
+                child: CaravellaBottomBar(
+                  loc: loc,
+                  onTripAdded: onTripAdded ?? () {},
+                  currentTrip: Trip.empty(),
+                  showAddButton: false,
+                ),
               ),
-            ),
-          ],
-        ),
-      ],
-    ));
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }

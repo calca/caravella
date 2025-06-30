@@ -72,6 +72,20 @@ class _TripDetailPageState extends State<TripDetailPage> {
         backgroundColor: colorScheme.surfaceContainerHighest,
         actions: [
           IconButton(
+            icon: Icon(
+              trip.pinned ? Icons.push_pin : Icons.push_pin_outlined,
+            ),
+            tooltip: trip.pinned ? 'Rimuovi pin' : 'Aggiungi pin',
+            onPressed: () async {
+              if (trip.pinned) {
+                await TripsStorage.removePinnedTrip(trip.id);
+              } else {
+                await TripsStorage.setPinnedTrip(trip.id);
+              }
+              await _refreshTrip();
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.edit),
             tooltip: loc.get('edit'),
             onPressed: () async {

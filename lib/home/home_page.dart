@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../app_localizations.dart';
 import '../data/trip.dart';
 import '../data/trips_storage.dart';
@@ -7,6 +6,7 @@ import '../state/locale_notifier.dart';
 import '../../main.dart';
 import 'welcome/welcome_section.dart';
 import 'trip/home_trip_section.dart';
+import 'pinned/pinned_trip_section.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,13 +17,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with RouteAware {
   Trip? _currentTrip;
+  Trip? _pinnedTrip;
   bool _loading = true;
-  bool _zenMode = false;
 
   @override
   void initState() {
     super.initState();
-    _loadZenMode();
     WidgetsBinding.instance.addPostFrameCallback((_) => _loadLocaleAndTrip());
   }
 
@@ -44,29 +43,16 @@ class _HomePageState extends State<HomePage> with RouteAware {
     _refresh();
   }
 
-  Future<void> _loadZenMode() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _zenMode = prefs.getBool('zenMode') ?? false;
-    });
-  }
-
-  Future<void> _toggleZenMode(bool value) async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _zenMode = value;
-    });
-    await prefs.setBool('zenMode', value);
-  }
-
   Future<void> _loadLocaleAndTrip() async {
     setState(() {
       _loading = true;
     });
     final trips = await TripsStorage.currentTrips(DateTime.now());
+    final pinnedTrip = await TripsStorage.getPinnedTrip();
     if (!mounted) return;
     setState(() {
       _currentTrip = trips.isNotEmpty ? trips.first : null;
+      _pinnedTrip = pinnedTrip;
       _loading = false;
     });
   }
@@ -81,19 +67,28 @@ class _HomePageState extends State<HomePage> with RouteAware {
       body: SafeArea(
         child: _loading
             ? const Center(child: CircularProgressIndicator())
-            : Column(
-                children: [
-                  if (_currentTrip == null)
-                    WelcomeSection(onTripAdded: _refresh)
-                  else
-                    HomeTripSection(
-                      trip: _currentTrip!,
-                      loc: loc,
-                      onTripAdded: _refresh,
-                      zenMode: _zenMode,
-                      onZenModeChanged: _toggleZenMode,
-                    ),
-                ],
+            : SingleChildScrollView(
+                child: Column(
+                  children: [
+                    // Sezione viaggio pinnato (se presente)
+                    if (_pinnedTrip != null)
+                      PinnedTripSection(
+                        pinnedTrip: _pinnedTrip!,
+                        loc: loc,
+                        onTripAdded: _refresh,
+                      ),
+
+                    // Sezione principale
+                    if (_currentTrip == null)
+                      WelcomeSection(onTripAdded: _refresh)
+                    else
+                      HomeTripSection(
+                        trip: _currentTrip!,
+                        loc: loc,
+                        onTripAdded: _refresh,
+                      ),
+                  ],
+                ),
               ),
       ),
     );

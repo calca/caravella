@@ -11,6 +11,7 @@ class Trip {
   final String currency; // Nuovo campo
   final List<String> categories;
   final DateTime timestamp; // Nuovo campo timestamp
+  final bool pinned; // Nuovo campo per pinnare il viaggio
 
   Trip({
     required this.title,
@@ -22,6 +23,7 @@ class Trip {
     this.categories = const [], // Default empty list
     DateTime? timestamp, // opzionale, default a now
     String? id, // opzionale, generato se mancante
+    this.pinned = false, // Default a false
   })  : timestamp = timestamp ?? DateTime.now(),
         id = id ?? const Uuid().v4();
 
@@ -43,6 +45,7 @@ class Trip {
       timestamp: json['timestamp'] != null
           ? DateTime.parse(json['timestamp'])
           : DateTime.now(),
+      pinned: json['pinned'] ?? false, // Legge il valore pinnato
     );
   }
 
@@ -56,7 +59,34 @@ class Trip {
         'currency': currency,
         'categories': categories,
         'timestamp': timestamp.toIso8601String(),
+        'pinned': pinned, // Salva il valore pinnato
       };
+
+  Trip copyWith({
+    String? id,
+    String? title,
+    List<Expense>? expenses,
+    List<String>? participants,
+    DateTime? startDate,
+    DateTime? endDate,
+    String? currency,
+    List<String>? categories,
+    DateTime? timestamp,
+    bool? pinned,
+  }) {
+    return Trip(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      expenses: expenses ?? this.expenses,
+      participants: participants ?? this.participants,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      currency: currency ?? this.currency,
+      categories: categories ?? this.categories,
+      timestamp: timestamp ?? this.timestamp,
+      pinned: pinned ?? this.pinned,
+    );
+  }
 
   static Trip empty() {
     return Trip(
@@ -69,6 +99,7 @@ class Trip {
       categories: const [],
       timestamp: DateTime.now(),
       id: 'empty',
+      pinned: false,
     );
   }
 }

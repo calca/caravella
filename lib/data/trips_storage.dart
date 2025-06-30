@@ -33,6 +33,28 @@ class TripsStorage {
     await file.writeAsString(jsonEncode(jsonList));
   }
 
+  static Future<void> saveTrip(Trip trip) async {
+    final trips = await readTrips();
+    final index = trips.indexWhere((t) => t.id == trip.id);
+
+    if (trip.pinned) {
+      // Se il viaggio è pinnato, rimuovi il pin da tutti gli altri
+      for (var i = 0; i < trips.length; i++) {
+        if (trips[i].id != trip.id && trips[i].pinned) {
+          trips[i] = trips[i].copyWith(pinned: false);
+        }
+      }
+    }
+
+    if (index != -1) {
+      trips[index] = trip;
+    } else {
+      trips.add(trip);
+    }
+
+    await writeTrips(trips);
+  }
+
   static Future<Trip?> getTripById(String id) async {
     final trips = await readTrips();
     try {
@@ -73,5 +95,41 @@ class TripsStorage {
     // Ordina per startDate (dal più recente al più vecchio)
     validTrips.sort((a, b) => b.startDate.compareTo(a.startDate));
     return validTrips;
+  }
+
+  /// Imposta un viaggio come pinnato, rimuovendo il pin da tutti gli altri
+  static Future<void> setPinnedTrip(String tripId) async {
+    final trips = await readTrips();
+
+    for (var i = 0; i < trips.length; i++) {
+      if (trips[i].id == tripId) {
+        trips[i] = trips[i].copyWith(pinned: true);
+      } else if (trips[i].pinned) {
+        trips[i] = trips[i].copyWith(pinned: false);
+      }
+    }
+
+    await writeTrips(trips);
+  }
+
+  /// Rimuove il pin da un viaggio
+  static Future<void> removePinnedTrip(String tripId) async {
+    final trips = await readTrips();
+    final index = trips.indexWhere((trip) => trip.id == tripId);
+
+    if (index != -1 && trips[index].pinned) {
+      trips[index] = trips[index].copyWith(pinned: false);
+      await writeTrips(trips);
+    }
+  }
+
+  /// Restituisce il viaggio attualmente pinnato, se esiste
+  static Future<Trip?> getPinnedTrip() async {
+    final trips = await readTrips();
+    try {
+      return trips.firstWhere((trip) => trip.pinned);
+    } catch (_) {
+      return null;
+    }
   }
 }
