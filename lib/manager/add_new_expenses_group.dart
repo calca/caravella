@@ -201,6 +201,31 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
     Future.delayed(const Duration(milliseconds: 10), _unfocusAll);
   }
 
+  Widget _buildSectionCard({required String title, required List<Widget> children}) {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(12.0),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          const SizedBox(height: 16),
+          ...children,
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
@@ -248,387 +273,453 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
           ],
         ),
         body: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(20.0),
           child: Form(
             key: _formKey,
             child: ListView(
               children: [
-                // Nome gruppo
-                TextFormField(
-                  controller: _titleController,
-                  style: Theme.of(context).textTheme.displayMedium?.copyWith(),
-                  decoration: InputDecoration(
-                    labelText: loc.get('group_name'),
-                    labelStyle: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  validator: (v) =>
-                      v == null || v.isEmpty ? loc.get('enter_title') : null,
-                ),
-                const SizedBox(height: 16),
-                // Sezione date compatta
-                Row(
+                // Sezione 1: Informazioni Base
+                _buildSectionCard(
+                  title: loc.get('basic_info'),
                   children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(loc.get('start_date_optional'),
-                              style: Theme.of(context).textTheme.bodySmall),
-                          TextButton.icon(
-                            icon: const Icon(Icons.calendar_today, size: 18),
-                            label: Text(
-                              _startDate == null
-                                  ? loc.get('start_date_not_selected')
-                                  : '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}',
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                            onPressed: () => _pickDate(context, true),
-                          ),
-                        ],
+                    // Nome gruppo
+                    TextFormField(
+                      controller: _titleController,
+                      style: Theme.of(context).textTheme.displayMedium?.copyWith(),
+                      decoration: InputDecoration(
+                        labelText: loc.get('group_name'),
+                        labelStyle: Theme.of(context).textTheme.titleMedium,
                       ),
+                      validator: (v) =>
+                          v == null || v.isEmpty ? loc.get('enter_title') : null,
                     ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(loc.get('end_date_optional'),
-                              style: Theme.of(context).textTheme.bodySmall),
-                          TextButton.icon(
-                            icon: const Icon(Icons.calendar_today, size: 18),
-                            label: Text(
-                              _endDate == null
-                                  ? loc.get('end_date_not_selected')
-                                  : '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}',
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                            onPressed: () => _pickDate(context, false),
+                    const SizedBox(height: 20),
+                    // Sezione date compatta
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(loc.get('start_date_optional'),
+                                  style: Theme.of(context).textTheme.bodySmall),
+                              const SizedBox(height: 4),
+                              TextButton.icon(
+                                icon: const Icon(Icons.calendar_today, size: 18),
+                                label: Text(
+                                  _startDate == null
+                                      ? loc.get('start_date_not_selected')
+                                      : '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}',
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                                onPressed: () => _pickDate(context, true),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(loc.get('end_date_optional'),
+                                  style: Theme.of(context).textTheme.bodySmall),
+                              const SizedBox(height: 4),
+                              TextButton.icon(
+                                icon: const Icon(Icons.calendar_today, size: 18),
+                                label: Text(
+                                  _endDate == null
+                                      ? loc.get('end_date_not_selected')
+                                      : '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}',
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                                onPressed: () => _pickDate(context, false),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
+                    if (_dateError != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          _dateError!,
+                          style: TextStyle(color: Colors.red, fontSize: 13),
+                        ),
+                      ),
                   ],
                 ),
-                if (_dateError != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4.0),
-                    child: Text(
-                      _dateError!,
-                      style: TextStyle(color: Colors.red, fontSize: 13),
-                    ),
-                  ),
-                const SizedBox(height: 16),
-                // Partecipanti
-                Row(
+                const SizedBox(height: 24),
+                
+                // Sezione 2: Partecipanti
+                _buildSectionCard(
+                  title: loc.get('participants'),
                   children: [
-                    Text(loc.get('participants'),
-                        style: Theme.of(context).textTheme.titleMedium),
-                    const Spacer(),
-                    IconButton(
-                      icon: const Icon(Icons.add),
-                      tooltip: loc.get('add_participant'),
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: Text(loc.get('add_participant')),
-                            content: TextField(
-                              controller: _participantController,
-                              autofocus: true,
-                              decoration: InputDecoration(
-                                labelText: loc.get('participant_name'),
-                                hintText: loc.get('participant_name_hint'),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          _participants.isEmpty 
+                            ? loc.get('no_participants')
+                            : '${_participants.length} partecipant${_participants.length == 1 ? 'e' : 'i'}',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: _participants.isEmpty 
+                              ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)
+                              : null,
+                          ),
+                        ),
+                        IconButton.outlined(
+                          icon: const Icon(Icons.add),
+                          tooltip: loc.get('add_participant'),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text(loc.get('add_participant')),
+                                content: TextField(
+                                  controller: _participantController,
+                                  autofocus: true,
+                                  decoration: InputDecoration(
+                                    labelText: loc.get('participant_name'),
+                                    hintText: loc.get('participant_name_hint'),
+                                  ),
+                                  onSubmitted: (val) {
+                                    if (val.trim().isNotEmpty) {
+                                      setState(() {
+                                        _participants.add(val.trim());
+                                        _participantController.clear();
+                                      });
+                                      _closeDialogAndUnfocus();
+                                    }
+                                  },
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => _closeDialogAndUnfocus(),
+                                    child: Text(loc.get('cancel')),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      final val = _participantController.text.trim();
+                                      if (val.isNotEmpty) {
+                                        setState(() {
+                                          _participants.add(val);
+                                          _participantController.clear();
+                                        });
+                                        _closeDialogAndUnfocus();
+                                      }
+                                    },
+                                    child: Text(loc.get('add')),
+                                  ),
+                                ],
                               ),
-                              onSubmitted: (val) {
-                                if (val.trim().isNotEmpty) {
-                                  setState(() {
-                                    _participants.add(val.trim());
-                                    _participantController.clear();
-                                  });
-                                  _closeDialogAndUnfocus();
-                                }
-                              },
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => _closeDialogAndUnfocus(),
-                                child: Text(loc.get('cancel')),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    if (_participants.isNotEmpty) ...[
+                      const SizedBox(height: 12),
+                      ..._participants.asMap().entries.map((entry) {
+                        final i = entry.key;
+                        final p = entry.value;
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0,
+                                    vertical: 8.0,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  child: Text(
+                                    p,
+                                    style: Theme.of(context).textTheme.bodyLarge,
+                                    semanticsLabel: loc.get(
+                                        'participant_name_semantics',
+                                        params: {'name': p}),
+                                  ),
+                                ),
                               ),
-                              TextButton(
+                              const SizedBox(width: 8),
+                              IconButton(
+                                icon: const Icon(Icons.edit_outlined),
+                                tooltip: loc.get('edit_participant'),
                                 onPressed: () {
-                                  final val =
-                                      _participantController.text.trim();
-                                  if (val.isNotEmpty) {
-                                    setState(() {
-                                      _participants.add(val);
-                                      _participantController.clear();
-                                    });
-                                    _closeDialogAndUnfocus();
-                                  }
+                                  final editController = TextEditingController(text: p);
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: Text(loc.get('edit_participant')),
+                                      content: TextField(
+                                        controller: editController,
+                                        autofocus: true,
+                                        decoration: InputDecoration(
+                                          labelText: loc.get('participant_name'),
+                                          hintText: loc.get('participant_name_hint'),
+                                        ),
+                                        onSubmitted: (val) {
+                                          if (val.trim().isNotEmpty) {
+                                            setState(() {
+                                              _participants[i] = val.trim();
+                                            });
+                                            _closeDialogAndUnfocus();
+                                          }
+                                        },
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () => _closeDialogAndUnfocus(),
+                                          child: Text(loc.get('cancel')),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            final val = editController.text.trim();
+                                            if (val.isNotEmpty) {
+                                              setState(() {
+                                                _participants[i] = val;
+                                              });
+                                              _closeDialogAndUnfocus();
+                                            }
+                                          },
+                                          child: Text(loc.get('save')),
+                                        ),
+                                      ],
+                                    ),
+                                  );
                                 },
-                                child: Text(loc.get('add')),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.delete_outline),
+                                tooltip: loc.get('delete_participant'),
+                                onPressed: () {
+                                  setState(() {
+                                    _participants.removeAt(i);
+                                  });
+                                },
                               ),
                             ],
                           ),
                         );
-                      },
-                    ),
+                      }),
+                    ],
                   ],
                 ),
-                const SizedBox(height: 8),
-                if (_participants.isEmpty)
-                  Text(loc.get('no_participants'),
-                      style: Theme.of(context).textTheme.bodySmall),
-                ..._participants.asMap().entries.map((entry) {
-                  final i = entry.key;
-                  final p = entry.value;
-                  return Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 0),
-                          child: Text(p,
-                              style: Theme.of(context).textTheme.bodyLarge,
-                              semanticsLabel: loc.get(
-                                  'participant_name_semantics',
-                                  params: {'name': p})),
-                        ),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.edit),
-                        tooltip: loc.get('edit_participant'),
-                        onPressed: () {
-                          final editController = TextEditingController(text: p);
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: Text(loc.get('edit_participant')),
-                              content: TextField(
-                                controller: editController,
-                                autofocus: true,
-                                decoration: InputDecoration(
-                                  labelText: loc.get('participant_name'),
-                                  hintText: loc.get('participant_name_hint'),
-                                ),
-                                onSubmitted: (val) {
-                                  if (val.trim().isNotEmpty) {
-                                    setState(() {
-                                      _participants[i] = val.trim();
-                                    });
-                                    _closeDialogAndUnfocus();
-                                  }
-                                },
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => _closeDialogAndUnfocus(),
-                                  child: Text(loc.get('cancel')),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    final val = editController.text.trim();
-                                    if (val.isNotEmpty) {
-                                      setState(() {
-                                        _participants[i] = val;
-                                      });
-                                      _closeDialogAndUnfocus();
-                                    }
-                                  },
-                                  child: Text(loc.get('save')),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.delete_outline),
-                        tooltip: loc.get('delete_participant'),
-                        onPressed: () {
-                          setState(() {
-                            _participants.removeAt(i);
-                          });
-                        },
-                      ),
-                    ],
-                  );
-                }),
-                const SizedBox(height: 16),
-                // Categorie
-                Row(
+                const SizedBox(height: 24),
+                
+                // Sezione 3: Categorie
+                _buildSectionCard(
+                  title: loc.get('categories'),
                   children: [
-                    Text(loc.get('categories'),
-                        style: Theme.of(context).textTheme.titleMedium),
-                    const Spacer(),
-                    IconButton(
-                      icon: const Icon(Icons.add),
-                      tooltip: loc.get('add_category'),
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            final TextEditingController categoryController =
-                                TextEditingController();
-                            return AlertDialog(
-                              title: Text(loc.get('add_category')),
-                              content: TextField(
-                                controller: categoryController,
-                                autofocus: true,
-                                decoration: InputDecoration(
-                                  labelText: loc.get('category_name'),
-                                  hintText: loc.get('category_name_hint'),
-                                ),
-                                onSubmitted: (val) {
-                                  if (val.trim().isNotEmpty) {
-                                    setState(() {
-                                      _categories.add(val.trim());
-                                    });
-                                    _closeDialogAndUnfocus();
-                                  }
-                                },
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => _closeDialogAndUnfocus(),
-                                  child: Text(loc.get('cancel')),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    final val = categoryController.text.trim();
-                                    if (val.isNotEmpty) {
-                                      setState(() {
-                                        _categories.add(val);
-                                      });
-                                      _closeDialogAndUnfocus();
-                                    }
-                                  },
-                                  child: Text(loc.get('add')),
-                                ),
-                              ],
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          _categories.isEmpty 
+                            ? loc.get('no_categories')
+                            : '${_categories.length} categori${_categories.length == 1 ? 'a' : 'e'}',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: _categories.isEmpty 
+                              ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)
+                              : null,
+                          ),
+                        ),
+                        IconButton.outlined(
+                          icon: const Icon(Icons.add),
+                          tooltip: loc.get('add_category'),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                final TextEditingController categoryController =
+                                    TextEditingController();
+                                return AlertDialog(
+                                  title: Text(loc.get('add_category')),
+                                  content: TextField(
+                                    controller: categoryController,
+                                    autofocus: true,
+                                    decoration: InputDecoration(
+                                      labelText: loc.get('category_name'),
+                                      hintText: loc.get('category_name_hint'),
+                                    ),
+                                    onSubmitted: (val) {
+                                      if (val.trim().isNotEmpty) {
+                                        setState(() {
+                                          _categories.add(val.trim());
+                                        });
+                                        _closeDialogAndUnfocus();
+                                      }
+                                    },
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => _closeDialogAndUnfocus(),
+                                      child: Text(loc.get('cancel')),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        final val = categoryController.text.trim();
+                                        if (val.isNotEmpty) {
+                                          setState(() {
+                                            _categories.add(val);
+                                          });
+                                          _closeDialogAndUnfocus();
+                                        }
+                                      },
+                                      child: Text(loc.get('add')),
+                                    ),
+                                  ],
+                                );
+                              },
                             );
                           },
-                        );
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                if (_categories.isEmpty)
-                  Text(loc.get('no_categories'),
-                      style: Theme.of(context).textTheme.bodySmall),
-                ..._categories.asMap().entries.map((entry) {
-                  final i = entry.key;
-                  final c = entry.value;
-                  return Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 0),
-                          child: Text(c,
-                              style: Theme.of(context).textTheme.bodyLarge,
-                              semanticsLabel: loc.get('category_name_semantics',
-                                  params: {'name': c})),
                         ),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.edit),
-                        tooltip: loc.get('edit_category'),
-                        onPressed: () {
-                          final editController = TextEditingController(text: c);
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: Text(loc.get('edit_category')),
-                              content: TextField(
-                                controller: editController,
-                                autofocus: true,
-                                decoration: InputDecoration(
-                                  labelText: loc.get('category_name'),
-                                  hintText: loc.get('category_name_hint'),
+                      ],
+                    ),
+                    if (_categories.isNotEmpty) ...[
+                      const SizedBox(height: 12),
+                      ..._categories.asMap().entries.map((entry) {
+                        final i = entry.key;
+                        final c = entry.value;
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0,
+                                    vertical: 8.0,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).colorScheme.secondaryContainer.withValues(alpha: 0.3),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  child: Text(
+                                    c,
+                                    style: Theme.of(context).textTheme.bodyLarge,
+                                    semanticsLabel: loc.get('category_name_semantics',
+                                        params: {'name': c}),
+                                  ),
                                 ),
-                                onSubmitted: (val) {
-                                  if (val.trim().isNotEmpty) {
-                                    setState(() {
-                                      _categories[i] = val.trim();
-                                    });
-                                    _closeDialogAndUnfocus();
-                                  }
+                              ),
+                              const SizedBox(width: 8),
+                              IconButton(
+                                icon: const Icon(Icons.edit_outlined),
+                                tooltip: loc.get('edit_category'),
+                                onPressed: () {
+                                  final editController = TextEditingController(text: c);
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: Text(loc.get('edit_category')),
+                                      content: TextField(
+                                        controller: editController,
+                                        autofocus: true,
+                                        decoration: InputDecoration(
+                                          labelText: loc.get('category_name'),
+                                          hintText: loc.get('category_name_hint'),
+                                        ),
+                                        onSubmitted: (val) {
+                                          if (val.trim().isNotEmpty) {
+                                            setState(() {
+                                              _categories[i] = val.trim();
+                                            });
+                                            _closeDialogAndUnfocus();
+                                          }
+                                        },
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () => _closeDialogAndUnfocus(),
+                                          child: Text(loc.get('cancel')),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            final val = editController.text.trim();
+                                            if (val.isNotEmpty) {
+                                              setState(() {
+                                                _categories[i] = val;
+                                              });
+                                              _closeDialogAndUnfocus();
+                                            }
+                                          },
+                                          child: Text(loc.get('save')),
+                                        ),
+                                      ],
+                                    ),
+                                  );
                                 },
                               ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => _closeDialogAndUnfocus(),
-                                  child: Text(loc.get('cancel')),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    final val = editController.text.trim();
-                                    if (val.isNotEmpty) {
-                                      setState(() {
-                                        _categories[i] = val;
-                                      });
-                                      _closeDialogAndUnfocus();
-                                    }
-                                  },
-                                  child: Text(loc.get('save')),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.delete_outline),
-                        tooltip: loc.get('delete_category'),
-                        onPressed: () {
-                          setState(() {
-                            _categories.removeAt(i);
-                          });
-                        },
-                      ),
+                              IconButton(
+                                icon: const Icon(Icons.delete_outline),
+                                tooltip: loc.get('delete_category'),
+                                onPressed: () {
+                                  setState(() {
+                                    _categories.removeAt(i);
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
                     ],
-                  );
-                }),
-                const SizedBox(height: 16),
-                // Valuta
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  ],
+                ),
+                const SizedBox(height: 24),
+                
+                // Sezione 4: Impostazioni
+                _buildSectionCard(
+                  title: loc.get('settings'),
                   children: [
-                    Text(loc.get('currency'),
-                        style: Theme.of(context).textTheme.titleMedium),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: CurrencySelector(
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(loc.get('currency'),
+                            style: Theme.of(context).textTheme.titleMedium),
+                        const SizedBox(width: 16),
+                        CurrencySelector(
                           value: _currency,
                           onChanged: (val) {
                             if (val != null) setState(() => _currency = val);
                           },
                         ),
-                      ),
+                      ],
                     ),
                   ],
                 ),
                 const SizedBox(height: 32),
-                TextButton(
-                  onPressed: _saveTrip,
-                  style: TextButton.styleFrom(
-                    minimumSize: const Size.fromHeight(48),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                
+                // Bottone di salvataggio
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: TextButton(
+                    onPressed: _saveTrip,
+                    style: TextButton.styleFrom(
+                      minimumSize: const Size.fromHeight(56),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      textStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                      elevation: 2,
                     ),
-                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    textStyle:
-                        Theme.of(context).textTheme.titleMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.onPrimary,
-                            ),
+                    child: Text(loc.get('save')),
                   ),
-                  child: Text(loc.get('save')),
                 ),
+                const SizedBox(height: 20),
               ],
             ),
           ),
