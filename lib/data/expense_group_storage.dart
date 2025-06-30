@@ -87,6 +87,9 @@ class ExpenseGroupStorage {
   static Future<List<ExpenseGroup>> currentTrips(DateTime date) async {
     final trips = await readTrips();
     final validTrips = trips.where((trip) {
+      // Escludi i gruppi archiviati
+      if (trip.archived) return false;
+      
       // Se non ci sono date, il gruppo è sempre valido
       if (trip.startDate == null || trip.endDate == null) return true;
       
@@ -137,13 +140,47 @@ class ExpenseGroupStorage {
     }
   }
 
-  /// Restituisce il viaggio attualmente pinnato, se esiste
+  /// Restituisce il gruppo attualmente pinnato, se esiste e non è archiviato
   static Future<ExpenseGroup?> getPinnedTrip() async {
     final trips = await readTrips();
     try {
-      return trips.firstWhere((trip) => trip.pinned);
+      return trips.firstWhere((trip) => trip.pinned && !trip.archived);
     } catch (_) {
       return null;
     }
+  }
+
+  /// Archivia un gruppo di spese
+  static Future<void> archiveGroup(String groupId) async {
+    final trips = await readTrips();
+    final index = trips.indexWhere((trip) => trip.id == groupId);
+
+    if (index != -1) {
+      trips[index] = trips[index].copyWith(archived: true);
+      await writeTrips(trips);
+    }
+  }
+
+  /// Rimuove dall'archivio un gruppo di spese
+  static Future<void> unarchiveGroup(String groupId) async {
+    final trips = await readTrips();
+    final index = trips.indexWhere((trip) => trip.id == groupId);
+
+    if (index != -1 && trips[index].archived) {
+      trips[index] = trips[index].copyWith(archived: false);
+      await writeTrips(trips);
+    }
+  }
+
+  /// Restituisce tutti i gruppi archiviati
+  static Future<List<ExpenseGroup>> getArchivedGroups() async {
+    final trips = await readTrips();
+    return trips.where((trip) => trip.archived).toList();
+  }
+
+  /// Restituisce tutti i gruppi non archiviati
+  static Future<List<ExpenseGroup>> getActiveGroups() async {
+    final trips = await readTrips();
+    return trips.where((trip) => !trip.archived).toList();
   }
 }

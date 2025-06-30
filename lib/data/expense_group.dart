@@ -12,6 +12,7 @@ class ExpenseGroup {
   final List<String> categories;
   final DateTime timestamp; // Nuovo campo timestamp
   final bool pinned; // Nuovo campo per pinnare il gruppo
+  final bool archived; // Nuovo campo per archiviare il gruppo
 
   ExpenseGroup({
     required this.title,
@@ -24,6 +25,7 @@ class ExpenseGroup {
     DateTime? timestamp, // opzionale, default a now
     String? id, // opzionale, generato se mancante
     this.pinned = false, // Default a false
+    this.archived = false, // Default a false
   })  : timestamp = timestamp ?? DateTime.now(),
         id = id ?? const Uuid().v4();
 
@@ -46,6 +48,7 @@ class ExpenseGroup {
           ? DateTime.parse(json['timestamp'])
           : DateTime.now(),
       pinned: json['pinned'] ?? false, // Legge il valore pinnato
+      archived: json['archived'] ?? false, // Legge il valore archiviato
     );
   }
 
@@ -60,6 +63,7 @@ class ExpenseGroup {
         'categories': categories,
         'timestamp': timestamp.toIso8601String(),
         'pinned': pinned, // Salva il valore pinnato
+        'archived': archived, // Salva il valore archiviato
       };
 
   ExpenseGroup copyWith({
@@ -73,6 +77,7 @@ class ExpenseGroup {
     List<String>? categories,
     DateTime? timestamp,
     bool? pinned,
+    bool? archived,
   }) {
     return ExpenseGroup(
       id: id ?? this.id,
@@ -85,6 +90,7 @@ class ExpenseGroup {
       categories: categories ?? this.categories,
       timestamp: timestamp ?? this.timestamp,
       pinned: pinned ?? this.pinned,
+      archived: archived ?? this.archived,
     );
   }
 
@@ -100,6 +106,7 @@ class ExpenseGroup {
       timestamp: DateTime.now(),
       id: 'empty',
       pinned: false,
+      archived: false,
     );
   }
 }
