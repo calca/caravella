@@ -2,130 +2,112 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class CaravellaThemes {
+  // Colori principali dell'app
+  static const Color _primaryDark = Color(0xFF2D3748);
+  static const Color _primaryLight = Color(0xFFE2E8F0);
+  static const Color _surfaceLight = Color(0xFFFAFAFA);
+  static const Color _surfaceDark = Color(0xFF1A202C);
+  static const Color _backgroundLight = Color(0xFFF7FAFC);
+  static const Color _backgroundDark = Color(0xFF1A202C);
+  static const Color _errorRed = Color(0xFFE53E3E);
+
   static final ColorScheme lightScheme = const ColorScheme(
     brightness: Brightness.light,
-    primary: Color(0xFF2D3748), // Grigio scuro elegante invece di nero
-    onPrimary: Color(0xFFFFFFFF),
-    secondary: Color(0xFF4A5568), // Grigio medio per accenti
-    onSecondary: Color(0xFFFFFFFF),
-    error: Color(0xFFE53E3E), // Rosso più soft
-    onError: Color(0xFFFFFFFF),
-    surface: Color(0xFFFAFAFA), // Off-white molto soft
-    onSurface: Color(0xFF2D3748),
-    surfaceContainerHighest:
-        Color(0xFFF7FAFC), // Grigio chiarissimo per background
+    primary: _primaryDark,
+    onPrimary: Colors.white,
+    secondary: Color(0xFF4A5568),
+    onSecondary: Colors.white,
+    error: _errorRed,
+    onError: Colors.white,
+    surface: _surfaceLight,
+    onSurface: _primaryDark,
+    surfaceContainerHighest: _backgroundLight,
   );
 
   static final ColorScheme darkScheme = const ColorScheme(
     brightness: Brightness.dark,
-    primary: Color(0xFFE2E8F0), // Grigio chiaro invece di bianco puro
-    onPrimary: Color(0xFF1A202C),
-    secondary: Color(0xFFA0AEC0), // Grigio medio-chiaro
-    onSecondary: Color(0xFF1A202C),
-    error: Color(0xFFFC8181), // Rosso più soft per dark mode
-    onError: Color(0xFF1A202C),
-    surface: Color(0xFF1A202C), // Grigio scuro invece di nero
-    onSurface: Color(0xFFE2E8F0),
-    surfaceContainerHighest: Color(0xFF2D3748), // Grigio medio per background
+    primary: _primaryLight,
+    onPrimary: _surfaceDark,
+    secondary: Color(0xFFA0AEC0),
+    onSecondary: _surfaceDark,
+    error: Color(0xFFFC8181),
+    onError: _surfaceDark,
+    surface: _surfaceDark,
+    onSurface: _primaryLight,
+    surfaceContainerHighest: Color(0xFF2D3748),
   );
+
+  // Sistema UI overlay style condiviso
+  static const SystemUiOverlayStyle _lightOverlayStyle = SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    statusBarIconBrightness: Brightness.dark,
+    statusBarBrightness: Brightness.light,
+    systemNavigationBarColor: Colors.transparent,
+    systemNavigationBarIconBrightness: Brightness.dark,
+  );
+
+  static const SystemUiOverlayStyle _darkOverlayStyle = SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    statusBarIconBrightness: Brightness.light,
+    statusBarBrightness: Brightness.dark,
+    systemNavigationBarColor: Colors.transparent,
+    systemNavigationBarIconBrightness: Brightness.light,
+  );
+
+  // TextTheme base condiviso
+  static TextTheme _createTextTheme(Color textColor) {
+    return TextTheme(
+      bodyLarge: TextStyle(fontWeight: FontWeight.w300, color: textColor),
+      bodyMedium: TextStyle(fontWeight: FontWeight.w300, color: textColor),
+      bodySmall: TextStyle(fontWeight: FontWeight.w300, color: textColor),
+      titleLarge: TextStyle(fontWeight: FontWeight.w300, color: textColor),
+      titleMedium: TextStyle(fontWeight: FontWeight.w300, color: textColor),
+      titleSmall: TextStyle(fontWeight: FontWeight.w300, color: textColor),
+      labelLarge: TextStyle(fontWeight: FontWeight.w300, color: textColor),
+      labelMedium: TextStyle(fontWeight: FontWeight.w300, color: textColor),
+      labelSmall: TextStyle(fontWeight: FontWeight.w300, color: textColor),
+    ).apply(fontFamily: 'Montserrat');
+  }
 
   static final ThemeData light = ThemeData(
     colorScheme: lightScheme,
     fontFamily: 'Montserrat',
-    textTheme: ThemeData.light()
-        .textTheme
-        .apply(
-          fontFamily: 'Montserrat',
-          bodyColor: const Color(0xFF2D3748), // Grigio scuro invece di nero
-          displayColor: const Color(0xFF2D3748),
-        )
-        .copyWith(
-          bodyLarge: const TextStyle(fontWeight: FontWeight.w300),
-          bodyMedium: const TextStyle(fontWeight: FontWeight.w300),
-          bodySmall: const TextStyle(fontWeight: FontWeight.w300),
-          titleLarge: const TextStyle(fontWeight: FontWeight.w300),
-          titleMedium: const TextStyle(fontWeight: FontWeight.w300),
-          titleSmall: const TextStyle(fontWeight: FontWeight.w300),
-          labelLarge: const TextStyle(fontWeight: FontWeight.w300),
-          labelMedium: const TextStyle(fontWeight: FontWeight.w300),
-          labelSmall: const TextStyle(fontWeight: FontWeight.w300),
-        ),
+    textTheme: _createTextTheme(_primaryDark),
+    scaffoldBackgroundColor: _backgroundLight,
     useMaterial3: true,
-  ).copyWith(
-    scaffoldBackgroundColor:
-        const Color(0xFFF7FAFC), // Background soft originale
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Color(0xFFFAFAFA), // AppBar soft originale
-      foregroundColor: Color(0xFF2D3748), // Testo grigio scuro
+    appBarTheme: AppBarTheme(
+      backgroundColor: _surfaceLight,
+      foregroundColor: _primaryDark,
       elevation: 0,
-      systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor:
-            Colors.transparent, // Status bar trasparente per edge-to-edge
-        statusBarIconBrightness: Brightness.dark, // Icone scure per contrasto
-        statusBarBrightness: Brightness.light, // Per iOS
-        systemNavigationBarColor:
-            Colors.transparent, // Navigation bar trasparente
-        systemNavigationBarIconBrightness:
-            Brightness.dark, // Icone navigation bar scure
-      ),
+      systemOverlayStyle: _lightOverlayStyle,
     ),
-    floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: const Color(0xFF2D3748), // FAB grigio scuro
-      foregroundColor: const Color(0xFFFFFFFF),
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      backgroundColor: _primaryDark,
+      foregroundColor: Colors.white,
     ),
-    dividerColor: const Color(0xFFE2E8F0), // Divider soft
-    cardColor: const Color(0xFFFAFAFA), // Card soft
-    iconTheme:
-        const IconThemeData(color: Color(0xFF4A5568)), // Icone grigio medio
+    dividerColor: const Color(0xFFE2E8F0),
+    cardColor: _surfaceLight,
+    iconTheme: const IconThemeData(color: Color(0xFF4A5568)),
   );
 
   static final ThemeData dark = ThemeData(
     colorScheme: darkScheme,
     fontFamily: 'Montserrat',
-    textTheme: ThemeData.dark()
-        .textTheme
-        .apply(
-          fontFamily: 'Montserrat',
-          bodyColor: const Color(0xFFE2E8F0), // Grigio chiaro invece di bianco
-          displayColor: const Color(0xFFE2E8F0),
-        )
-        .copyWith(
-          bodyLarge: const TextStyle(fontWeight: FontWeight.w300),
-          bodyMedium: const TextStyle(fontWeight: FontWeight.w300),
-          bodySmall: const TextStyle(fontWeight: FontWeight.w300),
-          titleLarge: const TextStyle(fontWeight: FontWeight.w300),
-          titleMedium: const TextStyle(fontWeight: FontWeight.w300),
-          titleSmall: const TextStyle(fontWeight: FontWeight.w300),
-          labelLarge: const TextStyle(fontWeight: FontWeight.w300),
-          labelMedium: const TextStyle(fontWeight: FontWeight.w300),
-          labelSmall: const TextStyle(fontWeight: FontWeight.w300),
-        ),
+    textTheme: _createTextTheme(_primaryLight),
+    scaffoldBackgroundColor: _backgroundDark,
     useMaterial3: true,
-  ).copyWith(
-    scaffoldBackgroundColor:
-        const Color(0xFF1A202C), // Background grigio scuro originale
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Color(0xFF1A202C), // AppBar grigio scuro originale
-      foregroundColor: Color(0xFFE2E8F0), // Testo grigio chiaro
+    appBarTheme: AppBarTheme(
+      backgroundColor: _surfaceDark,
+      foregroundColor: _primaryLight,
       elevation: 0,
-      systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor:
-            Colors.transparent, // Status bar trasparente per edge-to-edge
-        statusBarIconBrightness: Brightness.light, // Icone chiare per dark mode
-        statusBarBrightness: Brightness.dark, // Per iOS
-        systemNavigationBarColor:
-            Colors.transparent, // Navigation bar trasparente
-        systemNavigationBarIconBrightness:
-            Brightness.light, // Icone navigation bar chiare
-      ),
+      systemOverlayStyle: _darkOverlayStyle,
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      backgroundColor: Color(0xFFE2E8F0), // FAB grigio chiaro
-      foregroundColor: Color(0xFF1A202C), // Testo scuro
+      backgroundColor: _primaryLight,
+      foregroundColor: _surfaceDark,
     ),
-    dividerColor: const Color(0xFF4A5568), // Divider grigio medio
-    cardColor: const Color(0xFF2D3748), // Card grigio medio
-    iconTheme:
-        const IconThemeData(color: Color(0xFFA0AEC0)), // Icone grigio chiaro
+    dividerColor: const Color(0xFF4A5568),
+    cardColor: const Color(0xFF2D3748),
+    iconTheme: const IconThemeData(color: Color(0xFFA0AEC0)),
   );
 }
