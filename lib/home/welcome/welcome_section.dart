@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../app_localizations.dart';
-import '../../trip/trip_add_page.dart';
+import '../../manager/trip_add_page.dart';
 import '../../state/locale_notifier.dart';
 import '../../settings/settings_page.dart';
 

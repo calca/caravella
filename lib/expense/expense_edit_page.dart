@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../data/expense_details.dart';
 import '../app_localizations.dart';
 import 'expense_form_component.dart';
-import '../trip/detail_page/tabs/expenses_tab.dart';
+import '../manager/detail_page/tabs/expenses_tab.dart';
 import '../widgets/caravella_app_bar.dart';
 
 class ExpenseEditPage extends StatelessWidget {
