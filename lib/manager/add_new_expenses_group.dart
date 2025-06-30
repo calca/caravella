@@ -276,9 +276,12 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                               style: Theme.of(context).textTheme.bodySmall),
                           TextButton.icon(
                             icon: const Icon(Icons.calendar_today, size: 18),
-                            label: Text(_startDate == null
-                                ? loc.get('start_date_not_selected')
-                                : '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}'),
+                            label: Text(
+                              _startDate == null
+                                  ? loc.get('start_date_not_selected')
+                                  : '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
                             onPressed: () => _pickDate(context, true),
                           ),
                         ],
@@ -293,9 +296,12 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                               style: Theme.of(context).textTheme.bodySmall),
                           TextButton.icon(
                             icon: const Icon(Icons.calendar_today, size: 18),
-                            label: Text(_endDate == null
-                                ? loc.get('end_date_not_selected')
-                                : '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}'),
+                            label: Text(
+                              _endDate == null
+                                  ? loc.get('end_date_not_selected')
+                                  : '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
                             onPressed: () => _pickDate(context, false),
                           ),
                         ],
