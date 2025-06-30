@@ -19,8 +19,13 @@ class ExpenseGroupStorage {
       final contents = await file.readAsString();
       final List<dynamic> jsonList = jsonDecode(contents);
       final trips = jsonList.map((e) => ExpenseGroup.fromJson(e)).toList();
-      trips.sort((a, b) => b.startDate
-          .compareTo(a.startDate)); // Ordina dal più recente (startDate)
+      trips.sort((a, b) {
+        // Gestisce il caso di date null
+        if (a.startDate == null && b.startDate == null) return 0;
+        if (a.startDate == null) return 1; // null va alla fine
+        if (b.startDate == null) return -1; // null va alla fine
+        return b.startDate!.compareTo(a.startDate!); // Ordina dal più recente
+      });
       return trips;
     } catch (e) {
       return [];
@@ -75,16 +80,20 @@ class ExpenseGroupStorage {
     }
   }
 
-  /// Restituisce tutti i viaggi validi per una data specifica
+  /// Restituisce tutti i gruppi validi per una data specifica
   /// (dove la data è compresa tra startDate e endDate inclusi)
-  /// ordinati per startDate (dal più recente)
+  /// ordinati per startDate (dal più recente). Se startDate o endDate sono null,
+  /// il gruppo è considerato sempre valido per la data
   static Future<List<ExpenseGroup>> currentTrips(DateTime date) async {
     final trips = await readTrips();
     final validTrips = trips.where((trip) {
+      // Se non ci sono date, il gruppo è sempre valido
+      if (trip.startDate == null || trip.endDate == null) return true;
+      
       final startDate = DateTime(
-          trip.startDate.year, trip.startDate.month, trip.startDate.day);
+          trip.startDate!.year, trip.startDate!.month, trip.startDate!.day);
       final endDate =
-          DateTime(trip.endDate.year, trip.endDate.month, trip.endDate.day);
+          DateTime(trip.endDate!.year, trip.endDate!.month, trip.endDate!.day);
       final checkDate = DateTime(date.year, date.month, date.day);
 
       return (checkDate.isAfter(startDate) ||
@@ -93,7 +102,12 @@ class ExpenseGroupStorage {
     }).toList();
 
     // Ordina per startDate (dal più recente al più vecchio)
-    validTrips.sort((a, b) => b.startDate.compareTo(a.startDate));
+    validTrips.sort((a, b) {
+      if (a.startDate == null && b.startDate == null) return 0;
+      if (a.startDate == null) return 1; // null va alla fine
+      if (b.startDate == null) return -1; // null va alla fine
+      return b.startDate!.compareTo(a.startDate!);
+    });
     return validTrips;
   }
 

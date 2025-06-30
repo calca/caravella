@@ -6,8 +6,8 @@ class ExpenseGroup {
   final String title;
   final List<ExpenseDetails> expenses;
   final List<String> participants;
-  final DateTime startDate;
-  final DateTime endDate;
+  final DateTime? startDate;
+  final DateTime? endDate;
   final String currency; // Nuovo campo
   final List<String> categories;
   final DateTime timestamp; // Nuovo campo timestamp
@@ -17,8 +17,8 @@ class ExpenseGroup {
     required this.title,
     required this.expenses,
     required this.participants,
-    required this.startDate,
-    required this.endDate,
+    this.startDate,
+    this.endDate,
     required this.currency, // Nuovo campo obbligatorio
     this.categories = const [], // Default empty list
     DateTime? timestamp, // opzionale, default a now
@@ -36,8 +36,8 @@ class ExpenseGroup {
               .toList() ??
           [],
       participants: List<String>.from(json['participants'] ?? []),
-      startDate: DateTime.parse(json['startDate']),
-      endDate: DateTime.parse(json['endDate']),
+      startDate: json['startDate'] != null ? DateTime.parse(json['startDate']) : null,
+      endDate: json['endDate'] != null ? DateTime.parse(json['endDate']) : null,
       currency: json['currency'] ?? '€', // Default a euro se mancante
       categories: (json['categories'] is List)
           ? List<String>.from(json['categories'] ?? [])
@@ -54,8 +54,8 @@ class ExpenseGroup {
         'title': title,
         'expenses': expenses.map((e) => e.toJson()).toList(),
         'participants': participants,
-        'startDate': startDate.toIso8601String(),
-        'endDate': endDate.toIso8601String(),
+        'startDate': startDate?.toIso8601String(),
+        'endDate': endDate?.toIso8601String(),
         'currency': currency,
         'categories': categories,
         'timestamp': timestamp.toIso8601String(),
@@ -93,8 +93,8 @@ class ExpenseGroup {
       title: '',
       expenses: const [],
       participants: const [],
-      startDate: DateTime.now(),
-      endDate: DateTime.now(),
+      startDate: null,
+      endDate: null,
       currency: '€',
       categories: const [],
       timestamp: DateTime.now(),

@@ -71,10 +71,12 @@ class HomeTripCard extends StatelessWidget {
               const SizedBox(width: 4),
               Text(
                 loc.get('from_to', params: {
-                  'start':
-                      '${trip.startDate.day}/${trip.startDate.month}/${trip.startDate.year}',
-                  'end':
-                      '${trip.endDate.day}/${trip.endDate.month}/${trip.endDate.year}'
+                  'start': trip.startDate != null
+                      ? '${trip.startDate!.day}/${trip.startDate!.month}/${trip.startDate!.year}'
+                      : '-',
+                  'end': trip.endDate != null
+                      ? '${trip.endDate!.day}/${trip.endDate!.month}/${trip.endDate!.year}'
+                      : '-'
                 }),
                 style: Theme.of(context)
                     .textTheme

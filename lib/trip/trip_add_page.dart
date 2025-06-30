@@ -147,8 +147,8 @@ class _TripAddPageState extends State<TripAddPage> {
           title: _titleController.text,
           expenses: trips[idx].expenses, // keep expenses
           participants: _participants,
-          startDate: _startDate!,
-          endDate: _endDate!,
+          startDate: _startDate,
+          endDate: _endDate,
           currency: _currency,
           categories: _categories,
           timestamp: trips[idx].timestamp, // mantieni il timestamp originale
@@ -165,8 +165,8 @@ class _TripAddPageState extends State<TripAddPage> {
       title: _titleController.text,
       expenses: [],
       participants: _participants,
-      startDate: _startDate!,
-      endDate: _endDate!,
+      startDate: _startDate,
+      endDate: _endDate,
       currency: _currency,
       categories: _categories,
       // timestamp: default a now
