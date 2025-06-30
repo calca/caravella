@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../../../../data/trip.dart';
+import '../../../../data/expense_group.dart';
 import '../../../../app_localizations.dart';
 
 class DailyExpensesChart extends StatelessWidget {
-  final Trip trip;
+  final ExpenseGroup trip;
   final Map<DateTime, double> dailyStats;
   final AppLocalizations loc;
 

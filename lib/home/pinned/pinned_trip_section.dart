@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
-import '../../../data/trip.dart';
+import '../../data/expense_group.dart';
 import '../../../trip/detail_page/trip_detail_page.dart';
 import '../trip/home_trip_header.dart';
 import '../../../widgets/caravella_bottom_bar.dart';
 
 class PinnedTripSection extends StatelessWidget {
-  final Trip pinnedTrip;
+  final ExpenseGroup pinnedTrip;
   final AppLocalizations loc;
   final VoidCallback onTripAdded;
 

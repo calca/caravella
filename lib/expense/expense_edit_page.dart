@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import '../data/expense.dart';
+import '../data/expense_details.dart';
 import '../app_localizations.dart';
 import 'expense_form_component.dart';
 import '../trip/detail_page/tabs/expenses_tab.dart';
 import '../widgets/caravella_app_bar.dart';
 
 class ExpenseEditPage extends StatelessWidget {
-  final Expense expense;
+  final ExpenseDetails expense;
   final List<String> participants;
   final List<String> categories;
   final AppLocalizations loc;
@@ -22,7 +22,7 @@ class ExpenseEditPage extends StatelessWidget {
     required this.tripEndDate,
   });
 
-  void _onSave(BuildContext context, Expense updated) {
+  void _onSave(BuildContext context, ExpenseDetails updated) {
     Navigator.of(context).pop(ExpenseActionResult(updatedExpense: updated));
   }
 

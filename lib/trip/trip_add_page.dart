@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import '../data/trip.dart';
-import '../data/trips_storage.dart';
+import '../data/expense_group.dart';
+import '../../data/expense_group_storage.dart';
 import '../app_localizations.dart';
 import '../state/locale_notifier.dart';
 import '../widgets/currency_selector.dart';
 import '../widgets/caravella_app_bar.dart';
 
 class TripAddPage extends StatefulWidget {
-  final Trip? trip;
+  final ExpenseGroup? trip;
   final VoidCallback? onTripDeleted;
   const TripAddPage({super.key, this.trip, this.onTripDeleted});
 
@@ -140,10 +140,10 @@ class _TripAddPageState extends State<TripAddPage> {
     }
     if (widget.trip != null) {
       // EDIT: update existing trip
-      final trips = await TripsStorage.readTrips();
+      final trips = await ExpenseGroupStorage.readTrips();
       final idx = trips.indexWhere((v) => v.id == widget.trip!.id);
       if (idx != -1) {
-        trips[idx] = Trip(
+        trips[idx] = ExpenseGroup(
           title: _titleController.text,
           expenses: trips[idx].expenses, // keep expenses
           participants: _participants,
@@ -154,14 +154,14 @@ class _TripAddPageState extends State<TripAddPage> {
           timestamp: trips[idx].timestamp, // mantieni il timestamp originale
           id: trips[idx].id, // mantieni l'id originale
         );
-        await TripsStorage.writeTrips(trips);
+        await ExpenseGroupStorage.writeTrips(trips);
         if (!mounted) return;
         Navigator.of(context).pop(true);
         return;
       }
     }
     // CREATE: add new trip
-    final newTrip = Trip(
+    final newTrip = ExpenseGroup(
       title: _titleController.text,
       expenses: [],
       participants: _participants,
@@ -171,9 +171,9 @@ class _TripAddPageState extends State<TripAddPage> {
       categories: _categories,
       // timestamp: default a now
     );
-    final trips = await TripsStorage.readTrips();
+    final trips = await ExpenseGroupStorage.readTrips();
     trips.add(newTrip);
-    await TripsStorage.writeTrips(trips);
+    await ExpenseGroupStorage.writeTrips(trips);
     if (!mounted) return;
     Navigator.of(context).pop(true);
   }
@@ -224,9 +224,9 @@ class _TripAddPageState extends State<TripAddPage> {
                     ),
                   );
                   if (confirm == true) {
-                    final trips = await TripsStorage.readTrips();
+                    final trips = await ExpenseGroupStorage.readTrips();
                     trips.removeWhere((v) => v.id == widget.trip!.id);
-                    await TripsStorage.writeTrips(trips);
+                    await ExpenseGroupStorage.writeTrips(trips);
                     if (!context.mounted) return;
                     Navigator.of(context).pop(true);
                     if (widget.onTripDeleted != null) {

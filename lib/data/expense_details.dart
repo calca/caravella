@@ -1,6 +1,6 @@
 import 'package:uuid/uuid.dart';
 
-class Expense {
+class ExpenseDetails {
   final String id; // UDID per la spesa
   final String category;
   final double? amount;
@@ -8,7 +8,7 @@ class Expense {
   final DateTime date;
   final String? note;
 
-  Expense({
+  ExpenseDetails({
     required this.category,
     required this.amount,
     required this.paidBy,
@@ -17,8 +17,8 @@ class Expense {
     String? id, // opzionale, generato se mancante
   }) : id = id ?? const Uuid().v4();
 
-  factory Expense.fromJson(Map<String, dynamic> json) {
-    return Expense(
+  factory ExpenseDetails.fromJson(Map<String, dynamic> json) {
+    return ExpenseDetails(
       id: json['id'],
       category: json['category'],
       amount:
@@ -38,7 +38,7 @@ class Expense {
         if (note != null) 'note': note,
       };
 
-  Expense copyWith({
+  ExpenseDetails copyWith({
     String? id,
     String? category,
     double? amount,
@@ -46,7 +46,7 @@ class Expense {
     DateTime? date,
     String? note,
   }) {
-    return Expense(
+    return ExpenseDetails(
       id: id ?? this.id,
       category: category ?? this.category,
       amount: amount ?? this.amount,

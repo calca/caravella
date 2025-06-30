@@ -1,19 +1,19 @@
 import 'package:uuid/uuid.dart';
-import 'expense.dart';
+import 'expense_details.dart';
 
-class Trip {
-  final String id; // UDID per il viaggio
+class ExpenseGroup {
+  final String id; // UDID per il gruppo di spese
   final String title;
-  final List<Expense> expenses;
+  final List<ExpenseDetails> expenses;
   final List<String> participants;
   final DateTime startDate;
   final DateTime endDate;
   final String currency; // Nuovo campo
   final List<String> categories;
   final DateTime timestamp; // Nuovo campo timestamp
-  final bool pinned; // Nuovo campo per pinnare il viaggio
+  final bool pinned; // Nuovo campo per pinnare il gruppo
 
-  Trip({
+  ExpenseGroup({
     required this.title,
     required this.expenses,
     required this.participants,
@@ -27,12 +27,12 @@ class Trip {
   })  : timestamp = timestamp ?? DateTime.now(),
         id = id ?? const Uuid().v4();
 
-  factory Trip.fromJson(Map<String, dynamic> json) {
-    return Trip(
+  factory ExpenseGroup.fromJson(Map<String, dynamic> json) {
+    return ExpenseGroup(
       id: json['id'],
       title: json['title'],
       expenses: (json['expenses'] as List<dynamic>?)
-              ?.map((e) => Expense.fromJson(e))
+              ?.map((e) => ExpenseDetails.fromJson(e))
               .toList() ??
           [],
       participants: List<String>.from(json['participants'] ?? []),
@@ -62,10 +62,10 @@ class Trip {
         'pinned': pinned, // Salva il valore pinnato
       };
 
-  Trip copyWith({
+  ExpenseGroup copyWith({
     String? id,
     String? title,
-    List<Expense>? expenses,
+    List<ExpenseDetails>? expenses,
     List<String>? participants,
     DateTime? startDate,
     DateTime? endDate,
@@ -74,7 +74,7 @@ class Trip {
     DateTime? timestamp,
     bool? pinned,
   }) {
-    return Trip(
+    return ExpenseGroup(
       id: id ?? this.id,
       title: title ?? this.title,
       expenses: expenses ?? this.expenses,
@@ -88,8 +88,8 @@ class Trip {
     );
   }
 
-  static Trip empty() {
-    return Trip(
+  static ExpenseGroup empty() {
+    return ExpenseGroup(
       title: '',
       expenses: const [],
       participants: const [],

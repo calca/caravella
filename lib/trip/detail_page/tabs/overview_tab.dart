@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
-import '../../../data/trip.dart';
+import '../../../data/expense_group.dart';
 import '../../../widgets/currency_display.dart';
 
 class OverviewTab extends StatelessWidget {
-  final Trip trip;
+  final ExpenseGroup trip;
   const OverviewTab({super.key, required this.trip});
 
   /// Calcola i pareggi semplificati tra i partecipanti
-  List<Map<String, dynamic>> _calculateSettlements(Trip trip) {
+  List<Map<String, dynamic>> _calculateSettlements(ExpenseGroup trip) {
     if (trip.participants.length < 2 || trip.expenses.isEmpty) {
       return [];
     }

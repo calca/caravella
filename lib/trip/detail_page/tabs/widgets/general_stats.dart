@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../../../data/trip.dart';
+import '../../../../data/expense_group.dart';
 import '../../../../app_localizations.dart';
 import '../../../../widgets/currency_display.dart';
 
 class GeneralStats extends StatelessWidget {
-  final Trip trip;
+  final ExpenseGroup trip;
   final AppLocalizations loc;
 
   const GeneralStats({

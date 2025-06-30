@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../app_localizations.dart';
-import '../../data/trip.dart';
+import '../../data/expense_group.dart';
 import 'home_trip_header.dart';
 import '../../widgets/caravella_bottom_bar.dart';
 
 class HomeTripSection extends StatelessWidget {
-  final Trip trip;
+  final ExpenseGroup trip;
   final AppLocalizations loc;
   final VoidCallback onTripAdded;
 

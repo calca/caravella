@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import '../../../widgets/no_expense.dart';
-import '../../../data/expense.dart';
-import '../../../data/trip.dart';
+import '../../../data/expense_details.dart';
+import '../../../data/expense_group.dart';
 import '../trip_amount_card.dart';
-import '../../../data/trips_storage.dart';
+import '../../../data/expense_group_storage.dart';
 import '../../../app_localizations.dart';
 import '../../../expense/expense_edit_page.dart';
 
 class ExpensesTab extends StatefulWidget {
-  final Trip trip;
+  final ExpenseGroup trip;
   final AppLocalizations loc;
   const ExpensesTab({super.key, required this.trip, required this.loc});
 
@@ -17,7 +17,7 @@ class ExpensesTab extends StatefulWidget {
 }
 
 class _ExpensesTabState extends State<ExpensesTab> {
-  late List<Expense> _expenses;
+  late List<ExpenseDetails> _expenses;
 
   @override
   void initState() {
@@ -55,11 +55,11 @@ class _ExpensesTabState extends State<ExpensesTab> {
       widget.trip.expenses
         ..clear()
         ..addAll(_expenses);
-      final trips = await TripsStorage.readTrips();
+      final trips = await ExpenseGroupStorage.readTrips();
       final tripIdx = trips.indexWhere((t) => t.id == widget.trip.id);
       if (tripIdx != -1) {
         trips[tripIdx] = widget.trip;
-        await TripsStorage.writeTrips(trips);
+        await ExpenseGroupStorage.writeTrips(trips);
       }
     }
   }
@@ -98,7 +98,7 @@ class _ExpensesTabState extends State<ExpensesTab> {
 }
 
 class ExpenseActionResult {
-  final Expense? updatedExpense;
+  final ExpenseDetails? updatedExpense;
   final bool deleted;
   ExpenseActionResult({this.updatedExpense, this.deleted = false});
 }

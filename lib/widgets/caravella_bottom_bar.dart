@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/expense/expense_form_component.dart';
-import '../data/trip.dart';
+import '../data/expense_group.dart';
 import '../trip/trips_history_page.dart';
 import '../app_localizations.dart';
-import '../data/trips_storage.dart';
+import '../../data/expense_group_storage.dart';
 import '../settings/settings_page.dart';
 
 class CaravellaBottomBar extends StatelessWidget {
   final AppLocalizations loc;
   final VoidCallback onTripAdded;
-  final Trip currentTrip;
+  final ExpenseGroup currentTrip;
   final bool showLeftButtons;
   final bool showAddButton;
   final Duration animationDuration;
@@ -156,19 +156,20 @@ class CaravellaBottomBar extends StatelessWidget {
                                     participants: currentTrip.participants,
                                     categories: currentTrip.categories,
                                     onExpenseAdded: (expense) async {
-                                      final trips =
-                                          await TripsStorage.readTrips();
+                                      final trips = await ExpenseGroupStorage
+                                          .readTrips();
                                       final idx = trips.indexWhere(
                                           (v) => v.id == currentTrip.id);
                                       if (idx != -1) {
                                         trips[idx].expenses.add(expense);
-                                        await TripsStorage.writeTrips(trips);
+                                        await ExpenseGroupStorage.writeTrips(
+                                            trips);
                                         onTripAdded();
                                       }
                                     },
                                     onCategoryAdded: (newCategory) async {
-                                      final trips =
-                                          await TripsStorage.readTrips();
+                                      final trips = await ExpenseGroupStorage
+                                          .readTrips();
                                       final idx = trips.indexWhere(
                                           (v) => v.id == currentTrip.id);
                                       if (idx != -1) {
@@ -178,7 +179,8 @@ class CaravellaBottomBar extends StatelessWidget {
                                           trips[idx]
                                               .categories
                                               .add(newCategory);
-                                          await TripsStorage.writeTrips(trips);
+                                          await ExpenseGroupStorage
+                                              .writeTrips(trips);
                                           onTripAdded();
                                         }
                                       }

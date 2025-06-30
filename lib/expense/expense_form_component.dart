@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import '../data/expense.dart';
+import '../data/expense_details.dart';
 import '../app_localizations.dart';
 import '../state/locale_notifier.dart';
 
 class ExpenseFormComponent extends StatefulWidget {
   final List<String> participants;
   final List<String> categories;
-  final void Function(Expense) onExpenseAdded;
+  final void Function(ExpenseDetails) onExpenseAdded;
   final void Function()? onAddCategory;
   final void Function(String)? onCategoryAdded;
-  final Expense? initialExpense;
+  final ExpenseDetails? initialExpense;
   final DateTime? tripStartDate;
   final DateTime? tripEndDate;
   final bool
@@ -77,7 +77,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     bool hasPaidBy = _paidBy != null;
 
     if (isFormValid && hasCategoryIfRequired && hasPaidBy) {
-      final expense = Expense(
+      final expense = ExpenseDetails(
         category: _category ?? '',
         amount: _amount ?? 0,
         paidBy: _paidBy ?? '',

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../app_localizations.dart';
-import '../data/trip.dart';
-import '../data/trips_storage.dart';
+import '../data/expense_group.dart';
+import '../data/expense_group_storage.dart';
 import '../state/locale_notifier.dart';
 import '../../main.dart';
 import 'welcome/welcome_section.dart';
@@ -17,8 +17,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with RouteAware {
-  Trip? _currentTrip;
-  Trip? _pinnedTrip;
+  ExpenseGroup? _currentTrip;
+  ExpenseGroup? _pinnedTrip;
   bool _loading = true;
 
   @override
@@ -48,8 +48,8 @@ class _HomePageState extends State<HomePage> with RouteAware {
     setState(() {
       _loading = true;
     });
-    final trips = await TripsStorage.currentTrips(DateTime.now());
-    final pinnedTrip = await TripsStorage.getPinnedTrip();
+    final trips = await ExpenseGroupStorage.currentTrips(DateTime.now());
+    final pinnedTrip = await ExpenseGroupStorage.getPinnedTrip();
     if (!mounted) return;
     setState(() {
       _currentTrip = trips.isNotEmpty ? trips.first : null;

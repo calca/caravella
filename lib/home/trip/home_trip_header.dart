@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../app_localizations.dart';
-import '../../data/trip.dart';
+import '../../data/expense_group.dart';
 import '../../state/locale_notifier.dart';
 import '../../widgets/currency_display.dart';
 
 class HomeTripCard extends StatelessWidget {
-  final Trip trip;
+  final ExpenseGroup trip;
   const HomeTripCard({super.key, required this.trip});
 
   @override

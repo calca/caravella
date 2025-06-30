@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../data/trip.dart';
+import '../../../data/expense_group.dart';
 import '../../../app_localizations.dart';
 import '../../../state/locale_notifier.dart';
 import 'widgets/daily_expenses_chart.dart';
@@ -7,7 +7,7 @@ import 'widgets/categories_pie_chart.dart';
 import 'widgets/general_stats.dart';
 
 class StatisticsTab extends StatelessWidget {
-  final Trip trip;
+  final ExpenseGroup trip;
 
   const StatisticsTab({super.key, required this.trip});
 

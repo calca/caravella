@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../data/trip.dart';
-import '../data/trips_storage.dart';
+import '../data/expense_group.dart';
+import '../../data/expense_group_storage.dart';
 import 'detail_page/trip_detail_page.dart';
 import '../app_localizations.dart';
 import 'trip_add_page.dart';
@@ -16,8 +16,8 @@ class TripsHistoryPage extends StatefulWidget {
 }
 
 class _TripsHistoryPageState extends State<TripsHistoryPage> {
-  List<Trip> _allTrips = [];
-  List<Trip> _filteredTrips = [];
+  List<ExpenseGroup> _allTrips = [];
+  List<ExpenseGroup> _filteredTrips = [];
   String _periodFilter = 'all';
   bool _loading = true;
   final List<Map<String, dynamic>> _periodOptions = [
@@ -35,7 +35,7 @@ class _TripsHistoryPageState extends State<TripsHistoryPage> {
 
   Future<void> _loadTrips() async {
     setState(() => _loading = true);
-    final trips = await TripsStorage.readTrips();
+    final trips = await ExpenseGroupStorage.readTrips();
     setState(() {
       _allTrips = trips;
       _filteredTrips = _applyFilter(trips);
@@ -43,7 +43,7 @@ class _TripsHistoryPageState extends State<TripsHistoryPage> {
     });
   }
 
-  List<Trip> _applyFilter(List<Trip> trips) {
+  List<ExpenseGroup> _applyFilter(List<ExpenseGroup> trips) {
     final now = DateTime.now();
     switch (_periodFilter) {
       case 'last12':
@@ -67,7 +67,7 @@ class _TripsHistoryPageState extends State<TripsHistoryPage> {
     });
   }
 
-  Future<void> _deleteTrip(Trip trip) async {
+  Future<void> _deleteTrip(ExpenseGroup trip) async {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -85,14 +85,14 @@ class _TripsHistoryPageState extends State<TripsHistoryPage> {
     );
     if (confirm == true) {
       _allTrips.removeWhere((t) => t.id == trip.id);
-      await TripsStorage.writeTrips(_allTrips);
+      await ExpenseGroupStorage.writeTrips(_allTrips);
       setState(() {
         _filteredTrips = _applyFilter(_allTrips);
       });
     }
   }
 
-  void _showTripOptions(Trip trip) async {
+  void _showTripOptions(ExpenseGroup trip) async {
     final action = await showModalBottomSheet<String>(
       context: context,
       builder: (context) => SafeArea(
@@ -122,7 +122,7 @@ class _TripsHistoryPageState extends State<TripsHistoryPage> {
     if (action == 'edit') {
       _navigateAndEditTrip(trip);
     } else if (action == 'duplicate') {
-      final newTrip = Trip(
+      final newTrip = ExpenseGroup(
         title: "${trip.title} (Copia)",
         expenses: [],
         participants: List<String>.from(trip.participants),
@@ -132,7 +132,7 @@ class _TripsHistoryPageState extends State<TripsHistoryPage> {
         categories: List<String>.from(trip.categories),
       );
       _allTrips.add(newTrip);
-      await TripsStorage.writeTrips(_allTrips);
+      await ExpenseGroupStorage.writeTrips(_allTrips);
       setState(() {
         _filteredTrips = _applyFilter(_allTrips);
       });
@@ -141,7 +141,7 @@ class _TripsHistoryPageState extends State<TripsHistoryPage> {
     }
   }
 
-  void _navigateAndEditTrip(Trip trip) async {
+  void _navigateAndEditTrip(ExpenseGroup trip) async {
     final result = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => TripAddPage(trip: trip),
@@ -149,7 +149,7 @@ class _TripsHistoryPageState extends State<TripsHistoryPage> {
     );
     if (!mounted) return;
     if (result == true) {
-      final trips = await TripsStorage.readTrips();
+      final trips = await ExpenseGroupStorage.readTrips();
       if (!mounted) return;
       setState(() {
         _allTrips = trips;

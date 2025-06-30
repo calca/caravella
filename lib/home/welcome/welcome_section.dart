@@ -3,7 +3,7 @@ import '../../app_localizations.dart';
 import '../../trip/trip_add_page.dart';
 import '../../widgets/caravella_bottom_bar.dart';
 import 'welcome_card.dart';
-import '../../data/trip.dart';
+import '../../data/expense_group.dart';
 import '../widgets/home_background.dart';
 import '../../state/locale_notifier.dart';
 
@@ -54,7 +54,7 @@ class WelcomeSection extends StatelessWidget {
                 child: CaravellaBottomBar(
                   loc: loc,
                   onTripAdded: onTripAdded ?? () {},
-                  currentTrip: Trip.empty(),
+                  currentTrip: ExpenseGroup.empty(),
                   showAddButton: false,
                 ),
               ),

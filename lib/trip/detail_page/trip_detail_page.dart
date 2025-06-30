@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../data/expense.dart';
-import '../../data/trip.dart';
+import '../../data/expense_details.dart';
+import '../../data/expense_group.dart';
 import '../../expense/expense_edit_page.dart';
-import '../../data/trips_storage.dart';
+import '../../data/expense_group_storage.dart';
 import '../trip_add_page.dart';
 import '../../app_localizations.dart';
 import '../../state/locale_notifier.dart';
@@ -13,7 +13,7 @@ import 'tabs/statistics_tab.dart';
 import '../../widgets/caravella_app_bar.dart';
 
 class TripDetailPage extends StatefulWidget {
-  final Trip trip;
+  final ExpenseGroup trip;
   const TripDetailPage({super.key, required this.trip});
 
   @override
@@ -21,7 +21,7 @@ class TripDetailPage extends StatefulWidget {
 }
 
 class _TripDetailPageState extends State<TripDetailPage> {
-  Trip? _trip;
+  ExpenseGroup? _trip;
   bool _deleted = false;
   int _selectedTab = 0;
 
@@ -32,7 +32,7 @@ class _TripDetailPageState extends State<TripDetailPage> {
   }
 
   Future<void> _loadTrip() async {
-    final trip = await TripsStorage.getTripById(widget.trip.id);
+    final trip = await ExpenseGroupStorage.getTripById(widget.trip.id);
     if (!mounted) return;
     setState(() {
       _trip = trip;
@@ -44,7 +44,8 @@ class _TripDetailPageState extends State<TripDetailPage> {
   }
 
   Future<void> _refreshTrip() async {
-    final trip = await TripsStorage.getTripById(_trip?.id ?? widget.trip.id);
+    final trip =
+        await ExpenseGroupStorage.getTripById(_trip?.id ?? widget.trip.id);
     if (!mounted) return;
     if (trip != null) {
       setState(() {
@@ -78,9 +79,9 @@ class _TripDetailPageState extends State<TripDetailPage> {
             tooltip: trip.pinned ? 'Rimuovi pin' : 'Aggiungi pin',
             onPressed: () async {
               if (trip.pinned) {
-                await TripsStorage.removePinnedTrip(trip.id);
+                await ExpenseGroupStorage.removePinnedTrip(trip.id);
               } else {
-                await TripsStorage.setPinnedTrip(trip.id);
+                await ExpenseGroupStorage.setPinnedTrip(trip.id);
               }
               await _refreshTrip();
             },
@@ -114,7 +115,7 @@ class _TripDetailPageState extends State<TripDetailPage> {
                   final result = await Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => ExpenseEditPage(
-                        expense: Expense(
+                        expense: ExpenseDetails(
                           category: '',
                           amount: 0,
                           paidBy: '', // Nessun partecipante pre-selezionato
@@ -131,11 +132,11 @@ class _TripDetailPageState extends State<TripDetailPage> {
                   );
                   if (result is ExpenseActionResult &&
                       result.updatedExpense != null) {
-                    final trips = await TripsStorage.readTrips();
+                    final trips = await ExpenseGroupStorage.readTrips();
                     final idx = trips.indexWhere((v) => v.id == trip.id);
                     if (idx != -1) {
                       trips[idx].expenses.add(result.updatedExpense!);
-                      await TripsStorage.writeTrips(trips);
+                      await ExpenseGroupStorage.writeTrips(trips);
                     }
                   }
                   if (mounted) await _refreshTrip();
