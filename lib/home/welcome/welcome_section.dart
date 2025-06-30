@@ -16,10 +16,13 @@ class WelcomeSection extends StatelessWidget {
     final theme = Theme.of(context);
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
+    final mediaQuery = MediaQuery.of(context);
+    final topPadding = mediaQuery.padding.top; // Status bar height
+    final bottomPadding = mediaQuery.padding.bottom; // Navigation bar height
 
     return SizedBox(
       width: screenWidth,
-      height: screenHeight, // Occupa tutta l'altezza dello schermo
+      height: screenHeight, // Occupa tutta l'altezza dello schermo inclusi system UI
       child: Container(
         decoration: const BoxDecoration(
           color: Color(0xFF65CCED), // Background azzurro solo per WelcomeSection
@@ -30,7 +33,12 @@ class WelcomeSection extends StatelessWidget {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 48),
+          padding: EdgeInsets.only(
+            left: 24,
+            right: 24,
+            top: topPadding + 16, // Status bar + padding aggiuntivo
+            bottom: bottomPadding + 16, // Navigation bar + padding aggiuntivo
+          ),
           child: Column(
             children: [
               // Title Section - occupando 1/3 dello spazio verticale

@@ -73,37 +73,34 @@ class _HomePageState extends State<HomePage> with RouteAware {
               (_currentTrip != null && _pinnedTrip == null))
             const HomeBackground(),
 
-          SafeArea(
-            child: _loading
-                ? const Center(child: CircularProgressIndicator())
-                : SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        // Logica per mostrare le sezioni:
-                        // 1. Se non ci sono viaggi: Welcome
-                        // 2. Se ci sono viaggi e c'è un pinnato: solo sezione pinnata
-                        // 3. Se ci sono viaggi ma nessun pinnato: trip section normale
-                        if (_currentTrip == null)
-                          // Nessun viaggio corrente: mostra Welcome
-                          WelcomeSection(onTripAdded: _refresh)
-                        else if (_pinnedTrip != null)
-                          // C'è un viaggio pinnato: mostra solo la sezione pinnata
-                          PinnedTripSection(
-                            pinnedTrip: _pinnedTrip!,
-                            loc: loc,
-                            onTripAdded: _refresh,
-                          )
-                        else
-                          // Ci sono viaggi ma nessun pinnato: mostra trip section
-                          HomeTripSection(
-                            trip: _currentTrip!,
-                            loc: loc,
-                            onTripAdded: _refresh,
-                          ),
-                      ],
+          _loading
+              ? const Center(child: CircularProgressIndicator())
+              : _currentTrip == null
+                  // Per WelcomeSection: NO SafeArea per edge-to-edge completo
+                  ? WelcomeSection(onTripAdded: _refresh)
+                  // Per altre sezioni: USA SafeArea
+                  : SafeArea(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            if (_pinnedTrip != null)
+                              // C'è un viaggio pinnato: mostra solo la sezione pinnata
+                              PinnedTripSection(
+                                pinnedTrip: _pinnedTrip!,
+                                loc: loc,
+                                onTripAdded: _refresh,
+                              )
+                            else
+                              // Ci sono viaggi ma nessun pinnato: mostra trip section
+                              HomeTripSection(
+                                trip: _currentTrip!,
+                                loc: loc,
+                                onTripAdded: _refresh,
+                              ),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-          ),
         ],
       ),
     );
