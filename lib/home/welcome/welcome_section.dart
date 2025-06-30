@@ -22,10 +22,12 @@ class WelcomeSection extends StatelessWidget {
 
     return SizedBox(
       width: screenWidth,
-      height: screenHeight, // Occupa tutta l'altezza dello schermo inclusi system UI
+      height:
+          screenHeight, // Occupa tutta l'altezza dello schermo inclusi system UI
       child: Container(
         decoration: const BoxDecoration(
-          color: Color(0xFF65CCED), // Background azzurro solo per WelcomeSection
+          color:
+              Color(0xFF65CCED), // Background azzurro solo per WelcomeSection
           image: DecorationImage(
             image: AssetImage('assets/images/home/welcome/welcome-logo.png'),
             fit: BoxFit.contain,

@@ -84,8 +84,8 @@ class AppLocalizations {
       'settlement': 'Settlement',
       'all_balanced': 'All accounts are balanced!',
       // Welcome section v3 - Clean design
-      'welcome_v3_title': 'Manage Your\nGroup Expenses\nSafely',
-      'welcome_v3_cta': 'Next',
+      'welcome_v3_title': 'Manage your\ngroup expenses',
+      'welcome_v3_cta': 'Next >',
     },
     'it': {
       'no_trips_found': 'Dove vuoi andare?',
@@ -166,8 +166,8 @@ class AppLocalizations {
       'settlement': 'Pareggia',
       'all_balanced': 'Tutti i conti sono pari!',
       // Welcome section v3 - Clean design
-      'welcome_v3_title': 'Gestisci le tue\nSpese di Gruppo\nin Sicurezza',
-      'welcome_v3_cta': 'Avanti',
+      'welcome_v3_title': 'Le tue\nspese di gruppo,\nin modo semplice',
+      'welcome_v3_cta': 'Inizia!',
     },
   };
 

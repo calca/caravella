@@ -11,12 +11,12 @@ final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Abilita l'edge-to-edge su Android
   SystemChrome.setEnabledSystemUIMode(
     SystemUiMode.edgeToEdge,
   );
-  
+
   runApp(const CaravellaApp());
 }
 

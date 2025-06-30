@@ -52,17 +52,21 @@ class CaravellaThemes {
         ),
     useMaterial3: true,
   ).copyWith(
-    scaffoldBackgroundColor: const Color(0xFFF7FAFC), // Background soft originale
+    scaffoldBackgroundColor:
+        const Color(0xFFF7FAFC), // Background soft originale
     appBarTheme: const AppBarTheme(
       backgroundColor: Color(0xFFFAFAFA), // AppBar soft originale
       foregroundColor: Color(0xFF2D3748), // Testo grigio scuro
       elevation: 0,
       systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent, // Status bar trasparente per edge-to-edge
+        statusBarColor:
+            Colors.transparent, // Status bar trasparente per edge-to-edge
         statusBarIconBrightness: Brightness.dark, // Icone scure per contrasto
         statusBarBrightness: Brightness.light, // Per iOS
-        systemNavigationBarColor: Colors.transparent, // Navigation bar trasparente
-        systemNavigationBarIconBrightness: Brightness.dark, // Icone navigation bar scure
+        systemNavigationBarColor:
+            Colors.transparent, // Navigation bar trasparente
+        systemNavigationBarIconBrightness:
+            Brightness.dark, // Icone navigation bar scure
       ),
     ),
     floatingActionButtonTheme: FloatingActionButtonThemeData(
@@ -98,17 +102,21 @@ class CaravellaThemes {
         ),
     useMaterial3: true,
   ).copyWith(
-    scaffoldBackgroundColor: const Color(0xFF1A202C), // Background grigio scuro originale
+    scaffoldBackgroundColor:
+        const Color(0xFF1A202C), // Background grigio scuro originale
     appBarTheme: const AppBarTheme(
       backgroundColor: Color(0xFF1A202C), // AppBar grigio scuro originale
       foregroundColor: Color(0xFFE2E8F0), // Testo grigio chiaro
       elevation: 0,
       systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent, // Status bar trasparente per edge-to-edge
+        statusBarColor:
+            Colors.transparent, // Status bar trasparente per edge-to-edge
         statusBarIconBrightness: Brightness.light, // Icone chiare per dark mode
         statusBarBrightness: Brightness.dark, // Per iOS
-        systemNavigationBarColor: Colors.transparent, // Navigation bar trasparente
-        systemNavigationBarIconBrightness: Brightness.light, // Icone navigation bar chiare
+        systemNavigationBarColor:
+            Colors.transparent, // Navigation bar trasparente
+        systemNavigationBarIconBrightness:
+            Brightness.light, // Icone navigation bar chiare
       ),
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
