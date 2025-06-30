@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'themes/caravella_themes.dart';
@@ -9,6 +10,13 @@ import 'home/home_page.dart';
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Abilita l'edge-to-edge su Android
+  SystemChrome.setEnabledSystemUIMode(
+    SystemUiMode.edgeToEdge,
+  );
+  
   runApp(const CaravellaApp());
 }
 

@@ -65,7 +65,6 @@ class _HomePageState extends State<HomePage> with RouteAware {
     final localeNotifier = LocaleNotifier.of(context);
     final loc = AppLocalizations(localeNotifier?.locale ?? 'it');
     return Scaffold(
-      backgroundColor: const Color(0xFF65CCED), // Azzurro per tutta la pagina
       body: Stack(
         fit: StackFit.expand,
         children: [
