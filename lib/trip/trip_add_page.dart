@@ -140,7 +140,7 @@ class _TripAddPageState extends State<TripAddPage> {
     }
     if (widget.trip != null) {
       // EDIT: update existing trip
-      final trips = await ExpenseGroupStorage.readTrips();
+      final trips = await ExpenseGroupStorage.getAllGroups();
       final idx = trips.indexWhere((v) => v.id == widget.trip!.id);
       if (idx != -1) {
         trips[idx] = ExpenseGroup(
@@ -171,7 +171,7 @@ class _TripAddPageState extends State<TripAddPage> {
       categories: _categories,
       // timestamp: default a now
     );
-    final trips = await ExpenseGroupStorage.readTrips();
+    final trips = await ExpenseGroupStorage.getAllGroups();
     trips.add(newTrip);
     await ExpenseGroupStorage.writeTrips(trips);
     if (!mounted) return;
@@ -224,7 +224,7 @@ class _TripAddPageState extends State<TripAddPage> {
                     ),
                   );
                   if (confirm == true) {
-                    final trips = await ExpenseGroupStorage.readTrips();
+                    final trips = await ExpenseGroupStorage.getAllGroups();
                     trips.removeWhere((v) => v.id == widget.trip!.id);
                     await ExpenseGroupStorage.writeTrips(trips);
                     if (!context.mounted) return;

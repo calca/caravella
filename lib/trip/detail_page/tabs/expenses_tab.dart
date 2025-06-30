@@ -55,7 +55,7 @@ class _ExpensesTabState extends State<ExpensesTab> {
       widget.trip.expenses
         ..clear()
         ..addAll(_expenses);
-      final trips = await ExpenseGroupStorage.readTrips();
+      final trips = await ExpenseGroupStorage.getAllGroups();
       final tripIdx = trips.indexWhere((t) => t.id == widget.trip.id);
       if (tripIdx != -1) {
         trips[tripIdx] = widget.trip;

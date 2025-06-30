@@ -75,11 +75,20 @@ class StatisticsTab extends StatelessWidget {
   Map<DateTime, double> _calculateDailyStats() {
     final stats = <DateTime, double>{};
 
+    // Se non ci sono date definite, usa solo le date delle spese
+    if (trip.startDate == null || trip.endDate == null) {
+      for (final expense in trip.expenses) {
+        final date = DateTime(expense.date.year, expense.date.month, expense.date.day);
+        stats[date] = (stats[date] ?? 0.0) + (expense.amount ?? 0.0);
+      }
+      return stats;
+    }
+
     // Inizializza tutti i giorni del viaggio con 0
     DateTime currentDate =
-        DateTime(trip.startDate.year, trip.startDate.month, trip.startDate.day);
+        DateTime(trip.startDate!.year, trip.startDate!.month, trip.startDate!.day);
     final endDate =
-        DateTime(trip.endDate.year, trip.endDate.month, trip.endDate.day);
+        DateTime(trip.endDate!.year, trip.endDate!.month, trip.endDate!.day);
 
     while (currentDate.isBefore(endDate) ||
         currentDate.isAtSameMomentAs(endDate)) {
@@ -92,7 +101,7 @@ class StatisticsTab extends StatelessWidget {
       if (expense.amount != null) {
         final expenseDate =
             DateTime(expense.date.year, expense.date.month, expense.date.day);
-        stats[expenseDate] = (stats[expenseDate] ?? 0) + expense.amount!;
+        stats[expenseDate] = (stats[expenseDate] ?? 0.0) + expense.amount!;
       }
     }
 

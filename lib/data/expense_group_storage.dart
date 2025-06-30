@@ -12,21 +12,13 @@ class ExpenseGroupStorage {
     return File('${dir.path}/$fileName');
   }
 
-  static Future<List<ExpenseGroup>> readTrips() async {
+  static Future<List<ExpenseGroup>> _readAllGroups() async {
     try {
       final file = await _getFile();
       if (!await file.exists()) return [];
       final contents = await file.readAsString();
       final List<dynamic> jsonList = jsonDecode(contents);
-      final trips = jsonList.map((e) => ExpenseGroup.fromJson(e)).toList();
-      trips.sort((a, b) {
-        // Gestisce il caso di date null
-        if (a.startDate == null && b.startDate == null) return 0;
-        if (a.startDate == null) return 1; // null va alla fine
-        if (b.startDate == null) return -1; // null va alla fine
-        return b.startDate!.compareTo(a.startDate!); // Ordina dal più recente
-      });
-      return trips;
+      return jsonList.map((e) => ExpenseGroup.fromJson(e)).toList();
     } catch (e) {
       return [];
     }
@@ -39,7 +31,7 @@ class ExpenseGroupStorage {
   }
 
   static Future<void> saveTrip(ExpenseGroup trip) async {
-    final trips = await readTrips();
+    final trips = await _readAllGroups();
     final index = trips.indexWhere((t) => t.id == trip.id);
 
     if (trip.pinned) {
@@ -61,7 +53,7 @@ class ExpenseGroupStorage {
   }
 
   static Future<ExpenseGroup?> getTripById(String id) async {
-    final trips = await readTrips();
+    final trips = await _readAllGroups();
     try {
       return trips.firstWhere((trip) => trip.id == id);
     } catch (_) {
@@ -82,7 +74,7 @@ class ExpenseGroupStorage {
 
   /// Imposta un viaggio come pinnato, rimuovendo il pin da tutti gli altri
   static Future<void> setPinnedTrip(String tripId) async {
-    final trips = await readTrips();
+    final trips = await _readAllGroups();
 
     for (var i = 0; i < trips.length; i++) {
       if (trips[i].id == tripId) {
@@ -97,7 +89,7 @@ class ExpenseGroupStorage {
 
   /// Rimuove il pin da un viaggio
   static Future<void> removePinnedTrip(String tripId) async {
-    final trips = await readTrips();
+    final trips = await _readAllGroups();
     final index = trips.indexWhere((trip) => trip.id == tripId);
 
     if (index != -1 && trips[index].pinned) {
@@ -108,7 +100,7 @@ class ExpenseGroupStorage {
 
   /// Restituisce il gruppo attualmente pinnato, se esiste e non è archiviato
   static Future<ExpenseGroup?> getPinnedTrip() async {
-    final trips = await readTrips();
+    final trips = await _readAllGroups();
     try {
       return trips.firstWhere((trip) => trip.pinned && !trip.archived);
     } catch (_) {
@@ -118,7 +110,7 @@ class ExpenseGroupStorage {
 
   /// Archivia un gruppo di spese
   static Future<void> archiveGroup(String groupId) async {
-    final trips = await readTrips();
+    final trips = await _readAllGroups();
     final index = trips.indexWhere((trip) => trip.id == groupId);
 
     if (index != -1) {
@@ -129,7 +121,7 @@ class ExpenseGroupStorage {
 
   /// Rimuove dall'archivio un gruppo di spese
   static Future<void> unarchiveGroup(String groupId) async {
-    final trips = await readTrips();
+    final trips = await _readAllGroups();
     final index = trips.indexWhere((trip) => trip.id == groupId);
 
     if (index != -1 && trips[index].archived) {
@@ -138,20 +130,35 @@ class ExpenseGroupStorage {
     }
   }
 
-  /// Restituisce tutti i gruppi archiviati
+  /// Restituisce tutti i gruppi archiviati ordinati per timestamp di creazione (dal più recente)
   static Future<List<ExpenseGroup>> getArchivedGroups() async {
-    final trips = await readTrips();
-    return trips.where((trip) => trip.archived).toList();
+    final trips = await _readAllGroups();
+    final archivedTrips = trips.where((trip) => trip.archived).toList();
+    
+    // Ordina per timestamp di creazione (dal più recente al più vecchio)
+    archivedTrips.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    
+    return archivedTrips;
   }
 
   /// Restituisce tutti i gruppi non archiviati ordinati per timestamp di creazione (dal più recente)
   static Future<List<ExpenseGroup>> getActiveGroups() async {
-    final trips = await readTrips();
+    final trips = await _readAllGroups();
     final activeTrips = trips.where((trip) => !trip.archived).toList();
 
     // Ordina per timestamp di creazione (dal più recente al più vecchio)
     activeTrips.sort((a, b) => b.timestamp.compareTo(a.timestamp));
 
     return activeTrips;
+  }
+
+  /// Restituisce TUTTI i gruppi (inclusi quelli archiviati) ordinati per timestamp di creazione (dal più recente)
+  static Future<List<ExpenseGroup>> getAllGroups() async {
+    final trips = await _readAllGroups();
+    
+    // Ordina per timestamp di creazione (dal più recente al più vecchio)
+    trips.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    
+    return trips;
   }
 }

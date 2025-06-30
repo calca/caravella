@@ -56,7 +56,7 @@ class CategoriesPieChart extends StatelessWidget {
       Theme.of(context).colorScheme.outline,
       Theme.of(context).colorScheme.inversePrimary,
       Theme.of(context).colorScheme.surface,
-      Theme.of(context).colorScheme.surfaceVariant,
+      Theme.of(context).colorScheme.surfaceContainerHighest,
       Theme.of(context).colorScheme.primaryContainer,
       Theme.of(context).colorScheme.secondaryContainer,
     ];

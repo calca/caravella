@@ -10,16 +10,16 @@ class ExpenseEditPage extends StatelessWidget {
   final List<String> participants;
   final List<String> categories;
   final AppLocalizations loc;
-  final DateTime tripStartDate;
-  final DateTime tripEndDate;
+  final DateTime? tripStartDate;
+  final DateTime? tripEndDate;
   const ExpenseEditPage({
     super.key,
     required this.expense,
     required this.participants,
     required this.categories,
     required this.loc,
-    required this.tripStartDate,
-    required this.tripEndDate,
+    this.tripStartDate,
+    this.tripEndDate,
   });
 
   void _onSave(BuildContext context, ExpenseDetails updated) {

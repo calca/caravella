@@ -35,7 +35,7 @@ class _TripsHistoryPageState extends State<TripsHistoryPage> {
 
   Future<void> _loadTrips() async {
     setState(() => _loading = true);
-    final trips = await ExpenseGroupStorage.readTrips();
+    final trips = await ExpenseGroupStorage.getAllGroups();
     setState(() {
       _allTrips = trips;
       _filteredTrips = _applyFilter(trips);
@@ -49,12 +49,12 @@ class _TripsHistoryPageState extends State<TripsHistoryPage> {
       case 'last12':
         return trips
             .where(
-                (t) => t.startDate.isAfter(now.subtract(Duration(days: 365))))
+                (t) => t.startDate?.isAfter(now.subtract(Duration(days: 365))) ?? false)
             .toList();
       case 'future':
-        return trips.where((t) => t.startDate.isAfter(now)).toList();
+        return trips.where((t) => t.startDate?.isAfter(now) ?? false).toList();
       case 'past':
-        return trips.where((t) => t.endDate.isBefore(now)).toList();
+        return trips.where((t) => t.endDate?.isBefore(now) ?? false).toList();
       default:
         return trips;
     }
@@ -149,7 +149,7 @@ class _TripsHistoryPageState extends State<TripsHistoryPage> {
     );
     if (!mounted) return;
     if (result == true) {
-      final trips = await ExpenseGroupStorage.readTrips();
+      final trips = await ExpenseGroupStorage.getAllGroups();
       if (!mounted) return;
       setState(() {
         _allTrips = trips;
@@ -256,14 +256,14 @@ class _TripsHistoryPageState extends State<TripsHistoryPage> {
                             itemCount: _filteredTrips.length,
                             itemBuilder: (context, index) {
                               final trip = _filteredTrips[index];
-                              final isFuture = trip.startDate.isAfter(now);
-                              final isPast = trip.endDate.isBefore(now);
+                              final isFuture = trip.startDate?.isAfter(now) ?? false;
+                              final isPast = trip.endDate?.isBefore(now) ?? false;
                               final total = trip.expenses.fold<double>(
                                   0, (sum, e) => sum + (e.amount ?? 0));
                               // Usa solo colori del tema
                               return Dismissible(
                                 key: ValueKey(trip.title +
-                                    trip.startDate.toIso8601String()),
+                                    (trip.startDate?.toIso8601String() ?? trip.timestamp.toIso8601String())),
                                 direction: DismissDirection.endToStart,
                                 background: Container(
                                   alignment: Alignment.centerRight,
@@ -396,12 +396,14 @@ class _TripsHistoryPageState extends State<TripsHistoryPage> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            loc.get('from_to', params: {
-                                              'start':
-                                                  '${trip.startDate.day}/${trip.startDate.month}/${trip.startDate.year}',
-                                              'end':
-                                                  '${trip.endDate.day}/${trip.endDate.month}/${trip.endDate.year}'
-                                            }),
+                                            trip.startDate != null && trip.endDate != null
+                                                ? loc.get('from_to', params: {
+                                                    'start':
+                                                        '${trip.startDate!.day}/${trip.startDate!.month}/${trip.startDate!.year}',
+                                                    'end':
+                                                        '${trip.endDate!.day}/${trip.endDate!.month}/${trip.endDate!.year}'
+                                                  })
+                                                : 'Date non definite',
                                           ),
                                           Text(trip.participants.join(", "),
                                               style: Theme.of(context)

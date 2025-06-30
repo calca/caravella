@@ -132,7 +132,7 @@ class _TripDetailPageState extends State<TripDetailPage> {
                   );
                   if (result is ExpenseActionResult &&
                       result.updatedExpense != null) {
-                    final trips = await ExpenseGroupStorage.readTrips();
+                    final trips = await ExpenseGroupStorage.getAllGroups();
                     final idx = trips.indexWhere((v) => v.id == trip.id);
                     if (idx != -1) {
                       trips[idx].expenses.add(result.updatedExpense!);
@@ -173,7 +173,9 @@ class _TripDetailPageState extends State<TripDetailPage> {
                               ?.copyWith()),
                       const SizedBox(height: 8),
                       Text(
-                        '${trip.startDate.day}/${trip.startDate.month}/${trip.startDate.year} - ${trip.endDate.day}/${trip.endDate.month}/${trip.endDate.year}',
+                        trip.startDate != null && trip.endDate != null
+                            ? '${trip.startDate!.day}/${trip.startDate!.month}/${trip.startDate!.year} - ${trip.endDate!.day}/${trip.endDate!.month}/${trip.endDate!.year}'
+                            : 'Date non definite',
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       const SizedBox(height: 4),
