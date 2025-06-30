@@ -38,7 +38,8 @@ class ExpenseGroup {
               .toList() ??
           [],
       participants: List<String>.from(json['participants'] ?? []),
-      startDate: json['startDate'] != null ? DateTime.parse(json['startDate']) : null,
+      startDate:
+          json['startDate'] != null ? DateTime.parse(json['startDate']) : null,
       endDate: json['endDate'] != null ? DateTime.parse(json['endDate']) : null,
       currency: json['currency'] ?? '€', // Default a euro se mancante
       categories: (json['categories'] is List)

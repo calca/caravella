@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
     setState(() {
       _loading = true;
     });
-    final trips = await ExpenseGroupStorage.currentTrips(DateTime.now());
+    final trips = await ExpenseGroupStorage.getActiveGroups();
     final pinnedTrip = await ExpenseGroupStorage.getPinnedTrip();
     if (!mounted) return;
     setState(() {
