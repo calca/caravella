@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CaravellaThemes {
   static final ColorScheme lightScheme = const ColorScheme(
@@ -51,11 +52,16 @@ class CaravellaThemes {
         ),
     useMaterial3: true,
   ).copyWith(
-    scaffoldBackgroundColor: const Color(0xFFF7FAFC), // Background soft
+    scaffoldBackgroundColor: const Color(0xFF65CCED), // Background azzurro
     appBarTheme: const AppBarTheme(
-      backgroundColor: Color(0xFFFAFAFA), // AppBar soft
+      backgroundColor: Color(0xFF65CCED), // AppBar azzurro
       foregroundColor: Color(0xFF2D3748), // Testo grigio scuro
       elevation: 0,
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: Color(0xFF65CCED), // Status bar azzurra
+        statusBarIconBrightness: Brightness.dark, // Icone scure per contrasto
+        statusBarBrightness: Brightness.light, // Per iOS
+      ),
     ),
     floatingActionButtonTheme: FloatingActionButtonThemeData(
       backgroundColor: const Color(0xFF2D3748), // FAB grigio scuro
@@ -90,11 +96,16 @@ class CaravellaThemes {
         ),
     useMaterial3: true,
   ).copyWith(
-    scaffoldBackgroundColor: const Color(0xFF1A202C), // Background grigio scuro
+    scaffoldBackgroundColor: const Color(0xFF65CCED), // Background azzurro anche per dark mode
     appBarTheme: const AppBarTheme(
-      backgroundColor: Color(0xFF1A202C), // AppBar grigio scuro
-      foregroundColor: Color(0xFFE2E8F0), // Testo grigio chiaro
+      backgroundColor: Color(0xFF65CCED), // AppBar azzurro anche per dark mode
+      foregroundColor: Color(0xFF2D3748), // Testo grigio scuro per contrasto
       elevation: 0,
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: Color(0xFF65CCED), // Status bar azzurra
+        statusBarIconBrightness: Brightness.dark, // Icone scure per contrasto
+        statusBarBrightness: Brightness.light, // Per iOS
+      ),
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: Color(0xFFE2E8F0), // FAB grigio chiaro

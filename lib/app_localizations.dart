@@ -111,6 +111,26 @@ class AppLocalizations {
       'settlement': 'Settlement',
       'all_balanced': 'All accounts are balanced!',
       'owes_to': '{from} owes {to}',
+      // Welcome section
+      'welcome_title': 'Welcome to Caravella!',
+      'welcome_subtitle': 'Your smart companion for managing group expenses',
+      'welcome_description':
+          'Split bills, track expenses, and keep everyone happy during your trips and group activities.',
+      'get_started': 'Get Started',
+      'start_first_trip': 'Create Your First Group',
+      'welcome_image_alt':
+          'An illustration of a person looking at a list of expenses.',
+      'welcome_ready': 'Ready to start?',
+      // Welcome section v2
+      'welcome_v2_title': 'Organize Your Group Expenses',
+      'welcome_v2_subtitle':
+          'From shared apartments to dream vacations, keep track of every expense effortlessly.',
+      'welcome_v2_cta': 'Start a New Group',
+      'welcome_v2_image_alt':
+          'A vibrant illustration of people collaborating on a project.',
+      // Welcome section v3 - Clean design
+      'welcome_v3_title': 'Manage Your\nGroup Expenses\nSafely',
+      'welcome_v3_cta': 'Next',
     },
     'it': {
       'app_title': 'Caravella',
@@ -219,6 +239,27 @@ class AppLocalizations {
       'settlement': 'Pareggia',
       'all_balanced': 'Tutti i conti sono pari!',
       'owes_to': '{from} deve dare a {to}',
+      // Welcome section
+      'welcome_title': 'Benvenuto in Caravella!',
+      'welcome_subtitle':
+          'Il tuo compagno intelligente per gestire le spese di gruppo',
+      'welcome_description':
+          'Dividi le bollette, traccia le spese e rendi felici tutti durante i tuoi viaggi e le attività di gruppo.',
+      'get_started': 'Inizia',
+      'start_first_trip': 'Crea il tuo primo gruppo',
+      'welcome_image_alt':
+          'Un\'illustrazione di una persona che guarda un elenco di spese.',
+      'welcome_ready': 'Pronto per cominciare?',
+      // Welcome section v2
+      'welcome_v2_title': 'Organizza le tue spese di gruppo',
+      'welcome_v2_subtitle':
+          'Dagli appartamenti condivisi alle vacanze da sogno, tieni traccia di ogni spesa senza sforzo.',
+      'welcome_v2_cta': 'Inizia un nuovo gruppo',
+      'welcome_v2_image_alt':
+          'Un\'illustrazione vivace di persone che collaborano a un progetto.',
+      // Welcome section v3 - Clean design
+      'welcome_v3_title': 'Gestisci le tue\nSpese di Gruppo\nin Sicurezza',
+      'welcome_v3_cta': 'Avanti',
     },
   };
 

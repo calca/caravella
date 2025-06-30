@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../app_localizations.dart';
 import '../../trip/trip_add_page.dart';
-import '../../widgets/caravella_bottom_bar.dart';
-import 'welcome_card.dart';
-import '../../data/expense_group.dart';
-import '../widgets/home_background.dart';
 import '../../state/locale_notifier.dart';
 
 typedef RefreshCallback = void Function();
@@ -17,50 +13,81 @@ class WelcomeSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final localeNotifier = LocaleNotifier.of(context);
     final loc = AppLocalizations(localeNotifier?.locale ?? 'it');
-    return SizedBox(
-      height: MediaQuery.of(context).size.height -
-          120, // Altezza fissa meno spazio per header/padding
-      child: Stack(
-        children: [
-          const HomeBackground(),
-          Column(
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height -
-                    200, // Altezza fissa per evitare conflitti con Expanded
-                child: Center(
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                    child: WelcomeCard(
-                      loc: loc,
-                      onAddTrip: () async {
-                        final result = await Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => TripAddPage(),
-                          ),
-                        );
-                        if (result == true && onTripAdded != null) {
-                          onTripAdded!();
-                        }
-                      },
-                      opacity: 0.5,
+    final theme = Theme.of(context);
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    return Container(
+      width: screenWidth,
+      constraints: BoxConstraints(
+        minHeight: screenHeight - 120,
+      ),
+      decoration: BoxDecoration(
+        image: const DecorationImage(
+          image: AssetImage('assets/images/home/welcome/welcome-logo.png'),
+          fit: BoxFit.contain,
+          alignment: Alignment.center,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // Title Section
+            Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                loc.get('welcome_v3_title'),
+                style: theme.textTheme.headlineLarge?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 36,
+                  height: 1.2,
+                ),
+                textAlign: TextAlign.left,
+              ),
+            ),
+
+            // Action Section
+            Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.onSurface,
+                  shape: BoxShape.circle,
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(60),
+                    onTap: () async {
+                      final result = await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => TripAddPage(),
+                        ),
+                      );
+                      if (result == true && onTripAdded != null) {
+                        onTripAdded!();
+                      }
+                    },
+                    child: Center(
+                      child: Text(
+                        loc.get('welcome_v3_cta'),
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          color: theme.colorScheme.surface,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 2),
-                child: CaravellaBottomBar(
-                  loc: loc,
-                  onTripAdded: onTripAdded ?? () {},
-                  currentTrip: ExpenseGroup.empty(),
-                  showAddButton: false,
-                ),
-              ),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
