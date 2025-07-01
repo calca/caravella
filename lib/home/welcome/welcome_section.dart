@@ -26,14 +26,8 @@ class WelcomeSection extends StatelessWidget {
       height:
           screenHeight, // Occupa tutta l'altezza dello schermo inclusi system UI
       child: Container(
-        decoration: const BoxDecoration(
-          color:
-              Color(0xFF65CCED), // Background azzurro solo per WelcomeSection
-          image: DecorationImage(
-            image: AssetImage('assets/images/home/welcome/welcome-logo.png'),
-            fit: BoxFit.contain,
-            alignment: Alignment.center,
-          ),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.primary, // Usa il colore primario del tema
         ),
         child: Padding(
           padding: EdgeInsets.only(
@@ -54,16 +48,27 @@ class WelcomeSection extends StatelessWidget {
                     style: theme.textTheme.headlineLarge?.copyWith(
                       fontSize: 36,
                       height: 1.2,
+                      color: theme.colorScheme
+                          .onPrimary, // Colore che contrasta con il primary
                     ),
                     textAlign: TextAlign.left,
                   ),
                 ),
               ),
 
-              // Spacer centrale - occupando 1/3 dello spazio (dove sta il logo)
-              const Expanded(
+              // Logo Section - occupando 1/3 dello spazio, centrato
+              Expanded(
                 flex: 2,
-                child: SizedBox(), // Spazio per il logo di background
+                child: Align(
+                  alignment: Alignment.center, // Centra sia orizzontalmente che verticalmente
+                  child: SizedBox(
+                    width: screenWidth * 0.8, // 80% della larghezza dello schermo
+                    child: Image.asset(
+                      'assets/images/home/welcome/welcome-logo.png',
+                      fit: BoxFit.contain, // Mantiene le proporzioni
+                    ),
+                  ),
+                ),
               ),
 
               // Action Section - occupando 1/3 dello spazio
@@ -78,7 +83,8 @@ class WelcomeSection extends StatelessWidget {
                         width: 120,
                         height: 120,
                         decoration: BoxDecoration(
-                          color: theme.colorScheme.onSurface,
+                          color: theme.colorScheme
+                              .onPrimary, // Contrasta con il background primary
                           shape: BoxShape.circle,
                         ),
                         child: Material(
@@ -100,7 +106,8 @@ class WelcomeSection extends StatelessWidget {
                               child: Text(
                                 loc.get('welcome_v3_cta'),
                                 style: theme.textTheme.titleLarge?.copyWith(
-                                  color: theme.colorScheme.surface,
+                                  color: theme.colorScheme
+                                      .primary, // Usa il primary come colore del testo
                                 ),
                               ),
                             ),
@@ -123,7 +130,8 @@ class WelcomeSection extends StatelessWidget {
                         child: Text(
                           loc.get('settings_tab').toUpperCase(),
                           style: theme.textTheme.labelLarge?.copyWith(
-                            color: theme.colorScheme.onSurface,
+                            color: theme.colorScheme
+                                .onPrimary, // Contrasta con il background primary
                             letterSpacing: 1.2,
                           ),
                         ),

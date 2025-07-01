@@ -147,7 +147,8 @@ class CurrentSettingsTab extends StatelessWidget {
 
                                 bool fileFound = false;
                                 for (final file in archive) {
-                                  if (file.name == ExpenseGroupStorage.fileName) {
+                                  if (file.name ==
+                                      ExpenseGroupStorage.fileName) {
                                     await destFile.writeAsBytes(
                                         file.content as List<int>);
                                     fileFound = true;
