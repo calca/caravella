@@ -201,7 +201,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
     Future.delayed(const Duration(milliseconds: 10), _unfocusAll);
   }
 
-  Widget _buildSectionCard({required String title, required List<Widget> children}) {
+  Widget _buildSectionCard(
+      {required String title, required List<Widget> children}) {
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
@@ -285,13 +286,15 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                     // Nome gruppo
                     TextFormField(
                       controller: _titleController,
-                      style: Theme.of(context).textTheme.displayMedium?.copyWith(),
+                      style:
+                          Theme.of(context).textTheme.displayMedium?.copyWith(),
                       decoration: InputDecoration(
                         labelText: loc.get('group_name'),
                         labelStyle: Theme.of(context).textTheme.titleMedium,
                       ),
-                      validator: (v) =>
-                          v == null || v.isEmpty ? loc.get('enter_title') : null,
+                      validator: (v) => v == null || v.isEmpty
+                          ? loc.get('enter_title')
+                          : null,
                     ),
                     const SizedBox(height: 20),
                     // Sezione date compatta
@@ -305,7 +308,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                   style: Theme.of(context).textTheme.bodySmall),
                               const SizedBox(height: 4),
                               TextButton.icon(
-                                icon: const Icon(Icons.calendar_today, size: 18),
+                                icon:
+                                    const Icon(Icons.calendar_today, size: 18),
                                 label: Text(
                                   _startDate == null
                                       ? loc.get('start_date_not_selected')
@@ -326,7 +330,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                   style: Theme.of(context).textTheme.bodySmall),
                               const SizedBox(height: 4),
                               TextButton.icon(
-                                icon: const Icon(Icons.calendar_today, size: 18),
+                                icon:
+                                    const Icon(Icons.calendar_today, size: 18),
                                 label: Text(
                                   _endDate == null
                                       ? loc.get('end_date_not_selected')
@@ -351,7 +356,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                   ],
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Sezione 2: Partecipanti
                 _buildSectionCard(
                   title: loc.get('participants'),
@@ -360,14 +365,18 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          _participants.isEmpty 
-                            ? loc.get('no_participants')
-                            : '${_participants.length} partecipant${_participants.length == 1 ? 'e' : 'i'}',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: _participants.isEmpty 
-                              ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)
-                              : null,
-                          ),
+                          _participants.isEmpty
+                              ? loc.get('no_participants')
+                              : '${_participants.length} partecipant${_participants.length == 1 ? 'e' : 'i'}',
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: _participants.isEmpty
+                                        ? Theme.of(context)
+                                            .colorScheme
+                                            .onSurface
+                                            .withValues(alpha: 0.6)
+                                        : null,
+                                  ),
                         ),
                         IconButton.outlined(
                           icon: const Icon(Icons.add),
@@ -401,7 +410,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                   ),
                                   TextButton(
                                     onPressed: () {
-                                      final val = _participantController.text.trim();
+                                      final val =
+                                          _participantController.text.trim();
                                       if (val.isNotEmpty) {
                                         setState(() {
                                           _participants.add(val);
@@ -435,12 +445,16 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                     vertical: 8.0,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .primaryContainer
+                                        .withValues(alpha: 0.3),
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),
                                   child: Text(
                                     p,
-                                    style: Theme.of(context).textTheme.bodyLarge,
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
                                     semanticsLabel: loc.get(
                                         'participant_name_semantics',
                                         params: {'name': p}),
@@ -452,7 +466,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                 icon: const Icon(Icons.edit_outlined),
                                 tooltip: loc.get('edit_participant'),
                                 onPressed: () {
-                                  final editController = TextEditingController(text: p);
+                                  final editController =
+                                      TextEditingController(text: p);
                                   showDialog(
                                     context: context,
                                     builder: (context) => AlertDialog(
@@ -461,8 +476,10 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                         controller: editController,
                                         autofocus: true,
                                         decoration: InputDecoration(
-                                          labelText: loc.get('participant_name'),
-                                          hintText: loc.get('participant_name_hint'),
+                                          labelText:
+                                              loc.get('participant_name'),
+                                          hintText:
+                                              loc.get('participant_name_hint'),
                                         ),
                                         onSubmitted: (val) {
                                           if (val.trim().isNotEmpty) {
@@ -475,12 +492,14 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                       ),
                                       actions: [
                                         TextButton(
-                                          onPressed: () => _closeDialogAndUnfocus(),
+                                          onPressed: () =>
+                                              _closeDialogAndUnfocus(),
                                           child: Text(loc.get('cancel')),
                                         ),
                                         TextButton(
                                           onPressed: () {
-                                            final val = editController.text.trim();
+                                            final val =
+                                                editController.text.trim();
                                             if (val.isNotEmpty) {
                                               setState(() {
                                                 _participants[i] = val;
@@ -512,7 +531,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                   ],
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Sezione 3: Categorie
                 _buildSectionCard(
                   title: loc.get('categories'),
@@ -521,14 +540,18 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          _categories.isEmpty 
-                            ? loc.get('no_categories')
-                            : '${_categories.length} categori${_categories.length == 1 ? 'a' : 'e'}',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: _categories.isEmpty 
-                              ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)
-                              : null,
-                          ),
+                          _categories.isEmpty
+                              ? loc.get('no_categories')
+                              : '${_categories.length} categori${_categories.length == 1 ? 'a' : 'e'}',
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: _categories.isEmpty
+                                        ? Theme.of(context)
+                                            .colorScheme
+                                            .onSurface
+                                            .withValues(alpha: 0.6)
+                                        : null,
+                                  ),
                         ),
                         IconButton.outlined(
                           icon: const Icon(Icons.add),
@@ -564,7 +587,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                     ),
                                     TextButton(
                                       onPressed: () {
-                                        final val = categoryController.text.trim();
+                                        final val =
+                                            categoryController.text.trim();
                                         if (val.isNotEmpty) {
                                           setState(() {
                                             _categories.add(val);
@@ -598,13 +622,18 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                     vertical: 8.0,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: Theme.of(context).colorScheme.secondaryContainer.withValues(alpha: 0.3),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondaryContainer
+                                        .withValues(alpha: 0.3),
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),
                                   child: Text(
                                     c,
-                                    style: Theme.of(context).textTheme.bodyLarge,
-                                    semanticsLabel: loc.get('category_name_semantics',
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
+                                    semanticsLabel: loc.get(
+                                        'category_name_semantics',
                                         params: {'name': c}),
                                   ),
                                 ),
@@ -614,7 +643,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                 icon: const Icon(Icons.edit_outlined),
                                 tooltip: loc.get('edit_category'),
                                 onPressed: () {
-                                  final editController = TextEditingController(text: c);
+                                  final editController =
+                                      TextEditingController(text: c);
                                   showDialog(
                                     context: context,
                                     builder: (context) => AlertDialog(
@@ -624,7 +654,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                         autofocus: true,
                                         decoration: InputDecoration(
                                           labelText: loc.get('category_name'),
-                                          hintText: loc.get('category_name_hint'),
+                                          hintText:
+                                              loc.get('category_name_hint'),
                                         ),
                                         onSubmitted: (val) {
                                           if (val.trim().isNotEmpty) {
@@ -637,12 +668,14 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                       ),
                                       actions: [
                                         TextButton(
-                                          onPressed: () => _closeDialogAndUnfocus(),
+                                          onPressed: () =>
+                                              _closeDialogAndUnfocus(),
                                           child: Text(loc.get('cancel')),
                                         ),
                                         TextButton(
                                           onPressed: () {
-                                            final val = editController.text.trim();
+                                            final val =
+                                                editController.text.trim();
                                             if (val.isNotEmpty) {
                                               setState(() {
                                                 _categories[i] = val;
@@ -674,7 +707,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                   ],
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Sezione 4: Impostazioni
                 _buildSectionCard(
                   title: loc.get('settings'),
@@ -696,7 +729,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                   ],
                 ),
                 const SizedBox(height: 32),
-                
+
                 // Bottone di salvataggio
                 Container(
                   width: double.infinity,
@@ -710,10 +743,11 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                       ),
                       foregroundColor: Theme.of(context).colorScheme.onPrimary,
                       backgroundColor: Theme.of(context).colorScheme.primary,
-                      textStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.onPrimary,
-                            fontWeight: FontWeight.w600,
-                          ),
+                      textStyle:
+                          Theme.of(context).textTheme.titleMedium?.copyWith(
+                                color: Theme.of(context).colorScheme.onPrimary,
+                                fontWeight: FontWeight.w600,
+                              ),
                       elevation: 2,
                     ),
                     child: Text(loc.get('save')),
