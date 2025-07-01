@@ -60,9 +60,11 @@ class WelcomeSection extends StatelessWidget {
               Expanded(
                 flex: 2,
                 child: Align(
-                  alignment: Alignment.center, // Centra sia orizzontalmente che verticalmente
+                  alignment: Alignment
+                      .center, // Centra sia orizzontalmente che verticalmente
                   child: SizedBox(
-                    width: screenWidth * 0.8, // 80% della larghezza dello schermo
+                    width:
+                        screenWidth * 0.8, // 80% della larghezza dello schermo
                     child: Image.asset(
                       'assets/images/home/welcome/welcome-logo.png',
                       fit: BoxFit.contain, // Mantiene le proporzioni

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Adaptive icon background color for dark theme -->
+    <color name="ic_launcher_background">#4A9ACC</color>
+    
     <!-- Dark theme splash screen colors -->
     <color name="splash_background_light">#000000</color>
     <color name="splash_background_dark">#FFFFFF</color>
