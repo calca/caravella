@@ -3,6 +3,7 @@ import '../widgets/language_selector_setting.dart';
 import '../widgets/theme_selector_setting.dart';
 import '../../state/locale_notifier.dart';
 import '../../app_localizations.dart';
+import '../../data/expense_group_storage.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -137,7 +138,7 @@ class CurrentSettingsTab extends StatelessWidget {
                               final dir =
                                   await getApplicationDocumentsDirectory();
                               final destFile = File(
-                                  '${dir.path}/expense_group_storage.json');
+                                  '${dir.path}/${ExpenseGroupStorage.fileName}');
 
                               if (filePath.endsWith('.zip')) {
                                 final bytes =
@@ -146,10 +147,7 @@ class CurrentSettingsTab extends StatelessWidget {
 
                                 bool fileFound = false;
                                 for (final file in archive) {
-                                  // Cerca sia il nome nuovo che quello vecchio per compatibilità
-                                  if (file.name ==
-                                          'expense_group_storage.json' ||
-                                      file.name == 'trips.json') {
+                                  if (file.name == ExpenseGroupStorage.fileName) {
                                     await destFile.writeAsBytes(
                                         file.content as List<int>);
                                     fileFound = true;
@@ -209,7 +207,7 @@ class CurrentSettingsTab extends StatelessWidget {
 Future<void> _backupTrips(BuildContext context, AppLocalizations loc) async {
   try {
     final dir = await getApplicationDocumentsDirectory();
-    final tripsFile = File('${dir.path}/expense_group_storage.json');
+    final tripsFile = File('${dir.path}/${ExpenseGroupStorage.fileName}');
 
     if (!await tripsFile.exists()) {
       if (!context.mounted) return;
@@ -235,11 +233,8 @@ Future<void> _backupTrips(BuildContext context, AppLocalizations loc) async {
         "${now.year.toString().padLeft(4, '0')}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}_${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}${now.second.toString().padLeft(2, '0')}";
     final zipPath = '${tempDir.path}/caravella_backup_$dateStr.zip';
 
-    // Usa il nome del file storage come nome interno nell'archivio
-    final fileName = tripsFile.path.split('/').last;
-
     zipEncoder.create(zipPath);
-    zipEncoder.addFile(tripsFile, fileName);
+    zipEncoder.addFile(tripsFile, ExpenseGroupStorage.fileName);
     zipEncoder.close();
 
     if (!context.mounted) return;
