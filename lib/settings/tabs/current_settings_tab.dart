@@ -35,110 +35,167 @@ class CurrentSettingsTab extends StatelessWidget {
             const SizedBox(height: 16),
             const ThemeSelectorSetting(),
             const SizedBox(height: 24),
-            SizedBox(
-              width: double.infinity,
-              child: TextButton.icon(
-                icon: const Icon(Icons.backup),
-                label: Text(localizations.get('backup')),
-                style: TextButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+            // SEZIONE BACKUP E RIPRISTINO
+            Text(
+              'Backup e Ripristino',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
                   ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                ),
-                onPressed: () async {
-                  await _backupTrips(context, localizations);
-                },
-              ),
             ),
             const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: TextButton.icon(
-                icon: const Icon(Icons.file_upload),
-                label: Text(localizations.get('import')),
-                style: TextButton.styleFrom(
-                  backgroundColor:
-                      Theme.of(context).colorScheme.secondaryContainer,
-                  foregroundColor:
-                      Theme.of(context).colorScheme.onSecondaryContainer,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surface,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .outline
+                      .withValues(alpha: 0.2),
+                  width: 1,
                 ),
-                onPressed: () async {
-                  final result = await FilePicker.platform.pickFiles(
-                    type: FileType.custom,
-                    allowedExtensions: ['zip', 'json'],
-                  );
-                  if (!context.mounted) return;
-                  if (result != null && result.files.single.path != null) {
-                    final filePath = result.files.single.path!;
-                    final fileName = result.files.single.name;
-                    final confirm = await showDialog<bool>(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: Text(localizations.get('import_confirm_title')),
-                        content: Text(localizations.get(
-                            'import_confirm_message',
-                            params: {'file': fileName})),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(false),
-                            child: Text(localizations.get('cancel')),
-                          ),
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(true),
-                            child: Text(localizations.get('ok')),
-                          ),
-                        ],
+              ),
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      icon: const Icon(Icons.backup_rounded, size: 20),
+                      label: Text(localizations.get('backup')),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor:
+                            Theme.of(context).colorScheme.onPrimary,
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 16),
                       ),
-                    );
-                    if (confirm == true) {
-                      try {
-                        final dir = await getApplicationDocumentsDirectory();
-                        final destFile = File('${dir.path}/trips.json');
-                        if (filePath.endsWith('.zip')) {
-                          final bytes = await File(filePath).readAsBytes();
-                          final archive = ZipDecoder().decodeBytes(bytes);
-                          for (final file in archive) {
-                            if (file.name == 'trips.json') {
-                              await destFile
-                                  .writeAsBytes(file.content as List<int>);
-                              break;
+                      onPressed: () async {
+                        await _backupTrips(context, localizations);
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      icon: const Icon(Icons.file_upload_rounded, size: 20),
+                      label: Text(localizations.get('import')),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Theme.of(context).colorScheme.primary,
+                        side: BorderSide(
+                          color: Theme.of(context).colorScheme.primary,
+                          width: 1.5,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 16),
+                      ),
+                      onPressed: () async {
+                        final result = await FilePicker.platform.pickFiles(
+                          type: FileType.custom,
+                          allowedExtensions: ['zip', 'json'],
+                        );
+                        if (!context.mounted) return;
+                        if (result != null &&
+                            result.files.single.path != null) {
+                          final filePath = result.files.single.path!;
+                          final fileName = result.files.single.name;
+                          final confirm = await showDialog<bool>(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              title: Text(
+                                  localizations.get('import_confirm_title')),
+                              content: Text(localizations.get(
+                                  'import_confirm_message',
+                                  params: {'file': fileName})),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(false),
+                                  child: Text(localizations.get('cancel')),
+                                ),
+                                FilledButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(true),
+                                  child: Text(localizations.get('ok')),
+                                ),
+                              ],
+                            ),
+                          );
+                          if (confirm == true) {
+                            try {
+                              final dir =
+                                  await getApplicationDocumentsDirectory();
+                              final destFile = File(
+                                  '${dir.path}/expense_group_storage.json');
+
+                              if (filePath.endsWith('.zip')) {
+                                final bytes =
+                                    await File(filePath).readAsBytes();
+                                final archive = ZipDecoder().decodeBytes(bytes);
+
+                                bool fileFound = false;
+                                for (final file in archive) {
+                                  // Cerca sia il nome nuovo che quello vecchio per compatibilità
+                                  if (file.name ==
+                                          'expense_group_storage.json' ||
+                                      file.name == 'trips.json') {
+                                    await destFile.writeAsBytes(
+                                        file.content as List<int>);
+                                    fileFound = true;
+                                    break;
+                                  }
+                                }
+
+                                if (!fileFound) {
+                                  throw Exception(
+                                      'File di backup non trovato nell\'archivio');
+                                }
+                              } else if (filePath.endsWith('.json')) {
+                                await File(filePath).copy(destFile.path);
+                              } else {
+                                throw Exception('Formato file non supportato');
+                              }
+
+                              if (!context.mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content: Text(
+                                        localizations.get('import_success'))),
+                              );
+
+                              Navigator.of(context)
+                                  .popUntil((route) => route.isFirst);
+                              final state =
+                                  context.findAncestorStateOfType<State>();
+                              if (state != null && state.mounted) {
+                                // ignore: invalid_use_of_protected_member
+                                state.setState(() {});
+                              }
+                            } catch (e) {
+                              if (!context.mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content: Text(
+                                        '${localizations.get('import_error')}: ${e.toString()}')),
+                              );
                             }
                           }
-                        } else if (filePath.endsWith('.json')) {
-                          await File(filePath).copy(destFile.path);
                         }
-                        if (!context.mounted) return;
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content:
-                                  Text(localizations.get('import_success'))),
-                        );
-                        Navigator.of(context)
-                            .popUntil((route) => route.isFirst);
-                        final state = context.findAncestorStateOfType<State>();
-                        if (state != null && state.mounted) {
-                          // ignore: invalid_use_of_protected_member
-                          state.setState(() {});
-                        }
-                      } catch (e) {
-                        if (!context.mounted) return;
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Text(localizations.get('import_error'))),
-                        );
-                      }
-                    }
-                  }
-                },
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 24),
@@ -152,7 +209,8 @@ class CurrentSettingsTab extends StatelessWidget {
 Future<void> _backupTrips(BuildContext context, AppLocalizations loc) async {
   try {
     final dir = await getApplicationDocumentsDirectory();
-    final tripsFile = File('${dir.path}/trips.json');
+    final tripsFile = File('${dir.path}/expense_group_storage.json');
+
     if (!await tripsFile.exists()) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -160,16 +218,32 @@ Future<void> _backupTrips(BuildContext context, AppLocalizations loc) async {
       );
       return;
     }
+
+    final fileSize = await tripsFile.length();
+    if (fileSize == 0) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(loc.get('no_trips_to_backup'))),
+      );
+      return;
+    }
+
     final zipEncoder = ZipFileEncoder();
     final tempDir = await getTemporaryDirectory();
     final now = DateTime.now();
     final dateStr =
         "${now.year.toString().padLeft(4, '0')}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}_${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}${now.second.toString().padLeft(2, '0')}";
-    final zipPath = '${tempDir.path}/$dateStr-caravella_backup.zip';
+    final zipPath = '${tempDir.path}/caravella_backup_$dateStr.zip';
+
+    // Usa il nome del file storage come nome interno nell'archivio
+    final fileName = tripsFile.path.split('/').last;
+
     zipEncoder.create(zipPath);
-    zipEncoder.addFile(tripsFile);
+    zipEncoder.addFile(tripsFile, fileName);
     zipEncoder.close();
+
     if (!context.mounted) return;
+
     final params = ShareParams(
       text: loc.get('backup_share_message'),
       files: [XFile(zipPath)],
@@ -178,7 +252,7 @@ Future<void> _backupTrips(BuildContext context, AppLocalizations loc) async {
   } catch (e) {
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(loc.get('backup_error'))),
+      SnackBar(content: Text('${loc.get('backup_error')}: ${e.toString()}')),
     );
   }
 }
