@@ -279,9 +279,9 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
             key: _formKey,
             child: ListView(
               children: [
-                // Sezione 1: Informazioni Base
+                // Sezione 1: Nuovo Gruppo
                 _buildSectionCard(
-                  title: loc.get('basic_info'),
+                  title: loc.get('new_group'),
                   children: [
                     // Nome gruppo
                     TextFormField(
@@ -380,7 +380,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                         ),
                         IconButton.outlined(
                           icon: const Icon(Icons.add),
-                          tooltip: loc.get('add_participant'),
+                          tooltip: loc.get('add'),
                           onPressed: () {
                             showDialog(
                               context: context,
@@ -555,7 +555,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                         ),
                         IconButton.outlined(
                           icon: const Icon(Icons.add),
-                          tooltip: loc.get('add_category'),
+                          tooltip: loc.get('add'),
                           onPressed: () {
                             showDialog(
                               context: context,
@@ -733,7 +733,6 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 // Bottone di salvataggio
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: TextButton(
                     onPressed: _saveTrip,
                     style: TextButton.styleFrom(
