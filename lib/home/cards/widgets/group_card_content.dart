@@ -103,7 +103,7 @@ class GroupCardContent extends StatelessWidget {
       children: [
         // Totale spese in alto con font grande (allineato a destra)
         Padding(
-          padding: const EdgeInsets.only(bottom: 8),
+          padding: const EdgeInsets.only(bottom: 16),
           child: CurrencyDisplay(
             value: totalExpenses,
             currency: '€',
@@ -125,9 +125,7 @@ class GroupCardContent extends StatelessWidget {
                 children: [
                   Text(
                     group.title,
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: theme.textTheme.titleLarge,
                     overflow: TextOverflow.ellipsis,
                   ),
                   if (group.startDate != null || group.endDate != null)
@@ -150,7 +148,7 @@ class GroupCardContent extends StatelessWidget {
           ],
         ),
 
-        const SizedBox(height: 16),
+        const SizedBox(height: 24),
 
         // Statistiche rapide (solo icone e valori)
         Row(
@@ -188,7 +186,7 @@ class GroupCardContent extends StatelessWidget {
           ],
         ),
 
-        const SizedBox(height: 20),
+        const SizedBox(height: 28),
 
         // Grafico mini degli ultimi 7 giorni
         Row(
@@ -212,10 +210,10 @@ class GroupCardContent extends StatelessWidget {
         const SizedBox(height: 8),
         MiniExpenseChart(group: group, theme: theme),
 
-        // Spacer per spingere il bottone in basso
+        // Spacer per spingere il bottone sempre in fondo
         const Spacer(),
 
-        // Bottone "Aggiungi" in fondo alla card (solo testuale)
+        // Bottone "Aggiungi" sempre in fondo alla card (solo testuale)
         SizedBox(
           width: double.infinity,
           child: TextButton.icon(
