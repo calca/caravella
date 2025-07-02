@@ -18,6 +18,7 @@ class AppLocalizations {
       'create_first_group': 'Create first group',
       'new_expense_group': 'New Expense Group',
       'tap_to_create': 'Tap to create',
+      'no_expense_label': 'No expenses found',
 
       'no_trips_found': 'Where do you want to go?',
       'expenses': 'Expenses',
@@ -106,6 +107,7 @@ class AppLocalizations {
       'create_first_group': 'Crea primo gruppo',
       'new_expense_group': 'Nuovo Gruppo di Spese',
       'tap_to_create': 'Tocca per creare',
+      'no_expense_label': 'Nessuna spesa trovata',
 
       'no_trips_found': 'Dove vuoi andare?',
       'participants_label': 'Partecipanti',

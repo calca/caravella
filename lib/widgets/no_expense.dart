@@ -7,36 +7,29 @@ class NoExpense extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Opacity(
-      opacity: 0.2,
-      child: ColorFiltered(
-        colorFilter: ColorFilter.matrix(<double>[
-          0.2126,
-          0.7152,
-          0.0722,
-          0,
-          0,
-          0.2126,
-          0.7152,
-          0.0722,
-          0,
-          0,
-          0.2126,
-          0.7152,
-          0.0722,
-          0,
-          0,
-          0,
-          0,
-          0,
-          1,
-          0,
-        ]),
-        child: Image.asset(
-          'assets/images/no_expense.png',
-          width: 180,
-          height: 180,
-          fit: BoxFit.contain,
-          semanticLabel: semanticLabel,
+      opacity: 0.5,
+      child: SizedBox(
+        width: 180,
+        height: 180,
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.receipt_long,
+                size: 100,
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                semanticLabel: semanticLabel,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                semanticLabel,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                    ),
+              ),
+            ],
+          ),
         ),
       ),
     );

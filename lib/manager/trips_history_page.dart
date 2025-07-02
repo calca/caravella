@@ -608,11 +608,10 @@ class _TripsHistoryPageState extends State<TripsHistoryPage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          Image.asset(
-                                            'assets/images/home/no_travels.png',
-                                            width: 180,
-                                            height: 180,
-                                            fit: BoxFit.contain,
+                                          Icon(
+                                            Icons.luggage,
+                                            size: 100,
+                                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                                           ),
                                           const SizedBox(height: 16),
                                           Text(loc.get('no_trips_found'),
