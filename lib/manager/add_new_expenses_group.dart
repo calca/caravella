@@ -7,6 +7,7 @@ import '../app_localizations.dart';
 import '../state/locale_notifier.dart';
 import '../widgets/currency_selector.dart';
 import '../widgets/caravella_app_bar.dart';
+import '../widgets/widgets.dart';
 
 class AddNewExpensesGroupPage extends StatefulWidget {
   final ExpenseGroup? trip;
@@ -226,16 +227,9 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
 
   Widget _buildSectionCard(
       {required String title, required List<Widget> children}) {
-    return Container(
+    return BaseCard(
       padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(12.0),
-        border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
-          width: 1,
-        ),
-      ),
+      borderRadius: BorderRadius.circular(12.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

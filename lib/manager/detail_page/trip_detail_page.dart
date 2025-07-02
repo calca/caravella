@@ -9,6 +9,7 @@ import '../../state/locale_notifier.dart';
 import 'tabs/expenses_tab.dart';
 import 'tabs/overview_tab.dart';
 import '../../widgets/currency_display.dart';
+import '../../widgets/widgets.dart';
 import 'tabs/statistics_tab.dart';
 import '../../widgets/caravella_app_bar.dart';
 
@@ -154,12 +155,11 @@ class _TripDetailPageState extends State<TripDetailPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Flat info trip header (no Card)
-          Container(
+          // Flat info trip header
+          BaseCard(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-            decoration: BoxDecoration(
-              color: colorScheme.surfaceContainerHighest,
-            ),
+            backgroundColor: colorScheme.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(0), // Per farlo aderire ai bordi
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
