@@ -108,6 +108,17 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
     }
   }
 
+  /// Controlla se il form ha i dati minimi per essere salvato
+  bool _isFormValid() {
+    // Il titolo deve essere non vuoto
+    if (_titleController.text.trim().isEmpty) return false;
+    
+    // Deve esserci almeno un partecipante
+    if (_participants.isEmpty) return false;
+    
+    return true;
+  }
+
   Future<void> _saveTrip() async {
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
     final loc = AppLocalizations(locale);
@@ -312,6 +323,9 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                       validator: (v) => v == null || v.isEmpty
                           ? loc.get('enter_title')
                           : null,
+                      onChanged: (value) {
+                        setState(() {}); // Aggiorna lo stato per il bottone Salva
+                      },
                     ),
                     const SizedBox(height: 20),
                     // Sezione date compatta
@@ -841,20 +855,26 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 SizedBox(
                   width: double.infinity,
                   child: TextButton(
-                    onPressed: _saveTrip,
+                    onPressed: _isFormValid() ? _saveTrip : null,
                     style: TextButton.styleFrom(
                       minimumSize: const Size.fromHeight(56),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      foregroundColor: _isFormValid() 
+                          ? Theme.of(context).colorScheme.onPrimary
+                          : Theme.of(context).colorScheme.onSurface.withOpacity(0.38),
+                      backgroundColor: _isFormValid() 
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.onSurface.withOpacity(0.12),
                       textStyle:
                           Theme.of(context).textTheme.titleMedium?.copyWith(
-                                color: Theme.of(context).colorScheme.onPrimary,
+                                color: _isFormValid() 
+                                    ? Theme.of(context).colorScheme.onPrimary
+                                    : Theme.of(context).colorScheme.onSurface.withOpacity(0.38),
                                 fontWeight: FontWeight.w600,
                               ),
-                      elevation: 2,
+                      elevation: _isFormValid() ? 2 : 0,
                     ),
                     child: Text(loc.get('save')),
                   ),
