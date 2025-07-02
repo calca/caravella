@@ -62,31 +62,9 @@ class CaravellaBottomBar extends StatelessWidget {
                   child: showLeftButtons
                       ? Container(
                           key: const ValueKey('left-buttons'),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .surface
-                                .withValues(
-                                    alpha: Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? 0.32
-                                        : 0.85),
-                            borderRadius: BorderRadius.circular(32),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Theme.of(context)
-                                    .shadowColor
-                                    .withValues(alpha: 0.15),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
                           child: Row(
                             children: [
-                              IconButton(
-                                icon: const Icon(Icons.history),
-                                color: Theme.of(context).colorScheme.onSurface,
+                              TextButton(
                                 onPressed: () {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
@@ -95,10 +73,35 @@ class CaravellaBottomBar extends StatelessWidget {
                                     ),
                                   );
                                 },
+                                style: TextButton.styleFrom(
+                                  foregroundColor:
+                                      Theme.of(context).colorScheme.onSurface,
+                                  backgroundColor: Colors.transparent,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 12),
+                                  minimumSize: Size.zero,
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  elevation: 0,
+                                  shadowColor: Colors.transparent,
+                                  overlayColor: Theme.of(context)
+                                      .colorScheme
+                                      .onSurface
+                                      .withOpacity(0.1),
+                                ),
+                                child: Text(
+                                  loc.get('history').toUpperCase(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelMedium
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: 0.5,
+                                      ),
+                                ),
                               ),
-                              IconButton(
-                                icon: const Icon(Icons.settings),
-                                color: Theme.of(context).colorScheme.onSurface,
+                              const SizedBox(width: 8),
+                              TextButton(
                                 onPressed: () {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
@@ -107,6 +110,32 @@ class CaravellaBottomBar extends StatelessWidget {
                                     ),
                                   );
                                 },
+                                style: TextButton.styleFrom(
+                                  foregroundColor:
+                                      Theme.of(context).colorScheme.onSurface,
+                                  backgroundColor: Colors.transparent,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 12),
+                                  minimumSize: Size.zero,
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  elevation: 0,
+                                  shadowColor: Colors.transparent,
+                                  overlayColor: Theme.of(context)
+                                      .colorScheme
+                                      .onSurface
+                                      .withOpacity(0.1),
+                                ),
+                                child: Text(
+                                  loc.get('settings').toUpperCase(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelMedium
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: 0.5,
+                                      ),
+                                ),
                               ),
                             ],
                           ),

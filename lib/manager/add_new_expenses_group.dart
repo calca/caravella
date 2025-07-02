@@ -863,15 +863,15 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                       ),
                       foregroundColor: _isFormValid() 
                           ? Theme.of(context).colorScheme.onPrimary
-                          : Theme.of(context).colorScheme.onSurface.withOpacity(0.38),
+                          : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
                       backgroundColor: _isFormValid() 
                           ? Theme.of(context).colorScheme.primary
-                          : Theme.of(context).colorScheme.onSurface.withOpacity(0.12),
+                          : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.12),
                       textStyle:
                           Theme.of(context).textTheme.titleMedium?.copyWith(
                                 color: _isFormValid() 
                                     ? Theme.of(context).colorScheme.onPrimary
-                                    : Theme.of(context).colorScheme.onSurface.withOpacity(0.38),
+                                    : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
                                 fontWeight: FontWeight.w600,
                               ),
                       elevation: _isFormValid() ? 2 : 0,
