@@ -159,7 +159,8 @@ class _TripDetailPageState extends State<TripDetailPage> {
           BaseCard(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
             backgroundColor: colorScheme.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(0), // Per farlo aderire ai bordi
+            borderRadius:
+                BorderRadius.circular(0), // Per farlo aderire ai bordi
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
