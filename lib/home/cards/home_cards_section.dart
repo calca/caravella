@@ -50,50 +50,63 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
     final theme = Theme.of(context);
     final screenHeight = MediaQuery.of(context).size.height;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Header con avatar e saluto dinamico
-          HomeCardsHeader(
-            localizations: loc,
-            theme: theme,
-          ),
+    // Altezze delle varie sezioni
+    final headerHeight = screenHeight / 6;
+    final bottomBarHeight = screenHeight / 6;
+    final contentHeight = screenHeight - headerHeight - bottomBarHeight;
 
-          // Content area - occupa 2/3 della pagina
-          SizedBox(
-            height: screenHeight * 0.67, // 2/3 della pagina
-            child: _loading
-                ? const Center(child: CircularProgressIndicator())
-                : _activeGroups.isEmpty
-                    ? EmptyGroupsState(
-                        localizations: loc,
-                        theme: theme,
-                        onGroupAdded: () {
-                          widget.onTripAdded();
-                          _loadActiveGroups();
-                        },
-                      )
-                    : HorizontalGroupsList(
-                        groups: _activeGroups,
-                        localizations: loc,
-                        theme: theme,
-                        onGroupUpdated: () {
-                          widget.onTripAdded();
-                          _loadActiveGroups();
-                        },
-                      ),
-          ),
+    return SizedBox(
+      height: screenHeight, // Fornisce un vincolo di altezza definito
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            // Header con avatar e saluto dinamico
+            SizedBox(
+              height: headerHeight,
+              child: HomeCardsHeader(
+                localizations: loc,
+                theme: theme,
+              ),
+            ),
 
-          // Bottom bar semplificata
-          SimpleBottomBar(
-            localizations: loc,
-            theme: theme,
-          ),
-        ],
+            // Content area - riempie lo spazio tra header e bottom bar
+            SizedBox(
+              height: contentHeight,
+              child: _loading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _activeGroups.isEmpty
+                      ? EmptyGroupsState(
+                          localizations: loc,
+                          theme: theme,
+                          onGroupAdded: () {
+                            widget.onTripAdded();
+                            _loadActiveGroups();
+                          },
+                        )
+                      : HorizontalGroupsList(
+                          groups: _activeGroups,
+                          localizations: loc,
+                          theme: theme,
+                          onGroupUpdated: () {
+                            widget.onTripAdded();
+                            _loadActiveGroups();
+                          },
+                        ),
+            ),
+
+            // Bottom bar semplificata
+            SizedBox(
+              height: bottomBarHeight,
+              child: SimpleBottomBar(
+                localizations: loc,
+                theme: theme,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
