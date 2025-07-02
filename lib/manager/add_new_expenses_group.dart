@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../data/expense_group.dart';
 import '../data/participant.dart';
+import '../data/category.dart';
 import '../../data/expense_group_storage.dart';
 import '../app_localizations.dart';
 import '../state/locale_notifier.dart';
@@ -26,7 +27,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   DateTime? _startDate;
   DateTime? _endDate;
   String _currency = '€'; // Default euro
-  final List<String> _categories = [];
+  final List<Category> _categories = [];
   String? _dateError;
 
   @override
@@ -625,7 +626,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                     onSubmitted: (val) {
                                       if (val.trim().isNotEmpty) {
                                         setState(() {
-                                          _categories.add(val.trim());
+                                          _categories
+                                              .add(Category(name: val.trim()));
                                         });
                                         _closeDialogAndUnfocus();
                                       }
@@ -642,7 +644,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                             categoryController.text.trim();
                                         if (val.isNotEmpty) {
                                           setState(() {
-                                            _categories.add(val);
+                                            _categories
+                                                .add(Category(name: val));
                                           });
                                           _closeDialogAndUnfocus();
                                         }
@@ -708,13 +711,13 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                       const SizedBox(width: 8),
                                       Expanded(
                                         child: Text(
-                                          c,
+                                          c.name,
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodyLarge,
                                           semanticsLabel: loc.get(
                                               'category_name_semantics',
-                                              params: {'name': c}),
+                                              params: {'name': c.name}),
                                         ),
                                       ),
                                     ],
@@ -735,7 +738,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                 ),
                                 onPressed: () {
                                   final editController =
-                                      TextEditingController(text: c);
+                                      TextEditingController(text: c.name);
                                   showDialog(
                                     context: context,
                                     builder: (context) => AlertDialog(
@@ -751,7 +754,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                         onSubmitted: (val) {
                                           if (val.trim().isNotEmpty) {
                                             setState(() {
-                                              _categories[i] = val.trim();
+                                              _categories[i] =
+                                                  c.copyWith(name: val.trim());
                                             });
                                             _closeDialogAndUnfocus();
                                           }
@@ -769,7 +773,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                                 editController.text.trim();
                                             if (val.isNotEmpty) {
                                               setState(() {
-                                                _categories[i] = val;
+                                                _categories[i] =
+                                                    c.copyWith(name: val);
                                               });
                                               _closeDialogAndUnfocus();
                                             }

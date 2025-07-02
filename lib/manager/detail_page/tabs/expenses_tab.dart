@@ -33,7 +33,7 @@ class _ExpensesTabState extends State<ExpensesTab> {
         builder: (context) => ExpenseEditPage(
           expense: _expenses[i],
           participants: widget.trip.participants.map((p) => p.name).toList(),
-          categories: widget.trip.categories,
+          categories: widget.trip.categories.map((c) => c.name).toList(),
           loc: widget.loc,
           tripStartDate: widget.trip.startDate,
           tripEndDate: widget.trip.endDate,

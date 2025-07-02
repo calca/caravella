@@ -22,17 +22,18 @@ class CategoriesPieChart extends StatelessWidget {
     // Aggiungi le categorie definite
     for (final category in trip.categories) {
       final total = trip.expenses
-          .where((e) => e.category == category)
+          .where((e) => e.category == category.name)
           .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
       if (total > 0) {
-        categoryTotals[category] = total;
+        categoryTotals[category.name] = total;
       }
     }
 
     // Aggiungi le spese non categorizzate
     final uncategorizedTotal = trip.expenses
-        .where(
-            (e) => e.category.isEmpty || !trip.categories.contains(e.category))
+        .where((e) =>
+            e.category.isEmpty ||
+            !trip.categories.any((c) => c.name == e.category))
         .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
 
     if (uncategorizedTotal > 0) {

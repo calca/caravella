@@ -1,6 +1,7 @@
 import 'package:uuid/uuid.dart';
 import 'expense_details.dart';
 import 'participant.dart';
+import 'category.dart';
 
 class ExpenseGroup {
   final String id; // UDID per il gruppo di spese
@@ -10,7 +11,7 @@ class ExpenseGroup {
   final DateTime? startDate;
   final DateTime? endDate;
   final String currency; // Nuovo campo
-  final List<String> categories;
+  final List<Category> categories;
   final DateTime timestamp; // Nuovo campo timestamp
   final bool pinned; // Nuovo campo per pinnare il gruppo
   final bool archived; // Nuovo campo per archiviare il gruppo
@@ -46,9 +47,10 @@ class ExpenseGroup {
           json['startDate'] != null ? DateTime.parse(json['startDate']) : null,
       endDate: json['endDate'] != null ? DateTime.parse(json['endDate']) : null,
       currency: json['currency'] ?? '€', // Default a euro se mancante
-      categories: (json['categories'] is List)
-          ? List<String>.from(json['categories'] ?? [])
-          : [],
+      categories: (json['categories'] as List<dynamic>?)
+              ?.map((c) => Category.fromJson(c as Map<String, dynamic>))
+              .toList() ??
+          [],
       timestamp: json['timestamp'] != null
           ? DateTime.parse(json['timestamp'])
           : DateTime.now(),
@@ -65,7 +67,7 @@ class ExpenseGroup {
         'startDate': startDate?.toIso8601String(),
         'endDate': endDate?.toIso8601String(),
         'currency': currency,
-        'categories': categories,
+        'categories': categories.map((c) => c.toJson()).toList(),
         'timestamp': timestamp.toIso8601String(),
         'pinned': pinned, // Salva il valore pinnato
         'archived': archived, // Salva il valore archiviato
@@ -79,7 +81,7 @@ class ExpenseGroup {
     DateTime? startDate,
     DateTime? endDate,
     String? currency,
-    List<String>? categories,
+    List<Category>? categories,
     DateTime? timestamp,
     bool? pinned,
     bool? archived,
@@ -107,7 +109,7 @@ class ExpenseGroup {
       startDate: null,
       endDate: null,
       currency: '€',
-      categories: const [],
+      categories: const <Category>[],
       timestamp: DateTime.now(),
       id: 'empty',
       pinned: false,

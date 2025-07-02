@@ -124,7 +124,7 @@ class _TripDetailPageState extends State<TripDetailPage> {
                         ),
                         participants:
                             trip.participants.map((p) => p.name).toList(),
-                        categories: trip.categories,
+                        categories: trip.categories.map((c) => c.name).toList(),
                         loc: loc,
                         tripStartDate: trip.startDate,
                         tripEndDate: trip.endDate,

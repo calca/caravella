@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/expense/expense_form_component.dart';
 import '../data/expense_group.dart';
+import '../data/category.dart';
 import '../manager/trips_history_page.dart';
 import '../app_localizations.dart';
 import '../../data/expense_group_storage.dart';
@@ -156,7 +157,9 @@ class CaravellaBottomBar extends StatelessWidget {
                                     participants: currentTrip.participants
                                         .map((p) => p.name)
                                         .toList(),
-                                    categories: currentTrip.categories,
+                                    categories: currentTrip.categories
+                                        .map((c) => c.name)
+                                        .toList(),
                                     onExpenseAdded: (expense) async {
                                       final trips = await ExpenseGroupStorage
                                           .getAllGroups();
@@ -175,12 +178,14 @@ class CaravellaBottomBar extends StatelessWidget {
                                       final idx = trips.indexWhere(
                                           (v) => v.id == currentTrip.id);
                                       if (idx != -1) {
-                                        if (!trips[idx]
-                                            .categories
-                                            .contains(newCategory)) {
-                                          trips[idx]
-                                              .categories
-                                              .add(newCategory);
+                                        if (!trips[idx].categories.any(
+                                            (c) => c.name == newCategory)) {
+                                          trips[idx] = trips[idx].copyWith(
+                                            categories: [
+                                              ...trips[idx].categories,
+                                              Category(name: newCategory)
+                                            ],
+                                          );
                                           await ExpenseGroupStorage.writeTrips(
                                               trips);
                                           onTripAdded();
