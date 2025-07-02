@@ -230,7 +230,7 @@ class GroupCardContent extends StatelessWidget {
               size: 20,
             ),
             label: Text(
-              'Aggiungi Spesa',
+              localizations.get('add_expense').toUpperCase(),
               style: theme.textTheme.labelLarge?.copyWith(
                 fontWeight: FontWeight.w600,
                 color: theme.colorScheme.primary,
