@@ -47,6 +47,7 @@ class GroupCard extends StatelessWidget {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
+      height: double.infinity, // Assicura che usi tutto lo spazio verticale
       child: BaseCard(
         margin: const EdgeInsets.only(bottom: 16),
         backgroundColor: backgroundColor,

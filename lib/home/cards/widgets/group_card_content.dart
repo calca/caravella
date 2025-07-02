@@ -100,7 +100,7 @@ class GroupCardContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Header con titolo e pin
+        // Header con titolo e pin (senza bottone aggiungi)
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -126,48 +126,12 @@ class GroupCardContent extends StatelessWidget {
                 ],
               ),
             ),
-            Row(
-              children: [
-                if (group.pinned)
-                  Icon(
-                    Icons.push_pin,
-                    size: 18,
-                    color: theme.colorScheme.primary,
-                  ),
-                const SizedBox(width: 8),
-                // Quick add button
-                InkWell(
-                  onTap: () => _showAddExpenseSheet(context),
-                  borderRadius: BorderRadius.circular(20),
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.add,
-                          size: 16,
-                          color: theme.colorScheme.primary,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          'Aggiungi',
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.primary,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            if (group.pinned)
+              Icon(
+                Icons.push_pin,
+                size: 18,
+                color: theme.colorScheme.primary,
+              ),
           ],
         ),
 
@@ -202,7 +166,7 @@ class GroupCardContent extends StatelessWidget {
           ],
         ),
 
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
 
         // Grafico mini degli ultimi 7 giorni
         Row(
@@ -226,7 +190,8 @@ class GroupCardContent extends StatelessWidget {
         const SizedBox(height: 8),
         MiniExpenseChart(group: group, theme: theme),
 
-        const SizedBox(height: 16),
+        // Spacer per spingere il resto in basso
+        const Spacer(),
 
         // Totale spese (prominente)
         Container(
@@ -273,6 +238,36 @@ class GroupCardContent extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+        ),
+
+        const SizedBox(height: 16),
+
+        // Bottone "Aggiungi" in fondo alla card
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton.icon(
+            onPressed: () => _showAddExpenseSheet(context),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: theme.colorScheme.primary,
+              foregroundColor: theme.colorScheme.onPrimary,
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              elevation: 0,
+            ),
+            icon: Icon(
+              Icons.add,
+              size: 20,
+            ),
+            label: Text(
+              'Aggiungi Spesa',
+              style: theme.textTheme.labelLarge?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: theme.colorScheme.onPrimary,
+              ),
+            ),
           ),
         ),
       ],
