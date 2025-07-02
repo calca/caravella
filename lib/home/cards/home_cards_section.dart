@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import '../../app_localizations.dart';
 import '../../data/expense_group.dart';
-import 'home_trip_header.dart';
+import 'home_cards_header.dart';
 import '../../widgets/caravella_bottom_bar.dart';
 
-class HomeTripSection extends StatelessWidget {
+class HomeCardsSection extends StatelessWidget {
   final ExpenseGroup trip;
   final AppLocalizations loc;
   final VoidCallback onTripAdded;
 
-  const HomeTripSection({
+  const HomeCardsSection({
     super.key,
     required this.trip,
     required this.loc,
@@ -39,7 +39,7 @@ class HomeTripSection extends StatelessWidget {
                     vertical: isSmallScreen ? 6 : 8,
                   ),
                   child: Center(
-                    child: HomeTripCard(trip: trip),
+                    child: HomeCardsHeader(trip: trip),
                   ),
                 ),
 

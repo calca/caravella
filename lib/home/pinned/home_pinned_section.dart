@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
 import '../../data/expense_group.dart';
 import '../../manager/detail_page/trip_detail_page.dart';
-import '../trip/home_trip_header.dart';
+import '../cards/home_cards_header.dart';
 import '../../../widgets/caravella_bottom_bar.dart';
 
-class PinnedTripSection extends StatelessWidget {
+class HomePinnedSection extends StatelessWidget {
   final ExpenseGroup pinnedTrip;
   final AppLocalizations loc;
   final VoidCallback onTripAdded;
 
-  const PinnedTripSection({
+  const HomePinnedSection({
     super.key,
     required this.pinnedTrip,
     required this.loc,
@@ -76,7 +76,7 @@ class PinnedTripSection extends StatelessWidget {
                         width: 2,
                       ),
                     ),
-                    child: HomeTripCard(trip: pinnedTrip),
+                    child: HomeCardsHeader(trip: pinnedTrip),
                   ),
                 ),
 

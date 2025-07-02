@@ -6,9 +6,9 @@ import '../../settings/settings_page.dart';
 
 typedef RefreshCallback = void Function();
 
-class WelcomeSection extends StatelessWidget {
+class HomeWelcomeSection extends StatelessWidget {
   final RefreshCallback? onTripAdded;
-  const WelcomeSection({super.key, this.onTripAdded});
+  const HomeWelcomeSection({super.key, this.onTripAdded});
 
   @override
   Widget build(BuildContext context) {

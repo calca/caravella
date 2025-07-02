@@ -4,10 +4,9 @@ import '../data/expense_group.dart';
 import '../data/expense_group_storage.dart';
 import '../state/locale_notifier.dart';
 import '../../main.dart';
-import 'welcome/welcome_section.dart';
-import 'trip/home_trip_section.dart';
-import 'pinned/pinned_trip_section.dart';
-import 'widgets/home_background.dart';
+import 'welcome/home_welcome_section.dart';
+import 'cards/home_cards_section.dart';
+import 'pinned/home_pinned_section.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -68,16 +67,11 @@ class _HomePageState extends State<HomePage> with RouteAware {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // Background che occupa tutta la pagina - solo se ci sono viaggi
-          if (_pinnedTrip != null ||
-              (_currentTrip != null && _pinnedTrip == null))
-            const HomeBackground(),
-
           _loading
               ? const Center(child: CircularProgressIndicator())
               : _currentTrip == null
                   // Per WelcomeSection: NO SafeArea per edge-to-edge completo
-                  ? WelcomeSection(onTripAdded: _refresh)
+                  ? HomeWelcomeSection(onTripAdded: _refresh)
                   // Per altre sezioni: USA SafeArea
                   : SafeArea(
                       child: SingleChildScrollView(
@@ -85,14 +79,14 @@ class _HomePageState extends State<HomePage> with RouteAware {
                           children: [
                             if (_pinnedTrip != null)
                               // C'è un viaggio pinnato: mostra solo la sezione pinnata
-                              PinnedTripSection(
+                              HomePinnedSection(
                                 pinnedTrip: _pinnedTrip!,
                                 loc: loc,
                                 onTripAdded: _refresh,
                               )
                             else
                               // Ci sono viaggi ma nessun pinnato: mostra trip section
-                              HomeTripSection(
+                              HomeCardsSection(
                                 trip: _currentTrip!,
                                 loc: loc,
                                 onTripAdded: _refresh,

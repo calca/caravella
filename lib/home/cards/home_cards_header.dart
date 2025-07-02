@@ -4,9 +4,9 @@ import '../../data/expense_group.dart';
 import '../../state/locale_notifier.dart';
 import '../../widgets/currency_display.dart';
 
-class HomeTripCard extends StatelessWidget {
+class HomeCardsHeader extends StatelessWidget {
   final ExpenseGroup trip;
-  const HomeTripCard({super.key, required this.trip});
+  const HomeCardsHeader({super.key, required this.trip});
 
   @override
   Widget build(BuildContext context) {
