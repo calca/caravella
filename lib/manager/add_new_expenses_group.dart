@@ -19,6 +19,7 @@ class AddNewExpensesGroupPage extends StatefulWidget {
 class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
+  final FocusNode _titleFocusNode = FocusNode();
   final List<String> _participants = [];
   final TextEditingController _participantController = TextEditingController();
   DateTime? _startDate;
@@ -31,6 +32,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   void initState() {
     super.initState();
     if (widget.trip != null) {
+      // Edit mode
       _titleController.text = widget.trip!.title;
       _participants.addAll(widget.trip!.participants);
       _startDate = widget.trip!.startDate;
@@ -45,6 +47,14 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
     super.didChangeDependencies();
     // Forza rebuild su cambio locale
     if (mounted) setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _titleFocusNode.dispose();
+    _participantController.dispose();
+    super.dispose();
   }
 
   Future<void> _pickDate(BuildContext context, bool isStart) async {
@@ -216,11 +226,13 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          const SizedBox(height: 16),
+          if (title.isNotEmpty) ...[
+            Text(
+              title,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 16),
+          ],
           ...children,
         ],
       ),
@@ -286,6 +298,9 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                     // Nome gruppo
                     TextFormField(
                       controller: _titleController,
+                      focusNode: _titleFocusNode,
+                      autofocus: widget.trip ==
+                          null, // Focus automatico solo in modalità creazione
                       style:
                           Theme.of(context).textTheme.displayMedium?.copyWith(),
                       decoration: InputDecoration(
@@ -359,24 +374,14 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
 
                 // Sezione 2: Partecipanti
                 _buildSectionCard(
-                  title: loc.get('participants'),
+                  title: '', // Titolo vuoto perché lo gestiamo direttamente
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          _participants.isEmpty
-                              ? loc.get('no_participants')
-                              : '${_participants.length} partecipant${_participants.length == 1 ? 'e' : 'i'}',
-                          style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: _participants.isEmpty
-                                        ? Theme.of(context)
-                                            .colorScheme
-                                            .onSurface
-                                            .withValues(alpha: 0.6)
-                                        : null,
-                                  ),
+                          loc.get('participants'),
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                         IconButton.outlined(
                           icon: const Icon(Icons.add),
@@ -429,7 +434,21 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                         ),
                       ],
                     ),
-                    if (_participants.isNotEmpty) ...[
+                    if (_participants.isEmpty) ...[
+                      const SizedBox(height: 16),
+                      Center(
+                        child: Text(
+                          loc.get('no_participants'),
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withValues(alpha: 0.6),
+                                  ),
+                        ),
+                      ),
+                    ] else ...[
                       const SizedBox(height: 12),
                       ..._participants.asMap().entries.map((entry) {
                         final i = entry.key;
@@ -442,29 +461,55 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 12.0,
-                                    vertical: 8.0,
+                                    vertical: 12.0,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .primaryContainer
-                                        .withValues(alpha: 0.3),
-                                    borderRadius: BorderRadius.circular(8.0),
+                                    border: Border.all(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .outline
+                                          .withValues(alpha: 0.3),
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(12.0),
                                   ),
-                                  child: Text(
-                                    p,
-                                    style:
-                                        Theme.of(context).textTheme.bodyLarge,
-                                    semanticsLabel: loc.get(
-                                        'participant_name_semantics',
-                                        params: {'name': p}),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.person_outline,
+                                        size: 16,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: Text(
+                                          p,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge,
+                                          semanticsLabel: loc.get(
+                                              'participant_name_semantics',
+                                              params: {'name': p}),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
                               const SizedBox(width: 8),
                               IconButton(
-                                icon: const Icon(Icons.edit_outlined),
+                                icon: const Icon(Icons.edit_outlined, size: 20),
                                 tooltip: loc.get('edit_participant'),
+                                style: IconButton.styleFrom(
+                                  backgroundColor: Theme.of(context)
+                                      .colorScheme
+                                      .surfaceContainerHighest
+                                      .withValues(alpha: 0.3),
+                                  padding: const EdgeInsets.all(8),
+                                  minimumSize: const Size(36, 36),
+                                ),
                                 onPressed: () {
                                   final editController =
                                       TextEditingController(text: p);
@@ -515,8 +560,19 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                 },
                               ),
                               IconButton(
-                                icon: const Icon(Icons.delete_outline),
+                                icon:
+                                    const Icon(Icons.delete_outline, size: 20),
                                 tooltip: loc.get('delete_participant'),
+                                style: IconButton.styleFrom(
+                                  backgroundColor: Theme.of(context)
+                                      .colorScheme
+                                      .errorContainer
+                                      .withValues(alpha: 0.1),
+                                  foregroundColor:
+                                      Theme.of(context).colorScheme.error,
+                                  padding: const EdgeInsets.all(8),
+                                  minimumSize: const Size(36, 36),
+                                ),
                                 onPressed: () {
                                   setState(() {
                                     _participants.removeAt(i);
@@ -534,24 +590,14 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
 
                 // Sezione 3: Categorie
                 _buildSectionCard(
-                  title: loc.get('categories'),
+                  title: '', // Titolo vuoto perché lo gestiamo direttamente
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          _categories.isEmpty
-                              ? loc.get('no_categories')
-                              : '${_categories.length} categori${_categories.length == 1 ? 'a' : 'e'}',
-                          style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: _categories.isEmpty
-                                        ? Theme.of(context)
-                                            .colorScheme
-                                            .onSurface
-                                            .withValues(alpha: 0.6)
-                                        : null,
-                                  ),
+                          loc.get('categories'),
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                         IconButton.outlined(
                           icon: const Icon(Icons.add),
@@ -606,7 +652,21 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                         ),
                       ],
                     ),
-                    if (_categories.isNotEmpty) ...[
+                    if (_categories.isEmpty) ...[
+                      const SizedBox(height: 16),
+                      Center(
+                        child: Text(
+                          loc.get('no_categories'),
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withValues(alpha: 0.6),
+                                  ),
+                        ),
+                      ),
+                    ] else ...[
                       const SizedBox(height: 12),
                       ..._categories.asMap().entries.map((entry) {
                         final i = entry.key;
@@ -619,29 +679,55 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 12.0,
-                                    vertical: 8.0,
+                                    vertical: 12.0,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .secondaryContainer
-                                        .withValues(alpha: 0.3),
-                                    borderRadius: BorderRadius.circular(8.0),
+                                    border: Border.all(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .outline
+                                          .withValues(alpha: 0.3),
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(12.0),
                                   ),
-                                  child: Text(
-                                    c,
-                                    style:
-                                        Theme.of(context).textTheme.bodyLarge,
-                                    semanticsLabel: loc.get(
-                                        'category_name_semantics',
-                                        params: {'name': c}),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.category_outlined,
+                                        size: 16,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: Text(
+                                          c,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge,
+                                          semanticsLabel: loc.get(
+                                              'category_name_semantics',
+                                              params: {'name': c}),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
                               const SizedBox(width: 8),
                               IconButton(
-                                icon: const Icon(Icons.edit_outlined),
+                                icon: const Icon(Icons.edit_outlined, size: 20),
                                 tooltip: loc.get('edit_category'),
+                                style: IconButton.styleFrom(
+                                  backgroundColor: Theme.of(context)
+                                      .colorScheme
+                                      .surfaceContainerHighest
+                                      .withValues(alpha: 0.3),
+                                  padding: const EdgeInsets.all(8),
+                                  minimumSize: const Size(36, 36),
+                                ),
                                 onPressed: () {
                                   final editController =
                                       TextEditingController(text: c);
@@ -691,8 +777,19 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                 },
                               ),
                               IconButton(
-                                icon: const Icon(Icons.delete_outline),
+                                icon:
+                                    const Icon(Icons.delete_outline, size: 20),
                                 tooltip: loc.get('delete_category'),
+                                style: IconButton.styleFrom(
+                                  backgroundColor: Theme.of(context)
+                                      .colorScheme
+                                      .errorContainer
+                                      .withValues(alpha: 0.1),
+                                  foregroundColor:
+                                      Theme.of(context).colorScheme.error,
+                                  padding: const EdgeInsets.all(8),
+                                  minimumSize: const Size(36, 36),
+                                ),
                                 onPressed: () {
                                   setState(() {
                                     _categories.removeAt(i);
@@ -731,7 +828,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 const SizedBox(height: 32),
 
                 // Bottone di salvataggio
-                Container(
+                SizedBox(
                   width: double.infinity,
                   child: TextButton(
                     onPressed: _saveTrip,
