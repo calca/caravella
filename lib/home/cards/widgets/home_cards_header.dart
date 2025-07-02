@@ -18,6 +18,13 @@ class HomeCardsHeader extends StatelessWidget {
     return 'good_evening';
   }
 
+  IconData _getGreetingIcon() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) return Icons.wb_sunny_outlined; // Sole del mattino
+    if (hour < 18) return Icons.wb_sunny; // Sole pieno del pomeriggio
+    return Icons.nights_stay_outlined; // Luna della sera
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -33,7 +40,7 @@ class HomeCardsHeader extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: Icon(
-              Icons.person,
+              _getGreetingIcon(),
               size: 28,
               color: theme.colorScheme.primary,
             ),
