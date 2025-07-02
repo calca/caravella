@@ -9,6 +9,8 @@ class GroupCard extends StatelessWidget {
   final AppLocalizations localizations;
   final ThemeData theme;
   final VoidCallback onGroupUpdated;
+  final bool isSelected;
+  final double selectionProgress;
 
   const GroupCard({
     super.key,
@@ -16,7 +18,17 @@ class GroupCard extends StatelessWidget {
     required this.localizations,
     required this.theme,
     required this.onGroupUpdated,
+    this.isSelected = false,
+    this.selectionProgress = 0.0,
   });
+
+  Color _getSelectedColor(bool isDarkMode) {
+    if (isDarkMode) {
+      return const Color(0xFF90659A); // Colore tema scuro
+    } else {
+      return const Color(0xFFC9E9CA); // Colore tema chiaro
+    }
+  }
 
   String _formatDateRange(ExpenseGroup group, AppLocalizations loc) {
     final start = group.startDate;
@@ -42,127 +54,141 @@ class GroupCard extends StatelessWidget {
         .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
     final participantCount = group.participants.length;
 
-    return BaseCard(
-      margin: const EdgeInsets.only(bottom: 16),
-      onTap: () async {
-        final result = await Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => TripDetailPage(trip: group),
-          ),
-        );
-        if (result == true) {
-          onGroupUpdated();
-        }
-      },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header della card
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Text(
-                  group.title,
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
+    final isDarkMode = theme.brightness == Brightness.dark;
+    final selectedColor = _getSelectedColor(isDarkMode);
+    final defaultBackgroundColor = theme.colorScheme.surface;
+
+    // Interpola tra il colore di default e quello selezionato
+    final backgroundColor = Color.lerp(
+      defaultBackgroundColor,
+      selectedColor,
+      selectionProgress * 0.3, // 30% di intensità massima
+    );
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+      child: BaseCard(
+        margin: const EdgeInsets.only(bottom: 16),
+        backgroundColor: backgroundColor,
+        onTap: () async {
+          final result = await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => TripDetailPage(trip: group),
+            ),
+          );
+          if (result == true) {
+            onGroupUpdated();
+          }
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header della card
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    group.title,
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              if (group.pinned)
-                Icon(
-                  Icons.push_pin,
-                  size: 20,
-                  color: theme.colorScheme.primary,
-                ),
-            ],
-          ),
+                if (group.pinned)
+                  Icon(
+                    Icons.push_pin,
+                    size: 20,
+                    color: theme.colorScheme.primary,
+                  ),
+              ],
+            ),
 
-          const SizedBox(height: 12),
+            const SizedBox(height: 12),
 
-          // Info del gruppo
-          Row(
-            children: [
-              Icon(
-                Icons.people_outline,
-                size: 16,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-              ),
-              const SizedBox(width: 6),
-              Text(
-                '$participantCount ${localizations.get('participants').toLowerCase()}',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Icon(
-                Icons.receipt_long_outlined,
-                size: 16,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-              ),
-              const SizedBox(width: 6),
-              Text(
-                '${group.expenses.length} ${localizations.get('expenses').toLowerCase()}',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                ),
-              ),
-            ],
-          ),
-
-          if (group.startDate != null || group.endDate != null) ...[
-            const SizedBox(height: 8),
+            // Info del gruppo
             Row(
               children: [
                 Icon(
-                  Icons.calendar_today_outlined,
+                  Icons.people_outline,
                   size: 16,
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                 ),
                 const SizedBox(width: 6),
                 Text(
-                  _formatDateRange(group, localizations),
+                  '$participantCount ${localizations.get('participants').toLowerCase()}',
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color:
-                        theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Icon(
+                  Icons.receipt_long_outlined,
+                  size: 16,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  '${group.expenses.length} ${localizations.get('expenses').toLowerCase()}',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                 ),
               ],
+            ),
+
+            if (group.startDate != null || group.endDate != null) ...[
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Icon(
+                    Icons.calendar_today_outlined,
+                    size: 16,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    _formatDateRange(group, localizations),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+
+            const SizedBox(height: 16),
+
+            // Totale spese
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primaryContainer,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.euro,
+                    size: 16,
+                    color: theme.colorScheme.onPrimaryContainer,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    '€${totalExpenses.toStringAsFixed(2)}',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      color: theme.colorScheme.onPrimaryContainer,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
-
-          const SizedBox(height: 16),
-
-          // Totale spese
-          Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primaryContainer,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.euro,
-                  size: 16,
-                  color: theme.colorScheme.onPrimaryContainer,
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  '€${totalExpenses.toStringAsFixed(2)}',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    color: theme.colorScheme.onPrimaryContainer,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
