@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/expense/expense_form_component.dart';
 import '../data/expense_group.dart';
-import '../data/category.dart';
+import '../data/expense_category.dart';
 import '../manager/trips_history_page.dart';
 import '../app_localizations.dart';
 import '../../data/expense_group_storage.dart';
@@ -183,7 +183,7 @@ class CaravellaBottomBar extends StatelessWidget {
                                           trips[idx] = trips[idx].copyWith(
                                             categories: [
                                               ...trips[idx].categories,
-                                              Category(name: newCategory)
+                                              ExpenseCategory(name: newCategory)
                                             ],
                                           );
                                           await ExpenseGroupStorage.writeTrips(

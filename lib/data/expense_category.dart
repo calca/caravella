@@ -1,19 +1,19 @@
 import 'package:uuid/uuid.dart';
 
-class Participant {
-  final String id; // UDID per il partecipante
+class ExpenseCategory {
+  final String id; // UDID per la categoria
   final String name;
   final DateTime createdAt;
 
-  Participant({
+  ExpenseCategory({
     required this.name,
     String? id, // opzionale, generato se mancante
     DateTime? createdAt, // opzionale, default a now
   })  : id = id ?? const Uuid().v4(),
         createdAt = createdAt ?? DateTime.now();
 
-  factory Participant.fromJson(Map<String, dynamic> json) {
-    return Participant(
+  factory ExpenseCategory.fromJson(Map<String, dynamic> json) {
+    return ExpenseCategory(
       id: json['id'],
       name: json['name'],
       createdAt: json['createdAt'] != null
@@ -28,12 +28,12 @@ class Participant {
         'createdAt': createdAt.toIso8601String(),
       };
 
-  Participant copyWith({
+  ExpenseCategory copyWith({
     String? id,
     String? name,
     DateTime? createdAt,
   }) {
-    return Participant(
+    return ExpenseCategory(
       id: id ?? this.id,
       name: name ?? this.name,
       createdAt: createdAt ?? this.createdAt,
@@ -43,7 +43,7 @@ class Participant {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Participant &&
+      other is ExpenseCategory &&
           runtimeType == other.runtimeType &&
           id == other.id;
 
@@ -51,5 +51,5 @@ class Participant {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() => 'Participant{id: $id, name: $name}';
+  String toString() => 'Category{id: $id, name: $name}';
 }

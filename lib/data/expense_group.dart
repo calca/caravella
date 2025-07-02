@@ -1,17 +1,17 @@
 import 'package:uuid/uuid.dart';
 import 'expense_details.dart';
-import 'participant.dart';
-import 'category.dart';
+import 'expense_participant.dart';
+import 'expense_category.dart';
 
 class ExpenseGroup {
   final String id; // UDID per il gruppo di spese
   final String title;
   final List<ExpenseDetails> expenses;
-  final List<Participant> participants;
+  final List<ExpenseParticipant> participants;
   final DateTime? startDate;
   final DateTime? endDate;
   final String currency; // Nuovo campo
-  final List<Category> categories;
+  final List<ExpenseCategory> categories;
   final DateTime timestamp; // Nuovo campo timestamp
   final bool pinned; // Nuovo campo per pinnare il gruppo
   final bool archived; // Nuovo campo per archiviare il gruppo
@@ -40,7 +40,8 @@ class ExpenseGroup {
               .toList() ??
           [],
       participants: (json['participants'] as List<dynamic>?)
-              ?.map((p) => Participant.fromJson(p as Map<String, dynamic>))
+              ?.map(
+                  (p) => ExpenseParticipant.fromJson(p as Map<String, dynamic>))
               .toList() ??
           [],
       startDate:
@@ -48,7 +49,7 @@ class ExpenseGroup {
       endDate: json['endDate'] != null ? DateTime.parse(json['endDate']) : null,
       currency: json['currency'] ?? '€', // Default a euro se mancante
       categories: (json['categories'] as List<dynamic>?)
-              ?.map((c) => Category.fromJson(c as Map<String, dynamic>))
+              ?.map((c) => ExpenseCategory.fromJson(c as Map<String, dynamic>))
               .toList() ??
           [],
       timestamp: json['timestamp'] != null
@@ -77,11 +78,11 @@ class ExpenseGroup {
     String? id,
     String? title,
     List<ExpenseDetails>? expenses,
-    List<Participant>? participants,
+    List<ExpenseParticipant>? participants,
     DateTime? startDate,
     DateTime? endDate,
     String? currency,
-    List<Category>? categories,
+    List<ExpenseCategory>? categories,
     DateTime? timestamp,
     bool? pinned,
     bool? archived,
@@ -105,11 +106,11 @@ class ExpenseGroup {
     return ExpenseGroup(
       title: '',
       expenses: const [],
-      participants: const <Participant>[],
+      participants: const <ExpenseParticipant>[],
       startDate: null,
       endDate: null,
       currency: '€',
-      categories: const <Category>[],
+      categories: const <ExpenseCategory>[],
       timestamp: DateTime.now(),
       id: 'empty',
       pinned: false,

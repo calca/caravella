@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import '../data/expense_group.dart';
-import '../data/participant.dart';
-import '../data/category.dart';
+import '../data/expense_participant.dart';
+import '../data/expense_category.dart';
 import '../../data/expense_group_storage.dart';
 import 'detail_page/trip_detail_page.dart';
 import '../app_localizations.dart';
@@ -213,12 +213,14 @@ class _TripsHistoryPageState extends State<TripsHistoryPage> {
       final newTrip = ExpenseGroup(
         title: "${trip.title} (Copia)",
         expenses: [],
-        participants:
-            trip.participants.map((p) => Participant(name: p.name)).toList(),
+        participants: trip.participants
+            .map((p) => ExpenseParticipant(name: p.name))
+            .toList(),
         startDate: trip.startDate,
         endDate: trip.endDate,
         currency: trip.currency,
-        categories: trip.categories.map((c) => Category(name: c.name)).toList(),
+        categories:
+            trip.categories.map((c) => ExpenseCategory(name: c.name)).toList(),
       );
       _allTrips.add(newTrip);
       await ExpenseGroupStorage.writeTrips(_allTrips);
