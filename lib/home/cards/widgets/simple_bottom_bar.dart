@@ -16,10 +16,11 @@ class SimpleBottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-          vertical: 20), // Rimosso padding orizzontale
+      padding: const EdgeInsets.only(top: 0), // Solo padding superiore
+      alignment: Alignment.topLeft, // Allineamento in alto a sinistra
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start, // Allinea a sinistra
+        crossAxisAlignment: CrossAxisAlignment.start, // Allinea in alto
         children: [
           // Bottone Tutti
           TextButton(
