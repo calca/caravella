@@ -112,10 +112,10 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   bool _isFormValid() {
     // Il titolo deve essere non vuoto
     if (_titleController.text.trim().isEmpty) return false;
-    
+
     // Deve esserci almeno un partecipante
     if (_participants.isEmpty) return false;
-    
+
     return true;
   }
 
@@ -324,7 +324,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                           ? loc.get('enter_title')
                           : null,
                       onChanged: (value) {
-                        setState(() {}); // Aggiorna lo stato per il bottone Salva
+                        setState(
+                            () {}); // Aggiorna lo stato per il bottone Salva
                       },
                     ),
                     const SizedBox(height: 20),
@@ -861,17 +862,26 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      foregroundColor: _isFormValid() 
+                      foregroundColor: _isFormValid()
                           ? Theme.of(context).colorScheme.onPrimary
-                          : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
-                      backgroundColor: _isFormValid() 
+                          : Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withValues(alpha: 0.38),
+                      backgroundColor: _isFormValid()
                           ? Theme.of(context).colorScheme.primary
-                          : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.12),
+                          : Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withValues(alpha: 0.12),
                       textStyle:
                           Theme.of(context).textTheme.titleMedium?.copyWith(
-                                color: _isFormValid() 
+                                color: _isFormValid()
                                     ? Theme.of(context).colorScheme.onPrimary
-                                    : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
+                                    : Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withValues(alpha: 0.38),
                                 fontWeight: FontWeight.w600,
                               ),
                       elevation: _isFormValid() ? 2 : 0,

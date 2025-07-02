@@ -48,9 +48,10 @@ class _TripsHistoryPageState extends State<TripsHistoryPage> {
 
   Future<void> _loadTrips() async {
     setState(() => _loading = true);
-    
+
     try {
-      await Future.delayed(const Duration(milliseconds: 100)); // Smooth transition
+      await Future.delayed(
+          const Duration(milliseconds: 100)); // Smooth transition
       final trips = await ExpenseGroupStorage.getAllGroups();
       if (mounted) {
         setState(() {

@@ -7,6 +7,16 @@ class AppLocalizations {
 
   static final Map<String, Map<String, String>> _localizedValues = {
     'en': {
+      // Saluti dinamici
+      'good_morning': 'Good morning',
+      'good_afternoon': 'Good afternoon',
+      'good_evening': 'Good evening',
+      'your_groups': 'Your groups',
+      'no_active_groups': 'No active groups',
+      'no_active_groups_subtitle':
+          'Create your first expense group to get started',
+      'create_first_group': 'Create first group',
+
       'no_trips_found': 'Where do you want to go?',
       'expenses': 'Expenses',
       'participants': 'Participants',
@@ -82,6 +92,15 @@ class AppLocalizations {
       'try_different_search': 'Try searching with different words',
     },
     'it': {
+      // Saluti dinamici
+      'good_morning': 'Buongiorno',
+      'good_afternoon': 'Buon pomeriggio',
+      'good_evening': 'Buonasera',
+      'your_groups': 'I tuoi gruppi',
+      'no_active_groups': 'Nessun gruppo attivo',
+      'no_active_groups_subtitle': 'Crea il primo gruppo di spese per iniziare',
+      'create_first_group': 'Crea primo gruppo',
+
       'no_trips_found': 'Dove vuoi andare?',
       'participants_label': 'Partecipanti',
       'participants': 'Partecipanti',

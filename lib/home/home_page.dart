@@ -85,10 +85,8 @@ class _HomePageState extends State<HomePage> with RouteAware {
                                 onTripAdded: _refresh,
                               )
                             else
-                              // Ci sono viaggi ma nessun pinnato: mostra trip section
+                              // Mostra la nuova sezione cards moderna
                               HomeCardsSection(
-                                trip: _currentTrip!,
-                                loc: loc,
                                 onTripAdded: _refresh,
                               ),
                           ],

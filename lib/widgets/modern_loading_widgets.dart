@@ -68,7 +68,8 @@ class _ModernLoadingIndicatorState extends State<ModernLoadingIndicator>
           const SizedBox(height: 16),
           Text(
             widget.message!,
-            style: theme.textTheme.bodyMedium?.copyWith(                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
             ),
             textAlign: TextAlign.center,
           ),

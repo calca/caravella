@@ -78,9 +78,7 @@ class _EnhancedTextFieldState extends State<EnhancedTextField>
     final theme = Theme.of(context);
     _borderColorAnimation = ColorTween(
       begin: theme.colorScheme.outline,
-      end: _hasError
-          ? theme.colorScheme.error
-          : theme.colorScheme.primary,
+      end: _hasError ? theme.colorScheme.error : theme.colorScheme.primary,
     ).animate(CurvedAnimation(
       parent: _controller,
       curve: Curves.easeInOut,
@@ -110,7 +108,7 @@ class _EnhancedTextFieldState extends State<EnhancedTextField>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return AnimatedBuilder(
       animation: _borderColorAnimation,
       builder: (context, child) {
@@ -130,9 +128,8 @@ class _EnhancedTextFieldState extends State<EnhancedTextField>
             labelText: widget.labelText,
             hintText: widget.hintText,
             helperText: widget.helperText,
-            prefixIcon: widget.prefixIcon != null
-                ? Icon(widget.prefixIcon)
-                : null,
+            prefixIcon:
+                widget.prefixIcon != null ? Icon(widget.prefixIcon) : null,
             suffixIcon: widget.suffixIcon != null
                 ? IconButton(
                     icon: Icon(widget.suffixIcon),
