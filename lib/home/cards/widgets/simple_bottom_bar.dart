@@ -16,55 +16,50 @@ class SimpleBottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
+      padding: const EdgeInsets.symmetric(
+          vertical: 20), // Rimosso padding orizzontale
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.start, // Allinea a sinistra
         children: [
           // Bottone Tutti
-          Expanded(
-            child: TextButton(
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                    builder: (context) => const TripsHistoryPage()),
+          TextButton(
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const TripsHistoryPage()),
+            ),
+            style: TextButton.styleFrom(
+              foregroundColor:
+                  theme.colorScheme.onSurface.withValues(alpha: 0.8),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            ),
+            child: Text(
+              localizations.get('all').toUpperCase(),
+              style: theme.textTheme.labelLarge?.copyWith(
+                fontWeight: FontWeight.w600,
+                letterSpacing: 1.2,
               ),
-              style: TextButton.styleFrom(
-                foregroundColor:
-                    theme.colorScheme.onSurface.withValues(alpha: 0.8),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-              ),
-              child: Text(
-                localizations.get('all').toUpperCase(),
-                style: theme.textTheme.labelLarge?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 1.2,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
 
           const SizedBox(width: 16), // Spazio tra i bottoni
 
           // Bottone Opzioni
-          Expanded(
-            child: TextButton(
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const SettingsPage()),
+          TextButton(
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const SettingsPage()),
+            ),
+            style: TextButton.styleFrom(
+              foregroundColor:
+                  theme.colorScheme.onSurface.withValues(alpha: 0.8),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            ),
+            child: Text(
+              localizations.get('options').toUpperCase(),
+              style: theme.textTheme.labelLarge?.copyWith(
+                fontWeight: FontWeight.w600,
+                letterSpacing: 1.2,
               ),
-              style: TextButton.styleFrom(
-                foregroundColor:
-                    theme.colorScheme.onSurface.withValues(alpha: 0.8),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-              ),
-              child: Text(
-                localizations.get('options').toUpperCase(),
-                style: theme.textTheme.labelLarge?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 1.2,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],

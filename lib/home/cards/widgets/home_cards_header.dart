@@ -28,7 +28,7 @@ class HomeCardsHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 16, bottom: 24),
+      padding: const EdgeInsets.only(bottom: 16),
       child: Row(
         children: [
           // Avatar statico
