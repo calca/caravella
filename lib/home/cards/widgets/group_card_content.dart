@@ -125,15 +125,17 @@ class GroupCardContent extends StatelessWidget {
                 children: [
                   Text(
                     group.title,
-                    style: theme.textTheme.titleLarge,
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w400, // Non bold
+                      fontSize: 32, // Font più grande
+                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
                   if (group.startDate != null || group.endDate != null)
                     Text(
                       _formatDateRange(group, localizations),
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color:
-                            theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                        color: theme.colorScheme.onSurface.withValues(alpha: 1),
                       ),
                     ),
                 ],
