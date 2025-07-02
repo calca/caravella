@@ -153,7 +153,9 @@ class CaravellaBottomBar extends StatelessWidget {
                                     top: 24,
                                   ),
                                   child: ExpenseFormComponent(
-                                    participants: currentTrip.participants,
+                                    participants: currentTrip.participants
+                                        .map((p) => p.name)
+                                        .toList(),
                                     categories: currentTrip.categories,
                                     onExpenseAdded: (expense) async {
                                       final trips = await ExpenseGroupStorage

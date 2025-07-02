@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../data/expense_group.dart';
+import '../data/participant.dart';
 import '../../data/expense_group_storage.dart';
 import '../app_localizations.dart';
 import '../state/locale_notifier.dart';
@@ -20,7 +21,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final FocusNode _titleFocusNode = FocusNode();
-  final List<String> _participants = [];
+  final List<Participant> _participants = [];
   final TextEditingController _participantController = TextEditingController();
   DateTime? _startDate;
   DateTime? _endDate;
@@ -401,7 +402,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                   onSubmitted: (val) {
                                     if (val.trim().isNotEmpty) {
                                       setState(() {
-                                        _participants.add(val.trim());
+                                        _participants
+                                            .add(Participant(name: val.trim()));
                                         _participantController.clear();
                                       });
                                       _closeDialogAndUnfocus();
@@ -419,7 +421,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                           _participantController.text.trim();
                                       if (val.isNotEmpty) {
                                         setState(() {
-                                          _participants.add(val);
+                                          _participants
+                                              .add(Participant(name: val));
                                           _participantController.clear();
                                         });
                                         _closeDialogAndUnfocus();
@@ -485,13 +488,13 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                       const SizedBox(width: 8),
                                       Expanded(
                                         child: Text(
-                                          p,
+                                          p.name,
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodyLarge,
                                           semanticsLabel: loc.get(
                                               'participant_name_semantics',
-                                              params: {'name': p}),
+                                              params: {'name': p.name}),
                                         ),
                                       ),
                                     ],
@@ -512,7 +515,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                 ),
                                 onPressed: () {
                                   final editController =
-                                      TextEditingController(text: p);
+                                      TextEditingController(text: p.name);
                                   showDialog(
                                     context: context,
                                     builder: (context) => AlertDialog(
@@ -529,7 +532,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                         onSubmitted: (val) {
                                           if (val.trim().isNotEmpty) {
                                             setState(() {
-                                              _participants[i] = val.trim();
+                                              _participants[i] =
+                                                  p.copyWith(name: val.trim());
                                             });
                                             _closeDialogAndUnfocus();
                                           }
@@ -547,7 +551,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                                 editController.text.trim();
                                             if (val.isNotEmpty) {
                                               setState(() {
-                                                _participants[i] = val;
+                                                _participants[i] =
+                                                    p.copyWith(name: val);
                                               });
                                               _closeDialogAndUnfocus();
                                             }

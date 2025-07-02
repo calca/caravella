@@ -1,11 +1,12 @@
 import 'package:uuid/uuid.dart';
 import 'expense_details.dart';
+import 'participant.dart';
 
 class ExpenseGroup {
   final String id; // UDID per il gruppo di spese
   final String title;
   final List<ExpenseDetails> expenses;
-  final List<String> participants;
+  final List<Participant> participants;
   final DateTime? startDate;
   final DateTime? endDate;
   final String currency; // Nuovo campo
@@ -37,7 +38,10 @@ class ExpenseGroup {
               ?.map((e) => ExpenseDetails.fromJson(e))
               .toList() ??
           [],
-      participants: List<String>.from(json['participants'] ?? []),
+      participants: (json['participants'] as List<dynamic>?)
+              ?.map((p) => Participant.fromJson(p as Map<String, dynamic>))
+              .toList() ??
+          [],
       startDate:
           json['startDate'] != null ? DateTime.parse(json['startDate']) : null,
       endDate: json['endDate'] != null ? DateTime.parse(json['endDate']) : null,
@@ -57,7 +61,7 @@ class ExpenseGroup {
         'id': id,
         'title': title,
         'expenses': expenses.map((e) => e.toJson()).toList(),
-        'participants': participants,
+        'participants': participants.map((p) => p.toJson()).toList(),
         'startDate': startDate?.toIso8601String(),
         'endDate': endDate?.toIso8601String(),
         'currency': currency,
@@ -71,7 +75,7 @@ class ExpenseGroup {
     String? id,
     String? title,
     List<ExpenseDetails>? expenses,
-    List<String>? participants,
+    List<Participant>? participants,
     DateTime? startDate,
     DateTime? endDate,
     String? currency,
@@ -99,7 +103,7 @@ class ExpenseGroup {
     return ExpenseGroup(
       title: '',
       expenses: const [],
-      participants: const [],
+      participants: const <Participant>[],
       startDate: null,
       endDate: null,
       currency: '€',

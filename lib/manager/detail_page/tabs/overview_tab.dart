@@ -21,7 +21,7 @@ class OverviewTab extends StatelessWidget {
 
     // Inizializza i bilanci
     for (final participant in trip.participants) {
-      balances[participant] = 0.0;
+      balances[participant.name] = 0.0;
     }
 
     // Calcola quanto ha pagato ogni partecipante
@@ -34,7 +34,8 @@ class OverviewTab extends StatelessWidget {
 
     // Sottrai la quota equa per ottenere il bilancio netto
     for (final participant in trip.participants) {
-      balances[participant] = (balances[participant] ?? 0) - fairShare;
+      balances[participant.name] =
+          (balances[participant.name] ?? 0) - fairShare;
     }
 
     // Separa creditori e debitori
@@ -116,7 +117,7 @@ class OverviewTab extends StatelessWidget {
           const SizedBox(height: 12),
           ...trip.participants.map((p) {
             final total = trip.expenses
-                .where((e) => e.paidBy == p)
+                .where((e) => e.paidBy == p.name)
                 .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 6),
@@ -135,7 +136,7 @@ class OverviewTab extends StatelessWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      p,
+                      p.name,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w500,
                       ),

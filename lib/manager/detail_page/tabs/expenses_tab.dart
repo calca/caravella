@@ -32,7 +32,7 @@ class _ExpensesTabState extends State<ExpensesTab> {
       MaterialPageRoute(
         builder: (context) => ExpenseEditPage(
           expense: _expenses[i],
-          participants: widget.trip.participants,
+          participants: widget.trip.participants.map((p) => p.name).toList(),
           categories: widget.trip.categories,
           loc: widget.loc,
           tripStartDate: widget.trip.startDate,
