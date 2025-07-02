@@ -48,19 +48,6 @@ class HomeCardsSection extends StatelessWidget {
                   height: isSmallScreen ? 4 : (isMediumScreen ? 8 : 12),
                 ),
 
-                // Area centrale - placeholder per future funzionalità
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Center(
-                    child: Text(
-                      'Area viaggio - Contenuto in sviluppo',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Colors.grey[600],
-                          ),
-                    ),
-                  ),
-                ),
-
                 // Spazio inferiore flessibile
                 SizedBox(
                   height: isSmallScreen ? 4 : (isMediumScreen ? 8 : 12),

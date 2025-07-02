@@ -84,10 +84,6 @@ class CaravellaBottomBar extends StatelessWidget {
                                       MaterialTapTargetSize.shrinkWrap,
                                   elevation: 0,
                                   shadowColor: Colors.transparent,
-                                  overlayColor: Theme.of(context)
-                                      .colorScheme
-                                      .onSurface
-                                      .withOpacity(0.1),
                                 ),
                                 child: Text(
                                   loc.get('history').toUpperCase(),
@@ -121,10 +117,6 @@ class CaravellaBottomBar extends StatelessWidget {
                                       MaterialTapTargetSize.shrinkWrap,
                                   elevation: 0,
                                   shadowColor: Colors.transparent,
-                                  overlayColor: Theme.of(context)
-                                      .colorScheme
-                                      .onSurface
-                                      .withOpacity(0.1),
                                 ),
                                 child: Text(
                                   loc.get('settings').toUpperCase(),

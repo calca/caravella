@@ -48,12 +48,36 @@ class _TripsHistoryPageState extends State<TripsHistoryPage> {
 
   Future<void> _loadTrips() async {
     setState(() => _loading = true);
-    final trips = await ExpenseGroupStorage.getAllGroups();
-    setState(() {
-      _allTrips = trips;
-      _filteredTrips = _applyFilter(trips);
-      _loading = false;
-    });
+    
+    try {
+      await Future.delayed(const Duration(milliseconds: 100)); // Smooth transition
+      final trips = await ExpenseGroupStorage.getAllGroups();
+      if (mounted) {
+        setState(() {
+          _allTrips = trips;
+          _filteredTrips = _applyFilter(_allTrips);
+          _loading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _loading = false);
+        _showErrorSnackBar('Errore nel caricamento dei gruppi');
+      }
+    }
+  }
+
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        behavior: SnackBarBehavior.floating,
+        action: SnackBarAction(
+          label: 'Riprova',
+          onPressed: _loadTrips,
+        ),
+      ),
+    );
   }
 
   List<ExpenseGroup> _applyFilter(List<ExpenseGroup> trips) {

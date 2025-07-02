@@ -12,10 +12,20 @@ final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Ottimizzazioni performance
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
   // Abilita l'edge-to-edge su Android
   SystemChrome.setEnabledSystemUIMode(
     SystemUiMode.edgeToEdge,
   );
+
+  // Ottimizza la gestione memoria per immagini
+  PaintingBinding.instance.imageCache.maximumSize = 100;
+  PaintingBinding.instance.imageCache.maximumSizeBytes = 50 << 20; // 50MB
 
   runApp(const CaravellaApp());
 }
