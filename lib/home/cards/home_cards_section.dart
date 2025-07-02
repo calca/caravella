@@ -67,25 +67,35 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Header con saluto dinamico
+          // Header con avatar e saluto dinamico
           Padding(
             padding: const EdgeInsets.only(top: 16, bottom: 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
               children: [
-                Text(
-                  loc.get(_getGreeting()),
-                  style: theme.textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: theme.colorScheme.onSurface,
+                // Avatar statico
+                Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.person,
+                    size: 28,
+                    color: theme.colorScheme.primary,
                   ),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  loc.get('your_groups'),
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                    fontWeight: FontWeight.w400,
+                const SizedBox(width: 16),
+                
+                // Saluto dinamico
+                Expanded(
+                  child: Text(
+                    loc.get(_getGreeting()),
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w400,
+                      color: theme.colorScheme.onSurface,
+                    ),
                   ),
                 ),
               ],
