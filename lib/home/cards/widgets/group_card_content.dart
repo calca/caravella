@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
 import '../../../data/expense_group.dart';
 import '../../../expense/expense_form_component.dart';
+import '../../../widgets/currency_display.dart';
 import 'mini_expense_chart.dart';
 
 class GroupCardContent extends StatelessWidget {
@@ -92,14 +93,28 @@ class GroupCardContent extends StatelessWidget {
     final totalExpenses = group.expenses
         .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
     final participantCount = group.participants.length;
-    final recentExpenses = group.expenses
+    final recentExpensesTotal = group.expenses
         .where((e) =>
             e.date.isAfter(DateTime.now().subtract(const Duration(days: 7))))
-        .length;
+        .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Totale spese in alto con font grande (allineato a destra)
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: CurrencyDisplay(
+            value: totalExpenses,
+            currency: '€',
+            valueFontSize: 54.0,
+            currencyFontSize: 26.0,
+            alignment: MainAxisAlignment.end,
+            showDecimals: true,
+            color: theme.colorScheme.primary,
+          ),
+        ),
+
         // Header con titolo e pin (senza bottone aggiungi)
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -137,31 +152,38 @@ class GroupCardContent extends StatelessWidget {
 
         const SizedBox(height: 16),
 
-        // Statistiche rapide
+        // Statistiche rapide (solo icone e valori)
         Row(
           children: [
-            Expanded(
-              child: _buildStatCard(
-                icon: Icons.people_outline,
-                value: participantCount.toString(),
-                label: localizations.get('participants').toLowerCase(),
-              ),
+            _buildCompactStat(
+              icon: Icons.people_outline,
+              value: participantCount.toString(),
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildStatCard(
-                icon: Icons.receipt_long_outlined,
-                value: group.expenses.length.toString(),
-                label: localizations.get('expenses').toLowerCase(),
-              ),
+            const SizedBox(width: 16),
+            _buildCompactStat(
+              icon: Icons.receipt_long_outlined,
+              value: group.expenses.length.toString(),
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildStatCard(
-                icon: Icons.trending_up,
-                value: recentExpenses.toString(),
-                label: 'ultimi 7gg',
-              ),
+            const SizedBox(width: 16),
+            // Totale spese ultimi 7 giorni con CurrencyDisplay
+            Row(
+              children: [
+                Icon(
+                  Icons.trending_up,
+                  size: 16,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
+                const SizedBox(width: 4),
+                CurrencyDisplay(
+                  value: recentExpensesTotal,
+                  currency: '€',
+                  valueFontSize: 14.0,
+                  currencyFontSize: 12.0,
+                  alignment: MainAxisAlignment.start,
+                  showDecimals: true,
+                  color: theme.colorScheme.onSurface,
+                ),
+              ],
             ),
           ],
         ),
@@ -190,72 +212,20 @@ class GroupCardContent extends StatelessWidget {
         const SizedBox(height: 8),
         MiniExpenseChart(group: group, theme: theme),
 
-        // Spacer per spingere il resto in basso
+        // Spacer per spingere il bottone in basso
         const Spacer(),
 
-        // Totale spese (prominente)
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.primaryContainer,
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(
-                  Icons.euro,
-                  size: 20,
-                  color: theme.colorScheme.primary,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Totale spese',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onPrimaryContainer
-                            .withValues(alpha: 0.8),
-                      ),
-                    ),
-                    Text(
-                      '€${totalExpenses.toStringAsFixed(2)}',
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        color: theme.colorScheme.onPrimaryContainer,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-
-        const SizedBox(height: 16),
-
-        // Bottone "Aggiungi" in fondo alla card
+        // Bottone "Aggiungi" in fondo alla card (solo testuale)
         SizedBox(
           width: double.infinity,
-          child: ElevatedButton.icon(
+          child: TextButton.icon(
             onPressed: () => _showAddExpenseSheet(context),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: theme.colorScheme.primary,
-              foregroundColor: theme.colorScheme.onPrimary,
+            style: TextButton.styleFrom(
+              foregroundColor: theme.colorScheme.primary,
               padding: const EdgeInsets.symmetric(vertical: 12),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
-              elevation: 0,
             ),
             icon: Icon(
               Icons.add,
@@ -265,7 +235,7 @@ class GroupCardContent extends StatelessWidget {
               'Aggiungi Spesa',
               style: theme.textTheme.labelLarge?.copyWith(
                 fontWeight: FontWeight.w600,
-                color: theme.colorScheme.onPrimary,
+                color: theme.colorScheme.primary,
               ),
             ),
           ),
@@ -274,41 +244,26 @@ class GroupCardContent extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard({
+  Widget _buildCompactStat({
     required IconData icon,
     required String value,
-    required String label,
   }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        children: [
-          Icon(
-            icon,
-            size: 16,
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+    return Row(
+      children: [
+        Icon(
+          icon,
+          size: 16,
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+        ),
+        const SizedBox(width: 4),
+        Text(
+          value,
+          style: theme.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w600,
+            color: theme.colorScheme.onSurface,
           ),
-          const SizedBox(height: 2),
-          Text(
-            value,
-            style: theme.textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.w600,
-              color: theme.colorScheme.onSurface,
-            ),
-          ),
-          Text(
-            label,
-            style: theme.textTheme.bodySmall?.copyWith(
-              fontSize: 10,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
