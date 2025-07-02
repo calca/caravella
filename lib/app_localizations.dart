@@ -16,9 +16,15 @@ class AppLocalizations {
       'no_active_groups_subtitle':
           'Create your first expense group to get started',
       'create_first_group': 'Create first group',
+
       'new_expense_group': 'New Expense Group',
       'tap_to_create': 'Tap to create',
       'no_expense_label': 'No expenses found',
+      'select_image': 'Select Image',
+      'image_preview': 'Image Preview',
+      'from_gallery': 'From Gallery',
+      'from_camera': 'From Camera',
+      'remove_image': 'Remove Image',
 
       'no_trips_found': 'Where do you want to go?',
       'expenses': 'Expenses',
@@ -105,9 +111,15 @@ class AppLocalizations {
       'no_active_groups': 'Nessun gruppo attivo',
       'no_active_groups_subtitle': 'Crea il primo gruppo di spese per iniziare',
       'create_first_group': 'Crea primo gruppo',
+
       'new_expense_group': 'Nuovo Gruppo di Spese',
       'tap_to_create': 'Tocca per creare',
       'no_expense_label': 'Nessuna spesa trovata',
+      'select_image': 'Seleziona Immagine',
+      'image_preview': 'Anteprima Immagine',
+      'from_gallery': 'Dalla Galleria',
+      'from_camera': 'Dalla Fotocamera',
+      'remove_image': 'Rimuovi Immagine',
 
       'no_trips_found': 'Dove vuoi andare?',
       'participants_label': 'Partecipanti',

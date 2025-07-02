@@ -611,7 +611,7 @@ class _TripsHistoryPageState extends State<TripsHistoryPage> {
                                           Icon(
                                             Icons.luggage,
                                             size: 100,
-                                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                                           ),
                                           const SizedBox(height: 16),
                                           Text(loc.get('no_trips_found'),

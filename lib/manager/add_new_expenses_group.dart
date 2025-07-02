@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:image_picker/image_picker.dart';
+import 'package:image/image.dart' as img;
+import 'package:path_provider/path_provider.dart';
 import '../data/expense_group.dart';
 import '../data/expense_participant.dart';
 import '../data/expense_category.dart';
@@ -31,6 +36,11 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   final List<ExpenseCategory> _categories = [];
   String? _dateError;
 
+  // Image-related variables
+  File? _selectedImageFile;
+  String? _savedImagePath;
+  final ImagePicker _imagePicker = ImagePicker();
+
   @override
   void initState() {
     super.initState();
@@ -42,6 +52,10 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       _endDate = widget.trip!.endDate;
       _currency = widget.trip!.currency;
       _categories.addAll(widget.trip!.categories);
+      _savedImagePath = widget.trip!.file;
+      if (_savedImagePath != null) {
+        _selectedImageFile = File(_savedImagePath!);
+      }
     }
   }
 
@@ -187,6 +201,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
           categories: _categories,
           timestamp: trips[idx].timestamp, // mantieni il timestamp originale
           id: trips[idx].id, // mantieni l'id originale
+          file: _savedImagePath, // save image path
         );
         await ExpenseGroupStorage.writeTrips(trips);
         if (!mounted) return;
@@ -203,6 +218,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       endDate: _endDate,
       currency: _currency,
       categories: _categories,
+      file: _savedImagePath, // save image path
       // timestamp: default a now
     );
     final trips = await ExpenseGroupStorage.getAllGroups();
@@ -210,6 +226,107 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
     await ExpenseGroupStorage.writeTrips(trips);
     if (!mounted) return;
     Navigator.of(context).pop(true);
+  }
+
+  // Image handling methods
+  Future<void> _pickImage(ImageSource source) async {
+    try {
+      final XFile? pickedFile = await _imagePicker.pickImage(source: source);
+      if (pickedFile != null) {
+        await _processAndSaveImage(File(pickedFile.path));
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Errore durante la selezione dell\'immagine')),
+        );
+      }
+    }
+  }
+
+  Future<void> _processAndSaveImage(File imageFile) async {
+    try {
+      // Read the image
+      final Uint8List imageBytes = await imageFile.readAsBytes();
+      img.Image? image = img.decodeImage(imageBytes);
+
+      if (image != null) {
+        // Resize the image (max 800x600 to keep file size reasonable)
+        img.Image resizedImage = img.copyResize(image, width: 800, height: 600);
+
+        // Get the app's documents directory
+        final Directory appDir = await getApplicationDocumentsDirectory();
+        final String fileName =
+            'group_image_${DateTime.now().millisecondsSinceEpoch}.jpg';
+        final String filePath = '${appDir.path}/$fileName';
+
+        // Save the resized image as JPEG with 85% quality
+        final File savedFile = File(filePath);
+        await savedFile.writeAsBytes(img.encodeJpg(resizedImage, quality: 85));
+
+        setState(() {
+          _selectedImageFile = savedFile;
+          _savedImagePath = filePath;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Errore durante il salvataggio dell\'immagine')),
+        );
+      }
+    }
+  }
+
+  void _removeImage() {
+    setState(() {
+      _selectedImageFile = null;
+      _savedImagePath = null;
+    });
+  }
+
+  void _showImagePickerDialog() {
+    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
+    final loc = AppLocalizations(locale);
+
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Wrap(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: Text(loc.get('from_gallery')),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  _pickImage(ImageSource.gallery);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_camera),
+                title: Text(loc.get('from_camera')),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  _pickImage(ImageSource.camera);
+                },
+              ),
+              if (_selectedImageFile != null)
+                ListTile(
+                  leading: const Icon(Icons.delete),
+                  title: Text(loc.get('remove_image')),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    _removeImage();
+                  },
+                ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   void _unfocusAll() {
@@ -828,6 +945,57 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 _buildSectionCard(
                   title: loc.get('settings'),
                   children: [
+                    // Image selection
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(loc.get('select_image'),
+                                style: Theme.of(context).textTheme.titleMedium),
+                            IconButton(
+                              onPressed: _showImagePickerDialog,
+                              icon: const Icon(Icons.add_photo_alternate),
+                            ),
+                          ],
+                        ),
+                        if (_selectedImageFile != null) ...[
+                          const SizedBox(height: 12),
+                          Container(
+                            width: double.infinity,
+                            height: 200,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: Theme.of(context).colorScheme.outline,
+                              ),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.file(
+                                _selectedImageFile!,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Center(
+                            child: TextButton.icon(
+                              onPressed: _removeImage,
+                              icon: const Icon(Icons.delete, size: 16),
+                              label: Text(loc.get('remove_image')),
+                              style: TextButton.styleFrom(
+                                foregroundColor:
+                                    Theme.of(context).colorScheme.error,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    // Currency selector
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

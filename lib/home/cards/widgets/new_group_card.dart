@@ -86,7 +86,7 @@ class NewGroupCard extends StatelessWidget {
         Text(
           localizations.get('tap_to_create'),
           style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.onSurface.withOpacity(0.7),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
           ),
           textAlign: TextAlign.center,
         ),
