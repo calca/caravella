@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
 import '../../../data/expense_group.dart';
 import 'group_card.dart';
+import 'new_group_card.dart';
 
 class HorizontalGroupsList extends StatefulWidget {
   final List<ExpenseGroup> groups;
@@ -44,17 +45,40 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList> {
 
   @override
   Widget build(BuildContext context) {
+    // Total items include all groups plus the new group card
+    final totalItems = widget.groups.length + 1;
+
     return PageView.builder(
-      itemCount: widget.groups.length,
+      itemCount: totalItems,
       padEnds: false,
       controller: _pageController,
       itemBuilder: (context, index) {
-        final group = widget.groups[index];
-
         // Calcola quanto questa card è vicina al centro
         final double distanceFromCenter = (index - _currentPage).abs();
         final bool isSelected = distanceFromCenter < 0.5;
 
+        // If this is the last index, show the new group card
+        if (index == widget.groups.length) {
+          return AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            margin: EdgeInsets.only(
+              right: 16,
+              top: isSelected ? 0 : 8,
+              bottom: isSelected ? 0 : 8,
+            ),
+            child: NewGroupCard(
+              localizations: widget.localizations,
+              theme: widget.theme,
+              onGroupAdded: widget.onGroupUpdated,
+              isSelected: isSelected,
+              selectionProgress: 1.0 - distanceFromCenter.clamp(0.0, 1.0),
+            ),
+          );
+        }
+
+        // Otherwise show a regular group card
+        final group = widget.groups[index];
         return AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
