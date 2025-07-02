@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 import '../../../app_localizations.dart';
 import '../../../data/expense_group.dart';
 import '../../../expense/expense_form_component.dart';
@@ -98,9 +99,15 @@ class GroupCardContent extends StatelessWidget {
             e.date.isAfter(DateTime.now().subtract(const Duration(days: 7))))
         .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
 
-    return Column(
+    // Check if there's an image file available
+    final hasBackgroundImage = group.file != null &&
+        group.file!.isNotEmpty &&
+        File(group.file!).existsSync();
+
+    Widget content = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // ...existing code...
         // Totale spese in alto con font grande (allineato a destra)
         Padding(
           padding: const EdgeInsets.only(bottom: 16),
@@ -242,6 +249,32 @@ class GroupCardContent extends StatelessWidget {
         ),
       ],
     );
+
+    // If there's a background image, wrap the content in a Container with background
+    if (hasBackgroundImage) {
+      return Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: FileImage(File(group.file!)),
+            fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(
+              Colors.white.withValues(alpha: 0.7), // 0.3 opacity background
+              BlendMode.lighten,
+            ),
+          ),
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface
+                .withValues(alpha: 0.85), // Semi-transparent overlay
+          ),
+          child: content,
+        ),
+      );
+    }
+
+    // No background image, return content directly
+    return content;
   }
 
   Widget _buildCompactStat({
