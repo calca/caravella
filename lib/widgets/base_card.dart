@@ -32,7 +32,7 @@ class BaseCard extends StatelessWidget {
       margin: margin,
       padding: padding ?? const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: backgroundColor ?? theme.colorScheme.surface,
+        color: backgroundColor ?? theme.colorScheme.surfaceContainer,
         borderRadius: effectiveBorderRadius,
         border: isFlat
             ? Border.all(
