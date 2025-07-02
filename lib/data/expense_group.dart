@@ -15,6 +15,7 @@ class ExpenseGroup {
   final DateTime timestamp; // Nuovo campo timestamp
   final bool pinned; // Nuovo campo per pinnare il gruppo
   final bool archived; // Nuovo campo per archiviare il gruppo
+  final String? file; // Nuovo campo opzionale per il path del file
 
   ExpenseGroup({
     required this.title,
@@ -28,6 +29,7 @@ class ExpenseGroup {
     String? id, // opzionale, generato se mancante
     this.pinned = false, // Default a false
     this.archived = false, // Default a false
+    this.file, // Opzionale, path del file
   })  : timestamp = timestamp ?? DateTime.now(),
         id = id ?? const Uuid().v4();
 
@@ -57,6 +59,7 @@ class ExpenseGroup {
           : DateTime.now(),
       pinned: json['pinned'] ?? false, // Legge il valore pinnato
       archived: json['archived'] ?? false, // Legge il valore archiviato
+      file: json['file'], // Legge il valore del file
     );
   }
 
@@ -72,6 +75,7 @@ class ExpenseGroup {
         'timestamp': timestamp.toIso8601String(),
         'pinned': pinned, // Salva il valore pinnato
         'archived': archived, // Salva il valore archiviato
+        'file': file, // Salva il valore del file
       };
 
   ExpenseGroup copyWith({
@@ -86,6 +90,7 @@ class ExpenseGroup {
     DateTime? timestamp,
     bool? pinned,
     bool? archived,
+    String? file,
   }) {
     return ExpenseGroup(
       id: id ?? this.id,
@@ -99,6 +104,7 @@ class ExpenseGroup {
       timestamp: timestamp ?? this.timestamp,
       pinned: pinned ?? this.pinned,
       archived: archived ?? this.archived,
+      file: file ?? this.file,
     );
   }
 
@@ -115,6 +121,7 @@ class ExpenseGroup {
       id: 'empty',
       pinned: false,
       archived: false,
+      file: null, // Path del file inizialmente vuoto
     );
   }
 }
