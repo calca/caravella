@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
 import '../../data/expense_group.dart';
 import '../../manager/detail_page/trip_detail_page.dart';
-import '../cards/home_cards_header.dart';
+import 'home_cards_header.dart';
 import '../../../widgets/caravella_bottom_bar.dart';
 
 class HomePinnedSection extends StatelessWidget {

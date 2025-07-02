@@ -87,7 +87,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
                   ),
                 ),
                 const SizedBox(width: 16),
-                
+
                 // Saluto dinamico
                 Expanded(
                   child: Text(
@@ -109,7 +109,8 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
                 ? const Center(child: CircularProgressIndicator())
                 : _activeGroups.isEmpty
                     ? _buildEmptyState(context, loc, theme)
-                    : _buildHorizontalGroupsList(context, loc, theme, screenWidth),
+                    : _buildHorizontalGroupsList(
+                        context, loc, theme, screenWidth),
           ),
 
           // Bottom bar semplificata
@@ -119,7 +120,8 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
     );
   }
 
-  Widget _buildEmptyState(BuildContext context, AppLocalizations loc, ThemeData theme) {
+  Widget _buildEmptyState(
+      BuildContext context, AppLocalizations loc, ThemeData theme) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -170,7 +172,8 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
     );
   }
 
-  Widget _buildHorizontalGroupsList(BuildContext context, AppLocalizations loc, ThemeData theme, double screenWidth) {
+  Widget _buildHorizontalGroupsList(BuildContext context, AppLocalizations loc,
+      ThemeData theme, double screenWidth) {
     return PageView.builder(
       itemCount: _activeGroups.length,
       padEnds: false,
@@ -187,8 +190,10 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
     );
   }
 
-  Widget _buildGroupCard(BuildContext context, ExpenseGroup group, AppLocalizations loc, ThemeData theme) {
-    final totalExpenses = group.expenses.fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
+  Widget _buildGroupCard(BuildContext context, ExpenseGroup group,
+      AppLocalizations loc, ThemeData theme) {
+    final totalExpenses = group.expenses
+        .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
     final participantCount = group.participants.length;
 
     return Card(
@@ -234,9 +239,9 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
                     ),
                 ],
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               // Info del gruppo
               Row(
                 children: [
@@ -267,7 +272,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
                   ),
                 ],
               ),
-              
+
               if (group.startDate != null || group.endDate != null) ...[
                 const SizedBox(height: 8),
                 Row(
@@ -281,18 +286,20 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
                     Text(
                       _formatDateRange(group, loc),
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                        color:
+                            theme.colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                   ],
                 ),
               ],
-              
+
               const SizedBox(height: 16),
-              
+
               // Totale spese
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.primaryContainer,
                   borderRadius: BorderRadius.circular(20),
@@ -326,7 +333,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
   String _formatDateRange(ExpenseGroup group, AppLocalizations loc) {
     final start = group.startDate;
     final end = group.endDate;
-    
+
     if (start != null && end != null) {
       return '${_formatDate(start)} - ${_formatDate(end)}';
     } else if (start != null) {
@@ -341,23 +348,27 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
     return '${date.day}/${date.month}/${date.year}';
   }
 
-  Widget _buildSimpleBottomBar(BuildContext context, AppLocalizations loc, ThemeData theme) {
+  Widget _buildSimpleBottomBar(
+      BuildContext context, AppLocalizations loc, ThemeData theme) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
       child: Row(
         children: [
-          // Bottone Cronologia
+          // Bottone Tutti
           Expanded(
             child: TextButton(
               onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const TripsHistoryPage()),
+                MaterialPageRoute(
+                    builder: (context) => const TripsHistoryPage()),
               ),
               style: TextButton.styleFrom(
-                foregroundColor: theme.colorScheme.onSurface.withValues(alpha: 0.8),
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                foregroundColor:
+                    theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
               ),
               child: Text(
-                loc.get('history').toUpperCase(),
+                loc.get('all').toUpperCase(),
                 style: theme.textTheme.labelLarge?.copyWith(
                   fontWeight: FontWeight.w600,
                   letterSpacing: 1.2,
@@ -366,21 +377,23 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
               ),
             ),
           ),
-          
+
           const SizedBox(width: 16), // Spazio tra i bottoni
-          
-          // Bottone Impostazioni
+
+          // Bottone Opzioni
           Expanded(
             child: TextButton(
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => const SettingsPage()),
               ),
               style: TextButton.styleFrom(
-                foregroundColor: theme.colorScheme.onSurface.withValues(alpha: 0.8),
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                foregroundColor:
+                    theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
               ),
               child: Text(
-                loc.get('settings').toUpperCase(),
+                loc.get('options').toUpperCase(),
                 style: theme.textTheme.labelLarge?.copyWith(
                   fontWeight: FontWeight.w600,
                   letterSpacing: 1.2,
