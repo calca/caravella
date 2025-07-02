@@ -97,13 +97,10 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
                         ),
             ),
 
-            // Bottom bar semplificata
-            SizedBox(
-              height: bottomBarHeight,
-              child: SimpleBottomBar(
-                localizations: loc,
-                theme: theme,
-              ),
+            // Bottom bar semplificata d
+            SimpleBottomBar(
+              localizations: loc,
+              theme: theme,
             ),
           ],
         ),
