@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../data/expense_details.dart';
 import '../app_localizations.dart';
 import '../state/locale_notifier.dart';
+import '../widgets/themed_outlined_button.dart';
 
 class ExpenseFormComponent extends StatefulWidget {
   final List<String> participants;
@@ -327,17 +328,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                     ),
                   ),
                 ),
-                OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    backgroundColor:
-                        Theme.of(context).colorScheme.surfaceContainerHighest,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    side: BorderSide(color: Colors.transparent),
-                    padding: const EdgeInsets.all(0),
-                    minimumSize: const Size(40, 40),
-                  ),
+                ThemedOutlinedButton.icon(
                   onPressed: () async {
                     final controller = TextEditingController();
                     final newCategory = await showDialog<String>(
@@ -382,7 +373,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                       }
                     }
                   },
-                  child: const Icon(Icons.add, size: 22),
+                  icon: const Icon(Icons.add, size: 22),
                 ),
               ],
             ),
@@ -393,17 +384,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
               Row(
                 children: [
                   Expanded(child: Container()),
-                  OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      backgroundColor:
-                          Theme.of(context).colorScheme.surfaceContainerHighest,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      side: BorderSide(color: Colors.transparent),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8, horizontal: 12),
-                    ),
+                  ThemedOutlinedButton(
                     onPressed: () async {
                       final picked = await showDatePicker(
                         context: context,
@@ -421,6 +402,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                         });
                       }
                     },
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8, horizontal: 12),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
