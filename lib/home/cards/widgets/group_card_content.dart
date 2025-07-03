@@ -166,7 +166,7 @@ class GroupCardContent extends StatelessWidget {
             currencyFontSize: 26.0,
             alignment: MainAxisAlignment.end,
             showDecimals: true,
-            color: theme.colorScheme.primary,
+            color: theme.colorScheme.onSurface,
           ),
         ),
 
@@ -200,7 +200,7 @@ class GroupCardContent extends StatelessWidget {
               Icon(
                 Icons.push_pin,
                 size: 18,
-                color: theme.colorScheme.primary,
+                color: theme.colorScheme.onSurface,
               ),
           ],
         ),
@@ -226,7 +226,7 @@ class GroupCardContent extends StatelessWidget {
                 Icon(
                   Icons.trending_up,
                   size: 16,
-                  color: theme.colorScheme.secondary,
+                  color: theme.colorScheme.onSurface,
                 ),
                 const SizedBox(width: 4),
                 CurrencyDisplay(
@@ -276,9 +276,9 @@ class GroupCardContent extends StatelessWidget {
           child: TextButton.icon(
             onPressed: () => _showAddExpenseSheet(context),
             style: TextButton.styleFrom(
-              foregroundColor: theme.colorScheme.primary,
+              foregroundColor: theme.colorScheme.onSurface,
               backgroundColor:
-                  theme.colorScheme.primaryContainer.withValues(alpha: 0.1),
+                  theme.colorScheme.onSurface.withValues(alpha: 0.05),
               padding: const EdgeInsets.symmetric(vertical: 12),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -287,13 +287,13 @@ class GroupCardContent extends StatelessWidget {
             icon: Icon(
               Icons.add,
               size: 20,
-              color: theme.colorScheme.primary,
+              color: theme.colorScheme.onSurface,
             ),
             label: Text(
               localizations.get('add_expense').toUpperCase(),
               style: theme.textTheme.labelLarge?.copyWith(
                 fontWeight: FontWeight.w600,
-                color: theme.colorScheme.primary,
+                color: theme.colorScheme.onSurface,
               ),
             ),
           ),
@@ -343,7 +343,7 @@ class GroupCardContent extends StatelessWidget {
         Icon(
           icon,
           size: 16,
-          color: theme.colorScheme.secondary,
+          color: theme.colorScheme.onSurface,
         ),
         const SizedBox(width: 4),
         Text(

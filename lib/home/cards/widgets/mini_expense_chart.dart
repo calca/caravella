@@ -56,8 +56,8 @@ class MiniExpenseChart extends StatelessWidget {
                     height: height,
                     decoration: BoxDecoration(
                       color: isToday
-                          ? theme.colorScheme.primary
-                          : theme.colorScheme.primary.withValues(alpha: 0.6),
+                          ? theme.colorScheme.onSurface
+                          : theme.colorScheme.onSurface.withValues(alpha: 0.6),
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -66,7 +66,7 @@ class MiniExpenseChart extends StatelessWidget {
                     ['L', 'M', 'M', 'G', 'V', 'S', 'D'][index],
                     style: theme.textTheme.bodySmall?.copyWith(
                       fontSize: 8,
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ],
