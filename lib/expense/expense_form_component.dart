@@ -196,25 +196,39 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 4.0),
                                   child: ChoiceChip(
-                                    label: Text(
-                                      p,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge
-                                          ?.copyWith(
-                                            color: _paidBy == p
-                                                ? Theme.of(context)
-                                                    .colorScheme
-                                                    .onPrimary
-                                                : Theme.of(context)
-                                                    .colorScheme
-                                                    .onSurface,
-                                          ),
-                                    ),
+                                    label: Text(p),
                                     selected: _paidBy == p,
+                                    labelStyle: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                          color: _paidBy == p
+                                              ? Theme.of(context)
+                                                  .colorScheme
+                                                  .onPrimaryContainer
+                                              : Theme.of(context)
+                                                  .colorScheme
+                                                  .onSurface,
+                                        ),
+                                    backgroundColor: _paidBy == p
+                                        ? null
+                                        : Theme.of(context)
+                                            .colorScheme
+                                            .surfaceContainerHighest,
                                     selectedColor: Theme.of(context)
                                         .colorScheme
                                         .primaryContainer,
+                                    side: BorderSide(
+                                      color: _paidBy == p
+                                          ? Theme.of(context)
+                                              .colorScheme
+                                              .primary
+                                          : Theme.of(context)
+                                              .colorScheme
+                                              .outline
+                                              .withValues(alpha: 0.3),
+                                      width: 1,
+                                    ),
                                     onSelected: (selected) {
                                       setState(() {
                                         _paidBy = selected ? p : null;
@@ -257,26 +271,40 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 4.0),
                                   child: ChoiceChip(
-                                    label: Text(
-                                      cat,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge
-                                          ?.copyWith(
-                                            color: _category == cat
-                                                ? Theme.of(context)
-                                                    .colorScheme
-                                                    .onPrimary
-                                                : Theme.of(context)
-                                                    .colorScheme
-                                                    .onSurface,
-                                            fontWeight: FontWeight.w300,
-                                          ),
-                                    ),
+                                    label: Text(cat),
                                     selected: _category == cat,
+                                    labelStyle: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                          color: _category == cat
+                                              ? Theme.of(context)
+                                                  .colorScheme
+                                                  .onPrimaryContainer
+                                              : Theme.of(context)
+                                                  .colorScheme
+                                                  .onSurface,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                    backgroundColor: _category == cat
+                                        ? null
+                                        : Theme.of(context)
+                                            .colorScheme
+                                            .surfaceContainerHighest,
                                     selectedColor: Theme.of(context)
                                         .colorScheme
                                         .primaryContainer,
+                                    side: BorderSide(
+                                      color: _category == cat
+                                          ? Theme.of(context)
+                                              .colorScheme
+                                              .primary
+                                          : Theme.of(context)
+                                              .colorScheme
+                                              .outline
+                                              .withValues(alpha: 0.3),
+                                      width: 1,
+                                    ),
                                     onSelected: (selected) {
                                       setState(() {
                                         _category = selected ? cat : null;
