@@ -105,7 +105,7 @@ class GroupCardContent extends StatelessWidget {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                  color: theme.colorScheme.outline,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -190,7 +190,7 @@ class GroupCardContent extends StatelessWidget {
                     Text(
                       _formatDateRange(group, localizations),
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurface.withValues(alpha: 1),
+                        color: theme.colorScheme.onSurfaceVariant,
                       ),
                     ),
                 ],
@@ -226,7 +226,7 @@ class GroupCardContent extends StatelessWidget {
                 Icon(
                   Icons.trending_up,
                   size: 16,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                  color: theme.colorScheme.secondary,
                 ),
                 const SizedBox(width: 4),
                 CurrencyDisplay(
@@ -252,14 +252,14 @@ class GroupCardContent extends StatelessWidget {
               'Attività recente',
               style: theme.textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w500,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                color: theme.colorScheme.onSurface,
               ),
             ),
             const Spacer(),
             Text(
               'ultimi 7 giorni',
               style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
           ],
@@ -277,6 +277,7 @@ class GroupCardContent extends StatelessWidget {
             onPressed: () => _showAddExpenseSheet(context),
             style: TextButton.styleFrom(
               foregroundColor: theme.colorScheme.primary,
+              backgroundColor: theme.colorScheme.primaryContainer.withValues(alpha: 0.1),
               padding: const EdgeInsets.symmetric(vertical: 12),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -285,6 +286,7 @@ class GroupCardContent extends StatelessWidget {
             icon: Icon(
               Icons.add,
               size: 20,
+              color: theme.colorScheme.primary,
             ),
             label: Text(
               localizations.get('add_expense').toUpperCase(),
@@ -306,15 +308,21 @@ class GroupCardContent extends StatelessWidget {
             image: FileImage(File(group.file!)),
             fit: BoxFit.cover,
             colorFilter: ColorFilter.mode(
-              Colors.white.withValues(alpha: 0.7), // 0.3 opacity background
-              BlendMode.lighten,
+              theme.colorScheme.surface.withValues(alpha: 0.2),
+              BlendMode.srcOver,
             ),
           ),
         ),
         child: Container(
           decoration: BoxDecoration(
-            color: theme.colorScheme.surface
-                .withValues(alpha: 0.85), // Semi-transparent overlay
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                theme.colorScheme.surface.withValues(alpha: 0.7),
+                theme.colorScheme.surface.withValues(alpha: 0.9),
+              ],
+            ),
           ),
           child: content,
         ),
@@ -334,7 +342,7 @@ class GroupCardContent extends StatelessWidget {
         Icon(
           icon,
           size: 16,
-          color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+          color: theme.colorScheme.secondary,
         ),
         const SizedBox(width: 4),
         Text(
