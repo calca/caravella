@@ -6,17 +6,17 @@ class CaravellaThemes {
   static const Color _primaryDark = Color(0xFF2D3748);
   static const Color _primaryLight = Color(0xFF4A90E2);
   static const Color _accent = Color(0xFF68D391);
-  
+
   // Colori di superficie ottimizzati
   static const Color _surfaceLight = Color(0xFFFAFAFA);
   static const Color _surfaceDark = Color(0xFF1E2328);
   static const Color _surfaceContainerLight = Color(0xFFFFFFFF);
   static const Color _surfaceContainerDark = Color(0xFF2A3038);
-  
+
   // Background migliorati
   static const Color _backgroundLight = Color(0xFFF5F5F5);
   static const Color _backgroundDark = Color(0xFF161A1E);
-  
+
   // Errore
   static const Color _errorLight = Color(0xFFE53E3E);
   static const Color _errorDark = Color(0xFFFF6B6B);
@@ -101,7 +101,7 @@ class CaravellaThemes {
         color: colorScheme.onSurface,
         fontSize: 24,
       ),
-      
+
       // Titles
       titleLarge: TextStyle(
         fontWeight: FontWeight.w600,
@@ -118,7 +118,7 @@ class CaravellaThemes {
         color: colorScheme.onSurface,
         fontSize: 14,
       ),
-      
+
       // Body
       bodyLarge: TextStyle(
         fontWeight: FontWeight.w400,
@@ -135,7 +135,7 @@ class CaravellaThemes {
         color: colorScheme.onSurfaceVariant,
         fontSize: 12,
       ),
-      
+
       // Labels
       labelLarge: TextStyle(
         fontWeight: FontWeight.w600,
@@ -161,7 +161,6 @@ class CaravellaThemes {
     textTheme: _createTextTheme(lightScheme),
     scaffoldBackgroundColor: _backgroundLight,
     useMaterial3: true,
-    
     appBarTheme: AppBarTheme(
       backgroundColor: _surfaceLight,
       foregroundColor: lightScheme.onSurface,
@@ -175,7 +174,6 @@ class CaravellaThemes {
       ),
       systemOverlayStyle: lightOverlayStyle,
     ),
-    
     cardTheme: CardThemeData(
       color: _surfaceContainerLight,
       elevation: 0,
@@ -187,7 +185,6 @@ class CaravellaThemes {
         ),
       ),
     ),
-    
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: lightScheme.primary,
@@ -198,7 +195,6 @@ class CaravellaThemes {
         ),
       ),
     ),
-    
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
         foregroundColor: lightScheme.primary,
@@ -207,13 +203,11 @@ class CaravellaThemes {
         ),
       ),
     ),
-    
     floatingActionButtonTheme: FloatingActionButtonThemeData(
       backgroundColor: lightScheme.primary,
       foregroundColor: lightScheme.onPrimary,
       elevation: 4,
     ),
-    
     dividerColor: lightScheme.outline.withValues(alpha: 0.2),
     iconTheme: IconThemeData(color: lightScheme.onSurfaceVariant),
   );
@@ -224,7 +218,6 @@ class CaravellaThemes {
     textTheme: _createTextTheme(darkScheme),
     scaffoldBackgroundColor: _backgroundDark,
     useMaterial3: true,
-    
     appBarTheme: AppBarTheme(
       backgroundColor: _surfaceDark,
       foregroundColor: darkScheme.onSurface,
@@ -238,7 +231,6 @@ class CaravellaThemes {
       ),
       systemOverlayStyle: darkOverlayStyle,
     ),
-    
     cardTheme: CardThemeData(
       color: _surfaceContainerDark,
       elevation: 0,
@@ -250,7 +242,6 @@ class CaravellaThemes {
         ),
       ),
     ),
-    
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: darkScheme.primary,
@@ -261,7 +252,6 @@ class CaravellaThemes {
         ),
       ),
     ),
-    
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
         foregroundColor: darkScheme.primary,
@@ -270,13 +260,11 @@ class CaravellaThemes {
         ),
       ),
     ),
-    
     floatingActionButtonTheme: FloatingActionButtonThemeData(
       backgroundColor: darkScheme.primary,
       foregroundColor: darkScheme.onPrimary,
       elevation: 4,
     ),
-    
     dividerColor: darkScheme.outline.withValues(alpha: 0.3),
     iconTheme: IconThemeData(color: darkScheme.onSurfaceVariant),
   );

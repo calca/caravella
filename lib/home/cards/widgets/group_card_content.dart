@@ -44,11 +44,11 @@ class GroupCardContent extends StatelessWidget {
     try {
       final groups = await ExpenseGroupStorage.getAllGroups();
       final groupIndex = groups.indexWhere((g) => g.id == group.id);
-      
+
       if (groupIndex != -1) {
         // Add the expense to the group
         groups[groupIndex].expenses.add(expense);
-        
+
         // Save the updated groups back to storage
         await ExpenseGroupStorage.writeTrips(groups);
       }
@@ -62,16 +62,18 @@ class GroupCardContent extends StatelessWidget {
     try {
       final groups = await ExpenseGroupStorage.getAllGroups();
       final groupIndex = groups.indexWhere((g) => g.id == group.id);
-      
+
       if (groupIndex != -1) {
         // Check if category already exists
-        final existingCategories = groups[groupIndex].categories.map((c) => c.name).toList();
+        final existingCategories =
+            groups[groupIndex].categories.map((c) => c.name).toList();
         if (!existingCategories.contains(newCategory)) {
           // Add the new category to the group
           final updatedCategories = [...groups[groupIndex].categories];
           updatedCategories.add(ExpenseCategory(name: newCategory));
-          groups[groupIndex] = groups[groupIndex].copyWith(categories: updatedCategories);
-          
+          groups[groupIndex] =
+              groups[groupIndex].copyWith(categories: updatedCategories);
+
           // Save the updated groups back to storage
           await ExpenseGroupStorage.writeTrips(groups);
         }
@@ -108,17 +110,11 @@ class GroupCardContent extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              Text(
-                'Nuova Spesa - ${group.title}',
-                style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 20),
               Expanded(
                 child: ExpenseFormComponent(
                   participants: group.participants.map((p) => p.name).toList(),
                   categories: group.categories.map((c) => c.name).toList(),
+                  groupTitle: group.title, // Passa il titolo del gruppo
                   onExpenseAdded: (expense) async {
                     // Save the expense to the group
                     await _saveExpenseToGroup(expense);
