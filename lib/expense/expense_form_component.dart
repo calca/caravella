@@ -402,8 +402,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                         });
                       }
                     },
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 8, horizontal: 12),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -452,13 +452,10 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                   child: Text(loc.get('cancel')),
                 ),
                 const SizedBox(height: 8),
-                ElevatedButton(
+                ThemedOutlinedButton(
                   onPressed: _saveExpense,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                  ),
-                  child: Text(loc.get('save')),
+                  isPrimary: true, // Usa il colore primario del tema
+                  child: Text(loc.get('add_expense')),
                 ),
               ],
             ),
