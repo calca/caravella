@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// Un OutlinedButton con stile predefinito che rispetta il tema dell'app.
-/// Utilizzato per pulsanti con sfondo grigio, bordi arrotondati (16px) e senza bordi visibili.
+/// Utilizzato per pulsanti con sfondo grigio, bordi arrotondati (24px) e senza bordi visibili.
 class ThemedOutlinedButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final Widget child;
@@ -39,7 +39,7 @@ class ThemedOutlinedButton extends StatelessWidget {
       style: OutlinedButton.styleFrom(
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.0),
+          borderRadius: BorderRadius.circular(24.0),
         ),
         side: const BorderSide(color: Colors.transparent),
         padding: padding,

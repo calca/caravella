@@ -447,13 +447,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                OutlinedButton(
+                ThemedOutlinedButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: Theme.of(context).colorScheme.onSurface,
-                    side: BorderSide(
-                        color: Theme.of(context).colorScheme.outline),
-                  ),
                   child: Text(loc.get('cancel')),
                 ),
                 const SizedBox(height: 8),

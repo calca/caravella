@@ -4,6 +4,7 @@ import '../app_localizations.dart';
 import 'expense_form_component.dart';
 import '../manager/detail_page/tabs/expenses_tab.dart';
 import '../widgets/caravella_app_bar.dart';
+import '../widgets/themed_outlined_button.dart';
 
 class ExpenseEditPage extends StatelessWidget {
   final ExpenseDetails expense;
@@ -55,20 +56,11 @@ class ExpenseEditPage extends StatelessWidget {
     return Scaffold(
       appBar: CaravellaAppBar(
         actions: [
-          OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              backgroundColor:
-                  Theme.of(context).colorScheme.surfaceContainerHighest,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              side: BorderSide(color: Colors.transparent),
-              padding: const EdgeInsets.all(0),
-              minimumSize: const Size(40, 40),
-            ),
+          ThemedOutlinedButton.icon(
             onPressed: () => _onDelete(context),
-            child: Icon(Icons.delete,
-                color: Theme.of(context).colorScheme.primary),
+            icon: Icon(Icons.delete,
+                color: Theme.of(context).colorScheme.error),
+            size: 40,
           ),
         ],
       ),
