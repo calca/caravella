@@ -74,7 +74,6 @@ flutter:
   assets:
     - assets/images/
     - assets/images/home/
-    - assets/images/home/backgrounds/
     - assets/images/home/welcome/
 
   #   - images/a_dot_burr.jpeg

@@ -277,7 +277,8 @@ class GroupCardContent extends StatelessWidget {
             onPressed: () => _showAddExpenseSheet(context),
             style: TextButton.styleFrom(
               foregroundColor: theme.colorScheme.primary,
-              backgroundColor: theme.colorScheme.primaryContainer.withValues(alpha: 0.1),
+              backgroundColor:
+                  theme.colorScheme.primaryContainer.withValues(alpha: 0.1),
               padding: const EdgeInsets.symmetric(vertical: 12),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
