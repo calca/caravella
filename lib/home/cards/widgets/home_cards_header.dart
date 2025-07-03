@@ -36,13 +36,13 @@ class HomeCardsHeader extends StatelessWidget {
             width: 56,
             height: 56,
             decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withValues(alpha: 0.1),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(
               _getGreetingIcon(),
               size: 28,
-              color: theme.colorScheme.primary,
+              color: theme.colorScheme.onSurface,
             ),
           ),
           const SizedBox(width: 16),

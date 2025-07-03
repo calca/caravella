@@ -70,7 +70,7 @@ class NewGroupCard extends StatelessWidget {
         Icon(
           Icons.add_circle_outline,
           size: 64,
-          color: theme.colorScheme.primary,
+          color: theme.colorScheme.onSurface,
         ),
         const SizedBox(height: 24),
         Text(
@@ -78,7 +78,7 @@ class NewGroupCard extends StatelessWidget {
           style: theme.textTheme.headlineSmall?.copyWith(
             fontWeight: FontWeight.w400,
             fontSize: 22,
-            color: theme.colorScheme.primary,
+            color: theme.colorScheme.onSurface,
           ),
           textAlign: TextAlign.center,
         ),
@@ -86,7 +86,7 @@ class NewGroupCard extends StatelessWidget {
         Text(
           localizations.get('tap_to_create'),
           style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+            color: theme.colorScheme.onSurfaceVariant,
           ),
           textAlign: TextAlign.center,
         ),
