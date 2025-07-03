@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import '../../../app_localizations.dart';
 import '../../../data/expense_group.dart';
+import '../../../data/expense_category.dart';
+import '../../../data/expense_group_storage.dart';
 import '../../../expense/expense_form_component.dart';
 import '../../../widgets/currency_display.dart';
 import 'mini_expense_chart.dart';
@@ -36,6 +38,48 @@ class GroupCardContent extends StatelessWidget {
 
   String _formatDate(DateTime date) {
     return '${date.day}/${date.month}/${date.year}';
+  }
+
+  Future<void> _saveExpenseToGroup(dynamic expense) async {
+    try {
+      final groups = await ExpenseGroupStorage.getAllGroups();
+      final groupIndex = groups.indexWhere((g) => g.id == group.id);
+      
+      if (groupIndex != -1) {
+        // Add the expense to the group
+        groups[groupIndex].expenses.add(expense);
+        
+        // Save the updated groups back to storage
+        await ExpenseGroupStorage.writeTrips(groups);
+      }
+    } catch (e) {
+      // Handle error gracefully - could show a snackbar in a real app
+      debugPrint('Error saving expense: $e');
+    }
+  }
+
+  Future<void> _saveCategoryToGroup(String newCategory) async {
+    try {
+      final groups = await ExpenseGroupStorage.getAllGroups();
+      final groupIndex = groups.indexWhere((g) => g.id == group.id);
+      
+      if (groupIndex != -1) {
+        // Check if category already exists
+        final existingCategories = groups[groupIndex].categories.map((c) => c.name).toList();
+        if (!existingCategories.contains(newCategory)) {
+          // Add the new category to the group
+          final updatedCategories = [...groups[groupIndex].categories];
+          updatedCategories.add(ExpenseCategory(name: newCategory));
+          groups[groupIndex] = groups[groupIndex].copyWith(categories: updatedCategories);
+          
+          // Save the updated groups back to storage
+          await ExpenseGroupStorage.writeTrips(groups);
+        }
+      }
+    } catch (e) {
+      // Handle error gracefully
+      debugPrint('Error saving category: $e');
+    }
   }
 
   void _showAddExpenseSheet(BuildContext context) {
@@ -74,10 +118,18 @@ class GroupCardContent extends StatelessWidget {
               Expanded(
                 child: ExpenseFormComponent(
                   participants: group.participants.map((p) => p.name).toList(),
-                  categories: [], // TODO: Get categories from storage
-                  onExpenseAdded: (expense) {
-                    Navigator.pop(context);
+                  categories: group.categories.map((c) => c.name).toList(),
+                  onExpenseAdded: (expense) async {
+                    // Save the expense to the group
+                    await _saveExpenseToGroup(expense);
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                    }
                     onExpenseAdded();
+                  },
+                  onCategoryAdded: (newCategory) async {
+                    // Save the new category to the group
+                    await _saveCategoryToGroup(newCategory);
                   },
                   shouldAutoClose: false,
                 ),
