@@ -58,8 +58,8 @@ class ExpenseEditPage extends StatelessWidget {
         actions: [
           ThemedOutlinedButton.icon(
             onPressed: () => _onDelete(context),
-            icon: Icon(Icons.delete,
-                color: Theme.of(context).colorScheme.error),
+            icon:
+                Icon(Icons.delete, color: Theme.of(context).colorScheme.error),
             size: 40,
           ),
         ],
