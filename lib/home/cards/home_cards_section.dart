@@ -7,10 +7,12 @@ import 'widgets/widgets.dart';
 
 class HomeCardsSection extends StatefulWidget {
   final VoidCallback onTripAdded;
+  final ExpenseGroup? pinnedTrip;
 
   const HomeCardsSection({
     super.key,
     required this.onTripAdded,
+    this.pinnedTrip,
   });
 
   @override
@@ -27,12 +29,30 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
     _loadActiveGroups();
   }
 
+  @override
+  void didUpdateWidget(HomeCardsSection oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Se il pinnedTrip è cambiato, ricarica i gruppi
+    if (oldWidget.pinnedTrip?.id != widget.pinnedTrip?.id) {
+      _loadActiveGroups();
+    }
+  }
+
   Future<void> _loadActiveGroups() async {
     try {
       final groups = await ExpenseGroupStorage.getActiveGroups();
       if (mounted) {
         setState(() {
-          _activeGroups = groups;
+          // Se c'è un gruppo pinnato, mettiamolo sempre al primo posto
+          if (widget.pinnedTrip != null) {
+            // Rimuovi il gruppo pinnato dalla lista se è già presente
+            final filteredGroups =
+                groups.where((g) => g.id != widget.pinnedTrip!.id).toList();
+            // Metti il gruppo pinnato come primo elemento
+            _activeGroups = [widget.pinnedTrip!, ...filteredGroups];
+          } else {
+            _activeGroups = groups;
+          }
           _loading = false;
         });
       }
