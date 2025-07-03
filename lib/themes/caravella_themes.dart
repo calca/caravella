@@ -2,67 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class CaravellaThemes {
-  // Palette colori migliorata
-  static const Color _primaryDark = Color(0xFF2D3748);
-  static const Color _primaryLight = Color(0xFF4A90E2);
-  static const Color _accent = Color(0xFF68D391);
+  // Seed color per generare automaticamente la palette del tema
+  static const Color _seedColor = Color(0xFFD8DEE9); // #d8dee9
 
-  // Colori di superficie ottimizzati
-  static const Color _surfaceLight = Color(0xFFFAFAFA);
-  static const Color _surfaceDark = Color(0xFF1E2328);
-  static const Color _surfaceContainerLight = Color(0xFFFFFFFF);
-  static const Color _surfaceContainerDark = Color(0xFF2A3038);
-
-  // Background migliorati
-  static const Color _backgroundLight = Color(0xFFF5F5F5);
-  static const Color _backgroundDark = Color(0xFF161A1E);
-
-  // Errore
-  static const Color _errorLight = Color(0xFFE53E3E);
-  static const Color _errorDark = Color(0xFFFF6B6B);
-
-  static final ColorScheme lightScheme = const ColorScheme(
+  // ColorScheme generati automaticamente da Material 3
+  static final ColorScheme lightScheme = ColorScheme.fromSeed(
+    seedColor: _seedColor,
     brightness: Brightness.light,
-    primary: _primaryDark,
-    onPrimary: Colors.white,
-    primaryContainer: Color(0xFFE3F2FD),
-    onPrimaryContainer: _primaryDark,
-    secondary: Color(0xFF4A5568),
-    onSecondary: Colors.white,
-    secondaryContainer: Color(0xFFE2E8F0),
-    onSecondaryContainer: Color(0xFF2D3748),
-    tertiary: _accent,
-    onTertiary: Colors.white,
-    error: _errorLight,
-    onError: Colors.white,
-    surface: _surfaceLight,
-    onSurface: _primaryDark,
-    surfaceContainer: _surfaceContainerLight,
-    onSurfaceVariant: Color(0xFF6B7280),
-    outline: Color(0xFFD1D5DB),
-    shadow: Color(0xFF000000),
   );
 
-  static final ColorScheme darkScheme = const ColorScheme(
+  static final ColorScheme darkScheme = ColorScheme.fromSeed(
+    seedColor: _seedColor,
     brightness: Brightness.dark,
-    primary: _primaryLight,
-    onPrimary: Color(0xFF1A1D23),
-    primaryContainer: Color(0xFF2A5A8A),
-    onPrimaryContainer: Color(0xFFB3D4FC),
-    secondary: Color(0xFF8B9DC3),
-    onSecondary: Color(0xFF1A1D23),
-    secondaryContainer: Color(0xFF3A4A5C),
-    onSecondaryContainer: Color(0xFFB8C5D1),
-    tertiary: _accent,
-    onTertiary: Color(0xFF1A1D23),
-    error: _errorDark,
-    onError: Color(0xFF1A1D23),
-    surface: _surfaceDark,
-    onSurface: Color(0xFFE8EAED),
-    surfaceContainer: _surfaceContainerDark,
-    onSurfaceVariant: Color(0xFFBDC1C6),
-    outline: Color(0xFF5F6368),
-    shadow: Color(0xFF000000),
   );
 
   // Overlay styles ottimizzati
@@ -159,10 +110,9 @@ class CaravellaThemes {
     colorScheme: lightScheme,
     fontFamily: 'Montserrat',
     textTheme: _createTextTheme(lightScheme),
-    scaffoldBackgroundColor: _backgroundLight,
     useMaterial3: true,
     appBarTheme: AppBarTheme(
-      backgroundColor: _surfaceLight,
+      backgroundColor: lightScheme.surface,
       foregroundColor: lightScheme.onSurface,
       elevation: 0,
       centerTitle: false,
@@ -175,12 +125,12 @@ class CaravellaThemes {
       systemOverlayStyle: lightOverlayStyle,
     ),
     cardTheme: CardThemeData(
-      color: _surfaceContainerLight,
+      color: lightScheme.surfaceContainer,
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(
-          color: lightScheme.outline.withValues(alpha: 0.12),
+          color: lightScheme.outline.withValues(alpha: 0.15),
           width: 1,
         ),
       ),
@@ -191,7 +141,7 @@ class CaravellaThemes {
         foregroundColor: lightScheme.onPrimary,
         elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(32),
         ),
       ),
     ),
@@ -216,10 +166,9 @@ class CaravellaThemes {
     colorScheme: darkScheme,
     fontFamily: 'Montserrat',
     textTheme: _createTextTheme(darkScheme),
-    scaffoldBackgroundColor: _backgroundDark,
     useMaterial3: true,
     appBarTheme: AppBarTheme(
-      backgroundColor: _surfaceDark,
+      backgroundColor: darkScheme.surface,
       foregroundColor: darkScheme.onSurface,
       elevation: 0,
       centerTitle: false,
@@ -232,7 +181,7 @@ class CaravellaThemes {
       systemOverlayStyle: darkOverlayStyle,
     ),
     cardTheme: CardThemeData(
-      color: _surfaceContainerDark,
+      color: darkScheme.surfaceContainer,
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
@@ -248,7 +197,7 @@ class CaravellaThemes {
         foregroundColor: darkScheme.onPrimary,
         elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(32),
         ),
       ),
     ),
