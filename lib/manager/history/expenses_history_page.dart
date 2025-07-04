@@ -33,7 +33,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   late Animation<double> _filterAnimation;
   late AnimationController _searchAnimationController;
   late Animation<double> _searchAnimation;
-  
+
   final List<Map<String, dynamic>> _periodOptions = [
     {'key': 'all', 'label': 'Tutti', 'icon': Icons.all_inclusive},
     {'key': 'last12', 'label': 'Ultimi 12 mesi', 'icon': Icons.calendar_today},
@@ -236,7 +236,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                   color: Theme.of(context)
                       .colorScheme
                       .onSurface
-                      .withValues(alpha: 0.3),
+                      .withOpacity(0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -328,27 +328,34 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
 
   Widget _buildStatChip(IconData icon, String text, BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: Theme.of(context)
             .colorScheme
-            .secondaryContainer
-            .withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(8),
+            .surfaceContainerHigh
+            .withOpacity(0.8),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Theme.of(context)
+              .colorScheme
+              .outline
+              .withOpacity(0.2),
+          width: 1,
+        ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
             icon,
-            size: 14,
-            color: Theme.of(context).colorScheme.onSecondaryContainer,
+            size: 16,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
-          const SizedBox(width: 4),
+          const SizedBox(width: 6),
           Text(
             text,
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSecondaryContainer,
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontWeight: FontWeight.w600,
                 ),
           ),
@@ -373,9 +380,9 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
       margin: const EdgeInsets.symmetric(vertical: 4),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: color.withValues(alpha: 0.05),
+        color: color.withOpacity(0.05),
         border: Border.all(
-          color: color.withValues(alpha: 0.2),
+          color: color.withOpacity(0.2),
           width: 1,
         ),
       ),
@@ -384,7 +391,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
         leading: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.1),
+            color: color.withOpacity(0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(
@@ -406,13 +413,13 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                 color: Theme.of(context)
                     .colorScheme
                     .onSurface
-                    .withValues(alpha: 0.7),
+                    .withOpacity(0.7),
               ),
         ),
         trailing: Icon(
           Icons.arrow_forward_ios_rounded,
           size: 16,
-          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
+          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
@@ -434,7 +441,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
           boxShadow: [
             BoxShadow(
               color:
-                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+                  Theme.of(context).colorScheme.primary.withOpacity(0.3),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -476,7 +483,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                   color: Theme.of(context)
                       .colorScheme
                       .shadow
-                      .withValues(alpha: 0.1),
+                      .withOpacity(0.1),
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 ),
@@ -506,7 +513,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                               border: Border.all(
                                 color: _isSearchExpanded && _searchQuery.isNotEmpty
                                     ? Theme.of(context).colorScheme.primary
-                                    : Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+                                    : Theme.of(context).colorScheme.outline.withOpacity(0.2),
                                 width: _isSearchExpanded && _searchQuery.isNotEmpty ? 2 : 1,
                               ),
                             ),
@@ -525,7 +532,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                                             color: Theme.of(context)
                                                 .colorScheme
                                                 .onSurface
-                                                .withValues(alpha: 0.6),
+                                                .withOpacity(0.6),
                                           ),
                                       prefixIcon: Icon(
                                         Icons.search_rounded,
@@ -534,7 +541,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                                             : Theme.of(context)
                                                 .colorScheme
                                                 .onSurface
-                                                .withValues(alpha: 0.6),
+                                                .withOpacity(0.6),
                                         size: 20,
                                       ),
                                       suffixIcon: Row(
@@ -547,7 +554,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                                                 color: Theme.of(context)
                                                     .colorScheme
                                                     .onSurface
-                                                    .withValues(alpha: 0.6),
+                                                    .withOpacity(0.6),
                                                 size: 20,
                                               ),
                                               onPressed: () {
@@ -561,7 +568,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                                               color: Theme.of(context)
                                                   .colorScheme
                                                   .onSurface
-                                                  .withValues(alpha: 0.6),
+                                                  .withOpacity(0.6),
                                               size: 20,
                                             ),
                                             onPressed: _toggleSearch,
@@ -589,7 +596,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                                         color: Theme.of(context)
                                             .colorScheme
                                             .onSurface
-                                            .withValues(alpha: 0.7),
+                                            .withOpacity(0.7),
                                         size: 20,
                                       ),
                                     ),
@@ -620,7 +627,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                                     : Theme.of(context)
                                         .colorScheme
                                         .outline
-                                        .withValues(alpha: 0.2),
+                                        .withOpacity(0.2),
                                 width: 1,
                               ),
                             ),
@@ -639,7 +646,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                                         : Theme.of(context)
                                             .colorScheme
                                             .onSurface
-                                            .withValues(alpha: 0.7),
+                                            .withOpacity(0.7),
                                     size: 20,
                                   ),
                                 ),
@@ -686,7 +693,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                                     color: Theme.of(context)
                                         .colorScheme
                                         .onSurface
-                                        .withValues(alpha: 0.8),
+                                        .withOpacity(0.8),
                                   ),
                         ),
                         const SizedBox(height: 12),
@@ -720,7 +727,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                                           : Theme.of(context)
                                               .colorScheme
                                               .outline
-                                              .withValues(alpha: 0.2),
+                                              .withOpacity(0.2),
                                       width: 1,
                                     ),
                                     boxShadow: selected
@@ -729,7 +736,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                                               color: Theme.of(context)
                                                   .colorScheme
                                                   .primary
-                                                  .withValues(alpha: 0.3),
+                                                  .withOpacity(0.3),
                                               blurRadius: 8,
                                               offset: const Offset(0, 2),
                                             ),
@@ -749,7 +756,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                                             : Theme.of(context)
                                                 .colorScheme
                                                 .onSurface
-                                                .withValues(alpha: 0.7),
+                                                .withOpacity(0.7),
                                       ),
                                       const SizedBox(width: 6),
                                       Text(
@@ -765,7 +772,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                                                   : Theme.of(context)
                                                       .colorScheme
                                                       .onSurface
-                                                      .withValues(alpha: 0.8),
+                                                      .withOpacity(0.8),
                                               fontWeight: selected
                                                   ? FontWeight.w600
                                                   : FontWeight.w500,
@@ -792,13 +799,13 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                                 color: Theme.of(context)
                                     .colorScheme
                                     .errorContainer
-                                    .withValues(alpha: 0.1),
+                                    .withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
                                   color: Theme.of(context)
                                       .colorScheme
                                       .error
-                                      .withValues(alpha: 0.2),
+                                      .withOpacity(0.2),
                                   width: 1,
                                 ),
                               ),
@@ -853,7 +860,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                                         color: Theme.of(context)
                                             .colorScheme
                                             .onSurface
-                                            .withValues(alpha: 0.5),
+                                            .withOpacity(0.5),
                                       ),
                                       const SizedBox(height: 16),
                                       Text(
@@ -873,7 +880,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                                               color: Theme.of(context)
                                                   .colorScheme
                                                   .onSurface
-                                                  .withValues(alpha: 0.6),
+                                                  .withOpacity(0.6),
                                             ),
                                         textAlign: TextAlign.center,
                                       ),
@@ -890,7 +897,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                                             color: Theme.of(context)
                                                 .colorScheme
                                                 .onSurface
-                                                .withValues(alpha: 0.5),
+                                                .withOpacity(0.5),
                                           ),
                                           const SizedBox(height: 16),
                                           Text(loc.get('no_trips_found'),
@@ -1045,7 +1052,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                                           color: Theme.of(context)
                                               .colorScheme
                                               .shadow
-                                              .withValues(alpha: 0.08),
+                                              .withOpacity(0.08),
                                           blurRadius: 8,
                                           offset: const Offset(0, 2),
                                         ),
@@ -1054,7 +1061,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                                         color: Theme.of(context)
                                             .colorScheme
                                             .outline
-                                            .withValues(alpha: 0.1),
+                                            .withOpacity(0.1),
                                         width: 1,
                                       ),
                                     ),
@@ -1082,7 +1089,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                                                       const EdgeInsets.all(8),
                                                   decoration: BoxDecoration(
                                                     color: statusColor
-                                                        .withValues(alpha: 0.1),
+                                                        .withOpacity(0.1),
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             8),
@@ -1124,8 +1131,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                                                         decoration:
                                                             BoxDecoration(
                                                           color: statusColor
-                                                              .withValues(
-                                                                  alpha: 0.15),
+                                                              .withOpacity(0.15),
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(12),
@@ -1177,7 +1183,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                                                   color: Theme.of(context)
                                                       .colorScheme
                                                       .onSurface
-                                                      .withValues(alpha: 0.6),
+                                                      .withOpacity(0.6),
                                                 ),
                                                 const SizedBox(width: 6),
                                                 Expanded(
@@ -1200,9 +1206,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                                                               Theme.of(context)
                                                                   .colorScheme
                                                                   .onSurface
-                                                                  .withValues(
-                                                                      alpha:
-                                                                          0.7),
+                                                                  .withOpacity(0.7),
                                                         ),
                                                   ),
                                                 ),
@@ -1217,19 +1221,14 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                                                   color: Theme.of(context)
                                                       .colorScheme
                                                       .onSurface
-                                                      .withValues(alpha: 0.6),
+                                                      .withOpacity(0.6),
                                                 ),
                                                 const SizedBox(width: 6),
                                                 Expanded(
                                                   child: Text(
-                                                    trip.participants
-                                                            .take(3)
-                                                            .join(", ") +
-                                                        (trip.participants
-                                                                    .length >
-                                                                3
-                                                            ? " e altri ${trip.participants.length - 3}"
-                                                            : ""),
+                                                    trip.participants.length <= 2
+                                                        ? trip.participants.map((p) => p.name).join(', ')
+                                                        : '${trip.participants.length} partecipanti',
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .bodySmall
@@ -1238,13 +1237,10 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                                                               Theme.of(context)
                                                                   .colorScheme
                                                                   .onSurface
-                                                                  .withValues(
-                                                                      alpha:
-                                                                          0.7),
+                                                                  .withOpacity(0.7),
                                                         ),
                                                     maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
+                                                    overflow: TextOverflow.ellipsis,
                                                   ),
                                                 ),
                                               ],
@@ -1252,50 +1248,68 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                                             const SizedBox(height: 12),
                                             // Totale spese
                                             Container(
-                                              padding: const EdgeInsets.all(12),
+                                              padding: const EdgeInsets.all(16),
                                               decoration: BoxDecoration(
                                                 color: Theme.of(context)
                                                     .colorScheme
                                                     .primaryContainer
-                                                    .withValues(alpha: 0.3),
+                                                    .withOpacity(0.4),
                                                 borderRadius:
                                                     BorderRadius.circular(12),
+                                                border: Border.all(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .primary
+                                                      .withOpacity(0.2),
+                                                  width: 1,
+                                                ),
                                               ),
                                               child: Row(
                                                 children: [
-                                                  Icon(
-                                                    Icons
-                                                        .account_balance_wallet_rounded,
-                                                    size: 18,
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .primary,
+                                                  Container(
+                                                    padding: const EdgeInsets.all(8),
+                                                    decoration: BoxDecoration(
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .primary
+                                                          .withOpacity(0.1),
+                                                      borderRadius:
+                                                          BorderRadius.circular(8),
+                                                    ),
+                                                    child: Icon(
+                                                      Icons.euro_rounded,
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .primary,
+                                                      size: 20,
+                                                    ),
                                                   ),
-                                                  const SizedBox(width: 8),
+                                                  const SizedBox(width: 12),
                                                   Text(
-                                                    'Totale spese:',
+                                                    'Totale spese',
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .labelMedium
+                                                        .bodyMedium
                                                         ?.copyWith(
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .colorScheme
-                                                                  .onSurface
-                                                                  .withValues(
-                                                                      alpha:
-                                                                          0.8),
+                                                          color: Theme.of(context)
+                                                              .colorScheme
+                                                              .onSurface,
+                                                          fontWeight:
+                                                              FontWeight.w500,
                                                         ),
                                                   ),
                                                   const Spacer(),
                                                   CurrencyDisplay(
                                                     value: total,
                                                     currency: trip.currency,
-                                                    valueFontSize: 16.0,
-                                                    currencyFontSize: 11.0,
+                                                    valueFontSize: 18.0,
+                                                    currencyFontSize: 14.0,
                                                     alignment:
                                                         MainAxisAlignment.end,
                                                     showDecimals: true,
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .onSurface,
                                                   ),
                                                 ],
                                               ),
