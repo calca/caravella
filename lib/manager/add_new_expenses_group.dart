@@ -1017,37 +1017,9 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 // Bottone di salvataggio
                 SizedBox(
                   width: double.infinity,
-                  child: TextButton(
+                  child: ThemedOutlinedButton(
                     onPressed: _isFormValid() ? _saveTrip : null,
-                    style: TextButton.styleFrom(
-                      minimumSize: const Size.fromHeight(56),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      foregroundColor: _isFormValid()
-                          ? Theme.of(context).colorScheme.onPrimary
-                          : Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withValues(alpha: 0.38),
-                      backgroundColor: _isFormValid()
-                          ? Theme.of(context).colorScheme.primary
-                          : Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withValues(alpha: 0.12),
-                      textStyle:
-                          Theme.of(context).textTheme.titleMedium?.copyWith(
-                                color: _isFormValid()
-                                    ? Theme.of(context).colorScheme.onPrimary
-                                    : Theme.of(context)
-                                        .colorScheme
-                                        .onSurface
-                                        .withValues(alpha: 0.38),
-                                fontWeight: FontWeight.w600,
-                              ),
-                      elevation: _isFormValid() ? 2 : 0,
-                    ),
+                    isPrimary: true,
                     child: Text(loc.get('save')),
                   ),
                 ),
