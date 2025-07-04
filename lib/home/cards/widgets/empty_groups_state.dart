@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
-import '../../../manager/add_new_expenses_group.dart';
+import '../../../manager/group/add_new_expenses_group.dart';
 
 class EmptyGroupsState extends StatelessWidget {
   final AppLocalizations localizations;

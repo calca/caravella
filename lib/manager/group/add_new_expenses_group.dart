@@ -4,15 +4,15 @@ import 'dart:typed_data';
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
-import '../data/expense_group.dart';
-import '../data/expense_participant.dart';
-import '../data/expense_category.dart';
-import '../../data/expense_group_storage.dart';
-import '../app_localizations.dart';
-import '../state/locale_notifier.dart';
-import '../widgets/currency_selector.dart';
-import '../widgets/caravella_app_bar.dart';
-import '../widgets/widgets.dart';
+import '../../data/expense_group.dart';
+import '../../data/expense_participant.dart';
+import '../../data/expense_category.dart';
+import '../../../data/expense_group_storage.dart';
+import '../../app_localizations.dart';
+import '../../state/locale_notifier.dart';
+import '../../widgets/currency_selector.dart';
+import '../../widgets/caravella_app_bar.dart';
+import '../../widgets/widgets.dart';
 
 class AddNewExpensesGroupPage extends StatefulWidget {
   final ExpenseGroup? trip;

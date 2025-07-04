@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
-import '../../../manager/trips_history_page.dart';
+import '../../../manager/history/expenses_history_page.dart';
 import '../../../settings/settings_page.dart';
 
 class SimpleBottomBar extends StatelessWidget {
@@ -25,7 +25,8 @@ class SimpleBottomBar extends StatelessWidget {
           // Bottone Tutti
           TextButton(
             onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const TripsHistoryPage()),
+              MaterialPageRoute(
+                  builder: (context) => const ExpesensHistoryPage()),
             ),
             style: TextButton.styleFrom(
               foregroundColor:

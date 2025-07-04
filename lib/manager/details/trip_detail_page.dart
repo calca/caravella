@@ -3,7 +3,7 @@ import '../../data/expense_details.dart';
 import '../../data/expense_group.dart';
 import '../../expense/expense_edit_page.dart';
 import '../../data/expense_group_storage.dart';
-import '../add_new_expenses_group.dart';
+import '../group/add_new_expenses_group.dart';
 import '../../app_localizations.dart';
 import '../../state/locale_notifier.dart';
 import 'tabs/expenses_tab.dart';

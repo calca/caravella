@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:org_app_caravella/expense/expense_form_component.dart';
 import '../data/expense_group.dart';
 import '../data/expense_category.dart';
-import '../manager/trips_history_page.dart';
+import '../manager/history/expenses_history_page.dart';
 import '../app_localizations.dart';
 import '../../data/expense_group_storage.dart';
 import '../settings/settings_page.dart';
@@ -69,7 +69,7 @@ class CaravellaBottomBar extends StatelessWidget {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          const TripsHistoryPage(),
+                                          const ExpesensHistoryPage(),
                                     ),
                                   );
                                 },

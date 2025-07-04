@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import '../data/expense_group.dart';
-import '../data/expense_participant.dart';
-import '../data/expense_category.dart';
-import '../../data/expense_group_storage.dart';
-import 'details/trip_detail_page.dart';
-import '../app_localizations.dart';
-import 'group/add_new_expenses_group.dart';
-import '../state/locale_notifier.dart';
-import '../widgets/caravella_app_bar.dart';
-import '../widgets/currency_display.dart';
+import '../../data/expense_group.dart';
+import '../../data/expense_participant.dart';
+import '../../data/expense_category.dart';
+import '../../../data/expense_group_storage.dart';
+import '../details/trip_detail_page.dart';
+import '../../app_localizations.dart';
+import '../group/add_new_expenses_group.dart';
+import '../../state/locale_notifier.dart';
+import '../../widgets/caravella_app_bar.dart';
+import '../../widgets/currency_display.dart';
 
 class ExpesensHistoryPage extends StatefulWidget {
   const ExpesensHistoryPage({super.key});

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
 import '../../../data/expense_group.dart';
-import '../../../manager/detail_page/trip_detail_page.dart';
+import '../../../manager/details/trip_detail_page.dart';
 import '../../../widgets/widgets.dart';
 import 'group_card_content.dart';
 
