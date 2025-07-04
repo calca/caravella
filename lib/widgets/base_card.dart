@@ -45,7 +45,7 @@ class BaseCard extends StatelessWidget {
           image: FileImage(File(backgroundImage!)),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(
-            theme.colorScheme.surface.withValues(alpha: 0.2),
+            theme.colorScheme.surface.withValues(alpha: 0.9),
             BlendMode.srcOver,
           ),
         ),
