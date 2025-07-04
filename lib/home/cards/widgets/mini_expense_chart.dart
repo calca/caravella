@@ -38,11 +38,19 @@ class MiniExpenseChart extends StatelessWidget {
     });
   }
 
+  double _calculateDailyAverage() {
+    final expenses = _getLast7DaysExpenses();
+    if (expenses.isEmpty) return 0.0;
+    final total = expenses.fold<double>(0, (sum, expense) => sum + expense);
+    return total / expenses.length;
+  }
+
   @override
   Widget build(BuildContext context) {
     final expenses = _getLast7DaysExpenses();
     final days = _getLast7Days();
     final maxExpense = expenses.isEmpty ? 1.0 : expenses.reduce((a, b) => a > b ? a : b);
+    final dailyAverage = _calculateDailyAverage();
     
     return SizedBox(
       height: 40,
@@ -80,6 +88,19 @@ class MiniExpenseChart extends StatelessWidget {
           ),
           gridData: const FlGridData(show: false),
           borderData: FlBorderData(show: false),
+          // Linea della media usando extraLinesData
+          extraLinesData: dailyAverage > 0
+              ? ExtraLinesData(
+                  horizontalLines: [
+                    HorizontalLine(
+                      y: dailyAverage,
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                      strokeWidth: 1.5,
+                      dashArray: [4, 4],
+                    ),
+                  ],
+                )
+              : null,
           barGroups: List.generate(7, (index) {
             final isToday = index == 6;
             return BarChartGroupData(
