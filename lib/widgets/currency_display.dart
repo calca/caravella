@@ -28,13 +28,20 @@ class CurrencyDisplay extends StatelessWidget {
     return Row(
       mainAxisAlignment: alignment,
       crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          formattedValue,
-          style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                color: color ?? Theme.of(context).colorScheme.onSurface,
-                fontSize: valueFontSize,
-              ),
+        Flexible(
+          child: showDecimals
+              ? _buildValueWithSeparateDecimals(context, formattedValue)
+              : Text(
+                  formattedValue,
+                  style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                        color: color ?? Theme.of(context).colorScheme.onSurface,
+                        fontSize: valueFontSize,
+                      ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
         ),
         const SizedBox(width: 4),
         Text(
@@ -45,6 +52,36 @@ class CurrencyDisplay extends StatelessWidget {
               ),
         ),
       ],
+    );
+  }
+
+  Widget _buildValueWithSeparateDecimals(BuildContext context, String formattedValue) {
+    final parts = formattedValue.split('.');
+    final integerPart = parts[0];
+    final decimalPart = parts.length > 1 ? '.${parts[1]}' : '';
+
+    return RichText(
+      overflow: TextOverflow.ellipsis,
+      maxLines: 1,
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: integerPart,
+            style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                  color: color ?? Theme.of(context).colorScheme.onSurface,
+                  fontSize: valueFontSize,
+                ),
+          ),
+          if (decimalPart.isNotEmpty)
+            TextSpan(
+              text: decimalPart,
+              style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                    color: color ?? Theme.of(context).colorScheme.onSurface,
+                    fontSize: currencyFontSize,
+                  ),
+            ),
+        ],
+      ),
     );
   }
 }

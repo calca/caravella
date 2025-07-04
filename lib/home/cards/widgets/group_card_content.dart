@@ -182,7 +182,7 @@ class GroupCardContent extends StatelessWidget {
 
         // Seconda riga: Date e Totale integrati
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             if (group.startDate != null || group.endDate != null)
               Expanded(
@@ -195,14 +195,16 @@ class GroupCardContent extends StatelessWidget {
               )
             else
               const Expanded(child: SizedBox()),
-            CurrencyDisplay(
-              value: totalExpenses,
-              currency: '€',
-              valueFontSize: 36.0,
-              currencyFontSize: 24.0,
-              alignment: MainAxisAlignment.end,
-              showDecimals: true,
-              color: theme.colorScheme.onSurface,
+            Flexible(
+              child: CurrencyDisplay(
+                value: totalExpenses,
+                currency: '€',
+                valueFontSize: 36.0,
+                currencyFontSize: 24.0,
+                alignment: MainAxisAlignment.end,
+                showDecimals: true,
+                color: theme.colorScheme.onSurface,
+              ),
             ),
           ],
         ),
@@ -252,7 +254,7 @@ class GroupCardContent extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             SizedBox(
-              height: 50, // Più alto del precedente
+              height: 60, // Aumentato per il nuovo grafico
               child: MiniExpenseChart(group: group, theme: theme),
             ),
           ],
@@ -342,24 +344,26 @@ class GroupCardContent extends StatelessWidget {
               color: theme.colorScheme.onSurface,
             ),
             const SizedBox(width: 4),
-            if (isCurrency)
-              CurrencyDisplay(
-                value: value as double,
-                currency: '€',
-                valueFontSize: 16.0,
-                currencyFontSize: 12.0,
-                alignment: MainAxisAlignment.start,
-                showDecimals: true,
-                color: theme.colorScheme.onSurface,
-              )
-            else
-              Text(
-                value.toString(),
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: theme.colorScheme.onSurface,
-                ),
-              ),
+            Flexible(
+              child: isCurrency
+                  ? CurrencyDisplay(
+                      value: value as double,
+                      currency: '€',
+                      valueFontSize: 16.0,
+                      currencyFontSize: 12.0,
+                      alignment: MainAxisAlignment.start,
+                      showDecimals: true,
+                      color: theme.colorScheme.onSurface,
+                    )
+                  : Text(
+                      value.toString(),
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+            ),
           ],
         ),
         const SizedBox(height: 4),
