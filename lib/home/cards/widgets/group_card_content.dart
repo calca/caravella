@@ -198,8 +198,8 @@ class GroupCardContent extends StatelessWidget {
             CurrencyDisplay(
               value: totalExpenses,
               currency: '€',
-              valueFontSize: 24.0,
-              currencyFontSize: 16.0,
+              valueFontSize: 36.0,
+              currencyFontSize: 24.0,
               alignment: MainAxisAlignment.end,
               showDecimals: true,
               color: theme.colorScheme.onSurface,
@@ -216,21 +216,21 @@ class GroupCardContent extends StatelessWidget {
               child: _buildLabeledStat(
                 icon: Icons.people_outline,
                 value: participantCount.toString(),
-                label: 'persone',
+                label: localizations.get('participants'),
               ),
             ),
             Expanded(
               child: _buildLabeledStat(
                 icon: Icons.receipt_long_outlined,
                 value: group.expenses.length.toString(),
-                label: 'spese',
+                label: localizations.get('expenses'),
               ),
             ),
             Expanded(
               child: _buildLabeledStat(
                 icon: Icons.trending_up,
                 value: recentExpensesTotal,
-                label: '7 giorni',
+                label: localizations.get('last_7_days'),
                 isCurrency: true,
               ),
             ),
@@ -244,7 +244,7 @@ class GroupCardContent extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Attività recente',
+              localizations.get('recent_activity'),
               style: theme.textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.w600,
                 color: theme.colorScheme.onSurface,
