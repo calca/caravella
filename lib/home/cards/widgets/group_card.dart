@@ -51,6 +51,7 @@ class GroupCard extends StatelessWidget {
       child: BaseCard(
         margin: const EdgeInsets.only(bottom: 16),
         backgroundColor: backgroundColor,
+        backgroundImage: group.file,
         onTap: () async {
           final result = await Navigator.of(context).push(
             MaterialPageRoute(

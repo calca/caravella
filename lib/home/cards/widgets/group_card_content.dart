@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
 import '../../../app_localizations.dart';
 import '../../../data/expense_group.dart';
 import '../../../data/expense_category.dart';
@@ -147,12 +146,7 @@ class GroupCardContent extends StatelessWidget {
             e.date.isAfter(DateTime.now().subtract(const Duration(days: 7))))
         .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
 
-    // Check if there's an image file available
-    final hasBackgroundImage = group.file != null &&
-        group.file!.isNotEmpty &&
-        File(group.file!).existsSync();
-
-    Widget content = Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Header con titolo e pin prominente
@@ -293,38 +287,6 @@ class GroupCardContent extends StatelessWidget {
         ),
       ],
     );
-
-    // If there's a background image, wrap the content in a Container with background
-    if (hasBackgroundImage) {
-      return Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: FileImage(File(group.file!)),
-            fit: BoxFit.cover,
-            colorFilter: ColorFilter.mode(
-              theme.colorScheme.surface.withValues(alpha: 0.2),
-              BlendMode.srcOver,
-            ),
-          ),
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                theme.colorScheme.surface.withValues(alpha: 0.7),
-                theme.colorScheme.surface.withValues(alpha: 0.9),
-              ],
-            ),
-          ),
-          child: content,
-        ),
-      );
-    }
-
-    // No background image, return content directly
-    return content;
   }
 
   Widget _buildLabeledStat({

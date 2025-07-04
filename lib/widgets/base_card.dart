@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 
 class BaseCard extends StatelessWidget {
   final Widget child;
@@ -9,6 +10,7 @@ class BaseCard extends StatelessWidget {
   final double? elevation;
   final Color? backgroundColor;
   final BorderRadius? borderRadius;
+  final String? backgroundImage;
 
   const BaseCard({
     super.key,
@@ -20,6 +22,7 @@ class BaseCard extends StatelessWidget {
     this.elevation,
     this.backgroundColor,
     this.borderRadius,
+    this.backgroundImage,
   });
 
   @override
@@ -28,10 +31,42 @@ class BaseCard extends StatelessWidget {
     final defaultBorderRadius = BorderRadius.circular(16);
     final effectiveBorderRadius = borderRadius ?? defaultBorderRadius;
 
-    Widget cardContent = Container(
-      margin: margin,
-      padding: padding ?? const EdgeInsets.all(20),
-      decoration: BoxDecoration(
+    // Check if there's a background image
+    final hasBackgroundImage = backgroundImage != null &&
+        backgroundImage!.isNotEmpty &&
+        File(backgroundImage!).existsSync();
+
+    // Build the decoration
+    BoxDecoration decoration;
+    if (hasBackgroundImage) {
+      decoration = BoxDecoration(
+        borderRadius: effectiveBorderRadius,
+        image: DecorationImage(
+          image: FileImage(File(backgroundImage!)),
+          fit: BoxFit.cover,
+          colorFilter: ColorFilter.mode(
+            theme.colorScheme.surface.withValues(alpha: 0.2),
+            BlendMode.srcOver,
+          ),
+        ),
+        border: isFlat
+            ? Border.all(
+                color: theme.colorScheme.outline.withValues(alpha: 0.12),
+                width: 1,
+              )
+            : null,
+        boxShadow: isFlat
+            ? null
+            : [
+                BoxShadow(
+                  color: theme.colorScheme.shadow.withValues(alpha: 0.1),
+                  blurRadius: elevation ?? 2,
+                  offset: const Offset(0, 1),
+                ),
+              ],
+      );
+    } else {
+      decoration = BoxDecoration(
         color: backgroundColor ?? theme.colorScheme.surfaceContainer,
         borderRadius: effectiveBorderRadius,
         border: isFlat
@@ -49,7 +84,13 @@ class BaseCard extends StatelessWidget {
                   offset: const Offset(0, 1),
                 ),
               ],
-      ),
+      );
+    }
+
+    Widget cardContent = Container(
+      margin: margin,
+      padding: padding ?? const EdgeInsets.all(20),
+      decoration: decoration,
       child: child,
     );
 
