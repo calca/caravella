@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
 import '../../../data/expense_group.dart';
 
 class MiniExpenseChart extends StatelessWidget {
@@ -30,50 +31,72 @@ class MiniExpenseChart extends StatelessWidget {
     }).toList();
   }
 
+  List<DateTime> _getLast7Days() {
+    final now = DateTime.now();
+    return List.generate(7, (index) {
+      return now.subtract(Duration(days: 6 - index));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final expenses = _getLast7DaysExpenses();
-    final maxExpense =
-        expenses.isEmpty ? 1.0 : expenses.reduce((a, b) => a > b ? a : b);
-    final normalizedExpenses =
-        expenses.map((e) => maxExpense == 0 ? 0.0 : e / maxExpense).toList();
-
+    final days = _getLast7Days();
+    final maxExpense = expenses.isEmpty ? 1.0 : expenses.reduce((a, b) => a > b ? a : b);
+    
     return SizedBox(
       height: 40,
-      child: Row(
-        children: List.generate(7, (index) {
-          final height = normalizedExpenses[index] * 30 + 4; // Min 4px height
-          final isToday = index == 6;
-
-          return Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 1),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  AnimatedContainer(
-                    duration: Duration(milliseconds: 300 + (index * 50)),
-                    height: height,
-                    decoration: BoxDecoration(
-                      color: isToday
-                          ? theme.colorScheme.onSurface
-                          : theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    ['L', 'M', 'M', 'G', 'V', 'S', 'D'][index],
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      fontSize: 8,
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
+      child: BarChart(
+        BarChartData(
+          alignment: BarChartAlignment.spaceAround,
+          maxY: maxExpense == 0 ? 1 : maxExpense,
+          minY: 0,
+          groupsSpace: 4,
+          barTouchData: BarTouchData(enabled: false),
+          titlesData: FlTitlesData(
+            show: true,
+            rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                getTitlesWidget: (value, meta) {
+                  if (value.toInt() >= 0 && value.toInt() < days.length) {
+                    final day = days[value.toInt()];
+                    return Text(
+                      day.day.toString(),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        fontSize: 8,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    );
+                  }
+                  return const Text('');
+                },
+                reservedSize: 16,
               ),
             ),
-          );
-        }),
+          ),
+          gridData: const FlGridData(show: false),
+          borderData: FlBorderData(show: false),
+          barGroups: List.generate(7, (index) {
+            final isToday = index == 6;
+            return BarChartGroupData(
+              x: index,
+              barRods: [
+                BarChartRodData(
+                  toY: expenses[index],
+                  color: isToday
+                      ? theme.colorScheme.onSurface
+                      : theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                  width: 8,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ],
+            );
+          }),
+        ),
       ),
     );
   }
