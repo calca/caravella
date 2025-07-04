@@ -18,14 +18,22 @@ class ExpesensHistoryPage extends StatefulWidget {
   State<ExpesensHistoryPage> createState() => _ExpesensHistoryPageState();
 }
 
-class _ExpesensHistoryPageState extends State<ExpesensHistoryPage> {
+class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
+    with TickerProviderStateMixin {
   List<ExpenseGroup> _allTrips = [];
   List<ExpenseGroup> _filteredTrips = [];
   String _periodFilter = 'all';
   String _searchQuery = '';
   bool _loading = true;
+  bool _showFilters = false;
+  bool _isSearchExpanded = false;
   final TextEditingController _searchController = TextEditingController();
   Timer? _searchDebounce;
+  late AnimationController _filterAnimationController;
+  late Animation<double> _filterAnimation;
+  late AnimationController _searchAnimationController;
+  late Animation<double> _searchAnimation;
+  
   final List<Map<String, dynamic>> _periodOptions = [
     {'key': 'all', 'label': 'Tutti', 'icon': Icons.all_inclusive},
     {'key': 'last12', 'label': 'Ultimi 12 mesi', 'icon': Icons.calendar_today},
@@ -36,6 +44,22 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage> {
   @override
   void initState() {
     super.initState();
+    _filterAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _filterAnimation = CurvedAnimation(
+      parent: _filterAnimationController,
+      curve: Curves.easeInOut,
+    );
+    _searchAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _searchAnimation = CurvedAnimation(
+      parent: _searchAnimationController,
+      curve: Curves.easeInOut,
+    );
     _loadTrips();
   }
 
@@ -43,6 +67,8 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage> {
   void dispose() {
     _searchController.dispose();
     _searchDebounce?.cancel();
+    _filterAnimationController.dispose();
+    _searchAnimationController.dispose();
     super.dispose();
   }
 
@@ -124,13 +150,39 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage> {
     });
   }
 
+  void _toggleSearch() {
+    setState(() {
+      _isSearchExpanded = !_isSearchExpanded;
+      if (_isSearchExpanded) {
+        _searchAnimationController.forward();
+      } else {
+        _searchAnimationController.reverse();
+        _searchController.clear();
+        _onSearchChanged('');
+      }
+    });
+  }
+
+  void _toggleFilters() {
+    setState(() {
+      _showFilters = !_showFilters;
+      if (_showFilters) {
+        _filterAnimationController.forward();
+      } else {
+        _filterAnimationController.reverse();
+      }
+    });
+  }
+
   void _onSearchChanged(String query) {
     _searchDebounce?.cancel();
     _searchDebounce = Timer(const Duration(milliseconds: 300), () {
-      setState(() {
-        _searchQuery = query;
-        _filteredTrips = _applyFilter(_allTrips);
-      });
+      if (mounted) {
+        setState(() {
+          _searchQuery = query;
+          _filteredTrips = _applyFilter(_allTrips);
+        });
+      }
     });
   }
 
@@ -415,7 +467,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage> {
       ),
       body: Column(
         children: [
-          // HEADER SECTION CON RICERCA E FILTRI
+          // HEADER SECTION CON RICERCA E FILTRI MIGLIORATO
           Container(
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.surface,
@@ -432,127 +484,351 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage> {
             ),
             child: Column(
               children: [
-                // BOX DI RICERCA MIGLIORATO
+                // TOP BAR CON SEARCH E FILTER BUTTON
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      color:
-                          Theme.of(context).colorScheme.surfaceContainerHighest,
-                      border: Border.all(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .outline
-                            .withValues(alpha: 0.2),
-                        width: 1,
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                  child: Row(
+                    children: [
+                      // SEARCH BOX ESPANDIBILE
+                      AnimatedBuilder(
+                        animation: _searchAnimation,
+                        builder: (context, child) {
+                          return AnimatedContainer(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                            width: _isSearchExpanded ? MediaQuery.of(context).size.width - 112 : 48,
+                            height: 48,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(24),
+                              color: _isSearchExpanded
+                                  ? Theme.of(context).colorScheme.surfaceContainerHighest
+                                  : Theme.of(context).colorScheme.surfaceContainerHighest,
+                              border: Border.all(
+                                color: _isSearchExpanded && _searchQuery.isNotEmpty
+                                    ? Theme.of(context).colorScheme.primary
+                                    : Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+                                width: _isSearchExpanded && _searchQuery.isNotEmpty ? 2 : 1,
+                              ),
+                            ),
+                            child: _isSearchExpanded 
+                                ? TextField(
+                                    controller: _searchController,
+                                    onChanged: _onSearchChanged,
+                                    autofocus: true,
+                                    style: Theme.of(context).textTheme.bodyLarge,
+                                    decoration: InputDecoration(
+                                      hintText: 'Cerca gruppi...',
+                                      hintStyle: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge
+                                          ?.copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface
+                                                .withValues(alpha: 0.6),
+                                          ),
+                                      prefixIcon: Icon(
+                                        Icons.search_rounded,
+                                        color: _searchQuery.isNotEmpty
+                                            ? Theme.of(context).colorScheme.primary
+                                            : Theme.of(context)
+                                                .colorScheme
+                                                .onSurface
+                                                .withValues(alpha: 0.6),
+                                        size: 20,
+                                      ),
+                                      suffixIcon: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          if (_searchQuery.isNotEmpty)
+                                            IconButton(
+                                              icon: Icon(
+                                                Icons.clear_rounded,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onSurface
+                                                    .withValues(alpha: 0.6),
+                                                size: 20,
+                                              ),
+                                              onPressed: () {
+                                                _searchController.clear();
+                                                _onSearchChanged('');
+                                              },
+                                            ),
+                                          IconButton(
+                                            icon: Icon(
+                                              Icons.close_rounded,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSurface
+                                                  .withValues(alpha: 0.6),
+                                              size: 20,
+                                            ),
+                                            onPressed: _toggleSearch,
+                                          ),
+                                        ],
+                                      ),
+                                      border: InputBorder.none,
+                                      contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 12,
+                                      ),
+                                    ),
+                                  )
+                                : InkWell(
+                                    onTap: _toggleSearch,
+                                    borderRadius: BorderRadius.circular(24),
+                                    child: Container(
+                                      width: 48,
+                                      height: 48,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(24),
+                                      ),
+                                      child: Icon(
+                                        Icons.search_rounded,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface
+                                            .withValues(alpha: 0.7),
+                                        size: 20,
+                                      ),
+                                    ),
+                                  ),
+                          );
+                        },
                       ),
-                    ),
-                    child: TextField(
-                      controller: _searchController,
-                      onChanged: _onSearchChanged,
-                      style: Theme.of(context).textTheme.bodyLarge,
-                      decoration: InputDecoration(
-                        hintText: loc.get('search_groups'),
-                        hintStyle:
-                            Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  color: Theme.of(context)
+                      const SizedBox(width: 12),
+                      // FILTER TOGGLE BUTTON
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        child: InkWell(
+                          onTap: _toggleFilters,
+                          borderRadius: BorderRadius.circular(24),
+                          child: Container(
+                            height: 48,
+                            width: 48,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(24),
+                              color: _showFilters
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Theme.of(context)
                                       .colorScheme
-                                      .onSurface
-                                      .withValues(alpha: 0.6),
+                                      .surfaceContainerHighest,
+                              border: Border.all(
+                                color: _showFilters
+                                    ? Theme.of(context).colorScheme.primary
+                                    : Theme.of(context)
+                                        .colorScheme
+                                        .outline
+                                        .withValues(alpha: 0.2),
+                                width: 1,
+                              ),
+                            ),
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                AnimatedRotation(
+                                  turns: _showFilters ? 0.5 : 0,
+                                  duration: const Duration(milliseconds: 200),
+                                  child: Icon(
+                                    Icons.tune_rounded,
+                                    color: _showFilters
+                                        ? Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary
+                                        : Theme.of(context)
+                                            .colorScheme
+                                            .onSurface
+                                            .withValues(alpha: 0.7),
+                                    size: 20,
+                                  ),
                                 ),
-                        prefixIcon: Icon(
-                          Icons.search_rounded,
-                          color: Theme.of(context).colorScheme.primary,
-                          size: 24,
-                        ),
-                        suffixIcon: _searchQuery.isNotEmpty
-                            ? IconButton(
-                                icon: Icon(
-                                  Icons.clear_rounded,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onSurface
-                                      .withValues(alpha: 0.6),
-                                ),
-                                onPressed: () {
-                                  _searchController.clear();
-                                  _onSearchChanged('');
-                                },
-                              )
-                            : null,
-                        border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 16,
+                                if (_periodFilter != 'all')
+                                  Positioned(
+                                    top: 4,
+                                    right: 4,
+                                    child: Container(
+                                      width: 8,
+                                      height: 8,
+                                      decoration: BoxDecoration(
+                                        color: _showFilters
+                                            ? Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary
+                                            : Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
-                // FILTRI RAPIDI MIGLIORATI
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: _periodOptions.map((opt) {
-                        final selected = _periodFilter == opt['key'];
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
-                            child: FilterChip(
-                              avatar: Icon(
-                                opt['icon'],
-                                size: 18,
-                                color: selected
-                                    ? Theme.of(context).colorScheme.onPrimary
-                                    : Theme.of(context).colorScheme.primary,
-                              ),
-                              label: Text(
-                                opt['label'],
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelMedium
-                                    ?.copyWith(
-                                      fontWeight: selected
-                                          ? FontWeight.w600
-                                          : FontWeight.w500,
+                // FILTRI A SCOMPARSA
+                SizeTransition(
+                  sizeFactor: _filterAnimation,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Filtra per periodo',
+                          style:
+                              Theme.of(context).textTheme.titleSmall?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withValues(alpha: 0.8),
+                                  ),
+                        ),
+                        const SizedBox(height: 12),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: _periodOptions.map((opt) {
+                            final selected = _periodFilter == opt['key'];
+                            return AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              child: InkWell(
+                                onTap: () => _onFilterChanged(opt['key']),
+                                borderRadius: BorderRadius.circular(20),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 10,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: selected
+                                        ? Theme.of(context).colorScheme.primary
+                                        : Theme.of(context)
+                                            .colorScheme
+                                            .surfaceContainerHighest,
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                      color: selected
+                                          ? Theme.of(context)
+                                              .colorScheme
+                                              .primary
+                                          : Theme.of(context)
+                                              .colorScheme
+                                              .outline
+                                              .withValues(alpha: 0.2),
+                                      width: 1,
                                     ),
+                                    boxShadow: selected
+                                        ? [
+                                            BoxShadow(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary
+                                                  .withValues(alpha: 0.3),
+                                              blurRadius: 8,
+                                              offset: const Offset(0, 2),
+                                            ),
+                                          ]
+                                        : null,
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        opt['icon'],
+                                        size: 16,
+                                        color: selected
+                                            ? Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary
+                                            : Theme.of(context)
+                                                .colorScheme
+                                                .onSurface
+                                                .withValues(alpha: 0.7),
+                                      ),
+                                      const SizedBox(width: 6),
+                                      Text(
+                                        opt['label'],
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelMedium
+                                            ?.copyWith(
+                                              color: selected
+                                                  ? Theme.of(context)
+                                                      .colorScheme
+                                                      .onPrimary
+                                                  : Theme.of(context)
+                                                      .colorScheme
+                                                      .onSurface
+                                                      .withValues(alpha: 0.8),
+                                              fontWeight: selected
+                                                  ? FontWeight.w600
+                                                  : FontWeight.w500,
+                                            ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
-                              selected: selected,
-                              onSelected: (_) => _onFilterChanged(opt['key']),
-                              selectedColor:
-                                  Theme.of(context).colorScheme.primary,
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.surface,
-                              labelStyle: TextStyle(
-                                color: selected
-                                    ? Theme.of(context).colorScheme.onPrimary
-                                    : Theme.of(context).colorScheme.onSurface,
+                            );
+                          }).toList(),
+                        ),
+                        if (_periodFilter != 'all') ...[
+                          const SizedBox(height: 12),
+                          InkWell(
+                            onTap: () => _onFilterChanged('all'),
+                            borderRadius: BorderRadius.circular(16),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 8,
                               ),
-                              elevation: selected ? 2 : 0,
-                              shadowColor: Theme.of(context)
-                                  .colorScheme
-                                  .shadow
-                                  .withValues(alpha: 0.2),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                side: BorderSide(
-                                  color: selected
-                                      ? Theme.of(context).colorScheme.primary
-                                      : Theme.of(context)
-                                          .colorScheme
-                                          .outline
-                                          .withValues(alpha: 0.2),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .errorContainer
+                                    .withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .error
+                                      .withValues(alpha: 0.2),
                                   width: 1,
                                 ),
                               ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.clear_rounded,
+                                    size: 16,
+                                    color: Theme.of(context).colorScheme.error,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    'Rimuovi filtri',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelSmall
+                                        ?.copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .error,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        );
-                      }).toList(),
+                        ],
+                      ],
                     ),
                   ),
                 ),
