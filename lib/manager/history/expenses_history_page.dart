@@ -167,37 +167,36 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     bool isSelected,
     VoidCallback onTap,
   ) {
-    return Material(
-      borderRadius: BorderRadius.circular(12),
-      color: isSelected
-          ? Theme.of(context).colorScheme.primary
-          : Theme.of(context).colorScheme.surfaceContainerHigh.withValues(alpha: 0.8),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                icon,
-                size: 20,
-                color: isSelected
-                    ? Theme.of(context).colorScheme.onPrimary
-                    : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                label,
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: isSelected
-                          ? Theme.of(context).colorScheme.onPrimary
-                          : Theme.of(context).colorScheme.onSurface,
-                    ),
-              ),
-            ],
+    return Container(
+      width: 48,
+      height: 48,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        color: isSelected
+            ? Theme.of(context).colorScheme.primary
+            : Theme.of(context).colorScheme.surfaceContainerHighest,
+        border: Border.all(
+          color: isSelected
+              ? Theme.of(context).colorScheme.primary
+              : Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+          width: isSelected ? 2 : 1,
+        ),
+      ),
+      child: Material(
+        borderRadius: BorderRadius.circular(24),
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(24),
+          onTap: onTap,
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            child: Icon(
+              icon,
+              size: 20,
+              color: isSelected
+                  ? Theme.of(context).colorScheme.onPrimary
+                  : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+            ),
           ),
         ),
       ),
@@ -254,32 +253,28 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
           Container(
             child: Column(
               children: [
-                // STATUS FILTER BUTTONS
+                // FILTRI E SEARCH BAR SULLA STESSA RIGA
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-                  child: Row(
-                    children: _statusOptions.map((option) {
-                      final isSelected = _statusFilter == option['key'];
-                      return Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: _buildStatusFilterButton(
-                            context,
-                            option['label'],
-                            option['icon'],
-                            isSelected,
-                            () => _onStatusFilterChanged(option['key']),
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-                // SEARCH BAR
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
                   child: Row(
                     children: [
+                      // STATUS FILTER BUTTONS (nascondi quando search è espansa)
+                      if (!_isSearchExpanded) ...[
+                        ..._statusOptions.map((option) {
+                          final isSelected = _statusFilter == option['key'];
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: _buildStatusFilterButton(
+                              context,
+                              option['label'],
+                              option['icon'],
+                              isSelected,
+                              () => _onStatusFilterChanged(option['key']),
+                            ),
+                          );
+                        }).toList(),
+                        const SizedBox(width: 8),
+                      ],
                       // SEARCH BOX ESPANDIBILE
                       if (_isSearchExpanded)
                         Expanded(
