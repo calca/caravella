@@ -68,8 +68,7 @@ class _ExpandableSearchBarState extends State<ExpandableSearchBar>
         return AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
-          width:
-              widget.isExpanded ? MediaQuery.of(context).size.width - 112 : 48,
+          width: widget.isExpanded ? null : 48,
           height: 48,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),

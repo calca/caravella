@@ -8,7 +8,6 @@ import '../../state/locale_notifier.dart';
 import '../../widgets/caravella_app_bar.dart';
 import 'widgets/trip_empty_states.dart';
 import 'widgets/expandable_search_bar.dart';
-import 'widgets/history_filter_section.dart';
 import 'widgets/trip_card.dart';
 import 'widgets/trip_options_sheet.dart';
 
@@ -31,7 +30,6 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   final TextEditingController _searchController = TextEditingController();
   Timer? _searchDebounce;
   late AnimationController _filterAnimationController;
-  late Animation<double> _filterAnimation;
 
   final List<Map<String, dynamic>> _periodOptions = [
     {'key': 'all', 'label': 'Tutti', 'icon': Icons.all_inclusive},
@@ -46,10 +44,6 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     _filterAnimationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
-    );
-    _filterAnimation = CurvedAnimation(
-      parent: _filterAnimationController,
-      curve: Curves.easeInOut,
     );
     _loadTrips();
   }
@@ -194,6 +188,66 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     );
   }
 
+  Widget _buildFilterChip(
+    BuildContext context,
+    String label,
+    IconData icon,
+    bool isSelected,
+    VoidCallback onTap,
+  ) {
+    return Material(
+      borderRadius: BorderRadius.circular(20),
+      color: isSelected
+          ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
+          : Theme.of(context).colorScheme.surface,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(20),
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: isSelected
+                  ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.5)
+                  : Theme.of(context)
+                      .colorScheme
+                      .outline
+                      .withValues(alpha: 0.2),
+              width: 1.5,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon,
+                size: 16,
+                color: isSelected
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withValues(alpha: 0.7),
+              ),
+              const SizedBox(width: 6),
+              Text(
+                label,
+                style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: isSelected
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.onSurface,
+                    ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
@@ -242,19 +296,6 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
         children: [
           // HEADER SECTION CON RICERCA E FILTRI
           Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              boxShadow: [
-                BoxShadow(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .shadow
-                      .withValues(alpha: 0.1),
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
             child: Column(
               children: [
                 // TOP BAR CON SEARCH E FILTER BUTTON
@@ -263,76 +304,165 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                   child: Row(
                     children: [
                       // SEARCH BOX ESPANDIBILE
-                      Expanded(
-                        child: ExpandableSearchBar(
+                      if (_isSearchExpanded)
+                        Expanded(
+                          child: ExpandableSearchBar(
+                            controller: _searchController,
+                            isExpanded: _isSearchExpanded,
+                            searchQuery: _searchQuery,
+                            onToggle: _toggleSearch,
+                            onSearchChanged: _onSearchChanged,
+                          ),
+                        )
+                      else
+                        ExpandableSearchBar(
                           controller: _searchController,
                           isExpanded: _isSearchExpanded,
                           searchQuery: _searchQuery,
                           onToggle: _toggleSearch,
                           onSearchChanged: _onSearchChanged,
                         ),
-                      ),
-                      const SizedBox(width: 16),
-                      // FILTER BUTTON
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: _showFilters
-                              ? Theme.of(context)
-                                  .colorScheme
-                                  .primary
-                                  .withValues(alpha: 0.1)
-                              : Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainerHigh
-                                  .withValues(alpha: 0.8),
-                          border: Border.all(
+                      if (!_isSearchExpanded) ...[
+                        const SizedBox(width: 16),
+                        // FILTER BUTTON
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
                             color: _showFilters
                                 ? Theme.of(context)
                                     .colorScheme
                                     .primary
-                                    .withValues(alpha: 0.5)
+                                    .withValues(alpha: 0.1)
                                 : Theme.of(context)
                                     .colorScheme
-                                    .outline
-                                    .withValues(alpha: 0.2),
-                            width: 1,
+                                    .surfaceContainerHigh
+                                    .withValues(alpha: 0.8),
+                            border: Border.all(
+                              color: _showFilters
+                                  ? Theme.of(context)
+                                      .colorScheme
+                                      .primary
+                                      .withValues(alpha: 0.5)
+                                  : Theme.of(context)
+                                      .colorScheme
+                                      .outline
+                                      .withValues(alpha: 0.2),
+                              width: 1,
+                            ),
                           ),
-                        ),
-                        child: Material(
-                          borderRadius: BorderRadius.circular(12),
-                          color: Colors.transparent,
-                          child: InkWell(
+                          child: Material(
                             borderRadius: BorderRadius.circular(12),
-                            onTap: _toggleFilters,
-                            child: Container(
-                              padding: const EdgeInsets.all(12),
-                              child: Icon(
-                                Icons.tune_rounded,
-                                color: _showFilters
-                                    ? Theme.of(context).colorScheme.primary
-                                    : Theme.of(context)
-                                        .colorScheme
-                                        .onSurface
-                                        .withValues(alpha: 0.7),
-                                size: 24,
+                            color: Colors.transparent,
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(12),
+                              onTap: _toggleFilters,
+                              child: Container(
+                                padding: const EdgeInsets.all(12),
+                                child: Icon(
+                                  Icons.tune_rounded,
+                                  color: _showFilters
+                                      ? Theme.of(context).colorScheme.primary
+                                      : Theme.of(context)
+                                          .colorScheme
+                                          .onSurface
+                                          .withValues(alpha: 0.7),
+                                  size: 24,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
+                      ],
                     ],
                   ),
                 ),
                 const SizedBox(height: 16),
                 // FILTRI SECTION
-                HistoryFilterSection(
-                  periodOptions: _periodOptions,
-                  selectedPeriod: _periodFilter,
-                  onFilterChanged: _onFilterChanged,
-                  filterAnimation: _filterAnimation,
-                  onToggleFilters: _toggleFilters,
-                ),
+                if (_showFilters)
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Filtra per periodo',
+                          style:
+                              Theme.of(context).textTheme.titleSmall?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withValues(alpha: 0.8),
+                                  ),
+                        ),
+                        const SizedBox(height: 12),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: _periodOptions.map((option) {
+                            final isSelected = _periodFilter == option['key'];
+                            return _buildFilterChip(
+                              context,
+                              option['label'],
+                              option['icon'],
+                              isSelected,
+                              () => _onFilterChanged(option['key']),
+                            );
+                          }).toList(),
+                        ),
+                        if (_periodFilter != 'all') ...[
+                          const SizedBox(height: 12),
+                          InkWell(
+                            onTap: () => _onFilterChanged('all'),
+                            borderRadius: BorderRadius.circular(16),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .errorContainer
+                                    .withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .error
+                                      .withValues(alpha: 0.2),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.clear_rounded,
+                                    size: 16,
+                                    color: Theme.of(context).colorScheme.error,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    'Rimuovi filtri',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelSmall
+                                        ?.copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .error,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
                 const SizedBox(height: 16),
               ],
             ),
