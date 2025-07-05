@@ -22,29 +22,22 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     with TickerProviderStateMixin {
   List<ExpenseGroup> _allTrips = [];
   List<ExpenseGroup> _filteredTrips = [];
-  String _periodFilter = 'all';
+  String _statusFilter = 'active'; // active, all, archived
   String _searchQuery = '';
   bool _loading = true;
-  bool _showFilters = false;
   bool _isSearchExpanded = false;
   final TextEditingController _searchController = TextEditingController();
   Timer? _searchDebounce;
-  late AnimationController _filterAnimationController;
 
-  final List<Map<String, dynamic>> _periodOptions = [
+  final List<Map<String, dynamic>> _statusOptions = [
+    {'key': 'active', 'label': 'Attivi', 'icon': Icons.play_circle_fill_rounded},
     {'key': 'all', 'label': 'Tutti', 'icon': Icons.all_inclusive},
-    {'key': 'last12', 'label': 'Ultimi 12 mesi', 'icon': Icons.calendar_today},
-    {'key': 'future', 'label': 'Futuri', 'icon': Icons.schedule},
-    {'key': 'past', 'label': 'Passati', 'icon': Icons.history},
+    {'key': 'archived', 'label': 'Archiviati', 'icon': Icons.archive_rounded},
   ];
 
   @override
   void initState() {
     super.initState();
-    _filterAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
     _loadTrips();
   }
 
@@ -52,7 +45,6 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   void dispose() {
     _searchController.dispose();
     _searchDebounce?.cancel();
-    _filterAnimationController.dispose();
     super.dispose();
   }
 
@@ -61,7 +53,22 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
 
     try {
       await Future.delayed(const Duration(milliseconds: 100));
-      final trips = await ExpenseGroupStorage.getAllGroups();
+      List<ExpenseGroup> trips;
+      
+      // Carica i dati in base al filtro di stato
+      switch (_statusFilter) {
+        case 'all':
+          trips = await ExpenseGroupStorage.getAllGroups();
+          break;
+        case 'archived':
+          trips = await ExpenseGroupStorage.getArchivedGroups();
+          break;
+        case 'active':
+        default:
+          trips = await ExpenseGroupStorage.getActiveGroups();
+          break;
+      }
+      
       if (mounted) {
         setState(() {
           _allTrips = trips;
@@ -91,46 +98,22 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   }
 
   List<ExpenseGroup> _applyFilter(List<ExpenseGroup> trips) {
-    final now = DateTime.now();
-
-    // Prima applica il filtro per periodo
-    List<ExpenseGroup> filteredByPeriod;
-    switch (_periodFilter) {
-      case 'last12':
-        filteredByPeriod = trips
-            .where((t) =>
-                t.startDate?.isAfter(now.subtract(Duration(days: 365))) ??
-                false)
-            .toList();
-        break;
-      case 'future':
-        filteredByPeriod =
-            trips.where((t) => t.startDate?.isAfter(now) ?? false).toList();
-        break;
-      case 'past':
-        filteredByPeriod =
-            trips.where((t) => t.endDate?.isBefore(now) ?? false).toList();
-        break;
-      default:
-        filteredByPeriod = trips;
-    }
-
-    // Poi applica il filtro di ricerca per titolo
+    // Applica solo il filtro di ricerca per titolo
     if (_searchQuery.isEmpty) {
-      return filteredByPeriod;
+      return trips;
     }
 
-    return filteredByPeriod
+    return trips
         .where((trip) =>
             trip.title.toLowerCase().contains(_searchQuery.toLowerCase()))
         .toList();
   }
 
-  void _onFilterChanged(String key) {
+  void _onStatusFilterChanged(String key) {
     setState(() {
-      _periodFilter = key;
-      _filteredTrips = _applyFilter(_allTrips);
+      _statusFilter = key;
     });
+    _loadTrips(); // Ricarica i dati con il nuovo filtro
   }
 
   void _toggleSearch() {
@@ -139,17 +122,6 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
       if (!_isSearchExpanded) {
         _searchController.clear();
         _onSearchChanged('');
-      }
-    });
-  }
-
-  void _toggleFilters() {
-    setState(() {
-      _showFilters = !_showFilters;
-      if (_showFilters) {
-        _filterAnimationController.forward();
-      } else {
-        _filterAnimationController.reverse();
       }
     });
   }
@@ -188,7 +160,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     );
   }
 
-  Widget _buildFilterChip(
+  Widget _buildStatusFilterButton(
     BuildContext context,
     String label,
     IconData icon,
@@ -196,48 +168,32 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     VoidCallback onTap,
   ) {
     return Material(
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(12),
       color: isSelected
-          ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
-          : Theme.of(context).colorScheme.surface,
+          ? Theme.of(context).colorScheme.primary
+          : Theme.of(context).colorScheme.surfaceContainerHigh.withValues(alpha: 0.8),
       child: InkWell(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(12),
         onTap: onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: isSelected
-                  ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.5)
-                  : Theme.of(context)
-                      .colorScheme
-                      .outline
-                      .withValues(alpha: 0.2),
-              width: 1.5,
-            ),
-          ),
-          child: Row(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
                 icon,
-                size: 16,
+                size: 20,
                 color: isSelected
-                    ? Theme.of(context).colorScheme.primary
-                    : Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withValues(alpha: 0.7),
+                    ? Theme.of(context).colorScheme.onPrimary
+                    : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
               ),
-              const SizedBox(width: 6),
+              const SizedBox(height: 4),
               Text(
                 label,
-                style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       fontWeight: FontWeight.w600,
                       color: isSelected
-                          ? Theme.of(context).colorScheme.primary
+                          ? Theme.of(context).colorScheme.onPrimary
                           : Theme.of(context).colorScheme.onSurface,
                     ),
               ),
@@ -294,13 +250,34 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
       ),
       body: Column(
         children: [
-          // HEADER SECTION CON RICERCA E FILTRI
+          // HEADER SECTION CON FILTRI E RICERCA
           Container(
             child: Column(
               children: [
-                // TOP BAR CON SEARCH E FILTER BUTTON
+                // STATUS FILTER BUTTONS
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                  child: Row(
+                    children: _statusOptions.map((option) {
+                      final isSelected = _statusFilter == option['key'];
+                      return Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          child: _buildStatusFilterButton(
+                            context,
+                            option['label'],
+                            option['icon'],
+                            isSelected,
+                            () => _onStatusFilterChanged(option['key']),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+                // SEARCH BAR
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                   child: Row(
                     children: [
                       // SEARCH BOX ESPANDIBILE
@@ -322,148 +299,9 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                           onToggle: _toggleSearch,
                           onSearchChanged: _onSearchChanged,
                         ),
-                      if (!_isSearchExpanded) ...[
-                        const SizedBox(width: 16),
-                        // FILTER BUTTON
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: _showFilters
-                                ? Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withValues(alpha: 0.1)
-                                : Theme.of(context)
-                                    .colorScheme
-                                    .surfaceContainerHigh
-                                    .withValues(alpha: 0.8),
-                            border: Border.all(
-                              color: _showFilters
-                                  ? Theme.of(context)
-                                      .colorScheme
-                                      .primary
-                                      .withValues(alpha: 0.5)
-                                  : Theme.of(context)
-                                      .colorScheme
-                                      .outline
-                                      .withValues(alpha: 0.2),
-                              width: 1,
-                            ),
-                          ),
-                          child: Material(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Colors.transparent,
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(12),
-                              onTap: _toggleFilters,
-                              child: Container(
-                                padding: const EdgeInsets.all(12),
-                                child: Icon(
-                                  Icons.tune_rounded,
-                                  color: _showFilters
-                                      ? Theme.of(context).colorScheme.primary
-                                      : Theme.of(context)
-                                          .colorScheme
-                                          .onSurface
-                                          .withValues(alpha: 0.7),
-                                  size: 24,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
                     ],
                   ),
                 ),
-                const SizedBox(height: 16),
-                // FILTRI SECTION
-                if (_showFilters)
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Filtra per periodo',
-                          style:
-                              Theme.of(context).textTheme.titleSmall?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface
-                                        .withValues(alpha: 0.8),
-                                  ),
-                        ),
-                        const SizedBox(height: 12),
-                        Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: _periodOptions.map((option) {
-                            final isSelected = _periodFilter == option['key'];
-                            return _buildFilterChip(
-                              context,
-                              option['label'],
-                              option['icon'],
-                              isSelected,
-                              () => _onFilterChanged(option['key']),
-                            );
-                          }).toList(),
-                        ),
-                        if (_periodFilter != 'all') ...[
-                          const SizedBox(height: 12),
-                          InkWell(
-                            onTap: () => _onFilterChanged('all'),
-                            borderRadius: BorderRadius.circular(16),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 8,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .errorContainer
-                                    .withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .error
-                                      .withValues(alpha: 0.2),
-                                  width: 1,
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    Icons.clear_rounded,
-                                    size: 16,
-                                    color: Theme.of(context).colorScheme.error,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    'Rimuovi filtri',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelSmall
-                                        ?.copyWith(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .error,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                const SizedBox(height: 16),
               ],
             ),
           ),
@@ -476,7 +314,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                 : _filteredTrips.isEmpty
                     ? TripEmptyStates(
                         searchQuery: _searchQuery,
-                        periodFilter: _periodFilter,
+                        periodFilter: _statusFilter,
                         localizations: loc,
                         onTripAdded: () async {
                           final result = await Navigator.of(context).push(
