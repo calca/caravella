@@ -30,7 +30,11 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   Timer? _searchDebounce;
 
   final List<Map<String, dynamic>> _statusOptions = [
-    {'key': 'active', 'label': 'Attivi', 'icon': Icons.play_circle_fill_rounded},
+    {
+      'key': 'active',
+      'label': 'Attivi',
+      'icon': Icons.play_circle_fill_rounded
+    },
     {'key': 'all', 'label': 'Tutti', 'icon': Icons.all_inclusive},
     {'key': 'archived', 'label': 'Archiviati', 'icon': Icons.archive_rounded},
   ];
@@ -54,7 +58,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     try {
       await Future.delayed(const Duration(milliseconds: 100));
       List<ExpenseGroup> trips;
-      
+
       // Carica i dati in base al filtro di stato
       switch (_statusFilter) {
         case 'all':
@@ -68,7 +72,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
           trips = await ExpenseGroupStorage.getActiveGroups();
           break;
       }
-      
+
       if (mounted) {
         setState(() {
           _allTrips = trips;
@@ -195,7 +199,10 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
               size: 20,
               color: isSelected
                   ? Theme.of(context).colorScheme.onPrimary
-                  : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                  : Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7),
             ),
           ),
         ),
@@ -258,42 +265,52 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                   padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
                   child: Row(
                     children: [
-                      // STATUS FILTER BUTTONS (nascondi quando search è espansa)
-                      if (!_isSearchExpanded) ...[
-                        ..._statusOptions.map((option) {
-                          final isSelected = _statusFilter == option['key'];
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: _buildStatusFilterButton(
-                              context,
-                              option['label'],
-                              option['icon'],
-                              isSelected,
-                              () => _onStatusFilterChanged(option['key']),
+                      // STATUS FILTER BUTTONS con animazione di fade
+                      if (!_isSearchExpanded)
+                        AnimatedOpacity(
+                          opacity: _isSearchExpanded ? 0.0 : 1.0,
+                          duration: const Duration(milliseconds: 250),
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                            width: _isSearchExpanded ? 0 : null,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: _statusOptions.map((option) {
+                                final isSelected =
+                                    _statusFilter == option['key'];
+                                return Padding(
+                                  padding: const EdgeInsets.only(right: 8),
+                                  child: _buildStatusFilterButton(
+                                    context,
+                                    option['label'],
+                                    option['icon'],
+                                    isSelected,
+                                    () => _onStatusFilterChanged(option['key']),
+                                  ),
+                                );
+                              }).toList(),
                             ),
-                          );
-                        }).toList(),
-                        const SizedBox(width: 8),
-                      ],
-                      // SEARCH BOX ESPANDIBILE
-                      if (_isSearchExpanded)
-                        Expanded(
-                          child: ExpandableSearchBar(
-                            controller: _searchController,
-                            isExpanded: _isSearchExpanded,
-                            searchQuery: _searchQuery,
-                            onToggle: _toggleSearch,
-                            onSearchChanged: _onSearchChanged,
                           ),
-                        )
-                      else
-                        ExpandableSearchBar(
+                        ),
+                      // SPACER per spingere la search a destra
+                      const Spacer(),
+                      // SEARCH BOX ESPANDIBILE ALLINEATO A DESTRA
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 350),
+                        curve: Curves.easeOutCubic,
+                        width: _isSearchExpanded
+                            ? MediaQuery.of(context).size.width -
+                                32 // Full width minus padding
+                            : 48, // Collapsed width
+                        child: ExpandableSearchBar(
                           controller: _searchController,
                           isExpanded: _isSearchExpanded,
                           searchQuery: _searchQuery,
                           onToggle: _toggleSearch,
                           onSearchChanged: _onSearchChanged,
                         ),
+                      ),
                     ],
                   ),
                 ),

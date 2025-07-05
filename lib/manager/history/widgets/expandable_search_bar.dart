@@ -65,10 +65,7 @@ class _ExpandableSearchBarState extends State<ExpandableSearchBar>
     return AnimatedBuilder(
       animation: _animation,
       builder: (context, child) {
-        return AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-          width: widget.isExpanded ? null : 48,
+        return Container(
           height: 48,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),
@@ -157,15 +154,17 @@ class _ExpandableSearchBarState extends State<ExpandableSearchBar>
       onTap: widget.onToggle,
       borderRadius: BorderRadius.circular(24),
       child: Container(
-        width: 48,
         height: 48,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
         ),
-        child: Icon(
-          Icons.search_rounded,
-          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-          size: 20,
+        child: Center(
+          child: Icon(
+            Icons.search_rounded,
+            color:
+                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+            size: 20,
+          ),
         ),
       ),
     );
