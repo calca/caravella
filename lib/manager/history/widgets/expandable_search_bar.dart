@@ -129,7 +129,7 @@ class _ExpandableSearchBarState extends State<ExpandableSearchBar>
               ),
             IconButton(
               icon: Icon(
-                Icons.close_rounded,
+                Icons.arrow_back_rounded,
                 color: Theme.of(context)
                     .colorScheme
                     .onSurface
