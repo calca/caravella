@@ -278,13 +278,13 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                       
                       const Divider(),
                       
-                      // Edit action
+                      // Edit Group action
                       ListTile(
                         leading: Icon(
                           Icons.edit_rounded,
                           color: Theme.of(context).colorScheme.primary,
                         ),
-                        title: Text(AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it').get('edit')),
+                        title: Text('Modifica gruppo'),
                         onTap: () async {
                           Navigator.of(context).pop();
                           final result = await Navigator.of(context).push(
@@ -298,6 +298,54 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                           );
                           if (result == true && context.mounted) {
                             await _refreshTrip();
+                          }
+                        },
+                      ),
+                      
+                      const Divider(),
+                      
+                      // Delete action
+                      ListTile(
+                        leading: Icon(
+                          Icons.delete_rounded,
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                        title: Text(
+                          'Elimina gruppo',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.error,
+                          ),
+                        ),
+                        onTap: () async {
+                          Navigator.of(context).pop();
+                          final shouldDelete = await showDialog<bool>(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('Elimina gruppo'),
+                              content: const Text('Sei sicuro di voler eliminare questo gruppo di spese? Questa azione non può essere annullata.'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(false),
+                                  child: const Text('Annulla'),
+                                ),
+                                FilledButton(
+                                  onPressed: () => Navigator.of(context).pop(true),
+                                  style: FilledButton.styleFrom(
+                                    backgroundColor: Theme.of(context).colorScheme.error,
+                                  ),
+                                  child: const Text('Elimina'),
+                                ),
+                              ],
+                            ),
+                          );
+                          
+                          if (shouldDelete == true && context.mounted) {
+                            final trips = await ExpenseGroupStorage.getAllGroups();
+                            trips.removeWhere((v) => v.id == _trip!.id);
+                            await ExpenseGroupStorage.writeTrips(trips);
+                            if (context.mounted) {
+                              Navigator.of(context).pop(true); // Torna alla lista e aggiorna
+                            }
                           }
                         },
                       ),
@@ -480,7 +528,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                             ),
                           ),
                         ),
-                        // Menu Options IconButton
+                        // Menu Options IconButton (spostato all'ultimo posto)
                         Tooltip(
                           message: 'Opzioni',
                           child: IconButton.filled(
