@@ -7,6 +7,8 @@ import '../group/add_new_expenses_group.dart';
 import '../../app_localizations.dart';
 import '../../state/locale_notifier.dart';
 import 'tabs/expenses_tab.dart';
+import 'tabs/overview_tab.dart';
+import 'tabs/statistics_tab.dart';
 import '../../widgets/currency_display.dart';
 import '../../widgets/widgets.dart';
 import '../../widgets/no_expense.dart';
@@ -85,6 +87,110 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         await ExpenseGroupStorage.writeTrips(trips);
       }
     }
+  }
+
+  void _showOverviewSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.7,
+        maxChildSize: 0.9,
+        minChildSize: 0.3,
+        builder: (context, scrollController) => Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: Column(
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.outline,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    const Icon(Icons.dashboard_customize_rounded),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Panoramica',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  padding: const EdgeInsets.all(16),
+                  child: OverviewTab(trip: _trip!),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showStatisticsSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.7,
+        maxChildSize: 0.9,
+        minChildSize: 0.3,
+        builder: (context, scrollController) => Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: Column(
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.outline,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    const Icon(Icons.analytics_rounded),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Statistiche',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  padding: const EdgeInsets.all(16),
+                  child: StatisticsTab(trip: _trip!),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -295,33 +401,78 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               child: BaseCard(
                 padding: const EdgeInsets.all(16),
                 backgroundColor: colorScheme.surface,
-                child: _trip!.expenses.isEmpty
-                    ? NoExpense(
-                        semanticLabel: loc.get('no_expense_label'),
-                      )
-                    : Column(
-                        children: () {
-                          final expenses = List.from(_trip!.expenses)
-                            ..sort((a, b) => b.date.compareTo(a.date));
-                          return expenses.map<Widget>((expense) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 4),
-                              child: GestureDetector(
-                                onTap: () => _openEditExpense(expense),
-                                child: TripAmountCard(
-                                  title: expense.category,
-                                  coins: (expense.amount ?? 0).toInt(),
-                                  checked: true,
-                                  paidBy: expense.paidBy,
-                                  category: null,
-                                  date: expense.date,
-                                  currency: _trip!.currency,
-                                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Action buttons se ci sono spese
+                    if (_trip!.expenses.isNotEmpty) ...[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          // Overview IconButton
+                          Tooltip(
+                            message: 'Mostra panoramica',
+                            child: IconButton.filled(
+                              onPressed: _showOverviewSheet,
+                              icon: const Icon(Icons.dashboard_customize_rounded),
+                              iconSize: 24,
+                              tooltip: 'Panoramica',
+                              style: IconButton.styleFrom(
+                                backgroundColor: colorScheme.primaryContainer,
+                                foregroundColor: colorScheme.onPrimaryContainer,
+                                minimumSize: const Size(56, 56),
                               ),
-                            );
-                          }).toList();
-                        }(),
+                            ),
+                          ),
+                          // Statistics IconButton
+                          Tooltip(
+                            message: 'Mostra statistiche',
+                            child: IconButton.filled(
+                              onPressed: _showStatisticsSheet,
+                              icon: const Icon(Icons.analytics_rounded),
+                              iconSize: 24,
+                              tooltip: 'Statistiche',
+                              style: IconButton.styleFrom(
+                                backgroundColor: colorScheme.primaryContainer,
+                                foregroundColor: colorScheme.onPrimaryContainer,
+                                minimumSize: const Size(56, 56),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
+                      const SizedBox(height: 16),
+                    ],
+                    // Lista spese o messaggio vuoto
+                    _trip!.expenses.isEmpty
+                        ? NoExpense(
+                            semanticLabel: loc.get('no_expense_label'),
+                          )
+                        : Column(
+                            children: () {
+                              final expenses = List.from(_trip!.expenses)
+                                ..sort((a, b) => b.date.compareTo(a.date));
+                              return expenses.map<Widget>((expense) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 4),
+                                  child: GestureDetector(
+                                    onTap: () => _openEditExpense(expense),
+                                    child: TripAmountCard(
+                                      title: expense.category,
+                                      coins: (expense.amount ?? 0).toInt(),
+                                      checked: true,
+                                      paidBy: expense.paidBy,
+                                      category: null,
+                                      date: expense.date,
+                                      currency: _trip!.currency,
+                                    ),
+                                  ),
+                                );
+                              }).toList();
+                            }(),
+                          ),
+                  ],
+                ),
               ),
             ),
           ),
