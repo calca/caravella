@@ -10,7 +10,6 @@ import 'tabs/expenses_tab.dart';
 import 'tabs/overview_tab.dart';
 import 'tabs/statistics_tab.dart';
 import '../../widgets/currency_display.dart';
-import '../../widgets/widgets.dart';
 import '../../widgets/no_expense.dart';
 import 'trip_amount_card.dart';
 
@@ -436,115 +435,106 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             ),
           ),
 
-          // Expenses Content in BaseCard
+          // Expenses Content
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
             sliver: SliverToBoxAdapter(
-              child: BaseCard(
-                padding: EdgeInsets.zero,
-                backgroundColor: colorScheme.surface,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Action buttons se ci sono spese
-                    if (_trip!.expenses.isNotEmpty) ...[
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            // Overview IconButton
-                            Tooltip(
-                              message: 'Mostra panoramica',
-                              child: IconButton.filled(
-                                onPressed: _showOverviewSheet,
-                                icon: const Icon(
-                                    Icons.dashboard_customize_rounded),
-                                iconSize: 24,
-                                tooltip: 'Panoramica',
-                                style: IconButton.styleFrom(
-                                  backgroundColor: colorScheme.primaryContainer,
-                                  foregroundColor:
-                                      colorScheme.onPrimaryContainer,
-                                  minimumSize: const Size(56, 56),
-                                ),
-                              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Action buttons se ci sono spese
+                  if (_trip!.expenses.isNotEmpty) ...[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        // Overview IconButton
+                        Tooltip(
+                          message: 'Mostra panoramica',
+                          child: IconButton.filled(
+                            onPressed: _showOverviewSheet,
+                            icon: const Icon(
+                                Icons.dashboard_customize_rounded),
+                            iconSize: 24,
+                            tooltip: 'Panoramica',
+                            style: IconButton.styleFrom(
+                              backgroundColor: colorScheme.primaryContainer,
+                              foregroundColor:
+                                  colorScheme.onPrimaryContainer,
+                              minimumSize: const Size(56, 56),
                             ),
-                            // Statistics IconButton
-                            Tooltip(
-                              message: 'Mostra statistiche',
-                              child: IconButton.filled(
-                                onPressed: _showStatisticsSheet,
-                                icon: const Icon(Icons.analytics_rounded),
-                                iconSize: 24,
-                                tooltip: 'Statistiche',
-                                style: IconButton.styleFrom(
-                                  backgroundColor: colorScheme.primaryContainer,
-                                  foregroundColor:
-                                      colorScheme.onPrimaryContainer,
-                                  minimumSize: const Size(56, 56),
-                                ),
-                              ),
-                            ),
-                            // Menu Options IconButton
-                            Tooltip(
-                              message: 'Opzioni',
-                              child: IconButton.filled(
-                                onPressed: _showOptionsSheet,
-                                icon: const Icon(Icons.settings_rounded),
-                                iconSize: 24,
-                                tooltip: 'Opzioni',
-                                style: IconButton.styleFrom(
-                                  backgroundColor: colorScheme.secondaryContainer,
-                                  foregroundColor: colorScheme.onSecondaryContainer,
-                                  minimumSize: const Size(56, 56),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                    // Lista spese o messaggio vuoto
-                    _trip!.expenses.isEmpty
-                        ? Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: NoExpense(
-                              semanticLabel: loc.get('no_expense_label'),
-                            ),
-                          )
-                        : Column(
-                            children: () {
-                              final expenses = List.from(_trip!.expenses)
-                                ..sort((a, b) => b.date.compareTo(a.date));
-                              final expenseWidgets =
-                                  expenses.map<Widget>((expense) {
-                                return Container(
-                                  width: double.infinity,
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 4),
-                                  child: GestureDetector(
-                                    onTap: () => _openEditExpense(expense),
-                                    child: TripAmountCard(
-                                      title: expense.category,
-                                      coins: (expense.amount ?? 0).toInt(),
-                                      checked: true,
-                                      paidBy: expense.paidBy,
-                                      category: null,
-                                      date: expense.date,
-                                      currency: _trip!.currency,
-                                    ),
-                                  ),
-                                );
-                              }).toList();
-
-                              // Aggiungi spazio finale
-                              expenseWidgets.add(const SizedBox(height: 12));
-                              return expenseWidgets;
-                            }(),
                           ),
+                        ),
+                        // Statistics IconButton
+                        Tooltip(
+                          message: 'Mostra statistiche',
+                          child: IconButton.filled(
+                            onPressed: _showStatisticsSheet,
+                            icon: const Icon(Icons.analytics_rounded),
+                            iconSize: 24,
+                            tooltip: 'Statistiche',
+                            style: IconButton.styleFrom(
+                              backgroundColor: colorScheme.primaryContainer,
+                              foregroundColor:
+                                  colorScheme.onPrimaryContainer,
+                              minimumSize: const Size(56, 56),
+                            ),
+                          ),
+                        ),
+                        // Menu Options IconButton
+                        Tooltip(
+                          message: 'Opzioni',
+                          child: IconButton.filled(
+                            onPressed: _showOptionsSheet,
+                            icon: const Icon(Icons.settings_rounded),
+                            iconSize: 24,
+                            tooltip: 'Opzioni',
+                            style: IconButton.styleFrom(
+                              backgroundColor: colorScheme.secondaryContainer,
+                              foregroundColor: colorScheme.onSecondaryContainer,
+                              minimumSize: const Size(56, 56),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
                   ],
-                ),
+                  // Lista spese o messaggio vuoto
+                  _trip!.expenses.isEmpty
+                      ? NoExpense(
+                          semanticLabel: loc.get('no_expense_label'),
+                        )
+                      : Column(
+                          children: () {
+                            final expenses = List.from(_trip!.expenses)
+                              ..sort((a, b) => b.date.compareTo(a.date));
+                            final expenseWidgets =
+                                expenses.map<Widget>((expense) {
+                              return Container(
+                                width: double.infinity,
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: 4),
+                                child: GestureDetector(
+                                  onTap: () => _openEditExpense(expense),
+                                  child: TripAmountCard(
+                                    title: expense.category,
+                                    coins: (expense.amount ?? 0).toInt(),
+                                    checked: true,
+                                    paidBy: expense.paidBy,
+                                    category: null,
+                                    date: expense.date,
+                                    currency: _trip!.currency,
+                                  ),
+                                ),
+                              );
+                            }).toList();
+
+                            // Aggiungi spazio finale
+                            expenseWidgets.add(const SizedBox(height: 12));
+                            return expenseWidgets;
+                          }(),
+                        ),
+                ],
               ),
             ),
           ),
