@@ -6,12 +6,12 @@ import '../../../app_localizations.dart';
 import '../../../state/locale_notifier.dart';
 import '../../details/trip_detail_page.dart';
 
-class TripCard extends StatelessWidget {
+class ExpenseGroupCard extends StatelessWidget {
   final ExpenseGroup trip;
   final Function(ExpenseGroup) onTripUpdated;
   final Function(ExpenseGroup) onTripOptionsPressed;
 
-  const TripCard({
+  const ExpenseGroupCard({
     super.key,
     required this.trip,
     required this.onTripUpdated,
@@ -168,11 +168,12 @@ class TripCard extends StatelessWidget {
 
   Widget _buildStatusIcon(BuildContext context) {
     final isArchived = trip.archived;
-    final iconData = isArchived ? Icons.archive_rounded : Icons.play_circle_fill_rounded;
-    final iconColor = isArchived 
+    final iconData =
+        isArchived ? Icons.archive_rounded : Icons.play_circle_fill_rounded;
+    final iconColor = isArchived
         ? Theme.of(context).colorScheme.outline
         : Theme.of(context).colorScheme.primary;
-    
+
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(

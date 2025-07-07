@@ -5,12 +5,12 @@ import '../../../data/expense_category.dart';
 import '../../../data/expense_group_storage.dart';
 import '../../group/add_new_expenses_group.dart';
 
-class TripOptionsSheet extends StatelessWidget {
+class ExpenseGroupOptionsSheet extends StatelessWidget {
   final ExpenseGroup trip;
   final VoidCallback onTripDeleted;
   final VoidCallback onTripUpdated;
 
-  const TripOptionsSheet({
+  const ExpenseGroupOptionsSheet({
     super.key,
     required this.trip,
     required this.onTripDeleted,

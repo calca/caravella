@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
 import '../../group/add_new_expenses_group.dart';
 
-class TripEmptyStates extends StatelessWidget {
+class ExpsenseGroupEmptyStates extends StatelessWidget {
   final String searchQuery;
   final String periodFilter;
   final AppLocalizations localizations;
   final VoidCallback onTripAdded;
 
-  const TripEmptyStates({
+  const ExpsenseGroupEmptyStates({
     super.key,
     required this.searchQuery,
     required this.periodFilter,

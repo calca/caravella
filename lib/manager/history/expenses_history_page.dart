@@ -6,10 +6,10 @@ import '../../app_localizations.dart';
 import '../group/add_new_expenses_group.dart';
 import '../../state/locale_notifier.dart';
 import '../../widgets/caravella_app_bar.dart';
-import 'widgets/trip_empty_states.dart';
+import 'widgets/expense_group_empty_states.dart';
 import 'widgets/expandable_search_bar.dart';
-import 'widgets/trip_card.dart';
-import 'widgets/trip_options_sheet.dart';
+import 'widgets/expense_group_card.dart';
+import 'widgets/expense_group_options_sheet.dart';
 
 class ExpesensHistoryPage extends StatefulWidget {
   const ExpesensHistoryPage({super.key});
@@ -171,7 +171,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     await showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.transparent,
-      builder: (context) => TripOptionsSheet(
+      builder: (context) => ExpenseGroupOptionsSheet(
         trip: trip,
         onTripDeleted: () => _deleteTrip(trip),
         onTripUpdated: _loadTrips,
@@ -336,7 +336,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                     child: CircularProgressIndicator.adaptive(),
                   )
                 : _filteredTrips.isEmpty
-                    ? TripEmptyStates(
+                    ? ExpsenseGroupEmptyStates(
                         searchQuery: _searchQuery,
                         periodFilter: _statusFilter,
                         localizations: loc,
@@ -356,7 +356,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                         itemCount: _filteredTrips.length,
                         itemBuilder: (context, index) {
                           final trip = _filteredTrips[index];
-                          return TripCard(
+                          return ExpenseGroupCard(
                             trip: trip,
                             onTripUpdated: _updateTrip,
                             onTripOptionsPressed: _showTripOptions,
