@@ -25,20 +25,16 @@ class TripCard extends StatelessWidget {
 
     // Colori per stato
     Color statusColor;
-    IconData statusIcon;
     String statusText;
 
     if (isFuture) {
       statusColor = Theme.of(context).colorScheme.tertiary;
-      statusIcon = Icons.schedule_rounded;
       statusText = 'Futuro';
     } else if (isPast) {
       statusColor = Theme.of(context).colorScheme.outline;
-      statusIcon = Icons.history_rounded;
       statusText = 'Completato';
     } else {
       statusColor = Theme.of(context).colorScheme.primary;
-      statusIcon = Icons.play_circle_fill_rounded;
       statusText = 'In corso';
     }
 
@@ -90,19 +86,6 @@ class TripCard extends StatelessWidget {
                   // Header con titolo e stato
                   Row(
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: statusColor.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Icon(
-                          statusIcon,
-                          color: statusColor,
-                          size: 20,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
