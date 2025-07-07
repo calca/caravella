@@ -11,7 +11,6 @@ import 'tabs/overview_tab.dart';
 import '../../widgets/currency_display.dart';
 import '../../widgets/widgets.dart';
 import 'tabs/statistics_tab.dart';
-import '../../widgets/caravella_app_bar.dart';
 
 class ExpenseGroupDetailPage extends StatefulWidget {
   final ExpenseGroup trip;
@@ -80,11 +79,11 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         slivers: [
           // Hero AppBar con gradiente
           SliverAppBar(
-            expandedHeight: 220.0,
+            expandedHeight: 135.0,
             floating: false,
             pinned: true,
-            backgroundColor: colorScheme.primary,
-            foregroundColor: colorScheme.onPrimary,
+            backgroundColor: colorScheme.surfaceContainerHighest,
+            foregroundColor: colorScheme.onSurface,
             elevation: 0,
             actions: [
               PopupMenuButton<String>(
@@ -175,19 +174,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             ],
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      colorScheme.primary,
-                      colorScheme.primary.withValues(alpha: 0.8),
-                    ],
-                  ),
-                ),
+                color: colorScheme.surfaceContainerHighest,
                 child: SafeArea(
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 60, 16, 16),
+                    padding: const EdgeInsets.fromLTRB(16, 50, 16, 12),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -199,7 +189,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                               child: Text(
                                 trip.title,
                                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                                  color: colorScheme.onPrimary,
+                                  color: colorScheme.onSurface,
                                   fontWeight: FontWeight.bold,
                                 ),
                                 maxLines: 2,
@@ -214,23 +204,23 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                               currencyFontSize: 18.0,
                               alignment: MainAxisAlignment.end,
                               showDecimals: true,
-                              color: colorScheme.onPrimary,
+                              color: colorScheme.primary,
                             ),
                           ],
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 8),
                         // Badge stato sotto il titolo
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
                             color: trip.archived 
-                                ? colorScheme.outline.withValues(alpha: 0.2)
-                                : colorScheme.onPrimary.withValues(alpha: 0.2),
+                                ? colorScheme.outline.withValues(alpha: 0.15)
+                                : colorScheme.primary.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
                               color: trip.archived 
                                   ? colorScheme.outline 
-                                  : colorScheme.onPrimary,
+                                  : colorScheme.primary,
                               width: 1,
                             ),
                           ),
@@ -239,19 +229,19 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                             children: [
                               Icon(
                                 trip.archived ? Icons.archive_rounded : Icons.play_circle_fill_rounded,
-                                size: 16,
+                                size: 14,
                                 color: trip.archived 
                                     ? colorScheme.outline 
-                                    : colorScheme.onPrimary,
+                                    : colorScheme.primary,
                               ),
-                              const SizedBox(width: 6),
+                              const SizedBox(width: 4),
                               Text(
                                 trip.archived ? loc.get('archived') : loc.get('active'),
                                 style: TextStyle(
                                   color: trip.archived 
                                       ? colorScheme.outline 
-                                      : colorScheme.onPrimary,
-                                  fontSize: 12,
+                                      : colorScheme.primary,
+                                  fontSize: 11,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
