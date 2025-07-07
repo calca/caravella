@@ -243,22 +243,19 @@ class ExpenseGroupCard extends StatelessWidget {
   }
 
   Widget _buildTotalExpensesContainer(BuildContext context, double total) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        children: [
-          const Spacer(),
-          CurrencyDisplay(
-            value: total,
-            currency: trip.currency,
-            valueFontSize: 18.0,
-            currencyFontSize: 14.0,
-            alignment: MainAxisAlignment.end,
-            showDecimals: true,
-            color: Theme.of(context).colorScheme.onSurface,
-          ),
-        ],
-      ),
+    return Row(
+      children: [
+        const Spacer(),
+        CurrencyDisplay(
+          value: total,
+          currency: trip.currency,
+          valueFontSize: 20.0,
+          currencyFontSize: 16.0,
+          alignment: MainAxisAlignment.end,
+          showDecimals: true,
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
+      ],
     );
   }
 }
