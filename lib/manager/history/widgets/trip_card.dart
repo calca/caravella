@@ -159,10 +159,10 @@ class TripCard extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 12),
-                  // Data e partecipanti
-                  _buildDateRow(context),
-                  const SizedBox(height: 6),
+                  // Partecipanti e data
                   _buildParticipantsRow(context),
+                  const SizedBox(height: 6),
+                  _buildDateRow(context),
                   const SizedBox(height: 12),
                   // Totale spese
                   _buildTotalExpensesContainer(context, total),
@@ -287,7 +287,7 @@ class TripCard extends StatelessWidget {
           child: Text(
             trip.startDate != null && trip.endDate != null
                 ? '${trip.startDate!.day}/${trip.startDate!.month}/${trip.startDate!.year} - ${trip.endDate!.day}/${trip.endDate!.month}/${trip.endDate!.year}'
-                : 'Date non definite',
+                : '-',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: Theme.of(context)
                       .colorScheme
