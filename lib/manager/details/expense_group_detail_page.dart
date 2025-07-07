@@ -7,10 +7,10 @@ import '../group/add_new_expenses_group.dart';
 import '../../app_localizations.dart';
 import '../../state/locale_notifier.dart';
 import 'tabs/expenses_tab.dart';
-import 'tabs/overview_tab.dart';
 import '../../widgets/currency_display.dart';
 import '../../widgets/widgets.dart';
-import 'tabs/statistics_tab.dart';
+import '../../widgets/no_expense.dart';
+import 'trip_amount_card.dart';
 
 class ExpenseGroupDetailPage extends StatefulWidget {
   final ExpenseGroup trip;
@@ -23,7 +23,6 @@ class ExpenseGroupDetailPage extends StatefulWidget {
 class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   ExpenseGroup? _trip;
   bool _deleted = false;
-  int _selectedTab = 0;
 
   @override
   void initState() {
@@ -54,6 +53,40 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     }
   }
 
+  Future<void> _openEditExpense(ExpenseDetails expense) async {
+    final result = await Navigator.of(context).push<ExpenseActionResult>(
+      MaterialPageRoute(
+        builder: (context) => ExpenseEditPage(
+          expense: expense,
+          participants: _trip!.participants.map((p) => p.name).toList(),
+          categories: _trip!.categories.map((c) => c.name).toList(),
+          loc: AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it'),
+          tripStartDate: _trip!.startDate,
+          tripEndDate: _trip!.endDate,
+        ),
+      ),
+    );
+    if (result != null) {
+      if (result.deleted) {
+        setState(() {
+          _trip!.expenses.removeWhere((e) => e.id == expense.id);
+        });
+      } else if (result.updatedExpense != null) {
+        setState(() {
+          final idx = _trip!.expenses.indexWhere((e) => e.id == expense.id);
+          if (idx != -1) _trip!.expenses[idx] = result.updatedExpense!;
+        });
+      }
+      // Salva le modifiche
+      final trips = await ExpenseGroupStorage.getAllGroups();
+      final tripIdx = trips.indexWhere((t) => t.id == _trip!.id);
+      if (tripIdx != -1) {
+        trips[tripIdx] = _trip!;
+        await ExpenseGroupStorage.writeTrips(trips);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_deleted) {
@@ -70,7 +103,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
     final loc = AppLocalizations(locale);
     final colorScheme = Theme.of(context).colorScheme;
-    final hasExpenses = trip.expenses.isNotEmpty;
     final totalExpenses = trip.expenses.fold<double>(0, (sum, s) => sum + (s.amount ?? 0));
     
     return Scaffold(
@@ -256,83 +288,52 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             ),
           ),
           
-          // Tab Section
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+          // Expenses Content in BaseCard
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+            sliver: SliverToBoxAdapter(
               child: BaseCard(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(16),
                 backgroundColor: colorScheme.surface,
-                child: SegmentedButton<int>(
-                  segments: [
-                    const ButtonSegment(
-                      value: 0,
-                      icon: Icon(Icons.receipt_long_rounded),
-                      label: Text('Spese'),
-                    ),
-                    ButtonSegment(
-                      value: 1,
-                      icon: const Icon(Icons.dashboard_customize_rounded),
-                      label: const Text('Panoramica'),
-                      enabled: hasExpenses,
-                    ),
-                    ButtonSegment(
-                      value: 2,
-                      icon: const Icon(Icons.analytics_rounded),
-                      label: const Text('Statistiche'),
-                      enabled: hasExpenses,
-                    ),
-                  ],
-                  selected: <int>{_selectedTab},
-                  onSelectionChanged: (newSelection) {
-                    setState(() {
-                      _selectedTab = newSelection.first;
-                    });
-                  },
-                  showSelectedIcon: false,
-                  style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
-                      if (states.contains(WidgetState.selected)) {
-                        return colorScheme.primary.withValues(alpha: 0.15);
-                      }
-                      return Colors.transparent;
-                    }),
-                    foregroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
-                      if (states.contains(WidgetState.selected)) {
-                        return colorScheme.primary;
-                      }
-                      return colorScheme.onSurface.withValues(alpha: 0.7);
-                    }),
-                  ),
-                ),
+                child: _trip!.expenses.isEmpty
+                    ? NoExpense(
+                        semanticLabel: loc.get('no_expense_label'),
+                      )
+                    : Column(
+                        children: () {
+                          final expenses = List.from(_trip!.expenses)
+                            ..sort((a, b) => b.date.compareTo(a.date));
+                          return expenses.map<Widget>((expense) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 4),
+                              child: GestureDetector(
+                                onTap: () => _openEditExpense(expense),
+                                child: TripAmountCard(
+                                  title: expense.category,
+                                  coins: (expense.amount ?? 0).toInt(),
+                                  checked: true,
+                                  paidBy: expense.paidBy,
+                                  category: null,
+                                  date: expense.date,
+                                  currency: _trip!.currency,
+                                ),
+                              ),
+                            );
+                          }).toList();
+                        }(),
+                      ),
               ),
             ),
           ),
           
-          // Tab Content
-          SliverFillRemaining(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-              child: BaseCard(
-                padding: const EdgeInsets.all(16),
-                backgroundColor: colorScheme.surface,
-                child: Builder(
-                  builder: (context) {
-                    if (_selectedTab == 0) {
-                      return ExpensesTab(trip: trip, loc: loc);
-                    } else if (_selectedTab == 1) {
-                      return OverviewTab(trip: trip);
-                    } else {
-                      return StatisticsTab(trip: trip);
-                    }
-                  },
-                ),
-              ),
-            ),
+          // Spazio aggiuntivo per garantire lo scroll
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 100),
+            sliver: SliverToBoxAdapter(child: Container()),
           ),
         ],
       ),
-      floatingActionButton: _selectedTab == 0 && !trip.archived
+      floatingActionButton: !trip.archived
           ? FloatingActionButton.extended(
               heroTag: 'add-expense-fab',
               onPressed: () async {
