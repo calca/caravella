@@ -60,12 +60,8 @@ class TripCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  // Statistiche quick
-                  _buildStatChip(
-                    Icons.people_rounded,
-                    '${trip.participants.length}',
-                    context,
-                  ),
+                  // Icona stato (attivo/archiviato)
+                  _buildStatusIcon(context),
                 ],
               ),
               const SizedBox(height: 12),
@@ -170,37 +166,23 @@ class TripCard extends StatelessWidget {
     onTripUpdated(updatedTrip);
   }
 
-  Widget _buildStatChip(IconData icon, String text, BuildContext context) {
+  Widget _buildStatusIcon(BuildContext context) {
+    final isArchived = trip.archived;
+    final iconData = isArchived ? Icons.archive_rounded : Icons.play_circle_fill_rounded;
+    final iconColor = isArchived 
+        ? Theme.of(context).colorScheme.outline
+        : Theme.of(context).colorScheme.primary;
+    
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: Theme.of(context)
-            .colorScheme
-            .surfaceContainerHigh
-            .withValues(alpha: 0.8),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
-          width: 1,
-        ),
+        color: iconColor.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(8),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon,
-            size: 16,
-            color: Theme.of(context).colorScheme.onSurface,
-          ),
-          const SizedBox(width: 6),
-          Text(
-            text,
-            style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface,
-                  fontWeight: FontWeight.w600,
-                ),
-          ),
-        ],
+      child: Icon(
+        iconData,
+        size: 20,
+        color: iconColor,
       ),
     );
   }
