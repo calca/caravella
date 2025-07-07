@@ -13,15 +13,15 @@ import '../../widgets/widgets.dart';
 import 'tabs/statistics_tab.dart';
 import '../../widgets/caravella_app_bar.dart';
 
-class TripDetailPage extends StatefulWidget {
+class ExpenseGroupDetailPage extends StatefulWidget {
   final ExpenseGroup trip;
-  const TripDetailPage({super.key, required this.trip});
+  const ExpenseGroupDetailPage({super.key, required this.trip});
 
   @override
-  State<TripDetailPage> createState() => _TripDetailPageState();
+  State<ExpenseGroupDetailPage> createState() => _ExpenseGroupDetailPageState();
 }
 
-class _TripDetailPageState extends State<TripDetailPage> {
+class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   ExpenseGroup? _trip;
   bool _deleted = false;
   int _selectedTab = 0;

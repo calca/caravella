@@ -243,19 +243,51 @@ class ExpenseGroupCard extends StatelessWidget {
   }
 
   Widget _buildTotalExpensesContainer(BuildContext context, double total) {
-    return Row(
-      children: [
-        const Spacer(),
-        CurrencyDisplay(
-          value: total,
-          currency: trip.currency,
-          valueFontSize: 20.0,
-          currencyFontSize: 16.0,
-          alignment: MainAxisAlignment.end,
-          showDecimals: true,
-          color: Theme.of(context).colorScheme.onSurface,
-        ),
-      ],
+    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
+    final loc = AppLocalizations(locale);
+
+    // Stato basato sulla proprietà archived
+    final Color statusColor;
+    final String statusText;
+
+    if (trip.archived) {
+      statusColor = Theme.of(context).colorScheme.outline;
+      statusText = loc.get('archived');
+    } else {
+      statusColor = Theme.of(context).colorScheme.primary;
+      statusText = loc.get('active');
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            decoration: BoxDecoration(
+              color: statusColor.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              statusText,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: statusColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+          ),
+          const Spacer(),
+          CurrencyDisplay(
+            value: total,
+            currency: trip.currency,
+            valueFontSize: 18.0,
+            currencyFontSize: 14.0,
+            alignment: MainAxisAlignment.end,
+            showDecimals: true,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+        ],
+      ),
     );
   }
 }

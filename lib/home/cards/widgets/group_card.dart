@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
 import '../../../data/expense_group.dart';
-import '../../../manager/details/trip_detail_page.dart';
+import '../../../manager/details/expense_group_detail_page.dart';
 import '../../../widgets/widgets.dart';
 import 'group_card_content.dart';
 
@@ -55,7 +55,7 @@ class GroupCard extends StatelessWidget {
         onTap: () async {
           final result = await Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => TripDetailPage(trip: group),
+              builder: (context) => ExpenseGroupDetailPage(trip: group),
             ),
           );
           if (result == true) {
