@@ -158,10 +158,8 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     if (index != -1) {
       allTrips[index] = updatedTrip;
       await ExpenseGroupStorage.writeTrips(allTrips);
-      setState(() {
-        _allTrips = allTrips;
-        _filteredTrips = _applyFilter(_allTrips);
-      });
+      // Ricarica i dati con il filtro corrente
+      await _loadTrips();
     }
   }
 
