@@ -105,6 +105,10 @@ class AppLocalizations {
       'try_different_search': 'Try searching with different words',
       'active': 'Active',
       'archived': 'Archived',
+      'archive': 'Archive',
+      'unarchive': 'Unarchive',
+      'archive_confirm': 'Do you want to archive',
+      'unarchive_confirm': 'Do you want to unarchive',
     },
     'it': {
       // Saluti dinamici
@@ -220,6 +224,10 @@ class AppLocalizations {
       'welcome_v3_cta': 'Inizia!',
       'active': 'Attivo',
       'archived': 'Archiviato',
+      'archive': 'Archivia',
+      'unarchive': 'Disarchivia',
+      'archive_confirm': 'Vuoi archiviare',
+      'unarchive_confirm': 'Vuoi disarchiviare',
     },
   };
 
