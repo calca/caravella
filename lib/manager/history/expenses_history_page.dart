@@ -116,8 +116,12 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   void _onStatusFilterChanged(String key) {
     setState(() {
       _statusFilter = key;
+      _loading = true; // Forza loading state
     });
-    _loadTrips(); // Ricarica i dati con il nuovo filtro
+    // Forza un piccolo delay prima di ricaricare
+    Future.delayed(const Duration(milliseconds: 100), () {
+      _loadTrips(); // Ricarica i dati con il nuovo filtro
+    });
   }
 
   void _toggleSearch() {
@@ -146,10 +150,8 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     final allTrips = await ExpenseGroupStorage.getAllGroups();
     allTrips.removeWhere((t) => t.id == trip.id);
     await ExpenseGroupStorage.writeTrips(allTrips);
-    setState(() {
-      _allTrips = allTrips;
-      _filteredTrips = _applyFilter(_allTrips);
-    });
+    // Ricarica i dati con il filtro corrente
+    await _loadTrips();
   }
 
   Future<void> _updateTrip(ExpenseGroup updatedTrip) async {
@@ -158,6 +160,8 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     if (index != -1) {
       allTrips[index] = updatedTrip;
       await ExpenseGroupStorage.writeTrips(allTrips);
+      // Forza un breve delay per assicurare la persistenza
+      await Future.delayed(const Duration(milliseconds: 50));
       // Ricarica i dati con il filtro corrente
       await _loadTrips();
     }
