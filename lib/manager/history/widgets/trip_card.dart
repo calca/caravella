@@ -18,26 +18,8 @@ class TripCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final now = DateTime.now();
-    final isFuture = trip.startDate?.isAfter(now) ?? false;
-    final isPast = trip.endDate?.isBefore(now) ?? false;
     final total =
         trip.expenses.fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
-
-    // Colori per stato
-    Color statusColor;
-    String statusText;
-
-    if (isFuture) {
-      statusColor = Theme.of(context).colorScheme.tertiary;
-      statusText = 'Futuro';
-    } else if (isPast) {
-      statusColor = Theme.of(context).colorScheme.outline;
-      statusText = 'Completato';
-    } else {
-      statusColor = Theme.of(context).colorScheme.primary;
-      statusText = 'In corso';
-    }
 
     return Dismissible(
       key: ValueKey(trip.title +
@@ -67,40 +49,16 @@ class TripCard extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          trip.title,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium
-                              ?.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 2),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: statusColor.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(12),
+                    child: Text(
+                      trip.title,
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(
+                            fontWeight: FontWeight.w600,
                           ),
-                          child: Text(
-                            statusText,
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelSmall
-                                ?.copyWith(
-                                  color: statusColor,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                          ),
-                        ),
-                      ],
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   // Statistiche quick
@@ -280,10 +238,46 @@ class TripCard extends StatelessWidget {
   }
 
   Widget _buildTotalExpensesContainer(BuildContext context, double total) {
+    // Colori per stato
+    final now = DateTime.now();
+    final isFuture = trip.startDate?.isAfter(now) ?? false;
+    final isPast = trip.endDate?.isBefore(now) ?? false;
+    
+    Color statusColor;
+    String statusText;
+
+    if (isFuture) {
+      statusColor = Theme.of(context).colorScheme.tertiary;
+      statusText = 'Futuro';
+    } else if (isPast) {
+      statusColor = Theme.of(context).colorScheme.outline;
+      statusText = 'Completato';
+    } else {
+      statusColor = Theme.of(context).colorScheme.primary;
+      statusText = 'In corso';
+    }
+
     return Container(
       padding: const EdgeInsets.all(16),
       child: Row(
         children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            decoration: BoxDecoration(
+              color: statusColor.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              statusText,
+              style: Theme.of(context)
+                  .textTheme
+                  .labelSmall
+                  ?.copyWith(
+                    color: statusColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+          ),
           const Spacer(),
           CurrencyDisplay(
             value: total,
