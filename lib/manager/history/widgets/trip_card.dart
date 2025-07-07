@@ -124,20 +124,10 @@ class TripCard extends StatelessWidget {
                         ),
                       ),
                       // Statistiche quick
-                      Row(
-                        children: [
-                          _buildStatChip(
-                            Icons.people_rounded,
-                            '${trip.participants.length}',
-                            context,
-                          ),
-                          const SizedBox(width: 6),
-                          _buildStatChip(
-                            Icons.receipt_long_rounded,
-                            '${trip.expenses.length}',
-                            context,
-                          ),
-                        ],
+                      _buildStatChip(
+                        Icons.people_rounded,
+                        '${trip.participants.length}',
+                        context,
                       ),
                     ],
                   ),
