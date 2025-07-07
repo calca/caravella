@@ -268,65 +268,62 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
       body: Column(
         children: [
           // HEADER SECTION CON FILTRI E RICERCA
-          Container(
-            child: Column(
-              children: [
-                // FILTRI E SEARCH BAR SULLA STESSA RIGA
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                  child: Row(
-                    children: [
-                      // STATUS FILTER BUTTONS con animazione di fade
-                      if (!_isSearchExpanded)
-                        AnimatedOpacity(
-                          opacity: _isSearchExpanded ? 0.0 : 1.0,
-                          duration: const Duration(milliseconds: 250),
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                            width: _isSearchExpanded ? 0 : null,
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: _statusOptions.map((option) {
-                                final isSelected =
-                                    _statusFilter == option['key'];
-                                return Padding(
-                                  padding: const EdgeInsets.only(right: 8),
-                                  child: _buildStatusFilterButton(
-                                    context,
-                                    option['label'],
-                                    option['icon'],
-                                    isSelected,
-                                    () => _onStatusFilterChanged(option['key']),
-                                  ),
-                                );
-                              }).toList(),
-                            ),
+          Column(
+            children: [
+              // FILTRI E SEARCH BAR SULLA STESSA RIGA
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                child: Row(
+                  children: [
+                    // STATUS FILTER BUTTONS con animazione di fade
+                    if (!_isSearchExpanded)
+                      AnimatedOpacity(
+                        opacity: _isSearchExpanded ? 0.0 : 1.0,
+                        duration: const Duration(milliseconds: 250),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          width: _isSearchExpanded ? 0 : null,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: _statusOptions.map((option) {
+                              final isSelected = _statusFilter == option['key'];
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 8),
+                                child: _buildStatusFilterButton(
+                                  context,
+                                  option['label'],
+                                  option['icon'],
+                                  isSelected,
+                                  () => _onStatusFilterChanged(option['key']),
+                                ),
+                              );
+                            }).toList(),
                           ),
                         ),
-                      // SPACER per spingere la search a destra
-                      const Spacer(),
-                      // SEARCH BOX ESPANDIBILE ALLINEATO A DESTRA
-                      AnimatedContainer(
-                        duration: const Duration(milliseconds: 350),
-                        curve: Curves.easeOutCubic,
-                        width: _isSearchExpanded
-                            ? MediaQuery.of(context).size.width -
-                                32 // Full width minus padding
-                            : 48, // Collapsed width
-                        child: ExpandableSearchBar(
-                          controller: _searchController,
-                          isExpanded: _isSearchExpanded,
-                          searchQuery: _searchQuery,
-                          onToggle: _toggleSearch,
-                          onSearchChanged: _onSearchChanged,
-                        ),
                       ),
-                    ],
-                  ),
+                    // SPACER per spingere la search a destra
+                    const Spacer(),
+                    // SEARCH BOX ESPANDIBILE ALLINEATO A DESTRA
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 350),
+                      curve: Curves.easeOutCubic,
+                      width: _isSearchExpanded
+                          ? MediaQuery.of(context).size.width -
+                              32 // Full width minus padding
+                          : 48, // Collapsed width
+                      child: ExpandableSearchBar(
+                        controller: _searchController,
+                        isExpanded: _isSearchExpanded,
+                        searchQuery: _searchQuery,
+                        onToggle: _toggleSearch,
+                        onSearchChanged: _onSearchChanged,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           // MAIN CONTENT
           Expanded(

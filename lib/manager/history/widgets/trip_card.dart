@@ -149,7 +149,7 @@ class TripCard extends StatelessWidget {
           ],
         ),
         content: Text(
-          '${confirmText} "${trip.title}"?',
+          '$confirmText "${trip.title}"?',
         ),
         actions: [
           TextButton(
