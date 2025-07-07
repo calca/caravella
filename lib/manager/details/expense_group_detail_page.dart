@@ -193,6 +193,126 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     );
   }
 
+  void _showOptionsSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.4,
+        maxChildSize: 0.6,
+        minChildSize: 0.3,
+        builder: (context, scrollController) => Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: Column(
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.outline,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    const Icon(Icons.settings_rounded),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Opzioni',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      // Pin/Unpin action
+                      ListTile(
+                        leading: Icon(
+                          _trip!.pinned ? Icons.push_pin : Icons.push_pin_outlined,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        title: Text(_trip!.pinned ? 'Rimuovi pin' : 'Aggiungi pin'),
+                        onTap: () async {
+                          Navigator.of(context).pop();
+                          if (_trip!.pinned) {
+                            await ExpenseGroupStorage.removePinnedTrip(_trip!.id);
+                          } else {
+                            await ExpenseGroupStorage.setPinnedTrip(_trip!.id);
+                          }
+                          await _refreshTrip();
+                        },
+                      ),
+                      
+                      // Archive/Unarchive action
+                      ListTile(
+                        leading: Icon(
+                          _trip!.archived ? Icons.unarchive_rounded : Icons.archive_rounded,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        title: Text(_trip!.archived ? 
+                          AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it').get('unarchive') : 
+                          AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it').get('archive')),
+                        onTap: () async {
+                          Navigator.of(context).pop();
+                          final updatedTrip = _trip!.copyWith(archived: !_trip!.archived);
+                          final trips = await ExpenseGroupStorage.getAllGroups();
+                          final idx = trips.indexWhere((v) => v.id == _trip!.id);
+                          if (idx != -1) {
+                            trips[idx] = updatedTrip;
+                            await ExpenseGroupStorage.writeTrips(trips);
+                          }
+                          await _refreshTrip();
+                        },
+                      ),
+                      
+                      const Divider(),
+                      
+                      // Edit action
+                      ListTile(
+                        leading: Icon(
+                          Icons.edit_rounded,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        title: Text(AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it').get('edit')),
+                        onTap: () async {
+                          Navigator.of(context).pop();
+                          final result = await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => AddNewExpensesGroupPage(
+                                  trip: _trip!,
+                                  onTripDeleted: () async {
+                                    await _loadTrip();
+                                  }),
+                            ),
+                          );
+                          if (result == true && context.mounted) {
+                            await _refreshTrip();
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_deleted) {
@@ -205,12 +325,13 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         body: const Center(child: CircularProgressIndicator()),
       );
     }
-    
+
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
     final loc = AppLocalizations(locale);
     final colorScheme = Theme.of(context).colorScheme;
-    final totalExpenses = trip.expenses.fold<double>(0, (sum, s) => sum + (s.amount ?? 0));
-    
+    final totalExpenses =
+        trip.expenses.fold<double>(0, (sum, s) => sum + (s.amount ?? 0));
+
     return Scaffold(
       backgroundColor: colorScheme.surfaceContainerHighest,
       body: CustomScrollView(
@@ -223,93 +344,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             backgroundColor: colorScheme.surfaceContainerHighest,
             foregroundColor: colorScheme.onSurface,
             elevation: 0,
-            actions: [
-              PopupMenuButton<String>(
-                icon: const Icon(Icons.more_vert),
-                tooltip: 'Opzioni',
-                onSelected: (value) async {
-                  switch (value) {
-                    case 'pin':
-                      if (trip.pinned) {
-                        await ExpenseGroupStorage.removePinnedTrip(trip.id);
-                      } else {
-                        await ExpenseGroupStorage.setPinnedTrip(trip.id);
-                      }
-                      await _refreshTrip();
-                      break;
-                    case 'archive':
-                      final updatedTrip = trip.copyWith(archived: !trip.archived);
-                      final trips = await ExpenseGroupStorage.getAllGroups();
-                      final idx = trips.indexWhere((v) => v.id == trip.id);
-                      if (idx != -1) {
-                        trips[idx] = updatedTrip;
-                        await ExpenseGroupStorage.writeTrips(trips);
-                      }
-                      await _refreshTrip();
-                      break;
-                    case 'edit':
-                      final result = await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => AddNewExpensesGroupPage(
-                              trip: trip,
-                              onTripDeleted: () async {
-                                await _loadTrip();
-                              }),
-                        ),
-                      );
-                      if (result == true && context.mounted) {
-                        await _refreshTrip();
-                      }
-                      break;
-                  }
-                },
-                itemBuilder: (context) => [
-                  PopupMenuItem(
-                    value: 'pin',
-                    child: Row(
-                      children: [
-                        Icon(
-                          trip.pinned ? Icons.push_pin : Icons.push_pin_outlined,
-                          size: 20,
-                          color: Theme.of(context).colorScheme.onSurface,
-                        ),
-                        const SizedBox(width: 12),
-                        Text(trip.pinned ? 'Rimuovi pin' : 'Aggiungi pin'),
-                      ],
-                    ),
-                  ),
-                  PopupMenuItem(
-                    value: 'archive',
-                    child: Row(
-                      children: [
-                        Icon(
-                          trip.archived ? Icons.unarchive_rounded : Icons.archive_rounded,
-                          size: 20,
-                          color: Theme.of(context).colorScheme.onSurface,
-                        ),
-                        const SizedBox(width: 12),
-                        Text(trip.archived ? loc.get('unarchive') : loc.get('archive')),
-                      ],
-                    ),
-                  ),
-                  const PopupMenuDivider(),
-                  PopupMenuItem(
-                    value: 'edit',
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.edit_rounded,
-                          size: 20,
-                          color: Theme.of(context).colorScheme.onSurface,
-                        ),
-                        const SizedBox(width: 12),
-                        Text(loc.get('edit')),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
                 color: colorScheme.surfaceContainerHighest,
@@ -326,10 +360,13 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                             Expanded(
                               child: Text(
                                 trip.title,
-                                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                                  color: colorScheme.onSurface,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headlineMedium
+                                    ?.copyWith(
+                                      color: colorScheme.onSurface,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -349,15 +386,16 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                         const SizedBox(height: 8),
                         // Badge stato sotto il titolo
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
-                            color: trip.archived 
+                            color: trip.archived
                                 ? colorScheme.outline.withValues(alpha: 0.15)
                                 : colorScheme.primary.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
-                              color: trip.archived 
-                                  ? colorScheme.outline 
+                              color: trip.archived
+                                  ? colorScheme.outline
                                   : colorScheme.primary,
                               width: 1,
                             ),
@@ -366,18 +404,22 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(
-                                trip.archived ? Icons.archive_rounded : Icons.play_circle_fill_rounded,
+                                trip.archived
+                                    ? Icons.archive_rounded
+                                    : Icons.play_circle_fill_rounded,
                                 size: 14,
-                                color: trip.archived 
-                                    ? colorScheme.outline 
+                                color: trip.archived
+                                    ? colorScheme.outline
                                     : colorScheme.primary,
                               ),
                               const SizedBox(width: 4),
                               Text(
-                                trip.archived ? loc.get('archived') : loc.get('active'),
+                                trip.archived
+                                    ? loc.get('archived')
+                                    : loc.get('active'),
                                 style: TextStyle(
-                                  color: trip.archived 
-                                      ? colorScheme.outline 
+                                  color: trip.archived
+                                      ? colorScheme.outline
                                       : colorScheme.primary,
                                   fontSize: 11,
                                   fontWeight: FontWeight.w600,
@@ -393,68 +435,94 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               ),
             ),
           ),
-          
+
           // Expenses Content in BaseCard
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             sliver: SliverToBoxAdapter(
               child: BaseCard(
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.zero,
                 backgroundColor: colorScheme.surface,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Action buttons se ci sono spese
                     if (_trip!.expenses.isNotEmpty) ...[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          // Overview IconButton
-                          Tooltip(
-                            message: 'Mostra panoramica',
-                            child: IconButton.filled(
-                              onPressed: _showOverviewSheet,
-                              icon: const Icon(Icons.dashboard_customize_rounded),
-                              iconSize: 24,
-                              tooltip: 'Panoramica',
-                              style: IconButton.styleFrom(
-                                backgroundColor: colorScheme.primaryContainer,
-                                foregroundColor: colorScheme.onPrimaryContainer,
-                                minimumSize: const Size(56, 56),
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            // Overview IconButton
+                            Tooltip(
+                              message: 'Mostra panoramica',
+                              child: IconButton.filled(
+                                onPressed: _showOverviewSheet,
+                                icon: const Icon(
+                                    Icons.dashboard_customize_rounded),
+                                iconSize: 24,
+                                tooltip: 'Panoramica',
+                                style: IconButton.styleFrom(
+                                  backgroundColor: colorScheme.primaryContainer,
+                                  foregroundColor:
+                                      colorScheme.onPrimaryContainer,
+                                  minimumSize: const Size(56, 56),
+                                ),
                               ),
                             ),
-                          ),
-                          // Statistics IconButton
-                          Tooltip(
-                            message: 'Mostra statistiche',
-                            child: IconButton.filled(
-                              onPressed: _showStatisticsSheet,
-                              icon: const Icon(Icons.analytics_rounded),
-                              iconSize: 24,
-                              tooltip: 'Statistiche',
-                              style: IconButton.styleFrom(
-                                backgroundColor: colorScheme.primaryContainer,
-                                foregroundColor: colorScheme.onPrimaryContainer,
-                                minimumSize: const Size(56, 56),
+                            // Statistics IconButton
+                            Tooltip(
+                              message: 'Mostra statistiche',
+                              child: IconButton.filled(
+                                onPressed: _showStatisticsSheet,
+                                icon: const Icon(Icons.analytics_rounded),
+                                iconSize: 24,
+                                tooltip: 'Statistiche',
+                                style: IconButton.styleFrom(
+                                  backgroundColor: colorScheme.primaryContainer,
+                                  foregroundColor:
+                                      colorScheme.onPrimaryContainer,
+                                  minimumSize: const Size(56, 56),
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                            // Menu Options IconButton
+                            Tooltip(
+                              message: 'Opzioni',
+                              child: IconButton.filled(
+                                onPressed: _showOptionsSheet,
+                                icon: const Icon(Icons.settings_rounded),
+                                iconSize: 24,
+                                tooltip: 'Opzioni',
+                                style: IconButton.styleFrom(
+                                  backgroundColor: colorScheme.secondaryContainer,
+                                  foregroundColor: colorScheme.onSecondaryContainer,
+                                  minimumSize: const Size(56, 56),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      const SizedBox(height: 16),
                     ],
                     // Lista spese o messaggio vuoto
                     _trip!.expenses.isEmpty
-                        ? NoExpense(
-                            semanticLabel: loc.get('no_expense_label'),
+                        ? Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: NoExpense(
+                              semanticLabel: loc.get('no_expense_label'),
+                            ),
                           )
                         : Column(
                             children: () {
                               final expenses = List.from(_trip!.expenses)
                                 ..sort((a, b) => b.date.compareTo(a.date));
-                              return expenses.map<Widget>((expense) {
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 4),
+                              final expenseWidgets =
+                                  expenses.map<Widget>((expense) {
+                                return Container(
+                                  width: double.infinity,
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 4),
                                   child: GestureDetector(
                                     onTap: () => _openEditExpense(expense),
                                     child: TripAmountCard(
@@ -469,6 +537,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                                   ),
                                 );
                               }).toList();
+
+                              // Aggiungi spazio finale
+                              expenseWidgets.add(const SizedBox(height: 12));
+                              return expenseWidgets;
                             }(),
                           ),
                   ],
@@ -476,7 +548,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               ),
             ),
           ),
-          
+
           // Spazio aggiuntivo per garantire lo scroll
           SliverPadding(
             padding: const EdgeInsets.only(bottom: 100),
@@ -498,7 +570,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                         date: DateTime.now(),
                         note: null,
                       ),
-                      participants: trip.participants.map((p) => p.name).toList(),
+                      participants:
+                          trip.participants.map((p) => p.name).toList(),
                       categories: trip.categories.map((c) => c.name).toList(),
                       loc: loc,
                       tripStartDate: trip.startDate,
@@ -506,7 +579,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                     ),
                   ),
                 );
-                if (result is ExpenseActionResult && result.updatedExpense != null) {
+                if (result is ExpenseActionResult &&
+                    result.updatedExpense != null) {
                   final trips = await ExpenseGroupStorage.getAllGroups();
                   final idx = trips.indexWhere((v) => v.id == trip.id);
                   if (idx != -1) {
