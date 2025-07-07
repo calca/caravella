@@ -103,6 +103,8 @@ class AppLocalizations {
       'search_groups': 'Search groups...',
       'no_search_results': 'No groups found for',
       'try_different_search': 'Try searching with different words',
+      'active': 'Active',
+      'archived': 'Archived',
     },
     'it': {
       // Saluti dinamici
@@ -216,6 +218,8 @@ class AppLocalizations {
       // Welcome section v3 - Clean design
       'welcome_v3_title': 'Le tue\nspese di gruppo,\nin modo semplice',
       'welcome_v3_cta': 'Inizia!',
+      'active': 'Attivo',
+      'archived': 'Archiviato',
     },
   };
 

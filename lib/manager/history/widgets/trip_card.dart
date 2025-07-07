@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../../data/expense_group.dart';
 import '../../../widgets/currency_display.dart';
 import '../../../widgets/base_card.dart';
+import '../../../app_localizations.dart';
+import '../../../state/locale_notifier.dart';
 import '../../details/trip_detail_page.dart';
 
 class TripCard extends StatelessWidget {
@@ -51,10 +53,7 @@ class TripCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       trip.title,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
                       maxLines: 1,
@@ -238,23 +237,19 @@ class TripCard extends StatelessWidget {
   }
 
   Widget _buildTotalExpensesContainer(BuildContext context, double total) {
-    // Colori per stato
-    final now = DateTime.now();
-    final isFuture = trip.startDate?.isAfter(now) ?? false;
-    final isPast = trip.endDate?.isBefore(now) ?? false;
-    
-    Color statusColor;
-    String statusText;
+    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
+    final loc = AppLocalizations(locale);
 
-    if (isFuture) {
-      statusColor = Theme.of(context).colorScheme.tertiary;
-      statusText = 'Futuro';
-    } else if (isPast) {
+    // Stato basato sulla proprietà archived
+    final Color statusColor;
+    final String statusText;
+
+    if (trip.archived) {
       statusColor = Theme.of(context).colorScheme.outline;
-      statusText = 'Completato';
+      statusText = loc.get('archived');
     } else {
       statusColor = Theme.of(context).colorScheme.primary;
-      statusText = 'In corso';
+      statusText = loc.get('active');
     }
 
     return Container(
@@ -269,10 +264,7 @@ class TripCard extends StatelessWidget {
             ),
             child: Text(
               statusText,
-              style: Theme.of(context)
-                  .textTheme
-                  .labelSmall
-                  ?.copyWith(
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
                     color: statusColor,
                     fontWeight: FontWeight.w600,
                   ),
