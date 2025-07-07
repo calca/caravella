@@ -152,6 +152,19 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     });
   }
 
+  Future<void> _updateTrip(ExpenseGroup updatedTrip) async {
+    final allTrips = await ExpenseGroupStorage.getAllGroups();
+    final index = allTrips.indexWhere((t) => t.id == updatedTrip.id);
+    if (index != -1) {
+      allTrips[index] = updatedTrip;
+      await ExpenseGroupStorage.writeTrips(allTrips);
+      setState(() {
+        _allTrips = allTrips;
+        _filteredTrips = _applyFilter(_allTrips);
+      });
+    }
+  }
+
   void _showTripOptions(ExpenseGroup trip) async {
     await showModalBottomSheet<void>(
       context: context,
@@ -346,7 +359,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                           final trip = _filteredTrips[index];
                           return TripCard(
                             trip: trip,
-                            onTripDeleted: _deleteTrip,
+                            onTripUpdated: _updateTrip,
                             onTripOptionsPressed: _showTripOptions,
                           );
                         },

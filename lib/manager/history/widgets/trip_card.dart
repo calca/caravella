@@ -8,13 +8,13 @@ import '../../details/trip_detail_page.dart';
 
 class TripCard extends StatelessWidget {
   final ExpenseGroup trip;
-  final Function(ExpenseGroup) onTripDeleted;
+  final Function(ExpenseGroup) onTripUpdated;
   final Function(ExpenseGroup) onTripOptionsPressed;
 
   const TripCard({
     super.key,
     required this.trip,
-    required this.onTripDeleted,
+    required this.onTripUpdated,
     required this.onTripOptionsPressed,
   });
 
@@ -167,9 +167,7 @@ class TripCard extends StatelessWidget {
 
   void _onArchiveToggle() {
     final updatedTrip = trip.copyWith(archived: !trip.archived);
-    // Qui dovresti chiamare una funzione di callback per aggiornare il trip
-    // Per ora uso onTripDeleted ma dovrebbe essere rinominato
-    onTripDeleted(updatedTrip);
+    onTripUpdated(updatedTrip);
   }
 
   Widget _buildStatChip(IconData icon, String text, BuildContext context) {
