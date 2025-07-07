@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../data/expense_group.dart';
 import '../../../widgets/currency_display.dart';
+import '../../../widgets/base_card.dart';
 import '../../details/trip_detail_page.dart';
 
 class TripCard extends StatelessWidget {
@@ -48,100 +49,77 @@ class TripCard extends StatelessWidget {
       onDismissed: (_) => onTripDeleted(trip),
       child: GestureDetector(
         onLongPress: () => onTripOptionsPressed(trip),
-        child: Container(
+        child: BaseCard(
           margin: const EdgeInsets.symmetric(vertical: 6),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Theme.of(context)
-                    .colorScheme
-                    .shadow
-                    .withValues(alpha: 0.08),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
+          padding: const EdgeInsets.all(16),
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => TripDetailPage(trip: trip),
               ),
-            ],
-            border: Border.all(
-              color:
-                  Theme.of(context).colorScheme.outline.withValues(alpha: 0.1),
-              width: 1,
-            ),
-          ),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(16),
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => TripDetailPage(trip: trip),
-                ),
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            );
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header con titolo e stato
+              Row(
                 children: [
-                  // Header con titolo e stato
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              trip.title,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            const SizedBox(height: 2),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 2),
-                              decoration: BoxDecoration(
-                                color: statusColor.withValues(alpha: 0.15),
-                                borderRadius: BorderRadius.circular(12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          trip.title,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(
+                                fontWeight: FontWeight.w600,
                               ),
-                              child: Text(
-                                statusText,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelSmall
-                                    ?.copyWith(
-                                      color: statusColor,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                              ),
-                            ),
-                          ],
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      ),
-                      // Statistiche quick
-                      _buildStatChip(
-                        Icons.people_rounded,
-                        '${trip.participants.length}',
-                        context,
-                      ),
-                    ],
+                        const SizedBox(height: 2),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: statusColor.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            statusText,
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelSmall
+                                ?.copyWith(
+                                  color: statusColor,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 12),
-                  // Partecipanti e data
-                  _buildParticipantsRow(context),
-                  const SizedBox(height: 6),
-                  _buildDateRow(context),
-                  const SizedBox(height: 12),
-                  // Totale spese
-                  _buildTotalExpensesContainer(context, total),
+                  // Statistiche quick
+                  _buildStatChip(
+                    Icons.people_rounded,
+                    '${trip.participants.length}',
+                    context,
+                  ),
                 ],
               ),
-            ),
+              const SizedBox(height: 12),
+              // Partecipanti e data
+              _buildParticipantsRow(context),
+              const SizedBox(height: 6),
+              _buildDateRow(context),
+              const SizedBox(height: 12),
+              // Totale spese
+              _buildTotalExpensesContainer(context, total),
+            ],
           ),
         ),
       ),
