@@ -45,7 +45,7 @@ class ExpenseAmountCard extends StatelessWidget {
                       title,
                       style: textTheme.titleLarge?.copyWith(
                         color: colorScheme.onSurface,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w500,
                         height: 1.2,
                       ),
                       maxLines: 2,
@@ -59,14 +59,14 @@ class ExpenseAmountCard extends StatelessWidget {
                           Icon(
                             Icons.person_rounded,
                             size: 16,
-                            color: colorScheme.primary,
+                            color: colorScheme.onSurface,
                           ),
                           const SizedBox(width: 4),
                           Text(
                             paidBy!,
                             style: textTheme.labelMedium?.copyWith(
-                              color: colorScheme.primary,
-                              fontWeight: FontWeight.w600,
+                              color: colorScheme.onSurface,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ],
