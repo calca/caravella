@@ -419,7 +419,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Titolo e totale
+                        // Titolo del gruppo con icona stato a destra
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -437,62 +437,29 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            const SizedBox(width: 16),
-                            CurrencyDisplay(
-                              value: totalExpenses,
-                              currency: trip.currency,
-                              valueFontSize: 24.0,
-                              currencyFontSize: 18.0,
-                              alignment: MainAxisAlignment.end,
-                              showDecimals: true,
-                              color: colorScheme.primary,
+                            const SizedBox(width: 12),
+                            // Icona stato solo icona, neutra
+                            Icon(
+                              trip.archived
+                                  ? Icons.archive_rounded
+                                  : Icons.play_circle_fill_rounded,
+                              size: 24,
+                              color:
+                                  colorScheme.onSurface.withValues(alpha: 0.6),
                             ),
                           ],
                         ),
                         const SizedBox(height: 8),
-                        // Badge stato sotto il titolo
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: trip.archived
-                                ? colorScheme.outline.withValues(alpha: 0.15)
-                                : colorScheme.primary.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: trip.archived
-                                  ? colorScheme.outline
-                                  : colorScheme.primary,
-                              width: 1,
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                trip.archived
-                                    ? Icons.archive_rounded
-                                    : Icons.play_circle_fill_rounded,
-                                size: 14,
-                                color: trip.archived
-                                    ? colorScheme.outline
-                                    : colorScheme.primary,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                trip.archived
-                                    ? loc.get('archived')
-                                    : loc.get('active'),
-                                style: TextStyle(
-                                  color: trip.archived
-                                      ? colorScheme.outline
-                                      : colorScheme.primary,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
-                          ),
+                        // Totale sotto il titolo
+                        CurrencyDisplay(
+                          value: totalExpenses,
+                          currency: trip.currency,
+                          valueFontSize: 28.0,
+                          currencyFontSize: 20.0,
+                          alignment: MainAxisAlignment.start,
+                          showDecimals: true,
+                          color: colorScheme.onSurface,
+                          fontWeight: FontWeight.normal,
                         ),
                       ],
                     ),

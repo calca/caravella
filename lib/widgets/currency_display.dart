@@ -8,6 +8,7 @@ class CurrencyDisplay extends StatelessWidget {
   final MainAxisAlignment alignment;
   final bool showDecimals;
   final Color? color;
+  final FontWeight? fontWeight;
 
   const CurrencyDisplay({
     super.key,
@@ -18,6 +19,7 @@ class CurrencyDisplay extends StatelessWidget {
     this.alignment = MainAxisAlignment.end,
     this.showDecimals = false,
     this.color,
+    this.fontWeight,
   });
 
   @override
@@ -38,6 +40,7 @@ class CurrencyDisplay extends StatelessWidget {
                   style: Theme.of(context).textTheme.displayLarge?.copyWith(
                         color: color ?? Theme.of(context).colorScheme.onSurface,
                         fontSize: valueFontSize,
+                        fontWeight: fontWeight,
                       ),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
@@ -55,7 +58,8 @@ class CurrencyDisplay extends StatelessWidget {
     );
   }
 
-  Widget _buildValueWithSeparateDecimals(BuildContext context, String formattedValue) {
+  Widget _buildValueWithSeparateDecimals(
+      BuildContext context, String formattedValue) {
     final parts = formattedValue.split('.');
     final integerPart = parts[0];
     final decimalPart = parts.length > 1 ? '.${parts[1]}' : '';
@@ -70,6 +74,7 @@ class CurrencyDisplay extends StatelessWidget {
             style: Theme.of(context).textTheme.displayLarge?.copyWith(
                   color: color ?? Theme.of(context).colorScheme.onSurface,
                   fontSize: valueFontSize,
+                  fontWeight: fontWeight,
                 ),
           ),
           if (decimalPart.isNotEmpty)
