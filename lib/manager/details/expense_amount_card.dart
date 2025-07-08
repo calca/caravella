@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class TripAmountCard extends StatelessWidget {
+class ExpenseAmountCard extends StatelessWidget {
   final String title;
   final int coins;
   final bool checked;
@@ -8,7 +8,7 @@ class TripAmountCard extends StatelessWidget {
   final String? category;
   final DateTime? date;
   final String currency;
-  const TripAmountCard({
+  const ExpenseAmountCard({
     required this.title,
     required this.coins,
     required this.checked,

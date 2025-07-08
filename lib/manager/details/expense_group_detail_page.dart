@@ -593,7 +593,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                                 margin: const EdgeInsets.symmetric(vertical: 4),
                                 child: GestureDetector(
                                   onTap: () => _openEditExpense(expense),
-                                  child: TripAmountCard(
+                                  child: ExpenseAmountCard(
                                     title: expense.category,
                                     coins: (expense.amount ?? 0).toInt(),
                                     checked: true,
