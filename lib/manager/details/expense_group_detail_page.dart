@@ -490,63 +490,67 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Action buttons se ci sono spese
-                  if (_trip!.expenses.isNotEmpty) ...[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        // Overview IconButton
-                        Tooltip(
-                          message: 'Mostra panoramica',
-                          child: IconButton.filled(
-                            onPressed: _showOverviewSheet,
-                            icon: const Icon(
-                                Icons.dashboard_customize_rounded),
-                            iconSize: 24,
-                            tooltip: 'Panoramica',
-                            style: IconButton.styleFrom(
-                              backgroundColor: colorScheme.primaryContainer,
-                              foregroundColor:
-                                  colorScheme.onPrimaryContainer,
-                              minimumSize: const Size(56, 56),
-                            ),
+                  // Action buttons - sempre visibili
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      // Overview IconButton
+                      Tooltip(
+                        message: _trip!.expenses.isNotEmpty ? 'Mostra panoramica' : 'Nessuna spesa da visualizzare',
+                        child: IconButton.filled(
+                          onPressed: _trip!.expenses.isNotEmpty ? _showOverviewSheet : null,
+                          icon: const Icon(
+                              Icons.dashboard_customize_rounded),
+                          iconSize: 24,
+                          tooltip: 'Panoramica',
+                          style: IconButton.styleFrom(
+                            backgroundColor: _trip!.expenses.isNotEmpty 
+                                ? colorScheme.primaryContainer
+                                : colorScheme.surfaceContainerHighest,
+                            foregroundColor: _trip!.expenses.isNotEmpty
+                                ? colorScheme.onPrimaryContainer
+                                : colorScheme.outline,
+                            minimumSize: const Size(56, 56),
                           ),
                         ),
-                        // Statistics IconButton
-                        Tooltip(
-                          message: 'Mostra statistiche',
-                          child: IconButton.filled(
-                            onPressed: _showStatisticsSheet,
-                            icon: const Icon(Icons.analytics_rounded),
-                            iconSize: 24,
-                            tooltip: 'Statistiche',
-                            style: IconButton.styleFrom(
-                              backgroundColor: colorScheme.primaryContainer,
-                              foregroundColor:
-                                  colorScheme.onPrimaryContainer,
-                              minimumSize: const Size(56, 56),
-                            ),
+                      ),
+                      // Statistics IconButton
+                      Tooltip(
+                        message: _trip!.expenses.isNotEmpty ? 'Mostra statistiche' : 'Nessuna spesa da analizzare',
+                        child: IconButton.filled(
+                          onPressed: _trip!.expenses.isNotEmpty ? _showStatisticsSheet : null,
+                          icon: const Icon(Icons.analytics_rounded),
+                          iconSize: 24,
+                          tooltip: 'Statistiche',
+                          style: IconButton.styleFrom(
+                            backgroundColor: _trip!.expenses.isNotEmpty 
+                                ? colorScheme.primaryContainer
+                                : colorScheme.surfaceContainerHighest,
+                            foregroundColor: _trip!.expenses.isNotEmpty
+                                ? colorScheme.onPrimaryContainer
+                                : colorScheme.outline,
+                            minimumSize: const Size(56, 56),
                           ),
                         ),
-                        // Menu Options IconButton (spostato all'ultimo posto)
-                        Tooltip(
-                          message: 'Opzioni',
-                          child: IconButton.filled(
-                            onPressed: _showOptionsSheet,
-                            icon: const Icon(Icons.settings_rounded),
-                            iconSize: 24,
-                            tooltip: 'Opzioni',
-                            style: IconButton.styleFrom(
-                              backgroundColor: colorScheme.secondaryContainer,
-                              foregroundColor: colorScheme.onSecondaryContainer,
-                              minimumSize: const Size(56, 56),
-                            ),
+                      ),
+                      // Menu Options IconButton (sempre abilitato)
+                      Tooltip(
+                        message: 'Opzioni',
+                        child: IconButton.filled(
+                          onPressed: _showOptionsSheet,
+                          icon: const Icon(Icons.settings_rounded),
+                          iconSize: 24,
+                          tooltip: 'Opzioni',
+                          style: IconButton.styleFrom(
+                            backgroundColor: colorScheme.secondaryContainer,
+                            foregroundColor: colorScheme.onSecondaryContainer,
+                            minimumSize: const Size(56, 56),
                           ),
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                  ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
                   // Lista spese o messaggio vuoto
                   _trip!.expenses.isEmpty
                       ? NoExpense(
