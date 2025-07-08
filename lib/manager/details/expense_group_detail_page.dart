@@ -404,7 +404,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         slivers: [
           // Hero AppBar con gradiente
           SliverAppBar(
-            expandedHeight: 135.0,
+            expandedHeight: 160.0,
             floating: false,
             pinned: true,
             backgroundColor: colorScheme.surfaceContainerHighest,
@@ -450,16 +450,21 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                           ],
                         ),
                         const SizedBox(height: 8),
-                        // Totale sotto il titolo
-                        CurrencyDisplay(
-                          value: totalExpenses,
-                          currency: trip.currency,
-                          valueFontSize: 28.0,
-                          currencyFontSize: 20.0,
-                          alignment: MainAxisAlignment.start,
-                          showDecimals: true,
-                          color: colorScheme.onSurface,
-                          fontWeight: FontWeight.normal,
+                        // Totale sotto il titolo - allineato a destra
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            CurrencyDisplay(
+                              value: totalExpenses,
+                              currency: trip.currency,
+                              valueFontSize: 42.0,
+                              currencyFontSize: 28.0,
+                              alignment: MainAxisAlignment.end,
+                              showDecimals: true,
+                              color: colorScheme.onSurface,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ],
                         ),
                       ],
                     ),
