@@ -27,13 +27,13 @@ class ExpenseAmountCard extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return BaseCard(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Sezione sinistra: Titolo e chi ha pagato (evidenziati)
               Expanded(
@@ -51,33 +51,25 @@ class ExpenseAmountCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 8),
-                    // Solo chi ha pagato - evidenziato
+                    // Chi ha pagato - senza sfondo
                     if (paidBy != null && paidBy!.isNotEmpty)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: colorScheme.primaryContainer,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.person_rounded,
-                              size: 16,
-                              color: colorScheme.onPrimaryContainer,
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.person_rounded,
+                            size: 16,
+                            color: colorScheme.primary,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            paidBy!,
+                            style: textTheme.labelLarge?.copyWith(
+                              color: colorScheme.primary,
+                              fontWeight: FontWeight.w600,
                             ),
-                            const SizedBox(width: 6),
-                            Text(
-                              paidBy!,
-                              style: textTheme.labelLarge?.copyWith(
-                                color: colorScheme.onPrimaryContainer,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                   ],
                 ),
@@ -96,8 +88,7 @@ class ExpenseAmountCard extends StatelessWidget {
                     alignment: MainAxisAlignment.end,
                     showDecimals: false,
                   ),
-                  const SizedBox(height: 4),
-                  // Data - discreta, allineata a destra sotto l'importo
+                  // Data - discreta, allineata a destra sulla stessa baseline del paidBy
                   if (date != null)
                     Row(
                       mainAxisSize: MainAxisSize.min,
