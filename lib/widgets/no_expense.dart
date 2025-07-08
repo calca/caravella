@@ -6,38 +6,31 @@ class NoExpense extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Opacity(
-      opacity: 0.2,
-      child: ColorFiltered(
-        colorFilter: ColorFilter.matrix(<double>[
-          0.2126,
-          0.7152,
-          0.0722,
-          0,
-          0,
-          0.2126,
-          0.7152,
-          0.0722,
-          0,
-          0,
-          0.2126,
-          0.7152,
-          0.0722,
-          0,
-          0,
-          0,
-          0,
-          0,
-          1,
-          0,
-        ]),
-        child: Image.asset(
-          'assets/images/no_expense.png',
-          width: 180,
-          height: 180,
-          fit: BoxFit.contain,
-          semanticLabel: semanticLabel,
-        ),
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.receipt_long_outlined,
+            size: 120,
+            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
+            semanticLabel: semanticLabel,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Nessuna spesa',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.6),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Aggiungi la prima spesa per iniziare',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.5),
+            ),
+          ),
+        ],
       ),
     );
   }
