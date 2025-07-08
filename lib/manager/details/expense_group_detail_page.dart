@@ -89,6 +89,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   }
 
   void _showOverviewSheet() {
+    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
+    final loc = AppLocalizations(locale);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -120,7 +122,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                     const Icon(Icons.dashboard_customize_rounded),
                     const SizedBox(width: 8),
                     Text(
-                      'Panoramica',
+                      loc.get('overview'),
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                   ],
@@ -141,6 +143,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   }
 
   void _showStatisticsSheet() {
+    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
+    final loc = AppLocalizations(locale);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -172,7 +176,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                     const Icon(Icons.analytics_rounded),
                     const SizedBox(width: 8),
                     Text(
-                      'Statistiche',
+                      loc.get('statistics'),
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                   ],
@@ -193,6 +197,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   }
 
   void _showOptionsSheet() {
+    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
+    final loc = AppLocalizations(locale);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -224,7 +230,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                     const Icon(Icons.settings_rounded),
                     const SizedBox(width: 8),
                     Text(
-                      'Opzioni',
+                      loc.get('options'),
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                   ],
@@ -244,8 +250,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                               : Icons.push_pin_outlined,
                           color: Theme.of(context).colorScheme.primary,
                         ),
-                        title: Text(
-                            _trip!.pinned ? 'Rimuovi pin' : 'Aggiungi pin'),
+                        title: Text(_trip!.pinned
+                            ? loc.get('unpin_group')
+                            : loc.get('pin_group')),
                         onTap: () async {
                           Navigator.of(context).pop();
                           if (_trip!.pinned) {
@@ -297,7 +304,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                           Icons.edit_rounded,
                           color: Theme.of(context).colorScheme.primary,
                         ),
-                        title: Text('Modifica gruppo'),
+                        title: Text(loc.get('edit_group')),
                         onTap: () async {
                           Navigator.of(context).pop();
                           final result = await Navigator.of(context).push(
@@ -324,7 +331,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                           color: Theme.of(context).colorScheme.error,
                         ),
                         title: Text(
-                          'Elimina gruppo',
+                          loc.get('delete_group'),
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.error,
                           ),
@@ -334,14 +341,13 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                           final shouldDelete = await showDialog<bool>(
                             context: context,
                             builder: (context) => AlertDialog(
-                              title: const Text('Elimina gruppo'),
-                              content: const Text(
-                                  'Sei sicuro di voler eliminare questo gruppo di spese? Questa azione non può essere annullata.'),
+                              title: Text(loc.get('delete_group')),
+                              content: Text(loc.get('delete_group_confirm')),
                               actions: [
                                 TextButton(
                                   onPressed: () =>
                                       Navigator.of(context).pop(false),
-                                  child: const Text('Annulla'),
+                                  child: Text(loc.get('cancel')),
                                 ),
                                 FilledButton(
                                   onPressed: () =>
@@ -350,7 +356,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                                     backgroundColor:
                                         Theme.of(context).colorScheme.error,
                                   ),
-                                  child: const Text('Elimina'),
+                                  child: Text(loc.get('delete')),
                                 ),
                               ],
                             ),
@@ -488,15 +494,15 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                       // Overview IconButton
                       Tooltip(
                         message: _trip!.expenses.isNotEmpty
-                            ? 'Mostra panoramica'
-                            : 'Nessuna spesa da visualizzare',
+                            ? loc.get('show_overview')
+                            : loc.get('no_expenses_to_display'),
                         child: IconButton.filled(
                           onPressed: _trip!.expenses.isNotEmpty
                               ? _showOverviewSheet
                               : null,
                           icon: const Icon(Icons.dashboard_customize_rounded),
                           iconSize: 24,
-                          tooltip: 'Panoramica',
+                          tooltip: loc.get('overview'),
                           style: IconButton.styleFrom(
                             backgroundColor: _trip!.expenses.isNotEmpty
                                 ? colorScheme.primaryContainer
@@ -511,15 +517,15 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                       // Statistics IconButton
                       Tooltip(
                         message: _trip!.expenses.isNotEmpty
-                            ? 'Mostra statistiche'
-                            : 'Nessuna spesa da analizzare',
+                            ? loc.get('show_statistics')
+                            : loc.get('no_expenses_to_analyze'),
                         child: IconButton.filled(
                           onPressed: _trip!.expenses.isNotEmpty
                               ? _showStatisticsSheet
                               : null,
                           icon: const Icon(Icons.analytics_rounded),
                           iconSize: 24,
-                          tooltip: 'Statistiche',
+                          tooltip: loc.get('statistics'),
                           style: IconButton.styleFrom(
                             backgroundColor: _trip!.expenses.isNotEmpty
                                 ? colorScheme.primaryContainer
@@ -533,12 +539,12 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                       ),
                       // Menu Options IconButton (sempre abilitato)
                       Tooltip(
-                        message: 'Opzioni',
+                        message: loc.get('options'),
                         child: IconButton.filled(
                           onPressed: _showOptionsSheet,
                           icon: const Icon(Icons.settings_rounded),
                           iconSize: 24,
-                          tooltip: 'Opzioni',
+                          tooltip: loc.get('options'),
                           style: IconButton.styleFrom(
                             backgroundColor: colorScheme.secondaryContainer,
                             foregroundColor: colorScheme.onSecondaryContainer,
@@ -629,7 +635,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                 }
                 if (mounted) await _refreshTrip();
               },
-              label: const Text('Aggiungi Spesa'),
+              label: Text(loc.get('add_expense_fab')),
               icon: const Icon(Icons.add_rounded),
               backgroundColor: colorScheme.primary,
               foregroundColor: colorScheme.onPrimary,

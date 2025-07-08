@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../app_localizations.dart';
+import '../../state/locale_notifier.dart';
 import 'setting_selector.dart';
 import '../../state/theme_mode_notifier.dart';
 
@@ -27,6 +29,9 @@ class _ThemeSelectorSettingState extends State<ThemeSelectorSetting> {
 
   @override
   Widget build(BuildContext context) {
+    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
+    final loc = AppLocalizations(locale);
+
     return SettingSelector(
       icon: Icons.brightness_6,
       label: 'Tema:',
@@ -34,10 +39,13 @@ class _ThemeSelectorSettingState extends State<ThemeSelectorSetting> {
         value: _themeMode,
         underline: const SizedBox(),
         isExpanded: true,
-        items: const [
-          DropdownMenuItem(value: ThemeMode.system, child: Text('Automatico')),
-          DropdownMenuItem(value: ThemeMode.light, child: Text('Chiaro')),
-          DropdownMenuItem(value: ThemeMode.dark, child: Text('Scuro')),
+        items: [
+          DropdownMenuItem(
+              value: ThemeMode.system, child: Text(loc.get('theme_automatic'))),
+          DropdownMenuItem(
+              value: ThemeMode.light, child: Text(loc.get('theme_light'))),
+          DropdownMenuItem(
+              value: ThemeMode.dark, child: Text(loc.get('theme_dark'))),
         ],
         onChanged: _onChanged,
       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../app_localizations.dart';
+import '../../state/locale_notifier.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class InfoTab extends StatelessWidget {
@@ -7,7 +8,7 @@ class InfoTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locale = Localizations.localeOf(context).toString();
+    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
     final localizations = AppLocalizations(locale);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
@@ -27,7 +28,7 @@ class InfoTab extends StatelessWidget {
           Text('Caravella v0.0.3',
               style: Theme.of(context).textTheme.bodyMedium),
           const SizedBox(height: 2),
-          Text('Developed by calca',
+          Text(localizations.get('developed_by'),
               style: Theme.of(context).textTheme.bodySmall),
           const SizedBox(height: 24),
           Row(
