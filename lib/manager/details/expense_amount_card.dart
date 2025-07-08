@@ -33,7 +33,7 @@ class ExpenseAmountCard extends StatelessWidget {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               // Sezione sinistra: Titolo e chi ha pagato
               Expanded(
@@ -51,11 +51,12 @@ class ExpenseAmountCard extends StatelessWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 6),
-                    // Chi ha pagato - allineato alla baseline della data
-                    Row(
-                      children: [
-                        if (paidBy != null && paidBy!.isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    // Chi ha pagato - solo a sinistra
+                    if (paidBy != null && paidBy!.isNotEmpty)
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
                           Icon(
                             Icons.person_rounded,
                             size: 16,
@@ -70,38 +71,47 @@ class ExpenseAmountCard extends StatelessWidget {
                             ),
                           ),
                         ],
-                        // Spacer per spingere la data a destra
-                        const Spacer(),
-                        // Data - allineata alla baseline del paidBy
-                        if (date != null) ...[
-                          Icon(
-                            Icons.schedule_rounded,
-                            size: 14,
-                            color: colorScheme.outline,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            '${date!.day.toString().padLeft(2, '0')}/${date!.month.toString().padLeft(2, '0')}/${date!.year}',
-                            style: textTheme.bodySmall?.copyWith(
-                              color: colorScheme.outline,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
+                      ),
                   ],
                 ),
               ),
               const SizedBox(width: 20),
-              // Sezione destra: Solo importo
-              CurrencyDisplay(
-                value: coins.toDouble(),
-                currency: currency,
-                valueFontSize: 22.0,
-                currencyFontSize: 16.0,
-                alignment: MainAxisAlignment.end,
-                showDecimals: false,
+              // Sezione destra: Importo e data allineati
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  // Importo
+                  CurrencyDisplay(
+                    value: coins.toDouble(),
+                    currency: currency,
+                    valueFontSize: 22.0,
+                    currencyFontSize: 16.0,
+                    alignment: MainAxisAlignment.end,
+                    showDecimals: false,
+                  ),
+                  // Data - allineata a destra sotto l'importo
+                  if (date != null) ...[
+                    const SizedBox(height: 2),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.schedule_rounded,
+                          size: 14,
+                          color: colorScheme.outline,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${date!.day.toString().padLeft(2, '0')}/${date!.month.toString().padLeft(2, '0')}/${date!.year}',
+                          style: textTheme.bodySmall?.copyWith(
+                            color: colorScheme.outline,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ],
               ),
             ],
           ),
