@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../data/expense_details.dart';
 import '../app_localizations.dart';
 import 'expense_form_component.dart';
-import '../manager/details/tabs/expenses_tab.dart';
+import '../manager/details/tabs/expenses_action_result.dart';
 import '../widgets/caravella_app_bar.dart';
 import '../widgets/themed_outlined_button.dart';
 

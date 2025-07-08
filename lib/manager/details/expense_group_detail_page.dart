@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:org_app_caravella/manager/details/tabs/expenses_action_result.dart';
 import '../../data/expense_details.dart';
 import '../../data/expense_group.dart';
 import '../../expense/expense_edit_page.dart';
@@ -6,12 +7,11 @@ import '../../data/expense_group_storage.dart';
 import '../group/add_new_expenses_group.dart';
 import '../../app_localizations.dart';
 import '../../state/locale_notifier.dart';
-import 'tabs/expenses_tab.dart';
 import 'tabs/overview_tab.dart';
 import 'tabs/statistics_tab.dart';
 import '../../widgets/currency_display.dart';
 import '../../widgets/no_expense.dart';
-import 'trip_amount_card.dart';
+import 'expense_amount_card.dart';
 
 class ExpenseGroupDetailPage extends StatefulWidget {
   final ExpenseGroup trip;
@@ -239,35 +239,48 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                       // Pin/Unpin action
                       ListTile(
                         leading: Icon(
-                          _trip!.pinned ? Icons.push_pin : Icons.push_pin_outlined,
+                          _trip!.pinned
+                              ? Icons.push_pin
+                              : Icons.push_pin_outlined,
                           color: Theme.of(context).colorScheme.primary,
                         ),
-                        title: Text(_trip!.pinned ? 'Rimuovi pin' : 'Aggiungi pin'),
+                        title: Text(
+                            _trip!.pinned ? 'Rimuovi pin' : 'Aggiungi pin'),
                         onTap: () async {
                           Navigator.of(context).pop();
                           if (_trip!.pinned) {
-                            await ExpenseGroupStorage.removePinnedTrip(_trip!.id);
+                            await ExpenseGroupStorage.removePinnedTrip(
+                                _trip!.id);
                           } else {
                             await ExpenseGroupStorage.setPinnedTrip(_trip!.id);
                           }
                           await _refreshTrip();
                         },
                       ),
-                      
+
                       // Archive/Unarchive action
                       ListTile(
                         leading: Icon(
-                          _trip!.archived ? Icons.unarchive_rounded : Icons.archive_rounded,
+                          _trip!.archived
+                              ? Icons.unarchive_rounded
+                              : Icons.archive_rounded,
                           color: Theme.of(context).colorScheme.primary,
                         ),
-                        title: Text(_trip!.archived ? 
-                          AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it').get('unarchive') : 
-                          AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it').get('archive')),
+                        title: Text(_trip!.archived
+                            ? AppLocalizations(
+                                    LocaleNotifier.of(context)?.locale ?? 'it')
+                                .get('unarchive')
+                            : AppLocalizations(
+                                    LocaleNotifier.of(context)?.locale ?? 'it')
+                                .get('archive')),
                         onTap: () async {
                           Navigator.of(context).pop();
-                          final updatedTrip = _trip!.copyWith(archived: !_trip!.archived);
-                          final trips = await ExpenseGroupStorage.getAllGroups();
-                          final idx = trips.indexWhere((v) => v.id == _trip!.id);
+                          final updatedTrip =
+                              _trip!.copyWith(archived: !_trip!.archived);
+                          final trips =
+                              await ExpenseGroupStorage.getAllGroups();
+                          final idx =
+                              trips.indexWhere((v) => v.id == _trip!.id);
                           if (idx != -1) {
                             trips[idx] = updatedTrip;
                             await ExpenseGroupStorage.writeTrips(trips);
@@ -275,9 +288,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                           await _refreshTrip();
                         },
                       ),
-                      
+
                       const Divider(),
-                      
+
                       // Edit Group action
                       ListTile(
                         leading: Icon(
@@ -301,9 +314,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                           }
                         },
                       ),
-                      
+
                       const Divider(),
-                      
+
                       // Delete action
                       ListTile(
                         leading: Icon(
@@ -322,29 +335,35 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                             context: context,
                             builder: (context) => AlertDialog(
                               title: const Text('Elimina gruppo'),
-                              content: const Text('Sei sicuro di voler eliminare questo gruppo di spese? Questa azione non può essere annullata.'),
+                              content: const Text(
+                                  'Sei sicuro di voler eliminare questo gruppo di spese? Questa azione non può essere annullata.'),
                               actions: [
                                 TextButton(
-                                  onPressed: () => Navigator.of(context).pop(false),
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(false),
                                   child: const Text('Annulla'),
                                 ),
                                 FilledButton(
-                                  onPressed: () => Navigator.of(context).pop(true),
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(true),
                                   style: FilledButton.styleFrom(
-                                    backgroundColor: Theme.of(context).colorScheme.error,
+                                    backgroundColor:
+                                        Theme.of(context).colorScheme.error,
                                   ),
                                   child: const Text('Elimina'),
                                 ),
                               ],
                             ),
                           );
-                          
+
                           if (shouldDelete == true && context.mounted) {
-                            final trips = await ExpenseGroupStorage.getAllGroups();
+                            final trips =
+                                await ExpenseGroupStorage.getAllGroups();
                             trips.removeWhere((v) => v.id == _trip!.id);
                             await ExpenseGroupStorage.writeTrips(trips);
                             if (context.mounted) {
-                              Navigator.of(context).pop(true); // Torna alla lista e aggiorna
+                              Navigator.of(context)
+                                  .pop(true); // Torna alla lista e aggiorna
                             }
                           }
                         },
@@ -496,15 +515,18 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                     children: [
                       // Overview IconButton
                       Tooltip(
-                        message: _trip!.expenses.isNotEmpty ? 'Mostra panoramica' : 'Nessuna spesa da visualizzare',
+                        message: _trip!.expenses.isNotEmpty
+                            ? 'Mostra panoramica'
+                            : 'Nessuna spesa da visualizzare',
                         child: IconButton.filled(
-                          onPressed: _trip!.expenses.isNotEmpty ? _showOverviewSheet : null,
-                          icon: const Icon(
-                              Icons.dashboard_customize_rounded),
+                          onPressed: _trip!.expenses.isNotEmpty
+                              ? _showOverviewSheet
+                              : null,
+                          icon: const Icon(Icons.dashboard_customize_rounded),
                           iconSize: 24,
                           tooltip: 'Panoramica',
                           style: IconButton.styleFrom(
-                            backgroundColor: _trip!.expenses.isNotEmpty 
+                            backgroundColor: _trip!.expenses.isNotEmpty
                                 ? colorScheme.primaryContainer
                                 : colorScheme.surfaceContainerHighest,
                             foregroundColor: _trip!.expenses.isNotEmpty
@@ -516,14 +538,18 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                       ),
                       // Statistics IconButton
                       Tooltip(
-                        message: _trip!.expenses.isNotEmpty ? 'Mostra statistiche' : 'Nessuna spesa da analizzare',
+                        message: _trip!.expenses.isNotEmpty
+                            ? 'Mostra statistiche'
+                            : 'Nessuna spesa da analizzare',
                         child: IconButton.filled(
-                          onPressed: _trip!.expenses.isNotEmpty ? _showStatisticsSheet : null,
+                          onPressed: _trip!.expenses.isNotEmpty
+                              ? _showStatisticsSheet
+                              : null,
                           icon: const Icon(Icons.analytics_rounded),
                           iconSize: 24,
                           tooltip: 'Statistiche',
                           style: IconButton.styleFrom(
-                            backgroundColor: _trip!.expenses.isNotEmpty 
+                            backgroundColor: _trip!.expenses.isNotEmpty
                                 ? colorScheme.primaryContainer
                                 : colorScheme.surfaceContainerHighest,
                             foregroundColor: _trip!.expenses.isNotEmpty
@@ -564,8 +590,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                                 expenses.map<Widget>((expense) {
                               return Container(
                                 width: double.infinity,
-                                margin: const EdgeInsets.symmetric(
-                                    vertical: 4),
+                                margin: const EdgeInsets.symmetric(vertical: 4),
                                 child: GestureDetector(
                                   onTap: () => _openEditExpense(expense),
                                   child: TripAmountCard(
