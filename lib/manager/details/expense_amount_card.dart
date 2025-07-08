@@ -25,7 +25,7 @@ class ExpenseAmountCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    
+
     return BaseCard(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -51,10 +51,11 @@ class ExpenseAmountCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 8),
-                    // Chi ha pagato - evidenziato
+                    // Solo chi ha pagato - evidenziato
                     if (paidBy != null && paidBy!.isNotEmpty)
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
                           color: colorScheme.primaryContainer,
                           borderRadius: BorderRadius.circular(20),
@@ -82,7 +83,7 @@ class ExpenseAmountCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 16),
-              // Sezione destra: Importo evidenziato
+              // Sezione destra: Importo e data allineati
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -92,64 +93,55 @@ class ExpenseAmountCard extends StatelessWidget {
                     currency: currency,
                     valueFontSize: 24.0,
                     currencyFontSize: 18.0,
-                    alignment: MainAxisAlignment.center,
+                    alignment: MainAxisAlignment.end,
                     showDecimals: false,
                   ),
+                  const SizedBox(height: 4),
+                  // Data - discreta, allineata a destra sotto l'importo
+                  if (date != null)
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.schedule_rounded,
+                          size: 14,
+                          color: colorScheme.outline,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${date!.day.toString().padLeft(2, '0')}/${date!.month.toString().padLeft(2, '0')}/${date!.year}',
+                          style: textTheme.bodySmall?.copyWith(
+                            color: colorScheme.outline,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
                 ],
               ),
             ],
           ),
           const SizedBox(height: 12),
-          // Riga inferiore: Categoria e Data (più piccole e discrete)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Categoria - discreta
-              if (category != null)
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.local_offer_outlined,
-                      size: 14,
-                      color: colorScheme.outline,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      category!,
-                      style: textTheme.bodySmall?.copyWith(
-                        color: colorScheme.outline,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                )
-              else
-                const SizedBox.shrink(),
-              // Data - discreta
-              if (date != null)
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.schedule_rounded,
-                      size: 14,
-                      color: colorScheme.outline,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      '${date!.day.toString().padLeft(2, '0')}/${date!.month.toString().padLeft(2, '0')}/${date!.year}',
-                      style: textTheme.bodySmall?.copyWith(
-                        color: colorScheme.outline,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                )
-              else
-                const SizedBox.shrink(),
-            ],
-          ),
+          // Riga inferiore: Solo Categoria (discreta)
+          if (category != null)
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.local_offer_outlined,
+                  size: 14,
+                  color: colorScheme.outline,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  category!,
+                  style: textTheme.bodySmall?.copyWith(
+                    color: colorScheme.outline,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
         ],
       ),
     );
