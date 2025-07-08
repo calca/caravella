@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../widgets/base_card.dart';
+import '../../widgets/currency_display.dart';
 
 class ExpenseAmountCard extends StatelessWidget {
   final String title;
@@ -21,16 +23,11 @@ class ExpenseAmountCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color textColor = Theme.of(context).colorScheme.onSurface;
-    final Color paidByColor = Theme.of(context).colorScheme.primary;
-    final Color categoryColor = Theme.of(context).colorScheme.secondary;
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.transparent, // Background trasparente
-        borderRadius: BorderRadius.circular(18),
-        // Nessuna ombra
-      ),
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    
+    return BaseCard(
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -38,98 +35,119 @@ class ExpenseAmountCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Sezione sinistra: Titolo e chi ha pagato (evidenziati)
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Titolo della spesa - principale
                     Text(
                       title,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: textColor,
-                          ),
+                      style: textTheme.titleLarge?.copyWith(
+                        color: colorScheme.onSurface,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    if ((paidBy != null && paidBy!.isNotEmpty) ||
-                        category != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 4.0, right: 2.0),
+                    const SizedBox(height: 8),
+                    // Chi ha pagato - evidenziato
+                    if (paidBy != null && paidBy!.isNotEmpty)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: colorScheme.primaryContainer,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
                         child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            if (paidBy != null && paidBy!.isNotEmpty) ...[
-                              Icon(Icons.person, size: 15, color: paidByColor),
-                              const SizedBox(width: 2),
-                              Text(
-                                paidBy!,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(
-                                      color: paidByColor,
-                                      fontSize: 12,
-                                    ),
+                            Icon(
+                              Icons.person_rounded,
+                              size: 16,
+                              color: colorScheme.onPrimaryContainer,
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              paidBy!,
+                              style: textTheme.labelLarge?.copyWith(
+                                color: colorScheme.onPrimaryContainer,
+                                fontWeight: FontWeight.w600,
                               ),
-                              const SizedBox(width: 8),
-                            ],
-                            if (category != null) ...[
-                              Icon(Icons.category,
-                                  size: 15, color: categoryColor),
-                              const SizedBox(width: 2),
-                              Text(
-                                category!,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(
-                                      color: categoryColor,
-                                    ),
-                              ),
-                            ],
+                            ),
                           ],
                         ),
                       ),
                   ],
                 ),
               ),
-              // Amount e currency sulla stessa linea, allineati in basso, data sotto
+              const SizedBox(width: 16),
+              // Sezione destra: Importo evidenziato
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Baseline(
-                        baselineType: TextBaseline.alphabetic,
-                        baseline: 24, // valore adatto per l'allineamento
-                        child: Text('$coins',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(color: textColor)),
-                      ),
-                      const SizedBox(width: 4),
-                      Baseline(
-                        baselineType: TextBaseline.alphabetic,
-                        baseline: 24, // stesso valore per currency
-                        child: Text(currency,
-                            style: TextStyle(
-                              color: textColor,
-                              fontSize: 13, // più piccolo dell'amount
-                            )),
-                      ),
-                    ],
+                  // Importo - semplice senza sfondo
+                  CurrencyDisplay(
+                    value: coins.toDouble(),
+                    currency: currency,
+                    valueFontSize: 24.0,
+                    currencyFontSize: 18.0,
+                    alignment: MainAxisAlignment.center,
+                    showDecimals: false,
                   ),
-                  if (date != null) ...[
-                    const SizedBox(height: 2),
-                    Text(
-                      '${date!.day.toString().padLeft(2, '0')}/${date!.month.toString().padLeft(2, '0')}/${date!.year}',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: textColor,
-                          ),
-                    ),
-                  ],
                 ],
               ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          // Riga inferiore: Categoria e Data (più piccole e discrete)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Categoria - discreta
+              if (category != null)
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.local_offer_outlined,
+                      size: 14,
+                      color: colorScheme.outline,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      category!,
+                      style: textTheme.bodySmall?.copyWith(
+                        color: colorScheme.outline,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                )
+              else
+                const SizedBox.shrink(),
+              // Data - discreta
+              if (date != null)
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.schedule_rounded,
+                      size: 14,
+                      color: colorScheme.outline,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      '${date!.day.toString().padLeft(2, '0')}/${date!.month.toString().padLeft(2, '0')}/${date!.year}',
+                      style: textTheme.bodySmall?.copyWith(
+                        color: colorScheme.outline,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                )
+              else
+                const SizedBox.shrink(),
             ],
           ),
         ],
