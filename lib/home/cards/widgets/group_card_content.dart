@@ -259,14 +259,19 @@ class GroupCardContent extends StatelessWidget {
             ),
             // Spacer to push last 7 days to the right
             Expanded(child: Container()),
-            // Last 7 days - right aligned (solo se maggiore di 0)
-            if (recentExpensesTotal > 0)
-              _buildLabeledStat(
-                icon: Icons.trending_up,
-                value: recentExpensesTotal,
-                label: localizations.get('last_7_days'),
-                isCurrency: true,
-              ),
+            // Last 7 days - right aligned (mantiene sempre lo spazio nel layout)
+            recentExpensesTotal > 0
+                ? _buildLabeledStat(
+                    icon: Icons.trending_up,
+                    value: recentExpensesTotal,
+                    label: localizations.get('last_7_days'),
+                    isCurrency: true,
+                  )
+                : SizedBox(
+                    width: 80, // Larghezza fissa per mantenere lo spazio
+                    height: 60, // Altezza fissa per mantenere l'allineamento
+                    child: Container(), // Contenitore vuoto ma con dimensioni
+                  ),
           ],
         ),
 
