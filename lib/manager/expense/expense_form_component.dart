@@ -21,7 +21,6 @@ class ExpenseFormComponent extends StatefulWidget {
   final DateTime? tripEndDate;
   final bool
       shouldAutoClose; // Nuovo parametro per gestire la chiusura automatica
-  final String? groupTitle; // Titolo del gruppo di spese
 
   const ExpenseFormComponent({
     super.key,
@@ -35,7 +34,6 @@ class ExpenseFormComponent extends StatefulWidget {
     this.tripEndDate,
     this.shouldAutoClose =
         true, // Di default chiude automaticamente (per i bottom sheet)
-    this.groupTitle, // Titolo del gruppo di spese (opzionale)
   });
 
   @override
@@ -164,7 +162,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         borderRadius: BorderRadius.circular(8),
         // Solo sfondo colorato se c'è un errore
         color: isTouched && !isValid 
-            ? Theme.of(context).colorScheme.errorContainer.withOpacity(0.08)
+            ? Theme.of(context).colorScheme.errorContainer.withValues(alpha: 0.08)
             : null,
       ),
       child: field,
@@ -181,17 +179,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Mostra solo il titolo del gruppo se fornito
-            if (widget.groupTitle != null) ...[
-              Text(
-                widget.groupTitle!,
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-              ),
-              const SizedBox(height: 24),
-            ],
-            
             // IMPORTO + CURRENCY con status
             _buildFieldWithStatus(
               AmountInputWidget(

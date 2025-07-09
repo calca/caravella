@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
+import '../../../state/locale_notifier.dart';
 import '../../../data/expense_group.dart';
 import '../../../data/expense_category.dart';
 import '../../../data/expense_group_storage.dart';
@@ -103,6 +104,7 @@ class GroupCardContent extends StatelessWidget {
   }
 
   void _showAddExpenseSheet(BuildContext context) {
+    final loc = AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it');
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -133,7 +135,7 @@ class GroupCardContent extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    group.title,
+                    loc.get('add_expense'),
                     style: theme.textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
