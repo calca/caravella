@@ -89,31 +89,53 @@ class GroupCardContent extends StatelessWidget {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.9,
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.9,
+        ),
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Handle bar
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.outline,
-                  borderRadius: BorderRadius.circular(2),
-                ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Handle bar fisso
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.outline,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    group.title,
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 20),
-              Expanded(
+            ),
+            const Divider(height: 1),
+            
+            // Contenuto scrollabile
+            Flexible(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                  top: 16,
+                  bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+                ),
                 child: ExpenseFormComponent(
                   participants: group.participants.map((p) => p.name).toList(),
                   categories: group.categories.map((c) => c.name).toList(),
-                  groupTitle: group.title, // Passa il titolo del gruppo
                   onExpenseAdded: (expense) async {
                     // Save the expense to the group
                     await _saveExpenseToGroup(expense);
@@ -129,8 +151,8 @@ class GroupCardContent extends StatelessWidget {
                   shouldAutoClose: false,
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

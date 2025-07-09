@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:org_app_caravella/manager/details/tabs/expenses_action_result.dart';
+
 import '../../data/expense_details.dart';
 import '../../data/expense_group.dart';
-import '../expense/expense_edit_page.dart';
+import '../expense/expense_form_component.dart';
+import '../../data/expense_category.dart';
 import '../../data/expense_group_storage.dart';
 import '../group/add_new_expenses_group.dart';
 import '../../app_localizations.dart';
@@ -55,38 +56,126 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   }
 
   Future<void> _openEditExpense(ExpenseDetails expense) async {
-    final result = await Navigator.of(context).push<ExpenseActionResult>(
-      MaterialPageRoute(
-        builder: (context) => ExpenseEditPage(
-          expense: expense,
-          participants: _trip!.participants.map((p) => p.name).toList(),
-          categories: _trip!.categories.map((c) => c.name).toList(),
-          loc: AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it'),
-          tripStartDate: _trip!.startDate,
-          tripEndDate: _trip!.endDate,
-          groupId: _trip!.id, // Aggiungi l'ID del gruppo
+    final loc = AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it');
+    
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.9,
+        ),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Header fisso
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    loc.get('edit_expense'),
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          _showDeleteExpenseDialog(expense);
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const Divider(height: 1),
+            
+            // Contenuto scrollabile
+            Flexible(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                  top: 16,
+                  bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+                ),
+                child: ExpenseFormComponent(
+                  initialExpense: expense,
+                  participants: _trip!.participants.map((p) => p.name).toList(),
+                  categories: _trip!.categories.map((c) => c.name).toList(),
+                  tripStartDate: _trip!.startDate,
+                  tripEndDate: _trip!.endDate,
+                  shouldAutoClose: false,
+                  onExpenseAdded: (updatedExpense) async {
+                    // Aggiorna la spesa esistente
+                    final expenseWithId = ExpenseDetails(
+                      id: expense.id,
+                      category: updatedExpense.category,
+                      amount: updatedExpense.amount,
+                      paidBy: updatedExpense.paidBy,
+                      date: updatedExpense.date,
+                      note: updatedExpense.note,
+                    );
+                    
+                    setState(() {
+                      final index = _trip!.expenses.indexWhere((e) => e.id == expense.id);
+                      if (index != -1) {
+                        _trip!.expenses[index] = expenseWithId;
+                      }
+                    });
+                    
+                    // Salva le modifiche
+                    final trips = await ExpenseGroupStorage.getAllGroups();
+                    final tripIndex = trips.indexWhere((t) => t.id == _trip!.id);
+                    if (tripIndex != -1) {
+                      trips[tripIndex] = _trip!;
+                      await ExpenseGroupStorage.writeTrips(trips);
+                    }
+                    
+                    if (context.mounted) {
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  onCategoryAdded: (categoryName) async {
+                    // Gestisci l'aggiunta di una nuova categoria
+                    final newCategory = ExpenseCategory(name: categoryName);
+                    setState(() {
+                      _trip!.categories.add(newCategory);
+                    });
+                    
+                    // Salva le modifiche
+                    final trips = await ExpenseGroupStorage.getAllGroups();
+                    final tripIndex = trips.indexWhere((t) => t.id == _trip!.id);
+                    if (tripIndex != -1) {
+                      trips[tripIndex] = _trip!;
+                      await ExpenseGroupStorage.writeTrips(trips);
+                    }
+                  },
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
-    if (result != null) {
-      if (result.deleted) {
-        setState(() {
-          _trip!.expenses.removeWhere((e) => e.id == expense.id);
-        });
-      } else if (result.updatedExpense != null) {
-        setState(() {
-          final idx = _trip!.expenses.indexWhere((e) => e.id == expense.id);
-          if (idx != -1) _trip!.expenses[idx] = result.updatedExpense!;
-        });
-      }
-      // Salva le modifiche
-      final trips = await ExpenseGroupStorage.getAllGroups();
-      final tripIdx = trips.indexWhere((t) => t.id == _trip!.id);
-      if (tripIdx != -1) {
-        trips[tripIdx] = _trip!;
-        await ExpenseGroupStorage.writeTrips(trips);
-      }
-    }
   }
 
   void _showOverviewSheet() {
@@ -386,6 +475,156 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     );
   }
 
+  void _showDeleteExpenseDialog(ExpenseDetails expense) {
+    final loc = AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it');
+    
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(loc.get('delete_expense')),
+        content: Text(loc.get('delete_expense_confirm')),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(loc.get('cancel')),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+              
+              // Rimuovi la spesa
+              setState(() {
+                _trip!.expenses.removeWhere((e) => e.id == expense.id);
+              });
+              
+              // Salva le modifiche
+              final trips = await ExpenseGroupStorage.getAllGroups();
+              final tripIndex = trips.indexWhere((t) => t.id == _trip!.id);
+              if (tripIndex != -1) {
+                trips[tripIndex] = _trip!;
+                await ExpenseGroupStorage.writeTrips(trips);
+              }
+            },
+            child: Text(
+              loc.get('delete'),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.error,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAddExpenseSheet() {
+    final loc = AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it');
+    
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.9,
+        ),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Header fisso
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    loc.get('add_expense'),
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ],
+              ),
+            ),
+            const Divider(height: 1),
+            
+            // Contenuto scrollabile
+            Flexible(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                  top: 16,
+                  bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+                ),
+                child: ExpenseFormComponent(
+                  participants: _trip!.participants.map((p) => p.name).toList(),
+                  categories: _trip!.categories.map((c) => c.name).toList(),
+                  tripStartDate: _trip!.startDate,
+                  tripEndDate: _trip!.endDate,
+                  shouldAutoClose: false,
+                  onExpenseAdded: (newExpense) async {
+                    // Genera un ID univoco per la nuova spesa
+                    final expenseWithId = ExpenseDetails(
+                      id: DateTime.now().millisecondsSinceEpoch.toString(),
+                      category: newExpense.category,
+                      amount: newExpense.amount,
+                      paidBy: newExpense.paidBy,
+                      date: newExpense.date,
+                      note: newExpense.note,
+                    );
+                    
+                    setState(() {
+                      _trip!.expenses.add(expenseWithId);
+                    });
+                    
+                    // Salva le modifiche
+                    final trips = await ExpenseGroupStorage.getAllGroups();
+                    final tripIndex = trips.indexWhere((t) => t.id == _trip!.id);
+                    if (tripIndex != -1) {
+                      trips[tripIndex] = _trip!;
+                      await ExpenseGroupStorage.writeTrips(trips);
+                    }
+                    
+                    if (context.mounted) {
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  onCategoryAdded: (categoryName) async {
+                    // Gestisci l'aggiunta di una nuova categoria
+                    final newCategory = ExpenseCategory(name: categoryName);
+                    setState(() {
+                      _trip!.categories.add(newCategory);
+                    });
+                    
+                    // Salva le modifiche
+                    final trips = await ExpenseGroupStorage.getAllGroups();
+                    final tripIndex = trips.indexWhere((t) => t.id == _trip!.id);
+                    if (tripIndex != -1) {
+                      trips[tripIndex] = _trip!;
+                      await ExpenseGroupStorage.writeTrips(trips);
+                    }
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_deleted) {
@@ -605,38 +844,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       floatingActionButton: !trip.archived
           ? FloatingActionButton.extended(
               heroTag: 'add-expense-fab',
-              onPressed: () async {
-                final result = await Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => ExpenseEditPage(
-                      expense: ExpenseDetails(
-                        category: '',
-                        amount: 0,
-                        paidBy: '',
-                        date: DateTime.now(),
-                        note: null,
-                      ),
-                      participants:
-                          trip.participants.map((p) => p.name).toList(),
-                      categories: trip.categories.map((c) => c.name).toList(),
-                      loc: loc,
-                      tripStartDate: trip.startDate,
-                      tripEndDate: trip.endDate,
-                      groupId: trip.id, // Aggiungi l'ID del gruppo
-                    ),
-                  ),
-                );
-                if (result is ExpenseActionResult &&
-                    result.updatedExpense != null) {
-                  final trips = await ExpenseGroupStorage.getAllGroups();
-                  final idx = trips.indexWhere((v) => v.id == trip.id);
-                  if (idx != -1) {
-                    trips[idx].expenses.add(result.updatedExpense!);
-                    await ExpenseGroupStorage.writeTrips(trips);
-                  }
-                }
-                if (mounted) await _refreshTrip();
-              },
+              onPressed: () => _showAddExpenseSheet(),
               label: Text(loc.get('add_expense_fab')),
               icon: const Icon(Icons.add_rounded),
               backgroundColor: colorScheme.primary,
