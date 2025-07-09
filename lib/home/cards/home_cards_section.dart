@@ -114,6 +114,10 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
                             widget.onTripAdded();
                             _loadActiveGroups();
                           },
+                          onCategoryAdded: () {
+                            // Ricarica i gruppi per aggiornare le categorie
+                            _loadActiveGroups();
+                          },
                         ),
             ),
 

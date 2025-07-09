@@ -12,6 +12,7 @@ class GroupCardContent extends StatelessWidget {
   final AppLocalizations localizations;
   final ThemeData theme;
   final VoidCallback onExpenseAdded;
+  final VoidCallback? onCategoryAdded;
 
   const GroupCardContent({
     super.key,
@@ -19,6 +20,7 @@ class GroupCardContent extends StatelessWidget {
     required this.localizations,
     required this.theme,
     required this.onExpenseAdded,
+    this.onCategoryAdded,
   });
 
   String _formatDateRange(ExpenseGroup group, AppLocalizations loc) {
@@ -151,6 +153,10 @@ class GroupCardContent extends StatelessWidget {
                     onCategoryAdded: (newCategory) async {
                       // Save the new category to the group
                       await _saveCategoryToGroup(newCategory);
+                      // Notify parent that category was added
+                      if (onCategoryAdded != null) {
+                        onCategoryAdded!();
+                      }
                     },
                     shouldAutoClose: false,
                   ),

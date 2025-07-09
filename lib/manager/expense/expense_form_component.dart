@@ -209,16 +209,24 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                     widget.onCategoryAdded!(newCategory);
                   }
 
-                  // Aspetta un breve momento per permettere al parent di elaborare
-                  await Future.delayed(const Duration(milliseconds: 50));
-
-                  // Poi aggiorna la lista locale delle categorie
+                  // Aggiorna immediatamente la lista locale
                   setState(() {
                     if (!_categories.contains(newCategory)) {
                       _categories.add(newCategory);
                     }
                     _category = newCategory;
                   });
+
+                  // Aspetta un momento per permettere al parent di elaborare
+                  await Future.delayed(const Duration(milliseconds: 100));
+                  
+                  // Verifica se la categoria è stata aggiunta alla lista del parent
+                  if (widget.categories.contains(newCategory)) {
+                    // Se sì, aggiorna la lista locale con quella del parent
+                    setState(() {
+                      _categories = List.from(widget.categories);
+                    });
+                  }
                 }
               },
               loc: loc,

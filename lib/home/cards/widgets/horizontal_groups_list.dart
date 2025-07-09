@@ -9,6 +9,7 @@ class HorizontalGroupsList extends StatefulWidget {
   final AppLocalizations localizations;
   final ThemeData theme;
   final VoidCallback onGroupUpdated;
+  final VoidCallback? onCategoryAdded;
 
   const HorizontalGroupsList({
     super.key,
@@ -16,6 +17,7 @@ class HorizontalGroupsList extends StatefulWidget {
     required this.localizations,
     required this.theme,
     required this.onGroupUpdated,
+    this.onCategoryAdded,
   });
 
   @override
@@ -92,6 +94,7 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList> {
             localizations: widget.localizations,
             theme: widget.theme,
             onGroupUpdated: widget.onGroupUpdated,
+            onCategoryAdded: widget.onCategoryAdded,
             isSelected: isSelected,
             selectionProgress: 1.0 - distanceFromCenter.clamp(0.0, 1.0),
           ),

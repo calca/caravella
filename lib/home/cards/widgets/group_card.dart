@@ -10,6 +10,7 @@ class GroupCard extends StatelessWidget {
   final AppLocalizations localizations;
   final ThemeData theme;
   final VoidCallback onGroupUpdated;
+  final VoidCallback? onCategoryAdded;
   final bool isSelected;
   final double selectionProgress;
 
@@ -19,6 +20,7 @@ class GroupCard extends StatelessWidget {
     required this.localizations,
     required this.theme,
     required this.onGroupUpdated,
+    this.onCategoryAdded,
     this.isSelected = false,
     this.selectionProgress = 0.0,
   });
@@ -67,6 +69,7 @@ class GroupCard extends StatelessWidget {
           localizations: localizations,
           theme: theme,
           onExpenseAdded: onGroupUpdated,
+          onCategoryAdded: onCategoryAdded,
         ),
       ),
     );
