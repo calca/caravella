@@ -75,7 +75,13 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     super.didUpdateWidget(oldWidget);
     // Aggiorna la lista locale se quella del widget è cambiata
     if (oldWidget.categories != widget.categories) {
-      _categories = List.from(widget.categories);
+      setState(() {
+        _categories = List.from(widget.categories);
+        // Mantieni la selezione corrente se la categoria esiste ancora
+        if (_category != null && !_categories.contains(_category!)) {
+          _category = null;
+        }
+      });
     }
   }
 
@@ -376,18 +382,21 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                       ),
                     );
                     if (newCategory != null && newCategory.isNotEmpty) {
-                      // Aggiorna la lista locale delle categorie
+                      // Prima notifica al parent tramite callback
+                      if (widget.onCategoryAdded != null) {
+                        widget.onCategoryAdded!(newCategory);
+                      }
+                      
+                      // Aspetta un breve momento per permettere al parent di elaborare
+                      await Future.delayed(const Duration(milliseconds: 50));
+                      
+                      // Poi aggiorna la lista locale delle categorie
                       setState(() {
                         if (!_categories.contains(newCategory)) {
                           _categories.add(newCategory);
                         }
                         _category = newCategory;
                       });
-
-                      // Notifica al parent tramite callback
-                      if (widget.onCategoryAdded != null) {
-                        widget.onCategoryAdded!(newCategory);
-                      }
                     }
                   },
                   icon: const Icon(Icons.add, size: 22),
