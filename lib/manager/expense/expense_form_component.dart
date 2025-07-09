@@ -133,7 +133,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       widget.onExpenseAdded(expense);
 
       // Chiude automaticamente solo se richiesto (per i bottom sheet)
-      if (widget.shouldAutoClose) {
+      if (widget.shouldAutoClose && Navigator.of(context).canPop()) {
         Navigator.of(context).pop();
       }
     }
@@ -308,7 +308,11 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
             
             // Pulsanti di azione
             ExpenseFormActionsWidget(
-              onCancel: () => Navigator.of(context).pop(),
+              onCancel: () {
+                if (Navigator.of(context).canPop()) {
+                  Navigator.of(context).pop();
+                }
+              },
               onSave: _isFormValid() ? _saveExpense : null,
               loc: loc,
             ),
