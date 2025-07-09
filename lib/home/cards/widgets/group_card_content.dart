@@ -244,28 +244,27 @@ class GroupCardContent extends StatelessWidget {
 
         // Statistiche con etichette più chiare (layout a griglia)
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: _buildLabeledStat(
-                icon: Icons.people_outline,
-                value: participantCount.toString(),
-                label: localizations.get('participants'),
-              ),
+            // Participants - compact
+            _buildCompactStat(
+              icon: Icons.people_outline,
+              value: participantCount.toString(),
             ),
-            Expanded(
-              child: _buildLabeledStat(
-                icon: Icons.receipt_long_outlined,
-                value: group.expenses.length.toString(),
-                label: localizations.get('expenses'),
-              ),
+            const SizedBox(width: 16),
+            // Expenses - compact
+            _buildCompactStat(
+              icon: Icons.receipt_long_outlined,
+              value: group.expenses.length.toString(),
             ),
-            Expanded(
-              child: _buildLabeledStat(
-                icon: Icons.trending_up,
-                value: recentExpensesTotal,
-                label: localizations.get('last_7_days'),
-                isCurrency: true,
-              ),
+            // Spacer to push last 7 days to the right
+            Expanded(child: Container()),
+            // Last 7 days - right aligned
+            _buildLabeledStat(
+              icon: Icons.trending_up,
+              value: recentExpensesTotal,
+              label: localizations.get('last_7_days'),
+              isCurrency: true,
             ),
           ],
         ),
@@ -335,7 +334,8 @@ class GroupCardContent extends StatelessWidget {
     return Column(
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: label.isEmpty ? MainAxisAlignment.start : MainAxisAlignment.center,
           children: [
             Icon(
               icon,
@@ -365,11 +365,37 @@ class GroupCardContent extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 4),
+        if (label.isNotEmpty) ...[
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildCompactStat({
+    required IconData icon,
+    required String value,
+  }) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          icon,
+          size: 16,
+          color: theme.colorScheme.onSurface,
+        ),
+        const SizedBox(width: 4),
         Text(
-          label,
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
+          value,
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+            color: theme.colorScheme.onSurface,
           ),
         ),
       ],
