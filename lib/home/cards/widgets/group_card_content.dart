@@ -8,6 +8,18 @@ import '../../../widgets/currency_display.dart';
 import 'mini_expense_chart.dart';
 
 class GroupCardContent extends StatelessWidget {
+  // Design constants
+  static const double _titleFontSize = 28.0;
+  static const double _totalFontSize = 52.0;
+  static const double _currencyFontSize = 32.0;
+  static const double _chartHeight = 60.0;
+  static const double _buttonVerticalPadding = 12.0;
+  static const double _borderRadius = 12.0;
+  static const double _iconSize = 20.0;
+  static const double _spacing = 8.0;
+  static const double _largSpacing = 24.0;
+  static const double _sectionSpacing = 28.0;
+
   final ExpenseGroup group;
   final AppLocalizations localizations;
   final ThemeData theme;
@@ -174,113 +186,150 @@ class GroupCardContent extends StatelessWidget {
     );
   }
 
+  // Computed properties memoizzate per performance
+  double get totalExpenses => group.expenses
+      .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
+
+  int get participantCount => group.participants.length;
+
+  double get recentExpensesTotal => group.expenses
+      .where((e) =>
+          e.date.isAfter(DateTime.now().subtract(const Duration(days: 7))))
+      .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
   @override
   Widget build(BuildContext context) {
-    final totalExpenses = group.expenses
-        .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
-    final participantCount = group.participants.length;
-    final recentExpensesTotal = group.expenses
-        .where((e) =>
-            e.date.isAfter(DateTime.now().subtract(const Duration(days: 7))))
-        .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildHeader(),
+        _buildDateRange(),
+        _buildTotalAmount(),
+        SizedBox(height: _largSpacing),
+        _buildStatistics(),
+        _buildRecentActivity(),
+        const Spacer(),
+        _buildAddButton(context),
+      ],
+    );
+  }
+
+  Widget _buildHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: Text(
+            group.title,
+            style: theme.textTheme.headlineMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+              fontSize: _titleFontSize,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        if (group.pinned)
+          Icon(
+            Icons.push_pin,
+            size: _iconSize,
+            color: theme.colorScheme.onSurface,
+          ),
+      ],
+    );
+  }
+
+  Widget _buildDateRange() {
+    if (group.startDate == null && group.endDate == null) {
+      return SizedBox(height: _spacing);
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Header con titolo e pin prominente
+        SizedBox(height: _spacing),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(
-              child: Text(
-                group.title,
-                style: theme.textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 28,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            if (group.pinned)
-              Icon(
-                Icons.push_pin,
-                size: 20,
-                color: theme.colorScheme.onSurface,
-              ),
-          ],
-        ),
-
-        const SizedBox(height: 8),
-
-        // Date range (if available)
-        if (group.startDate != null || group.endDate != null)
-          Text(
-            _formatDateRange(group, localizations),
-            style: theme.textTheme.bodyMedium?.copyWith(
+            Icon(
+              Icons.calendar_today,
+              size: 16,
               color: theme.colorScheme.onSurfaceVariant,
             ),
+            const SizedBox(width: 4),
+            Text(
+              _formatDateRange(group, localizations),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: _spacing),
+      ],
+    );
+  }
+
+  Widget _buildTotalAmount() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Semantics(
+          label: 'Total expenses: ${totalExpenses.toStringAsFixed(2)}€',
+          child: CurrencyDisplay(
+            value: totalExpenses,
+            currency: '€',
+            valueFontSize: _totalFontSize,
+            currencyFontSize: _currencyFontSize,
+            alignment: MainAxisAlignment.end,
+            showDecimals: true,
+            color: theme.colorScheme.onSurface,
           ),
-        
-        if (group.startDate != null || group.endDate != null)
-          const SizedBox(height: 8),
-
-        // Total expenses - full width aligned right
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            CurrencyDisplay(
-              value: totalExpenses,
-              currency: '€',
-              valueFontSize: 52.0,
-              currencyFontSize: 32.0,
-              alignment: MainAxisAlignment.end,
-              showDecimals: true,
-              color: theme.colorScheme.onSurface,
-            ),
-          ],
         ),
+      ],
+    );
+  }
 
-        const SizedBox(height: 24),
-
-        // Statistiche con etichette più chiare (layout a griglia)
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Participants - compact
-            _buildCompactStat(
-              icon: Icons.people_outline,
-              value: participantCount.toString(),
-            ),
-            const SizedBox(width: 16),
-            // Expenses - compact
-            _buildCompactStat(
-              icon: Icons.receipt_long_outlined,
-              value: group.expenses.length.toString(),
-            ),
-            // Spacer to push last 7 days to the right
-            Expanded(child: Container()),
-            // Last 7 days - right aligned (mantiene sempre lo spazio nel layout)
-            recentExpensesTotal > 0
-                ? _buildLabeledStat(
-                    icon: Icons.trending_up,
-                    value: recentExpensesTotal,
-                    label: localizations.get('last_7_days'),
-                    isCurrency: true,
-                  )
-                : SizedBox(
-                    width: 80, // Larghezza fissa per mantenere lo spazio
-                    height: 60, // Altezza fissa per mantenere l'allineamento
-                    child: Container(), // Contenitore vuoto ma con dimensioni
-                  ),
-          ],
+  Widget _buildStatistics() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Semantics(
+          label: 'Participants: $participantCount',
+          child: _buildCompactStat(
+            icon: Icons.people_outline,
+            value: participantCount.toString(),
+          ),
         ),
+        const SizedBox(width: 16),
+        Semantics(
+          label: 'Expenses: ${group.expenses.length}',
+          child: _buildCompactStat(
+            icon: Icons.receipt_long_outlined,
+            value: group.expenses.length.toString(),
+          ),
+        ),
+        Expanded(child: Container()),
+        Semantics(
+          label: 'Last 7 days: ${recentExpensesTotal.toStringAsFixed(2)}€',
+          child: _buildLabeledStat(
+            icon: Icons.trending_up,
+            value: recentExpensesTotal,
+            label: localizations.get('last_7_days'),
+            isCurrency: true,
+            isPlaceholder: recentExpensesTotal == 0,
+          ),
+        ),
+      ],
+    );
+  }
 
-        // Mostra la sezione attività recenti solo se ci sono spese
-        if (group.expenses.isNotEmpty) ...[
-          const SizedBox(height: 28),
-          
-          // Grafico con più spazio respirabile
-          Column(
+  Widget _buildRecentActivity() {
+    if (group.expenses.isEmpty) return Container();
+
+    return Column(
+      children: [
+        SizedBox(height: _sectionSpacing),
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
@@ -292,45 +341,46 @@ class GroupCardContent extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               SizedBox(
-                height: 60, // Aumentato per il nuovo grafico
+                height: _chartHeight,
                 child: MiniExpenseChart(group: group, theme: theme),
               ),
             ],
           ),
-        ],
+        ),
+      ],
+    );
+  }
 
-        // Spacer per spingere il bottone sempre in fondo
-        const Spacer(),
-
-        // Bottone "Aggiungi" sempre in fondo alla card
-        SizedBox(
-          width: double.infinity,
-          child: TextButton.icon(
-            onPressed: () => _showAddExpenseSheet(context),
-            style: TextButton.styleFrom(
-              foregroundColor: theme.colorScheme.onSurface,
-              backgroundColor:
-                  theme.colorScheme.onSurface.withValues(alpha: 0.05),
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
+  Widget _buildAddButton(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: Semantics(
+        label: 'Add new expense',
+        child: TextButton.icon(
+          onPressed: () => _showAddExpenseSheet(context),
+          style: TextButton.styleFrom(
+            foregroundColor: theme.colorScheme.onSurface,
+            backgroundColor:
+                theme.colorScheme.onSurface.withValues(alpha: 0.05),
+            padding: EdgeInsets.symmetric(vertical: _buttonVerticalPadding),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(_borderRadius),
             ),
-            icon: Icon(
-              Icons.add,
-              size: 20,
+          ),
+          icon: Icon(
+            Icons.add,
+            size: _iconSize,
+            color: theme.colorScheme.onSurface,
+          ),
+          label: Text(
+            localizations.get('add_expense').toUpperCase(),
+            style: theme.textTheme.labelLarge?.copyWith(
+              fontWeight: FontWeight.w600,
               color: theme.colorScheme.onSurface,
-            ),
-            label: Text(
-              localizations.get('add_expense').toUpperCase(),
-              style: theme.textTheme.labelLarge?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: theme.colorScheme.onSurface,
-              ),
             ),
           ),
         ),
-      ],
+      ),
     );
   }
 
@@ -339,17 +389,23 @@ class GroupCardContent extends StatelessWidget {
     required dynamic value,
     required String label,
     bool isCurrency = false,
+    bool isPlaceholder = false,
   }) {
+    final color = isPlaceholder
+        ? theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5)
+        : theme.colorScheme.onSurface;
     return Column(
       children: [
         Row(
           mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: label.isEmpty ? MainAxisAlignment.start : MainAxisAlignment.center,
+          mainAxisAlignment: label.isEmpty
+              ? MainAxisAlignment.start
+              : MainAxisAlignment.center,
           children: [
             Icon(
               icon,
               size: 16,
-              color: theme.colorScheme.onSurface,
+              color: color,
             ),
             const SizedBox(width: 4),
             Flexible(
@@ -361,13 +417,13 @@ class GroupCardContent extends StatelessWidget {
                       currencyFontSize: 12.0,
                       alignment: MainAxisAlignment.start,
                       showDecimals: true,
-                      color: theme.colorScheme.onSurface,
+                      color: color,
                     )
                   : Text(
                       value.toString(),
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.onSurface,
+                        color: color,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -379,7 +435,9 @@ class GroupCardContent extends StatelessWidget {
           Text(
             label,
             style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
+              color: isPlaceholder
+                  ? theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5)
+                  : theme.colorScheme.onSurfaceVariant,
             ),
           ),
         ],
