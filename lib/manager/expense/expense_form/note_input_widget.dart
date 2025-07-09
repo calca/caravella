@@ -20,7 +20,9 @@ class NoteInputWidget extends StatelessWidget {
           alignment: Alignment.centerLeft,
           child: Text(
             loc.get('note'),
-            style: Theme.of(context).textTheme.titleMedium,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w500,
+                ),
           ),
         ),
         const SizedBox(height: 8),
@@ -28,9 +30,15 @@ class NoteInputWidget extends StatelessWidget {
           controller: controller,
           maxLines: 4,
           minLines: 2,
-          style: Theme.of(context).textTheme.bodyMedium,
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.w400,
+              ),
           decoration: InputDecoration(
             hintText: loc.get('note_hint'),
+            hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w400,
+                ),
             border: const OutlineInputBorder(),
           ),
         ),

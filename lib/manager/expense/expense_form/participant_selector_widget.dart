@@ -25,7 +25,9 @@ class ParticipantSelectorWidget extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 8),
           child: Text(
             '${loc.get('paid_by')} *',
-            style: Theme.of(context).textTheme.titleMedium,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w500,
+                ),
           ),
         ),
         Row(
@@ -47,13 +49,16 @@ class ParticipantSelectorWidget extends StatelessWidget {
                                 selected: selectedParticipant == p,
                                 labelStyle: Theme.of(context)
                                     .textTheme
-                                    .bodyMedium
+                                    .bodyLarge
                                     ?.copyWith(
                                       color: selectedParticipant == p
                                           ? Theme.of(context)
                                               .colorScheme
                                               .onPrimaryContainer
                                           : Theme.of(context).colorScheme.onSurface,
+                                      fontWeight: selectedParticipant == p
+                                          ? FontWeight.w500
+                                          : FontWeight.w400,
                                     ),
                                 backgroundColor: selectedParticipant == p
                                     ? null

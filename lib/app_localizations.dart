@@ -52,6 +52,7 @@ class AppLocalizations {
       'ok': 'OK',
       'from_to': '{start} - {end}',
       'add_expense': 'Add new expense',
+      'edit_expense': 'Edit expense',
       'category': 'Category',
       'amount': 'Amount',
       'invalid_amount': 'Invalid amount',
@@ -117,6 +118,7 @@ class AppLocalizations {
       'no_expenses_to_analyze': 'No expenses to analyze',
       'select_expense_date': 'Select expense date',
       'select_expense_date_short': 'Select date',
+      'date': 'Date',
       'edit_group': 'Edit group',
       'delete_group': 'Delete group',
       'delete_group_confirm':
@@ -182,6 +184,7 @@ class AppLocalizations {
       'ok': 'OK',
       'from_to': '{start} - {end}',
       'add_expense': 'Aggiungi spesa',
+      'edit_expense': 'Modifica spesa',
       'category': 'Categoria',
       'amount': 'Importo',
       'invalid_amount': 'Importo non valido',
@@ -263,6 +266,7 @@ class AppLocalizations {
       'no_expenses_to_analyze': 'Nessuna spesa da analizzare',
       'select_expense_date': 'Seleziona data spesa',
       'select_expense_date_short': 'Seleziona data',
+      'date': 'Data',
       'edit_group': 'Modifica gruppo',
       'delete_group': 'Elimina gruppo',
       'delete_group_confirm':

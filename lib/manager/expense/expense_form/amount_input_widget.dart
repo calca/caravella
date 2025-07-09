@@ -30,10 +30,14 @@ class AmountInputWidget extends StatelessWidget {
           child: TextFormField(
             controller: controller,
             focusNode: focusNode,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(),
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
             decoration: InputDecoration(
               labelText: '${loc.get('amount')} *',
-              labelStyle: Theme.of(context).textTheme.titleMedium,
+              labelStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
             ),
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             textInputAction: TextInputAction.done,
@@ -50,7 +54,10 @@ class AmountInputWidget extends StatelessWidget {
             (categories.isNotEmpty && categories.first.startsWith('€'))
                 ? categories.first
                 : '€',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(),
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
           ),
         ),
       ],

@@ -29,7 +29,9 @@ class CategorySelectorWidget extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 8),
             child: Text(
               '${loc.get('category')} *',
-              style: Theme.of(context).textTheme.titleMedium,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
             ),
           ),
         Row(
@@ -51,14 +53,16 @@ class CategorySelectorWidget extends StatelessWidget {
                                 selected: selectedCategory == cat,
                                 labelStyle: Theme.of(context)
                                     .textTheme
-                                    .bodyMedium
+                                    .bodyLarge
                                     ?.copyWith(
                                       color: selectedCategory == cat
                                           ? Theme.of(context)
                                               .colorScheme
                                               .onPrimaryContainer
                                           : Theme.of(context).colorScheme.onSurface,
-                                      fontWeight: FontWeight.w400,
+                                      fontWeight: selectedCategory == cat
+                                          ? FontWeight.w500
+                                          : FontWeight.w400,
                                     ),
                                 backgroundColor: selectedCategory == cat
                                     ? null

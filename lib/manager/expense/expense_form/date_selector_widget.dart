@@ -22,42 +22,57 @@ class DateSelectorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(child: Container()),
-        ThemedOutlinedButton(
-          onPressed: () async {
-            final picked = await showDatePicker(
-              context: context,
-              initialDate: selectedDate ?? DateTime.now(),
-              firstDate: tripStartDate ?? DateTime(2000),
-              lastDate: tripEndDate ?? DateTime(2100),
-              helpText: loc.get('select_expense_date'),
-              cancelText: loc.get('cancel'),
-              confirmText: loc.get('ok'),
-              locale: Locale(locale),
-            );
-            if (picked != null) {
-              onDateSelected(picked);
-            }
-          },
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                selectedDate != null
-                    ? '${selectedDate!.day.toString().padLeft(2, '0')}/${selectedDate!.month.toString().padLeft(2, '0')}/${selectedDate!.year}'
-                    : loc.get('select_expense_date_short'),
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(),
-              ),
-              const SizedBox(width: 6),
-              Icon(
-                Icons.event,
-                size: 18,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ],
+        // Etichetta per il campo data
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Text(
+            loc.get('date'),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w500,
+                ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: ThemedOutlinedButton(
+            onPressed: () async {
+              final picked = await showDatePicker(
+                context: context,
+                initialDate: selectedDate ?? DateTime.now(),
+                firstDate: tripStartDate ?? DateTime(2000),
+                lastDate: tripEndDate ?? DateTime(2100),
+                helpText: loc.get('select_expense_date'),
+                cancelText: loc.get('cancel'),
+                confirmText: loc.get('ok'),
+                locale: Locale(locale),
+              );
+              if (picked != null) {
+                onDateSelected(picked);
+              }
+            },
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  selectedDate != null
+                      ? '${selectedDate!.day.toString().padLeft(2, '0')}/${selectedDate!.month.toString().padLeft(2, '0')}/${selectedDate!.year}'
+                      : loc.get('select_expense_date_short'),
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                ),
+                const SizedBox(width: 6),
+                Icon(
+                  Icons.event,
+                  size: 18,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ],
+            ),
           ),
         ),
       ],

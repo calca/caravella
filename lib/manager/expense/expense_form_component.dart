@@ -185,11 +185,11 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
             if (widget.groupTitle != null) ...[
               Text(
                 widget.groupTitle!,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
             ],
             
             // IMPORTO + CURRENCY con status
