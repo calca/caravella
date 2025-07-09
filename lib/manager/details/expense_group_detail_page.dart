@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../data/expense_details.dart';
 import '../../data/expense_group.dart';
@@ -422,6 +423,21 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
 
                       const Divider(),
 
+                      // Export CSV action
+                      ListTile(
+                        leading: Icon(
+                          Icons.file_download_rounded,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        title: Text(loc.get('export_csv')),
+                        onTap: () async {
+                          Navigator.of(context).pop();
+                          await _exportToCsv();
+                        },
+                      ),
+
+                      const Divider(),
+
                       // Delete action
                       ListTile(
                         leading: Icon(
@@ -638,6 +654,79 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _exportToCsv() async {
+    final loc = AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it');
+
+    if (_trip!.expenses.isEmpty) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(loc.get('no_expenses_to_export'))),
+        );
+      }
+      return;
+    }
+
+    try {
+      // Genera il contenuto CSV
+      final csvContent = _generateCsvContent();
+
+      // Condividi il contenuto CSV come testo
+      await SharePlus.instance.share(
+        ShareParams(
+          text:
+              '${loc.get('export_csv_share_text')}${_trip!.title}\n\n$csvContent',
+        ),
+      );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(loc.get('export_csv_error'))),
+        );
+      }
+    }
+  }
+
+  String _generateCsvContent() {
+    final loc = AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it');
+
+    // Header CSV
+    final header = [
+      loc.get('date'),
+      loc.get('category'),
+      loc.get('amount'),
+      loc.get('currency'),
+      loc.get('paid_by'),
+      loc.get('note'),
+    ].join(',');
+
+    // Ordina le spese per data
+    final sortedExpenses = List.from(_trip!.expenses)
+      ..sort((a, b) => a.date.compareTo(b.date));
+
+    // Genera le righe CSV
+    final rows = sortedExpenses.map((expense) {
+      final date =
+          '${expense.date.day.toString().padLeft(2, '0')}/${expense.date.month.toString().padLeft(2, '0')}/${expense.date.year}';
+      final category = _escapeCsvValue(expense.category);
+      final amount = expense.amount?.toStringAsFixed(2) ?? '0.00';
+      final currency = _trip!.currency;
+      final paidBy = _escapeCsvValue(expense.paidBy);
+      final note = _escapeCsvValue(expense.note ?? '');
+
+      return [date, category, amount, currency, paidBy, note].join(',');
+    }).toList();
+
+    return [header, ...rows].join('\n');
+  }
+
+  String _escapeCsvValue(String value) {
+    // Esclude i valori CSV che contengono virgole, virgolette o newline
+    if (value.contains(',') || value.contains('"') || value.contains('\n')) {
+      return '"${value.replaceAll('"', '""')}"';
+    }
+    return value;
   }
 
   @override

@@ -129,6 +129,13 @@ class AppLocalizations {
       'theme_dark': 'Dark',
       'developed_by': 'Developed by calca',
       'links': 'Links',
+
+      // Export CSV
+      'export_csv': 'Export CSV',
+      'no_expenses_to_export': 'No expenses to export',
+      'export_csv_share_text': 'Expenses exported from ',
+      'export_csv_error': 'Error exporting expenses',
+      'paid_by': 'Paid by',
     },
     'it': {
       // Saluti dinamici
@@ -268,6 +275,13 @@ class AppLocalizations {
       'theme_dark': 'Scuro',
       'developed_by': 'Sviluppato da calca',
       'links': 'Collegamenti',
+
+      // Export CSV
+      'export_csv': 'Esporta CSV',
+      'no_expenses_to_export': 'Nessuna spesa da esportare',
+      'export_csv_share_text': 'Spese esportate da ',
+      'export_csv_error': 'Errore nell\'esportazione delle spese',
+      'paid_by': 'Pagato da',
     },
   };
 

@@ -70,14 +70,14 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     } else {
       _date = DateTime.now();
     }
-    
+
     // Listener per aggiornare la validazione in tempo reale
     _amountController.addListener(() {
       setState(() {
         _amount = double.tryParse(_amountController.text);
       });
     });
-    
+
     // Focus automatico su importo
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _amountFocus.requestFocus();
@@ -135,7 +135,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     bool hasCategoryIfRequired =
         _categories.isNotEmpty ? _category != null : true;
     bool hasPaidBy = _paidBy != null;
-    
+
     return hasValidAmount && hasCategoryIfRequired && hasPaidBy;
   }
 
@@ -290,8 +290,10 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                       child: Text(
                         _getValidationMessage(),
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onErrorContainer,
-                        ),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onErrorContainer,
+                            ),
                       ),
                     ),
                   ],
