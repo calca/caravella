@@ -3,7 +3,7 @@ import '../../../app_localizations.dart';
 import '../../../data/expense_group.dart';
 import '../../../data/expense_category.dart';
 import '../../../data/expense_group_storage.dart';
-import '../../../expense/expense_form_component.dart';
+import '../../../manager/expense/expense_form_component.dart';
 import '../../../widgets/currency_display.dart';
 import 'mini_expense_chart.dart';
 

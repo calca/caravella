@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
-import '../../../expense/create_expense_group_page.dart';
+import '../../../manager/group/create_expense_group_page.dart';
 import '../../../widgets/base_card.dart';
 
 class NewGroupCard extends StatelessWidget {

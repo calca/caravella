@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../data/expense_details.dart';
-import '../app_localizations.dart';
-import '../state/locale_notifier.dart';
-import '../widgets/themed_outlined_button.dart';
+import '../../data/expense_details.dart';
+import '../../app_localizations.dart';
+import '../../state/locale_notifier.dart';
+import '../../widgets/themed_outlined_button.dart';
 
 class ExpenseFormComponent extends StatefulWidget {
   final List<String> participants;

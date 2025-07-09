@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:org_app_caravella/manager/details/tabs/expenses_action_result.dart';
 import '../../data/expense_details.dart';
 import '../../data/expense_group.dart';
-import '../../expense/expense_edit_page.dart';
+import '../expense/expense_edit_page.dart';
 import '../../data/expense_group_storage.dart';
 import '../group/add_new_expenses_group.dart';
 import '../../app_localizations.dart';
