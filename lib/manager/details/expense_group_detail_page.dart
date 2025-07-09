@@ -64,6 +64,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           loc: AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it'),
           tripStartDate: _trip!.startDate,
           tripEndDate: _trip!.endDate,
+          groupId: _trip!.id, // Aggiungi l'ID del gruppo
         ),
       ),
     );
@@ -621,6 +622,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                       loc: loc,
                       tripStartDate: trip.startDate,
                       tripEndDate: trip.endDate,
+                      groupId: trip.id, // Aggiungi l'ID del gruppo
                     ),
                   ),
                 );

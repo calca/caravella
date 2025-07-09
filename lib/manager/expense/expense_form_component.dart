@@ -45,10 +45,12 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   final _amountController = TextEditingController();
   final FocusNode _amountFocus = FocusNode();
   final TextEditingController _noteController = TextEditingController();
+  late List<String> _categories; // Lista locale delle categorie
 
   @override
   void initState() {
     super.initState();
+    _categories = List.from(widget.categories); // Copia della lista originale
     if (widget.initialExpense != null) {
       _category = widget.initialExpense!.category;
       _amount = widget.initialExpense!.amount;
@@ -68,6 +70,15 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     });
   }
 
+  @override
+  void didUpdateWidget(ExpenseFormComponent oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Aggiorna la lista locale se quella del widget è cambiata
+    if (oldWidget.categories != widget.categories) {
+      _categories = List.from(widget.categories);
+    }
+  }
+
   void _saveExpense() {
     setState(() {});
     // Always save the form to update _amount
@@ -76,7 +87,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     // Applica la validazione completa prima di salvare
     bool isFormValid = _formKey.currentState!.validate();
     bool hasCategoryIfRequired =
-        widget.categories.isNotEmpty ? _category != null : true;
+        _categories.isNotEmpty ? _category != null : true;
     bool hasPaidBy = _paidBy != null;
 
     if (isFormValid && hasCategoryIfRequired && hasPaidBy) {
@@ -170,9 +181,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                   alignment: Alignment.bottomCenter,
                   child: Text(
                     // Mostra la currency del viaggio se disponibile
-                    (widget.categories.isNotEmpty &&
-                            widget.categories.first.startsWith('€'))
-                        ? widget.categories.first
+                    (_categories.isNotEmpty &&
+                            _categories.first.startsWith('€'))
+                        ? _categories.first
                         : '€',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(),
                   ),
@@ -266,8 +277,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
-                        children: widget.categories.isNotEmpty
-                            ? widget.categories.map((cat) {
+                        children: _categories.isNotEmpty
+                            ? _categories.map((cat) {
                                 return Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 4.0),
@@ -365,9 +376,15 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                       ),
                     );
                     if (newCategory != null && newCategory.isNotEmpty) {
+                      // Aggiorna la lista locale delle categorie
                       setState(() {
-                        widget.categories.add(newCategory);
+                        if (!_categories.contains(newCategory)) {
+                          _categories.add(newCategory);
+                        }
+                        _category = newCategory;
                       });
+
+                      // Notifica al parent tramite callback
                       if (widget.onCategoryAdded != null) {
                         widget.onCategoryAdded!(newCategory);
                       }
