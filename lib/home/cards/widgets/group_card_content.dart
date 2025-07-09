@@ -212,31 +212,30 @@ class GroupCardContent extends StatelessWidget {
 
         const SizedBox(height: 8),
 
-        // Seconda riga: Date e Totale integrati
+        // Date range (if available)
+        if (group.startDate != null || group.endDate != null)
+          Text(
+            _formatDateRange(group, localizations),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        
+        if (group.startDate != null || group.endDate != null)
+          const SizedBox(height: 8),
+
+        // Total expenses - full width aligned right
         Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            if (group.startDate != null || group.endDate != null)
-              Expanded(
-                child: Text(
-                  _formatDateRange(group, localizations),
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              )
-            else
-              const Expanded(child: SizedBox()),
-            Expanded(
-              child: CurrencyDisplay(
-                value: totalExpenses,
-                currency: '€',
-                valueFontSize: 36.0,
-                currencyFontSize: 24.0,
-                alignment: MainAxisAlignment.end,
-                showDecimals: true,
-                color: theme.colorScheme.onSurface,
-              ),
+            CurrencyDisplay(
+              value: totalExpenses,
+              currency: '€',
+              valueFontSize: 52.0,
+              currencyFontSize: 32.0,
+              alignment: MainAxisAlignment.end,
+              showDecimals: true,
+              color: theme.colorScheme.onSurface,
             ),
           ],
         ),
