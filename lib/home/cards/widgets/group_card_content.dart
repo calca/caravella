@@ -259,36 +259,40 @@ class GroupCardContent extends StatelessWidget {
             ),
             // Spacer to push last 7 days to the right
             Expanded(child: Container()),
-            // Last 7 days - right aligned
-            _buildLabeledStat(
-              icon: Icons.trending_up,
-              value: recentExpensesTotal,
-              label: localizations.get('last_7_days'),
-              isCurrency: true,
-            ),
-          ],
-        ),
-
-        const SizedBox(height: 28),
-
-        // Grafico con più spazio respirabile
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              localizations.get('recent_activity'),
-              style: theme.textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: theme.colorScheme.onSurface,
+            // Last 7 days - right aligned (solo se maggiore di 0)
+            if (recentExpensesTotal > 0)
+              _buildLabeledStat(
+                icon: Icons.trending_up,
+                value: recentExpensesTotal,
+                label: localizations.get('last_7_days'),
+                isCurrency: true,
               ),
-            ),
-            const SizedBox(height: 12),
-            SizedBox(
-              height: 60, // Aumentato per il nuovo grafico
-              child: MiniExpenseChart(group: group, theme: theme),
-            ),
           ],
         ),
+
+        // Mostra la sezione attività recenti solo se ci sono spese
+        if (group.expenses.isNotEmpty) ...[
+          const SizedBox(height: 28),
+          
+          // Grafico con più spazio respirabile
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                localizations.get('recent_activity'),
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: theme.colorScheme.onSurface,
+                ),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                height: 60, // Aumentato per il nuovo grafico
+                child: MiniExpenseChart(group: group, theme: theme),
+              ),
+            ],
+          ),
+        ],
 
         // Spacer per spingere il bottone sempre in fondo
         const Spacer(),
