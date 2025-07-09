@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
 import '../../../data/expense_group.dart';
+import '../../../data/expense_group_storage.dart';
 import 'group_card.dart';
 import 'new_group_card.dart';
 
@@ -27,16 +28,56 @@ class HorizontalGroupsList extends StatefulWidget {
 class _HorizontalGroupsListState extends State<HorizontalGroupsList> {
   late PageController _pageController;
   double _currentPage = 0.0;
+  late List<ExpenseGroup> _localGroups;
 
   @override
   void initState() {
     super.initState();
+    _localGroups = List.from(widget.groups);
     _pageController = PageController(viewportFraction: 0.85);
     _pageController.addListener(() {
       setState(() {
         _currentPage = _pageController.page ?? 0.0;
       });
     });
+  }
+
+  @override
+  void didUpdateWidget(HorizontalGroupsList oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Aggiorna solo se i gruppi sono effettivamente cambiati
+    if (oldWidget.groups != widget.groups) {
+      _localGroups = List.from(widget.groups);
+    }
+  }
+
+  Future<void> _updateGroupLocally(String groupId) async {
+    try {
+      final groups = await ExpenseGroupStorage.getAllGroups();
+      final updatedGroup = groups.firstWhere((g) => g.id == groupId);
+
+      setState(() {
+        final index = _localGroups.indexWhere((g) => g.id == groupId);
+        if (index != -1) {
+          _localGroups[index] = updatedGroup;
+        }
+      });
+    } catch (e) {
+      // Fallback al callback originale se c'è un errore
+      widget.onGroupUpdated();
+    }
+  }
+
+  void _handleGroupUpdated([String? groupId]) {
+    if (groupId != null) {
+      _updateGroupLocally(groupId);
+    } else {
+      widget.onGroupUpdated();
+    }
+  }
+
+  void _handleCategoryAdded() {
+    widget.onCategoryAdded?.call();
   }
 
   @override
@@ -48,7 +89,7 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList> {
   @override
   Widget build(BuildContext context) {
     // Total items include all groups plus the new group card
-    final totalItems = widget.groups.length + 1;
+    final totalItems = _localGroups.length + 1;
 
     return PageView.builder(
       itemCount: totalItems,
@@ -60,7 +101,7 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList> {
         final bool isSelected = distanceFromCenter < 0.5;
 
         // If this is the last index, show the new group card
-        if (index == widget.groups.length) {
+        if (index == _localGroups.length) {
           return AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut,
@@ -72,7 +113,7 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList> {
             child: NewGroupCard(
               localizations: widget.localizations,
               theme: widget.theme,
-              onGroupAdded: widget.onGroupUpdated,
+              onGroupAdded: _handleGroupUpdated,
               isSelected: isSelected,
               selectionProgress: 1.0 - distanceFromCenter.clamp(0.0, 1.0),
             ),
@@ -80,7 +121,7 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList> {
         }
 
         // Otherwise show a regular group card
-        final group = widget.groups[index];
+        final group = _localGroups[index];
         return AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
@@ -93,8 +134,8 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList> {
             group: group,
             localizations: widget.localizations,
             theme: widget.theme,
-            onGroupUpdated: widget.onGroupUpdated,
-            onCategoryAdded: widget.onCategoryAdded,
+            onGroupUpdated: () => _handleGroupUpdated(group.id),
+            onCategoryAdded: _handleCategoryAdded,
             isSelected: isSelected,
             selectionProgress: 1.0 - distanceFromCenter.clamp(0.0, 1.0),
           ),

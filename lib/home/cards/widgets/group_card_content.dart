@@ -163,8 +163,11 @@ class GroupCardContent extends StatelessWidget {
                       // Save the expense to the group
                       await _saveExpenseToGroup(expense);
                       if (context.mounted) {
+                        // Brief delay per permettere all'utente di vedere il feedback
+                        await Future.delayed(const Duration(milliseconds: 100));
                         Navigator.pop(context);
                       }
+                      // Callback per aggiornare la UI, mantenendo la posizione corrente
                       onExpenseAdded();
                     },
                     onCategoryAdded: (newCategory) async {
