@@ -110,21 +110,23 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             
             // Contenuto scrollabile
             Flexible(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.only(
-                  left: 20,
-                  right: 20,
-                  top: 16,
-                  bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-                ),
-                child: ExpenseFormComponent(
-                  initialExpense: expense,
-                  participants: _trip!.participants.map((p) => p.name).toList(),
-                  categories: _trip!.categories.map((c) => c.name).toList(),
-                  tripStartDate: _trip!.startDate,
-                  tripEndDate: _trip!.endDate,
-                  shouldAutoClose: false,
-                  onExpenseAdded: (updatedExpense) async {
+              child: SafeArea(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.only(
+                    left: 20,
+                    right: 20,
+                    top: 16,
+                    bottom: MediaQuery.of(context).viewInsets.bottom + 
+                            MediaQuery.of(context).padding.bottom + 20,
+                  ),
+                  child: ExpenseFormComponent(
+                    initialExpense: expense,
+                    participants: _trip!.participants.map((p) => p.name).toList(),
+                    categories: _trip!.categories.map((c) => c.name).toList(),
+                    tripStartDate: _trip!.startDate,
+                    tripEndDate: _trip!.endDate,
+                    shouldAutoClose: false,
+                    onExpenseAdded: (updatedExpense) async {
                     // Aggiorna la spesa esistente
                     final expenseWithId = ExpenseDetails(
                       id: expense.id,
@@ -169,6 +171,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                       await ExpenseGroupStorage.writeTrips(trips);
                     }
                   },
+                  ),
                 ),
               ),
             ),
@@ -561,14 +564,16 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             
             // Contenuto scrollabile
             Flexible(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.only(
-                  left: 20,
-                  right: 20,
-                  top: 16,
-                  bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-                ),
-                child: ExpenseFormComponent(
+              child: SafeArea(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.only(
+                    left: 20,
+                    right: 20,
+                    top: 16,
+                    bottom: MediaQuery.of(context).viewInsets.bottom + 
+                            MediaQuery.of(context).padding.bottom + 20,
+                  ),
+                  child: ExpenseFormComponent(
                   participants: _trip!.participants.map((p) => p.name).toList(),
                   categories: _trip!.categories.map((c) => c.name).toList(),
                   tripStartDate: _trip!.startDate,
@@ -616,6 +621,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                       await ExpenseGroupStorage.writeTrips(trips);
                     }
                   },
+                  ),
                 ),
               ),
             ),

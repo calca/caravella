@@ -126,14 +126,16 @@ class GroupCardContent extends StatelessWidget {
             
             // Contenuto scrollabile
             Flexible(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.only(
-                  left: 20,
-                  right: 20,
-                  top: 16,
-                  bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-                ),
-                child: ExpenseFormComponent(
+              child: SafeArea(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.only(
+                    left: 20,
+                    right: 20,
+                    top: 16,
+                    bottom: MediaQuery.of(context).viewInsets.bottom + 
+                            MediaQuery.of(context).padding.bottom + 20,
+                  ),
+                  child: ExpenseFormComponent(
                   participants: group.participants.map((p) => p.name).toList(),
                   categories: group.categories.map((c) => c.name).toList(),
                   onExpenseAdded: (expense) async {
@@ -149,6 +151,7 @@ class GroupCardContent extends StatelessWidget {
                     await _saveCategoryToGroup(newCategory);
                   },
                   shouldAutoClose: false,
+                  ),
                 ),
               ),
             ),
