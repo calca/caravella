@@ -49,7 +49,7 @@ class DateSelectorWidget extends StatelessWidget {
                 selectedDate != null
                     ? '${selectedDate!.day.toString().padLeft(2, '0')}/${selectedDate!.month.toString().padLeft(2, '0')}/${selectedDate!.year}'
                     : loc.get('select_expense_date_short'),
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(),
               ),
               const SizedBox(width: 6),
               Icon(

@@ -30,9 +30,9 @@ class AmountInputWidget extends StatelessWidget {
           child: TextFormField(
             controller: controller,
             focusNode: focusNode,
-            style: Theme.of(context).textTheme.displayMedium?.copyWith(),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(),
             decoration: InputDecoration(
-              labelText: loc.get('amount'),
+              labelText: '${loc.get('amount')} *',
               labelStyle: Theme.of(context).textTheme.titleMedium,
             ),
             keyboardType: const TextInputType.numberWithOptions(decimal: true),

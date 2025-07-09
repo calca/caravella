@@ -52,6 +52,16 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   final FocusNode _amountFocus = FocusNode();
   final TextEditingController _noteController = TextEditingController();
   late List<String> _categories; // Lista locale delle categorie
+  
+  // Stato per validazione in tempo reale
+  bool _amountTouched = false;
+  bool _paidByTouched = false;
+  bool _categoryTouched = false;
+  
+  // Getters per stato dei campi
+  bool get _isAmountValid => _amount != null && _amount! > 0;
+  bool get _isPaidByValid => _paidBy != null;
+  bool get _isCategoryValid => _categories.isEmpty || _category != null;
 
   @override
   void initState() {
@@ -75,6 +85,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     _amountController.addListener(() {
       setState(() {
         _amount = double.tryParse(_amountController.text);
+        _amountTouched = true;
       });
     });
 
@@ -130,29 +141,34 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   }
 
   bool _isFormValid() {
-    // Controlla se il form è valido senza chiamare validate()
+    // SET MINIMO DI INFORMAZIONI NECESSARIE per abilitare il pulsante:
+    // 1. Importo valido (> 0)
     bool hasValidAmount = _amount != null && _amount! > 0;
-    bool hasCategoryIfRequired =
-        _categories.isNotEmpty ? _category != null : true;
-    bool hasPaidBy = _paidBy != null;
+    
+    // 2. Partecipante selezionato (chi ha pagato)
+    bool hasPaidBy = _paidBy != null && _paidBy!.isNotEmpty;
+    
+    // 3. Categoria selezionata (solo se esistono categorie)
+    bool hasCategoryIfRequired = _categories.isEmpty || 
+        (_category != null && _category!.isNotEmpty);
 
-    return hasValidAmount && hasCategoryIfRequired && hasPaidBy;
+    // Il pulsante è abilitato SOLO se tutti i requisiti sono soddisfatti
+    return hasValidAmount && hasPaidBy && hasCategoryIfRequired;
   }
 
-  String _getValidationMessage() {
-    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    final loc = AppLocalizations(locale);
-
-    if (_amount == null || _amount! <= 0) {
-      return loc.get('invalid_amount');
-    }
-    if (_paidBy == null) {
-      return loc.get('select_paid_by');
-    }
-    if (widget.categories.isNotEmpty && _category == null) {
-      return loc.get('select_category');
-    }
-    return loc.get('check_form');
+  // Widget per indicatori di stato - versione minimalista
+  Widget _buildFieldWithStatus(Widget field, bool isValid, bool isTouched) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        // Solo sfondo colorato se c'è un errore
+        color: isTouched && !isValid 
+            ? Theme.of(context).colorScheme.errorContainer.withOpacity(0.08)
+            : null,
+      ),
+      child: field,
+    );
   }
 
   @override
@@ -175,76 +191,95 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
               ),
               const SizedBox(height: 16),
             ],
-            // IMPORTO + CURRENCY
-            AmountInputWidget(
-              controller: _amountController,
-              focusNode: _amountFocus,
-              categories: _categories,
-              loc: loc,
-              validator: (v) => v == null || double.tryParse(v) == null
-                  ? loc.get('invalid_amount')
-                  : null,
-              onSaved: (v) {
-                // Non necessario più, viene gestito dal listener
-              },
-              onSubmitted: _saveExpense,
+            
+            // IMPORTO + CURRENCY con status
+            _buildFieldWithStatus(
+              AmountInputWidget(
+                controller: _amountController,
+                focusNode: _amountFocus,
+                categories: _categories,
+                loc: loc,
+                validator: (v) => v == null || double.tryParse(v) == null
+                    ? loc.get('invalid_amount')
+                    : null,
+                onSaved: (v) {
+                  // Non necessario più, viene gestito dal listener
+                },
+                onSubmitted: _saveExpense,
+              ),
+              _isAmountValid,
+              _amountTouched,
             ),
             const SizedBox(height: 16),
-            // PAID BY (chip)
-            ParticipantSelectorWidget(
-              participants: widget.participants,
-              selectedParticipant: _paidBy,
-              onParticipantSelected: (selected) {
-                setState(() {
-                  _paidBy = selected;
-                });
-              },
-              loc: loc,
-            ),
-            const SizedBox(height: 16),
-            // CATEGORIE
-            CategorySelectorWidget(
-              categories: _categories,
-              selectedCategory: _category,
-              onCategorySelected: (selected) {
-                setState(() {
-                  _category = selected;
-                });
-              },
-              onAddCategory: () async {
-                final newCategory = await CategoryDialog.show(
-                  context: context,
-                  loc: loc,
-                );
-                if (newCategory != null && newCategory.isNotEmpty) {
-                  // Prima notifica al parent tramite callback
-                  if (widget.onCategoryAdded != null) {
-                    widget.onCategoryAdded!(newCategory);
-                  }
-
-                  // Aggiorna immediatamente la lista locale
+            
+            // PAID BY (chip) con status
+            _buildFieldWithStatus(
+              ParticipantSelectorWidget(
+                participants: widget.participants,
+                selectedParticipant: _paidBy,
+                onParticipantSelected: (selected) {
                   setState(() {
-                    if (!_categories.contains(newCategory)) {
-                      _categories.add(newCategory);
-                    }
-                    _category = newCategory;
+                    _paidBy = selected;
+                    _paidByTouched = true;
                   });
-
-                  // Aspetta un momento per permettere al parent di elaborare
-                  await Future.delayed(const Duration(milliseconds: 100));
-
-                  // Verifica se la categoria è stata aggiunta alla lista del parent
-                  if (widget.categories.contains(newCategory)) {
-                    // Se sì, aggiorna la lista locale con quella del parent
-                    setState(() {
-                      _categories = List.from(widget.categories);
-                    });
-                  }
-                }
-              },
-              loc: loc,
+                },
+                loc: loc,
+              ),
+              _isPaidByValid,
+              _paidByTouched,
             ),
             const SizedBox(height: 16),
+            
+            // CATEGORIE con status
+            _buildFieldWithStatus(
+              CategorySelectorWidget(
+                categories: _categories,
+                selectedCategory: _category,
+                onCategorySelected: (selected) {
+                  setState(() {
+                    _category = selected;
+                    _categoryTouched = true;
+                  });
+                },
+                onAddCategory: () async {
+                  final newCategory = await CategoryDialog.show(
+                    context: context,
+                    loc: loc,
+                  );
+                  if (newCategory != null && newCategory.isNotEmpty) {
+                    // Prima notifica al parent tramite callback
+                    if (widget.onCategoryAdded != null) {
+                      widget.onCategoryAdded!(newCategory);
+                    }
+
+                    // Aggiorna immediatamente la lista locale
+                    setState(() {
+                      if (!_categories.contains(newCategory)) {
+                        _categories.add(newCategory);
+                      }
+                      _category = newCategory;
+                      _categoryTouched = true;
+                    });
+
+                    // Aspetta un momento per permettere al parent di elaborare
+                    await Future.delayed(const Duration(milliseconds: 100));
+
+                    // Verifica se la categoria è stata aggiunta alla lista del parent
+                    if (widget.categories.contains(newCategory)) {
+                      // Se sì, aggiorna la lista locale con quella del parent
+                      setState(() {
+                        _categories = List.from(widget.categories);
+                      });
+                    }
+                  }
+                },
+                loc: loc,
+              ),
+              _isCategoryValid,
+              _categoryTouched,
+            ),
+            const SizedBox(height: 16),
+            
             // DATA (bottone con data + icona, angoli arrotondati, sfondo grigio coerente col tema)
             if (widget.initialExpense != null ||
                 (ModalRoute.of(context)?.settings.name != null))
@@ -261,6 +296,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                 locale: locale,
               ),
             const SizedBox(height: 16),
+            
             // NOTE
             if (widget.initialExpense != null) ...[
               NoteInputWidget(
@@ -269,41 +305,11 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
               ),
               const SizedBox(height: 16),
             ],
-            // Messaggio di errore se il form non è valido
-            if (!_isFormValid()) ...[
-              Container(
-                margin: const EdgeInsets.only(bottom: 16),
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.errorContainer,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.warning_amber_rounded,
-                      size: 16,
-                      color: Theme.of(context).colorScheme.onErrorContainer,
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        _getValidationMessage(),
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onErrorContainer,
-                            ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+            
             // Pulsanti di azione
             ExpenseFormActionsWidget(
               onCancel: () => Navigator.of(context).pop(),
-              onSave: _isFormValid() ? _saveExpense : () {},
+              onSave: _isFormValid() ? _saveExpense : null,
               loc: loc,
             ),
             const SizedBox(height: 8),

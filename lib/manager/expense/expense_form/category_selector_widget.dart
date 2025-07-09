@@ -20,72 +20,86 @@ class CategorySelectorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: categories.isNotEmpty
-                    ? categories.map((cat) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          child: ChoiceChip(
-                            label: Text(cat),
-                            selected: selectedCategory == cat,
-                            labelStyle: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(
-                                  color: selectedCategory == cat
-                                      ? Theme.of(context)
-                                          .colorScheme
-                                          .onPrimaryContainer
-                                      : Theme.of(context).colorScheme.onSurface,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                            backgroundColor: selectedCategory == cat
-                                ? null
-                                : Theme.of(context)
-                                    .colorScheme
-                                    .surfaceContainerHighest,
-                            selectedColor:
-                                Theme.of(context).colorScheme.primaryContainer,
-                            side: BorderSide(
-                              color: selectedCategory == cat
-                                  ? Theme.of(context).colorScheme.primary
-                                  : Theme.of(context)
-                                      .colorScheme
-                                      .outline
-                                      .withValues(alpha: 0.3),
-                              width: 1,
-                            ),
-                            onSelected: (selected) {
-                              onCategorySelected(selected ? cat : null);
-                            },
-                          ),
-                        );
-                      }).toList()
-                    : [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          child: Text(
-                            loc.get('no_categories'),
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ),
-                      ],
-              ),
+        // Etichetta con asterisco per campo obbligatorio (solo se ci sono categorie)
+        if (categories.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Text(
+              '${loc.get('category')} *',
+              style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
-        ),
-        ThemedOutlinedButton.icon(
-          onPressed: onAddCategory,
-          icon: const Icon(Icons.add, size: 22),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: categories.isNotEmpty
+                        ? categories.map((cat) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                              child: ChoiceChip(
+                                label: Text(cat),
+                                selected: selectedCategory == cat,
+                                labelStyle: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      color: selectedCategory == cat
+                                          ? Theme.of(context)
+                                              .colorScheme
+                                              .onPrimaryContainer
+                                          : Theme.of(context).colorScheme.onSurface,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                backgroundColor: selectedCategory == cat
+                                    ? null
+                                    : Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainerHighest,
+                                selectedColor:
+                                    Theme.of(context).colorScheme.primaryContainer,
+                                side: BorderSide(
+                                  color: selectedCategory == cat
+                                      ? Theme.of(context).colorScheme.primary
+                                      : Theme.of(context)
+                                          .colorScheme
+                                          .outline
+                                          .withValues(alpha: 0.3),
+                                  width: 1,
+                                ),
+                                onSelected: (selected) {
+                                  onCategorySelected(selected ? cat : null);
+                                },
+                              ),
+                            );
+                          }).toList()
+                        : [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                              child: Text(
+                                loc.get('no_categories'),
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ),
+                          ],
+                  ),
+                ),
+              ),
+            ),
+            ThemedOutlinedButton.icon(
+              onPressed: onAddCategory,
+              icon: const Icon(Icons.add, size: 22),
+            ),
+          ],
         ),
       ],
     );

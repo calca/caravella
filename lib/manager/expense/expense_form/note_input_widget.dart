@@ -28,6 +28,7 @@ class NoteInputWidget extends StatelessWidget {
           controller: controller,
           maxLines: 4,
           minLines: 2,
+          style: Theme.of(context).textTheme.bodyMedium,
           decoration: InputDecoration(
             hintText: loc.get('note_hint'),
             border: const OutlineInputBorder(),

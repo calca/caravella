@@ -4,7 +4,7 @@ import '../../../widgets/themed_outlined_button.dart';
 
 class ExpenseFormActionsWidget extends StatelessWidget {
   final VoidCallback onCancel;
-  final VoidCallback onSave;
+  final VoidCallback? onSave;
   final AppLocalizations loc;
 
   const ExpenseFormActionsWidget({
