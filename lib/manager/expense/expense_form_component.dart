@@ -70,6 +70,14 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     } else {
       _date = DateTime.now();
     }
+    
+    // Listener per aggiornare la validazione in tempo reale
+    _amountController.addListener(() {
+      setState(() {
+        _amount = double.tryParse(_amountController.text);
+      });
+    });
+    
     // Focus automatico su importo
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _amountFocus.requestFocus();
@@ -117,15 +125,18 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       if (widget.shouldAutoClose) {
         Navigator.of(context).pop();
       }
-    } else {
-      // Mostra un feedback visivo se la validazione fallisce
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(_getValidationMessage()),
-          backgroundColor: Theme.of(context).colorScheme.error,
-        ),
-      );
     }
+    // Rimuoviamo la SnackBar perché ora mostriamo il messaggio nel widget
+  }
+
+  bool _isFormValid() {
+    // Controlla se il form è valido senza chiamare validate()
+    bool hasValidAmount = _amount != null && _amount! > 0;
+    bool hasCategoryIfRequired =
+        _categories.isNotEmpty ? _category != null : true;
+    bool hasPaidBy = _paidBy != null;
+    
+    return hasValidAmount && hasCategoryIfRequired && hasPaidBy;
   }
 
   String _getValidationMessage() {
@@ -173,7 +184,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
               validator: (v) => v == null || double.tryParse(v) == null
                   ? loc.get('invalid_amount')
                   : null,
-              onSaved: (v) => _amount = double.tryParse(v ?? ''),
+              onSaved: (v) {
+                // Non necessario più, viene gestito dal listener
+              },
               onSubmitted: _saveExpense,
             ),
             const SizedBox(height: 16),
@@ -219,7 +232,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
 
                   // Aspetta un momento per permettere al parent di elaborare
                   await Future.delayed(const Duration(milliseconds: 100));
-                  
+
                   // Verifica se la categoria è stata aggiunta alla lista del parent
                   if (widget.categories.contains(newCategory)) {
                     // Se sì, aggiorna la lista locale con quella del parent
@@ -256,10 +269,39 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
               ),
               const SizedBox(height: 16),
             ],
+            // Messaggio di errore se il form non è valido
+            if (!_isFormValid()) ...[
+              Container(
+                margin: const EdgeInsets.only(bottom: 16),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.errorContainer,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.warning_amber_rounded,
+                      size: 16,
+                      color: Theme.of(context).colorScheme.onErrorContainer,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        _getValidationMessage(),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.onErrorContainer,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
             // Pulsanti di azione
             ExpenseFormActionsWidget(
               onCancel: () => Navigator.of(context).pop(),
-              onSave: _saveExpense,
+              onSave: _isFormValid() ? _saveExpense : () {},
               loc: loc,
             ),
             const SizedBox(height: 8),
