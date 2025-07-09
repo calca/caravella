@@ -227,7 +227,7 @@ class GroupCardContent extends StatelessWidget {
               )
             else
               const Expanded(child: SizedBox()),
-            Flexible(
+            Expanded(
               child: CurrencyDisplay(
                 value: totalExpenses,
                 currency: '€',
