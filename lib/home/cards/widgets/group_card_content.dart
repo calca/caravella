@@ -38,7 +38,12 @@ class GroupCardContent extends StatelessWidget {
   }
 
   String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
+    final currentYear = DateTime.now().year;
+    if (date.year == currentYear) {
+      return '${date.day}/${date.month}';
+    } else {
+      return '${date.day}/${date.month}/${date.year}';
+    }
   }
 
   Future<void> _saveExpenseToGroup(dynamic expense) async {
