@@ -123,7 +123,7 @@ class GroupCardContent extends StatelessWidget {
               ),
             ),
             const Divider(height: 1),
-            
+
             // Contenuto scrollabile
             Flexible(
               child: SafeArea(
@@ -132,25 +132,27 @@ class GroupCardContent extends StatelessWidget {
                     left: 20,
                     right: 20,
                     top: 16,
-                    bottom: MediaQuery.of(context).viewInsets.bottom + 
-                            MediaQuery.of(context).padding.bottom + 20,
+                    bottom: MediaQuery.of(context).viewInsets.bottom +
+                        MediaQuery.of(context).padding.bottom +
+                        20,
                   ),
                   child: ExpenseFormComponent(
-                  participants: group.participants.map((p) => p.name).toList(),
-                  categories: group.categories.map((c) => c.name).toList(),
-                  onExpenseAdded: (expense) async {
-                    // Save the expense to the group
-                    await _saveExpenseToGroup(expense);
-                    if (context.mounted) {
-                      Navigator.pop(context);
-                    }
-                    onExpenseAdded();
-                  },
-                  onCategoryAdded: (newCategory) async {
-                    // Save the new category to the group
-                    await _saveCategoryToGroup(newCategory);
-                  },
-                  shouldAutoClose: false,
+                    participants:
+                        group.participants.map((p) => p.name).toList(),
+                    categories: group.categories.map((c) => c.name).toList(),
+                    onExpenseAdded: (expense) async {
+                      // Save the expense to the group
+                      await _saveExpenseToGroup(expense);
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                      }
+                      onExpenseAdded();
+                    },
+                    onCategoryAdded: (newCategory) async {
+                      // Save the new category to the group
+                      await _saveCategoryToGroup(newCategory);
+                    },
+                    shouldAutoClose: false,
                   ),
                 ),
               ),

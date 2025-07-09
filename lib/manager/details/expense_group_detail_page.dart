@@ -57,7 +57,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
 
   Future<void> _openEditExpense(ExpenseDetails expense) async {
     final loc = AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it');
-    
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -107,7 +107,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               ),
             ),
             const Divider(height: 1),
-            
+
             // Contenuto scrollabile
             Flexible(
               child: SafeArea(
@@ -116,61 +116,66 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                     left: 20,
                     right: 20,
                     top: 16,
-                    bottom: MediaQuery.of(context).viewInsets.bottom + 
-                            MediaQuery.of(context).padding.bottom + 20,
+                    bottom: MediaQuery.of(context).viewInsets.bottom +
+                        MediaQuery.of(context).padding.bottom +
+                        20,
                   ),
                   child: ExpenseFormComponent(
                     initialExpense: expense,
-                    participants: _trip!.participants.map((p) => p.name).toList(),
+                    participants:
+                        _trip!.participants.map((p) => p.name).toList(),
                     categories: _trip!.categories.map((c) => c.name).toList(),
                     tripStartDate: _trip!.startDate,
                     tripEndDate: _trip!.endDate,
                     shouldAutoClose: false,
                     onExpenseAdded: (updatedExpense) async {
-                    // Aggiorna la spesa esistente
-                    final expenseWithId = ExpenseDetails(
-                      id: expense.id,
-                      category: updatedExpense.category,
-                      amount: updatedExpense.amount,
-                      paidBy: updatedExpense.paidBy,
-                      date: updatedExpense.date,
-                      note: updatedExpense.note,
-                    );
-                    
-                    setState(() {
-                      final index = _trip!.expenses.indexWhere((e) => e.id == expense.id);
-                      if (index != -1) {
-                        _trip!.expenses[index] = expenseWithId;
+                      // Aggiorna la spesa esistente
+                      final expenseWithId = ExpenseDetails(
+                        id: expense.id,
+                        category: updatedExpense.category,
+                        amount: updatedExpense.amount,
+                        paidBy: updatedExpense.paidBy,
+                        date: updatedExpense.date,
+                        note: updatedExpense.note,
+                      );
+
+                      setState(() {
+                        final index = _trip!.expenses
+                            .indexWhere((e) => e.id == expense.id);
+                        if (index != -1) {
+                          _trip!.expenses[index] = expenseWithId;
+                        }
+                      });
+
+                      // Salva le modifiche
+                      final trips = await ExpenseGroupStorage.getAllGroups();
+                      final tripIndex =
+                          trips.indexWhere((t) => t.id == _trip!.id);
+                      if (tripIndex != -1) {
+                        trips[tripIndex] = _trip!;
+                        await ExpenseGroupStorage.writeTrips(trips);
                       }
-                    });
-                    
-                    // Salva le modifiche
-                    final trips = await ExpenseGroupStorage.getAllGroups();
-                    final tripIndex = trips.indexWhere((t) => t.id == _trip!.id);
-                    if (tripIndex != -1) {
-                      trips[tripIndex] = _trip!;
-                      await ExpenseGroupStorage.writeTrips(trips);
-                    }
-                    
-                    if (context.mounted) {
-                      Navigator.of(context).pop();
-                    }
-                  },
-                  onCategoryAdded: (categoryName) async {
-                    // Gestisci l'aggiunta di una nuova categoria
-                    final newCategory = ExpenseCategory(name: categoryName);
-                    setState(() {
-                      _trip!.categories.add(newCategory);
-                    });
-                    
-                    // Salva le modifiche
-                    final trips = await ExpenseGroupStorage.getAllGroups();
-                    final tripIndex = trips.indexWhere((t) => t.id == _trip!.id);
-                    if (tripIndex != -1) {
-                      trips[tripIndex] = _trip!;
-                      await ExpenseGroupStorage.writeTrips(trips);
-                    }
-                  },
+
+                      if (context.mounted) {
+                        Navigator.of(context).pop();
+                      }
+                    },
+                    onCategoryAdded: (categoryName) async {
+                      // Gestisci l'aggiunta di una nuova categoria
+                      final newCategory = ExpenseCategory(name: categoryName);
+                      setState(() {
+                        _trip!.categories.add(newCategory);
+                      });
+
+                      // Salva le modifiche
+                      final trips = await ExpenseGroupStorage.getAllGroups();
+                      final tripIndex =
+                          trips.indexWhere((t) => t.id == _trip!.id);
+                      if (tripIndex != -1) {
+                        trips[tripIndex] = _trip!;
+                        await ExpenseGroupStorage.writeTrips(trips);
+                      }
+                    },
                   ),
                 ),
               ),
@@ -480,7 +485,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
 
   void _showDeleteExpenseDialog(ExpenseDetails expense) {
     final loc = AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it');
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -494,12 +499,12 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           TextButton(
             onPressed: () async {
               Navigator.of(context).pop();
-              
+
               // Rimuovi la spesa
               setState(() {
                 _trip!.expenses.removeWhere((e) => e.id == expense.id);
               });
-              
+
               // Salva le modifiche
               final trips = await ExpenseGroupStorage.getAllGroups();
               final tripIndex = trips.indexWhere((t) => t.id == _trip!.id);
@@ -522,7 +527,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
 
   void _showAddExpenseSheet() {
     final loc = AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it');
-    
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -561,7 +566,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               ),
             ),
             const Divider(height: 1),
-            
+
             // Contenuto scrollabile
             Flexible(
               child: SafeArea(
@@ -570,57 +575,61 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                     left: 20,
                     right: 20,
                     top: 16,
-                    bottom: MediaQuery.of(context).viewInsets.bottom + 
-                            MediaQuery.of(context).padding.bottom + 20,
+                    bottom: MediaQuery.of(context).viewInsets.bottom +
+                        MediaQuery.of(context).padding.bottom +
+                        20,
                   ),
                   child: ExpenseFormComponent(
-                  participants: _trip!.participants.map((p) => p.name).toList(),
-                  categories: _trip!.categories.map((c) => c.name).toList(),
-                  tripStartDate: _trip!.startDate,
-                  tripEndDate: _trip!.endDate,
-                  shouldAutoClose: false,
-                  onExpenseAdded: (newExpense) async {
-                    // Genera un ID univoco per la nuova spesa
-                    final expenseWithId = ExpenseDetails(
-                      id: DateTime.now().millisecondsSinceEpoch.toString(),
-                      category: newExpense.category,
-                      amount: newExpense.amount,
-                      paidBy: newExpense.paidBy,
-                      date: newExpense.date,
-                      note: newExpense.note,
-                    );
-                    
-                    setState(() {
-                      _trip!.expenses.add(expenseWithId);
-                    });
-                    
-                    // Salva le modifiche
-                    final trips = await ExpenseGroupStorage.getAllGroups();
-                    final tripIndex = trips.indexWhere((t) => t.id == _trip!.id);
-                    if (tripIndex != -1) {
-                      trips[tripIndex] = _trip!;
-                      await ExpenseGroupStorage.writeTrips(trips);
-                    }
-                    
-                    if (context.mounted) {
-                      Navigator.of(context).pop();
-                    }
-                  },
-                  onCategoryAdded: (categoryName) async {
-                    // Gestisci l'aggiunta di una nuova categoria
-                    final newCategory = ExpenseCategory(name: categoryName);
-                    setState(() {
-                      _trip!.categories.add(newCategory);
-                    });
-                    
-                    // Salva le modifiche
-                    final trips = await ExpenseGroupStorage.getAllGroups();
-                    final tripIndex = trips.indexWhere((t) => t.id == _trip!.id);
-                    if (tripIndex != -1) {
-                      trips[tripIndex] = _trip!;
-                      await ExpenseGroupStorage.writeTrips(trips);
-                    }
-                  },
+                    participants:
+                        _trip!.participants.map((p) => p.name).toList(),
+                    categories: _trip!.categories.map((c) => c.name).toList(),
+                    tripStartDate: _trip!.startDate,
+                    tripEndDate: _trip!.endDate,
+                    shouldAutoClose: false,
+                    onExpenseAdded: (newExpense) async {
+                      // Genera un ID univoco per la nuova spesa
+                      final expenseWithId = ExpenseDetails(
+                        id: DateTime.now().millisecondsSinceEpoch.toString(),
+                        category: newExpense.category,
+                        amount: newExpense.amount,
+                        paidBy: newExpense.paidBy,
+                        date: newExpense.date,
+                        note: newExpense.note,
+                      );
+
+                      setState(() {
+                        _trip!.expenses.add(expenseWithId);
+                      });
+
+                      // Salva le modifiche
+                      final trips = await ExpenseGroupStorage.getAllGroups();
+                      final tripIndex =
+                          trips.indexWhere((t) => t.id == _trip!.id);
+                      if (tripIndex != -1) {
+                        trips[tripIndex] = _trip!;
+                        await ExpenseGroupStorage.writeTrips(trips);
+                      }
+
+                      if (context.mounted) {
+                        Navigator.of(context).pop();
+                      }
+                    },
+                    onCategoryAdded: (categoryName) async {
+                      // Gestisci l'aggiunta di una nuova categoria
+                      final newCategory = ExpenseCategory(name: categoryName);
+                      setState(() {
+                        _trip!.categories.add(newCategory);
+                      });
+
+                      // Salva le modifiche
+                      final trips = await ExpenseGroupStorage.getAllGroups();
+                      final tripIndex =
+                          trips.indexWhere((t) => t.id == _trip!.id);
+                      if (tripIndex != -1) {
+                        trips[tripIndex] = _trip!;
+                        await ExpenseGroupStorage.writeTrips(trips);
+                      }
+                    },
                   ),
                 ),
               ),
