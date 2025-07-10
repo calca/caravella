@@ -123,55 +123,6 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
     }
   }
 
-  Future<void> _pickDate(BuildContext context, bool isStart) async {
-    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    final loc = AppLocalizations(locale);
-    final now = DateTime.now();
-    final firstDate = DateTime(now.year - 5);
-    final lastDate = DateTime(now.year + 5);
-    DateTime? initialDate = isStart ? (_startDate ?? now) : (_endDate ?? now);
-    bool isSelectable(DateTime d) {
-      if (isStart && _endDate != null) return !d.isAfter(_endDate!);
-      if (!isStart && _startDate != null) return !d.isBefore(_startDate!);
-      return true;
-    }
-
-    // Se l'initialDate non è selezionabile, trova la prima data valida
-    if (!isSelectable(initialDate)) {
-      DateTime candidate = isStart ? lastDate : firstDate;
-      while (!isSelectable(candidate)) {
-        candidate = isStart
-            ? candidate.subtract(const Duration(days: 1))
-            : candidate.add(const Duration(days: 1));
-        if (candidate.isBefore(firstDate) || candidate.isAfter(lastDate)) {
-          candidate = now;
-          break;
-        }
-      }
-      initialDate = candidate;
-    }
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: initialDate,
-      firstDate: firstDate,
-      lastDate: lastDate,
-      helpText: isStart ? loc.get('select_from_date') : loc.get('select_to_date'),
-      cancelText: loc.get('cancel'),
-      confirmText: loc.get('ok'),
-      locale: Locale(locale),
-      selectableDayPredicate: isSelectable,
-    );
-    if (picked != null) {
-      setState(() {
-        if (isStart) {
-          _startDate = picked;
-        } else {
-          _endDate = picked;
-        }
-      });
-    }
-  }
-
   String _getDateRangeText(AppLocalizations loc) {
     final startFormatted = '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}';
     final endFormatted = '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}';
@@ -611,13 +562,10 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                     vertical: 12.0,
                                   ),
                                   decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .outline
-                                          .withValues(alpha: 0.3),
-                                      width: 1,
-                                    ),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainerHighest
+                                        .withValues(alpha: 0.3),
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
                                   child: Row(
@@ -833,13 +781,10 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                     vertical: 12.0,
                                   ),
                                   decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .outline
-                                          .withValues(alpha: 0.3),
-                                      width: 1,
-                                    ),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainerHighest
+                                        .withValues(alpha: 0.3),
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
                                   child: Row(
@@ -973,12 +918,10 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                             child: Container(
                               padding: const EdgeInsets.all(16),
                               decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .outline
-                                      .withValues(alpha: 0.3),
-                                ),
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .surfaceContainerHighest
+                                    .withValues(alpha: 0.3),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Column(
@@ -1011,12 +954,10 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                             child: Container(
                               padding: const EdgeInsets.all(16),
                               decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .outline
-                                      .withValues(alpha: 0.3),
-                                ),
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .surfaceContainerHighest
+                                    .withValues(alpha: 0.3),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Column(
