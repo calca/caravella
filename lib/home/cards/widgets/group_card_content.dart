@@ -164,13 +164,14 @@ class GroupCardContent extends StatelessWidget {
                     onExpenseAdded: (expense) async {
                       // Save the expense to the group
                       await _saveExpenseToGroup(expense);
-                      if (context.mounted) {
-                        // Brief delay per permettere all'utente di vedere il feedback
-                        await Future.delayed(const Duration(milliseconds: 100));
-                        Navigator.pop(context);
-                      }
+                      // Brief delay per permettere all'utente di vedere il feedback
+                      await Future.delayed(const Duration(milliseconds: 100));
                       // Callback per aggiornare la UI, mantenendo la posizione corrente
                       onExpenseAdded();
+                      // Close the modal only if context is still mounted
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                      }
                     },
                     onCategoryAdded: (newCategory) async {
                       // Save the new category to the group
