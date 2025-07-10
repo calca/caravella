@@ -362,16 +362,7 @@ class GroupCardContent extends StatelessWidget {
       child: Semantics(
         label: 'Add new expense',
         child: TextButton.icon(
-          onPressed: () async {
-            final result = await Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => AddNewExpenseGroupPage(trip: group),
-              ),
-            );
-            if (result == true && context.mounted && onUpdated != null) {
-              onUpdated!();
-            }
-          },
+          onPressed: () => _showAddExpenseSheet(context),
           style: TextButton.styleFrom(
             foregroundColor: theme.colorScheme.onSurface,
             backgroundColor:
