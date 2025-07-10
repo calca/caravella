@@ -18,16 +18,53 @@ class HomeWelcomeSection extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     final mediaQuery = MediaQuery.of(context);
-    final topPadding = mediaQuery.padding.top; // Status bar height
-    final bottomPadding = mediaQuery.padding.bottom; // Navigation bar height
+    final topPadding = mediaQuery.padding.top;
+    final bottomPadding = mediaQuery.padding.bottom;
+
+    // Adaptive color scheme for welcome screen
+    final isDarkMode = theme.brightness == Brightness.dark;
+    
+    // Beautiful gradient backgrounds
+    final backgroundGradient = isDarkMode
+        ? LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              theme.colorScheme.surface,
+              theme.colorScheme.surfaceVariant,
+            ],
+          )
+        : LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              theme.colorScheme.primary,
+              theme.colorScheme.primaryContainer,
+            ],
+          );
+    
+    final titleColor = isDarkMode 
+        ? theme.colorScheme.onSurface 
+        : theme.colorScheme.onPrimary;
+    
+    final buttonBackgroundColor = isDarkMode 
+        ? theme.colorScheme.primaryContainer 
+        : theme.colorScheme.onPrimary;
+    
+    final buttonForegroundColor = isDarkMode 
+        ? theme.colorScheme.onPrimaryContainer 
+        : theme.colorScheme.primary;
+    
+    final settingsTextColor = isDarkMode 
+        ? theme.colorScheme.primary 
+        : theme.colorScheme.onPrimary;
 
     return SizedBox(
       width: screenWidth,
-      height:
-          screenHeight, // Occupa tutta l'altezza dello schermo inclusi system UI
+      height: screenHeight,
       child: Container(
         decoration: BoxDecoration(
-          color: theme.colorScheme.primary, // Usa il colore primario del tema
+          gradient: backgroundGradient, // Use gradient instead of solid color
         ),
         child: Padding(
           padding: EdgeInsets.only(
@@ -48,8 +85,8 @@ class HomeWelcomeSection extends StatelessWidget {
                     style: theme.textTheme.headlineLarge?.copyWith(
                       fontSize: 36,
                       height: 1.2,
-                      color: theme.colorScheme
-                          .onPrimary, // Colore che contrasta con il primary
+                      color: titleColor, // Use adaptive title color
+                      fontWeight: FontWeight.bold,
                     ),
                     textAlign: TextAlign.left,
                   ),
@@ -93,9 +130,9 @@ class HomeWelcomeSection extends StatelessWidget {
                         child: Text(
                           loc.get('settings_tab').toUpperCase(),
                           style: theme.textTheme.labelLarge?.copyWith(
-                            color: theme.colorScheme
-                                .onPrimary, // Contrasta con il background primary
+                            color: settingsTextColor,
                             letterSpacing: 1.2,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
@@ -116,11 +153,12 @@ class HomeWelcomeSection extends StatelessWidget {
                           }
                         },
                         style: IconButton.styleFrom(
-                          backgroundColor: theme.colorScheme.onPrimary,
-                          foregroundColor: theme.colorScheme.primary,
+                          backgroundColor: buttonBackgroundColor,
+                          foregroundColor: buttonForegroundColor,
                           minimumSize: const Size(120, 120),
                           maximumSize: const Size(120, 120),
                           shape: const CircleBorder(),
+                          elevation: isDarkMode ? 2 : 0, // Subtle elevation in dark mode
                         ),
                         icon: Icon(
                           Icons.arrow_forward,
