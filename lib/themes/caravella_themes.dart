@@ -194,4 +194,3 @@ class CaravellaThemes {
     useMaterial3: true,
   );
 }
-}
