@@ -442,10 +442,14 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                       focusNode: _titleFocusNode,
                       autofocus: widget.trip ==
                           null, // Focus automatico solo in modalità creazione
-                      style: Theme.of(context).textTheme.bodyLarge,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
                       decoration: InputDecoration(
                         labelText: '${loc.get('group_name')} *',
-                        labelStyle: Theme.of(context).textTheme.titleMedium,
+                        labelStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
                       ),
                       validator: (v) => v == null || v.isEmpty
                           ? loc.get('enter_title')
@@ -479,9 +483,13 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                           '${loc.get('participants')} *',
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
-                        IconButton.outlined(
-                          icon: const Icon(Icons.add),
+                        IconButton.filled(
+                          icon: const Icon(Icons.add, size: 18),
                           tooltip: loc.get('add'),
+                          style: IconButton.styleFrom(
+                            padding: const EdgeInsets.all(8),
+                            minimumSize: const Size(32, 32),
+                          ),
                           onPressed: () {
                             showDialog(
                               context: context,
@@ -656,15 +664,14 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                   );
                                 },
                               ),
-                              IconButton(
+                              IconButton.filled(
                                 icon:
                                     const Icon(Icons.delete_outline, size: 20),
                                 tooltip: loc.get('delete_participant'),
                                 style: IconButton.styleFrom(
                                   backgroundColor: Theme.of(context)
                                       .colorScheme
-                                      .errorContainer
-                                      .withValues(alpha: 0.1),
+                                      .errorContainer,
                                   foregroundColor:
                                       Theme.of(context).colorScheme.error,
                                   padding: const EdgeInsets.all(8),
@@ -696,9 +703,13 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                           loc.get('categories'),
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
-                        IconButton.outlined(
-                          icon: const Icon(Icons.add),
+                        IconButton.filled(
+                          icon: const Icon(Icons.add, size: 18),
                           tooltip: loc.get('add'),
+                          style: IconButton.styleFrom(
+                            padding: const EdgeInsets.all(8),
+                            minimumSize: const Size(32, 32),
+                          ),
                           onPressed: () {
                             showDialog(
                               context: context,
@@ -874,15 +885,14 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                   );
                                 },
                               ),
-                              IconButton(
+                              IconButton.filled(
                                 icon:
                                     const Icon(Icons.delete_outline, size: 20),
                                 tooltip: loc.get('delete_category'),
                                 style: IconButton.styleFrom(
                                   backgroundColor: Theme.of(context)
                                       .colorScheme
-                                      .errorContainer
-                                      .withValues(alpha: 0.1),
+                                      .errorContainer,
                                   foregroundColor:
                                       Theme.of(context).colorScheme.error,
                                   padding: const EdgeInsets.all(8),
@@ -1103,16 +1113,32 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 ),
                 const SizedBox(height: 32),
 
-                // Bottone di salvataggio
-                SizedBox(
-                  width: double.infinity,
-                  child: ThemedOutlinedButton(
-                    onPressed: _isFormValid() ? _saveTrip : null,
-                    isPrimary: true,
-                    child: Text(loc.get('save')),
-                  ),
+                // Bottoni di azione
+                Column(
+                  children: [
+                    // Bottone Annulla
+                    SizedBox(
+                      width: double.infinity,
+                      child: ThemedOutlinedButton(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        isPrimary: false,
+                        child: Text(loc.get('cancel')),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    // Bottone Salva
+                    SizedBox(
+                      width: double.infinity,
+                      child: ThemedOutlinedButton(
+                        onPressed: _isFormValid() ? _saveTrip : null,
+                        isPrimary: true,
+                        child: Text(loc.get('save')),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 20),
+                // Spazio extra per la navigation bar
+                const SizedBox(height: 80),
               ],
             ),
           ),
