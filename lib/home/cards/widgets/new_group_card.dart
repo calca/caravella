@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../app_localizations.dart';
+import '../../app_localizations.dart';
 import '../../../manager/group/add_new_expenses_group.dart';
 import '../../../widgets/base_card.dart';
 

@@ -5,7 +5,6 @@ import '../../../data/expense_group.dart';
 import '../../../data/expense_category.dart';
 import '../../../data/expense_group_storage.dart';
 import '../../../manager/expense/expense_form_component.dart';
-import '../../../manager/group/add_new_expenses_group.dart';
 import '../../../widgets/currency_display.dart';
 import 'mini_expense_chart.dart';
 
@@ -27,7 +26,6 @@ class GroupCardContent extends StatelessWidget {
   final ThemeData theme;
   final VoidCallback onExpenseAdded;
   final VoidCallback? onCategoryAdded;
-  final VoidCallback? onUpdated; // Add this missing callback
 
   const GroupCardContent({
     super.key,
@@ -36,7 +34,6 @@ class GroupCardContent extends StatelessWidget {
     required this.theme,
     required this.onExpenseAdded,
     this.onCategoryAdded,
-    this.onUpdated, // Add this parameter
   });
 
   String _formatDateRange(ExpenseGroup group, AppLocalizations loc) {
@@ -368,8 +365,7 @@ class GroupCardContent extends StatelessWidget {
           onPressed: () async {
             final result = await Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) =>
-                    AddNewExpensesGroupPage(trip: group), // Fix class name
+                builder: (context) => AddNewExpenseGroupPage(trip: group),
               ),
             );
             if (result == true && context.mounted && onUpdated != null) {

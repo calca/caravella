@@ -2,92 +2,18 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Flutter: Debug (Development)",
+      "name": "Flutter: Debug su emulatore Android",
       "request": "launch",
       "type": "dart",
       "program": "lib/main.dart",
-      "args": [
-        "--flavor",
-        "dev",
-        "--dart-define",
-        "ENVIRONMENT=dev"
-      ]
+      "deviceId": "emulator-5554"
     },
     {
-      "name": "Flutter: Debug (Staging)",
+      "name": "Flutter: Debug su iOS Simulator",
       "request": "launch",
       "type": "dart",
       "program": "lib/main.dart",
-      "args": [
-        "--flavor",
-        "staging",
-        "--dart-define",
-        "ENVIRONMENT=staging"
-      ]
-    },
-    {
-      "name": "Flutter: Debug (Production)",
-      "request": "launch",
-      "type": "dart",
-      "program": "lib/main.dart",
-      "args": [
-        "--flavor",
-        "prod",
-        "--dart-define",
-        "ENVIRONMENT=prod"
-      ]
-    },
-    {
-      "name": "Flutter: Debug su emulatore Android (Dev)",
-      "request": "launch",
-      "type": "dart",
-      "program": "lib/main.dart",
-      "deviceId": "emulator-5554",
-      "args": [
-        "--flavor",
-        "dev",
-        "--dart-define",
-        "ENVIRONMENT=dev"
-      ]
-    },
-    {
-      "name": "Flutter: Debug su iOS Simulator (Dev)",
-      "request": "launch",
-      "type": "dart",
-      "program": "lib/main.dart",
-      "deviceId": "ios",
-      "args": [
-        "--flavor",
-        "dev",
-        "--dart-define",
-        "ENVIRONMENT=dev"
-      ]
-    },
-    {
-      "name": "Flutter: Profile (Staging)",
-      "request": "launch",
-      "type": "dart",
-      "program": "lib/main.dart",
-      "flutterMode": "profile",
-      "args": [
-        "--flavor",
-        "staging",
-        "--dart-define",
-        "ENVIRONMENT=staging"
-      ]
-    },
-    {
-      "name": "Flutter: Release (Production)",
-      "request": "launch",
-      "type": "dart",
-      "program": "lib/main.dart",
-      "flutterMode": "release",
-      "args": [
-        "--flavor",
-        "prod",
-        "--dart-define",
-        "ENVIRONMENT=prod"
-      ]
+      "deviceId": "ios"
     }
   ]
 }
