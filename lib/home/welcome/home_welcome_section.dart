@@ -23,7 +23,7 @@ class HomeWelcomeSection extends StatelessWidget {
 
     // Adaptive color scheme for welcome screen
     final isDarkMode = theme.brightness == Brightness.dark;
-    
+
     // Beautiful gradient backgrounds
     final backgroundGradient = isDarkMode
         ? LinearGradient(
@@ -31,7 +31,8 @@ class HomeWelcomeSection extends StatelessWidget {
             end: Alignment.bottomRight,
             colors: [
               theme.colorScheme.surface,
-              theme.colorScheme.surfaceContainerHighest, // Replace deprecated surfaceVariant
+              theme.colorScheme
+                  .surfaceContainerHighest, // Replace deprecated surfaceVariant
             ],
           )
         : LinearGradient(
@@ -42,22 +43,20 @@ class HomeWelcomeSection extends StatelessWidget {
               theme.colorScheme.primaryContainer,
             ],
           );
-    
-    final titleColor = isDarkMode 
-        ? theme.colorScheme.onSurface 
+
+    final titleColor =
+        isDarkMode ? theme.colorScheme.onSurface : theme.colorScheme.onPrimary;
+
+    final buttonBackgroundColor = isDarkMode
+        ? theme.colorScheme.primaryContainer
         : theme.colorScheme.onPrimary;
-    
-    final buttonBackgroundColor = isDarkMode 
-        ? theme.colorScheme.primaryContainer 
-        : theme.colorScheme.onPrimary;
-    
-    final buttonForegroundColor = isDarkMode 
-        ? theme.colorScheme.onPrimaryContainer 
+
+    final buttonForegroundColor = isDarkMode
+        ? theme.colorScheme.onPrimaryContainer
         : theme.colorScheme.primary;
-    
-    final settingsTextColor = isDarkMode 
-        ? theme.colorScheme.primary 
-        : theme.colorScheme.onPrimary;
+
+    final settingsTextColor =
+        isDarkMode ? theme.colorScheme.primary : theme.colorScheme.onPrimary;
 
     return SizedBox(
       width: screenWidth,
@@ -158,7 +157,9 @@ class HomeWelcomeSection extends StatelessWidget {
                           minimumSize: const Size(120, 120),
                           maximumSize: const Size(120, 120),
                           shape: const CircleBorder(),
-                          elevation: isDarkMode ? 2 : 0, // Subtle elevation in dark mode
+                          elevation: isDarkMode
+                              ? 2
+                              : 0, // Subtle elevation in dark mode
                         ),
                         icon: Icon(
                           Icons.arrow_forward,

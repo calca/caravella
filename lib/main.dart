@@ -6,13 +6,15 @@ import 'themes/caravella_themes.dart';
 import 'state/locale_notifier.dart';
 import 'state/theme_mode_notifier.dart';
 import 'home/home_page.dart';
+import 'config/app_config.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 void main() {
+  // Initialize Flutter binding for better performance
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Ottimizzazioni performance
+  // Set preferred orientations
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -26,6 +28,20 @@ void main() {
   // Ottimizza la gestione memoria per immagini
   PaintingBinding.instance.imageCache.maximumSize = 100;
   PaintingBinding.instance.imageCache.maximumSizeBytes = 50 << 20; // 50MB
+
+  // Set environment based on build mode
+  const environment =
+      String.fromEnvironment('ENVIRONMENT', defaultValue: 'prod');
+  switch (environment) {
+    case 'dev':
+      AppConfig.setEnvironment(Environment.dev);
+      break;
+    case 'staging':
+      AppConfig.setEnvironment(Environment.staging);
+      break;
+    default:
+      AppConfig.setEnvironment(Environment.prod);
+  }
 
   runApp(const CaravellaApp());
 }
