@@ -43,7 +43,8 @@ class ParticipantSelectorWidget extends StatelessWidget {
                     children: participants.isNotEmpty
                         ? participants.map((p) {
                             return Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
                               child: ChoiceChip(
                                 label: Text(p),
                                 selected: selectedParticipant == p,
@@ -55,7 +56,9 @@ class ParticipantSelectorWidget extends StatelessWidget {
                                           ? Theme.of(context)
                                               .colorScheme
                                               .onPrimaryContainer
-                                          : Theme.of(context).colorScheme.onSurface,
+                                          : Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
                                       fontWeight: selectedParticipant == p
                                           ? FontWeight.w500
                                           : FontWeight.w400,
@@ -65,8 +68,9 @@ class ParticipantSelectorWidget extends StatelessWidget {
                                     : Theme.of(context)
                                         .colorScheme
                                         .surfaceContainerHighest,
-                                selectedColor:
-                                    Theme.of(context).colorScheme.primaryContainer,
+                                selectedColor: Theme.of(context)
+                                    .colorScheme
+                                    .primaryContainer,
                                 side: BorderSide(
                                   color: selectedParticipant == p
                                       ? Theme.of(context).colorScheme.primary
@@ -84,7 +88,8 @@ class ParticipantSelectorWidget extends StatelessWidget {
                           }).toList()
                         : [
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
                               child: Text(
                                 loc.get('participants_label'),
                                 style: Theme.of(context).textTheme.bodySmall,

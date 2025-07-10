@@ -50,12 +50,12 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   final FocusNode _amountFocus = FocusNode();
   final TextEditingController _noteController = TextEditingController();
   late List<String> _categories; // Lista locale delle categorie
-  
+
   // Stato per validazione in tempo reale
   bool _amountTouched = false;
   bool _paidByTouched = false;
   bool _categoryTouched = false;
-  
+
   // Getters per stato dei campi
   bool get _isAmountValid => _amount != null && _amount! > 0;
   bool get _isPaidByValid => _paidBy != null;
@@ -142,13 +142,13 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     // SET MINIMO DI INFORMAZIONI NECESSARIE per abilitare il pulsante:
     // 1. Importo valido (> 0)
     bool hasValidAmount = _amount != null && _amount! > 0;
-    
+
     // 2. Partecipante selezionato (chi ha pagato)
     bool hasPaidBy = _paidBy != null && _paidBy!.isNotEmpty;
-    
+
     // 3. Categoria selezionata (solo se esistono categorie)
-    bool hasCategoryIfRequired = _categories.isEmpty || 
-        (_category != null && _category!.isNotEmpty);
+    bool hasCategoryIfRequired =
+        _categories.isEmpty || (_category != null && _category!.isNotEmpty);
 
     // Il pulsante è abilitato SOLO se tutti i requisiti sono soddisfatti
     return hasValidAmount && hasPaidBy && hasCategoryIfRequired;
@@ -161,8 +161,11 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         // Solo sfondo colorato se c'è un errore
-        color: isTouched && !isValid 
-            ? Theme.of(context).colorScheme.errorContainer.withValues(alpha: 0.08)
+        color: isTouched && !isValid
+            ? Theme.of(context)
+                .colorScheme
+                .errorContainer
+                .withValues(alpha: 0.08)
             : null,
       ),
       child: field,
@@ -198,7 +201,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
               _amountTouched,
             ),
             const SizedBox(height: 16),
-            
+
             // PAID BY (chip) con status
             _buildFieldWithStatus(
               ParticipantSelectorWidget(
@@ -216,7 +219,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
               _paidByTouched,
             ),
             const SizedBox(height: 16),
-            
+
             // CATEGORIE con status
             _buildFieldWithStatus(
               CategorySelectorWidget(
@@ -266,7 +269,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
               _categoryTouched,
             ),
             const SizedBox(height: 16),
-            
+
             // DATA (bottone con data + icona, angoli arrotondati, sfondo grigio coerente col tema)
             if (widget.initialExpense != null ||
                 (ModalRoute.of(context)?.settings.name != null))
@@ -283,7 +286,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                 locale: locale,
               ),
             const SizedBox(height: 16),
-            
+
             // NOTE
             if (widget.initialExpense != null) ...[
               NoteInputWidget(
@@ -292,7 +295,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
               ),
               const SizedBox(height: 16),
             ],
-            
+
             // Pulsanti di azione
             ExpenseFormActionsWidget(
               onCancel: () {

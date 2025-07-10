@@ -2,125 +2,106 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class CaravellaThemes {
-  // === COLORI NORD UFFICIALI ===
-  // Polar Night (Palette scura) - per dark theme
-  static const Color nord0 = Color(0xFF2E3440); // Base background scuro
-  static const Color nord1 = Color(0xFF3B4252); // Elevated surfaces scure
-  static const Color nord2 = Color(0xFF434C5E); // Selection background
-  static const Color nord3 = Color(0xFF4C566A); // Comments, disabled elements
-
-  // Snow Storm (Palette chiara) - per light theme
-  static const Color nord4 = Color(0xFFD8DEE9); // Subtle text, borders
-  static const Color nord5 = Color(0xFFE5E9F0); // Base text, primary elements
-  static const Color nord6 = Color(0xFFECEFF4); // Pure text, backgrounds
-
-  // Frost (Palette blu) - accenti principali
-  static const Color nord7 = Color(0xFF8FBCBB); // Teal calm
-  static const Color nord8 = Color(0xFF88C0D0); // Blue bright - PRIMARY
-  static const Color nord9 = Color(0xFF81A1C1); // Blue muted
-  static const Color nord10 = Color(0xFF5E81AC); // Blue deep
-
-  // Aurora (Palette colorata) - accenti secondari
-  static const Color nord11 = Color(0xFFBF616A); // Red - errori
-  static const Color nord12 = Color(0xFFD08770); // Orange - warning
-  static const Color nord13 = Color(0xFFEBCB8B); // Yellow - warning soft
-  static const Color nord14 = Color(0xFFA3BE8C); // Green - success
-  static const Color nord15 = Color(0xFFB48EAD); // Purple - special
-
-  // Light Theme - Snow Storm + Frost + Aurora
-  static final ColorScheme lightScheme = ColorScheme(
+  // Light ColorScheme made with FlexColorScheme v8.2.0
+  static const ColorScheme lightScheme = ColorScheme(
     brightness: Brightness.light,
-
-    // Primary usando Nord Frost Blue
-    primary: nord8, // Bright blue per azioni principali
-    onPrimary: nord0, // Testo scuro su primary
-    primaryContainer: nord6, // Container chiaro
-    onPrimaryContainer: nord1,
-
-    // Secondary usando Nord Frost Teal
-    secondary: nord7, // Teal per elementi secondari
-    onSecondary: nord0,
-    secondaryContainer: nord6,
-    onSecondaryContainer: nord1,
-
-    // Tertiary usando Nord Aurora Green
-    tertiary: nord14, // Verde per successo/elementi speciali
-    onTertiary: nord0,
-    tertiaryContainer: nord6,
-    onTertiaryContainer: nord1,
-
-    // Error usando Nord Aurora Red
-    error: nord11,
-    onError: nord6,
-    errorContainer: nord6,
-    onErrorContainer: nord11,
-
-    // Surfaces usando Snow Storm
-    surface: nord6, // Background principale
-    onSurface: nord0, // Testo principale
-    surfaceContainerLowest: nord6,
-    surfaceContainerLow: nord5,
-    surfaceContainer: nord5, // Card e container
-    surfaceContainerHigh: nord4,
-    surfaceContainerHighest: nord4,
-    onSurfaceVariant: nord3, // Testo secondario
-
-    // Outline e utilità
-    outline: nord3,
-    outlineVariant: nord4,
-    shadow: nord0,
-    scrim: nord0,
-    inverseSurface: nord0,
-    onInverseSurface: nord6,
-    inversePrimary: nord8,
+    primary: Color(0xFF4C9BBA),
+    onPrimary: Color(0xFFFFFFFF),
+    primaryContainer: Color(0xFF9CEBEB),
+    onPrimaryContainer: Color(0xFF000000),
+    primaryFixed: Color(0xFFD8E9EF),
+    primaryFixedDim: Color(0xFFB1D2DF),
+    onPrimaryFixed: Color(0xFF204553),
+    onPrimaryFixedVariant: Color(0xFF255061),
+    secondary: Color(0xFFFF4F58),
+    onSecondary: Color(0xFFFFFFFF),
+    secondaryContainer: Color(0xFFFFDAD7),
+    onSecondaryContainer: Color(0xFF000000),
+    secondaryFixed: Color(0xFFF7DFE0),
+    secondaryFixedDim: Color(0xFFEABCBF),
+    onSecondaryFixed: Color(0xFFA60008),
+    onSecondaryFixedVariant: Color(0xFFB3060E),
+    tertiary: Color(0xFFBF4A50),
+    onTertiary: Color(0xFFFFFFFF),
+    tertiaryContainer: Color(0xFFFCBDBD),
+    onTertiaryContainer: Color(0xFF000000),
+    tertiaryFixed: Color(0xFFF0D8DA),
+    tertiaryFixedDim: Color(0xFFE0B0B3),
+    onTertiaryFixed: Color(0xFF571F22),
+    onTertiaryFixedVariant: Color(0xFF642427),
+    error: Color(0xFFB00020),
+    onError: Color(0xFFFFFFFF),
+    errorContainer: Color(0xFFFCD9DF),
+    onErrorContainer: Color(0xFF000000),
+    surface: Color(0xFFFCFCFC),
+    onSurface: Color(0xFF111111),
+    surfaceDim: Color(0xFFE0E0E0),
+    surfaceBright: Color(0xFFFDFDFD),
+    surfaceContainerLowest: Color(0xFFFFFFFF),
+    surfaceContainerLow: Color(0xFFF8F8F8),
+    surfaceContainer: Color(0xFFF3F3F3),
+    surfaceContainerHigh: Color(0xFFEDEDED),
+    surfaceContainerHighest: Color(0xFFE7E7E7),
+    onSurfaceVariant: Color(0xFF393939),
+    outline: Color(0xFF919191),
+    outlineVariant: Color(0xFFD1D1D1),
+    shadow: Color(0xFF000000),
+    scrim: Color(0xFF000000),
+    inverseSurface: Color(0xFF2A2A2A),
+    onInverseSurface: Color(0xFFF1F1F1),
+    inversePrimary: Color(0xFFE5FFFF),
+    surfaceTint: Color(0xFF4C9BBA),
   );
 
-  // Dark Theme - Polar Night + Frost + Aurora
-  static final ColorScheme darkScheme = ColorScheme(
+  // Dark ColorScheme made with FlexColorScheme v8.2.0
+  static const ColorScheme darkScheme = ColorScheme(
     brightness: Brightness.dark,
-
-    // Primary usando Nord Frost Blue
-    primary: nord8, // Stesso blue, ma su sfondo scuro
-    onPrimary: nord0,
-    primaryContainer: nord1, // Container scuri
-    onPrimaryContainer: nord6,
-
-    // Secondary usando Nord Frost Teal
-    secondary: nord7,
-    onSecondary: nord0,
-    secondaryContainer: nord1,
-    onSecondaryContainer: nord6,
-
-    // Tertiary usando Nord Aurora Green
-    tertiary: nord14,
-    onTertiary: nord0,
-    tertiaryContainer: nord1,
-    onTertiaryContainer: nord6,
-
-    // Error usando Nord Aurora Red
-    error: nord11,
-    onError: nord0,
-    errorContainer: nord1,
-    onErrorContainer: nord11,
-
-    // Surfaces usando Polar Night
-    surface: nord0, // Background principale scuro
-    onSurface: nord6, // Testo chiaro
-    surfaceContainerLowest: nord0,
-    surfaceContainerLow: nord1,
-    surfaceContainer: nord1, // Card e container
-    surfaceContainerHigh: nord2,
-    surfaceContainerHighest: nord3,
-    onSurfaceVariant: nord4, // Testo secondario
-
-    // Outline e utilità
-    outline: nord3,
-    outlineVariant: nord2,
-    shadow: Colors.black,
-    scrim: Colors.black,
-    inverseSurface: nord6,
-    onInverseSurface: nord0,
-    inversePrimary: nord8,
+    primary: Color(0xFF669DB3),
+    onPrimary: Color(0xFFFFFFFF),
+    primaryContainer: Color(0xFF078282),
+    onPrimaryContainer: Color(0xFFFFFFFF),
+    primaryFixed: Color(0xFFD8E9EF),
+    primaryFixedDim: Color(0xFFB1D2DF),
+    onPrimaryFixed: Color(0xFF204553),
+    onPrimaryFixedVariant: Color(0xFF255061),
+    secondary: Color(0xFFFC6E75),
+    onSecondary: Color(0xFFFFFFFF),
+    secondaryContainer: Color(0xFF92001A),
+    onSecondaryContainer: Color(0xFFFFFFFF),
+    secondaryFixed: Color(0xFFF7DFE0),
+    secondaryFixedDim: Color(0xFFEABCBF),
+    onSecondaryFixed: Color(0xFFA60008),
+    onSecondaryFixedVariant: Color(0xFFB3060E),
+    tertiary: Color(0xFFF75F67),
+    onTertiary: Color(0xFFFFFFFF),
+    tertiaryContainer: Color(0xFF580810),
+    onTertiaryContainer: Color(0xFFFFFFFF),
+    tertiaryFixed: Color(0xFFF0D8DA),
+    tertiaryFixedDim: Color(0xFFE0B0B3),
+    onTertiaryFixed: Color(0xFF571F22),
+    onTertiaryFixedVariant: Color(0xFF642427),
+    error: Color(0xFFCF6679),
+    onError: Color(0xFF000000),
+    errorContainer: Color(0xFFB1384E),
+    onErrorContainer: Color(0xFFFFFFFF),
+    surface: Color(0xFF080808),
+    onSurface: Color(0xFFF1F1F1),
+    surfaceDim: Color(0xFF060606),
+    surfaceBright: Color(0xFF2C2C2C),
+    surfaceContainerLowest: Color(0xFF010101),
+    surfaceContainerLow: Color(0xFF0E0E0E),
+    surfaceContainer: Color(0xFF151515),
+    surfaceContainerHigh: Color(0xFF1D1D1D),
+    surfaceContainerHighest: Color(0xFF282828),
+    onSurfaceVariant: Color(0xFFCACACA),
+    outline: Color(0xFF777777),
+    outlineVariant: Color(0xFF414141),
+    shadow: Color(0xFF000000),
+    scrim: Color(0xFF000000),
+    inverseSurface: Color(0xFFE8E8E8),
+    onInverseSurface: Color(0xFF2A2A2A),
+    inversePrimary: Color(0xFF334952),
+    surfaceTint: Color(0xFF669DB3),
   );
 
   // Overlay styles ottimizzati
@@ -217,10 +198,10 @@ class CaravellaThemes {
     colorScheme: lightScheme,
     fontFamily: 'Montserrat',
     textTheme: _createTextTheme(lightScheme),
-    scaffoldBackgroundColor: nord4, // Background morbido
+    scaffoldBackgroundColor: lightScheme.surface,
     useMaterial3: true,
     appBarTheme: AppBarTheme(
-      backgroundColor: nord6, // AppBar pulita
+      backgroundColor: lightScheme.surface,
       foregroundColor: lightScheme.onSurface,
       elevation: 0,
       centerTitle: false,
@@ -233,12 +214,12 @@ class CaravellaThemes {
       systemOverlayStyle: lightOverlayStyle,
     ),
     cardTheme: CardThemeData(
-      color: nord6, // Card bianche pulite
+      color: lightScheme.surfaceContainer,
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(
-          color: nord4.withValues(alpha: 0.5), // Bordo sottile nord
+          color: lightScheme.outline.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -248,7 +229,7 @@ class CaravellaThemes {
         backgroundColor: lightScheme.primary,
         foregroundColor: lightScheme.onPrimary,
         elevation: 2,
-        shadowColor: nord0.withValues(alpha: 0.1),
+        shadowColor: lightScheme.shadow.withValues(alpha: 0.1),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(32),
         ),
@@ -270,7 +251,7 @@ class CaravellaThemes {
         borderRadius: BorderRadius.circular(16),
       ),
     ),
-    dividerColor: nord4, // Divisori sottili
+    dividerColor: lightScheme.outline.withValues(alpha: 0.3),
     iconTheme: IconThemeData(color: lightScheme.onSurfaceVariant),
   );
 
@@ -278,10 +259,10 @@ class CaravellaThemes {
     colorScheme: darkScheme,
     fontFamily: 'Montserrat',
     textTheme: _createTextTheme(darkScheme),
-    scaffoldBackgroundColor: nord0, // Background scuro base
+    scaffoldBackgroundColor: darkScheme.surface,
     useMaterial3: true,
     appBarTheme: AppBarTheme(
-      backgroundColor: nord1, // AppBar scura elevated
+      backgroundColor: darkScheme.surface,
       foregroundColor: darkScheme.onSurface,
       elevation: 0,
       centerTitle: false,
@@ -294,12 +275,12 @@ class CaravellaThemes {
       systemOverlayStyle: darkOverlayStyle,
     ),
     cardTheme: CardThemeData(
-      color: nord1, // Card leggermente più chiare del background
+      color: darkScheme.surfaceContainer,
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(
-          color: nord2.withValues(alpha: 0.5), // Bordo sottile
+          color: darkScheme.outline.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -331,7 +312,7 @@ class CaravellaThemes {
         borderRadius: BorderRadius.circular(16),
       ),
     ),
-    dividerColor: nord2, // Divisori scuri
+    dividerColor: darkScheme.outline.withValues(alpha: 0.3),
     iconTheme: IconThemeData(color: darkScheme.onSurfaceVariant),
   );
 }

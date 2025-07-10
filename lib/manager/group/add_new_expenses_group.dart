@@ -106,7 +106,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       initialDate: initialDate,
       firstDate: firstDate,
       lastDate: lastDate,
-      helpText: isStart ? loc.get('select_from_date') : loc.get('select_to_date'),
+      helpText:
+          isStart ? loc.get('select_from_date') : loc.get('select_to_date'),
       cancelText: loc.get('cancel'),
       confirmText: loc.get('ok'),
       locale: Locale(locale),
@@ -124,8 +125,10 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   }
 
   String _getDateRangeText(AppLocalizations loc) {
-    final startFormatted = '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}';
-    final endFormatted = '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}';
+    final startFormatted =
+        '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}';
+    final endFormatted =
+        '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}';
     return '${loc.get('start_date_optional')} $startFormatted ${loc.get('end_date_optional')} $endFormatted';
   }
 
@@ -423,7 +426,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
               children: [
                 // Titolo principale dinamico
                 Text(
-                  widget.trip != null 
+                  widget.trip != null
                       ? loc.get('edit_group')
                       : loc.get('new_group'),
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
@@ -431,7 +434,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                       ),
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Sezione 1: Informazioni di base
                 _buildSectionCard(
                   title: '', // Titolo vuoto perché ora è fuori dalla card
@@ -447,9 +450,10 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                           ),
                       decoration: InputDecoration(
                         labelText: '${loc.get('group_name')} *',
-                        labelStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
+                        labelStyle:
+                            Theme.of(context).textTheme.titleLarge?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
                       ),
                       validator: (v) => v == null || v.isEmpty
                           ? loc.get('enter_title')
@@ -543,7 +547,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                     if (_participants.isEmpty) ...[
                       const SizedBox(height: 16),
                       Center(
-                        child:                        Text(
+                        child: Text(
                           loc.get('no_participants'),
                           style:
                               Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -765,7 +769,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                     if (_categories.isEmpty) ...[
                       const SizedBox(height: 16),
                       Center(
-                        child:                        Text(
+                        child: Text(
                           loc.get('no_categories'),
                           style:
                               Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -939,16 +943,22 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                 children: [
                                   Text(
                                     loc.get('start_date_optional'),
-                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                      color: Theme.of(context).colorScheme.primary,
-                                    ),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                        ),
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
                                     _startDate == null
                                         ? loc.get('select_from_date')
                                         : '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}',
-                                    style: Theme.of(context).textTheme.bodyLarge,
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
                                   ),
                                 ],
                               ),
@@ -975,16 +985,22 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                 children: [
                                   Text(
                                     loc.get('end_date_optional'),
-                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                      color: Theme.of(context).colorScheme.primary,
-                                    ),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                        ),
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
                                     _endDate == null
                                         ? loc.get('select_to_date')
                                         : '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}',
-                                    style: Theme.of(context).textTheme.bodyLarge,
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
                                   ),
                                 ],
                               ),
@@ -997,9 +1013,13 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                     if (_startDate != null && _endDate != null) ...[
                       const SizedBox(height: 12),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
                         decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .primaryContainer
+                              .withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Row(
@@ -1013,10 +1033,14 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                             const SizedBox(width: 8),
                             Text(
                               _getDateRangeText(loc),
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: Theme.of(context).colorScheme.primary,
-                                fontWeight: FontWeight.w500,
-                              ),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                             ),
                             const SizedBox(width: 8),
                             InkWell(

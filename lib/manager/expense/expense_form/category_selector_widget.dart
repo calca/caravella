@@ -47,7 +47,8 @@ class CategorySelectorWidget extends StatelessWidget {
                     children: categories.isNotEmpty
                         ? categories.map((cat) {
                             return Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
                               child: ChoiceChip(
                                 label: Text(cat),
                                 selected: selectedCategory == cat,
@@ -59,7 +60,9 @@ class CategorySelectorWidget extends StatelessWidget {
                                           ? Theme.of(context)
                                               .colorScheme
                                               .onPrimaryContainer
-                                          : Theme.of(context).colorScheme.onSurface,
+                                          : Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
                                       fontWeight: selectedCategory == cat
                                           ? FontWeight.w500
                                           : FontWeight.w400,
@@ -69,8 +72,9 @@ class CategorySelectorWidget extends StatelessWidget {
                                     : Theme.of(context)
                                         .colorScheme
                                         .surfaceContainerHighest,
-                                selectedColor:
-                                    Theme.of(context).colorScheme.primaryContainer,
+                                selectedColor: Theme.of(context)
+                                    .colorScheme
+                                    .primaryContainer,
                                 side: BorderSide(
                                   color: selectedCategory == cat
                                       ? Theme.of(context).colorScheme.primary
@@ -88,7 +92,8 @@ class CategorySelectorWidget extends StatelessWidget {
                           }).toList()
                         : [
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
                               child: Text(
                                 loc.get('no_categories'),
                                 style: Theme.of(context).textTheme.bodySmall,

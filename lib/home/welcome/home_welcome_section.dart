@@ -78,45 +78,6 @@ class HomeWelcomeSection extends StatelessWidget {
                 flex: 2,
                 child: Stack(
                   children: [
-                    // Bottone principale "Avanti" in basso a destra
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: Container(
-                        width: 120,
-                        height: 120,
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme
-                              .onPrimary, // Contrasta con il background primary
-                          shape: BoxShape.circle,
-                        ),
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(60),
-                            onTap: () async {
-                              final result = await Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      AddNewExpensesGroupPage(),
-                                ),
-                              );
-                              if (result == true && onTripAdded != null) {
-                                onTripAdded!();
-                              }
-                            },
-                            child: Center(
-                              child: Text(
-                                loc.get('welcome_v3_cta'),
-                                style: theme.textTheme.titleLarge?.copyWith(
-                                  color: theme.colorScheme
-                                      .primary, // Usa il primary come colore del testo
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
                     // Bottone "Impostazioni" in basso a sinistra
                     Positioned(
                       bottom: 0,
@@ -137,6 +98,35 @@ class HomeWelcomeSection extends StatelessWidget {
                             letterSpacing: 1.2,
                           ),
                         ),
+                      ),
+                    ),
+                    // Bottone principale "Avanti" sopra al bottone impostazioni
+                    Positioned(
+                      bottom: 60, // Posizionato sopra al bottone impostazioni
+                      right: 0,
+                      child: IconButton.filled(
+                        onPressed: () async {
+                          final result = await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => AddNewExpensesGroupPage(),
+                            ),
+                          );
+                          if (result == true && onTripAdded != null) {
+                            onTripAdded!();
+                          }
+                        },
+                        style: IconButton.styleFrom(
+                          backgroundColor: theme.colorScheme.onPrimary,
+                          foregroundColor: theme.colorScheme.primary,
+                          minimumSize: const Size(120, 120),
+                          maximumSize: const Size(120, 120),
+                          shape: const CircleBorder(),
+                        ),
+                        icon: Icon(
+                          Icons.arrow_forward,
+                          size: 32,
+                        ),
+                        tooltip: loc.get('welcome_v3_cta'),
                       ),
                     ),
                   ],
