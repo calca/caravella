@@ -353,7 +353,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
           if (title.isNotEmpty) ...[
             Text(
               title,
-              style: Theme.of(context).textTheme.titleLarge,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 16),
           ],
@@ -415,9 +415,20 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
             key: _formKey,
             child: ListView(
               children: [
-                // Sezione 1: Nuovo Gruppo
+                // Titolo principale dinamico
+                Text(
+                  widget.trip != null 
+                      ? loc.get('edit_group')
+                      : loc.get('new_group'),
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+                const SizedBox(height: 24),
+                
+                // Sezione 1: Informazioni di base
                 _buildSectionCard(
-                  title: loc.get('new_group'),
+                  title: '', // Titolo vuoto perché ora è fuori dalla card
                   children: [
                     // Nome gruppo
                     TextFormField(
@@ -425,10 +436,9 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                       focusNode: _titleFocusNode,
                       autofocus: widget.trip ==
                           null, // Focus automatico solo in modalità creazione
-                      style:
-                          Theme.of(context).textTheme.displayMedium?.copyWith(),
+                      style: Theme.of(context).textTheme.bodyLarge,
                       decoration: InputDecoration(
-                        labelText: loc.get('group_name'),
+                        labelText: '${loc.get('group_name')} *',
                         labelStyle: Theme.of(context).textTheme.titleMedium,
                       ),
                       validator: (v) => v == null || v.isEmpty
@@ -448,7 +458,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(loc.get('start_date_optional'),
-                                  style: Theme.of(context).textTheme.bodySmall),
+                                  style: Theme.of(context).textTheme.titleMedium),
                               const SizedBox(height: 4),
                               TextButton.icon(
                                 icon:
@@ -457,7 +467,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                   _startDate == null
                                       ? loc.get('start_date_not_selected')
                                       : '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}',
-                                  style: Theme.of(context).textTheme.bodyMedium,
+                                  style: Theme.of(context).textTheme.bodyLarge,
                                 ),
                                 onPressed: () => _pickDate(context, true),
                               ),
@@ -470,7 +480,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(loc.get('end_date_optional'),
-                                  style: Theme.of(context).textTheme.bodySmall),
+                                  style: Theme.of(context).textTheme.titleMedium),
                               const SizedBox(height: 4),
                               TextButton.icon(
                                 icon:
@@ -479,7 +489,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                   _endDate == null
                                       ? loc.get('end_date_not_selected')
                                       : '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}',
-                                  style: Theme.of(context).textTheme.bodyMedium,
+                                  style: Theme.of(context).textTheme.bodyLarge,
                                 ),
                                 onPressed: () => _pickDate(context, false),
                               ),
@@ -508,8 +518,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          loc.get('participants'),
-                          style: Theme.of(context).textTheme.titleLarge,
+                          '${loc.get('participants')} *',
+                          style: Theme.of(context).textTheme.titleMedium,
                         ),
                         IconButton.outlined(
                           icon: const Icon(Icons.add),
@@ -567,10 +577,10 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                     if (_participants.isEmpty) ...[
                       const SizedBox(height: 16),
                       Center(
-                        child: Text(
+                        child:                        Text(
                           loc.get('no_participants'),
                           style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
                                     color: Theme.of(context)
                                         .colorScheme
                                         .onSurface
@@ -729,7 +739,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                       children: [
                         Text(
                           loc.get('categories'),
-                          style: Theme.of(context).textTheme.titleLarge,
+                          style: Theme.of(context).textTheme.titleMedium,
                         ),
                         IconButton.outlined(
                           icon: const Icon(Icons.add),
@@ -789,10 +799,10 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                     if (_categories.isEmpty) ...[
                       const SizedBox(height: 16),
                       Center(
-                        child: Text(
+                        child:                        Text(
                           loc.get('no_categories'),
                           style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
                                     color: Theme.of(context)
                                         .colorScheme
                                         .onSurface
