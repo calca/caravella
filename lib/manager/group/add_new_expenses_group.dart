@@ -450,15 +450,22 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    // Sezione date compatta
+                    // Sezione date
+                    Text(
+                      loc.get('dates'),
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 12),
                     Row(
                       children: [
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(loc.get('start_date_optional'),
-                                  style: Theme.of(context).textTheme.titleMedium),
+                              Text(
+                                loc.get('start_date_optional'),
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
                               const SizedBox(height: 4),
                               TextButton.icon(
                                 icon:
@@ -479,8 +486,10 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(loc.get('end_date_optional'),
-                                  style: Theme.of(context).textTheme.titleMedium),
+                              Text(
+                                loc.get('end_date_optional'),
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
                               const SizedBox(height: 4),
                               TextButton.icon(
                                 icon:
