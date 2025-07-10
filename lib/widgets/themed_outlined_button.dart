@@ -40,26 +40,30 @@ class ThemedOutlinedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final isEnabled = onPressed != null;
 
     return OutlinedButton(
       onPressed: onPressed,
       style: OutlinedButton.styleFrom(
         backgroundColor: isPrimary
-            ? colorScheme.primaryContainer
-            : colorScheme.surfaceContainerHighest,
-        foregroundColor:
-            isPrimary ? colorScheme.onPrimaryContainer : colorScheme.onSurface,
+            ? (isEnabled ? colorScheme.primary : colorScheme.onSurface.withValues(alpha: 0.12))
+            : (isEnabled ? colorScheme.surface : colorScheme.onSurface.withValues(alpha: 0.12)),
+        foregroundColor: isPrimary
+            ? (isEnabled ? colorScheme.onPrimary : colorScheme.onSurface.withValues(alpha: 0.38))
+            : (isEnabled ? colorScheme.onSurface : colorScheme.onSurface.withValues(alpha: 0.38)),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(32.0),
         ),
         side: BorderSide(
           color: isPrimary
-              ? colorScheme.primary.withValues(alpha: 0.3)
-              : colorScheme.outline.withValues(alpha: 0.2),
-          width: 1,
+              ? (isEnabled ? colorScheme.primary : colorScheme.onSurface.withValues(alpha: 0.12))
+              : (isEnabled ? colorScheme.outline : colorScheme.onSurface.withValues(alpha: 0.12)),
+          width: isPrimary ? 2 : 1,
         ),
         padding: padding,
         minimumSize: minimumSize,
+        elevation: isPrimary && isEnabled ? 1 : 0,
+        shadowColor: colorScheme.shadow,
       ),
       child: child,
     );
