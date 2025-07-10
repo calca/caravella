@@ -31,7 +31,7 @@ class HomeWelcomeSection extends StatelessWidget {
             end: Alignment.bottomRight,
             colors: [
               theme.colorScheme.surface,
-              theme.colorScheme.surfaceVariant,
+              theme.colorScheme.surfaceContainerHighest, // Replace deprecated surfaceVariant
             ],
           )
         : LinearGradient(
