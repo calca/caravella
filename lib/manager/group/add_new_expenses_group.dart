@@ -106,7 +106,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       initialDate: initialDate,
       firstDate: firstDate,
       lastDate: lastDate,
-      helpText: isStart ? loc.get('select_start') : loc.get('select_end'),
+      helpText: isStart ? loc.get('select_from_date') : loc.get('select_to_date'),
       cancelText: loc.get('cancel'),
       confirmText: loc.get('ok'),
       locale: Locale(locale),
@@ -121,6 +121,61 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
         }
       });
     }
+  }
+
+  Future<void> _pickDate(BuildContext context, bool isStart) async {
+    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
+    final loc = AppLocalizations(locale);
+    final now = DateTime.now();
+    final firstDate = DateTime(now.year - 5);
+    final lastDate = DateTime(now.year + 5);
+    DateTime? initialDate = isStart ? (_startDate ?? now) : (_endDate ?? now);
+    bool isSelectable(DateTime d) {
+      if (isStart && _endDate != null) return !d.isAfter(_endDate!);
+      if (!isStart && _startDate != null) return !d.isBefore(_startDate!);
+      return true;
+    }
+
+    // Se l'initialDate non è selezionabile, trova la prima data valida
+    if (!isSelectable(initialDate)) {
+      DateTime candidate = isStart ? lastDate : firstDate;
+      while (!isSelectable(candidate)) {
+        candidate = isStart
+            ? candidate.subtract(const Duration(days: 1))
+            : candidate.add(const Duration(days: 1));
+        if (candidate.isBefore(firstDate) || candidate.isAfter(lastDate)) {
+          candidate = now;
+          break;
+        }
+      }
+      initialDate = candidate;
+    }
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: firstDate,
+      lastDate: lastDate,
+      helpText: isStart ? loc.get('select_from_date') : loc.get('select_to_date'),
+      cancelText: loc.get('cancel'),
+      confirmText: loc.get('ok'),
+      locale: Locale(locale),
+      selectableDayPredicate: isSelectable,
+    );
+    if (picked != null) {
+      setState(() {
+        if (isStart) {
+          _startDate = picked;
+        } else {
+          _endDate = picked;
+        }
+      });
+    }
+  }
+
+  String _getDateRangeText(AppLocalizations loc) {
+    final startFormatted = '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}';
+    final endFormatted = '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}';
+    return '${loc.get('start_date_optional')} $startFormatted ${loc.get('end_date_optional')} $endFormatted';
   }
 
   /// Controlla se il form ha i dati minimi per essere salvato
@@ -449,64 +504,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                             () {}); // Aggiorna lo stato per il bottone Salva
                       },
                     ),
-                    const SizedBox(height: 20),
-                    // Sezione date
-                    Text(
-                      loc.get('dates'),
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                loc.get('start_date_optional'),
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                              const SizedBox(height: 4),
-                              TextButton.icon(
-                                icon:
-                                    const Icon(Icons.calendar_today, size: 18),
-                                label: Text(
-                                  _startDate == null
-                                      ? loc.get('start_date_not_selected')
-                                      : '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}',
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                                onPressed: () => _pickDate(context, true),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                loc.get('end_date_optional'),
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                              const SizedBox(height: 4),
-                              TextButton.icon(
-                                icon:
-                                    const Icon(Icons.calendar_today, size: 18),
-                                label: Text(
-                                  _endDate == null
-                                      ? loc.get('end_date_not_selected')
-                                      : '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}',
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                                onPressed: () => _pickDate(context, false),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+
                     if (_dateError != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
@@ -960,7 +958,138 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 ),
                 const SizedBox(height: 24),
 
-                // Sezione 4: Impostazioni
+                // Sezione 4: Periodo
+                _buildSectionCard(
+                  title: loc.get('dates'),
+                  children: [
+                    // Selezione periodo compatta - inline
+                    Row(
+                      children: [
+                        // Data dal
+                        Expanded(
+                          child: InkWell(
+                            onTap: () => _pickDate(context, true),
+                            borderRadius: BorderRadius.circular(12),
+                            child: Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .outline
+                                      .withValues(alpha: 0.3),
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    loc.get('start_date_optional'),
+                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                      color: Theme.of(context).colorScheme.primary,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    _startDate == null
+                                        ? loc.get('select_from_date')
+                                        : '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}',
+                                    style: Theme.of(context).textTheme.bodyLarge,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        // Data al
+                        Expanded(
+                          child: InkWell(
+                            onTap: () => _pickDate(context, false),
+                            borderRadius: BorderRadius.circular(12),
+                            child: Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .outline
+                                      .withValues(alpha: 0.3),
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    loc.get('end_date_optional'),
+                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                      color: Theme.of(context).colorScheme.primary,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    _endDate == null
+                                        ? loc.get('select_to_date')
+                                        : '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}',
+                                    style: Theme.of(context).textTheme.bodyLarge,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    // Mostra il range completo se entrambe le date sono selezionate
+                    if (_startDate != null && _endDate != null) ...[
+                      const SizedBox(height: 12),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.date_range,
+                              size: 16,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              _getDateRangeText(loc),
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  _startDate = null;
+                                  _endDate = null;
+                                });
+                              },
+                              child: Icon(
+                                Icons.close,
+                                size: 16,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+                const SizedBox(height: 24),
+
+                // Sezione 5: Impostazioni
                 _buildSectionCard(
                   title: loc.get('settings'),
                   children: [
