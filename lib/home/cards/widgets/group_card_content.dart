@@ -210,7 +210,7 @@ class GroupCardContent extends StatelessWidget {
         _buildHeader(),
         _buildDateRange(),
         _buildTotalAmount(),
-        SizedBox(height: _largSpacing),
+        const SizedBox(height: _largSpacing),
         _buildStatistics(),
         _buildRecentActivity(),
         const Spacer(),

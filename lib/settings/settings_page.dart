@@ -15,7 +15,7 @@ class SettingsPage extends StatelessWidget {
     final loc = AppLocalizations(locale);
 
     return Scaffold(
-      appBar: CaravellaAppBar(),
+      appBar: const CaravellaAppBar(),
       body: DefaultTabController(
         length: 2,
         child: Column(

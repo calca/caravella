@@ -49,7 +49,7 @@ class InfoTab extends StatelessWidget {
             style: TextButton.styleFrom(
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.zero,
-              minimumSize: Size(0, 0),
+              minimumSize: const Size(0, 0),
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
           ),
@@ -63,7 +63,7 @@ class InfoTab extends StatelessWidget {
             style: TextButton.styleFrom(
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.zero,
-              minimumSize: Size(0, 0),
+              minimumSize: const Size(0, 0),
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
           ),

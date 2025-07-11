@@ -164,7 +164,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(loc.get('select_both_dates')),
-          backgroundColor: Theme.of(context).colorScheme.error, // Use theme error color
+          backgroundColor:
+              Theme.of(context).colorScheme.error, // Use theme error color
         ),
       );
       return;
@@ -180,7 +181,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(loc.get('end_date_after_start')),
-          backgroundColor: Theme.of(context).colorScheme.error, // Use theme error color
+          backgroundColor:
+              Theme.of(context).colorScheme.error, // Use theme error color
         ),
       );
       return;
@@ -190,7 +192,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(loc.get('enter_participant')),
-          backgroundColor: Theme.of(context).colorScheme.error, // Use theme error color
+          backgroundColor:
+              Theme.of(context).colorScheme.error, // Use theme error color
         ),
       );
       return;
@@ -248,8 +251,9 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Errore durante la selezione dell\'immagine'),
-            backgroundColor: Theme.of(context).colorScheme.error, // Use theme error color
+            content: const Text('Errore durante la selezione dell\'immagine'),
+            backgroundColor:
+                Theme.of(context).colorScheme.error, // Use theme error color
           ),
         );
       }
@@ -286,7 +290,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Errore durante il salvataggio dell\'immagine'),
-            backgroundColor: Theme.of(context).colorScheme.error, // Use theme error color
+            backgroundColor:
+                Theme.of(context).colorScheme.error, // Use theme error color
           ),
         );
       }
@@ -474,7 +479,9 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                         child: Text(
                           _dateError!,
                           style: TextStyle(
-                            color: Theme.of(context).colorScheme.error, // Use theme error color
+                            color: Theme.of(context)
+                                .colorScheme
+                                .error, // Use theme error color
                             fontSize: 13,
                           ),
                         ),
@@ -584,7 +591,9 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                     color: Theme.of(context)
                                         .colorScheme
                                         .surfaceContainerHighest
-                                        .withValues(alpha: 0.5), // Slightly more opacity for better visibility
+                                        .withValues(
+                                            alpha:
+                                                0.5), // Slightly more opacity for better visibility
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
                                   child: Row(
@@ -620,8 +629,11 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                   backgroundColor: Theme.of(context)
                                       .colorScheme
                                       .surfaceContainerHighest
-                                      .withValues(alpha: 0.7), // Better visibility
-                                  foregroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
+                                      .withValues(
+                                          alpha: 0.7), // Better visibility
+                                  foregroundColor: Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant,
                                   padding: const EdgeInsets.all(8),
                                   minimumSize: const Size(36, 36),
                                 ),
@@ -807,7 +819,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                     color: Theme.of(context)
                                         .colorScheme
                                         .surfaceContainerHighest
-                                        .withValues(alpha: 0.5), // Consistent opacity
+                                        .withValues(
+                                            alpha: 0.5), // Consistent opacity
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
                                   child: Row(
@@ -843,8 +856,11 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                   backgroundColor: Theme.of(context)
                                       .colorScheme
                                       .surfaceContainerHighest
-                                      .withValues(alpha: 0.7), // Better visibility
-                                  foregroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
+                                      .withValues(
+                                          alpha: 0.7), // Better visibility
+                                  foregroundColor: Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant,
                                   padding: const EdgeInsets.all(8),
                                   minimumSize: const Size(36, 36),
                                 ),
@@ -946,7 +962,10 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                     .surfaceContainerHigh, // Better contrast for date containers
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
-                                  color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .outline
+                                      .withValues(alpha: 0.2),
                                 ),
                               ),
                               child: Column(
@@ -990,7 +1009,10 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                     .surfaceContainerHigh, // Consistent with start date
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
-                                  color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .outline
+                                      .withValues(alpha: 0.2),
                                 ),
                               ),
                               child: Column(
@@ -1032,10 +1054,15 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                           color: Theme.of(context)
                               .colorScheme
                               .primaryContainer
-                              .withValues(alpha: 0.6), // Better visibility for date range
+                              .withValues(
+                                  alpha:
+                                      0.6), // Better visibility for date range
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
-                            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .withValues(alpha: 0.3),
                           ),
                         ),
                         child: Row(
@@ -1107,7 +1134,11 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(
-                                color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.5), // Theme-aware border
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .outline
+                                    .withValues(
+                                        alpha: 0.5), // Theme-aware border
                               ),
                             ),
                             child: ClipRRect(
@@ -1127,7 +1158,10 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                               style: TextButton.styleFrom(
                                 foregroundColor:
                                     Theme.of(context).colorScheme.error,
-                                backgroundColor: Theme.of(context).colorScheme.errorContainer.withValues(alpha: 0.1),
+                                backgroundColor: Theme.of(context)
+                                    .colorScheme
+                                    .errorContainer
+                                    .withValues(alpha: 0.1),
                               ),
                             ),
                           ),

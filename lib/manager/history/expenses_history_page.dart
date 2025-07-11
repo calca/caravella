@@ -231,7 +231,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     final loc = AppLocalizations(locale);
 
     return Scaffold(
-      appBar: CaravellaAppBar(),
+      appBar: const CaravellaAppBar(),
       floatingActionButton: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
@@ -248,7 +248,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
           onPressed: () async {
             final result = await Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => AddNewExpensesGroupPage(),
+                builder: (context) => const AddNewExpensesGroupPage(),
               ),
             );
             if (result == true) {
