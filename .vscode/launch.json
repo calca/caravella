@@ -2,18 +2,40 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Flutter: Debug su emulatore Android",
+      "name": "Run (Dev)",
       "request": "launch",
       "type": "dart",
       "program": "lib/main.dart",
-      "deviceId": "emulator-5554"
+      "args": [
+        "--flavor",
+        "dev",
+        "--dart-define",
+        "FLAVOR=dev"
+      ]
     },
     {
-      "name": "Flutter: Debug su iOS Simulator",
+      "name": "Run (Staging)",
       "request": "launch",
       "type": "dart",
       "program": "lib/main.dart",
-      "deviceId": "ios"
+      "args": [
+        "--flavor",
+        "staging",
+        "--dart-define",
+        "FLAVOR=staging"
+      ]
+    },
+    {
+      "name": "Run (Prod)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": [
+        "--flavor",
+        "prod",
+        "--dart-define",
+        "FLAVOR=prod"
+      ]
     }
   ]
 }

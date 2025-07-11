@@ -6,11 +6,25 @@ import 'themes/caravella_themes.dart';
 import 'state/locale_notifier.dart';
 import 'state/theme_mode_notifier.dart';
 import 'home/home_page.dart';
+import 'config/app_config.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Legge il flavor dall'ambiente di compilazione
+  const flavorString = String.fromEnvironment('FLAVOR', defaultValue: 'prod');
+  switch (flavorString) {
+    case 'dev':
+      AppConfig.setEnvironment(Environment.dev);
+      break;
+    case 'staging':
+      AppConfig.setEnvironment(Environment.staging);
+      break;
+    default:
+      AppConfig.setEnvironment(Environment.prod);
+  }
 
   // Ottimizzazioni performance
   SystemChrome.setPreferredOrientations([
@@ -101,7 +115,8 @@ class _CaravellaAppState extends State<CaravellaApp> {
         themeMode: _themeMode,
         changeTheme: _changeTheme,
         child: MaterialApp(
-          title: 'Caravella',
+          title: AppConfig.appName,
+          debugShowCheckedModeBanner: AppConfig.showDebugBanner,
           theme: CaravellaThemes.light,
           darkTheme: CaravellaThemes.dark,
           themeMode: _themeMode,
