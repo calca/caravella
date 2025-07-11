@@ -93,7 +93,13 @@ flutter:
     - assets/images/
     - assets/images/home/
     - assets/images/home/welcome/
-    - assets/icons/
+    # Rimossi i file delle icone mancanti per evitare warning
+    # - assets/icons/app_icon.png
+    # - assets/icons/app_icon_dev.png
+    # - assets/icons/app_icon_staging.png
+    # - assets/icons/app_icon_foreground.png
+    # - assets/icons/app_icon_dev_foreground.png
+    # - assets/icons/app_icon_staging_foreground.png
 
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
