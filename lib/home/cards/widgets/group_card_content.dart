@@ -268,7 +268,7 @@ class GroupCardContent extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: _spacing),
+        const SizedBox(height: _spacing),
       ],
     );
   }

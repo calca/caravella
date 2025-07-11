@@ -50,7 +50,7 @@ class NewGroupCard extends StatelessWidget {
         onTap: () async {
           final result = await Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => AddNewExpensesGroupPage(),
+              builder: (context) => const AddNewExpensesGroupPage(),
             ),
           );
           if (result == true) {

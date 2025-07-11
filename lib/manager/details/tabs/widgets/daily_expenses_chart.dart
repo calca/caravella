@@ -74,7 +74,7 @@ class DailyExpensesChart extends StatelessWidget {
               width: _calculateChartWidth(context, filteredEntries.length),
               child: LineChart(
                 LineChartData(
-                  gridData: FlGridData(
+                  gridData: const FlGridData(
                     show: false, // Rimuove tutte le righe orizzontali
                   ),
                   titlesData: FlTitlesData(

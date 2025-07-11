@@ -162,7 +162,7 @@ class HomeWelcomeSection extends StatelessWidget {
                               ? 2
                               : 0, // Subtle elevation in dark mode
                         ),
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.arrow_forward,
                           size: 32,
                         ),
