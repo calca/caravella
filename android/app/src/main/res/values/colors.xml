@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ic_launcher_background">#65CCED</color>
+    <color name="ic_launcher_background">#2196F3</color>
     
     <!-- Splash screen colors -->
     <color name="splash_background_light">#FFFFFF</color>
