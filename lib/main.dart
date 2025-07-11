@@ -122,12 +122,12 @@ class _CaravellaAppState extends State<CaravellaApp> {
           themeMode: _themeMode,
           locale: Locale(_locale),
           supportedLocales: const [Locale('it'), Locale('en')],
-          localizationsDelegates: [
+          localizationsDelegates: const [
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          home: CaravellaHomePage(title: 'Caravella'),
+          home: const CaravellaHomePage(title: 'Caravella'),
           navigatorObservers: [routeObserver],
         ),
       ),

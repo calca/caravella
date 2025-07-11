@@ -245,13 +245,13 @@ class GroupCardContent extends StatelessWidget {
 
   Widget _buildDateRange() {
     if (group.startDate == null && group.endDate == null) {
-      return SizedBox(height: _spacing);
+      return const SizedBox(height: _spacing);
     }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: _spacing),
+        const SizedBox(height: _spacing),
         Row(
           children: [
             Icon(
@@ -332,7 +332,7 @@ class GroupCardContent extends StatelessWidget {
 
     return Column(
       children: [
-        SizedBox(height: _sectionSpacing),
+        const SizedBox(height: _sectionSpacing),
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
           child: Column(
@@ -368,7 +368,8 @@ class GroupCardContent extends StatelessWidget {
             foregroundColor: theme.colorScheme.onSurface,
             backgroundColor:
                 theme.colorScheme.onSurface.withValues(alpha: 0.05),
-            padding: EdgeInsets.symmetric(vertical: _buttonVerticalPadding),
+            padding:
+                const EdgeInsets.symmetric(vertical: _buttonVerticalPadding),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(_borderRadius),
             ),

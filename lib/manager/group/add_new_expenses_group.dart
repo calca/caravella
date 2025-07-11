@@ -289,7 +289,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Errore durante il salvataggio dell\'immagine'),
+            content: const Text('Errore durante il salvataggio dell\'immagine'),
             backgroundColor:
                 Theme.of(context).colorScheme.error, // Use theme error color
           ),
