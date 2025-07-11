@@ -59,7 +59,7 @@ flutter_launcher_icons:
   ios: true
   image_path: "assets/icons/caravella-icon.png"
   adaptive_icon_foreground: "assets/icons/caravella-icon.png"
-  adaptive_icon_background: "#2196F3" # Colore principale app
+  adaptive_icon_background: "#009688" # Colore principale app
   
 # Staging  
 flutter_launcher_icons_staging:
@@ -67,7 +67,7 @@ flutter_launcher_icons_staging:
   ios: true
   image_path: "assets/icons/caravella-icon.png"
   adaptive_icon_foreground: "assets/icons/caravella-icon.png"
-  adaptive_icon_background: "#FF9800" # Arancione per staging
+  adaptive_icon_background: "#FF9800"
 
 # Sviluppo
 flutter_launcher_icons_dev:
@@ -75,7 +75,7 @@ flutter_launcher_icons_dev:
   ios: true
   image_path: "assets/icons/caravella-icon.png"
   adaptive_icon_foreground: "assets/icons/caravella-icon.png"
-  adaptive_icon_background: "#4CAF50" # Verde per sviluppo
+  adaptive_icon_background: "#FFC107"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
