@@ -1,3 +1,5 @@
+import 'weekly_expense_chart.dart';
+import 'monthly_expense_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../app_localizations.dart';
@@ -186,10 +188,26 @@ class GroupCardContent extends StatelessWidget {
             _buildHeader(currentGroup),
             _buildDateRange(currentGroup),
             _buildTotalAmount(currentGroup),
+            // Numero partecipanti subito sotto al totale
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+              child: Row(
+                children: [
+                  Semantics(
+                    label: 'Participants: ${currentGroup.participants.length}',
+                    child: _buildCompactStat(
+                      icon: Icons.people_outline,
+                      value: currentGroup.participants.length.toString(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             const SizedBox(height: _largSpacing),
-            _buildStatistics(currentGroup),
             _buildRecentActivity(currentGroup),
-            const Spacer(),
+            Spacer(),
+            _buildStatistics(currentGroup),
+            const SizedBox(height: 24),
             _buildAddButton(context, currentGroup),
           ],
         );
@@ -275,28 +293,47 @@ class GroupCardContent extends StatelessWidget {
   }
 
   Widget _buildStatistics(ExpenseGroup currentGroup) {
-    final participantCount = currentGroup.participants.length;
+    final now = DateTime.now();
+    // Calcola il lunedì della settimana corrente
+    final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+    // Genera i 7 giorni da lunedì a domenica
+    final dailyTotals = List<double>.generate(7, (i) {
+      final day = startOfWeek.add(Duration(days: i));
+      return currentGroup.expenses
+          .where((e) =>
+              e.date.year == day.year &&
+              e.date.month == day.month &&
+              e.date.day == day.day)
+          .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
+    });
+    // weeklyTotal non più usato
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    // Spesa per ogni giorno del mese corrente
+    final daysInMonth = DateTime(now.year, now.month + 1, 0).day;
+    final startOfMonth = DateTime(now.year, now.month, 1);
+    final dailyMonthTotals = List<double>.generate(daysInMonth, (i) {
+      final day = startOfMonth.add(Duration(days: i));
+      return currentGroup.expenses
+          .where((e) =>
+              e.date.year == day.year &&
+              e.date.month == day.month &&
+              e.date.day == day.day)
+          .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
+    });
+    // monthlyTotal non più usato
+
+    // Statistiche base
+    return Column(
       children: [
-        Semantics(
-          label: 'Participants: $participantCount',
-          child: _buildCompactStat(
-            icon: Icons.people_outline,
-            value: participantCount.toString(),
-          ),
-        ),
-        const SizedBox(width: 16),
-        Semantics(
-          label: 'Expenses: ${currentGroup.expenses.length}',
-          child: _buildCompactStat(
-            icon: Icons.receipt_long_outlined,
-            value: currentGroup.expenses.length.toString(),
-          ),
-        ),
+        // Settimana
+        WeeklyExpenseChart(dailyTotals: dailyTotals, theme: theme),
+        SizedBox(height: 12),
+        // Mese
+        MonthlyExpenseChart(dailyTotals: dailyMonthTotals, theme: theme),
       ],
     );
+
+    // Dead code removed, now handled in the new Column above
   }
 
   Widget _buildRecentActivity(ExpenseGroup currentGroup) {
@@ -357,5 +394,4 @@ class GroupCardContent extends StatelessWidget {
       ],
     );
   }
-
 }
