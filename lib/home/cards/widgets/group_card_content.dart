@@ -205,7 +205,7 @@ class GroupCardContent extends StatelessWidget {
             ),
             const SizedBox(height: _largSpacing),
             _buildRecentActivity(currentGroup),
-            Spacer(),
+            const Spacer(),
             _buildStatistics(currentGroup),
             const SizedBox(height: 24),
             _buildAddButton(context, currentGroup),
@@ -327,7 +327,7 @@ class GroupCardContent extends StatelessWidget {
       children: [
         // Settimana
         WeeklyExpenseChart(dailyTotals: dailyTotals, theme: theme),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         // Mese
         MonthlyExpenseChart(dailyTotals: dailyMonthTotals, theme: theme),
       ],

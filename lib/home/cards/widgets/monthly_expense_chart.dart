@@ -27,17 +27,18 @@ class MonthlyExpenseChart extends StatelessWidget {
             LineChartBarData(
               spots: spots,
               isCurved: true,
-              color: theme.colorScheme.onSurfaceVariant.withOpacity(0.5),
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.25),
               barWidth: 2,
-              dotData: FlDotData(show: false),
+              dotData: const FlDotData(show: false),
               belowBarData: BarAreaData(
                 show: true,
-                color: theme.colorScheme.onSurfaceVariant.withOpacity(0.18),
+                color:
+                    theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.12),
               ),
             ),
           ],
-          titlesData: FlTitlesData(show: false),
-          gridData: FlGridData(show: false),
+          titlesData: const FlTitlesData(show: false),
+          gridData: const FlGridData(show: false),
           borderData: FlBorderData(show: false),
         ),
       ),
