@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../data/expense_details.dart';
 import '../../data/expense_group.dart';
+import '../../state/expense_group_notifier.dart';
 import '../expense/expense_form_component.dart';
-import '../../data/expense_category.dart';
 import '../../data/expense_group_storage.dart';
 import '../group/add_new_expenses_group.dart';
 import '../../app_localizations.dart';
@@ -26,11 +27,45 @@ class ExpenseGroupDetailPage extends StatefulWidget {
 class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   ExpenseGroup? _trip;
   bool _deleted = false;
+  ExpenseGroupNotifier? _groupNotifier;
 
   @override
   void initState() {
     super.initState();
     _loadTrip();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // Rimuovi il listener precedente se esiste
+    _groupNotifier?.removeListener(_onGroupChanged);
+
+    // Ottieni il nuovo notifier e aggiungi il listener
+    _groupNotifier = context.read<ExpenseGroupNotifier>();
+    _groupNotifier?.addListener(_onGroupChanged);
+  }
+
+  @override
+  void dispose() {
+    // Rimuovi il listener in modo sicuro
+    _groupNotifier?.removeListener(_onGroupChanged);
+    _groupNotifier = null;
+    super.dispose();
+  }
+
+  void _onGroupChanged() {
+    final currentGroup = _groupNotifier?.currentGroup;
+
+    // Se il gruppo corrente nel notifier è lo stesso che stiamo visualizzando, aggiorna
+    if (currentGroup != null && _trip != null && currentGroup.id == _trip!.id) {
+      if (mounted) {
+        setState(() {
+          _trip = currentGroup;
+        });
+      }
+    }
   }
 
   Future<void> _loadTrip() async {
@@ -53,138 +88,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       setState(() {
         _trip = trip;
       });
+
+      // Forza sempre l'aggiornamento del notifier con i nuovi dati
+      _groupNotifier?.setCurrentGroup(trip);
     }
-  }
-
-  Future<void> _openEditExpense(ExpenseDetails expense) async {
-    final loc = AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it');
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.9,
-        ),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Header fisso
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    loc.get('edit_expense'),
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                  ),
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          _showDeleteExpenseDialog(expense);
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.close),
-                        onPressed: () => Navigator.of(context).pop(),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const Divider(height: 1),
-
-            // Contenuto scrollabile
-            Flexible(
-              child: SafeArea(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.only(
-                    left: 20,
-                    right: 20,
-                    top: 16,
-                    bottom: MediaQuery.of(context).viewInsets.bottom +
-                        MediaQuery.of(context).padding.bottom +
-                        20,
-                  ),
-                  child: ExpenseFormComponent(
-                    initialExpense: expense,
-                    participants:
-                        _trip!.participants.map((p) => p.name).toList(),
-                    categories: _trip!.categories.map((c) => c.name).toList(),
-                    tripStartDate: _trip!.startDate,
-                    tripEndDate: _trip!.endDate,
-                    shouldAutoClose: false,
-                    onExpenseAdded: (updatedExpense) async {
-                      // Aggiorna la spesa esistente
-                      final expenseWithId = ExpenseDetails(
-                        id: expense.id,
-                        category: updatedExpense.category,
-                        amount: updatedExpense.amount,
-                        paidBy: updatedExpense.paidBy,
-                        date: updatedExpense.date,
-                        note: updatedExpense.note,
-                      );
-
-                      setState(() {
-                        final index = _trip!.expenses
-                            .indexWhere((e) => e.id == expense.id);
-                        if (index != -1) {
-                          _trip!.expenses[index] = expenseWithId;
-                        }
-                      });
-
-                      // Salva le modifiche
-                      final trips = await ExpenseGroupStorage.getAllGroups();
-                      final tripIndex =
-                          trips.indexWhere((t) => t.id == _trip!.id);
-                      if (tripIndex != -1) {
-                        trips[tripIndex] = _trip!;
-                        await ExpenseGroupStorage.writeTrips(trips);
-                      }
-
-                      if (context.mounted) {
-                        Navigator.of(context).pop();
-                      }
-                    },
-                    onCategoryAdded: (categoryName) async {
-                      // Gestisci l'aggiunta di una nuova categoria
-                      final newCategory = ExpenseCategory(name: categoryName);
-                      setState(() {
-                        _trip!.categories.add(newCategory);
-                      });
-
-                      // Salva le modifiche
-                      final trips = await ExpenseGroupStorage.getAllGroups();
-                      final tripIndex =
-                          trips.indexWhere((t) => t.id == _trip!.id);
-                      if (tripIndex != -1) {
-                        trips[tripIndex] = _trip!;
-                        await ExpenseGroupStorage.writeTrips(trips);
-                      }
-                    },
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   void _showOverviewSheet() {
@@ -406,6 +313,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                         title: Text(loc.get('edit_group')),
                         onTap: () async {
                           Navigator.of(context).pop();
+
+                          // Imposta il gruppo corrente nel notifier prima di aprire l'editor
+                          _groupNotifier?.setCurrentGroup(_trip!);
+
                           final result = await Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => AddNewExpensesGroupPage(
@@ -416,7 +327,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                             ),
                           );
                           if (result == true && context.mounted) {
+                            // Forza il refresh completo e aggiorna il notifier
                             await _refreshTrip();
+                            // Pulisci e ricarica il notifier per essere sicuri
+                            _groupNotifier?.clearCurrentGroup();
                           }
                         },
                       ),
@@ -544,116 +458,270 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   void _showAddExpenseSheet() {
     final loc = AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it');
 
+    // Assicurati sempre che il notifier abbia i dati più aggiornati
+    if (_trip != null) {
+      _groupNotifier?.setCurrentGroup(_trip!);
+    }
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.9,
-        ),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Header fisso
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    loc.get('add_expense'),
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                ],
+      builder: (context) => Consumer<ExpenseGroupNotifier>(
+        builder: (context, groupNotifier, child) {
+          final currentGroup = groupNotifier.currentGroup ?? _trip!;
+
+          return Container(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.9,
+            ),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
               ),
             ),
-            const Divider(height: 1),
-
-            // Contenuto scrollabile
-            Flexible(
-              child: SafeArea(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.only(
-                    left: 20,
-                    right: 20,
-                    top: 16,
-                    bottom: MediaQuery.of(context).viewInsets.bottom +
-                        MediaQuery.of(context).padding.bottom +
-                        20,
-                  ),
-                  child: ExpenseFormComponent(
-                    participants:
-                        _trip!.participants.map((p) => p.name).toList(),
-                    categories: _trip!.categories.map((c) => c.name).toList(),
-                    tripStartDate: _trip!.startDate,
-                    tripEndDate: _trip!.endDate,
-                    shouldAutoClose: false,
-                    onExpenseAdded: (newExpense) async {
-                      // Genera un ID univoco per la nuova spesa
-                      final expenseWithId = ExpenseDetails(
-                        id: DateTime.now().millisecondsSinceEpoch.toString(),
-                        category: newExpense.category,
-                        amount: newExpense.amount,
-                        paidBy: newExpense.paidBy,
-                        date: newExpense.date,
-                        note: newExpense.note,
-                      );
-
-                      setState(() {
-                        _trip!.expenses.add(expenseWithId);
-                      });
-
-                      // Salva le modifiche
-                      final trips = await ExpenseGroupStorage.getAllGroups();
-                      final tripIndex =
-                          trips.indexWhere((t) => t.id == _trip!.id);
-                      if (tripIndex != -1) {
-                        trips[tripIndex] = _trip!;
-                        await ExpenseGroupStorage.writeTrips(trips);
-                      }
-
-                      if (context.mounted) {
-                        Navigator.of(context).pop();
-                      }
-                    },
-                    onCategoryAdded: (categoryName) async {
-                      // Gestisci l'aggiunta di una nuova categoria
-                      final newCategory = ExpenseCategory(name: categoryName);
-                      setState(() {
-                        _trip!.categories.add(newCategory);
-                      });
-
-                      // Salva le modifiche
-                      final trips = await ExpenseGroupStorage.getAllGroups();
-                      final tripIndex =
-                          trips.indexWhere((t) => t.id == _trip!.id);
-                      if (tripIndex != -1) {
-                        trips[tripIndex] = _trip!;
-                        await ExpenseGroupStorage.writeTrips(trips);
-                      }
-                    },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Header fisso
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        loc.get('add_expense'),
+                        style:
+                            Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                    ],
                   ),
                 ),
+                const Divider(height: 1),
+
+                // Contenuto scrollabile
+                Flexible(
+                  child: SafeArea(
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.only(
+                        left: 20,
+                        right: 20,
+                        top: 16,
+                        bottom: MediaQuery.of(context).viewInsets.bottom +
+                            MediaQuery.of(context).padding.bottom +
+                            20,
+                      ),
+                      child: ExpenseFormComponent(
+                        participants: currentGroup.participants
+                            .map((p) => p.name)
+                            .toList(),
+                        categories:
+                            currentGroup.categories.map((c) => c.name).toList(),
+                        tripStartDate: currentGroup.startDate,
+                        tripEndDate: currentGroup.endDate,
+                        shouldAutoClose: false,
+                        onExpenseAdded: (newExpense) async {
+                          // Genera un ID univoco per la nuova spesa
+                          final expenseWithId = ExpenseDetails(
+                            id: DateTime.now()
+                                .millisecondsSinceEpoch
+                                .toString(),
+                            category: newExpense.category,
+                            amount: newExpense.amount,
+                            paidBy: newExpense.paidBy,
+                            date: newExpense.date,
+                            note: newExpense.note,
+                          );
+
+                          // Usa il notifier per aggiungere la spesa
+                          await groupNotifier.addExpense(expenseWithId);
+
+                          // Aggiorna lo stato locale
+                          await _refreshTrip();
+
+                          if (context.mounted) {
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        onCategoryAdded: (categoryName) async {
+                          // Usa il notifier per aggiungere la categoria
+                          await groupNotifier.addCategory(categoryName);
+
+                          // Aggiorna lo stato locale
+                          await _refreshTrip();
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    ).whenComplete(() {
+      // Pulisci il notifier quando il dialog si chiude
+      if (mounted) {
+        _groupNotifier?.clearCurrentGroup();
+      }
+    });
+  }
+
+  Future<void> _openEditExpense(ExpenseDetails expense) async {
+    final loc = AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it');
+
+    // Assicurati sempre che il notifier abbia i dati più aggiornati
+    if (_trip != null) {
+      _groupNotifier?.setCurrentGroup(_trip!);
+    }
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Consumer<ExpenseGroupNotifier>(
+        builder: (context, groupNotifier, child) {
+          final currentGroup = groupNotifier.currentGroup ?? _trip!;
+
+          return Container(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.9,
+            ),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
               ),
             ),
-          ],
-        ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Header fisso
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        loc.get('edit_expense'),
+                        style:
+                            Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                      ),
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              _showDeleteExpenseDialog(expense);
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () => Navigator.of(context).pop(),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const Divider(height: 1),
+
+                // Contenuto scrollabile
+                Flexible(
+                  child: SafeArea(
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.only(
+                        left: 20,
+                        right: 20,
+                        top: 16,
+                        bottom: MediaQuery.of(context).viewInsets.bottom +
+                            MediaQuery.of(context).padding.bottom +
+                            20,
+                      ),
+                      child: ExpenseFormComponent(
+                        initialExpense: expense,
+                        participants: currentGroup.participants
+                            .map((p) => p.name)
+                            .toList(),
+                        categories:
+                            currentGroup.categories.map((c) => c.name).toList(),
+                        tripStartDate: currentGroup.startDate,
+                        tripEndDate: currentGroup.endDate,
+                        shouldAutoClose: false,
+                        onExpenseAdded: (updatedExpense) async {
+                          // Aggiorna la spesa esistente
+                          final expenseWithId = ExpenseDetails(
+                            id: expense.id,
+                            category: updatedExpense.category,
+                            amount: updatedExpense.amount,
+                            paidBy: updatedExpense.paidBy,
+                            date: updatedExpense.date,
+                            note: updatedExpense.note,
+                          );
+
+                          // Aggiorna tramite il notifier
+                          final updatedExpenses =
+                              currentGroup.expenses.map((e) {
+                            return e.id == expense.id ? expenseWithId : e;
+                          }).toList();
+
+                          final updatedGroup = ExpenseGroup(
+                            title: currentGroup.title,
+                            expenses: updatedExpenses,
+                            participants: currentGroup.participants,
+                            startDate: currentGroup.startDate,
+                            endDate: currentGroup.endDate,
+                            currency: currentGroup.currency,
+                            categories: currentGroup.categories,
+                            timestamp: currentGroup.timestamp,
+                            id: currentGroup.id,
+                            file: currentGroup.file,
+                            pinned: currentGroup.pinned,
+                          );
+
+                          await groupNotifier.updateGroup(updatedGroup);
+
+                          // Aggiorna lo stato locale
+                          await _refreshTrip();
+
+                          if (context.mounted) {
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        onCategoryAdded: (categoryName) async {
+                          // Usa il notifier per aggiungere la categoria
+                          await groupNotifier.addCategory(categoryName);
+
+                          // Aggiorna lo stato locale
+                          await _refreshTrip();
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
       ),
-    );
+    ).whenComplete(() {
+      // Pulisci il notifier quando il dialog si chiude
+      if (mounted) {
+        _groupNotifier?.clearCurrentGroup();
+      }
+    });
   }
 
   Future<void> _exportToCsv() async {

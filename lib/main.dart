@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'themes/caravella_themes.dart';
 import 'state/locale_notifier.dart';
 import 'state/theme_mode_notifier.dart';
+import 'state/expense_group_notifier.dart';
 import 'home/home_page.dart';
 import 'config/app_config.dart';
 
@@ -108,27 +110,32 @@ class _CaravellaAppState extends State<CaravellaApp> {
 
   @override
   Widget build(BuildContext context) {
-    return LocaleNotifier(
-      locale: _locale,
-      changeLocale: _changeLocale,
-      child: ThemeModeNotifier(
-        themeMode: _themeMode,
-        changeTheme: _changeTheme,
-        child: MaterialApp(
-          title: AppConfig.appName,
-          debugShowCheckedModeBanner: AppConfig.showDebugBanner,
-          theme: CaravellaThemes.light,
-          darkTheme: CaravellaThemes.dark,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ExpenseGroupNotifier()),
+      ],
+      child: LocaleNotifier(
+        locale: _locale,
+        changeLocale: _changeLocale,
+        child: ThemeModeNotifier(
           themeMode: _themeMode,
-          locale: Locale(_locale),
-          supportedLocales: const [Locale('it'), Locale('en')],
-          localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          home: const CaravellaHomePage(title: 'Caravella'),
-          navigatorObservers: [routeObserver],
+          changeTheme: _changeTheme,
+          child: MaterialApp(
+            title: AppConfig.appName,
+            debugShowCheckedModeBanner: AppConfig.showDebugBanner,
+            theme: CaravellaThemes.light,
+            darkTheme: CaravellaThemes.dark,
+            themeMode: _themeMode,
+            locale: Locale(_locale),
+            supportedLocales: const [Locale('it'), Locale('en')],
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            home: const CaravellaHomePage(title: 'Caravella'),
+            navigatorObservers: [routeObserver],
+          ),
         ),
       ),
     );

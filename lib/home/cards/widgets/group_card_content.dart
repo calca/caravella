@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../app_localizations.dart';
 import '../../../state/locale_notifier.dart';
+import '../../../state/expense_group_notifier.dart';
 import '../../../data/expense_group.dart';
 import '../../../data/expense_category.dart';
 import '../../../data/expense_group_storage.dart';
@@ -103,93 +105,110 @@ class GroupCardContent extends StatelessWidget {
     }
   }
 
-  void _showAddExpenseSheet(BuildContext context) {
+  void _showAddExpenseSheet(BuildContext context, ExpenseGroup currentGroup) {
     final loc = AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it');
+
+    // Imposta il gruppo corrente nel notifier
+    context.read<ExpenseGroupNotifier>().setCurrentGroup(currentGroup);
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.9,
-        ),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Handle bar fisso
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  Container(
-                    width: 40,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.outline,
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    loc.get('add_expense'),
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Divider(height: 1),
+      builder: (context) => Consumer<ExpenseGroupNotifier>(
+        builder: (context, groupNotifier, child) {
+          final currentGroup = groupNotifier.currentGroup ?? group;
 
-            // Contenuto scrollabile
-            Flexible(
-              child: SafeArea(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.only(
-                    left: 20,
-                    right: 20,
-                    top: 16,
-                    bottom: MediaQuery.of(context).viewInsets.bottom +
-                        MediaQuery.of(context).padding.bottom +
-                        20,
-                  ),
-                  child: ExpenseFormComponent(
-                    participants:
-                        group.participants.map((p) => p.name).toList(),
-                    categories: group.categories.map((c) => c.name).toList(),
-                    onExpenseAdded: (expense) async {
-                      // Save the expense to the group
-                      await _saveExpenseToGroup(expense);
-                      // Brief delay per permettere all'utente di vedere il feedback
-                      await Future.delayed(const Duration(milliseconds: 100));
-                      // Callback per aggiornare la UI, mantenendo la posizione corrente
-                      onExpenseAdded();
-                      // Close the modal only if context is still mounted
-                      if (context.mounted) {
-                        Navigator.pop(context);
-                      }
-                    },
-                    onCategoryAdded: (newCategory) async {
-                      // Save the new category to the group
-                      await _saveCategoryToGroup(newCategory);
-                      // Notify parent that category was added
-                      if (onCategoryAdded != null) {
-                        onCategoryAdded!();
-                      }
-                    },
-                    shouldAutoClose: false,
+          return Container(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.9,
+            ),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surface,
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Handle bar fisso
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    children: [
+                      Container(
+                        width: 40,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.outline,
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        loc.get('add_expense'),
+                        style: theme.textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
+                const Divider(height: 1),
+
+                // Contenuto scrollabile
+                Flexible(
+                  child: SafeArea(
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.only(
+                        left: 20,
+                        right: 20,
+                        top: 16,
+                        bottom: MediaQuery.of(context).viewInsets.bottom +
+                            MediaQuery.of(context).padding.bottom +
+                            20,
+                      ),
+                      child: ExpenseFormComponent(
+                        participants: currentGroup.participants
+                            .map((p) => p.name)
+                            .toList(),
+                        categories:
+                            currentGroup.categories.map((c) => c.name).toList(),
+                        onExpenseAdded: (expense) async {
+                          // Save the expense to the group
+                          await _saveExpenseToGroup(expense);
+                          // Brief delay per permettere all'utente di vedere il feedback
+                          await Future.delayed(
+                              const Duration(milliseconds: 100));
+                          // Callback per aggiornare la UI, mantenendo la posizione corrente
+                          onExpenseAdded();
+                          // Close the modal only if context is still mounted
+                          if (context.mounted) {
+                            Navigator.pop(context);
+                          }
+                        },
+                        onCategoryAdded: (newCategory) async {
+                          // Save the new category to the group
+                          await _saveCategoryToGroup(newCategory);
+                          // Notify parent that category was added
+                          if (onCategoryAdded != null) {
+                            onCategoryAdded!();
+                          }
+                        },
+                        shouldAutoClose: false,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          );
+        },
       ),
-    );
+    ).whenComplete(() {
+      // Pulisci il notifier quando il dialog si chiude
+      context.read<ExpenseGroupNotifier>().clearCurrentGroup();
+    });
   }
 
   // Computed properties memoizzate per performance
@@ -204,28 +223,37 @@ class GroupCardContent extends StatelessWidget {
       .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildHeader(),
-        _buildDateRange(),
-        _buildTotalAmount(),
-        const SizedBox(height: _largSpacing),
-        _buildStatistics(),
-        _buildRecentActivity(),
-        const Spacer(),
-        _buildAddButton(context),
-      ],
+    return Consumer<ExpenseGroupNotifier>(
+      builder: (context, groupNotifier, child) {
+        // Se questo gruppo è stato aggiornato, usa i dati dal notifier
+        final currentGroup = (groupNotifier.currentGroup?.id == group.id)
+            ? groupNotifier.currentGroup!
+            : group;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader(currentGroup),
+            _buildDateRange(currentGroup),
+            _buildTotalAmount(currentGroup),
+            const SizedBox(height: _largSpacing),
+            _buildStatistics(currentGroup),
+            _buildRecentActivity(currentGroup),
+            const Spacer(),
+            _buildAddButton(context, currentGroup),
+          ],
+        );
+      },
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(ExpenseGroup currentGroup) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
           child: Text(
-            group.title,
+            currentGroup.title,
             style: theme.textTheme.headlineMedium?.copyWith(
               fontWeight: FontWeight.w600,
               fontSize: _titleFontSize,
@@ -233,7 +261,7 @@ class GroupCardContent extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        if (group.pinned)
+        if (currentGroup.pinned)
           Icon(
             Icons.push_pin,
             size: _iconSize,
@@ -243,15 +271,15 @@ class GroupCardContent extends StatelessWidget {
     );
   }
 
-  Widget _buildDateRange() {
-    if (group.startDate == null && group.endDate == null) {
-      return const SizedBox(height: _spacing);
+  Widget _buildDateRange(ExpenseGroup currentGroup) {
+    if (currentGroup.startDate == null && currentGroup.endDate == null) {
+      return SizedBox(height: _spacing);
     }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: _spacing),
+        SizedBox(height: _spacing),
         Row(
           children: [
             Icon(
@@ -261,7 +289,7 @@ class GroupCardContent extends StatelessWidget {
             ),
             const SizedBox(width: 4),
             Text(
-              _formatDateRange(group, localizations),
+              _formatDateRange(currentGroup, localizations),
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -273,7 +301,10 @@ class GroupCardContent extends StatelessWidget {
     );
   }
 
-  Widget _buildTotalAmount() {
+  Widget _buildTotalAmount(ExpenseGroup currentGroup) {
+    final totalExpenses = currentGroup.expenses
+        .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
@@ -293,7 +324,13 @@ class GroupCardContent extends StatelessWidget {
     );
   }
 
-  Widget _buildStatistics() {
+  Widget _buildStatistics(ExpenseGroup currentGroup) {
+    final participantCount = currentGroup.participants.length;
+    final recentExpensesTotal = currentGroup.expenses
+        .where((e) =>
+            e.date.isAfter(DateTime.now().subtract(const Duration(days: 7))))
+        .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -306,13 +343,13 @@ class GroupCardContent extends StatelessWidget {
         ),
         const SizedBox(width: 16),
         Semantics(
-          label: 'Expenses: ${group.expenses.length}',
+          label: 'Expenses: ${currentGroup.expenses.length}',
           child: _buildCompactStat(
             icon: Icons.receipt_long_outlined,
-            value: group.expenses.length.toString(),
+            value: currentGroup.expenses.length.toString(),
           ),
         ),
-        Expanded(child: Container()),
+        const Spacer(),
         Semantics(
           label: 'Last 7 days: ${recentExpensesTotal.toStringAsFixed(2)}€',
           child: _buildLabeledStat(
@@ -327,8 +364,8 @@ class GroupCardContent extends StatelessWidget {
     );
   }
 
-  Widget _buildRecentActivity() {
-    if (group.expenses.isEmpty) return Container();
+  Widget _buildRecentActivity(ExpenseGroup currentGroup) {
+    if (currentGroup.expenses.isEmpty) return Container();
 
     return Column(
       children: [
@@ -348,7 +385,7 @@ class GroupCardContent extends StatelessWidget {
               const SizedBox(height: 12),
               SizedBox(
                 height: _chartHeight,
-                child: MiniExpenseChart(group: group, theme: theme),
+                child: MiniExpenseChart(group: currentGroup, theme: theme),
               ),
             ],
           ),
@@ -357,19 +394,18 @@ class GroupCardContent extends StatelessWidget {
     );
   }
 
-  Widget _buildAddButton(BuildContext context) {
+  Widget _buildAddButton(BuildContext context, ExpenseGroup currentGroup) {
     return SizedBox(
       width: double.infinity,
       child: Semantics(
         label: 'Add new expense',
         child: TextButton.icon(
-          onPressed: () => _showAddExpenseSheet(context),
+          onPressed: () => _showAddExpenseSheet(context, currentGroup),
           style: TextButton.styleFrom(
             foregroundColor: theme.colorScheme.onSurface,
             backgroundColor:
                 theme.colorScheme.onSurface.withValues(alpha: 0.05),
-            padding:
-                const EdgeInsets.symmetric(vertical: _buttonVerticalPadding),
+            padding: EdgeInsets.symmetric(vertical: _buttonVerticalPadding),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(_borderRadius),
             ),
@@ -391,49 +427,54 @@ class GroupCardContent extends StatelessWidget {
     );
   }
 
+  Widget _buildCompactStat({required IconData icon, required String value}) {
+    return Row(
+      children: [
+        Icon(
+          icon,
+          size: _iconSize,
+          color: theme.colorScheme.onSurface,
+        ),
+        const SizedBox(width: 4),
+        Text(
+          value,
+          style: theme.textTheme.bodyLarge?.copyWith(
+            fontWeight: FontWeight.w600,
+            color: theme.colorScheme.onSurface,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildLabeledStat({
     required IconData icon,
-    required dynamic value,
+    required double value,
     required String label,
     bool isCurrency = false,
     bool isPlaceholder = false,
   }) {
-    final color = isPlaceholder
-        ? theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5)
+    final valueColor = isPlaceholder
+        ? theme.colorScheme.onSurface.withOpacity(0.4)
         : theme.colorScheme.onSurface;
+
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: label.isEmpty
-              ? MainAxisAlignment.start
-              : MainAxisAlignment.center,
           children: [
             Icon(
               icon,
-              size: 16,
-              color: color,
+              size: _iconSize,
+              color: valueColor,
             ),
             const SizedBox(width: 4),
-            Flexible(
-              child: isCurrency
-                  ? CurrencyDisplay(
-                      value: value as double,
-                      currency: '€',
-                      valueFontSize: 16.0,
-                      currencyFontSize: 12.0,
-                      alignment: MainAxisAlignment.start,
-                      showDecimals: true,
-                      color: color,
-                    )
-                  : Text(
-                      value.toString(),
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: color,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
+            Text(
+              isCurrency ? '${value.toStringAsFixed(2)}€' : value.toString(),
+              style: theme.textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: valueColor,
+              ),
             ),
           ],
         ),
@@ -442,36 +483,10 @@ class GroupCardContent extends StatelessWidget {
           Text(
             label,
             style: theme.textTheme.bodySmall?.copyWith(
-              color: isPlaceholder
-                  ? theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5)
-                  : theme.colorScheme.onSurfaceVariant,
+              color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
         ],
-      ],
-    );
-  }
-
-  Widget _buildCompactStat({
-    required IconData icon,
-    required String value,
-  }) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          icon,
-          size: 16,
-          color: theme.colorScheme.onSurface,
-        ),
-        const SizedBox(width: 4),
-        Text(
-          value,
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w600,
-            color: theme.colorScheme.onSurface,
-          ),
-        ),
       ],
     );
   }

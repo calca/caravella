@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:image_picker/image_picker.dart';
@@ -10,6 +11,7 @@ import '../../data/expense_category.dart';
 import '../../../data/expense_group_storage.dart';
 import '../../app_localizations.dart';
 import '../../state/locale_notifier.dart';
+import '../../state/expense_group_notifier.dart';
 import '../../widgets/currency_selector.dart';
 import '../../widgets/caravella_app_bar.dart';
 import '../../widgets/widgets.dart';
@@ -198,46 +200,79 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       );
       return;
     }
-    if (widget.trip != null) {
-      // EDIT: update existing trip
-      final trips = await ExpenseGroupStorage.getAllGroups();
-      final idx = trips.indexWhere((v) => v.id == widget.trip!.id);
-      if (idx != -1) {
-        trips[idx] = ExpenseGroup(
-          title: _titleController.text,
-          expenses: trips[idx].expenses, // keep expenses
-          participants: _participants,
-          startDate: _startDate,
-          endDate: _endDate,
-          currency: _currency,
-          categories: _categories,
-          timestamp: trips[idx].timestamp, // mantieni il timestamp originale
-          id: trips[idx].id, // mantieni l'id originale
-          file: _savedImagePath, // save image path
-        );
-        await ExpenseGroupStorage.writeTrips(trips);
-        if (!mounted) return;
-        Navigator.of(context).pop(true);
-        return;
+
+    try {
+      if (widget.trip != null) {
+        // EDIT: update existing trip
+        final trips = await ExpenseGroupStorage.getAllGroups();
+        final idx = trips.indexWhere((v) => v.id == widget.trip!.id);
+        if (idx != -1) {
+          // Crea una nuova istanza del gruppo con i dati aggiornati
+          final updatedTrip = ExpenseGroup(
+            title: _titleController.text.trim(),
+            expenses: trips[idx].expenses, // keep expenses
+            participants:
+                List.from(_participants), // Copia la lista dei partecipanti
+            startDate: _startDate,
+            endDate: _endDate,
+            currency: _currency,
+            categories:
+                List.from(_categories), // Copia la lista delle categorie
+            timestamp: trips[idx].timestamp, // mantieni il timestamp originale
+            id: trips[idx].id, // mantieni l'id originale
+            file: _savedImagePath, // save image path
+            pinned: trips[idx].pinned, // mantieni lo stato pinned
+          );
+
+          trips[idx] = updatedTrip;
+          await ExpenseGroupStorage.writeTrips(trips);
+
+          // Notifica l'aggiornamento al notifier
+          if (mounted) {
+            final groupNotifier = context.read<ExpenseGroupNotifier>();
+            if (groupNotifier.currentGroup?.id == updatedTrip.id) {
+              await groupNotifier.updateGroup(updatedTrip);
+            } else {
+              // Notifica che questo gruppo è stato aggiornato anche se non è quello corrente
+              groupNotifier.notifyGroupUpdated(updatedTrip.id);
+            }
+          }
+
+          if (!mounted) return;
+          Navigator.of(context).pop(true);
+          return;
+        }
       }
+
+      // CREATE: add new trip
+      final newTrip = ExpenseGroup(
+        title: _titleController.text.trim(),
+        expenses: [],
+        participants:
+            List.from(_participants), // Copia la lista dei partecipanti
+        startDate: _startDate,
+        endDate: _endDate,
+        currency: _currency,
+        categories: List.from(_categories), // Copia la lista delle categorie
+        file: _savedImagePath, // save image path
+        // timestamp: default a now
+      );
+
+      final trips = await ExpenseGroupStorage.getAllGroups();
+      trips.add(newTrip);
+      await ExpenseGroupStorage.writeTrips(trips);
+
+      if (!mounted) return;
+      Navigator.of(context).pop(true);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Errore durante il salvataggio: ${e.toString()}'),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
     }
-    // CREATE: add new trip
-    final newTrip = ExpenseGroup(
-      title: _titleController.text,
-      expenses: [],
-      participants: _participants,
-      startDate: _startDate,
-      endDate: _endDate,
-      currency: _currency,
-      categories: _categories,
-      file: _savedImagePath, // save image path
-      // timestamp: default a now
-    );
-    final trips = await ExpenseGroupStorage.getAllGroups();
-    trips.add(newTrip);
-    await ExpenseGroupStorage.writeTrips(trips);
-    if (!mounted) return;
-    Navigator.of(context).pop(true);
   }
 
   // Image handling methods
@@ -657,7 +692,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                           if (val.trim().isNotEmpty) {
                                             setState(() {
                                               _participants[i] =
-                                                  p.copyWith(name: val.trim());
+                                                  ExpenseParticipant(
+                                                      name: val.trim());
                                             });
                                             _closeDialogAndUnfocus();
                                           }
@@ -676,7 +712,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                             if (val.isNotEmpty) {
                                               setState(() {
                                                 _participants[i] =
-                                                    p.copyWith(name: val);
+                                                    ExpenseParticipant(
+                                                        name: val);
                                               });
                                               _closeDialogAndUnfocus();
                                             }
@@ -882,8 +919,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                         onSubmitted: (val) {
                                           if (val.trim().isNotEmpty) {
                                             setState(() {
-                                              _categories[i] =
-                                                  c.copyWith(name: val.trim());
+                                              _categories[i] = ExpenseCategory(
+                                                  name: val.trim());
                                             });
                                             _closeDialogAndUnfocus();
                                           }
@@ -902,7 +939,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                             if (val.isNotEmpty) {
                                               setState(() {
                                                 _categories[i] =
-                                                    c.copyWith(name: val);
+                                                    ExpenseCategory(name: val);
                                               });
                                               _closeDialogAndUnfocus();
                                             }
