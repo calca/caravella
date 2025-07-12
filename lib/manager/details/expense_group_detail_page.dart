@@ -837,31 +837,30 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                   ),
                 ),
         ),
-        Positioned(
-          bottom: 0,
-          right: 0,
-          child: Container(
-            decoration: BoxDecoration(
-              color: colorScheme.surface,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.08),
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            padding: const EdgeInsets.all(4),
-            child: Icon(
-              trip.archived
-                  ? Icons.archive_rounded
-                  : Icons.play_circle_fill_rounded,
-              size: circleSize * 0.3,
-              color: colorScheme.onSurface.withValues(alpha: 0.6),
+        if (trip.archived)
+          Positioned(
+            bottom: 0,
+            right: 0,
+            child: Container(
+              decoration: BoxDecoration(
+                color: colorScheme.surface,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.08),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              padding: const EdgeInsets.all(4),
+              child: Icon(
+                Icons.archive_rounded,
+                size: circleSize * 0.3,
+                color: colorScheme.onSurface.withValues(alpha: 0.6),
+              ),
             ),
           ),
-        ),
       ],
     );
 
@@ -954,8 +953,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                                 iconSize: 24,
                                 tooltip: loc.get('overview'),
                                 style: IconButton.styleFrom(
-                                  backgroundColor: colorScheme.surfaceContainerLowest,
-                                  foregroundColor: colorScheme.onSurface.withOpacity(0.85),
+                                  backgroundColor:
+                                      colorScheme.surfaceContainerLowest,
+                                  foregroundColor: colorScheme.onSurface
+                                      .withValues(alpha: 0.85),
                                   minimumSize: const Size(54, 54),
                                 ),
                               ),
@@ -973,8 +974,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                                 iconSize: 24,
                                 tooltip: loc.get('statistics'),
                                 style: IconButton.styleFrom(
-                                  backgroundColor: colorScheme.surfaceContainerLowest,
-                                  foregroundColor: colorScheme.onSurface.withOpacity(0.85),
+                                  backgroundColor:
+                                      colorScheme.surfaceContainerLowest,
+                                  foregroundColor: colorScheme.onSurface
+                                      .withValues(alpha: .85),
                                   minimumSize: const Size(54, 54),
                                 ),
                               ),
@@ -988,8 +991,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                                 iconSize: 24,
                                 tooltip: loc.get('options'),
                                 style: IconButton.styleFrom(
-                                  backgroundColor: colorScheme.surfaceContainerLowest,
-                                  foregroundColor: colorScheme.onSurface.withOpacity(0.85),
+                                  backgroundColor:
+                                      colorScheme.surfaceContainerLowest,
+                                  foregroundColor: colorScheme.onSurface
+                                      .withValues(alpha: .85),
                                   minimumSize: const Size(54, 54),
                                 ),
                               ),
