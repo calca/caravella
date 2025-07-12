@@ -6,20 +6,17 @@ import '../../../state/expense_group_notifier.dart';
 import '../../../data/expense_group.dart';
 import '../../../manager/expense/expense_form_component.dart';
 import '../../../widgets/currency_display.dart';
-import 'mini_expense_chart.dart';
 
 class GroupCardContent extends StatelessWidget {
   // Design constants
   static const double _titleFontSize = 28.0;
   static const double _totalFontSize = 52.0;
   static const double _currencyFontSize = 32.0;
-  static const double _chartHeight = 60.0;
   static const double _buttonVerticalPadding = 12.0;
   static const double _borderRadius = 12.0;
   static const double _iconSize = 20.0;
   static const double _spacing = 8.0;
   static const double _largSpacing = 24.0;
-  static const double _sectionSpacing = 28.0;
 
   final ExpenseGroup group;
   final AppLocalizations localizations;
@@ -279,10 +276,6 @@ class GroupCardContent extends StatelessWidget {
 
   Widget _buildStatistics(ExpenseGroup currentGroup) {
     final participantCount = currentGroup.participants.length;
-    final recentExpensesTotal = currentGroup.expenses
-        .where((e) =>
-            e.date.isAfter(DateTime.now().subtract(const Duration(days: 7))))
-        .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -302,49 +295,13 @@ class GroupCardContent extends StatelessWidget {
             value: currentGroup.expenses.length.toString(),
           ),
         ),
-        const Spacer(),
-        Semantics(
-          label: 'Last 7 days: ${recentExpensesTotal.toStringAsFixed(2)}€',
-          child: _buildLabeledStat(
-            icon: Icons.trending_up,
-            value: recentExpensesTotal,
-            label: localizations.get('last_7_days'),
-            isCurrency: true,
-            isPlaceholder: recentExpensesTotal == 0,
-          ),
-        ),
       ],
     );
   }
 
   Widget _buildRecentActivity(ExpenseGroup currentGroup) {
-    if (currentGroup.expenses.isEmpty) return Container();
-
-    return Column(
-      children: [
-        const SizedBox(height: _sectionSpacing),
-        AnimatedSwitcher(
-          duration: const Duration(milliseconds: 300),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                localizations.get('recent_activity'),
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: theme.colorScheme.onSurface,
-                ),
-              ),
-              const SizedBox(height: 12),
-              SizedBox(
-                height: _chartHeight,
-                child: MiniExpenseChart(group: currentGroup, theme: theme),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
+    // Recent activity and chart removed for cleaner UI
+    return Container();
   }
 
   Widget _buildAddButton(BuildContext context, ExpenseGroup currentGroup) {
@@ -401,47 +358,4 @@ class GroupCardContent extends StatelessWidget {
     );
   }
 
-  Widget _buildLabeledStat({
-    required IconData icon,
-    required double value,
-    required String label,
-    bool isCurrency = false,
-    bool isPlaceholder = false,
-  }) {
-    final valueColor = isPlaceholder
-        ? theme.colorScheme.onSurface.withValues(alpha: 0.4)
-        : theme.colorScheme.onSurface;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Row(
-          children: [
-            Icon(
-              icon,
-              size: _iconSize,
-              color: valueColor,
-            ),
-            const SizedBox(width: 4),
-            Text(
-              isCurrency ? '${value.toStringAsFixed(2)}€' : value.toString(),
-              style: theme.textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: valueColor,
-              ),
-            ),
-          ],
-        ),
-        if (label.isNotEmpty) ...[
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ],
-      ],
-    );
-  }
 }
