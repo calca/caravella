@@ -799,78 +799,218 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     final totalExpenses =
         trip.expenses.fold<double>(0, (sum, s) => sum + (s.amount ?? 0));
 
+    // Widget cerchio con immagine o lettere e icona di stato sovrapposta
+    final double circleSize = MediaQuery.of(context).size.width * 0.3;
+    Widget groupCircle = Stack(
+      children: [
+        Container(
+          margin: const EdgeInsets.only(top: 8, bottom: 8),
+          width: circleSize,
+          height: circleSize,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: colorScheme.primaryContainer,
+            border: Border.all(
+              color: colorScheme.outline,
+              width: 2,
+            ),
+          ),
+          child: trip.file != null && trip.file!.isNotEmpty
+              ? ClipOval(
+                  child: Image.asset(
+                    trip.file!,
+                    fit: BoxFit.cover,
+                    width: circleSize,
+                    height: circleSize,
+                  ),
+                )
+              : Center(
+                  child: Text(
+                    trip.title.length >= 2
+                        ? trip.title.substring(0, 2).toUpperCase()
+                        : trip.title.toUpperCase(),
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                          color: colorScheme.onPrimaryContainer,
+                          fontWeight: FontWeight.bold,
+                          fontSize: circleSize * 0.4,
+                        ),
+                  ),
+                ),
+        ),
+        Positioned(
+          bottom: 0,
+          right: 0,
+          child: Container(
+            decoration: BoxDecoration(
+              color: colorScheme.surface,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.08),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            padding: const EdgeInsets.all(4),
+            child: Icon(
+              trip.archived
+                  ? Icons.archive_rounded
+                  : Icons.play_circle_fill_rounded,
+              size: circleSize * 0.3,
+              color: colorScheme.onSurface.withValues(alpha: 0.6),
+            ),
+          ),
+        ),
+      ],
+    );
+
     return Scaffold(
       backgroundColor: colorScheme.surfaceContainerHighest,
       body: CustomScrollView(
         slivers: [
           // Hero AppBar con gradiente
           SliverAppBar(
-            expandedHeight: 160.0,
+            expandedHeight: 10.0,
             floating: false,
             pinned: true,
             backgroundColor: colorScheme.surfaceContainerHighest,
             foregroundColor: colorScheme.onSurface,
             elevation: 0,
-            flexibleSpace: FlexibleSpaceBar(
-              background: Container(
-                color: colorScheme.surfaceContainerHighest,
-                child: SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 50, 16, 12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Titolo del gruppo con icona stato a destra
-                        Row(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_rounded),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ),
+          // Header custom sotto l'AppBar
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(child: groupCircle),
+                  const SizedBox(height: 16),
+                  Text(
+                    trip.title,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                          color: colorScheme.onSurface,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 28,
+                        ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 32),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(
-                              child: Text(
-                                trip.title,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headlineMedium
-                                    ?.copyWith(
-                                      color: colorScheme.onSurface,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                            Text(
+                              'Totale',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: colorScheme.onSurface,
+                                    fontSize: 20,
+                                  ),
                             ),
-                            const SizedBox(width: 12),
-                            // Icona stato solo icona, neutra
-                            Icon(
-                              trip.archived
-                                  ? Icons.archive_rounded
-                                  : Icons.play_circle_fill_rounded,
-                              size: 24,
-                              color:
-                                  colorScheme.onSurface.withValues(alpha: 0.6),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        // Totale sotto il titolo - allineato a destra
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
+                            const SizedBox(height: 4),
                             CurrencyDisplay(
                               value: totalExpenses,
                               currency: trip.currency,
-                              valueFontSize: 42.0,
-                              currencyFontSize: 28.0,
-                              alignment: MainAxisAlignment.end,
+                              valueFontSize: 22.0,
+                              currencyFontSize: 18.0,
+                              alignment: MainAxisAlignment.start,
                               showDecimals: true,
                               color: colorScheme.onSurface,
                               fontWeight: FontWeight.normal,
                             ),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
+                      SizedBox(
+                        height: 54,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Tooltip(
+                              message: _trip!.expenses.isNotEmpty
+                                  ? loc.get('show_overview')
+                                  : loc.get('no_expenses_to_display'),
+                              child: IconButton.filled(
+                                onPressed: _trip!.expenses.isNotEmpty
+                                    ? _showOverviewSheet
+                                    : null,
+                                icon: const Icon(
+                                    Icons.dashboard_customize_rounded),
+                                iconSize: 24,
+                                tooltip: loc.get('overview'),
+                                style: IconButton.styleFrom(
+                                  backgroundColor: _trip!.expenses.isNotEmpty
+                                      ? colorScheme.primaryContainer
+                                      : colorScheme.surfaceContainerHighest,
+                                  foregroundColor: _trip!.expenses.isNotEmpty
+                                      ? colorScheme.onPrimaryContainer
+                                      : colorScheme.outline,
+                                  minimumSize: const Size(54, 54),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Tooltip(
+                              message: _trip!.expenses.isNotEmpty
+                                  ? loc.get('show_statistics')
+                                  : loc.get('no_expenses_to_analyze'),
+                              child: IconButton.filled(
+                                onPressed: _trip!.expenses.isNotEmpty
+                                    ? _showStatisticsSheet
+                                    : null,
+                                icon: const Icon(Icons.analytics_rounded),
+                                iconSize: 24,
+                                tooltip: loc.get('statistics'),
+                                style: IconButton.styleFrom(
+                                  backgroundColor: _trip!.expenses.isNotEmpty
+                                      ? colorScheme.primaryContainer
+                                      : colorScheme.surfaceContainerHighest,
+                                  foregroundColor: _trip!.expenses.isNotEmpty
+                                      ? colorScheme.onPrimaryContainer
+                                      : colorScheme.outline,
+                                  minimumSize: const Size(54, 54),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Tooltip(
+                              message: loc.get('options'),
+                              child: IconButton.filled(
+                                onPressed: _showOptionsSheet,
+                                icon: const Icon(Icons.settings_rounded),
+                                iconSize: 24,
+                                tooltip: loc.get('options'),
+                                style: IconButton.styleFrom(
+                                  backgroundColor:
+                                      colorScheme.secondaryContainer,
+                                  foregroundColor:
+                                      colorScheme.onSecondaryContainer,
+                                  minimumSize: const Size(54, 54),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ),
+                  const SizedBox(height: 8),
+                ],
               ),
             ),
           ),
@@ -882,72 +1022,14 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Action buttons - sempre visibili
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      // Overview IconButton
-                      Tooltip(
-                        message: _trip!.expenses.isNotEmpty
-                            ? loc.get('show_overview')
-                            : loc.get('no_expenses_to_display'),
-                        child: IconButton.filled(
-                          onPressed: _trip!.expenses.isNotEmpty
-                              ? _showOverviewSheet
-                              : null,
-                          icon: const Icon(Icons.dashboard_customize_rounded),
-                          iconSize: 24,
-                          tooltip: loc.get('overview'),
-                          style: IconButton.styleFrom(
-                            backgroundColor: _trip!.expenses.isNotEmpty
-                                ? colorScheme.primaryContainer
-                                : colorScheme.surfaceContainerHighest,
-                            foregroundColor: _trip!.expenses.isNotEmpty
-                                ? colorScheme.onPrimaryContainer
-                                : colorScheme.outline,
-                            minimumSize: const Size(56, 56),
-                          ),
+                  // Titolo 'Attività' al posto della seconda row di bottoni
+                  Text(
+                    'Attività',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: colorScheme.onSurface,
+                          fontSize: 20,
                         ),
-                      ),
-                      // Statistics IconButton
-                      Tooltip(
-                        message: _trip!.expenses.isNotEmpty
-                            ? loc.get('show_statistics')
-                            : loc.get('no_expenses_to_analyze'),
-                        child: IconButton.filled(
-                          onPressed: _trip!.expenses.isNotEmpty
-                              ? _showStatisticsSheet
-                              : null,
-                          icon: const Icon(Icons.analytics_rounded),
-                          iconSize: 24,
-                          tooltip: loc.get('statistics'),
-                          style: IconButton.styleFrom(
-                            backgroundColor: _trip!.expenses.isNotEmpty
-                                ? colorScheme.primaryContainer
-                                : colorScheme.surfaceContainerHighest,
-                            foregroundColor: _trip!.expenses.isNotEmpty
-                                ? colorScheme.onPrimaryContainer
-                                : colorScheme.outline,
-                            minimumSize: const Size(56, 56),
-                          ),
-                        ),
-                      ),
-                      // Menu Options IconButton (sempre abilitato)
-                      Tooltip(
-                        message: loc.get('options'),
-                        child: IconButton.filled(
-                          onPressed: _showOptionsSheet,
-                          icon: const Icon(Icons.settings_rounded),
-                          iconSize: 24,
-                          tooltip: loc.get('options'),
-                          style: IconButton.styleFrom(
-                            backgroundColor: colorScheme.secondaryContainer,
-                            foregroundColor: colorScheme.onSecondaryContainer,
-                            minimumSize: const Size(56, 56),
-                          ),
-                        ),
-                      ),
-                    ],
                   ),
                   const SizedBox(height: 16),
                   // Lista spese o messaggio vuoto
