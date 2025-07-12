@@ -809,9 +809,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           height: circleSize,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: colorScheme.primaryContainer,
+            color: colorScheme.surfaceContainerLowest,
             border: Border.all(
-              color: colorScheme.outline,
+              color: colorScheme.outlineVariant,
               width: 2,
             ),
           ),
@@ -830,7 +830,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                         ? trip.title.substring(0, 2).toUpperCase()
                         : trip.title.toUpperCase(),
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          color: colorScheme.onPrimaryContainer,
+                          color: colorScheme.onSurface,
                           fontWeight: FontWeight.bold,
                           fontSize: circleSize * 0.4,
                         ),
@@ -954,12 +954,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                                 iconSize: 24,
                                 tooltip: loc.get('overview'),
                                 style: IconButton.styleFrom(
-                                  backgroundColor: _trip!.expenses.isNotEmpty
-                                      ? colorScheme.primaryContainer
-                                      : colorScheme.surfaceContainerHighest,
-                                  foregroundColor: _trip!.expenses.isNotEmpty
-                                      ? colorScheme.onPrimaryContainer
-                                      : colorScheme.outline,
+                                  backgroundColor: colorScheme.surfaceContainerLowest,
+                                  foregroundColor: colorScheme.onSurface.withOpacity(0.85),
                                   minimumSize: const Size(54, 54),
                                 ),
                               ),
@@ -977,12 +973,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                                 iconSize: 24,
                                 tooltip: loc.get('statistics'),
                                 style: IconButton.styleFrom(
-                                  backgroundColor: _trip!.expenses.isNotEmpty
-                                      ? colorScheme.primaryContainer
-                                      : colorScheme.surfaceContainerHighest,
-                                  foregroundColor: _trip!.expenses.isNotEmpty
-                                      ? colorScheme.onPrimaryContainer
-                                      : colorScheme.outline,
+                                  backgroundColor: colorScheme.surfaceContainerLowest,
+                                  foregroundColor: colorScheme.onSurface.withOpacity(0.85),
                                   minimumSize: const Size(54, 54),
                                 ),
                               ),
@@ -996,10 +988,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                                 iconSize: 24,
                                 tooltip: loc.get('options'),
                                 style: IconButton.styleFrom(
-                                  backgroundColor:
-                                      colorScheme.secondaryContainer,
-                                  foregroundColor:
-                                      colorScheme.onSecondaryContainer,
+                                  backgroundColor: colorScheme.surfaceContainerLowest,
+                                  foregroundColor: colorScheme.onSurface.withOpacity(0.85),
                                   minimumSize: const Size(54, 54),
                                 ),
                               ),
