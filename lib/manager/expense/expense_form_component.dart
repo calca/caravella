@@ -11,6 +11,7 @@ import 'expense_form/expense_form_actions_widget.dart';
 import 'expense_form/category_dialog.dart';
 
 class ExpenseFormComponent extends StatefulWidget {
+  final bool showDateAndNote;
   final ExpenseDetails? initialExpense;
   final List<String> participants;
   final List<String> categories;
@@ -32,6 +33,7 @@ class ExpenseFormComponent extends StatefulWidget {
     this.tripStartDate,
     this.tripEndDate,
     this.newlyAddedCategory, // Nuova proprietà
+    this.showDateAndNote = false,
   });
 
   @override
@@ -284,7 +286,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
             const SizedBox(height: 16),
 
             // DATA (bottone con data + icona, angoli arrotondati, sfondo grigio coerente col tema)
-            if (widget.initialExpense != null ||
+            if (widget.showDateAndNote || widget.initialExpense != null ||
                 (ModalRoute.of(context)?.settings.name != null))
               DateSelectorWidget(
                 selectedDate: _date,
@@ -301,7 +303,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
             const SizedBox(height: 16),
 
             // NOTE
-            if (widget.initialExpense != null) ...[
+            if (widget.showDateAndNote || widget.initialExpense != null) ...[
               NoteInputWidget(
                 controller: _noteController,
                 loc: loc,

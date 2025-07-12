@@ -528,6 +528,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                         tripStartDate: currentGroup.startDate,
                         tripEndDate: currentGroup.endDate,
                         shouldAutoClose: false,
+                        showDateAndNote: true,
                         onExpenseAdded: (newExpense) async {
                           // Genera un ID univoco per la nuova spesa
                           final expenseWithId = ExpenseDetails(
