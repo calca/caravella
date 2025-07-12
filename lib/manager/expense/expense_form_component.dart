@@ -245,9 +245,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                   );
                   if (newCategory != null && newCategory.isNotEmpty) {
                     // Prima notifica al parent tramite callback
-                    if (widget.onCategoryAdded != null) {
-                      widget.onCategoryAdded!(newCategory);
-                    }
+                    widget.onCategoryAdded(newCategory);
 
                     // Aggiorna immediatamente la lista locale
                     setState(() {
@@ -286,7 +284,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
             const SizedBox(height: 16),
 
             // DATA (bottone con data + icona, angoli arrotondati, sfondo grigio coerente col tema)
-            if (widget.showDateAndNote || widget.initialExpense != null ||
+            if (widget.showDateAndNote ||
+                widget.initialExpense != null ||
                 (ModalRoute.of(context)?.settings.name != null))
               DateSelectorWidget(
                 selectedDate: _date,

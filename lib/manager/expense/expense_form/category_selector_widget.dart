@@ -38,13 +38,14 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
       if (mounted) _scrollToSelected();
     });
   }
+
   void _scrollToSelected() {
     if (widget.selectedCategory != null && widget.categories.isNotEmpty) {
       final idx = widget.categories.indexOf(widget.selectedCategory!);
       if (idx >= 0 && _scrollController.hasClients) {
         // Calcola la posizione approssimativa del chip
         // Supponiamo larghezza chip ~100px + padding 8px
-        final double chipWidth = 100.0 + 8.0;
+        const double chipWidth = 100.0 + 8.0;
         final double offset = idx * chipWidth;
         _scrollController.animateTo(
           offset,
@@ -54,6 +55,7 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
       }
     }
   }
+
   @override
   void didUpdateWidget(covariant CategorySelectorWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -143,7 +145,8 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
                                   width: 1,
                                 ),
                                 onSelected: (selected) {
-                                  widget.onCategorySelected(selected ? cat : null);
+                                  widget.onCategorySelected(
+                                      selected ? cat : null);
                                 },
                               ),
                             );

@@ -454,7 +454,7 @@ class GroupCardContent extends StatelessWidget {
     bool isPlaceholder = false,
   }) {
     final valueColor = isPlaceholder
-        ? theme.colorScheme.onSurface.withOpacity(0.4)
+        ? theme.colorScheme.onSurface.withValues(alpha: 0.4)
         : theme.colorScheme.onSurface;
 
     return Column(
