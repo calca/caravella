@@ -108,8 +108,9 @@ class GroupCardContent extends StatelessWidget {
   void _showAddExpenseSheet(BuildContext context, ExpenseGroup currentGroup) {
     final loc = AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it');
 
-    // Imposta il gruppo corrente nel notifier
-    context.read<ExpenseGroupNotifier>().setCurrentGroup(currentGroup);
+    // Salva il riferimento al notifier
+    final notifier = Provider.of<ExpenseGroupNotifier>(context, listen: false);
+    notifier.setCurrentGroup(currentGroup);
 
     showModalBottomSheet(
       context: context,
@@ -205,7 +206,7 @@ class GroupCardContent extends StatelessWidget {
       ),
     ).whenComplete(() {
       // Pulisci il notifier quando il dialog si chiude
-      context.read<ExpenseGroupNotifier>().clearCurrentGroup();
+      notifier.clearCurrentGroup();
     });
   }
 

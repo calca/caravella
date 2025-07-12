@@ -59,6 +59,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   bool get _isPaidByValid => _paidBy != null;
   bool get _isCategoryValid => _categories.isEmpty || _category != null;
 
+  // Scroll controller callback per CategorySelectorWidget
+  void Function()? _scrollToCategoryEnd;
+
   @override
   void initState() {
     super.initState();
@@ -263,9 +266,17 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                         _categories = List.from(widget.categories);
                       });
                     }
+
+                    // Scroll automatico alla fine
+                    if (_scrollToCategoryEnd != null) {
+                      _scrollToCategoryEnd!();
+                    }
                   }
                 },
                 loc: loc,
+                registerScrollToEnd: (fn) {
+                  _scrollToCategoryEnd = fn;
+                },
               ),
               _isCategoryValid,
               _categoryTouched,

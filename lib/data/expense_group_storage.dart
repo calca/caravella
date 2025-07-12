@@ -54,22 +54,16 @@ class ExpenseGroupStorage {
 
   static Future<ExpenseGroup?> getTripById(String id) async {
     final trips = await _readAllGroups();
-    try {
-      return trips.firstWhere((trip) => trip.id == id);
-    } catch (_) {
-      return null;
-    }
+    final found = trips.where((trip) => trip.id == id);
+    return found.isNotEmpty ? found.first : null;
   }
 
   static Future<ExpenseDetails?> getExpenseById(
       String tripId, String expenseId) async {
     final trip = await getTripById(tripId);
     if (trip == null) return null;
-    try {
-      return trip.expenses.firstWhere((expense) => expense.id == expenseId);
-    } catch (_) {
-      return null;
-    }
+    final found = trip.expenses.where((expense) => expense.id == expenseId);
+    return found.isNotEmpty ? found.first : null;
   }
 
   /// Imposta un viaggio come pinnato, rimuovendo il pin da tutti gli altri
@@ -101,11 +95,8 @@ class ExpenseGroupStorage {
   /// Restituisce il gruppo attualmente pinnato, se esiste e non è archiviato
   static Future<ExpenseGroup?> getPinnedTrip() async {
     final trips = await _readAllGroups();
-    try {
-      return trips.firstWhere((trip) => trip.pinned && !trip.archived);
-    } catch (_) {
-      return null;
-    }
+    final found = trips.where((trip) => trip.pinned && !trip.archived);
+    return found.isNotEmpty ? found.first : null;
   }
 
   /// Archivia un gruppo di spese

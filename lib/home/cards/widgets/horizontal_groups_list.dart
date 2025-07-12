@@ -30,16 +30,20 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList> {
   double _currentPage = 0.0;
   late List<ExpenseGroup> _localGroups;
 
+  void _onPageChanged() {
+    if (mounted) {
+      setState(() {
+        _currentPage = _pageController.page ?? 0.0;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _localGroups = List.from(widget.groups);
     _pageController = PageController(viewportFraction: 0.85);
-    _pageController.addListener(() {
-      setState(() {
-        _currentPage = _pageController.page ?? 0.0;
-      });
-    });
+    _pageController.addListener(_onPageChanged);
   }
 
   @override
@@ -52,18 +56,20 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList> {
   }
 
   Future<void> _updateGroupLocally(String groupId) async {
-    try {
-      final groups = await ExpenseGroupStorage.getAllGroups();
-      final updatedGroup = groups.firstWhere((g) => g.id == groupId);
-
-      setState(() {
-        final index = _localGroups.indexWhere((g) => g.id == groupId);
-        if (index != -1) {
-          _localGroups[index] = updatedGroup;
-        }
-      });
-    } catch (e) {
-      // Fallback al callback originale se c'è un errore
+    final groups = await ExpenseGroupStorage.getAllGroups();
+    final found = groups.where((g) => g.id == groupId);
+    if (found.isNotEmpty) {
+      final updatedGroup = found.first;
+      if (mounted) {
+        setState(() {
+          final index = _localGroups.indexWhere((g) => g.id == groupId);
+          if (index != -1) {
+            _localGroups[index] = updatedGroup;
+          }
+        });
+      }
+    } else {
+      // Fallback al callback originale se non trovato
       widget.onGroupUpdated();
     }
   }
@@ -82,6 +88,7 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList> {
 
   @override
   void dispose() {
+    _pageController.removeListener(_onPageChanged);
     _pageController.dispose();
     super.dispose();
   }
