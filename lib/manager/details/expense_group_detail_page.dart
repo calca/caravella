@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -817,11 +818,50 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           ),
           child: trip.file != null && trip.file!.isNotEmpty
               ? ClipOval(
-                  child: Image.asset(
-                    trip.file!,
-                    fit: BoxFit.cover,
-                    width: circleSize,
-                    height: circleSize,
+                  child: Builder(
+                    builder: (context) {
+                      // Se il path è assoluto, usa Image.file
+                      if (trip.file!.startsWith('/') || trip.file!.startsWith('file:')) {
+                        return Image.file(
+                          File(trip.file!),
+                          fit: BoxFit.cover,
+                          width: circleSize,
+                          height: circleSize,
+                          errorBuilder: (context, error, stackTrace) => Center(
+                            child: Text(
+                              trip.title.length >= 2
+                                  ? trip.title.substring(0, 2).toUpperCase()
+                                  : trip.title.toUpperCase(),
+                              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                    color: colorScheme.onSurface,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: circleSize * 0.4,
+                                  ),
+                            ),
+                          ),
+                        );
+                      } else {
+                        // Altrimenti prova come asset Flutter
+                        return Image.asset(
+                          trip.file!,
+                          fit: BoxFit.cover,
+                          width: circleSize,
+                          height: circleSize,
+                          errorBuilder: (context, error, stackTrace) => Center(
+                            child: Text(
+                              trip.title.length >= 2
+                                  ? trip.title.substring(0, 2).toUpperCase()
+                                  : trip.title.toUpperCase(),
+                              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                    color: colorScheme.onSurface,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: circleSize * 0.4,
+                                  ),
+                            ),
+                          ),
+                        );
+                      }
+                    },
                   ),
                 )
               : Center(
