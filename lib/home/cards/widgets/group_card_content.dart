@@ -169,33 +169,31 @@ class GroupCardContent extends StatelessWidget {
                             20,
                       ),
                       child: ExpenseFormComponent(
+                        key: ValueKey(currentGroup.categories
+                            .hashCode), // Forza rebuild quando le categorie cambiano
                         participants: currentGroup.participants
                             .map((p) => p.name)
                             .toList(),
                         categories:
                             currentGroup.categories.map((c) => c.name).toList(),
                         onExpenseAdded: (expense) async {
-                          // Save the expense to the group
-                          await _saveExpenseToGroup(expense);
-                          // Brief delay per permettere all'utente di vedere il feedback
-                          await Future.delayed(
-                              const Duration(milliseconds: 100));
-                          // Callback per aggiornare la UI, mantenendo la posizione corrente
+                          // Usa il notifier per aggiungere la spesa
+                          await groupNotifier.addExpense(expense);
+                          // Callback per aggiornare la UI della home
                           onExpenseAdded();
-                          // Close the modal only if context is still mounted
+                          // Chiudi il modal
                           if (context.mounted) {
                             Navigator.pop(context);
                           }
                         },
                         onCategoryAdded: (newCategory) async {
-                          // Save the new category to the group
-                          await _saveCategoryToGroup(newCategory);
-                          // Notify parent that category was added
-                          if (onCategoryAdded != null) {
-                            onCategoryAdded!();
-                          }
+                          // Usa il notifier per aggiungere la categoria
+                          await groupNotifier.addCategory(newCategory);
+                          // La UI del form si aggiornerà automaticamente grazie al Consumer e alla ValueKey
                         },
                         shouldAutoClose: false,
+                        // Passa la nuova categoria al form per la pre-selezione
+                        newlyAddedCategory: groupNotifier.lastAddedCategory,
                       ),
                     ),
                   ),

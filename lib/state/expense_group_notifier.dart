@@ -7,11 +7,15 @@ import '../data/expense_group_storage.dart';
 class ExpenseGroupNotifier extends ChangeNotifier {
   ExpenseGroup? _currentGroup;
   final List<String> _updatedGroupIds = [];
+  String? _lastAddedCategory;
 
   ExpenseGroup? get currentGroup => _currentGroup;
 
   // Lista degli ID dei gruppi che sono stati aggiornati
   List<String> get updatedGroupIds => List.unmodifiable(_updatedGroupIds);
+
+  // Ultima categoria aggiunta
+  String? get lastAddedCategory => _lastAddedCategory;
 
   void setCurrentGroup(ExpenseGroup group) {
     _currentGroup = group;
@@ -20,6 +24,7 @@ class ExpenseGroupNotifier extends ChangeNotifier {
 
   void clearCurrentGroup() {
     _currentGroup = null;
+    _lastAddedCategory = null; // Pulisci anche l'ultima categoria
     notifyListeners();
   }
 
@@ -46,23 +51,12 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     }
   }
 
-  Future<void> addExpense(dynamic expense) async {
+  Future<void> addExpense(ExpenseDetails expense) async {
     if (_currentGroup == null) return;
 
-    final updatedExpenses =
-        [..._currentGroup!.expenses, expense] as List<ExpenseDetails>;
-    final updatedGroup = ExpenseGroup(
-      title: _currentGroup!.title,
+    final updatedExpenses = [..._currentGroup!.expenses, expense];
+    final updatedGroup = _currentGroup!.copyWith(
       expenses: updatedExpenses,
-      participants: _currentGroup!.participants,
-      startDate: _currentGroup!.startDate,
-      endDate: _currentGroup!.endDate,
-      currency: _currentGroup!.currency,
-      categories: _currentGroup!.categories,
-      timestamp: _currentGroup!.timestamp,
-      id: _currentGroup!.id,
-      file: _currentGroup!.file,
-      pinned: _currentGroup!.pinned,
     );
 
     await updateGroup(updatedGroup);
@@ -73,25 +67,21 @@ class ExpenseGroupNotifier extends ChangeNotifier {
 
     // Controlla se la categoria esiste già
     if (_currentGroup!.categories.any((c) => c.name == categoryName)) {
+      _lastAddedCategory =
+          null; // La categoria esiste già, non c'è nulla di nuovo da preselezionare
+      notifyListeners();
       return;
     }
 
     final updatedCategories = [..._currentGroup!.categories];
     updatedCategories.add(ExpenseCategory(name: categoryName));
 
-    final updatedGroup = ExpenseGroup(
-      title: _currentGroup!.title,
-      expenses: _currentGroup!.expenses,
-      participants: _currentGroup!.participants,
-      startDate: _currentGroup!.startDate,
-      endDate: _currentGroup!.endDate,
-      currency: _currentGroup!.currency,
+    final updatedGroup = _currentGroup!.copyWith(
       categories: updatedCategories,
-      timestamp: _currentGroup!.timestamp,
-      id: _currentGroup!.id,
-      file: _currentGroup!.file,
-      pinned: _currentGroup!.pinned,
     );
+
+    // Memorizza l'ultima categoria aggiunta
+    _lastAddedCategory = categoryName;
 
     await updateGroup(updatedGroup);
   }

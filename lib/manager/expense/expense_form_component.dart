@@ -11,29 +11,27 @@ import 'expense_form/expense_form_actions_widget.dart';
 import 'expense_form/category_dialog.dart';
 
 class ExpenseFormComponent extends StatefulWidget {
+  final ExpenseDetails? initialExpense;
   final List<String> participants;
   final List<String> categories;
-  final void Function(ExpenseDetails) onExpenseAdded;
-  final void Function()? onAddCategory;
-  final void Function(String)? onCategoryAdded;
-  final ExpenseDetails? initialExpense;
+  final Function(ExpenseDetails) onExpenseAdded;
+  final Function(String) onCategoryAdded;
+  final bool shouldAutoClose;
   final DateTime? tripStartDate;
   final DateTime? tripEndDate;
-  final bool
-      shouldAutoClose; // Nuovo parametro per gestire la chiusura automatica
+  final String? newlyAddedCategory; // Nuova proprietà
 
   const ExpenseFormComponent({
     super.key,
-    required this.participants,
-    required this.onExpenseAdded,
-    this.categories = const [],
-    this.onAddCategory,
-    this.onCategoryAdded,
     this.initialExpense,
+    required this.participants,
+    required this.categories,
+    required this.onExpenseAdded,
+    required this.onCategoryAdded,
+    this.shouldAutoClose = true,
     this.tripStartDate,
     this.tripEndDate,
-    this.shouldAutoClose =
-        true, // Di default chiude automaticamente (per i bottom sheet)
+    this.newlyAddedCategory, // Nuova proprietà
   });
 
   @override
@@ -91,19 +89,23 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _amountFocus.requestFocus();
     });
+
+    // Se c'è una nuova categoria, preselezionala
+    if (widget.newlyAddedCategory != null &&
+        widget.categories.contains(widget.newlyAddedCategory)) {
+      _category = widget.newlyAddedCategory;
+    }
   }
 
   @override
-  void didUpdateWidget(ExpenseFormComponent oldWidget) {
+  void didUpdateWidget(covariant ExpenseFormComponent oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Aggiorna la lista locale se quella del widget è cambiata
-    if (oldWidget.categories != widget.categories) {
+    // Se una nuova categoria è stata aggiunta e non è già selezionata, la selezioniamo
+    if (widget.newlyAddedCategory != null &&
+        widget.newlyAddedCategory != _category &&
+        widget.categories.contains(widget.newlyAddedCategory)) {
       setState(() {
-        _categories = List.from(widget.categories);
-        // Mantieni la selezione corrente se la categoria esiste ancora
-        if (_category != null && !_categories.contains(_category!)) {
-          _category = null;
-        }
+        _category = widget.newlyAddedCategory;
       });
     }
   }
