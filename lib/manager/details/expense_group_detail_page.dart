@@ -123,15 +123,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               ),
               Padding(
                 padding: const EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    const Icon(Icons.dashboard_customize_rounded),
-                    const SizedBox(width: 8),
-                    Text(
-                      loc.get('overview'),
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                  ],
+                child: Text(
+                  loc.get('overview'),
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
               Expanded(
@@ -177,15 +171,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               ),
               Padding(
                 padding: const EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    const Icon(Icons.analytics_rounded),
-                    const SizedBox(width: 8),
-                    Text(
-                      loc.get('statistics'),
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                  ],
+                child: Text(
+                  loc.get('statistics'),
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
               Expanded(
@@ -231,15 +219,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               ),
               Padding(
                 padding: const EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    const Icon(Icons.settings_rounded),
-                    const SizedBox(width: 8),
-                    Text(
-                      loc.get('options'),
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                  ],
+                child: Text(
+                  loc.get('options'),
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
               Expanded(

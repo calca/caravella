@@ -138,7 +138,7 @@ class GroupCardContent extends StatelessWidget {
                   child: Column(
                     children: [
                       Container(
-                        width: 40,
+                        width: 28,
                         height: 4,
                         decoration: BoxDecoration(
                           color: theme.colorScheme.outline,
@@ -155,7 +155,6 @@ class GroupCardContent extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Divider(height: 1),
 
                 // Contenuto scrollabile
                 Flexible(
@@ -220,6 +219,7 @@ class GroupCardContent extends StatelessWidget {
       .where((e) =>
           e.date.isAfter(DateTime.now().subtract(const Duration(days: 7))))
       .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ExpenseGroupNotifier>(
