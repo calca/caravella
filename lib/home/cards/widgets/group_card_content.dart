@@ -4,8 +4,6 @@ import '../../../app_localizations.dart';
 import '../../../state/locale_notifier.dart';
 import '../../../state/expense_group_notifier.dart';
 import '../../../data/expense_group.dart';
-import '../../../data/expense_category.dart';
-import '../../../data/expense_group_storage.dart';
 import '../../../manager/expense/expense_form_component.dart';
 import '../../../widgets/currency_display.dart';
 import 'mini_expense_chart.dart';
@@ -58,50 +56,6 @@ class GroupCardContent extends StatelessWidget {
       return '${date.day}/${date.month}';
     } else {
       return '${date.day}/${date.month}/${date.year}';
-    }
-  }
-
-  Future<void> _saveExpenseToGroup(dynamic expense) async {
-    try {
-      final groups = await ExpenseGroupStorage.getAllGroups();
-      final groupIndex = groups.indexWhere((g) => g.id == group.id);
-
-      if (groupIndex != -1) {
-        // Add the expense to the group
-        groups[groupIndex].expenses.add(expense);
-
-        // Save the updated groups back to storage
-        await ExpenseGroupStorage.writeTrips(groups);
-      }
-    } catch (e) {
-      // Handle error gracefully - could show a snackbar in a real app
-      debugPrint('Error saving expense: $e');
-    }
-  }
-
-  Future<void> _saveCategoryToGroup(String newCategory) async {
-    try {
-      final groups = await ExpenseGroupStorage.getAllGroups();
-      final groupIndex = groups.indexWhere((g) => g.id == group.id);
-
-      if (groupIndex != -1) {
-        // Check if category already exists
-        final existingCategories =
-            groups[groupIndex].categories.map((c) => c.name).toList();
-        if (!existingCategories.contains(newCategory)) {
-          // Add the new category to the group
-          final updatedCategories = [...groups[groupIndex].categories];
-          updatedCategories.add(ExpenseCategory(name: newCategory));
-          groups[groupIndex] =
-              groups[groupIndex].copyWith(categories: updatedCategories);
-
-          // Save the updated groups back to storage
-          await ExpenseGroupStorage.writeTrips(groups);
-        }
-      }
-    } catch (e) {
-      // Handle error gracefully
-      debugPrint('Error saving category: $e');
     }
   }
 
@@ -272,13 +226,13 @@ class GroupCardContent extends StatelessWidget {
 
   Widget _buildDateRange(ExpenseGroup currentGroup) {
     if (currentGroup.startDate == null && currentGroup.endDate == null) {
-      return SizedBox(height: _spacing);
+      return const SizedBox(height: _spacing);
     }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: _spacing),
+        const SizedBox(height: _spacing),
         Row(
           children: [
             Icon(
@@ -404,7 +358,8 @@ class GroupCardContent extends StatelessWidget {
             foregroundColor: theme.colorScheme.onSurface,
             backgroundColor:
                 theme.colorScheme.onSurface.withValues(alpha: 0.05),
-            padding: EdgeInsets.symmetric(vertical: _buttonVerticalPadding),
+            padding:
+                const EdgeInsets.symmetric(vertical: _buttonVerticalPadding),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(_borderRadius),
             ),
