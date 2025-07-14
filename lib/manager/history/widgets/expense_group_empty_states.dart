@@ -20,11 +20,36 @@ class ExpsenseGroupEmptyStates extends StatelessWidget {
   Widget build(BuildContext context) {
     if (searchQuery.isNotEmpty) {
       return _buildSearchEmptyState(context);
-    } else if (periodFilter == 'all') {
-      return _buildNoTripsState(context);
+    } else if (periodFilter != 'all') {
+      return _buildNoResultsState(context);
     } else {
-      return const SizedBox.shrink();
+      return _buildNoTripsState(context);
     }
+  }
+
+  Widget _buildNoResultsState(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.search_off_rounded,
+          size: 64,
+          color: Theme.of(context).colorScheme.outline,
+        ),
+        const SizedBox(height: 16),
+        Text(
+          'Nessun risultato trovato.',
+          style: Theme.of(context).textTheme.titleMedium,
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Prova a modificare il filtro o la ricerca.',
+          style: Theme.of(context).textTheme.bodyMedium,
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
   }
 
   Widget _buildSearchEmptyState(BuildContext context) {
