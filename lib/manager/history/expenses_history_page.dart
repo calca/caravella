@@ -192,11 +192,11 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
         color: isSelected
-            ? Theme.of(context).colorScheme.primary
-            : Theme.of(context).colorScheme.surfaceContainerHighest,
+            ? Theme.of(context).colorScheme.surfaceContainerHighest
+            : Theme.of(context).colorScheme.surface,
         border: Border.all(
           color: isSelected
-              ? Theme.of(context).colorScheme.primary
+              ? Theme.of(context).colorScheme.surfaceContainerHighest
               : Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
           width: isSelected ? 2 : 1,
         ),
@@ -213,7 +213,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
               icon,
               size: 20,
               color: isSelected
-                  ? Theme.of(context).colorScheme.onPrimary
+                  ? Theme.of(context).colorScheme.primary
                   : Theme.of(context)
                       .colorScheme
                       .onSurface
