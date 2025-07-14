@@ -60,8 +60,8 @@ class ExpenseGroupCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  // Icona stato (attivo/archiviato)
-                  _buildStatusIcon(context),
+                  // Icona stato (solo se archiviato)
+                  if (trip.archived) _buildStatusIcon(context),
                 ],
               ),
               const SizedBox(height: 12),
