@@ -821,7 +821,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                   child: Builder(
                     builder: (context) {
                       // Se il path è assoluto, usa Image.file
-                      if (trip.file!.startsWith('/') || trip.file!.startsWith('file:')) {
+                      if (trip.file!.startsWith('/') ||
+                          trip.file!.startsWith('file:')) {
                         return Image.file(
                           File(trip.file!),
                           fit: BoxFit.cover,
@@ -832,7 +833,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                               trip.title.length >= 2
                                   ? trip.title.substring(0, 2).toUpperCase()
                                   : trip.title.toUpperCase(),
-                              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineMedium
+                                  ?.copyWith(
                                     color: colorScheme.onSurface,
                                     fontWeight: FontWeight.bold,
                                     fontSize: circleSize * 0.4,
@@ -852,7 +856,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                               trip.title.length >= 2
                                   ? trip.title.substring(0, 2).toUpperCase()
                                   : trip.title.toUpperCase(),
-                              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineMedium
+                                  ?.copyWith(
                                     color: colorScheme.onSurface,
                                     fontWeight: FontWeight.bold,
                                     fontSize: circleSize * 0.4,
