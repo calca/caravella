@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../app_localizations.dart';
 import '../../state/locale_notifier.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class InfoTab extends StatelessWidget {
   const InfoTab({super.key});
@@ -10,6 +11,7 @@ class InfoTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
     final localizations = AppLocalizations(locale);
+    const flavor = String.fromEnvironment('FLAVOR', defaultValue: 'staging');
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
       child: Column(
@@ -25,8 +27,19 @@ class InfoTab extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
-          Text('Caravella v0.0.3',
-              style: Theme.of(context).textTheme.bodyMedium),
+          FutureBuilder<PackageInfo>(
+            future: PackageInfo.fromPlatform(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done) {
+                return Text('Caravella ...',
+                    style: Theme.of(context).textTheme.bodyMedium);
+              }
+              final info = snapshot.data;
+              final version = info?.version ?? '-';
+              return Text('Caravella v$version ($flavor)',
+                  style: Theme.of(context).textTheme.bodyMedium);
+            },
+          ),
           const SizedBox(height: 2),
           Text(localizations.get('developed_by'),
               style: Theme.of(context).textTheme.bodySmall),
