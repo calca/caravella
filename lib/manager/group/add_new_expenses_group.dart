@@ -684,20 +684,14 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                 ),
                               ),
                               const SizedBox(width: 8),
-                              IconButton(
-                                icon: const Icon(Icons.edit_outlined, size: 20),
-                                tooltip: loc.get('edit_participant'),
-                                style: IconButton.styleFrom(
-                                  backgroundColor: Theme.of(context)
-                                      .colorScheme
-                                      .surfaceContainerHighest
-                                      .withValues(
-                                          alpha: 0.7), // Better visibility
-                                  foregroundColor: Theme.of(context)
-                                      .colorScheme
-                                      .onSurfaceVariant,
+                              OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
+                                  side: BorderSide(color: Theme.of(context).colorScheme.onSurfaceVariant),
                                   padding: const EdgeInsets.all(8),
                                   minimumSize: const Size(36, 36),
+                                  shape: const CircleBorder(),
+                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                 ),
                                 onPressed: () {
                                   final editController =
@@ -751,25 +745,24 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                     ),
                                   );
                                 },
+                                child: const Icon(Icons.edit_outlined, size: 20),
                               ),
-                              IconButton.filled(
-                                icon:
-                                    const Icon(Icons.delete_outline, size: 20),
-                                tooltip: loc.get('delete_participant'),
-                                style: IconButton.styleFrom(
-                                  backgroundColor: Theme.of(context)
-                                      .colorScheme
-                                      .errorContainer,
-                                  foregroundColor:
-                                      Theme.of(context).colorScheme.error,
+                              const SizedBox(width: 4),
+                              OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: Theme.of(context).colorScheme.error,
+                                  side: BorderSide(color: Theme.of(context).colorScheme.error),
                                   padding: const EdgeInsets.all(8),
                                   minimumSize: const Size(36, 36),
+                                  shape: const CircleBorder(),
+                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                 ),
                                 onPressed: () {
                                   setState(() {
                                     _participants.removeAt(i);
                                   });
                                 },
+                                child: const Icon(Icons.delete_outline, size: 20),
                               ),
                             ],
                           ),
@@ -925,20 +918,14 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                 ),
                               ),
                               const SizedBox(width: 8),
-                              IconButton(
-                                icon: const Icon(Icons.edit_outlined, size: 20),
-                                tooltip: loc.get('edit_category'),
-                                style: IconButton.styleFrom(
-                                  backgroundColor: Theme.of(context)
-                                      .colorScheme
-                                      .surfaceContainerHighest
-                                      .withValues(
-                                          alpha: 0.7), // Better visibility
-                                  foregroundColor: Theme.of(context)
-                                      .colorScheme
-                                      .onSurfaceVariant,
+                              OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
+                                  side: BorderSide(color: Theme.of(context).colorScheme.onSurfaceVariant),
                                   padding: const EdgeInsets.all(8),
                                   minimumSize: const Size(36, 36),
+                                  shape: const CircleBorder(),
+                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                 ),
                                 onPressed: () {
                                   final editController =
@@ -989,25 +976,24 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                     ),
                                   );
                                 },
+                                child: const Icon(Icons.edit_outlined, size: 20),
                               ),
-                              IconButton.filled(
-                                icon:
-                                    const Icon(Icons.delete_outline, size: 20),
-                                tooltip: loc.get('delete_category'),
-                                style: IconButton.styleFrom(
-                                  backgroundColor: Theme.of(context)
-                                      .colorScheme
-                                      .errorContainer,
-                                  foregroundColor:
-                                      Theme.of(context).colorScheme.error,
+                              const SizedBox(width: 4),
+                              OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: Theme.of(context).colorScheme.error,
+                                  side: BorderSide(color: Theme.of(context).colorScheme.error),
                                   padding: const EdgeInsets.all(8),
                                   minimumSize: const Size(36, 36),
+                                  shape: const CircleBorder(),
+                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                 ),
                                 onPressed: () {
                                   setState(() {
                                     _categories.removeAt(i);
                                   });
                                 },
+                                child: const Icon(Icons.delete_outline, size: 20),
                               ),
                             ],
                           ),
