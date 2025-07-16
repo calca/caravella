@@ -1019,163 +1019,71 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 _buildSectionFlat(
                   title: loc.get('dates'),
                   children: [
-                    // Selezione periodo compatta - inline
+                    // Nuova riga compatta: Selezione date
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        // Data dal
-                        Expanded(
-                          child: InkWell(
-                            onTap: () => _pickDate(context, true),
-                            borderRadius: BorderRadius.circular(12),
-                            child: Container(
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .surfaceContainerHigh, // Better contrast for date containers
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .outline
-                                      .withValues(alpha: 0.2),
+                        // Dal
+                        GestureDetector(
+                          onTap: () => _pickDate(context, true),
+                          child: Container(
+                            padding: const EdgeInsets.only(bottom: 2),
+                            decoration: const BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(width: 1.5),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Text(
+                                  _startDate == null
+                                      ? loc.get('select_from_date') // "Seleziona inizio"
+                                      : '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}',
+                                  style: Theme.of(context).textTheme.bodyLarge,
                                 ),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    loc.get('start_date_optional'),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.copyWith(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
-                                        ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    _startDate == null
-                                        ? loc.get('select_from_date')
-                                        : '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}',
-                                    style:
-                                        Theme.of(context).textTheme.bodyLarge,
-                                  ),
-                                ],
-                              ),
+                              ],
                             ),
                           ),
                         ),
-                        const SizedBox(width: 12),
-                        // Data al
-                        Expanded(
-                          child: InkWell(
-                            onTap: () => _pickDate(context, false),
-                            borderRadius: BorderRadius.circular(12),
-                            child: Container(
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .surfaceContainerHigh, // Consistent with start date
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .outline
-                                      .withValues(alpha: 0.2),
+                        const SizedBox(width: 18),
+                        Text('-', style: Theme.of(context).textTheme.bodyLarge),
+                        const SizedBox(width: 18),
+                        // Al
+                        GestureDetector(
+                          onTap: () => _pickDate(context, false),
+                          child: Container(
+                            padding: const EdgeInsets.only(bottom: 2),
+                            decoration: const BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(width: 1.5),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Text(
+                                  _endDate == null
+                                      ? loc.get('select_to_date') // "Seleziona fine"
+                                      : '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}',
+                                  style: Theme.of(context).textTheme.bodyLarge,
                                 ),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    loc.get('end_date_optional'),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.copyWith(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
-                                        ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    _endDate == null
-                                        ? loc.get('select_to_date')
-                                        : '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}',
-                                    style:
-                                        Theme.of(context).textTheme.bodyLarge,
-                                  ),
-                                ],
-                              ),
+                              ],
                             ),
                           ),
                         ),
+                        if (_startDate != null || _endDate != null) ...[
+                          const SizedBox(width: 12),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _startDate = null;
+                                _endDate = null;
+                              });
+                            },
+                            child: Icon(Icons.close, size: 18, color: Theme.of(context).colorScheme.primary),
+                          ),
+                        ],
                       ],
                     ),
-                    // Mostra il range completo se entrambe le date sono selezionate
-                    if (_startDate != null && _endDate != null) ...[
-                      const SizedBox(height: 12),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .primaryContainer
-                              .withValues(
-                                  alpha:
-                                      0.6), // Better visibility for date range
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .primary
-                                .withValues(alpha: 0.3),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.date_range,
-                              size: 16,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              _getDateRangeText(loc),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                            ),
-                            const SizedBox(width: 8),
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  _startDate = null;
-                                  _endDate = null;
-                                });
-                              },
-                              child: Icon(
-                                Icons.close,
-                                size: 16,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
                   ],
                 ),
                 const SizedBox(height: 24),
