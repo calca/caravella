@@ -1019,57 +1019,52 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 _buildSectionFlat(
                   title: loc.get('dates'),
                   children: [
-                    // Nuova riga compatta: Selezione date
+                    // Nuova riga compatta: Selezione date con FilledButton senza bordo sotto e trattino allineato
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         // Dal
-                        GestureDetector(
-                          onTap: () => _pickDate(context, true),
-                          child: Container(
-                            padding: const EdgeInsets.only(bottom: 2),
-                            decoration: const BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(width: 1.5),
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                Text(
-                                  _startDate == null
-                                      ? loc.get('select_from_date') // "Seleziona inizio"
-                                      : '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}',
+                        _startDate == null
+                            ? FilledButton(
+                                style: FilledButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                  minimumSize: Size(0, 0),
+                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                ),
+                                onPressed: () => _pickDate(context, true),
+                                child: Text(loc.get('select_from_date'), style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white)),
+                              )
+                            : GestureDetector(
+                                onTap: () => _pickDate(context, true),
+                                child: Text(
+                                  '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}',
                                   style: Theme.of(context).textTheme.bodyLarge,
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
+                              ),
                         const SizedBox(width: 18),
-                        Text('-', style: Theme.of(context).textTheme.bodyLarge),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Text('-', style: Theme.of(context).textTheme.bodyLarge),
+                        ),
                         const SizedBox(width: 18),
                         // Al
-                        GestureDetector(
-                          onTap: () => _pickDate(context, false),
-                          child: Container(
-                            padding: const EdgeInsets.only(bottom: 2),
-                            decoration: const BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(width: 1.5),
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                Text(
-                                  _endDate == null
-                                      ? loc.get('select_to_date') // "Seleziona fine"
-                                      : '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}',
+                        _endDate == null
+                            ? FilledButton(
+                                style: FilledButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                  minimumSize: Size(0, 0),
+                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                ),
+                                onPressed: () => _pickDate(context, false),
+                                child: Text(loc.get('select_to_date'), style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white)),
+                              )
+                            : GestureDetector(
+                                onTap: () => _pickDate(context, false),
+                                child: Text(
+                                  '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}',
                                   style: Theme.of(context).textTheme.bodyLarge,
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
+                              ),
                         if (_startDate != null || _endDate != null) ...[
                           const SizedBox(width: 12),
                           GestureDetector(
