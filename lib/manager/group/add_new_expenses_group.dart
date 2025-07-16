@@ -1246,20 +1246,9 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          children: [
-                            Text(
-                              loc.get('currency'),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                            ),
-                            const SizedBox(width: 4),
-                            Text('*', style: TextStyle(fontWeight: FontWeight.bold)),
-                          ],
+                        Text(
+                          loc.get('currency'),
+                          style: Theme.of(context).textTheme.titleMedium,
                         ),
                         const SizedBox(width: 16),
                         CurrencySelector(
