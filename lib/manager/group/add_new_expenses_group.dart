@@ -346,36 +346,44 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
 
     showModalBottomSheet(
       context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (BuildContext context) {
         return SafeArea(
-          child: Wrap(
-            children: [
-              ListTile(
-                leading: const Icon(Icons.photo_library),
-                title: Text(loc.get('from_gallery')),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  _pickImage(ImageSource.gallery);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.photo_camera),
-                title: Text(loc.get('from_camera')),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  _pickImage(ImageSource.camera);
-                },
-              ),
-              if (_selectedImageFile != null)
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
                 ListTile(
-                  leading: const Icon(Icons.delete),
-                  title: Text(loc.get('remove_image')),
+                  leading: const Icon(Icons.photo_library),
+                  title: Text(loc.get('from_gallery')),
                   onTap: () {
                     Navigator.of(context).pop();
-                    _removeImage();
+                    _pickImage(ImageSource.gallery);
                   },
                 ),
-            ],
+                ListTile(
+                  leading: const Icon(Icons.photo_camera),
+                  title: Text(loc.get('from_camera')),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    _pickImage(ImageSource.camera);
+                  },
+                ),
+                if (_selectedImageFile != null)
+                  ListTile(
+                    leading: const Icon(Icons.delete),
+                    title: Text(loc.get('remove_image')),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      _removeImage();
+                    },
+                  ),
+                const SizedBox(height: 8),
+              ],
+            ),
           ),
         );
       },
@@ -653,7 +661,10 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                     color: Colors.transparent,
                                     border: Border(
                                       left: BorderSide(
-                                        color: Theme.of(context).colorScheme.primaryFixedDim.withOpacity(0.5),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primaryFixedDim
+                                            .withOpacity(0.5),
                                         width: 3,
                                       ),
                                     ),
@@ -686,12 +697,18 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                               const SizedBox(width: 8),
                               OutlinedButton(
                                 style: OutlinedButton.styleFrom(
-                                  foregroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
-                                  side: BorderSide(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                                  foregroundColor: Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant,
+                                  side: BorderSide(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurfaceVariant),
                                   padding: const EdgeInsets.all(8),
                                   minimumSize: const Size(36, 36),
                                   shape: const CircleBorder(),
-                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
                                 ),
                                 onPressed: () {
                                   final editController =
@@ -745,24 +762,30 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                     ),
                                   );
                                 },
-                                child: const Icon(Icons.edit_outlined, size: 20),
+                                child:
+                                    const Icon(Icons.edit_outlined, size: 20),
                               ),
                               const SizedBox(width: 4),
                               OutlinedButton(
                                 style: OutlinedButton.styleFrom(
-                                  foregroundColor: Theme.of(context).colorScheme.error,
-                                  side: BorderSide(color: Theme.of(context).colorScheme.error),
+                                  foregroundColor:
+                                      Theme.of(context).colorScheme.error,
+                                  side: BorderSide(
+                                      color:
+                                          Theme.of(context).colorScheme.error),
                                   padding: const EdgeInsets.all(8),
                                   minimumSize: const Size(36, 36),
                                   shape: const CircleBorder(),
-                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
                                 ),
                                 onPressed: () {
                                   setState(() {
                                     _participants.removeAt(i);
                                   });
                                 },
-                                child: const Icon(Icons.delete_outline, size: 20),
+                                child:
+                                    const Icon(Icons.delete_outline, size: 20),
                               ),
                             ],
                           ),
@@ -888,7 +911,10 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                     color: Colors.transparent,
                                     border: Border(
                                       left: BorderSide(
-                                        color: Theme.of(context).colorScheme.primaryFixed.withOpacity(0.5),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primaryFixed
+                                            .withOpacity(0.5),
                                         width: 3,
                                       ),
                                     ),
@@ -921,12 +947,18 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                               const SizedBox(width: 8),
                               OutlinedButton(
                                 style: OutlinedButton.styleFrom(
-                                  foregroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
-                                  side: BorderSide(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                                  foregroundColor: Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant,
+                                  side: BorderSide(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurfaceVariant),
                                   padding: const EdgeInsets.all(8),
                                   minimumSize: const Size(36, 36),
                                   shape: const CircleBorder(),
-                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
                                 ),
                                 onPressed: () {
                                   final editController =
@@ -977,24 +1009,30 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                     ),
                                   );
                                 },
-                                child: const Icon(Icons.edit_outlined, size: 20),
+                                child:
+                                    const Icon(Icons.edit_outlined, size: 20),
                               ),
                               const SizedBox(width: 4),
                               OutlinedButton(
                                 style: OutlinedButton.styleFrom(
-                                  foregroundColor: Theme.of(context).colorScheme.error,
-                                  side: BorderSide(color: Theme.of(context).colorScheme.error),
+                                  foregroundColor:
+                                      Theme.of(context).colorScheme.error,
+                                  side: BorderSide(
+                                      color:
+                                          Theme.of(context).colorScheme.error),
                                   padding: const EdgeInsets.all(8),
                                   minimumSize: const Size(36, 36),
                                   shape: const CircleBorder(),
-                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
                                 ),
                                 onPressed: () {
                                   setState(() {
                                     _categories.removeAt(i);
                                   });
                                 },
-                                child: const Icon(Icons.delete_outline, size: 20),
+                                child:
+                                    const Icon(Icons.delete_outline, size: 20),
                               ),
                             ],
                           ),
