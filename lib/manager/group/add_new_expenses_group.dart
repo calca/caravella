@@ -127,14 +127,6 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
     }
   }
 
-  String _getDateRangeText(AppLocalizations loc) {
-    final startFormatted =
-        '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}';
-    final endFormatted =
-        '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}';
-    return '${loc.get('start_date_optional')} $startFormatted ${loc.get('end_date_optional')} $endFormatted';
-  }
-
   /// Controlla se il form ha i dati minimi per essere salvato
   bool _isFormValid() {
     // Il titolo deve essere non vuoto
@@ -149,6 +141,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   Future<void> _saveTrip() async {
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
     final loc = AppLocalizations(locale);
+    if (!mounted) return;
     setState(() {
       _dateError = null;
     });
@@ -512,7 +505,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                   ),
                         ),
                         const SizedBox(width: 4),
-                        Text('*',
+                        const Text('*',
                             style: TextStyle(fontWeight: FontWeight.bold)),
                       ],
                     ),
@@ -578,7 +571,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                   ),
                             ),
                             const SizedBox(width: 4),
-                            Text('*',
+                            const Text('*',
                                 style: TextStyle(fontWeight: FontWeight.bold)),
                           ],
                         ),
@@ -675,7 +668,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                         color: Theme.of(context)
                                             .colorScheme
                                             .primaryFixedDim
-                                            .withOpacity(0.5),
+                                            .withValues(alpha: 0.5),
                                         width: 3,
                                       ),
                                     ),
@@ -826,7 +819,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                   ),
                             ),
                             const SizedBox(width: 4),
-                            Text('*',
+                            const Text('*',
                                 style: TextStyle(fontWeight: FontWeight.bold)),
                           ],
                         ),
@@ -925,7 +918,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                         color: Theme.of(context)
                                             .colorScheme
                                             .primaryFixed
-                                            .withOpacity(0.5),
+                                            .withValues(alpha: 0.5),
                                         width: 3,
                                       ),
                                     ),
@@ -1074,7 +1067,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                   onPressed: () => _pickDate(context, true),
                                   child: Text(
                                     loc.get('select_from_date'),
-                                    style: Theme.of(context).textTheme.bodyLarge,
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
                                   ),
                                 )
                               : GestureDetector(
@@ -1085,14 +1079,16 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                     alignment: Alignment.center,
                                     child: Text(
                                       '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}',
-                                      style: Theme.of(context).textTheme.bodyLarge,
+                                      style:
+                                          Theme.of(context).textTheme.bodyLarge,
                                     ),
                                   ),
                                 ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Text('-', style: Theme.of(context).textTheme.bodyLarge),
+                          child: Text('-',
+                              style: Theme.of(context).textTheme.bodyLarge),
                         ),
                         Expanded(
                           child: _endDate == null
@@ -1107,7 +1103,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                   onPressed: () => _pickDate(context, false),
                                   child: Text(
                                     loc.get('select_to_date'),
-                                    style: Theme.of(context).textTheme.bodyLarge,
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
                                   ),
                                 )
                               : GestureDetector(
@@ -1118,7 +1115,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                     alignment: Alignment.center,
                                     child: Text(
                                       '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}',
-                                      style: Theme.of(context).textTheme.bodyLarge,
+                                      style:
+                                          Theme.of(context).textTheme.bodyLarge,
                                     ),
                                   ),
                                 ),
