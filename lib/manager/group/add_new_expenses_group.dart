@@ -493,7 +493,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                   ),
                         ),
                         const SizedBox(width: 4),
-                        Text('*', style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text('*',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -558,15 +559,15 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                   ),
                             ),
                             const SizedBox(width: 4),
-                            Text('*', style: TextStyle(fontWeight: FontWeight.bold)),
+                            Text('*',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
                           ],
                         ),
-                        IconButton.filled(
-                          icon: const Icon(Icons.add, size: 18),
-                          tooltip: loc.get('add'),
-                          style: IconButton.styleFrom(
+                        OutlinedButton(
+                          style: OutlinedButton.styleFrom(
                             padding: const EdgeInsets.all(8),
                             minimumSize: const Size(32, 32),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
                           onPressed: () {
                             showDialog(
@@ -615,6 +616,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                               ),
                             );
                           },
+                          child: const Icon(Icons.add, size: 18),
                         ),
                       ],
                     ),
@@ -797,15 +799,15 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                   ),
                             ),
                             const SizedBox(width: 4),
-                            Text('*', style: TextStyle(fontWeight: FontWeight.bold)),
+                            Text('*',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
                           ],
                         ),
-                        IconButton.filled(
-                          icon: const Icon(Icons.add, size: 18),
-                          tooltip: loc.get('add'),
-                          style: IconButton.styleFrom(
+                        OutlinedButton(
+                          style: OutlinedButton.styleFrom(
                             padding: const EdgeInsets.all(8),
                             minimumSize: const Size(32, 32),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
                           onPressed: () {
                             showDialog(
@@ -856,6 +858,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                               },
                             );
                           },
+                          child: const Icon(Icons.add, size: 18),
                         ),
                       ],
                     ),
@@ -1027,12 +1030,16 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                         _startDate == null
                             ? OutlinedButton(
                                 style: OutlinedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 8),
                                   minimumSize: Size(0, 0),
-                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
                                 ),
                                 onPressed: () => _pickDate(context, true),
-                                child: Text(loc.get('select_from_date'), style: Theme.of(context).textTheme.bodyLarge),
+                                child: Text(loc.get('select_from_date'),
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge),
                               )
                             : GestureDetector(
                                 onTap: () => _pickDate(context, true),
@@ -1044,19 +1051,24 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                         const SizedBox(width: 18),
                         Align(
                           alignment: Alignment.center,
-                          child: Text('-', style: Theme.of(context).textTheme.bodyLarge),
+                          child: Text('-',
+                              style: Theme.of(context).textTheme.bodyLarge),
                         ),
                         const SizedBox(width: 18),
                         // Al
                         _endDate == null
                             ? OutlinedButton(
                                 style: OutlinedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 8),
                                   minimumSize: Size(0, 0),
-                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
                                 ),
                                 onPressed: () => _pickDate(context, false),
-                                child: Text(loc.get('select_to_date'), style: Theme.of(context).textTheme.bodyLarge),
+                                child: Text(loc.get('select_to_date'),
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge),
                               )
                             : GestureDetector(
                                 onTap: () => _pickDate(context, false),
@@ -1069,7 +1081,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                           const SizedBox(width: 12),
                           OutlinedButton(
                             style: OutlinedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 8),
                               minimumSize: Size(0, 0),
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
@@ -1079,7 +1092,9 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                 _endDate = null;
                               });
                             },
-                            child: Icon(Icons.close, size: 18, color: Theme.of(context).colorScheme.primary),
+                            child: Icon(Icons.close,
+                                size: 18,
+                                color: Theme.of(context).colorScheme.primary),
                           ),
                         ],
                       ],
