@@ -1221,13 +1221,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                             child: OutlinedButton.icon(
                               onPressed: _showImagePickerDialog,
                               icon: const Icon(Icons.add_photo_alternate),
-                              label: Text(
-                                loc.get('select_image'),
-                                style: TextStyle(
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface,
-                                ),
-                              ),
+                              label: Text(loc.get('select_image')),
                               style: OutlinedButton.styleFrom(
                                 foregroundColor:
                                     Theme.of(context).colorScheme.onSurface,
