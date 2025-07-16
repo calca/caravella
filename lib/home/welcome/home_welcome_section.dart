@@ -30,33 +30,32 @@ class HomeWelcomeSection extends StatelessWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              theme.colorScheme.surface,
+              theme.colorScheme.primaryFixedDim,
               theme.colorScheme
-                  .surfaceContainerHighest, // Replace deprecated surfaceVariant
+                  .onPrimaryFixed, // Replace deprecated surfaceVariant
             ],
           )
         : LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
+              theme.colorScheme.primaryFixedDim,
               theme.colorScheme.primary,
-              theme.colorScheme.primaryContainer,
             ],
           );
 
     final titleColor =
         isDarkMode ? theme.colorScheme.onSurface : theme.colorScheme.onPrimary;
 
-    final buttonBackgroundColor = isDarkMode
-        ? theme.colorScheme.primaryContainer
-        : theme.colorScheme.onPrimary;
+    final buttonBackgroundColor =
+        isDarkMode ? theme.colorScheme.primary : theme.colorScheme.onPrimary;
 
     final buttonForegroundColor = isDarkMode
         ? theme.colorScheme.onPrimaryContainer
         : theme.colorScheme.primary;
 
     final settingsTextColor =
-        isDarkMode ? theme.colorScheme.primary : theme.colorScheme.onPrimary;
+        isDarkMode ? theme.colorScheme.onPrimary : theme.colorScheme.onPrimary;
 
     return SizedBox(
       width: screenWidth,
