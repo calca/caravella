@@ -6,8 +6,7 @@ class ImageCropPage extends StatefulWidget {
   final File imageFile;
   final double aspectRatio;
   const ImageCropPage(
-      {Key? key, required this.imageFile, this.aspectRatio = 3 / 2})
-      : super(key: key);
+      {super.key, required this.imageFile, this.aspectRatio = 3 / 2});
 
   @override
   State<ImageCropPage> createState() => _ImageCropPageState();
@@ -59,7 +58,7 @@ class _ImageCropPageState extends State<ImageCropPage> {
       width: cropRect!.width.round(),
       height: cropRect!.height.round(),
     );
-    final croppedFile = File(widget.imageFile.path + '_cropped.jpg');
+    final croppedFile = File('${widget.imageFile.path}_cropped.jpg');
     await croppedFile.writeAsBytes(img.encodeJpg(crop, quality: 85));
     if (mounted) Navigator.of(context).pop(croppedFile);
   }
@@ -98,7 +97,7 @@ class _ImageCropPageState extends State<ImageCropPage> {
                     height: cropRect!.height,
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.blueAccent, width: 2),
-                      color: Colors.black.withOpacity(0.15),
+                      color: Colors.black.withValues(alpha: 0.15),
                     ),
                   ),
                 ),
