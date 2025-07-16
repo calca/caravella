@@ -395,11 +395,10 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
     Future.delayed(const Duration(milliseconds: 10), _unfocusAll);
   }
 
-  Widget _buildSectionCard(
+  Widget _buildSectionFlat(
       {required String title, required List<Widget> children}) {
-    return BaseCard(
-      padding: const EdgeInsets.all(16.0),
-      borderRadius: BorderRadius.circular(12.0),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -480,31 +479,46 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 const SizedBox(height: 24),
 
                 // Sezione 1: Informazioni di base
-                _buildSectionCard(
-                  title: '', // Titolo vuoto perché ora è fuori dalla card
+                _buildSectionFlat(
+                  title: '',
                   children: [
                     // Nome gruppo
+                    Row(
+                      children: [
+                        Text(
+                          loc.get('group_name'),
+                          style:
+                              Theme.of(context).textTheme.titleLarge?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                        ),
+                        const SizedBox(width: 4),
+                        Text('*', style: TextStyle(fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
                     TextFormField(
                       controller: _titleController,
                       focusNode: _titleFocusNode,
-                      autofocus: widget.trip ==
-                          null, // Focus automatico solo in modalità creazione
+                      autofocus: widget.trip == null,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
-                      decoration: InputDecoration(
-                        labelText: '${loc.get('group_name')} *',
-                        labelStyle:
-                            Theme.of(context).textTheme.titleLarge?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
+                      decoration: const InputDecoration(
+                        labelText: '',
+                        border: UnderlineInputBorder(),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(width: 2),
+                        ),
                       ),
                       validator: (v) => v == null || v.isEmpty
                           ? loc.get('enter_title')
                           : null,
                       onChanged: (value) {
-                        setState(
-                            () {}); // Aggiorna lo stato per il bottone Salva
+                        setState(() {});
                       },
                     ),
 
@@ -526,15 +540,26 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 const SizedBox(height: 24),
 
                 // Sezione 2: Partecipanti
-                _buildSectionCard(
-                  title: '', // Titolo vuoto perché lo gestiamo direttamente
+                _buildSectionFlat(
+                  title: '',
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          '${loc.get('participants')} *',
-                          style: Theme.of(context).textTheme.titleMedium,
+                        Row(
+                          children: [
+                            Text(
+                              loc.get('participants'),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                            ),
+                            const SizedBox(width: 4),
+                            Text('*', style: TextStyle(fontWeight: FontWeight.bold)),
+                          ],
                         ),
                         IconButton.filled(
                           icon: const Icon(Icons.add, size: 18),
@@ -754,15 +779,26 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 const SizedBox(height: 24),
 
                 // Sezione 3: Categorie
-                _buildSectionCard(
-                  title: '', // Titolo vuoto perché lo gestiamo direttamente
+                _buildSectionFlat(
+                  title: '',
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          loc.get('categories'),
-                          style: Theme.of(context).textTheme.titleMedium,
+                        Row(
+                          children: [
+                            Text(
+                              loc.get('categories'),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                            ),
+                            const SizedBox(width: 4),
+                            Text('*', style: TextStyle(fontWeight: FontWeight.bold)),
+                          ],
                         ),
                         IconButton.filled(
                           icon: const Icon(Icons.add, size: 18),
@@ -980,7 +1016,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 const SizedBox(height: 24),
 
                 // Sezione 4: Periodo
-                _buildSectionCard(
+                _buildSectionFlat(
                   title: loc.get('dates'),
                   children: [
                     // Selezione periodo compatta - inline
@@ -1145,7 +1181,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 const SizedBox(height: 24),
 
                 // Sezione 5: Impostazioni
-                _buildSectionCard(
+                _buildSectionFlat(
                   title: loc.get('settings'),
                   children: [
                     // Image selection
@@ -1210,8 +1246,21 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(loc.get('currency'),
-                            style: Theme.of(context).textTheme.titleMedium),
+                        Row(
+                          children: [
+                            Text(
+                              loc.get('currency'),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                            ),
+                            const SizedBox(width: 4),
+                            Text('*', style: TextStyle(fontWeight: FontWeight.bold)),
+                          ],
+                        ),
                         const SizedBox(width: 16),
                         CurrencySelector(
                           value: _currency,
