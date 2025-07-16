@@ -650,13 +650,13 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                     vertical: 12.0,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .surfaceContainerHighest
-                                        .withValues(
-                                            alpha:
-                                                0.5), // Slightly more opacity for better visibility
-                                    borderRadius: BorderRadius.circular(12.0),
+                                    color: Colors.transparent,
+                                    border: Border(
+                                      left: BorderSide(
+                                        color: Theme.of(context).colorScheme.primaryFixedDim.withOpacity(0.5),
+                                        width: 3,
+                                      ),
+                                    ),
                                   ),
                                   child: Row(
                                     children: [
@@ -665,7 +665,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                         size: 16,
                                         color: Theme.of(context)
                                             .colorScheme
-                                            .primary,
+                                            .primaryFixedDim,
                                       ),
                                       const SizedBox(width: 8),
                                       Expanded(
@@ -885,12 +885,13 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                     vertical: 12.0,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .surfaceContainerHighest
-                                        .withValues(
-                                            alpha: 0.5), // Consistent opacity
-                                    borderRadius: BorderRadius.circular(12.0),
+                                    color: Colors.transparent,
+                                    border: Border(
+                                      left: BorderSide(
+                                        color: Theme.of(context).colorScheme.primaryFixed.withOpacity(0.5),
+                                        width: 3,
+                                      ),
+                                    ),
                                   ),
                                   child: Row(
                                     children: [
@@ -899,7 +900,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                         size: 16,
                                         color: Theme.of(context)
                                             .colorScheme
-                                            .secondary,
+                                            .primaryFixedDim,
                                       ),
                                       const SizedBox(width: 8),
                                       Expanded(
