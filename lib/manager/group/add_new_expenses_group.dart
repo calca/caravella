@@ -1025,14 +1025,14 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                       children: [
                         // Dal
                         _startDate == null
-                            ? FilledButton(
-                                style: FilledButton.styleFrom(
+                            ? OutlinedButton(
+                                style: OutlinedButton.styleFrom(
                                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                   minimumSize: Size(0, 0),
                                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                 ),
                                 onPressed: () => _pickDate(context, true),
-                                child: Text(loc.get('select_from_date'), style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white)),
+                                child: Text(loc.get('select_from_date'), style: Theme.of(context).textTheme.bodyLarge),
                               )
                             : GestureDetector(
                                 onTap: () => _pickDate(context, true),
@@ -1049,14 +1049,14 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                         const SizedBox(width: 18),
                         // Al
                         _endDate == null
-                            ? FilledButton(
-                                style: FilledButton.styleFrom(
+                            ? OutlinedButton(
+                                style: OutlinedButton.styleFrom(
                                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                   minimumSize: Size(0, 0),
                                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                 ),
                                 onPressed: () => _pickDate(context, false),
-                                child: Text(loc.get('select_to_date'), style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white)),
+                                child: Text(loc.get('select_to_date'), style: Theme.of(context).textTheme.bodyLarge),
                               )
                             : GestureDetector(
                                 onTap: () => _pickDate(context, false),
@@ -1067,8 +1067,13 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                               ),
                         if (_startDate != null || _endDate != null) ...[
                           const SizedBox(width: 12),
-                          GestureDetector(
-                            onTap: () {
+                          OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                              minimumSize: Size(0, 0),
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            onPressed: () {
                               setState(() {
                                 _startDate = null;
                                 _endDate = null;
