@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
+import 'image_crop_page.dart';
 import '../../data/expense_group.dart';
 import '../../data/expense_participant.dart';
 import '../../data/expense_category.dart';
@@ -280,7 +281,16 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
     try {
       final XFile? pickedFile = await _imagePicker.pickImage(source: source);
       if (pickedFile != null) {
-        await _processAndSaveImage(File(pickedFile.path));
+        // Naviga alla pagina di crop
+        final croppedFile = await Navigator.of(context).push<File?>(
+          MaterialPageRoute(
+            builder: (context) =>
+                ImageCropPage(imageFile: File(pickedFile.path)),
+          ),
+        );
+        if (croppedFile != null) {
+          await _processAndSaveImage(croppedFile);
+        }
       }
     } catch (e) {
       if (mounted) {
@@ -352,7 +362,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       builder: (BuildContext context) {
         return SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -1136,53 +1147,92 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(loc.get('select_image'),
-                                style: Theme.of(context).textTheme.titleMedium),
-                            IconButton(
-                              onPressed: _showImagePickerDialog,
-                              icon: const Icon(Icons.add_photo_alternate),
-                            ),
-                          ],
-                        ),
                         if (_selectedImageFile != null) ...[
                           const SizedBox(height: 12),
-                          Container(
-                            width: double.infinity,
-                            height: 200,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .outline
-                                    .withValues(
-                                        alpha: 0.5), // Theme-aware border
-                              ),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: Image.file(
-                                _selectedImageFile!,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+                          LayoutBuilder(
+                            builder: (context, constraints) {
+                              final double size = constraints.maxWidth;
+                              return Container(
+                                width: size,
+                                height: size,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .outline
+                                        .withValues(alpha: 0.5),
+                                  ),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.file(
+                                    _selectedImageFile!,
+                                    fit: BoxFit.cover,
+                                    width: size,
+                                    height: size,
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                           const SizedBox(height: 8),
-                          Center(
-                            child: TextButton.icon(
-                              onPressed: _removeImage,
-                              icon: const Icon(Icons.delete, size: 16),
-                              label: Text(loc.get('remove_image')),
-                              style: TextButton.styleFrom(
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: OutlinedButton(
+                                  onPressed: _showImagePickerDialog,
+                                  style: OutlinedButton.styleFrom(
+                                    foregroundColor:
+                                        Theme.of(context).colorScheme.primary,
+                                    side: BorderSide(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12),
+                                  ),
+                                  child: Text(loc.get('change_image')),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: OutlinedButton(
+                                  onPressed: _removeImage,
+                                  style: OutlinedButton.styleFrom(
+                                    foregroundColor:
+                                        Theme.of(context).colorScheme.error,
+                                    side: BorderSide(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .error),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12),
+                                  ),
+                                  child: Text(loc.get('remove_image')),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ] else ...[
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: OutlinedButton.icon(
+                              onPressed: _showImagePickerDialog,
+                              icon: const Icon(Icons.add_photo_alternate),
+                              label: Text(
+                                loc.get('select_image'),
+                                style: TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface,
+                                ),
+                              ),
+                              style: OutlinedButton.styleFrom(
                                 foregroundColor:
-                                    Theme.of(context).colorScheme.error,
-                                backgroundColor: Theme.of(context)
-                                    .colorScheme
-                                    .errorContainer
-                                    .withValues(alpha: 0.1),
+                                    Theme.of(context).colorScheme.onSurface,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 14),
                               ),
                             ),
                           ),
