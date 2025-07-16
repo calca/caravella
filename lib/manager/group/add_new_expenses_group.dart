@@ -1058,79 +1058,90 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 _buildSectionFlat(
                   title: loc.get('dates'),
                   children: [
-                    // Nuova riga compatta: Selezione date con FilledButton senza bordo sotto e trattino allineato
+                    // Riga di selezione date: bottoni grandi uguali e riga a tutta larghezza
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        // Dal
-                        _startDate == null
-                            ? OutlinedButton(
-                                style: OutlinedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 8),
-                                  minimumSize: Size(0, 0),
-                                  tapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
+                        Expanded(
+                          child: _startDate == null
+                              ? OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16),
+                                    minimumSize: const Size(0, 48),
+                                    tapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                  ),
+                                  onPressed: () => _pickDate(context, true),
+                                  child: Text(
+                                    loc.get('select_from_date'),
+                                    style: Theme.of(context).textTheme.bodyLarge,
+                                  ),
+                                )
+                              : GestureDetector(
+                                  onTap: () => _pickDate(context, true),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}',
+                                      style: Theme.of(context).textTheme.bodyLarge,
+                                    ),
+                                  ),
                                 ),
-                                onPressed: () => _pickDate(context, true),
-                                child: Text(loc.get('select_from_date'),
-                                    style:
-                                        Theme.of(context).textTheme.bodyLarge),
-                              )
-                            : GestureDetector(
-                                onTap: () => _pickDate(context, true),
-                                child: Text(
-                                  '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}',
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                              ),
-                        const SizedBox(width: 18),
-                        Align(
-                          alignment: Alignment.center,
-                          child: Text('-',
-                              style: Theme.of(context).textTheme.bodyLarge),
                         ),
-                        const SizedBox(width: 18),
-                        // Al
-                        _endDate == null
-                            ? OutlinedButton(
-                                style: OutlinedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 8),
-                                  minimumSize: Size(0, 0),
-                                  tapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Text('-', style: Theme.of(context).textTheme.bodyLarge),
+                        ),
+                        Expanded(
+                          child: _endDate == null
+                              ? OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16),
+                                    minimumSize: const Size(0, 48),
+                                    tapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                  ),
+                                  onPressed: () => _pickDate(context, false),
+                                  child: Text(
+                                    loc.get('select_to_date'),
+                                    style: Theme.of(context).textTheme.bodyLarge,
+                                  ),
+                                )
+                              : GestureDetector(
+                                  onTap: () => _pickDate(context, false),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}',
+                                      style: Theme.of(context).textTheme.bodyLarge,
+                                    ),
+                                  ),
                                 ),
-                                onPressed: () => _pickDate(context, false),
-                                child: Text(loc.get('select_to_date'),
-                                    style:
-                                        Theme.of(context).textTheme.bodyLarge),
-                              )
-                            : GestureDetector(
-                                onTap: () => _pickDate(context, false),
-                                child: Text(
-                                  '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}',
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                              ),
+                        ),
                         if (_startDate != null || _endDate != null) ...[
-                          const SizedBox(width: 12),
-                          OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 8),
-                              minimumSize: Size(0, 0),
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                padding: const EdgeInsets.all(8),
+                                minimumSize: const Size(0, 48),
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _startDate = null;
+                                  _endDate = null;
+                                });
+                              },
+                              child: Icon(Icons.close,
+                                  size: 18,
+                                  color: Theme.of(context).colorScheme.primary),
                             ),
-                            onPressed: () {
-                              setState(() {
-                                _startDate = null;
-                                _endDate = null;
-                              });
-                            },
-                            child: Icon(Icons.close,
-                                size: 18,
-                                color: Theme.of(context).colorScheme.primary),
                           ),
                         ],
                       ],
