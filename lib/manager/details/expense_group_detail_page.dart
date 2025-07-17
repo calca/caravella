@@ -488,7 +488,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                     ],
                   ),
                 ),
-                const Divider(height: 1),
 
                 // Contenuto scrollabile
                 Flexible(
@@ -620,7 +619,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                     ],
                   ),
                 ),
-                const Divider(height: 1),
 
                 // Contenuto scrollabile
                 Flexible(
