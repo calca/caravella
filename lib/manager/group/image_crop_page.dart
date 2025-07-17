@@ -181,7 +181,8 @@ class _ImageCropPageState extends State<ImageCropPage> {
                           decoration: BoxDecoration(
                             border:
                                 Border.all(color: Colors.blueAccent, width: 2),
-                            color: Colors.transparent,
+                            color:
+                                Colors.transparent, // area interna trasparente
                           ),
                           child: Stack(
                             children: [
@@ -269,11 +270,14 @@ class _CropOverlayPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..color = Colors.black.withOpacity(0.5);
-    // Area piena
+    // Usa saveLayer per abilitare BlendMode.clear su tutte le piattaforme
+    canvas.saveLayer(Offset.zero & size, Paint());
+    // Area piena scura
     canvas.drawRect(Offset.zero & size, paint);
     // Area di crop "trasparente"
     paint.blendMode = BlendMode.clear;
     canvas.drawRect(cropRect, paint);
+    canvas.restore();
   }
 
   @override
