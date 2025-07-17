@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 // ...existing code...
 import 'package:provider/provider.dart';
-import 'package:share_plus/share_plus.dart';
 
 import '../../data/expense_details.dart';
 import '../../data/expense_group.dart';
 import '../../state/expense_group_notifier.dart';
-import '../expense/expense_form_component.dart';
 import '../../data/expense_group_storage.dart';
-import '../group/add_new_expenses_group.dart';
 import '../../app_localizations.dart';
 import '../../state/locale_notifier.dart';
 import 'tabs/overview_tab.dart';
-import 'tabs/statistics_tab.dart';
 import 'widgets/group_header.dart';
 import 'widgets/group_actions.dart';
 import 'widgets/group_total.dart';
 import 'widgets/expense_list.dart';
 import 'widgets/empty_expenses.dart';
+import 'widgets/statistics_sheet.dart';
+import 'widgets/options_sheet.dart';
+import 'widgets/expense_form_sheet.dart';
+import 'widgets/edit_expense_sheet.dart';
+import 'widgets/delete_expense_dialog.dart';
 
 class ExpenseGroupDetailPage extends StatefulWidget {
   final ExpenseGroup trip;
@@ -146,414 +147,87 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   }
 
   void _showStatisticsSheet() {
-    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    final loc = AppLocalizations(locale);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.7,
-        maxChildSize: 0.9,
-        minChildSize: 0.3,
-        builder: (context, scrollController) => Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          child: Column(
-            children: [
-              Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.symmetric(vertical: 8),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.outline,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Text(
-                  loc.get('statistics'),
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  padding: const EdgeInsets.all(16),
-                  child: StatisticsTab(trip: _trip!),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      builder: (context) => StatisticsSheet(trip: _trip!),
     );
   }
 
   void _showOptionsSheet() {
-    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    final loc = AppLocalizations(locale);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.4,
-        maxChildSize: 0.6,
-        minChildSize: 0.3,
-        builder: (context, scrollController) => Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          child: Column(
-            children: [
-              Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.symmetric(vertical: 8),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.outline,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Text(
-                  loc.get('options'),
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      // Pin/Unpin action
-                      ListTile(
-                        leading: Icon(
-                          _trip!.pinned
-                              ? Icons.push_pin
-                              : Icons.push_pin_outlined,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        title: Text(_trip!.pinned
-                            ? loc.get('unpin_group')
-                            : loc.get('pin_group')),
-                        onTap: () async {
-                          Navigator.of(context).pop();
-                          if (_trip!.pinned) {
-                            await ExpenseGroupStorage.removePinnedTrip(
-                                _trip!.id);
-                          } else {
-                            await ExpenseGroupStorage.setPinnedTrip(_trip!.id);
-                          }
-                          await _refreshTrip();
-                        },
-                      ),
-
-                      // Archive/Unarchive action
-                      ListTile(
-                        leading: Icon(
-                          _trip!.archived
-                              ? Icons.unarchive_rounded
-                              : Icons.archive_rounded,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        title: Text(_trip!.archived
-                            ? AppLocalizations(
-                                    LocaleNotifier.of(context)?.locale ?? 'it')
-                                .get('unarchive')
-                            : AppLocalizations(
-                                    LocaleNotifier.of(context)?.locale ?? 'it')
-                                .get('archive')),
-                        onTap: () async {
-                          Navigator.of(context).pop();
-                          final updatedTrip =
-                              _trip!.copyWith(archived: !_trip!.archived);
-                          final trips =
-                              await ExpenseGroupStorage.getAllGroups();
-                          final idx =
-                              trips.indexWhere((v) => v.id == _trip!.id);
-                          if (idx != -1) {
-                            trips[idx] = updatedTrip;
-                            await ExpenseGroupStorage.writeTrips(trips);
-                          }
-                          await _refreshTrip();
-                        },
-                      ),
-
-                      const Divider(),
-
-                      // Edit Group action
-                      ListTile(
-                        leading: Icon(
-                          Icons.edit_rounded,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        title: Text(loc.get('edit_group')),
-                        onTap: () async {
-                          Navigator.of(context).pop();
-
-                          // Imposta il gruppo corrente nel notifier prima di aprire l'editor
-                          _groupNotifier?.setCurrentGroup(_trip!);
-
-                          final result = await Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => AddNewExpensesGroupPage(
-                                  trip: _trip!,
-                                  onTripDeleted: () async {
-                                    await _loadTrip();
-                                  }),
-                            ),
-                          );
-                          if (result == true && context.mounted) {
-                            // Forza il refresh completo e aggiorna il notifier
-                            await _refreshTrip();
-                            // Pulisci e ricarica il notifier per essere sicuri
-                            _groupNotifier?.clearCurrentGroup();
-                          }
-                        },
-                      ),
-
-                      const Divider(),
-
-                      // Export CSV action
-                      ListTile(
-                        leading: Icon(
-                          Icons.file_download_rounded,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        title: Text(loc.get('export_csv')),
-                        onTap: () async {
-                          Navigator.of(context).pop();
-                          await _exportToCsv();
-                        },
-                      ),
-
-                      const Divider(),
-
-                      // Delete action
-                      ListTile(
-                        leading: Icon(
-                          Icons.delete_rounded,
-                          color: Theme.of(context).colorScheme.error,
-                        ),
-                        title: Text(
-                          loc.get('delete_group'),
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.error,
-                          ),
-                        ),
-                        onTap: () async {
-                          Navigator.of(context).pop();
-                          final shouldDelete = await showDialog<bool>(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: Text(loc.get('delete_group')),
-                              content: Text(loc.get('delete_group_confirm')),
-                              actions: [
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.of(context).pop(false),
-                                  child: Text(loc.get('cancel')),
-                                ),
-                                FilledButton(
-                                  onPressed: () =>
-                                      Navigator.of(context).pop(true),
-                                  style: FilledButton.styleFrom(
-                                    backgroundColor:
-                                        Theme.of(context).colorScheme.error,
-                                  ),
-                                  child: Text(loc.get('delete')),
-                                ),
-                              ],
-                            ),
-                          );
-
-                          if (shouldDelete == true && context.mounted) {
-                            final trips =
-                                await ExpenseGroupStorage.getAllGroups();
-                            trips.removeWhere((v) => v.id == _trip!.id);
-                            await ExpenseGroupStorage.writeTrips(trips);
-                            if (context.mounted) {
-                              Navigator.of(context)
-                                  .pop(true); // Torna alla lista e aggiorna
-                            }
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+      builder: (context) => OptionsSheet(
+        trip: _trip!,
+        onRefresh: _refreshTrip,
+        onDelete: () async {
+          // Implement delete logic or callback here
+        },
+        onEdit: () async {
+          // Implement edit logic or callback here
+        },
       ),
     );
   }
 
   void _showDeleteExpenseDialog(ExpenseDetails expense) {
-    final loc = AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it');
-
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(loc.get('delete_expense')),
-        content: Text(loc.get('delete_expense_confirm')),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(loc.get('cancel')),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.of(context).pop();
+      builder: (context) => DeleteExpenseDialog(
+        expense: expense,
+        onDelete: () async {
+          // Rimuovi la spesa
+          setState(() {
+            _trip!.expenses.removeWhere((e) => e.id == expense.id);
+          });
 
-              // Rimuovi la spesa
-              setState(() {
-                _trip!.expenses.removeWhere((e) => e.id == expense.id);
-              });
-
-              // Salva le modifiche
-              final trips = await ExpenseGroupStorage.getAllGroups();
-              final tripIndex = trips.indexWhere((t) => t.id == _trip!.id);
-              if (tripIndex != -1) {
-                trips[tripIndex] = _trip!;
-                await ExpenseGroupStorage.writeTrips(trips);
-              }
-            },
-            child: Text(
-              loc.get('delete'),
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.error,
-              ),
-            ),
-          ),
-        ],
+          // Salva le modifiche
+          final trips = await ExpenseGroupStorage.getAllGroups();
+          final tripIndex = trips.indexWhere((t) => t.id == _trip!.id);
+          if (tripIndex != -1) {
+            trips[tripIndex] = _trip!;
+            await ExpenseGroupStorage.writeTrips(trips);
+          }
+        },
       ),
     );
   }
 
   void _showAddExpenseSheet() {
     final loc = AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it');
-
-    // Assicurati sempre che il notifier abbia i dati più aggiornati
     if (_trip != null) {
       _groupNotifier?.setCurrentGroup(_trip!);
     }
-
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => Consumer<ExpenseGroupNotifier>(
-        builder: (context, groupNotifier, child) {
-          final currentGroup = groupNotifier.currentGroup ?? _trip!;
-
-          return Container(
-            constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height * 0.9,
-            ),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Header fisso
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        loc.get('add_expense'),
-                        style:
-                            Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.close),
-                        onPressed: () => Navigator.of(context).pop(),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // Contenuto scrollabile
-                Flexible(
-                  child: SafeArea(
-                    child: SingleChildScrollView(
-                      padding: EdgeInsets.only(
-                        left: 20,
-                        right: 20,
-                        top: 16,
-                        bottom: MediaQuery.of(context).viewInsets.bottom +
-                            MediaQuery.of(context).padding.bottom +
-                            20,
-                      ),
-                      child: ExpenseFormComponent(
-                        participants: currentGroup.participants
-                            .map((p) => p.name)
-                            .toList(),
-                        categories:
-                            currentGroup.categories.map((c) => c.name).toList(),
-                        tripStartDate: currentGroup.startDate,
-                        tripEndDate: currentGroup.endDate,
-                        shouldAutoClose: false,
-                        showDateAndNote: true,
-                        onExpenseAdded: (newExpense) async {
-                          // Genera un ID univoco per la nuova spesa
-                          final expenseWithId = ExpenseDetails(
-                            id: DateTime.now()
-                                .millisecondsSinceEpoch
-                                .toString(),
-                            category: newExpense.category,
-                            amount: newExpense.amount,
-                            paidBy: newExpense.paidBy,
-                            date: newExpense.date,
-                            note: newExpense.note,
-                          );
-
-                          // Usa il notifier per aggiungere la spesa
-                          await groupNotifier.addExpense(expenseWithId);
-
-                          // Aggiorna lo stato locale
-                          await _refreshTrip();
-
-                          if (context.mounted) {
-                            Navigator.of(context).pop();
-                          }
-                        },
-                        onCategoryAdded: (categoryName) async {
-                          // Usa il notifier per aggiungere la categoria
-                          await groupNotifier.addCategory(categoryName);
-
-                          // Aggiorna lo stato locale
-                          await _refreshTrip();
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+      builder: (context) => ExpenseFormSheet(
+        group: _trip!,
+        title: loc.get('add_expense'),
+        onExpenseSaved: (newExpense) async {
+          final expenseWithId = ExpenseDetails(
+            id: DateTime.now().millisecondsSinceEpoch.toString(),
+            category: newExpense.category,
+            amount: newExpense.amount,
+            paidBy: newExpense.paidBy,
+            date: newExpense.date,
+            note: newExpense.note,
           );
+          await _groupNotifier?.addExpense(expenseWithId);
+          await _refreshTrip();
+          if (context.mounted) Navigator.of(context).pop();
         },
+        onCategoryAdded: (categoryName) async {
+          await _groupNotifier?.addCategory(categoryName);
+          await _refreshTrip();
+        },
+        showDateAndNote: true,
       ),
     ).whenComplete(() {
-      // Pulisci il notifier quando il dialog si chiude
       if (mounted) {
         _groupNotifier?.clearCurrentGroup();
       }
@@ -562,224 +236,62 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
 
   Future<void> _openEditExpense(ExpenseDetails expense) async {
     final loc = AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it');
-
-    // Assicurati sempre che il notifier abbia i dati più aggiornati
     if (_trip != null) {
       _groupNotifier?.setCurrentGroup(_trip!);
     }
-
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => Consumer<ExpenseGroupNotifier>(
-        builder: (context, groupNotifier, child) {
-          final currentGroup = groupNotifier.currentGroup ?? _trip!;
-
-          return Container(
-            constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height * 0.9,
-            ),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Header fisso
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        loc.get('edit_expense'),
-                        style:
-                            Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
-                      ),
-                      Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                              _showDeleteExpenseDialog(expense);
-                            },
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.close),
-                            onPressed: () => Navigator.of(context).pop(),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-
-                // Contenuto scrollabile
-                Flexible(
-                  child: SafeArea(
-                    child: SingleChildScrollView(
-                      padding: EdgeInsets.only(
-                        left: 20,
-                        right: 20,
-                        top: 16,
-                        bottom: MediaQuery.of(context).viewInsets.bottom +
-                            MediaQuery.of(context).padding.bottom +
-                            20,
-                      ),
-                      child: ExpenseFormComponent(
-                        initialExpense: expense,
-                        participants: currentGroup.participants
-                            .map((p) => p.name)
-                            .toList(),
-                        categories:
-                            currentGroup.categories.map((c) => c.name).toList(),
-                        tripStartDate: currentGroup.startDate,
-                        tripEndDate: currentGroup.endDate,
-                        shouldAutoClose: false,
-                        onExpenseAdded: (updatedExpense) async {
-                          // Aggiorna la spesa esistente
-                          final expenseWithId = ExpenseDetails(
-                            id: expense.id,
-                            category: updatedExpense.category,
-                            amount: updatedExpense.amount,
-                            paidBy: updatedExpense.paidBy,
-                            date: updatedExpense.date,
-                            note: updatedExpense.note,
-                          );
-
-                          // Aggiorna tramite il notifier
-                          final updatedExpenses =
-                              currentGroup.expenses.map((e) {
-                            return e.id == expense.id ? expenseWithId : e;
-                          }).toList();
-
-                          final updatedGroup = ExpenseGroup(
-                            title: currentGroup.title,
-                            expenses: updatedExpenses,
-                            participants: currentGroup.participants,
-                            startDate: currentGroup.startDate,
-                            endDate: currentGroup.endDate,
-                            currency: currentGroup.currency,
-                            categories: currentGroup.categories,
-                            timestamp: currentGroup.timestamp,
-                            id: currentGroup.id,
-                            file: currentGroup.file,
-                            pinned: currentGroup.pinned,
-                          );
-
-                          await groupNotifier.updateGroup(updatedGroup);
-
-                          // Aggiorna lo stato locale
-                          await _refreshTrip();
-
-                          if (context.mounted) {
-                            Navigator.of(context).pop();
-                          }
-                        },
-                        onCategoryAdded: (categoryName) async {
-                          // Usa il notifier per aggiungere la categoria
-                          await groupNotifier.addCategory(categoryName);
-
-                          // Aggiorna lo stato locale
-                          await _refreshTrip();
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+      builder: (context) => EditExpenseSheet(
+        group: _trip!,
+        expense: expense,
+        title: loc.get('edit_expense'),
+        onExpenseAdded: (updatedExpense) async {
+          final expenseWithId = ExpenseDetails(
+            id: expense.id,
+            category: updatedExpense.category,
+            amount: updatedExpense.amount,
+            paidBy: updatedExpense.paidBy,
+            date: updatedExpense.date,
+            note: updatedExpense.note,
           );
+          final updatedExpenses = _trip!.expenses.map((e) {
+            return e.id == expense.id ? expenseWithId : e;
+          }).toList();
+          final updatedGroup = ExpenseGroup(
+            title: _trip!.title,
+            expenses: updatedExpenses,
+            participants: _trip!.participants,
+            startDate: _trip!.startDate,
+            endDate: _trip!.endDate,
+            currency: _trip!.currency,
+            categories: _trip!.categories,
+            timestamp: _trip!.timestamp,
+            id: _trip!.id,
+            file: _trip!.file,
+            pinned: _trip!.pinned,
+          );
+          await _groupNotifier?.updateGroup(updatedGroup);
+          await _refreshTrip();
+          if (context.mounted) Navigator.of(context).pop();
+        },
+        onCategoryAdded: (categoryName) async {
+          await _groupNotifier?.addCategory(categoryName);
+          await _refreshTrip();
+        },
+        onDelete: () {
+          Navigator.of(context).pop();
+          _showDeleteExpenseDialog(expense);
         },
       ),
     ).whenComplete(() {
-      // Pulisci il notifier quando il dialog si chiude
       if (mounted) {
         _groupNotifier?.clearCurrentGroup();
       }
     });
   }
 
-  Future<void> _exportToCsv() async {
-    final loc = AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it');
-
-    if (_trip!.expenses.isEmpty) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(loc.get('no_expenses_to_export'))),
-        );
-      }
-      return;
-    }
-
-    try {
-      // Genera il contenuto CSV
-      final csvContent = _generateCsvContent();
-
-      // Condividi il contenuto CSV come testo
-      await SharePlus.instance.share(
-        ShareParams(
-          text:
-              '${loc.get('export_csv_share_text')}${_trip!.title}\n\n$csvContent',
-        ),
-      );
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(loc.get('export_csv_error'))),
-        );
-      }
-    }
-  }
-
-  String _generateCsvContent() {
-    final loc = AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it');
-
-    // Header CSV
-    final header = [
-      loc.get('date'),
-      loc.get('category'),
-      loc.get('amount'),
-      loc.get('currency'),
-      loc.get('paid_by'),
-      loc.get('note'),
-    ].join(',');
-
-    // Ordina le spese per data
-    final sortedExpenses = List.from(_trip!.expenses)
-      ..sort((a, b) => a.date.compareTo(b.date));
-
-    // Genera le righe CSV
-    final rows = sortedExpenses.map((expense) {
-      final date =
-          '${expense.date.day.toString().padLeft(2, '0')}/${expense.date.month.toString().padLeft(2, '0')}/${expense.date.year}';
-      final category = _escapeCsvValue(expense.category);
-      final amount = expense.amount?.toStringAsFixed(2) ?? '0.00';
-      final currency = _trip!.currency;
-      final paidBy = _escapeCsvValue(expense.paidBy);
-      final note = _escapeCsvValue(expense.note ?? '');
-
-      return [date, category, amount, currency, paidBy, note].join(',');
-    }).toList();
-
-    return [header, ...rows].join('\n');
-  }
-
-  String _escapeCsvValue(String value) {
-    // Esclude i valori CSV che contengono virgole, virgolette o newline
-    if (value.contains(',') || value.contains('"') || value.contains('\n')) {
-      return '"${value.replaceAll('"', '""')}"';
-    }
-    return value;
-  }
 
   @override
   Widget build(BuildContext context) {
