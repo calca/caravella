@@ -37,7 +37,9 @@ class _ImageCropPageState extends State<ImageCropPage> {
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
-    if (_cropRectDisplay == null || _imageDisplaySize == null) return;
+    if (_cropRectDisplay == null || _imageDisplaySize == null) {
+      return;
+    }
     final dx = details.delta.dx;
     final dy = details.delta.dy;
     double newLeft = _cropRectDisplay!.left + dx;
@@ -88,10 +90,12 @@ class _ImageCropPageState extends State<ImageCropPage> {
     // Clamp to image bounds
     if (newLeft < 0) newLeft = 0;
     if (newTop < 0) newTop = 0;
-    if (newLeft + newWidth > _imageDisplaySize!.width)
+    if (newLeft + newWidth > _imageDisplaySize!.width) {
       newLeft = _imageDisplaySize!.width - newWidth;
-    if (newTop + newHeight > _imageDisplaySize!.height)
+    }
+    if (newTop + newHeight > _imageDisplaySize!.height) {
       newTop = _imageDisplaySize!.height - newHeight;
+    }
     setState(() {
       _cropRectDisplay = Rect.fromLTWH(newLeft, newTop, newWidth, newHeight);
     });
@@ -241,15 +245,15 @@ class _ImageCropPageState extends State<ImageCropPage> {
 // --- TOP LEVEL ---
 class _CornerHandle extends StatelessWidget {
   final void Function(DragUpdateDetails) onPanUpdate;
-  const _CornerHandle({Key? key, required this.onPanUpdate}) : super(key: key);
+  const _CornerHandle({required this.onPanUpdate});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onPanUpdate: onPanUpdate,
-      child: Padding(
-        padding: const EdgeInsets.all(3), // distanza dal bordo esterno
+      child: const Padding(
+        padding: EdgeInsets.all(3), // distanza dal bordo esterno
         child: SizedBox(
           width: 18,
           height: 18,
@@ -263,13 +267,9 @@ class _CornerHandle extends StatelessWidget {
 class _DashedBorderPainter extends CustomPainter {
   final Color color;
   final double strokeWidth;
-  final double dashLength;
-  final double gapLength;
   _DashedBorderPainter({
     required this.color,
     required this.strokeWidth,
-    this.dashLength = 8,
-    this.gapLength = 6,
   });
 
   @override
@@ -283,12 +283,14 @@ class _DashedBorderPainter extends CustomPainter {
   }
 
   void _drawDashedPath(Canvas canvas, Path path, Paint paint) {
+    const double dashLength = 8;
+    const double gapLength = 6;
     final PathMetrics metrics = path.computeMetrics();
     for (final metric in metrics) {
       double distance = 0.0;
       while (distance < metric.length) {
-        final double len = dashLength;
-        final double gap = gapLength;
+        const double len = dashLength;
+        const double gap = gapLength;
         final double next = distance + len;
         final extractLen =
             next < metric.length ? len : metric.length - distance;
@@ -311,7 +313,7 @@ class _CropOverlayPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = Colors.black.withOpacity(0.5);
+    final paint = Paint()..color = Colors.black.withValues(alpha: 0.5);
     // Usa saveLayer per abilitare BlendMode.clear su tutte le piattaforme
     canvas.saveLayer(Offset.zero & size, Paint());
     // Area piena scura
