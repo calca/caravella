@@ -1151,11 +1151,29 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 ),
                 const SizedBox(height: 24),
 
-                // Sezione 5: Impostazioni
+                // Sezione 5: Impostazioni (label rimossa)
                 _buildSectionFlat(
-                  title: loc.get('settings'),
+                  title: '',
                   children: [
-                    // Image selection
+                    // Currency selector PRIMA
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          loc.get('currency'),
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        const SizedBox(width: 16),
+                        CurrencySelector(
+                          value: _currency,
+                          onChanged: (val) {
+                            if (val != null) setState(() => _currency = val);
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    // Image selection DOPO
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -1243,24 +1261,6 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                             ),
                           ),
                         ],
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    // Currency selector
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          loc.get('currency'),
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        const SizedBox(width: 16),
-                        CurrencySelector(
-                          value: _currency,
-                          onChanged: (val) {
-                            if (val != null) setState(() => _currency = val);
-                          },
-                        ),
                       ],
                     ),
                   ],
