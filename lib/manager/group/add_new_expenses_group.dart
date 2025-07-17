@@ -154,9 +154,11 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
     // Validazione delle date solo se entrambe sono state selezionate
     if ((_startDate != null && _endDate == null) ||
         (_startDate == null && _endDate != null)) {
+      if (!mounted) return;
       setState(() {
         _dateError = loc.get('select_both_dates');
       });
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(loc.get('select_both_dates')),
@@ -199,6 +201,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       if (widget.trip != null) {
         // EDIT: update existing trip
         final trips = await ExpenseGroupStorage.getAllGroups();
+        if (!mounted) return;
         final idx = trips.indexWhere((v) => v.id == widget.trip!.id);
         if (idx != -1) {
           // Crea una nuova istanza del gruppo con i dati aggiornati
@@ -220,18 +223,15 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
 
           trips[idx] = updatedTrip;
           await ExpenseGroupStorage.writeTrips(trips);
-
+          if (!mounted) return;
           // Notifica l'aggiornamento al notifier
-          if (mounted) {
-            final groupNotifier = context.read<ExpenseGroupNotifier>();
-            if (groupNotifier.currentGroup?.id == updatedTrip.id) {
-              await groupNotifier.updateGroup(updatedTrip);
-            } else {
-              // Notifica che questo gruppo è stato aggiornato anche se non è quello corrente
-              groupNotifier.notifyGroupUpdated(updatedTrip.id);
-            }
+          final groupNotifier = context.read<ExpenseGroupNotifier>();
+          if (groupNotifier.currentGroup?.id == updatedTrip.id) {
+            await groupNotifier.updateGroup(updatedTrip);
+          } else {
+            // Notifica che questo gruppo è stato aggiornato anche se non è quello corrente
+            groupNotifier.notifyGroupUpdated(updatedTrip.id);
           }
-
           if (!mounted) return;
           Navigator.of(context).pop(true);
           return;
@@ -253,13 +253,14 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       );
 
       final trips = await ExpenseGroupStorage.getAllGroups();
+      if (!mounted) return;
       trips.add(newTrip);
       await ExpenseGroupStorage.writeTrips(trips);
-
       if (!mounted) return;
       Navigator.of(context).pop(true);
     } catch (e) {
       if (!mounted) return;
+      // Dopo await ExpenseGroupStorage.writeTrips/trips.add, ricontrolla mounted
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Errore durante il salvataggio: ${e.toString()}'),
@@ -273,6 +274,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   Future<void> _pickImage(ImageSource source) async {
     try {
       final XFile? pickedFile = await _imagePicker.pickImage(source: source);
+      if (!mounted) return;
       if (pickedFile != null) {
         // Naviga alla pagina di crop
         final croppedFile = await Navigator.of(context).push<File?>(
@@ -281,6 +283,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 ImageCropPage(imageFile: File(pickedFile.path)),
           ),
         );
+        if (!mounted) return;
         if (croppedFile != null) {
           await _processAndSaveImage(croppedFile);
         }
