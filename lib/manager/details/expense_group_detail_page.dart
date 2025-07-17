@@ -14,7 +14,11 @@ import '../../state/locale_notifier.dart';
 import 'tabs/overview_tab.dart';
 import 'tabs/statistics_tab.dart';
 import '../../widgets/currency_display.dart';
-import '../../widgets/no_expense.dart';
+import 'widgets/group_header.dart';
+import 'widgets/group_actions.dart';
+import 'widgets/group_total.dart';
+import 'widgets/expense_list.dart';
+import 'widgets/empty_expenses.dart';
 import 'expense_amount_card.dart';
 
 class ExpenseGroupDetailPage extends StatefulWidget {
@@ -798,117 +802,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     final totalExpenses =
         trip.expenses.fold<double>(0, (sum, s) => sum + (s.amount ?? 0));
 
-    // Widget cerchio con immagine o lettere e icona di stato sovrapposta
-    final double circleSize = MediaQuery.of(context).size.width * 0.3;
-    Widget groupCircle = Stack(
-      children: [
-        Container(
-          margin: const EdgeInsets.only(top: 8, bottom: 8),
-          width: circleSize,
-          height: circleSize,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: colorScheme.primaryFixed,
-            border: Border.all(
-              color: colorScheme.outlineVariant,
-              width: 2,
-            ),
-          ),
-          child: trip.file != null && trip.file!.isNotEmpty
-              ? ClipOval(
-                  child: Builder(
-                    builder: (context) {
-                      // Se il path è assoluto, usa Image.file
-                      if (trip.file!.startsWith('/') ||
-                          trip.file!.startsWith('file:')) {
-                        return Image.file(
-                          File(trip.file!),
-                          fit: BoxFit.cover,
-                          width: circleSize,
-                          height: circleSize,
-                          errorBuilder: (context, error, stackTrace) => Center(
-                            child: Text(
-                              trip.title.length >= 2
-                                  ? trip.title.substring(0, 2).toUpperCase()
-                                  : trip.title.toUpperCase(),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineMedium
-                                  ?.copyWith(
-                                    color: colorScheme.onSurface,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: circleSize * 0.4,
-                                  ),
-                            ),
-                          ),
-                        );
-                      } else {
-                        // Altrimenti prova come asset Flutter
-                        return Image.asset(
-                          trip.file!,
-                          fit: BoxFit.cover,
-                          width: circleSize,
-                          height: circleSize,
-                          errorBuilder: (context, error, stackTrace) => Center(
-                            child: Text(
-                              trip.title.length >= 2
-                                  ? trip.title.substring(0, 2).toUpperCase()
-                                  : trip.title.toUpperCase(),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineMedium
-                                  ?.copyWith(
-                                    color: colorScheme.onSurface,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: circleSize * 0.4,
-                                  ),
-                            ),
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                )
-              : Center(
-                  child: Text(
-                    trip.title.length >= 2
-                        ? trip.title.substring(0, 2).toUpperCase()
-                        : trip.title.toUpperCase(),
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          color: colorScheme.onSurface,
-                          fontWeight: FontWeight.bold,
-                          fontSize: circleSize * 0.4,
-                        ),
-                  ),
-                ),
-        ),
-        if (trip.archived)
-          Positioned(
-            bottom: 0,
-            right: 0,
-            child: Container(
-              decoration: BoxDecoration(
-                color: colorScheme.surface,
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.08),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.all(4),
-              child: Icon(
-                Icons.archive_rounded,
-                size: circleSize * 0.3,
-                color: colorScheme.onSurface.withValues(alpha: 0.6),
-              ),
-            ),
-          ),
-      ],
-    );
-
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: CustomScrollView(
@@ -933,116 +826,26 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Center(child: groupCircle),
-                  const SizedBox(height: 16),
-                  Text(
-                    trip.title,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          color: colorScheme.onSurface,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 28,
-                        ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                  GroupHeader(trip: trip),
                   const SizedBox(height: 32),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Totale',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: colorScheme.onSurface,
-                                    fontSize: 20,
-                                  ),
-                            ),
-                            const SizedBox(height: 4),
-                            CurrencyDisplay(
-                              value: totalExpenses,
-                              currency: trip.currency,
-                              valueFontSize: 22.0,
-                              currencyFontSize: 18.0,
-                              alignment: MainAxisAlignment.start,
-                              showDecimals: true,
-                              color: colorScheme.onSurface,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ],
+                        child: GroupTotal(
+                          total: totalExpenses,
+                          currency: trip.currency,
                         ),
                       ),
-                      SizedBox(
-                        height: 54,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Tooltip(
-                              message: _trip!.expenses.isNotEmpty
-                                  ? loc.get('show_overview')
-                                  : loc.get('no_expenses_to_display'),
-                              child: IconButton.outlined(
-                                onPressed: _trip!.expenses.isNotEmpty
-                                    ? _showOverviewSheet
-                                    : null,
-                                icon: const Icon(
-                                    Icons.dashboard_customize_rounded),
-                                iconSize: 24,
-                                tooltip: loc.get('overview'),
-                                style: IconButton.styleFrom(
-                                  backgroundColor:
-                                      colorScheme.surfaceContainerLowest,
-                                  foregroundColor: colorScheme.onSurface,
-                                  minimumSize: const Size(54, 54),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Tooltip(
-                              message: _trip!.expenses.isNotEmpty
-                                  ? loc.get('show_statistics')
-                                  : loc.get('no_expenses_to_analyze'),
-                              child: IconButton.outlined(
-                                onPressed: _trip!.expenses.isNotEmpty
-                                    ? _showStatisticsSheet
-                                    : null,
-                                icon: const Icon(Icons.analytics_rounded),
-                                iconSize: 24,
-                                tooltip: loc.get('statistics'),
-                                style: IconButton.styleFrom(
-                                  backgroundColor:
-                                      colorScheme.surfaceContainerLowest,
-                                  foregroundColor: colorScheme.onSurface,
-                                  minimumSize: const Size(54, 54),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Tooltip(
-                              message: loc.get('options'),
-                              child: IconButton.outlined(
-                                onPressed: _showOptionsSheet,
-                                icon: const Icon(Icons.settings_rounded),
-                                iconSize: 24,
-                                tooltip: loc.get('options'),
-                                style: IconButton.styleFrom(
-                                  backgroundColor:
-                                      colorScheme.surfaceContainerLowest,
-                                  foregroundColor: colorScheme.onSurface,
-                                  minimumSize: const Size(54, 54),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                      GroupActions(
+                        hasExpenses: trip.expenses.isNotEmpty,
+                        onOverview: trip.expenses.isNotEmpty
+                            ? _showOverviewSheet
+                            : null,
+                        onStatistics: trip.expenses.isNotEmpty
+                            ? _showStatisticsSheet
+                            : null,
+                        onOptions: _showOptionsSheet,
                       ),
                     ],
                   ),
@@ -1059,7 +862,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Titolo 'Attività' al posto della seconda row di bottoni
                   Text(
                     'Attività',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -1069,39 +871,13 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                         ),
                   ),
                   const SizedBox(height: 16),
-                  // Lista spese o messaggio vuoto
-                  _trip!.expenses.isEmpty
-                      ? NoExpense(
-                          semanticLabel: loc.get('no_expense_label'),
-                        )
-                      : Column(
-                          children: () {
-                            final expenses = List.from(_trip!.expenses)
-                              ..sort((a, b) => b.date.compareTo(a.date));
-                            final expenseWidgets =
-                                expenses.map<Widget>((expense) {
-                              return Container(
-                                width: double.infinity,
-                                margin: const EdgeInsets.symmetric(vertical: 4),
-                                child: GestureDetector(
-                                  onTap: () => _openEditExpense(expense),
-                                  child: ExpenseAmountCard(
-                                    title: expense.category,
-                                    coins: (expense.amount ?? 0).toInt(),
-                                    checked: true,
-                                    paidBy: expense.paidBy,
-                                    category: null,
-                                    date: expense.date,
-                                    currency: _trip!.currency,
-                                  ),
-                                ),
-                              );
-                            }).toList();
-
-                            // Aggiungi spazio finale
-                            expenseWidgets.add(const SizedBox(height: 12));
-                            return expenseWidgets;
-                          }(),
+                  trip.expenses.isEmpty
+                      ? EmptyExpenses(
+                          semanticLabel: loc.get('no_expense_label'))
+                      : ExpenseList(
+                          expenses: trip.expenses,
+                          currency: trip.currency,
+                          onExpenseTap: _openEditExpense,
                         ),
                 ],
               ),
