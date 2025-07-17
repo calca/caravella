@@ -789,7 +789,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     final trip = _trip;
     if (trip == null) {
       return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: const Center(child: CircularProgressIndicator()),
       );
     }
@@ -912,7 +912,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     );
 
     return Scaffold(
-      backgroundColor: colorScheme.surfaceContainerHighest,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: CustomScrollView(
         slivers: [
           // Hero AppBar con gradiente
@@ -920,7 +920,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             expandedHeight: 10.0,
             floating: false,
             pinned: true,
-            backgroundColor: colorScheme.surfaceContainerHighest,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             foregroundColor: colorScheme.onSurface,
             elevation: 0,
             leading: IconButton(
