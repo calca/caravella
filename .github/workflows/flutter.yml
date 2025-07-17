@@ -17,13 +17,28 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+      - name: Decode keystore from secret
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 -d > android/upload-keystore.jks
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+      - name: Configure signing properties
+        run: |
+          echo "storeFile=upload-keystore.jks" > android/key.properties
+          echo "storePassword=$KEYSTORE_PASSWORD" >> android/key.properties
+          echo "keyAlias=$KEY_ALIAS" >> android/key.properties
+          echo "keyPassword=$KEY_PASSWORD" >> android/key.properties
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       - name: Install dependencies
         run: flutter pub get
       - name: Analyze
         run: flutter analyze
       # - name: Run tests
       #   run: flutter test
-      - name: Build staging APK
+      - name: Build staging APK (signed)
         run: flutter build apk --flavor staging --release --dart-define=FLAVOR=staging
       - name: Get app version
         id: get_version
@@ -54,6 +69,21 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+      - name: Decode keystore from secret
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 -d > android/upload-keystore.jks
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+      - name: Configure signing properties
+        run: |
+          echo "storeFile=upload-keystore.jks" > android/key.properties
+          echo "storePassword=$KEYSTORE_PASSWORD" >> android/key.properties
+          echo "keyAlias=$KEY_ALIAS" >> android/key.properties
+          echo "keyPassword=$KEY_PASSWORD" >> android/key.properties
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       - name: Install dependencies
         run: flutter pub get
       - name: Determine build flavor
@@ -70,7 +100,7 @@ jobs:
             echo "APK_NAME=app-prod-release.apk" >> $GITHUB_ENV
             echo "FILE_PREFIX=org_app_caravella" >> $GITHUB_ENV
           fi
-      - name: Build APK
+      - name: Build APK (signed)
         run: flutter build apk --flavor ${{ env.FLAVOR }} --release --dart-define=FLAVOR=${{ env.FLAVOR }}
       - name: Get app version
         id: get_version
