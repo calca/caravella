@@ -16,7 +16,7 @@ class GroupActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final loc = MaterialLocalizations.of(context);
+    // final loc = MaterialLocalizations.of(context); // Removed unused local variable
     return SizedBox(
       height: 54,
       child: Row(

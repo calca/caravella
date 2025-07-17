@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
+// ...existing code...
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -13,13 +13,11 @@ import '../../app_localizations.dart';
 import '../../state/locale_notifier.dart';
 import 'tabs/overview_tab.dart';
 import 'tabs/statistics_tab.dart';
-import '../../widgets/currency_display.dart';
 import 'widgets/group_header.dart';
 import 'widgets/group_actions.dart';
 import 'widgets/group_total.dart';
 import 'widgets/expense_list.dart';
 import 'widgets/empty_expenses.dart';
-import 'expense_amount_card.dart';
 
 class ExpenseGroupDetailPage extends StatefulWidget {
   final ExpenseGroup trip;

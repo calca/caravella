@@ -103,13 +103,13 @@ class ExpenseAmountCard extends StatelessWidget {
                           Icon(
                             Icons.schedule_rounded,
                             size: 13,
-                            color: colorScheme.outline.withOpacity(0.7),
+                            color: colorScheme.outline.withValues(alpha: 0.7),
                           ),
                           const SizedBox(width: 3),
                           Text(
                             '${date!.day.toString().padLeft(2, '0')}/${date!.month.toString().padLeft(2, '0')}/${date!.year}',
                             style: textTheme.bodySmall?.copyWith(
-                              color: colorScheme.outline.withOpacity(0.7),
+                              color: colorScheme.outline.withValues(alpha: 0.7),
                               fontSize: 11,
                             ),
                           ),
