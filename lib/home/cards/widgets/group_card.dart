@@ -26,11 +26,8 @@ class GroupCard extends StatelessWidget {
   });
 
   Color _getSelectedColor(bool isDarkMode) {
-    if (isDarkMode) {
-      return const Color(0xFF90659A); // Colore tema scuro
-    } else {
-      return const Color(0xFFC9E9CA); // Colore tema chiaro
-    }
+    return theme.colorScheme
+        .primaryFixed; //const Color(0xFFC9E9CA); // Colore tema chiaro
   }
 
   @override
