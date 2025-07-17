@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 
@@ -13,18 +14,6 @@ class ImageCropPage extends StatefulWidget {
 }
 
 class _ImageCropPageState extends State<ImageCropPage> {
-  late img.Image _decodedImage;
-  bool _loading = true;
-  Rect? _cropRectDisplay; // crop rect in display coordinates
-  Size? _imageDisplaySize; // displayed image size
-  double? _scale; // image pixel / display pixel
-
-  @override
-  void initState() {
-    super.initState();
-    _loadImage();
-  }
-
   Future<void> _loadImage() async {
     final bytes = await widget.imageFile.readAsBytes();
     _decodedImage = img.decodeImage(bytes)!;
@@ -47,7 +36,6 @@ class _ImageCropPageState extends State<ImageCropPage> {
     _cropRectDisplay = Rect.fromLTWH(left, top, cropW, cropH);
   }
 
-  // Drag crop area (move)
   void _onPanUpdate(DragUpdateDetails details) {
     if (_cropRectDisplay == null || _imageDisplaySize == null) return;
     final dx = details.delta.dx;
@@ -65,7 +53,18 @@ class _ImageCropPageState extends State<ImageCropPage> {
     });
   }
 
-  // Resize crop area from a corner, keeping aspect ratio
+  late img.Image _decodedImage;
+  bool _loading = true;
+  Rect? _cropRectDisplay; // crop rect in display coordinates
+  Size? _imageDisplaySize; // displayed image size
+  double? _scale; // image pixel / display pixel
+
+  @override
+  void initState() {
+    super.initState();
+    _loadImage();
+  }
+
   void _onResize(DragUpdateDetails details,
       {required bool fromLeft, required bool fromTop}) {
     if (_cropRectDisplay == null || _imageDisplaySize == null) return;
@@ -175,17 +174,18 @@ class _ImageCropPageState extends State<ImageCropPage> {
                       top: _cropRectDisplay!.top,
                       child: GestureDetector(
                         onPanUpdate: _onPanUpdate,
-                        child: Container(
+                        child: SizedBox(
                           width: _cropRectDisplay!.width,
                           height: _cropRectDisplay!.height,
-                          decoration: BoxDecoration(
-                            border:
-                                Border.all(color: Colors.blueAccent, width: 2),
-                            color:
-                                Colors.transparent, // area interna trasparente
-                          ),
                           child: Stack(
+                            fit: StackFit.expand,
                             children: [
+                              CustomPaint(
+                                painter: _DashedBorderPainter(
+                                  color: Theme.of(context).colorScheme.outline,
+                                  strokeWidth: 3,
+                                ),
+                              ),
                               // Handle angolo in alto a sinistra
                               Positioned(
                                 left: 0,
@@ -238,6 +238,7 @@ class _ImageCropPageState extends State<ImageCropPage> {
   }
 }
 
+// --- TOP LEVEL ---
 class _CornerHandle extends StatelessWidget {
   final void Function(DragUpdateDetails) onPanUpdate;
   const _CornerHandle({Key? key, required this.onPanUpdate}) : super(key: key);
@@ -249,18 +250,59 @@ class _CornerHandle extends StatelessWidget {
       onPanUpdate: onPanUpdate,
       child: Padding(
         padding: const EdgeInsets.all(3), // distanza dal bordo esterno
-        child: Container(
+        child: SizedBox(
           width: 18,
           height: 18,
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            shape: BoxShape.rectangle,
-            border: Border.all(color: Colors.blueAccent, width: 2),
-          ),
+          // Nessun bordo, solo area trasparente per la gesture
         ),
       ),
     );
   }
+}
+
+class _DashedBorderPainter extends CustomPainter {
+  final Color color;
+  final double strokeWidth;
+  final double dashLength;
+  final double gapLength;
+  _DashedBorderPainter({
+    required this.color,
+    required this.strokeWidth,
+    this.dashLength = 8,
+    this.gapLength = 6,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = strokeWidth
+      ..style = PaintingStyle.stroke;
+    final path = Path()..addRect(Rect.fromLTWH(0, 0, size.width, size.height));
+    _drawDashedPath(canvas, path, paint);
+  }
+
+  void _drawDashedPath(Canvas canvas, Path path, Paint paint) {
+    final PathMetrics metrics = path.computeMetrics();
+    for (final metric in metrics) {
+      double distance = 0.0;
+      while (distance < metric.length) {
+        final double len = dashLength;
+        final double gap = gapLength;
+        final double next = distance + len;
+        final extractLen =
+            next < metric.length ? len : metric.length - distance;
+        canvas.drawPath(
+          metric.extractPath(distance, distance + extractLen),
+          paint,
+        );
+        distance += len + gap;
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
 
 class _CropOverlayPainter extends CustomPainter {
