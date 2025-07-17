@@ -991,7 +991,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                               message: _trip!.expenses.isNotEmpty
                                   ? loc.get('show_overview')
                                   : loc.get('no_expenses_to_display'),
-                              child: IconButton.filled(
+                              child: IconButton.outlined(
                                 onPressed: _trip!.expenses.isNotEmpty
                                     ? _showOverviewSheet
                                     : null,
@@ -1002,8 +1002,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                                 style: IconButton.styleFrom(
                                   backgroundColor:
                                       colorScheme.surfaceContainerLowest,
-                                  foregroundColor: colorScheme.onSurface
-                                      .withValues(alpha: 0.85),
+                                  foregroundColor: colorScheme.onSurface,
                                   minimumSize: const Size(54, 54),
                                 ),
                               ),
@@ -1013,7 +1012,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                               message: _trip!.expenses.isNotEmpty
                                   ? loc.get('show_statistics')
                                   : loc.get('no_expenses_to_analyze'),
-                              child: IconButton.filled(
+                              child: IconButton.outlined(
                                 onPressed: _trip!.expenses.isNotEmpty
                                     ? _showStatisticsSheet
                                     : null,
@@ -1023,8 +1022,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                                 style: IconButton.styleFrom(
                                   backgroundColor:
                                       colorScheme.surfaceContainerLowest,
-                                  foregroundColor: colorScheme.onSurface
-                                      .withValues(alpha: .85),
+                                  foregroundColor: colorScheme.onSurface,
                                   minimumSize: const Size(54, 54),
                                 ),
                               ),
@@ -1032,7 +1030,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                             const SizedBox(width: 8),
                             Tooltip(
                               message: loc.get('options'),
-                              child: IconButton.filled(
+                              child: IconButton.outlined(
                                 onPressed: _showOptionsSheet,
                                 icon: const Icon(Icons.settings_rounded),
                                 iconSize: 24,
@@ -1040,8 +1038,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                                 style: IconButton.styleFrom(
                                   backgroundColor:
                                       colorScheme.surfaceContainerLowest,
-                                  foregroundColor: colorScheme.onSurface
-                                      .withValues(alpha: .85),
+                                  foregroundColor: colorScheme.onSurface,
                                   minimumSize: const Size(54, 54),
                                 ),
                               ),
