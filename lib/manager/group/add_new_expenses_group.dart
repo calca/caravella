@@ -1212,7 +1212,10 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                             children: [
                               Expanded(
                                 child: OutlinedButton(
-                                  onPressed: _showImagePickerDialog,
+                                  onPressed: () {
+                                    _unfocusAll();
+                                    _showImagePickerDialog();
+                                  },
                                   style: OutlinedButton.styleFrom(
                                     foregroundColor:
                                         Theme.of(context).colorScheme.primary,
@@ -1249,7 +1252,10 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                           Align(
                             alignment: Alignment.centerRight,
                             child: OutlinedButton.icon(
-                              onPressed: _showImagePickerDialog,
+                              onPressed: () {
+                                _unfocusAll();
+                                _showImagePickerDialog();
+                              },
                               icon: const Icon(Icons.add_photo_alternate),
                               label: Text(loc.get('select_image')),
                               style: OutlinedButton.styleFrom(
