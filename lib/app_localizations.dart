@@ -7,6 +7,7 @@ class AppLocalizations {
 
   static final Map<String, Map<String, String>> _localizedValues = {
     'en': {
+      'welcome_v3_title': 'Organize.\nShare.\nSettle.\n ',
       // Saluti dinamici
       'good_morning': 'Good morning',
       'good_afternoon': 'Good afternoon',
@@ -259,7 +260,7 @@ class AppLocalizations {
       'settlement': 'Pareggia',
       'all_balanced': 'Tutti i conti sono pari!',
       // Welcome section v3 - Clean design
-      'welcome_v3_title': 'Le tue\nspese di gruppo,\nin modo semplice',
+      'welcome_v3_title': 'Organizza.\nCondividi.\nBilancia.\n ',
       'welcome_v3_cta': 'Inizia!',
       'active': 'Attivo',
       'archived': 'Archiviato',
