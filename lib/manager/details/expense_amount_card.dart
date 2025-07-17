@@ -26,117 +26,137 @@ class ExpenseAmountCard extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
-    return BaseCard(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return InkWell(
+      borderRadius: BorderRadius.circular(16),
+      onTap: null, // Sostituisci con una callback se la card è cliccabile
+      child: Stack(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              // Sezione sinistra: Titolo e chi ha pagato
-              Expanded(
-                child: Column(
+          BaseCard(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Titolo della spesa - principale
-                    Text(
-                      title,
-                      style: textTheme.titleLarge?.copyWith(
-                        color: colorScheme.onSurface,
-                        fontWeight: FontWeight.w500,
-                        height: 1.2,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 12),
-                    // Chi ha pagato - solo a sinistra
-                    if (paidBy != null && paidBy!.isNotEmpty)
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
+                    // Sezione sinistra: Titolo e chi ha pagato
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(
-                            Icons.person_rounded,
-                            size: 16,
-                            color: colorScheme.onSurface,
-                          ),
-                          const SizedBox(width: 4),
+                          // Titolo della spesa - principale
                           Text(
-                            paidBy!,
-                            style: textTheme.labelMedium?.copyWith(
+                            title,
+                            style: textTheme.titleMedium?.copyWith(
                               color: colorScheme.onSurface,
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w600,
+                              height: 1.1,
                             ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
+                          if (paidBy != null && paidBy!.isNotEmpty) ...[
+                            const SizedBox(height: 6),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.person_outline_rounded,
+                                  size: 15,
+                                  color: colorScheme.outline,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  paidBy!,
+                                  style: textTheme.labelSmall?.copyWith(
+                                    color: colorScheme.outline,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ],
                       ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 20),
-              // Sezione destra: Importo e data allineati
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  // Importo
-                  CurrencyDisplay(
-                    value: coins.toDouble(),
-                    currency: currency,
-                    valueFontSize: 22.0,
-                    currencyFontSize: 16.0,
-                    alignment: MainAxisAlignment.end,
-                    showDecimals: false,
-                  ),
-                  // Data - allineata a destra sotto l'importo
-                  if (date != null) ...[
-                    const SizedBox(height: 2),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
+                    ),
+                    const SizedBox(width: 16),
+                    // Sezione destra: Importo e data allineati
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Icon(
-                          Icons.schedule_rounded,
-                          size: 14,
-                          color: colorScheme.outline,
+                        // Importo
+                        CurrencyDisplay(
+                          value: coins.toDouble(),
+                          currency: currency,
+                          valueFontSize: 28.0,
+                          currencyFontSize: 16.0,
+                          alignment: MainAxisAlignment.end,
+                          showDecimals: false,
                         ),
-                        const SizedBox(width: 4),
-                        Text(
-                          '${date!.day.toString().padLeft(2, '0')}/${date!.month.toString().padLeft(2, '0')}/${date!.year}',
-                          style: textTheme.bodySmall?.copyWith(
-                            color: colorScheme.outline,
-                            fontSize: 12,
+                        // Data - allineata a destra sotto l'importo
+                        if (date != null) ...[
+                          const SizedBox(height: 2),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.schedule_rounded,
+                                size: 13,
+                                color: colorScheme.outline.withOpacity(0.7),
+                              ),
+                              const SizedBox(width: 3),
+                              Text(
+                                '${date!.day.toString().padLeft(2, '0')}/${date!.month.toString().padLeft(2, '0')}/${date!.year}',
+                                style: textTheme.bodySmall?.copyWith(
+                                  color: colorScheme.outline.withOpacity(0.7),
+                                  fontSize: 11,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
+                        ],
                       ],
                     ),
                   ],
-                ],
-              ),
-            ],
-          ),
-          // Categoria in fondo se presente
-          if (category != null) ...[
-            const SizedBox(height: 8),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.local_offer_outlined,
-                  size: 12,
-                  color: colorScheme.outline.withValues(alpha: 0.7),
                 ),
-                const SizedBox(width: 4),
-                Text(
-                  category!,
-                  style: textTheme.bodySmall?.copyWith(
-                    color: colorScheme.outline.withValues(alpha: 0.7),
-                    fontSize: 11,
+                // Categoria in fondo se presente
+                if (category != null && category!.isNotEmpty) ...[
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: colorScheme.secondaryContainer,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.local_offer_outlined,
+                              size: 13,
+                              color: colorScheme.secondary,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              category!,
+                              style: textTheme.labelSmall?.copyWith(
+                                color: colorScheme.secondary,
+                                fontSize: 11,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ),
+                ],
               ],
             ),
-          ],
+          ),
+          // ...badge checked rimosso...
         ],
       ),
     );
