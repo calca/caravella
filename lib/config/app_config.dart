@@ -12,9 +12,9 @@ class AppConfig {
   static String get appName {
     switch (_environment) {
       case Environment.dev:
-        return 'Caravella Dev';
+        return 'Caravella - Dev';
       case Environment.staging:
-        return 'Caravella Staging';
+        return 'Caravella - Staging';
       case Environment.prod:
         return 'Caravella';
     }

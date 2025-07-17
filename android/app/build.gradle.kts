@@ -33,14 +33,14 @@ android {
             dimension = "environment"
             applicationIdSuffix = ".dev"
             versionNameSuffix = "-dev"
-            resValue("string", "app_name", "Caravella Dev")
+            resValue("string", "app_name", "Caravella - Dev")
             manifestPlaceholders["appIcon"] = "@mipmap/ic_launcher_dev"
         }
         create("staging") {
             dimension = "environment"
             applicationIdSuffix = ".staging"
             versionNameSuffix = "-staging"
-            resValue("string", "app_name", "Caravella Staging")
+            resValue("string", "app_name", "Caravella - Staging")
             manifestPlaceholders["appIcon"] = "@mipmap/ic_launcher_staging"
         }
         create("prod") {
