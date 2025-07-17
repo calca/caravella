@@ -810,7 +810,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           height: circleSize,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: colorScheme.surfaceContainerLowest,
+            color: colorScheme.primaryFixed,
             border: Border.all(
               color: colorScheme.outlineVariant,
               width: 2,
