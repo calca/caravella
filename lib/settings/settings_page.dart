@@ -30,7 +30,7 @@ class SettingsPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: colorScheme.shadow.withOpacity(0.04),
+                      color: colorScheme.shadow.withValues(alpha: 0.04),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
@@ -42,17 +42,18 @@ class SettingsPage extends StatelessWidget {
                     Tab(text: loc.get('info_tab')),
                   ],
                   labelColor: colorScheme.onSurface,
-                  unselectedLabelColor: colorScheme.onSurface.withOpacity(0.2),
+                  unselectedLabelColor:
+                      colorScheme.onSurface.withValues(alpha: 0.2),
                   indicator: BoxDecoration(
-                    color: colorScheme.primaryFixedDim.withOpacity(0.30),
+                    color: colorScheme.primaryFixedDim.withValues(alpha: 0.30),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   indicatorSize: TabBarIndicatorSize.tab,
                   labelStyle: textTheme.labelLarge
                       ?.copyWith(fontWeight: FontWeight.bold),
                   unselectedLabelStyle: textTheme.labelLarge,
-                  overlayColor: MaterialStateProperty.all(
-                      colorScheme.primaryFixed.withOpacity(0.08)),
+                  overlayColor: WidgetStateProperty.all(
+                      colorScheme.primaryFixed.withValues(alpha: 0.08)),
                   dividerColor: Colors.transparent,
                 ),
               ),
@@ -66,7 +67,7 @@ class SettingsPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: colorScheme.shadow.withOpacity(0.03),
+                        color: colorScheme.shadow.withValues(alpha: 0.03),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
