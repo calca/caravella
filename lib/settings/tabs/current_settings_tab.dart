@@ -36,14 +36,7 @@ class CurrentSettingsTab extends StatelessWidget {
             const SizedBox(height: 16),
             const ThemeSelectorSetting(),
             const SizedBox(height: 24),
-            // SEZIONE BACKUP E RIPRISTINO
-            Text(
-              'Backup e Ripristino',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-            ),
-            const SizedBox(height: 12),
+            // ...
             Column(
               children: [
                 SizedBox(
