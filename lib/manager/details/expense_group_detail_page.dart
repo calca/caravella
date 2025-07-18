@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 // ...existing code...
+
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 
 import '../../data/expense_details.dart';
 import '../../data/expense_group.dart';
@@ -29,6 +33,33 @@ class ExpenseGroupDetailPage extends StatefulWidget {
 }
 
 class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
+  /// Genera il contenuto CSV delle spese del gruppo
+  String _generateCsvContent() {
+    if (_trip == null || _trip!.expenses.isEmpty) return '';
+    final buffer = StringBuffer();
+    // Header
+    buffer.writeln('Categoria,Importo,Pagate da,Data,Nota');
+    for (final e in _trip!.expenses) {
+      buffer.writeln([
+        _escapeCsvValue(e.category),
+        e.amount?.toStringAsFixed(2) ?? '',
+        _escapeCsvValue(e.paidBy),
+        e.date.toIso8601String().split('T').first,
+        _escapeCsvValue(e.note ?? ''),
+      ].join(','));
+    }
+    return buffer.toString();
+  }
+
+  /// Escape per valori CSV
+  String _escapeCsvValue(String value) {
+    if (value.contains(',') || value.contains('"') || value.contains('\n')) {
+      value = value.replaceAll('"', '""');
+      return '"$value"';
+    }
+    return value;
+  }
+
   ExpenseGroup? _trip;
   bool _deleted = false;
   ExpenseGroupNotifier? _groupNotifier;
@@ -162,12 +193,97 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       backgroundColor: Colors.transparent,
       builder: (context) => OptionsSheet(
         trip: _trip!,
-        onRefresh: _refreshTrip,
-        onDelete: () async {
-          // Implement delete logic or callback here
+        onPinToggle: () async {
+          if (_trip != null) {
+            final updatedGroup = ExpenseGroup(
+              title: _trip!.title,
+              expenses: _trip!.expenses,
+              participants: _trip!.participants,
+              startDate: _trip!.startDate,
+              endDate: _trip!.endDate,
+              currency: _trip!.currency,
+              categories: _trip!.categories,
+              timestamp: _trip!.timestamp,
+              id: _trip!.id,
+              file: _trip!.file,
+              pinned: !_trip!.pinned,
+              archived: _trip!.archived,
+            );
+            await _groupNotifier?.updateGroup(updatedGroup);
+            await _refreshTrip();
+            if (context.mounted) Navigator.of(context).pop();
+          }
+        },
+        onArchiveToggle: () async {
+          if (_trip != null) {
+            final updatedGroup = ExpenseGroup(
+              title: _trip!.title,
+              expenses: _trip!.expenses,
+              participants: _trip!.participants,
+              startDate: _trip!.startDate,
+              endDate: _trip!.endDate,
+              currency: _trip!.currency,
+              categories: _trip!.categories,
+              timestamp: _trip!.timestamp,
+              id: _trip!.id,
+              file: _trip!.file,
+              pinned: _trip!.pinned,
+              archived: !_trip!.archived,
+            );
+            await _groupNotifier?.updateGroup(updatedGroup);
+            await _refreshTrip();
+            if (context.mounted) Navigator.of(context).pop();
+          }
         },
         onEdit: () async {
-          // Implement edit logic or callback here
+          // Open edit group sheet (assume you have a method or dialog for this)
+          // For now, just close the sheet
+          if (context.mounted) Navigator.of(context).pop();
+        },
+        onExportCsv: () async {
+          // Export CSV logic
+          final csv = _generateCsvContent();
+          final tempDir = await getTemporaryDirectory();
+          final file =
+              await File('${tempDir.path}/${_trip!.title}_export.csv').create();
+          await file.writeAsString(csv);
+          await Share.shareXFiles([XFile(file.path)],
+              text: '${_trip!.title} - CSV');
+          if (context.mounted) Navigator.of(context).pop();
+        },
+        onDelete: () async {
+          final loc =
+              AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it');
+          final confirmed = await showDialog<bool>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text(loc.get('delete_group')),
+              content: Text(loc.get('delete_group_confirm')),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: Text(loc.get('cancel')),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: Text(
+                    loc.get('delete'),
+                    style:
+                        TextStyle(color: Theme.of(context).colorScheme.error),
+                  ),
+                ),
+              ],
+            ),
+          );
+          if (confirmed == true && _trip != null) {
+            final trips = await ExpenseGroupStorage.getAllGroups();
+            trips.removeWhere((t) => t.id == _trip!.id);
+            await ExpenseGroupStorage.writeTrips(trips);
+            if (context.mounted) {
+              Navigator.of(context).pop(); // Close sheet
+              Navigator.of(context).pop(true); // Go back
+            }
+          }
         },
       ),
     );
@@ -291,7 +407,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       }
     });
   }
-
 
   @override
   Widget build(BuildContext context) {

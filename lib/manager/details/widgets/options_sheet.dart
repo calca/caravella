@@ -7,15 +7,20 @@ import '../../../data/expense_group.dart';
 
 class OptionsSheet extends StatelessWidget {
   final ExpenseGroup trip;
-  final VoidCallback onRefresh;
+  final VoidCallback onPinToggle;
+  final VoidCallback onArchiveToggle;
   final VoidCallback onDelete;
   final VoidCallback onEdit;
-  const OptionsSheet(
-      {super.key,
-      required this.trip,
-      required this.onRefresh,
-      required this.onDelete,
-      required this.onEdit});
+  final VoidCallback onExportCsv;
+  const OptionsSheet({
+    super.key,
+    required this.trip,
+    required this.onPinToggle,
+    required this.onArchiveToggle,
+    required this.onDelete,
+    required this.onEdit,
+    required this.onExportCsv,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +68,7 @@ class OptionsSheet extends StatelessWidget {
                       title: Text(trip.pinned
                           ? loc.get('unpin_group')
                           : loc.get('pin_group')),
-                      onTap: onRefresh,
+                      onTap: onPinToggle,
                     ),
                     // Archive/Unarchive action
                     ListTile(
@@ -76,7 +81,7 @@ class OptionsSheet extends StatelessWidget {
                       title: Text(trip.archived
                           ? loc.get('unarchive')
                           : loc.get('archive')),
-                      onTap: onRefresh,
+                      onTap: onArchiveToggle,
                     ),
                     const Divider(),
                     // Edit Group action
@@ -96,7 +101,7 @@ class OptionsSheet extends StatelessWidget {
                         color: Theme.of(context).colorScheme.primary,
                       ),
                       title: Text(loc.get('export_csv')),
-                      onTap: onRefresh,
+                      onTap: onExportCsv,
                     ),
                     const Divider(),
                     // Delete action
