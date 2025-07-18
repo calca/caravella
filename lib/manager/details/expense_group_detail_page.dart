@@ -1,3 +1,4 @@
+import '../group/add_new_expenses_group.dart';
 import 'package:flutter/material.dart';
 // ...existing code...
 
@@ -236,9 +237,18 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           }
         },
         onEdit: () async {
-          // Open edit group sheet (assume you have a method or dialog for this)
-          // For now, just close the sheet
-          if (context.mounted) Navigator.of(context).pop();
+          if (_trip != null && context.mounted) {
+            Navigator.of(context).pop();
+            await Future.delayed(const Duration(milliseconds: 200));
+            if (context.mounted) {
+              await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (ctx) => AddNewExpensesGroupPage(trip: _trip!),
+                ),
+              );
+              await _refreshTrip();
+            }
+          }
         },
         onExportCsv: () async {
           // Export CSV logic
