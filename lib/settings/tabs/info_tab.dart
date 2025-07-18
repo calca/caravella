@@ -12,110 +12,144 @@ class InfoTab extends StatelessWidget {
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
     final localizations = AppLocalizations(locale);
     const flavor = String.fromEnvironment('FLAVOR', defaultValue: 'staging');
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(Icons.info_outline,
-                  color: Theme.of(context).colorScheme.primary),
-              const SizedBox(width: 8),
-              Text(localizations.get('about'),
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith()),
-            ],
-          ),
-          const SizedBox(height: 10),
-          FutureBuilder<PackageInfo>(
-            future: PackageInfo.fromPlatform(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done) {
-                return Text('Caravella ...',
-                    style: Theme.of(context).textTheme.bodyMedium);
-              }
-              final info = snapshot.data;
-              final version = info?.version ?? '-';
-              return Text('Caravella v$version ($flavor)',
-                  style: Theme.of(context).textTheme.bodyMedium);
-            },
-          ),
-          const SizedBox(height: 2),
-          Text(localizations.get('developed_by'),
-              style: Theme.of(context).textTheme.bodySmall),
-          const SizedBox(height: 24),
-          Row(
-            children: [
-              Icon(Icons.link, color: Theme.of(context).colorScheme.primary),
-              const SizedBox(width: 8),
-              Text(localizations.get('links'),
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith()),
-            ],
-          ),
-          const SizedBox(height: 8),
-          TextButton.icon(
-            icon: Icon(Icons.person,
-                size: 20, color: Theme.of(context).colorScheme.primary),
-            label: Text('GitHub: calca',
-                style: TextStyle(color: Theme.of(context).colorScheme.primary)),
-            onPressed: () => _launchUrl(context, 'https://github.com/calca'),
-            style: TextButton.styleFrom(
-              alignment: Alignment.centerLeft,
-              padding: EdgeInsets.zero,
-              minimumSize: const Size(0, 0),
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    return ListView(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      children: [
+        Card(
+          elevation: 0,
+          color: colorScheme.surfaceContainer,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.info_outline,
+                        color: colorScheme.primary, size: 22),
+                    const SizedBox(width: 8),
+                    Text(localizations.get('about'),
+                        style: textTheme.titleSmall
+                            ?.copyWith(fontWeight: FontWeight.w600)),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                FutureBuilder<PackageInfo>(
+                  future: PackageInfo.fromPlatform(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState != ConnectionState.done) {
+                      return Text('Caravella ...', style: textTheme.bodyMedium);
+                    }
+                    final info = snapshot.data;
+                    final version = info?.version ?? '-';
+                    return Text('Caravella v$version ($flavor)',
+                        style: textTheme.bodyMedium);
+                  },
+                ),
+              ],
             ),
           ),
-          TextButton.icon(
-            icon: Icon(Icons.code,
-                size: 20, color: Theme.of(context).colorScheme.primary),
-            label: Text('Repository: github.com/calca/caravella',
-                style: TextStyle(color: Theme.of(context).colorScheme.primary)),
-            onPressed: () =>
-                _launchUrl(context, 'https://github.com/calca/caravella'),
-            style: TextButton.styleFrom(
-              alignment: Alignment.centerLeft,
-              padding: EdgeInsets.zero,
-              minimumSize: const Size(0, 0),
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        ),
+        const SizedBox(height: 16),
+        Card(
+          elevation: 0,
+          color: colorScheme.surfaceContainer,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.link, color: colorScheme.primary, size: 22),
+                    const SizedBox(width: 8),
+                    Text(localizations.get('links'),
+                        style: textTheme.titleSmall
+                            ?.copyWith(fontWeight: FontWeight.w600)),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading:
+                      Icon(Icons.person, color: colorScheme.primary, size: 20),
+                  title: Text('GitHub: calca',
+                      style: textTheme.bodyMedium
+                          ?.copyWith(color: colorScheme.primary)),
+                  onTap: () => _launchUrl(context, 'https://github.com/calca'),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                  minLeadingWidth: 0,
+                  horizontalTitleGap: 8,
+                ),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading:
+                      Icon(Icons.code, color: colorScheme.primary, size: 20),
+                  title: Text('GitHub Repository',
+                      style: textTheme.bodyMedium
+                          ?.copyWith(color: colorScheme.primary)),
+                  onTap: () =>
+                      _launchUrl(context, 'https://github.com/calca/caravella'),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                  minLeadingWidth: 0,
+                  horizontalTitleGap: 8,
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 8),
-          Text(localizations.get('contribute'),
-              style: Theme.of(context).textTheme.bodySmall),
-          const SizedBox(height: 24),
-          Row(
-            children: [
-              Icon(Icons.description,
-                  color: Theme.of(context).colorScheme.primary),
-              const SizedBox(width: 8),
-              Text(localizations.get('license_section'),
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith()),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(localizations.get('license_hint'),
-              style: Theme.of(context).textTheme.bodySmall),
-          InkWell(
-            borderRadius: BorderRadius.circular(8),
-            onTap: () => _launchUrl(context,
-                'https://github.com/calca/caravella/blob/main/LICENSE'),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 6),
-              child: Row(
-                children: [
-                  Icon(Icons.open_in_new,
-                      size: 20, color: Theme.of(context).colorScheme.primary),
-                  const SizedBox(width: 8),
-                  Text(localizations.get('license_link'),
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary)),
-                ],
-              ),
+        ),
+        const SizedBox(height: 16),
+        Card(
+          elevation: 0,
+          color: colorScheme.surfaceContainer,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.description,
+                        color: colorScheme.primary, size: 22),
+                    const SizedBox(width: 8),
+                    Text(localizations.get('license_section'),
+                        style: textTheme.titleSmall
+                            ?.copyWith(fontWeight: FontWeight.w600)),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Text(localizations.get('license_hint'),
+                    style: textTheme.bodySmall),
+                const SizedBox(height: 8),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Icon(Icons.open_in_new,
+                      color: colorScheme.primary, size: 20),
+                  title: Text(localizations.get('license_link'),
+                      style: textTheme.bodyMedium
+                          ?.copyWith(color: colorScheme.primary)),
+                  onTap: () => _launchUrl(context,
+                      'https://github.com/calca/caravella/blob/main/LICENSE'),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                  minLeadingWidth: 0,
+                  horizontalTitleGap: 8,
+                ),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
