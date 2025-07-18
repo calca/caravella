@@ -13,6 +13,8 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
     final loc = AppLocalizations(locale);
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
       appBar: const CaravellaAppBar(),
@@ -20,24 +22,65 @@ class SettingsPage extends StatelessWidget {
         length: 2,
         child: Column(
           children: [
-            TabBar(
-              tabs: [
-                Tab(text: loc.get('settings_tab')),
-                Tab(text: loc.get('info_tab')),
-              ],
-              labelColor: Theme.of(context).colorScheme.primary,
-              unselectedLabelColor: Theme.of(context)
-                  .colorScheme
-                  .onSurface
-                  .withAlpha((0.6 * 255).toInt()),
-              indicatorColor: Theme.of(context).colorScheme.primary,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: colorScheme.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: colorScheme.shadow.withOpacity(0.04),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: TabBar(
+                  tabs: [
+                    Tab(text: loc.get('settings_tab')),
+                    Tab(text: loc.get('info_tab')),
+                  ],
+                  labelColor: colorScheme.primary,
+                  unselectedLabelColor: colorScheme.onSurface.withOpacity(0.6),
+                  indicator: BoxDecoration(
+                    color: colorScheme.primary.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  labelStyle: textTheme.labelLarge
+                      ?.copyWith(fontWeight: FontWeight.bold),
+                  unselectedLabelStyle: textTheme.labelLarge,
+                  overlayColor: MaterialStateProperty.all(
+                      colorScheme.primary.withOpacity(0.08)),
+                  dividerColor: Colors.transparent,
+                ),
+              ),
             ),
             Expanded(
-              child: TabBarView(
-                children: [
-                  CurrentSettingsTab(onLocaleChanged: onLocaleChanged),
-                  const InfoTab(),
-                ],
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: colorScheme.surface,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: colorScheme.shadow.withOpacity(0.03),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: TabBarView(
+                    physics: const BouncingScrollPhysics(),
+                    children: [
+                      CurrentSettingsTab(onLocaleChanged: onLocaleChanged),
+                      const InfoTab(),
+                    ],
+                  ),
+                ),
               ),
             ),
           ],
