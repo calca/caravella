@@ -257,8 +257,12 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           final file =
               await File('${tempDir.path}/${_trip!.title}_export.csv').create();
           await file.writeAsString(csv);
-          await Share.shareXFiles([XFile(file.path)],
-              text: '${_trip!.title} - CSV');
+          await SharePlus.instance.share(
+            ShareParams(
+              text: '${_trip!.title} - CSV',
+              files: [XFile(file.path)],
+            ),
+          );
           if (context.mounted) Navigator.of(context).pop();
         },
         onDelete: () async {
