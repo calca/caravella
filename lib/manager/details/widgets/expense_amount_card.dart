@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../widgets/base_card.dart';
-import '../../widgets/currency_display.dart';
+import '../../../widgets/base_card.dart';
+import '../../../widgets/currency_display.dart';
 
 class ExpenseAmountCard extends StatelessWidget {
   final String title;
