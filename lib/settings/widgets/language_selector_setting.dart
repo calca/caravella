@@ -35,7 +35,6 @@ class _LanguageSelectorSettingState extends State<LanguageSelectorSetting> {
   @override
   Widget build(BuildContext context) {
     return SettingSelector(
-      icon: Icons.language,
       label: 'Lingua:',
       selector: DropdownButton<String>(
         value: _locale,

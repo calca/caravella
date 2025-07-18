@@ -44,158 +44,133 @@ class CurrentSettingsTab extends StatelessWidget {
                   ),
             ),
             const SizedBox(height: 12),
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .outline
-                      .withValues(alpha: 0.2),
-                  width: 1,
-                ),
-              ),
-              child: Column(
-                children: [
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton.icon(
-                      icon: const Icon(Icons.backup_rounded, size: 20),
-                      label: Text(localizations.get('backup')),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                        foregroundColor:
-                            Theme.of(context).colorScheme.onPrimary,
-                        elevation: 2,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 16),
+            Column(
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    child: Text(localizations.get('backup')),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      onPressed: () async {
-                        await _backupTrips(context, localizations);
-                      },
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 16),
                     ),
+                    onPressed: () async {
+                      await _backupTrips(context, localizations);
+                    },
                   ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton.icon(
-                      icon: const Icon(Icons.file_upload_rounded, size: 20),
-                      label: Text(localizations.get('import')),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Theme.of(context).colorScheme.primary,
-                        side: BorderSide(
-                          color: Theme.of(context).colorScheme.primary,
-                          width: 1.5,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 16),
+                ),
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton(
+                    child: Text(localizations.get('import')),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Theme.of(context).colorScheme.primary,
+                      side: BorderSide(
+                        color: Theme.of(context).colorScheme.primary,
+                        width: 1.5,
                       ),
-                      onPressed: () async {
-                        final result = await FilePicker.platform.pickFiles(
-                          type: FileType.custom,
-                          allowedExtensions: ['zip', 'json'],
-                        );
-                        if (!context.mounted) return;
-                        if (result != null &&
-                            result.files.single.path != null) {
-                          final filePath = result.files.single.path!;
-                          final fileName = result.files.single.name;
-                          final confirm = await showDialog<bool>(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              title: Text(
-                                  localizations.get('import_confirm_title')),
-                              content: Text(localizations.get(
-                                  'import_confirm_message',
-                                  params: {'file': fileName})),
-                              actions: [
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.of(context).pop(false),
-                                  child: Text(localizations.get('cancel')),
-                                ),
-                                FilledButton(
-                                  onPressed: () =>
-                                      Navigator.of(context).pop(true),
-                                  child: Text(localizations.get('ok')),
-                                ),
-                              ],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 16),
+                    ),
+                    onPressed: () async {
+                      final result = await FilePicker.platform.pickFiles(
+                        type: FileType.custom,
+                        allowedExtensions: ['zip', 'json'],
+                      );
+                      if (!context.mounted) return;
+                      if (result != null && result.files.single.path != null) {
+                        final filePath = result.files.single.path!;
+                        final fileName = result.files.single.name;
+                        final confirm = await showDialog<bool>(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
                             ),
-                          );
-                          if (confirm == true) {
-                            try {
-                              final dir =
-                                  await getApplicationDocumentsDirectory();
-                              final destFile = File(
-                                  '${dir.path}/${ExpenseGroupStorage.fileName}');
-
-                              if (filePath.endsWith('.zip')) {
-                                final bytes =
-                                    await File(filePath).readAsBytes();
-                                final archive = ZipDecoder().decodeBytes(bytes);
-
-                                bool fileFound = false;
-                                for (final file in archive) {
-                                  if (file.name ==
-                                      ExpenseGroupStorage.fileName) {
-                                    await destFile.writeAsBytes(
-                                        file.content as List<int>);
-                                    fileFound = true;
-                                    break;
-                                  }
+                            title:
+                                Text(localizations.get('import_confirm_title')),
+                            content: Text(localizations.get(
+                                'import_confirm_message',
+                                params: {'file': fileName})),
+                            actions: [
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(false),
+                                child: Text(localizations.get('cancel')),
+                              ),
+                              FilledButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(true),
+                                child: Text(localizations.get('ok')),
+                              ),
+                            ],
+                          ),
+                        );
+                        if (confirm == true) {
+                          try {
+                            final dir =
+                                await getApplicationDocumentsDirectory();
+                            final destFile = File(
+                                '${dir.path}/${ExpenseGroupStorage.fileName}');
+                            if (filePath.endsWith('.zip')) {
+                              final bytes = await File(filePath).readAsBytes();
+                              final archive = ZipDecoder().decodeBytes(bytes);
+                              bool fileFound = false;
+                              for (final file in archive) {
+                                if (file.name == ExpenseGroupStorage.fileName) {
+                                  await destFile
+                                      .writeAsBytes(file.content as List<int>);
+                                  fileFound = true;
+                                  break;
                                 }
-
-                                if (!fileFound) {
-                                  throw Exception(
-                                      'File di backup non trovato nell\'archivio');
-                                }
-                              } else if (filePath.endsWith('.json')) {
-                                await File(filePath).copy(destFile.path);
-                              } else {
-                                throw Exception('Formato file non supportato');
                               }
-
-                              if (!context.mounted) return;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    content: Text(
-                                        localizations.get('import_success'))),
-                              );
-
-                              Navigator.of(context)
-                                  .popUntil((route) => route.isFirst);
-                              final state =
-                                  context.findAncestorStateOfType<State>();
-                              if (state != null && state.mounted) {
-                                // ignore: invalid_use_of_protected_member
-                                state.setState(() {});
+                              if (!fileFound) {
+                                throw Exception(
+                                    'File di backup non trovato nell\'archivio');
                               }
-                            } catch (e) {
-                              if (!context.mounted) return;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    content: Text(
-                                        '${localizations.get('import_error')}: ${e.toString()}')),
-                              );
+                            } else if (filePath.endsWith('.json')) {
+                              await File(filePath).copy(destFile.path);
+                            } else {
+                              throw Exception('Formato file non supportato');
                             }
+                            if (!context.mounted) return;
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text(
+                                      localizations.get('import_success'))),
+                            );
+                            Navigator.of(context)
+                                .popUntil((route) => route.isFirst);
+                            final state =
+                                context.findAncestorStateOfType<State>();
+                            if (state != null && state.mounted) {
+                              // ignore: invalid_use_of_protected_member
+                              state.setState(() {});
+                            }
+                          } catch (e) {
+                            if (!context.mounted) return;
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text(
+                                      '${localizations.get('import_error')}: ${e.toString()}')),
+                            );
                           }
                         }
-                      },
-                    ),
+                      }
+                    },
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             const SizedBox(height: 24),
           ],

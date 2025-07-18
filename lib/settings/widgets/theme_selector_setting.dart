@@ -33,7 +33,6 @@ class _ThemeSelectorSettingState extends State<ThemeSelectorSetting> {
     final loc = AppLocalizations(locale);
 
     return SettingSelector(
-      icon: Icons.brightness_6,
       label: 'Tema:',
       selector: DropdownButton<ThemeMode>(
         value: _themeMode,
