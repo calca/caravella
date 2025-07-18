@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../widgets/themed_outlined_button.dart';
 import '../widgets/language_selector_setting.dart';
 import '../widgets/theme_selector_setting.dart';
 import '../../state/locale_notifier.dart';
@@ -41,18 +42,8 @@ class CurrentSettingsTab extends StatelessWidget {
               children: [
                 SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(
+                  child: ThemedOutlinedButton(
                     child: Text(localizations.get('backup')),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 16),
-                    ),
                     onPressed: () async {
                       await _backupTrips(context, localizations);
                     },
@@ -61,20 +52,8 @@ class CurrentSettingsTab extends StatelessWidget {
                 const SizedBox(height: 12),
                 SizedBox(
                   width: double.infinity,
-                  child: OutlinedButton(
+                  child: ThemedOutlinedButton(
                     child: Text(localizations.get('import')),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Theme.of(context).colorScheme.primary,
-                      side: BorderSide(
-                        color: Theme.of(context).colorScheme.primary,
-                        width: 1.5,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 16),
-                    ),
                     onPressed: () async {
                       final result = await FilePicker.platform.pickFiles(
                         type: FileType.custom,
