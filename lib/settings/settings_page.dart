@@ -41,10 +41,10 @@ class SettingsPage extends StatelessWidget {
                     Tab(text: loc.get('settings_tab')),
                     Tab(text: loc.get('info_tab')),
                   ],
-                  labelColor: colorScheme.primary,
-                  unselectedLabelColor: colorScheme.onSurface.withOpacity(0.6),
+                  labelColor: colorScheme.onSurface,
+                  unselectedLabelColor: colorScheme.onSurface.withOpacity(0.2),
                   indicator: BoxDecoration(
-                    color: colorScheme.primary.withOpacity(0.12),
+                    color: colorScheme.primaryFixedDim.withOpacity(0.30),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   indicatorSize: TabBarIndicatorSize.tab,
@@ -52,15 +52,14 @@ class SettingsPage extends StatelessWidget {
                       ?.copyWith(fontWeight: FontWeight.bold),
                   unselectedLabelStyle: textTheme.labelLarge,
                   overlayColor: MaterialStateProperty.all(
-                      colorScheme.primary.withOpacity(0.08)),
+                      colorScheme.primaryFixed.withOpacity(0.08)),
                   dividerColor: Colors.transparent,
                 ),
               ),
             ),
             Expanded(
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
                 child: Container(
                   decoration: BoxDecoration(
                     color: colorScheme.surface,
