@@ -63,7 +63,7 @@ class OptionsSheet extends StatelessWidget {
                     ListTile(
                       leading: Icon(
                         trip.pinned ? Icons.push_pin : Icons.push_pin_outlined,
-                        color: Theme.of(context).colorScheme.primary,
+                        color: Theme.of(context).colorScheme.onPrimaryFixed,
                       ),
                       title: Text(trip.pinned
                           ? loc.get('unpin_group')
@@ -76,7 +76,7 @@ class OptionsSheet extends StatelessWidget {
                         trip.archived
                             ? Icons.unarchive_rounded
                             : Icons.archive_rounded,
-                        color: Theme.of(context).colorScheme.primary,
+                        color: Theme.of(context).colorScheme.onPrimaryFixed,
                       ),
                       title: Text(trip.archived
                           ? loc.get('unarchive')
@@ -88,7 +88,7 @@ class OptionsSheet extends StatelessWidget {
                     ListTile(
                       leading: Icon(
                         Icons.edit_rounded,
-                        color: Theme.of(context).colorScheme.primary,
+                        color: Theme.of(context).colorScheme.onPrimaryFixed,
                       ),
                       title: Text(loc.get('edit_group')),
                       onTap: onEdit,
@@ -98,7 +98,7 @@ class OptionsSheet extends StatelessWidget {
                     ListTile(
                       leading: Icon(
                         Icons.file_download_rounded,
-                        color: Theme.of(context).colorScheme.primary,
+                        color: Theme.of(context).colorScheme.onPrimaryFixed,
                       ),
                       title: Text(loc.get('export_csv')),
                       onTap: onExportCsv,
@@ -108,12 +108,12 @@ class OptionsSheet extends StatelessWidget {
                     ListTile(
                       leading: Icon(
                         Icons.delete_rounded,
-                        color: Theme.of(context).colorScheme.error,
+                        color: Theme.of(context).colorScheme.tertiary,
                       ),
                       title: Text(
                         loc.get('delete_group'),
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.error,
+                          color: Theme.of(context).colorScheme.tertiary,
                         ),
                       ),
                       onTap: onDelete,
