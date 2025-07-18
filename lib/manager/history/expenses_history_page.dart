@@ -103,14 +103,19 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
 
   List<ExpenseGroup> _applyFilter(List<ExpenseGroup> trips) {
     // Applica solo il filtro di ricerca per titolo
-    if (_searchQuery.isEmpty) {
-      return trips;
+    List<ExpenseGroup> filtered = trips;
+    if (_searchQuery.isNotEmpty) {
+      filtered = filtered
+          .where((trip) =>
+              trip.title.toLowerCase().contains(_searchQuery.toLowerCase()))
+          .toList();
     }
-
-    return trips
-        .where((trip) =>
-            trip.title.toLowerCase().contains(_searchQuery.toLowerCase()))
-        .toList();
+    // Ordina: pinned prima, poi il resto
+    filtered.sort((a, b) {
+      if (a.pinned == b.pinned) return 0;
+      return a.pinned ? -1 : 1;
+    });
+    return filtered;
   }
 
   void _onStatusFilterChanged(String key) {
