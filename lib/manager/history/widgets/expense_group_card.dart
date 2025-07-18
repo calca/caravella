@@ -36,7 +36,7 @@ class ExpenseGroupCard extends StatelessWidget {
         child: BaseCard(
           margin: const EdgeInsets.symmetric(vertical: 6),
           padding: const EdgeInsets.all(16),
-          backgroundColor: Theme.of(context).colorScheme.surface,
+          backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
@@ -84,9 +84,7 @@ class ExpenseGroupCard extends StatelessWidget {
     final loc = AppLocalizations(locale);
 
     final isArchived = trip.archived;
-    final backgroundColor = isArchived
-        ? Theme.of(context).colorScheme.tertiary
-        : Theme.of(context).colorScheme.outline;
+    final backgroundColor = Theme.of(context).colorScheme.primaryFixed;
     final iconData =
         isArchived ? Icons.unarchive_rounded : Icons.archive_rounded;
     final actionText = isArchived ? loc.get('unarchive') : loc.get('archive');
