@@ -22,7 +22,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     with TickerProviderStateMixin {
   List<ExpenseGroup> _allTrips = [];
   List<ExpenseGroup> _filteredTrips = [];
-  String _statusFilter = 'active'; // active, all, archived
+  String _statusFilter = 'all'; // active, all, archived
   String _searchQuery = '';
   bool _loading = true;
   bool _isSearchExpanded = false;
@@ -30,12 +30,12 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   Timer? _searchDebounce;
 
   final List<Map<String, dynamic>> _statusOptions = [
+    {'key': 'all', 'label': 'Tutti', 'icon': Icons.all_inclusive},
     {
       'key': 'active',
       'label': 'Attivi',
       'icon': Icons.play_circle_fill_rounded
     },
-    {'key': 'all', 'label': 'Tutti', 'icon': Icons.all_inclusive},
     {'key': 'archived', 'label': 'Archiviati', 'icon': Icons.archive_rounded},
   ];
 
