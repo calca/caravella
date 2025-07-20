@@ -76,7 +76,7 @@ class EditExpenseSheet extends StatelessWidget {
                 ),
                 child: ExpenseFormComponent(
                   initialExpense: expense,
-                  participants: group.participants.map((p) => p.name).toList(),
+                  participants: group.participants,
                   categories: group.categories,
                   tripStartDate: group.startDate,
                   tripEndDate: group.endDate,

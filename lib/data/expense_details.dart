@@ -1,11 +1,12 @@
 import 'package:uuid/uuid.dart';
 import 'expense_category.dart';
+import 'expense_participant.dart';
 
 class ExpenseDetails {
   final String id; // UDID per la spesa
   final ExpenseCategory category;
   final double? amount;
-  final String paidBy;
+  final ExpenseParticipant paidBy;
   final DateTime date;
   final String? note;
 
@@ -24,7 +25,7 @@ class ExpenseDetails {
       category: ExpenseCategory.fromJson(json['category']),
       amount:
           json['amount'] != null ? (json['amount'] as num).toDouble() : null,
-      paidBy: json['paidBy'],
+      paidBy: ExpenseParticipant.fromJson(json['paidBy']),
       date: DateTime.parse(json['date']),
       note: json['note'],
     );
@@ -34,7 +35,7 @@ class ExpenseDetails {
         'id': id,
         'category': category.toJson(),
         if (amount != null) 'amount': amount,
-        'paidBy': paidBy,
+        'paidBy': paidBy.toJson(),
         'date': date.toIso8601String(),
         if (note != null) 'note': note,
       };
@@ -43,7 +44,7 @@ class ExpenseDetails {
     String? id,
     ExpenseCategory? category,
     double? amount,
-    String? paidBy,
+    ExpenseParticipant? paidBy,
     DateTime? date,
     String? note,
   }) {

@@ -44,7 +44,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       buffer.writeln([
         _escapeCsvValue(e.category.name),
         e.amount?.toStringAsFixed(2) ?? '',
-        _escapeCsvValue(e.paidBy),
+        _escapeCsvValue(e.paidBy.name),
         e.date.toIso8601String().split('T').first,
         _escapeCsvValue(e.note ?? ''),
       ].join(','));

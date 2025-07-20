@@ -124,9 +124,7 @@ class GroupCardContent extends StatelessWidget {
                       child: ExpenseFormComponent(
                         key: ValueKey(currentGroup.categories
                             .hashCode), // Forza rebuild quando le categorie cambiano
-                        participants: currentGroup.participants
-                            .map((p) => p.name)
-                            .toList(),
+                        participants: currentGroup.participants,
                         categories: currentGroup.categories,
                         onExpenseAdded: (expense) async {
                           // Usa il notifier per aggiungere la spesa

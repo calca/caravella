@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../data/expense_category.dart';
 import '../../data/expense_details.dart';
 import '../../app_localizations.dart';
+import '../../data/expense_participant.dart';
 import '../../state/locale_notifier.dart';
 import 'expense_form/amount_input_widget.dart';
 import 'expense_form/participant_selector_widget.dart';
@@ -14,7 +15,7 @@ import 'expense_form/category_dialog.dart';
 class ExpenseFormComponent extends StatefulWidget {
   final bool showDateAndNote;
   final ExpenseDetails? initialExpense;
-  final List<String> participants;
+  final List<ExpenseParticipant> participants;
   final List<ExpenseCategory> categories;
   final Function(ExpenseDetails) onExpenseAdded;
   final Function(String) onCategoryAdded;
@@ -45,7 +46,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   final _formKey = GlobalKey<FormState>();
   ExpenseCategory? _category;
   double? _amount;
-  String? _paidBy;
+  ExpenseParticipant? _paidBy;
   DateTime? _date;
   final _amountController = TextEditingController();
   final FocusNode _amountFocus = FocusNode();
@@ -140,7 +141,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     bool isFormValid = _formKey.currentState!.validate();
     bool hasCategoryIfRequired =
         _categories.isNotEmpty ? _category != null : true;
-    bool hasPaidBy = _paidBy != null;
+    bool hasPaidBy = _paidBy != null && _paidBy!.name.isNotEmpty;
 
     if (isFormValid && hasCategoryIfRequired && hasPaidBy) {
       final expense = ExpenseDetails(
@@ -149,7 +150,10 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                 ? _categories.first
                 : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000))),
         amount: _amount ?? 0,
-        paidBy: _paidBy ?? '',
+        paidBy: _paidBy ??
+            (widget.participants.isNotEmpty
+                ? widget.participants.first
+                : ExpenseParticipant(name: '')),
         date: _date ?? DateTime.now(),
         note:
             widget.initialExpense != null ? _noteController.text.trim() : null,
@@ -167,16 +171,13 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   bool _isFormValid() {
     // SET MINIMO DI INFORMAZIONI NECESSARIE per abilitare il pulsante:
     // 1. Importo valido (> 0)
-    bool hasValidAmount = _amount != null && _amount! > 0;
+    bool hasPaidBy = _paidBy != null && _paidBy!.name.isNotEmpty;
 
-    // 2. Partecipante selezionato (chi ha pagato)
-    bool hasPaidBy = _paidBy != null && _paidBy!.isNotEmpty;
-
-    // 3. Categoria selezionata (solo se esistono categorie)
+    // 2. Categoria selezionata (solo se esistono categorie)
     bool hasCategoryIfRequired = _categories.isEmpty || _category != null;
 
     // Il pulsante è abilitato SOLO se tutti i requisiti sono soddisfatti
-    return hasValidAmount && hasPaidBy && hasCategoryIfRequired;
+    return _isAmountValid && hasPaidBy && hasCategoryIfRequired;
   }
 
   // Widget per indicatori di stato - versione minimalista
@@ -230,11 +231,16 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
             // PAID BY (chip) con status
             _buildFieldWithStatus(
               ParticipantSelectorWidget(
-                participants: widget.participants,
-                selectedParticipant: _paidBy,
-                onParticipantSelected: (selected) {
+                participants: widget.participants.map((p) => p.name).toList(),
+                selectedParticipant: _paidBy?.name,
+                onParticipantSelected: (selectedName) {
                   setState(() {
-                    _paidBy = selected;
+                    _paidBy = widget.participants.firstWhere(
+                      (p) => p.name == selectedName,
+                      orElse: () => widget.participants.isNotEmpty
+                          ? widget.participants.first
+                          : ExpenseParticipant(name: ''),
+                    );
                     _paidByTouched = true;
                   });
                 },

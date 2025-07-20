@@ -29,7 +29,7 @@ class ExpenseList extends StatelessWidget {
                 title: expense.category.name,
                 coins: (expense.amount ?? 0).toInt(),
                 checked: true,
-                paidBy: expense.paidBy,
+                paidBy: expense.paidBy.name,
                 category: null,
                 date: expense.date,
                 currency: currency,

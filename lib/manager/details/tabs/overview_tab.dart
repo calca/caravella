@@ -27,8 +27,8 @@ class OverviewTab extends StatelessWidget {
     // Calcola quanto ha pagato ogni partecipante
     for (final expense in trip.expenses) {
       if (expense.amount != null) {
-        balances[expense.paidBy] =
-            (balances[expense.paidBy] ?? 0) + expense.amount!;
+        balances[expense.paidBy.name] =
+            (balances[expense.paidBy.name] ?? 0) + expense.amount!;
       }
     }
 
@@ -118,7 +118,7 @@ class OverviewTab extends StatelessWidget {
           const SizedBox(height: 12),
           ...trip.participants.map((p) {
             final total = trip.expenses
-                .where((e) => e.paidBy == p.name)
+                .where((e) => e.paidBy.name == p.name)
                 .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 6),
