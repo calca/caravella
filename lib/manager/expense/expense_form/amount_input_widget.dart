@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../data/expense_category.dart';
 import '../../../app_localizations.dart';
 
 class AmountInputWidget extends StatelessWidget {
@@ -7,7 +8,7 @@ class AmountInputWidget extends StatelessWidget {
   final String? Function(String?)? validator;
   final void Function(String?)? onSaved;
   final VoidCallback? onSubmitted;
-  final List<String> categories;
+  final List<ExpenseCategory> categories;
   final AppLocalizations loc;
 
   const AmountInputWidget({
@@ -18,7 +19,7 @@ class AmountInputWidget extends StatelessWidget {
     this.validator,
     this.onSaved,
     this.onSubmitted,
-    this.categories = const [],
+    this.categories = const <ExpenseCategory>[],
   });
 
   @override
@@ -51,8 +52,8 @@ class AmountInputWidget extends StatelessWidget {
           alignment: Alignment.bottomCenter,
           child: Text(
             // Mostra la currency del viaggio se disponibile
-            (categories.isNotEmpty && categories.first.startsWith('€'))
-                ? categories.first
+            (categories.isNotEmpty && categories.first.name.startsWith('€'))
+                ? categories.first.name
                 : '€',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w600,

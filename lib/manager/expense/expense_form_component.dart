@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../data/expense_category.dart';
 import '../../data/expense_details.dart';
 import '../../app_localizations.dart';
 import '../../state/locale_notifier.dart';
@@ -14,7 +15,7 @@ class ExpenseFormComponent extends StatefulWidget {
   final bool showDateAndNote;
   final ExpenseDetails? initialExpense;
   final List<String> participants;
-  final List<String> categories;
+  final List<ExpenseCategory> categories;
   final Function(ExpenseDetails) onExpenseAdded;
   final Function(String) onCategoryAdded;
   final bool shouldAutoClose;
@@ -42,14 +43,14 @@ class ExpenseFormComponent extends StatefulWidget {
 
 class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   final _formKey = GlobalKey<FormState>();
-  String? _category;
+  ExpenseCategory? _category;
   double? _amount;
   String? _paidBy;
   DateTime? _date;
   final _amountController = TextEditingController();
   final FocusNode _amountFocus = FocusNode();
   final TextEditingController _noteController = TextEditingController();
-  late List<String> _categories; // Lista locale delle categorie
+  late List<ExpenseCategory> _categories; // Lista locale delle categorie
 
   // Stato per validazione in tempo reale
   bool _amountTouched = false;
@@ -69,7 +70,12 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     super.initState();
     _categories = List.from(widget.categories); // Copia della lista originale
     if (widget.initialExpense != null) {
-      _category = widget.initialExpense!.category;
+      _category = widget.categories.firstWhere(
+        (c) => c.id == widget.initialExpense!.category.id,
+        orElse: () => widget.categories.isNotEmpty
+            ? widget.categories.first
+            : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000)),
+      );
       _amount = widget.initialExpense!.amount;
       _paidBy = widget.initialExpense!.paidBy;
       _date = widget.initialExpense!.date;
@@ -96,9 +102,14 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     });
 
     // Se c'è una nuova categoria, preselezionala
-    if (widget.newlyAddedCategory != null &&
-        widget.categories.contains(widget.newlyAddedCategory)) {
-      _category = widget.newlyAddedCategory;
+    if (widget.newlyAddedCategory != null) {
+      final found = widget.categories.firstWhere(
+        (c) => c.name == widget.newlyAddedCategory,
+        orElse: () => widget.categories.isNotEmpty
+            ? widget.categories.first
+            : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000)),
+      );
+      _category = found;
     }
   }
 
@@ -107,10 +118,15 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     super.didUpdateWidget(oldWidget);
     // Se una nuova categoria è stata aggiunta e non è già selezionata, la selezioniamo
     if (widget.newlyAddedCategory != null &&
-        widget.newlyAddedCategory != _category &&
-        widget.categories.contains(widget.newlyAddedCategory)) {
+        (_category == null || widget.newlyAddedCategory != _category!.name)) {
+      final found = widget.categories.firstWhere(
+        (c) => c.name == widget.newlyAddedCategory,
+        orElse: () => widget.categories.isNotEmpty
+            ? widget.categories.first
+            : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000)),
+      );
       setState(() {
-        _category = widget.newlyAddedCategory;
+        _category = found;
       });
     }
   }
@@ -128,7 +144,10 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
 
     if (isFormValid && hasCategoryIfRequired && hasPaidBy) {
       final expense = ExpenseDetails(
-        category: _category ?? '',
+        category: _category ??
+            (_categories.isNotEmpty
+                ? _categories.first
+                : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000))),
         amount: _amount ?? 0,
         paidBy: _paidBy ?? '',
         date: _date ?? DateTime.now(),
@@ -154,8 +173,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     bool hasPaidBy = _paidBy != null && _paidBy!.isNotEmpty;
 
     // 3. Categoria selezionata (solo se esistono categorie)
-    bool hasCategoryIfRequired =
-        _categories.isEmpty || (_category != null && _category!.isNotEmpty);
+    bool hasCategoryIfRequired = _categories.isEmpty || _category != null;
 
     // Il pulsante è abilitato SOLO se tutti i requisiti sono soddisfatti
     return hasValidAmount && hasPaidBy && hasCategoryIfRequired;
@@ -239,33 +257,46 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                   });
                 },
                 onAddCategory: () async {
-                  final newCategory = await CategoryDialog.show(
+                  final newCategoryName = await CategoryDialog.show(
                     context: context,
                     loc: loc,
                   );
-                  if (newCategory != null && newCategory.isNotEmpty) {
+                  if (newCategoryName != null && newCategoryName.isNotEmpty) {
                     // Prima notifica al parent tramite callback
-                    widget.onCategoryAdded(newCategory);
+                    widget.onCategoryAdded(newCategoryName);
 
-                    // Aggiorna immediatamente la lista locale
+                    // Aggiorna immediatamente la lista locale se la categoria è già presente
+                    final found = widget.categories.firstWhere(
+                      (c) => c.name == newCategoryName,
+                      orElse: () => widget.categories.isNotEmpty
+                          ? widget.categories.first
+                          : ExpenseCategory(
+                              name: '', id: '', createdAt: DateTime(2000)),
+                    );
                     setState(() {
-                      if (!_categories.contains(newCategory)) {
-                        _categories.add(newCategory);
+                      if (!_categories.contains(found)) {
+                        _categories.add(found);
+                        _category = found;
+                        _categoryTouched = true;
                       }
-                      _category = newCategory;
-                      _categoryTouched = true;
                     });
 
                     // Aspetta un momento per permettere al parent di elaborare
                     await Future.delayed(const Duration(milliseconds: 100));
 
                     // Verifica se la categoria è stata aggiunta alla lista del parent
-                    if (widget.categories.contains(newCategory)) {
-                      // Se sì, aggiorna la lista locale con quella del parent
-                      setState(() {
-                        _categories = List.from(widget.categories);
-                      });
-                    }
+                    final foundAfter = widget.categories.firstWhere(
+                      (c) => c.name == newCategoryName,
+                      orElse: () => widget.categories.isNotEmpty
+                          ? widget.categories.first
+                          : ExpenseCategory(
+                              name: '', id: '', createdAt: DateTime(2000)),
+                    );
+                    setState(() {
+                      _categories = List.from(widget.categories);
+                      _category = foundAfter;
+                      _categoryTouched = true;
+                    });
 
                     // Scroll automatico alla fine
                     if (_scrollToCategoryEnd != null) {

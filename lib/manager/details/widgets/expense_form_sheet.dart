@@ -68,7 +68,7 @@ class ExpenseFormSheet extends StatelessWidget {
                 child: ExpenseFormComponent(
                   initialExpense: initialExpense,
                   participants: group.participants.map((p) => p.name).toList(),
-                  categories: group.categories.map((c) => c.name).toList(),
+                  categories: group.categories,
                   tripStartDate: group.startDate,
                   tripEndDate: group.endDate,
                   shouldAutoClose: false,

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
 import '../../../widgets/themed_outlined_button.dart';
+import '../../../data/expense_category.dart';
 
 class CategorySelectorWidget extends StatefulWidget {
-  final List<String> categories;
-  final String? selectedCategory;
-  final void Function(String?) onCategorySelected;
+  final List<ExpenseCategory> categories;
+  final ExpenseCategory? selectedCategory;
+  final void Function(ExpenseCategory?) onCategorySelected;
   final Future<void> Function() onAddCategory;
   final AppLocalizations loc;
   final void Function(void Function())? registerScrollToEnd;
@@ -110,7 +111,7 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 4.0),
                               child: ChoiceChip(
-                                label: Text(cat),
+                                label: Text(cat.name),
                                 selected: widget.selectedCategory == cat,
                                 labelStyle: Theme.of(context)
                                     .textTheme

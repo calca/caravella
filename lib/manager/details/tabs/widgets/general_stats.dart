@@ -53,7 +53,7 @@ class GeneralStats extends StatelessWidget {
           // Spesa più alta
           _buildFlatStatItem(
             context,
-            'Maggiore spesa: ${maxExpense.category.isNotEmpty ? maxExpense.category : loc.get('uncategorized')}',
+            'Maggiore spesa: ${maxExpense.category.toString().isNotEmpty ? maxExpense.category : loc.get('uncategorized')}',
             CurrencyDisplay(
               value: maxExpense.amount ?? 0,
               currency: trip.currency,

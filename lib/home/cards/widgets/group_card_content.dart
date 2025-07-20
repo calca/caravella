@@ -127,8 +127,7 @@ class GroupCardContent extends StatelessWidget {
                         participants: currentGroup.participants
                             .map((p) => p.name)
                             .toList(),
-                        categories:
-                            currentGroup.categories.map((c) => c.name).toList(),
+                        categories: currentGroup.categories,
                         onExpenseAdded: (expense) async {
                           // Usa il notifier per aggiungere la spesa
                           await groupNotifier.addExpense(expense);

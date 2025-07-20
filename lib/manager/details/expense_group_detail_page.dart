@@ -42,7 +42,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     buffer.writeln('Categoria,Importo,Pagate da,Data,Nota');
     for (final e in _trip!.expenses) {
       buffer.writeln([
-        _escapeCsvValue(e.category),
+        _escapeCsvValue(e.category.name),
         e.amount?.toStringAsFixed(2) ?? '',
         _escapeCsvValue(e.paidBy),
         e.date.toIso8601String().split('T').first,

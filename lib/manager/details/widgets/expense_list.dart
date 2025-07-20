@@ -26,7 +26,7 @@ class ExpenseList extends StatelessWidget {
               width: double.infinity,
               margin: const EdgeInsets.symmetric(vertical: 4),
               child: ExpenseAmountCard(
-                title: expense.category,
+                title: expense.category.name,
                 coins: (expense.amount ?? 0).toInt(),
                 checked: true,
                 paidBy: expense.paidBy,

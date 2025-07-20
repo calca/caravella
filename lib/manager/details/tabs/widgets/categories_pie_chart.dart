@@ -3,6 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import '../../../../data/expense_group.dart';
 import '../../../../app_localizations.dart';
 import '../../../../widgets/currency_display.dart';
+import '../../../../data/expense_category.dart';
 
 class CategoriesPieChart extends StatelessWidget {
   final ExpenseGroup trip;
@@ -16,28 +17,31 @@ class CategoriesPieChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Calcola i totali per categoria
-    final Map<String, double> categoryTotals = {};
+    // Calcola i totali per categoria (ExpenseCategory come chiave)
+    final Map<ExpenseCategory, double> categoryTotals = {};
 
-    // Aggiungi le categorie definite
     for (final category in trip.categories) {
       final total = trip.expenses
-          .where((e) => e.category == category.name)
+          .where((e) => e.category.id == category.id)
           .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
       if (total > 0) {
-        categoryTotals[category.name] = total;
+        categoryTotals[category] = total;
       }
     }
 
-    // Aggiungi le spese non categorizzate
+    // Aggiungi le spese non categorizzate (categoria non presente tra quelle note)
     final uncategorizedTotal = trip.expenses
-        .where((e) =>
-            e.category.isEmpty ||
-            !trip.categories.any((c) => c.name == e.category))
+        .where((e) => !trip.categories.any((c) => c.id == e.category.id))
         .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
 
     if (uncategorizedTotal > 0) {
-      categoryTotals[loc.get('uncategorized')] = uncategorizedTotal;
+      // Crea una categoria fittizia per "Senza categoria"
+      final uncategorized = ExpenseCategory(
+        name: loc.get('uncategorized'),
+        id: 'uncategorized',
+        createdAt: DateTime(2000),
+      );
+      categoryTotals[uncategorized] = uncategorizedTotal;
     }
 
     if (categoryTotals.isEmpty) {
@@ -134,7 +138,7 @@ class CategoriesPieChart extends StatelessWidget {
                 ),
                 const SizedBox(width: 6),
                 Text(
-                  categoryEntry.key,
+                  categoryEntry.key.name,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.w500,
                       ),
