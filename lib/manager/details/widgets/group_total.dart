@@ -25,7 +25,7 @@ class GroupTotal extends StatelessWidget {
           value: total,
           currency: currency,
           valueFontSize: 22.0,
-          currencyFontSize: 18.0,
+          currencyFontSize: 16.0,
           alignment: MainAxisAlignment.start,
           showDecimals: true,
           color: colorScheme.onSurface,
