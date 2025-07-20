@@ -250,8 +250,29 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             }
           }
         },
-        onExportCsv: () async {
-          // Export CSV logic
+        onDownloadCsv: () async {
+          // Download CSV logic
+          final csv = _generateCsvContent();
+          Directory? downloadsDir;
+          try {
+            downloadsDir = await getDownloadsDirectory();
+          } catch (_) {
+            downloadsDir = null;
+          }
+          final saveDir = downloadsDir ?? await getTemporaryDirectory();
+          final file =
+              await File('${saveDir.path}/${_trip!.title}_export.csv').create();
+          await file.writeAsString(csv);
+          // Show a snackbar or dialog to notify user of download location
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('CSV salvato in: ${file.path}')),
+            );
+            Navigator.of(context).pop();
+          }
+        },
+        onShareCsv: () async {
+          // Share CSV logic
           final csv = _generateCsvContent();
           final tempDir = await getTemporaryDirectory();
           final file =

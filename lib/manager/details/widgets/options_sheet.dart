@@ -11,7 +11,8 @@ class OptionsSheet extends StatelessWidget {
   final VoidCallback onArchiveToggle;
   final VoidCallback onDelete;
   final VoidCallback onEdit;
-  final VoidCallback onExportCsv;
+  final VoidCallback onDownloadCsv;
+  final VoidCallback onShareCsv;
   const OptionsSheet({
     super.key,
     required this.trip,
@@ -19,7 +20,8 @@ class OptionsSheet extends StatelessWidget {
     required this.onArchiveToggle,
     required this.onDelete,
     required this.onEdit,
-    required this.onExportCsv,
+    required this.onDownloadCsv,
+    required this.onShareCsv,
   });
 
   @override
@@ -94,14 +96,23 @@ class OptionsSheet extends StatelessWidget {
                       onTap: onEdit,
                     ),
                     const Divider(),
-                    // Export CSV action
+                    // Download CSV action
                     ListTile(
                       leading: Icon(
                         Icons.file_download_rounded,
                         color: Theme.of(context).colorScheme.onPrimaryFixed,
                       ),
-                      title: Text(loc.get('export_csv')),
-                      onTap: onExportCsv,
+                      title: Text(loc.get('download_all_csv')),
+                      onTap: onDownloadCsv,
+                    ),
+                    // Share CSV action
+                    ListTile(
+                      leading: Icon(
+                        Icons.share_rounded,
+                        color: Theme.of(context).colorScheme.onPrimaryFixed,
+                      ),
+                      title: Text(loc.get('share_all_csv')),
+                      onTap: onShareCsv,
                     ),
                     const Divider(),
                     // Delete action

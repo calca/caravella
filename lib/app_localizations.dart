@@ -7,6 +7,8 @@ class AppLocalizations {
 
   static final Map<String, Map<String, String>> _localizedValues = {
     'en': {
+      'download_all_csv': 'Download all (CSV)',
+      'share_all_csv': 'Share all (CSV)',
       'welcome_v3_title': 'Organize.\nShare.\nSettle.\n ',
       // Saluti dinamici
       'good_morning': 'Good morning',
@@ -146,6 +148,8 @@ class AppLocalizations {
       'paid_by': 'Paid by',
     },
     'it': {
+      'download_all_csv': 'Scarica tutto (CSV)',
+      'share_all_csv': 'Condividi tutto (CSV)',
       // Saluti dinamici
       'good_morning': 'Buongiorno',
       'good_afternoon': 'Buon pomeriggio',
