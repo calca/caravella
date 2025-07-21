@@ -9,6 +9,7 @@ class ExpenseDetails {
   final ExpenseParticipant paidBy;
   final DateTime date;
   final String? note;
+  final String? name;
 
   ExpenseDetails({
     required this.category,
@@ -16,6 +17,7 @@ class ExpenseDetails {
     required this.paidBy,
     required this.date,
     this.note,
+    this.name,
     String? id, // opzionale, generato se mancante
   }) : id = id ?? const Uuid().v4();
 
@@ -28,6 +30,7 @@ class ExpenseDetails {
       paidBy: ExpenseParticipant.fromJson(json['paidBy']),
       date: DateTime.parse(json['date']),
       note: json['note'],
+      name: json['name'],
     );
   }
 
@@ -38,6 +41,7 @@ class ExpenseDetails {
         'paidBy': paidBy.toJson(),
         'date': date.toIso8601String(),
         if (note != null) 'note': note,
+        if (name != null) 'name': name,
       };
 
   ExpenseDetails copyWith({
@@ -47,6 +51,7 @@ class ExpenseDetails {
     ExpenseParticipant? paidBy,
     DateTime? date,
     String? note,
+    String? name,
   }) {
     return ExpenseDetails(
       id: id ?? this.id,
@@ -55,6 +60,7 @@ class ExpenseDetails {
       paidBy: paidBy ?? this.paidBy,
       date: date ?? this.date,
       note: note ?? this.note,
+      name: name ?? this.name,
     );
   }
 }
