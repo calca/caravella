@@ -150,22 +150,17 @@ class _ExpandableSearchBarState extends State<ExpandableSearchBar>
   }
 
   Widget _buildCollapsedSearch(BuildContext context) {
-    return InkWell(
-      onTap: widget.onToggle,
-      borderRadius: BorderRadius.circular(24),
-      child: Container(
-        height: 48,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
-        ),
-        child: Center(
-          child: Icon(
-            Icons.search_rounded,
-            color:
-                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-            size: 20,
-          ),
-        ),
+    final colorScheme = Theme.of(context).colorScheme;
+    return IconButton.filledTonal(
+      onPressed: widget.onToggle,
+      icon: Icon(
+        Icons.search_outlined,
+        color: colorScheme.onSurface,
+        size: 20,
+      ),
+      style: IconButton.styleFrom(
+        backgroundColor: colorScheme.surfaceContainer,
+        minimumSize: const Size(54, 54),
       ),
     );
   }
