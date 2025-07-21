@@ -175,7 +175,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   void _showTripOptions(ExpenseGroup trip) async {
     await showModalBottomSheet<void>(
       context: context,
-      backgroundColor: Colors.transparent,
+      // backgroundColor centralizzato nel tema
       builder: (context) => ExpenseGroupOptionsSheet(
         trip: trip,
         onTripDeleted: () => _deleteTrip(trip),
@@ -236,6 +236,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     final loc = AppLocalizations(locale);
 
     return Scaffold(
+      // backgroundColor centralizzato nel tema
       appBar: const CaravellaAppBar(),
       floatingActionButton: Container(
         decoration: BoxDecoration(

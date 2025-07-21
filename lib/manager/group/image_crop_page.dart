@@ -124,6 +124,7 @@ class _ImageCropPageState extends State<ImageCropPage> {
       );
     }
     return Scaffold(
+      // backgroundColor centralizzato nel tema
       appBar: AppBar(
         title: const Text('Ritaglia immagine'),
         actions: [

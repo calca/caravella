@@ -185,6 +185,7 @@ class CaravellaThemes {
     fontFamily: 'Montserrat',
     textTheme: _createTextTheme(lightColorScheme),
     useMaterial3: true,
+    scaffoldBackgroundColor: lightColorScheme.surface,
   );
 
   static final ThemeData dark = ThemeData(
@@ -192,5 +193,6 @@ class CaravellaThemes {
     fontFamily: 'Montserrat',
     textTheme: _createTextTheme(darkColorScheme),
     useMaterial3: true,
+    scaffoldBackgroundColor: darkColorScheme.surface,
   );
 }

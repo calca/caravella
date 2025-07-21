@@ -36,7 +36,7 @@ class ExpenseGroupCard extends StatelessWidget {
         child: BaseCard(
           margin: const EdgeInsets.symmetric(vertical: 6),
           padding: const EdgeInsets.all(16),
-          backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+          // backgroundColor centralizzato nel tema
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(

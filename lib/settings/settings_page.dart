@@ -17,6 +17,7 @@ class SettingsPage extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
+      // backgroundColor centralizzato nel tema
       appBar: const CaravellaAppBar(),
       body: DefaultTabController(
         length: 2,

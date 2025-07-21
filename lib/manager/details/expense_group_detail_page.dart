@@ -136,7 +136,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      // backgroundColor centralizzato nel tema
       builder: (context) => DraggableScrollableSheet(
         initialChildSize: 0.7,
         maxChildSize: 0.9,
@@ -182,7 +182,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      // backgroundColor centralizzato nel tema
       builder: (context) => StatisticsSheet(trip: _trip!),
     );
   }
@@ -191,7 +191,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      // backgroundColor centralizzato nel tema
       builder: (context) => OptionsSheet(
         trip: _trip!,
         onPinToggle: () async {
@@ -355,7 +355,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      // backgroundColor centralizzato nel tema
       builder: (context) => ExpenseFormSheet(
         group: _trip!,
         title: loc.get('add_expense'),
@@ -393,7 +393,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      // backgroundColor centralizzato nel tema
       builder: (context) => EditExpenseSheet(
         group: _trip!,
         expense: expense,
@@ -451,7 +451,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     final trip = _trip;
     if (trip == null) {
       return Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      // backgroundColor centralizzato nel tema
         body: const Center(child: CircularProgressIndicator()),
       );
     }
@@ -463,7 +463,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         trip.expenses.fold<double>(0, (sum, s) => sum + (s.amount ?? 0));
 
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      // backgroundColor centralizzato nel tema
       body: CustomScrollView(
         slivers: [
           // Hero AppBar con gradiente
@@ -471,7 +471,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             expandedHeight: 10.0,
             floating: false,
             pinned: true,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            // backgroundColor centralizzato nel tema
             foregroundColor: colorScheme.onSurface,
             elevation: 0,
             leading: IconButton(
