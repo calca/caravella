@@ -43,6 +43,7 @@ class ExpenseAmountCard extends StatelessWidget {
 
     return BaseCard(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      backgroundColor: colorScheme.surfaceContainer,
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
         onTap: onTap,
@@ -74,13 +75,13 @@ class ExpenseAmountCard extends StatelessWidget {
                         Icon(
                           Icons.person_outline_rounded,
                           size: 15,
-                          color: colorScheme.outline,
+                          color: colorScheme.onSurface,
                         ),
                         const SizedBox(width: 4),
                         Text(
                           paidBy!,
                           style: textTheme.labelSmall?.copyWith(
-                            color: colorScheme.outline,
+                            color: colorScheme.onSurface,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -96,13 +97,13 @@ class ExpenseAmountCard extends StatelessWidget {
                         Icon(
                           Icons.local_offer_outlined,
                           size: 15,
-                          color: colorScheme.outline,
+                          color: colorScheme.onSurface,
                         ),
                         const SizedBox(width: 4),
                         Text(
                           category!,
                           style: textTheme.labelSmall?.copyWith(
-                            color: colorScheme.outline,
+                            color: colorScheme.onSurface,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -117,13 +118,13 @@ class ExpenseAmountCard extends StatelessWidget {
                         Icon(
                           Icons.schedule_rounded,
                           size: 13,
-                          color: colorScheme.outline.withValues(alpha: 0.7),
+                          color: colorScheme.onSurface.withValues(alpha: 0.7),
                         ),
                         const SizedBox(width: 3),
                         Text(
                           _formatDateTime(date!),
                           style: textTheme.bodySmall?.copyWith(
-                            color: colorScheme.outline.withValues(alpha: 0.7),
+                            color: colorScheme.onSurface.withValues(alpha: 0.7),
                             fontSize: 11,
                           ),
                         ),
