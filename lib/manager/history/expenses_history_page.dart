@@ -30,13 +30,9 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   Timer? _searchDebounce;
 
   final List<Map<String, dynamic>> _statusOptions = [
-    {'key': 'all', 'label': 'Tutti', 'icon': Icons.all_inclusive},
-    {
-      'key': 'active',
-      'label': 'Attivi',
-      'icon': Icons.play_circle_fill_rounded
-    },
-    {'key': 'archived', 'label': 'Archiviati', 'icon': Icons.archive_rounded},
+    {'key': 'all', 'label': 'Tutti', 'icon': Icons.all_inclusive_outlined},
+    {'key': 'active', 'label': 'Attivi', 'icon': Icons.play_circle_outline},
+    {'key': 'archived', 'label': 'Archiviati', 'icon': Icons.archive_outlined},
   ];
 
   @override
@@ -191,41 +187,18 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     bool isSelected,
     VoidCallback onTap,
   ) {
-    return Container(
-      width: 48,
-      height: 48,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        color: isSelected
-            ? Theme.of(context).colorScheme.surfaceContainerHighest
-            : Theme.of(context).colorScheme.surface,
-        border: Border.all(
-          color: isSelected
-              ? Theme.of(context).colorScheme.surfaceContainerHighest
-              : Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
-          width: isSelected ? 2 : 1,
-        ),
+    final colorScheme = Theme.of(context).colorScheme;
+    return IconButton.filledTonal(
+      onPressed: onTap,
+      icon: Icon(
+        icon,
+        size: 20,
+        color: isSelected ? colorScheme.primary : colorScheme.onSurface,
       ),
-      child: Material(
-        borderRadius: BorderRadius.circular(24),
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(24),
-          onTap: onTap,
-          child: Container(
-            padding: const EdgeInsets.all(12),
-            child: Icon(
-              icon,
-              size: 20,
-              color: isSelected
-                  ? Theme.of(context).colorScheme.primary
-                  : Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withValues(alpha: 0.7),
-            ),
-          ),
-        ),
+      style: IconButton.styleFrom(
+        backgroundColor: colorScheme.surfaceContainer,
+        foregroundColor: colorScheme.onSurface,
+        minimumSize: const Size(54, 54),
       ),
     );
   }

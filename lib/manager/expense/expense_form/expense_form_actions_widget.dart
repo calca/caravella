@@ -18,9 +18,8 @@ class ExpenseFormActionsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final saveLabel = isEdit
-        ? loc.get('save_change_expense')
-        : loc.get('add_expense');
+    final saveLabel =
+        isEdit ? loc.get('save_change_expense') : loc.get('add_expense');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
