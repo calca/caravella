@@ -48,7 +48,7 @@ class ExpenseAmountCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         onTap: onTap,
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // ...existing code...
             // Main info (title, person, date)
@@ -132,16 +132,19 @@ class ExpenseAmountCard extends StatelessWidget {
               ),
             ),
             // Amount
-            Padding(
-              padding: const EdgeInsets.only(left: 12.0, top: 2),
-              child: CurrencyDisplay(
-                value: coins.toDouble(),
-                currency: currency,
-                valueFontSize: 32.0,
-                currencyFontSize: 14.0,
-                alignment: MainAxisAlignment.end,
-                showDecimals: false,
-                fontWeight: FontWeight.bold,
+            Align(
+              alignment: Alignment.center,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 12.0),
+                child: CurrencyDisplay(
+                  value: coins.toDouble(),
+                  currency: currency,
+                  valueFontSize: 32.0,
+                  currencyFontSize: 14.0,
+                  alignment: MainAxisAlignment.end,
+                  showDecimals: false,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ],
