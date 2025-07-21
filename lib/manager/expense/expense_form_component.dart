@@ -388,6 +388,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
               },
               onSave: _isFormValid() ? _saveExpense : null,
               loc: loc,
+              isEdit: widget.initialExpense != null,
             ),
             const SizedBox(height: 8),
           ],
