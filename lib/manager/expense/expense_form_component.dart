@@ -48,6 +48,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   double? _amount;
   ExpenseParticipant? _paidBy;
   DateTime? _date;
+  final TextEditingController _nameController = TextEditingController();
+  final FocusNode _nameFocus = FocusNode();
   final _amountController = TextEditingController();
   final FocusNode _amountFocus = FocusNode();
   final TextEditingController _noteController = TextEditingController();
@@ -80,6 +82,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       _amount = widget.initialExpense!.amount;
       _paidBy = widget.initialExpense!.paidBy;
       _date = widget.initialExpense!.date;
+      _nameController.text = widget.initialExpense!.name ?? '';
       // Se amount è null o 0, lascia il campo vuoto
       _amountController.text = (widget.initialExpense!.amount == 0)
           ? ''
@@ -87,6 +90,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       _noteController.text = widget.initialExpense!.note ?? '';
     } else {
       _date = DateTime.now();
+      _nameController.text = '';
     }
 
     // Listener per aggiornare la validazione in tempo reale
@@ -97,9 +101,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       });
     });
 
-    // Focus automatico su importo
+    // Focus automatico su nome spesa
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _amountFocus.requestFocus();
+      _nameFocus.requestFocus();
     });
 
     // Se c'è una nuova categoria, preselezionala
@@ -143,7 +147,11 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         _categories.isNotEmpty ? _category != null : true;
     bool hasPaidBy = _paidBy != null && _paidBy!.name.isNotEmpty;
 
-    if (isFormValid && hasCategoryIfRequired && hasPaidBy) {
+    final nameValue = _nameController.text.trim();
+    if (isFormValid &&
+        hasCategoryIfRequired &&
+        hasPaidBy &&
+        nameValue.isNotEmpty) {
       final expense = ExpenseDetails(
         category: _category ??
             (_categories.isNotEmpty
@@ -157,6 +165,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         date: _date ?? DateTime.now(),
         note:
             widget.initialExpense != null ? _noteController.text.trim() : null,
+        name: nameValue,
       );
       widget.onExpenseAdded(expense);
 
@@ -177,7 +186,11 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     bool hasCategoryIfRequired = _categories.isEmpty || _category != null;
 
     // Il pulsante è abilitato SOLO se tutti i requisiti sono soddisfatti
-    return _isAmountValid && hasPaidBy && hasCategoryIfRequired;
+    final nameValue = _nameController.text.trim();
+    return _isAmountValid &&
+        hasPaidBy &&
+        hasCategoryIfRequired &&
+        nameValue.isNotEmpty;
   }
 
   // Widget per indicatori di stato - versione minimalista
@@ -208,12 +221,31 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // CAMPO NOME SPESA (identico a importo, ora AmountInputWidget supporta testo)
+            _buildFieldWithStatus(
+              AmountInputWidget(
+                controller: _nameController,
+                focusNode: _nameFocus,
+                loc: loc,
+                label: loc.get('expense_name'),
+                validator: (v) => v == null || v.trim().isEmpty
+                    ? 'Il nome è obbligatorio'
+                    : null,
+                onSaved: (v) {},
+                onSubmitted: () {},
+                isText: true,
+              ),
+              _nameController.text.trim().isNotEmpty,
+              _amountTouched,
+            ),
+            const SizedBox(height: 16),
             // IMPORTO + CURRENCY con status
             _buildFieldWithStatus(
               AmountInputWidget(
                 controller: _amountController,
                 focusNode: _amountFocus,
                 categories: _categories,
+                label: loc.get('amount'),
                 loc: loc,
                 validator: (v) => v == null || double.tryParse(v) == null
                     ? loc.get('invalid_amount')
@@ -368,6 +400,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   void dispose() {
     _amountController.dispose();
     _amountFocus.dispose();
+    _nameFocus.dispose();
     _noteController.dispose();
     super.dispose();
   }

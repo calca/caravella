@@ -145,6 +145,7 @@ class AppLocalizations {
       'no_expenses_to_export': 'No expenses to export',
       'export_csv_share_text': 'Expenses exported from ',
       'export_csv_error': 'Error exporting expenses',
+      'expense_name': 'Name',
       'paid_by': 'Paid by',
     },
     'it': {
@@ -300,6 +301,7 @@ class AppLocalizations {
       'no_expenses_to_export': 'Nessuna spesa da esportare',
       'export_csv_share_text': 'Spese esportate da ',
       'export_csv_error': 'Errore nell\'esportazione delle spese',
+      'expense_name': 'Nome',
       'paid_by': 'Pagato da',
     },
   };
