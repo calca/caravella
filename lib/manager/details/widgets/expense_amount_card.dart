@@ -44,6 +44,7 @@ class ExpenseAmountCard extends StatelessWidget {
     return BaseCard(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       backgroundColor: colorScheme.surfaceContainer,
+      noBorder: true,
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
         onTap: onTap,

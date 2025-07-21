@@ -11,6 +11,7 @@ class BaseCard extends StatelessWidget {
   final Color? backgroundColor;
   final BorderRadius? borderRadius;
   final String? backgroundImage;
+  final bool noBorder;
 
   const BaseCard({
     super.key,
@@ -23,6 +24,7 @@ class BaseCard extends StatelessWidget {
     this.backgroundColor,
     this.borderRadius,
     this.backgroundImage,
+    this.noBorder = false,
   });
 
   @override
@@ -49,7 +51,7 @@ class BaseCard extends StatelessWidget {
             BlendMode.srcOver,
           ),
         ),
-        border: isFlat
+        border: (isFlat && !noBorder)
             ? Border.all(
                 color: theme.colorScheme.outline.withValues(alpha: 0.12),
                 width: 1,
@@ -69,7 +71,7 @@ class BaseCard extends StatelessWidget {
       decoration = BoxDecoration(
         color: backgroundColor ?? theme.colorScheme.surfaceContainer,
         borderRadius: effectiveBorderRadius,
-        border: isFlat
+        border: (isFlat && !noBorder)
             ? Border.all(
                 color: theme.colorScheme.outline.withValues(alpha: 0.12),
                 width: 1,

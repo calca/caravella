@@ -34,6 +34,7 @@ class ExpenseGroupCard extends StatelessWidget {
       child: GestureDetector(
         onLongPress: () => onTripOptionsPressed(trip),
         child: BaseCard(
+          noBorder: true,
           margin: const EdgeInsets.symmetric(vertical: 6),
           padding: const EdgeInsets.all(16),
           // backgroundColor centralizzato nel tema
