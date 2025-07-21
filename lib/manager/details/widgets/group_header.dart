@@ -22,11 +22,7 @@ class GroupHeader extends StatelessWidget {
                 height: circleSize,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: colorScheme.primaryFixed,
-                  border: Border.all(
-                    color: colorScheme.outlineVariant,
-                    width: 2,
-                  ),
+                  color: colorScheme.surfaceContainer,
                 ),
                 child: trip.file != null && trip.file!.isNotEmpty
                     ? ClipOval(

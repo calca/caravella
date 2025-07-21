@@ -27,11 +27,11 @@ class GroupActions extends StatelessWidget {
             message: hasExpenses ? 'Overview' : 'Nessuna spesa',
             child: IconButton.filledTonal(
               onPressed: hasExpenses ? onOverview : null,
-              icon: const Icon(Icons.dashboard_customize_rounded),
+              icon: const Icon(Icons.dashboard_customize_outlined),
               iconSize: 24,
               tooltip: 'Overview',
               style: IconButton.styleFrom(
-                backgroundColor: colorScheme.surfaceContainerLowest,
+                backgroundColor: colorScheme.surfaceContainer,
                 foregroundColor: colorScheme.onSurface,
                 minimumSize: const Size(54, 54),
               ),
@@ -42,11 +42,11 @@ class GroupActions extends StatelessWidget {
             message: hasExpenses ? 'Statistiche' : 'Nessuna spesa',
             child: IconButton.filledTonal(
               onPressed: hasExpenses ? onStatistics : null,
-              icon: const Icon(Icons.analytics_rounded),
+              icon: const Icon(Icons.analytics_outlined),
               iconSize: 24,
               tooltip: 'Statistiche',
               style: IconButton.styleFrom(
-                backgroundColor: colorScheme.surfaceContainerLowest,
+                backgroundColor: colorScheme.surfaceContainer,
                 foregroundColor: colorScheme.onSurface,
                 minimumSize: const Size(54, 54),
               ),
@@ -57,11 +57,11 @@ class GroupActions extends StatelessWidget {
             message: 'Opzioni',
             child: IconButton.filledTonal(
               onPressed: onOptions,
-              icon: const Icon(Icons.settings_rounded),
+              icon: const Icon(Icons.settings_outlined),
               iconSize: 24,
               tooltip: 'Opzioni',
               style: IconButton.styleFrom(
-                backgroundColor: colorScheme.surfaceContainerLowest,
+                backgroundColor: colorScheme.surfaceContainer,
                 foregroundColor: colorScheme.onSurface,
                 minimumSize: const Size(54, 54),
               ),
