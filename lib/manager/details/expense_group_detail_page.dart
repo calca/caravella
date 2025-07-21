@@ -451,7 +451,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     final trip = _trip;
     if (trip == null) {
       return Scaffold(
-      // backgroundColor centralizzato nel tema
+        // backgroundColor centralizzato nel tema
         body: const Center(child: CircularProgressIndicator()),
       );
     }
