@@ -136,7 +136,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      // backgroundColor centralizzato nel tema
+      backgroundColor: Colors.transparent,
       builder: (context) => DraggableScrollableSheet(
         initialChildSize: 0.7,
         maxChildSize: 0.9,
@@ -182,7 +182,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      // backgroundColor centralizzato nel tema
+      backgroundColor: Colors.transparent,
       builder: (context) => StatisticsSheet(trip: _trip!),
     );
   }
@@ -191,7 +191,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      // backgroundColor centralizzato nel tema
+      backgroundColor: Colors.transparent,
       builder: (context) => OptionsSheet(
         trip: _trip!,
         onPinToggle: () async {
@@ -355,7 +355,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      // backgroundColor centralizzato nel tema
+      backgroundColor: Colors.transparent,
       builder: (context) => ExpenseFormSheet(
         group: _trip!,
         title: loc.get('add_expense'),
@@ -393,7 +393,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      // backgroundColor centralizzato nel tema
+      backgroundColor: Colors.transparent,
       builder: (context) => EditExpenseSheet(
         group: _trip!,
         expense: expense,
