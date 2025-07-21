@@ -67,46 +67,43 @@ class ExpenseAmountCard extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  if (paidBy != null && paidBy!.isNotEmpty) ...[
+                  if ((paidBy != null && paidBy!.isNotEmpty) ||
+                      (category != null && category!.isNotEmpty)) ...[
                     const SizedBox(height: 6),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(
-                          Icons.person_outline_rounded,
-                          size: 15,
-                          color: colorScheme.onSurface,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          paidBy!,
-                          style: textTheme.labelSmall?.copyWith(
+                        if (paidBy != null && paidBy!.isNotEmpty) ...[
+                          Icon(
+                            Icons.person_outline_rounded,
+                            size: 15,
                             color: colorScheme.onSurface,
-                            fontWeight: FontWeight.w400,
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                  // Categoria dopo paidBy, stesso stile
-                  if (category != null && category!.isNotEmpty) ...[
-                    const SizedBox(height: 6),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.local_offer_outlined,
-                          size: 15,
-                          color: colorScheme.onSurface,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          category!,
-                          style: textTheme.labelSmall?.copyWith(
+                          const SizedBox(width: 4),
+                          Text(
+                            paidBy!,
+                            style: textTheme.labelSmall?.copyWith(
+                              color: colorScheme.onSurface,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ],
+                        if (category != null && category!.isNotEmpty) ...[
+                          const SizedBox(width: 12),
+                          Icon(
+                            Icons.local_offer_outlined,
+                            size: 15,
                             color: colorScheme.onSurface,
-                            fontWeight: FontWeight.w400,
                           ),
-                        ),
+                          const SizedBox(width: 4),
+                          Text(
+                            category!,
+                            style: textTheme.labelSmall?.copyWith(
+                              color: colorScheme.onSurface,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ],
