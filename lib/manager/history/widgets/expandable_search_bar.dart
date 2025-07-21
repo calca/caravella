@@ -70,15 +70,6 @@ class _ExpandableSearchBarState extends State<ExpandableSearchBar>
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),
             color: Theme.of(context).colorScheme.surfaceContainerHighest,
-            border: Border.all(
-              color: widget.isExpanded && widget.searchQuery.isNotEmpty
-                  ? Theme.of(context).colorScheme.primary
-                  : Theme.of(context)
-                      .colorScheme
-                      .outline
-                      .withValues(alpha: 0.2),
-              width: widget.isExpanded && widget.searchQuery.isNotEmpty ? 2 : 1,
-            ),
           ),
           child: widget.isExpanded
               ? _buildExpandedSearch(context)
