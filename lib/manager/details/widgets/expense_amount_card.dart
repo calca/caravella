@@ -49,20 +49,7 @@ class ExpenseAmountCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Category Icon and Name
-            if (category != null && category!.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(right: 12.0, top: 2),
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.local_offer_outlined,
-                      size: 28,
-                      color: colorScheme.secondary,
-                    ),
-                  ],
-                ),
-              ),
+            // ...existing code...
             // Main info (title, person, date)
             Expanded(
               child: Column(
@@ -92,6 +79,28 @@ class ExpenseAmountCard extends StatelessWidget {
                         const SizedBox(width: 4),
                         Text(
                           paidBy!,
+                          style: textTheme.labelSmall?.copyWith(
+                            color: colorScheme.outline,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                  // Categoria dopo paidBy, stesso stile
+                  if (category != null && category!.isNotEmpty) ...[
+                    const SizedBox(height: 6),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.local_offer_outlined,
+                          size: 15,
+                          color: colorScheme.outline,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          category!,
                           style: textTheme.labelSmall?.copyWith(
                             color: colorScheme.outline,
                             fontWeight: FontWeight.w400,
