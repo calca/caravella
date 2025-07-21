@@ -482,7 +482,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           // Header custom sotto l'AppBar
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
