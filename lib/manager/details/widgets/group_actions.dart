@@ -25,7 +25,7 @@ class GroupActions extends StatelessWidget {
         children: [
           Tooltip(
             message: hasExpenses ? 'Overview' : 'Nessuna spesa',
-            child: IconButton.outlined(
+            child: IconButton.filledTonal(
               onPressed: hasExpenses ? onOverview : null,
               icon: const Icon(Icons.dashboard_customize_rounded),
               iconSize: 24,
@@ -40,7 +40,7 @@ class GroupActions extends StatelessWidget {
           const SizedBox(width: 8),
           Tooltip(
             message: hasExpenses ? 'Statistiche' : 'Nessuna spesa',
-            child: IconButton.outlined(
+            child: IconButton.filledTonal(
               onPressed: hasExpenses ? onStatistics : null,
               icon: const Icon(Icons.analytics_rounded),
               iconSize: 24,
@@ -55,7 +55,7 @@ class GroupActions extends StatelessWidget {
           const SizedBox(width: 8),
           Tooltip(
             message: 'Opzioni',
-            child: IconButton.outlined(
+            child: IconButton.filledTonal(
               onPressed: onOptions,
               icon: const Icon(Icons.settings_rounded),
               iconSize: 24,
