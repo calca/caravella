@@ -19,7 +19,7 @@ jobs:
           channel: 'stable'
       - name: Decode keystore from secret
         run: |
-          echo "$KEYSTORE_BASE64" | base64 -d > android/upload-keystore.jks
+          echo "$KEYSTORE_BASE64" | base64 -d > android/app/upload-keystore.jks
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
       - name: Configure signing properties
@@ -71,7 +71,7 @@ jobs:
           channel: 'stable'
       - name: Decode keystore from secret
         run: |
-          echo "$KEYSTORE_BASE64" | base64 -d > android/upload-keystore.jks
+          echo "$KEYSTORE_BASE64" | base64 -d > android/app/upload-keystore.jks
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
       - name: Configure signing properties
