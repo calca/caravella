@@ -141,7 +141,7 @@ class AppLocalizations {
       'theme_dark': 'Dark',
       'developed_by': 'Developed by calca',
       'links': 'Links',
-
+      'daily_expenses_chart': 'Weekly expenses',
       // Export CSV
       'export_csv': 'Export CSV',
       'no_expenses_to_export': 'No expenses to export',
@@ -263,7 +263,7 @@ class AppLocalizations {
       'delete': 'Elimina',
       'no_expenses_for_statistics':
           'Nessuna spesa disponibile per le statistiche',
-      'daily_expenses_chart': 'Grafico spese giornaliere',
+      'daily_expenses_chart': 'Spese settimanali',
       'general_statistics': 'Statistiche generali',
       'average_expense': 'Spesa media',
       'settlement': 'Pareggia',

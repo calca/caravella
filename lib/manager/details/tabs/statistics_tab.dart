@@ -7,6 +7,34 @@ import 'widgets/categories_pie_chart.dart';
 // ...existing code...
 
 class StatisticsTab extends StatelessWidget {
+  /// Aggrega le spese per settimana (lunedì-domenica)
+  Map<DateTime, double> _calculateWeeklyStats() {
+    final dailyStats = _calculateDailyStats();
+    final weeklyStats = <DateTime, double>{};
+    if (dailyStats.isEmpty) return weeklyStats;
+
+    // Trova il primo giorno (lunedì) e l'ultimo giorno
+    final sortedDays = dailyStats.keys.toList()..sort();
+    DateTime firstDay = sortedDays.first;
+    DateTime lastDay = sortedDays.last;
+
+    // Allinea il primo giorno a lunedì
+    firstDay = firstDay.subtract(Duration(days: firstDay.weekday - 1));
+
+    DateTime currentWeekStart = firstDay;
+    while (currentWeekStart.isBefore(lastDay) ||
+        currentWeekStart.isAtSameMomentAs(lastDay)) {
+      double weekTotal = 0.0;
+      for (int i = 0; i < 7; i++) {
+        final day = currentWeekStart.add(Duration(days: i));
+        weekTotal += dailyStats[day] ?? 0.0;
+      }
+      weeklyStats[currentWeekStart] = weekTotal;
+      currentWeekStart = currentWeekStart.add(const Duration(days: 7));
+    }
+    return weeklyStats;
+  }
+
   final ExpenseGroup trip;
 
   const StatisticsTab({super.key, required this.trip});
@@ -37,8 +65,8 @@ class StatisticsTab extends StatelessWidget {
       );
     }
 
-    // Calcola le statistiche per giorni
-    final dailyStats = _calculateDailyStats();
+    // Calcola le statistiche aggregate per settimana
+    final weeklyStats = _calculateWeeklyStats();
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
@@ -48,7 +76,7 @@ class StatisticsTab extends StatelessWidget {
           // Grafico delle spese per giorno
           DailyExpensesChart(
             trip: trip,
-            dailyStats: dailyStats,
+            dailyStats: weeklyStats,
             loc: loc,
           ),
 
@@ -76,12 +104,26 @@ class StatisticsTab extends StatelessWidget {
   Map<DateTime, double> _calculateDailyStats() {
     final stats = <DateTime, double>{};
 
-    // Se non ci sono date definite, usa solo le date delle spese
+    // Se non ci sono date definite, usa il mese corrente
     if (trip.startDate == null || trip.endDate == null) {
+      final now = DateTime.now();
+      final firstDay = DateTime(now.year, now.month, 1);
+      final lastDay = DateTime(now.year, now.month + 1, 0);
+
+      DateTime currentDate = firstDay;
+      while (currentDate.isBefore(lastDay) ||
+          currentDate.isAtSameMomentAs(lastDay)) {
+        stats[currentDate] = 0.0;
+        currentDate = currentDate.add(const Duration(days: 1));
+      }
+
       for (final expense in trip.expenses) {
         final date =
             DateTime(expense.date.year, expense.date.month, expense.date.day);
-        stats[date] = (stats[date] ?? 0.0) + (expense.amount ?? 0.0);
+        // Solo spese del mese corrente
+        if (date.month == now.month && date.year == now.year) {
+          stats[date] = (stats[date] ?? 0.0) + (expense.amount ?? 0.0);
+        }
       }
       return stats;
     }

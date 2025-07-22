@@ -65,7 +65,7 @@ class DailyExpensesChart extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 0),
         SizedBox(
           height: chartHeight,
           child: SingleChildScrollView(
