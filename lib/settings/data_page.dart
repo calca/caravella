@@ -44,7 +44,7 @@ class DataPage extends StatelessWidget {
                 minLeadingWidth: 0,
                 title: Text(localization.get('backup'),
                     style: textTheme.titleMedium),
-                subtitle: Text('Crea un file di backup delle tue spese.'),
+                subtitle: const Text('Crea un file di backup delle tue spese.'),
                 trailing: const Icon(Icons.arrow_forward_ios, size: 18),
                 onTap: () async {
                   await _backupTrips(context, localization);
@@ -64,7 +64,8 @@ class DataPage extends StatelessWidget {
                 leading: const Icon(Icons.download_outlined),
                 minLeadingWidth: 0,
                 title: Text('Ripristino', style: textTheme.titleMedium),
-                subtitle: Text('Importa un backup per ripristinare i dati.'),
+                subtitle:
+                    const Text('Importa un backup per ripristinare i dati.'),
                 trailing: const Icon(Icons.arrow_forward_ios, size: 18),
                 onTap: () async {
                   await _importTrips(context, localization);

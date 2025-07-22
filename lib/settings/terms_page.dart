@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../app_localizations.dart';
 import '../state/locale_notifier.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 
 class TermsPage extends StatelessWidget {
   const TermsPage({super.key});
@@ -11,7 +10,6 @@ class TermsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
     final loc = AppLocalizations(locale);
-    const flavor = String.fromEnvironment('FLAVOR', defaultValue: 'staging');
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
