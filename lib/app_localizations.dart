@@ -149,6 +149,13 @@ class AppLocalizations {
       'export_csv_error': 'Error exporting expenses',
       'expense_name': 'Name',
       'paid_by': 'Paid by',
+      // CSV column headers
+      'csv_expense_name': 'Name',
+      'csv_amount': 'Amount',
+      'csv_paid_by': 'Paid by',
+      'csv_category': 'Category',
+      'csv_date': 'Date',
+      'csv_note': 'Note',
     },
     'it': {
       'save_change_expense': 'Salva modifiche',
@@ -307,6 +314,13 @@ class AppLocalizations {
       'export_csv_error': 'Errore nell\'esportazione delle spese',
       'expense_name': 'Nome',
       'paid_by': 'Pagato da',
+      // Intestazioni colonne CSV
+      'csv_expense_name': 'Nome',
+      'csv_amount': 'Importo',
+      'csv_paid_by': 'Pagato da',
+      'csv_category': 'Categoria',
+      'csv_date': 'Data',
+      'csv_note': 'Nota',
     },
   };
 

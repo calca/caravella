@@ -38,8 +38,17 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   String _generateCsvContent() {
     if (_trip == null || _trip!.expenses.isEmpty) return '';
     final buffer = StringBuffer();
-    // Header
-    buffer.writeln('Nome,Importo,Pagate da,Categoria,Data,Nota');
+    // Header localizzato
+    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
+    final loc = AppLocalizations(locale);
+    buffer.writeln([
+      loc.get('csv_expense_name'),
+      loc.get('csv_amount'),
+      loc.get('csv_paid_by'),
+      loc.get('csv_category'),
+      loc.get('csv_date'),
+      loc.get('csv_note'),
+    ].join(','));
     for (final e in _trip!.expenses) {
       buffer.writeln([
         _escapeCsvValue(e.name ?? ''),
