@@ -64,7 +64,7 @@ class GroupHeader extends StatelessWidget {
                         ),
                       ),
               ),
-              if (trip.archived)
+              if (trip.pinned || trip.archived)
                 Positioned(
                   bottom: 0,
                   right: 0,
@@ -75,7 +75,9 @@ class GroupHeader extends StatelessWidget {
                     ),
                     padding: const EdgeInsets.all(12),
                     child: Icon(
-                      Icons.archive_outlined,
+                      trip.pinned
+                          ? Icons.push_pin_outlined
+                          : Icons.archive_outlined,
                       size: circleSize * 0.15,
                       color: colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
