@@ -64,7 +64,9 @@ class OptionsSheet extends StatelessWidget {
                     // Pin/Unpin action
                     ListTile(
                       leading: Icon(
-                        trip.pinned ? Icons.push_pin : Icons.push_pin_outlined,
+                        trip.pinned
+                            ? Icons.push_pin_outlined
+                            : Icons.push_pin_outlined,
                         color: Theme.of(context).colorScheme.onPrimaryFixed,
                       ),
                       title: Text(trip.pinned
@@ -76,8 +78,8 @@ class OptionsSheet extends StatelessWidget {
                     ListTile(
                       leading: Icon(
                         trip.archived
-                            ? Icons.unarchive_rounded
-                            : Icons.archive_rounded,
+                            ? Icons.unarchive_outlined
+                            : Icons.archive_outlined,
                         color: Theme.of(context).colorScheme.onPrimaryFixed,
                       ),
                       title: Text(trip.archived
@@ -89,7 +91,7 @@ class OptionsSheet extends StatelessWidget {
                     // Edit Group action
                     ListTile(
                       leading: Icon(
-                        Icons.edit_rounded,
+                        Icons.edit_outlined,
                         color: Theme.of(context).colorScheme.onPrimaryFixed,
                       ),
                       title: Text(loc.get('edit_group')),
@@ -99,7 +101,7 @@ class OptionsSheet extends StatelessWidget {
                     // Download CSV action
                     ListTile(
                       leading: Icon(
-                        Icons.file_download_rounded,
+                        Icons.file_download_outlined,
                         color: Theme.of(context).colorScheme.onPrimaryFixed,
                       ),
                       title: Text(loc.get('download_all_csv')),
@@ -108,7 +110,7 @@ class OptionsSheet extends StatelessWidget {
                     // Share CSV action
                     ListTile(
                       leading: Icon(
-                        Icons.share_rounded,
+                        Icons.share_outlined,
                         color: Theme.of(context).colorScheme.onPrimaryFixed,
                       ),
                       title: Text(loc.get('share_all_csv')),
@@ -118,7 +120,7 @@ class OptionsSheet extends StatelessWidget {
                     // Delete action
                     ListTile(
                       leading: Icon(
-                        Icons.delete_rounded,
+                        Icons.delete_outline,
                         color: Theme.of(context).colorScheme.tertiary,
                       ),
                       title: Text(
