@@ -35,10 +35,10 @@ class TermsPage extends StatelessWidget {
                     contentPadding: EdgeInsets.zero,
                     leading: Icon(Icons.person,
                         color: colorScheme.onSurface, size: 20),
-                    title: Text('GitHub: calca',
+                    title: Text(loc.get('terms_github_title'),
                         style: textTheme.bodyMedium
                             ?.copyWith(color: colorScheme.onSurface)),
-                    subtitle: Text('Profilo dello sviluppatore su GitHub.',
+                    subtitle: Text(loc.get('terms_github_desc'),
                         style: textTheme.bodySmall
                             ?.copyWith(color: colorScheme.onSurface)),
                     trailing: const Icon(Icons.arrow_forward_ios, size: 18),
@@ -53,10 +53,10 @@ class TermsPage extends StatelessWidget {
                     contentPadding: EdgeInsets.zero,
                     leading: Icon(Icons.code,
                         color: colorScheme.onSurface, size: 20),
-                    title: Text('GitHub Repository',
+                    title: Text(loc.get('terms_repo_title'),
                         style: textTheme.bodyMedium
                             ?.copyWith(color: colorScheme.onSurface)),
-                    subtitle: Text('Codice sorgente dell’applicazione.',
+                    subtitle: Text(loc.get('terms_repo_desc'),
                         style: textTheme.bodySmall
                             ?.copyWith(color: colorScheme.onSurface)),
                     trailing: const Icon(Icons.arrow_forward_ios, size: 18),
@@ -71,10 +71,10 @@ class TermsPage extends StatelessWidget {
                     contentPadding: EdgeInsets.zero,
                     leading: Icon(Icons.bug_report,
                         color: colorScheme.onSurface, size: 20),
-                    title: Text('Segnala un problema',
+                    title: Text(loc.get('terms_issue_title'),
                         style: textTheme.bodyMedium
                             ?.copyWith(color: colorScheme.onSurface)),
-                    subtitle: Text('Vai alla pagina delle issue su GitHub.',
+                    subtitle: Text(loc.get('terms_issue_desc'),
                         style: textTheme.bodySmall
                             ?.copyWith(color: colorScheme.onSurface)),
                     trailing: const Icon(Icons.arrow_forward_ios, size: 18),
@@ -92,7 +92,7 @@ class TermsPage extends StatelessWidget {
                     title: Text(loc.get('license_link'),
                         style: textTheme.bodyMedium
                             ?.copyWith(color: colorScheme.onSurface)),
-                    subtitle: Text('Visualizza la licenza open source.',
+                    subtitle: Text(loc.get('terms_license_desc'),
                         style: textTheme.bodySmall
                             ?.copyWith(color: colorScheme.onSurface)),
                     trailing: const Icon(Icons.arrow_forward_ios, size: 18),
