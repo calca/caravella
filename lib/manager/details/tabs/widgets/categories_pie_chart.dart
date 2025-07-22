@@ -75,86 +75,89 @@ class CategoriesPieChart extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 24),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 180,
+              width: 180,
+              child: PieChart(
+                PieChartData(
+                  sectionsSpace: 2,
+                  centerSpaceRadius: 40,
+                  startDegreeOffset: -90,
+                  sections: sortedEntries.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final categoryEntry = entry.value;
+                    final percentage = (categoryEntry.value /
+                            categoryTotals.values.reduce((a, b) => a + b)) *
+                        100;
 
-        // Grafico a torta
-        SizedBox(
-          height: 200,
-          child: PieChart(
-            PieChartData(
-              sectionsSpace: 2,
-              centerSpaceRadius: 60,
-              startDegreeOffset: -90,
-              sections: sortedEntries.asMap().entries.map((entry) {
-                final index = entry.key;
-                final categoryEntry = entry.value;
-                final percentage = (categoryEntry.value /
-                        categoryTotals.values.reduce((a, b) => a + b)) *
-                    100;
-
-                return PieChartSectionData(
-                  color: colors[index % colors.length],
-                  value: categoryEntry.value,
-                  title: '${percentage.toStringAsFixed(0)}%',
-                  radius: 50,
-                  titleStyle: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    return PieChartSectionData(
+                      color: colors[index % colors.length],
+                      value: categoryEntry.value,
+                      title: '${percentage.toStringAsFixed(0)}%',
+                      radius: 60,
+                      titleStyle: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                      badgeWidget: null,
+                    );
+                  }).toList(),
+                  pieTouchData: PieTouchData(
+                    enabled: true,
+                    touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                      // Aggiungi interattività se necessario
+                    },
                   ),
-                  badgeWidget: null,
-                );
-              }).toList(),
-              pieTouchData: PieTouchData(
-                enabled: true,
-                touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                  // Aggiungi interattività se necessario
-                },
+                ),
               ),
             ),
-          ),
-        ),
-
-        const SizedBox(height: 16),
-
-        // Leggenda sotto il grafico
-        Wrap(
-          spacing: 16,
-          runSpacing: 8,
-          children: sortedEntries.asMap().entries.map((entry) {
-            final index = entry.key;
-            final categoryEntry = entry.value;
-
-            return Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 12,
-                  height: 12,
-                  decoration: BoxDecoration(
-                    color: colors[index % colors.length],
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  categoryEntry.key.name,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w500,
+            const SizedBox(width: 40),
+            // Legenda verticale a destra
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: sortedEntries.asMap().entries.map((entry) {
+                final index = entry.key;
+                final categoryEntry = entry.value;
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 14,
+                        height: 14,
+                        decoration: BoxDecoration(
+                          color: colors[index % colors.length],
+                          shape: BoxShape.circle,
+                        ),
                       ),
-                ),
-                const SizedBox(width: 4),
-                CurrencyDisplay(
-                  value: categoryEntry.value,
-                  currency: trip.currency,
-                  valueFontSize: 11,
-                  currencyFontSize: 9,
-                  showDecimals: false,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-              ],
-            );
-          }).toList(),
+                      const SizedBox(width: 8),
+                      Text(
+                        categoryEntry.key.name,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w500,
+                            ),
+                      ),
+                      const SizedBox(width: 6),
+                      CurrencyDisplay(
+                        value: categoryEntry.value,
+                        currency: trip.currency,
+                        valueFontSize: 12,
+                        currencyFontSize: 10,
+                        showDecimals: false,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
         ),
       ],
     );

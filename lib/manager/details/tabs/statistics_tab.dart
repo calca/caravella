@@ -55,9 +55,16 @@ class StatisticsTab extends StatelessWidget {
           const SizedBox(height: 32),
 
           // Grafico a torta per categorie
-          CategoriesPieChart(
-            trip: trip,
-            loc: loc,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: CategoriesPieChart(
+                  trip: trip,
+                  loc: loc,
+                ),
+              ),
+            ],
           ),
 
           // ...existing code...
