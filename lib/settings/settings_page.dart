@@ -277,7 +277,8 @@ class SettingsPage extends StatelessWidget {
                   child: ListTile(
                     leading: const Icon(Icons.info_outline),
                     title: Text('Informazioni', style: textTheme.titleMedium),
-                    subtitle: Text('Sviluppatore, Source code e Licenza', style: textTheme.bodySmall),
+                    subtitle: Text('Sviluppatore, Source code e Licenza',
+                        style: textTheme.bodySmall),
                     trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                     onTap: () {
                       Navigator.of(context).push(
