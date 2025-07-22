@@ -4,7 +4,7 @@ import '../../../app_localizations.dart';
 import '../../../state/locale_notifier.dart';
 import 'widgets/daily_expenses_chart.dart';
 import 'widgets/categories_pie_chart.dart';
-import 'widgets/general_stats.dart';
+// ...existing code...
 
 class StatisticsTab extends StatelessWidget {
   final ExpenseGroup trip;
@@ -60,13 +60,7 @@ class StatisticsTab extends StatelessWidget {
             loc: loc,
           ),
 
-          const SizedBox(height: 32),
-
-          // Statistiche generali
-          GeneralStats(
-            trip: trip,
-            loc: loc,
-          ),
+          // ...existing code...
         ],
       ),
     );
