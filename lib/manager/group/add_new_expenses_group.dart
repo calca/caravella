@@ -578,12 +578,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                 style: TextStyle(fontWeight: FontWeight.bold)),
                           ],
                         ),
-                        OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.all(8),
-                            minimumSize: const Size(32, 32),
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
+                        IconButton.filledTonal(
+                          icon: const Icon(Icons.add, size: 18),
                           onPressed: () {
                             showDialog(
                               context: context,
@@ -631,7 +627,13 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                               ),
                             );
                           },
-                          child: const Icon(Icons.add, size: 18),
+                          style: IconButton.styleFrom(
+                            backgroundColor:
+                                Theme.of(context).colorScheme.surfaceContainer,
+                            foregroundColor:
+                                Theme.of(context).colorScheme.onSurface,
+                            minimumSize: const Size(54, 54),
+                          ),
                         ),
                       ],
                     ),
@@ -702,21 +704,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                 ),
                               ),
                               const SizedBox(width: 8),
-                              OutlinedButton(
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor: Theme.of(context)
-                                      .colorScheme
-                                      .onSurfaceVariant,
-                                  side: BorderSide(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurfaceVariant),
-                                  padding: const EdgeInsets.all(8),
-                                  minimumSize: const Size(36, 36),
-                                  shape: const CircleBorder(),
-                                  tapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                ),
+                              IconButton.filledTonal(
+                                icon: const Icon(Icons.edit_outlined, size: 20),
                                 onPressed: () {
                                   final editController =
                                       TextEditingController(text: p.name);
@@ -769,30 +758,32 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                     ),
                                   );
                                 },
-                                child:
-                                    const Icon(Icons.edit_outlined, size: 20),
+                                style: IconButton.styleFrom(
+                                  backgroundColor: Theme.of(context)
+                                      .colorScheme
+                                      .surfaceContainer,
+                                  foregroundColor:
+                                      Theme.of(context).colorScheme.onSurface,
+                                  minimumSize: const Size(54, 54),
+                                ),
                               ),
                               const SizedBox(width: 4),
-                              OutlinedButton(
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor:
-                                      Theme.of(context).colorScheme.error,
-                                  side: BorderSide(
-                                      color:
-                                          Theme.of(context).colorScheme.error),
-                                  padding: const EdgeInsets.all(8),
-                                  minimumSize: const Size(36, 36),
-                                  shape: const CircleBorder(),
-                                  tapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                ),
+                              IconButton.filledTonal(
+                                icon:
+                                    const Icon(Icons.delete_outline, size: 20),
                                 onPressed: () {
                                   setState(() {
                                     _participants.removeAt(i);
                                   });
                                 },
-                                child:
-                                    const Icon(Icons.delete_outline, size: 20),
+                                style: IconButton.styleFrom(
+                                  backgroundColor: Theme.of(context)
+                                      .colorScheme
+                                      .surfaceContainer,
+                                  foregroundColor:
+                                      Theme.of(context).colorScheme.error,
+                                  minimumSize: const Size(54, 54),
+                                ),
                               ),
                             ],
                           ),
@@ -826,12 +817,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                 style: TextStyle(fontWeight: FontWeight.bold)),
                           ],
                         ),
-                        OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.all(8),
-                            minimumSize: const Size(32, 32),
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
+                        IconButton.filledTonal(
+                          icon: const Icon(Icons.add, size: 18),
                           onPressed: () {
                             showDialog(
                               context: context,
@@ -881,7 +868,13 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                               },
                             );
                           },
-                          child: const Icon(Icons.add, size: 18),
+                          style: IconButton.styleFrom(
+                            backgroundColor:
+                                Theme.of(context).colorScheme.surfaceContainer,
+                            foregroundColor:
+                                Theme.of(context).colorScheme.onSurface,
+                            minimumSize: const Size(54, 54),
+                          ),
                         ),
                       ],
                     ),
@@ -952,21 +945,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                 ),
                               ),
                               const SizedBox(width: 8),
-                              OutlinedButton(
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor: Theme.of(context)
-                                      .colorScheme
-                                      .onSurfaceVariant,
-                                  side: BorderSide(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurfaceVariant),
-                                  padding: const EdgeInsets.all(8),
-                                  minimumSize: const Size(36, 36),
-                                  shape: const CircleBorder(),
-                                  tapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                ),
+                              IconButton.filledTonal(
+                                icon: const Icon(Icons.edit_outlined, size: 20),
                                 onPressed: () {
                                   final editController =
                                       TextEditingController(text: c.name);
@@ -1016,30 +996,32 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                     ),
                                   );
                                 },
-                                child:
-                                    const Icon(Icons.edit_outlined, size: 20),
+                                style: IconButton.styleFrom(
+                                  backgroundColor: Theme.of(context)
+                                      .colorScheme
+                                      .surfaceContainer,
+                                  foregroundColor:
+                                      Theme.of(context).colorScheme.onSurface,
+                                  minimumSize: const Size(54, 54),
+                                ),
                               ),
                               const SizedBox(width: 4),
-                              OutlinedButton(
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor:
-                                      Theme.of(context).colorScheme.error,
-                                  side: BorderSide(
-                                      color:
-                                          Theme.of(context).colorScheme.error),
-                                  padding: const EdgeInsets.all(8),
-                                  minimumSize: const Size(36, 36),
-                                  shape: const CircleBorder(),
-                                  tapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                ),
+                              IconButton.filledTonal(
+                                icon:
+                                    const Icon(Icons.delete_outline, size: 20),
                                 onPressed: () {
                                   setState(() {
                                     _categories.removeAt(i);
                                   });
                                 },
-                                child:
-                                    const Icon(Icons.delete_outline, size: 20),
+                                style: IconButton.styleFrom(
+                                  backgroundColor: Theme.of(context)
+                                      .colorScheme
+                                      .surfaceContainer,
+                                  foregroundColor:
+                                      Theme.of(context).colorScheme.error,
+                                  minimumSize: const Size(54, 54),
+                                ),
                               ),
                             ],
                           ),
