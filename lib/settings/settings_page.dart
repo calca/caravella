@@ -275,9 +275,9 @@ class SettingsPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: ListTile(
-                    leading: const Icon(Icons.verified_user_outlined),
-                    title: Text('Termini di servizio',
-                        style: textTheme.titleMedium),
+                    leading: const Icon(Icons.info_outline),
+                    title: Text('Informazioni', style: textTheme.titleMedium),
+                    subtitle: Text('Sviluppatore, Source code e Licenza', style: textTheme.bodySmall),
                     trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                     onTap: () {
                       Navigator.of(context).push(

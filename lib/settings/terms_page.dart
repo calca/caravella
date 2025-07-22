@@ -16,7 +16,6 @@ class TermsPage extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
       appBar: AppBar(
-        title: Text(loc.get('Termini di servizio')),
         backgroundColor: colorScheme.surface,
         foregroundColor: colorScheme.onSurface,
         elevation: 0,
@@ -26,7 +25,7 @@ class TermsPage extends StatelessWidget {
         children: [
           Card(
             elevation: 0,
-            color: colorScheme.surfaceContainer,
+            color: colorScheme.surface,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             child: Padding(
@@ -34,62 +33,17 @@ class TermsPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Icon(Icons.info_outline,
-                          color: colorScheme.primary, size: 22),
-                      const SizedBox(width: 8),
-                      Text(loc.get('about'),
-                          style: textTheme.titleSmall
-                              ?.copyWith(fontWeight: FontWeight.w600)),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  FutureBuilder<PackageInfo>(
-                    future: PackageInfo.fromPlatform(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState != ConnectionState.done) {
-                        return Text('Caravella ...',
-                            style: textTheme.bodyMedium);
-                      }
-                      final info = snapshot.data;
-                      final version = info?.version ?? '-';
-                      return Text('Caravella v$version ($flavor)',
-                          style: textTheme.bodyMedium);
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Card(
-            elevation: 0,
-            color: colorScheme.surfaceContainer,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.link, color: colorScheme.primary, size: 22),
-                      const SizedBox(width: 8),
-                      Text(loc.get('links'),
-                          style: textTheme.titleSmall
-                              ?.copyWith(fontWeight: FontWeight.w600)),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: Icon(Icons.person,
-                        color: colorScheme.primary, size: 20),
+                        color: colorScheme.onSurface, size: 20),
                     title: Text('GitHub: calca',
                         style: textTheme.bodyMedium
-                            ?.copyWith(color: colorScheme.primary)),
+                            ?.copyWith(color: colorScheme.onSurface)),
+                    subtitle: Text('Profilo dello sviluppatore su GitHub.',
+                        style: textTheme.bodySmall
+                            ?.copyWith(color: colorScheme.onSurface)),
+                    trailing: const Icon(Icons.arrow_forward_ios, size: 18),
                     onTap: () =>
                         _launchUrl(context, 'https://github.com/calca'),
                     shape: RoundedRectangleBorder(
@@ -99,11 +53,15 @@ class TermsPage extends StatelessWidget {
                   ),
                   ListTile(
                     contentPadding: EdgeInsets.zero,
-                    leading:
-                        Icon(Icons.code, color: colorScheme.primary, size: 20),
+                    leading: Icon(Icons.code,
+                        color: colorScheme.onSurface, size: 20),
                     title: Text('GitHub Repository',
                         style: textTheme.bodyMedium
-                            ?.copyWith(color: colorScheme.primary)),
+                            ?.copyWith(color: colorScheme.onSurface)),
+                    subtitle: Text('Codice sorgente dell’applicazione.',
+                        style: textTheme.bodySmall
+                            ?.copyWith(color: colorScheme.onSurface)),
+                    trailing: const Icon(Icons.arrow_forward_ios, size: 18),
                     onTap: () => _launchUrl(
                         context, 'https://github.com/calca/caravella'),
                     shape: RoundedRectangleBorder(
@@ -111,41 +69,35 @@ class TermsPage extends StatelessWidget {
                     minLeadingWidth: 0,
                     horizontalTitleGap: 8,
                   ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Card(
-            elevation: 0,
-            color: colorScheme.surfaceContainer,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.description,
-                          color: colorScheme.primary, size: 22),
-                      const SizedBox(width: 8),
-                      Text(loc.get('license_section'),
-                          style: textTheme.titleSmall
-                              ?.copyWith(fontWeight: FontWeight.w600)),
-                    ],
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: Icon(Icons.bug_report,
+                        color: colorScheme.onSurface, size: 20),
+                    title: Text('Segnala un problema',
+                        style: textTheme.bodyMedium
+                            ?.copyWith(color: colorScheme.onSurface)),
+                    subtitle: Text('Vai alla pagina delle issue su GitHub.',
+                        style: textTheme.bodySmall
+                            ?.copyWith(color: colorScheme.onSurface)),
+                    trailing: const Icon(Icons.arrow_forward_ios, size: 18),
+                    onTap: () => _launchUrl(
+                        context, 'https://github.com/calca/caravella/issues'),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                    minLeadingWidth: 0,
+                    horizontalTitleGap: 8,
                   ),
-                  const SizedBox(height: 10),
-                  Text(loc.get('license_hint'), style: textTheme.bodySmall),
-                  const SizedBox(height: 8),
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: Icon(Icons.open_in_new,
-                        color: colorScheme.primary, size: 20),
+                        color: colorScheme.onSurface, size: 20),
                     title: Text(loc.get('license_link'),
                         style: textTheme.bodyMedium
-                            ?.copyWith(color: colorScheme.primary)),
+                            ?.copyWith(color: colorScheme.onSurface)),
+                    subtitle: Text('Visualizza la licenza open source.',
+                        style: textTheme.bodySmall
+                            ?.copyWith(color: colorScheme.onSurface)),
+                    trailing: const Icon(Icons.arrow_forward_ios, size: 18),
                     onTap: () => _launchUrl(context,
                         'https://github.com/calca/caravella/blob/main/LICENSE'),
                     shape: RoundedRectangleBorder(
