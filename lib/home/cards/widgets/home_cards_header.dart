@@ -27,6 +27,19 @@ class HomeCardsHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color getFlavorBgColor() {
+      const flavor = String.fromEnvironment('FLAVOR', defaultValue: 'staging');
+      switch (flavor) {
+        case 'prod':
+          return theme.colorScheme.surfaceContainerHigh;
+        case 'dev':
+          return theme.colorScheme.tertiaryFixed;
+        case 'staging':
+        default:
+          return theme.colorScheme.secondaryFixed;
+      }
+    }
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 0),
       child: Row(
@@ -36,7 +49,7 @@ class HomeCardsHeader extends StatelessWidget {
             width: 56,
             height: 56,
             decoration: BoxDecoration(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
+              color: getFlavorBgColor(),
               shape: BoxShape.circle,
             ),
             child: Icon(
