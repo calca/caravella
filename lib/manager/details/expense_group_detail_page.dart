@@ -39,12 +39,13 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     if (_trip == null || _trip!.expenses.isEmpty) return '';
     final buffer = StringBuffer();
     // Header
-    buffer.writeln('Categoria,Importo,Pagate da,Data,Nota');
+    buffer.writeln('Nome,Importo,Pagate da,Categoria,Data,Nota');
     for (final e in _trip!.expenses) {
       buffer.writeln([
-        _escapeCsvValue(e.category.name),
+        _escapeCsvValue(e.name ?? ''),
         e.amount?.toStringAsFixed(2) ?? '',
         _escapeCsvValue(e.paidBy.name),
+        _escapeCsvValue(e.category.name),
         e.date.toIso8601String().split('T').first,
         _escapeCsvValue(e.note ?? ''),
       ].join(','));
