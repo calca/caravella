@@ -70,20 +70,13 @@ class GroupHeader extends StatelessWidget {
                   right: 0,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: colorScheme.surface,
+                      color: colorScheme.surfaceDim,
                       shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.08),
-                          blurRadius: 4,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
                     ),
-                    padding: const EdgeInsets.all(4),
+                    padding: const EdgeInsets.all(12),
                     child: Icon(
-                      Icons.archive_rounded,
-                      size: circleSize * 0.3,
+                      Icons.archive_outlined,
+                      size: circleSize * 0.15,
                       color: colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
