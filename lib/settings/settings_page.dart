@@ -10,6 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:archive/archive_io.dart';
 import 'package:file_picker/file_picker.dart';
+import 'terms_page.dart';
 
 class SettingsPage extends StatelessWidget {
   final void Function(String)? onLocaleChanged;
@@ -297,7 +298,11 @@ class SettingsPage extends StatelessWidget {
                         style: textTheme.titleMedium),
                     trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                     onTap: () {
-                      // TODO: Apri pagina termini di servizio
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (ctx) => const TermsPage(),
+                        ),
+                      );
                     },
                   ),
                 ),
