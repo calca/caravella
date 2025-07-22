@@ -228,7 +228,7 @@ class GroupCardContent extends StatelessWidget {
         ),
         if (currentGroup.pinned)
           Icon(
-            Icons.push_pin,
+            Icons.push_pin_outlined,
             size: _iconSize,
             color: theme.colorScheme.onSurface,
           ),
