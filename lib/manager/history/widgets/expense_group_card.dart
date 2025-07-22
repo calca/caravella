@@ -67,20 +67,11 @@ class ExpenseGroupCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        if (trip.pinned)
-                          Padding(
-                            padding: const EdgeInsets.only(left: 6),
-                            child: Icon(
-                              Icons.push_pin_rounded,
-                              size: 18,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
                       ],
                     ),
                   ),
-                  // Icona stato (solo se archiviato)
-                  if (trip.archived) _buildStatusIcon(context),
+                  // Icona stato (pinned, archiviato, attivo)
+                  _buildStatusIcon(context),
                 ],
               ),
               const SizedBox(height: 12),
@@ -184,25 +175,27 @@ class ExpenseGroupCard extends StatelessWidget {
   }
 
   Widget _buildStatusIcon(BuildContext context) {
-    final isArchived = trip.archived;
-    final iconData =
-        isArchived ? Icons.archive_rounded : Icons.play_circle_fill_rounded;
-    final iconColor = isArchived
-        ? Theme.of(context).colorScheme.outline
-        : Theme.of(context).colorScheme.primary;
-
-    return Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: iconColor.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Icon(
-        iconData,
-        size: 20,
-        color: iconColor,
-      ),
-    );
+    if (trip.pinned) {
+      return Container(
+        padding: const EdgeInsets.all(8),
+        child: Icon(
+          Icons.push_pin_outlined,
+          size: 20,
+          color: Theme.of(context).colorScheme.outline,
+        ),
+      );
+    } else if (trip.archived) {
+      return Container(
+        padding: const EdgeInsets.all(8),
+        child: Icon(
+          Icons.archive_outlined,
+          size: 20,
+          color: Theme.of(context).colorScheme.outline,
+        ),
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
   }
 
   Widget _buildDateRow(BuildContext context) {
