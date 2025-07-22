@@ -26,7 +26,7 @@ class SettingsPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
             child: Text(
-              'Generali',
+              loc.get('settings_general'),
               style: textTheme.titleSmall?.copyWith(
                 color: colorScheme.onSurface,
                 fontWeight: FontWeight.bold,
@@ -46,8 +46,8 @@ class SettingsPage extends StatelessWidget {
                   ),
                   child: ListTile(
                     leading: const Icon(Icons.language),
-                    title: Text('Lingua', style: textTheme.titleMedium),
-                    subtitle: Text(locale == 'it' ? 'Italiano' : 'English'),
+                    title: Text(loc.get('settings_language'), style: textTheme.titleMedium),
+                    subtitle: Text(locale == 'it' ? loc.get('settings_language_it') : loc.get('settings_language_en')),
                     trailing: const Icon(Icons.arrow_drop_down),
                     onTap: () {
                       showModalBottomSheet(
@@ -66,7 +66,7 @@ class SettingsPage extends StatelessWidget {
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Text('Seleziona lingua',
+                                    Text(loc.get('settings_select_language'),
                                         style: Theme.of(context)
                                             .textTheme
                                             .titleMedium),
@@ -74,7 +74,7 @@ class SettingsPage extends StatelessWidget {
                                     RadioListTile<String>(
                                       value: 'it',
                                       groupValue: selectedLocale,
-                                      title: const Text('Italiano'),
+                                      title: Text(loc.get('settings_language_it')),
                                       onChanged: (value) {
                                         setState(() => selectedLocale = value!);
                                         LocaleNotifier.of(context)
@@ -88,7 +88,7 @@ class SettingsPage extends StatelessWidget {
                                     RadioListTile<String>(
                                       value: 'en',
                                       groupValue: selectedLocale,
-                                      title: const Text('English'),
+                                      title: Text(loc.get('settings_language_en')),
                                       onChanged: (value) {
                                         setState(() => selectedLocale = value!);
                                         LocaleNotifier.of(context)
@@ -119,7 +119,7 @@ class SettingsPage extends StatelessWidget {
                   ),
                   child: ListTile(
                     leading: const Icon(Icons.brightness_6),
-                    title: Text('Tema', style: textTheme.titleMedium),
+                    title: Text(loc.get('settings_theme'), style: textTheme.titleMedium),
                     subtitle: Text(loc.get('theme_automatic')),
                     trailing: const Icon(Icons.arrow_drop_down),
                     onTap: () {
@@ -142,7 +142,7 @@ class SettingsPage extends StatelessWidget {
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Text('Seleziona tema',
+                                    Text(loc.get('settings_select_theme'),
                                         style: Theme.of(context)
                                             .textTheme
                                             .titleMedium),
@@ -197,7 +197,7 @@ class SettingsPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
             child: Text(
-              'Dati',
+              loc.get('settings_data'),
               style: textTheme.titleSmall?.copyWith(
                 color: colorScheme.onSurface,
                 fontWeight: FontWeight.bold,
@@ -215,8 +215,8 @@ class SettingsPage extends StatelessWidget {
               ),
               child: ListTile(
                 leading: const Icon(Icons.storage_outlined),
-                title: Text('Gestione dati', style: textTheme.titleMedium),
-                subtitle: const Text('Backup e importazione'),
+                title: Text(loc.get('settings_data_manage'), style: textTheme.titleMedium),
+                subtitle: Text(loc.get('settings_data_desc')),
                 trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                 onTap: () {
                   Navigator.of(context).push(
@@ -231,7 +231,7 @@ class SettingsPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
             child: Text(
-              'Informazioni',
+              loc.get('settings_info'),
               style: textTheme.titleSmall?.copyWith(
                 color: colorScheme.onSurface,
                 fontWeight: FontWeight.bold,
@@ -252,7 +252,7 @@ class SettingsPage extends StatelessWidget {
                   child: ListTile(
                     leading: const Icon(Icons.info_outline),
                     title:
-                        Text("Versione dell'app", style: textTheme.titleMedium),
+                        Text(loc.get('settings_app_version'), style: textTheme.titleMedium),
                     subtitle: FutureBuilder<String>(
                       future: _getAppVersion(),
                       builder: (context, snapshot) {
@@ -270,8 +270,8 @@ class SettingsPage extends StatelessWidget {
                   ),
                   child: ListTile(
                     leading: const Icon(Icons.info_outline),
-                    title: Text('Informazioni', style: textTheme.titleMedium),
-                    subtitle: Text('Sviluppatore, Source code e Licenza',
+                    title: Text(loc.get('settings_info_card'), style: textTheme.titleMedium),
+                    subtitle: Text(loc.get('settings_info_card_desc'),
                         style: textTheme.bodySmall),
                     trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                     onTap: () {
