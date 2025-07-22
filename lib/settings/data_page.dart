@@ -20,7 +20,6 @@ class DataPage extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dati'),
         backgroundColor: colorScheme.surface,
         foregroundColor: colorScheme.onSurface,
         elevation: 0,
@@ -30,48 +29,49 @@ class DataPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Dati',
+            Text('Backup & Ripristino',
                 style: textTheme.titleLarge
                     ?.copyWith(fontWeight: FontWeight.bold)),
-            const SizedBox(height: 24),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton.icon(
-                    icon: const Icon(Icons.cloud_upload_outlined),
-                    label: Text(localization.get('backup')),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: colorScheme.surface,
-                      foregroundColor: colorScheme.onSurface,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
-                    onPressed: () async {
-                      await _backupTrips(context, localization);
-                    },
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: ElevatedButton.icon(
-                    icon: const Icon(Icons.download_outlined),
-                    label: Text(localization.get('import')),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: colorScheme.surface,
-                      foregroundColor: colorScheme.onSurface,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
-                    onPressed: () async {
-                      await _importTrips(context, localization);
-                    },
-                  ),
-                ),
-              ],
+            const SizedBox(height: 32),
+            Card(
+              elevation: 0,
+              color: colorScheme.surface,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: ListTile(
+                leading: const Icon(Icons.cloud_upload_outlined),
+                minLeadingWidth: 0,
+                title: Text(localization.get('backup'),
+                    style: textTheme.titleMedium),
+                subtitle: Text('Crea un file di backup delle tue spese.'),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 18),
+                onTap: () async {
+                  await _backupTrips(context, localization);
+                },
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Card(
+              elevation: 0,
+              color: colorScheme.surface,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: ListTile(
+                leading: const Icon(Icons.download_outlined),
+                minLeadingWidth: 0,
+                title: Text('Ripristino', style: textTheme.titleMedium),
+                subtitle: Text('Importa un backup per ripristinare i dati.'),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 18),
+                onTap: () async {
+                  await _importTrips(context, localization);
+                },
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              ),
             ),
           ],
         ),
