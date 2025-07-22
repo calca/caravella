@@ -94,9 +94,10 @@ class ExpenseGroupCard extends StatelessWidget {
     final loc = AppLocalizations(locale);
 
     final isArchived = trip.archived;
-    final backgroundColor = Theme.of(context).colorScheme.primaryFixed;
+    final backgroundColor =
+        Theme.of(context).colorScheme.surfaceContainerHighest;
     final iconData =
-        isArchived ? Icons.unarchive_rounded : Icons.archive_rounded;
+        isArchived ? Icons.unarchive_outlined : Icons.archive_outlined;
     final actionText = isArchived ? loc.get('unarchive') : loc.get('archive');
 
     return Container(
