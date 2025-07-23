@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'widgets/section_flat.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 import 'dart:typed_data';
@@ -506,25 +507,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
     Future.delayed(const Duration(milliseconds: 10), _unfocusAll);
   }
 
-  Widget _buildSectionFlat(
-      {required String title, required List<Widget> children}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (title.isNotEmpty) ...[
-            Text(
-              title,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 16),
-          ],
-          ...children,
-        ],
-      ),
-    );
-  }
+  // Removed _buildSectionFlat method
 
   @override
   Widget build(BuildContext context) {
@@ -589,7 +572,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 const SizedBox(height: 24),
 
                 // Sezione 1: Informazioni di base
-                _buildSectionFlat(
+                SectionFlat(
                   title: '',
                   children: [
                     // Nome gruppo
@@ -651,7 +634,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 const SizedBox(height: 24),
 
                 // Sezione 2: Partecipanti
-                _buildSectionFlat(
+                SectionFlat(
                   title: '',
                   children: [
                     Row(
@@ -890,7 +873,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 const SizedBox(height: 24),
 
                 // Sezione 3: Categorie
-                _buildSectionFlat(
+                SectionFlat(
                   title: '',
                   children: [
                     Row(
@@ -1128,7 +1111,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 const SizedBox(height: 24),
 
                 // Sezione 4: Periodo
-                _buildSectionFlat(
+                SectionFlat(
                   title: loc.get('dates'),
                   children: [
                     // Riga di selezione date: bottoni grandi uguali e riga a tutta larghezza
@@ -1229,7 +1212,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 const SizedBox(height: 24),
 
                 // Sezione 5: Impostazioni (label rimossa)
-                _buildSectionFlat(
+                SectionFlat(
                   title: '',
                   children: [
                     // Currency selector PRIMA
