@@ -51,7 +51,20 @@ class SectionPeriod extends StatelessWidget {
             children: [
               Expanded(
                 child: GestureDetector(
-                  onTap: () => onPickDate(context, true),
+                  onTap: () async {
+                    FocusScopeNode currentFocus = FocusScope.of(context);
+                    if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+                      currentFocus.unfocus();
+                    }
+                    onPickDate(context, true);
+                    // Unfocus again after picker closes
+                    Future.delayed(const Duration(milliseconds: 10), () {
+                      FocusScopeNode currentFocus = FocusScope.of(context);
+                      if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+                        currentFocus.unfocus();
+                      }
+                    });
+                  },
                   child: const _DateCard(
                     day: null,
                     label: 'Data Inizio',
@@ -64,7 +77,19 @@ class SectionPeriod extends StatelessWidget {
               const SizedBox(width: 16),
               Expanded(
                 child: GestureDetector(
-                  onTap: () => onPickDate(context, false),
+                  onTap: () async {
+                    FocusScopeNode currentFocus = FocusScope.of(context);
+                    if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+                      currentFocus.unfocus();
+                    }
+                    onPickDate(context, false);
+                    Future.delayed(const Duration(milliseconds: 10), () {
+                      FocusScopeNode currentFocus = FocusScope.of(context);
+                      if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+                        currentFocus.unfocus();
+                      }
+                    });
+                  },
                   child: const _DateCard(
                     day: null,
                     label: 'Data Fine',
@@ -81,7 +106,19 @@ class SectionPeriod extends StatelessWidget {
             children: [
               Expanded(
                 child: GestureDetector(
-                  onTap: () => onPickDate(context, true),
+                  onTap: () async {
+                    FocusScopeNode currentFocus = FocusScope.of(context);
+                    if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+                      currentFocus.unfocus();
+                    }
+                    onPickDate(context, true);
+                    Future.delayed(const Duration(milliseconds: 10), () {
+                      FocusScopeNode currentFocus = FocusScope.of(context);
+                      if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+                        currentFocus.unfocus();
+                      }
+                    });
+                  },
                   child: _DateCard(
                     day: startDate?.day,
                     label: 'Data Inizio',
@@ -93,7 +130,19 @@ class SectionPeriod extends StatelessWidget {
               const SizedBox(width: 16),
               Expanded(
                 child: GestureDetector(
-                  onTap: () => onPickDate(context, false),
+                  onTap: () async {
+                    FocusScopeNode currentFocus = FocusScope.of(context);
+                    if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+                      currentFocus.unfocus();
+                    }
+                    onPickDate(context, false);
+                    Future.delayed(const Duration(milliseconds: 10), () {
+                      FocusScopeNode currentFocus = FocusScope.of(context);
+                      if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+                        currentFocus.unfocus();
+                      }
+                    });
+                  },
                   child: _DateCard(
                     day: endDate?.day,
                     label: 'Data Fine',
