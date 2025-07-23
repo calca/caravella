@@ -1,6 +1,5 @@
 // Widget simile a quello incollato per la selezione valuta
 import 'package:flutter/material.dart';
-import 'widgets/dashed_border_painter.dart';
 import 'widgets/section_flat.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
@@ -41,20 +40,20 @@ class CurrencySelectorTile extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         child: Row(
           children: [
-            const Icon(Icons.account_balance_wallet_outlined, size: 28),
-            const SizedBox(width: 12),
+            const Icon(Icons.account_balance_wallet_outlined, size: 32),
+            const SizedBox(width: 28),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   name,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w400,
                       ),
                 ),
                 Text(
                   '$symbol $code',
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],
             ),
@@ -1213,123 +1212,114 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                   ),
                         ),
                         const SizedBox(height: 8),
-                        GestureDetector(
+                        InkWell(
                           onTap: () {
                             _unfocusAll();
-                            _showImagePickerDialog();
-                          },
-                          child: CustomPaint(
-                            painter: DashedBorderPainter(
-                              color: Theme.of(context).colorScheme.outline,
-                              radius: 12,
-                            ),
-                            child: Container(
-                              width: double.infinity,
-                              constraints: const BoxConstraints(minHeight: 140),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .surfaceContainer,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: _selectedImageFile == null
-                                  ? Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                            if (_selectedImageFile != null) {
+                              showModalBottomSheet(
+                                context: context,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(20)),
+                                ),
+                                builder: (BuildContext context) {
+                                  final loc = AppLocalizations.of(context);
+                                  return SafeArea(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        const SizedBox(height: 24),
-                                        const Icon(Icons.image_outlined,
-                                            size: 48, color: Colors.grey),
-                                        const SizedBox(height: 12),
-                                        Text(
-                                          loc.get('select_image'),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge
-                                              ?.copyWith(
-                                                color: Colors.blue,
-                                                fontWeight: FontWeight.w500,
-                                              ),
+                                        ListTile(
+                                          leading: const Icon(Icons.edit),
+                                          title: Text(loc.get('change_image')),
+                                          onTap: () {
+                                            Navigator.of(context).pop();
+                                            _showImagePickerDialog();
+                                          },
                                         ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          'PNG, JPG, GIF fino a 10MB',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall
-                                              ?.copyWith(
-                                                color: Colors.grey[700],
-                                              ),
+                                        ListTile(
+                                          leading: const Icon(Icons.delete),
+                                          title: Text(loc.get('remove_image')),
+                                          onTap: () {
+                                            Navigator.of(context).pop();
+                                            _removeImage();
+                                          },
                                         ),
-                                        const SizedBox(height: 24),
+                                        const SizedBox(height: 8),
                                       ],
-                                    )
-                                  : ClipRRect(
-                                      borderRadius: BorderRadius.circular(12),
-                                      child: Image.file(
-                                        _selectedImageFile!,
-                                        fit: BoxFit.cover,
-                                        width: double.infinity,
-                                        height: 140,
-                                      ),
                                     ),
+                                  );
+                                },
+                              );
+                            } else {
+                              _showImagePickerDialog();
+                            }
+                          },
+                          borderRadius: BorderRadius.circular(8),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 2.0),
+                            child: Row(
+                              children: [
+                                // Leading icon or image
+                                Container(
+                                  width: 48,
+                                  height: 48,
+                                  child: _selectedImageFile == null
+                                      ? Icon(
+                                          Icons.image_outlined,
+                                          size: 32,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                        )
+                                      : ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          child: Image.file(
+                                            _selectedImageFile!,
+                                            fit: BoxFit.cover,
+                                            width: 48,
+                                            height: 48,
+                                          ),
+                                        ),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        _selectedImageFile == null
+                                            ? loc.get('select_image')
+                                            : 'Modifica Immagine',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge,
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        'PNG, JPG, GIF fino a 10MB',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall
+                                            ?.copyWith(
+                                              color: Colors.grey[700],
+                                            ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Icon(Icons.chevron_right,
+                                    size: 24,
+                                    color:
+                                        Theme.of(context).colorScheme.outline),
+                              ],
                             ),
                           ),
                         ),
-                        if (_selectedImageFile != null) ...[
-                          const SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              FilledButton.tonal(
-                                onPressed: () {
-                                  _unfocusAll();
-                                  _showImagePickerDialog();
-                                },
-                                style: FilledButton.styleFrom(
-                                  backgroundColor: Theme.of(context)
-                                      .colorScheme
-                                      .surfaceContainer,
-                                  foregroundColor:
-                                      Theme.of(context).colorScheme.onSurface,
-                                  minimumSize: const Size(44, 44),
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10, horizontal: 16),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Icon(Icons.edit, size: 18),
-                                    const SizedBox(width: 6),
-                                    Text(loc.get('change_image')),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              FilledButton.tonal(
-                                onPressed: _removeImage,
-                                style: FilledButton.styleFrom(
-                                  backgroundColor: Theme.of(context)
-                                      .colorScheme
-                                      .surfaceContainer,
-                                  foregroundColor:
-                                      Theme.of(context).colorScheme.error,
-                                  minimumSize: const Size(44, 44),
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10, horizontal: 16),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Icon(Icons.delete_outline, size: 18),
-                                    const SizedBox(width: 6),
-                                    Text(loc.get('remove_image')),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                        // ...existing code...
                       ],
                     ),
                   ],
