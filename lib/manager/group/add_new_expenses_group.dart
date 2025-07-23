@@ -1,5 +1,6 @@
 // Widget simile a quello incollato per la selezione valuta
 import 'package:flutter/material.dart';
+import 'widgets/dashed_border_painter.dart';
 import 'widgets/section_flat.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
@@ -1217,60 +1218,62 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                             _unfocusAll();
                             _showImagePickerDialog();
                           },
-                          child: Container(
-                            width: double.infinity,
-                            constraints: const BoxConstraints(minHeight: 140),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: Theme.of(context).colorScheme.outline,
-                                style: BorderStyle.solid,
-                                width: 1.2,
-                              ),
+                          child: CustomPaint(
+                            painter: DashedBorderPainter(
+                              color: Theme.of(context).colorScheme.outline,
+                              radius: 12,
                             ),
-                            child: _selectedImageFile == null
-                                ? Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const SizedBox(height: 24),
-                                      const Icon(Icons.image_outlined,
-                                          size: 48, color: Colors.grey),
-                                      const SizedBox(height: 12),
-                                      Text(
-                                        loc.get('upload_image'),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge
-                                            ?.copyWith(
-                                              color: Colors.blue,
-                                              fontWeight: FontWeight.w500,
-                                            ),
+                            child: Container(
+                              width: double.infinity,
+                              constraints: const BoxConstraints(minHeight: 140),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .surfaceContainer,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: _selectedImageFile == null
+                                  ? Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        const SizedBox(height: 24),
+                                        const Icon(Icons.image_outlined,
+                                            size: 48, color: Colors.grey),
+                                        const SizedBox(height: 12),
+                                        Text(
+                                          loc.get('upload_image'),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge
+                                              ?.copyWith(
+                                                color: Colors.blue,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          'PNG, JPG, GIF fino a 10MB',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall
+                                              ?.copyWith(
+                                                color: Colors.grey[700],
+                                              ),
+                                        ),
+                                        const SizedBox(height: 24),
+                                      ],
+                                    )
+                                  : ClipRRect(
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: Image.file(
+                                        _selectedImageFile!,
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        height: 140,
                                       ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        'PNG, JPG, GIF fino a 10MB',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall
-                                            ?.copyWith(
-                                              color: Colors.grey[700],
-                                            ),
-                                      ),
-                                      const SizedBox(height: 24),
-                                    ],
-                                  )
-                                : ClipRRect(
-                                    borderRadius: BorderRadius.circular(12),
-                                    child: Image.file(
-                                      _selectedImageFile!,
-                                      fit: BoxFit.cover,
-                                      width: double.infinity,
-                                      height: 140,
                                     ),
-                                  ),
+                            ),
                           ),
                         ),
                         if (_selectedImageFile != null) ...[
