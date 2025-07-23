@@ -1200,7 +1200,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 32),
                     // Image selection DOPO
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
