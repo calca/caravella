@@ -11,11 +11,9 @@ import '../../data/expense_participant.dart';
 import '../../data/expense_category.dart';
 import '../../../data/expense_group_storage.dart';
 import '../../app_localizations.dart';
-import '../../state/locale_notifier.dart';
 import '../../state/expense_group_notifier.dart';
-import '../../widgets/currency_selector.dart';
+// import '../../widgets/currency_selector.dart'; // Removed unused import
 import '../../widgets/caravella_app_bar.dart';
-import '../../widgets/widgets.dart';
 
 class AddNewExpensesGroupPage extends StatefulWidget {
   final ExpenseGroup? trip;
@@ -24,36 +22,106 @@ class AddNewExpensesGroupPage extends StatefulWidget {
 
   @override
   State<AddNewExpensesGroupPage> createState() =>
-      _AddNewExpensesGroupPageState();
+      AddNewExpensesGroupPageState();
 }
 
-class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
-  final _formKey = GlobalKey<FormState>();
+class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
+  // Currency sheet scroll controller
+  final ScrollController _currencySheetScrollController = ScrollController();
+
+  void _showCurrencySheet() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        final loc = AppLocalizations.of(context);
+        return SafeArea(
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    loc.get('select_currency'),
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    height: 320, // reasonable height for modal scroll
+                    child: Scrollbar(
+                      thumbVisibility: true,
+                      controller: _currencySheetScrollController,
+                      child: ListView.builder(
+                        controller: _currencySheetScrollController,
+                        itemCount: _currencies.length,
+                        itemBuilder: (context, index) {
+                          final currency = _currencies[index];
+                          return ListTile(
+                            leading: Text(currency['symbol']!,
+                                style: Theme.of(context).textTheme.titleLarge),
+                            title: Text(
+                                '${currency['code']} - ${currency['name']}',
+                                style: Theme.of(context).textTheme.bodyMedium),
+                            trailing: currency['symbol'] ==
+                                    _selectedCurrency['symbol']
+                                ? Icon(Icons.check,
+                                    color:
+                                        Theme.of(context).colorScheme.primary)
+                                : null,
+                            onTap: () {
+                              setState(() {
+                                _selectedCurrency = currency;
+                              });
+                              Navigator.of(context).pop();
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // Controllers and focus nodes
   final TextEditingController _titleController = TextEditingController();
   final FocusNode _titleFocusNode = FocusNode();
-  final List<ExpenseParticipant> _participants = [];
   final TextEditingController _participantController = TextEditingController();
+
+  // Form key
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  // Participants and categories
+  final List<ExpenseParticipant> _participants = [];
+  final List<ExpenseCategory> _categories = [];
+
+  // Dates
   DateTime? _startDate;
   DateTime? _endDate;
-  String _currency = '€'; // Default euro
-  final List<ExpenseCategory> _categories = [];
   String? _dateError;
 
-  // Image-related variables
+  // Image handling
   File? _selectedImageFile;
   String? _savedImagePath;
   final ImagePicker _imagePicker = ImagePicker();
-
   @override
   void initState() {
     super.initState();
     if (widget.trip != null) {
-      // Edit mode
-      _titleController.text = widget.trip!.title;
-      _participants.addAll(widget.trip!.participants);
-      _startDate = widget.trip!.startDate;
-      _endDate = widget.trip!.endDate;
-      _currency = widget.trip!.currency;
+      final found = _currencies.firstWhere(
+        (c) => c['symbol'] == widget.trip!.currency,
+        orElse: () => _currencies[0],
+      );
+      _selectedCurrency = found;
       _categories.addAll(widget.trip!.categories);
       _savedImagePath = widget.trip!.file;
       if (_savedImagePath != null) {
@@ -61,6 +129,37 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       }
     }
   }
+
+  // Remove stray constructor declaration
+  // List of available currencies (customize as needed)
+  final List<Map<String, String>> _currencies = [
+    {'symbol': '€', 'code': 'EUR', 'name': 'Euro'},
+    {'symbol': '\u0024', 'code': 'USD', 'name': 'US Dollar'},
+    {'symbol': '£', 'code': 'GBP', 'name': 'British Pound'},
+    {'symbol': '¥', 'code': 'JPY', 'name': 'Japanese Yen'},
+    {'symbol': '₽', 'code': 'RUB', 'name': 'Russian Ruble'},
+    {'symbol': '₹', 'code': 'INR', 'name': 'Indian Rupee'},
+    {'symbol': '₺', 'code': 'TRY', 'name': 'Turkish Lira'},
+    {'symbol': '₩', 'code': 'KRW', 'name': 'South Korean Won'},
+    {'symbol': '₪', 'code': 'ILS', 'name': 'Israeli Shekel'},
+    {'symbol': '₫', 'code': 'VND', 'name': 'Vietnamese Dong'},
+    {'symbol': '₴', 'code': 'UAH', 'name': 'Ukrainian Hryvnia'},
+    {'symbol': '₦', 'code': 'NGN', 'name': 'Nigerian Naira'},
+    {'symbol': '₲', 'code': 'PYG', 'name': 'Paraguayan Guarani'},
+    {'symbol': '₵', 'code': 'GHS', 'name': 'Ghanaian Cedi'},
+    {'symbol': '₡', 'code': 'CRC', 'name': 'Costa Rican Colon'},
+    {'symbol': '₱', 'code': 'PHP', 'name': 'Philippine Peso'},
+    {'symbol': '฿', 'code': 'THB', 'name': 'Thai Baht'},
+    {'symbol': '₸', 'code': 'KZT', 'name': 'Kazakhstani Tenge'},
+    {'symbol': '₭', 'code': 'LAK', 'name': 'Lao Kip'},
+    {'symbol': '₮', 'code': 'MNT', 'name': 'Mongolian Tögrög'},
+  ];
+
+  Map<String, String> _selectedCurrency = {
+    'symbol': '€',
+    'code': 'EUR',
+    'name': 'Euro'
+  };
 
   @override
   void didChangeDependencies() {
@@ -74,19 +173,18 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
     _titleController.dispose();
     _titleFocusNode.dispose();
     _participantController.dispose();
+    _currencySheetScrollController.dispose();
     super.dispose();
   }
 
   Future<void> _pickDate(BuildContext context, bool isStart) async {
-    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    final loc = AppLocalizations(locale);
+    final loc = AppLocalizations.of(context);
     final now = DateTime.now();
     final firstDate = DateTime(now.year - 5);
     final lastDate = DateTime(now.year + 5);
     DateTime? initialDate = isStart ? (_startDate ?? now) : (_endDate ?? now);
     bool isSelectable(DateTime d) {
       if (isStart && _endDate != null) return !d.isAfter(_endDate!);
-      if (!isStart && _startDate != null) return !d.isBefore(_startDate!);
       return true;
     }
 
@@ -113,7 +211,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
           isStart ? loc.get('select_from_date') : loc.get('select_to_date'),
       cancelText: loc.get('cancel'),
       confirmText: loc.get('ok'),
-      locale: Locale(locale),
+      locale: Locale(loc.locale),
       selectableDayPredicate: isSelectable,
     );
     if (picked != null) {
@@ -139,8 +237,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   }
 
   Future<void> _saveTrip() async {
-    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    final loc = AppLocalizations(locale);
+    final loc = AppLocalizations.of(context);
     if (!mounted) return;
     setState(() {
       _dateError = null;
@@ -212,7 +309,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 List.from(_participants), // Copia la lista dei partecipanti
             startDate: _startDate,
             endDate: _endDate,
-            currency: _currency,
+            currency: _selectedCurrency['symbol']!,
             categories:
                 List.from(_categories), // Copia la lista delle categorie
             timestamp: trips[idx].timestamp, // mantieni il timestamp originale
@@ -246,7 +343,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
             List.from(_participants), // Copia la lista dei partecipanti
         startDate: _startDate,
         endDate: _endDate,
-        currency: _currency,
+        currency: _selectedCurrency['symbol']!,
         categories: List.from(_categories), // Copia la lista delle categorie
         file: _savedImagePath, // save image path
         // timestamp: default a now
@@ -347,8 +444,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   }
 
   void _showImagePickerDialog() {
-    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    final loc = AppLocalizations(locale);
+    final loc = AppLocalizations.of(context);
 
     showModalBottomSheet(
       context: context,
@@ -432,8 +528,7 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
 
   @override
   Widget build(BuildContext context) {
-    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    final loc = AppLocalizations(locale);
+    final loc = AppLocalizations.of(context);
     return GestureDetector(
       onTap: _unfocusAll,
       behavior: HitTestBehavior.translucent,
@@ -1041,20 +1136,18 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                       children: [
                         Expanded(
                           child: _startDate == null
-                              ? OutlinedButton(
-                                  style: OutlinedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 16),
-                                    minimumSize: const Size(0, 48),
-                                    tapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
-                                  ),
+                              ? IconButton.filledTonal(
+                                  icon: const Icon(Icons.calendar_today),
                                   onPressed: () => _pickDate(context, true),
-                                  child: Text(
-                                    loc.get('select_from_date'),
-                                    style:
-                                        Theme.of(context).textTheme.bodyLarge,
+                                  style: IconButton.styleFrom(
+                                    backgroundColor: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainer,
+                                    foregroundColor:
+                                        Theme.of(context).colorScheme.onSurface,
+                                    minimumSize: const Size(54, 54),
                                   ),
+                                  tooltip: loc.get('select_from_date'),
                                 )
                               : GestureDetector(
                                   onTap: () => _pickDate(context, true),
@@ -1077,20 +1170,18 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                         ),
                         Expanded(
                           child: _endDate == null
-                              ? OutlinedButton(
-                                  style: OutlinedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 16),
-                                    minimumSize: const Size(0, 48),
-                                    tapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
-                                  ),
+                              ? IconButton.filledTonal(
+                                  icon: const Icon(Icons.calendar_today),
                                   onPressed: () => _pickDate(context, false),
-                                  child: Text(
-                                    loc.get('select_to_date'),
-                                    style:
-                                        Theme.of(context).textTheme.bodyLarge,
+                                  style: IconButton.styleFrom(
+                                    backgroundColor: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainer,
+                                    foregroundColor:
+                                        Theme.of(context).colorScheme.onSurface,
+                                    minimumSize: const Size(54, 54),
                                   ),
+                                  tooltip: loc.get('select_to_date'),
                                 )
                               : GestureDetector(
                                   onTap: () => _pickDate(context, false),
@@ -1109,21 +1200,25 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                         if (_startDate != null || _endDate != null) ...[
                           Padding(
                             padding: const EdgeInsets.only(left: 8.0),
-                            child: OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                padding: const EdgeInsets.all(8),
-                                minimumSize: const Size(0, 48),
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              ),
+                            child: IconButton.filledTonal(
+                              icon: Icon(Icons.close,
+                                  size: 18,
+                                  color: Theme.of(context).colorScheme.primary),
                               onPressed: () {
                                 setState(() {
                                   _startDate = null;
                                   _endDate = null;
                                 });
                               },
-                              child: Icon(Icons.close,
-                                  size: 18,
-                                  color: Theme.of(context).colorScheme.primary),
+                              style: IconButton.styleFrom(
+                                backgroundColor: Theme.of(context)
+                                    .colorScheme
+                                    .surfaceContainer,
+                                foregroundColor:
+                                    Theme.of(context).colorScheme.onSurface,
+                                minimumSize: const Size(54, 54),
+                              ),
+                              tooltip: loc.get('clear_dates'),
                             ),
                           ),
                         ],
@@ -1138,19 +1233,51 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                   title: '',
                   children: [
                     // Currency selector PRIMA
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           loc.get('currency'),
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
-                        const SizedBox(width: 16),
-                        CurrencySelector(
-                          value: _currency,
-                          onChanged: (val) {
-                            if (val != null) setState(() => _currency = val);
-                          },
+                        const SizedBox(height: 8),
+                        SizedBox(
+                          width: double.infinity,
+                          child: GestureDetector(
+                            onTap: _showCurrencySheet,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 16),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .surfaceContainer,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(),
+                              ),
+                              child: Row(
+                                children: [
+                                  Text(_selectedCurrency['symbol']!,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge),
+                                  const SizedBox(width: 12),
+                                  Text(_selectedCurrency['code']!,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Text(_selectedCurrency['name']!,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium),
+                                  ),
+                                  const Icon(Icons.arrow_drop_down),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -1193,39 +1320,54 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Expanded(
-                                child: OutlinedButton(
+                                child: FilledButton.tonal(
                                   onPressed: () {
                                     _unfocusAll();
                                     _showImagePickerDialog();
                                   },
-                                  style: OutlinedButton.styleFrom(
+                                  style: FilledButton.styleFrom(
+                                    backgroundColor: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainer,
                                     foregroundColor:
-                                        Theme.of(context).colorScheme.primary,
-                                    side: BorderSide(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary),
+                                        Theme.of(context).colorScheme.onSurface,
+                                    minimumSize: const Size(54, 54),
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 12),
                                   ),
-                                  child: Text(loc.get('change_image')),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Icon(Icons.edit, size: 20),
+                                      const SizedBox(width: 8),
+                                      Text(loc.get('change_image')),
+                                    ],
+                                  ),
                                 ),
                               ),
                               const SizedBox(width: 12),
                               Expanded(
-                                child: OutlinedButton(
+                                child: FilledButton.tonal(
                                   onPressed: _removeImage,
-                                  style: OutlinedButton.styleFrom(
+                                  style: FilledButton.styleFrom(
+                                    backgroundColor: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainer,
                                     foregroundColor:
                                         Theme.of(context).colorScheme.error,
-                                    side: BorderSide(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .error),
+                                    minimumSize: const Size(54, 54),
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 12),
                                   ),
-                                  child: Text(loc.get('remove_image')),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Icon(Icons.delete_outline,
+                                          size: 20),
+                                      const SizedBox(width: 8),
+                                      Text(loc.get('remove_image')),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],
@@ -1233,18 +1375,28 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                         ] else ...[
                           Align(
                             alignment: Alignment.centerRight,
-                            child: OutlinedButton.icon(
+                            child: FilledButton.tonal(
                               onPressed: () {
                                 _unfocusAll();
                                 _showImagePickerDialog();
                               },
-                              icon: const Icon(Icons.add_photo_alternate),
-                              label: Text(loc.get('select_image')),
-                              style: OutlinedButton.styleFrom(
+                              style: FilledButton.styleFrom(
+                                backgroundColor: Theme.of(context)
+                                    .colorScheme
+                                    .surfaceContainer,
                                 foregroundColor:
                                     Theme.of(context).colorScheme.onSurface,
+                                minimumSize: const Size(54, 54),
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 20, vertical: 14),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(Icons.add_photo_alternate),
+                                  const SizedBox(width: 8),
+                                  Text(loc.get('select_image')),
+                                ],
                               ),
                             ),
                           ),
@@ -1261,9 +1413,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                     // Bottone Annulla
                     SizedBox(
                       width: double.infinity,
-                      child: ThemedOutlinedButton(
+                      child: OutlinedButton(
                         onPressed: () => Navigator.of(context).pop(false),
-                        isPrimary: false,
                         child: Text(loc.get('cancel')),
                       ),
                     ),
@@ -1271,9 +1422,8 @@ class _AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                     // Bottone Salva
                     SizedBox(
                       width: double.infinity,
-                      child: ThemedOutlinedButton(
+                      child: OutlinedButton(
                         onPressed: _isFormValid() ? _saveTrip : null,
-                        isPrimary: true,
                         child: Text(loc.get('save')),
                       ),
                     ),

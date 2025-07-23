@@ -1,5 +1,27 @@
+import 'package:flutter/widgets.dart';
+
+// Static method to get AppLocalizations from context
+AppLocalizations of(BuildContext context) {
+  // Try to get locale from Localizations or fallback to 'it'
+  Locale? localeObj = Localizations.maybeLocaleOf(context);
+  String locale = localeObj?.languageCode ?? 'it';
+  return AppLocalizations(locale);
+}
+
 // Simple localization class for EN/ITA, easily extendable
 class AppLocalizations {
+  // Static method to get AppLocalizations from context
+  static AppLocalizations of(BuildContext context) {
+    Locale localeObj;
+    try {
+      localeObj = Localizations.localeOf(context);
+    } catch (_) {
+      localeObj = const Locale('it');
+    }
+    String locale = localeObj.languageCode;
+    return AppLocalizations(locale);
+  }
+
   final String locale;
   AppLocalizations(this.locale);
 
@@ -170,18 +192,18 @@ class AppLocalizations {
       'settings_app_version': 'App version',
       'settings_info_card': 'Information',
       'settings_info_card_desc': 'Developer, Source code and License',
-    'terms_github_title': 'GitHub: calca',
-    'terms_github_desc': 'Developer profile on GitHub.',
-    'terms_repo_title': 'GitHub Repository',
-    'terms_repo_desc': 'Application source code.',
-    'terms_issue_title': 'Report a problem',
-    'terms_issue_desc': 'Go to the GitHub issues page.',
-    'terms_license_desc': 'View the open source license.',
-    'data_title': 'Backup & Restore',
-    'data_backup_title': 'Backup',
-    'data_backup_desc': 'Create a backup file of your expenses.',
-    'data_restore_title': 'Restore',
-    'data_restore_desc': 'Import a backup to restore your data.',
+      'terms_github_title': 'GitHub: calca',
+      'terms_github_desc': 'Developer profile on GitHub.',
+      'terms_repo_title': 'GitHub Repository',
+      'terms_repo_desc': 'Application source code.',
+      'terms_issue_title': 'Report a problem',
+      'terms_issue_desc': 'Go to the GitHub issues page.',
+      'terms_license_desc': 'View the open source license.',
+      'data_title': 'Backup & Restore',
+      'data_backup_title': 'Backup',
+      'data_backup_desc': 'Create a backup file of your expenses.',
+      'data_restore_title': 'Restore',
+      'data_restore_desc': 'Import a backup to restore your data.',
     },
     'it': {
       'save_change_expense': 'Salva modifiche',
@@ -361,18 +383,18 @@ class AppLocalizations {
       'settings_app_version': 'Versione dell\'app',
       'settings_info_card': 'Informazioni',
       'settings_info_card_desc': 'Sviluppatore, Source code e Licenza',
-    'terms_github_title': 'GitHub: calca',
-    'terms_github_desc': 'Profilo dello sviluppatore su GitHub.',
-    'terms_repo_title': 'Repository GitHub',
-    'terms_repo_desc': 'Codice sorgente dell’applicazione.',
-    'terms_issue_title': 'Segnala un problema',
-    'terms_issue_desc': 'Vai alla pagina delle issue su GitHub.',
-    'terms_license_desc': 'Visualizza la licenza open source.',
-    'data_title': 'Backup & Ripristino',
-    'data_backup_title': 'Backup',
-    'data_backup_desc': 'Crea un file di backup delle tue spese.',
-    'data_restore_title': 'Ripristino',
-    'data_restore_desc': 'Importa un backup per ripristinare i dati.',
+      'terms_github_title': 'GitHub: calca',
+      'terms_github_desc': 'Profilo dello sviluppatore su GitHub.',
+      'terms_repo_title': 'Repository GitHub',
+      'terms_repo_desc': 'Codice sorgente dell’applicazione.',
+      'terms_issue_title': 'Segnala un problema',
+      'terms_issue_desc': 'Vai alla pagina delle issue su GitHub.',
+      'terms_license_desc': 'Visualizza la licenza open source.',
+      'data_title': 'Backup & Ripristino',
+      'data_backup_title': 'Backup',
+      'data_backup_desc': 'Crea un file di backup delle tue spese.',
+      'data_restore_title': 'Ripristino',
+      'data_restore_desc': 'Importa un backup per ripristinare i dati.',
     },
   };
 
