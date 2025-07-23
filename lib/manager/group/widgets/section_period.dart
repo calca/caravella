@@ -136,50 +136,58 @@ class _DateCard extends StatelessWidget {
             : theme.colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                alignment: Alignment.center,
-                child: icon != null
-                    ? Icon(icon, color: theme.colorScheme.primary, size: 22)
-                    : Text(
-                        day != null ? day.toString() : '--',
-                        style: theme.textTheme.titleLarge?.copyWith(
-                          color: theme.colorScheme.primary,
-                          fontWeight: FontWeight.bold,
-                        ),
+      child: SizedBox(
+        height: 64,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              alignment: Alignment.center,
+              child: icon != null
+                  ? Icon(icon, size: 22)
+                  : Text(
+                      day != null ? day.toString() : '--',
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
                       ),
-              ),
-              const SizedBox(width: 12),
-              Text(
-                label,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          date != null
-              ? Text(
-                  _formatDate(date!),
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.onSurface,
+                    ),
+            ),
+            const SizedBox(width: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  label,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                    fontWeight: FontWeight.w500,
                   ),
-                )
-              : SizedBox(height: theme.textTheme.titleMedium?.fontSize ?? 20),
-        ],
+                ),
+                SizedBox(
+                  height: 24,
+                  child: date != null
+                      ? Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            _formatDate(date!),
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              color: theme.colorScheme.onSurface,
+                            ),
+                          ),
+                        )
+                      : null,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
