@@ -32,22 +32,15 @@ class SectionPeriod extends StatelessWidget {
                   ),
             ),
             if (startDate != null || endDate != null)
-              FilledButton.tonal(
+              IconButton.filledTonal(
                 onPressed: onClearDates,
+                icon: const Icon(Icons.delete_outline, size: 22),
                 style: FilledButton.styleFrom(
                   backgroundColor:
                       Theme.of(context).colorScheme.surfaceContainer,
                   foregroundColor: Theme.of(context).colorScheme.error,
                   minimumSize: const Size(44, 44),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                ),
-                child: Row(
-                  children: [
-                    const Icon(Icons.delete_outline, size: 20),
-                    const SizedBox(width: 6),
-                    Text(loc.get('clear_dates')),
-                  ],
+                  padding: EdgeInsets.zero,
                 ),
               ),
           ],
