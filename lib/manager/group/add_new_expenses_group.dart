@@ -1236,7 +1236,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       const SizedBox(height: 24),
-                                      Icon(Icons.image_outlined,
+                                      const Icon(Icons.image_outlined,
                                           size: 48, color: Colors.grey),
                                       const SizedBox(height: 12),
                                       Text(
