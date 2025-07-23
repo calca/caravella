@@ -1242,7 +1242,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                             size: 48, color: Colors.grey),
                                         const SizedBox(height: 12),
                                         Text(
-                                          loc.get('upload_image'),
+                                          loc.get('select_image'),
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodyLarge
