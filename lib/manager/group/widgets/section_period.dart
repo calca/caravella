@@ -130,12 +130,6 @@ class _DateCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4),
       padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: isActive
-            ? theme.colorScheme.primary.withValues(alpha: 0.08)
-            : theme.colorScheme.surfaceContainer,
-        borderRadius: BorderRadius.circular(12),
-      ),
       child: SizedBox(
         height: 64,
         child: Row(
@@ -159,9 +153,9 @@ class _DateCard extends StatelessWidget {
                     ),
             ),
             const SizedBox(width: 12),
-            date == null
-                ? Expanded(
-                    child: Align(
+            Expanded(
+              child: date == null
+                  ? Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
                         label,
@@ -171,34 +165,37 @@ class _DateCard extends StatelessWidget {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                    ),
-                  )
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        label,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface
-                              .withValues(alpha: 0.7),
-                          fontWeight: FontWeight.w500,
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          label,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurface
+                                .withValues(alpha: 0.7),
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 24,
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            _formatDate(date!),
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              color: theme.colorScheme.onSurface,
+                        SizedBox(
+                          height: 24,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              _formatDate(date!),
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                color: theme.colorScheme.onSurface,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+            ),
+            const SizedBox(width: 8),
+            Icon(Icons.chevron_right,
+                size: 24, color: theme.colorScheme.outline),
           ],
         ),
       ),
