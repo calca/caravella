@@ -14,7 +14,6 @@ import '../../data/expense_category.dart';
 import '../../../data/expense_group_storage.dart';
 import '../../app_localizations.dart';
 import '../../state/expense_group_notifier.dart';
-// import '../../widgets/currency_selector.dart'; // Removed unused import
 import '../../widgets/caravella_app_bar.dart';
 import 'widgets/section_period.dart';
 
