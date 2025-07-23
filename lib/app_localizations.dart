@@ -30,6 +30,8 @@ class AppLocalizations {
   static final Map<String, Map<String, String>> _localizedValues = {
     'en': {
       'select_currency': 'Select currency',
+      'select_period_hint_short': 'Set dates',
+      'select_period_hint': 'Select a date range',
       'save_change_expense': 'Save changes',
       'group_total': 'Total',
       'download_all_csv': 'Download all (CSV)',
@@ -208,6 +210,8 @@ class AppLocalizations {
     },
     'it': {
       'select_currency': 'Seleziona valuta',
+      'select_period_hint_short': 'Imposta date',
+      'select_period_hint': 'Seleziona un intervallo di date',
       'save_change_expense': 'Salva modifiche',
       'group_total': 'Totale',
       'download_all_csv': 'Scarica tutto (CSV)',

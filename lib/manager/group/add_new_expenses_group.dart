@@ -15,6 +15,7 @@ import '../../app_localizations.dart';
 import '../../state/expense_group_notifier.dart';
 // import '../../widgets/currency_selector.dart'; // Removed unused import
 import '../../widgets/caravella_app_bar.dart';
+import 'widgets/section_period.dart';
 
 class AddNewExpensesGroupPage extends StatefulWidget {
   final ExpenseGroup? trip;
@@ -1111,103 +1112,17 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 const SizedBox(height: 24),
 
                 // Sezione 4: Periodo
-                SectionFlat(
-                  title: loc.get('dates'),
-                  children: [
-                    // Riga di selezione date: bottoni grandi uguali e riga a tutta larghezza
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _startDate == null
-                              ? IconButton.filledTonal(
-                                  icon: const Icon(Icons.calendar_today),
-                                  onPressed: () => _pickDate(context, true),
-                                  style: IconButton.styleFrom(
-                                    backgroundColor: Theme.of(context)
-                                        .colorScheme
-                                        .surfaceContainer,
-                                    foregroundColor:
-                                        Theme.of(context).colorScheme.onSurface,
-                                    minimumSize: const Size(54, 54),
-                                  ),
-                                  tooltip: loc.get('select_from_date'),
-                                )
-                              : GestureDetector(
-                                  onTap: () => _pickDate(context, true),
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 16),
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}',
-                                      style:
-                                          Theme.of(context).textTheme.bodyLarge,
-                                    ),
-                                  ),
-                                ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Text('-',
-                              style: Theme.of(context).textTheme.bodyLarge),
-                        ),
-                        Expanded(
-                          child: _endDate == null
-                              ? IconButton.filledTonal(
-                                  icon: const Icon(Icons.calendar_today),
-                                  onPressed: () => _pickDate(context, false),
-                                  style: IconButton.styleFrom(
-                                    backgroundColor: Theme.of(context)
-                                        .colorScheme
-                                        .surfaceContainer,
-                                    foregroundColor:
-                                        Theme.of(context).colorScheme.onSurface,
-                                    minimumSize: const Size(54, 54),
-                                  ),
-                                  tooltip: loc.get('select_to_date'),
-                                )
-                              : GestureDetector(
-                                  onTap: () => _pickDate(context, false),
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 16),
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}',
-                                      style:
-                                          Theme.of(context).textTheme.bodyLarge,
-                                    ),
-                                  ),
-                                ),
-                        ),
-                        if (_startDate != null || _endDate != null) ...[
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: IconButton.filledTonal(
-                              icon: Icon(Icons.close,
-                                  size: 18,
-                                  color: Theme.of(context).colorScheme.primary),
-                              onPressed: () {
-                                setState(() {
-                                  _startDate = null;
-                                  _endDate = null;
-                                });
-                              },
-                              style: IconButton.styleFrom(
-                                backgroundColor: Theme.of(context)
-                                    .colorScheme
-                                    .surfaceContainer,
-                                foregroundColor:
-                                    Theme.of(context).colorScheme.onSurface,
-                                minimumSize: const Size(54, 54),
-                              ),
-                              tooltip: loc.get('clear_dates'),
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ],
+                SectionPeriod(
+                  startDate: _startDate,
+                  endDate: _endDate,
+                  onPickDate: _pickDate,
+                  onClearDates: () {
+                    setState(() {
+                      _startDate = null;
+                      _endDate = null;
+                    });
+                  },
+                  loc: loc,
                 ),
                 const SizedBox(height: 24),
 
