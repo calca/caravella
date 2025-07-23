@@ -161,7 +161,8 @@ class _DateCard extends StatelessWidget {
             const SizedBox(width: 12),
             date == null
                 ? Expanded(
-                    child: Center(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         label,
                         style: theme.textTheme.bodySmall?.copyWith(
