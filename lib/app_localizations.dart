@@ -29,6 +29,7 @@ class AppLocalizations {
 
   static final Map<String, Map<String, String>> _localizedValues = {
     'en': {
+      'select_currency': 'Select currency',
       'save_change_expense': 'Save changes',
       'group_total': 'Total',
       'download_all_csv': 'Download all (CSV)',
@@ -206,6 +207,7 @@ class AppLocalizations {
       'data_restore_desc': 'Import a backup to restore your data.',
     },
     'it': {
+      'select_currency': 'Seleziona valuta',
       'save_change_expense': 'Salva modifiche',
       'group_total': 'Totale',
       'download_all_csv': 'Scarica tutto (CSV)',
