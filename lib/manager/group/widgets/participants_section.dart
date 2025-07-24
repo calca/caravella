@@ -40,124 +40,109 @@ class ParticipantsSection extends StatelessWidget {
             const Text('*', style: TextStyle(fontWeight: FontWeight.bold)),
           ],
         ),
-        if (participants.isEmpty) ...[
-          const SizedBox(height: 16),
-          Center(
-            child: Text(
-              loc.get('no_participants'),
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withAlpha(153), // 0.6 alpha
+        const SizedBox(height: 12),
+        ...participants.asMap().entries.map((entry) {
+          final i = entry.key;
+          final p = entry.value;
+          return SectionListTile(
+            icon:
+                Icons.person_outline, // not shown, but required by constructor
+            title: p.name,
+            subtitle: null,
+            backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+            borderColor:
+                Theme.of(context).colorScheme.primaryFixedDim.withAlpha(128),
+            onEdit: () {
+              final editController = TextEditingController(text: p.name);
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text(loc.get('edit_participant')),
+                  content: TextField(
+                    controller: editController,
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      labelText: loc.get('participant_name'),
+                      hintText: loc.get('participant_name_hint'),
+                    ),
+                    onSubmitted: (val) {
+                      if (val.trim().isNotEmpty) {
+                        onEditParticipant(i, val.trim());
+                        Navigator.of(context).pop();
+                      }
+                    },
                   ),
-            ),
-          ),
-        ] else ...[
-          const SizedBox(height: 12),
-          ...participants.asMap().entries.map((entry) {
-            final i = entry.key;
-            final p = entry.value;
-            return SectionListTile(
-              icon: Icons
-                  .person_outline, // not shown, but required by constructor
-              title: p.name,
-              subtitle: null,
-              backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-              borderColor:
-                  Theme.of(context).colorScheme.primaryFixedDim.withAlpha(128),
-              onEdit: () {
-                final editController = TextEditingController(text: p.name);
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: Text(loc.get('edit_participant')),
-                    content: TextField(
-                      controller: editController,
-                      autofocus: true,
-                      decoration: InputDecoration(
-                        labelText: loc.get('participant_name'),
-                        hintText: loc.get('participant_name_hint'),
-                      ),
-                      onSubmitted: (val) {
-                        if (val.trim().isNotEmpty) {
-                          onEditParticipant(i, val.trim());
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text(loc.get('cancel')),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        final val = editController.text.trim();
+                        if (val.isNotEmpty) {
+                          onEditParticipant(i, val);
                           Navigator.of(context).pop();
                         }
                       },
+                      child: Text(loc.get('save')),
                     ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: Text(loc.get('cancel')),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          final val = editController.text.trim();
-                          if (val.isNotEmpty) {
-                            onEditParticipant(i, val);
-                            Navigator.of(context).pop();
-                          }
-                        },
-                        child: Text(loc.get('save')),
-                      ),
-                    ],
+                  ],
+                ),
+              );
+            },
+            onDelete: () => onRemoveParticipant(i),
+          );
+        }),
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: SelectionTile(
+            leading: const Icon(Icons.add),
+            title: loc.get('add_participant'),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text(loc.get('add_participant')),
+                  content: TextField(
+                    controller: participantController,
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      labelText: loc.get('participant_name'),
+                      hintText: loc.get('participant_name_hint'),
+                    ),
+                    onSubmitted: (val) {
+                      if (val.trim().isNotEmpty) {
+                        onAddParticipant(val.trim());
+                        participantController.clear();
+                        Navigator.of(context).pop();
+                      }
+                    },
                   ),
-                );
-              },
-              onDelete: () => onRemoveParticipant(i),
-            );
-          }),
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: SelectionTile(
-              leading: const Icon(Icons.add),
-              title: loc.get('add_participant'),
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: Text(loc.get('add_participant')),
-                    content: TextField(
-                      controller: participantController,
-                      autofocus: true,
-                      decoration: InputDecoration(
-                        labelText: loc.get('participant_name'),
-                        hintText: loc.get('participant_name_hint'),
-                      ),
-                      onSubmitted: (val) {
-                        if (val.trim().isNotEmpty) {
-                          onAddParticipant(val.trim());
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text(loc.get('cancel')),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        final val = participantController.text.trim();
+                        if (val.isNotEmpty) {
+                          onAddParticipant(val);
                           participantController.clear();
                           Navigator.of(context).pop();
                         }
                       },
+                      child: Text(loc.get('add')),
                     ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: Text(loc.get('cancel')),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          final val = participantController.text.trim();
-                          if (val.isNotEmpty) {
-                            onAddParticipant(val);
-                            participantController.clear();
-                            Navigator.of(context).pop();
-                          }
-                        },
-                        child: Text(loc.get('add')),
-                      ),
-                    ],
-                  ),
-                );
-              },
-              backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-              borderRadius: 8,
-            ),
+                  ],
+                ),
+              );
+            },
+            backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+            borderRadius: 8,
           ),
-        ],
+        ),
       ],
     );
   }
