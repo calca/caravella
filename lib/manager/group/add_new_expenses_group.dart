@@ -77,6 +77,8 @@ class AddNewExpensesGroupPage extends StatefulWidget {
 }
 
 class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
+  // Loader state for image
+  bool _loadingImage = false;
   // Currency sheet scroll controller
   final ScrollController _currencySheetScrollController = ScrollController();
 
@@ -421,6 +423,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   // Image handling methods
   Future<void> _pickImage(ImageSource source) async {
     try {
+      setState(() => _loadingImage = true);
       final XFile? pickedFile = await _imagePicker.pickImage(source: source);
       if (!mounted) return;
       if (pickedFile != null) {
@@ -446,11 +449,14 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
           ),
         );
       }
+    } finally {
+      if (mounted) setState(() => _loadingImage = false);
     }
   }
 
   Future<void> _processAndSaveImage(File imageFile) async {
     try {
+      setState(() => _loadingImage = true);
       // Read the image
       final Uint8List imageBytes = await imageFile.readAsBytes();
       img.Image? image = img.decodeImage(imageBytes);
@@ -484,6 +490,8 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
           ),
         );
       }
+    } finally {
+      if (mounted) setState(() => _loadingImage = false);
     }
   }
 
@@ -554,7 +562,9 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   // --- UTILITY: Unfocus after dialog close ---
   void _closeDialogAndUnfocus([dynamic result]) {
     Navigator.of(context).pop(result);
-    Future.delayed(const Duration(milliseconds: 10), _unfocusAll);
+    Future.delayed(const Duration(milliseconds: 10), () {
+      if (mounted) FocusScope.of(context).unfocus();
+    });
   }
 
   // Removed _buildSectionFlat method
@@ -1263,24 +1273,33 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                 Container(
                                   width: 48,
                                   height: 48,
-                                  child: _selectedImageFile == null
-                                      ? Icon(
-                                          Icons.image_outlined,
-                                          size: 32,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onSurface,
-                                        )
-                                      : ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          child: Image.file(
-                                            _selectedImageFile!,
-                                            fit: BoxFit.cover,
-                                            width: 48,
-                                            height: 48,
+                                  child: _loadingImage
+                                      ? Center(
+                                          child: SizedBox(
+                                            width: 28,
+                                            height: 28,
+                                            child: CircularProgressIndicator(
+                                                strokeWidth: 3),
                                           ),
-                                        ),
+                                        )
+                                      : (_selectedImageFile == null
+                                          ? Icon(
+                                              Icons.image_outlined,
+                                              size: 32,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSurface,
+                                            )
+                                          : ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              child: Image.file(
+                                                _selectedImageFile!,
+                                                fit: BoxFit.cover,
+                                                width: 48,
+                                                height: 48,
+                                              ),
+                                            )),
                                 ),
                                 const SizedBox(width: 16),
                                 Expanded(
