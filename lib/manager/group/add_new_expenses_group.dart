@@ -1,5 +1,7 @@
 // Widget simile a quello incollato per la selezione valuta
 import 'package:flutter/material.dart';
+import 'widgets/participants_section.dart';
+import 'widgets/categories_section.dart';
 import 'widgets/section_flat.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
@@ -696,479 +698,47 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 const SizedBox(height: 24),
 
                 // Sezione 2: Partecipanti
-                SectionFlat(
-                  title: '',
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              loc.get('participants'),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                            ),
-                            const SizedBox(width: 4),
-                            const Text('*',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                        IconButton.filledTonal(
-                          icon: const Icon(Icons.add, size: 18),
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                title: Text(loc.get('add_participant')),
-                                content: TextField(
-                                  controller: _participantController,
-                                  autofocus: true,
-                                  decoration: InputDecoration(
-                                    labelText: loc.get('participant_name'),
-                                    hintText: loc.get('participant_name_hint'),
-                                  ),
-                                  onSubmitted: (val) {
-                                    if (val.trim().isNotEmpty) {
-                                      setState(() {
-                                        _participants.add(ExpenseParticipant(
-                                            name: val.trim()));
-                                        _participantController.clear();
-                                      });
-                                      _closeDialogAndUnfocus();
-                                    }
-                                  },
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => _closeDialogAndUnfocus(),
-                                    child: Text(loc.get('cancel')),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      final val =
-                                          _participantController.text.trim();
-                                      if (val.isNotEmpty) {
-                                        setState(() {
-                                          _participants.add(
-                                              ExpenseParticipant(name: val));
-                                          _participantController.clear();
-                                        });
-                                        _closeDialogAndUnfocus();
-                                      }
-                                    },
-                                    child: Text(loc.get('add')),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                          style: IconButton.styleFrom(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.surfaceContainer,
-                            foregroundColor:
-                                Theme.of(context).colorScheme.onSurface,
-                            minimumSize: const Size(54, 54),
-                          ),
-                        ),
-                      ],
-                    ),
-                    if (_participants.isEmpty) ...[
-                      const SizedBox(height: 16),
-                      Center(
-                        child: Text(
-                          loc.get('no_participants'),
-                          style:
-                              Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface
-                                        .withValues(alpha: 0.6),
-                                  ),
-                        ),
-                      ),
-                    ] else ...[
-                      const SizedBox(height: 12),
-                      ..._participants.asMap().entries.map((entry) {
-                        final i = entry.key;
-                        final p = entry.value;
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4.0),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12.0,
-                                    vertical: 12.0,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.transparent,
-                                    border: Border(
-                                      left: BorderSide(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primaryFixedDim
-                                            .withValues(alpha: 0.5),
-                                        width: 3,
-                                      ),
-                                    ),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.person_outline,
-                                        size: 16,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primaryFixedDim,
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Expanded(
-                                        child: Text(
-                                          p.name,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge,
-                                          semanticsLabel: loc.get(
-                                              'participant_name_semantics',
-                                              params: {'name': p.name}),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              IconButton.filledTonal(
-                                icon: const Icon(Icons.edit_outlined, size: 20),
-                                onPressed: () {
-                                  final editController =
-                                      TextEditingController(text: p.name);
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      title: Text(loc.get('edit_participant')),
-                                      content: TextField(
-                                        controller: editController,
-                                        autofocus: true,
-                                        decoration: InputDecoration(
-                                          labelText:
-                                              loc.get('participant_name'),
-                                          hintText:
-                                              loc.get('participant_name_hint'),
-                                        ),
-                                        onSubmitted: (val) {
-                                          if (val.trim().isNotEmpty) {
-                                            setState(() {
-                                              _participants[i] =
-                                                  ExpenseParticipant(
-                                                      name: val.trim());
-                                            });
-                                            _closeDialogAndUnfocus();
-                                          }
-                                        },
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () =>
-                                              _closeDialogAndUnfocus(),
-                                          child: Text(loc.get('cancel')),
-                                        ),
-                                        TextButton(
-                                          onPressed: () {
-                                            final val =
-                                                editController.text.trim();
-                                            if (val.isNotEmpty) {
-                                              setState(() {
-                                                _participants[i] =
-                                                    ExpenseParticipant(
-                                                        name: val);
-                                              });
-                                              _closeDialogAndUnfocus();
-                                            }
-                                          },
-                                          child: Text(loc.get('save')),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                                style: IconButton.styleFrom(
-                                  backgroundColor: Theme.of(context)
-                                      .colorScheme
-                                      .surfaceContainer,
-                                  foregroundColor:
-                                      Theme.of(context).colorScheme.onSurface,
-                                  minimumSize: const Size(54, 54),
-                                ),
-                              ),
-                              const SizedBox(width: 4),
-                              IconButton.filledTonal(
-                                icon:
-                                    const Icon(Icons.delete_outline, size: 20),
-                                onPressed: () {
-                                  setState(() {
-                                    _participants.removeAt(i);
-                                  });
-                                },
-                                style: IconButton.styleFrom(
-                                  backgroundColor: Theme.of(context)
-                                      .colorScheme
-                                      .surfaceContainer,
-                                  foregroundColor:
-                                      Theme.of(context).colorScheme.error,
-                                  minimumSize: const Size(54, 54),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }),
-                    ],
-                  ],
+                ParticipantsSection(
+                  participants: _participants,
+                  participantController: _participantController,
+                  loc: loc,
+                  onAddParticipant: (String name) {
+                    setState(() {
+                      _participants.add(ExpenseParticipant(name: name));
+                    });
+                  },
+                  onEditParticipant: (int i, String name) {
+                    setState(() {
+                      _participants[i] = ExpenseParticipant(name: name);
+                    });
+                  },
+                  onRemoveParticipant: (int i) {
+                    setState(() {
+                      _participants.removeAt(i);
+                    });
+                  },
                 ),
                 const SizedBox(height: 24),
 
                 // Sezione 3: Categorie
-                SectionFlat(
-                  title: '',
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              loc.get('categories'),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                            ),
-                            const SizedBox(width: 4),
-                            const Text('*',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                        IconButton.filledTonal(
-                          icon: const Icon(Icons.add, size: 18),
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                final TextEditingController categoryController =
-                                    TextEditingController();
-                                return AlertDialog(
-                                  title: Text(loc.get('add_category')),
-                                  content: TextField(
-                                    controller: categoryController,
-                                    autofocus: true,
-                                    decoration: InputDecoration(
-                                      labelText: loc.get('category_name'),
-                                      hintText: loc.get('category_name_hint'),
-                                    ),
-                                    onSubmitted: (val) {
-                                      if (val.trim().isNotEmpty) {
-                                        setState(() {
-                                          _categories.add(ExpenseCategory(
-                                              name: val.trim()));
-                                        });
-                                        _closeDialogAndUnfocus();
-                                      }
-                                    },
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => _closeDialogAndUnfocus(),
-                                      child: Text(loc.get('cancel')),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        final val =
-                                            categoryController.text.trim();
-                                        if (val.isNotEmpty) {
-                                          setState(() {
-                                            _categories.add(
-                                                ExpenseCategory(name: val));
-                                          });
-                                          _closeDialogAndUnfocus();
-                                        }
-                                      },
-                                      child: Text(loc.get('add')),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          },
-                          style: IconButton.styleFrom(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.surfaceContainer,
-                            foregroundColor:
-                                Theme.of(context).colorScheme.onSurface,
-                            minimumSize: const Size(54, 54),
-                          ),
-                        ),
-                      ],
-                    ),
-                    if (_categories.isEmpty) ...[
-                      const SizedBox(height: 16),
-                      Center(
-                        child: Text(
-                          loc.get('no_categories'),
-                          style:
-                              Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface
-                                        .withValues(alpha: 0.6),
-                                  ),
-                        ),
-                      ),
-                    ] else ...[
-                      const SizedBox(height: 12),
-                      ..._categories.asMap().entries.map((entry) {
-                        final i = entry.key;
-                        final c = entry.value;
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4.0),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12.0,
-                                    vertical: 12.0,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.transparent,
-                                    border: Border(
-                                      left: BorderSide(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primaryFixed
-                                            .withValues(alpha: 0.5),
-                                        width: 3,
-                                      ),
-                                    ),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.category_outlined,
-                                        size: 16,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primaryFixedDim,
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Expanded(
-                                        child: Text(
-                                          c.name,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge,
-                                          semanticsLabel: loc.get(
-                                              'category_name_semantics',
-                                              params: {'name': c.name}),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              IconButton.filledTonal(
-                                icon: const Icon(Icons.edit_outlined, size: 20),
-                                onPressed: () {
-                                  final editController =
-                                      TextEditingController(text: c.name);
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      title: Text(loc.get('edit_category')),
-                                      content: TextField(
-                                        controller: editController,
-                                        autofocus: true,
-                                        decoration: InputDecoration(
-                                          labelText: loc.get('category_name'),
-                                          hintText:
-                                              loc.get('category_name_hint'),
-                                        ),
-                                        onSubmitted: (val) {
-                                          if (val.trim().isNotEmpty) {
-                                            setState(() {
-                                              _categories[i] = ExpenseCategory(
-                                                  name: val.trim());
-                                            });
-                                            _closeDialogAndUnfocus();
-                                          }
-                                        },
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () =>
-                                              _closeDialogAndUnfocus(),
-                                          child: Text(loc.get('cancel')),
-                                        ),
-                                        TextButton(
-                                          onPressed: () {
-                                            final val =
-                                                editController.text.trim();
-                                            if (val.isNotEmpty) {
-                                              setState(() {
-                                                _categories[i] =
-                                                    ExpenseCategory(name: val);
-                                              });
-                                              _closeDialogAndUnfocus();
-                                            }
-                                          },
-                                          child: Text(loc.get('save')),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                                style: IconButton.styleFrom(
-                                  backgroundColor: Theme.of(context)
-                                      .colorScheme
-                                      .surfaceContainer,
-                                  foregroundColor:
-                                      Theme.of(context).colorScheme.onSurface,
-                                  minimumSize: const Size(54, 54),
-                                ),
-                              ),
-                              const SizedBox(width: 4),
-                              IconButton.filledTonal(
-                                icon:
-                                    const Icon(Icons.delete_outline, size: 20),
-                                onPressed: () {
-                                  setState(() {
-                                    _categories.removeAt(i);
-                                  });
-                                },
-                                style: IconButton.styleFrom(
-                                  backgroundColor: Theme.of(context)
-                                      .colorScheme
-                                      .surfaceContainer,
-                                  foregroundColor:
-                                      Theme.of(context).colorScheme.error,
-                                  minimumSize: const Size(54, 54),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }),
-                    ],
-                  ],
+                CategoriesSection(
+                  categories: _categories,
+                  loc: loc,
+                  onAddCategory: (String name) {
+                    setState(() {
+                      _categories.add(ExpenseCategory(name: name));
+                    });
+                  },
+                  onEditCategory: (int i, String name) {
+                    setState(() {
+                      _categories[i] = ExpenseCategory(name: name);
+                    });
+                  },
+                  onRemoveCategory: (int i) {
+                    setState(() {
+                      _categories.removeAt(i);
+                    });
+                  },
                 ),
                 const SizedBox(height: 24),
 
