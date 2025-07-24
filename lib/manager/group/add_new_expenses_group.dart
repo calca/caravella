@@ -513,14 +513,6 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
     }
   }
 
-  // --- UTILITY: Unfocus after dialog close ---
-  void _closeDialogAndUnfocus([dynamic result]) {
-    Navigator.of(context).pop(result);
-    Future.delayed(const Duration(milliseconds: 10), () {
-      if (mounted) FocusScope.of(context).unfocus();
-    });
-  }
-
   // Removed _buildSectionFlat method
 
   @override
@@ -805,7 +797,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                   width: 48,
                                   height: 48,
                                   child: _loadingImage
-                                      ? Center(
+                                      ? const Center(
                                           child: SizedBox(
                                             width: 28,
                                             height: 28,

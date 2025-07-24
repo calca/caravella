@@ -48,53 +48,59 @@ class SectionPeriod extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         // Always show two separate rows for start and end date
-        GestureDetector(
-          onTap: () async {
-            FocusScopeNode currentFocus = FocusScope.of(context);
-            if (!currentFocus.hasPrimaryFocus &&
-                currentFocus.focusedChild != null) {
-              currentFocus.unfocus();
-            }
-            onPickDate(context, true);
-            Future.delayed(const Duration(milliseconds: 10), () {
-              FocusScopeNode currentFocus = FocusScope.of(context);
+        Builder(
+          builder: (context) => GestureDetector(
+            onTap: () {
+              final currentFocus = FocusScope.of(context);
               if (!currentFocus.hasPrimaryFocus &&
                   currentFocus.focusedChild != null) {
                 currentFocus.unfocus();
               }
-            });
-          },
-          child: DateCard(
-            day: startDate?.day,
-            label: 'Data Inizio',
-            date: startDate,
-            isActive: startDate != null,
-            icon: startDate == null ? Icons.calendar_today : null,
+              // Call onPickDate synchronously, do not use context after async gap
+              onPickDate(context, true);
+              // Schedule unfocus after a short delay, but do not use context after async gap
+              Future.delayed(const Duration(milliseconds: 10), () {
+                final currentFocus2 = FocusScope.of(context);
+                if (!currentFocus2.hasPrimaryFocus &&
+                    currentFocus2.focusedChild != null) {
+                  currentFocus2.unfocus();
+                }
+              });
+            },
+            child: DateCard(
+              day: startDate?.day,
+              label: 'Data Inizio',
+              date: startDate,
+              isActive: startDate != null,
+              icon: startDate == null ? Icons.calendar_today : null,
+            ),
           ),
         ),
         const SizedBox(height: 8),
-        GestureDetector(
-          onTap: () async {
-            FocusScopeNode currentFocus = FocusScope.of(context);
-            if (!currentFocus.hasPrimaryFocus &&
-                currentFocus.focusedChild != null) {
-              currentFocus.unfocus();
-            }
-            onPickDate(context, false);
-            Future.delayed(const Duration(milliseconds: 10), () {
-              FocusScopeNode currentFocus = FocusScope.of(context);
+        Builder(
+          builder: (context) => GestureDetector(
+            onTap: () {
+              final currentFocus = FocusScope.of(context);
               if (!currentFocus.hasPrimaryFocus &&
                   currentFocus.focusedChild != null) {
                 currentFocus.unfocus();
               }
-            });
-          },
-          child: DateCard(
-            day: endDate?.day,
-            label: 'Data Fine',
-            date: endDate,
-            isActive: endDate != null,
-            icon: endDate == null ? Icons.calendar_today : null,
+              onPickDate(context, false);
+              Future.delayed(const Duration(milliseconds: 10), () {
+                final currentFocus2 = FocusScope.of(context);
+                if (!currentFocus2.hasPrimaryFocus &&
+                    currentFocus2.focusedChild != null) {
+                  currentFocus2.unfocus();
+                }
+              });
+            },
+            child: DateCard(
+              day: endDate?.day,
+              label: 'Data Fine',
+              date: endDate,
+              isActive: endDate != null,
+              icon: endDate == null ? Icons.calendar_today : null,
+            ),
           ),
         ),
       ],
