@@ -109,10 +109,13 @@ class CategoriesSection extends StatelessWidget {
             final i = entry.key;
             final c = entry.value;
             return SectionListTile(
-              icon: Icons.category_outlined, // not shown, but required by constructor
+              icon: Icons
+                  .category_outlined, // not shown, but required by constructor
               title: c.name,
               subtitle: null,
-              borderColor: Theme.of(context).colorScheme.primaryFixed.withAlpha(128),
+              backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+              borderColor:
+                  Theme.of(context).colorScheme.primaryFixed.withAlpha(128),
               onEdit: () {
                 final editController = TextEditingController(text: c.name);
                 showDialog(

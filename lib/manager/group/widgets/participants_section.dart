@@ -111,10 +111,13 @@ class ParticipantsSection extends StatelessWidget {
             final i = entry.key;
             final p = entry.value;
             return SectionListTile(
-              icon: Icons.person_outline, // not shown, but required by constructor
+              icon: Icons
+                  .person_outline, // not shown, but required by constructor
               title: p.name,
               subtitle: null,
-              borderColor: Theme.of(context).colorScheme.primaryFixedDim.withAlpha(128),
+              backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+              borderColor:
+                  Theme.of(context).colorScheme.primaryFixedDim.withAlpha(128),
               onEdit: () {
                 final editController = TextEditingController(text: p.name);
                 showDialog(

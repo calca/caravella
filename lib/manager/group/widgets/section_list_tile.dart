@@ -34,74 +34,73 @@ class SectionListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: padding ?? const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
-              decoration: BoxDecoration(
-                color: backgroundColor ?? Colors.transparent,
-                border: Border(
-                  left: BorderSide(
-                    color: borderColor ??
-                        Theme.of(context).colorScheme.primary.withAlpha(128),
-                    width: 3,
-                  ),
+      child: Container(
+        decoration: BoxDecoration(
+          color: backgroundColor ?? Colors.transparent,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0, vertical: 16.0),
+                // No decoration here, background is on the parent
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            title,
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                          if (subtitle != null)
+                            Text(
+                              subtitle!,
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                        ],
+                      ),
+                    ),
+                    if (trailing != null) ...[
+                      const SizedBox(width: 8),
+                      trailing!,
+                    ],
+                  ],
                 ),
               ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          title,
-                          style: Theme.of(context).textTheme.bodyLarge,
-                        ),
-                        if (subtitle != null)
-                          Text(
-                            subtitle!,
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                      ],
-                    ),
-                  ),
-                  if (trailing != null) ...[
-                    const SizedBox(width: 8),
-                    trailing!,
-                  ],
-                ],
-              ),
             ),
-          ),
-          if (onEdit != null) ...[
-            const SizedBox(width: 8),
-            IconButton.filledTonal(
-              icon: const Icon(Icons.edit_outlined, size: 20),
-              onPressed: onEdit,
-              style: IconButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-                foregroundColor: Theme.of(context).colorScheme.onSurface,
-                minimumSize: const Size(54, 54),
+            if (onEdit != null) ...[
+              const SizedBox(width: 4),
+              IconButton.filledTonal(
+                icon: const Icon(Icons.edit_outlined, size: 20),
+                onPressed: onEdit,
+                style: IconButton.styleFrom(
+                  backgroundColor:
+                      Theme.of(context).colorScheme.surfaceContainer,
+                  foregroundColor: Theme.of(context).colorScheme.onSurface,
+                  minimumSize: const Size(42, 42),
+                ),
               ),
-            ),
+            ],
+            if (onDelete != null) ...[
+              const SizedBox(width: 4),
+              IconButton.filledTonal(
+                icon: const Icon(Icons.delete_outline, size: 20),
+                onPressed: onDelete,
+                style: IconButton.styleFrom(
+                  backgroundColor:
+                      Theme.of(context).colorScheme.surfaceContainer,
+                  foregroundColor:
+                      deleteColor ?? Theme.of(context).colorScheme.error,
+                  minimumSize: const Size(42, 42),
+                ),
+              ),
+            ],
           ],
-          if (onDelete != null) ...[
-            const SizedBox(width: 4),
-            IconButton.filledTonal(
-              icon: const Icon(Icons.delete_outline, size: 20),
-              onPressed: onDelete,
-              style: IconButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-                foregroundColor:
-                    deleteColor ?? Theme.of(context).colorScheme.error,
-                minimumSize: const Size(54, 54),
-              ),
-            ),
-          ],
-        ],
+        ),
       ),
     );
   }
