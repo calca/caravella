@@ -52,12 +52,6 @@ class SectionListTile extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Icon(
-                    icon,
-                    size: 16,
-                    color: iconColor ?? Theme.of(context).colorScheme.primary,
-                  ),
-                  const SizedBox(width: 8),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

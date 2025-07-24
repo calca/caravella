@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
 import '../../../data/expense_participant.dart';
+import 'section_list_tile.dart';
 
 class ParticipantsSection extends StatelessWidget {
   final List<ExpenseParticipant> participants;
@@ -109,114 +110,51 @@ class ParticipantsSection extends StatelessWidget {
           ...participants.asMap().entries.map((entry) {
             final i = entry.key;
             final p = entry.value;
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12.0,
-                        vertical: 12.0,
+            return SectionListTile(
+              icon: Icons.person_outline, // not shown, but required by constructor
+              title: p.name,
+              subtitle: null,
+              borderColor: Theme.of(context).colorScheme.primaryFixedDim.withAlpha(128),
+              onEdit: () {
+                final editController = TextEditingController(text: p.name);
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text(loc.get('edit_participant')),
+                    content: TextField(
+                      controller: editController,
+                      autofocus: true,
+                      decoration: InputDecoration(
+                        labelText: loc.get('participant_name'),
+                        hintText: loc.get('participant_name_hint'),
                       ),
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        border: Border(
-                          left: BorderSide(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .primaryFixedDim
-                                .withAlpha(128), // 0.5 alpha
-                            width: 3,
-                          ),
-                        ),
+                      onSubmitted: (val) {
+                        if (val.trim().isNotEmpty) {
+                          onEditParticipant(i, val.trim());
+                          Navigator.of(context).pop();
+                        }
+                      },
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text(loc.get('cancel')),
                       ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.person_outline,
-                            size: 16,
-                            color:
-                                Theme.of(context).colorScheme.primaryFixedDim,
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              p.name,
-                              style: Theme.of(context).textTheme.bodyLarge,
-                              semanticsLabel: loc.get(
-                                'participant_name_semantics',
-                                params: {'name': p.name},
-                              ),
-                            ),
-                          ),
-                        ],
+                      TextButton(
+                        onPressed: () {
+                          final val = editController.text.trim();
+                          if (val.isNotEmpty) {
+                            onEditParticipant(i, val);
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        child: Text(loc.get('save')),
                       ),
-                    ),
+                    ],
                   ),
-                  const SizedBox(width: 8),
-                  IconButton.filledTonal(
-                    icon: const Icon(Icons.edit_outlined, size: 20),
-                    onPressed: () {
-                      final editController =
-                          TextEditingController(text: p.name);
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: Text(loc.get('edit_participant')),
-                          content: TextField(
-                            controller: editController,
-                            autofocus: true,
-                            decoration: InputDecoration(
-                              labelText: loc.get('participant_name'),
-                              hintText: loc.get('participant_name_hint'),
-                            ),
-                            onSubmitted: (val) {
-                              if (val.trim().isNotEmpty) {
-                                onEditParticipant(i, val.trim());
-                                Navigator.of(context).pop();
-                              }
-                            },
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.of(context).pop(),
-                              child: Text(loc.get('cancel')),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                final val = editController.text.trim();
-                                if (val.isNotEmpty) {
-                                  onEditParticipant(i, val);
-                                  Navigator.of(context).pop();
-                                }
-                              },
-                              child: Text(loc.get('save')),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                    style: IconButton.styleFrom(
-                      backgroundColor:
-                          Theme.of(context).colorScheme.surfaceContainer,
-                      foregroundColor: Theme.of(context).colorScheme.onSurface,
-                      minimumSize: const Size(54, 54),
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  IconButton.filledTonal(
-                    icon: const Icon(Icons.delete_outline, size: 20),
-                    onPressed: () => onRemoveParticipant(i),
-                    style: IconButton.styleFrom(
-                      backgroundColor:
-                          Theme.of(context).colorScheme.surfaceContainer,
-                      foregroundColor: Theme.of(context).colorScheme.error,
-                      minimumSize: const Size(54, 54),
-                    ),
-                  ),
-                ],
-              ),
+                );
+              },
+              onDelete: () => onRemoveParticipant(i),
             );
           }),
         ],
