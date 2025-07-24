@@ -217,7 +217,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
           boxShadow: [
             BoxShadow(
               color:
-                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+                  Theme.of(context).colorScheme.primary.withOpacity(0.3),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
