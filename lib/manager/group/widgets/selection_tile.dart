@@ -64,14 +64,17 @@ class SelectionTile extends StatelessWidget {
         ],
       ],
     );
-    final tile = Container(
-      padding:
-          padding ?? const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      decoration: BoxDecoration(
-        color: backgroundColor ?? Colors.transparent,
-        borderRadius: BorderRadius.circular(borderRadius),
+    final tile = ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 52),
+      child: Container(
+        padding:
+            padding ?? const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+        decoration: BoxDecoration(
+          color: backgroundColor ?? Colors.transparent,
+          borderRadius: BorderRadius.circular(borderRadius),
+        ),
+        child: content,
       ),
-      child: content,
     );
     if (onTap != null) {
       return InkWell(

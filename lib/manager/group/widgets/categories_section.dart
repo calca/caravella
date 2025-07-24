@@ -95,51 +95,49 @@ class CategoriesSection extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: SelectionTile(
-            leading: const Icon(Icons.add),
-            title: loc.get('add_category'),
-            onTap: () {
-              final TextEditingController categoryController =
-                  TextEditingController();
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: Text(loc.get('add_category')),
-                  content: TextField(
-                    controller: categoryController,
-                    autofocus: true,
-                    decoration: InputDecoration(
-                      labelText: loc.get('category_name'),
-                      hintText: loc.get('category_name_hint'),
-                    ),
-                    onSubmitted: (val) {
-                      if (val.trim().isNotEmpty) {
-                        onAddCategory(val.trim());
-                        Navigator.of(context).pop();
-                      }
-                    },
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text(loc.get('cancel')),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        final val = categoryController.text.trim();
-                        if (val.isNotEmpty) {
-                          onAddCategory(val);
+              leading: const Icon(Icons.add),
+              title: loc.get('add_category'),
+              onTap: () {
+                final TextEditingController categoryController =
+                    TextEditingController();
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text(loc.get('add_category')),
+                    content: TextField(
+                      controller: categoryController,
+                      autofocus: true,
+                      decoration: InputDecoration(
+                        labelText: loc.get('category_name'),
+                        hintText: loc.get('category_name_hint'),
+                      ),
+                      onSubmitted: (val) {
+                        if (val.trim().isNotEmpty) {
+                          onAddCategory(val.trim());
                           Navigator.of(context).pop();
                         }
                       },
-                      child: Text(loc.get('add')),
                     ),
-                  ],
-                ),
-              );
-            },
-            backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-            borderRadius: 8,
-          ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text(loc.get('cancel')),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          final val = categoryController.text.trim();
+                          if (val.isNotEmpty) {
+                            onAddCategory(val);
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        child: Text(loc.get('add')),
+                      ),
+                    ],
+                  ),
+                );
+              },
+              backgroundColor: Theme.of(context).colorScheme.surfaceContainer),
         ),
       ],
     );

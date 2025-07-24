@@ -140,7 +140,6 @@ class ParticipantsSection extends StatelessWidget {
               );
             },
             backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-            borderRadius: 8,
           ),
         ),
       ],
