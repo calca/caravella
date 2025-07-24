@@ -46,114 +46,56 @@ class SectionPeriod extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 8),
-        if (startDate == null && endDate == null) ...[
-          Row(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: () async {
-                    FocusScopeNode currentFocus = FocusScope.of(context);
-                    if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
-                      currentFocus.unfocus();
-                    }
-                    onPickDate(context, true);
-                    // Unfocus again after picker closes
-                    Future.delayed(const Duration(milliseconds: 10), () {
-                      FocusScopeNode currentFocus = FocusScope.of(context);
-                      if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
-                        currentFocus.unfocus();
-                      }
-                    });
-                  },
-                  child: const _DateCard(
-                    day: null,
-                    label: 'Data Inizio',
-                    date: null,
-                    isActive: false,
-                    icon: Icons.calendar_today,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: GestureDetector(
-                  onTap: () async {
-                    FocusScopeNode currentFocus = FocusScope.of(context);
-                    if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
-                      currentFocus.unfocus();
-                    }
-                    onPickDate(context, false);
-                    Future.delayed(const Duration(milliseconds: 10), () {
-                      FocusScopeNode currentFocus = FocusScope.of(context);
-                      if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
-                        currentFocus.unfocus();
-                      }
-                    });
-                  },
-                  child: const _DateCard(
-                    day: null,
-                    label: 'Data Fine',
-                    date: null,
-                    isActive: false,
-                    icon: Icons.calendar_today,
-                  ),
-                ),
-              ),
-            ],
+        // Always show two separate rows for start and end date
+        GestureDetector(
+          onTap: () async {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+            if (!currentFocus.hasPrimaryFocus &&
+                currentFocus.focusedChild != null) {
+              currentFocus.unfocus();
+            }
+            onPickDate(context, true);
+            Future.delayed(const Duration(milliseconds: 10), () {
+              FocusScopeNode currentFocus = FocusScope.of(context);
+              if (!currentFocus.hasPrimaryFocus &&
+                  currentFocus.focusedChild != null) {
+                currentFocus.unfocus();
+              }
+            });
+          },
+          child: _DateCard(
+            day: startDate?.day,
+            label: 'Data Inizio',
+            date: startDate,
+            isActive: startDate != null,
+            icon: startDate == null ? Icons.calendar_today : null,
           ),
-        ] else ...[
-          Row(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: () async {
-                    FocusScopeNode currentFocus = FocusScope.of(context);
-                    if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
-                      currentFocus.unfocus();
-                    }
-                    onPickDate(context, true);
-                    Future.delayed(const Duration(milliseconds: 10), () {
-                      FocusScopeNode currentFocus = FocusScope.of(context);
-                      if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
-                        currentFocus.unfocus();
-                      }
-                    });
-                  },
-                  child: _DateCard(
-                    day: startDate?.day,
-                    label: 'Data Inizio',
-                    date: startDate,
-                    isActive: startDate != null,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: GestureDetector(
-                  onTap: () async {
-                    FocusScopeNode currentFocus = FocusScope.of(context);
-                    if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
-                      currentFocus.unfocus();
-                    }
-                    onPickDate(context, false);
-                    Future.delayed(const Duration(milliseconds: 10), () {
-                      FocusScopeNode currentFocus = FocusScope.of(context);
-                      if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
-                        currentFocus.unfocus();
-                      }
-                    });
-                  },
-                  child: _DateCard(
-                    day: endDate?.day,
-                    label: 'Data Fine',
-                    date: endDate,
-                    isActive: endDate != null,
-                  ),
-                ),
-              ),
-            ],
+        ),
+        const SizedBox(height: 8),
+        GestureDetector(
+          onTap: () async {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+            if (!currentFocus.hasPrimaryFocus &&
+                currentFocus.focusedChild != null) {
+              currentFocus.unfocus();
+            }
+            onPickDate(context, false);
+            Future.delayed(const Duration(milliseconds: 10), () {
+              FocusScopeNode currentFocus = FocusScope.of(context);
+              if (!currentFocus.hasPrimaryFocus &&
+                  currentFocus.focusedChild != null) {
+                currentFocus.unfocus();
+              }
+            });
+          },
+          child: _DateCard(
+            day: endDate?.day,
+            label: 'Data Fine',
+            date: endDate,
+            isActive: endDate != null,
+            icon: endDate == null ? Icons.calendar_today : null,
           ),
-        ],
+        ),
       ],
     );
   }
@@ -177,23 +119,22 @@ class _DateCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
       child: SizedBox(
         height: 64,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              width: 32,
-              height: 32,
+              width: 48,
+              height: 48,
               decoration: BoxDecoration(
                 color: Colors.transparent,
                 borderRadius: BorderRadius.circular(8),
               ),
               alignment: Alignment.center,
               child: icon != null
-                  ? Icon(icon, size: 22)
+                  ? Icon(icon, size: 32)
                   : Text(
                       day != null ? day.toString() : '--',
                       style: theme.textTheme.titleLarge?.copyWith(
