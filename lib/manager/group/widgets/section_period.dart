@@ -56,11 +56,11 @@ class SectionPeriod extends StatelessWidget {
               currentFocus.unfocus();
             }
             onPickDate(true);
+            final focusAfter = FocusScope.of(context);
             Future.delayed(const Duration(milliseconds: 10), () {
-              final currentFocus2 = FocusScope.of(context);
-              if (!currentFocus2.hasPrimaryFocus &&
-                  currentFocus2.focusedChild != null) {
-                currentFocus2.unfocus();
+              if (!focusAfter.hasPrimaryFocus &&
+                  focusAfter.focusedChild != null) {
+                focusAfter.unfocus();
               }
             });
           },
@@ -81,11 +81,11 @@ class SectionPeriod extends StatelessWidget {
               currentFocus.unfocus();
             }
             onPickDate(false);
+            final focusAfter = FocusScope.of(context);
             Future.delayed(const Duration(milliseconds: 10), () {
-              final currentFocus2 = FocusScope.of(context);
-              if (!currentFocus2.hasPrimaryFocus &&
-                  currentFocus2.focusedChild != null) {
-                currentFocus2.unfocus();
+              if (!focusAfter.hasPrimaryFocus &&
+                  focusAfter.focusedChild != null) {
+                focusAfter.unfocus();
               }
             });
           },
