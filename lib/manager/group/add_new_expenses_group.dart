@@ -37,28 +37,30 @@ class CurrencySelectorTile extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(8),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        padding: const EdgeInsets.only(left: 8, top: 8, bottom: 8),
         child: Row(
           children: [
             const Icon(Icons.account_balance_wallet_outlined, size: 32),
             const SizedBox(width: 28),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w400,
-                      ),
-                ),
-                Text(
-                  '$symbol $code',
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    name,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w400,
+                        ),
+                  ),
+                  Text(
+                    '$symbol $code',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ],
+              ),
             ),
-            const Spacer(),
-            const Icon(Icons.chevron_right, size: 24),
+            Icon(Icons.chevron_right,
+                size: 24, color: Theme.of(context).colorScheme.outline),
           ],
         ),
       ),
