@@ -5,7 +5,7 @@ import 'date_card.dart';
 class SectionPeriod extends StatelessWidget {
   final DateTime? startDate;
   final DateTime? endDate;
-  final void Function(BuildContext, bool) onPickDate;
+  final void Function(bool) onPickDate;
   final void Function() onClearDates;
   final AppLocalizations loc;
 
@@ -48,59 +48,53 @@ class SectionPeriod extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         // Always show two separate rows for start and end date
-        Builder(
-          builder: (context) => GestureDetector(
-            onTap: () {
-              final currentFocus = FocusScope.of(context);
-              if (!currentFocus.hasPrimaryFocus &&
-                  currentFocus.focusedChild != null) {
-                currentFocus.unfocus();
+        GestureDetector(
+          onTap: () {
+            final currentFocus = FocusScope.of(context);
+            if (!currentFocus.hasPrimaryFocus &&
+                currentFocus.focusedChild != null) {
+              currentFocus.unfocus();
+            }
+            onPickDate(true);
+            Future.delayed(const Duration(milliseconds: 10), () {
+              final currentFocus2 = FocusScope.of(context);
+              if (!currentFocus2.hasPrimaryFocus &&
+                  currentFocus2.focusedChild != null) {
+                currentFocus2.unfocus();
               }
-              // Call onPickDate synchronously, do not use context after async gap
-              onPickDate(context, true);
-              // Schedule unfocus after a short delay, but do not use context after async gap
-              Future.delayed(const Duration(milliseconds: 10), () {
-                final currentFocus2 = FocusScope.of(context);
-                if (!currentFocus2.hasPrimaryFocus &&
-                    currentFocus2.focusedChild != null) {
-                  currentFocus2.unfocus();
-                }
-              });
-            },
-            child: DateCard(
-              day: startDate?.day,
-              label: 'Data Inizio',
-              date: startDate,
-              isActive: startDate != null,
-              icon: startDate == null ? Icons.calendar_today : null,
-            ),
+            });
+          },
+          child: DateCard(
+            day: startDate?.day,
+            label: 'Data Inizio',
+            date: startDate,
+            isActive: startDate != null,
+            icon: startDate == null ? Icons.calendar_today : null,
           ),
         ),
         const SizedBox(height: 8),
-        Builder(
-          builder: (context) => GestureDetector(
-            onTap: () {
-              final currentFocus = FocusScope.of(context);
-              if (!currentFocus.hasPrimaryFocus &&
-                  currentFocus.focusedChild != null) {
-                currentFocus.unfocus();
+        GestureDetector(
+          onTap: () {
+            final currentFocus = FocusScope.of(context);
+            if (!currentFocus.hasPrimaryFocus &&
+                currentFocus.focusedChild != null) {
+              currentFocus.unfocus();
+            }
+            onPickDate(false);
+            Future.delayed(const Duration(milliseconds: 10), () {
+              final currentFocus2 = FocusScope.of(context);
+              if (!currentFocus2.hasPrimaryFocus &&
+                  currentFocus2.focusedChild != null) {
+                currentFocus2.unfocus();
               }
-              onPickDate(context, false);
-              Future.delayed(const Duration(milliseconds: 10), () {
-                final currentFocus2 = FocusScope.of(context);
-                if (!currentFocus2.hasPrimaryFocus &&
-                    currentFocus2.focusedChild != null) {
-                  currentFocus2.unfocus();
-                }
-              });
-            },
-            child: DateCard(
-              day: endDate?.day,
-              label: 'Data Fine',
-              date: endDate,
-              isActive: endDate != null,
-              icon: endDate == null ? Icons.calendar_today : null,
-            ),
+            });
+          },
+          child: DateCard(
+            day: endDate?.day,
+            label: 'Data Fine',
+            date: endDate,
+            isActive: endDate != null,
+            icon: endDate == null ? Icons.calendar_today : null,
           ),
         ),
       ],

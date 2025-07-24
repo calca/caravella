@@ -688,7 +688,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 SectionPeriod(
                   startDate: _startDate,
                   endDate: _endDate,
-                  onPickDate: _pickDate,
+                  onPickDate: (isStart) => _pickDate(context, isStart),
                   onClearDates: () {
                     setState(() {
                       _startDate = null;
@@ -793,7 +793,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                             child: Row(
                               children: [
                                 // Leading icon or image
-                                Container(
+                                SizedBox(
                                   width: 48,
                                   height: 48,
                                   child: _loadingImage
