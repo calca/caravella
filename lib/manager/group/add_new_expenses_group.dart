@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'widgets/participants_section.dart';
 import 'widgets/categories_section.dart';
 import 'widgets/section_flat.dart';
-import 'widgets/currency_selector_tile.dart';
+import 'widgets/selection_tile.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 import 'dart:typed_data';
@@ -19,8 +19,6 @@ import '../../app_localizations.dart';
 import '../../state/expense_group_notifier.dart';
 import '../../widgets/caravella_app_bar.dart';
 import 'widgets/section_period.dart';
-
-// CurrencySelectorTile is now in widgets/currency_selector_tile.dart
 
 class AddNewExpensesGroupPage extends StatefulWidget {
   final ExpenseGroup? trip;
@@ -725,11 +723,20 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                   ),
                         ),
                         const SizedBox(height: 8),
-                        CurrencySelectorTile(
-                          symbol: _selectedCurrency['symbol']!,
-                          code: _selectedCurrency['code']!,
-                          name: _selectedCurrency['name']!,
+                        SelectionTile(
+                          leading: const Icon(
+                              Icons.account_balance_wallet_outlined,
+                              size: 32),
+                          title: _selectedCurrency['name']!,
+                          subtitle:
+                              '0${_selectedCurrency['symbol']} ${_selectedCurrency['code']}',
+                          trailing: Icon(Icons.chevron_right,
+                              size: 24,
+                              color: Theme.of(context).colorScheme.outline),
                           onTap: _showCurrencySheet,
+                          borderRadius: 8,
+                          padding:
+                              const EdgeInsets.only(left: 8, top: 8, bottom: 8),
                         ),
                       ],
                     ),
