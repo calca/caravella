@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'widgets/participants_section.dart';
 import 'widgets/categories_section.dart';
 import 'widgets/section_flat.dart';
+import 'widgets/currency_selector_tile.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 import 'dart:typed_data';
@@ -19,56 +20,7 @@ import '../../state/expense_group_notifier.dart';
 import '../../widgets/caravella_app_bar.dart';
 import 'widgets/section_period.dart';
 
-class CurrencySelectorTile extends StatelessWidget {
-  final String symbol;
-  final String code;
-  final String name;
-  final VoidCallback onTap;
-
-  const CurrencySelectorTile({
-    super.key,
-    required this.symbol,
-    required this.code,
-    required this.name,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
-      child: Padding(
-        padding: const EdgeInsets.only(left: 8, top: 8, bottom: 8),
-        child: Row(
-          children: [
-            const Icon(Icons.account_balance_wallet_outlined, size: 32),
-            const SizedBox(width: 28),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    name,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w400,
-                        ),
-                  ),
-                  Text(
-                    '$symbol $code',
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                ],
-              ),
-            ),
-            Icon(Icons.chevron_right,
-                size: 24, color: Theme.of(context).colorScheme.outline),
-          ],
-        ),
-      ),
-    );
-  }
-}
+// CurrencySelectorTile is now in widgets/currency_selector_tile.dart
 
 class AddNewExpensesGroupPage extends StatefulWidget {
   final ExpenseGroup? trip;
