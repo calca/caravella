@@ -109,7 +109,7 @@ class CategoriesSection extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: SelectionTile(
-              leading: const Icon(Icons.add, color: Colors.green),
+              leading: const Icon(Icons.add),
               title: loc.get('add_category'),
               onTap: () {
                 final TextEditingController categoryController =
