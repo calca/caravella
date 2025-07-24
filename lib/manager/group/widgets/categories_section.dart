@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
 import '../../../data/expense_category.dart';
 import 'section_list_tile.dart';
+import 'selection_tile.dart';
 
 class CategoriesSection extends StatelessWidget {
   final List<ExpenseCategory> categories;
@@ -25,69 +26,16 @@ class CategoriesSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: [
-                Text(
-                  loc.get('categories'),
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium
-                      ?.copyWith(fontWeight: FontWeight.w600),
-                ),
-                const SizedBox(width: 4),
-                const Text('*', style: TextStyle(fontWeight: FontWeight.bold)),
-              ],
+            Text(
+              loc.get('categories'),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(fontWeight: FontWeight.w600),
             ),
-            IconButton.filledTonal(
-              icon: const Icon(Icons.add, size: 18),
-              onPressed: () {
-                final TextEditingController categoryController =
-                    TextEditingController();
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: Text(loc.get('add_category')),
-                    content: TextField(
-                      controller: categoryController,
-                      autofocus: true,
-                      decoration: InputDecoration(
-                        labelText: loc.get('category_name'),
-                        hintText: loc.get('category_name_hint'),
-                      ),
-                      onSubmitted: (val) {
-                        if (val.trim().isNotEmpty) {
-                          onAddCategory(val.trim());
-                          Navigator.of(context).pop();
-                        }
-                      },
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: Text(loc.get('cancel')),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          final val = categoryController.text.trim();
-                          if (val.isNotEmpty) {
-                            onAddCategory(val);
-                            Navigator.of(context).pop();
-                          }
-                        },
-                        child: Text(loc.get('add')),
-                      ),
-                    ],
-                  ),
-                );
-              },
-              style: IconButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-                foregroundColor: Theme.of(context).colorScheme.onSurface,
-                minimumSize: const Size(54, 54),
-              ),
-            ),
+            const SizedBox(width: 4),
+            const Text('*', style: TextStyle(fontWeight: FontWeight.bold)),
           ],
         ),
         if (categories.isEmpty) ...[
@@ -158,6 +106,55 @@ class CategoriesSection extends StatelessWidget {
               onDelete: () => onRemoveCategory(i),
             );
           }),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: SelectionTile(
+              leading: const Icon(Icons.add, color: Colors.green),
+              title: loc.get('add_category'),
+              onTap: () {
+                final TextEditingController categoryController =
+                    TextEditingController();
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text(loc.get('add_category')),
+                    content: TextField(
+                      controller: categoryController,
+                      autofocus: true,
+                      decoration: InputDecoration(
+                        labelText: loc.get('category_name'),
+                        hintText: loc.get('category_name_hint'),
+                      ),
+                      onSubmitted: (val) {
+                        if (val.trim().isNotEmpty) {
+                          onAddCategory(val.trim());
+                          Navigator.of(context).pop();
+                        }
+                      },
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text(loc.get('cancel')),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          final val = categoryController.text.trim();
+                          if (val.isNotEmpty) {
+                            onAddCategory(val);
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        child: Text(loc.get('add')),
+                      ),
+                    ],
+                  ),
+                );
+              },
+              backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+              borderRadius: 8,
+            ),
+          ),
         ],
       ],
     );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
 import '../../../data/expense_participant.dart';
 import 'section_list_tile.dart';
+import 'selection_tile.dart';
 
 class ParticipantsSection extends StatelessWidget {
   final List<ExpenseParticipant> participants;
@@ -27,69 +28,16 @@ class ParticipantsSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: [
-                Text(
-                  loc.get('participants'),
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium
-                      ?.copyWith(fontWeight: FontWeight.w600),
-                ),
-                const SizedBox(width: 4),
-                const Text('*', style: TextStyle(fontWeight: FontWeight.bold)),
-              ],
+            Text(
+              loc.get('participants'),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(fontWeight: FontWeight.w600),
             ),
-            IconButton.filledTonal(
-              icon: const Icon(Icons.add, size: 18),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: Text(loc.get('add_participant')),
-                    content: TextField(
-                      controller: participantController,
-                      autofocus: true,
-                      decoration: InputDecoration(
-                        labelText: loc.get('participant_name'),
-                        hintText: loc.get('participant_name_hint'),
-                      ),
-                      onSubmitted: (val) {
-                        if (val.trim().isNotEmpty) {
-                          onAddParticipant(val.trim());
-                          participantController.clear();
-                          Navigator.of(context).pop();
-                        }
-                      },
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: Text(loc.get('cancel')),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          final val = participantController.text.trim();
-                          if (val.isNotEmpty) {
-                            onAddParticipant(val);
-                            participantController.clear();
-                            Navigator.of(context).pop();
-                          }
-                        },
-                        child: Text(loc.get('add')),
-                      ),
-                    ],
-                  ),
-                );
-              },
-              style: IconButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-                foregroundColor: Theme.of(context).colorScheme.onSurface,
-                minimumSize: const Size(54, 54),
-              ),
-            ),
+            const SizedBox(width: 4),
+            const Text('*', style: TextStyle(fontWeight: FontWeight.bold)),
           ],
         ),
         if (participants.isEmpty) ...[
@@ -160,6 +108,55 @@ class ParticipantsSection extends StatelessWidget {
               onDelete: () => onRemoveParticipant(i),
             );
           }),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: SelectionTile(
+              leading: const Icon(Icons.add, color: Colors.green),
+              title: loc.get('add_participant'),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text(loc.get('add_participant')),
+                    content: TextField(
+                      controller: participantController,
+                      autofocus: true,
+                      decoration: InputDecoration(
+                        labelText: loc.get('participant_name'),
+                        hintText: loc.get('participant_name_hint'),
+                      ),
+                      onSubmitted: (val) {
+                        if (val.trim().isNotEmpty) {
+                          onAddParticipant(val.trim());
+                          participantController.clear();
+                          Navigator.of(context).pop();
+                        }
+                      },
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text(loc.get('cancel')),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          final val = participantController.text.trim();
+                          if (val.isNotEmpty) {
+                            onAddParticipant(val);
+                            participantController.clear();
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        child: Text(loc.get('add')),
+                      ),
+                    ],
+                  ),
+                );
+              },
+              backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+              borderRadius: 8,
+            ),
+          ),
         ],
       ],
     );
