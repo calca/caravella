@@ -42,30 +42,48 @@ class ThemedOutlinedButton extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final isEnabled = onPressed != null;
 
-    return OutlinedButton(
-      onPressed: onPressed,
-      style: OutlinedButton.styleFrom(
-        backgroundColor: isPrimary
-            ? (isEnabled ? colorScheme.primary : colorScheme.onSurface.withValues(alpha: 0.12))
-            : (isEnabled ? colorScheme.surface : colorScheme.onSurface.withValues(alpha: 0.12)),
-        foregroundColor: isPrimary
-            ? (isEnabled ? colorScheme.onPrimary : colorScheme.onSurface.withValues(alpha: 0.38))
-            : (isEnabled ? colorScheme.onSurface : colorScheme.onSurface.withValues(alpha: 0.38)),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(32.0),
-        ),
-        side: BorderSide(
-          color: isPrimary
-              ? (isEnabled ? colorScheme.primary : colorScheme.onSurface.withValues(alpha: 0.12))
-              : (isEnabled ? colorScheme.outline : colorScheme.onSurface.withValues(alpha: 0.12)),
-          width: isPrimary ? 2 : 1,
-        ),
-        padding: padding,
-        minimumSize: minimumSize,
-        elevation: isPrimary && isEnabled ? 1 : 0,
-        shadowColor: colorScheme.shadow,
-      ),
-      child: child,
-    );
+    final ButtonStyle style = (isPrimary
+        ? FilledButton.styleFrom(
+            backgroundColor: isEnabled
+                ? colorScheme.primary
+                : colorScheme.onSurface.withOpacity(0.12),
+            foregroundColor: isEnabled
+                ? colorScheme.onPrimary
+                : colorScheme.onSurface.withOpacity(0.38),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(32.0),
+            ),
+            padding: padding,
+            minimumSize: minimumSize,
+            elevation: isEnabled ? 1 : 0,
+            shadowColor: colorScheme.shadow,
+          )
+        : FilledButton.styleFrom(
+            backgroundColor: isEnabled
+                ? colorScheme.surfaceContainerHighest
+                : colorScheme.onSurface.withOpacity(0.12),
+            foregroundColor: isEnabled
+                ? colorScheme.onSurface
+                : colorScheme.onSurface.withOpacity(0.38),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(32.0),
+            ),
+            padding: padding,
+            minimumSize: minimumSize,
+            elevation: 0,
+            shadowColor: colorScheme.shadow,
+          ));
+
+    return isPrimary
+        ? FilledButton(
+            onPressed: onPressed,
+            style: style,
+            child: child,
+          )
+        : FilledButton.tonal(
+            onPressed: onPressed,
+            style: style,
+            child: child,
+          );
   }
 }

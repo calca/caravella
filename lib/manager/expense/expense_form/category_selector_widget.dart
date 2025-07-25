@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
-import '../../../widgets/themed_outlined_button.dart';
 import '../../../data/expense_category.dart';
 
 class CategorySelectorWidget extends StatefulWidget {
@@ -120,7 +119,7 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
                                       color: widget.selectedCategory == cat
                                           ? Theme.of(context)
                                               .colorScheme
-                                              .onPrimaryContainer
+                                              .onPrimary
                                           : Theme.of(context)
                                               .colorScheme
                                               .onSurface,
@@ -133,9 +132,8 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
                                     : Theme.of(context)
                                         .colorScheme
                                         .surfaceContainerHighest,
-                                selectedColor: Theme.of(context)
-                                    .colorScheme
-                                    .primaryContainer,
+                                selectedColor:
+                                    Theme.of(context).colorScheme.primary,
                                 side: BorderSide(
                                   color: widget.selectedCategory == cat
                                       ? Theme.of(context).colorScheme.primary
@@ -166,10 +164,16 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
                 ),
               ),
             ),
-            ThemedOutlinedButton.icon(
+            IconButton.filledTonal(
               onPressed: widget.onAddCategory,
-              icon: const Icon(Icons.add, size: 22),
-            ),
+              icon: const Icon(Icons.add),
+              iconSize: 24,
+              style: IconButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+                foregroundColor: Theme.of(context).colorScheme.onSurface,
+                minimumSize: const Size(42, 42),
+              ),
+            )
           ],
         ),
       ],

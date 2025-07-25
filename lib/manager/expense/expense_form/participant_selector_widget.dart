@@ -55,7 +55,7 @@ class ParticipantSelectorWidget extends StatelessWidget {
                                       color: selectedParticipant == p
                                           ? Theme.of(context)
                                               .colorScheme
-                                              .onPrimaryContainer
+                                              .onPrimary
                                           : Theme.of(context)
                                               .colorScheme
                                               .onSurface,
@@ -68,9 +68,8 @@ class ParticipantSelectorWidget extends StatelessWidget {
                                     : Theme.of(context)
                                         .colorScheme
                                         .surfaceContainerHighest,
-                                selectedColor: Theme.of(context)
-                                    .colorScheme
-                                    .primaryContainer,
+                                selectedColor:
+                                    Theme.of(context).colorScheme.primary,
                                 side: BorderSide(
                                   color: selectedParticipant == p
                                       ? Theme.of(context).colorScheme.primary
