@@ -44,12 +44,10 @@ class ThemedOutlinedButton extends StatelessWidget {
 
     final ButtonStyle style = (isPrimary
         ? FilledButton.styleFrom(
-            backgroundColor: isEnabled
-                ? colorScheme.primary
-                : colorScheme.onSurface.withOpacity(0.12),
-            foregroundColor: isEnabled
-                ? colorScheme.onPrimary
-                : colorScheme.onSurface.withOpacity(0.38),
+            backgroundColor:
+                isEnabled ? colorScheme.primary : colorScheme.onSurface,
+            foregroundColor:
+                isEnabled ? colorScheme.onPrimary : colorScheme.onSurface,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(32.0),
             ),
@@ -61,10 +59,9 @@ class ThemedOutlinedButton extends StatelessWidget {
         : FilledButton.styleFrom(
             backgroundColor: isEnabled
                 ? colorScheme.surfaceContainerHighest
-                : colorScheme.onSurface.withOpacity(0.12),
-            foregroundColor: isEnabled
-                ? colorScheme.onSurface
-                : colorScheme.onSurface.withOpacity(0.38),
+                : colorScheme.onSurface,
+            foregroundColor:
+                isEnabled ? colorScheme.onSurface : colorScheme.onSurface,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(32.0),
             ),
