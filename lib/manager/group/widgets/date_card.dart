@@ -50,7 +50,7 @@ class DateCard extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         label,
-                        style: theme.textTheme.bodySmall?.copyWith(
+                        style: theme.textTheme.bodyLarge?.copyWith(
                           color: theme.colorScheme.onSurface
                               .withValues(alpha: 0.7),
                           fontWeight: FontWeight.w500,
