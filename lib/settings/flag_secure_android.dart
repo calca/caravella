@@ -1,12 +1,12 @@
-import 'package:flutter_windowmanager/flutter_windowmanager.dart';
+import 'package:flag_secure/flag_secure.dart';
 
 class FlagSecureAndroid {
   static Future<void> setFlagSecure(bool enabled) async {
     try {
       if (enabled) {
-        await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+        await FlagSecure.set();
       } else {
-        await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
+        await FlagSecure.unset();
       }
     } catch (_) {}
   }
