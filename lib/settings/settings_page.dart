@@ -210,7 +210,26 @@ class SettingsPage extends StatelessWidget {
                         },
                       ),
                     ),
-                    // Opzione FLAG_SECURE solo su Android
+                    // ...existing code...
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+                child: Text(
+                  'Privacy',
+                  style: textTheme.titleSmall?.copyWith(
+                    color: colorScheme.onSurface,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Column(
+                  children: [
                     if (Theme.of(context).platform == TargetPlatform.android)
                       Card(
                         elevation: 0,
