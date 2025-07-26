@@ -48,6 +48,7 @@ dependencies:
   uuid: ^4.2.2
   share_plus: ^11.0.0
   archive: ^4.0.7
+  flutter_windowmanager: ^0.2.0
 
 dev_dependencies:
   flutter_test:
