@@ -124,16 +124,6 @@ class SettingsPage extends StatelessWidget {
                         },
                       ),
                     ),
-                    // Opzione FLAG_SECURE solo su Android
-                    if (Theme.of(context).platform == TargetPlatform.android)
-                      Card(
-                        elevation: 0,
-                        color: colorScheme.surface,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: FlagSecureSwitch(),
-                      ),
                     const SizedBox(height: 8),
                     Card(
                       elevation: 0,
@@ -220,6 +210,16 @@ class SettingsPage extends StatelessWidget {
                         },
                       ),
                     ),
+                    // Opzione FLAG_SECURE solo su Android
+                    if (Theme.of(context).platform == TargetPlatform.android)
+                      Card(
+                        elevation: 0,
+                        color: colorScheme.surface,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: FlagSecureSwitch(),
+                      ),
                   ],
                 ),
               ),
