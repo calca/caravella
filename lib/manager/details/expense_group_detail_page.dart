@@ -519,37 +519,45 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 24),
                 ],
               ),
             ),
           ),
 
           // Expenses Content
-          SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-            sliver: SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Attività',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: colorScheme.onSurface,
-                          fontSize: 20,
-                        ),
-                  ),
-                  const SizedBox(height: 16),
-                  trip.expenses.isEmpty
-                      ? EmptyExpenses(
-                          semanticLabel: loc.get('no_expense_label'))
-                      : ExpenseList(
-                          expenses: trip.expenses,
-                          currency: trip.currency,
-                          onExpenseTap: _openEditExpense,
-                        ),
-                ],
+          SliverToBoxAdapter(
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: colorScheme.surfaceContainer,
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(24)),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 24, 16, 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Attività',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: colorScheme.onSurface,
+                            fontSize: 20,
+                          ),
+                    ),
+                    const SizedBox(height: 16),
+                    trip.expenses.isEmpty
+                        ? EmptyExpenses(
+                            semanticLabel: loc.get('no_expense_label'))
+                        : ExpenseList(
+                            expenses: trip.expenses,
+                            currency: trip.currency,
+                            onExpenseTap: _openEditExpense,
+                          ),
+                  ],
+                ),
               ),
             ),
           ),
