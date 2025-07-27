@@ -134,9 +134,11 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       if (_savedImagePath != null) {
         _selectedImageFile = File(_savedImagePath!);
       }
-      // Precompila nome e partecipanti
+      // Precompila nome, partecipanti e date
       _titleController.text = widget.trip!.title;
       _participants.addAll(widget.trip!.participants);
+      _startDate = widget.trip!.startDate;
+      _endDate = widget.trip!.endDate;
     }
   }
 
