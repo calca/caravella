@@ -6,38 +6,51 @@ class NoExpense extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.receipt_long_outlined,
-            size: 120,
-            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
-            semanticLabel: semanticLabel,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Nessuna spesa',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+    final width = MediaQuery.of(context).size.width;
+    final iconSize = width * 0.10;
+    return Column(
+      children: [
+        Expanded(
+          child: Align(
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 24),
+                Icon(
+                  Icons.receipt_long_outlined,
+                  size: iconSize,
                   color: Theme.of(context)
                       .colorScheme
                       .outline
-                      .withValues(alpha: 0.6),
+                      .withValues(alpha: 0.3),
+                  semanticLabel: semanticLabel,
                 ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Aggiungi la prima spesa per iniziare',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .outline
-                      .withValues(alpha: 0.5),
+                const SizedBox(height: 16),
+                Text(
+                  'Nessuna spesa',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .outline
+                            .withValues(alpha: 0.6),
+                      ),
                 ),
+                const SizedBox(height: 8),
+                Text(
+                  'Aggiungi la prima spesa per iniziare',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .outline
+                            .withValues(alpha: 0.5),
+                      ),
+                ),
+              ],
+            ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
