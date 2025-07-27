@@ -91,6 +91,13 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     } else {
       _date = DateTime.now();
       _nameController.text = '';
+      // Preseleziona il primo elemento di paidBy e category se disponibili
+      _paidBy = widget.participants.isNotEmpty
+          ? widget.participants.first
+          : ExpenseParticipant(name: '');
+      _category = widget.categories.isNotEmpty
+          ? widget.categories.first
+          : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000));
     }
 
     // Listener per aggiornare la validazione in tempo reale
