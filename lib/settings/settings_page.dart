@@ -26,7 +26,12 @@ class SettingsPage extends StatelessWidget {
         child: Scaffold(
           appBar: const CaravellaAppBar(),
           body: ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+            padding: EdgeInsets.fromLTRB(
+              0,
+              0,
+              0,
+              MediaQuery.of(context).padding.bottom + 24,
+            ),
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
