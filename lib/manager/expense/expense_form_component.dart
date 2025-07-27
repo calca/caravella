@@ -215,6 +215,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   Widget build(BuildContext context) {
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
     final loc = AppLocalizations(locale);
+    final smallStyle = Theme.of(context).textTheme.bodySmall;
     return SingleChildScrollView(
       child: Form(
         key: _formKey,
@@ -234,6 +235,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                 onSaved: (v) {},
                 onSubmitted: () {},
                 isText: true,
+                textStyle: smallStyle,
               ),
               _nameController.text.trim().isNotEmpty,
               _amountTouched,
@@ -254,6 +256,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                   // Non necessario più, viene gestito dal listener
                 },
                 onSubmitted: _saveExpense,
+                textStyle: smallStyle,
               ),
               _isAmountValid,
               _amountTouched,
@@ -277,6 +280,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                   });
                 },
                 loc: loc,
+                textStyle: smallStyle,
               ),
               _isPaidByValid,
               _paidByTouched,
@@ -346,6 +350,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                 registerScrollToEnd: (fn) {
                   _scrollToCategoryEnd = fn;
                 },
+                textStyle: smallStyle,
               ),
               _isCategoryValid,
               _categoryTouched,
@@ -367,6 +372,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                 },
                 loc: loc,
                 locale: locale,
+                textStyle: smallStyle,
               ),
             const SizedBox(height: 16),
 
@@ -375,6 +381,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
               NoteInputWidget(
                 controller: _noteController,
                 loc: loc,
+                textStyle: smallStyle,
               ),
               const SizedBox(height: 16),
             ],
@@ -389,6 +396,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
               onSave: _isFormValid() ? _saveExpense : null,
               loc: loc,
               isEdit: widget.initialExpense != null,
+              textStyle: smallStyle,
             ),
             const SizedBox(height: 8),
           ],

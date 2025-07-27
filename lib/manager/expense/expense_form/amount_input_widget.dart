@@ -12,6 +12,7 @@ class AmountInputWidget extends StatelessWidget {
   final AppLocalizations loc;
   final String? label;
   final bool isText;
+  final TextStyle? textStyle;
 
   const AmountInputWidget({
     super.key,
@@ -24,6 +25,7 @@ class AmountInputWidget extends StatelessWidget {
     this.categories = const <ExpenseCategory>[],
     this.label,
     this.isText = false,
+    this.textStyle,
   });
 
   @override
@@ -35,12 +37,12 @@ class AmountInputWidget extends StatelessWidget {
           child: TextFormField(
             controller: controller,
             focusNode: focusNode,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            style: textStyle ?? Theme.of(context).textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
             decoration: InputDecoration(
               labelText: label != null ? '${label!} *' : null,
-              labelStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
+              labelStyle: textStyle ?? Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
             ),

@@ -9,6 +9,7 @@ class DateSelectorWidget extends StatelessWidget {
   final void Function(DateTime) onDateSelected;
   final AppLocalizations loc;
   final String locale;
+  final TextStyle? textStyle;
 
   const DateSelectorWidget({
     super.key,
@@ -18,6 +19,7 @@ class DateSelectorWidget extends StatelessWidget {
     required this.locale,
     this.tripStartDate,
     this.tripEndDate,
+    this.textStyle,
   });
 
   @override
@@ -26,15 +28,13 @@ class DateSelectorWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Etichetta per il campo data
-        Padding(
-          padding: const EdgeInsets.only(bottom: 8),
-          child: Text(
-            loc.get('date'),
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
-          ),
-        ),
+         Padding(
+           padding: const EdgeInsets.only(bottom: 8),
+           child: Text(
+             loc.get('date'),
+             style: textStyle ?? Theme.of(context).textTheme.bodySmall,
+           ),
+         ),
         Align(
           alignment: Alignment.centerLeft,
           child: ThemedOutlinedButton(
@@ -57,14 +57,12 @@ class DateSelectorWidget extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  selectedDate != null
-                      ? '${selectedDate!.day.toString().padLeft(2, '0')}/${selectedDate!.month.toString().padLeft(2, '0')}/${selectedDate!.year}'
-                      : loc.get('select_expense_date_short'),
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.w500,
-                      ),
-                ),
+                 Text(
+                   selectedDate != null
+                       ? '${selectedDate!.day.toString().padLeft(2, '0')}/${selectedDate!.month.toString().padLeft(2, '0')}/${selectedDate!.year}'
+                       : loc.get('select_expense_date_short'),
+                   style: textStyle ?? Theme.of(context).textTheme.bodySmall,
+                 ),
                 const SizedBox(width: 6),
                 Icon(
                   Icons.event,

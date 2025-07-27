@@ -9,7 +9,7 @@ class CategorySelectorWidget extends StatefulWidget {
   final Future<void> Function() onAddCategory;
   final AppLocalizations loc;
   final void Function(void Function())? registerScrollToEnd;
-
+  final TextStyle? textStyle; // Keep this line for context
   const CategorySelectorWidget({
     super.key,
     required this.categories,
@@ -18,7 +18,10 @@ class CategorySelectorWidget extends StatefulWidget {
     required this.onAddCategory,
     required this.loc,
     this.registerScrollToEnd,
+    this.textStyle, // Keep this line for context
   });
+
+  // Removed duplicate constructor
 
   @override
   State<CategorySelectorWidget> createState() => _CategorySelectorWidgetState();
@@ -88,9 +91,7 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
             padding: const EdgeInsets.only(bottom: 8),
             child: Text(
               '${widget.loc.get('category')} *',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
+              style: widget.textStyle ?? Theme.of(context).textTheme.bodySmall,
             ),
           ),
         Row(
@@ -110,25 +111,14 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 4.0),
                               child: ChoiceChip(
-                                label: Text(cat.name),
+                                label: Text(
+                                  cat.name,
+                                  style: widget.textStyle ?? Theme.of(context).textTheme.bodySmall,
+                                ),
                                 selected: widget.selectedCategory == cat,
                                 avatar: null,
                                 showCheckmark: false,
-                                labelStyle: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge
-                                    ?.copyWith(
-                                      color: widget.selectedCategory == cat
-                                          ? Theme.of(context)
-                                              .colorScheme
-                                              .onPrimary
-                                          : Theme.of(context)
-                                              .colorScheme
-                                              .onSurface,
-                                      fontWeight: widget.selectedCategory == cat
-                                          ? FontWeight.w500
-                                          : FontWeight.w400,
-                                    ),
+                                labelStyle: widget.textStyle ?? Theme.of(context).textTheme.bodySmall,
                                 backgroundColor: widget.selectedCategory == cat
                                     ? null
                                     : Theme.of(context)

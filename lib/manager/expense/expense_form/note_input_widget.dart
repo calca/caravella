@@ -4,11 +4,13 @@ import '../../../app_localizations.dart';
 class NoteInputWidget extends StatelessWidget {
   final TextEditingController controller;
   final AppLocalizations loc;
+  final TextStyle? textStyle;
 
   const NoteInputWidget({
     super.key,
     required this.controller,
     required this.loc,
+    this.textStyle,
   });
 
   @override
@@ -20,9 +22,7 @@ class NoteInputWidget extends StatelessWidget {
           alignment: Alignment.centerLeft,
           child: Text(
             loc.get('note'),
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
+            style: textStyle ?? Theme.of(context).textTheme.bodySmall,
           ),
         ),
         const SizedBox(height: 8),
@@ -30,14 +30,13 @@ class NoteInputWidget extends StatelessWidget {
           controller: controller,
           maxLines: 4,
           minLines: 2,
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.w400,
-              ),
+          style: textStyle ?? Theme.of(context).textTheme.bodySmall,
           decoration: InputDecoration(
             hintText: loc.get('note_hint'),
-            hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+            hintStyle: textStyle?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  fontWeight: FontWeight.w400,
+                ) ?? Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
             border: const OutlineInputBorder(),
           ),

@@ -7,6 +7,7 @@ class ExpenseFormActionsWidget extends StatelessWidget {
   final VoidCallback? onSave;
   final AppLocalizations loc;
   final bool isEdit;
+  final TextStyle? textStyle; // Initialize textStyle property
 
   const ExpenseFormActionsWidget({
     super.key,
@@ -14,6 +15,7 @@ class ExpenseFormActionsWidget extends StatelessWidget {
     required this.onSave,
     required this.loc,
     this.isEdit = false,
+    this.textStyle, // Include textStyle in the constructor
   });
 
   @override
@@ -25,13 +27,13 @@ class ExpenseFormActionsWidget extends StatelessWidget {
       children: [
         ThemedOutlinedButton(
           onPressed: onCancel,
-          child: Text(loc.get('cancel')),
+          child: Text(loc.get('cancel'), style: textStyle),
         ),
         const SizedBox(height: 8),
         ThemedOutlinedButton(
           onPressed: onSave,
           isPrimary: true,
-          child: Text(saveLabel),
+          child: Text(saveLabel, style: textStyle),
         ),
       ],
     );
