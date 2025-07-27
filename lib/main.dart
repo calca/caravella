@@ -9,6 +9,7 @@ import 'state/theme_mode_notifier.dart';
 import 'state/expense_group_notifier.dart';
 import 'home/home_page.dart';
 import 'config/app_config.dart';
+import 'settings/flag_secure_android.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
@@ -43,7 +44,15 @@ void main() {
   PaintingBinding.instance.imageCache.maximumSize = 100;
   PaintingBinding.instance.imageCache.maximumSizeBytes = 50 << 20; // 50MB
 
-  runApp(const CaravellaApp());
+  _initFlagSecure().then((_) {
+    runApp(const CaravellaApp());
+  });
+}
+
+Future<void> _initFlagSecure() async {
+  final prefs = await SharedPreferences.getInstance();
+  final enabled = prefs.getBool('flag_secure_enabled') ?? true;
+  await FlagSecureAndroid.setFlagSecure(enabled);
 }
 
 class CaravellaApp extends StatefulWidget {
