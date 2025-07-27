@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
+import '../../../widgets/themed_choice_chip.dart';
 
 class ParticipantSelectorWidget extends StatelessWidget {
   final List<String> participants;
@@ -34,19 +35,35 @@ class ParticipantSelectorWidget extends StatelessWidget {
                   final selected = selectedParticipant == p;
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                    child: ChoiceChip(
-                      label: Text(
-                        p,
-                        style:
-                            (textStyle ?? Theme.of(context).textTheme.bodySmall)
-                                ?.copyWith(
-                          fontWeight:
-                              selected ? FontWeight.bold : FontWeight.normal,
-                        ),
-                      ),
+                    child: ThemedChoiceChip(
+                      label: p,
                       selected: selected,
+                      textStyle:
+                          (textStyle ?? Theme.of(context).textTheme.bodySmall)
+                              ?.copyWith(
+                        fontWeight:
+                            selected ? FontWeight.bold : FontWeight.normal,
+                      ),
+                      selectedTextColor:
+                          Theme.of(context).colorScheme.onPrimary,
+                      selectedColor: Theme.of(context).colorScheme.primary,
+                      backgroundColor: selected
+                          ? null
+                          : Theme.of(context)
+                              .colorScheme
+                              .surfaceContainerHighest,
+                      side: BorderSide(
+                        color: selected
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context)
+                                .colorScheme
+                                .outline
+                                .withValues(alpha: 0.3),
+                        width: 1,
+                      ),
                       showCheckmark: false,
-                      onSelected: (_) => onParticipantSelected(p),
+                      avatar: null,
+                      onSelected: () => onParticipantSelected(p),
                     ),
                   );
                 }).toList()

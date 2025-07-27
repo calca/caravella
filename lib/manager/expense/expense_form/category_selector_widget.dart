@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
 import '../../../data/expense_category.dart';
+import '../../../widgets/themed_choice_chip.dart';
 
 class CategorySelectorWidget extends StatefulWidget {
   final List<ExpenseCategory> categories;
@@ -108,30 +109,22 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
                     children: widget.categories.isNotEmpty
                         ? widget.categories.map((cat) {
                             final isSelected = widget.selectedCategory == cat;
-                            final baseStyle = widget.textStyle ??
-                                Theme.of(context).textTheme.bodySmall;
-                            final chipTextStyle = isSelected
-                                ? baseStyle?.copyWith(color: Theme.of(context).colorScheme.onPrimary)
-                                : baseStyle;
                             return Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 4.0),
-                              child: ChoiceChip(
-                                label: Text(
-                                  cat.name,
-                                  style: chipTextStyle,
-                                ),
+                              child: ThemedChoiceChip(
+                                label: cat.name,
                                 selected: isSelected,
-                                avatar: null,
-                                showCheckmark: false,
-                                labelStyle: chipTextStyle,
+                                textStyle: widget.textStyle,
+                                selectedTextColor:
+                                    Theme.of(context).colorScheme.onPrimary,
+                                selectedColor:
+                                    Theme.of(context).colorScheme.primary,
                                 backgroundColor: isSelected
                                     ? null
                                     : Theme.of(context)
                                         .colorScheme
                                         .surfaceContainerHighest,
-                                selectedColor:
-                                    Theme.of(context).colorScheme.primary,
                                 side: BorderSide(
                                   color: isSelected
                                       ? Theme.of(context).colorScheme.primary
@@ -141,10 +134,10 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
                                           .withValues(alpha: 0.3),
                                   width: 1,
                                 ),
-                                onSelected: (selected) {
-                                  widget.onCategorySelected(
-                                      selected ? cat : null);
-                                },
+                                showCheckmark: false,
+                                avatar: null,
+                                onSelected: () => widget.onCategorySelected(
+                                    isSelected ? null : cat),
                               ),
                             );
                           }).toList()
