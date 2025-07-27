@@ -47,6 +47,8 @@ class ParticipantSelectorWidget extends StatelessWidget {
                                   const EdgeInsets.symmetric(horizontal: 4.0),
                               child: ChoiceChip(
                                 label: Text(p),
+                                avatar: null,
+                                showCheckmark: false,
                                 selected: selectedParticipant == p,
                                 labelStyle: Theme.of(context)
                                     .textTheme

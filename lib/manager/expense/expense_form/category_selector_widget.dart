@@ -112,6 +112,8 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
                               child: ChoiceChip(
                                 label: Text(cat.name),
                                 selected: widget.selectedCategory == cat,
+                                avatar: null,
+                                showCheckmark: false,
                                 labelStyle: Theme.of(context)
                                     .textTheme
                                     .bodyLarge
