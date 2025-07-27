@@ -29,6 +29,8 @@ class AppLocalizations {
 
   static final Map<String, Map<String, String>> _localizedValues = {
     'en': {
+      'settings_flag_secure_desc': 'Prevents screenshots and screen recording',
+      'settings_flag_secure_title': 'Secure screen',
       'select_currency': 'Select currency',
       'select_period_hint_short': 'Set dates',
       'select_period_hint': 'Select a date range',
@@ -210,6 +212,9 @@ class AppLocalizations {
       'data_restore_desc': 'Import a backup to restore your data.',
     },
     'it': {
+      'settings_flag_secure_desc':
+          'Impedisce screenshot e registrazione schermo',
+      'settings_flag_secure_title': 'Proteggi schermata',
       'select_currency': 'Seleziona valuta',
       'select_period_hint_short': 'Imposta date',
       'select_period_hint': 'Seleziona un intervallo di date',

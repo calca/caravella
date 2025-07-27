@@ -4,7 +4,7 @@ import '../app_localizations.dart';
 import '../state/locale_notifier.dart';
 import '../state/theme_mode_notifier.dart';
 import 'flag_secure_notifier.dart';
-import 'flag_secure_switch.dart';
+import 'flag_secure_android.dart';
 import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'terms_page.dart';
@@ -237,7 +237,26 @@ class SettingsPage extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        child: FlagSecureSwitch(),
+                        child: Consumer<FlagSecureNotifier>(
+                          builder: (context, notifier, _) => ListTile(
+                            leading: const Icon(Icons.privacy_tip_outlined),
+                            title: Text(
+                              loc.get('settings_flag_secure_title'),
+                              style: textTheme.titleMedium,
+                            ),
+                            subtitle: Text(
+                              loc.get('settings_flag_secure_desc'),
+                              style: textTheme.bodySmall,
+                            ),
+                            trailing: Switch(
+                              value: notifier.enabled,
+                              onChanged: (val) async {
+                                notifier.setEnabled(val);
+                                await FlagSecureAndroid.setFlagSecure(val);
+                              },
+                            ),
+                          ),
+                        ),
                       ),
                   ],
                 ),
