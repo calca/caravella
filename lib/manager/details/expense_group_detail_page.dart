@@ -411,6 +411,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         onExpenseAdded: (updatedExpense) async {
           final expenseWithId = ExpenseDetails(
             id: expense.id,
+            name: updatedExpense.name,
             category: updatedExpense.category,
             amount: updatedExpense.amount,
             paidBy: updatedExpense.paidBy,
