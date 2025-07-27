@@ -98,7 +98,7 @@ class GroupCardContent extends StatelessWidget {
                           borderRadius: BorderRadius.circular(2),
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 12),
                       Text(
                         loc.get('add_expense'),
                         style: theme.textTheme.headlineSmall?.copyWith(
@@ -116,7 +116,7 @@ class GroupCardContent extends StatelessWidget {
                       padding: EdgeInsets.only(
                         left: 20,
                         right: 20,
-                        top: 16,
+                        top: 0,
                         bottom: MediaQuery.of(context).viewInsets.bottom +
                             MediaQuery.of(context).padding.bottom +
                             20,
