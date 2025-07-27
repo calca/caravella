@@ -28,13 +28,13 @@ class DateSelectorWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Etichetta per il campo data
-         Padding(
-           padding: const EdgeInsets.only(bottom: 8),
-           child: Text(
-             loc.get('date'),
-             style: textStyle ?? Theme.of(context).textTheme.bodySmall,
-           ),
-         ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Text(
+            loc.get('date'),
+            style: textStyle ?? Theme.of(context).textTheme.bodySmall,
+          ),
+        ),
         Align(
           alignment: Alignment.centerLeft,
           child: ThemedOutlinedButton(
@@ -57,12 +57,12 @@ class DateSelectorWidget extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                 Text(
-                   selectedDate != null
-                       ? '${selectedDate!.day.toString().padLeft(2, '0')}/${selectedDate!.month.toString().padLeft(2, '0')}/${selectedDate!.year}'
-                       : loc.get('select_expense_date_short'),
-                   style: textStyle ?? Theme.of(context).textTheme.bodySmall,
-                 ),
+                Text(
+                  selectedDate != null
+                      ? '${selectedDate!.day.toString().padLeft(2, '0')}/${selectedDate!.month.toString().padLeft(2, '0')}/${selectedDate!.year}'
+                      : loc.get('select_expense_date_short'),
+                  style: textStyle ?? Theme.of(context).textTheme.bodySmall,
+                ),
                 const SizedBox(width: 6),
                 Icon(
                   Icons.event,

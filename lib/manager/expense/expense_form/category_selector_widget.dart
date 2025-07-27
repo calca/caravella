@@ -107,19 +107,25 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: widget.categories.isNotEmpty
                         ? widget.categories.map((cat) {
+                            final isSelected = widget.selectedCategory == cat;
+                            final baseStyle = widget.textStyle ??
+                                Theme.of(context).textTheme.bodySmall;
+                            final chipTextStyle = isSelected
+                                ? baseStyle?.copyWith(color: Theme.of(context).colorScheme.onPrimary)
+                                : baseStyle;
                             return Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 4.0),
                               child: ChoiceChip(
                                 label: Text(
                                   cat.name,
-                                  style: widget.textStyle ?? Theme.of(context).textTheme.bodySmall,
+                                  style: chipTextStyle,
                                 ),
-                                selected: widget.selectedCategory == cat,
+                                selected: isSelected,
                                 avatar: null,
                                 showCheckmark: false,
-                                labelStyle: widget.textStyle ?? Theme.of(context).textTheme.bodySmall,
-                                backgroundColor: widget.selectedCategory == cat
+                                labelStyle: chipTextStyle,
+                                backgroundColor: isSelected
                                     ? null
                                     : Theme.of(context)
                                         .colorScheme
@@ -127,7 +133,7 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
                                 selectedColor:
                                     Theme.of(context).colorScheme.primary,
                                 side: BorderSide(
-                                  color: widget.selectedCategory == cat
+                                  color: isSelected
                                       ? Theme.of(context).colorScheme.primary
                                       : Theme.of(context)
                                           .colorScheme

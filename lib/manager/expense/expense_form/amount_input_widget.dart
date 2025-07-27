@@ -37,14 +37,16 @@ class AmountInputWidget extends StatelessWidget {
           child: TextFormField(
             controller: controller,
             focusNode: focusNode,
-            style: textStyle ?? Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+            style: textStyle ??
+                Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
             decoration: InputDecoration(
               labelText: label != null ? '${label!} *' : null,
-              labelStyle: textStyle ?? Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              labelStyle: textStyle ??
+                  Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
             ),
             keyboardType: isText
                 ? TextInputType.text

@@ -35,9 +35,10 @@ class NoteInputWidget extends StatelessWidget {
             hintText: loc.get('note_hint'),
             hintStyle: textStyle?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ) ?? Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
+                ) ??
+                Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
             border: const OutlineInputBorder(),
           ),
         ),

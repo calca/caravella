@@ -37,8 +37,11 @@ class ParticipantSelectorWidget extends StatelessWidget {
                     child: ChoiceChip(
                       label: Text(
                         p,
-                        style: (textStyle ?? Theme.of(context).textTheme.bodySmall)?.copyWith(
-                          fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+                        style:
+                            (textStyle ?? Theme.of(context).textTheme.bodySmall)
+                                ?.copyWith(
+                          fontWeight:
+                              selected ? FontWeight.bold : FontWeight.normal,
                         ),
                       ),
                       selected: selected,
