@@ -565,8 +565,13 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
 
           // Spazio aggiuntivo per garantire lo scroll
           SliverPadding(
-            padding: const EdgeInsets.only(bottom: 100),
-            sliver: SliverToBoxAdapter(child: Container()),
+            padding: const EdgeInsets.only(bottom: 0),
+            sliver: SliverToBoxAdapter(
+              child: Container(
+                height: 100, // Altezza fissa per lo spazio
+                color: colorScheme.surfaceContainer,
+              ),
+            ),
           ),
         ],
       ),
