@@ -20,7 +20,8 @@ class SettingsPage extends StatelessWidget {
     final loc = AppLocalizations(locale);
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    final currentThemeMode = ThemeModeNotifier.of(context)?.themeMode ?? ThemeMode.system;
+    final currentThemeMode =
+        ThemeModeNotifier.of(context)?.themeMode ?? ThemeMode.system;
     String currentThemeLabel;
     switch (currentThemeMode) {
       case ThemeMode.light:
@@ -270,7 +271,11 @@ class SettingsPage extends StatelessWidget {
   }
 }
 
-void _showLanguagePicker(BuildContext context, String currentLocale, AppLocalizations loc) {
+void _showLanguagePicker(
+  BuildContext context,
+  String currentLocale,
+  AppLocalizations loc,
+) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: false,
@@ -299,7 +304,9 @@ void _showLanguagePicker(BuildContext context, String currentLocale, AppLocaliza
                       ),
                     ),
                     IconButton(
-                      tooltip: MaterialLocalizations.of(context).closeButtonLabel,
+                      tooltip: MaterialLocalizations.of(
+                        context,
+                      ).closeButtonLabel,
                       icon: const Icon(Icons.close),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
@@ -315,15 +322,21 @@ void _showLanguagePicker(BuildContext context, String currentLocale, AppLocaliza
                   trailing: AnimatedSwitcher(
                     duration: const Duration(milliseconds: 180),
                     child: selected
-                        ? Icon(Icons.check, key: ValueKey(e.$1), color: Theme.of(context).colorScheme.primary)
+                        ? Icon(
+                            Icons.check,
+                            key: ValueKey(e.$1),
+                            color: Theme.of(context).colorScheme.primary,
+                          )
                         : const SizedBox.shrink(),
                   ),
                   onTap: selected
                       ? null
                       : () {
                           LocaleNotifier.of(context)?.changeLocale(e.$1);
-                          final stateWidget = context.findAncestorWidgetOfExactType<SettingsPage>();
-                          if (stateWidget != null && stateWidget.onLocaleChanged != null) {
+                          final stateWidget = context
+                              .findAncestorWidgetOfExactType<SettingsPage>();
+                          if (stateWidget != null &&
+                              stateWidget.onLocaleChanged != null) {
                             stateWidget.onLocaleChanged!(e.$1);
                           }
                           Navigator.of(context).pop();
@@ -340,9 +353,14 @@ void _showLanguagePicker(BuildContext context, String currentLocale, AppLocaliza
 }
 
 void _showThemePicker(BuildContext context, AppLocalizations loc) {
-  final currentMode = ThemeModeNotifier.of(context)?.themeMode ?? ThemeMode.system;
+  final currentMode =
+      ThemeModeNotifier.of(context)?.themeMode ?? ThemeMode.system;
   final entries = <(ThemeMode, String, IconData)>[
-    (ThemeMode.system, loc.get('theme_automatic'), Icons.settings_suggest_outlined),
+    (
+      ThemeMode.system,
+      loc.get('theme_automatic'),
+      Icons.settings_suggest_outlined,
+    ),
     (ThemeMode.light, loc.get('theme_light'), Icons.light_mode_outlined),
     (ThemeMode.dark, loc.get('theme_dark'), Icons.dark_mode_outlined),
   ];
@@ -369,7 +387,9 @@ void _showThemePicker(BuildContext context, AppLocalizations loc) {
                       ),
                     ),
                     IconButton(
-                      tooltip: MaterialLocalizations.of(context).closeButtonLabel,
+                      tooltip: MaterialLocalizations.of(
+                        context,
+                      ).closeButtonLabel,
                       icon: const Icon(Icons.close),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
@@ -380,12 +400,21 @@ void _showThemePicker(BuildContext context, AppLocalizations loc) {
               ...entries.map((e) {
                 final selected = e.$1 == currentMode;
                 return ListTile(
-                  leading: Icon(e.$3, color: selected ? Theme.of(context).colorScheme.primary : null),
+                  leading: Icon(
+                    e.$3,
+                    color: selected
+                        ? Theme.of(context).colorScheme.primary
+                        : null,
+                  ),
                   title: Text(e.$2),
                   trailing: AnimatedSwitcher(
                     duration: const Duration(milliseconds: 180),
                     child: selected
-                        ? Icon(Icons.check, key: ValueKey(e.$1), color: Theme.of(context).colorScheme.primary)
+                        ? Icon(
+                            Icons.check,
+                            key: ValueKey(e.$1),
+                            color: Theme.of(context).colorScheme.primary,
+                          )
                         : const SizedBox.shrink(),
                   ),
                   onTap: selected
