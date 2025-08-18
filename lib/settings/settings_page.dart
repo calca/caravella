@@ -20,6 +20,19 @@ class SettingsPage extends StatelessWidget {
     final loc = AppLocalizations(locale);
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+    final currentThemeMode = ThemeModeNotifier.of(context)?.themeMode ?? ThemeMode.system;
+    String currentThemeLabel;
+    switch (currentThemeMode) {
+      case ThemeMode.light:
+        currentThemeLabel = loc.get('theme_light');
+        break;
+      case ThemeMode.dark:
+        currentThemeLabel = loc.get('theme_dark');
+        break;
+      case ThemeMode.system:
+        currentThemeLabel = loc.get('theme_automatic');
+        break;
+    }
 
     return ChangeNotifierProvider<FlagSecureNotifier>(
       create: (_) => FlagSecureNotifier(),
@@ -67,76 +80,7 @@ class SettingsPage extends StatelessWidget {
                       ),
                       trailing: const Icon(Icons.arrow_drop_down),
                       onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(24),
-                            ),
-                          ),
-                          builder: (context) {
-                            String selectedLocale = locale;
-                            return StatefulBuilder(
-                              builder: (context, setState) {
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 24,
-                                    horizontal: 0,
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        loc.get('settings_select_language'),
-                                        style: Theme.of(
-                                          context,
-                                        ).textTheme.titleMedium,
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 16,
-                                          vertical: 8,
-                                        ),
-                                        child: SegmentedButton<String>(
-                                          segments: [
-                                            ButtonSegment(
-                                              value: 'it',
-                                              label: Text(
-                                                loc.get('settings_language_it'),
-                                              ),
-                                            ),
-                                            ButtonSegment(
-                                              value: 'en',
-                                              label: Text(
-                                                loc.get('settings_language_en'),
-                                              ),
-                                            ),
-                                          ],
-                                          selected: {selectedLocale},
-                                          onSelectionChanged: (values) {
-                                            final value = values.first;
-                                            setState(
-                                              () => selectedLocale = value,
-                                            );
-                                            LocaleNotifier.of(
-                                              context,
-                                            )?.changeLocale(value);
-                                            if (onLocaleChanged != null) {
-                                              onLocaleChanged!(value);
-                                            }
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ),
-                                      const SizedBox(height: 32),
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                        );
+                        _showLanguagePicker(context, locale, loc);
                       },
                     ),
                   ),
@@ -153,85 +97,10 @@ class SettingsPage extends StatelessWidget {
                         loc.get('settings_theme'),
                         style: textTheme.titleMedium,
                       ),
-                      subtitle: Text(loc.get('theme_automatic')),
+                      subtitle: Text(currentThemeLabel),
                       trailing: const Icon(Icons.arrow_drop_down),
                       onTap: () {
-                        final themeMode =
-                            ThemeModeNotifier.of(context)?.themeMode ??
-                            ThemeMode.system;
-                        showModalBottomSheet(
-                          context: context,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(24),
-                            ),
-                          ),
-                          builder: (context) {
-                            ThemeMode selectedMode = themeMode;
-                            return StatefulBuilder(
-                              builder: (context, setState) {
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 24,
-                                    horizontal: 0,
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        loc.get('settings_select_theme'),
-                                        style: Theme.of(
-                                          context,
-                                        ).textTheme.titleMedium,
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 16,
-                                          vertical: 8,
-                                        ),
-                                        child: SegmentedButton<ThemeMode>(
-                                          segments: [
-                                            ButtonSegment(
-                                              value: ThemeMode.system,
-                                              label: Text(
-                                                loc.get('theme_automatic'),
-                                              ),
-                                            ),
-                                            ButtonSegment(
-                                              value: ThemeMode.light,
-                                              label: Text(
-                                                loc.get('theme_light'),
-                                              ),
-                                            ),
-                                            ButtonSegment(
-                                              value: ThemeMode.dark,
-                                              label: Text(
-                                                loc.get('theme_dark'),
-                                              ),
-                                            ),
-                                          ],
-                                          selected: {selectedMode},
-                                          onSelectionChanged: (values) {
-                                            final value = values.first;
-                                            setState(
-                                              () => selectedMode = value,
-                                            );
-                                            ThemeModeNotifier.of(
-                                              context,
-                                            )?.changeTheme(value);
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ),
-                                      const SizedBox(height: 32),
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                        );
+                        _showThemePicker(context, loc);
                       },
                     ),
                   ),
@@ -399,4 +268,139 @@ class SettingsPage extends StatelessWidget {
       return '-';
     }
   }
+}
+
+void _showLanguagePicker(BuildContext context, String currentLocale, AppLocalizations loc) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: false,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+    ),
+    builder: (ctx) {
+      final entries = [
+        ('it', loc.get('settings_language_it')),
+        ('en', loc.get('settings_language_en')),
+      ];
+      return SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        loc.get('settings_select_language'),
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                    ),
+                    IconButton(
+                      tooltip: MaterialLocalizations.of(context).closeButtonLabel,
+                      icon: const Icon(Icons.close),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 8),
+              ...entries.map((e) {
+                final selected = e.$1 == currentLocale;
+                return ListTile(
+                  visualDensity: VisualDensity.compact,
+                  title: Text(e.$2),
+                  trailing: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 180),
+                    child: selected
+                        ? Icon(Icons.check, key: ValueKey(e.$1), color: Theme.of(context).colorScheme.primary)
+                        : const SizedBox.shrink(),
+                  ),
+                  onTap: selected
+                      ? null
+                      : () {
+                          LocaleNotifier.of(context)?.changeLocale(e.$1);
+                          final stateWidget = context.findAncestorWidgetOfExactType<SettingsPage>();
+                          if (stateWidget != null && stateWidget.onLocaleChanged != null) {
+                            stateWidget.onLocaleChanged!(e.$1);
+                          }
+                          Navigator.of(context).pop();
+                        },
+                );
+              }),
+              const SizedBox(height: 8),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
+void _showThemePicker(BuildContext context, AppLocalizations loc) {
+  final currentMode = ThemeModeNotifier.of(context)?.themeMode ?? ThemeMode.system;
+  final entries = <(ThemeMode, String, IconData)>[
+    (ThemeMode.system, loc.get('theme_automatic'), Icons.settings_suggest_outlined),
+    (ThemeMode.light, loc.get('theme_light'), Icons.light_mode_outlined),
+    (ThemeMode.dark, loc.get('theme_dark'), Icons.dark_mode_outlined),
+  ];
+  showModalBottomSheet(
+    context: context,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+    ),
+    builder: (ctx) {
+      return SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        loc.get('settings_select_theme'),
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                    ),
+                    IconButton(
+                      tooltip: MaterialLocalizations.of(context).closeButtonLabel,
+                      icon: const Icon(Icons.close),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 8),
+              ...entries.map((e) {
+                final selected = e.$1 == currentMode;
+                return ListTile(
+                  leading: Icon(e.$3, color: selected ? Theme.of(context).colorScheme.primary : null),
+                  title: Text(e.$2),
+                  trailing: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 180),
+                    child: selected
+                        ? Icon(Icons.check, key: ValueKey(e.$1), color: Theme.of(context).colorScheme.primary)
+                        : const SizedBox.shrink(),
+                  ),
+                  onTap: selected
+                      ? null
+                      : () {
+                          ThemeModeNotifier.of(context)?.changeTheme(e.$1);
+                          Navigator.of(context).pop();
+                        },
+                );
+              }),
+              const SizedBox(height: 8),
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }
