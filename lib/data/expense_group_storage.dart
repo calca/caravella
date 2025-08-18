@@ -25,6 +25,22 @@ class ExpenseGroupStorage {
   }
 
   static Future<void> writeTrips(List<ExpenseGroup> trips) async {
+    // Enforce pin constraint: only one group can be pinned at a time
+    String? pinnedGroupId;
+    for (final trip in trips) {
+      if (trip.pinned) {
+        if (pinnedGroupId == null) {
+          pinnedGroupId = trip.id;
+        } else {
+          // Multiple pinned groups found, unpin all except the first one
+          final index = trips.indexWhere((t) => t.id == trip.id);
+          if (index != -1) {
+            trips[index] = trips[index].copyWith(pinned: false);
+          }
+        }
+      }
+    }
+    
     final file = await _getFile();
     final jsonList = trips.map((v) => v.toJson()).toList();
     await file.writeAsString(jsonEncode(jsonList));
@@ -33,15 +49,6 @@ class ExpenseGroupStorage {
   static Future<void> saveTrip(ExpenseGroup trip) async {
     final trips = await _readAllGroups();
     final index = trips.indexWhere((t) => t.id == trip.id);
-
-    if (trip.pinned) {
-      // Se il viaggio è pinnato, rimuovi il pin da tutti gli altri
-      for (var i = 0; i < trips.length; i++) {
-        if (trips[i].id != trip.id && trips[i].pinned) {
-          trips[i] = trips[i].copyWith(pinned: false);
-        }
-      }
-    }
 
     if (index != -1) {
       trips[index] = trip;

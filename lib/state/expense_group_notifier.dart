@@ -43,15 +43,6 @@ class ExpenseGroupNotifier extends ChangeNotifier {
       final trips = await ExpenseGroupStorage.getAllGroups();
       final idx = trips.indexWhere((g) => g.id == updatedGroup.id);
       if (idx != -1) {
-        // Se il gruppo è pinnato, rimuovi il pin da tutti gli altri
-        if (updatedGroup.pinned) {
-          for (var i = 0; i < trips.length; i++) {
-            if (trips[i].id != updatedGroup.id && trips[i].pinned) {
-              trips[i] = trips[i].copyWith(pinned: false);
-            }
-          }
-        }
-        
         trips[idx] = updatedGroup;
         await ExpenseGroupStorage.writeTrips(trips);
       }

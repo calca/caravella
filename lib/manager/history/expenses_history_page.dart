@@ -159,15 +159,6 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     final allTrips = await ExpenseGroupStorage.getAllGroups();
     final index = allTrips.indexWhere((t) => t.id == updatedTrip.id);
     if (index != -1) {
-      // Se il gruppo è pinnato, rimuovi il pin da tutti gli altri
-      if (updatedTrip.pinned) {
-        for (var i = 0; i < allTrips.length; i++) {
-          if (allTrips[i].id != updatedTrip.id && allTrips[i].pinned) {
-            allTrips[i] = allTrips[i].copyWith(pinned: false);
-          }
-        }
-      }
-      
       allTrips[index] = updatedTrip;
       await ExpenseGroupStorage.writeTrips(allTrips);
       // Forza un breve delay per assicurare la persistenza
