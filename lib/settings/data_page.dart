@@ -5,6 +5,7 @@ import '../data/expense_group_storage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:archive/archive_io.dart';
+import 'package:archive/archive.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 
@@ -102,16 +103,19 @@ class DataPage extends StatelessWidget {
         return;
       }
 
-      final zipEncoder = ZipFileEncoder();
       final tempDir = await getTemporaryDirectory();
       final now = DateTime.now();
       final dateStr =
           "${now.year.toString().padLeft(4, '0')}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}_${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}${now.second.toString().padLeft(2, '0')}";
       final zipPath = '${tempDir.path}/caravella_backup_$dateStr.zip';
 
-      zipEncoder.create(zipPath);
-      zipEncoder.addFile(tripsFile, ExpenseGroupStorage.fileName);
-      zipEncoder.close();
+      // Create archive manually to ensure file content is properly added
+      final archive = Archive();
+      final fileBytes = await tripsFile.readAsBytes();
+      final archiveFile = ArchiveFile(ExpenseGroupStorage.fileName, fileBytes.length, fileBytes);
+      archive.addFile(archiveFile);
+      final zipData = ZipEncoder().encode(archive);
+      await File(zipPath).writeAsBytes(zipData!);
 
       if (!context.mounted) return;
 
