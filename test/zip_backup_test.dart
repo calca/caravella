@@ -42,9 +42,7 @@ void main() {
       final zipData = ZipEncoder().encode(archive);
       
       final zipFile = File('${tempDir.path}/test_backup.zip');
-      if (zipData != null) {
-        await zipFile.writeAsBytes(zipData);
-      }
+      await zipFile.writeAsBytes(zipData);
 
       // Verify ZIP file was created and is not empty
       expect(await zipFile.exists(), true);
@@ -81,9 +79,7 @@ void main() {
       final zipData = ZipEncoder().encode(archive);
       
       final zipFile = File('${tempDir.path}/empty_backup.zip');
-      if (zipData != null) {
-        await zipFile.writeAsBytes(zipData);
-      }
+      await zipFile.writeAsBytes(zipData);
 
       // Verify ZIP file structure is correct even with empty content
       expect(await zipFile.exists(), true);

@@ -53,9 +53,7 @@ void main() {
       final zipData = ZipEncoder().encode(archive);
       
       final zipFile = File('${tempDir.path}/test_backup.zip');
-      if (zipData != null) {
-        await zipFile.writeAsBytes(zipData);
-      }
+      await zipFile.writeAsBytes(zipData);
       
       // Step 3: Simulate IMPORT - read ZIP using existing import logic
       final zipBytes = await zipFile.readAsBytes();

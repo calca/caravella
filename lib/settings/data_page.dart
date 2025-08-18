@@ -115,9 +115,7 @@ class DataPage extends StatelessWidget {
       final archiveFile = ArchiveFile(ExpenseGroupStorage.fileName, fileBytes.length, fileBytes);
       archive.addFile(archiveFile);
       final zipData = ZipEncoder().encode(archive);
-      if (zipData != null) {
-        await File(zipPath).writeAsBytes(zipData);
-      }
+      await File(zipPath).writeAsBytes(zipData);
 
       if (!context.mounted) return;
 
