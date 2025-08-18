@@ -23,7 +23,7 @@ android {
         }
     }
     namespace = "org.app.caravella"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 35  // Android 16 API level
     ndkVersion = "27.0.12077973"
 
     compileOptions {
@@ -38,7 +38,7 @@ android {
     defaultConfig {
         applicationId = "org.app.caravella"
         minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        targetSdk = 35  // Android 16 API level
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
