@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:path_provider/path_provider.dart'; // still used for share temp file
 import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 
 import '../../data/expense_details.dart';
 import '../../data/expense_group.dart';
@@ -41,23 +42,27 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     // Header localizzato
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
     final loc = AppLocalizations(locale);
-    buffer.writeln([
-      loc.get('csv_expense_name'),
-      loc.get('csv_amount'),
-      loc.get('csv_paid_by'),
-      loc.get('csv_category'),
-      loc.get('csv_date'),
-      loc.get('csv_note'),
-    ].join(','));
+    buffer.writeln(
+      [
+        loc.get('csv_expense_name'),
+        loc.get('csv_amount'),
+        loc.get('csv_paid_by'),
+        loc.get('csv_category'),
+        loc.get('csv_date'),
+        loc.get('csv_note'),
+      ].join(','),
+    );
     for (final e in _trip!.expenses) {
-      buffer.writeln([
-        _escapeCsvValue(e.name ?? ''),
-        e.amount?.toStringAsFixed(2) ?? '',
-        _escapeCsvValue(e.paidBy.name),
-        _escapeCsvValue(e.category.name),
-        e.date.toIso8601String().split('T').first,
-        _escapeCsvValue(e.note ?? ''),
-      ].join(','));
+      buffer.writeln(
+        [
+          _escapeCsvValue(e.name ?? ''),
+          e.amount?.toStringAsFixed(2) ?? '',
+          _escapeCsvValue(e.paidBy.name),
+          _escapeCsvValue(e.category.name),
+          e.date.toIso8601String().split('T').first,
+          _escapeCsvValue(e.note ?? ''),
+        ].join(','),
+      );
     }
     return buffer.toString();
   }
@@ -127,8 +132,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   }
 
   Future<void> _refreshTrip() async {
-    final trip =
-        await ExpenseGroupStorage.getTripById(_trip?.id ?? widget.trip.id);
+    final trip = await ExpenseGroupStorage.getTripById(
+      _trip?.id ?? widget.trip.id,
+    );
     if (!mounted) return;
     if (trip != null) {
       setState(() {
@@ -261,32 +267,63 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           }
         },
         onDownloadCsv: () async {
-          // Download CSV logic
+          final loc = AppLocalizations(
+            LocaleNotifier.of(context)?.locale ?? 'it',
+          );
           final csv = _generateCsvContent();
-          Directory? downloadsDir;
-          try {
-            downloadsDir = await getDownloadsDirectory();
-          } catch (_) {
-            downloadsDir = null;
+          if (csv.isEmpty) {
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(loc.get('no_expenses_to_export'))),
+              );
+            }
+            return;
           }
-          final saveDir = downloadsDir ?? await getTemporaryDirectory();
-          final file =
-              await File('${saveDir.path}/${_trip!.title}_export.csv').create();
-          await file.writeAsString(csv);
-          // Show a snackbar or dialog to notify user of download location
-          if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('CSV salvato in: ${file.path}')),
+          final filename = '${_trip!.title}_export.csv';
+          String? dirPath;
+          try {
+            dirPath = await FilePicker.platform.getDirectoryPath(
+              dialogTitle: loc.get('csv_select_directory_title'),
             );
-            Navigator.of(context).pop();
+          } catch (e) {
+            dirPath = null;
+          }
+          if (dirPath == null) {
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(loc.get('csv_save_cancelled'))),
+              );
+            }
+            return;
+          }
+          try {
+            final file = File('$dirPath/$filename');
+            await file.writeAsString(csv);
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    loc.get('csv_saved_in', params: {'path': file.path}),
+                  ),
+                ),
+              );
+              Navigator.of(context).pop();
+            }
+          } catch (e) {
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(loc.get('csv_save_error'))),
+              );
+            }
           }
         },
         onShareCsv: () async {
           // Share CSV logic
           final csv = _generateCsvContent();
           final tempDir = await getTemporaryDirectory();
-          final file =
-              await File('${tempDir.path}/${_trip!.title}_export.csv').create();
+          final file = await File(
+            '${tempDir.path}/${_trip!.title}_export.csv',
+          ).create();
           await file.writeAsString(csv);
           await SharePlus.instance.share(
             ShareParams(
@@ -297,8 +334,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           if (context.mounted) Navigator.of(context).pop();
         },
         onDelete: () async {
-          final loc =
-              AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it');
+          final loc = AppLocalizations(
+            LocaleNotifier.of(context)?.locale ?? 'it',
+          );
           final confirmed = await showDialog<bool>(
             context: context,
             builder: (context) => AlertDialog(
@@ -313,8 +351,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                   onPressed: () => Navigator.of(context).pop(true),
                   child: Text(
                     loc.get('delete'),
-                    style:
-                        TextStyle(color: Theme.of(context).colorScheme.error),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
                   ),
                 ),
               ],
@@ -470,8 +509,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
     final loc = AppLocalizations(locale);
     final colorScheme = Theme.of(context).colorScheme;
-    final totalExpenses =
-        trip.expenses.fold<double>(0, (sum, s) => sum + (s.amount ?? 0));
+    final totalExpenses = trip.expenses.fold<double>(
+      0,
+      (sum, s) => sum + (s.amount ?? 0),
+    );
 
     return Scaffold(
       // backgroundColor centralizzato nel tema
@@ -532,8 +573,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               width: double.infinity,
               decoration: BoxDecoration(
                 color: colorScheme.surfaceContainer,
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(24)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(24),
+                ),
               ),
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 24, 16, 0),
@@ -543,15 +585,16 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                     Text(
                       'Attività',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: colorScheme.onSurface,
-                            fontSize: 20,
-                          ),
+                        fontWeight: FontWeight.bold,
+                        color: colorScheme.onSurface,
+                        fontSize: 20,
+                      ),
                     ),
                     const SizedBox(height: 16),
                     trip.expenses.isEmpty
                         ? EmptyExpenses(
-                            semanticLabel: loc.get('no_expense_label'))
+                            semanticLabel: loc.get('no_expense_label'),
+                          )
                         : ExpenseList(
                             expenses: trip.expenses,
                             currency: trip.currency,

@@ -177,6 +177,11 @@ class AppLocalizations {
       'export_csv_error': 'Error exporting expenses',
       'expense_name': 'Name',
       'paid_by': 'Paid by',
+      // CSV save / picker messages
+      'csv_select_directory_title': 'Select folder to save CSV',
+      'csv_saved_in': 'CSV saved in: {path}',
+      'csv_save_cancelled': 'Export cancelled',
+      'csv_save_error': 'Error saving CSV file',
       // CSV column headers
       'csv_expense_name': 'Name',
       'csv_amount': 'Amount',
@@ -375,6 +380,11 @@ class AppLocalizations {
       'export_csv_error': 'Errore nell\'esportazione delle spese',
       'expense_name': 'Nome',
       'paid_by': 'Pagato da',
+      // Messaggi salvataggio CSV / selezione cartella
+      'csv_select_directory_title': 'Seleziona cartella per salvare CSV',
+      'csv_saved_in': 'CSV salvato in: {path}',
+      'csv_save_cancelled': 'Esportazione annullata',
+      'csv_save_error': 'Errore nel salvataggio del file CSV',
       // Intestazioni colonne CSV
       'csv_expense_name': 'Nome',
       'csv_amount': 'Importo',
