@@ -8,6 +8,7 @@ class ExpenseGroupNotifier extends ChangeNotifier {
   ExpenseGroup? _currentGroup;
   final List<String> _updatedGroupIds = [];
   String? _lastAddedCategory;
+  String? _lastEvent; // es: 'expense_added', 'category_added'
 
   ExpenseGroup? get currentGroup => _currentGroup;
 
@@ -16,6 +17,13 @@ class ExpenseGroupNotifier extends ChangeNotifier {
 
   // Ultima categoria aggiunta
   String? get lastAddedCategory => _lastAddedCategory;
+  String? get lastEvent => _lastEvent;
+
+  String? consumeLastEvent() {
+    final e = _lastEvent;
+    _lastEvent = null;
+    return e;
+  }
 
   void setCurrentGroup(ExpenseGroup group) {
     _currentGroup = group;
@@ -59,6 +67,8 @@ class ExpenseGroupNotifier extends ChangeNotifier {
       expenses: updatedExpenses,
     );
 
+  _lastEvent = 'expense_added';
+
     await updateGroup(updatedGroup);
   }
 
@@ -82,6 +92,7 @@ class ExpenseGroupNotifier extends ChangeNotifier {
 
     // Memorizza l'ultima categoria aggiunta
     _lastAddedCategory = categoryName;
+  _lastEvent = 'category_added';
 
     await updateGroup(updatedGroup);
   }

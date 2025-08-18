@@ -4,6 +4,7 @@ import '../data/expense_group.dart';
 import '../data/expense_group_storage.dart';
 import '../state/expense_group_notifier.dart';
 import '../../main.dart';
+import '../app_localizations.dart';
 import 'welcome/home_welcome_section.dart';
 import 'cards/home_cards_section.dart';
 
@@ -18,6 +19,9 @@ class _HomePageState extends State<HomePage> with RouteAware {
   ExpenseGroup? _pinnedTrip;
   bool _loading = true;
   ExpenseGroupNotifier? _groupNotifier;
+  bool _refreshing = false;
+  final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
+      GlobalKey<ScaffoldMessengerState>();
 
   @override
   void initState() {
@@ -59,50 +63,106 @@ class _HomePageState extends State<HomePage> with RouteAware {
       _loadLocaleAndTrip();
       // Pulisci la lista degli aggiornamenti
       _groupNotifier?.clearUpdatedGroups();
+      final event = _groupNotifier?.consumeLastEvent();
+      if (event == 'expense_added') {
+        final loc = AppLocalizations.of(context);
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _scaffoldMessengerKey.currentState?.showSnackBar(
+            SnackBar(
+              content: Text(loc.get('expense_added_success')),
+              behavior: SnackBarBehavior.floating,
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        });
+      }
     }
   }
 
   Future<void> _loadLocaleAndTrip() async {
-    setState(() {
-      _loading = true;
-    });
+    if (!_refreshing) {
+      setState(() {
+        _loading = true;
+      });
+    }
     final pinnedTrip = await ExpenseGroupStorage.getPinnedTrip();
     if (!mounted) return;
     setState(() {
       _pinnedTrip = pinnedTrip;
       _loading = false;
+      _refreshing = false;
     });
   }
 
   void _refresh() => _loadLocaleAndTrip();
 
+  Future<void> _handleUserRefresh() async {
+    if (_refreshing) return;
+    setState(() => _refreshing = true);
+    await _loadLocaleAndTrip();
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context).get('data_refreshed')),
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          _loading
-              ? const Center(child: CircularProgressIndicator())
-              : FutureBuilder<List<ExpenseGroup>>(
+    final loc = AppLocalizations.of(context);
+    return ScaffoldMessenger(
+      key: _scaffoldMessengerKey,
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        body: _loading
+            ? const Center(child: CircularProgressIndicator())
+            : RefreshIndicator(
+                onRefresh: _handleUserRefresh,
+                child: FutureBuilder<List<ExpenseGroup>>(
                   future: ExpenseGroupStorage.getActiveGroups(),
                   builder: (context, snapshot) {
                     final hasGroups = snapshot.data?.isNotEmpty == true;
-
-                    return hasGroups
-                        // Ci sono gruppi: mostra HomeCardsSection con SafeArea
-                        ? SafeArea(
-                            child: HomeCardsSection(
-                              onTripAdded: _refresh,
-                              pinnedTrip: _pinnedTrip,
-                            ),
-                          )
-                        // Nessun gruppo: mostra WelcomeSection senza SafeArea
-                        : HomeWelcomeSection(onTripAdded: _refresh);
+                    if (hasGroups) {
+                      return SafeArea(
+                        child: HomeCardsSection(
+                          onTripAdded: () {
+                            _refresh();
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              _scaffoldMessengerKey.currentState?.showSnackBar(
+                                SnackBar(
+                                  content: Text(loc.get('group_added_success')),
+                                  behavior: SnackBarBehavior.floating,
+                                  duration: const Duration(seconds: 2),
+                                ),
+                              );
+                            });
+                          },
+                          pinnedTrip: _pinnedTrip,
+                        ),
+                      );
+                    } else {
+                      return HomeWelcomeSection(
+                        onTripAdded: () {
+                          _refresh();
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            _scaffoldMessengerKey.currentState?.showSnackBar(
+                              SnackBar(
+                                content: Text(loc.get('group_added_success')),
+                                behavior: SnackBarBehavior.floating,
+                                duration: const Duration(seconds: 2),
+                              ),
+                            );
+                          });
+                        },
+                      );
+                    }
                   },
                 ),
-        ],
+              ),
       ),
     );
   }

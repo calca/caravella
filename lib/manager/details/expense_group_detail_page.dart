@@ -96,6 +96,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   ExpenseGroup? _trip;
   bool _deleted = false;
   ExpenseGroupNotifier? _groupNotifier;
+  bool _reloading = false;
+  double _listOpacity = 1.0;
 
   @override
   void initState() {
@@ -149,6 +151,11 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   }
 
   Future<void> _refreshTrip() async {
+    if (_reloading) return;
+    setState(() {
+      _reloading = true;
+      _listOpacity = 0.3;
+    });
     final trip = await ExpenseGroupStorage.getTripById(
       _trip?.id ?? widget.trip.id,
     );
@@ -157,9 +164,15 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       setState(() {
         _trip = trip;
       });
-
-      // Forza sempre l'aggiornamento del notifier con i nuovi dati
       _groupNotifier?.setCurrentGroup(trip);
+    }
+    // Piccola pausa per percezione visiva
+    await Future.delayed(const Duration(milliseconds: 180));
+    if (mounted) {
+      setState(() {
+        _listOpacity = 1.0;
+        _reloading = false;
+      });
     }
   }
 
@@ -431,6 +444,18 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           );
           await _groupNotifier?.addExpense(expenseWithId);
           await _refreshTrip();
+          if (mounted) {
+            final loc = AppLocalizations(
+              LocaleNotifier.of(context)?.locale ?? 'it',
+            );
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(loc.get('expense_added_success')),
+                behavior: SnackBarBehavior.floating,
+                duration: const Duration(seconds: 2),
+              ),
+            );
+          }
           if (context.mounted) Navigator.of(context).pop();
         },
         onCategoryAdded: (categoryName) async {
@@ -479,6 +504,18 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           );
           await _groupNotifier?.updateGroup(updatedGroup);
           await _refreshTrip();
+          if (mounted) {
+            final loc = AppLocalizations(
+              LocaleNotifier.of(context)?.locale ?? 'it',
+            );
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(loc.get('expense_updated_success')),
+                behavior: SnackBarBehavior.floating,
+                duration: const Duration(seconds: 2),
+              ),
+            );
+          }
           if (context.mounted) Navigator.of(context).pop();
         },
         onCategoryAdded: (categoryName) async {
@@ -563,6 +600,19 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                             : null,
                         onOptions: _showOptionsSheet,
                       ),
+                      const SizedBox(width: 8),
+                      if (_reloading)
+                        const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      else
+                        IconButton(
+                          tooltip: 'Refresh',
+                          icon: const Icon(Icons.refresh_rounded, size: 20),
+                          onPressed: _refreshTrip,
+                        ),
                     ],
                   ),
                   const SizedBox(height: 24),
@@ -583,28 +633,33 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               ),
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 24, 16, 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Attività',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: colorScheme.onSurface,
-                        fontSize: 20,
+                child: AnimatedOpacity(
+                  duration: const Duration(milliseconds: 220),
+                  opacity: _listOpacity,
+                  curve: Curves.easeInOut,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Attività',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: colorScheme.onSurface,
+                          fontSize: 20,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    trip.expenses.isEmpty
-                        ? EmptyExpenses(
-                            semanticLabel: loc.get('no_expense_label'),
-                          )
-                        : ExpenseList(
-                            expenses: trip.expenses,
-                            currency: trip.currency,
-                            onExpenseTap: _openEditExpense,
-                          ),
-                  ],
+                      const SizedBox(height: 16),
+                      trip.expenses.isEmpty
+                          ? EmptyExpenses(
+                              semanticLabel: loc.get('no_expense_label'),
+                            )
+                          : ExpenseList(
+                              expenses: trip.expenses,
+                              currency: trip.currency,
+                              onExpenseTap: _openEditExpense,
+                            ),
+                    ],
+                  ),
                 ),
               ),
             ),
