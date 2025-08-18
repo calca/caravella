@@ -181,7 +181,7 @@ class _AnimatedToastState extends State<_AnimatedToast>
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Material(
-                    color: widget.background.withOpacity(0.95),
+                    color: widget.background.withValues(alpha: 0.95),
                     elevation: 0, // removed shadow
                     shadowColor: Colors.transparent,
                     clipBehavior: Clip.antiAlias,
@@ -190,10 +190,9 @@ class _AnimatedToastState extends State<_AnimatedToast>
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .outlineVariant
-                              .withOpacity(0.25),
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.outlineVariant.withValues(alpha: 0.25),
                           width: 1,
                         ),
                       ),

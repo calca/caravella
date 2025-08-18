@@ -239,74 +239,77 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => OptionsSheet(
+      builder: (sheetCtx) => OptionsSheet(
         trip: _trip!,
         onPinToggle: () async {
-          if (_trip != null) {
-            final updatedGroup = ExpenseGroup(
-              title: _trip!.title,
-              expenses: _trip!.expenses,
-              participants: _trip!.participants,
-              startDate: _trip!.startDate,
-              endDate: _trip!.endDate,
-              currency: _trip!.currency,
-              categories: _trip!.categories,
-              timestamp: _trip!.timestamp,
-              id: _trip!.id,
-              file: _trip!.file,
-              pinned: !_trip!.pinned,
-              archived: _trip!.archived,
-            );
-            await _groupNotifier?.updateGroup(updatedGroup);
-            await _refreshTrip();
-            if (context.mounted) Navigator.of(context).pop();
-          }
+          if (_trip == null) return;
+          final nav = Navigator.of(sheetCtx);
+          final updatedGroup = ExpenseGroup(
+            title: _trip!.title,
+            expenses: _trip!.expenses,
+            participants: _trip!.participants,
+            startDate: _trip!.startDate,
+            endDate: _trip!.endDate,
+            currency: _trip!.currency,
+            categories: _trip!.categories,
+            timestamp: _trip!.timestamp,
+            id: _trip!.id,
+            file: _trip!.file,
+            pinned: !_trip!.pinned,
+            archived: _trip!.archived,
+          );
+          await _groupNotifier?.updateGroup(updatedGroup);
+          await _refreshTrip();
+          if (!mounted) return;
+          nav.pop();
         },
         onArchiveToggle: () async {
-          if (_trip != null) {
-            final updatedGroup = ExpenseGroup(
-              title: _trip!.title,
-              expenses: _trip!.expenses,
-              participants: _trip!.participants,
-              startDate: _trip!.startDate,
-              endDate: _trip!.endDate,
-              currency: _trip!.currency,
-              categories: _trip!.categories,
-              timestamp: _trip!.timestamp,
-              id: _trip!.id,
-              file: _trip!.file,
-              pinned: _trip!.pinned,
-              archived: !_trip!.archived,
-            );
-            await _groupNotifier?.updateGroup(updatedGroup);
-            await _refreshTrip();
-            if (context.mounted) Navigator.of(context).pop();
-          }
+          if (_trip == null) return;
+          final nav = Navigator.of(sheetCtx);
+          final updatedGroup = ExpenseGroup(
+            title: _trip!.title,
+            expenses: _trip!.expenses,
+            participants: _trip!.participants,
+            startDate: _trip!.startDate,
+            endDate: _trip!.endDate,
+            currency: _trip!.currency,
+            categories: _trip!.categories,
+            timestamp: _trip!.timestamp,
+            id: _trip!.id,
+            file: _trip!.file,
+            pinned: _trip!.pinned,
+            archived: !_trip!.archived,
+          );
+          await _groupNotifier?.updateGroup(updatedGroup);
+          await _refreshTrip();
+          if (!mounted) return;
+          nav.pop();
         },
         onEdit: () async {
-          if (_trip != null && context.mounted) {
-            Navigator.of(context).pop();
-            await Future.delayed(const Duration(milliseconds: 200));
-            if (context.mounted) {
-              await Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (ctx) => AddNewExpensesGroupPage(trip: _trip!),
-                ),
-              );
-              await _refreshTrip();
-            }
-          }
+          if (_trip == null) return;
+          final nav = Navigator.of(sheetCtx);
+          nav.pop();
+          await Future.delayed(const Duration(milliseconds: 200));
+          if (!mounted) return;
+          await nav.push(
+            MaterialPageRoute(
+              builder: (ctx) => AddNewExpensesGroupPage(trip: _trip!),
+            ),
+          );
+          await _refreshTrip();
         },
         onDownloadCsv: () async {
-          final loc = AppLocalizations(
+          final preLoc = AppLocalizations(
             LocaleNotifier.of(context)?.locale ?? 'it',
           );
+          final nav = Navigator.of(sheetCtx);
+          final rootContext = context; // capture for toasts
           final csv = _generateCsvContent();
           if (csv.isEmpty) {
-            if (context.mounted) {
+            if (rootContext.mounted) {
               AppToast.show(
-                context,
-                loc.get('no_expenses_to_export'),
+                rootContext,
+                preLoc.get('no_expenses_to_export'),
                 type: ToastType.info,
               );
             }
@@ -316,79 +319,90 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           String? dirPath;
           try {
             dirPath = await FilePicker.platform.getDirectoryPath(
-              dialogTitle: loc.get('csv_select_directory_title'),
+              dialogTitle: preLoc.get('csv_select_directory_title'),
             );
-          } catch (e) {
+          } catch (_) {
             dirPath = null;
           }
           if (dirPath == null) {
-            if (context.mounted) {
-              AppToast.show(
-                context,
-                loc.get('csv_save_cancelled'),
-                type: ToastType.info,
-              );
-            }
+            if (!rootContext.mounted) return;
+            AppToast.show(
+              rootContext,
+              preLoc.get('csv_save_cancelled'),
+              type: ToastType.info,
+            );
             return;
           }
           try {
             final file = File('$dirPath/$filename');
             await file.writeAsString(csv);
-            if (context.mounted) {
-              AppToast.show(
-                context,
-                loc.get('csv_saved_in', params: {'path': file.path}),
-                type: ToastType.success,
-              );
-              Navigator.of(context).pop();
-            }
+            if (!rootContext.mounted) return;
+            final msg = preLoc.get('csv_saved_in', params: {'path': file.path});
+            AppToast.show(rootContext, msg, type: ToastType.success);
+            nav.pop();
           } catch (e) {
-            if (context.mounted) {
-              AppToast.show(
-                context,
-                loc.get('csv_save_error'),
-                type: ToastType.error,
-              );
-            }
+            if (!rootContext.mounted) return;
+            AppToast.show(
+              rootContext,
+              preLoc.get('csv_save_error'),
+              type: ToastType.error,
+            );
           }
         },
         onShareCsv: () async {
-          // Share CSV logic
+          final preLoc = AppLocalizations(
+            LocaleNotifier.of(context)?.locale ?? 'it',
+          );
+          final nav = Navigator.of(sheetCtx);
+          final rootContext = context;
           final csv = _generateCsvContent();
+          if (csv.isEmpty) {
+            if (rootContext.mounted) {
+              AppToast.show(
+                rootContext,
+                preLoc.get('no_expenses_to_export'),
+                type: ToastType.info,
+              );
+            }
+            return;
+          }
           final tempDir = await getTemporaryDirectory();
           final file = await File(
             '${tempDir.path}/${_buildCsvFilename()}',
           ).create();
           await file.writeAsString(csv);
+          if (!rootContext.mounted) return; // ensure still alive before share
           await SharePlus.instance.share(
             ShareParams(
               text: '${_trip!.title} - CSV',
               files: [XFile(file.path)],
             ),
           );
-          if (context.mounted) Navigator.of(context).pop();
+          if (!rootContext.mounted) return;
+          nav.pop();
         },
         onDelete: () async {
-          final loc = AppLocalizations(
+          final preLoc = AppLocalizations(
             LocaleNotifier.of(context)?.locale ?? 'it',
           );
+          final nav = Navigator.of(sheetCtx);
+          final theme = Theme.of(context);
+          final rootNav = Navigator.of(context);
           final confirmed = await showDialog<bool>(
             context: context,
-            builder: (context) => AlertDialog(
-              title: Text(loc.get('delete_group')),
-              content: Text(loc.get('delete_group_confirm')),
+            builder: (dialogCtx) => AlertDialog(
+              title: Text(preLoc.get('delete_group')),
+              content: Text(preLoc.get('delete_group_confirm')),
               actions: [
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: Text(loc.get('cancel')),
+                  onPressed: () => Navigator.of(dialogCtx).pop(false),
+                  child: Text(preLoc.get('cancel')),
                 ),
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(true),
+                  onPressed: () => Navigator.of(dialogCtx).pop(true),
                   child: Text(
-                    loc.get('delete'),
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.error,
-                    ),
+                    preLoc.get('delete'),
+                    style: TextStyle(color: theme.colorScheme.error),
                   ),
                 ),
               ],
@@ -398,10 +412,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             final trips = await ExpenseGroupStorage.getAllGroups();
             trips.removeWhere((t) => t.id == _trip!.id);
             await ExpenseGroupStorage.writeTrips(trips);
-            if (context.mounted) {
-              Navigator.of(context).pop(); // Close sheet
-              Navigator.of(context).pop(true); // Go back
-            }
+            if (!context.mounted) return;
+            nav.pop(); // close sheet
+            rootNav.pop(true); // go back to list
           }
         },
       ),
@@ -444,22 +457,23 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         group: _trip!,
         title: loc.get('add_expense'),
         onExpenseSaved: (newExpense) async {
+          final sheetCtx = context; // bottom sheet context
+          final nav = Navigator.of(sheetCtx);
+          final preLoc = AppLocalizations(
+            LocaleNotifier.of(sheetCtx)?.locale ?? 'it',
+          );
           final expenseWithId = newExpense.copyWith(
             id: DateTime.now().millisecondsSinceEpoch.toString(),
           );
           await _groupNotifier?.addExpense(expenseWithId);
           await _refreshTrip();
-          if (mounted) {
-            final loc = AppLocalizations(
-              LocaleNotifier.of(context)?.locale ?? 'it',
-            );
-            AppToast.show(
-              context,
-              loc.get('expense_added_success'),
-              type: ToastType.success,
-            );
-          }
-          if (context.mounted) Navigator.of(context).pop();
+          if (!sheetCtx.mounted) return;
+          AppToast.show(
+            sheetCtx,
+            preLoc.get('expense_added_success'),
+            type: ToastType.success,
+          );
+          nav.pop();
         },
         onCategoryAdded: (categoryName) async {
           await _groupNotifier?.addCategory(categoryName);
@@ -488,6 +502,11 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         expense: expense,
         title: loc.get('edit_expense'),
         onExpenseAdded: (updatedExpense) async {
+          final sheetCtx = context; // bottom sheet context
+          final preLoc = AppLocalizations(
+            LocaleNotifier.of(sheetCtx)?.locale ?? 'it',
+          );
+          final nav = Navigator.of(sheetCtx);
           final expenseWithId = updatedExpense.copyWith(id: expense.id);
           final updatedExpenses = _trip!.expenses.map((e) {
             return e.id == expense.id ? expenseWithId : e;
@@ -507,17 +526,13 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           );
           await _groupNotifier?.updateGroup(updatedGroup);
           await _refreshTrip();
-          if (mounted) {
-            final loc = AppLocalizations(
-              LocaleNotifier.of(context)?.locale ?? 'it',
-            );
-            AppToast.show(
-              context,
-              loc.get('expense_updated_success'),
-              type: ToastType.success,
-            );
-          }
-          if (context.mounted) Navigator.of(context).pop();
+          if (!sheetCtx.mounted) return;
+          AppToast.show(
+            sheetCtx,
+            preLoc.get('expense_updated_success'),
+            type: ToastType.success,
+          );
+          nav.pop();
         },
         onCategoryAdded: (categoryName) async {
           await _groupNotifier?.addCategory(categoryName);
