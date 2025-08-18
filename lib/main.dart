@@ -36,9 +36,7 @@ void main() {
   ]);
 
   // Abilita l'edge-to-edge su Android
-  SystemChrome.setEnabledSystemUIMode(
-    SystemUiMode.edgeToEdge,
-  );
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
   // Ottimizza la gestione memoria per immagini
   PaintingBinding.instance.imageCache.maximumSize = 100;
@@ -47,6 +45,14 @@ void main() {
   _initFlagSecure().then((_) {
     runApp(const CaravellaApp());
   });
+}
+
+// Test entrypoint (avoids async flag secure wait & system chrome constraints in tests)
+@visibleForTesting
+Widget createAppForTest() {
+  // Initialize environment (prod) for tests
+  AppConfig.setEnvironment(Environment.prod);
+  return const CaravellaApp();
 }
 
 Future<void> _initFlagSecure() async {

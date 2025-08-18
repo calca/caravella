@@ -17,6 +17,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          flutter-version: '3.35.1'
       - name: Decode keystore from secret
         run: |
           echo "$KEYSTORE_BASE64" | base64 -d > android/app/upload-keystore.jks
@@ -69,6 +70,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          flutter-version: '3.35.1'
       - name: Decode keystore from secret
         run: |
           echo "$KEYSTORE_BASE64" | base64 -d > android/app/upload-keystore.jks
