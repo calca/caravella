@@ -1,9 +1,7 @@
 import 'dart:io';
-import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:archive/archive.dart';
 import 'package:archive/archive_io.dart';
-import 'package:path_provider/path_provider.dart';
 
 // Mock expense group data for testing
 const String mockExpenseData = '''
@@ -44,7 +42,9 @@ void main() {
       final zipData = ZipEncoder().encode(archive);
       
       final zipFile = File('${tempDir.path}/test_backup.zip');
-      await zipFile.writeAsBytes(zipData!);
+      if (zipData != null) {
+        await zipFile.writeAsBytes(zipData);
+      }
 
       // Verify ZIP file was created and is not empty
       expect(await zipFile.exists(), true);
@@ -81,7 +81,9 @@ void main() {
       final zipData = ZipEncoder().encode(archive);
       
       final zipFile = File('${tempDir.path}/empty_backup.zip');
-      await zipFile.writeAsBytes(zipData!);
+      if (zipData != null) {
+        await zipFile.writeAsBytes(zipData);
+      }
 
       // Verify ZIP file structure is correct even with empty content
       expect(await zipFile.exists(), true);

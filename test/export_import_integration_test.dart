@@ -46,7 +46,6 @@ void main() {
       await originalFile.writeAsString(originalData);
       
       // Step 2: Simulate EXPORT - create ZIP using the NEW approach
-      print('Creating ZIP using new export method...');
       final archive = Archive();
       final fileBytes = await originalFile.readAsBytes();
       final archiveFile = ArchiveFile(fileName, fileBytes.length, fileBytes);
@@ -54,13 +53,11 @@ void main() {
       final zipData = ZipEncoder().encode(archive);
       
       final zipFile = File('${tempDir.path}/test_backup.zip');
-      await zipFile.writeAsBytes(zipData!);
-      
-      print('✓ ZIP created: ${zipFile.path}');
-      print('✓ ZIP size: ${await zipFile.length()} bytes');
+      if (zipData != null) {
+        await zipFile.writeAsBytes(zipData);
+      }
       
       // Step 3: Simulate IMPORT - read ZIP using existing import logic
-      print('Reading ZIP using existing import method...');
       final zipBytes = await zipFile.readAsBytes();
       final decodedArchive = ZipDecoder().decodeBytes(zipBytes);
       
@@ -81,7 +78,6 @@ void main() {
       expect(extractedContent, isNotNull, reason: 'Extracted content should not be null');
       
       // Step 4: Verify data integrity
-      print('Verifying data integrity...');
       
       // Compare as JSON to ignore whitespace differences
       final originalJson = jsonDecode(originalData);
@@ -94,9 +90,6 @@ void main() {
       expect(extractedJson[0]['title'], equals('Test Export-Import'));
       expect(extractedJson[0]['expenses'][0]['amount'], equals(50.0));
       expect(extractedJson[0]['participants'].length, equals(2));
-      
-      print('✓ Data integrity verified');
-      print('✓ Export-Import cycle completed successfully');
       
       // Cleanup
       await originalFile.delete();
