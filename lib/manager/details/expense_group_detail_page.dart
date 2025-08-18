@@ -426,13 +426,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         group: _trip!,
         title: loc.get('add_expense'),
         onExpenseSaved: (newExpense) async {
-          final expenseWithId = ExpenseDetails(
+          final expenseWithId = newExpense.copyWith(
             id: DateTime.now().millisecondsSinceEpoch.toString(),
-            category: newExpense.category,
-            amount: newExpense.amount,
-            paidBy: newExpense.paidBy,
-            date: newExpense.date,
-            note: newExpense.note,
           );
           await _groupNotifier?.addExpense(expenseWithId);
           await _refreshTrip();
@@ -465,15 +460,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         expense: expense,
         title: loc.get('edit_expense'),
         onExpenseAdded: (updatedExpense) async {
-          final expenseWithId = ExpenseDetails(
-            id: expense.id,
-            name: updatedExpense.name,
-            category: updatedExpense.category,
-            amount: updatedExpense.amount,
-            paidBy: updatedExpense.paidBy,
-            date: updatedExpense.date,
-            note: updatedExpense.note,
-          );
+          final expenseWithId = updatedExpense.copyWith(id: expense.id);
           final updatedExpenses = _trip!.expenses.map((e) {
             return e.id == expense.id ? expenseWithId : e;
           }).toList();
