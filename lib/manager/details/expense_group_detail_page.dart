@@ -76,6 +76,23 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     return value;
   }
 
+  /// Costruisce il nome file CSV includendo la data odierna in formato YYYY-MM-DD
+  /// ed una versione "sanitizzata" del titolo del gruppo.
+  String _buildCsvFilename() {
+    final now = DateTime.now();
+    final date =
+        '${now.year.toString().padLeft(4, '0')}-'
+        '${now.month.toString().padLeft(2, '0')}-'
+        '${now.day.toString().padLeft(2, '0')}';
+    final rawTitle = _trip?.title ?? 'export';
+    final safeTitle = rawTitle
+        .toLowerCase()
+        .replaceAll(RegExp(r'[^a-z0-9_-]+'), '_')
+        .replaceAll(RegExp(r'_+'), '_')
+        .trim();
+    return '${date}_${safeTitle}_export.csv';
+  }
+
   ExpenseGroup? _trip;
   bool _deleted = false;
   ExpenseGroupNotifier? _groupNotifier;
@@ -279,7 +296,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             }
             return;
           }
-          final filename = '${_trip!.title}_export.csv';
+          final filename = _buildCsvFilename();
           String? dirPath;
           try {
             dirPath = await FilePicker.platform.getDirectoryPath(
@@ -322,7 +339,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           final csv = _generateCsvContent();
           final tempDir = await getTemporaryDirectory();
           final file = await File(
-            '${tempDir.path}/${_trip!.title}_export.csv',
+            '${tempDir.path}/${_buildCsvFilename()}',
           ).create();
           await file.writeAsString(csv);
           await SharePlus.instance.share(
