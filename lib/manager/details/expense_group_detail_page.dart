@@ -14,6 +14,7 @@ import '../../state/expense_group_notifier.dart';
 import '../../data/expense_group_storage.dart';
 import '../../app_localizations.dart';
 import '../../state/locale_notifier.dart';
+import '../../widgets/app_toast.dart';
 import 'tabs/overview_tab.dart';
 import 'widgets/group_header.dart';
 import 'widgets/group_actions.dart';
@@ -303,8 +304,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           final csv = _generateCsvContent();
           if (csv.isEmpty) {
             if (context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(loc.get('no_expenses_to_export'))),
+              AppToast.show(
+                context,
+                loc.get('no_expenses_to_export'),
+                type: ToastType.info,
               );
             }
             return;
@@ -320,8 +323,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           }
           if (dirPath == null) {
             if (context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(loc.get('csv_save_cancelled'))),
+              AppToast.show(
+                context,
+                loc.get('csv_save_cancelled'),
+                type: ToastType.info,
               );
             }
             return;
@@ -330,19 +335,19 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             final file = File('$dirPath/$filename');
             await file.writeAsString(csv);
             if (context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    loc.get('csv_saved_in', params: {'path': file.path}),
-                  ),
-                ),
+              AppToast.show(
+                context,
+                loc.get('csv_saved_in', params: {'path': file.path}),
+                type: ToastType.success,
               );
               Navigator.of(context).pop();
             }
           } catch (e) {
             if (context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(loc.get('csv_save_error'))),
+              AppToast.show(
+                context,
+                loc.get('csv_save_error'),
+                type: ToastType.error,
               );
             }
           }
@@ -448,12 +453,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             final loc = AppLocalizations(
               LocaleNotifier.of(context)?.locale ?? 'it',
             );
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(loc.get('expense_added_success')),
-                behavior: SnackBarBehavior.floating,
-                duration: const Duration(seconds: 2),
-              ),
+            AppToast.show(
+              context,
+              loc.get('expense_added_success'),
+              type: ToastType.success,
             );
           }
           if (context.mounted) Navigator.of(context).pop();
@@ -508,12 +511,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             final loc = AppLocalizations(
               LocaleNotifier.of(context)?.locale ?? 'it',
             );
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(loc.get('expense_updated_success')),
-                behavior: SnackBarBehavior.floating,
-                duration: const Duration(seconds: 2),
-              ),
+            AppToast.show(
+              context,
+              loc.get('expense_updated_success'),
+              type: ToastType.success,
             );
           }
           if (context.mounted) Navigator.of(context).pop();

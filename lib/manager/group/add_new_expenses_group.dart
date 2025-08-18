@@ -19,6 +19,7 @@ import '../../app_localizations.dart';
 import '../../state/expense_group_notifier.dart';
 import '../../widgets/caravella_app_bar.dart';
 import 'widgets/section_period.dart';
+import '../../widgets/app_toast.dart';
 
 class AddNewExpensesGroupPage extends StatefulWidget {
   final ExpenseGroup? trip;
@@ -46,8 +47,10 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
         final loc = AppLocalizations.of(context);
         return SafeArea(
           child: Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20.0,
+              vertical: 16.0,
+            ),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -68,16 +71,23 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                         itemBuilder: (context, index) {
                           final currency = _currencies[index];
                           return ListTile(
-                            leading: Text(currency['symbol']!,
-                                style: Theme.of(context).textTheme.titleLarge),
+                            leading: Text(
+                              currency['symbol']!,
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
                             title: Text(
-                                '${currency['code']} - ${currency['name']}',
-                                style: Theme.of(context).textTheme.bodyMedium),
-                            trailing: currency['symbol'] ==
+                              '${currency['code']} - ${currency['name']}',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                            trailing:
+                                currency['symbol'] ==
                                     _selectedCurrency['symbol']
-                                ? Icon(Icons.check,
-                                    color:
-                                        Theme.of(context).colorScheme.primary)
+                                ? Icon(
+                                    Icons.check,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                  )
                                 : null,
                             onTap: () {
                               setState(() {
@@ -170,7 +180,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   Map<String, String> _selectedCurrency = {
     'symbol': '€',
     'code': 'EUR',
-    'name': 'Euro'
+    'name': 'Euro',
   };
 
   @override
@@ -219,8 +229,9 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       initialDate: initialDate,
       firstDate: firstDate,
       lastDate: lastDate,
-      helpText:
-          isStart ? loc.get('select_from_date') : loc.get('select_to_date'),
+      helpText: isStart
+          ? loc.get('select_from_date')
+          : loc.get('select_to_date'),
       cancelText: loc.get('cancel'),
       confirmText: loc.get('ok'),
       locale: Locale(loc.locale),
@@ -268,12 +279,10 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
         _dateError = loc.get('select_both_dates');
       });
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(loc.get('select_both_dates')),
-          backgroundColor:
-              Theme.of(context).colorScheme.error, // Use theme error color
-        ),
+      AppToast.show(
+        context,
+        loc.get('select_both_dates'),
+        type: ToastType.error,
       );
       return;
     }
@@ -285,23 +294,19 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       setState(() {
         _dateError = loc.get('end_date_after_start');
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(loc.get('end_date_after_start')),
-          backgroundColor:
-              Theme.of(context).colorScheme.error, // Use theme error color
-        ),
+      AppToast.show(
+        context,
+        loc.get('end_date_after_start'),
+        type: ToastType.error,
       );
       return;
     }
 
     if (_participants.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(loc.get('enter_participant')),
-          backgroundColor:
-              Theme.of(context).colorScheme.error, // Use theme error color
-        ),
+      AppToast.show(
+        context,
+        loc.get('enter_participant'),
+        type: ToastType.error,
       );
       return;
     }
@@ -317,13 +322,15 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
           final updatedTrip = ExpenseGroup(
             title: _titleController.text.trim(),
             expenses: trips[idx].expenses, // keep expenses
-            participants:
-                List.from(_participants), // Copia la lista dei partecipanti
+            participants: List.from(
+              _participants,
+            ), // Copia la lista dei partecipanti
             startDate: _startDate,
             endDate: _endDate,
             currency: _selectedCurrency['symbol']!,
-            categories:
-                List.from(_categories), // Copia la lista delle categorie
+            categories: List.from(
+              _categories,
+            ), // Copia la lista delle categorie
             timestamp: trips[idx].timestamp, // mantieni il timestamp originale
             id: trips[idx].id, // mantieni l'id originale
             file: _savedImagePath, // save image path
@@ -351,8 +358,9 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       final newTrip = ExpenseGroup(
         title: _titleController.text.trim(),
         expenses: [],
-        participants:
-            List.from(_participants), // Copia la lista dei partecipanti
+        participants: List.from(
+          _participants,
+        ), // Copia la lista dei partecipanti
         startDate: _startDate,
         endDate: _endDate,
         currency: _selectedCurrency['symbol']!,
@@ -370,11 +378,10 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
     } catch (e) {
       if (!mounted) return;
       // Dopo await ExpenseGroupStorage.writeTrips/trips.add, ricontrolla mounted
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Errore durante il salvataggio: ${e.toString()}'),
-          backgroundColor: Theme.of(context).colorScheme.error,
-        ),
+      AppToast.show(
+        context,
+        'Errore durante il salvataggio: ${e.toString()}',
+        type: ToastType.error,
       );
     }
   }
@@ -400,12 +407,10 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Errore durante la selezione dell\'immagine'),
-            backgroundColor:
-                Theme.of(context).colorScheme.error, // Use theme error color
-          ),
+        AppToast.show(
+          context,
+          'Errore durante la selezione dell\'immagine',
+          type: ToastType.error,
         );
       }
     } finally {
@@ -441,12 +446,10 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Errore durante il salvataggio dell\'immagine'),
-            backgroundColor:
-                Theme.of(context).colorScheme.error, // Use theme error color
-          ),
+        AppToast.show(
+          context,
+          'Errore durante il salvataggio dell\'immagine',
+          type: ToastType.error,
         );
       }
     } finally {
@@ -472,8 +475,10 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       builder: (BuildContext context) {
         return SafeArea(
           child: Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20.0,
+              vertical: 16.0,
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -577,8 +582,8 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                       ? loc.get('edit_group')
                       : loc.get('new_group'),
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 const SizedBox(height: 24),
 
@@ -591,14 +596,14 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                       children: [
                         Text(
                           loc.get('group_name'),
-                          style:
-                              Theme.of(context).textTheme.titleLarge?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(fontWeight: FontWeight.w600),
                         ),
                         const SizedBox(width: 4),
-                        const Text('*',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text(
+                          '*',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -607,8 +612,8 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                       focusNode: _titleFocusNode,
                       autofocus: widget.trip == null,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
+                        fontWeight: FontWeight.w600,
+                      ),
                       decoration: const InputDecoration(
                         labelText: '',
                         border: UnderlineInputBorder(),
@@ -633,9 +638,9 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                         child: Text(
                           _dateError!,
                           style: TextStyle(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .error, // Use theme error color
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.error, // Use theme error color
                             fontSize: 13,
                           ),
                         ),
@@ -714,26 +719,30 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                       children: [
                         Text(
                           loc.get('currency'),
-                          style:
-                              Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.w600),
                         ),
                         const SizedBox(height: 8),
                         SelectionTile(
                           leading: const Icon(
-                              Icons.account_balance_wallet_outlined,
-                              size: 32),
+                            Icons.account_balance_wallet_outlined,
+                            size: 32,
+                          ),
                           title: _selectedCurrency['name']!,
                           subtitle:
                               '0${_selectedCurrency['symbol']} ${_selectedCurrency['code']}',
-                          trailing: Icon(Icons.chevron_right,
-                              size: 24,
-                              color: Theme.of(context).colorScheme.outline),
+                          trailing: Icon(
+                            Icons.chevron_right,
+                            size: 24,
+                            color: Theme.of(context).colorScheme.outline,
+                          ),
                           onTap: _showCurrencySheet,
                           borderRadius: 8,
-                          padding:
-                              const EdgeInsets.only(left: 8, top: 8, bottom: 8),
+                          padding: const EdgeInsets.only(
+                            left: 8,
+                            top: 8,
+                            bottom: 8,
+                          ),
                         ),
                       ],
                     ),
@@ -744,10 +753,8 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                       children: [
                         Text(
                           loc.get('image'),
-                          style:
-                              Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.w600),
                         ),
                         const SizedBox(height: 8),
                         InkWell(
@@ -758,7 +765,8 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                 context: context,
                                 shape: const RoundedRectangleBorder(
                                   borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(20)),
+                                    top: Radius.circular(20),
+                                  ),
                                 ),
                                 builder: (BuildContext context) {
                                   final loc = AppLocalizations.of(context);
@@ -807,27 +815,28 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                             width: 28,
                                             height: 28,
                                             child: CircularProgressIndicator(
-                                                strokeWidth: 3),
+                                              strokeWidth: 3,
+                                            ),
                                           ),
                                         )
                                       : (_selectedImageFile == null
-                                          ? Icon(
-                                              Icons.image_outlined,
-                                              size: 32,
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .onSurface,
-                                            )
-                                          : ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              child: Image.file(
-                                                _selectedImageFile!,
-                                                fit: BoxFit.cover,
-                                                width: 48,
-                                                height: 48,
-                                              ),
-                                            )),
+                                            ? Icon(
+                                                Icons.image_outlined,
+                                                size: 32,
+                                                color: Theme.of(
+                                                  context,
+                                                ).colorScheme.onSurface,
+                                              )
+                                            : ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                child: Image.file(
+                                                  _selectedImageFile!,
+                                                  fit: BoxFit.cover,
+                                                  width: 48,
+                                                  height: 48,
+                                                ),
+                                              )),
                                 ),
                                 const SizedBox(width: 16),
                                 Expanded(
@@ -840,9 +849,9 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                         _selectedImageFile == null
                                             ? loc.get('select_image')
                                             : 'Modifica Immagine',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge,
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.bodyLarge,
                                       ),
                                       const SizedBox(height: 4),
                                       Text(
@@ -850,18 +859,17 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodySmall
-                                            ?.copyWith(
-                                              color: Colors.grey[700],
-                                            ),
+                                            ?.copyWith(color: Colors.grey[700]),
                                       ),
                                     ],
                                   ),
                                 ),
                                 const SizedBox(width: 8),
-                                Icon(Icons.chevron_right,
-                                    size: 24,
-                                    color:
-                                        Theme.of(context).colorScheme.outline),
+                                Icon(
+                                  Icons.chevron_right,
+                                  size: 24,
+                                  color: Theme.of(context).colorScheme.outline,
+                                ),
                               ],
                             ),
                           ),

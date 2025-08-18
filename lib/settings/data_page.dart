@@ -8,6 +8,7 @@ import 'package:archive/archive_io.dart';
 import 'package:archive/archive.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
+import '../widgets/app_toast.dart';
 
 class DataPage extends StatelessWidget {
   final AppLocalizations? loc;
@@ -30,9 +31,12 @@ class DataPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Backup & Ripristino',
-                style: textTheme.titleLarge
-                    ?.copyWith(fontWeight: FontWeight.bold)),
+            Text(
+              'Backup & Ripristino',
+              style: textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 32),
             Card(
               elevation: 0,
@@ -43,15 +47,19 @@ class DataPage extends StatelessWidget {
               child: ListTile(
                 leading: const Icon(Icons.cloud_upload_outlined),
                 minLeadingWidth: 0,
-                title: Text(localization.get('backup'),
-                    style: textTheme.titleMedium),
+                title: Text(
+                  localization.get('backup'),
+                  style: textTheme.titleMedium,
+                ),
                 subtitle: const Text('Crea un file di backup delle tue spese.'),
                 trailing: const Icon(Icons.arrow_forward_ios, size: 18),
                 onTap: () async {
                   await _backupTrips(context, localization);
                 },
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 8,
+                  horizontal: 16,
+                ),
               ),
             ),
             const SizedBox(height: 16),
@@ -65,14 +73,17 @@ class DataPage extends StatelessWidget {
                 leading: const Icon(Icons.download_outlined),
                 minLeadingWidth: 0,
                 title: Text('Ripristino', style: textTheme.titleMedium),
-                subtitle:
-                    const Text('Importa un backup per ripristinare i dati.'),
+                subtitle: const Text(
+                  'Importa un backup per ripristinare i dati.',
+                ),
                 trailing: const Icon(Icons.arrow_forward_ios, size: 18),
                 onTap: () async {
                   await _importTrips(context, localization);
                 },
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 8,
+                  horizontal: 16,
+                ),
               ),
             ),
           ],
@@ -88,8 +99,10 @@ class DataPage extends StatelessWidget {
 
       if (!await tripsFile.exists()) {
         if (!context.mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(loc.get('no_trips_to_backup'))),
+        AppToast.show(
+          context,
+          loc.get('no_trips_to_backup'),
+          type: ToastType.info,
         );
         return;
       }
@@ -97,8 +110,10 @@ class DataPage extends StatelessWidget {
       final fileSize = await tripsFile.length();
       if (fileSize == 0) {
         if (!context.mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(loc.get('no_trips_to_backup'))),
+        AppToast.show(
+          context,
+          loc.get('no_trips_to_backup'),
+          type: ToastType.info,
         );
         return;
       }
@@ -126,8 +141,10 @@ class DataPage extends StatelessWidget {
       await SharePlus.instance.share(params);
     } catch (e) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${loc.get('backup_error')}: ${e.toString()}')),
+      AppToast.show(
+        context,
+        '${loc.get('backup_error')}: ${e.toString()}',
+        type: ToastType.error,
       );
     }
   }
@@ -149,7 +166,8 @@ class DataPage extends StatelessWidget {
           ),
           title: Text(loc.get('import_confirm_title')),
           content: Text(
-              loc.get('import_confirm_message', params: {'file': fileName})),
+            loc.get('import_confirm_message', params: {'file': fileName}),
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
@@ -186,15 +204,18 @@ class DataPage extends StatelessWidget {
             throw Exception('Formato file non supportato');
           }
           if (!context.mounted) return;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(loc.get('import_success'))),
+          AppToast.show(
+            context,
+            loc.get('import_success'),
+            type: ToastType.success,
           );
           Navigator.of(context).popUntil((route) => route.isFirst);
         } catch (e) {
           if (!context.mounted) return;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content: Text('${loc.get('import_error')}: ${e.toString()}')),
+          AppToast.show(
+            context,
+            '${loc.get('import_error')}: ${e.toString()}',
+            type: ToastType.error,
           );
         }
       }

@@ -63,11 +63,9 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     if (_currentGroup == null) return;
 
     final updatedExpenses = [..._currentGroup!.expenses, expense];
-    final updatedGroup = _currentGroup!.copyWith(
-      expenses: updatedExpenses,
-    );
+    final updatedGroup = _currentGroup!.copyWith(expenses: updatedExpenses);
 
-  _lastEvent = 'expense_added';
+    _lastEvent = 'expense_added';
 
     await updateGroup(updatedGroup);
   }
@@ -86,13 +84,11 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     final updatedCategories = [..._currentGroup!.categories];
     updatedCategories.add(ExpenseCategory(name: categoryName));
 
-    final updatedGroup = _currentGroup!.copyWith(
-      categories: updatedCategories,
-    );
+    final updatedGroup = _currentGroup!.copyWith(categories: updatedCategories);
 
     // Memorizza l'ultima categoria aggiunta
     _lastAddedCategory = categoryName;
-  _lastEvent = 'category_added';
+    _lastEvent = 'category_added';
 
     await updateGroup(updatedGroup);
   }
@@ -102,8 +98,9 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     if (_currentGroup == null) return;
 
     try {
-      final updatedGroup =
-          await ExpenseGroupStorage.getTripById(_currentGroup!.id);
+      final updatedGroup = await ExpenseGroupStorage.getTripById(
+        _currentGroup!.id,
+      );
       if (updatedGroup != null) {
         _currentGroup = updatedGroup;
         notifyListeners();

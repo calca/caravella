@@ -7,6 +7,7 @@ import '../../main.dart';
 import '../app_localizations.dart';
 import 'welcome/home_welcome_section.dart';
 import 'cards/home_cards_section.dart';
+import '../widgets/app_toast.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,8 +21,6 @@ class _HomePageState extends State<HomePage> with RouteAware {
   bool _loading = true;
   ExpenseGroupNotifier? _groupNotifier;
   bool _refreshing = false;
-  final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
-      GlobalKey<ScaffoldMessengerState>();
 
   @override
   void initState() {
@@ -67,12 +66,10 @@ class _HomePageState extends State<HomePage> with RouteAware {
       if (event == 'expense_added') {
         final loc = AppLocalizations.of(context);
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          _scaffoldMessengerKey.currentState?.showSnackBar(
-            SnackBar(
-              content: Text(loc.get('expense_added_success')),
-              behavior: SnackBarBehavior.floating,
-              duration: const Duration(seconds: 2),
-            ),
+          AppToast.show(
+            context,
+            loc.get('expense_added_success'),
+            type: ToastType.success,
           );
         });
       }
@@ -101,12 +98,10 @@ class _HomePageState extends State<HomePage> with RouteAware {
     setState(() => _refreshing = true);
     await _loadLocaleAndTrip();
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context).get('data_refreshed')),
-          behavior: SnackBarBehavior.floating,
-          duration: const Duration(seconds: 2),
-        ),
+      AppToast.show(
+        context,
+        AppLocalizations.of(context).get('data_refreshed'),
+        type: ToastType.info,
       );
     }
   }
@@ -114,56 +109,49 @@ class _HomePageState extends State<HomePage> with RouteAware {
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context);
-    return ScaffoldMessenger(
-      key: _scaffoldMessengerKey,
-      child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        body: _loading
-            ? const Center(child: CircularProgressIndicator())
-            : RefreshIndicator(
-                onRefresh: _handleUserRefresh,
-                child: FutureBuilder<List<ExpenseGroup>>(
-                  future: ExpenseGroupStorage.getActiveGroups(),
-                  builder: (context, snapshot) {
-                    final hasGroups = snapshot.data?.isNotEmpty == true;
-                    if (hasGroups) {
-                      return SafeArea(
-                        child: HomeCardsSection(
-                          onTripAdded: () {
-                            _refresh();
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              _scaffoldMessengerKey.currentState?.showSnackBar(
-                                SnackBar(
-                                  content: Text(loc.get('group_added_success')),
-                                  behavior: SnackBarBehavior.floating,
-                                  duration: const Duration(seconds: 2),
-                                ),
-                              );
-                            });
-                          },
-                          pinnedTrip: _pinnedTrip,
-                        ),
-                      );
-                    } else {
-                      return HomeWelcomeSection(
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      body: _loading
+          ? const Center(child: CircularProgressIndicator())
+          : RefreshIndicator(
+              onRefresh: _handleUserRefresh,
+              child: FutureBuilder<List<ExpenseGroup>>(
+                future: ExpenseGroupStorage.getActiveGroups(),
+                builder: (context, snapshot) {
+                  final hasGroups = snapshot.data?.isNotEmpty == true;
+                  if (hasGroups) {
+                    return SafeArea(
+                      child: HomeCardsSection(
                         onTripAdded: () {
                           _refresh();
                           WidgetsBinding.instance.addPostFrameCallback((_) {
-                            _scaffoldMessengerKey.currentState?.showSnackBar(
-                              SnackBar(
-                                content: Text(loc.get('group_added_success')),
-                                behavior: SnackBarBehavior.floating,
-                                duration: const Duration(seconds: 2),
-                              ),
+                            AppToast.show(
+                              context,
+                              loc.get('group_added_success'),
+                              type: ToastType.success,
                             );
                           });
                         },
-                      );
-                    }
-                  },
-                ),
+                        pinnedTrip: _pinnedTrip,
+                      ),
+                    );
+                  } else {
+                    return HomeWelcomeSection(
+                      onTripAdded: () {
+                        _refresh();
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          AppToast.show(
+                            context,
+                            loc.get('group_added_success'),
+                            type: ToastType.success,
+                          );
+                        });
+                      },
+                    );
+                  }
+                },
               ),
-      ),
+            ),
     );
   }
 }

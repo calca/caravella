@@ -10,6 +10,7 @@ import 'widgets/expense_group_empty_states.dart';
 import 'widgets/expandable_search_bar.dart';
 import 'widgets/expense_group_card.dart';
 import 'widgets/expense_group_options_sheet.dart';
+import '../../widgets/app_toast.dart';
 
 class ExpesensHistoryPage extends StatefulWidget {
   const ExpesensHistoryPage({super.key});
@@ -79,22 +80,13 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     } catch (e) {
       if (mounted) {
         setState(() => _loading = false);
-        _showErrorSnackBar('Errore nel caricamento dei gruppi');
+        AppToast.show(
+          context,
+          'Errore nel caricamento dei gruppi',
+          type: ToastType.error,
+        );
       }
     }
-  }
-
-  void _showErrorSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        behavior: SnackBarBehavior.floating,
-        action: SnackBarAction(
-          label: 'Riprova',
-          onPressed: _loadTrips,
-        ),
-      ),
-    );
   }
 
   List<ExpenseGroup> _applyFilter(List<ExpenseGroup> trips) {
@@ -102,8 +94,10 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     List<ExpenseGroup> filtered = trips;
     if (_searchQuery.isNotEmpty) {
       filtered = filtered
-          .where((trip) =>
-              trip.title.toLowerCase().contains(_searchQuery.toLowerCase()))
+          .where(
+            (trip) =>
+                trip.title.toLowerCase().contains(_searchQuery.toLowerCase()),
+          )
           .toList();
     }
     // Ordina: pinned prima, poi il resto
@@ -216,8 +210,9 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color:
-                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+              color: Theme.of(
+                context,
+              ).colorScheme.primary.withValues(alpha: 0.3),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -242,9 +237,9 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
           label: Text(
             'Nuovo gruppo',
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  fontWeight: FontWeight.w600,
-                ),
+              color: Theme.of(context).colorScheme.onPrimary,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ),
@@ -293,7 +288,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                       curve: Curves.easeOutCubic,
                       width: _isSearchExpanded
                           ? MediaQuery.of(context).size.width -
-                              32 // Full width minus padding
+                                32 // Full width minus padding
                           : 48, // Collapsed width
                       child: ExpandableSearchBar(
                         controller: _searchController,
@@ -311,38 +306,35 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
           // MAIN CONTENT
           Expanded(
             child: _loading
-                ? const Center(
-                    child: CircularProgressIndicator.adaptive(),
-                  )
+                ? const Center(child: CircularProgressIndicator.adaptive())
                 : _filteredTrips.isEmpty
-                    ? ExpsenseGroupEmptyStates(
-                        searchQuery: _searchQuery,
-                        periodFilter: _statusFilter,
-                        localizations: loc,
-                        onTripAdded: () async {
-                          final result = await Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const AddNewExpensesGroupPage(),
-                            ),
-                          );
-                          if (result == true) {
-                            await _loadTrips();
-                          }
-                        },
-                      )
-                    : ListView.builder(
-                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
-                        itemCount: _filteredTrips.length,
-                        itemBuilder: (context, index) {
-                          final trip = _filteredTrips[index];
-                          return ExpenseGroupCard(
-                            trip: trip,
-                            onTripUpdated: _updateTrip,
-                            onTripOptionsPressed: _showTripOptions,
-                          );
-                        },
-                      ),
+                ? ExpsenseGroupEmptyStates(
+                    searchQuery: _searchQuery,
+                    periodFilter: _statusFilter,
+                    localizations: loc,
+                    onTripAdded: () async {
+                      final result = await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const AddNewExpensesGroupPage(),
+                        ),
+                      );
+                      if (result == true) {
+                        await _loadTrips();
+                      }
+                    },
+                  )
+                : ListView.builder(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
+                    itemCount: _filteredTrips.length,
+                    itemBuilder: (context, index) {
+                      final trip = _filteredTrips[index];
+                      return ExpenseGroupCard(
+                        trip: trip,
+                        onTripUpdated: _updateTrip,
+                        onTripOptionsPressed: _showTripOptions,
+                      );
+                    },
+                  ),
           ),
         ],
       ),
