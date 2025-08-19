@@ -225,7 +225,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   Widget build(BuildContext context) {
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
     final loc = AppLocalizations(locale);
-  final smallStyle = Theme.of(context).textTheme.bodyMedium;
+    final smallStyle = Theme.of(context).textTheme.bodyMedium;
     return PopScope(
       canPop: !_isDirty,
       onPopInvokedWithResult: (didPop, result) async {
