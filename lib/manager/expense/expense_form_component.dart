@@ -441,7 +441,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
 
               // DATA (bottone con data + icona, angoli arrotondati, sfondo grigio coerente col tema)
               if (widget.showDateAndNote ||
@@ -461,7 +460,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                   locale: locale,
                   textStyle: smallStyle,
                 ),
-              const SizedBox(height: 16),
 
               // LOCATION (spostato prima di NOTE)
               if (widget.showDateAndNote || widget.initialExpense != null) ...[
@@ -488,6 +486,13 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                 ),
                 const SizedBox(height: 16),
               ],
+              Divider(
+                height: 24,
+                thickness: 1,
+                color: Theme.of(
+                  context,
+                ).colorScheme.outlineVariant.withValues(alpha: 0.4),
+              ),
 
               // Pulsanti di azione
               ExpenseFormActionsWidget(
