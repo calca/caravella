@@ -290,6 +290,110 @@ class GroupCardContent extends StatelessWidget {
     );
   }
 
+  /// Check if the group duration is less than 30 days
+  bool _isShortDuration(ExpenseGroup group) {
+    if (group.startDate == null || group.endDate == null) return false;
+    final duration = group.endDate!.difference(group.startDate!);
+    return duration.inDays < 30;
+  }
+
+  /// Calculate daily average spending for the group
+  double _calculateDailyAverage(ExpenseGroup group) {
+    if (group.expenses.isEmpty) return 0.0;
+    
+    final now = DateTime.now();
+    DateTime startDate, endDate;
+    
+    if (group.startDate != null && group.endDate != null) {
+      startDate = group.startDate!;
+      endDate = group.endDate!.isBefore(now) ? group.endDate! : now;
+    } else {
+      // If no dates, use first expense to now
+      final sortedExpenses = [...group.expenses]
+        ..sort((a, b) => a.date.compareTo(b.date));
+      startDate = sortedExpenses.first.date;
+      endDate = now;
+    }
+    
+    final days = endDate.difference(startDate).inDays + 1;
+    if (days <= 0) return 0.0;
+    
+    final totalSpent = group.expenses.fold<double>(
+      0,
+      (sum, expense) => sum + (expense.amount ?? 0),
+    );
+    
+    return totalSpent / days;
+  }
+
+  /// Calculate today's total spending
+  double _calculateTodaySpending(ExpenseGroup group) {
+    final today = DateTime.now();
+    return group.expenses
+        .where((e) => 
+            e.date.year == today.year &&
+            e.date.month == today.month &&
+            e.date.day == today.day)
+        .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
+  }
+
+  Widget _buildExtraInfo(ExpenseGroup group) {
+    if (!_isShortDuration(group)) return const SizedBox.shrink();
+    
+    final dailyAverage = _calculateDailyAverage(group);
+    final todaySpending = _calculateTodaySpending(group);
+    final textColor = theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7);
+    
+    return Column(
+      children: [
+        // Daily average
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              '${localizations.get('daily_average')}: ',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: textColor,
+                fontSize: 14,
+              ),
+            ),
+            Text(
+              '${dailyAverage.toStringAsFixed(1)}€',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: textColor,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        // Today's spending
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              '${localizations.get('spent_today')}: ',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: textColor,
+                fontSize: 14,
+              ),
+            ),
+            Text(
+              '${todaySpending.toStringAsFixed(1)}€',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: textColor,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+
   Widget _buildStatistics(ExpenseGroup currentGroup) {
     // Check if we should show date range chart for groups with dates < 1 month
     if (shouldShowDateRangeChart(currentGroup)) {
@@ -362,6 +466,8 @@ class GroupCardContent extends StatelessWidget {
     // Statistiche base
     return Column(
       children: [
+        // Extra info for short duration trips
+        _buildExtraInfo(currentGroup),
         // Settimana
         WeeklyExpenseChart(dailyTotals: dailyTotals, theme: theme),
         const SizedBox(height: 12),
