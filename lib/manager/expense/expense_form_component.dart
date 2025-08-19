@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../data/expense_category.dart';
 import '../../data/expense_details.dart';
 import '../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../data/expense_participant.dart';
 import '../../data/expense_location.dart';
 import '../../state/locale_notifier.dart';
@@ -141,20 +142,20 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   }
 
   Future<bool> _confirmDiscardChanges() async {
-    final loc = AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it');
+    final gloc = gen.AppLocalizations.of(context);
     return await showDialog<bool>(
           context: context,
           builder: (ctx) => AlertDialog(
-            title: Text(loc.get('discard_changes_title')),
-            content: Text(loc.get('discard_changes_message')),
+            title: Text(gloc.discard_changes_title),
+            content: Text(gloc.discard_changes_message),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(ctx).pop(false),
-                child: Text(loc.get('cancel')),
+                child: Text(gloc.cancel),
               ),
               TextButton(
                 onPressed: () => Navigator.of(ctx).pop(true),
-                child: Text(loc.get('discard')),
+                child: Text(gloc.discard),
               ),
             ],
           ),
@@ -231,8 +232,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
 
   @override
   Widget build(BuildContext context) {
-    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    final loc = AppLocalizations(locale);
+  final locale = LocaleNotifier.of(context)?.locale ?? 'it';
+  final gloc = gen.AppLocalizations.of(context); // generated (non-null)
+  final loc = AppLocalizations(gloc); // bridge for children not yet migrated
     final smallStyle = Theme.of(context).textTheme.bodyMedium;
     return PopScope(
       canPop: !_isDirty,
@@ -261,13 +263,13 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                   controller: _amountController,
                   focusNode: _amountFocus,
                   categories: _categories,
-                  label: loc.get('amount'),
+                  label: gloc.amount,
                   loc: loc,
                   currency: widget.currency,
                   validator: (v) {
                     final parsed = _parseLocalizedAmount(v ?? '');
                     if (parsed == null || parsed <= 0) {
-                      return loc.get('invalid_amount');
+                      return gloc.invalid_amount;
                     }
                     return null;
                   },
@@ -285,7 +287,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                   controller: _nameController,
                   focusNode: _nameFocus,
                   loc: loc,
-                  label: loc.get('expense_name'),
+                  label: gloc.expense_name,
                   validator: (v) => v == null || v.trim().isEmpty
                       ? 'Il nome è obbligatorio'
                       : null,
