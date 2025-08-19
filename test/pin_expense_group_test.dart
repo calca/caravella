@@ -1,14 +1,13 @@
-import 'dart:io';
-import 'dart:convert';
+// Removed unused imports
 
 // Simple data-only test to verify pin logic without Flutter dependencies
 void main() {
   group('Pin Expense Group Logic Tests', () {
     test('Pin constraint logic works correctly', () {
-      print('Testing pin constraint logic...');
-      
+      // Testing pin constraint logic
+
       // Mock ExpenseGroup data
-      final groups = [
+      final List<Map<String, Object?>> groups = [
         {'id': 'group1', 'title': 'Group 1', 'pinned': false},
         {'id': 'group2', 'title': 'Group 2', 'pinned': false},
         {'id': 'group3', 'title': 'Group 3', 'pinned': false},
@@ -38,32 +37,36 @@ void main() {
       // Pin second group (should unpin first)
       setPinnedTrip('group2');
       final secondPinned = groups.where((g) => g['pinned'] == true).toList();
-      assert(secondPinned.length == 1, 'Only one group should be pinned after changing pin');
+      assert(
+        secondPinned.length == 1,
+        'Only one group should be pinned after changing pin',
+      );
       assert(secondPinned[0]['id'] == 'group2', 'Group2 should be pinned now');
-      
+
       // Verify group1 is no longer pinned
       final group1 = groups.firstWhere((g) => g['id'] == 'group1');
       assert(group1['pinned'] == false, 'Group1 should no longer be pinned');
 
-      print('✅ Pin constraint logic test passed');
+      // Pin constraint logic test passed
     });
 
     test('Update group with pin constraint works', () {
-      print('Testing updateGroup pin constraint logic...');
-      
-      final groups = [
+      // Testing updateGroup pin constraint logic
+
+      final List<Map<String, Object?>> groups = [
         {'id': 'group1', 'title': 'Group 1', 'pinned': false},
         {'id': 'group2', 'title': 'Group 2', 'pinned': false},
       ];
 
       // Simulate updateGroup logic with pin constraint (our fix)
-      void updateGroup(Map<String, dynamic> updatedGroup) {
+      void updateGroup(Map<String, Object?> updatedGroup) {
         final idx = groups.indexWhere((g) => g['id'] == updatedGroup['id']);
         if (idx != -1) {
           // If the group is being pinned, unpin all others
           if (updatedGroup['pinned'] == true) {
             for (var i = 0; i < groups.length; i++) {
-              if (groups[i]['id'] != updatedGroup['id'] && groups[i]['pinned'] == true) {
+              if (groups[i]['id'] != updatedGroup['id'] &&
+                  groups[i]['pinned'] == true) {
                 groups[i]['pinned'] = false;
               }
             }
@@ -81,26 +84,16 @@ void main() {
       updateGroup({'id': 'group2', 'title': 'Group 2', 'pinned': true});
       final secondPinned = groups.where((g) => g['pinned'] == true).length;
       assert(secondPinned == 1, 'Only one group should be pinned after update');
-      
+
       final pinnedGroup = groups.firstWhere((g) => g['pinned'] == true);
       assert(pinnedGroup['id'] == 'group2', 'Group2 should be the pinned one');
 
-      print('✅ UpdateGroup pin constraint test passed');
+      // UpdateGroup pin constraint test passed
     });
   });
 }
 
 // Simple test runner
-void group(String description, Function() tests) {
-  print('Running: $description');
-  tests();
-}
-
-void test(String description, Function() testFunction) {
-  try {
-    testFunction();
-    print('  ✅ $description');
-  } catch (e) {
-    print('  ❌ $description - Failed: $e');
-  }
-}
+// Minimal fake test runners (no output to avoid print lint)
+void group(String description, Function() tests) => tests();
+void test(String description, Function() testFunction) => testFunction();

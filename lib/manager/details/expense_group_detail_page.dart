@@ -100,8 +100,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   ExpenseGroup? _trip;
   bool _deleted = false;
   ExpenseGroupNotifier? _groupNotifier;
-  bool _reloading = false;
-  double _listOpacity = 1.0;
+  // Removed manual refresh state (_reloading, _listOpacity)
 
   @override
   void initState() {
@@ -154,30 +153,13 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     }
   }
 
-  Future<void> _refreshTrip() async {
-    if (_reloading) return;
-    setState(() {
-      _reloading = true;
-      _listOpacity = 0.3;
-    });
-    final trip = await ExpenseGroupStorage.getTripById(
-      _trip?.id ?? widget.trip.id,
-    );
-    if (!mounted) return;
-    if (trip != null) {
-      setState(() {
-        _trip = trip;
-      });
-      _groupNotifier?.setCurrentGroup(trip);
-    }
-    // Piccola pausa per percezione visiva
-    await Future.delayed(const Duration(milliseconds: 180));
-    if (mounted) {
-      setState(() {
-        _listOpacity = 1.0;
-        _reloading = false;
-      });
-    }
+  // _refreshTrip removed: state updates occur inline after each mutation.
+  Future<void> _refreshGroup() async {
+    if (_trip == null) return;
+    final refreshed = await ExpenseGroupStorage.getTripById(_trip!.id);
+    if (!mounted || refreshed == null) return;
+    setState(() => _trip = refreshed);
+    _groupNotifier?.setCurrentGroup(refreshed);
   }
 
   void _showOverviewSheet() {
@@ -262,7 +244,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             archived: _trip!.archived,
           );
           await _groupNotifier?.updateGroup(updatedGroup);
-          await _refreshTrip();
+          await _refreshGroup();
           if (!mounted) return;
           nav.pop();
         },
@@ -284,7 +266,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             archived: !_trip!.archived,
           );
           await _groupNotifier?.updateGroup(updatedGroup);
-          await _refreshTrip();
+          await _refreshGroup();
           if (!mounted) return;
           nav.pop();
         },
@@ -299,7 +281,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               builder: (ctx) => AddNewExpensesGroupPage(trip: _trip!),
             ),
           );
-          await _refreshTrip();
+          await _refreshGroup();
         },
         onDownloadCsv: () async {
           final preLoc = AppLocalizations(
@@ -469,7 +451,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             id: DateTime.now().millisecondsSinceEpoch.toString(),
           );
           await _groupNotifier?.addExpense(expenseWithId);
-          await _refreshTrip();
+          await _refreshGroup();
           if (!sheetCtx.mounted) return;
           AppToast.show(
             sheetCtx,
@@ -480,7 +462,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         },
         onCategoryAdded: (categoryName) async {
           await _groupNotifier?.addCategory(categoryName);
-          await _refreshTrip();
+          await _refreshGroup();
         },
         showDateAndNote: true,
       ),
@@ -500,12 +482,11 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => EditExpenseSheet(
+      builder: (sheetCtx) => EditExpenseSheet(
         group: _trip!,
         expense: expense,
         title: loc.get('edit_expense'),
         onExpenseAdded: (updatedExpense) async {
-          final sheetCtx = context; // bottom sheet context
           final preLoc = AppLocalizations(
             LocaleNotifier.of(sheetCtx)?.locale ?? 'it',
           );
@@ -528,7 +509,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             pinned: _trip!.pinned,
           );
           await _groupNotifier?.updateGroup(updatedGroup);
-          await _refreshTrip();
+          await _refreshGroup();
           if (!sheetCtx.mounted) return;
           AppToast.show(
             sheetCtx,
@@ -539,7 +520,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         },
         onCategoryAdded: (categoryName) async {
           await _groupNotifier?.addCategory(categoryName);
-          await _refreshTrip();
+          await _refreshGroup();
         },
         onDelete: () {
           Navigator.of(context).pop();
@@ -601,7 +582,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                   GroupHeader(trip: trip),
                   const SizedBox(height: 32),
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
                         child: GroupTotal(
@@ -619,19 +600,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                             : null,
                         onOptions: _showOptionsSheet,
                       ),
-                      const SizedBox(width: 8),
-                      if (_reloading)
-                        const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      else
-                        IconButton(
-                          tooltip: 'Refresh',
-                          icon: const Icon(Icons.refresh_rounded, size: 20),
-                          onPressed: _refreshTrip,
-                        ),
                     ],
                   ),
                   const SizedBox(height: 24),
@@ -672,29 +640,25 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               ),
             ),
           ),
-
-          // Spazio aggiuntivo per garantire lo scroll
           SliverPadding(
             padding: const EdgeInsets.only(bottom: 0),
             sliver: SliverToBoxAdapter(
               child: Container(
-                height: 100, // Altezza fissa per lo spazio
+                height: 100,
                 color: colorScheme.surfaceContainer,
               ),
             ),
           ),
         ],
       ),
-      floatingActionButton: !trip.archived
-          ? FloatingActionButton.extended(
+      floatingActionButton: trip.archived
+          ? null
+          : FloatingActionButton.extended(
               heroTag: 'add-expense-fab',
-              onPressed: () => _showAddExpenseSheet(),
+              onPressed: _showAddExpenseSheet,
               label: Text(loc.get('add_expense_fab')),
               icon: const Icon(Icons.add_rounded),
-              backgroundColor: colorScheme.primary,
-              foregroundColor: colorScheme.onPrimary,
-            )
-          : null,
+            ),
     );
   }
 }
