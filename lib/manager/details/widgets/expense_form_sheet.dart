@@ -8,7 +8,6 @@ class ExpenseFormSheet extends StatelessWidget {
   final ExpenseDetails? initialExpense;
   final void Function(ExpenseDetails) onExpenseSaved;
   final void Function(String) onCategoryAdded;
-  final String title;
   final bool showDateAndNote;
   const ExpenseFormSheet({
     super.key,
@@ -16,7 +15,6 @@ class ExpenseFormSheet extends StatelessWidget {
     this.initialExpense,
     required this.onExpenseSaved,
     required this.onCategoryAdded,
-    required this.title,
     this.showDateAndNote = true,
   });
 
@@ -36,19 +34,15 @@ class ExpenseFormSheet extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          // Top bar with only a close button (title removed per UX request)
           Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                ),
                 IconButton(
                   icon: const Icon(Icons.close),
+                  tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
                   onPressed: () => Navigator.of(context).pop(),
                 ),
               ],
@@ -61,7 +55,8 @@ class ExpenseFormSheet extends StatelessWidget {
                   left: 20,
                   right: 20,
                   top: 16,
-                  bottom: MediaQuery.of(context).viewInsets.bottom +
+                  bottom:
+                      MediaQuery.of(context).viewInsets.bottom +
                       MediaQuery.of(context).padding.bottom +
                       20,
                 ),

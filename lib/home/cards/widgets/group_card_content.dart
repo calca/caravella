@@ -3,7 +3,6 @@ import 'monthly_expense_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../app_localizations.dart';
-import '../../../state/locale_notifier.dart';
 import '../../../state/expense_group_notifier.dart';
 import '../../../data/expense_group.dart';
 import '../../../manager/expense/expense_form_component.dart';
@@ -59,8 +58,6 @@ class GroupCardContent extends StatelessWidget {
   }
 
   void _showAddExpenseSheet(BuildContext context, ExpenseGroup currentGroup) {
-    final loc = AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it');
-
     // Salva il riferimento al notifier
     final notifier = Provider.of<ExpenseGroupNotifier>(context, listen: false);
     notifier.setCurrentGroup(currentGroup);
@@ -79,8 +76,9 @@ class GroupCardContent extends StatelessWidget {
             ),
             decoration: BoxDecoration(
               color: theme.colorScheme.surface,
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(20)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(20),
+              ),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -99,12 +97,7 @@ class GroupCardContent extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 12),
-                      Text(
-                        loc.get('add_expense'),
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                      // Removed title text per UX request (icon-only header)
                     ],
                   ),
                 ),
@@ -117,7 +110,8 @@ class GroupCardContent extends StatelessWidget {
                         left: 20,
                         right: 20,
                         top: 0,
-                        bottom: MediaQuery.of(context).viewInsets.bottom +
+                        bottom:
+                            MediaQuery.of(context).viewInsets.bottom +
                             MediaQuery.of(context).padding.bottom +
                             20,
                       ),
@@ -158,14 +152,17 @@ class GroupCardContent extends StatelessWidget {
   }
 
   // Computed properties memoizzate per performance
-  double get totalExpenses => group.expenses
-      .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
+  double get totalExpenses => group.expenses.fold<double>(
+    0,
+    (sum, expense) => sum + (expense.amount ?? 0),
+  );
 
   int get participantCount => group.participants.length;
 
   double get recentExpensesTotal => group.expenses
-      .where((e) =>
-          e.date.isAfter(DateTime.now().subtract(const Duration(days: 7))))
+      .where(
+        (e) => e.date.isAfter(DateTime.now().subtract(const Duration(days: 7))),
+      )
       .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
 
   @override
@@ -265,8 +262,10 @@ class GroupCardContent extends StatelessWidget {
   }
 
   Widget _buildTotalAmount(ExpenseGroup currentGroup) {
-    final totalExpenses = currentGroup.expenses
-        .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
+    final totalExpenses = currentGroup.expenses.fold<double>(
+      0,
+      (sum, expense) => sum + (expense.amount ?? 0),
+    );
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
@@ -295,10 +294,12 @@ class GroupCardContent extends StatelessWidget {
     final dailyTotals = List<double>.generate(7, (i) {
       final day = startOfWeek.add(Duration(days: i));
       return currentGroup.expenses
-          .where((e) =>
-              e.date.year == day.year &&
-              e.date.month == day.month &&
-              e.date.day == day.day)
+          .where(
+            (e) =>
+                e.date.year == day.year &&
+                e.date.month == day.month &&
+                e.date.day == day.day,
+          )
           .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
     });
     // weeklyTotal non più usato
@@ -309,10 +310,12 @@ class GroupCardContent extends StatelessWidget {
     final dailyMonthTotals = List<double>.generate(daysInMonth, (i) {
       final day = startOfMonth.add(Duration(days: i));
       return currentGroup.expenses
-          .where((e) =>
-              e.date.year == day.year &&
-              e.date.month == day.month &&
-              e.date.day == day.day)
+          .where(
+            (e) =>
+                e.date.year == day.year &&
+                e.date.month == day.month &&
+                e.date.day == day.day,
+          )
           .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
     });
     // monthlyTotal non più usato
@@ -340,30 +343,25 @@ class GroupCardContent extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: Semantics(
-        label: 'Add new expense',
-        child: TextButton.icon(
+        label: 'Add expense',
+        child: TextButton(
           onPressed: () => _showAddExpenseSheet(context, currentGroup),
           style: TextButton.styleFrom(
             foregroundColor: theme.colorScheme.onSurface,
-            backgroundColor:
-                theme.colorScheme.onSurface.withValues(alpha: 0.05),
-            padding:
-                const EdgeInsets.symmetric(vertical: _buttonVerticalPadding),
+            backgroundColor: theme.colorScheme.onSurface.withValues(
+              alpha: 0.05,
+            ),
+            padding: const EdgeInsets.symmetric(
+              vertical: _buttonVerticalPadding,
+            ),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(_borderRadius),
             ),
           ),
-          icon: Icon(
+          child: Icon(
             Icons.add,
-            size: _iconSize,
+            size: _iconSize + 2,
             color: theme.colorScheme.onSurface,
-          ),
-          label: Text(
-            localizations.get('add_expense').toUpperCase(),
-            style: theme.textTheme.labelLarge?.copyWith(
-              fontWeight: FontWeight.w600,
-              color: theme.colorScheme.onSurface,
-            ),
           ),
         ),
       ),
@@ -373,11 +371,7 @@ class GroupCardContent extends StatelessWidget {
   Widget _buildCompactStat({required IconData icon, required String value}) {
     return Row(
       children: [
-        Icon(
-          icon,
-          size: _iconSize,
-          color: theme.colorScheme.onSurface,
-        ),
+        Icon(icon, size: _iconSize, color: theme.colorScheme.onSurface),
         const SizedBox(width: 4),
         Text(
           value,

@@ -18,16 +18,15 @@ class ExpenseFormActionsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final icon = isEdit ? Icons.save_rounded : Icons.check_rounded;
-    final label = isEdit ? loc.get('save_change_expense') : loc.get('add_expense');
+    // Use existing save_change_expense for edit; generic label for add
+    final label = isEdit ? loc.get('save_change_expense') : 'Save';
     return Align(
       alignment: Alignment.centerRight,
       child: IconButton.filled(
         onPressed: onSave,
         tooltip: label,
         icon: Icon(icon, size: 24),
-        style: IconButton.styleFrom(
-          padding: const EdgeInsets.all(16),
-        ),
+        style: IconButton.styleFrom(padding: const EdgeInsets.all(16)),
       ),
     );
   }

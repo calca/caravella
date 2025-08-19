@@ -6,11 +6,10 @@ import '../../expense/expense_form_component.dart';
 class EditExpenseSheet extends StatelessWidget {
   final ExpenseGroup group;
   final ExpenseDetails expense;
-// Removed unused imports
+  // Removed unused imports
   final void Function(ExpenseDetails) onExpenseAdded;
   final void Function(String) onCategoryAdded;
   final void Function() onDelete;
-  final String title;
   const EditExpenseSheet({
     super.key,
     required this.group,
@@ -18,7 +17,6 @@ class EditExpenseSheet extends StatelessWidget {
     required this.onExpenseAdded,
     required this.onCategoryAdded,
     required this.onDelete,
-    required this.title,
   });
 
   @override
@@ -38,27 +36,19 @@ class EditExpenseSheet extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  tooltip: 'Delete', // Could be localized if needed
+                  onPressed: onDelete,
                 ),
-                Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: onDelete,
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.close),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                  ],
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
+                  onPressed: () => Navigator.of(context).pop(),
                 ),
               ],
             ),
@@ -70,7 +60,8 @@ class EditExpenseSheet extends StatelessWidget {
                   left: 20,
                   right: 20,
                   top: 16,
-                  bottom: MediaQuery.of(context).viewInsets.bottom +
+                  bottom:
+                      MediaQuery.of(context).viewInsets.bottom +
                       MediaQuery.of(context).padding.bottom +
                       20,
                 ),

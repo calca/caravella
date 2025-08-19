@@ -394,7 +394,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   }
 
   void _showAddExpenseSheet() {
-    final loc = AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it');
     if (_trip != null) {
       _groupNotifier?.setCurrentGroup(_trip!);
     }
@@ -404,7 +403,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       backgroundColor: Colors.transparent,
       builder: (context) => ExpenseFormSheet(
         group: _trip!,
-        title: loc.get('add_expense'),
         onExpenseSaved: (newExpense) async {
           final sheetCtx = context; // bottom sheet context
           final nav = Navigator.of(sheetCtx);
@@ -438,7 +436,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   }
 
   Future<void> _openEditExpense(ExpenseDetails expense) async {
-    final loc = AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it');
     if (_trip != null) {
       _groupNotifier?.setCurrentGroup(_trip!);
     }
@@ -449,7 +446,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       builder: (sheetCtx) => EditExpenseSheet(
         group: _trip!,
         expense: expense,
-        title: loc.get('edit_expense'),
         onExpenseAdded: (updatedExpense) async {
           final preLoc = AppLocalizations(
             LocaleNotifier.of(sheetCtx)?.locale ?? 'it',
