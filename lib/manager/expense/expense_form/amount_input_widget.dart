@@ -33,45 +33,81 @@ class AmountInputWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final currency =
-        (!isText &&
-            categories.isNotEmpty &&
-            categories.first.name.startsWith('€'))
-        ? categories.first.name
-        : (!isText ? '€' : null);
-    return TextFormField(
-      controller: controller,
-      focusNode: focusNode,
-      style:
-          textStyle ??
-          theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
-      decoration: InputDecoration(
-        hintText: label != null ? '${label!} *' : null,
-        hintStyle: (textStyle ?? theme.textTheme.titleLarge)?.copyWith(
-          fontWeight: FontWeight.w400,
-          color: theme.colorScheme.outline,
+    if (isText) {
+      // Campo testo normale (riuso del widget per il nome spesa)
+      return TextFormField(
+        controller: controller,
+        focusNode: focusNode,
+        style:
+            textStyle ??
+            theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
+        decoration: InputDecoration(
+          hintText: label != null ? '${label!} *' : null,
+          hintStyle: (textStyle ?? theme.textTheme.titleLarge)?.copyWith(
+            fontWeight: FontWeight.w400,
+            color: theme.colorScheme.outline,
+          ),
+          floatingLabelBehavior: FloatingLabelBehavior.never,
+          contentPadding: const EdgeInsets.symmetric(
+            vertical: 8,
+            horizontal: 0,
+          ),
         ),
-        floatingLabelBehavior: FloatingLabelBehavior.never,
-        prefixText: currency != null ? '$currency ' : null,
-        prefixStyle: (textStyle ?? theme.textTheme.titleLarge)?.copyWith(
-          fontWeight: FontWeight.w600,
-          color: theme.colorScheme.onSurfaceVariant,
+        keyboardType: TextInputType.text,
+        textInputAction: TextInputAction.next,
+        validator: validator,
+        onSaved: onSaved,
+        onFieldSubmitted: (_) => onSubmitted?.call(),
+      );
+    }
+
+    // Campo importo: valuta sempre visibile anche senza focus o testo
+    final currencyStyle = (textStyle ?? theme.textTheme.titleLarge)?.copyWith(
+      fontWeight: FontWeight.w600,
+      color: theme.colorScheme.onSurfaceVariant,
+    );
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(right: 6, top: 8, bottom: 8),
+          child: Text('€', style: currencyStyle),
         ),
-        contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
-      ),
-      keyboardType: isText
-          ? TextInputType.text
-          : const TextInputType.numberWithOptions(decimal: true),
-      textInputAction: TextInputAction.next,
-      validator: validator,
-      onSaved: onSaved,
-      onFieldSubmitted: (_) => onSubmitted?.call(),
-      inputFormatters: isText
-          ? null
-          : [
+        Expanded(
+          child: TextFormField(
+            controller: controller,
+            focusNode: focusNode,
+            style:
+                textStyle ??
+                theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+            decoration: InputDecoration(
+              hintText: label != null ? '${label!} *' : null,
+              hintStyle: (textStyle ?? theme.textTheme.titleLarge)?.copyWith(
+                fontWeight: FontWeight.w400,
+                color: theme.colorScheme.outline,
+              ),
+              floatingLabelBehavior: FloatingLabelBehavior.never,
+              isDense: true,
+              contentPadding: const EdgeInsets.symmetric(
+                vertical: 8,
+                horizontal: 0,
+              ),
+            ),
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            textInputAction: TextInputAction.next,
+            validator: validator,
+            onSaved: onSaved,
+            onFieldSubmitted: (_) => onSubmitted?.call(),
+            inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]')),
               _AmountFormatter(),
             ],
+          ),
+        ),
+      ],
     );
   }
 }
