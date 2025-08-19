@@ -324,11 +324,28 @@ class GroupCardContent extends StatelessWidget {
 
     // Statistiche base
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Settimana
+        Text(
+          localizations.get('weekly_expenses_chart'),
+          style: theme.textTheme.labelMedium?.copyWith(
+            fontWeight: FontWeight.w500,
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: 4),
         WeeklyExpenseChart(dailyTotals: dailyTotals, theme: theme),
-        const SizedBox(height: 12),
+        const SizedBox(height: 16),
         // Mese
+        Text(
+          localizations.get('monthly_expenses_chart'),
+          style: theme.textTheme.labelMedium?.copyWith(
+            fontWeight: FontWeight.w500,
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: 4),
         MonthlyExpenseChart(dailyTotals: dailyMonthTotals, theme: theme),
       ],
     );
