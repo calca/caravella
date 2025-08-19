@@ -102,6 +102,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   bool _deleted = false;
   ExpenseGroupNotifier? _groupNotifier;
   // Removed manual refresh state (_reloading, _listOpacity)
+  bool _hideHeader = false; // animazione nascondi header quando filtri aperti
 
   @override
   void initState() {
@@ -575,36 +576,59 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           ),
           // Header custom sotto l'AppBar
           SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  GroupHeader(trip: trip),
-                  const SizedBox(height: 32),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: GroupTotal(
-                          total: totalExpenses,
-                          currency: trip.currency,
+            child: AnimatedSize(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              alignment: Alignment.topCenter,
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 220),
+                switchInCurve: Curves.easeOut,
+                switchOutCurve: Curves.easeIn,
+                transitionBuilder: (child, animation) {
+                  return FadeTransition(
+                    opacity: animation,
+                    child: SizeTransition(
+                      sizeFactor: animation,
+                      axisAlignment: -1.0,
+                      child: child,
+                    ),
+                  );
+                },
+                child: _hideHeader
+                    ? const SizedBox.shrink(key: ValueKey('header-hidden'))
+                    : Padding(
+                        key: const ValueKey('header-visible'),
+                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            GroupHeader(trip: trip),
+                            const SizedBox(height: 32),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: GroupTotal(
+                                    total: totalExpenses,
+                                    currency: trip.currency,
+                                  ),
+                                ),
+                                GroupActions(
+                                  hasExpenses: trip.expenses.isNotEmpty,
+                                  onOverview: trip.expenses.isNotEmpty
+                                      ? _showOverviewSheet
+                                      : null,
+                                  onStatistics: trip.expenses.isNotEmpty
+                                      ? _showStatisticsSheet
+                                      : null,
+                                  onOptions: _showOptionsSheet,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 24),
+                          ],
                         ),
                       ),
-                      GroupActions(
-                        hasExpenses: trip.expenses.isNotEmpty,
-                        onOverview: trip.expenses.isNotEmpty
-                            ? _showOverviewSheet
-                            : null,
-                        onStatistics: trip.expenses.isNotEmpty
-                            ? _showStatisticsSheet
-                            : null,
-                        onOptions: _showOptionsSheet,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                ],
               ),
             ),
           ),
@@ -630,6 +654,11 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                       onExpenseTap: _openEditExpense,
                       categories: trip.categories,
                       participants: trip.participants,
+                      onFiltersVisibilityChanged: (visible) {
+                        if (mounted) {
+                          setState(() => _hideHeader = visible);
+                        }
+                      },
                     ),
                   ],
                 ),
