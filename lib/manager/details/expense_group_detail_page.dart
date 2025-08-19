@@ -107,6 +107,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   bool _hideHeader = false; // animazione nascondi header quando filtri aperti
   late final ScrollController _scrollController;
   bool _fabVisible = true; // controllo visibilità totale
+  Timer? _fabIdleTimer; // timer per ri-mostrare il FAB dopo inattività
 
   @override
   void initState() {
@@ -135,6 +136,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     _groupNotifier = null;
   _scrollController.removeListener(_onScroll);
   _scrollController.dispose();
+  _fabIdleTimer?.cancel();
     super.dispose();
   }
 
@@ -549,8 +551,17 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     final direction = _scrollController.position.userScrollDirection;
     if (direction == ScrollDirection.reverse) {
       if (_fabVisible && mounted) setState(() => _fabVisible = false);
+      // Avvia timer per ri-mostrare dopo inattività
+      _fabIdleTimer?.cancel();
+      _fabIdleTimer = Timer(const Duration(milliseconds: 1200), () {
+        if (mounted && !_fabVisible) {
+          setState(() => _fabVisible = true);
+        }
+      });
     } else if (direction == ScrollDirection.forward) {
       if (!_fabVisible && mounted) setState(() => _fabVisible = true);
+      // reset timer perché già visibile
+      _fabIdleTimer?.cancel();
     }
   }
   
