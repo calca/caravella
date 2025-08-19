@@ -25,6 +25,7 @@ class ExpenseFormComponent extends StatefulWidget {
   final DateTime? tripStartDate;
   final DateTime? tripEndDate;
   final String? newlyAddedCategory; // Nuova proprietà
+  final String? groupTitle; // Titolo del gruppo per la riga azioni
 
   const ExpenseFormComponent({
     super.key,
@@ -37,6 +38,7 @@ class ExpenseFormComponent extends StatefulWidget {
     this.tripStartDate,
     this.tripEndDate,
     this.newlyAddedCategory, // Nuova proprietà
+    this.groupTitle,
     this.showDateAndNote = false,
   });
 
@@ -106,7 +108,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
           : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000));
     }
 
-  // (Eventuali listener per aggiornare validazioni in tempo reale possono essere aggiunti qui)
+    // (Eventuali listener per aggiornare validazioni in tempo reale possono essere aggiunti qui)
   }
 
   Future<bool> _confirmDiscardChanges() async {
@@ -179,7 +181,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     final expense = ExpenseDetails(
       amount: _amount ?? double.tryParse(_amountController.text) ?? 0,
       paidBy: _paidBy ?? ExpenseParticipant(name: ''),
-      category: _category ??
+      category:
+          _category ??
           (_categories.isNotEmpty
               ? _categories.first
               : ExpenseCategory(name: '', id: '', createdAt: DateTime.now())),
@@ -415,12 +418,29 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                 ).colorScheme.outlineVariant.withValues(alpha: 0.4),
               ),
 
-              // Pulsanti di azione
-              ExpenseFormActionsWidget(
-                onSave: _isFormValid() ? _saveExpense : null,
-                loc: loc,
-                isEdit: widget.initialExpense != null,
-                textStyle: smallStyle,
+              // Pulsanti di azione con titolo gruppo a sinistra
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  if (widget.groupTitle != null)
+                    Expanded(
+                      child: Text(
+                        widget.groupTitle!,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    )
+                  else
+                    const Spacer(),
+                  ExpenseFormActionsWidget(
+                    onSave: _isFormValid() ? _saveExpense : null,
+                    loc: loc,
+                    isEdit: widget.initialExpense != null,
+                    textStyle: smallStyle,
+                  ),
+                ],
               ),
             ],
           ),

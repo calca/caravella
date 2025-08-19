@@ -46,7 +46,11 @@ class ParticipantSelectorWidget extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.person_outline, size: 20, color: theme.colorScheme.onSurfaceVariant),
+          Icon(
+            Icons.person_outline,
+            size: 20,
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
           const SizedBox(width: 8),
           Flexible(
             child: Text(

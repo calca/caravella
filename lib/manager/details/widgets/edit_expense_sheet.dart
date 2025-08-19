@@ -78,6 +78,7 @@ class EditExpenseSheet extends StatelessWidget {
                       tripStartDate: group.startDate,
                       tripEndDate: group.endDate,
                       shouldAutoClose: false,
+                      groupTitle: group.title,
                       onExpenseAdded: onExpenseAdded,
                       onCategoryAdded: onCategoryAdded,
                     ),
