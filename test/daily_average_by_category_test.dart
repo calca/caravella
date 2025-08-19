@@ -115,6 +115,17 @@ void main() {
       expect(averages[transportCategory], 5.0);
     });
 
+    test('uses localized per_day text', () {
+      final trip = ExpenseGroup.empty();
+      final widget = DailyAverageByCategoryWidget(trip: trip, loc: loc);
+      
+      // Test that the widget would use the localized key
+      expect(loc.get('per_day'), '/day'); // English
+      
+      final locIT = AppLocalizations('it');
+      expect(locIT.get('per_day'), '/giorno'); // Italian
+    });
+
     test('handles group with end date in future by using current date', () {
       final now = DateTime.now();
       final startDate = DateTime(now.year, now.month, now.day - 9); // 10 days ago

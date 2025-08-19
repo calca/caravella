@@ -69,7 +69,7 @@ class DailyAverageByCategoryWidget extends StatelessWidget {
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
                 Text(
-                  '/day',
+                  loc.get('per_day'),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
