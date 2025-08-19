@@ -661,7 +661,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                   },
                   onEditParticipant: (int i, String name) {
                     setState(() {
-                      _participants[i] = ExpenseParticipant(name: name);
+                      _participants[i] = _participants[i].copyWith(name: name);
                     });
                   },
                   onRemoveParticipant: (int i) {
@@ -683,7 +683,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                   },
                   onEditCategory: (int i, String name) {
                     setState(() {
-                      _categories[i] = ExpenseCategory(name: name);
+                      _categories[i] = _categories[i].copyWith(name: name);
                     });
                   },
                   onRemoveCategory: (int i) {
