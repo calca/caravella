@@ -6,5 +6,6 @@ export 'group_card.dart';
 export 'group_card_content.dart';
 export 'simple_bottom_bar.dart';
 export 'chart_type.dart';
+export 'chart_badge.dart';
 export 'weekly_expense_chart.dart';
 export 'monthly_expense_chart.dart';
