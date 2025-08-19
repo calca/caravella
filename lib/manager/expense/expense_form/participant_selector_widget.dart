@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
-import '../../../widgets/themed_choice_chip.dart';
+import '../../../widgets/selection_bottom_sheet.dart';
 
 class ParticipantSelectorWidget extends StatelessWidget {
   final List<String> participants;
@@ -19,50 +19,44 @@ class ParticipantSelectorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: participants.isNotEmpty
-          ? participants.map((p) {
-              final selected = selectedParticipant == p;
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                child: ThemedChoiceChip(
-                  label: p,
-                  selected: selected,
-                  textStyle:
-                      (textStyle ?? Theme.of(context).textTheme.bodySmall)
-                          ?.copyWith(
-                            fontWeight: selected
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                          ),
-                  selectedTextColor: Theme.of(context).colorScheme.onPrimary,
-                  selectedColor: Theme.of(context).colorScheme.primary,
-                  backgroundColor: selected
-                      ? null
-                      : Theme.of(context).colorScheme.surfaceContainerHighest,
-                  side: BorderSide(
-                    color: selected
-                        ? Theme.of(context).colorScheme.primary
-                        : Theme.of(
-                            context,
-                          ).colorScheme.outline.withValues(alpha: 0.3),
-                    width: 1,
-                  ),
-                  showCheckmark: false,
-                  avatar: null,
-                  onSelected: () => onParticipantSelected(p),
-                ),
+    final theme = Theme.of(context);
+    final selected = selectedParticipant;
+    return FilledButton(
+      style: FilledButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        backgroundColor: theme.colorScheme.primary,
+        foregroundColor: theme.colorScheme.onPrimary,
+      ),
+      onPressed: participants.isEmpty
+          ? null
+          : () async {
+              final picked = await showSelectionBottomSheet<String>(
+                context: context,
+                items: participants,
+                selected: selected,
+                loc: loc,
+                itemLabel: (p) => p,
               );
-            }).toList()
-          : [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                child: Text(
-                  loc.get('participants_label'),
-                  style: textStyle ?? Theme.of(context).textTheme.bodySmall,
-                ),
-              ),
-            ],
+              if (picked != null && picked != selectedParticipant) {
+                onParticipantSelected(picked);
+              }
+            },
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.person, size: 20, color: theme.colorScheme.onPrimary),
+          const SizedBox(width: 8),
+          Text(
+            selected ?? loc.get('participants_label'),
+            style: (textStyle ?? theme.textTheme.bodyMedium)?.copyWith(
+              color: theme.colorScheme.onPrimary,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Icon(Icons.expand_more, size: 20, color: theme.colorScheme.onPrimary),
+        ],
+      ),
     );
   }
 }

@@ -70,7 +70,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   bool get _isCategoryValid => _categories.isEmpty || _category != null;
 
   // Scroll controller callback per CategorySelectorWidget
-  void Function()? _scrollToCategoryEnd;
+  // Removed _scrollToCategoryEnd: no longer needed with new category selector bottom sheet.
 
   @override
   void initState() {
@@ -429,16 +429,11 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                         _isDirty = true;
                       });
 
-                      // Scroll automatico alla fine
-                      if (_scrollToCategoryEnd != null) {
-                        _scrollToCategoryEnd!();
-                      }
+                      // Scroll automatico alla fine non più necessario: bottom sheet gestisce la selezione.
                     }
                   },
                   loc: loc,
-                  registerScrollToEnd: (fn) {
-                    _scrollToCategoryEnd = fn;
-                  },
+                  // registerScrollToEnd rimosso con nuovo CategorySelectorWidget.
                   textStyle: smallStyle,
                 ),
                 _isCategoryValid,

@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
 import '../../../data/expense_category.dart';
-import '../../../widgets/themed_choice_chip.dart';
+import '../../../widgets/selection_bottom_sheet.dart';
 
-class CategorySelectorWidget extends StatefulWidget {
+class CategorySelectorWidget extends StatelessWidget {
   final List<ExpenseCategory> categories;
   final ExpenseCategory? selectedCategory;
   final void Function(ExpenseCategory?) onCategorySelected;
   final Future<void> Function() onAddCategory;
   final AppLocalizations loc;
-  final void Function(void Function())? registerScrollToEnd;
-  final TextStyle? textStyle; // Keep this line for context
+  final TextStyle? textStyle;
   const CategorySelectorWidget({
     super.key,
     required this.categories,
@@ -18,157 +17,50 @@ class CategorySelectorWidget extends StatefulWidget {
     required this.onCategorySelected,
     required this.onAddCategory,
     required this.loc,
-    this.registerScrollToEnd,
-    this.textStyle, // Keep this line for context
+    this.textStyle,
   });
-
-  // Removed duplicate constructor
-
-  @override
-  State<CategorySelectorWidget> createState() => _CategorySelectorWidgetState();
-}
-
-class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
-  int _lastCategoryCount = 0;
-  final ScrollController _scrollController = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-    widget.registerScrollToEnd?.call(_scrollToEnd);
-    _lastCategoryCount = widget.categories.length;
-    // Scroll automatico alla categoria selezionata all'apertura
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _scrollToSelected();
-    });
-  }
-
-  void _scrollToSelected() {
-    if (widget.selectedCategory != null && widget.categories.isNotEmpty) {
-      final idx = widget.categories.indexOf(widget.selectedCategory!);
-      if (idx >= 0 && _scrollController.hasClients) {
-        // Calcola la posizione approssimativa del chip
-        // Supponiamo larghezza chip ~100px + padding 8px
-        const double chipWidth = 100.0 + 8.0;
-        final double offset = idx * chipWidth;
-        _scrollController.animateTo(
-          offset,
-          duration: const Duration(milliseconds: 400),
-          curve: Curves.easeOut,
-        );
-      }
-    }
-  }
-
-  @override
-  void didUpdateWidget(covariant CategorySelectorWidget oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // Se la lista delle categorie è aumentata, scrolla alla fine
-    if (widget.categories.length > _lastCategoryCount) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) _scrollToEnd();
-      });
-    }
-    _lastCategoryCount = widget.categories.length;
-  }
-
-  void _scrollToEnd() {
-    if (_scrollController.hasClients) {
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeOut,
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  controller: _scrollController,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: widget.categories.isNotEmpty
-                        ? widget.categories.map((cat) {
-                            final isSelected = widget.selectedCategory == cat;
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 4.0,
-                              ),
-                              child: ThemedChoiceChip(
-                                label: cat.name,
-                                selected: isSelected,
-                                textStyle: widget.textStyle,
-                                selectedTextColor: Theme.of(
-                                  context,
-                                ).colorScheme.onPrimary,
-                                selectedColor: Theme.of(
-                                  context,
-                                ).colorScheme.primary,
-                                backgroundColor: isSelected
-                                    ? null
-                                    : Theme.of(
-                                        context,
-                                      ).colorScheme.surfaceContainerHighest,
-                                side: BorderSide(
-                                  color: isSelected
-                                      ? Theme.of(context).colorScheme.primary
-                                      : Theme.of(context).colorScheme.outline
-                                            .withValues(alpha: 0.3),
-                                  width: 1,
-                                ),
-                                showCheckmark: false,
-                                avatar: null,
-                                onSelected: () => widget.onCategorySelected(
-                                  isSelected ? null : cat,
-                                ),
-                              ),
-                            );
-                          }).toList()
-                        : [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 4.0,
-                              ),
-                              child: Text(
-                                widget.loc.get('no_categories'),
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            ),
-                          ],
-                  ),
-                ),
-              ),
+    final theme = Theme.of(context);
+    return FilledButton(
+      style: FilledButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        backgroundColor: theme.colorScheme.primary,
+        foregroundColor: theme.colorScheme.onPrimary,
+      ),
+      onPressed: () async {
+        final picked = await showSelectionBottomSheet<ExpenseCategory>(
+          context: context,
+            items: categories,
+            selected: selectedCategory,
+            loc: loc,
+            itemLabel: (c) => c.name,
+            onAddItem: () async {
+              await onAddCategory();
+            },
+            addItemTooltip: loc.get('add_category'),
+        );
+        if (picked != null && picked != selectedCategory) {
+          onCategorySelected(picked);
+        }
+      },
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.category, size: 20, color: theme.colorScheme.onPrimary),
+          const SizedBox(width: 8),
+          Text(
+            selectedCategory?.name ?? loc.get('category_placeholder'),
+            style: (textStyle ?? theme.textTheme.bodyMedium)?.copyWith(
+              color: theme.colorScheme.onPrimary,
+              fontWeight: FontWeight.w600,
             ),
-            IconButton.filledTonal(
-              onPressed: widget.onAddCategory,
-              icon: const Icon(Icons.add),
-              iconSize: 24,
-              style: IconButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-                foregroundColor: Theme.of(context).colorScheme.onSurface,
-                minimumSize: const Size(42, 42),
-              ),
-            ),
-          ],
-        ),
-      ],
+          ),
+          const SizedBox(width: 8),
+          Icon(Icons.expand_more, size: 20, color: theme.colorScheme.onPrimary),
+        ],
+      ),
     );
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
   }
 }
