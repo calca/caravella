@@ -52,7 +52,12 @@ class UnifiedOverviewSheet extends StatelessWidget {
                     final extra = 24.0;
                     return SingleChildScrollView(
                       controller: scrollController,
-                      padding: EdgeInsets.fromLTRB(16, 16, 16, 16 + bottomInset + extra),
+                      padding: EdgeInsets.fromLTRB(
+                        16,
+                        16,
+                        16,
+                        16 + bottomInset + extra,
+                      ),
                       child: UnifiedOverviewTab(trip: trip),
                     );
                   },

@@ -30,6 +30,7 @@ class AmountInputWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -37,16 +38,20 @@ class AmountInputWidget extends StatelessWidget {
           child: TextFormField(
             controller: controller,
             focusNode: focusNode,
-            style: textStyle ??
-                Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+            style:
+                textStyle ??
+                theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
             decoration: InputDecoration(
-              labelText: label != null ? '${label!} *' : null,
-              labelStyle: textStyle ??
-                  Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+              // Use hintText instead of labelText so it stays inline until user starts typing.
+              hintText: label != null ? '${label!} *' : null,
+              hintStyle: (textStyle ?? theme.textTheme.titleLarge)?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+              // Ensure no floating behavior occurs.
+              floatingLabelBehavior: FloatingLabelBehavior.never,
             ),
             keyboardType: isText
                 ? TextInputType.text
@@ -66,10 +71,10 @@ class AmountInputWidget extends StatelessWidget {
               (categories.isNotEmpty && categories.first.name.startsWith('€'))
                   ? categories.first.name
                   : '€',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
             ),
           ),
         ],

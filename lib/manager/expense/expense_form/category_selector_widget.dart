@@ -102,41 +102,44 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
                         ? widget.categories.map((cat) {
                             final isSelected = widget.selectedCategory == cat;
                             return Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 4.0,
+                              ),
                               child: ThemedChoiceChip(
                                 label: cat.name,
                                 selected: isSelected,
                                 textStyle: widget.textStyle,
-                                selectedTextColor:
-                                    Theme.of(context).colorScheme.onPrimary,
-                                selectedColor:
-                                    Theme.of(context).colorScheme.primary,
+                                selectedTextColor: Theme.of(
+                                  context,
+                                ).colorScheme.onPrimary,
+                                selectedColor: Theme.of(
+                                  context,
+                                ).colorScheme.primary,
                                 backgroundColor: isSelected
                                     ? null
-                                    : Theme.of(context)
-                                        .colorScheme
-                                        .surfaceContainerHighest,
+                                    : Theme.of(
+                                        context,
+                                      ).colorScheme.surfaceContainerHighest,
                                 side: BorderSide(
                                   color: isSelected
                                       ? Theme.of(context).colorScheme.primary
-                                      : Theme.of(context)
-                                          .colorScheme
-                                          .outline
-                                          .withValues(alpha: 0.3),
+                                      : Theme.of(context).colorScheme.outline
+                                            .withValues(alpha: 0.3),
                                   width: 1,
                                 ),
                                 showCheckmark: false,
                                 avatar: null,
                                 onSelected: () => widget.onCategorySelected(
-                                    isSelected ? null : cat),
+                                  isSelected ? null : cat,
+                                ),
                               ),
                             );
                           }).toList()
                         : [
                             Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 4.0,
+                              ),
                               child: Text(
                                 widget.loc.get('no_categories'),
                                 style: Theme.of(context).textTheme.bodySmall,
@@ -156,7 +159,7 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
                 foregroundColor: Theme.of(context).colorScheme.onSurface,
                 minimumSize: const Size(42, 42),
               ),
-            )
+            ),
           ],
         ),
       ],

@@ -395,6 +395,17 @@ class UnifiedOverviewTab extends StatelessWidget {
                   ),
                 );
               }),
+
+            const SizedBox(height: 32),
+
+            // 3. WEEKLY (DailyExpensesChart already has its own bold title)
+            if (weeklyStats.isNotEmpty) ...[
+              DailyExpensesChart(trip: trip, dailyStats: weeklyStats, loc: loc),
+              const SizedBox(height: 32),
+            ],
+
+            // 4. BY CATEGORY (chart widget prints its own bold title)
+            CategoriesPieChart(trip: trip, loc: loc),
           ],
         ),
       ),

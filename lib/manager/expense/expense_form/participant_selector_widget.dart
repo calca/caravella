@@ -28,10 +28,13 @@ class ParticipantSelectorWidget extends StatelessWidget {
                 child: ThemedChoiceChip(
                   label: p,
                   selected: selected,
-                  textStyle: (textStyle ?? Theme.of(context).textTheme.bodySmall)
-                      ?.copyWith(
-                    fontWeight: selected ? FontWeight.bold : FontWeight.normal,
-                  ),
+                  textStyle:
+                      (textStyle ?? Theme.of(context).textTheme.bodySmall)
+                          ?.copyWith(
+                            fontWeight: selected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                          ),
                   selectedTextColor: Theme.of(context).colorScheme.onPrimary,
                   selectedColor: Theme.of(context).colorScheme.primary,
                   backgroundColor: selected
@@ -40,10 +43,9 @@ class ParticipantSelectorWidget extends StatelessWidget {
                   side: BorderSide(
                     color: selected
                         ? Theme.of(context).colorScheme.primary
-                        : Theme.of(context)
-                            .colorScheme
-                            .outline
-                            .withValues(alpha: 0.3),
+                        : Theme.of(
+                            context,
+                          ).colorScheme.outline.withValues(alpha: 0.3),
                     width: 1,
                   ),
                   showCheckmark: false,
