@@ -76,88 +76,91 @@ class CategoriesPieChart extends StatelessWidget {
               ),
         ),
         const SizedBox(height: 24),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 180,
-              width: 180,
-              child: PieChart(
-                PieChartData(
-                  sectionsSpace: 2,
-                  centerSpaceRadius: 40,
-                  startDegreeOffset: -90,
-                  sections: sortedEntries.asMap().entries.map((entry) {
-                    final index = entry.key;
-                    final categoryEntry = entry.value;
-                    final percentage = (categoryEntry.value /
-                            categoryTotals.values.reduce((a, b) => a + b)) *
-                        100;
+        // Pie chart centrato
+        Center(
+          child: SizedBox(
+            height: 180,
+            width: 180,
+            child: PieChart(
+              PieChartData(
+                sectionsSpace: 2,
+                centerSpaceRadius: 40,
+                startDegreeOffset: -90,
+                sections: sortedEntries.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final categoryEntry = entry.value;
+                  final percentage = (categoryEntry.value /
+                          categoryTotals.values.reduce((a, b) => a + b)) *
+                      100;
 
-                    return PieChartSectionData(
-                      color: colors[index % colors.length],
-                      value: categoryEntry.value,
-                      title: '${percentage.toStringAsFixed(0)}%',
-                      radius: 60,
-                      titleStyle: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                      badgeWidget: null,
-                    );
-                  }).toList(),
-                  pieTouchData: PieTouchData(
-                    enabled: true,
-                    touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                      // Aggiungi interattività se necessario
-                    },
-                  ),
+                  return PieChartSectionData(
+                    color: colors[index % colors.length],
+                    value: categoryEntry.value,
+                    title: '${percentage.toStringAsFixed(0)}%',
+                    radius: 60,
+                    titleStyle: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                    badgeWidget: null,
+                  );
+                }).toList(),
+                pieTouchData: PieTouchData(
+                  enabled: true,
+                  touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                    // Aggiungi interattività se necessario
+                  },
                 ),
               ),
             ),
-            const SizedBox(width: 40),
-            // Legenda verticale a destra
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: sortedEntries.asMap().entries.map((entry) {
-                final index = entry.key;
-                final categoryEntry = entry.value;
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 16.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 14,
-                        height: 14,
-                        decoration: BoxDecoration(
-                          color: colors[index % colors.length],
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        categoryEntry.key.name,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.w500,
-                            ),
-                      ),
-                      const SizedBox(width: 6),
-                      CurrencyDisplay(
-                        value: categoryEntry.value,
-                        currency: trip.currency,
-                        valueFontSize: 12,
-                        currencyFontSize: 10,
-                        showDecimals: false,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                    ],
+          ),
+        ),
+        const SizedBox(height: 28),
+        // Legenda sotto il grafico (wrap responsivo)
+        Wrap(
+          spacing: 24,
+            runSpacing: 16,
+          children: sortedEntries.asMap().entries.map((entry) {
+            final index = entry.key;
+            final categoryEntry = entry.value;
+            return ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 140),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 14,
+                    height: 14,
+                    decoration: BoxDecoration(
+                      color: colors[index % colors.length],
+                      shape: BoxShape.circle,
+                    ),
                   ),
-                );
-              }).toList(),
-            ),
-          ],
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      categoryEntry.key.name,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.w500,
+                          ),
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  CurrencyDisplay(
+                    value: categoryEntry.value,
+                    currency: trip.currency,
+                    valueFontSize: 12,
+                    currencyFontSize: 10,
+                    showDecimals: false,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
         ),
       ],
     );
