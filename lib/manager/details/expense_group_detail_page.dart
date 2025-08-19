@@ -20,6 +20,7 @@ import 'widgets/group_header.dart';
 import 'widgets/group_actions.dart';
 import 'widgets/group_total.dart';
 import 'widgets/expense_list.dart';
+import 'widgets/filtered_expense_list.dart';
 import 'widgets/empty_expenses.dart';
 import 'widgets/statistics_sheet.dart';
 import 'widgets/options_sheet.dart';
@@ -656,24 +657,13 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Attività',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: colorScheme.onSurface,
-                          fontSize: 20,
-                        ),
+                      FilteredExpenseList(
+                        expenses: trip.expenses,
+                        currency: trip.currency,
+                        onExpenseTap: _openEditExpense,
+                        categories: trip.categories,
+                        participants: trip.participants,
                       ),
-                      const SizedBox(height: 16),
-                      trip.expenses.isEmpty
-                          ? EmptyExpenses(
-                              semanticLabel: loc.get('no_expense_label'),
-                            )
-                          : ExpenseList(
-                              expenses: trip.expenses,
-                              currency: trip.currency,
-                              onExpenseTap: _openEditExpense,
-                            ),
                     ],
                   ),
                 ),
