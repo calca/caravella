@@ -6,6 +6,7 @@
       "request": "launch",
       "type": "dart",
       "program": "lib/main.dart",
+  "preLaunchTask": "start-emulator-if-needed",
       "args": [
         "--flavor",
         "dev",
@@ -18,6 +19,7 @@
       "request": "launch",
       "type": "dart",
       "program": "lib/main.dart",
+  "preLaunchTask": "start-emulator-if-needed",
       "args": [
         "--flavor",
         "staging",
@@ -30,6 +32,7 @@
       "request": "launch",
       "type": "dart",
       "program": "lib/main.dart",
+  "preLaunchTask": "start-emulator-if-needed",
       "args": [
         "--flavor",
         "prod",

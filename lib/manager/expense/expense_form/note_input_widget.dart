@@ -28,8 +28,8 @@ class NoteInputWidget extends StatelessWidget {
         const SizedBox(height: 8),
         TextFormField(
           controller: controller,
-          maxLines: 4,
-          minLines: 2,
+          maxLines: null, // auto-grow illimitato
+          minLines: 4, // minimo 4 righe visibili
           style: textStyle ?? Theme.of(context).textTheme.bodySmall,
           decoration: InputDecoration(
             hintText: loc.get('note_hint'),

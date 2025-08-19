@@ -10,6 +10,7 @@ class FilteredExpenseList extends StatefulWidget {
   final void Function(ExpenseDetails) onExpenseTap;
   final List<ExpenseCategory> categories;
   final List<ExpenseParticipant> participants;
+  final ValueChanged<bool>? onFiltersVisibilityChanged;
 
   const FilteredExpenseList({
     super.key,
@@ -18,6 +19,7 @@ class FilteredExpenseList extends StatefulWidget {
     required this.onExpenseTap,
     required this.categories,
     required this.participants,
+    this.onFiltersVisibilityChanged,
   });
 
   @override
@@ -46,14 +48,16 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
 
     // Apply category filter
     if (_selectedCategoryId != null) {
-      filtered = filtered.where((expense) =>
-          expense.category.id == _selectedCategoryId).toList();
+      filtered = filtered
+          .where((expense) => expense.category.id == _selectedCategoryId)
+          .toList();
     }
 
     // Apply participant filter
     if (_selectedParticipantId != null) {
-      filtered = filtered.where((expense) =>
-          expense.paidBy.id == _selectedParticipantId).toList();
+      filtered = filtered
+          .where((expense) => expense.paidBy.id == _selectedParticipantId)
+          .toList();
     }
 
     // Sort by date (newest first)
@@ -92,7 +96,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
       children: [
         // Filter Header with Toggle
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           child: Row(
             children: [
               Expanded(
@@ -123,6 +127,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                   setState(() {
                     _showFilters = !_showFilters;
                   });
+                  widget.onFiltersVisibilityChanged?.call(_showFilters);
                 },
                 tooltip: _showFilters ? 'Nascondi filtri' : 'Mostra filtri',
               ),
@@ -135,7 +140,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
+              color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(12),
             ),
             margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -162,7 +167,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                     });
                   },
                 ),
-                
+
                 const SizedBox(height: 16),
 
                 // Category Filter
@@ -186,15 +191,19 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                           });
                         },
                       ),
-                      ...widget.categories.map((category) => FilterChip(
-                        label: Text(category.name),
-                        selected: _selectedCategoryId == category.id,
-                        onSelected: (selected) {
-                          setState(() {
-                            _selectedCategoryId = selected ? category.id : null;
-                          });
-                        },
-                      )),
+                      ...widget.categories.map(
+                        (category) => FilterChip(
+                          label: Text(category.name),
+                          selected: _selectedCategoryId == category.id,
+                          onSelected: (selected) {
+                            setState(() {
+                              _selectedCategoryId = selected
+                                  ? category.id
+                                  : null;
+                            });
+                          },
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 16),
@@ -221,15 +230,19 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                           });
                         },
                       ),
-                      ...widget.participants.map((participant) => FilterChip(
-                        label: Text(participant.name),
-                        selected: _selectedParticipantId == participant.id,
-                        onSelected: (selected) {
-                          setState(() {
-                            _selectedParticipantId = selected ? participant.id : null;
-                          });
-                        },
-                      )),
+                      ...widget.participants.map(
+                        (participant) => FilterChip(
+                          label: Text(participant.name),
+                          selected: _selectedParticipantId == participant.id,
+                          onSelected: (selected) {
+                            setState(() {
+                              _selectedParticipantId = selected
+                                  ? participant.id
+                                  : null;
+                            });
+                          },
+                        ),
+                      ),
                     ],
                   ),
                 ],
@@ -246,17 +259,19 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
             child: Column(
               children: [
                 Icon(
-                  _hasActiveFilters ? Icons.search_off : Icons.receipt_long_outlined,
+                  _hasActiveFilters
+                      ? Icons.search_off
+                      : Icons.receipt_long_outlined,
                   size: 48,
-                  color: colorScheme.onSurface.withOpacity(0.4),
+                  color: colorScheme.onSurface.withValues(alpha: 0.4),
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  _hasActiveFilters 
+                  _hasActiveFilters
                       ? 'Nessuna spesa trovata con i filtri selezionati'
                       : 'Nessuna spesa ancora aggiunta',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: colorScheme.onSurface.withOpacity(0.6),
+                    color: colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -266,20 +281,25 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
         ] else ...[
           Column(
             children: [
-              ...filteredExpenses.map((expense) => Container(
-                width: double.infinity,
-                margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-                child: ExpenseAmountCard(
-                  title: expense.name ?? '',
-                  coins: (expense.amount ?? 0).toInt(),
-                  checked: true,
-                  paidBy: expense.paidBy.name,
-                  category: expense.category.name,
-                  date: expense.date,
-                  currency: widget.currency,
-                  onTap: () => widget.onExpenseTap(expense),
+              ...filteredExpenses.map(
+                (expense) => Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 2,
+                    horizontal: 0,
+                  ),
+                  child: ExpenseAmountCard(
+                    title: expense.name ?? '',
+                    coins: (expense.amount ?? 0).toInt(),
+                    checked: true,
+                    paidBy: expense.paidBy.name,
+                    category: expense.category.name,
+                    date: expense.date,
+                    currency: widget.currency,
+                    onTap: () => widget.onExpenseTap(expense),
+                  ),
                 ),
-              )),
+              ),
               const SizedBox(height: 12),
             ],
           ),

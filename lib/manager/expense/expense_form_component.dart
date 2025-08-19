@@ -397,17 +397,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
               ),
             const SizedBox(height: 16),
 
-            // NOTE
-            if (widget.showDateAndNote || widget.initialExpense != null) ...[
-              NoteInputWidget(
-                controller: _noteController,
-                loc: loc,
-                textStyle: smallStyle,
-              ),
-              const SizedBox(height: 16),
-            ],
-
-            // LOCATION
+            // LOCATION (spostato prima di NOTE)
             if (widget.showDateAndNote || widget.initialExpense != null) ...[
               LocationInputWidget(
                 initialLocation: _location,
@@ -418,6 +408,16 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                     _location = location;
                   });
                 },
+              ),
+              const SizedBox(height: 16),
+            ],
+
+            // NOTE (ora dopo LOCATION)
+            if (widget.showDateAndNote || widget.initialExpense != null) ...[
+              NoteInputWidget(
+                controller: _noteController,
+                loc: loc,
+                textStyle: smallStyle,
               ),
               const SizedBox(height: 16),
             ],

@@ -1,5 +1,7 @@
 import '../group/add_new_expenses_group.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'dart:async';
 // ...existing code...
 
 import 'package:provider/provider.dart';
@@ -18,7 +20,6 @@ import '../../widgets/app_toast.dart';
 import 'widgets/group_header.dart';
 import 'widgets/group_actions.dart';
 import 'widgets/group_total.dart';
-import 'widgets/expense_list.dart';
 import 'widgets/filtered_expense_list.dart';
 import 'widgets/empty_expenses.dart';
 import 'widgets/unified_overview_sheet.dart';
@@ -36,6 +37,9 @@ class ExpenseGroupDetailPage extends StatefulWidget {
 }
 
 class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
+  // Opacità lista spese (default 1.0, manual refresh stato rimosso)
+  // final double _listOpacity = 1.0; // RIMOSSO: non più necessario
+
   /// Genera il contenuto CSV delle spese del gruppo
   String _generateCsvContent() {
     if (_trip == null || _trip!.expenses.isEmpty) return '';
@@ -99,13 +103,18 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   ExpenseGroup? _trip;
   bool _deleted = false;
   ExpenseGroupNotifier? _groupNotifier;
-  bool _reloading = false;
-  double _listOpacity = 1.0;
+  // Removed manual refresh state (_reloading, _listOpacity)
+  bool _hideHeader = false; // animazione nascondi header quando filtri aperti
+  late final ScrollController _scrollController;
+  bool _fabVisible = true; // controllo visibilità totale
+  Timer? _fabIdleTimer; // timer per ri-mostrare il FAB dopo inattività
 
   @override
   void initState() {
     super.initState();
     _loadTrip();
+    _scrollController = ScrollController();
+    _scrollController.addListener(_onScroll);
   }
 
   @override
@@ -125,6 +134,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     // Rimuovi il listener in modo sicuro
     _groupNotifier?.removeListener(_onGroupChanged);
     _groupNotifier = null;
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    _fabIdleTimer?.cancel();
     super.dispose();
   }
 
@@ -153,30 +165,13 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     }
   }
 
-  Future<void> _refreshTrip() async {
-    if (_reloading) return;
-    setState(() {
-      _reloading = true;
-      _listOpacity = 0.3;
-    });
-    final trip = await ExpenseGroupStorage.getTripById(
-      _trip?.id ?? widget.trip.id,
-    );
-    if (!mounted) return;
-    if (trip != null) {
-      setState(() {
-        _trip = trip;
-      });
-      _groupNotifier?.setCurrentGroup(trip);
-    }
-    // Piccola pausa per percezione visiva
-    await Future.delayed(const Duration(milliseconds: 180));
-    if (mounted) {
-      setState(() {
-        _listOpacity = 1.0;
-        _reloading = false;
-      });
-    }
+  // _refreshTrip removed: state updates occur inline after each mutation.
+  Future<void> _refreshGroup() async {
+    if (_trip == null) return;
+    final refreshed = await ExpenseGroupStorage.getTripById(_trip!.id);
+    if (!mounted || refreshed == null) return;
+    setState(() => _trip = refreshed);
+    _groupNotifier?.setCurrentGroup(refreshed);
   }
 
   void _showUnifiedOverviewSheet() {
@@ -213,7 +208,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             archived: _trip!.archived,
           );
           await _groupNotifier?.updateGroup(updatedGroup);
-          await _refreshTrip();
+          await _refreshGroup();
           if (!mounted) return;
           nav.pop();
         },
@@ -235,7 +230,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             archived: !_trip!.archived,
           );
           await _groupNotifier?.updateGroup(updatedGroup);
-          await _refreshTrip();
+          await _refreshGroup();
           if (!mounted) return;
           nav.pop();
         },
@@ -250,7 +245,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               builder: (ctx) => AddNewExpensesGroupPage(trip: _trip!),
             ),
           );
-          await _refreshTrip();
+          await _refreshGroup();
         },
         onDownloadCsv: () async {
           final preLoc = AppLocalizations(
@@ -420,7 +415,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             id: DateTime.now().millisecondsSinceEpoch.toString(),
           );
           await _groupNotifier?.addExpense(expenseWithId);
-          await _refreshTrip();
+          await _refreshGroup();
           if (!sheetCtx.mounted) return;
           AppToast.show(
             sheetCtx,
@@ -431,7 +426,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         },
         onCategoryAdded: (categoryName) async {
           await _groupNotifier?.addCategory(categoryName);
-          await _refreshTrip();
+          await _refreshGroup();
         },
         showDateAndNote: true,
       ),
@@ -451,12 +446,11 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => EditExpenseSheet(
+      builder: (sheetCtx) => EditExpenseSheet(
         group: _trip!,
         expense: expense,
         title: loc.get('edit_expense'),
         onExpenseAdded: (updatedExpense) async {
-          final sheetCtx = context; // bottom sheet context
           final preLoc = AppLocalizations(
             LocaleNotifier.of(sheetCtx)?.locale ?? 'it',
           );
@@ -479,7 +473,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             pinned: _trip!.pinned,
           );
           await _groupNotifier?.updateGroup(updatedGroup);
-          await _refreshTrip();
+          await _refreshGroup();
           if (!sheetCtx.mounted) return;
           AppToast.show(
             sheetCtx,
@@ -490,7 +484,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         },
         onCategoryAdded: (categoryName) async {
           await _groupNotifier?.addCategory(categoryName);
-          await _refreshTrip();
+          await _refreshGroup();
         },
         onDelete: () {
           Navigator.of(context).pop();
@@ -502,6 +496,45 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         _groupNotifier?.clearCurrentGroup();
       }
     });
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    final direction = _scrollController.position.userScrollDirection;
+    if (direction == ScrollDirection.reverse) {
+      if (_fabVisible && mounted) setState(() => _fabVisible = false);
+      // Avvia timer per ri-mostrare dopo inattività
+      _fabIdleTimer?.cancel();
+      _fabIdleTimer = Timer(const Duration(milliseconds: 1200), () {
+        if (mounted && !_fabVisible) {
+          setState(() => _fabVisible = true);
+        }
+      });
+    } else if (direction == ScrollDirection.forward) {
+      if (!_fabVisible && mounted) setState(() => _fabVisible = true);
+      // reset timer perché già visibile
+      _fabIdleTimer?.cancel();
+    }
+  }
+
+  Widget _buildAnimatedFab(AppLocalizations loc, ColorScheme colorScheme) {
+    if (_trip?.archived == true) return const SizedBox.shrink();
+
+    return AnimatedSlide(
+      duration: const Duration(milliseconds: 260),
+      curve: Curves.easeOut,
+      offset: _fabVisible ? Offset.zero : const Offset(0.3, 1.2),
+      child: AnimatedOpacity(
+        duration: const Duration(milliseconds: 220),
+        curve: Curves.easeInOut,
+        opacity: _fabVisible ? 1 : 0,
+        child: FloatingActionButton(
+          heroTag: 'add-expense-fab',
+          onPressed: _showAddExpenseSheet,
+          child: const Icon(Icons.add_rounded),
+        ),
+      ),
+    );
   }
 
   @override
@@ -528,6 +561,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     return Scaffold(
       // backgroundColor centralizzato nel tema
       body: CustomScrollView(
+        controller: _scrollController,
         slivers: [
           // Hero AppBar con gradiente
           SliverAppBar(
@@ -544,46 +578,59 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           ),
           // Header custom sotto l'AppBar
           SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  GroupHeader(trip: trip),
-                  const SizedBox(height: 32),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: GroupTotal(
-                          total: totalExpenses,
-                          currency: trip.currency,
+            child: AnimatedSize(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              alignment: Alignment.topCenter,
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 220),
+                switchInCurve: Curves.easeOut,
+                switchOutCurve: Curves.easeIn,
+                transitionBuilder: (child, animation) {
+                  return FadeTransition(
+                    opacity: animation,
+                    child: SizeTransition(
+                      sizeFactor: animation,
+                      axisAlignment: -1.0,
+                      child: child,
+                    ),
+                  );
+                },
+                child: _hideHeader
+                    ? const SizedBox.shrink(key: ValueKey('header-hidden'))
+                    : Padding(
+                        key: const ValueKey('header-visible'),
+                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            GroupHeader(trip: trip),
+                            const SizedBox(height: 32),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: GroupTotal(
+                                    total: totalExpenses,
+                                    currency: trip.currency,
+                                  ),
+                                ),
+                                GroupActions(
+                                  hasExpenses: trip.expenses.isNotEmpty,
+                                  onOverview: trip.expenses.isNotEmpty
+                                      ? _showUnifiedOverviewSheet
+                                      : null,
+                                  onStatistics: trip.expenses.isNotEmpty
+                                      ? _showStatisticsSheet
+                                      : null,
+                                  onOptions: _showOptionsSheet,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 24),
+                          ],
                         ),
                       ),
-                      GroupActions(
-                        hasExpenses: trip.expenses.isNotEmpty,
-                        onOverview: trip.expenses.isNotEmpty
-                            ? _showUnifiedOverviewSheet
-                            : null,
-                        onOptions: _showOptionsSheet,
-                      ),
-                      const SizedBox(width: 8),
-                      if (_reloading)
-                        const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      else
-                        IconButton(
-                          tooltip: 'Refresh',
-                          icon: const Icon(Icons.refresh_rounded, size: 20),
-                          onPressed: _refreshTrip,
-                        ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                ],
               ),
             ),
           ),
@@ -599,50 +646,39 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                 ),
               ),
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 24, 16, 0),
-                child: AnimatedOpacity(
-                  duration: const Duration(milliseconds: 220),
-                  opacity: _listOpacity,
-                  curve: Curves.easeInOut,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      FilteredExpenseList(
-                        expenses: trip.expenses,
-                        currency: trip.currency,
-                        onExpenseTap: _openEditExpense,
-                        categories: trip.categories,
-                        participants: trip.participants,
-                      ),
-                    ],
-                  ),
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    FilteredExpenseList(
+                      expenses: trip.expenses,
+                      currency: trip.currency,
+                      onExpenseTap: _openEditExpense,
+                      categories: trip.categories,
+                      participants: trip.participants,
+                      onFiltersVisibilityChanged: (visible) {
+                        if (mounted) {
+                          setState(() => _hideHeader = visible);
+                        }
+                      },
+                    ),
+                  ],
                 ),
               ),
             ),
           ),
-
-          // Spazio aggiuntivo per garantire lo scroll
           SliverPadding(
             padding: const EdgeInsets.only(bottom: 0),
             sliver: SliverToBoxAdapter(
               child: Container(
-                height: 100, // Altezza fissa per lo spazio
+                height: 100,
                 color: colorScheme.surfaceContainer,
               ),
             ),
           ),
         ],
       ),
-      floatingActionButton: !trip.archived
-          ? FloatingActionButton.extended(
-              heroTag: 'add-expense-fab',
-              onPressed: () => _showAddExpenseSheet(),
-              label: Text(loc.get('add_expense_fab')),
-              icon: const Icon(Icons.add_rounded),
-              backgroundColor: colorScheme.primary,
-              foregroundColor: colorScheme.onPrimary,
-            )
-          : null,
+      floatingActionButton: _buildAnimatedFab(loc, colorScheme),
     );
   }
 }
