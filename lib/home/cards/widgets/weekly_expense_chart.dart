@@ -39,6 +39,9 @@ class WeeklyExpenseChart extends StatelessWidget {
           titlesData: const FlTitlesData(show: false),
           gridData: const FlGridData(show: false),
           borderData: FlBorderData(show: false),
+          lineTouchData: const LineTouchData(
+            enabled: false,
+          ),
         ),
       ),
     );

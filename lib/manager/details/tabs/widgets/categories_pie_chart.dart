@@ -106,11 +106,8 @@ class CategoriesPieChart extends StatelessWidget {
                     badgeWidget: null,
                   );
                 }).toList(),
-                pieTouchData: PieTouchData(
-                  enabled: true,
-                  touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                    // Aggiungi interattività se necessario
-                  },
+                pieTouchData: const PieTouchData(
+                  enabled: false,
                 ),
               ),
             ),
