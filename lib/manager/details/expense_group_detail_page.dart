@@ -1,5 +1,7 @@
 import '../group/add_new_expenses_group.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'dart:async';
 // ...existing code...
 
 import 'package:provider/provider.dart';
@@ -103,11 +105,15 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   ExpenseGroupNotifier? _groupNotifier;
   // Removed manual refresh state (_reloading, _listOpacity)
   bool _hideHeader = false; // animazione nascondi header quando filtri aperti
+  late final ScrollController _scrollController;
+  bool _fabVisible = true; // controllo visibilità totale
 
   @override
   void initState() {
     super.initState();
     _loadTrip();
+  _scrollController = ScrollController();
+  _scrollController.addListener(_onScroll);
   }
 
   @override
@@ -127,6 +133,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     // Rimuovi il listener in modo sicuro
     _groupNotifier?.removeListener(_onGroupChanged);
     _groupNotifier = null;
+  _scrollController.removeListener(_onScroll);
+  _scrollController.dispose();
     super.dispose();
   }
 
@@ -536,6 +544,36 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     });
   }
 
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    final direction = _scrollController.position.userScrollDirection;
+    if (direction == ScrollDirection.reverse) {
+      if (_fabVisible && mounted) setState(() => _fabVisible = false);
+    } else if (direction == ScrollDirection.forward) {
+      if (!_fabVisible && mounted) setState(() => _fabVisible = true);
+    }
+  }
+  
+  Widget _buildAnimatedFab(AppLocalizations loc, ColorScheme colorScheme) {
+    if (_trip?.archived == true) return const SizedBox.shrink();
+
+    return AnimatedSlide(
+      duration: const Duration(milliseconds: 260),
+      curve: Curves.easeOut,
+      offset: _fabVisible ? Offset.zero : const Offset(0.3, 1.2),
+      child: AnimatedOpacity(
+        duration: const Duration(milliseconds: 220),
+        curve: Curves.easeInOut,
+        opacity: _fabVisible ? 1 : 0,
+        child: FloatingActionButton(
+          heroTag: 'add-expense-fab',
+          onPressed: _showAddExpenseSheet,
+          child: const Icon(Icons.add_rounded),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_deleted) {
@@ -560,6 +598,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     return Scaffold(
       // backgroundColor centralizzato nel tema
       body: CustomScrollView(
+        controller: _scrollController,
         slivers: [
           // Hero AppBar con gradiente
           SliverAppBar(
@@ -676,14 +715,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           ),
         ],
       ),
-      floatingActionButton: trip.archived
-          ? null
-          : FloatingActionButton.extended(
-              heroTag: 'add-expense-fab',
-              onPressed: _showAddExpenseSheet,
-              label: Text(loc.get('add_expense_fab')),
-              icon: const Icon(Icons.add_rounded),
-            ),
+  floatingActionButton: _buildAnimatedFab(loc, colorScheme),
     );
   }
 }
