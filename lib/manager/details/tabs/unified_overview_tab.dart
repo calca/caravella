@@ -227,6 +227,7 @@ class UnifiedOverviewTab extends StatelessWidget {
                 trip: trip,
                 dailyStats: weeklyStats,
                 loc: loc,
+                titleKey: 'weekly_expenses_chart',
               ),
               const SizedBox(height: 24),
             ],
