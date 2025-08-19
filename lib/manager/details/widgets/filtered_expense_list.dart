@@ -285,8 +285,8 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                 (expense) => Container(
                   width: double.infinity,
                   margin: const EdgeInsets.symmetric(
-                    vertical: 4,
-                    horizontal: 16,
+                    vertical: 2,
+                    horizontal: 0,
                   ),
                   child: ExpenseAmountCard(
                     title: expense.name ?? '',
