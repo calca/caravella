@@ -327,26 +327,34 @@ class GroupCardContent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Settimana
-        Text(
-          localizations.get('weekly_expenses_chart'),
-          style: theme.textTheme.labelMedium?.copyWith(
-            fontWeight: FontWeight.w600,
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _buildCompactChartIndicator(
+              letter: localizations.locale == 'en' ? 'W' : 'S',
+              color: theme.colorScheme.primary,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: WeeklyExpenseChart(dailyTotals: dailyTotals, theme: theme),
+            ),
+          ],
         ),
-        const SizedBox(height: 4),
-        WeeklyExpenseChart(dailyTotals: dailyTotals, theme: theme),
         const SizedBox(height: 16),
         // Mese
-        Text(
-          localizations.get('monthly_expenses_chart'),
-          style: theme.textTheme.labelMedium?.copyWith(
-            fontWeight: FontWeight.w600,
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _buildCompactChartIndicator(
+              letter: 'M',
+              color: theme.colorScheme.secondary,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: MonthlyExpenseChart(dailyTotals: dailyMonthTotals, theme: theme),
+            ),
+          ],
         ),
-        const SizedBox(height: 4),
-        MonthlyExpenseChart(dailyTotals: dailyMonthTotals, theme: theme),
       ],
     );
 
@@ -400,6 +408,44 @@ class GroupCardContent extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildCompactChartIndicator({
+    required String letter,
+    required Color color,
+  }) {
+    // Add semantic labels for accessibility
+    final isWeekly = letter == 'W' || letter == 'S';
+    final semanticLabel = isWeekly 
+        ? localizations.get('weekly_expenses_chart')
+        : localizations.get('monthly_expenses_chart');
+    
+    return Semantics(
+      label: semanticLabel,
+      child: Container(
+        width: 28,
+        height: 28,
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.12),
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: color.withValues(alpha: 0.25),
+            width: 1.5,
+          ),
+        ),
+        child: Center(
+          child: Text(
+            letter,
+            style: theme.textTheme.labelMedium?.copyWith(
+              fontWeight: FontWeight.w800,
+              color: color,
+              fontSize: 12,
+              letterSpacing: 0,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
