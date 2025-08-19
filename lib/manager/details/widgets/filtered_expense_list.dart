@@ -29,6 +29,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
   String? _selectedCategoryId;
   String? _selectedParticipantId;
   bool _showFilters = false;
+  final TextEditingController _searchController = TextEditingController();
 
   List<ExpenseDetails> get _filteredExpenses {
     List<ExpenseDetails> filtered = List.from(widget.expenses);
@@ -73,6 +74,13 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
       _selectedCategoryId = null;
       _selectedParticipantId = null;
     });
+    _searchController.clear();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -136,6 +144,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
               children: [
                 // Search Bar
                 TextField(
+                  controller: _searchController,
                   decoration: InputDecoration(
                     hintText: 'Cerca per nome o nota...',
                     prefixIcon: Icon(Icons.search, size: 20),
