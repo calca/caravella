@@ -46,3 +46,4 @@ app.*.map.json
 
 # Local Flutter SDK installation
 flutter/
+flutter-sdk/

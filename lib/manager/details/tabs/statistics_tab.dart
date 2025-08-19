@@ -4,6 +4,7 @@ import '../../../app_localizations.dart';
 import '../../../state/locale_notifier.dart';
 import 'widgets/daily_expenses_chart.dart';
 import 'widgets/categories_pie_chart.dart';
+import 'widgets/daily_average_by_category.dart';
 // ...existing code...
 
 class StatisticsTab extends StatelessWidget {
@@ -54,10 +55,6 @@ class StatisticsTab extends StatelessWidget {
     }
     return weeklyStats;
   }
-
-  final ExpenseGroup trip;
-
-  const StatisticsTab({super.key, required this.trip});
 
   @override
   Widget build(BuildContext context) {
@@ -116,6 +113,14 @@ class StatisticsTab extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+
+          const SizedBox(height: 32),
+
+          // Daily average by category
+          DailyAverageByCategoryWidget(
+            trip: trip,
+            loc: loc,
           ),
 
           // ...existing code...
