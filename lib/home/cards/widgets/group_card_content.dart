@@ -330,7 +330,7 @@ class GroupCardContent extends StatelessWidget {
         Text(
           localizations.get('weekly_expenses_chart'),
           style: theme.textTheme.labelMedium?.copyWith(
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w600,
             color: theme.colorScheme.onSurfaceVariant,
           ),
         ),
@@ -341,7 +341,7 @@ class GroupCardContent extends StatelessWidget {
         Text(
           localizations.get('monthly_expenses_chart'),
           style: theme.textTheme.labelMedium?.copyWith(
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w600,
             color: theme.colorScheme.onSurfaceVariant,
           ),
         ),
