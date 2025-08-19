@@ -23,11 +23,13 @@ class CategorySelectorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return FilledButton(
-      style: FilledButton.styleFrom(
+    final borderColor = theme.colorScheme.outlineVariant;
+    return OutlinedButton(
+      style: OutlinedButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        backgroundColor: theme.colorScheme.primary,
-        foregroundColor: theme.colorScheme.onPrimary,
+        foregroundColor: theme.colorScheme.onSurface,
+        side: BorderSide(color: borderColor.withValues(alpha: 0.8), width: 1),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       onPressed: () async {
         final picked = await showSelectionBottomSheet<ExpenseCategory>(
@@ -48,18 +50,14 @@ class CategorySelectorWidget extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.category_outlined,
-            size: 20,
-            color: theme.colorScheme.onPrimary,
-          ),
+          Icon(Icons.category_outlined, size: 20, color: theme.colorScheme.onSurfaceVariant),
           const SizedBox(width: 8),
           Flexible(
             child: Text(
               selectedCategory?.name ?? loc.get('category_placeholder'),
               overflow: TextOverflow.ellipsis,
               style: (textStyle ?? theme.textTheme.bodyMedium)?.copyWith(
-                color: theme.colorScheme.onPrimary,
+                color: theme.colorScheme.onSurface,
                 fontWeight: FontWeight.w600,
               ),
             ),
