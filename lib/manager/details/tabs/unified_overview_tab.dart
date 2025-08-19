@@ -242,17 +242,6 @@ class UnifiedOverviewTab extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 8),
-
-            // Grafici (massimo 2 come richiesto)
-            if (weeklyStats.isNotEmpty) ...[
-              DailyExpensesChart(trip: trip, dailyStats: weeklyStats, loc: loc),
-              const SizedBox(height: 24),
-            ],
-
-            CategoriesPieChart(trip: trip, loc: loc),
-
-            const SizedBox(height: 32),
-
             // Sezione partecipanti
             Text(
               loc.get('expenses_by_participant'),
@@ -395,6 +384,11 @@ class UnifiedOverviewTab extends StatelessWidget {
                   ),
                 );
               }),
+
+            const SizedBox(height: 32),
+
+            // Daily average by category
+            DailyAverageByCategoryWidget(trip: trip, loc: loc),
 
             const SizedBox(height: 32),
 
