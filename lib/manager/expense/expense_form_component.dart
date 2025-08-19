@@ -106,118 +106,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
           : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000));
     }
 
-    // Listener per aggiornare la validazione in tempo reale
-    _amountController.addListener(() {
-      setState(() {
-        _amount = double.tryParse(_amountController.text);
-        _amountTouched = true;
-        _isDirty = true;
-      });
-    });
-
-    // Listener per nome
-    _nameController.addListener(() {
-      if (!_isDirty) {
-        setState(() => _isDirty = true);
-      }
-    });
-
-    // Listener per note
-    _noteController.addListener(() {
-      if (!_isDirty) {
-        setState(() => _isDirty = true);
-      }
-    });
-
-    // Focus automatico su nome spesa
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _nameFocus.requestFocus();
-    });
-
-    // Se c'è una nuova categoria, preselezionala
-    if (widget.newlyAddedCategory != null) {
-      final found = widget.categories.firstWhere(
-        (c) => c.name == widget.newlyAddedCategory,
-        orElse: () => widget.categories.isNotEmpty
-            ? widget.categories.first
-            : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000)),
-      );
-      _category = found;
-    }
-  }
-
-  @override
-  void didUpdateWidget(covariant ExpenseFormComponent oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    // Aggiorna la lista locale delle categorie se cambiata
-    if (widget.categories != oldWidget.categories) {
-      setState(() {
-        _categories = List.from(widget.categories);
-      });
-    }
-
-    // Se una nuova categoria è stata aggiunta e non è già selezionata, la selezioniamo
-    if (widget.newlyAddedCategory != null &&
-        (_category == null || widget.newlyAddedCategory != _category!.name)) {
-      final found = widget.categories.firstWhere(
-        (c) => c.name == widget.newlyAddedCategory,
-        orElse: () => widget.categories.isNotEmpty
-            ? widget.categories.first
-            : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000)),
-      );
-      setState(() {
-        _category = found;
-      });
-    }
-  }
-
-  void _saveExpense() {
-    setState(() {});
-    // Always save the form to update _amount
-    _formKey.currentState!.save();
-
-    // Applica la validazione completa prima di salvare
-    bool isFormValid = _formKey.currentState!.validate();
-    bool hasCategoryIfRequired = _categories.isNotEmpty
-        ? _category != null
-        : true;
-    bool hasPaidBy = _paidBy != null && _paidBy!.name.isNotEmpty;
-
-    final nameValue = _nameController.text.trim();
-    if (isFormValid &&
-        hasCategoryIfRequired &&
-        hasPaidBy &&
-        nameValue.isNotEmpty) {
-      final expense = ExpenseDetails(
-        category:
-            _category ??
-            (_categories.isNotEmpty
-                ? _categories.first
-                : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000))),
-        amount: _amount ?? 0,
-        paidBy:
-            _paidBy ??
-            (widget.participants.isNotEmpty
-                ? widget.participants.first
-                : ExpenseParticipant(name: '')),
-        date: _date ?? DateTime.now(),
-        note: widget.initialExpense != null
-            ? _noteController.text.trim()
-            : null,
-        name: nameValue,
-        location: _location,
-      );
-      widget.onExpenseAdded(expense);
-      // reset dirty (salvato)
-      _isDirty = false;
-
-      // Chiude automaticamente solo se richiesto (per i bottom sheet)
-      if (widget.shouldAutoClose && Navigator.of(context).canPop()) {
-        Navigator.of(context).pop();
-      }
-    }
-    // Rimuoviamo la SnackBar perché ora mostriamo il messaggio nel widget
+  // (Eventuali listener per aggiornare validazioni in tempo reale possono essere aggiunti qui)
   }
 
   Future<bool> _confirmDiscardChanges() async {
@@ -273,6 +162,39 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       ),
       child: field,
     );
+  }
+
+  void _saveExpense() {
+    final valid = _formKey.currentState?.validate() ?? false;
+    if (!valid) {
+      setState(() {
+        _amountTouched = true;
+        _paidByTouched = true;
+        _categoryTouched = true;
+      });
+      return;
+    }
+    if (!_isFormValid()) return;
+    final nameValue = _nameController.text.trim();
+    final expense = ExpenseDetails(
+      amount: _amount ?? double.tryParse(_amountController.text) ?? 0,
+      paidBy: _paidBy ?? ExpenseParticipant(name: ''),
+      category: _category ??
+          (_categories.isNotEmpty
+              ? _categories.first
+              : ExpenseCategory(name: '', id: '', createdAt: DateTime.now())),
+      date: _date ?? DateTime.now(),
+      note: _noteController.text.trim().isNotEmpty
+          ? _noteController.text.trim()
+          : null,
+      name: nameValue,
+      location: _location,
+    );
+    widget.onExpenseAdded(expense);
+    _isDirty = false;
+    if (widget.shouldAutoClose && Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    }
   }
 
   @override
@@ -342,12 +264,14 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
               ),
               const SizedBox(height: 16),
 
-              // PAID BY + CATEGORY sulla stessa riga
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: _buildFieldWithStatus(
+              // PAID BY + CATEGORY dinamici e allineati a sinistra
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Wrap(
+                  spacing: 12,
+                  runSpacing: 8,
+                  children: [
+                    _buildFieldWithStatus(
                       ParticipantSelectorWidget(
                         participants: widget.participants
                             .map((p) => p.name)
@@ -371,10 +295,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                       _isPaidByValid,
                       _paidByTouched,
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _buildFieldWithStatus(
+                    _buildFieldWithStatus(
                       CategorySelectorWidget(
                         categories: _categories,
                         selectedCategory: _category,
@@ -438,8 +359,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                       _isCategoryValid,
                       _categoryTouched,
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
 
               // DATA (bottone con data + icona, angoli arrotondati, sfondo grigio coerente col tema)
