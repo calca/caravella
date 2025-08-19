@@ -620,9 +620,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                                   onOverview: trip.expenses.isNotEmpty
                                       ? _showUnifiedOverviewSheet
                                       : null,
-                                  onStatistics: trip.expenses.isNotEmpty
-                                      ? _showStatisticsSheet
-                                      : null,
                                   onOptions: _showOptionsSheet,
                                 ),
                               ],
