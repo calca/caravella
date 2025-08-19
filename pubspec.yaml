@@ -49,6 +49,7 @@ dependencies:
   share_plus: ^11.0.0
   archive: ^4.0.7
   flag_secure: ^2.0.0
+  geolocator: ^10.1.0
 
 dev_dependencies:
   flutter_test:

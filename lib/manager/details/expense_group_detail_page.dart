@@ -52,6 +52,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         loc.get('csv_category'),
         loc.get('csv_date'),
         loc.get('csv_note'),
+        loc.get('csv_location'),
       ].join(','),
     );
     for (final e in _trip!.expenses) {
@@ -63,6 +64,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           _escapeCsvValue(e.category.name),
           e.date.toIso8601String().split('T').first,
           _escapeCsvValue(e.note ?? ''),
+          _escapeCsvValue(e.location?.displayText ?? ''),
         ].join(','),
       );
     }
