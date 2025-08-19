@@ -122,8 +122,6 @@ class GroupCardContent extends StatelessWidget {
                             20,
                       ),
                       child: ExpenseFormComponent(
-                        key: ValueKey(currentGroup.categories
-                            .hashCode), // Forza rebuild quando le categorie cambiano
                         participants: currentGroup.participants,
                         categories: currentGroup.categories,
                         onExpenseAdded: (expense) async {
@@ -139,7 +137,7 @@ class GroupCardContent extends StatelessWidget {
                         onCategoryAdded: (newCategory) async {
                           // Usa il notifier per aggiungere la categoria
                           await groupNotifier.addCategory(newCategory);
-                          // La UI del form si aggiornerà automaticamente grazie al Consumer e alla ValueKey
+                          // La UI del form si aggiornerà automaticamente grazie al Consumer e didUpdateWidget
                         },
                         shouldAutoClose: false,
                         // Passa la nuova categoria al form per la pre-selezione
