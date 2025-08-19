@@ -327,34 +327,10 @@ class GroupCardContent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Settimana
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            _buildCompactChartIndicator(
-              letter: localizations.get('weekly_chart_badge'),
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: WeeklyExpenseChart(dailyTotals: dailyTotals, theme: theme),
-            ),
-          ],
-        ),
+        WeeklyExpenseChart(dailyTotals: dailyTotals, theme: theme),
         const SizedBox(height: 16),
         // Mese
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            _buildCompactChartIndicator(
-              letter: localizations.get('monthly_chart_badge'),
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: MonthlyExpenseChart(dailyTotals: dailyMonthTotals, theme: theme),
-            ),
-          ],
-        ),
+        MonthlyExpenseChart(dailyTotals: dailyMonthTotals, theme: theme),
       ],
     );
 
@@ -408,44 +384,6 @@ class GroupCardContent extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildCompactChartIndicator({
-    required String letter,
-    required Color color,
-  }) {
-    // Add semantic labels for accessibility
-    final isWeekly = letter == 'W' || letter == 'S';
-    final semanticLabel = isWeekly 
-        ? localizations.get('weekly_expenses_chart')
-        : localizations.get('monthly_expenses_chart');
-    
-    return Semantics(
-      label: semanticLabel,
-      child: Container(
-        width: 28,
-        height: 28,
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.12),
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: color.withValues(alpha: 0.25),
-            width: 1.5,
-          ),
-        ),
-        child: Center(
-          child: Text(
-            letter,
-            style: theme.textTheme.labelMedium?.copyWith(
-              fontWeight: FontWeight.w800,
-              color: color,
-              fontSize: 12,
-              letterSpacing: 0,
-            ),
-          ),
-        ),
-      ),
     );
   }
 }
