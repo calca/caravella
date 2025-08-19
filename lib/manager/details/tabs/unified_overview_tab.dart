@@ -6,6 +6,10 @@ import '../../../state/locale_notifier.dart';
 import 'widgets/daily_expenses_chart.dart';
 import 'widgets/categories_pie_chart.dart';
 
+/// Unified overview tab that combines the functionality of both OverviewTab and StatisticsTab.
+/// Shows exactly 2 charts (daily expenses and categories pie chart) plus settlement information.
+/// This addresses the requirement to "unify overview and statistics pages with useful information 
+/// and maximum 2 charts".
 class UnifiedOverviewTab extends StatelessWidget {
   final ExpenseGroup trip;
   const UnifiedOverviewTab({super.key, required this.trip});
@@ -209,172 +213,177 @@ class UnifiedOverviewTab extends StatelessWidget {
     // Calcola le statistiche per i grafici
     final weeklyStats = _calculateWeeklyStats();
 
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Grafici (massimo 2 come richiesto)
-          if (weeklyStats.isNotEmpty) ...[
-            DailyExpensesChart(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 8),
+            
+            // Grafici (massimo 2 come richiesto)
+            if (weeklyStats.isNotEmpty) ...[
+              DailyExpensesChart(
+                trip: trip,
+                dailyStats: weeklyStats,
+                loc: loc,
+              ),
+              const SizedBox(height: 24),
+            ],
+            
+            CategoriesPieChart(
               trip: trip,
-              dailyStats: weeklyStats,
               loc: loc,
             ),
-            const SizedBox(height: 24),
-          ],
-          
-          CategoriesPieChart(
-            trip: trip,
-            loc: loc,
-          ),
-          
-          const SizedBox(height: 32),
+            
+            const SizedBox(height: 32),
 
-          // Sezione partecipanti
-          Text(
-            loc.get('expenses_by_participant'),
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 12),
-          ...trip.participants.map((p) {
-            final total = trip.expenses
-                .where((e) => e.paidBy.name == p.name)
-                .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 6),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 16,
-                    backgroundColor: theme.colorScheme.primary
-                        .withAlpha((0.1 * 255).toInt()),
-                    child: Icon(
-                      Icons.person,
-                      size: 18,
-                      color: theme.colorScheme.primary,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      p.name,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  CurrencyDisplay(
-                    value: total,
-                    currency: trip.currency,
-                    valueFontSize: 14.0,
-                    currencyFontSize: 12.0,
-                    alignment: MainAxisAlignment.end,
-                    showDecimals: true,
-                  ),
-                ],
+            // Sezione partecipanti
+            Text(
+              loc.get('expenses_by_participant'),
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w500,
               ),
-            );
-          }),
-
-          const SizedBox(height: 24),
-
-          // Sezione Pareggia
-          Text(
-            loc.get('settlement'),
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w500,
             ),
-          ),
-          const SizedBox(height: 12),
-
-          if (settlements.isEmpty)
-            // Messaggio se tutto è a posto
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.check_circle_outline,
-                    color: theme.colorScheme.primary,
-                    size: 20,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      loc.get('all_balanced'),
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.primary,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )
-          else
-            // Lista dei pareggi
-            ...settlements.map((settlement) {
+            const SizedBox(height: 12),
+            ...trip.participants.map((p) {
+              final total = trip.expenses
+                  .where((e) => e.paidBy.name == p.name)
+                  .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 6),
                 child: Row(
                   children: [
-                    // Avatar con icona freccia
                     CircleAvatar(
-                      radius: 14,
-                      backgroundColor: theme.colorScheme.error
+                      radius: 16,
+                      backgroundColor: theme.colorScheme.primary
                           .withAlpha((0.1 * 255).toInt()),
                       child: Icon(
-                        Icons.arrow_forward,
-                        size: 16,
-                        color: theme.colorScheme.error,
+                        Icons.person,
+                        size: 18,
+                        color: theme.colorScheme.primary,
                       ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: RichText(
-                        text: TextSpan(
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w500,
-                          ),
-                          children: [
-                            TextSpan(
-                              text: settlement['from'],
-                              style: TextStyle(
-                                color: theme.colorScheme.error,
-                              ),
-                            ),
-                            TextSpan(
-                              text: ' deve dare a ',
-                              style: TextStyle(
-                                color: theme.colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                            TextSpan(
-                              text: settlement['to'],
-                              style: TextStyle(
-                                color: theme.colorScheme.primary,
-                              ),
-                            ),
-                          ],
+                      child: Text(
+                        p.name,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
                     CurrencyDisplay(
-                      value: settlement['amount'],
+                      value: total,
                       currency: trip.currency,
                       valueFontSize: 14.0,
                       currencyFontSize: 12.0,
                       alignment: MainAxisAlignment.end,
                       showDecimals: true,
-                      color: theme.colorScheme.error,
                     ),
                   ],
                 ),
               );
             }),
-        ],
+
+            const SizedBox(height: 24),
+
+            // Sezione Pareggia
+            Text(
+              loc.get('settlement'),
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 12),
+
+            if (settlements.isEmpty)
+              // Messaggio se tutto è a posto
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.check_circle_outline,
+                      color: theme.colorScheme.primary,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        loc.get('all_balanced'),
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.primary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            else
+              // Lista dei pareggi
+              ...settlements.map((settlement) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  child: Row(
+                    children: [
+                      // Avatar con icona freccia
+                      CircleAvatar(
+                        radius: 14,
+                        backgroundColor: theme.colorScheme.error
+                            .withAlpha((0.1 * 255).toInt()),
+                        child: Icon(
+                          Icons.arrow_forward,
+                          size: 16,
+                          color: theme.colorScheme.error,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: RichText(
+                          text: TextSpan(
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w500,
+                            ),
+                            children: [
+                              TextSpan(
+                                text: settlement['from'],
+                                style: TextStyle(
+                                  color: theme.colorScheme.error,
+                                ),
+                              ),
+                              TextSpan(
+                                text: loc.get('owes_to'),
+                                style: TextStyle(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                              TextSpan(
+                                text: settlement['to'],
+                                style: TextStyle(
+                                  color: theme.colorScheme.primary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      CurrencyDisplay(
+                        value: settlement['amount'],
+                        currency: trip.currency,
+                        valueFontSize: 14.0,
+                        currencyFontSize: 12.0,
+                        alignment: MainAxisAlignment.end,
+                        showDecimals: true,
+                        color: theme.colorScheme.error,
+                      ),
+                    ],
+                  ),
+                );
+              }),
+          ],
+        ),
       ),
     );
   }

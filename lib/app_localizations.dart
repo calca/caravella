@@ -173,6 +173,7 @@ class AppLocalizations {
       'no_expenses_for_statistics': 'No expenses available for statistics',
       'settlement': 'Settlement',
       'all_balanced': 'All accounts are balanced!',
+      'owes_to': ' owes ',
       // Export CSV
       'export_csv': 'Export CSV',
       'no_expenses_to_export': 'No expenses to export',
@@ -359,6 +360,7 @@ class AppLocalizations {
       'average_expense': 'Spesa media',
       'settlement': 'Pareggia',
       'all_balanced': 'Tutti i conti sono pari!',
+      'owes_to': ' deve dare a ',
       // Welcome section v3 - Clean design
       'welcome_v3_title': 'Organizza.\nCondividi.\nBilancia.\n ',
       'welcome_v3_cta': 'Inizia!',
