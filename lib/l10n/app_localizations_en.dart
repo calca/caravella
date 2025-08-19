@@ -9,7 +9,8 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get settings_flag_secure_desc => 'Prevents screenshots and screen recording';
+  String get settings_flag_secure_desc =>
+      'Prevents screenshots and screen recording';
 
   @override
   String get settings_flag_secure_title => 'Secure screen';
@@ -54,7 +55,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get no_active_groups => 'No active groups';
 
   @override
-  String get no_active_groups_subtitle => 'Create your first expense group to get started';
+  String get no_active_groups_subtitle =>
+      'Create your first expense group to get started';
 
   @override
   String get create_first_group => 'Create first group';
@@ -162,7 +164,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get delete_trip => 'Delete trip';
 
   @override
-  String get delete_trip_confirm => 'Are you sure you want to delete this trip?';
+  String get delete_trip_confirm =>
+      'Are you sure you want to delete this trip?';
 
   @override
   String get cancel => 'Cancel';
@@ -206,10 +209,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get note_hint => 'Add a note (optional)';
 
   @override
-  String get select_both_dates => 'If you select one date, you must select both';
+  String get select_both_dates =>
+      'If you select one date, you must select both';
 
   @override
-  String get select_both_dates_or_none => 'Select both dates or leave both empty';
+  String get select_both_dates_or_none =>
+      'Select both dates or leave both empty';
 
   @override
   String get end_date_after_start => 'End date must be after start date';
@@ -392,7 +397,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get delete_group => 'Delete group';
 
   @override
-  String get delete_group_confirm => 'Are you sure you want to delete this expense group? This action cannot be undone.';
+  String get delete_group_confirm =>
+      'Are you sure you want to delete this expense group? This action cannot be undone.';
 
   @override
   String get add_expense_fab => 'Add Expense';
@@ -431,7 +437,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get per_day => '/day';
 
   @override
-  String get no_expenses_for_statistics => 'No expenses available for statistics';
+  String get no_expenses_for_statistics =>
+      'No expenses available for statistics';
 
   @override
   String get settlement => 'Settlement';

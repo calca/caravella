@@ -22,7 +22,7 @@ class AppLocalizations {
   }
 
   static AppLocalizations of(BuildContext context) =>
-      AppLocalizations(gen.AppLocalizations.of(context)!);
+      AppLocalizations(gen.AppLocalizations.of(context));
 
   String get locale => _delegate.localeName;
 

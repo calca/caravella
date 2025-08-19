@@ -9,7 +9,8 @@ class AppLocalizationsIt extends AppLocalizations {
   AppLocalizationsIt([String locale = 'it']) : super(locale);
 
   @override
-  String get settings_flag_secure_desc => 'Impedisce screenshot e registrazione schermo';
+  String get settings_flag_secure_desc =>
+      'Impedisce screenshot e registrazione schermo';
 
   @override
   String get settings_flag_secure_title => 'Proteggi schermata';
@@ -54,7 +55,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get no_active_groups => 'Nessun gruppo attivo';
 
   @override
-  String get no_active_groups_subtitle => 'Crea il primo gruppo di spese per iniziare';
+  String get no_active_groups_subtitle =>
+      'Crea il primo gruppo di spese per iniziare';
 
   @override
   String get create_first_group => 'Crea primo gruppo';
@@ -162,7 +164,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get delete_trip => 'Elimina viaggio';
 
   @override
-  String get delete_trip_confirm => 'Sei sicuro di voler eliminare questo viaggio?';
+  String get delete_trip_confirm =>
+      'Sei sicuro di voler eliminare questo viaggio?';
 
   @override
   String get cancel => 'Annulla';
@@ -206,13 +209,16 @@ class AppLocalizationsIt extends AppLocalizations {
   String get note_hint => 'Aggiungi una nota (opzionale)';
 
   @override
-  String get select_both_dates => 'Se selezioni una data, devi selezionare entrambe';
+  String get select_both_dates =>
+      'Se selezioni una data, devi selezionare entrambe';
 
   @override
-  String get select_both_dates_or_none => 'Seleziona entrambe le date o lascia entrambe vuote';
+  String get select_both_dates_or_none =>
+      'Seleziona entrambe le date o lascia entrambe vuote';
 
   @override
-  String get end_date_after_start => 'La data di fine deve essere successiva a quella di inizio';
+  String get end_date_after_start =>
+      'La data di fine deve essere successiva a quella di inizio';
 
   @override
   String get start_date_optional => 'Dal';
@@ -329,13 +335,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get all => 'TUTTI';
 
   @override
-  String get search_groups => 'Search groups...';
+  String get search_groups => 'Cerca gruppi...';
 
   @override
-  String get no_search_results => 'No groups found for';
+  String get no_search_results => 'Nessun gruppo trovato per';
 
   @override
-  String get try_different_search => 'Try searching with different words';
+  String get try_different_search => 'Prova a cercare con parole diverse';
 
   @override
   String get active => 'Attivo';
@@ -392,7 +398,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get delete_group => 'Elimina gruppo';
 
   @override
-  String get delete_group_confirm => 'Sei sicuro di voler eliminare questo gruppo di spese? Questa azione non può essere annullata.';
+  String get delete_group_confirm =>
+      'Sei sicuro di voler eliminare questo gruppo di spese? Questa azione non può essere annullata.';
 
   @override
   String get add_expense_fab => 'Aggiungi Spesa';
@@ -431,7 +438,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get per_day => '/giorno';
 
   @override
-  String get no_expenses_for_statistics => 'Nessuna spesa disponibile per le statistiche';
+  String get no_expenses_for_statistics =>
+      'Nessuna spesa disponibile per le statistiche';
 
   @override
   String get settlement => 'Pareggia';
