@@ -5,6 +5,7 @@ import '../../../widgets/currency_display.dart';
 import '../../../state/locale_notifier.dart';
 import 'widgets/daily_expenses_chart.dart';
 import 'widgets/categories_pie_chart.dart';
+import 'widgets/daily_average_by_category.dart';
 
 /// Unified overview tab that combines the functionality of both OverviewTab and StatisticsTab.
 /// Shows exactly 2 charts (daily expenses and categories pie chart) plus settlement information.
@@ -237,6 +238,14 @@ class UnifiedOverviewTab extends StatelessWidget {
               loc: loc,
             ),
             
+            const SizedBox(height: 32),
+
+            // Daily average by category
+            DailyAverageByCategoryWidget(
+              trip: trip,
+              loc: loc,
+            ),
+
             const SizedBox(height: 32),
 
             // Sezione partecipanti
