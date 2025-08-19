@@ -342,102 +342,102 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
               ),
               const SizedBox(height: 16),
 
-              // PAID BY (chip) con status
-              _buildFieldWithStatus(
-                ParticipantSelectorWidget(
-                  participants: widget.participants.map((p) => p.name).toList(),
-                  selectedParticipant: _paidBy?.name,
-                  onParticipantSelected: (selectedName) {
-                    setState(() {
-                      _paidBy = widget.participants.firstWhere(
-                        (p) => p.name == selectedName,
-                        orElse: () => widget.participants.isNotEmpty
-                            ? widget.participants.first
-                            : ExpenseParticipant(name: ''),
-                      );
-                      _paidByTouched = true;
-                      _isDirty = true;
-                    });
-                  },
-                  loc: loc,
-                  textStyle: smallStyle,
-                ),
-                _isPaidByValid,
-                _paidByTouched,
-              ),
-              const SizedBox(height: 16),
-
-              // CATEGORIE con status
-              _buildFieldWithStatus(
-                CategorySelectorWidget(
-                  categories: _categories,
-                  selectedCategory: _category,
-                  onCategorySelected: (selected) {
-                    setState(() {
-                      _category = selected;
-                      _categoryTouched = true;
-                      _isDirty = true;
-                    });
-                  },
-                  onAddCategory: () async {
-                    final newCategoryName = await CategoryDialog.show(
-                      context: context,
-                      loc: loc,
-                    );
-                    if (newCategoryName != null && newCategoryName.isNotEmpty) {
-                      // Prima notifica al parent tramite callback
-                      widget.onCategoryAdded(newCategoryName);
-
-                      // Aggiorna immediatamente la lista locale se la categoria è già presente
-                      final found = widget.categories.firstWhere(
-                        (c) => c.name == newCategoryName,
-                        orElse: () => widget.categories.isNotEmpty
-                            ? widget.categories.first
-                            : ExpenseCategory(
-                                name: '',
-                                id: '',
-                                createdAt: DateTime(2000),
-                              ),
-                      );
-                      setState(() {
-                        if (!_categories.contains(found)) {
-                          _categories.add(found);
-                          _category = found;
-                          _categoryTouched = true;
-                          _isDirty = true;
-                        }
-                      });
-
-                      // Aspetta un momento per permettere al parent di elaborare
-                      await Future.delayed(const Duration(milliseconds: 100));
-
-                      // Verifica se la categoria è stata aggiunta alla lista del parent
-                      final foundAfter = widget.categories.firstWhere(
-                        (c) => c.name == newCategoryName,
-                        orElse: () => widget.categories.isNotEmpty
-                            ? widget.categories.first
-                            : ExpenseCategory(
-                                name: '',
-                                id: '',
-                                createdAt: DateTime(2000),
-                              ),
-                      );
-                      setState(() {
-                        _categories = List.from(widget.categories);
-                        _category = foundAfter;
-                        _categoryTouched = true;
-                        _isDirty = true;
-                      });
-
-                      // Scroll automatico alla fine non più necessario: bottom sheet gestisce la selezione.
-                    }
-                  },
-                  loc: loc,
-                  // registerScrollToEnd rimosso con nuovo CategorySelectorWidget.
-                  textStyle: smallStyle,
-                ),
-                _isCategoryValid,
-                _categoryTouched,
+              // PAID BY + CATEGORY sulla stessa riga
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: _buildFieldWithStatus(
+                      ParticipantSelectorWidget(
+                        participants:
+                            widget.participants.map((p) => p.name).toList(),
+                        selectedParticipant: _paidBy?.name,
+                        onParticipantSelected: (selectedName) {
+                          setState(() {
+                            _paidBy = widget.participants.firstWhere(
+                              (p) => p.name == selectedName,
+                              orElse: () => widget.participants.isNotEmpty
+                                  ? widget.participants.first
+                                  : ExpenseParticipant(name: ''),
+                            );
+                            _paidByTouched = true;
+                            _isDirty = true;
+                          });
+                        },
+                        loc: loc,
+                        textStyle: smallStyle,
+                      ),
+                      _isPaidByValid,
+                      _paidByTouched,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _buildFieldWithStatus(
+                      CategorySelectorWidget(
+                        categories: _categories,
+                        selectedCategory: _category,
+                        onCategorySelected: (selected) {
+                          setState(() {
+                            _category = selected;
+                            _categoryTouched = true;
+                            _isDirty = true;
+                          });
+                        },
+                        onAddCategory: () async {
+                          final newCategoryName = await CategoryDialog.show(
+                            context: context,
+                            loc: loc,
+                          );
+                          if (newCategoryName != null &&
+                              newCategoryName.isNotEmpty) {
+                            widget.onCategoryAdded(newCategoryName);
+                            final found = widget.categories.firstWhere(
+                              (c) => c.name == newCategoryName,
+                              orElse: () => widget.categories.isNotEmpty
+                                  ? widget.categories.first
+                                  : ExpenseCategory(
+                                      name: '',
+                                      id: '',
+                                      createdAt: DateTime(2000),
+                                    ),
+                            );
+                            setState(() {
+                              if (!_categories.contains(found)) {
+                                _categories.add(found);
+                                _category = found;
+                                _categoryTouched = true;
+                                _isDirty = true;
+                              }
+                            });
+                            await Future.delayed(
+                                const Duration(milliseconds: 100));
+                            final foundAfter = widget.categories.firstWhere(
+                              (c) => c.name == newCategoryName,
+                              orElse: () => widget.categories.isNotEmpty
+                                  ? widget.categories.first
+                                  : ExpenseCategory(
+                                      name: '',
+                                      id: '',
+                                      createdAt: DateTime(2000),
+                                    ),
+                            );
+                            setState(() {
+                              _categories = List.from(widget.categories);
+                              _category = foundAfter;
+                              _categoryTouched = true;
+                              _isDirty = true;
+                            });
+                          }
+                        },
+                        loc: loc,
+                        textStyle: smallStyle,
+                      ),
+                      _isCategoryValid,
+                      _categoryTouched,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
 

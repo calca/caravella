@@ -23,7 +23,7 @@ class CategorySelectorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return FilledButton(
+  return FilledButton(
       style: FilledButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         backgroundColor: theme.colorScheme.primary,
@@ -50,15 +50,16 @@ class CategorySelectorWidget extends StatelessWidget {
         children: [
           Icon(Icons.category, size: 20, color: theme.colorScheme.onPrimary),
           const SizedBox(width: 8),
-          Text(
-            selectedCategory?.name ?? loc.get('category_placeholder'),
-            style: (textStyle ?? theme.textTheme.bodyMedium)?.copyWith(
-              color: theme.colorScheme.onPrimary,
-              fontWeight: FontWeight.w600,
+          Flexible(
+            child: Text(
+              selectedCategory?.name ?? loc.get('category_placeholder'),
+              overflow: TextOverflow.ellipsis,
+              style: (textStyle ?? theme.textTheme.bodyMedium)?.copyWith(
+                color: theme.colorScheme.onPrimary,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
-          const SizedBox(width: 8),
-          Icon(Icons.expand_more, size: 20, color: theme.colorScheme.onPrimary),
         ],
       ),
     );

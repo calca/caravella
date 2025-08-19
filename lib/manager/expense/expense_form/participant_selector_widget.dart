@@ -21,7 +21,7 @@ class ParticipantSelectorWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final selected = selectedParticipant;
-    return FilledButton(
+  return FilledButton(
       style: FilledButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         backgroundColor: theme.colorScheme.primary,
@@ -46,15 +46,16 @@ class ParticipantSelectorWidget extends StatelessWidget {
         children: [
           Icon(Icons.person, size: 20, color: theme.colorScheme.onPrimary),
           const SizedBox(width: 8),
-          Text(
-            selected ?? loc.get('participants_label'),
-            style: (textStyle ?? theme.textTheme.bodyMedium)?.copyWith(
-              color: theme.colorScheme.onPrimary,
-              fontWeight: FontWeight.w600,
+          Flexible(
+            child: Text(
+              selected ?? loc.get('participants_label'),
+              overflow: TextOverflow.ellipsis,
+              style: (textStyle ?? theme.textTheme.bodyMedium)?.copyWith(
+                color: theme.colorScheme.onPrimary,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
-          const SizedBox(width: 8),
-          Icon(Icons.expand_more, size: 20, color: theme.colorScheme.onPrimary),
         ],
       ),
     );
