@@ -113,8 +113,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   void initState() {
     super.initState();
     _loadTrip();
-  _scrollController = ScrollController();
-  _scrollController.addListener(_onScroll);
+    _scrollController = ScrollController();
+    _scrollController.addListener(_onScroll);
   }
 
   @override
@@ -134,9 +134,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     // Rimuovi il listener in modo sicuro
     _groupNotifier?.removeListener(_onGroupChanged);
     _groupNotifier = null;
-  _scrollController.removeListener(_onScroll);
-  _scrollController.dispose();
-  _fabIdleTimer?.cancel();
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    _fabIdleTimer?.cancel();
     super.dispose();
   }
 
@@ -564,7 +564,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       _fabIdleTimer?.cancel();
     }
   }
-  
+
   Widget _buildAnimatedFab(AppLocalizations loc, ColorScheme colorScheme) {
     if (_trip?.archived == true) return const SizedBox.shrink();
 
@@ -694,7 +694,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                 ),
               ),
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 24, 16, 0),
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -726,7 +726,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           ),
         ],
       ),
-  floatingActionButton: _buildAnimatedFab(loc, colorScheme),
+      floatingActionButton: _buildAnimatedFab(loc, colorScheme),
     );
   }
 }

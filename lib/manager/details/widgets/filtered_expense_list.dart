@@ -96,7 +96,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
       children: [
         // Filter Header with Toggle
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           child: Row(
             children: [
               Expanded(
