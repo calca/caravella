@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 
 class SectionFlatChildren {
   static List<Widget> basicInfo({
@@ -17,7 +18,7 @@ class SectionFlatChildren {
       Row(
         children: [
           Text(
-            loc.get('group_name'),
+            gen.AppLocalizations.of(context).group_name,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -44,8 +45,8 @@ class SectionFlatChildren {
             borderSide: BorderSide(width: 2),
           ),
         ),
-        validator: (v) =>
-            v == null || v.isEmpty ? loc.get('enter_title') : null,
+    validator: (v) =>
+      v == null || v.isEmpty ? gen.AppLocalizations.of(context).enter_title : null,
         onChanged: (_) => onChanged(),
       ),
       if (showError && dateError != null)

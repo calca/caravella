@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../data/expense_category.dart';
 import 'section_list_tile.dart';
 import 'selection_tile.dart';
@@ -28,7 +29,7 @@ class CategoriesSection extends StatelessWidget {
         Row(
           children: [
             Text(
-              loc.get('categories'),
+              gen.AppLocalizations.of(context).categories,
               style: Theme.of(context)
                   .textTheme
                   .titleMedium
@@ -55,13 +56,13 @@ class CategoriesSection extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: Text(loc.get('edit_category')),
+                  title: Text(gen.AppLocalizations.of(context).edit_category),
                   content: TextField(
                     controller: editController,
                     autofocus: true,
                     decoration: InputDecoration(
-                      labelText: loc.get('category_name'),
-                      hintText: loc.get('category_name_hint'),
+                      labelText: gen.AppLocalizations.of(context).category_name,
+                      hintText: gen.AppLocalizations.of(context).category_name_hint,
                     ),
                     onSubmitted: (val) {
                       if (val.trim().isNotEmpty) {
@@ -73,7 +74,7 @@ class CategoriesSection extends StatelessWidget {
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      child: Text(loc.get('cancel')),
+                      child: Text(gen.AppLocalizations.of(context).cancel),
                     ),
                     TextButton(
                       onPressed: () {
@@ -83,7 +84,7 @@ class CategoriesSection extends StatelessWidget {
                           Navigator.of(context).pop();
                         }
                       },
-                      child: Text(loc.get('save')),
+                      child: Text(gen.AppLocalizations.of(context).save),
                     ),
                   ],
                 ),
@@ -96,20 +97,20 @@ class CategoriesSection extends StatelessWidget {
           padding: const EdgeInsets.only(top: 8.0),
           child: SelectionTile(
               leading: const Icon(Icons.add),
-              title: loc.get('add_category'),
+              title: gen.AppLocalizations.of(context).add_category,
               onTap: () {
                 final TextEditingController categoryController =
                     TextEditingController();
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: Text(loc.get('add_category')),
+                    title: Text(gen.AppLocalizations.of(context).add_category),
                     content: TextField(
                       controller: categoryController,
                       autofocus: true,
                       decoration: InputDecoration(
-                        labelText: loc.get('category_name'),
-                        hintText: loc.get('category_name_hint'),
+                        labelText: gen.AppLocalizations.of(context).category_name,
+                        hintText: gen.AppLocalizations.of(context).category_name_hint,
                       ),
                       onSubmitted: (val) {
                         if (val.trim().isNotEmpty) {
@@ -121,7 +122,7 @@ class CategoriesSection extends StatelessWidget {
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        child: Text(loc.get('cancel')),
+                        child: Text(gen.AppLocalizations.of(context).cancel),
                       ),
                       TextButton(
                         onPressed: () {
@@ -131,7 +132,7 @@ class CategoriesSection extends StatelessWidget {
                             Navigator.of(context).pop();
                           }
                         },
-                        child: Text(loc.get('add')),
+                        child: Text(gen.AppLocalizations.of(context).add),
                       ),
                     ],
                   ),

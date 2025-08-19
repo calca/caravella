@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import 'date_card.dart';
 
 class SectionPeriod extends StatelessWidget {
@@ -27,7 +28,7 @@ class SectionPeriod extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              loc.get('dates'),
+              gen.AppLocalizations.of(context).dates,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),

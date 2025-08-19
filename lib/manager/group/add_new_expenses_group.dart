@@ -16,6 +16,7 @@ import '../../data/expense_participant.dart';
 import '../../data/expense_category.dart';
 import '../../../data/expense_group_storage.dart';
 import '../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../state/expense_group_notifier.dart';
 import '../../widgets/caravella_app_bar.dart';
 import 'widgets/section_period.dart';
@@ -44,7 +45,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (BuildContext context) {
-        final loc = AppLocalizations.of(context);
+  final gloc = gen.AppLocalizations.of(context);
         return SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(
@@ -56,7 +57,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    loc.get('select_currency'),
+                    gloc.select_currency,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 16),
@@ -200,7 +201,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   }
 
   Future<void> _pickDate(BuildContext context, bool isStart) async {
-    final loc = AppLocalizations.of(context);
+  final gloc = gen.AppLocalizations.of(context);
     final now = DateTime.now();
     final firstDate = DateTime(now.year - 5);
     final lastDate = DateTime(now.year + 5);
@@ -229,12 +230,10 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       initialDate: initialDate,
       firstDate: firstDate,
       lastDate: lastDate,
-      helpText: isStart
-          ? loc.get('select_from_date')
-          : loc.get('select_to_date'),
-      cancelText: loc.get('cancel'),
-      confirmText: loc.get('ok'),
-      locale: Locale(loc.locale),
+  helpText: isStart ? gloc.select_from_date : gloc.select_to_date,
+  cancelText: gloc.cancel,
+  confirmText: gloc.ok,
+  locale: Locale(Localizations.localeOf(context).languageCode),
       selectableDayPredicate: isSelectable,
     );
     if (picked != null) {
@@ -260,7 +259,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   }
 
   Future<void> _saveTrip() async {
-    final loc = AppLocalizations.of(context);
+  final gloc = gen.AppLocalizations.of(context);
     if (!mounted) return;
     setState(() {
       _dateError = null;
@@ -275,15 +274,9 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
     if ((_startDate != null && _endDate == null) ||
         (_startDate == null && _endDate != null)) {
       if (!mounted) return;
-      setState(() {
-        _dateError = loc.get('select_both_dates');
-      });
+  setState(() { _dateError = gloc.select_both_dates; });
       if (!mounted) return;
-      AppToast.show(
-        context,
-        loc.get('select_both_dates'),
-        type: ToastType.error,
-      );
+  AppToast.show(context, gloc.select_both_dates, type: ToastType.error);
       return;
     }
 
@@ -291,23 +284,13 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
     if (_startDate != null &&
         _endDate != null &&
         _endDate!.isBefore(_startDate!)) {
-      setState(() {
-        _dateError = loc.get('end_date_after_start');
-      });
-      AppToast.show(
-        context,
-        loc.get('end_date_after_start'),
-        type: ToastType.error,
-      );
+  setState(() { _dateError = gloc.end_date_after_start; });
+  AppToast.show(context, gloc.end_date_after_start, type: ToastType.error);
       return;
     }
 
     if (_participants.isEmpty) {
-      AppToast.show(
-        context,
-        loc.get('enter_participant'),
-        type: ToastType.error,
-      );
+  AppToast.show(context, gloc.enter_participant, type: ToastType.error);
       return;
     }
 
@@ -465,7 +448,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   }
 
   void _showImagePickerDialog() {
-    final loc = AppLocalizations.of(context);
+  final gloc = gen.AppLocalizations.of(context);
 
     showModalBottomSheet(
       context: context,
@@ -484,7 +467,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
               children: [
                 ListTile(
                   leading: const Icon(Icons.photo_library),
-                  title: Text(loc.get('from_gallery')),
+                  title: Text(gloc.from_gallery),
                   onTap: () {
                     Navigator.of(context).pop();
                     _pickImage(ImageSource.gallery);
@@ -492,7 +475,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 ),
                 ListTile(
                   leading: const Icon(Icons.photo_camera),
-                  title: Text(loc.get('from_camera')),
+                  title: Text(gloc.from_camera),
                   onTap: () {
                     Navigator.of(context).pop();
                     _pickImage(ImageSource.camera);
@@ -501,7 +484,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 if (_selectedImageFile != null)
                   ListTile(
                     leading: const Icon(Icons.delete),
-                    title: Text(loc.get('remove_image')),
+                    title: Text(gloc.remove_image),
                     onTap: () {
                       Navigator.of(context).pop();
                       _removeImage();
@@ -527,7 +510,8 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
 
   @override
   Widget build(BuildContext context) {
-    final loc = AppLocalizations.of(context);
+  final gloc = gen.AppLocalizations.of(context);
+  final loc = AppLocalizations(gloc); // bridge instance for children expecting old API
     return GestureDetector(
       onTap: _unfocusAll,
       behavior: HitTestBehavior.translucent,
@@ -537,21 +521,21 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
             if (widget.trip != null)
               IconButton(
                 icon: const Icon(Icons.delete),
-                tooltip: loc.get('delete'),
+                tooltip: gloc.delete,
                 onPressed: () async {
                   final confirm = await showDialog<bool>(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: Text(loc.get('delete_trip')),
-                      content: Text(loc.get('delete_trip_confirm')),
+                      title: Text(gloc.delete_trip),
+                      content: Text(gloc.delete_trip_confirm),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.of(context).pop(false),
-                          child: Text(loc.get('cancel')),
+                          child: Text(gloc.cancel),
                         ),
                         TextButton(
                           onPressed: () => Navigator.of(context).pop(true),
-                          child: Text(loc.get('delete')),
+                          child: Text(gloc.delete),
                         ),
                       ],
                     ),
@@ -579,8 +563,8 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 // Titolo principale dinamico
                 Text(
                   widget.trip != null
-                      ? loc.get('edit_group')
-                      : loc.get('new_group'),
+                      ? gloc.edit_group
+                      : gloc.new_group,
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -595,7 +579,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                     Row(
                       children: [
                         Text(
-                          loc.get('group_name'),
+                          gloc.group_name,
                           style: Theme.of(context).textTheme.titleLarge
                               ?.copyWith(fontWeight: FontWeight.w600),
                         ),
@@ -625,7 +609,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                         ),
                       ),
                       validator: (v) => v == null || v.isEmpty
-                          ? loc.get('enter_title')
+                          ? gloc.enter_title
                           : null,
                       onChanged: (value) {
                         setState(() {});
@@ -718,7 +702,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          loc.get('currency'),
+                          gloc.currency,
                           style: Theme.of(context).textTheme.titleMedium
                               ?.copyWith(fontWeight: FontWeight.w600),
                         ),
@@ -752,7 +736,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          loc.get('image'),
+                          gloc.image,
                           style: Theme.of(context).textTheme.titleMedium
                               ?.copyWith(fontWeight: FontWeight.w600),
                         ),
@@ -769,14 +753,13 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                   ),
                                 ),
                                 builder: (BuildContext context) {
-                                  final loc = AppLocalizations.of(context);
                                   return SafeArea(
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         ListTile(
                                           leading: const Icon(Icons.edit),
-                                          title: Text(loc.get('change_image')),
+                                          title: Text(gloc.change_image),
                                           onTap: () {
                                             Navigator.of(context).pop();
                                             _showImagePickerDialog();
@@ -784,7 +767,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                         ),
                                         ListTile(
                                           leading: const Icon(Icons.delete),
-                                          title: Text(loc.get('remove_image')),
+                                          title: Text(gloc.remove_image),
                                           onTap: () {
                                             Navigator.of(context).pop();
                                             _removeImage();
@@ -847,7 +830,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                     children: [
                                       Text(
                                         _selectedImageFile == null
-                                            ? loc.get('select_image')
+                                            ? gloc.select_image
                                             : 'Modifica Immagine',
                                         style: Theme.of(
                                           context,
@@ -889,7 +872,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                       width: double.infinity,
                       child: OutlinedButton(
                         onPressed: () => Navigator.of(context).pop(false),
-                        child: Text(loc.get('cancel')),
+                        child: Text(gloc.cancel),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -898,7 +881,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                       width: double.infinity,
                       child: OutlinedButton(
                         onPressed: _isFormValid() ? _saveTrip : null,
-                        child: Text(loc.get('save')),
+                        child: Text(gloc.save),
                       ),
                     ),
                   ],

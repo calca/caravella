@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../data/expense_participant.dart';
 import 'section_list_tile.dart';
 import 'selection_tile.dart';
@@ -30,7 +31,7 @@ class ParticipantsSection extends StatelessWidget {
         Row(
           children: [
             Text(
-              loc.get('participants'),
+              gen.AppLocalizations.of(context).participants,
               style: Theme.of(context)
                   .textTheme
                   .titleMedium
@@ -57,13 +58,13 @@ class ParticipantsSection extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: Text(loc.get('edit_participant')),
+                  title: Text(gen.AppLocalizations.of(context).edit_participant),
                   content: TextField(
                     controller: editController,
                     autofocus: true,
                     decoration: InputDecoration(
-                      labelText: loc.get('participant_name'),
-                      hintText: loc.get('participant_name_hint'),
+                      labelText: gen.AppLocalizations.of(context).participant_name,
+                      hintText: gen.AppLocalizations.of(context).participant_name_hint,
                     ),
                     onSubmitted: (val) {
                       if (val.trim().isNotEmpty) {
@@ -75,7 +76,7 @@ class ParticipantsSection extends StatelessWidget {
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      child: Text(loc.get('cancel')),
+                      child: Text(gen.AppLocalizations.of(context).cancel),
                     ),
                     TextButton(
                       onPressed: () {
@@ -85,7 +86,7 @@ class ParticipantsSection extends StatelessWidget {
                           Navigator.of(context).pop();
                         }
                       },
-                      child: Text(loc.get('save')),
+                      child: Text(gen.AppLocalizations.of(context).save),
                     ),
                   ],
                 ),
@@ -98,18 +99,18 @@ class ParticipantsSection extends StatelessWidget {
           padding: const EdgeInsets.only(top: 8.0),
           child: SelectionTile(
             leading: const Icon(Icons.add),
-            title: loc.get('add_participant'),
+            title: gen.AppLocalizations.of(context).add_participant,
             onTap: () {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: Text(loc.get('add_participant')),
+                  title: Text(gen.AppLocalizations.of(context).add_participant),
                   content: TextField(
                     controller: participantController,
                     autofocus: true,
                     decoration: InputDecoration(
-                      labelText: loc.get('participant_name'),
-                      hintText: loc.get('participant_name_hint'),
+                      labelText: gen.AppLocalizations.of(context).participant_name,
+                      hintText: gen.AppLocalizations.of(context).participant_name_hint,
                     ),
                     onSubmitted: (val) {
                       if (val.trim().isNotEmpty) {
@@ -122,7 +123,7 @@ class ParticipantsSection extends StatelessWidget {
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      child: Text(loc.get('cancel')),
+                      child: Text(gen.AppLocalizations.of(context).cancel),
                     ),
                     TextButton(
                       onPressed: () {
@@ -133,7 +134,7 @@ class ParticipantsSection extends StatelessWidget {
                           Navigator.of(context).pop();
                         }
                       },
-                      child: Text(loc.get('add')),
+                      child: Text(gen.AppLocalizations.of(context).add),
                     ),
                   ],
                 ),
