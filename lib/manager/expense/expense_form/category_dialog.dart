@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 
 class CategoryDialog {
   static Future<String?> show({
@@ -11,12 +12,12 @@ class CategoryDialog {
     return showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(loc.get('add_category')),
+  title: Text(gen.AppLocalizations.of(context).add_category),
         content: TextField(
           controller: controller,
           autofocus: true,
           decoration: InputDecoration(
-            labelText: loc.get('category_name'),
+            labelText: gen.AppLocalizations.of(context).category_name,
           ),
           onSubmitted: (val) {
             if (val.trim().isNotEmpty) {
@@ -27,7 +28,7 @@ class CategoryDialog {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text(loc.get('cancel')),
+            child: Text(gen.AppLocalizations.of(context).cancel),
           ),
           TextButton(
             onPressed: () {
@@ -36,7 +37,7 @@ class CategoryDialog {
                 Navigator.of(context).pop(val);
               }
             },
-            child: Text(loc.get('add')),
+            child: Text(gen.AppLocalizations.of(context).add),
           ),
         ],
       ),

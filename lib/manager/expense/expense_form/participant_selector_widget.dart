@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../widgets/selection_bottom_sheet.dart';
 
 class ParticipantSelectorWidget extends StatelessWidget {
@@ -54,7 +55,7 @@ class ParticipantSelectorWidget extends StatelessWidget {
           const SizedBox(width: 8),
           Flexible(
             child: Text(
-              selected ?? loc.get('participants_label'),
+              selected ?? gen.AppLocalizations.of(context).participants_label,
               overflow: TextOverflow.ellipsis,
               style: (textStyle ?? theme.textTheme.bodyMedium)?.copyWith(
                 color: theme.colorScheme.onSurface,

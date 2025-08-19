@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 
 class NoteInputWidget extends StatelessWidget {
   final TextEditingController controller;
@@ -21,7 +22,7 @@ class NoteInputWidget extends StatelessWidget {
         Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            loc.get('note'),
+            gen.AppLocalizations.of(context).note,
             style: textStyle ?? Theme.of(context).textTheme.bodySmall,
           ),
         ),
@@ -32,7 +33,7 @@ class NoteInputWidget extends StatelessWidget {
           minLines: 4, // minimo 4 righe visibili
           style: textStyle ?? Theme.of(context).textTheme.bodySmall,
           decoration: InputDecoration(
-            hintText: loc.get('note_hint'),
+            hintText: gen.AppLocalizations.of(context).note_hint,
             hintStyle: textStyle?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ) ??
