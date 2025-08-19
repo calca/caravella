@@ -15,14 +15,13 @@ import '../../data/expense_group_storage.dart';
 import '../../app_localizations.dart';
 import '../../state/locale_notifier.dart';
 import '../../widgets/app_toast.dart';
-import 'tabs/overview_tab.dart';
 import 'widgets/group_header.dart';
 import 'widgets/group_actions.dart';
 import 'widgets/group_total.dart';
 import 'widgets/expense_list.dart';
 import 'widgets/filtered_expense_list.dart';
 import 'widgets/empty_expenses.dart';
-import 'widgets/statistics_sheet.dart';
+import 'widgets/unified_overview_sheet.dart';
 import 'widgets/options_sheet.dart';
 import 'widgets/expense_form_sheet.dart';
 import 'widgets/edit_expense_sheet.dart';
@@ -180,60 +179,12 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     }
   }
 
-  void _showOverviewSheet() {
-    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    final loc = AppLocalizations(locale);
+  void _showUnifiedOverviewSheet() {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.7,
-        maxChildSize: 0.9,
-        minChildSize: 0.3,
-        builder: (context, scrollController) => Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          child: Column(
-            children: [
-              Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.symmetric(vertical: 8),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.outline,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Text(
-                  loc.get('overview'),
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  padding: const EdgeInsets.all(16),
-                  child: OverviewTab(trip: _trip!),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _showStatisticsSheet() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => StatisticsSheet(trip: _trip!),
+      builder: (context) => UnifiedOverviewSheet(trip: _trip!),
     );
   }
 
@@ -612,10 +563,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                       GroupActions(
                         hasExpenses: trip.expenses.isNotEmpty,
                         onOverview: trip.expenses.isNotEmpty
-                            ? _showOverviewSheet
-                            : null,
-                        onStatistics: trip.expenses.isNotEmpty
-                            ? _showStatisticsSheet
+                            ? _showUnifiedOverviewSheet
                             : null,
                         onOptions: _showOptionsSheet,
                       ),
