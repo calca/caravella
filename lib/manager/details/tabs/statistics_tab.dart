@@ -7,6 +7,26 @@ import 'widgets/categories_pie_chart.dart';
 // ...existing code...
 
 class StatisticsTab extends StatelessWidget {
+  final ExpenseGroup trip;
+
+  const StatisticsTab({super.key, required this.trip});
+
+  /// Determines whether to use weekly stats based on trip duration
+  bool _shouldUseWeeklyStats() {
+    // If no dates defined, use weekly
+    if (trip.startDate == null || trip.endDate == null) {
+      return true;
+    }
+    
+    final duration = trip.endDate!.difference(trip.startDate!);
+    // Use weekly if duration > 1 week (7 days)
+    return duration.inDays > 7;
+  }
+
+  /// Gets the appropriate chart title key based on data type
+  String _getChartTitleKey() {
+    return _shouldUseWeeklyStats() ? 'weekly_expenses_chart' : 'daily_expenses_chart';
+  }
   /// Aggrega le spese per settimana (lunedì-domenica)
   Map<DateTime, double> _calculateWeeklyStats() {
     final dailyStats = _calculateDailyStats();
@@ -65,19 +85,22 @@ class StatisticsTab extends StatelessWidget {
       );
     }
 
-    // Calcola le statistiche aggregate per settimana
-    final weeklyStats = _calculateWeeklyStats();
+    // Calcola le statistiche aggregate - daily o weekly in base alla durata
+    final useWeeklyStats = _shouldUseWeeklyStats();
+    final chartStats = useWeeklyStats ? _calculateWeeklyStats() : _calculateDailyStats();
+    final chartTitleKey = _getChartTitleKey();
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Grafico delle spese per giorno
+          // Grafico delle spese per giorno o settimana
           DailyExpensesChart(
             trip: trip,
-            dailyStats: weeklyStats,
+            dailyStats: chartStats,
             loc: loc,
+            titleKey: chartTitleKey,
           ),
 
           const SizedBox(height: 32),

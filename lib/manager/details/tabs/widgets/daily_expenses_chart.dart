@@ -7,12 +7,14 @@ class DailyExpensesChart extends StatelessWidget {
   final ExpenseGroup trip;
   final Map<DateTime, double> dailyStats;
   final AppLocalizations loc;
+  final String titleKey;
 
   const DailyExpensesChart({
     super.key,
     required this.trip,
     required this.dailyStats,
     required this.loc,
+    this.titleKey = 'daily_expenses_chart',
   });
 
   @override
@@ -60,7 +62,7 @@ class DailyExpensesChart extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          loc.get('daily_expenses_chart'),
+          loc.get(titleKey),
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -97,10 +99,21 @@ class DailyExpensesChart extends StatelessWidget {
                           }
 
                           final date = filteredEntries[index].key;
+                          String dateText;
+                          
+                          // If this looks like weekly data (first day of week),
+                          // show week range format, otherwise show day/month
+                          if (titleKey == 'weekly_expenses_chart' && date.weekday == 1) {
+                            final endWeek = date.add(const Duration(days: 6));
+                            dateText = '${date.day}/${date.month}-${endWeek.day}/${endWeek.month}';
+                          } else {
+                            dateText = '${date.day}/${date.month}';
+                          }
+                          
                           return Padding(
                             padding: const EdgeInsets.only(top: 8.0),
                             child: Text(
-                              '${date.day}/${date.month}',
+                              dateText,
                               style: Theme.of(context)
                                   .textTheme
                                   .bodySmall
@@ -177,9 +190,17 @@ class DailyExpensesChart extends StatelessWidget {
 
                           final date = filteredEntries[index].key;
                           final amount = filteredEntries[index].value;
+                          
+                          String dateText;
+                          if (titleKey == 'weekly_expenses_chart' && date.weekday == 1) {
+                            final endWeek = date.add(const Duration(days: 6));
+                            dateText = '${date.day}/${date.month}-${endWeek.day}/${endWeek.month}';
+                          } else {
+                            dateText = '${date.day}/${date.month}';
+                          }
 
                           return LineTooltipItem(
-                            '${date.day}/${date.month}\n${amount.toStringAsFixed(2)} ${trip.currency}',
+                            '$dateText\n${amount.toStringAsFixed(2)} ${trip.currency}',
                             TextStyle(
                               color: Theme.of(context)
                                   .colorScheme
