@@ -332,7 +332,7 @@ class GroupCardContent extends StatelessWidget {
           children: [
             _buildCompactChartIndicator(
               letter: localizations.locale == 'en' ? 'W' : 'S',
-              color: theme.colorScheme.primary,
+              color: theme.colorScheme.onSurfaceVariant,
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -347,7 +347,7 @@ class GroupCardContent extends StatelessWidget {
           children: [
             _buildCompactChartIndicator(
               letter: 'M',
-              color: theme.colorScheme.secondary,
+              color: theme.colorScheme.onSurfaceVariant,
             ),
             const SizedBox(width: 12),
             Expanded(
