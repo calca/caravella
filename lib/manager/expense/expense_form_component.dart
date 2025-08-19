@@ -149,14 +149,14 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   @override
   void didUpdateWidget(covariant ExpenseFormComponent oldWidget) {
     super.didUpdateWidget(oldWidget);
-    
+
     // Aggiorna la lista locale delle categorie se cambiata
     if (widget.categories != oldWidget.categories) {
       setState(() {
         _categories = List.from(widget.categories);
       });
     }
-    
+
     // Se una nuova categoria è stata aggiunta e non è già selezionata, la selezioniamo
     if (widget.newlyAddedCategory != null &&
         (_category == null || widget.newlyAddedCategory != _category!.name)) {
@@ -179,8 +179,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
 
     // Applica la validazione completa prima di salvare
     bool isFormValid = _formKey.currentState!.validate();
-    bool hasCategoryIfRequired =
-        _categories.isNotEmpty ? _category != null : true;
+    bool hasCategoryIfRequired = _categories.isNotEmpty
+        ? _category != null
+        : true;
     bool hasPaidBy = _paidBy != null && _paidBy!.name.isNotEmpty;
 
     final nameValue = _nameController.text.trim();
@@ -189,24 +190,27 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         hasPaidBy &&
         nameValue.isNotEmpty) {
       final expense = ExpenseDetails(
-        category: _category ??
+        category:
+            _category ??
             (_categories.isNotEmpty
                 ? _categories.first
                 : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000))),
         amount: _amount ?? 0,
-        paidBy: _paidBy ??
+        paidBy:
+            _paidBy ??
             (widget.participants.isNotEmpty
                 ? widget.participants.first
                 : ExpenseParticipant(name: '')),
         date: _date ?? DateTime.now(),
-        note:
-            widget.initialExpense != null ? _noteController.text.trim() : null,
+        note: widget.initialExpense != null
+            ? _noteController.text.trim()
+            : null,
         name: nameValue,
         location: _location,
       );
-  widget.onExpenseAdded(expense);
-  // reset dirty (salvato)
-  _isDirty = false;
+      widget.onExpenseAdded(expense);
+      // reset dirty (salvato)
+      _isDirty = false;
 
       // Chiude automaticamente solo se richiesto (per i bottom sheet)
       if (widget.shouldAutoClose && Navigator.of(context).canPop()) {
@@ -262,10 +266,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         borderRadius: BorderRadius.circular(8),
         // Solo sfondo colorato se c'è un errore
         color: isTouched && !isValid
-            ? Theme.of(context)
-                .colorScheme
-                .errorContainer
-                .withValues(alpha: 0.08)
+            ? Theme.of(
+                context,
+              ).colorScheme.errorContainer.withValues(alpha: 0.08)
             : null,
       ),
       child: field,
@@ -296,202 +299,208 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         child: Form(
           key: _formKey,
           child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // CAMPO NOME SPESA (identico a importo, ora AmountInputWidget supporta testo)
-            _buildFieldWithStatus(
-              AmountInputWidget(
-                controller: _nameController,
-                focusNode: _nameFocus,
-                loc: loc,
-                label: loc.get('expense_name'),
-                validator: (v) => v == null || v.trim().isEmpty
-                    ? 'Il nome è obbligatorio'
-                    : null,
-                onSaved: (v) {},
-                onSubmitted: () {},
-                isText: true,
-                textStyle: smallStyle,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // CAMPO NOME SPESA (identico a importo, ora AmountInputWidget supporta testo)
+              _buildFieldWithStatus(
+                AmountInputWidget(
+                  controller: _nameController,
+                  focusNode: _nameFocus,
+                  loc: loc,
+                  label: loc.get('expense_name'),
+                  validator: (v) => v == null || v.trim().isEmpty
+                      ? 'Il nome è obbligatorio'
+                      : null,
+                  onSaved: (v) {},
+                  onSubmitted: () {},
+                  isText: true,
+                  textStyle: smallStyle,
+                ),
+                _nameController.text.trim().isNotEmpty,
+                _amountTouched,
               ),
-              _nameController.text.trim().isNotEmpty,
-              _amountTouched,
-            ),
-            const SizedBox(height: 16),
-            // IMPORTO + CURRENCY con status
-            _buildFieldWithStatus(
-              AmountInputWidget(
-                controller: _amountController,
-                focusNode: _amountFocus,
-                categories: _categories,
-                label: loc.get('amount'),
-                loc: loc,
-                validator: (v) => v == null || double.tryParse(v) == null
-                    ? loc.get('invalid_amount')
-                    : null,
-                onSaved: (v) {
-                  // Non necessario più, viene gestito dal listener
-                },
-                onSubmitted: _saveExpense,
-                textStyle: smallStyle,
+              const SizedBox(height: 16),
+              // IMPORTO + CURRENCY con status
+              _buildFieldWithStatus(
+                AmountInputWidget(
+                  controller: _amountController,
+                  focusNode: _amountFocus,
+                  categories: _categories,
+                  label: loc.get('amount'),
+                  loc: loc,
+                  validator: (v) => v == null || double.tryParse(v) == null
+                      ? loc.get('invalid_amount')
+                      : null,
+                  onSaved: (v) {
+                    // Non necessario più, viene gestito dal listener
+                  },
+                  onSubmitted: _saveExpense,
+                  textStyle: smallStyle,
+                ),
+                _isAmountValid,
+                _amountTouched,
               ),
-              _isAmountValid,
-              _amountTouched,
-            ),
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-            // PAID BY (chip) con status
-            _buildFieldWithStatus(
-              ParticipantSelectorWidget(
-                participants: widget.participants.map((p) => p.name).toList(),
-                selectedParticipant: _paidBy?.name,
-                onParticipantSelected: (selectedName) {
-                  setState(() {
-                    _paidBy = widget.participants.firstWhere(
-                      (p) => p.name == selectedName,
-                      orElse: () => widget.participants.isNotEmpty
-                          ? widget.participants.first
-                          : ExpenseParticipant(name: ''),
-                    );
-                    _paidByTouched = true;
-                    _isDirty = true;
-                  });
-                },
-                loc: loc,
-                textStyle: smallStyle,
-              ),
-              _isPaidByValid,
-              _paidByTouched,
-            ),
-            const SizedBox(height: 16),
-
-            // CATEGORIE con status
-            _buildFieldWithStatus(
-              CategorySelectorWidget(
-                categories: _categories,
-                selectedCategory: _category,
-                onCategorySelected: (selected) {
-                  setState(() {
-                    _category = selected;
-                    _categoryTouched = true;
-                    _isDirty = true;
-                  });
-                },
-                onAddCategory: () async {
-                  final newCategoryName = await CategoryDialog.show(
-                    context: context,
-                    loc: loc,
-                  );
-                  if (newCategoryName != null && newCategoryName.isNotEmpty) {
-                    // Prima notifica al parent tramite callback
-                    widget.onCategoryAdded(newCategoryName);
-
-                    // Aggiorna immediatamente la lista locale se la categoria è già presente
-                    final found = widget.categories.firstWhere(
-                      (c) => c.name == newCategoryName,
-                      orElse: () => widget.categories.isNotEmpty
-                          ? widget.categories.first
-                          : ExpenseCategory(
-                              name: '', id: '', createdAt: DateTime(2000)),
-                    );
+              // PAID BY (chip) con status
+              _buildFieldWithStatus(
+                ParticipantSelectorWidget(
+                  participants: widget.participants.map((p) => p.name).toList(),
+                  selectedParticipant: _paidBy?.name,
+                  onParticipantSelected: (selectedName) {
                     setState(() {
-                      if (!_categories.contains(found)) {
-                        _categories.add(found);
-                        _category = found;
-                        _categoryTouched = true;
-                        _isDirty = true;
-                      }
+                      _paidBy = widget.participants.firstWhere(
+                        (p) => p.name == selectedName,
+                        orElse: () => widget.participants.isNotEmpty
+                            ? widget.participants.first
+                            : ExpenseParticipant(name: ''),
+                      );
+                      _paidByTouched = true;
+                      _isDirty = true;
                     });
+                  },
+                  loc: loc,
+                  textStyle: smallStyle,
+                ),
+                _isPaidByValid,
+                _paidByTouched,
+              ),
+              const SizedBox(height: 16),
 
-                    // Aspetta un momento per permettere al parent di elaborare
-                    await Future.delayed(const Duration(milliseconds: 100));
-
-                    // Verifica se la categoria è stata aggiunta alla lista del parent
-                    final foundAfter = widget.categories.firstWhere(
-                      (c) => c.name == newCategoryName,
-                      orElse: () => widget.categories.isNotEmpty
-                          ? widget.categories.first
-                          : ExpenseCategory(
-                              name: '', id: '', createdAt: DateTime(2000)),
-                    );
+              // CATEGORIE con status
+              _buildFieldWithStatus(
+                CategorySelectorWidget(
+                  categories: _categories,
+                  selectedCategory: _category,
+                  onCategorySelected: (selected) {
                     setState(() {
-                      _categories = List.from(widget.categories);
-                      _category = foundAfter;
+                      _category = selected;
                       _categoryTouched = true;
                       _isDirty = true;
                     });
+                  },
+                  onAddCategory: () async {
+                    final newCategoryName = await CategoryDialog.show(
+                      context: context,
+                      loc: loc,
+                    );
+                    if (newCategoryName != null && newCategoryName.isNotEmpty) {
+                      // Prima notifica al parent tramite callback
+                      widget.onCategoryAdded(newCategoryName);
 
-                    // Scroll automatico alla fine
-                    if (_scrollToCategoryEnd != null) {
-                      _scrollToCategoryEnd!();
+                      // Aggiorna immediatamente la lista locale se la categoria è già presente
+                      final found = widget.categories.firstWhere(
+                        (c) => c.name == newCategoryName,
+                        orElse: () => widget.categories.isNotEmpty
+                            ? widget.categories.first
+                            : ExpenseCategory(
+                                name: '',
+                                id: '',
+                                createdAt: DateTime(2000),
+                              ),
+                      );
+                      setState(() {
+                        if (!_categories.contains(found)) {
+                          _categories.add(found);
+                          _category = found;
+                          _categoryTouched = true;
+                          _isDirty = true;
+                        }
+                      });
+
+                      // Aspetta un momento per permettere al parent di elaborare
+                      await Future.delayed(const Duration(milliseconds: 100));
+
+                      // Verifica se la categoria è stata aggiunta alla lista del parent
+                      final foundAfter = widget.categories.firstWhere(
+                        (c) => c.name == newCategoryName,
+                        orElse: () => widget.categories.isNotEmpty
+                            ? widget.categories.first
+                            : ExpenseCategory(
+                                name: '',
+                                id: '',
+                                createdAt: DateTime(2000),
+                              ),
+                      );
+                      setState(() {
+                        _categories = List.from(widget.categories);
+                        _category = foundAfter;
+                        _categoryTouched = true;
+                        _isDirty = true;
+                      });
+
+                      // Scroll automatico alla fine
+                      if (_scrollToCategoryEnd != null) {
+                        _scrollToCategoryEnd!();
+                      }
                     }
-                  }
-                },
-                loc: loc,
-                registerScrollToEnd: (fn) {
-                  _scrollToCategoryEnd = fn;
-                },
-                textStyle: smallStyle,
-              ),
-              _isCategoryValid,
-              _categoryTouched,
-            ),
-            const SizedBox(height: 16),
-
-            // DATA (bottone con data + icona, angoli arrotondati, sfondo grigio coerente col tema)
-            if (widget.showDateAndNote ||
-                widget.initialExpense != null ||
-                (ModalRoute.of(context)?.settings.name != null))
-              DateSelectorWidget(
-                selectedDate: _date,
-                tripStartDate: widget.tripStartDate,
-                tripEndDate: widget.tripEndDate,
-                onDateSelected: (picked) {
-                  setState(() {
-                    _date = picked;
-                    _isDirty = true;
-                  });
-                },
-                loc: loc,
-                locale: locale,
-                textStyle: smallStyle,
-              ),
-            const SizedBox(height: 16),
-
-            // LOCATION (spostato prima di NOTE)
-            if (widget.showDateAndNote || widget.initialExpense != null) ...[
-              LocationInputWidget(
-                initialLocation: _location,
-                loc: loc,
-                textStyle: smallStyle,
-                onLocationChanged: (location) {
-                  setState(() {
-                    _location = location;
-                    _isDirty = true;
-                  });
-                },
+                  },
+                  loc: loc,
+                  registerScrollToEnd: (fn) {
+                    _scrollToCategoryEnd = fn;
+                  },
+                  textStyle: smallStyle,
+                ),
+                _isCategoryValid,
+                _categoryTouched,
               ),
               const SizedBox(height: 16),
-            ],
 
-            // NOTE (ora dopo LOCATION)
-            if (widget.showDateAndNote || widget.initialExpense != null) ...[
-              NoteInputWidget(
-                controller: _noteController,
+              // DATA (bottone con data + icona, angoli arrotondati, sfondo grigio coerente col tema)
+              if (widget.showDateAndNote ||
+                  widget.initialExpense != null ||
+                  (ModalRoute.of(context)?.settings.name != null))
+                DateSelectorWidget(
+                  selectedDate: _date,
+                  tripStartDate: widget.tripStartDate,
+                  tripEndDate: widget.tripEndDate,
+                  onDateSelected: (picked) {
+                    setState(() {
+                      _date = picked;
+                      _isDirty = true;
+                    });
+                  },
+                  loc: loc,
+                  locale: locale,
+                  textStyle: smallStyle,
+                ),
+              const SizedBox(height: 16),
+
+              // LOCATION (spostato prima di NOTE)
+              if (widget.showDateAndNote || widget.initialExpense != null) ...[
+                LocationInputWidget(
+                  initialLocation: _location,
+                  loc: loc,
+                  textStyle: smallStyle,
+                  onLocationChanged: (location) {
+                    setState(() {
+                      _location = location;
+                      _isDirty = true;
+                    });
+                  },
+                ),
+                const SizedBox(height: 16),
+              ],
+
+              // NOTE (ora dopo LOCATION)
+              if (widget.showDateAndNote || widget.initialExpense != null) ...[
+                NoteInputWidget(
+                  controller: _noteController,
+                  loc: loc,
+                  textStyle: smallStyle,
+                ),
+                const SizedBox(height: 16),
+              ],
+
+              // Pulsanti di azione
+              ExpenseFormActionsWidget(
+                onSave: _isFormValid() ? _saveExpense : null,
                 loc: loc,
+                isEdit: widget.initialExpense != null,
                 textStyle: smallStyle,
               ),
-              const SizedBox(height: 16),
             ],
-
-            // Pulsanti di azione
-            ExpenseFormActionsWidget(
-              onSave: _isFormValid() ? _saveExpense : null,
-              loc: loc,
-              isEdit: widget.initialExpense != null,
-              textStyle: smallStyle,
-            ),
-          ],
-        ),
+          ),
         ),
       ),
     );

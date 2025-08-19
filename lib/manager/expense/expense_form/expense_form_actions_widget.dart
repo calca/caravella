@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
-import '../../../widgets/themed_outlined_button.dart';
 
 class ExpenseFormActionsWidget extends StatelessWidget {
   final VoidCallback? onSave;
@@ -18,12 +17,18 @@ class ExpenseFormActionsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final saveLabel =
-        isEdit ? loc.get('save_change_expense') : loc.get('add_expense');
-    return ThemedOutlinedButton(
-      onPressed: onSave,
-      isPrimary: true,
-      child: Text(saveLabel, style: textStyle),
+    final icon = isEdit ? Icons.save_rounded : Icons.check_rounded;
+    final label = isEdit ? loc.get('save_change_expense') : loc.get('add_expense');
+    return Align(
+      alignment: Alignment.centerRight,
+      child: IconButton.filled(
+        onPressed: onSave,
+        tooltip: label,
+        icon: Icon(icon, size: 24),
+        style: IconButton.styleFrom(
+          padding: const EdgeInsets.all(16),
+        ),
+      ),
     );
   }
 }
