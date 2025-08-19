@@ -21,7 +21,6 @@ import 'widgets/group_header.dart';
 import 'widgets/group_actions.dart';
 import 'widgets/group_total.dart';
 import 'widgets/filtered_expense_list.dart';
-import 'widgets/empty_expenses.dart';
 import 'widgets/unified_overview_sheet.dart';
 import 'widgets/options_sheet.dart';
 import 'widgets/expense_form_sheet.dart';

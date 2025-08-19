@@ -55,26 +55,34 @@ class EditExpenseSheet extends StatelessWidget {
           ),
           Flexible(
             child: SafeArea(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.only(
-                  left: 20,
-                  right: 20,
-                  top: 16,
-                  bottom:
-                      MediaQuery.of(context).viewInsets.bottom +
-                      MediaQuery.of(context).padding.bottom +
+              top: false,
+              left: false,
+              right: false,
+              bottom: true,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final bottomInset = MediaQuery.of(context).padding.bottom;
+                  final keyboard = MediaQuery.of(context).viewInsets.bottom;
+                  const extra = 24.0;
+                  return SingleChildScrollView(
+                    padding: EdgeInsets.fromLTRB(
                       20,
-                ),
-                child: ExpenseFormComponent(
-                  initialExpense: expense,
-                  participants: group.participants,
-                  categories: group.categories,
-                  tripStartDate: group.startDate,
-                  tripEndDate: group.endDate,
-                  shouldAutoClose: false,
-                  onExpenseAdded: onExpenseAdded,
-                  onCategoryAdded: onCategoryAdded,
-                ),
+                      16,
+                      20,
+                      20 + bottomInset + extra + keyboard,
+                    ),
+                    child: ExpenseFormComponent(
+                      initialExpense: expense,
+                      participants: group.participants,
+                      categories: group.categories,
+                      tripStartDate: group.startDate,
+                      tripEndDate: group.endDate,
+                      shouldAutoClose: false,
+                      onExpenseAdded: onExpenseAdded,
+                      onCategoryAdded: onCategoryAdded,
+                    ),
+                  );
+                },
               ),
             ),
           ),

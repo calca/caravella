@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../app_localizations.dart';
 import '../../../state/locale_notifier.dart';
-// ...existing code...
 import '../../../data/expense_group.dart';
-// ...existing code...
 
 class OptionsSheet extends StatelessWidget {
   final ExpenseGroup trip;
@@ -13,6 +11,7 @@ class OptionsSheet extends StatelessWidget {
   final VoidCallback onEdit;
   final VoidCallback onDownloadCsv;
   final VoidCallback onShareCsv;
+
   const OptionsSheet({
     super.key,
     required this.trip,
@@ -56,82 +55,80 @@ class OptionsSheet extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: SingleChildScrollView(
-                controller: scrollController,
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    // Pin/Unpin action
-                    ListTile(
-                      leading: Icon(
-                        trip.pinned
-                            ? Icons.push_pin_outlined
-                            : Icons.push_pin_outlined,
-                        color: Theme.of(context).colorScheme.onPrimaryFixed,
+              child: SafeArea(
+                top: false,
+                left: false,
+                right: false,
+                bottom: true,
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final bottomInset = MediaQuery.of(context).padding.bottom;
+                    const extra = 24.0;
+                    return SingleChildScrollView(
+                      controller: scrollController,
+                      padding: EdgeInsets.fromLTRB(16, 16, 16, 16 + bottomInset + extra),
+                      child: Column(
+                        children: [
+                          ListTile(
+                            leading: Icon(
+                              trip.pinned ? Icons.push_pin_outlined : Icons.push_pin_outlined,
+                              color: Theme.of(context).colorScheme.onPrimaryFixed,
+                            ),
+                            title: Text(trip.pinned ? loc.get('unpin_group') : loc.get('pin_group')),
+                            onTap: onPinToggle,
+                          ),
+                          ListTile(
+                            leading: Icon(
+                              trip.archived ? Icons.unarchive_outlined : Icons.archive_outlined,
+                              color: Theme.of(context).colorScheme.onPrimaryFixed,
+                            ),
+                            title: Text(trip.archived ? loc.get('unarchive') : loc.get('archive')),
+                            onTap: onArchiveToggle,
+                          ),
+                          const Divider(),
+                          ListTile(
+                            leading: Icon(
+                              Icons.edit_outlined,
+                              color: Theme.of(context).colorScheme.onPrimaryFixed,
+                            ),
+                            title: Text(loc.get('edit_group')),
+                            onTap: onEdit,
+                          ),
+                          const Divider(),
+                          ListTile(
+                            leading: Icon(
+                              Icons.file_download_outlined,
+                              color: Theme.of(context).colorScheme.onPrimaryFixed,
+                            ),
+                            title: Text(loc.get('download_all_csv')),
+                            onTap: onDownloadCsv,
+                          ),
+                          ListTile(
+                            leading: Icon(
+                              Icons.share_outlined,
+                              color: Theme.of(context).colorScheme.onPrimaryFixed,
+                            ),
+                            title: Text(loc.get('share_all_csv')),
+                            onTap: onShareCsv,
+                          ),
+                          const Divider(),
+                          ListTile(
+                            leading: Icon(
+                              Icons.delete_outline,
+                              color: Theme.of(context).colorScheme.tertiary,
+                            ),
+                            title: Text(
+                              loc.get('delete_group'),
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.tertiary,
+                              ),
+                            ),
+                            onTap: onDelete,
+                          ),
+                        ],
                       ),
-                      title: Text(trip.pinned
-                          ? loc.get('unpin_group')
-                          : loc.get('pin_group')),
-                      onTap: onPinToggle,
-                    ),
-                    // Archive/Unarchive action
-                    ListTile(
-                      leading: Icon(
-                        trip.archived
-                            ? Icons.unarchive_outlined
-                            : Icons.archive_outlined,
-                        color: Theme.of(context).colorScheme.onPrimaryFixed,
-                      ),
-                      title: Text(trip.archived
-                          ? loc.get('unarchive')
-                          : loc.get('archive')),
-                      onTap: onArchiveToggle,
-                    ),
-                    const Divider(),
-                    // Edit Group action
-                    ListTile(
-                      leading: Icon(
-                        Icons.edit_outlined,
-                        color: Theme.of(context).colorScheme.onPrimaryFixed,
-                      ),
-                      title: Text(loc.get('edit_group')),
-                      onTap: onEdit,
-                    ),
-                    const Divider(),
-                    // Download CSV action
-                    ListTile(
-                      leading: Icon(
-                        Icons.file_download_outlined,
-                        color: Theme.of(context).colorScheme.onPrimaryFixed,
-                      ),
-                      title: Text(loc.get('download_all_csv')),
-                      onTap: onDownloadCsv,
-                    ),
-                    // Share CSV action
-                    ListTile(
-                      leading: Icon(
-                        Icons.share_outlined,
-                        color: Theme.of(context).colorScheme.onPrimaryFixed,
-                      ),
-                      title: Text(loc.get('share_all_csv')),
-                      onTap: onShareCsv,
-                    ),
-                    const Divider(),
-                    // Delete action
-                    ListTile(
-                      leading: Icon(
-                        Icons.delete_outline,
-                        color: Theme.of(context).colorScheme.tertiary,
-                      ),
-                      title: Text(
-                        loc.get('delete_group'),
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.tertiary,
-                        ),
-                      ),
-                      onTap: onDelete,
-                    ),
-                  ],
+                    );
+                  },
                 ),
               ),
             ),

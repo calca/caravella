@@ -9,7 +9,7 @@ import 'widgets/daily_average_by_category.dart';
 
 /// Unified overview tab that combines the functionality of both OverviewTab and StatisticsTab.
 /// Shows exactly 2 charts (daily expenses and categories pie chart) plus settlement information.
-/// This addresses the requirement to "unify overview and statistics pages with useful information 
+/// This addresses the requirement to "unify overview and statistics pages with useful information
 /// and maximum 2 charts".
 class UnifiedOverviewTab extends StatelessWidget {
   final ExpenseGroup trip;
@@ -23,8 +23,10 @@ class UnifiedOverviewTab extends StatelessWidget {
 
     // Calcola il bilancio di ogni partecipante
     final Map<String, double> balances = {};
-    final totalExpenses =
-        trip.expenses.fold(0.0, (sum, e) => sum + (e.amount ?? 0));
+    final totalExpenses = trip.expenses.fold(
+      0.0,
+      (sum, e) => sum + (e.amount ?? 0),
+    );
     final fairShare = totalExpenses / trip.participants.length;
 
     // Inizializza i bilanci
@@ -55,8 +57,9 @@ class UnifiedOverviewTab extends StatelessWidget {
         // Tolleranza per errori di arrotondamento
         creditors.add(MapEntry(participant, balance));
       } else if (balance < -0.01) {
-        debtors
-            .add(MapEntry(participant, -balance)); // Rendi positivo il debito
+        debtors.add(
+          MapEntry(participant, -balance),
+        ); // Rendi positivo il debito
       }
     });
 
@@ -68,8 +71,9 @@ class UnifiedOverviewTab extends StatelessWidget {
     final List<Map<String, dynamic>> settlements = [];
 
     // Copia le liste per non modificare quelle originali
-    final List<MapEntry<String, double>> remainingCreditors =
-        List.from(creditors);
+    final List<MapEntry<String, double>> remainingCreditors = List.from(
+      creditors,
+    );
     final List<MapEntry<String, double>> remainingDebtors = List.from(debtors);
 
     int creditorIndex = 0;
@@ -80,8 +84,9 @@ class UnifiedOverviewTab extends StatelessWidget {
       final creditor = remainingCreditors[creditorIndex];
       final debtor = remainingDebtors[debtorIndex];
 
-      final settlement =
-          creditor.value < debtor.value ? creditor.value : debtor.value;
+      final settlement = creditor.value < debtor.value
+          ? creditor.value
+          : debtor.value;
 
       settlements.add({
         'from': debtor.key,
@@ -90,10 +95,14 @@ class UnifiedOverviewTab extends StatelessWidget {
       });
 
       // Aggiorna i bilanci
-      remainingCreditors[creditorIndex] =
-          MapEntry(creditor.key, creditor.value - settlement);
-      remainingDebtors[debtorIndex] =
-          MapEntry(debtor.key, debtor.value - settlement);
+      remainingCreditors[creditorIndex] = MapEntry(
+        creditor.key,
+        creditor.value - settlement,
+      );
+      remainingDebtors[debtorIndex] = MapEntry(
+        debtor.key,
+        debtor.value - settlement,
+      );
 
       // Passa al prossimo se completamente pareggiato
       if (remainingCreditors[creditorIndex].value < 0.01) creditorIndex++;
@@ -121,8 +130,11 @@ class UnifiedOverviewTab extends StatelessWidget {
       }
 
       for (final expense in trip.expenses) {
-        final date =
-            DateTime(expense.date.year, expense.date.month, expense.date.day);
+        final date = DateTime(
+          expense.date.year,
+          expense.date.month,
+          expense.date.day,
+        );
         // Solo spese del mese corrente
         if (date.month == now.month && date.year == now.year) {
           stats[date] = (stats[date] ?? 0.0) + (expense.amount ?? 0.0);
@@ -133,9 +145,15 @@ class UnifiedOverviewTab extends StatelessWidget {
 
     // Inizializza tutti i giorni del viaggio con 0
     DateTime currentDate = DateTime(
-        trip.startDate!.year, trip.startDate!.month, trip.startDate!.day);
-    final endDate =
-        DateTime(trip.endDate!.year, trip.endDate!.month, trip.endDate!.day);
+      trip.startDate!.year,
+      trip.startDate!.month,
+      trip.startDate!.day,
+    );
+    final endDate = DateTime(
+      trip.endDate!.year,
+      trip.endDate!.month,
+      trip.endDate!.day,
+    );
 
     while (currentDate.isBefore(endDate) ||
         currentDate.isAtSameMomentAs(endDate)) {
@@ -146,8 +164,11 @@ class UnifiedOverviewTab extends StatelessWidget {
     // Aggiungi le spese reali
     for (final expense in trip.expenses) {
       if (expense.amount != null) {
-        final expenseDate =
-            DateTime(expense.date.year, expense.date.month, expense.date.day);
+        final expenseDate = DateTime(
+          expense.date.year,
+          expense.date.month,
+          expense.date.day,
+        );
         stats[expenseDate] = (stats[expenseDate] ?? 0.0) + expense.amount!;
       }
     }
@@ -203,8 +224,8 @@ class UnifiedOverviewTab extends StatelessWidget {
             Text(
               loc.get('no_expenses_for_statistics'),
               style: theme.textTheme.bodyLarge?.copyWith(
-                    color: theme.colorScheme.outline,
-                  ),
+                color: theme.colorScheme.outline,
+              ),
             ),
           ],
         ),
@@ -221,30 +242,14 @@ class UnifiedOverviewTab extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 8),
-            
+
             // Grafici (massimo 2 come richiesto)
             if (weeklyStats.isNotEmpty) ...[
-              DailyExpensesChart(
-                trip: trip,
-                dailyStats: weeklyStats,
-                loc: loc,
-                titleKey: 'weekly_expenses_chart',
-              ),
+              DailyExpensesChart(trip: trip, dailyStats: weeklyStats, loc: loc),
               const SizedBox(height: 24),
             ],
-            
-            CategoriesPieChart(
-              trip: trip,
-              loc: loc,
-            ),
-            
-            const SizedBox(height: 32),
 
-            // Daily average by category
-            DailyAverageByCategoryWidget(
-              trip: trip,
-              loc: loc,
-            ),
+            CategoriesPieChart(trip: trip, loc: loc),
 
             const SizedBox(height: 32),
 
@@ -252,7 +257,7 @@ class UnifiedOverviewTab extends StatelessWidget {
             Text(
               loc.get('expenses_by_participant'),
               style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 12),
@@ -266,8 +271,9 @@ class UnifiedOverviewTab extends StatelessWidget {
                   children: [
                     CircleAvatar(
                       radius: 16,
-                      backgroundColor: theme.colorScheme.primary
-                          .withAlpha((0.1 * 255).toInt()),
+                      backgroundColor: theme.colorScheme.primary.withAlpha(
+                        (0.1 * 255).toInt(),
+                      ),
                       child: Icon(
                         Icons.person,
                         size: 18,
@@ -279,7 +285,7 @@ class UnifiedOverviewTab extends StatelessWidget {
                       child: Text(
                         p.name,
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
@@ -298,17 +304,15 @@ class UnifiedOverviewTab extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            // Sezione Pareggia
+            // 2. SETTLEMENT
             Text(
               loc.get('settlement'),
               style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 12),
-
             if (settlements.isEmpty)
-              // Messaggio se tutto è a posto
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 child: Row(
@@ -324,7 +328,7 @@ class UnifiedOverviewTab extends StatelessWidget {
                         loc.get('all_balanced'),
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: theme.colorScheme.primary,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
@@ -332,17 +336,16 @@ class UnifiedOverviewTab extends StatelessWidget {
                 ),
               )
             else
-              // Lista dei pareggi
               ...settlements.map((settlement) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 6),
                   child: Row(
                     children: [
-                      // Avatar con icona freccia
                       CircleAvatar(
                         radius: 14,
-                        backgroundColor: theme.colorScheme.error
-                            .withAlpha((0.1 * 255).toInt()),
+                        backgroundColor: theme.colorScheme.error.withAlpha(
+                          (0.1 * 255).toInt(),
+                        ),
                         child: Icon(
                           Icons.arrow_forward,
                           size: 16,
@@ -354,7 +357,7 @@ class UnifiedOverviewTab extends StatelessWidget {
                         child: RichText(
                           text: TextSpan(
                             style: theme.textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w600,
                             ),
                             children: [
                               TextSpan(

@@ -40,10 +40,23 @@ class UnifiedOverviewSheet extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: SingleChildScrollView(
-                controller: scrollController,
-                padding: const EdgeInsets.all(16),
-                child: UnifiedOverviewTab(trip: trip),
+              child: SafeArea(
+                top: false,
+                left: false,
+                right: false,
+                bottom: true,
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final bottomInset = MediaQuery.of(context).padding.bottom;
+                    // Extra spazio per distanziare il grafico dalla nav bar
+                    final extra = 24.0;
+                    return SingleChildScrollView(
+                      controller: scrollController,
+                      padding: EdgeInsets.fromLTRB(16, 16, 16, 16 + bottomInset + extra),
+                      child: UnifiedOverviewTab(trip: trip),
+                    );
+                  },
+                ),
               ),
             ),
           ],
