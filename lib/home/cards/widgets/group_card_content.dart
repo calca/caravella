@@ -331,7 +331,7 @@ class GroupCardContent extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             _buildCompactChartIndicator(
-              letter: localizations.locale == 'en' ? 'W' : 'S',
+              letter: localizations.get('weekly_chart_badge'),
               color: theme.colorScheme.onSurfaceVariant,
             ),
             const SizedBox(width: 12),
@@ -346,7 +346,7 @@ class GroupCardContent extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             _buildCompactChartIndicator(
-              letter: 'M',
+              letter: localizations.get('monthly_chart_badge'),
               color: theme.colorScheme.onSurfaceVariant,
             ),
             const SizedBox(width: 12),
