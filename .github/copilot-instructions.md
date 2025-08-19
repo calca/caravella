@@ -7,16 +7,15 @@ Caravella is a modern Flutter application for managing group expenses, travel co
 ## Working Effectively
 
 ### Prerequisites
-- **Install Flutter SDK 3.35.1 stable channel** (exact version used in CI):
+- **Install Flutter SDK (latest stable channel)** (CI now tracks latest stable):
   ```bash
   # Option 1: Use Flutter Version Manager (recommended)
   # git clone https://github.com/fvm/fvm.git
-  # fvm install 3.35.1
-  # fvm use 3.35.1
+  # fvm install stable
+  # fvm use stable
   
   # Option 2: Direct download (if FVM not available)
-  wget https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.35.1-stable.tar.xz
-  tar xf flutter_linux_3.35.1-stable.tar.xz
+  # (Oppure scarica l'ultima stable manualmente dal sito Flutter)
   export PATH="$PWD/flutter/bin:$PATH"
   
   # Verify installation
@@ -25,7 +24,7 @@ Caravella is a modern Flutter application for managing group expenses, travel co
   ```
 
 ### Exact Commands from CI Pipeline
-**These commands are validated to work in the CI environment:**
+**These commands are validated to work in the CI environment (latest stable):**
 ### Exact Commands from CI Pipeline
 **These commands are validated to work in the CI environment:**
 
