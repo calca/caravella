@@ -26,7 +26,7 @@ class ExpenseFormActionsWidget extends StatelessWidget {
         onPressed: onSave,
         tooltip: label,
         icon: Icon(icon, size: 24),
-        style: IconButton.styleFrom(padding: const EdgeInsets.all(16)),
+        style: IconButton.styleFrom(padding: const EdgeInsets.all(8)),
       ),
     );
   }

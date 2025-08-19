@@ -108,6 +108,10 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
           : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000));
     }
 
+    // Autofocus su amount dopo primo frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _amountFocus.requestFocus();
+    });
     // (Eventuali listener per aggiornare validazioni in tempo reale possono essere aggiunti qui)
   }
 
@@ -226,26 +230,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // CAMPO NOME SPESA (identico a importo, ora AmountInputWidget supporta testo)
-              _buildFieldWithStatus(
-                AmountInputWidget(
-                  controller: _nameController,
-                  focusNode: _nameFocus,
-                  loc: loc,
-                  label: loc.get('expense_name'),
-                  validator: (v) => v == null || v.trim().isEmpty
-                      ? 'Il nome è obbligatorio'
-                      : null,
-                  onSaved: (v) {},
-                  onSubmitted: () {},
-                  isText: true,
-                  textStyle: smallStyle,
-                ),
-                _nameController.text.trim().isNotEmpty,
-                _amountTouched,
-              ),
-              const SizedBox(height: 16),
-              // IMPORTO + CURRENCY con status
+              // IMPORTO + CURRENCY con status (ora prima del nome)
               _buildFieldWithStatus(
                 AmountInputWidget(
                   controller: _amountController,
@@ -263,6 +248,25 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                   textStyle: smallStyle,
                 ),
                 _isAmountValid,
+                _amountTouched,
+              ),
+              const SizedBox(height: 16),
+              // CAMPO NOME SPESA (dopo amount)
+              _buildFieldWithStatus(
+                AmountInputWidget(
+                  controller: _nameController,
+                  focusNode: _nameFocus,
+                  loc: loc,
+                  label: loc.get('expense_name'),
+                  validator: (v) => v == null || v.trim().isEmpty
+                      ? 'Il nome è obbligatorio'
+                      : null,
+                  onSaved: (v) {},
+                  onSubmitted: () {},
+                  isText: true,
+                  textStyle: smallStyle,
+                ),
+                _nameController.text.trim().isNotEmpty,
                 _amountTouched,
               ),
               const SizedBox(height: 16),
