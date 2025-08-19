@@ -1,5 +1,6 @@
 import 'weekly_expense_chart.dart';
 import 'monthly_expense_chart.dart';
+import 'date_range_expense_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../app_localizations.dart';
@@ -7,6 +8,7 @@ import '../../../state/expense_group_notifier.dart';
 import '../../../data/expense_group.dart';
 import '../../../manager/expense/expense_form_component.dart';
 import '../../../widgets/currency_display.dart';
+import '../../../manager/details/tabs/overview_stats_logic.dart';
 
 class GroupCardContent extends StatelessWidget {
   // Design constants
@@ -289,6 +291,41 @@ class GroupCardContent extends StatelessWidget {
   }
 
   Widget _buildStatistics(ExpenseGroup currentGroup) {
+    // Check if we should show date range chart for groups with dates < 1 month
+    if (shouldShowDateRangeChart(currentGroup)) {
+      return _buildDateRangeStatistics(currentGroup);
+    }
+
+    // Default behavior: show weekly + monthly charts
+    return _buildDefaultStatistics(currentGroup);
+  }
+
+  Widget _buildDateRangeStatistics(ExpenseGroup currentGroup) {
+    final startDate = currentGroup.startDate!;
+    final endDate = currentGroup.endDate!;
+    final duration = endDate.difference(startDate).inDays + 1; // inclusive
+
+    // Calculate daily totals for each day in the date range
+    final dailyTotals = List<double>.generate(duration, (i) {
+      final day = startDate.add(Duration(days: i));
+      return currentGroup.expenses
+          .where(
+            (e) =>
+                e.date.year == day.year &&
+                e.date.month == day.month &&
+                e.date.day == day.day,
+          )
+          .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
+    });
+
+    return Column(
+      children: [
+        DateRangeExpenseChart(dailyTotals: dailyTotals, theme: theme),
+      ],
+    );
+  }
+
+  Widget _buildDefaultStatistics(ExpenseGroup currentGroup) {
     final now = DateTime.now();
     // Calcola il lunedì della settimana corrente
     final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
@@ -332,8 +369,6 @@ class GroupCardContent extends StatelessWidget {
         MonthlyExpenseChart(dailyTotals: dailyMonthTotals, theme: theme),
       ],
     );
-
-    // Dead code removed, now handled in the new Column above
   }
 
   Widget _buildRecentActivity(ExpenseGroup currentGroup) {
