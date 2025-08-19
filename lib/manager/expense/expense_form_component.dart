@@ -3,12 +3,14 @@ import '../../data/expense_category.dart';
 import '../../data/expense_details.dart';
 import '../../app_localizations.dart';
 import '../../data/expense_participant.dart';
+import '../../data/expense_location.dart';
 import '../../state/locale_notifier.dart';
 import 'expense_form/amount_input_widget.dart';
 import 'expense_form/participant_selector_widget.dart';
 import 'expense_form/category_selector_widget.dart';
 import 'expense_form/date_selector_widget.dart';
 import 'expense_form/note_input_widget.dart';
+import 'expense_form/location_input_widget.dart';
 import 'expense_form/expense_form_actions_widget.dart';
 import 'expense_form/category_dialog.dart';
 
@@ -48,6 +50,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   double? _amount;
   ExpenseParticipant? _paidBy;
   DateTime? _date;
+  ExpenseLocation? _location;
   final TextEditingController _nameController = TextEditingController();
   final FocusNode _nameFocus = FocusNode();
   final _amountController = TextEditingController();
@@ -82,6 +85,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       _amount = widget.initialExpense!.amount;
       _paidBy = widget.initialExpense!.paidBy;
       _date = widget.initialExpense!.date;
+      _location = widget.initialExpense!.location;
       _nameController.text = widget.initialExpense!.name ?? '';
       // Se amount è null o 0, lascia il campo vuoto
       _amountController.text = (widget.initialExpense!.amount == 0)
@@ -91,6 +95,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     } else {
       _date = DateTime.now();
       _nameController.text = '';
+      _location = null;
       // Preseleziona il primo elemento di paidBy e category se disponibili
       _paidBy = widget.participants.isNotEmpty
           ? widget.participants.first
@@ -181,6 +186,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         note:
             widget.initialExpense != null ? _noteController.text.trim() : null,
         name: nameValue,
+        location: _location,
       );
       widget.onExpenseAdded(expense);
 
@@ -397,6 +403,21 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                 controller: _noteController,
                 loc: loc,
                 textStyle: smallStyle,
+              ),
+              const SizedBox(height: 16),
+            ],
+
+            // LOCATION
+            if (widget.showDateAndNote || widget.initialExpense != null) ...[
+              LocationInputWidget(
+                initialLocation: _location,
+                loc: loc,
+                textStyle: smallStyle,
+                onLocationChanged: (location) {
+                  setState(() {
+                    _location = location;
+                  });
+                },
               ),
               const SizedBox(height: 16),
             ],

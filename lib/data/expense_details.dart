@@ -1,6 +1,7 @@
 import 'package:uuid/uuid.dart';
 import 'expense_category.dart';
 import 'expense_participant.dart';
+import 'expense_location.dart';
 
 class ExpenseDetails {
   final String id; // UDID per la spesa
@@ -10,6 +11,7 @@ class ExpenseDetails {
   final DateTime date;
   final String? note;
   final String? name;
+  final ExpenseLocation? location;
 
   ExpenseDetails({
     required this.category,
@@ -18,6 +20,7 @@ class ExpenseDetails {
     required this.date,
     this.note,
     this.name,
+    this.location,
     String? id, // opzionale, generato se mancante
   }) : id = id ?? const Uuid().v4();
 
@@ -31,6 +34,9 @@ class ExpenseDetails {
       date: DateTime.parse(json['date']),
       note: json['note'],
       name: json['name'],
+      location: json['location'] != null
+          ? ExpenseLocation.fromJson(json['location'])
+          : null,
     );
   }
 
@@ -42,6 +48,7 @@ class ExpenseDetails {
         'date': date.toIso8601String(),
         if (note != null) 'note': note,
         if (name != null) 'name': name,
+        if (location != null) 'location': location!.toJson(),
       };
 
   ExpenseDetails copyWith({
@@ -52,6 +59,7 @@ class ExpenseDetails {
     DateTime? date,
     String? note,
     String? name,
+    ExpenseLocation? location,
   }) {
     return ExpenseDetails(
       id: id ?? this.id,
@@ -61,6 +69,7 @@ class ExpenseDetails {
       date: date ?? this.date,
       note: note ?? this.note,
       name: name ?? this.name,
+      location: location ?? this.location,
     );
   }
 }
