@@ -186,6 +186,22 @@ class CaravellaThemes {
     textTheme: _createTextTheme(lightColorScheme),
     useMaterial3: true,
     scaffoldBackgroundColor: lightColorScheme.surface,
+    inputDecorationTheme: InputDecorationTheme(
+      isDense: true,
+      filled: true,
+      fillColor: lightColorScheme.surface,
+      border: InputBorder.none,
+      enabledBorder: InputBorder.none,
+      focusedBorder: InputBorder.none,
+      errorBorder: InputBorder.none,
+      disabledBorder: InputBorder.none,
+      focusedErrorBorder: InputBorder.none,
+      hintStyle: TextStyle(
+        color: lightColorScheme.surfaceContainerHigh,
+        fontWeight: FontWeight.w500,
+      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+    ),
   );
 
   static final ThemeData dark = ThemeData(
@@ -194,5 +210,21 @@ class CaravellaThemes {
     textTheme: _createTextTheme(darkColorScheme),
     useMaterial3: true,
     scaffoldBackgroundColor: darkColorScheme.surface,
+    inputDecorationTheme: InputDecorationTheme(
+      isDense: true,
+      filled: true,
+      fillColor: darkColorScheme.surface,
+      border: InputBorder.none,
+      enabledBorder: InputBorder.none,
+      focusedBorder: InputBorder.none,
+      errorBorder: InputBorder.none,
+      disabledBorder: InputBorder.none,
+      focusedErrorBorder: InputBorder.none,
+      hintStyle: TextStyle(
+        color: darkColorScheme.surfaceContainerHigh,
+        fontWeight: FontWeight.w500,
+      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+    ),
   );
 }
