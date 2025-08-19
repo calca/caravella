@@ -33,21 +33,23 @@ class AmountInputWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final currency = (!isText && categories.isNotEmpty && categories.first.name.startsWith('€'))
+    final currency =
+        (!isText &&
+            categories.isNotEmpty &&
+            categories.first.name.startsWith('€'))
         ? categories.first.name
         : (!isText ? '€' : null);
     return TextFormField(
       controller: controller,
       focusNode: focusNode,
-      style: textStyle ??
-          theme.textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
+      style:
+          textStyle ??
+          theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
       decoration: InputDecoration(
         hintText: label != null ? '${label!} *' : null,
         hintStyle: (textStyle ?? theme.textTheme.titleLarge)?.copyWith(
-          fontWeight: FontWeight.w600,
-          color: theme.colorScheme.onSurfaceVariant,
+          fontWeight: FontWeight.w400,
+          color: theme.colorScheme.outline,
         ),
         floatingLabelBehavior: FloatingLabelBehavior.never,
         prefixText: currency != null ? '$currency ' : null,
@@ -77,15 +79,24 @@ class AmountInputWidget extends StatelessWidget {
 /// Formatter che formatta live il numero secondo la locale corrente
 class _AmountFormatter extends TextInputFormatter {
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     // Preserve selection index relative to numeric characters
-    final oldDigitsBeforeCursor = _countDigitsBefore(oldValue.text, oldValue.selection.baseOffset);
+    final oldDigitsBeforeCursor = _countDigitsBefore(
+      oldValue.text,
+      oldValue.selection.baseOffset,
+    );
 
     // Normalize new raw input (allow both , and . as decimal separators)
     String sanitized = newValue.text.replaceAll(RegExp(r'[^0-9,\.]'), '');
     // If user just typed separator at start -> ignore
     if (sanitized == ',' || sanitized == '.') {
-      return TextEditingValue(text: '', selection: const TextSelection.collapsed(offset: 0));
+      return TextEditingValue(
+        text: '',
+        selection: const TextSelection.collapsed(offset: 0),
+      );
     }
 
     // Track if user is typing decimal part (keeps trailing comma or partial decimals)
@@ -94,10 +105,14 @@ class _AmountFormatter extends TextInputFormatter {
     // Replace commas with dot for parsing
     String parseCandidate = sanitized.replaceAll(',', '.');
     // Allow single dot at end (partial decimal) without formatting yet
-    final partialDecimal = endsWithSeparator && !parseCandidate.contains(RegExp(r'\.[0-9]{1,}'));
+    final partialDecimal =
+        endsWithSeparator && !parseCandidate.contains(RegExp(r'\.[0-9]{1,}'));
 
     if (parseCandidate.isEmpty) {
-      return const TextEditingValue(text: '', selection: TextSelection.collapsed(offset: 0));
+      return const TextEditingValue(
+        text: '',
+        selection: TextSelection.collapsed(offset: 0),
+      );
     }
 
     double? value = double.tryParse(parseCandidate);
@@ -137,13 +152,16 @@ class _AmountFormatter extends TextInputFormatter {
       caret++;
     }
     // If user was at end typing
-    if (oldValue.selection.baseOffset == oldValue.text.length && newValue.selection.baseOffset == newValue.text.length) {
+    if (oldValue.selection.baseOffset == oldValue.text.length &&
+        newValue.selection.baseOffset == newValue.text.length) {
       caret = rebuilt.length; // keep at end
     }
 
     return TextEditingValue(
       text: rebuilt,
-      selection: TextSelection.collapsed(offset: caret.clamp(0, rebuilt.length)),
+      selection: TextSelection.collapsed(
+        offset: caret.clamp(0, rebuilt.length),
+      ),
     );
   }
 

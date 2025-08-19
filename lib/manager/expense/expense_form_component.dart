@@ -112,7 +112,24 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) _amountFocus.requestFocus();
     });
-    // (Eventuali listener per aggiornare validazioni in tempo reale possono essere aggiunti qui)
+    // Listener per aggiornare _amount in tempo reale (mantiene valore anche quando perde focus)
+    _amountController.addListener(() {
+      final parsed = _parseLocalizedAmount(_amountController.text);
+      if (parsed != _amount) {
+        setState(() {
+          _amount = parsed;
+          _amountTouched = true;
+          _isDirty = true;
+        });
+      }
+    });
+    // (Altri listener realtime possono essere aggiunti qui)
+  }
+
+  double? _parseLocalizedAmount(String input) {
+    if (input.isEmpty) return null;
+    final cleaned = input.replaceAll('.', '').replaceAll(',', '.');
+    return double.tryParse(cleaned);
   }
 
   Future<bool> _confirmDiscardChanges() async {
@@ -183,7 +200,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     if (!_isFormValid()) return;
     final nameValue = _nameController.text.trim();
     final expense = ExpenseDetails(
-      amount: _amount ?? double.tryParse(_amountController.text) ?? 0,
+      amount: _amount ?? _parseLocalizedAmount(_amountController.text) ?? 0,
       paidBy: _paidBy ?? ExpenseParticipant(name: ''),
       category:
           _category ??
@@ -208,7 +225,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   Widget build(BuildContext context) {
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
     final loc = AppLocalizations(locale);
-    final smallStyle = Theme.of(context).textTheme.bodySmall;
+  final smallStyle = Theme.of(context).textTheme.bodyMedium;
     return PopScope(
       canPop: !_isDirty,
       onPopInvokedWithResult: (didPop, result) async {
@@ -238,12 +255,14 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                   categories: _categories,
                   label: loc.get('amount'),
                   loc: loc,
-                  validator: (v) => v == null || double.tryParse(v) == null
-                      ? loc.get('invalid_amount')
-                      : null,
-                  onSaved: (v) {
-                    // Non necessario più, viene gestito dal listener
+                  validator: (v) {
+                    final parsed = _parseLocalizedAmount(v ?? '');
+                    if (parsed == null || parsed <= 0) {
+                      return loc.get('invalid_amount');
+                    }
+                    return null;
                   },
+                  onSaved: (v) {},
                   onSubmitted: _saveExpense,
                   textStyle: smallStyle,
                 ),

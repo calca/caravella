@@ -53,7 +53,7 @@ class CategorySelectorWidget extends StatelessWidget {
           Icon(
             Icons.category_outlined,
             size: 20,
-            color: theme.colorScheme.onSurfaceVariant,
+            color: theme.colorScheme.onSurface,
           ),
           const SizedBox(width: 8),
           Flexible(
@@ -62,7 +62,7 @@ class CategorySelectorWidget extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: (textStyle ?? theme.textTheme.bodyMedium)?.copyWith(
                 color: theme.colorScheme.onSurface,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w400,
               ),
             ),
           ),
