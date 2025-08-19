@@ -67,8 +67,8 @@ abstract class AppLocalizations {
 
   final String localeName;
 
-  static AppLocalizations of(BuildContext context) {
-    return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
+  static AppLocalizations? of(BuildContext context) {
+    return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
   static const LocalizationsDelegate<AppLocalizations> delegate =
@@ -1291,6 +1291,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Import a backup to restore your data.'**
   String get data_restore_desc;
+
+  /// No description provided for @info_tab.
+  ///
+  /// In en, this message translates to:
+  /// **'Info'**
+  String get info_tab;
+
+  /// No description provided for @select_paid_by.
+  ///
+  /// In en, this message translates to:
+  /// **'Select payer'**
+  String get select_paid_by;
+
+  /// No description provided for @select_category.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a category'**
+  String get select_category;
+
+  /// No description provided for @check_form.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the entered data'**
+  String get check_form;
+
+  /// No description provided for @delete_expense.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete expense'**
+  String get delete_expense;
+
+  /// No description provided for @delete_expense_confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this expense?'**
+  String get delete_expense_confirm;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @general_statistics.
+  ///
+  /// In en, this message translates to:
+  /// **'General statistics'**
+  String get general_statistics;
+
+  /// No description provided for @average_expense.
+  ///
+  /// In en, this message translates to:
+  /// **'Average expense'**
+  String get average_expense;
+
+  /// No description provided for @welcome_v3_cta.
+  ///
+  /// In en, this message translates to:
+  /// **'Get started!'**
+  String get welcome_v3_cta;
+
+  /// No description provided for @discard_changes_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard changes?'**
+  String get discard_changes_title;
+
+  /// No description provided for @discard_changes_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to discard unsaved changes?'**
+  String get discard_changes_message;
+
+  /// No description provided for @discard.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get discard;
+
+  /// No description provided for @category_placeholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get category_placeholder;
 }
 
 class _AppLocalizationsDelegate

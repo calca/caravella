@@ -622,4 +622,48 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get data_restore_desc => 'Importa un backup per ripristinare i dati.';
+
+  @override
+  String get info_tab => 'Info';
+
+  @override
+  String get select_paid_by => 'Seleziona chi ha pagato';
+
+  @override
+  String get select_category => 'Seleziona una categoria';
+
+  @override
+  String get check_form => 'Controlla i dati inseriti';
+
+  @override
+  String get delete_expense => 'Elimina spesa';
+
+  @override
+  String get delete_expense_confirm =>
+      'Sei sicuro di voler eliminare questa spesa?';
+
+  @override
+  String get delete => 'Elimina';
+
+  @override
+  String get general_statistics => 'Statistiche generali';
+
+  @override
+  String get average_expense => 'Spesa media';
+
+  @override
+  String get welcome_v3_cta => 'Inizia!';
+
+  @override
+  String get discard_changes_title => 'Scartare le modifiche?';
+
+  @override
+  String get discard_changes_message =>
+      'Sei sicuro di voler scartare le modifiche non salvate?';
+
+  @override
+  String get discard => 'Scarta';
+
+  @override
+  String get category_placeholder => 'Categoria';
 }

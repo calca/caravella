@@ -621,4 +621,48 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get data_restore_desc => 'Import a backup to restore your data.';
+
+  @override
+  String get info_tab => 'Info';
+
+  @override
+  String get select_paid_by => 'Select payer';
+
+  @override
+  String get select_category => 'Select a category';
+
+  @override
+  String get check_form => 'Check the entered data';
+
+  @override
+  String get delete_expense => 'Delete expense';
+
+  @override
+  String get delete_expense_confirm =>
+      'Are you sure you want to delete this expense?';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get general_statistics => 'General statistics';
+
+  @override
+  String get average_expense => 'Average expense';
+
+  @override
+  String get welcome_v3_cta => 'Get started!';
+
+  @override
+  String get discard_changes_title => 'Discard changes?';
+
+  @override
+  String get discard_changes_message =>
+      'Are you sure you want to discard unsaved changes?';
+
+  @override
+  String get discard => 'Discard';
+
+  @override
+  String get category_placeholder => 'Category';
 }

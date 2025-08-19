@@ -199,4 +199,18 @@
   "data_backup_desc": "Create a backup file of your expenses.",
   "data_restore_title": "Restore",
   "data_restore_desc": "Import a backup to restore your data."
+  ,"info_tab": "Info"
+  ,"select_paid_by": "Select payer"
+  ,"select_category": "Select a category"
+  ,"check_form": "Check the entered data"
+  ,"delete_expense": "Delete expense"
+  ,"delete_expense_confirm": "Are you sure you want to delete this expense?"
+  ,"delete": "Delete"
+  ,"general_statistics": "General statistics"
+  ,"average_expense": "Average expense"
+  ,"welcome_v3_cta": "Get started!"
+  ,"discard_changes_title": "Discard changes?"
+  ,"discard_changes_message": "Are you sure you want to discard unsaved changes?"
+  ,"discard": "Discard"
+  ,"category_placeholder": "Category"
 }

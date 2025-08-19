@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-// Generated localization file (via flutter gen-l10n) resides in lib/l10n
-import 'l10n/app_localizations.dart' as gen;
+// Generated localization file (project path via l10n.yaml synthetic-package: false)
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 
 // Bridge per mantenere compatibile l'attuale API loc.get('key')
 // usando le classi generate automaticamente.
