@@ -3,6 +3,7 @@ import '../../../app_localizations.dart';
 import '../../../data/expense_group.dart';
 import '../../../widgets/currency_display.dart';
 import '../../../state/locale_notifier.dart';
+import 'overview_stats_logic.dart';
 import 'widgets/daily_expenses_chart.dart';
 import 'widgets/categories_pie_chart.dart';
 import 'widgets/daily_average_by_category.dart';
@@ -232,8 +233,12 @@ class UnifiedOverviewTab extends StatelessWidget {
       );
     }
 
-    // Calcola le statistiche per i grafici
-    final weeklyStats = _calculateWeeklyStats();
+    // Calcola le statistiche per i grafici (daily o weekly)
+    final bool weekly = useWeeklyAggregation(trip);
+    final stats = weekly ? _calculateWeeklyStats() : _calculateDailyStats();
+    final chartTitleKey = weekly
+        ? 'weekly_expenses_chart'
+        : 'daily_expenses_chart';
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -392,9 +397,14 @@ class UnifiedOverviewTab extends StatelessWidget {
 
             const SizedBox(height: 32),
 
-            // 3. WEEKLY (DailyExpensesChart already has its own bold title)
-            if (weeklyStats.isNotEmpty) ...[
-              DailyExpensesChart(trip: trip, dailyStats: weeklyStats, loc: loc),
+            // 3. DAILY / WEEKLY chart dinamico
+            if (stats.isNotEmpty) ...[
+              DailyExpensesChart(
+                trip: trip,
+                dailyStats: stats,
+                loc: loc,
+                titleKey: chartTitleKey,
+              ),
               const SizedBox(height: 32),
             ],
 

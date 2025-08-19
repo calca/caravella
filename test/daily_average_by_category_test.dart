@@ -67,8 +67,8 @@ void main() {
         categories: [foodCategory, transportCategory],
       );
 
-      final widget = DailyAverageByCategoryWidget(trip: trip, loc: loc);
-      final averages = widget._calculateDailyAveragesByCategory();
+    final averages = DailyAverageByCategoryWidget(trip: trip, loc: loc)
+      ._calculateDailyAveragesByCategory();
 
       // Food: 150.0 / 10 days = 15.0 per day
       // Transport: 30.0 / 10 days = 3.0 per day
@@ -105,8 +105,8 @@ void main() {
         categories: [foodCategory, transportCategory],
       );
 
-      final widget = DailyAverageByCategoryWidget(trip: trip, loc: loc);
-      final averages = widget._calculateDailyAveragesByCategory();
+    final averages = DailyAverageByCategoryWidget(trip: trip, loc: loc)
+      ._calculateDailyAveragesByCategory();
 
       // Duration is 10 days (from first expense to now)
       // Food: 100.0 / 10 days = 10.0 per day
@@ -117,11 +117,9 @@ void main() {
 
     test('uses localized per_day text', () {
       final trip = ExpenseGroup.empty();
-      final widget = DailyAverageByCategoryWidget(trip: trip, loc: loc);
-      
-      // Test that the widget would use the localized key
+      // Instantiate to mirror typical usage (no direct need to keep reference)
+      DailyAverageByCategoryWidget(trip: trip, loc: loc);
       expect(loc.get('per_day'), '/day'); // English
-      
       final locIT = AppLocalizations('it');
       expect(locIT.get('per_day'), '/giorno'); // Italian
     });
@@ -149,8 +147,8 @@ void main() {
         categories: [foodCategory],
       );
 
-      final widget = DailyAverageByCategoryWidget(trip: trip, loc: loc);
-      final averages = widget._calculateDailyAveragesByCategory();
+    final averages = DailyAverageByCategoryWidget(trip: trip, loc: loc)
+      ._calculateDailyAveragesByCategory();
 
       // Should use startDate to current date (10 days), not to future endDate
       // Food: 100.0 / 10 days = 10.0 per day
@@ -168,8 +166,8 @@ void main() {
         categories: [foodCategory],
       );
 
-      final widget = DailyAverageByCategoryWidget(trip: trip, loc: loc);
-      final averages = widget._calculateDailyAveragesByCategory();
+    final averages = DailyAverageByCategoryWidget(trip: trip, loc: loc)
+      ._calculateDailyAveragesByCategory();
 
       expect(averages.isEmpty, isTrue);
     });

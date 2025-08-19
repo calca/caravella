@@ -54,9 +54,9 @@ class DailyExpensesChart extends StatelessWidget {
     final useLogScale =
         maxAmount > 0 && minAmount > 0 && (maxAmount / minAmount) > 100;
 
-    // Calcola l'altezza del grafico: max 1/3 della pagina, min 180px, max 300px
-    final screenHeight = MediaQuery.of(context).size.height;
-    final chartHeight = (screenHeight / 3).clamp(180.0, 300.0);
+  // Altezza compatta: massimo 25% dell'altezza schermo (nessun extra spazio)
+  final screenHeight = MediaQuery.of(context).size.height;
+  final chartHeight = screenHeight * 0.25; // compatto e limitato al 25%
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,7 +67,7 @@ class DailyExpensesChart extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
         ),
-        const SizedBox(height: 0),
+  // Nessuno spazio aggiuntivo sotto il titolo per compattezza
         SizedBox(
           height: chartHeight,
           child: SingleChildScrollView(

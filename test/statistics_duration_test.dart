@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:org_app_caravella/data/expense_group.dart';
-import 'package:org_app_caravella/manager/details/tabs/statistics_tab.dart';
+import 'package:org_app_caravella/manager/details/tabs/overview_stats_logic.dart';
 
 void main() {
   group('StatisticsTab Duration Logic', () {
@@ -17,7 +17,7 @@ void main() {
         currency: 'EUR',
       );
       
-      final statisticsTab = StatisticsTab(trip: trip);
+  expect(useWeeklyAggregation(trip), isFalse);
       
       // Access the private method through a test-friendly way
       // For now, we'll test the duration calculation directly
@@ -38,7 +38,7 @@ void main() {
         currency: 'EUR',
       );
       
-      final statisticsTab = StatisticsTab(trip: trip);
+  expect(useWeeklyAggregation(trip), isTrue);
       
       final duration = endDate.difference(startDate);
       expect(duration.inDays > 7, isTrue);
@@ -52,7 +52,7 @@ void main() {
         currency: 'EUR',
       );
       
-      final statisticsTab = StatisticsTab(trip: trip);
+  expect(useWeeklyAggregation(trip), isTrue);
       
       expect(trip.startDate, isNull);
       expect(trip.endDate, isNull);
