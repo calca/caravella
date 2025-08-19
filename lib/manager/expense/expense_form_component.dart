@@ -128,6 +128,14 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   @override
   void didUpdateWidget(covariant ExpenseFormComponent oldWidget) {
     super.didUpdateWidget(oldWidget);
+    
+    // Aggiorna la lista locale delle categorie se cambiata
+    if (widget.categories != oldWidget.categories) {
+      setState(() {
+        _categories = List.from(widget.categories);
+      });
+    }
+    
     // Se una nuova categoria è stata aggiunta e non è già selezionata, la selezioniamo
     if (widget.newlyAddedCategory != null &&
         (_category == null || widget.newlyAddedCategory != _category!.name)) {
