@@ -349,8 +349,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                   Expanded(
                     child: _buildFieldWithStatus(
                       ParticipantSelectorWidget(
-                        participants:
-                            widget.participants.map((p) => p.name).toList(),
+                        participants: widget.participants
+                            .map((p) => p.name)
+                            .toList(),
                         selectedParticipant: _paidBy?.name,
                         onParticipantSelected: (selectedName) {
                           setState(() {
@@ -411,7 +412,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                               }
                             });
                             await Future.delayed(
-                                const Duration(milliseconds: 100));
+                              const Duration(milliseconds: 100),
+                            );
                             final foundAfter = widget.categories.firstWhere(
                               (c) => c.name == newCategoryName,
                               orElse: () => widget.categories.isNotEmpty

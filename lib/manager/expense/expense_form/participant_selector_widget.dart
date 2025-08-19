@@ -21,7 +21,7 @@ class ParticipantSelectorWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final selected = selectedParticipant;
-  return FilledButton(
+    return FilledButton(
       style: FilledButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         backgroundColor: theme.colorScheme.primary,

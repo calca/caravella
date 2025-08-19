@@ -23,7 +23,7 @@ class CategorySelectorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-  return FilledButton(
+    return FilledButton(
       style: FilledButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         backgroundColor: theme.colorScheme.primary,
@@ -32,14 +32,14 @@ class CategorySelectorWidget extends StatelessWidget {
       onPressed: () async {
         final picked = await showSelectionBottomSheet<ExpenseCategory>(
           context: context,
-            items: categories,
-            selected: selectedCategory,
-            loc: loc,
-            itemLabel: (c) => c.name,
-            onAddItem: () async {
-              await onAddCategory();
-            },
-            addItemTooltip: loc.get('add_category'),
+          items: categories,
+          selected: selectedCategory,
+          loc: loc,
+          itemLabel: (c) => c.name,
+          onAddItem: () async {
+            await onAddCategory();
+          },
+          addItemTooltip: loc.get('add_category'),
         );
         if (picked != null && picked != selectedCategory) {
           onCategorySelected(picked);
