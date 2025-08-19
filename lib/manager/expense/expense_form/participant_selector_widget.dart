@@ -19,65 +19,48 @@ class ParticipantSelectorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 8),
-          child: Text(
-            '${loc.get('paid_by')} *',
-            style: textStyle ?? Theme.of(context).textTheme.bodySmall,
-          ),
-        ),
-        Row(
-          children: participants.isNotEmpty
-              ? participants.map((p) {
-                  final selected = selectedParticipant == p;
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                    child: ThemedChoiceChip(
-                      label: p,
-                      selected: selected,
-                      textStyle:
-                          (textStyle ?? Theme.of(context).textTheme.bodySmall)
-                              ?.copyWith(
-                        fontWeight:
-                            selected ? FontWeight.bold : FontWeight.normal,
-                      ),
-                      selectedTextColor:
-                          Theme.of(context).colorScheme.onPrimary,
-                      selectedColor: Theme.of(context).colorScheme.primary,
-                      backgroundColor: selected
-                          ? null
-                          : Theme.of(context)
-                              .colorScheme
-                              .surfaceContainerHighest,
-                      side: BorderSide(
-                        color: selected
-                            ? Theme.of(context).colorScheme.primary
-                            : Theme.of(context)
-                                .colorScheme
-                                .outline
-                                .withValues(alpha: 0.3),
-                        width: 1,
-                      ),
-                      showCheckmark: false,
-                      avatar: null,
-                      onSelected: () => onParticipantSelected(p),
-                    ),
-                  );
-                }).toList()
-              : [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                    child: Text(
-                      loc.get('participants_label'),
-                      style: textStyle ?? Theme.of(context).textTheme.bodySmall,
-                    ),
+    return Row(
+      children: participants.isNotEmpty
+          ? participants.map((p) {
+              final selected = selectedParticipant == p;
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                child: ThemedChoiceChip(
+                  label: p,
+                  selected: selected,
+                  textStyle: (textStyle ?? Theme.of(context).textTheme.bodySmall)
+                      ?.copyWith(
+                    fontWeight: selected ? FontWeight.bold : FontWeight.normal,
                   ),
-                ],
-        ),
-      ],
+                  selectedTextColor: Theme.of(context).colorScheme.onPrimary,
+                  selectedColor: Theme.of(context).colorScheme.primary,
+                  backgroundColor: selected
+                      ? null
+                      : Theme.of(context).colorScheme.surfaceContainerHighest,
+                  side: BorderSide(
+                    color: selected
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context)
+                            .colorScheme
+                            .outline
+                            .withValues(alpha: 0.3),
+                    width: 1,
+                  ),
+                  showCheckmark: false,
+                  avatar: null,
+                  onSelected: () => onParticipantSelected(p),
+                ),
+              );
+            }).toList()
+          : [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                child: Text(
+                  loc.get('participants_label'),
+                  style: textStyle ?? Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
+            ],
     );
   }
 }

@@ -87,14 +87,6 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (widget.categories.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: Text(
-              '${widget.loc.get('category')} *',
-              style: widget.textStyle ?? Theme.of(context).textTheme.bodySmall,
-            ),
-          ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
