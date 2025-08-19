@@ -19,9 +19,7 @@ import 'tabs/overview_tab.dart';
 import 'widgets/group_header.dart';
 import 'widgets/group_actions.dart';
 import 'widgets/group_total.dart';
-import 'widgets/expense_list.dart';
 import 'widgets/filtered_expense_list.dart';
-import 'widgets/empty_expenses.dart';
 import 'widgets/statistics_sheet.dart';
 import 'widgets/options_sheet.dart';
 import 'widgets/expense_form_sheet.dart';
@@ -37,6 +35,9 @@ class ExpenseGroupDetailPage extends StatefulWidget {
 }
 
 class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
+  // Opacità lista spese (default 1.0, manual refresh stato rimosso)
+  // final double _listOpacity = 1.0; // RIMOSSO: non più necessario
+
   /// Genera il contenuto CSV delle spese del gruppo
   String _generateCsvContent() {
     if (_trip == null || _trip!.expenses.isEmpty) return '';
@@ -620,22 +621,17 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               ),
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 24, 16, 0),
-                child: AnimatedOpacity(
-                  duration: const Duration(milliseconds: 220),
-                  opacity: _listOpacity,
-                  curve: Curves.easeInOut,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      FilteredExpenseList(
-                        expenses: trip.expenses,
-                        currency: trip.currency,
-                        onExpenseTap: _openEditExpense,
-                        categories: trip.categories,
-                        participants: trip.participants,
-                      ),
-                    ],
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    FilteredExpenseList(
+                      expenses: trip.expenses,
+                      currency: trip.currency,
+                      onExpenseTap: _openEditExpense,
+                      categories: trip.categories,
+                      participants: trip.participants,
+                    ),
+                  ],
                 ),
               ),
             ),
