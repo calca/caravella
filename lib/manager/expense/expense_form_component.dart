@@ -57,6 +57,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   final FocusNode _amountFocus = FocusNode();
   final TextEditingController _noteController = TextEditingController();
   late List<ExpenseCategory> _categories; // Lista locale delle categorie
+  bool _isDirty = false; // traccia modifiche non salvate
 
   // Stato per validazione in tempo reale
   bool _amountTouched = false;
@@ -110,7 +111,22 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       setState(() {
         _amount = double.tryParse(_amountController.text);
         _amountTouched = true;
+        _isDirty = true;
       });
+    });
+
+    // Listener per nome
+    _nameController.addListener(() {
+      if (!_isDirty) {
+        setState(() => _isDirty = true);
+      }
+    });
+
+    // Listener per note
+    _noteController.addListener(() {
+      if (!_isDirty) {
+        setState(() => _isDirty = true);
+      }
     });
 
     // Focus automatico su nome spesa
@@ -188,7 +204,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         name: nameValue,
         location: _location,
       );
-      widget.onExpenseAdded(expense);
+  widget.onExpenseAdded(expense);
+  // reset dirty (salvato)
+  _isDirty = false;
 
       // Chiude automaticamente solo se richiesto (per i bottom sheet)
       if (widget.shouldAutoClose && Navigator.of(context).canPop()) {
@@ -196,6 +214,28 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       }
     }
     // Rimuoviamo la SnackBar perché ora mostriamo il messaggio nel widget
+  }
+
+  Future<bool> _confirmDiscardChanges() async {
+    final loc = AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it');
+    return await showDialog<bool>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text(loc.get('discard_changes_title')),
+            content: Text(loc.get('discard_changes_message')),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(false),
+                child: Text(loc.get('cancel')),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(true),
+                child: Text(loc.get('discard')),
+              ),
+            ],
+          ),
+        ) ??
+        false;
   }
 
   bool _isFormValid() {
@@ -237,10 +277,25 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
     final loc = AppLocalizations(locale);
     final smallStyle = Theme.of(context).textTheme.bodySmall;
-    return SingleChildScrollView(
-      child: Form(
-        key: _formKey,
-        child: Column(
+    return PopScope(
+      canPop: !_isDirty,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return; // già gestito
+        if (_isDirty) {
+          final navigator = Navigator.of(context);
+          final discard = await _confirmDiscardChanges();
+          if (discard && mounted) {
+            _isDirty = false; // evita loop
+            if (navigator.canPop()) {
+              navigator.pop();
+            }
+          }
+        }
+      },
+      child: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             // CAMPO NOME SPESA (identico a importo, ora AmountInputWidget supporta testo)
@@ -298,6 +353,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                           : ExpenseParticipant(name: ''),
                     );
                     _paidByTouched = true;
+                    _isDirty = true;
                   });
                 },
                 loc: loc,
@@ -317,6 +373,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                   setState(() {
                     _category = selected;
                     _categoryTouched = true;
+                    _isDirty = true;
                   });
                 },
                 onAddCategory: () async {
@@ -341,6 +398,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                         _categories.add(found);
                         _category = found;
                         _categoryTouched = true;
+                        _isDirty = true;
                       }
                     });
 
@@ -359,6 +417,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                       _categories = List.from(widget.categories);
                       _category = foundAfter;
                       _categoryTouched = true;
+                      _isDirty = true;
                     });
 
                     // Scroll automatico alla fine
@@ -389,6 +448,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                 onDateSelected: (picked) {
                   setState(() {
                     _date = picked;
+                    _isDirty = true;
                   });
                 },
                 loc: loc,
@@ -406,6 +466,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                 onLocationChanged: (location) {
                   setState(() {
                     _location = location;
+                    _isDirty = true;
                   });
                 },
               ),
@@ -424,18 +485,13 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
 
             // Pulsanti di azione
             ExpenseFormActionsWidget(
-              onCancel: () {
-                if (Navigator.of(context).canPop()) {
-                  Navigator.of(context).pop();
-                }
-              },
               onSave: _isFormValid() ? _saveExpense : null,
               loc: loc,
               isEdit: widget.initialExpense != null,
               textStyle: smallStyle,
             ),
-            const SizedBox(height: 8),
           ],
+        ),
         ),
       ),
     );
