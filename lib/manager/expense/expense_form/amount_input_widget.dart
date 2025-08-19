@@ -15,6 +15,7 @@ class AmountInputWidget extends StatelessWidget {
   final String? label;
   final bool isText;
   final TextStyle? textStyle;
+  final String? currency; // currency override
 
   const AmountInputWidget({
     super.key,
@@ -28,6 +29,7 @@ class AmountInputWidget extends StatelessWidget {
     this.label,
     this.isText = false,
     this.textStyle,
+    this.currency,
   });
 
   @override
@@ -62,6 +64,7 @@ class AmountInputWidget extends StatelessWidget {
     }
 
     // Campo importo: valuta sempre visibile anche senza focus o testo
+    final currencySymbol = currency ?? '€';
     final currencyStyle = (textStyle ?? theme.textTheme.titleLarge)?.copyWith(
       fontWeight: FontWeight.w600,
       color: theme.colorScheme.onSurfaceVariant,
@@ -72,7 +75,7 @@ class AmountInputWidget extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.only(right: 6, top: 8, bottom: 8),
-          child: Text('€', style: currencyStyle),
+          child: Text(currencySymbol, style: currencyStyle),
         ),
         Expanded(
           child: TextFormField(

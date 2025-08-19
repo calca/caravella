@@ -75,6 +75,7 @@ class ExpenseFormSheet extends StatelessWidget {
                       shouldAutoClose: false,
                       showDateAndNote: showDateAndNote,
                       groupTitle: group.title,
+                      currency: group.currency,
                       onExpenseAdded: onExpenseSaved,
                       onCategoryAdded: onCategoryAdded,
                     ),

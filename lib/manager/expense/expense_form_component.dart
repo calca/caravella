@@ -26,6 +26,7 @@ class ExpenseFormComponent extends StatefulWidget {
   final DateTime? tripEndDate;
   final String? newlyAddedCategory; // Nuova proprietà
   final String? groupTitle; // Titolo del gruppo per la riga azioni
+  final String? currency; // Currency del gruppo
 
   const ExpenseFormComponent({
     super.key,
@@ -39,6 +40,7 @@ class ExpenseFormComponent extends StatefulWidget {
     this.tripEndDate,
     this.newlyAddedCategory, // Nuova proprietà
     this.groupTitle,
+    this.currency,
     this.showDateAndNote = false,
   });
 
@@ -255,6 +257,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                   categories: _categories,
                   label: loc.get('amount'),
                   loc: loc,
+                  currency: widget.currency,
                   validator: (v) {
                     final parsed = _parseLocalizedAmount(v ?? '');
                     if (parsed == null || parsed <= 0) {

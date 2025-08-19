@@ -117,6 +117,7 @@ class GroupCardContent extends StatelessWidget {
                       ),
                       child: ExpenseFormComponent(
                         groupTitle: currentGroup.title,
+                        currency: currentGroup.currency,
                         participants: currentGroup.participants,
                         categories: currentGroup.categories,
                         onExpenseAdded: (expense) async {
