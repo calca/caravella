@@ -26,6 +26,7 @@ import 'widgets/options_sheet.dart';
 import 'widgets/expense_form_sheet.dart';
 import 'widgets/edit_expense_sheet.dart';
 import 'widgets/delete_expense_dialog.dart';
+import '../../widgets/add_fab.dart';
 
 class ExpenseGroupDetailPage extends StatefulWidget {
   final ExpenseGroup trip;
@@ -513,10 +514,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         duration: const Duration(milliseconds: 220),
         curve: Curves.easeInOut,
         opacity: _fabVisible ? 1 : 0,
-        child: FloatingActionButton(
+        child: AddFab(
           heroTag: 'add-expense-fab',
+          tooltip: gen.AppLocalizations.of(context).add_expense,
           onPressed: _showAddExpenseSheet,
-          child: const Icon(Icons.add_rounded),
         ),
       ),
     );

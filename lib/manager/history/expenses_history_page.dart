@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'dart:async';
 import '../../data/expense_group.dart';
 import '../../../data/expense_group_storage.dart';
@@ -28,6 +29,10 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   bool _isSearchExpanded = false;
   final TextEditingController _searchController = TextEditingController();
   Timer? _searchDebounce;
+  // Scroll + FAB state
+  late final ScrollController _scrollController;
+  bool _fabVisible = true;
+  Timer? _fabIdleTimer;
 
   List<Map<String, dynamic>> _statusOptions(BuildContext context) {
     // TODO: Replace hardcoded Italian with localized getters when keys added
@@ -46,12 +51,17 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   void initState() {
     super.initState();
     _loadTrips();
+  _scrollController = ScrollController();
+  _scrollController.addListener(_onScroll);
   }
 
   @override
   void dispose() {
     _searchController.dispose();
     _searchDebounce?.cancel();
+  _scrollController.removeListener(_onScroll);
+  _scrollController.dispose();
+  _fabIdleTimer?.cancel();
     super.dispose();
   }
 
@@ -112,6 +122,62 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
       return a.pinned ? -1 : 1;
     });
     return filtered;
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    final direction = _scrollController.position.userScrollDirection;
+    if (direction == ScrollDirection.reverse) {
+      if (_fabVisible && mounted) setState(() => _fabVisible = false);
+      _fabIdleTimer?.cancel();
+      _fabIdleTimer = Timer(const Duration(milliseconds: 1200), () {
+        if (mounted && !_fabVisible) setState(() => _fabVisible = true);
+      });
+    } else if (direction == ScrollDirection.forward) {
+      if (!_fabVisible && mounted) setState(() => _fabVisible = true);
+      _fabIdleTimer?.cancel();
+    }
+  }
+
+  Widget _buildAnimatedFab(ColorScheme scheme, gen.AppLocalizations gloc) {
+    return AnimatedSlide(
+      duration: const Duration(milliseconds: 260),
+      curve: Curves.easeOut,
+      offset: _fabVisible ? Offset.zero : const Offset(0.3, 1.2),
+      child: AnimatedOpacity(
+        duration: const Duration(milliseconds: 220),
+        curve: Curves.easeInOut,
+        opacity: _fabVisible ? 1 : 0,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: scheme.primary.withValues(alpha: 0.3),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: FloatingActionButton(
+            heroTag: 'add-group-fab',
+            onPressed: () async {
+              final result = await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const AddNewExpensesGroupPage(),
+                ),
+              );
+              if (result == true) await _loadTrips();
+            },
+            tooltip: gloc.add_trip,
+            backgroundColor: scheme.primary,
+            foregroundColor: scheme.onPrimary,
+            elevation: 0,
+            child: const Icon(Icons.add_rounded, size: 28),
+          ),
+        ),
+      ),
+    );
   }
 
   void _onStatusFilterChanged(String key) {
@@ -207,47 +273,10 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
 
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      // backgroundColor centralizzato nel tema
       appBar: const CaravellaAppBar(),
-      floatingActionButton: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Theme.of(
-                context,
-              ).colorScheme.primary.withValues(alpha: 0.3),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: FloatingActionButton.extended(
-          onPressed: () async {
-            final result = await Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const AddNewExpensesGroupPage(),
-              ),
-            );
-            if (result == true) {
-              await _loadTrips();
-            }
-          },
-          tooltip: gloc.add_trip,
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          foregroundColor: Theme.of(context).colorScheme.onPrimary,
-          elevation: 0,
-          icon: const Icon(Icons.add_rounded, size: 24),
-          label: Text(
-            'Nuovo gruppo',
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-              color: Theme.of(context).colorScheme.onPrimary,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-      ),
+      floatingActionButton: _buildAnimatedFab(colorScheme, gloc),
       body: Column(
         children: [
           // HEADER SECTION CON FILTRI E RICERCA
@@ -327,7 +356,8 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                       }
                     },
                   )
-                : ListView.builder(
+        : ListView.builder(
+          controller: _scrollController,
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
                     itemCount: _filteredTrips.length,
                     itemBuilder: (context, index) {
