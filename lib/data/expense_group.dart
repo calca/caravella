@@ -16,6 +16,7 @@ class ExpenseGroup {
   final bool pinned; // Nuovo campo per pinnare il gruppo
   final bool archived; // Nuovo campo per archiviare il gruppo
   final String? file; // Nuovo campo opzionale per il path del file
+  final int? color; // Nuovo campo opzionale per il colore (Color.value)
 
   ExpenseGroup({
     required this.title,
@@ -30,6 +31,7 @@ class ExpenseGroup {
     this.pinned = false, // Default a false
     this.archived = false, // Default a false
     this.file, // Opzionale, path del file
+    this.color, // Opzionale, colore del gruppo
   })  : timestamp = timestamp ?? DateTime.now(),
         id = id ?? const Uuid().v4();
 
@@ -60,6 +62,7 @@ class ExpenseGroup {
       pinned: json['pinned'] ?? false, // Legge il valore pinnato
       archived: json['archived'] ?? false, // Legge il valore archiviato
       file: json['file'], // Legge il valore del file
+      color: json['color'], // Legge il valore del colore
     );
   }
 
@@ -76,6 +79,7 @@ class ExpenseGroup {
         'pinned': pinned, // Salva il valore pinnato
         'archived': archived, // Salva il valore archiviato
         'file': file, // Salva il valore del file
+        'color': color, // Salva il valore del colore
       };
 
   ExpenseGroup copyWith({
@@ -91,6 +95,7 @@ class ExpenseGroup {
     bool? pinned,
     bool? archived,
     String? file,
+    int? color,
   }) {
     return ExpenseGroup(
       id: id ?? this.id,
@@ -105,6 +110,7 @@ class ExpenseGroup {
       pinned: pinned ?? this.pinned,
       archived: archived ?? this.archived,
       file: file ?? this.file,
+      color: color ?? this.color,
     );
   }
 
@@ -122,6 +128,7 @@ class ExpenseGroup {
       pinned: false,
       archived: false,
       file: null, // Path del file inizialmente vuoto
+      color: null, // Colore inizialmente vuoto
     );
   }
 }
