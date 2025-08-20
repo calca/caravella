@@ -502,10 +502,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     return Divider(
       height: 24,
       thickness: 1,
-      color: Theme.of(context)
-          .colorScheme
-          .outlineVariant
-          .withValues(alpha: 0.4),
+      color: Theme.of(
+        context,
+      ).colorScheme.outlineVariant.withValues(alpha: 0.4),
     );
   }
 

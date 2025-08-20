@@ -565,36 +565,33 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                   icon: const Icon(Icons.delete),
                   tooltip: gloc.delete,
                   onPressed: () async {
-                    // ignore: use_build_context_synchronously
                     final confirm = await showDialog<bool>(
                       context: context,
-                      builder: (context) => AlertDialog(
+                      builder: (dialogCtx) => AlertDialog(
                         title: Text(gloc.delete_trip),
                         content: Text(gloc.delete_trip_confirm),
                         actions: [
                           TextButton(
-                            onPressed: () => Navigator.of(context).pop(false),
+                            onPressed: () => Navigator.of(dialogCtx).pop(false),
                             child: Text(gloc.cancel),
                           ),
                           TextButton(
-                            onPressed: () => Navigator.of(context).pop(true),
+                            onPressed: () => Navigator.of(dialogCtx).pop(true),
                             child: Text(gloc.delete),
                           ),
                         ],
                       ),
                     );
-                    if (!mounted) return; // sicurezza dopo await
-                    if (confirm == true) {
-                      final trips = await ExpenseGroupStorage.getAllGroups();
-                      if (!mounted) return;
-                      trips.removeWhere((v) => v.id == widget.trip!.id);
-                      await ExpenseGroupStorage.writeTrips(trips);
-                      if (!context.mounted) return;
+                    if (!context.mounted || confirm != true) return;
+                    final trips = await ExpenseGroupStorage.getAllGroups();
+                    if (!context.mounted) return;
+                    trips.removeWhere((v) => v.id == widget.trip!.id);
+                    await ExpenseGroupStorage.writeTrips(trips);
+                    if (!context.mounted) return;
+                    if (Navigator.of(context).canPop()) {
                       Navigator.of(context).pop(true);
-                      if (widget.onTripDeleted != null) {
-                        widget.onTripDeleted!();
-                      }
                     }
+                    widget.onTripDeleted?.call();
                   },
                 ),
             ],
