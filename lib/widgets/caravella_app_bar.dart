@@ -18,16 +18,29 @@ class CaravellaAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      backgroundColor:
-          backgroundColor ?? Theme.of(context).scaffoldBackgroundColor,
-      elevation: elevation,
-      iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onSurface),
-      foregroundColor: Theme.of(context).colorScheme.onSurface,
-      centerTitle: centerTitle,
-      title: null,
-      leading: leading,
-      actions: actions,
+    return Semantics(
+      header: true,
+      label: 'Navigation bar',
+      child: AppBar(
+        backgroundColor:
+            backgroundColor ?? Theme.of(context).scaffoldBackgroundColor,
+        elevation: elevation,
+        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onSurface),
+        foregroundColor: Theme.of(context).colorScheme.onSurface,
+        centerTitle: centerTitle,
+        title: null,
+        leading: leading != null 
+            ? Semantics(
+                button: true,
+                label: 'Back',
+                child: leading,
+              )
+            : null,
+        actions: actions?.map((action) => Semantics(
+          button: true,
+          child: action,
+        )).toList(),
+      ),
     );
   }
 

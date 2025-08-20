@@ -64,6 +64,7 @@ class AmountInputWidget extends StatelessWidget {
             vertical: 8,
             horizontal: 0,
           ),
+          semanticCounterText: '',
         ),
         keyboardType: TextInputType.text,
         textInputAction: TextInputAction.next,
@@ -72,13 +73,23 @@ class AmountInputWidget extends StatelessWidget {
         onFieldSubmitted: (_) => onSubmitted?.call(),
       );
 
-      if (leading == null) return textField; // default behavior
+      if (leading == null) {
+        return Semantics(
+          textField: true,
+          label: label != null ? label!.replaceAll(' *', '') : null,
+          child: textField,
+        );
+      }
 
       return IconLeadingField(
         icon: leading!,
         semanticsLabel: (label ?? '').replaceAll(' *', ''),
         tooltip: (label ?? '').replaceAll(' *', ''),
-        child: textField,
+        child: Semantics(
+          textField: true,
+          label: label != null ? label!.replaceAll(' *', '') : null,
+          child: textField,
+        ),
       );
     }
 
@@ -104,6 +115,7 @@ class AmountInputWidget extends StatelessWidget {
         floatingLabelBehavior: FloatingLabelBehavior.never,
         isDense: true,
         contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
+        semanticCounterText: '',
       ),
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       textInputAction: TextInputAction.next,
@@ -120,7 +132,11 @@ class AmountInputWidget extends StatelessWidget {
       icon: Text(currencySymbol, style: currencyStyle),
       semanticsLabel: label,
       tooltip: label,
-      child: amountField,
+      child: Semantics(
+        textField: true,
+        label: label != null ? '${label!.replaceAll(' *', '')} amount in $currencySymbol' : 'Amount input',
+        child: amountField,
+      ),
     );
   }
 }

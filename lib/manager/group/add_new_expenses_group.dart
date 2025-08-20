@@ -470,42 +470,58 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (BuildContext context) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20.0,
-              vertical: 16.0,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.photo_library),
-                  title: Text(gloc.from_gallery),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    _pickImage(ImageSource.gallery);
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.photo_camera),
-                  title: Text(gloc.from_camera),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    _pickImage(ImageSource.camera);
-                  },
-                ),
-                if (_selectedImageFile != null)
-                  ListTile(
-                    leading: const Icon(Icons.delete),
-                    title: Text(gloc.remove_image),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      _removeImage();
-                    },
+        return Semantics(
+          container: true,
+          label: 'Image source selection dialog',
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20.0,
+                vertical: 16.0,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Semantics(
+                    button: true,
+                    label: '${gloc.from_gallery} - Select photo from gallery',
+                    child: ListTile(
+                      leading: const Icon(Icons.photo_library),
+                      title: Text(gloc.from_gallery),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        _pickImage(ImageSource.gallery);
+                      },
+                    ),
                   ),
-                const SizedBox(height: 8),
-              ],
+                  Semantics(
+                    button: true,
+                    label: '${gloc.from_camera} - Take photo with camera',
+                    child: ListTile(
+                      leading: const Icon(Icons.photo_camera),
+                      title: Text(gloc.from_camera),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        _pickImage(ImageSource.camera);
+                      },
+                    ),
+                  ),
+                  if (_selectedImageFile != null)
+                    Semantics(
+                      button: true,
+                      label: '${gloc.remove_image} - Remove current image',
+                      child: ListTile(
+                        leading: const Icon(Icons.delete),
+                        title: Text(gloc.remove_image),
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          _removeImage();
+                        },
+                      ),
+                    ),
+                  const SizedBox(height: 8),
+                ],
+              ),
             ),
           ),
         );

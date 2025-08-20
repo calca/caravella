@@ -40,24 +40,29 @@ class AppToast {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              effectiveIcon,
-              color: textColor,
-              size: 20,
-            ),
-            const SizedBox(width: 10),
-            Flexible(
-              child: Text(
-                message,
-                style: theme.textTheme.bodyMedium?.copyWith(color: textColor),
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
+        content: Semantics(
+          liveRegion: true,
+          label: '${_getTypeDescription(type)}: $message',
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                effectiveIcon,
+                color: textColor,
+                size: 20,
+                semanticLabel: _getTypeDescription(type),
               ),
-            ),
-          ],
+              const SizedBox(width: 10),
+              Flexible(
+                child: Text(
+                  message,
+                  style: theme.textTheme.bodyMedium?.copyWith(color: textColor),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
         ),
         backgroundColor: backgroundColor,
         duration: duration,
@@ -73,6 +78,17 @@ class AppToast {
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       ),
     );
+  }
+
+  static String _getTypeDescription(ToastType type) {
+    switch (type) {
+      case ToastType.success:
+        return 'Success';
+      case ToastType.error:
+        return 'Error';
+      case ToastType.info:
+        return 'Information';
+    }
   }
 }
 

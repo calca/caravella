@@ -260,4 +260,8 @@
   ,"@status_archived": {"description": "Filter label: archived groups"}
   ,"filter_status_tooltip": "Filter groups"
   ,"@filter_status_tooltip": {"description": "Tooltip for status filter buttons row"}
+  ,"welcome_logo_semantic": "Caravella app logo"
+  ,"@welcome_logo_semantic": {"description": "Semantic label for the welcome screen logo"}
+  ,"create_new_group": "Create new group"
+  ,"@create_new_group": {"description": "Create new group action label"}
 }

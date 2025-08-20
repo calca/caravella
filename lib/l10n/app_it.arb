@@ -247,4 +247,8 @@
   ,"@status_archived": {"description": "Etichetta filtro: gruppi archiviati"}
   ,"filter_status_tooltip": "Filtra gruppi"
   ,"@filter_status_tooltip": {"description": "Tooltip per la riga dei pulsanti filtro stato"}
+  ,"welcome_logo_semantic": "Logo dell'app Caravella"
+  ,"@welcome_logo_semantic": {"description": "Semantic label for the welcome screen logo"}
+  ,"create_new_group": "Crea nuovo gruppo"
+  ,"@create_new_group": {"description": "Create new group action label"}
 }

@@ -102,9 +102,13 @@ class HomeWelcomeSection extends StatelessWidget {
                   child: SizedBox(
                     width:
                         screenWidth * 0.8, // 80% della larghezza dello schermo
-                    child: Image.asset(
-                      'assets/images/home/welcome/welcome-logo.png',
-                      fit: BoxFit.contain, // Mantiene le proporzioni
+                    child: Semantics(
+                      label: gloc.welcome_logo_semantic ?? 'Caravella app logo',
+                      image: true,
+                      child: Image.asset(
+                        'assets/images/home/welcome/welcome-logo.png',
+                        fit: BoxFit.contain, // Mantiene le proporzioni
+                      ),
                     ),
                   ),
                 ),
@@ -119,20 +123,24 @@ class HomeWelcomeSection extends StatelessWidget {
                     Positioned(
                       bottom: 0,
                       left: 0,
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const SettingsPage(),
+                      child: Semantics(
+                        button: true,
+                        label: '${gloc.settings_tab} - ${gloc.settings_tab.toLowerCase()} menu',
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const SettingsPage(),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            gloc.settings_tab.toUpperCase(),
+                            style: theme.textTheme.labelLarge?.copyWith(
+                              color: settingsTextColor,
+                              letterSpacing: 1.2,
+                              fontWeight: FontWeight.w500,
                             ),
-                          );
-                        },
-                        child: Text(
-                          gloc.settings_tab.toUpperCase(),
-                          style: theme.textTheme.labelLarge?.copyWith(
-                            color: settingsTextColor,
-                            letterSpacing: 1.2,
-                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
@@ -141,30 +149,34 @@ class HomeWelcomeSection extends StatelessWidget {
                     Positioned(
                       bottom: 60, // Posizionato sopra al bottone impostazioni
                       right: 0,
-                      child: IconButton.filled(
-                        onPressed: () async {
-                          final result = await Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const AddNewExpensesGroupPage(),
-                            ),
-                          );
-                          if (result == true && onTripAdded != null) {
-                            onTripAdded!();
-                          }
-                        },
-                        style: IconButton.styleFrom(
-                          backgroundColor: buttonBackgroundColor,
-                          foregroundColor: buttonForegroundColor,
-                          minimumSize: const Size(120, 120),
-                          maximumSize: const Size(120, 120),
-                          shape: const CircleBorder(),
-                          elevation: isDarkMode
-                              ? 2
-                              : 0, // Subtle elevation in dark mode
+                      child: Semantics(
+                        button: true,
+                        label: '${gloc.welcome_v3_cta} - ${gloc.create_new_group ?? "Create new group"}',
+                        child: IconButton.filled(
+                          onPressed: () async {
+                            final result = await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const AddNewExpensesGroupPage(),
+                              ),
+                            );
+                            if (result == true && onTripAdded != null) {
+                              onTripAdded!();
+                            }
+                          },
+                          style: IconButton.styleFrom(
+                            backgroundColor: buttonBackgroundColor,
+                            foregroundColor: buttonForegroundColor,
+                            minimumSize: const Size(120, 120),
+                            maximumSize: const Size(120, 120),
+                            shape: const CircleBorder(),
+                            elevation: isDarkMode
+                                ? 2
+                                : 0, // Subtle elevation in dark mode
+                          ),
+                          icon: const Icon(Icons.arrow_forward, size: 32),
+                          tooltip: gloc.welcome_v3_cta,
                         ),
-                        icon: const Icon(Icons.arrow_forward, size: 32),
-                        tooltip: gloc.welcome_v3_cta,
                       ),
                     ),
                   ],

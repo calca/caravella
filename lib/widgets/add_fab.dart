@@ -31,14 +31,18 @@ class AddFab extends StatelessWidget {
           ),
         ],
       ),
-      child: FloatingActionButton(
-        heroTag: heroTag,
-        onPressed: onPressed,
-        tooltip: tooltip,
-        backgroundColor: scheme.primary,
-        foregroundColor: scheme.onPrimary,
-        elevation: 0,
-        child: Icon(icon, size: iconSize),
+      child: Semantics(
+        button: true,
+        label: tooltip ?? 'Add new item',
+        child: FloatingActionButton(
+          heroTag: heroTag,
+          onPressed: onPressed,
+          tooltip: tooltip,
+          backgroundColor: scheme.primary,
+          foregroundColor: scheme.onPrimary,
+          elevation: 0,
+          child: Icon(icon, size: iconSize),
+        ),
       ),
     );
   }

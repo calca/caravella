@@ -112,7 +112,15 @@ class _HomePageState extends State<HomePage> with RouteAware {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? Semantics(
+              liveRegion: true,
+              label: 'Loading groups',
+              child: const Center(
+                child: CircularProgressIndicator(
+                  semanticsLabel: 'Loading your groups',
+                ),
+              ),
+            )
           : RefreshIndicator(
               onRefresh: _handleUserRefresh,
               child: FutureBuilder<List<ExpenseGroup>>(
@@ -121,7 +129,27 @@ class _HomePageState extends State<HomePage> with RouteAware {
                   final hasGroups = snapshot.data?.isNotEmpty == true;
                   if (hasGroups) {
                     return SafeArea(
-                      child: HomeCardsSection(
+                      child: Semantics(
+                        label: 'Groups list',
+                        child: HomeCardsSection(
+                          onTripAdded: () {
+                            _refresh();
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              AppToast.show(
+                                context,
+                                gloc.group_added_success,
+                                type: ToastType.success,
+                              );
+                            });
+                          },
+                          pinnedTrip: _pinnedTrip,
+                        ),
+                      ),
+                    );
+                  } else {
+                    return Semantics(
+                      label: 'Welcome screen',
+                      child: HomeWelcomeSection(
                         onTripAdded: () {
                           _refresh();
                           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -132,21 +160,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
                             );
                           });
                         },
-                        pinnedTrip: _pinnedTrip,
                       ),
-                    );
-                  } else {
-                    return HomeWelcomeSection(
-                      onTripAdded: () {
-                        _refresh();
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          AppToast.show(
-                            context,
-                            gloc.group_added_success,
-                            type: ToastType.success,
-                          );
-                        });
-                      },
                     );
                   }
                 },

@@ -7,35 +7,52 @@ class CategoryDialog {
 
     return showDialog<String>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(gen.AppLocalizations.of(context).add_category),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          decoration: InputDecoration(
-            labelText: gen.AppLocalizations.of(context).category_name,
+      builder: (context) => Semantics(
+        dialog: true,
+        label: gen.AppLocalizations.of(context).add_category,
+        child: AlertDialog(
+          title: Text(gen.AppLocalizations.of(context).add_category),
+          content: Semantics(
+            textField: true,
+            label: gen.AppLocalizations.of(context).category_name,
+            child: TextField(
+              controller: controller,
+              autofocus: true,
+              decoration: InputDecoration(
+                labelText: gen.AppLocalizations.of(context).category_name,
+                semanticCounterText: '',
+              ),
+              onSubmitted: (val) {
+                if (val.trim().isNotEmpty) {
+                  Navigator.of(context).pop(val.trim());
+                }
+              },
+            ),
           ),
-          onSubmitted: (val) {
-            if (val.trim().isNotEmpty) {
-              Navigator.of(context).pop(val.trim());
-            }
-          },
+          actions: [
+            Semantics(
+              button: true,
+              label: '${gen.AppLocalizations.of(context).cancel} dialog',
+              child: TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(gen.AppLocalizations.of(context).cancel),
+              ),
+            ),
+            Semantics(
+              button: true,
+              label: '${gen.AppLocalizations.of(context).add} category',
+              child: TextButton(
+                onPressed: () {
+                  final val = controller.text.trim();
+                  if (val.isNotEmpty) {
+                    Navigator.of(context).pop(val);
+                  }
+                },
+                child: Text(gen.AppLocalizations.of(context).add),
+              ),
+            ),
+          ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(gen.AppLocalizations.of(context).cancel),
-          ),
-          TextButton(
-            onPressed: () {
-              final val = controller.text.trim();
-              if (val.isNotEmpty) {
-                Navigator.of(context).pop(val);
-              }
-            },
-            child: Text(gen.AppLocalizations.of(context).add),
-          ),
-        ],
       ),
     );
   }
