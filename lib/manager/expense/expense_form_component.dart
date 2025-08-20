@@ -1,3 +1,4 @@
+library expense_form_component;
 import 'package:flutter/material.dart';
 import '../../data/expense_category.dart';
 import '../../data/expense_details.dart';
@@ -232,339 +233,277 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => _buildRoot(context);
+
+  Widget _buildRoot(BuildContext context) {
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    final gloc = gen.AppLocalizations.of(context); // generated (non-null)
+    final gloc = gen.AppLocalizations.of(context);
     final smallStyle = Theme.of(context).textTheme.bodyMedium;
     return PopScope(
       canPop: !_isDirty,
-      onPopInvokedWithResult: (didPop, result) async {
-        if (didPop) return; // già gestito
-        if (_isDirty) {
-          final navigator = Navigator.of(context);
-          final discard = await _confirmDiscardChanges();
-          if (discard && mounted) {
-            _isDirty = false; // evita loop
-            if (navigator.canPop()) {
-              navigator.pop();
-            }
-          }
-        }
-      },
+      onPopInvokedWithResult: _handlePop,
       child: SingleChildScrollView(
         child: Form(
           key: _formKey,
           child: Column(
-            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // IMPORTO + CURRENCY con status (ora prima del nome)
-              _buildFieldWithStatus(
-                AmountInputWidget(
-                  controller: _amountController,
-                  focusNode: _amountFocus,
-                  categories: _categories,
-                  label: gloc.amount,
-                  currency: widget.currency,
-                  validator: (v) {
-                    final parsed = _parseLocalizedAmount(v ?? '');
-                    if (parsed == null || parsed <= 0) {
-                      return gloc.invalid_amount;
-                    }
-                    return null;
-                  },
-                  onSaved: (v) {},
-                  onSubmitted: _saveExpense,
-                  textStyle: smallStyle,
-                ),
-                _isAmountValid,
-                _amountTouched,
-              ),
-              const SizedBox(height: _rowSpacing),
-              // CAMPO NOME SPESA (dopo amount)
-              _buildFieldWithStatus(
-                AmountInputWidget(
-                  controller: _nameController,
-                  focusNode: _nameFocus,
-                  label: gloc.expense_name,
-                  leading: Icon(
-                    Icons.description_outlined,
-                    size: 22,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-                  // TODO: replace with generated localization key (e.g., gloc.expense_name_required) once added to ARB
-                  validator: (v) =>
-                      v == null || v.trim().isEmpty ? gloc.enter_title : null,
-                  onSaved: (v) {},
-                  onSubmitted: () {},
-                  isText: true,
-                  textStyle: smallStyle,
-                ),
-                _nameController.text.trim().isNotEmpty,
-                _amountTouched,
-              ),
-              const SizedBox(height: _rowSpacing),
-
-              // PAID BY + CATEGORY
-              if (widget.fullEdit) ...[
-                // Stacked vertically to match other row layouts
-                _buildFieldWithStatus(
-                  ParticipantSelectorWidget(
-                    participants:
-                        widget.participants.map((p) => p.name).toList(),
-                    selectedParticipant: _paidBy?.name,
-                    onParticipantSelected: (selectedName) {
-                      setState(() {
-                        _paidBy = widget.participants.firstWhere(
-                          (p) => p.name == selectedName,
-                          orElse: () => widget.participants.isNotEmpty
-                              ? widget.participants.first
-                              : ExpenseParticipant(name: ''),
-                        );
-                        _paidByTouched = true;
-                        _isDirty = true;
-                      });
-                    },
-                    textStyle: smallStyle,
-                    fullEdit: true,
-                  ),
-                  _isPaidByValid,
-                  _paidByTouched,
-                ),
-                const SizedBox(height: _rowSpacing),
-                _buildFieldWithStatus(
-                  CategorySelectorWidget(
-                    categories: _categories,
-                    selectedCategory: _category,
-                    onCategorySelected: (selected) {
-                      setState(() {
-                        _category = selected;
-                        _categoryTouched = true;
-                        _isDirty = true;
-                      });
-                    },
-                    onAddCategory: () async {
-                      final newCategoryName = await CategoryDialog.show(
-                        context: context,
-                      );
-                      if (newCategoryName != null &&
-                          newCategoryName.isNotEmpty) {
-                        widget.onCategoryAdded(newCategoryName);
-                        final found = widget.categories.firstWhere(
-                          (c) => c.name == newCategoryName,
-                          orElse: () => widget.categories.isNotEmpty
-                              ? widget.categories.first
-                              : ExpenseCategory(
-                                  name: '',
-                                  id: '',
-                                  createdAt: DateTime(2000),
-                                ),
-                        );
-                        setState(() {
-                          if (!_categories.contains(found)) {
-                            _categories.add(found);
-                            _category = found;
-                            _categoryTouched = true;
-                            _isDirty = true;
-                          }
-                        });
-                        await Future.delayed(
-                          const Duration(milliseconds: 100),
-                        );
-                        final foundAfter = widget.categories.firstWhere(
-                          (c) => c.name == newCategoryName,
-                          orElse: () => widget.categories.isNotEmpty
-                              ? widget.categories.first
-                              : ExpenseCategory(
-                                  name: '',
-                                  id: '',
-                                  createdAt: DateTime(2000),
-                                ),
-                        );
-                        setState(() {
-                          _categories = List.from(widget.categories);
-                          _category = foundAfter;
-                          _categoryTouched = true;
-                          _isDirty = true;
-                        });
-                      }
-                    },
-                    textStyle: smallStyle,
-                    fullEdit: true,
-                  ),
-                  _isCategoryValid,
-                  _categoryTouched,
-                ),
-              ] else
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Wrap(
-                    spacing: 12,
-                    runSpacing: 8,
-                    children: [
-                      _buildFieldWithStatus(
-                        ParticipantSelectorWidget(
-                          participants: widget.participants
-                              .map((p) => p.name)
-                              .toList(),
-                          selectedParticipant: _paidBy?.name,
-                          onParticipantSelected: (selectedName) {
-                            setState(() {
-                              _paidBy = widget.participants.firstWhere(
-                                (p) => p.name == selectedName,
-                                orElse: () => widget.participants.isNotEmpty
-                                    ? widget.participants.first
-                                    : ExpenseParticipant(name: ''),
-                              );
-                              _paidByTouched = true;
-                              _isDirty = true;
-                            });
-                          },
-                          textStyle: smallStyle,
-                          fullEdit: false,
-                        ),
-                        _isPaidByValid,
-                        _paidByTouched,
-                      ),
-                      _buildFieldWithStatus(
-                        CategorySelectorWidget(
-                          categories: _categories,
-                          selectedCategory: _category,
-                          onCategorySelected: (selected) {
-                            setState(() {
-                              _category = selected;
-                              _categoryTouched = true;
-                              _isDirty = true;
-                            });
-                          },
-                          onAddCategory: () async {
-                            final newCategoryName = await CategoryDialog.show(
-                              context: context,
-                            );
-                            if (newCategoryName != null &&
-                                newCategoryName.isNotEmpty) {
-                              widget.onCategoryAdded(newCategoryName);
-                              final found = widget.categories.firstWhere(
-                                (c) => c.name == newCategoryName,
-                                orElse: () => widget.categories.isNotEmpty
-                                    ? widget.categories.first
-                                    : ExpenseCategory(
-                                        name: '',
-                                        id: '',
-                                        createdAt: DateTime(2000),
-                                      ),
-                              );
-                              setState(() {
-                                if (!_categories.contains(found)) {
-                                  _categories.add(found);
-                                  _category = found;
-                                  _categoryTouched = true;
-                                  _isDirty = true;
-                                }
-                              });
-                              await Future.delayed(
-                                const Duration(milliseconds: 100),
-                              );
-                              final foundAfter = widget.categories.firstWhere(
-                                (c) => c.name == newCategoryName,
-                                orElse: () => widget.categories.isNotEmpty
-                                    ? widget.categories.first
-                                    : ExpenseCategory(
-                                        name: '',
-                                        id: '',
-                                        createdAt: DateTime(2000),
-                                      ),
-                              );
-                              setState(() {
-                                _categories = List.from(widget.categories);
-                                _category = foundAfter;
-                                _categoryTouched = true;
-                                _isDirty = true;
-                              });
-                            }
-                          },
-                          textStyle: smallStyle,
-                          fullEdit: false,
-                        ),
-                        _isCategoryValid,
-                        _categoryTouched,
-                      ),
-                    ],
-                  ),
-                ),
-
-              // DATA (bottone con data + icona, angoli arrotondati, sfondo grigio coerente col tema)
-              // Unified extended fields (date, location, note)
-              if ((widget.fullEdit || widget.initialExpense != null ||
-                  (ModalRoute.of(context)?.settings.name != null))) ...[
-                const SizedBox(height: _rowSpacing),
-                DateSelectorWidget(
-                  selectedDate: _date,
-                  tripStartDate: widget.tripStartDate,
-                  tripEndDate: widget.tripEndDate,
-                  onDateSelected: (picked) {
-                    setState(() {
-                      _date = picked;
-                      _isDirty = true;
-                    });
-                  },
-                  locale: locale,
-                  textStyle: smallStyle,
-                ),
-                const SizedBox(height: _rowSpacing),
-                LocationInputWidget(
-                  initialLocation: _location,
-                  textStyle: smallStyle,
-                  onLocationChanged: (location) {
-                    setState(() {
-                      _location = location;
-                      _isDirty = true;
-                    });
-                  },
-                ),
-                const SizedBox(height: _rowSpacing),
-                NoteInputWidget(
-                  controller: _noteController,
-                  textStyle: smallStyle,
-                ),
-              ],
-              Divider(
-                height: 24,
-                thickness: 1,
-                color: Theme.of(
-                  context,
-                ).colorScheme.outlineVariant.withValues(alpha: 0.4),
-              ),
-
-              // Pulsanti di azione con titolo gruppo a sinistra
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  if (widget.groupTitle != null)
-                    Expanded(
-                      child: Text(
-                        widget.groupTitle!,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    )
-                  else
-                    const Spacer(),
-                  ExpenseFormActionsWidget(
-                    onSave: _isFormValid() ? _saveExpense : null,
-                    isEdit: widget.initialExpense != null,
-                    textStyle: smallStyle,
-                  ),
-                ],
-              ),
+              _buildAmountField(gloc, smallStyle),
+              _spacer(),
+              _buildNameField(gloc, smallStyle),
+              _spacer(),
+              _buildParticipantCategorySection(smallStyle),
+              _buildExtendedFields(locale, smallStyle),
+              _buildDivider(context),
+              _buildActionsRow(gloc, smallStyle),
             ],
           ),
         ),
       ),
     );
   }
+
+  Future<void> _handlePop(bool didPop, Object? result) async {
+    if (didPop) return;
+    if (_isDirty) {
+      final navigator = Navigator.of(context);
+      final discard = await _confirmDiscardChanges();
+      if (discard && mounted && navigator.canPop()) navigator.pop();
+    }
+  }
+
+  Widget _spacer() => const SizedBox(height: _rowSpacing);
+
+  Widget _buildAmountField(gen.AppLocalizations gloc, TextStyle? style) =>
+      _buildFieldWithStatus(
+        AmountInputWidget(
+          controller: _amountController,
+          focusNode: _amountFocus,
+          categories: _categories,
+          label: gloc.amount,
+          currency: widget.currency,
+          validator: (v) {
+            final parsed = _parseLocalizedAmount(v ?? '');
+            if (parsed == null || parsed <= 0) return gloc.invalid_amount;
+            return null;
+          },
+          onSaved: (v) {},
+          onSubmitted: _saveExpense,
+          textStyle: style,
+        ),
+        _isAmountValid,
+        _amountTouched,
+      );
+
+  Widget _buildNameField(gen.AppLocalizations gloc, TextStyle? style) =>
+      _buildFieldWithStatus(
+        AmountInputWidget(
+          controller: _nameController,
+          focusNode: _nameFocus,
+          label: gloc.expense_name,
+          leading: Icon(
+            Icons.description_outlined,
+            size: 22,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+          validator: (v) => v == null || v.trim().isEmpty
+              ? gloc.enter_title
+              : null,
+          onSaved: (v) {},
+          onSubmitted: () {},
+          isText: true,
+          textStyle: style,
+        ),
+        _nameController.text.trim().isNotEmpty,
+        _amountTouched,
+      );
+
+  Widget _buildParticipantCategorySection(TextStyle? style) {
+    if (widget.fullEdit) {
+      return Column(
+        children: [
+          _buildFieldWithStatus(
+            ParticipantSelectorWidget(
+              participants: widget.participants.map((p) => p.name).toList(),
+              selectedParticipant: _paidBy?.name,
+              onParticipantSelected: _onParticipantSelected,
+              textStyle: style,
+              fullEdit: true,
+            ),
+            _isPaidByValid,
+            _paidByTouched,
+          ),
+          _spacer(),
+          _buildFieldWithStatus(
+            CategorySelectorWidget(
+              categories: _categories,
+              selectedCategory: _category,
+              onCategorySelected: _onCategorySelected,
+              onAddCategory: _onAddCategory,
+              textStyle: style,
+              fullEdit: true,
+            ),
+            _isCategoryValid,
+            _categoryTouched,
+          ),
+        ],
+      );
+    }
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Wrap(
+        spacing: 12,
+        runSpacing: 8,
+        children: [
+          _buildFieldWithStatus(
+            ParticipantSelectorWidget(
+              participants: widget.participants.map((p) => p.name).toList(),
+              selectedParticipant: _paidBy?.name,
+              onParticipantSelected: _onParticipantSelected,
+              textStyle: style,
+              fullEdit: false,
+            ),
+            _isPaidByValid,
+            _paidByTouched,
+          ),
+          _buildFieldWithStatus(
+            CategorySelectorWidget(
+              categories: _categories,
+              selectedCategory: _category,
+              onCategorySelected: _onCategorySelected,
+              onAddCategory: _onAddCategory,
+              textStyle: style,
+              fullEdit: false,
+            ),
+            _isCategoryValid,
+            _categoryTouched,
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _onParticipantSelected(String selectedName) {
+    setState(() {
+      _paidBy = widget.participants.firstWhere(
+        (p) => p.name == selectedName,
+        orElse: () => widget.participants.isNotEmpty
+            ? widget.participants.first
+            : ExpenseParticipant(name: ''),
+      );
+      _paidByTouched = true;
+      _isDirty = true;
+    });
+  }
+
+  void _onCategorySelected(ExpenseCategory? selected) {
+    setState(() {
+      _category = selected;
+      _categoryTouched = true;
+      _isDirty = true;
+    });
+  }
+
+  Future<void> _onAddCategory() async {
+    final newCategoryName = await CategoryDialog.show(context: context);
+    if (newCategoryName != null && newCategoryName.isNotEmpty) {
+      widget.onCategoryAdded(newCategoryName);
+      final found = widget.categories.firstWhere(
+        (c) => c.name == newCategoryName,
+        orElse: () => widget.categories.isNotEmpty
+            ? widget.categories.first
+            : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000)),
+      );
+      setState(() {
+        if (!_categories.contains(found)) {
+          _categories.add(found);
+          _category = found;
+          _categoryTouched = true;
+          _isDirty = true;
+        }
+      });
+      await Future.delayed(const Duration(milliseconds: 100));
+      final foundAfter = widget.categories.firstWhere(
+        (c) => c.name == newCategoryName,
+        orElse: () => widget.categories.isNotEmpty
+            ? widget.categories.first
+            : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000)),
+      );
+      setState(() {
+        _categories = List.from(widget.categories);
+        _category = foundAfter;
+        _categoryTouched = true;
+        _isDirty = true;
+      });
+    }
+  }
+
+  Widget _buildExtendedFields(String locale, TextStyle? style) {
+    final shouldShow = widget.fullEdit ||
+        widget.initialExpense != null ||
+        (ModalRoute.of(context)?.settings.name != null);
+    if (!shouldShow) return const SizedBox.shrink();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _spacer(),
+        DateSelectorWidget(
+          selectedDate: _date,
+          tripStartDate: widget.tripStartDate,
+          tripEndDate: widget.tripEndDate,
+          onDateSelected: (picked) => setState(() {
+            _date = picked;
+            _isDirty = true;
+          }),
+          locale: locale,
+          textStyle: style,
+        ),
+        _spacer(),
+        LocationInputWidget(
+          initialLocation: _location,
+          textStyle: style,
+          onLocationChanged: (location) => setState(() {
+            _location = location;
+            _isDirty = true;
+          }),
+        ),
+        _spacer(),
+        NoteInputWidget(
+          controller: _noteController,
+          textStyle: style,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDivider(BuildContext context) => Divider(
+        height: 24,
+        thickness: 1,
+        color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.4),
+      );
+
+  Widget _buildActionsRow(gen.AppLocalizations gloc, TextStyle? style) => Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          if (widget.groupTitle != null)
+            Expanded(
+              child: Text(
+                widget.groupTitle!,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+            )
+          else
+            const Spacer(),
+          ExpenseFormActionsWidget(
+            onSave: _isFormValid() ? _saveExpense : null,
+            isEdit: widget.initialExpense != null,
+            textStyle: style,
+          ),
+        ],
+      );
 
   @override
   void dispose() {
