@@ -232,13 +232,13 @@ class GroupCardContent extends StatelessWidget {
           children: [
             Icon(
               Icons.calendar_today,
-              size: 16,
+              size: 8,
               color: theme.colorScheme.onSurfaceVariant,
             ),
             const SizedBox(width: 4),
             Text(
               _formatDateRange(currentGroup, localizations),
-              style: theme.textTheme.bodyMedium?.copyWith(
+              style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
@@ -485,22 +485,6 @@ class GroupCardContent extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildCompactStat({required IconData icon, required String value}) {
-    return Row(
-      children: [
-        Icon(icon, size: _iconSize, color: theme.colorScheme.onSurface),
-        const SizedBox(width: 4),
-        Text(
-          value,
-          style: theme.textTheme.bodyLarge?.copyWith(
-            fontWeight: FontWeight.w600,
-            color: theme.colorScheme.onSurface,
-          ),
-        ),
-      ],
     );
   }
 }
