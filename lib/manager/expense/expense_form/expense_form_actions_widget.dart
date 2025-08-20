@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
-import '../../../app_localizations.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 
 class ExpenseFormActionsWidget extends StatelessWidget {
   final VoidCallback? onSave;
-  final AppLocalizations loc;
   final bool isEdit;
   final TextStyle? textStyle; // Initialize textStyle property
 
   const ExpenseFormActionsWidget({
     super.key,
     required this.onSave,
-    required this.loc,
     this.isEdit = false,
     this.textStyle,
   });

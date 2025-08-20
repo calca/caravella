@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../data/expense_category.dart';
-import '../../../app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 
@@ -11,7 +10,6 @@ class AmountInputWidget extends StatelessWidget {
   final void Function(String?)? onSaved;
   final VoidCallback? onSubmitted;
   final List<ExpenseCategory> categories;
-  final AppLocalizations loc;
   final String? label;
   final bool isText;
   final TextStyle? textStyle;
@@ -21,7 +19,6 @@ class AmountInputWidget extends StatelessWidget {
     super.key,
     required this.controller,
     this.focusNode,
-    required this.loc,
     this.validator,
     this.onSaved,
     this.onSubmitted,

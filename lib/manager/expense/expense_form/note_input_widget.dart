@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
-import '../../../app_localizations.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 
 class NoteInputWidget extends StatelessWidget {
   final TextEditingController controller;
-  final AppLocalizations loc;
   final TextStyle? textStyle;
 
   const NoteInputWidget({
     super.key,
     required this.controller,
-    required this.loc,
     this.textStyle,
   });
 

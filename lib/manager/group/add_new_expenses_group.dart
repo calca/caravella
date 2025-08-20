@@ -15,7 +15,6 @@ import '../../data/expense_group.dart';
 import '../../data/expense_participant.dart';
 import '../../data/expense_category.dart';
 import '../../../data/expense_group_storage.dart';
-import '../../app_localizations.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../state/expense_group_notifier.dart';
 import '../../widgets/caravella_app_bar.dart';
@@ -363,7 +362,8 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       // Dopo await ExpenseGroupStorage.writeTrips/trips.add, ricontrolla mounted
       AppToast.show(
         context,
-        'Errore durante il salvataggio: ${e.toString()}',
+  // TODO localize error saving group
+  'Errore durante il salvataggio: ${e.toString()}',
         type: ToastType.error,
       );
     }
@@ -392,6 +392,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       if (mounted) {
         AppToast.show(
           context,
+          // TODO localize image selection error
           'Errore durante la selezione dell\'immagine',
           type: ToastType.error,
         );
@@ -431,6 +432,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       if (mounted) {
         AppToast.show(
           context,
+          // TODO localize image save error
           'Errore durante il salvataggio dell\'immagine',
           type: ToastType.error,
         );
@@ -511,7 +513,6 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   @override
   Widget build(BuildContext context) {
   final gloc = gen.AppLocalizations.of(context);
-  final loc = AppLocalizations(gloc); // bridge instance for children expecting old API
     return GestureDetector(
       onTap: _unfocusAll,
       behavior: HitTestBehavior.translucent,
@@ -637,7 +638,6 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 ParticipantsSection(
                   participants: _participants,
                   participantController: _participantController,
-                  loc: loc,
                   onAddParticipant: (String name) {
                     setState(() {
                       _participants.add(ExpenseParticipant(name: name));
@@ -659,7 +659,6 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 // Sezione 3: Categorie
                 CategoriesSection(
                   categories: _categories,
-                  loc: loc,
                   onAddCategory: (String name) {
                     setState(() {
                       _categories.add(ExpenseCategory(name: name));
@@ -689,7 +688,6 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                       _endDate = null;
                     });
                   },
-                  loc: loc,
                 ),
                 const SizedBox(height: 24),
 
@@ -831,14 +829,15 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                       Text(
                                         _selectedImageFile == null
                                             ? gloc.select_image
-                                            : 'Modifica Immagine',
+                                            : gloc.change_image,
                                         style: Theme.of(
                                           context,
                                         ).textTheme.bodyLarge,
                                       ),
                                       const SizedBox(height: 4),
                                       Text(
-                                        'PNG, JPG, GIF fino a 10MB',
+                                        // TODO add localization e.g. gloc.image_requirements
+                                        'PNG, JPG, GIF (max 10MB)',
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodySmall

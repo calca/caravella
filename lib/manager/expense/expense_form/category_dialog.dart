@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../../app_localizations.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 
 class CategoryDialog {
   static Future<String?> show({
     required BuildContext context,
-    required AppLocalizations loc,
   }) async {
     final controller = TextEditingController();
 

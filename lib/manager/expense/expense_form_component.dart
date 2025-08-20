@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../data/expense_category.dart';
 import '../../data/expense_details.dart';
-import '../../app_localizations.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../data/expense_participant.dart';
 import '../../data/expense_location.dart';
@@ -234,7 +233,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   Widget build(BuildContext context) {
   final locale = LocaleNotifier.of(context)?.locale ?? 'it';
   final gloc = gen.AppLocalizations.of(context); // generated (non-null)
-  final loc = AppLocalizations(gloc); // bridge for children not yet migrated
     final smallStyle = Theme.of(context).textTheme.bodyMedium;
     return PopScope(
       canPop: !_isDirty,
@@ -264,7 +262,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                   focusNode: _amountFocus,
                   categories: _categories,
                   label: gloc.amount,
-                  loc: loc,
                   currency: widget.currency,
                   validator: (v) {
                     final parsed = _parseLocalizedAmount(v ?? '');
@@ -286,11 +283,11 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                 AmountInputWidget(
                   controller: _nameController,
                   focusNode: _nameFocus,
-                  loc: loc,
                   label: gloc.expense_name,
-                  validator: (v) => v == null || v.trim().isEmpty
-                      ? 'Il nome è obbligatorio'
-                      : null,
+          // TODO: replace with generated localization key (e.g., gloc.expense_name_required) once added to ARB
+          validator: (v) => v == null || v.trim().isEmpty
+            ? gloc.enter_title
+            : null,
                   onSaved: (v) {},
                   onSubmitted: () {},
                   isText: true,
@@ -326,7 +323,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                             _isDirty = true;
                           });
                         },
-                        loc: loc,
                         textStyle: smallStyle,
                       ),
                       _isPaidByValid,
@@ -346,7 +342,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                         onAddCategory: () async {
                           final newCategoryName = await CategoryDialog.show(
                             context: context,
-                            loc: loc,
                           );
                           if (newCategoryName != null &&
                               newCategoryName.isNotEmpty) {
@@ -390,7 +385,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                             });
                           }
                         },
-                        loc: loc,
                         textStyle: smallStyle,
                       ),
                       _isCategoryValid,
@@ -414,7 +408,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                       _isDirty = true;
                     });
                   },
-                  loc: loc,
                   locale: locale,
                   textStyle: smallStyle,
                 ),
@@ -423,7 +416,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
               if (widget.showDateAndNote || widget.initialExpense != null) ...[
                 LocationInputWidget(
                   initialLocation: _location,
-                  loc: loc,
                   textStyle: smallStyle,
                   onLocationChanged: (location) {
                     setState(() {
@@ -439,7 +431,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
               if (widget.showDateAndNote || widget.initialExpense != null) ...[
                 NoteInputWidget(
                   controller: _noteController,
-                  loc: loc,
                   textStyle: smallStyle,
                 ),
                 const SizedBox(height: 16),
@@ -470,7 +461,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                     const Spacer(),
                   ExpenseFormActionsWidget(
                     onSave: _isFormValid() ? _saveExpense : null,
-                    loc: loc,
                     isEdit: widget.initialExpense != null,
                     textStyle: smallStyle,
                   ),

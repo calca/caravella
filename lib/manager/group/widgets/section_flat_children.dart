@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-
-import '../../../app_localizations.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 
 class SectionFlatChildren {
@@ -10,7 +8,6 @@ class SectionFlatChildren {
     required FocusNode titleFocusNode,
     required bool showError,
     required String? dateError,
-    required AppLocalizations loc,
     required bool isEdit,
     required void Function() onChanged,
   }) {

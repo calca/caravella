@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../app_localizations.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../data/expense_participant.dart';
 import 'section_list_tile.dart';
@@ -11,7 +10,6 @@ class ParticipantsSection extends StatelessWidget {
   final void Function(int, String) onEditParticipant;
   final void Function(int) onRemoveParticipant;
   final TextEditingController participantController;
-  final AppLocalizations loc;
 
   const ParticipantsSection({
     super.key,
@@ -20,7 +18,6 @@ class ParticipantsSection extends StatelessWidget {
     required this.onEditParticipant,
     required this.onRemoveParticipant,
     required this.participantController,
-    required this.loc,
   });
 
   @override

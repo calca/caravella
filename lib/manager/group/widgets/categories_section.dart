@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../app_localizations.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../data/expense_category.dart';
 import 'section_list_tile.dart';
@@ -10,7 +9,6 @@ class CategoriesSection extends StatelessWidget {
   final void Function(String) onAddCategory;
   final void Function(int, String) onEditCategory;
   final void Function(int) onRemoveCategory;
-  final AppLocalizations loc;
 
   const CategoriesSection({
     super.key,
@@ -18,7 +16,6 @@ class CategoriesSection extends StatelessWidget {
     required this.onAddCategory,
     required this.onEditCategory,
     required this.onRemoveCategory,
-    required this.loc,
   });
 
   @override

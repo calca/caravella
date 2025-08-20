@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../app_localizations.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../widgets/themed_outlined_button.dart';
 
@@ -8,7 +7,6 @@ class DateSelectorWidget extends StatelessWidget {
   final DateTime? tripStartDate;
   final DateTime? tripEndDate;
   final void Function(DateTime) onDateSelected;
-  final AppLocalizations loc;
   final String locale;
   final TextStyle? textStyle;
 
@@ -16,7 +14,6 @@ class DateSelectorWidget extends StatelessWidget {
     super.key,
     required this.selectedDate,
     required this.onDateSelected,
-    required this.loc,
     required this.locale,
     this.tripStartDate,
     this.tripEndDate,

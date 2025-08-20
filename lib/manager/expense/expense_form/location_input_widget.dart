@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import '../../../app_localizations.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../data/expense_location.dart';
 
 class LocationInputWidget extends StatefulWidget {
   final ExpenseLocation? initialLocation;
-  final AppLocalizations loc; // bridge
   final TextStyle? textStyle;
   final Function(ExpenseLocation?) onLocationChanged;
 
   const LocationInputWidget({
     super.key,
     this.initialLocation,
-    required this.loc,
     this.textStyle,
     required this.onLocationChanged,
   });

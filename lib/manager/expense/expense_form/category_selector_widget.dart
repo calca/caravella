@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../app_localizations.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../data/expense_category.dart';
 import '../../../widgets/selection_bottom_sheet.dart';
@@ -9,7 +8,6 @@ class CategorySelectorWidget extends StatelessWidget {
   final ExpenseCategory? selectedCategory;
   final void Function(ExpenseCategory?) onCategorySelected;
   final Future<void> Function() onAddCategory;
-  final AppLocalizations loc;
   final TextStyle? textStyle;
   const CategorySelectorWidget({
     super.key,
@@ -17,7 +15,6 @@ class CategorySelectorWidget extends StatelessWidget {
     required this.selectedCategory,
     required this.onCategorySelected,
     required this.onAddCategory,
-    required this.loc,
     this.textStyle,
   });
 
