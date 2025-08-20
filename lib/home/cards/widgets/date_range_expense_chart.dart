@@ -13,12 +13,13 @@ class DateRangeExpenseChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hasExpenses = dailyTotals.any((v) => v > 0);
-    if (!hasExpenses) {
-      return const SizedBox.shrink();
-    }
+    // We now always render the chart space even if all values are zero so that
+    // the date range statistics section is visible when a date range is set.
+    // Previously this returned SizedBox.shrink() which hid the whole section.
     final spots = List.generate(
-        dailyTotals.length, (i) => FlSpot(i.toDouble(), dailyTotals[i]));
+      dailyTotals.length,
+      (i) => FlSpot(i.toDouble(), dailyTotals[i]),
+    );
     return SizedBox(
       height: 40,
       child: LineChart(
@@ -32,8 +33,9 @@ class DateRangeExpenseChart extends StatelessWidget {
               dotData: const FlDotData(show: false),
               belowBarData: BarAreaData(
                 show: true,
-                color:
-                    theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.12),
+                color: theme.colorScheme.onSurfaceVariant.withValues(
+                  alpha: 0.12,
+                ),
               ),
             ),
           ],
