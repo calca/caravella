@@ -16,11 +16,10 @@ bool useWeeklyAggregation(ExpenseGroup trip) {
 ///  - start = 1, end = 30 => 30 giorni (mostra)
 ///  - start = 1, end = 31 => 31 giorni (NON mostra)
 bool shouldShowDateRangeChart(ExpenseGroup group) {
-	final start = group.startDate;
-	final end = group.endDate;
-	if (start == null || end == null) return false;
-	if (end.isBefore(start)) return false; // dati incoerenti
-	final inclusiveDays = end.difference(start).inDays + 1; // inclusive span
-	return inclusiveDays <= 30;
+  final start = group.startDate;
+  final end = group.endDate;
+  if (start == null || end == null) return false;
+  if (end.isBefore(start)) return false; // dati incoerenti
+  final inclusiveDays = end.difference(start).inDays + 1; // inclusive span
+  return inclusiveDays <= 30;
 }
-

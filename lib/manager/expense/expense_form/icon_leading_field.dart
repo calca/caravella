@@ -11,7 +11,8 @@ class IconLeadingField extends StatelessWidget {
   final String? semanticsLabel;
   final String? tooltip;
   final bool alignTop; // For multi-line fields like note
-  final EdgeInsets? iconPadding; // Allow fine-tuned vertical alignment per field
+  final EdgeInsets?
+  iconPadding; // Allow fine-tuned vertical alignment per field
 
   const IconLeadingField({
     super.key,
@@ -20,7 +21,7 @@ class IconLeadingField extends StatelessWidget {
     this.semanticsLabel,
     this.tooltip,
     this.alignTop = false,
-  this.iconPadding,
+    this.iconPadding,
   });
 
   @override
@@ -42,19 +43,22 @@ class IconLeadingField extends StatelessWidget {
     );
 
     return Row(
-      crossAxisAlignment:
-          alignTop ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+      crossAxisAlignment: alignTop
+          ? CrossAxisAlignment.start
+          : CrossAxisAlignment.center,
       children: [
         SizedBox(
           width: kLeadingIconWidth,
           child: Align(
             alignment: alignTop ? Alignment.topLeft : Alignment.centerLeft,
             child: Padding(
-              padding: iconPadding ?? EdgeInsets.only(
-                top: alignTop ? 8 : 8,
-                bottom: alignTop ? 0 : 8,
-                right: 6,
-              ),
+              padding:
+                  iconPadding ??
+                  EdgeInsets.only(
+                    top: alignTop ? 8 : 8,
+                    bottom: alignTop ? 0 : 8,
+                    right: 6,
+                  ),
               child: iconWidget,
             ),
           ),

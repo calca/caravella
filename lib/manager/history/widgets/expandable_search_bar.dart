@@ -87,7 +87,7 @@ class _ExpandableSearchBarState extends State<ExpandableSearchBar>
       style: Theme.of(context).textTheme.bodyLarge,
       decoration: InputDecoration(
         hintText: 'Cerca gruppi...',
-  // rely on theme hintStyle
+        // rely on theme hintStyle
         prefixIcon: Icon(
           Icons.search_rounded,
           color: widget.searchQuery.isNotEmpty
@@ -102,10 +102,9 @@ class _ExpandableSearchBarState extends State<ExpandableSearchBar>
               IconButton(
                 icon: Icon(
                   Icons.clear_rounded,
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withValues(alpha: 0.6),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.6),
                   size: 20,
                 ),
                 onPressed: () {
@@ -116,10 +115,9 @@ class _ExpandableSearchBarState extends State<ExpandableSearchBar>
             IconButton(
               icon: Icon(
                 Icons.arrow_back_rounded,
-                color: Theme.of(context)
-                    .colorScheme
-                    .onSurface
-                    .withValues(alpha: 0.6),
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.6),
                 size: 20,
               ),
               onPressed: widget.onToggle,
@@ -139,11 +137,7 @@ class _ExpandableSearchBarState extends State<ExpandableSearchBar>
     final colorScheme = Theme.of(context).colorScheme;
     return IconButton.filledTonal(
       onPressed: widget.onToggle,
-      icon: Icon(
-        Icons.search_outlined,
-        color: colorScheme.onSurface,
-        size: 20,
-      ),
+      icon: Icon(Icons.search_outlined, color: colorScheme.onSurface, size: 20),
       style: IconButton.styleFrom(
         backgroundColor: colorScheme.surfaceContainer,
         minimumSize: const Size(54, 54),

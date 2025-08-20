@@ -29,9 +29,9 @@ class DateSelectorWidget extends StatelessWidget {
         : gloc.select_expense_date_short;
     final semanticLabel = '${gloc.date}: $dateText';
 
-  // icon color now handled by InlineSelectField's icon theme
+    // icon color now handled by InlineSelectField's icon theme
 
-  Future<void> pickDate() async {
+    Future<void> pickDate() async {
       final picked = await showDatePicker(
         context: context,
         initialDate: selectedDate ?? DateTime.now(),

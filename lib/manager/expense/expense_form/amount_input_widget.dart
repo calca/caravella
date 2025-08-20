@@ -16,7 +16,8 @@ class AmountInputWidget extends StatelessWidget {
   final TextStyle? textStyle;
   final String? currency; // currency override
   final Widget? trailing; // optional trailing icon for text mode
-  final Widget? leading; // optional leading icon for text mode aligned like currency
+  final Widget?
+  leading; // optional leading icon for text mode aligned like currency
 
   const AmountInputWidget({
     super.key,
@@ -30,8 +31,8 @@ class AmountInputWidget extends StatelessWidget {
     this.isText = false,
     this.textStyle,
     this.currency,
-  this.trailing,
-  this.leading,
+    this.trailing,
+    this.leading,
   });
 
   @override
@@ -41,7 +42,8 @@ class AmountInputWidget extends StatelessWidget {
       final textField = TextFormField(
         controller: controller,
         focusNode: focusNode,
-        style: textStyle ??
+        style:
+            textStyle ??
             theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
         decoration: InputDecoration(
           hintText: label != null ? '${label!} *' : null,
@@ -54,8 +56,10 @@ class AmountInputWidget extends StatelessWidget {
                   child: trailing,
                 )
               : null,
-          suffixIconConstraints:
-              const BoxConstraints(minHeight: 32, minWidth: 32),
+          suffixIconConstraints: const BoxConstraints(
+            minHeight: 32,
+            minWidth: 32,
+          ),
           contentPadding: const EdgeInsets.symmetric(
             vertical: 8,
             horizontal: 0,
@@ -91,19 +95,15 @@ class AmountInputWidget extends StatelessWidget {
     final amountField = TextFormField(
       controller: controller,
       focusNode: focusNode,
-      style: textStyle ??
-          theme.textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
+      style:
+          textStyle ??
+          theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
       decoration: InputDecoration(
         hintText: label != null ? '${label!} *' : null,
-  // rely on theme hintStyle
+        // rely on theme hintStyle
         floatingLabelBehavior: FloatingLabelBehavior.never,
         isDense: true,
-        contentPadding: const EdgeInsets.symmetric(
-          vertical: 8,
-          horizontal: 0,
-        ),
+        contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
       ),
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       textInputAction: TextInputAction.next,

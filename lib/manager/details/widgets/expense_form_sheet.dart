@@ -15,7 +15,7 @@ class ExpenseFormSheet extends StatelessWidget {
     this.initialExpense,
     required this.onExpenseSaved,
     required this.onCategoryAdded,
-  this.fullEdit = true,
+    this.fullEdit = true,
   });
 
   @override

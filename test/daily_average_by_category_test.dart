@@ -122,30 +122,34 @@ void main() {
 
     testWidgets('uses localized per_day text (generated l10n)', (tester) async {
       // English
-      await tester.pumpWidget(MaterialApp(
-        locale: const Locale('en'),
-        localizationsDelegates: gen.AppLocalizations.localizationsDelegates,
-        supportedLocales: gen.AppLocalizations.supportedLocales,
-        home: Builder(
-          builder: (context) {
-            expect(gen.AppLocalizations.of(context).per_day, '/day');
-            return const SizedBox.shrink();
-          },
+      await tester.pumpWidget(
+        MaterialApp(
+          locale: const Locale('en'),
+          localizationsDelegates: gen.AppLocalizations.localizationsDelegates,
+          supportedLocales: gen.AppLocalizations.supportedLocales,
+          home: Builder(
+            builder: (context) {
+              expect(gen.AppLocalizations.of(context).per_day, '/day');
+              return const SizedBox.shrink();
+            },
+          ),
         ),
-      ));
+      );
 
       // Italian
-      await tester.pumpWidget(MaterialApp(
-        locale: const Locale('it'),
-        localizationsDelegates: gen.AppLocalizations.localizationsDelegates,
-        supportedLocales: gen.AppLocalizations.supportedLocales,
-        home: Builder(
-          builder: (context) {
-            expect(gen.AppLocalizations.of(context).per_day, '/giorno');
-            return const SizedBox.shrink();
-          },
+      await tester.pumpWidget(
+        MaterialApp(
+          locale: const Locale('it'),
+          localizationsDelegates: gen.AppLocalizations.localizationsDelegates,
+          supportedLocales: gen.AppLocalizations.supportedLocales,
+          home: Builder(
+            builder: (context) {
+              expect(gen.AppLocalizations.of(context).per_day, '/giorno');
+              return const SizedBox.shrink();
+            },
+          ),
         ),
-      ));
+      );
     });
 
     test('handles group with end date in future by using current date', () {
@@ -228,10 +232,11 @@ extension DailyAverageByCategoryWidgetTesting on DailyAverageByCategoryWidget {
         .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
     if (uncategorizedTotal > 0) {
       categoryTotals[ExpenseCategory(
-        name: 'UNCATEGORIZED_PLACEHOLDER',
-        id: 'uncategorized',
-        createdAt: DateTime(2000),
-      )] = uncategorizedTotal / totalDays;
+            name: 'UNCATEGORIZED_PLACEHOLDER',
+            id: 'uncategorized',
+            createdAt: DateTime(2000),
+          )] =
+          uncategorizedTotal / totalDays;
     }
     return categoryTotals;
   }
@@ -244,14 +249,32 @@ extension DailyAverageByCategoryWidgetTesting on DailyAverageByCategoryWidget {
         final lastDay = DateTime(now.year, now.month + 1, 0);
         return (start: firstDay, end: lastDay);
       }
-      final sortedExpenses = [...trip.expenses]..sort((a, b) => a.date.compareTo(b.date));
+      final sortedExpenses = [...trip.expenses]
+        ..sort((a, b) => a.date.compareTo(b.date));
       final firstExpenseDate = sortedExpenses.first.date;
-      return (start: DateTime(firstExpenseDate.year, firstExpenseDate.month, firstExpenseDate.day), end: DateTime(now.year, now.month, now.day));
+      return (
+        start: DateTime(
+          firstExpenseDate.year,
+          firstExpenseDate.month,
+          firstExpenseDate.day,
+        ),
+        end: DateTime(now.year, now.month, now.day),
+      );
     }
-    final startDate = DateTime(trip.startDate!.year, trip.startDate!.month, trip.startDate!.day);
-    final endDate = DateTime(trip.endDate!.year, trip.endDate!.month, trip.endDate!.day);
+    final startDate = DateTime(
+      trip.startDate!.year,
+      trip.startDate!.month,
+      trip.startDate!.day,
+    );
+    final endDate = DateTime(
+      trip.endDate!.year,
+      trip.endDate!.month,
+      trip.endDate!.day,
+    );
     final currentDate = DateTime(now.year, now.month, now.day);
-    final effectiveEndDate = endDate.isBefore(currentDate) ? endDate : currentDate;
+    final effectiveEndDate = endDate.isBefore(currentDate)
+        ? endDate
+        : currentDate;
     return (start: startDate, end: effectiveEndDate);
   }
 }

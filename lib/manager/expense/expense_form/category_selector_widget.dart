@@ -27,7 +27,7 @@ class CategorySelectorWidget extends StatelessWidget {
     final borderColor = theme.colorScheme.outlineVariant;
     final gloc = gen.AppLocalizations.of(context);
 
-  Future<void> openPicker() async {
+    Future<void> openPicker() async {
       final picked = await showSelectionBottomSheet<ExpenseCategory>(
         context: context,
         items: categories,
@@ -62,7 +62,7 @@ class CategorySelectorWidget extends StatelessWidget {
         side: BorderSide(color: borderColor.withValues(alpha: 0.8), width: 1),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
-  onPressed: openPicker,
+      onPressed: openPicker,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

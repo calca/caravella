@@ -275,9 +275,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       padding: const EdgeInsets.only(bottom: 12.0),
       child: Text(
         '${gloc.in_group_prefix} ${widget.groupTitle}',
-        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-          fontWeight: FontWeight.w600,
-        ),
+        style: Theme.of(
+          context,
+        ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
       ),

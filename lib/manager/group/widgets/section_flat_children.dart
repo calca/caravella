@@ -38,8 +38,9 @@ class SectionFlatChildren {
           // rely on theme hintStyle
           border: const UnderlineInputBorder(),
           enabledBorder: const UnderlineInputBorder(borderSide: BorderSide()),
-          focusedBorder:
-              const UnderlineInputBorder(borderSide: BorderSide(width: 2)),
+          focusedBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(width: 2),
+          ),
         ),
         validator: (v) => v == null || v.isEmpty
             ? gen.AppLocalizations.of(context).enter_title
