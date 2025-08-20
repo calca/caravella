@@ -131,7 +131,6 @@ class _EditableNameListState extends State<EditableNameList> {
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainer,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
@@ -181,7 +180,6 @@ class _EditableNameListState extends State<EditableNameList> {
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerHigh,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
@@ -226,7 +224,6 @@ class _EditableNameListState extends State<EditableNameList> {
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerHigh,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
@@ -299,7 +296,6 @@ class _EditableNameListState extends State<EditableNameList> {
                   vertical: 14.0,
                 ),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surfaceContainer,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
