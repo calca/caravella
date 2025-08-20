@@ -68,7 +68,6 @@ class SectionPeriod extends StatelessWidget {
             },
             child: DateCard(
               day: startDate?.day,
-              // TODO add dedicated key if needed; using from as placeholder
               label: gen.AppLocalizations.of(context).from,
               date: startDate,
               isActive: startDate != null,
@@ -98,7 +97,6 @@ class SectionPeriod extends StatelessWidget {
             },
             child: DateCard(
               day: endDate?.day,
-              // TODO add dedicated key if needed; using to as placeholder
               label: gen.AppLocalizations.of(context).to,
               date: endDate,
               isActive: endDate != null,

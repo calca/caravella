@@ -552,8 +552,9 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 ],
               ),
             );
-            if (confirm == true && mounted) {
-              Navigator.of(context).pop(false);
+            if (confirm == true && context.mounted) {
+              final navigator = Navigator.of(context);
+              if (navigator.canPop()) navigator.pop(false);
             }
           }
         },
