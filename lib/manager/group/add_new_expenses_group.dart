@@ -599,13 +599,15 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: '',
-                        border: UnderlineInputBorder(),
-                        enabledBorder: UnderlineInputBorder(
+                        hintText: gloc.group_name,
+                        // rely on theme hintStyle
+                        border: const UnderlineInputBorder(),
+                        enabledBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(),
                         ),
-                        focusedBorder: UnderlineInputBorder(
+                        focusedBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(width: 2),
                         ),
                       ),

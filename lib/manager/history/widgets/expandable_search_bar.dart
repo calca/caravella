@@ -87,12 +87,7 @@ class _ExpandableSearchBarState extends State<ExpandableSearchBar>
       style: Theme.of(context).textTheme.bodyLarge,
       decoration: InputDecoration(
         hintText: 'Cerca gruppi...',
-        hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: Theme.of(context)
-                  .colorScheme
-                  .onSurface
-                  .withValues(alpha: 0.6),
-            ),
+  // rely on theme hintStyle
         prefixIcon: Icon(
           Icons.search_rounded,
           color: widget.searchQuery.isNotEmpty

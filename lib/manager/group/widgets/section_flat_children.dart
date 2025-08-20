@@ -32,11 +32,14 @@ class SectionFlatChildren {
         style: Theme.of(
           context,
         ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
-        decoration: const InputDecoration(
+        decoration: InputDecoration(
           labelText: '',
-          border: UnderlineInputBorder(),
-          enabledBorder: UnderlineInputBorder(borderSide: BorderSide()),
-          focusedBorder: UnderlineInputBorder(borderSide: BorderSide(width: 2)),
+          hintText: gen.AppLocalizations.of(context).group_name,
+          // rely on theme hintStyle
+          border: const UnderlineInputBorder(),
+          enabledBorder: const UnderlineInputBorder(borderSide: BorderSide()),
+          focusedBorder:
+              const UnderlineInputBorder(borderSide: BorderSide(width: 2)),
         ),
         validator: (v) => v == null || v.isEmpty
             ? gen.AppLocalizations.of(context).enter_title

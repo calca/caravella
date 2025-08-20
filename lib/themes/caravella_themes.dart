@@ -197,8 +197,8 @@ class CaravellaThemes {
       disabledBorder: InputBorder.none,
       focusedErrorBorder: InputBorder.none,
       hintStyle: TextStyle(
-        color: lightColorScheme.surfaceContainerHigh,
-        fontWeight: FontWeight.w500,
+        color: lightColorScheme.outline,
+        fontWeight: FontWeight.w400,
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
     ),
@@ -221,8 +221,8 @@ class CaravellaThemes {
       disabledBorder: InputBorder.none,
       focusedErrorBorder: InputBorder.none,
       hintStyle: TextStyle(
-        color: darkColorScheme.surfaceContainerHigh,
-        fontWeight: FontWeight.w500,
+        color: darkColorScheme.outline,
+        fontWeight: FontWeight.w400,
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
     ),

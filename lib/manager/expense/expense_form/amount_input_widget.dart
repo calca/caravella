@@ -45,10 +45,7 @@ class AmountInputWidget extends StatelessWidget {
             theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
         decoration: InputDecoration(
           hintText: label != null ? '${label!} *' : null,
-          hintStyle: (textStyle ?? theme.textTheme.titleLarge)?.copyWith(
-            fontWeight: FontWeight.w400,
-            color: theme.colorScheme.outline,
-          ),
+          // rely on theme hintStyle
           floatingLabelBehavior: FloatingLabelBehavior.never,
           isDense: true,
           suffixIcon: leading == null && trailing != null
@@ -100,10 +97,7 @@ class AmountInputWidget extends StatelessWidget {
           ),
       decoration: InputDecoration(
         hintText: label != null ? '${label!} *' : null,
-        hintStyle: (textStyle ?? theme.textTheme.titleLarge)?.copyWith(
-          fontWeight: FontWeight.w400,
-          color: theme.colorScheme.outline,
-        ),
+  // rely on theme hintStyle
         floatingLabelBehavior: FloatingLabelBehavior.never,
         isDense: true,
         contentPadding: const EdgeInsets.symmetric(

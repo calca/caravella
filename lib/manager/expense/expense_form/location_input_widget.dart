@@ -152,12 +152,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
       onChanged: _onTextChanged,
       decoration: InputDecoration(
         hintText: gloc.location_hint,
-        hintStyle: widget.textStyle?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ) ??
-            Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
+  // rely on theme hintStyle
         border: InputBorder.none,
         isDense: true,
         contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
