@@ -252,4 +252,12 @@
   ,"@error_saving_group": {"placeholders": {"error": {}}}
   ,"already_exists": "already exists"
   ,"@already_exists": {"description": "Shown after an entity name when a duplicate entry is attempted"}
+  ,"status_all": "All"
+  ,"@status_all": {"description": "Filter label: all groups"}
+  ,"status_active": "Active"
+  ,"@status_active": {"description": "Filter label: active groups"}
+  ,"status_archived": "Archived"
+  ,"@status_archived": {"description": "Filter label: archived groups"}
+  ,"filter_status_tooltip": "Filter groups"
+  ,"@filter_status_tooltip": {"description": "Tooltip for status filter buttons row"}
 }

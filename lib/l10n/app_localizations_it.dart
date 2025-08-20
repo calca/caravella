@@ -725,4 +725,16 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get already_exists => 'esiste già';
+
+  @override
+  String get status_all => 'Tutti';
+
+  @override
+  String get status_active => 'Attivi';
+
+  @override
+  String get status_archived => 'Archiviati';
+
+  @override
+  String get filter_status_tooltip => 'Filtra gruppi';
 }

@@ -1483,6 +1483,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'already exists'**
   String get already_exists;
+
+  /// Filter label: all groups
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get status_all;
+
+  /// Filter label: active groups
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get status_active;
+
+  /// Filter label: archived groups
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get status_archived;
+
+  /// Tooltip for status filter buttons row
+  ///
+  /// In en, this message translates to:
+  /// **'Filter groups'**
+  String get filter_status_tooltip;
 }
 
 class _AppLocalizationsDelegate

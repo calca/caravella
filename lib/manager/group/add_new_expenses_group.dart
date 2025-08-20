@@ -18,6 +18,7 @@ import '../../../data/expense_group_storage.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../state/expense_group_notifier.dart';
 import '../../widgets/caravella_app_bar.dart';
+import '../expense/expense_form/icon_leading_field.dart';
 import 'widgets/section_period.dart';
 import '../../widgets/app_toast.dart';
 
@@ -131,6 +132,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   String? _savedImagePath;
   final ImagePicker _imagePicker = ImagePicker();
   bool _isDirty = false; // traccia modifiche non salvate
+  // Removed auto bottom sheet prompt flag (inline editing now)
   @override
   void initState() {
     super.initState();
@@ -154,6 +156,9 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
     _titleController.addListener(() {
       if (!_isDirty) setState(() => _isDirty = true);
     });
+
+    // Apri automaticamente l'editor nome se nuovo gruppo e nome vuoto
+    // Nessun bottom sheet automatico: il campo è inline ora
   }
 
   // Remove stray constructor declaration
@@ -514,6 +519,8 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
     }
   }
 
+  // Rimosso _editGroupName (non più necessario)
+
   // Removed _buildSectionFlat method
 
   @override
@@ -557,6 +564,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                   icon: const Icon(Icons.delete),
                   tooltip: gloc.delete,
                   onPressed: () async {
+                    // ignore: use_build_context_synchronously
                     final confirm = await showDialog<bool>(
                       context: context,
                       builder: (context) => AlertDialog(
@@ -574,8 +582,10 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                         ],
                       ),
                     );
+                    if (!mounted) return; // sicurezza dopo await
                     if (confirm == true) {
                       final trips = await ExpenseGroupStorage.getAllGroups();
+                      if (!mounted) return;
                       trips.removeWhere((v) => v.id == widget.trip!.id);
                       await ExpenseGroupStorage.writeTrips(trips);
                       if (!context.mounted) return;
@@ -608,46 +618,38 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                     title: '',
                     children: [
                       // Nome gruppo
-                      Row(
-                        children: [
-                          Text(
-                            gloc.group_name,
-                            style: Theme.of(context).textTheme.titleLarge
-                                ?.copyWith(fontWeight: FontWeight.w600),
-                          ),
-                          const SizedBox(width: 4),
-                          const Text(
-                            '*',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      TextFormField(
-                        controller: _titleController,
-                        focusNode: _titleFocusNode,
-                        autofocus: widget.trip == null,
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                        decoration: InputDecoration(
-                          labelText: '',
-                          hintText: gloc.group_name,
-                          // rely on theme hintStyle
-                          border: const UnderlineInputBorder(),
-                          enabledBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(),
-                          ),
-                          focusedBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(width: 2),
+                      IconLeadingField(
+                        icon: const Icon(Icons.title_outlined),
+                        semanticsLabel: gloc.group_name,
+                        tooltip: gloc.group_name,
+                        child: TextField(
+                          controller: _titleController,
+                          autofocus: true, // focus diretto sul primo campo
+                          textInputAction: TextInputAction.next,
+                          onChanged: (v) {
+                            setState(() {}); // refresh per validazione inline
+                          },
+                          decoration: InputDecoration(
+                            hintText: gloc.group_name,
+                            isDense: true,
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.symmetric(
+                              vertical: 8,
+                            ),
                           ),
                         ),
-                        validator: (v) =>
-                            v == null || v.isEmpty ? gloc.enter_title : null,
-                        onChanged: (value) {
-                          setState(() {});
-                        },
                       ),
+                      if (_titleController.text.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4.0),
+                          child: Text(
+                            '* ${gloc.enter_title}',
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
+                                  color: Theme.of(context).colorScheme.error,
+                                ),
+                          ),
+                        ),
 
                       if (_dateError != null)
                         Padding(

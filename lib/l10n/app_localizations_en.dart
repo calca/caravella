@@ -722,4 +722,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get already_exists => 'already exists';
+
+  @override
+  String get status_all => 'All';
+
+  @override
+  String get status_active => 'Active';
+
+  @override
+  String get status_archived => 'Archived';
+
+  @override
+  String get filter_status_tooltip => 'Filter groups';
 }

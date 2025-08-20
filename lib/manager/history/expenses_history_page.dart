@@ -35,13 +35,21 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   Timer? _fabIdleTimer;
 
   List<Map<String, dynamic>> _statusOptions(BuildContext context) {
-    // TODO: Replace hardcoded Italian with localized getters when keys added
+    final gloc = gen.AppLocalizations.of(context);
     return [
-      {'key': 'all', 'label': 'Tutti', 'icon': Icons.all_inclusive_outlined},
-      {'key': 'active', 'label': 'Attivi', 'icon': Icons.play_circle_outline},
+      {
+        'key': 'all',
+        'label': gloc.status_all,
+        'icon': Icons.all_inclusive_outlined,
+      },
+      {
+        'key': 'active',
+        'label': gloc.status_active,
+        'icon': Icons.play_circle_outline,
+      },
       {
         'key': 'archived',
-        'label': 'Archiviati',
+        'label': gloc.status_archived,
         'icon': Icons.archive_outlined,
       },
     ];
