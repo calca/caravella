@@ -36,13 +36,13 @@ class ExpsenseGroupEmptyStates extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          'Nessun risultato trovato.',
+          gen.AppLocalizations.of(context).no_results_found,
           style: Theme.of(context).textTheme.titleMedium,
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 8),
         Text(
-          'Prova a modificare il filtro o la ricerca.',
+          gen.AppLocalizations.of(context).try_adjust_filter_or_search,
           style: Theme.of(context).textTheme.bodyMedium,
           textAlign: TextAlign.center,
         ),

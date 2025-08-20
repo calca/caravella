@@ -1334,6 +1334,18 @@ abstract class AppLocalizations {
   /// **'Delete'**
   String get delete;
 
+  /// No description provided for @no_results_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found.'**
+  String get no_results_found;
+
+  /// No description provided for @try_adjust_filter_or_search.
+  ///
+  /// In en, this message translates to:
+  /// **'Try adjusting the filter or search.'**
+  String get try_adjust_filter_or_search;
+
   /// No description provided for @general_statistics.
   ///
   /// In en, this message translates to:

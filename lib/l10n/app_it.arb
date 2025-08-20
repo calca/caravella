@@ -213,6 +213,8 @@
   ,"discard_changes_title": "Scartare le modifiche?"
   ,"discard_changes_message": "Sei sicuro di voler scartare le modifiche non salvate?"
   ,"discard": "Scarta"
+  ,"no_results_found": "Nessun risultato trovato."
+  ,"try_adjust_filter_or_search": "Prova a modificare il filtro o la ricerca."
   ,"image_requirements": "PNG, JPG, GIF (max 10MB)"
   ,"error_saving_group": "Errore durante il salvataggio: {error}"
   ,"error_selecting_image": "Errore durante la selezione dell'immagine"

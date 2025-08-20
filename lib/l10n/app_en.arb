@@ -206,6 +206,8 @@
   ,"delete_expense": "Delete expense"
   ,"delete_expense_confirm": "Are you sure you want to delete this expense?"
   ,"delete": "Delete"
+  ,"no_results_found": "No results found."
+  ,"try_adjust_filter_or_search": "Try adjusting the filter or search."
   ,"general_statistics": "General statistics"
   ,"average_expense": "Average expense"
   ,"welcome_v3_cta": "Get started!"

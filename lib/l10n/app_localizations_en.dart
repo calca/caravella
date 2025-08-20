@@ -645,6 +645,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get delete => 'Delete';
 
   @override
+  String get no_results_found => 'No results found.';
+
+  @override
+  String get try_adjust_filter_or_search =>
+      'Try adjusting the filter or search.';
+
+  @override
   String get general_statistics => 'General statistics';
 
   @override
