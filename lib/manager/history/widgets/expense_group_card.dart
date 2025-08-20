@@ -29,16 +29,16 @@ class ExpenseGroupCard extends StatelessWidget {
       child: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(radius)),
         child: Dismissible(
-      key: ValueKey(
-        trip.title +
-            (trip.startDate?.toIso8601String() ??
-                trip.timestamp.toIso8601String()),
-      ),
-      direction: DismissDirection.endToStart,
-      background: _buildDismissBackground(context),
-      secondaryBackground: _buildDismissBackground(context),
-      confirmDismiss: (_) => _confirmArchive(context),
-      onDismissed: (_) => _onArchiveToggle(),
+          key: ValueKey(
+            trip.title +
+                (trip.startDate?.toIso8601String() ??
+                    trip.timestamp.toIso8601String()),
+          ),
+          direction: DismissDirection.endToStart,
+          background: _buildDismissBackground(context),
+          secondaryBackground: _buildDismissBackground(context),
+          confirmDismiss: (_) => _confirmArchive(context),
+          onDismissed: (_) => _onArchiveToggle(),
           child: Container(
             color: cardColor,
             child: BaseCard(
@@ -46,53 +46,53 @@ class ExpenseGroupCard extends StatelessWidget {
               noBorder: true,
               margin: EdgeInsets.zero,
               padding: const EdgeInsets.all(16),
-        // backgroundColor centralizzato nel tema
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => ExpenseGroupDetailPage(trip: trip),
-            ),
-          );
-        },
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header con titolo e stato
-            Row(
-              children: [
-                Expanded(
-                  child: Row(
+              // backgroundColor centralizzato nel tema
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ExpenseGroupDetailPage(trip: trip),
+                  ),
+                );
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Header con titolo e stato
+                  Row(
                     children: [
                       Expanded(
-                        child: Text(
-                          trip.title,
-                          style: Theme.of(context).textTheme.titleMedium
-                              ?.copyWith(fontWeight: FontWeight.w600),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                trip.title,
+                                style: Theme.of(context).textTheme.titleMedium
+                                    ?.copyWith(fontWeight: FontWeight.w600),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
+                      // Icona stato (pinned, archiviato, attivo)
+                      _buildStatusIcon(context),
                     ],
                   ),
-                ),
-                // Icona stato (pinned, archiviato, attivo)
-                _buildStatusIcon(context),
-              ],
-            ),
-            const SizedBox(height: 12),
-            // Partecipanti e data
-            _buildParticipantsRow(context),
-            const SizedBox(height: 6),
-            _buildDateRow(context),
-            const SizedBox(height: 12),
-            // Totale spese
-            _buildTotalExpensesContainer(context, total),
-          ],
+                  const SizedBox(height: 12),
+                  // Partecipanti e data
+                  _buildParticipantsRow(context),
+                  const SizedBox(height: 6),
+                  _buildDateRow(context),
+                  const SizedBox(height: 12),
+                  // Totale spese
+                  _buildTotalExpensesContainer(context, total),
+                ],
+              ),
             ),
           ),
         ),
       ),
-    ),
     );
   }
 
@@ -100,7 +100,9 @@ class ExpenseGroupCard extends StatelessWidget {
     final gloc = gen.AppLocalizations.of(context);
 
     final isArchived = trip.archived;
-  final backgroundColor = Theme.of(context).colorScheme.surfaceContainer;
+    final backgroundColor = Theme.of(
+      context,
+    ).colorScheme.surfaceContainerHighest;
     final iconData = isArchived
         ? Icons.unarchive_outlined
         : Icons.archive_outlined;
