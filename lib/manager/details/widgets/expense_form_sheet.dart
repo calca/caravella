@@ -8,14 +8,14 @@ class ExpenseFormSheet extends StatelessWidget {
   final ExpenseDetails? initialExpense;
   final void Function(ExpenseDetails) onExpenseSaved;
   final void Function(String) onCategoryAdded;
-  final bool showDateAndNote;
+  final bool fullEdit;
   const ExpenseFormSheet({
     super.key,
     required this.group,
     this.initialExpense,
     required this.onExpenseSaved,
     required this.onCategoryAdded,
-    this.showDateAndNote = true,
+  this.fullEdit = true,
   });
 
   @override
@@ -73,7 +73,7 @@ class ExpenseFormSheet extends StatelessWidget {
                       tripStartDate: group.startDate,
                       tripEndDate: group.endDate,
                       shouldAutoClose: false,
-                      showDateAndNote: showDateAndNote,
+                      fullEdit: fullEdit,
                       groupTitle: group.title,
                       currency: group.currency,
                       onExpenseAdded: onExpenseSaved,

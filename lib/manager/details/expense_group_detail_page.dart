@@ -417,7 +417,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           await _groupNotifier?.addCategory(categoryName);
           await _refreshGroup();
         },
-        showDateAndNote: true,
+  fullEdit: true,
       ),
     ).whenComplete(() {
       if (mounted) {

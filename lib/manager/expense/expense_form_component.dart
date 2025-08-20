@@ -15,7 +15,8 @@ import 'expense_form/expense_form_actions_widget.dart';
 import 'expense_form/category_dialog.dart';
 
 class ExpenseFormComponent extends StatefulWidget {
-  final bool showDateAndNote;
+  // When true shows date, location and note fields (full edit mode). In edit mode (initialExpense != null) these are always shown.
+  final bool fullEdit;
   final ExpenseDetails? initialExpense;
   final List<ExpenseParticipant> participants;
   final List<ExpenseCategory> categories;
@@ -41,7 +42,7 @@ class ExpenseFormComponent extends StatefulWidget {
     this.newlyAddedCategory, // Nuova proprietà
     this.groupTitle,
     this.currency,
-    this.showDateAndNote = false,
+  this.fullEdit = false,
   });
 
   @override
@@ -401,9 +402,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
               ),
 
               // DATA (bottone con data + icona, angoli arrotondati, sfondo grigio coerente col tema)
-              if (widget.showDateAndNote ||
-                  widget.initialExpense != null ||
-                  (ModalRoute.of(context)?.settings.name != null)) ...[
+              // Unified extended fields (date, location, note)
+              if ((widget.fullEdit || widget.initialExpense != null ||
+                  (ModalRoute.of(context)?.settings.name != null))) ...[
                 const SizedBox(height: _rowSpacing),
                 DateSelectorWidget(
                   selectedDate: _date,
@@ -418,10 +419,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                   locale: locale,
                   textStyle: smallStyle,
                 ),
-              ],
-
-              // LOCATION (spostato prima di NOTE)
-              if (widget.showDateAndNote || widget.initialExpense != null) ...[
                 const SizedBox(height: _rowSpacing),
                 LocationInputWidget(
                   initialLocation: _location,
@@ -433,10 +430,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                     });
                   },
                 ),
-              ],
-
-              // NOTE (ora dopo LOCATION)
-              if (widget.showDateAndNote || widget.initialExpense != null) ...[
                 const SizedBox(height: _rowSpacing),
                 NoteInputWidget(
                   controller: _noteController,
