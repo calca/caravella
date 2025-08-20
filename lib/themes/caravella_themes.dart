@@ -188,14 +188,35 @@ class CaravellaThemes {
     scaffoldBackgroundColor: lightColorScheme.surface,
     inputDecorationTheme: InputDecorationTheme(
       isDense: true,
-      filled: true,
-      fillColor: lightColorScheme.surface,
-      border: InputBorder.none,
-      enabledBorder: InputBorder.none,
-      focusedBorder: InputBorder.none,
-      errorBorder: InputBorder.none,
-      disabledBorder: InputBorder.none,
-      focusedErrorBorder: InputBorder.none,
+      filled: false,
+      // Always show a bottom border (underline style)
+      border: UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: lightColorScheme.outlineVariant,
+          width: 0.5,
+        ),
+      ),
+      enabledBorder: UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: lightColorScheme.outlineVariant,
+          width: 0.5,
+        ),
+      ),
+      focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: lightColorScheme.primary, width: 1),
+      ),
+      disabledBorder: UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: lightColorScheme.outline.withValues(alpha: 0.3),
+          width: 1,
+        ),
+      ),
+      errorBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: lightColorScheme.error, width: 0.5),
+      ),
+      focusedErrorBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: lightColorScheme.error, width: 1),
+      ),
       hintStyle: TextStyle(
         color: lightColorScheme.outline,
         fontWeight: FontWeight.w400,
@@ -212,14 +233,34 @@ class CaravellaThemes {
     scaffoldBackgroundColor: darkColorScheme.surface,
     inputDecorationTheme: InputDecorationTheme(
       isDense: true,
-      filled: true,
-      fillColor: darkColorScheme.surface,
-      border: InputBorder.none,
-      enabledBorder: InputBorder.none,
-      focusedBorder: InputBorder.none,
-      errorBorder: InputBorder.none,
-      disabledBorder: InputBorder.none,
-      focusedErrorBorder: InputBorder.none,
+      filled: false,
+      border: UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: darkColorScheme.outlineVariant,
+          width: 0.5,
+        ),
+      ),
+      enabledBorder: UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: darkColorScheme.outlineVariant,
+          width: 0.5,
+        ),
+      ),
+      focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: darkColorScheme.primary, width: 1),
+      ),
+      disabledBorder: UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: darkColorScheme.outline.withValues(alpha: 0.3),
+          width: 1,
+        ),
+      ),
+      errorBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: darkColorScheme.error, width: 0.5),
+      ),
+      focusedErrorBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: darkColorScheme.error, width: 1),
+      ),
       hintStyle: TextStyle(
         color: darkColorScheme.outline,
         fontWeight: FontWeight.w400,
