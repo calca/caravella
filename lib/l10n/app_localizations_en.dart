@@ -655,6 +655,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get general_statistics => 'General statistics';
 
   @override
+  String get add_first_expense => 'Add the first expense to get started';
+
+  @override
+  String get overview_and_statistics => 'Overview and statistics';
+
+  @override
   String get average_expense => 'Average expense';
 
   @override

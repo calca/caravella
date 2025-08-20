@@ -1334,23 +1334,35 @@ abstract class AppLocalizations {
   /// **'Delete'**
   String get delete;
 
-  /// No description provided for @no_results_found.
+  /// Shown when a filter (not search) returns no groups
   ///
   /// In en, this message translates to:
   /// **'No results found.'**
   String get no_results_found;
 
-  /// No description provided for @try_adjust_filter_or_search.
+  /// Secondary helper text suggesting to change filters or search
   ///
   /// In en, this message translates to:
   /// **'Try adjusting the filter or search.'**
   String get try_adjust_filter_or_search;
 
-  /// No description provided for @general_statistics.
+  /// Header for general statistics section
   ///
   /// In en, this message translates to:
   /// **'General statistics'**
   String get general_statistics;
+
+  /// Empty state subtitle encouraging user to add first expense
+  ///
+  /// In en, this message translates to:
+  /// **'Add the first expense to get started'**
+  String get add_first_expense;
+
+  /// Tooltip text when overview/statistics button is enabled
+  ///
+  /// In en, this message translates to:
+  /// **'Overview and statistics'**
+  String get overview_and_statistics;
 
   /// No description provided for @average_expense.
   ///

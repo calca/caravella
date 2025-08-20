@@ -207,8 +207,15 @@
   ,"delete_expense_confirm": "Are you sure you want to delete this expense?"
   ,"delete": "Delete"
   ,"no_results_found": "No results found."
+  ,"@no_results_found": {"description": "Shown when a filter (not search) returns no groups"}
   ,"try_adjust_filter_or_search": "Try adjusting the filter or search."
+  ,"@try_adjust_filter_or_search": {"description": "Secondary helper text suggesting to change filters or search"}
   ,"general_statistics": "General statistics"
+  ,"@general_statistics": {"description": "Header for general statistics section"}
+  ,"add_first_expense": "Add the first expense to get started"
+  ,"@add_first_expense": {"description": "Empty state subtitle encouraging user to add first expense"}
+  ,"overview_and_statistics": "Overview and statistics"
+  ,"@overview_and_statistics": {"description": "Tooltip text when overview/statistics button is enabled"}
   ,"average_expense": "Average expense"
   ,"welcome_v3_cta": "Get started!"
   ,"discard_changes_title": "Discard changes?"
