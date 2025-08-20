@@ -158,45 +158,11 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
             Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
-        border: const OutlineInputBorder(),
+        border: InputBorder.none,
         isDense: true,
         contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
-        suffixIcon: _isGettingLocation
-            ? Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-              )
-            : Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    tooltip: gloc.get_current_location,
-                    icon: Icon(
-                      Icons.my_location,
-                      size: 20,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    onPressed: _getCurrentLocation,
-                  ),
-                  if (_currentLocation != null)
-                    IconButton(
-                      tooltip: gloc.cancel,
-                      icon: Icon(
-                        Icons.clear,
-                        size: 20,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                      onPressed: _clearLocation,
-                    ),
-                ],
-              ),
+        suffixIconConstraints: const BoxConstraints(minHeight: 32, minWidth: 32),
+        suffixIcon: _buildSuffixIcons(context, gloc),
       ),
     );
 
@@ -205,7 +171,66 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
       semanticsLabel: gloc.location,
       tooltip: gloc.location,
       alignTop: false,
+      iconPadding: const EdgeInsets.only(top: 8, bottom: 8, right: 6),
       child: field,
     );
+  }
+
+  Widget _buildSuffixIcons(BuildContext context, gen.AppLocalizations gloc) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    Widget buildAction({
+      required IconData icon,
+      required String tooltip,
+      required VoidCallback onTap,
+      required Color color,
+    }) {
+      return Tooltip(
+        message: tooltip,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: onTap,
+          child: SizedBox(
+            width: 32,
+            height: 32,
+            child: Center(
+              child: Icon(icon, size: 20, color: color),
+            ),
+          ),
+        ),
+      );
+    }
+
+    if (_isGettingLocation) {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox(
+          width: 20,
+          height: 20,
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            color: colorScheme.primary,
+          ),
+        ),
+      );
+    }
+
+    final actions = <Widget>[
+      buildAction(
+        icon: Icons.my_location,
+        tooltip: gloc.get_current_location,
+        onTap: _getCurrentLocation,
+        color: colorScheme.primary,
+      ),
+      if (_currentLocation != null)
+        buildAction(
+          icon: Icons.clear,
+          tooltip: gloc.cancel,
+          onTap: _clearLocation,
+          color: colorScheme.onSurfaceVariant,
+        ),
+    ];
+
+    return Row(mainAxisSize: MainAxisSize.min, children: actions);
   }
 }

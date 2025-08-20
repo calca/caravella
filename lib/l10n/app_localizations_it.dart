@@ -215,10 +215,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get category_name => 'Nome categoria';
 
   @override
-  String get note => 'Note';
+  String get note => 'Nota';
 
   @override
-  String get note_hint => 'Aggiungi una nota (opzionale)';
+  String get note_hint => 'Nota';
 
   @override
   String get select_both_dates =>
@@ -537,7 +537,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get location => 'Posizione';
 
   @override
-  String get location_hint => 'Aggiungi posizione (opzionale)';
+  String get location_hint => 'Posizione';
 
   @override
   String get get_current_location => 'Usa posizione corrente';

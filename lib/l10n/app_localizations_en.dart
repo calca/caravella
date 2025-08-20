@@ -218,7 +218,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get note => 'Note';
 
   @override
-  String get note_hint => 'Add a note (optional)';
+  String get note_hint => 'Note';
 
   @override
   String get select_both_dates =>
@@ -536,7 +536,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get location => 'Location';
 
   @override
-  String get location_hint => 'Add location (optional)';
+  String get location_hint => 'Location';
 
   @override
   String get get_current_location => 'Use current location';

@@ -509,7 +509,7 @@ abstract class AppLocalizations {
   /// No description provided for @note_hint.
   ///
   /// In en, this message translates to:
-  /// **'Add a note (optional)'**
+  /// **'Note'**
   String get note_hint;
 
   /// No description provided for @select_both_dates.
@@ -1121,7 +1121,7 @@ abstract class AppLocalizations {
   /// No description provided for @location_hint.
   ///
   /// In en, this message translates to:
-  /// **'Add location (optional)'**
+  /// **'Location'**
   String get location_hint;
 
   /// No description provided for @get_current_location.
