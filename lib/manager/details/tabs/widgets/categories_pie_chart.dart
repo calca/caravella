@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../../data/expense_group.dart';
-import '../../../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../../widgets/currency_display.dart';
 import '../../../../data/expense_category.dart';
 
 class CategoriesPieChart extends StatelessWidget {
   final ExpenseGroup trip;
-  final AppLocalizations loc;
 
   const CategoriesPieChart({
     super.key,
     required this.trip,
-    required this.loc,
   });
 
   @override
   Widget build(BuildContext context) {
+  final gloc = gen.AppLocalizations.of(context);
     // Calcola i totali per categoria (ExpenseCategory come chiave)
     final Map<ExpenseCategory, double> categoryTotals = {};
 
@@ -37,7 +36,7 @@ class CategoriesPieChart extends StatelessWidget {
     if (uncategorizedTotal > 0) {
       // Crea una categoria fittizia per "Senza categoria"
       final uncategorized = ExpenseCategory(
-        name: loc.get('uncategorized'),
+  name: gloc.uncategorized,
         id: 'uncategorized',
         createdAt: DateTime(2000),
       );
@@ -70,7 +69,7 @@ class CategoriesPieChart extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          loc.get('expenses_by_category'),
+          gloc.expenses_by_category,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w600,
               ),

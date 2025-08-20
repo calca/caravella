@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../widgets/currency_display.dart';
-import '../../../app_localizations.dart';
-import '../../../state/locale_notifier.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 
 class GroupTotal extends StatelessWidget {
   final double total;
@@ -11,13 +10,12 @@ class GroupTotal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    final loc = AppLocalizations(locale);
+  final gloc = gen.AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          loc.get('group_total'),
+          gloc.group_total,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w500,
                 color: colorScheme.onSurfaceVariant,

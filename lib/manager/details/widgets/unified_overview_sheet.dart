@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../app_localizations.dart';
-import '../../../state/locale_notifier.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../data/expense_group.dart';
 import '../tabs/unified_overview_tab.dart';
 
@@ -10,8 +9,7 @@ class UnifiedOverviewSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    final loc = AppLocalizations(locale);
+  final gloc = gen.AppLocalizations.of(context);
     return DraggableScrollableSheet(
       initialChildSize: 0.7,
       maxChildSize: 0.9,
@@ -35,7 +33,7 @@ class UnifiedOverviewSheet extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(16),
               child: Text(
-                loc.get('overview'),
+                gloc.overview,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ),

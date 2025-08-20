@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import '../../../../data/expense_group.dart';
 import '../../../../data/expense_category.dart';
-import '../../../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../../widgets/currency_display.dart';
 
 class DailyAverageByCategoryWidget extends StatelessWidget {
   final ExpenseGroup trip;
-  final AppLocalizations loc;
 
   const DailyAverageByCategoryWidget({
     super.key,
     required this.trip,
-    required this.loc,
   });
 
   @override
@@ -30,7 +28,7 @@ class DailyAverageByCategoryWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          loc.get('daily_average_by_category'),
+          gen.AppLocalizations.of(context).daily_average_by_category,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -42,6 +40,10 @@ class DailyAverageByCategoryWidget extends StatelessWidget {
   }
 
   Widget _buildCategoryRow(BuildContext context, MapEntry<ExpenseCategory, double> entry) {
+  final gloc = gen.AppLocalizations.of(context);
+  final displayName = entry.key.id == 'uncategorized' && entry.key.name == 'UNCATEGORIZED_PLACEHOLDER'
+    ? gloc.uncategorized
+    : entry.key.name;
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
       child: Row(
@@ -49,7 +51,7 @@ class DailyAverageByCategoryWidget extends StatelessWidget {
           Expanded(
             flex: 3,
             child: Text(
-              entry.key.name,
+        displayName,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w500,
                   ),
@@ -69,7 +71,7 @@ class DailyAverageByCategoryWidget extends StatelessWidget {
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
                 Text(
-                  loc.get('per_day'),
+                  gen.AppLocalizations.of(context).per_day,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
@@ -112,10 +114,10 @@ class DailyAverageByCategoryWidget extends StatelessWidget {
         .where((e) => !trip.categories.any((c) => c.id == e.category.id))
         .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
 
+    // Note: Localization context not available here; uncategorized label will be resolved in build
     if (uncategorizedTotal > 0) {
-      // Create a placeholder category for uncategorized expenses
       final uncategorized = ExpenseCategory(
-        name: loc.get('uncategorized'),
+        name: 'UNCATEGORIZED_PLACEHOLDER',
         id: 'uncategorized',
         createdAt: DateTime(2000),
       );

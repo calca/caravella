@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../../data/expense_group.dart';
-import '../../../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 
 class DailyExpensesChart extends StatelessWidget {
   final ExpenseGroup trip;
   final Map<DateTime, double> dailyStats;
-  final AppLocalizations loc;
   final String titleKey;
 
   const DailyExpensesChart({
     super.key,
     required this.trip,
     required this.dailyStats,
-    required this.loc,
     this.titleKey = 'daily_expenses_chart',
   });
 
@@ -62,7 +60,7 @@ class DailyExpensesChart extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          loc.get(titleKey),
+          _resolveTitle(context),
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -228,6 +226,15 @@ class DailyExpensesChart extends StatelessWidget {
       // Se ci sono più di 15 giorni, calcola la larghezza per mostrare esattamente 15 giorni inizialmente
       final widthPerDay = availableWidth / minDaysVisible;
       return widthPerDay * numberOfDays;
+      String _resolveTitle(BuildContext context) {
+        final gloc = gen.AppLocalizations.of(context);
+        switch (titleKey) {
+          case 'weekly_expenses_chart':
+            return gloc.weekly_expenses_chart;
+          case 'daily_expenses_chart':
+          default:
+            return gloc.daily_expenses_chart;
+        }
+      }
     }
-  }
 }
