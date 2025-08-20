@@ -307,10 +307,9 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                     AnimatedContainer(
                       duration: const Duration(milliseconds: 350),
                       curve: Curves.easeOutCubic,
-                      width: _isSearchExpanded
-                          ? MediaQuery.of(context).size.width -
-                                32 // Full width minus padding
-                          : 48, // Collapsed width
+            width: _isSearchExpanded
+              ? MediaQuery.of(context).size.width - 32
+              : 54, // Collapsed width aligned to filter buttons
                       child: ExpandableSearchBar(
                         controller: _searchController,
                         isExpanded: _isSearchExpanded,
