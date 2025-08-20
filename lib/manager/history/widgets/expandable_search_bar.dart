@@ -59,7 +59,7 @@ class _ExpandableSearchBarState extends State<ExpandableSearchBar>
   @override
   void dispose() {
     _animationController.dispose();
-  _focusNode.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -110,10 +110,9 @@ class _ExpandableSearchBarState extends State<ExpandableSearchBar>
               onChanged: widget.onSearchChanged,
               focusNode: _focusNode,
               autofocus: true,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontSize: 14,
-                    height: 1.2,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(fontSize: 14, height: 1.2),
             ),
           ),
           // Trailing actions
@@ -163,11 +162,7 @@ class _ExpandableSearchBarState extends State<ExpandableSearchBar>
     final colorScheme = Theme.of(context).colorScheme;
     return IconButton.filledTonal(
       onPressed: widget.onToggle,
-      icon: Icon(
-        Icons.search_outlined,
-        color: colorScheme.onSurface,
-        size: 20,
-      ),
+      icon: Icon(Icons.search_outlined, color: colorScheme.onSurface, size: 20),
       style: IconButton.styleFrom(
         backgroundColor: colorScheme.surfaceContainer,
         minimumSize: const Size(54, 54),
