@@ -1,5 +1,6 @@
 import 'weekly_expense_chart.dart';
 import 'monthly_expense_chart.dart';
+import 'date_range_expense_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../app_localizations.dart';
@@ -7,6 +8,7 @@ import '../../../state/expense_group_notifier.dart';
 import '../../../data/expense_group.dart';
 import '../../../manager/expense/expense_form_component.dart';
 import '../../../widgets/currency_display.dart';
+import '../../../manager/details/tabs/overview_stats_logic.dart';
 
 class GroupCardContent extends StatelessWidget {
   // Design constants
@@ -288,7 +290,146 @@ class GroupCardContent extends StatelessWidget {
     );
   }
 
+  /// Check if the group duration is less than 30 days
+  bool _isShortDuration(ExpenseGroup group) {
+    if (group.startDate == null || group.endDate == null) return false;
+    final duration = group.endDate!.difference(group.startDate!);
+    return duration.inDays < 30;
+  }
+
+  /// Calculate daily average spending for the group
+  double _calculateDailyAverage(ExpenseGroup group) {
+    if (group.expenses.isEmpty) return 0.0;
+    
+    final now = DateTime.now();
+    DateTime startDate, endDate;
+    
+    if (group.startDate != null && group.endDate != null) {
+      startDate = group.startDate!;
+      endDate = group.endDate!.isBefore(now) ? group.endDate! : now;
+    } else {
+      // If no dates, use first expense to now
+      final sortedExpenses = [...group.expenses]
+        ..sort((a, b) => a.date.compareTo(b.date));
+      startDate = sortedExpenses.first.date;
+      endDate = now;
+    }
+    
+    final days = endDate.difference(startDate).inDays + 1;
+    if (days <= 0) return 0.0;
+    
+    final totalSpent = group.expenses.fold<double>(
+      0,
+      (sum, expense) => sum + (expense.amount ?? 0),
+    );
+    
+    return totalSpent / days;
+  }
+
+  /// Calculate today's total spending
+  double _calculateTodaySpending(ExpenseGroup group) {
+    final today = DateTime.now();
+    return group.expenses
+        .where((e) => 
+            e.date.year == today.year &&
+            e.date.month == today.month &&
+            e.date.day == today.day)
+        .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
+  }
+
+  Widget _buildExtraInfo(ExpenseGroup group) {
+    if (!_isShortDuration(group)) return const SizedBox.shrink();
+    
+    final dailyAverage = _calculateDailyAverage(group);
+    final todaySpending = _calculateTodaySpending(group);
+    final textColor = theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7);
+    
+    return Column(
+      children: [
+        // Daily average
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              '${localizations.get('daily_average')}: ',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: textColor,
+                fontSize: 14,
+              ),
+            ),
+            Text(
+              '${dailyAverage.toStringAsFixed(1)}€',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: textColor,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        // Today's spending
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              '${localizations.get('spent_today')}: ',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: textColor,
+                fontSize: 14,
+              ),
+            ),
+            Text(
+              '${todaySpending.toStringAsFixed(1)}€',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: textColor,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+
   Widget _buildStatistics(ExpenseGroup currentGroup) {
+    // Check if we should show date range chart for groups with dates < 1 month
+    if (shouldShowDateRangeChart(currentGroup)) {
+      return _buildDateRangeStatistics(currentGroup);
+    }
+
+    // Default behavior: show weekly + monthly charts
+    return _buildDefaultStatistics(currentGroup);
+  }
+
+  Widget _buildDateRangeStatistics(ExpenseGroup currentGroup) {
+    final startDate = currentGroup.startDate!;
+    final endDate = currentGroup.endDate!;
+    final duration = endDate.difference(startDate).inDays + 1; // inclusive
+
+    // Calculate daily totals for each day in the date range
+    final dailyTotals = List<double>.generate(duration, (i) {
+      final day = startDate.add(Duration(days: i));
+      return currentGroup.expenses
+          .where(
+            (e) =>
+                e.date.year == day.year &&
+                e.date.month == day.month &&
+                e.date.day == day.day,
+          )
+          .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
+    });
+
+    return Column(
+      children: [
+        DateRangeExpenseChart(dailyTotals: dailyTotals, theme: theme),
+      ],
+    );
+  }
+
+  Widget _buildDefaultStatistics(ExpenseGroup currentGroup) {
     final now = DateTime.now();
     // Calcola il lunedì della settimana corrente
     final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
@@ -326,6 +467,8 @@ class GroupCardContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Extra info for short duration trips
+        _buildExtraInfo(currentGroup),
         // Settimana
         WeeklyExpenseChart(dailyTotals: dailyTotals, theme: theme),
         const SizedBox(height: 16),
@@ -333,8 +476,6 @@ class GroupCardContent extends StatelessWidget {
         MonthlyExpenseChart(dailyTotals: dailyMonthTotals, theme: theme),
       ],
     );
-
-    // Dead code removed, now handled in the new Column above
   }
 
   Widget _buildRecentActivity(ExpenseGroup currentGroup) {

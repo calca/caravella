@@ -176,42 +176,8 @@ class DailyExpensesChart extends StatelessWidget {
                       ),
                     ),
                   ],
-                  lineTouchData: LineTouchData(
-                    enabled: true,
-                    touchTooltipData: LineTouchTooltipData(
-                      getTooltipColor: (touchedSpot) =>
-                          Theme.of(context).colorScheme.inverseSurface,
-                      getTooltipItems: (touchedSpots) {
-                        return touchedSpots.map((spot) {
-                          final index = spot.x.toInt();
-                          if (index < 0 || index >= filteredEntries.length) {
-                            return null;
-                          }
-
-                          final date = filteredEntries[index].key;
-                          final amount = filteredEntries[index].value;
-                          
-                          String dateText;
-                          if (titleKey == 'weekly_expenses_chart' && date.weekday == 1) {
-                            final endWeek = date.add(const Duration(days: 6));
-                            dateText = '${date.day}/${date.month}-${endWeek.day}/${endWeek.month}';
-                          } else {
-                            dateText = '${date.day}/${date.month}';
-                          }
-
-                          return LineTooltipItem(
-                            '$dateText\n${amount.toStringAsFixed(2)} ${trip.currency}',
-                            TextStyle(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onInverseSurface,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          );
-                        }).toList();
-                      },
-                    ),
+                  lineTouchData: const LineTouchData(
+                    enabled: false,
                   ),
                 ),
               ),

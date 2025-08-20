@@ -125,7 +125,13 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         });
       }
     });
-    // (Altri listener realtime possono essere aggiunti qui)
+    
+    // Listener per aggiornare lo stato quando il nome cambia
+    _nameController.addListener(() {
+      setState(() {
+        _isDirty = true;
+      });
+    });
   }
 
   double? _parseLocalizedAmount(String input) {
@@ -479,6 +485,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   void dispose() {
     _amountController.dispose();
     _amountFocus.dispose();
+    _nameController.dispose();
     _nameFocus.dispose();
     _noteController.dispose();
     super.dispose();

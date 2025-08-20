@@ -48,3 +48,4 @@ app.*.map.json
 flutter/
 flutter-sdk/
 flutter*.tar.xz
+flutter_linux_*.tar.xz
