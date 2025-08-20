@@ -305,101 +305,193 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
               ),
               const SizedBox(height: _rowSpacing),
 
-              // PAID BY + CATEGORY dinamici e allineati a sinistra
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Wrap(
-                  spacing: 12,
-                  runSpacing: 8,
-                  children: [
-                    _buildFieldWithStatus(
-                      ParticipantSelectorWidget(
-                        participants: widget.participants
-                            .map((p) => p.name)
-                            .toList(),
-                        selectedParticipant: _paidBy?.name,
-                        onParticipantSelected: (selectedName) {
-                          setState(() {
-                            _paidBy = widget.participants.firstWhere(
-                              (p) => p.name == selectedName,
-                              orElse: () => widget.participants.isNotEmpty
-                                  ? widget.participants.first
-                                  : ExpenseParticipant(name: ''),
-                            );
-                            _paidByTouched = true;
-                            _isDirty = true;
-                          });
-                        },
-                        textStyle: smallStyle,
-                      ),
-                      _isPaidByValid,
-                      _paidByTouched,
-                    ),
-                    _buildFieldWithStatus(
-                      CategorySelectorWidget(
-                        categories: _categories,
-                        selectedCategory: _category,
-                        onCategorySelected: (selected) {
-                          setState(() {
-                            _category = selected;
+              // PAID BY + CATEGORY
+              if (widget.fullEdit) ...[
+                // Stacked vertically to match other row layouts
+                _buildFieldWithStatus(
+                  ParticipantSelectorWidget(
+                    participants:
+                        widget.participants.map((p) => p.name).toList(),
+                    selectedParticipant: _paidBy?.name,
+                    onParticipantSelected: (selectedName) {
+                      setState(() {
+                        _paidBy = widget.participants.firstWhere(
+                          (p) => p.name == selectedName,
+                          orElse: () => widget.participants.isNotEmpty
+                              ? widget.participants.first
+                              : ExpenseParticipant(name: ''),
+                        );
+                        _paidByTouched = true;
+                        _isDirty = true;
+                      });
+                    },
+                    textStyle: smallStyle,
+                    fullEdit: true,
+                  ),
+                  _isPaidByValid,
+                  _paidByTouched,
+                ),
+                const SizedBox(height: _rowSpacing),
+                _buildFieldWithStatus(
+                  CategorySelectorWidget(
+                    categories: _categories,
+                    selectedCategory: _category,
+                    onCategorySelected: (selected) {
+                      setState(() {
+                        _category = selected;
+                        _categoryTouched = true;
+                        _isDirty = true;
+                      });
+                    },
+                    onAddCategory: () async {
+                      final newCategoryName = await CategoryDialog.show(
+                        context: context,
+                      );
+                      if (newCategoryName != null &&
+                          newCategoryName.isNotEmpty) {
+                        widget.onCategoryAdded(newCategoryName);
+                        final found = widget.categories.firstWhere(
+                          (c) => c.name == newCategoryName,
+                          orElse: () => widget.categories.isNotEmpty
+                              ? widget.categories.first
+                              : ExpenseCategory(
+                                  name: '',
+                                  id: '',
+                                  createdAt: DateTime(2000),
+                                ),
+                        );
+                        setState(() {
+                          if (!_categories.contains(found)) {
+                            _categories.add(found);
+                            _category = found;
                             _categoryTouched = true;
                             _isDirty = true;
-                          });
-                        },
-                        onAddCategory: () async {
-                          final newCategoryName = await CategoryDialog.show(
-                            context: context,
-                          );
-                          if (newCategoryName != null &&
-                              newCategoryName.isNotEmpty) {
-                            widget.onCategoryAdded(newCategoryName);
-                            final found = widget.categories.firstWhere(
-                              (c) => c.name == newCategoryName,
-                              orElse: () => widget.categories.isNotEmpty
-                                  ? widget.categories.first
-                                  : ExpenseCategory(
-                                      name: '',
-                                      id: '',
-                                      createdAt: DateTime(2000),
-                                    ),
-                            );
+                          }
+                        });
+                        await Future.delayed(
+                          const Duration(milliseconds: 100),
+                        );
+                        final foundAfter = widget.categories.firstWhere(
+                          (c) => c.name == newCategoryName,
+                          orElse: () => widget.categories.isNotEmpty
+                              ? widget.categories.first
+                              : ExpenseCategory(
+                                  name: '',
+                                  id: '',
+                                  createdAt: DateTime(2000),
+                                ),
+                        );
+                        setState(() {
+                          _categories = List.from(widget.categories);
+                          _category = foundAfter;
+                          _categoryTouched = true;
+                          _isDirty = true;
+                        });
+                      }
+                    },
+                    textStyle: smallStyle,
+                    fullEdit: true,
+                  ),
+                  _isCategoryValid,
+                  _categoryTouched,
+                ),
+              ] else
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Wrap(
+                    spacing: 12,
+                    runSpacing: 8,
+                    children: [
+                      _buildFieldWithStatus(
+                        ParticipantSelectorWidget(
+                          participants: widget.participants
+                              .map((p) => p.name)
+                              .toList(),
+                          selectedParticipant: _paidBy?.name,
+                          onParticipantSelected: (selectedName) {
                             setState(() {
-                              if (!_categories.contains(found)) {
-                                _categories.add(found);
-                                _category = found;
-                                _categoryTouched = true;
-                                _isDirty = true;
-                              }
+                              _paidBy = widget.participants.firstWhere(
+                                (p) => p.name == selectedName,
+                                orElse: () => widget.participants.isNotEmpty
+                                    ? widget.participants.first
+                                    : ExpenseParticipant(name: ''),
+                              );
+                              _paidByTouched = true;
+                              _isDirty = true;
                             });
-                            await Future.delayed(
-                              const Duration(milliseconds: 100),
-                            );
-                            final foundAfter = widget.categories.firstWhere(
-                              (c) => c.name == newCategoryName,
-                              orElse: () => widget.categories.isNotEmpty
-                                  ? widget.categories.first
-                                  : ExpenseCategory(
-                                      name: '',
-                                      id: '',
-                                      createdAt: DateTime(2000),
-                                    ),
-                            );
+                          },
+                          textStyle: smallStyle,
+                          fullEdit: false,
+                        ),
+                        _isPaidByValid,
+                        _paidByTouched,
+                      ),
+                      _buildFieldWithStatus(
+                        CategorySelectorWidget(
+                          categories: _categories,
+                          selectedCategory: _category,
+                          onCategorySelected: (selected) {
                             setState(() {
-                              _categories = List.from(widget.categories);
-                              _category = foundAfter;
+                              _category = selected;
                               _categoryTouched = true;
                               _isDirty = true;
                             });
-                          }
-                        },
-                        textStyle: smallStyle,
+                          },
+                          onAddCategory: () async {
+                            final newCategoryName = await CategoryDialog.show(
+                              context: context,
+                            );
+                            if (newCategoryName != null &&
+                                newCategoryName.isNotEmpty) {
+                              widget.onCategoryAdded(newCategoryName);
+                              final found = widget.categories.firstWhere(
+                                (c) => c.name == newCategoryName,
+                                orElse: () => widget.categories.isNotEmpty
+                                    ? widget.categories.first
+                                    : ExpenseCategory(
+                                        name: '',
+                                        id: '',
+                                        createdAt: DateTime(2000),
+                                      ),
+                              );
+                              setState(() {
+                                if (!_categories.contains(found)) {
+                                  _categories.add(found);
+                                  _category = found;
+                                  _categoryTouched = true;
+                                  _isDirty = true;
+                                }
+                              });
+                              await Future.delayed(
+                                const Duration(milliseconds: 100),
+                              );
+                              final foundAfter = widget.categories.firstWhere(
+                                (c) => c.name == newCategoryName,
+                                orElse: () => widget.categories.isNotEmpty
+                                    ? widget.categories.first
+                                    : ExpenseCategory(
+                                        name: '',
+                                        id: '',
+                                        createdAt: DateTime(2000),
+                                      ),
+                              );
+                              setState(() {
+                                _categories = List.from(widget.categories);
+                                _category = foundAfter;
+                                _categoryTouched = true;
+                                _isDirty = true;
+                              });
+                            }
+                          },
+                          textStyle: smallStyle,
+                          fullEdit: false,
+                        ),
+                        _isCategoryValid,
+                        _categoryTouched,
                       ),
-                      _isCategoryValid,
-                      _categoryTouched,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
 
               // DATA (bottone con data + icona, angoli arrotondati, sfondo grigio coerente col tema)
               // Unified extended fields (date, location, note)

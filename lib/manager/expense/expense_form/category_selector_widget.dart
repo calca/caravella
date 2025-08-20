@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../data/expense_category.dart';
 import '../../../widgets/selection_bottom_sheet.dart';
+import 'inline_select_field.dart';
 
 class CategorySelectorWidget extends StatelessWidget {
   final List<ExpenseCategory> categories;
@@ -9,6 +10,7 @@ class CategorySelectorWidget extends StatelessWidget {
   final void Function(ExpenseCategory?) onCategorySelected;
   final Future<void> Function() onAddCategory;
   final TextStyle? textStyle;
+  final bool fullEdit;
   const CategorySelectorWidget({
     super.key,
     required this.categories,
@@ -16,12 +18,43 @@ class CategorySelectorWidget extends StatelessWidget {
     required this.onCategorySelected,
     required this.onAddCategory,
     this.textStyle,
+    this.fullEdit = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final borderColor = theme.colorScheme.outlineVariant;
+    final gloc = gen.AppLocalizations.of(context);
+
+  Future<void> openPicker() async {
+      final picked = await showSelectionBottomSheet<ExpenseCategory>(
+        context: context,
+        items: categories,
+        selected: selectedCategory,
+        gloc: gloc,
+        itemLabel: (c) => c.name,
+        onAddItem: () async {
+          await onAddCategory();
+        },
+        addItemTooltip: gloc.add_category,
+      );
+      if (picked != null && picked != selectedCategory) {
+        onCategorySelected(picked);
+      }
+    }
+
+    if (fullEdit) {
+      return InlineSelectField(
+        icon: Icons.category_outlined,
+        label: selectedCategory?.name ?? gloc.category_placeholder,
+        onTap: openPicker,
+        enabled: true,
+        semanticsLabel: gloc.category,
+        textStyle: textStyle,
+      );
+    }
+
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -29,22 +62,7 @@ class CategorySelectorWidget extends StatelessWidget {
         side: BorderSide(color: borderColor.withValues(alpha: 0.8), width: 1),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
-      onPressed: () async {
-        final picked = await showSelectionBottomSheet<ExpenseCategory>(
-          context: context,
-          items: categories,
-          selected: selectedCategory,
-          gloc: gen.AppLocalizations.of(context),
-          itemLabel: (c) => c.name,
-          onAddItem: () async {
-            await onAddCategory();
-          },
-          addItemTooltip: gen.AppLocalizations.of(context).add_category,
-        );
-        if (picked != null && picked != selectedCategory) {
-          onCategorySelected(picked);
-        }
-      },
+  onPressed: openPicker,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -56,8 +74,7 @@ class CategorySelectorWidget extends StatelessWidget {
           const SizedBox(width: 8),
           Flexible(
             child: Text(
-              selectedCategory?.name ??
-                  gen.AppLocalizations.of(context).category_placeholder,
+              selectedCategory?.name ?? gloc.category_placeholder,
               overflow: TextOverflow.ellipsis,
               style: (textStyle ?? theme.textTheme.bodyMedium)?.copyWith(
                 color: theme.colorScheme.onSurface,

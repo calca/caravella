@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
-import 'icon_leading_field.dart';
+import 'inline_select_field.dart';
 
 class DateSelectorWidget extends StatelessWidget {
   final DateTime? selectedDate;
@@ -29,7 +29,7 @@ class DateSelectorWidget extends StatelessWidget {
         : gloc.select_expense_date_short;
     final semanticLabel = '${gloc.date}: $dateText';
 
-    final iconColor = Theme.of(context).colorScheme.onSurfaceVariant;
+  // icon color now handled by InlineSelectField's icon theme
 
   Future<void> pickDate() async {
       final picked = await showDatePicker(
@@ -47,29 +47,13 @@ class DateSelectorWidget extends StatelessWidget {
       }
     }
 
-    return IconLeadingField(
+    return InlineSelectField(
+      icon: Icons.event_outlined,
+      label: dateText,
+      onTap: pickDate,
+      enabled: true,
       semanticsLabel: semanticLabel,
-      tooltip: gloc.date,
-      icon: Icon(
-        Icons.event_outlined,
-        size: 22,
-        color: iconColor,
-      ),
-      child: Semantics(
-        label: semanticLabel,
-        button: true,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(4),
-          onTap: pickDate,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Text(
-              dateText,
-              style: textStyle ?? Theme.of(context).textTheme.bodySmall,
-            ),
-          ),
-        ),
-      ),
+      textStyle: textStyle ?? Theme.of(context).textTheme.bodySmall,
     );
   }
 }
