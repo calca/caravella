@@ -250,4 +250,6 @@
   ,"error_selecting_image": "Error selecting image"
   ,"error_saving_image": "Error saving image"
   ,"@error_saving_group": {"placeholders": {"error": {}}}
+  ,"already_exists": "already exists"
+  ,"@already_exists": {"description": "Shown after an entity name when a duplicate entry is attempted"}
 }

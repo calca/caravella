@@ -719,4 +719,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get error_saving_image => 'Error saving image';
+
+  @override
+  String get already_exists => 'already exists';
 }

@@ -112,7 +112,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   // Controllers and focus nodes
   final TextEditingController _titleController = TextEditingController();
   final FocusNode _titleFocusNode = FocusNode();
-  final TextEditingController _participantController = TextEditingController();
+  // Removed participant controller (now inline add/edit)
 
   // Form key
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -198,7 +198,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   void dispose() {
     _titleController.dispose();
     _titleFocusNode.dispose();
-    _participantController.dispose();
+    // _participantController removed
     _currencySheetScrollController.dispose();
     super.dispose();
   }
@@ -669,7 +669,6 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                   // Sezione 2: Partecipanti
                   ParticipantsSection(
                     participants: _participants,
-                    participantController: _participantController,
                     onAddParticipant: (String name) {
                       setState(() {
                         _participants.add(ExpenseParticipant(name: name));

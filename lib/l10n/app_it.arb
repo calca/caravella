@@ -237,4 +237,6 @@
   ,"error_selecting_image": "Errore durante la selezione dell'immagine"
   ,"error_saving_image": "Errore durante il salvataggio dell'immagine"
   ,"@error_saving_group": {"placeholders": {"error": {}}}
+  ,"already_exists": "esiste già"
+  ,"@already_exists": {"description": "Mostrato dopo il nome di un'entità quando si tenta di inserire un duplicato"}
 }

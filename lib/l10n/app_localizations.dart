@@ -1477,6 +1477,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error saving image'**
   String get error_saving_image;
+
+  /// Shown after an entity name when a duplicate entry is attempted
+  ///
+  /// In en, this message translates to:
+  /// **'already exists'**
+  String get already_exists;
 }
 
 class _AppLocalizationsDelegate
