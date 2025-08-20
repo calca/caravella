@@ -8,13 +8,11 @@ import '../../details/expense_group_detail_page.dart';
 class ExpenseGroupCard extends StatelessWidget {
   final ExpenseGroup trip;
   final Function(ExpenseGroup) onTripUpdated;
-  final Function(ExpenseGroup) onTripOptionsPressed;
 
   const ExpenseGroupCard({
     super.key,
     required this.trip,
     required this.onTripUpdated,
-    required this.onTripOptionsPressed,
   });
 
   @override
@@ -23,7 +21,6 @@ class ExpenseGroupCard extends StatelessWidget {
       0,
       (sum, e) => sum + (e.amount ?? 0),
     );
-
     return Dismissible(
       key: ValueKey(
         trip.title +
@@ -34,9 +31,7 @@ class ExpenseGroupCard extends StatelessWidget {
       background: _buildDismissBackground(context),
       confirmDismiss: (_) => _confirmArchive(context),
       onDismissed: (_) => _onArchiveToggle(),
-      child: GestureDetector(
-        onLongPress: () => onTripOptionsPressed(trip),
-        child: BaseCard(
+  child: BaseCard(
           noBorder: true,
           margin: const EdgeInsets.symmetric(vertical: 6),
           padding: const EdgeInsets.all(16),
@@ -84,7 +79,6 @@ class ExpenseGroupCard extends StatelessWidget {
             ],
           ),
         ),
-      ),
     );
   }
 
