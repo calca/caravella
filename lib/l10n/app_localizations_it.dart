@@ -674,10 +674,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get overview_and_statistics => 'Panoramica e statistiche';
 
   @override
-  String get daily_average => 'Media giornaliera';
+  String get daily_average => 'Media';
 
   @override
-  String get spent_today => 'Speso oggi';
+  String get spent_today => 'Oggi';
 
   @override
   String get average_expense => 'Spesa media';

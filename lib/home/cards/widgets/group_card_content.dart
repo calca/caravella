@@ -339,8 +339,6 @@ class GroupCardContent extends StatelessWidget {
   }
 
   Widget _buildExtraInfo(ExpenseGroup group) {
-    if (!_isShortDuration(group)) return const SizedBox.shrink();
-
     final dailyAverage = _calculateDailyAverage(group);
     final todaySpending = _calculateTodaySpending(group);
     final textColor = theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7);
@@ -358,13 +356,15 @@ class GroupCardContent extends StatelessWidget {
                 fontSize: 14,
               ),
             ),
-            Text(
-              '${dailyAverage.toStringAsFixed(1)}€',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: textColor,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
+            CurrencyDisplay(
+              value: dailyAverage,
+              currency: group.currency,
+              valueFontSize: 14,
+              currencyFontSize: 12,
+              alignment: MainAxisAlignment.end,
+              showDecimals: true,
+              color: textColor,
+              fontWeight: FontWeight.w600,
             ),
           ],
         ),
@@ -380,13 +380,15 @@ class GroupCardContent extends StatelessWidget {
                 fontSize: 14,
               ),
             ),
-            Text(
-              '${todaySpending.toStringAsFixed(1)}€',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: textColor,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
+            CurrencyDisplay(
+              value: todaySpending,
+              currency: group.currency,
+              valueFontSize: 14,
+              currencyFontSize: 12,
+              alignment: MainAxisAlignment.end,
+              showDecimals: true,
+              color: textColor,
+              fontWeight: FontWeight.w600,
             ),
           ],
         ),
@@ -424,7 +426,11 @@ class GroupCardContent extends StatelessWidget {
     });
 
     return Column(
-      children: [DateRangeExpenseChart(dailyTotals: dailyTotals, theme: theme)],
+      children: [
+        // Extra info for short duration trips
+        _buildExtraInfo(currentGroup),
+        DateRangeExpenseChart(dailyTotals: dailyTotals, theme: theme),
+      ],
     );
   }
 
@@ -466,8 +472,6 @@ class GroupCardContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Extra info for short duration trips
-        _buildExtraInfo(currentGroup),
         // Settimana
         WeeklyExpenseChart(dailyTotals: dailyTotals, theme: theme),
         const SizedBox(height: 16),
