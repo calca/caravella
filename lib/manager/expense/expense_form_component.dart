@@ -249,6 +249,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              _buildGroupHeader(),
               _buildAmountField(gloc, smallStyle),
               _spacer(),
               _buildNameField(gloc, smallStyle),
@@ -260,6 +261,25 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  /// Intestazione con il titolo del gruppo (solo in fullEdit, se presente)
+  Widget _buildGroupHeader() {
+    if (!(widget.fullEdit && widget.groupTitle != null)) {
+      return const SizedBox.shrink();
+    }
+    final gloc = gen.AppLocalizations.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12.0),
+      child: Text(
+        '${gloc.in_group_prefix} ${widget.groupTitle}',
+        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+          fontWeight: FontWeight.w600,
+        ),
+        overflow: TextOverflow.ellipsis,
+        maxLines: 1,
       ),
     );
   }
@@ -483,7 +503,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   Widget _buildActionsRow(gen.AppLocalizations gloc, TextStyle? style) => Row(
     crossAxisAlignment: CrossAxisAlignment.center,
     children: [
-      if (widget.groupTitle != null)
+      if (widget.groupTitle != null && !widget.fullEdit)
         Expanded(
           child: Text(
             widget.groupTitle!,

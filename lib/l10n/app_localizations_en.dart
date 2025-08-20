@@ -37,6 +37,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get select_period_hint => 'Select a date range';
 
   @override
+  String get in_group_prefix => 'in';
+
+  @override
   String get save_change_expense => 'Save changes';
 
   @override

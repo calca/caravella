@@ -9,6 +9,7 @@
   "select_currency": "Seleziona valuta",
   "select_period_hint_short": "Imposta date",
   "select_period_hint": "Seleziona un intervallo di date",
+  "in_group_prefix": "in",
   "save_change_expense": "Salva modifiche",
   "group_total": "Totale",
   "download_all_csv": "Scarica tutto (CSV)",

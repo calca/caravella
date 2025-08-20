@@ -152,6 +152,12 @@ abstract class AppLocalizations {
   /// **'Select a date range'**
   String get select_period_hint;
 
+  /// No description provided for @in_group_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'in'**
+  String get in_group_prefix;
+
   /// No description provided for @save_change_expense.
   ///
   /// In en, this message translates to:
