@@ -16,9 +16,9 @@ class SectionFlatChildren {
         children: [
           Text(
             gen.AppLocalizations.of(context).group_name,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
           ),
           const SizedBox(width: 4),
           const Text('*', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -29,21 +29,18 @@ class SectionFlatChildren {
         controller: titleController,
         focusNode: titleFocusNode,
         autofocus: !isEdit,
-        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
+        style: Theme.of(
+          context,
+        ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
         decoration: const InputDecoration(
           labelText: '',
           border: UnderlineInputBorder(),
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(),
-          ),
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(width: 2),
-          ),
+          enabledBorder: UnderlineInputBorder(borderSide: BorderSide()),
+          focusedBorder: UnderlineInputBorder(borderSide: BorderSide(width: 2)),
         ),
-    validator: (v) =>
-      v == null || v.isEmpty ? gen.AppLocalizations.of(context).enter_title : null,
+        validator: (v) => v == null || v.isEmpty
+            ? gen.AppLocalizations.of(context).enter_title
+            : null,
         onChanged: (_) => onChanged(),
       ),
       if (showError && dateError != null)

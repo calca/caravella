@@ -34,15 +34,17 @@ class DailyExpensesChart extends StatelessWidget {
     }
 
     // Filtra per mostrare solo dall'inizio fino all'ultimo giorno con spese
-    final filteredEntries =
-        sortedEntries.take(lastDayWithExpenses + 1).toList();
+    final filteredEntries = sortedEntries
+        .take(lastDayWithExpenses + 1)
+        .toList();
 
     if (filteredEntries.isEmpty) {
       return const SizedBox.shrink();
     }
 
-    final maxAmount =
-        filteredEntries.map((e) => e.value).reduce((a, b) => a > b ? a : b);
+    final maxAmount = filteredEntries
+        .map((e) => e.value)
+        .reduce((a, b) => a > b ? a : b);
     final minAmount = filteredEntries
         .map((e) => e.value)
         .where((v) => v > 0)
@@ -52,18 +54,18 @@ class DailyExpensesChart extends StatelessWidget {
     final useLogScale =
         maxAmount > 0 && minAmount > 0 && (maxAmount / minAmount) > 100;
 
-  // Altezza compatta: massimo 25% dell'altezza schermo (nessun extra spazio)
-  final screenHeight = MediaQuery.of(context).size.height;
-  final chartHeight = screenHeight * 0.25; // compatto e limitato al 25%
+    // Altezza compatta: massimo 25% dell'altezza schermo (nessun extra spazio)
+    final screenHeight = MediaQuery.of(context).size.height;
+    final chartHeight = screenHeight * 0.25; // compatto e limitato al 25%
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           _resolveTitle(context),
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
         ),
         SizedBox(
           height: chartHeight,
@@ -77,11 +79,14 @@ class DailyExpensesChart extends StatelessWidget {
                   titlesData: FlTitlesData(
                     show: true,
                     topTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false)),
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
                     rightTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false)),
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
                     leftTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false)),
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
                     bottomTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
@@ -95,28 +100,28 @@ class DailyExpensesChart extends StatelessWidget {
 
                           final date = filteredEntries[index].key;
                           String dateText;
-                          
+
                           // If this looks like weekly data (first day of week),
                           // show week range format, otherwise show day/month
-                          if (titleKey == 'weekly_expenses_chart' && date.weekday == 1) {
+                          if (titleKey == 'weekly_expenses_chart' &&
+                              date.weekday == 1) {
                             final endWeek = date.add(const Duration(days: 6));
-                            dateText = '${date.day}/${date.month}-${endWeek.day}/${endWeek.month}';
+                            dateText =
+                                '${date.day}/${date.month}-${endWeek.day}/${endWeek.month}';
                           } else {
                             dateText = '${date.day}/${date.month}';
                           }
-                          
+
                           return Padding(
                             padding: const EdgeInsets.only(top: 8.0),
                             child: Text(
                               dateText,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
+                              style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(
                                     fontSize: 10,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurfaceVariant,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurfaceVariant,
                                   ),
                             ),
                           );
@@ -128,17 +133,20 @@ class DailyExpensesChart extends StatelessWidget {
                     show: true,
                     border: Border(
                       bottom: BorderSide(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .outline
-                            .withValues(alpha: 0.3),
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.outline.withValues(alpha: 0.3),
                       ),
                     ),
                   ),
                   minX: 0,
                   maxX: (filteredEntries.length - 1).toDouble(),
-                  minY: useLogScale ? (minAmount > 0 ? minAmount * 0.5 : 0.1) : 0,
-                  maxY: useLogScale ? maxAmount * 1.5 : _calculateMaxY(maxAmount),
+                  minY: useLogScale
+                      ? (minAmount > 0 ? minAmount * 0.5 : 0.1)
+                      : 0,
+                  maxY: useLogScale
+                      ? maxAmount * 1.5
+                      : _calculateMaxY(maxAmount),
                   lineBarsData: [
                     LineChartBarData(
                       spots: filteredEntries.asMap().entries.map((entry) {
@@ -162,10 +170,9 @@ class DailyExpensesChart extends StatelessWidget {
                       ),
                       belowBarData: BarAreaData(
                         show: true,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .primary
-                            .withValues(alpha: 0.1),
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.primary.withValues(alpha: 0.1),
                       ),
                     ),
                   ],

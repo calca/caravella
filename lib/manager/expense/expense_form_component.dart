@@ -231,8 +231,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
 
   @override
   Widget build(BuildContext context) {
-  final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-  final gloc = gen.AppLocalizations.of(context); // generated (non-null)
+    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
+    final gloc = gen.AppLocalizations.of(context); // generated (non-null)
     final smallStyle = Theme.of(context).textTheme.bodyMedium;
     return PopScope(
       canPop: !_isDirty,
@@ -284,10 +284,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                   controller: _nameController,
                   focusNode: _nameFocus,
                   label: gloc.expense_name,
-          // TODO: replace with generated localization key (e.g., gloc.expense_name_required) once added to ARB
-          validator: (v) => v == null || v.trim().isEmpty
-            ? gloc.enter_title
-            : null,
+                  // TODO: replace with generated localization key (e.g., gloc.expense_name_required) once added to ARB
+                  validator: (v) =>
+                      v == null || v.trim().isEmpty ? gloc.enter_title : null,
                   onSaved: (v) {},
                   onSubmitted: () {},
                   isText: true,

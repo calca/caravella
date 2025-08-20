@@ -29,10 +29,9 @@ class ParticipantsSection extends StatelessWidget {
           children: [
             Text(
               gen.AppLocalizations.of(context).participants,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium
-                  ?.copyWith(fontWeight: FontWeight.w600),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(width: 4),
             const Text('*', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -48,20 +47,27 @@ class ParticipantsSection extends StatelessWidget {
             title: p.name,
             subtitle: null,
             backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-            borderColor:
-                Theme.of(context).colorScheme.primaryFixedDim.withAlpha(128),
+            borderColor: Theme.of(
+              context,
+            ).colorScheme.primaryFixedDim.withAlpha(128),
             onEdit: () {
               final editController = TextEditingController(text: p.name);
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: Text(gen.AppLocalizations.of(context).edit_participant),
+                  title: Text(
+                    gen.AppLocalizations.of(context).edit_participant,
+                  ),
                   content: TextField(
                     controller: editController,
                     autofocus: true,
                     decoration: InputDecoration(
-                      labelText: gen.AppLocalizations.of(context).participant_name,
-                      hintText: gen.AppLocalizations.of(context).participant_name_hint,
+                      labelText: gen.AppLocalizations.of(
+                        context,
+                      ).participant_name,
+                      hintText: gen.AppLocalizations.of(
+                        context,
+                      ).participant_name_hint,
                     ),
                     onSubmitted: (val) {
                       if (val.trim().isNotEmpty) {
@@ -106,8 +112,12 @@ class ParticipantsSection extends StatelessWidget {
                     controller: participantController,
                     autofocus: true,
                     decoration: InputDecoration(
-                      labelText: gen.AppLocalizations.of(context).participant_name,
-                      hintText: gen.AppLocalizations.of(context).participant_name_hint,
+                      labelText: gen.AppLocalizations.of(
+                        context,
+                      ).participant_name,
+                      hintText: gen.AppLocalizations.of(
+                        context,
+                      ).participant_name_hint,
                     ),
                     onSubmitted: (val) {
                       if (val.trim().isNotEmpty) {

@@ -11,7 +11,7 @@ class HomeWelcomeSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  final gloc = gen.AppLocalizations.of(context);
+    final gloc = gen.AppLocalizations.of(context);
     final theme = Theme.of(context);
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
@@ -29,7 +29,8 @@ class HomeWelcomeSection extends StatelessWidget {
             end: Alignment.bottomRight,
             colors: [
               theme.colorScheme.primaryFixedDim,
-              theme.colorScheme
+              theme
+                  .colorScheme
                   .onPrimaryFixed, // Replace deprecated surfaceVariant
             ],
           )
@@ -42,18 +43,21 @@ class HomeWelcomeSection extends StatelessWidget {
             ],
           );
 
-    final titleColor =
-        isDarkMode ? theme.colorScheme.onSurface : theme.colorScheme.onPrimary;
+    final titleColor = isDarkMode
+        ? theme.colorScheme.onSurface
+        : theme.colorScheme.onPrimary;
 
-    final buttonBackgroundColor =
-        isDarkMode ? theme.colorScheme.primary : theme.colorScheme.onPrimary;
+    final buttonBackgroundColor = isDarkMode
+        ? theme.colorScheme.primary
+        : theme.colorScheme.onPrimary;
 
     final buttonForegroundColor = isDarkMode
         ? theme.colorScheme.onPrimaryContainer
         : theme.colorScheme.primary;
 
-    final settingsTextColor =
-        isDarkMode ? theme.colorScheme.onPrimary : theme.colorScheme.onPrimary;
+    final settingsTextColor = isDarkMode
+        ? theme.colorScheme.onPrimary
+        : theme.colorScheme.onPrimary;
 
     return SizedBox(
       width: screenWidth,
@@ -159,10 +163,7 @@ class HomeWelcomeSection extends StatelessWidget {
                               ? 2
                               : 0, // Subtle elevation in dark mode
                         ),
-                        icon: const Icon(
-                          Icons.arrow_forward,
-                          size: 32,
-                        ),
+                        icon: const Icon(Icons.arrow_forward, size: 32),
                         tooltip: gloc.welcome_v3_cta,
                       ),
                     ),

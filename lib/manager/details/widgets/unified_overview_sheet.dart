@@ -9,7 +9,7 @@ class UnifiedOverviewSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  final gloc = gen.AppLocalizations.of(context);
+    final gloc = gen.AppLocalizations.of(context);
     return DraggableScrollableSheet(
       initialChildSize: 0.7,
       maxChildSize: 0.9,

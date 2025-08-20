@@ -41,7 +41,7 @@ class _SelectionSheet<T> extends StatefulWidget {
     required this.items,
     required this.selected,
     required this.itemLabel,
-  required this.gloc,
+    required this.gloc,
     this.onAddItem,
     this.addItemTooltip,
   });

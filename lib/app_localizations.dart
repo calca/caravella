@@ -18,7 +18,9 @@ class AppLocalizations {
       final code = source.split('_').first;
       return AppLocalizations._(gen.lookupAppLocalizations(Locale(code)));
     }
-    throw ArgumentError('Unsupported AppLocalizations source type: ${source.runtimeType}');
+    throw ArgumentError(
+      'Unsupported AppLocalizations source type: ${source.runtimeType}',
+    );
   }
 
   static AppLocalizations of(BuildContext context) =>
@@ -254,4 +256,3 @@ class AppLocalizations {
     return value;
   }
 }
-

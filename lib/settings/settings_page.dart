@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/caravella_app_bar.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen; // generated strongly-typed
+import 'package:org_app_caravella/l10n/app_localizations.dart'
+    as gen; // generated strongly-typed
 import '../state/locale_notifier.dart';
 import '../state/theme_mode_notifier.dart';
 import 'flag_secure_notifier.dart';
@@ -17,7 +18,7 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-  final genLoc = gen.AppLocalizations.of(context);
+    final genLoc = gen.AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     final currentThemeMode =
@@ -68,9 +69,9 @@ class SettingsPage extends StatelessWidget {
                         style: textTheme.titleMedium,
                       ),
                       subtitle: Text(
-            locale == 'it'
-              ? genLoc.settings_language_it
-              : genLoc.settings_language_en,
+                        locale == 'it'
+                            ? genLoc.settings_language_it
+                            : genLoc.settings_language_en,
                       ),
                       trailing: const Icon(Icons.arrow_drop_down),
                       onTap: () {
@@ -277,8 +278,8 @@ void _showLanguagePicker(
     ),
     builder: (ctx) {
       final entries = [
-  ('it', loc.settings_language_it),
-  ('en', loc.settings_language_en),
+        ('it', loc.settings_language_it),
+        ('en', loc.settings_language_en),
       ];
       return SafeArea(
         child: Padding(
@@ -349,13 +350,9 @@ void _showThemePicker(BuildContext context, gen.AppLocalizations loc) {
   final currentMode =
       ThemeModeNotifier.of(context)?.themeMode ?? ThemeMode.system;
   final entries = <(ThemeMode, String, IconData)>[
-    (
-      ThemeMode.system,
-  loc.theme_automatic,
-      Icons.settings_suggest_outlined,
-    ),
-  (ThemeMode.light, loc.theme_light, Icons.light_mode_outlined),
-  (ThemeMode.dark, loc.theme_dark, Icons.dark_mode_outlined),
+    (ThemeMode.system, loc.theme_automatic, Icons.settings_suggest_outlined),
+    (ThemeMode.light, loc.theme_light, Icons.light_mode_outlined),
+    (ThemeMode.dark, loc.theme_dark, Icons.dark_mode_outlined),
   ];
   showModalBottomSheet(
     context: context,

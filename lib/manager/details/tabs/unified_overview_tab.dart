@@ -207,7 +207,7 @@ class UnifiedOverviewTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-  final gloc = gen.AppLocalizations.of(context);
+    final gloc = gen.AppLocalizations.of(context);
     final settlements = _calculateSettlements(trip);
 
     if (trip.expenses.isEmpty) {

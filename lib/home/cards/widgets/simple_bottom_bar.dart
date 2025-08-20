@@ -26,11 +26,13 @@ class SimpleBottomBar extends StatelessWidget {
           TextButton(
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute(
-                  builder: (context) => const ExpesensHistoryPage()),
+                builder: (context) => const ExpesensHistoryPage(),
+              ),
             ),
             style: TextButton.styleFrom(
-              foregroundColor:
-                  theme.colorScheme.onSurface.withValues(alpha: 0.8),
+              foregroundColor: theme.colorScheme.onSurface.withValues(
+                alpha: 0.8,
+              ),
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             ),
             child: Text(
@@ -44,15 +46,15 @@ class SimpleBottomBar extends StatelessWidget {
           ),
 
           const SizedBox(width: 16), // Spazio tra i bottoni
-
           // Bottone Opzioni
           TextButton(
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => const SettingsPage()),
             ),
             style: TextButton.styleFrom(
-              foregroundColor:
-                  theme.colorScheme.onSurface.withValues(alpha: 0.8),
+              foregroundColor: theme.colorScheme.onSurface.withValues(
+                alpha: 0.8,
+              ),
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             ),
             child: Text(

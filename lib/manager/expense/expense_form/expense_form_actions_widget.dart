@@ -17,8 +17,8 @@ class ExpenseFormActionsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final icon = isEdit ? Icons.save_rounded : Icons.check_rounded;
     // Use existing save_change_expense for edit; generic label for add
-  final gloc = gen.AppLocalizations.of(context);
-  final label = isEdit ? gloc.save_change_expense : 'Save';
+    final gloc = gen.AppLocalizations.of(context);
+    final label = isEdit ? gloc.save_change_expense : 'Save';
     return Align(
       alignment: Alignment.centerRight,
       child: IconButton.filled(

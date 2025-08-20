@@ -19,13 +19,17 @@ class ExpenseGroupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final total =
-        trip.expenses.fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
+    final total = trip.expenses.fold<double>(
+      0,
+      (sum, e) => sum + (e.amount ?? 0),
+    );
 
     return Dismissible(
-      key: ValueKey(trip.title +
-          (trip.startDate?.toIso8601String() ??
-              trip.timestamp.toIso8601String())),
+      key: ValueKey(
+        trip.title +
+            (trip.startDate?.toIso8601String() ??
+                trip.timestamp.toIso8601String()),
+      ),
       direction: DismissDirection.endToStart,
       background: _buildDismissBackground(context),
       confirmDismiss: (_) => _confirmArchive(context),
@@ -56,12 +60,8 @@ class ExpenseGroupCard extends StatelessWidget {
                         Expanded(
                           child: Text(
                             trip.title,
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(fontWeight: FontWeight.w600),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -89,14 +89,16 @@ class ExpenseGroupCard extends StatelessWidget {
   }
 
   Widget _buildDismissBackground(BuildContext context) {
-  final gloc = gen.AppLocalizations.of(context);
+    final gloc = gen.AppLocalizations.of(context);
 
     final isArchived = trip.archived;
-    final backgroundColor =
-        Theme.of(context).colorScheme.surfaceContainerHighest;
-    final iconData =
-        isArchived ? Icons.unarchive_outlined : Icons.archive_outlined;
-  final actionText = isArchived ? gloc.unarchive : gloc.archive;
+    final backgroundColor = Theme.of(
+      context,
+    ).colorScheme.surfaceContainerHighest;
+    final iconData = isArchived
+        ? Icons.unarchive_outlined
+        : Icons.archive_outlined;
+    final actionText = isArchived ? gloc.unarchive : gloc.archive;
 
     return Container(
       alignment: Alignment.centerRight,
@@ -118,8 +120,8 @@ class ExpenseGroupCard extends StatelessWidget {
           Text(
             actionText,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
           ),
         ],
       ),
@@ -127,19 +129,18 @@ class ExpenseGroupCard extends StatelessWidget {
   }
 
   Future<bool?> _confirmArchive(BuildContext context) async {
-  final gloc = gen.AppLocalizations.of(context);
+    final gloc = gen.AppLocalizations.of(context);
 
     final isArchived = trip.archived;
-  final actionText = isArchived ? gloc.unarchive : gloc.archive;
-  final confirmText =
-    isArchived ? gloc.unarchive_confirm : gloc.archive_confirm;
+    final actionText = isArchived ? gloc.unarchive : gloc.archive;
+    final confirmText = isArchived
+        ? gloc.unarchive_confirm
+        : gloc.archive_confirm;
 
     return await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Row(
           children: [
             Icon(
@@ -150,9 +151,7 @@ class ExpenseGroupCard extends StatelessWidget {
             Text(actionText),
           ],
         ),
-        content: Text(
-          '$confirmText "${trip.title}"?',
-        ),
+        content: Text('$confirmText "${trip.title}"?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
@@ -211,11 +210,10 @@ class ExpenseGroupCard extends StatelessWidget {
                 ? '${trip.startDate!.day}/${trip.startDate!.month}/${trip.startDate!.year} - ${trip.endDate!.day}/${trip.endDate!.month}/${trip.endDate!.year}'
                 : '-',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withValues(alpha: 0.7),
-                ),
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.7),
+            ),
           ),
         ),
       ],
@@ -237,11 +235,10 @@ class ExpenseGroupCard extends StatelessWidget {
                 ? trip.participants.map((p) => p.name).join(', ')
                 : '${trip.participants.length} partecipanti',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withValues(alpha: 0.7),
-                ),
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.7),
+            ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),

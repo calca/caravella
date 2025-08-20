@@ -24,17 +24,14 @@ void main() {
         id: 'transport',
         createdAt: DateTime(2023, 12, 1),
       );
-      participant = ExpenseParticipant(
-        name: 'John',
-        id: 'john',
-      );
+      participant = ExpenseParticipant(name: 'John', id: 'john');
       loc = AppLocalizations('en');
     });
 
     test('calculates daily averages correctly for group with dates', () {
       final startDate = DateTime(2023, 12, 1);
       final endDate = DateTime(2023, 12, 10); // 10 days duration
-      
+
       final trip = ExpenseGroup(
         title: 'Test Trip',
         expenses: [
@@ -67,8 +64,10 @@ void main() {
         categories: [foodCategory, transportCategory],
       );
 
-    final averages = DailyAverageByCategoryWidget(trip: trip, loc: loc)
-      ._calculateDailyAveragesByCategory();
+      final averages = DailyAverageByCategoryWidget(
+        trip: trip,
+        loc: loc,
+      )._calculateDailyAveragesByCategory();
 
       // Food: 150.0 / 10 days = 15.0 per day
       // Transport: 30.0 / 10 days = 3.0 per day
@@ -76,44 +75,53 @@ void main() {
       expect(averages[transportCategory], 3.0);
     });
 
-    test('calculates daily averages for group without dates using first expense to now', () {
-      final now = DateTime.now();
-      final firstExpenseDate = DateTime(now.year, now.month, now.day - 9); // 10 days ago
-      
-      final trip = ExpenseGroup(
-        title: 'Test Trip No Dates',
-        expenses: [
-          ExpenseDetails(
-            category: foodCategory,
-            amount: 100.0,
-            paidBy: participant,
-            date: firstExpenseDate,
-            name: 'First expense',
-          ),
-          ExpenseDetails(
-            category: transportCategory,
-            amount: 50.0,
-            paidBy: participant,
-            date: DateTime(now.year, now.month, now.day - 5),
-            name: 'Second expense',
-          ),
-        ],
-        participants: [participant],
-        startDate: null,
-        endDate: null,
-        currency: 'EUR',
-        categories: [foodCategory, transportCategory],
-      );
+    test(
+      'calculates daily averages for group without dates using first expense to now',
+      () {
+        final now = DateTime.now();
+        final firstExpenseDate = DateTime(
+          now.year,
+          now.month,
+          now.day - 9,
+        ); // 10 days ago
 
-    final averages = DailyAverageByCategoryWidget(trip: trip, loc: loc)
-      ._calculateDailyAveragesByCategory();
+        final trip = ExpenseGroup(
+          title: 'Test Trip No Dates',
+          expenses: [
+            ExpenseDetails(
+              category: foodCategory,
+              amount: 100.0,
+              paidBy: participant,
+              date: firstExpenseDate,
+              name: 'First expense',
+            ),
+            ExpenseDetails(
+              category: transportCategory,
+              amount: 50.0,
+              paidBy: participant,
+              date: DateTime(now.year, now.month, now.day - 5),
+              name: 'Second expense',
+            ),
+          ],
+          participants: [participant],
+          startDate: null,
+          endDate: null,
+          currency: 'EUR',
+          categories: [foodCategory, transportCategory],
+        );
 
-      // Duration is 10 days (from first expense to now)
-      // Food: 100.0 / 10 days = 10.0 per day
-      // Transport: 50.0 / 10 days = 5.0 per day
-      expect(averages[foodCategory], 10.0);
-      expect(averages[transportCategory], 5.0);
-    });
+        final averages = DailyAverageByCategoryWidget(
+          trip: trip,
+          loc: loc,
+        )._calculateDailyAveragesByCategory();
+
+        // Duration is 10 days (from first expense to now)
+        // Food: 100.0 / 10 days = 10.0 per day
+        // Transport: 50.0 / 10 days = 5.0 per day
+        expect(averages[foodCategory], 10.0);
+        expect(averages[transportCategory], 5.0);
+      },
+    );
 
     test('uses localized per_day text', () {
       final trip = ExpenseGroup.empty();
@@ -126,9 +134,17 @@ void main() {
 
     test('handles group with end date in future by using current date', () {
       final now = DateTime.now();
-      final startDate = DateTime(now.year, now.month, now.day - 9); // 10 days ago
-      final endDate = DateTime(now.year, now.month, now.day + 5); // 5 days in future
-      
+      final startDate = DateTime(
+        now.year,
+        now.month,
+        now.day - 9,
+      ); // 10 days ago
+      final endDate = DateTime(
+        now.year,
+        now.month,
+        now.day + 5,
+      ); // 5 days in future
+
       final trip = ExpenseGroup(
         title: 'Test Trip Future End',
         expenses: [
@@ -147,8 +163,10 @@ void main() {
         categories: [foodCategory],
       );
 
-    final averages = DailyAverageByCategoryWidget(trip: trip, loc: loc)
-      ._calculateDailyAveragesByCategory();
+      final averages = DailyAverageByCategoryWidget(
+        trip: trip,
+        loc: loc,
+      )._calculateDailyAveragesByCategory();
 
       // Should use startDate to current date (10 days), not to future endDate
       // Food: 100.0 / 10 days = 10.0 per day
@@ -166,8 +184,10 @@ void main() {
         categories: [foodCategory],
       );
 
-    final averages = DailyAverageByCategoryWidget(trip: trip, loc: loc)
-      ._calculateDailyAveragesByCategory();
+      final averages = DailyAverageByCategoryWidget(
+        trip: trip,
+        loc: loc,
+      )._calculateDailyAveragesByCategory();
 
       expect(averages.isEmpty, isTrue);
     });
@@ -190,7 +210,7 @@ extension DailyAverageByCategoryWidgetTesting on DailyAverageByCategoryWidget {
     }
 
     final Map<ExpenseCategory, double> categoryTotals = {};
-    
+
     // Calculate totals for known categories
     for (final category in trip.categories) {
       final total = trip.expenses
@@ -221,7 +241,7 @@ extension DailyAverageByCategoryWidgetTesting on DailyAverageByCategoryWidget {
 
   ({DateTime start, DateTime end}) _calculateDateRange() {
     final now = DateTime.now();
-    
+
     // If the group has no dates, use first expense date to current date
     if (trip.startDate == null || trip.endDate == null) {
       if (trip.expenses.isEmpty) {
@@ -230,25 +250,39 @@ extension DailyAverageByCategoryWidgetTesting on DailyAverageByCategoryWidget {
         final lastDay = DateTime(now.year, now.month + 1, 0);
         return (start: firstDay, end: lastDay);
       }
-      
+
       // Find the first expense date
       final sortedExpenses = [...trip.expenses]
         ..sort((a, b) => a.date.compareTo(b.date));
       final firstExpenseDate = sortedExpenses.first.date;
-      
+
       return (
-        start: DateTime(firstExpenseDate.year, firstExpenseDate.month, firstExpenseDate.day),
-        end: DateTime(now.year, now.month, now.day)
+        start: DateTime(
+          firstExpenseDate.year,
+          firstExpenseDate.month,
+          firstExpenseDate.day,
+        ),
+        end: DateTime(now.year, now.month, now.day),
       );
     }
-    
+
     // If group has dates, use start date to min(end date, current date)
-    final startDate = DateTime(trip.startDate!.year, trip.startDate!.month, trip.startDate!.day);
-    final endDate = DateTime(trip.endDate!.year, trip.endDate!.month, trip.endDate!.day);
+    final startDate = DateTime(
+      trip.startDate!.year,
+      trip.startDate!.month,
+      trip.startDate!.day,
+    );
+    final endDate = DateTime(
+      trip.endDate!.year,
+      trip.endDate!.month,
+      trip.endDate!.day,
+    );
     final currentDate = DateTime(now.year, now.month, now.day);
-    
-    final effectiveEndDate = endDate.isBefore(currentDate) ? endDate : currentDate;
-    
+
+    final effectiveEndDate = endDate.isBefore(currentDate)
+        ? endDate
+        : currentDate;
+
     return (start: startDate, end: effectiveEndDate);
   }
 }

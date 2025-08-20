@@ -14,7 +14,7 @@ class DataPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  final gloc = gen.AppLocalizations.of(context);
+    final gloc = gen.AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
@@ -44,10 +44,7 @@ class DataPage extends StatelessWidget {
               child: ListTile(
                 leading: const Icon(Icons.cloud_upload_outlined),
                 minLeadingWidth: 0,
-                title: Text(
-                  gloc.backup,
-                  style: textTheme.titleMedium,
-                ),
+                title: Text(gloc.backup, style: textTheme.titleMedium),
                 subtitle: Text(gloc.data_backup_desc),
                 trailing: const Icon(Icons.arrow_forward_ios, size: 18),
                 onTap: () async {
@@ -69,7 +66,10 @@ class DataPage extends StatelessWidget {
               child: ListTile(
                 leading: const Icon(Icons.download_outlined),
                 minLeadingWidth: 0,
-                title: Text(gloc.data_restore_title, style: textTheme.titleMedium),
+                title: Text(
+                  gloc.data_restore_title,
+                  style: textTheme.titleMedium,
+                ),
                 subtitle: Text(gloc.data_restore_desc),
                 trailing: const Icon(Icons.arrow_forward_ios, size: 18),
                 onTap: () async {
@@ -87,29 +87,24 @@ class DataPage extends StatelessWidget {
     );
   }
 
-  Future<void> _backupTrips(BuildContext context, gen.AppLocalizations loc) async {
+  Future<void> _backupTrips(
+    BuildContext context,
+    gen.AppLocalizations loc,
+  ) async {
     try {
       final dir = await getApplicationDocumentsDirectory();
       final tripsFile = File('${dir.path}/${ExpenseGroupStorage.fileName}');
 
       if (!await tripsFile.exists()) {
         if (!context.mounted) return;
-        AppToast.show(
-          context,
-          loc.no_trips_to_backup,
-          type: ToastType.info,
-        );
+        AppToast.show(context, loc.no_trips_to_backup, type: ToastType.info);
         return;
       }
 
       final fileSize = await tripsFile.length();
       if (fileSize == 0) {
         if (!context.mounted) return;
-        AppToast.show(
-          context,
-          loc.no_trips_to_backup,
-          type: ToastType.info,
-        );
+        AppToast.show(context, loc.no_trips_to_backup, type: ToastType.info);
         return;
       }
 
@@ -122,7 +117,11 @@ class DataPage extends StatelessWidget {
       // Create archive manually to ensure file content is properly added
       final archive = Archive();
       final fileBytes = await tripsFile.readAsBytes();
-      final archiveFile = ArchiveFile(ExpenseGroupStorage.fileName, fileBytes.length, fileBytes);
+      final archiveFile = ArchiveFile(
+        ExpenseGroupStorage.fileName,
+        fileBytes.length,
+        fileBytes,
+      );
       archive.addFile(archiveFile);
       final zipData = ZipEncoder().encode(archive);
       await File(zipPath).writeAsBytes(zipData);
@@ -130,7 +129,7 @@ class DataPage extends StatelessWidget {
       if (!context.mounted) return;
 
       final params = ShareParams(
-  text: loc.backup_share_message,
+        text: loc.backup_share_message,
         files: [XFile(zipPath)],
       );
       await SharePlus.instance.share(params);
@@ -138,13 +137,16 @@ class DataPage extends StatelessWidget {
       if (!context.mounted) return;
       AppToast.show(
         context,
-  '${loc.backup_error}: ${e.toString()}',
+        '${loc.backup_error}: ${e.toString()}',
         type: ToastType.error,
       );
     }
   }
 
-  Future<void> _importTrips(BuildContext context, gen.AppLocalizations loc) async {
+  Future<void> _importTrips(
+    BuildContext context,
+    gen.AppLocalizations loc,
+  ) async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['zip', 'json'],
@@ -160,9 +162,7 @@ class DataPage extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
           ),
           title: Text(loc.import_confirm_title),
-          content: Text(
-            loc.import_confirm_message(fileName),
-          ),
+          content: Text(loc.import_confirm_message(fileName)),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
@@ -199,11 +199,7 @@ class DataPage extends StatelessWidget {
             throw Exception('Formato file non supportato');
           }
           if (!context.mounted) return;
-          AppToast.show(
-            context,
-            loc.import_success,
-            type: ToastType.success,
-          );
+          AppToast.show(context, loc.import_success, type: ToastType.success);
           Navigator.of(context).popUntil((route) => route.isFirst);
         } catch (e) {
           if (!context.mounted) return;

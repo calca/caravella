@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
       _groupNotifier?.clearUpdatedGroups();
       final event = _groupNotifier?.consumeLastEvent();
       if (event == 'expense_added') {
-  final gloc = gen.AppLocalizations.of(context);
+        final gloc = gen.AppLocalizations.of(context);
         WidgetsBinding.instance.addPostFrameCallback((_) {
           AppToast.show(
             context,
@@ -100,7 +100,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
     if (mounted) {
       AppToast.show(
         context,
-  gen.AppLocalizations.of(context).data_refreshed,
+        gen.AppLocalizations.of(context).data_refreshed,
         type: ToastType.info,
       );
     }
@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
-  final gloc = gen.AppLocalizations.of(context);
+    final gloc = gen.AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: _loading

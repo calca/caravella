@@ -24,7 +24,7 @@ class OptionsSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  final gloc = gen.AppLocalizations.of(context);
+    final gloc = gen.AppLocalizations.of(context);
     return DraggableScrollableSheet(
       initialChildSize: 0.4,
       maxChildSize: 0.6,
@@ -82,9 +82,7 @@ class OptionsSheet extends StatelessWidget {
                               ).colorScheme.onPrimaryFixed,
                             ),
                             title: Text(
-                trip.pinned
-                  ? gloc.unpin_group
-                  : gloc.pin_group,
+                              trip.pinned ? gloc.unpin_group : gloc.pin_group,
                             ),
                             onTap: onPinToggle,
                           ),
@@ -98,9 +96,7 @@ class OptionsSheet extends StatelessWidget {
                               ).colorScheme.onPrimaryFixed,
                             ),
                             title: Text(
-                trip.archived
-                  ? gloc.unarchive
-                  : gloc.archive,
+                              trip.archived ? gloc.unarchive : gloc.archive,
                             ),
                             onTap: onArchiveToggle,
                           ),

@@ -58,7 +58,9 @@ class DateSelectorWidget extends StatelessWidget {
                 Text(
                   selectedDate != null
                       ? '${selectedDate!.day.toString().padLeft(2, '0')}/${selectedDate!.month.toString().padLeft(2, '0')}/${selectedDate!.year}'
-                      : gen.AppLocalizations.of(context).select_expense_date_short,
+                      : gen.AppLocalizations.of(
+                          context,
+                        ).select_expense_date_short,
                   style: textStyle ?? Theme.of(context).textTheme.bodySmall,
                 ),
                 const SizedBox(width: 6),

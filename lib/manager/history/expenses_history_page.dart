@@ -34,7 +34,11 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     return [
       {'key': 'all', 'label': 'Tutti', 'icon': Icons.all_inclusive_outlined},
       {'key': 'active', 'label': 'Attivi', 'icon': Icons.play_circle_outline},
-      {'key': 'archived', 'label': 'Archiviati', 'icon': Icons.archive_outlined},
+      {
+        'key': 'archived',
+        'label': 'Archiviati',
+        'icon': Icons.archive_outlined,
+      },
     ];
   }
 
@@ -201,7 +205,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
 
   @override
   Widget build(BuildContext context) {
-  final gloc = gen.AppLocalizations.of(context);
+    final gloc = gen.AppLocalizations.of(context);
 
     return Scaffold(
       // backgroundColor centralizzato nel tema

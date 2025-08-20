@@ -56,7 +56,8 @@ class CategorySelectorWidget extends StatelessWidget {
           const SizedBox(width: 8),
           Flexible(
             child: Text(
-              selectedCategory?.name ?? gen.AppLocalizations.of(context).category_placeholder,
+              selectedCategory?.name ??
+                  gen.AppLocalizations.of(context).category_placeholder,
               overflow: TextOverflow.ellipsis,
               style: (textStyle ?? theme.textTheme.bodyMedium)?.copyWith(
                 color: theme.colorScheme.onSurface,

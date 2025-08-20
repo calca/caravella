@@ -26,17 +26,18 @@ class SectionPeriod extends StatelessWidget {
           children: [
             Text(
               gen.AppLocalizations.of(context).dates,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             if (startDate != null || endDate != null)
               IconButton.filledTonal(
                 onPressed: onClearDates,
                 icon: const Icon(Icons.delete_outline, size: 22),
                 style: FilledButton.styleFrom(
-                  backgroundColor:
-                      Theme.of(context).colorScheme.surfaceContainer,
+                  backgroundColor: Theme.of(
+                    context,
+                  ).colorScheme.surfaceContainer,
                   foregroundColor: Theme.of(context).colorScheme.error,
                   minimumSize: const Size(44, 44),
                   padding: EdgeInsets.zero,

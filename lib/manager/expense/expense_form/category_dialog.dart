@@ -2,15 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 
 class CategoryDialog {
-  static Future<String?> show({
-    required BuildContext context,
-  }) async {
+  static Future<String?> show({required BuildContext context}) async {
     final controller = TextEditingController();
 
     return showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-  title: Text(gen.AppLocalizations.of(context).add_category),
+        title: Text(gen.AppLocalizations.of(context).add_category),
         content: TextField(
           controller: controller,
           autofocus: true,

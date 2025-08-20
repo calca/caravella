@@ -10,17 +10,17 @@ class GroupTotal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-  final gloc = gen.AppLocalizations.of(context);
+    final gloc = gen.AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           gloc.group_total,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w500,
-                color: colorScheme.onSurfaceVariant,
-                fontSize: 16,
-              ),
+            fontWeight: FontWeight.w500,
+            color: colorScheme.onSurfaceVariant,
+            fontSize: 16,
+          ),
         ),
         const SizedBox(height: 2),
         CurrencyDisplay(

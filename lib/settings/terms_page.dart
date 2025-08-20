@@ -8,7 +8,7 @@ class TermsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  final loc = gen.AppLocalizations.of(context);
+    final loc = gen.AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(

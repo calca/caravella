@@ -5,11 +5,7 @@ class NoteInputWidget extends StatelessWidget {
   final TextEditingController controller;
   final TextStyle? textStyle;
 
-  const NoteInputWidget({
-    super.key,
-    required this.controller,
-    this.textStyle,
-  });
+  const NoteInputWidget({super.key, required this.controller, this.textStyle});
 
   @override
   Widget build(BuildContext context) {
@@ -31,12 +27,13 @@ class NoteInputWidget extends StatelessWidget {
           style: textStyle ?? Theme.of(context).textTheme.bodySmall,
           decoration: InputDecoration(
             hintText: gen.AppLocalizations.of(context).note_hint,
-            hintStyle: textStyle?.copyWith(
+            hintStyle:
+                textStyle?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ) ??
                 Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
             border: const OutlineInputBorder(),
           ),
         ),

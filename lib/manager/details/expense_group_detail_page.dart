@@ -45,15 +45,17 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     final buffer = StringBuffer();
     // Header localizzato
     final gloc = gen.AppLocalizations.of(context);
-    buffer.writeln([
-      gloc.csv_expense_name,
-      gloc.csv_amount,
-      gloc.csv_paid_by,
-      gloc.csv_category,
-      gloc.csv_date,
-      gloc.csv_note,
-      gloc.csv_location,
-    ].join(','));
+    buffer.writeln(
+      [
+        gloc.csv_expense_name,
+        gloc.csv_amount,
+        gloc.csv_paid_by,
+        gloc.csv_category,
+        gloc.csv_date,
+        gloc.csv_note,
+        gloc.csv_location,
+      ].join(','),
+    );
     for (final e in _trip!.expenses) {
       buffer.writeln(
         [
@@ -250,7 +252,11 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           final csv = _generateCsvContent();
           if (csv.isEmpty) {
             if (rootContext.mounted) {
-              AppToast.show(rootContext, gloc.no_expenses_to_export, type: ToastType.info);
+              AppToast.show(
+                rootContext,
+                gloc.no_expenses_to_export,
+                type: ToastType.info,
+              );
             }
             return;
           }
@@ -295,7 +301,11 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           final csv = _generateCsvContent();
           if (csv.isEmpty) {
             if (rootContext.mounted) {
-              AppToast.show(rootContext, gloc.no_expenses_to_export, type: ToastType.info);
+              AppToast.show(
+                rootContext,
+                gloc.no_expenses_to_export,
+                type: ToastType.info,
+              );
             }
             return;
           }
@@ -322,7 +332,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             context: context,
             builder: (dialogCtx) => AlertDialog(
               title: Text(gen.AppLocalizations.of(dialogCtx).delete_group),
-              content: Text(gen.AppLocalizations.of(dialogCtx).delete_group_confirm),
+              content: Text(
+                gen.AppLocalizations.of(dialogCtx).delete_group_confirm,
+              ),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(dialogCtx).pop(false),
@@ -517,9 +529,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     }
     final trip = _trip;
     if (trip == null) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
     final colorScheme = Theme.of(context).colorScheme;
     final totalExpenses = trip.expenses.fold<double>(

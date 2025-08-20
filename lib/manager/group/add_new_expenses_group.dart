@@ -44,7 +44,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (BuildContext context) {
-  final gloc = gen.AppLocalizations.of(context);
+        final gloc = gen.AppLocalizations.of(context);
         return SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(
@@ -200,7 +200,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   }
 
   Future<void> _pickDate(BuildContext context, bool isStart) async {
-  final gloc = gen.AppLocalizations.of(context);
+    final gloc = gen.AppLocalizations.of(context);
     final now = DateTime.now();
     final firstDate = DateTime(now.year - 5);
     final lastDate = DateTime(now.year + 5);
@@ -229,10 +229,10 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       initialDate: initialDate,
       firstDate: firstDate,
       lastDate: lastDate,
-  helpText: isStart ? gloc.select_from_date : gloc.select_to_date,
-  cancelText: gloc.cancel,
-  confirmText: gloc.ok,
-  locale: Locale(Localizations.localeOf(context).languageCode),
+      helpText: isStart ? gloc.select_from_date : gloc.select_to_date,
+      cancelText: gloc.cancel,
+      confirmText: gloc.ok,
+      locale: Locale(Localizations.localeOf(context).languageCode),
       selectableDayPredicate: isSelectable,
     );
     if (picked != null) {
@@ -258,7 +258,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   }
 
   Future<void> _saveTrip() async {
-  final gloc = gen.AppLocalizations.of(context);
+    final gloc = gen.AppLocalizations.of(context);
     if (!mounted) return;
     setState(() {
       _dateError = null;
@@ -273,9 +273,11 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
     if ((_startDate != null && _endDate == null) ||
         (_startDate == null && _endDate != null)) {
       if (!mounted) return;
-  setState(() { _dateError = gloc.select_both_dates; });
+      setState(() {
+        _dateError = gloc.select_both_dates;
+      });
       if (!mounted) return;
-  AppToast.show(context, gloc.select_both_dates, type: ToastType.error);
+      AppToast.show(context, gloc.select_both_dates, type: ToastType.error);
       return;
     }
 
@@ -283,13 +285,15 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
     if (_startDate != null &&
         _endDate != null &&
         _endDate!.isBefore(_startDate!)) {
-  setState(() { _dateError = gloc.end_date_after_start; });
-  AppToast.show(context, gloc.end_date_after_start, type: ToastType.error);
+      setState(() {
+        _dateError = gloc.end_date_after_start;
+      });
+      AppToast.show(context, gloc.end_date_after_start, type: ToastType.error);
       return;
     }
 
     if (_participants.isEmpty) {
-  AppToast.show(context, gloc.enter_participant, type: ToastType.error);
+      AppToast.show(context, gloc.enter_participant, type: ToastType.error);
       return;
     }
 
@@ -362,8 +366,8 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       // Dopo await ExpenseGroupStorage.writeTrips/trips.add, ricontrolla mounted
       AppToast.show(
         context,
-  // TODO localize error saving group
-  'Errore durante il salvataggio: ${e.toString()}',
+        // TODO localize error saving group
+        'Errore durante il salvataggio: ${e.toString()}',
         type: ToastType.error,
       );
     }
@@ -450,7 +454,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   }
 
   void _showImagePickerDialog() {
-  final gloc = gen.AppLocalizations.of(context);
+    final gloc = gen.AppLocalizations.of(context);
 
     showModalBottomSheet(
       context: context,
@@ -512,7 +516,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
 
   @override
   Widget build(BuildContext context) {
-  final gloc = gen.AppLocalizations.of(context);
+    final gloc = gen.AppLocalizations.of(context);
     return GestureDetector(
       onTap: _unfocusAll,
       behavior: HitTestBehavior.translucent,
@@ -563,9 +567,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
               children: [
                 // Titolo principale dinamico
                 Text(
-                  widget.trip != null
-                      ? gloc.edit_group
-                      : gloc.new_group,
+                  widget.trip != null ? gloc.edit_group : gloc.new_group,
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -609,9 +611,8 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                           borderSide: BorderSide(width: 2),
                         ),
                       ),
-                      validator: (v) => v == null || v.isEmpty
-                          ? gloc.enter_title
-                          : null,
+                      validator: (v) =>
+                          v == null || v.isEmpty ? gloc.enter_title : null,
                       onChanged: (value) {
                         setState(() {});
                       },

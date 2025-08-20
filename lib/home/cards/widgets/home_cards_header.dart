@@ -74,6 +74,7 @@ class HomeCardsHeader extends StatelessWidget {
       ),
     );
   }
+
   String _resolveGreeting() {
     final key = _getGreetingKey();
     if (key == 'good_morning') return localizations.good_morning;

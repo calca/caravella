@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen; // generated
+import 'package:org_app_caravella/l10n/app_localizations.dart'
+    as gen; // generated
 import '../../data/expense_group.dart';
 import '../../data/expense_group_storage.dart';
 // Removed locale_notifier import after migration
@@ -47,8 +48,9 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
           // Se c'è un gruppo pinnato, mettiamolo sempre al primo posto
           if (widget.pinnedTrip != null) {
             // Rimuovi il gruppo pinnato dalla lista se è già presente
-            final filteredGroups =
-                groups.where((g) => g.id != widget.pinnedTrip!.id).toList();
+            final filteredGroups = groups
+                .where((g) => g.id != widget.pinnedTrip!.id)
+                .toList();
             // Metti il gruppo pinnato come primo elemento
             _activeGroups = [widget.pinnedTrip!, ...filteredGroups];
           } else {
@@ -66,7 +68,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
 
   @override
   Widget build(BuildContext context) {
-  final loc = gen.AppLocalizations.of(context);
+    final loc = gen.AppLocalizations.of(context);
     final theme = Theme.of(context);
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -95,26 +97,26 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
               child: _loading
                   ? const Center(child: CircularProgressIndicator())
                   : _activeGroups.isEmpty
-                      ? EmptyGroupsState(
-                          localizations: loc,
-                          theme: theme,
-                          onGroupAdded: () {
-                            widget.onTripAdded();
-                            _loadActiveGroups();
-                          },
-                        )
-                      : HorizontalGroupsList(
-                          groups: _activeGroups,
-                          localizations: loc,
-                          theme: theme,
-                          onGroupUpdated: () {
-                            widget.onTripAdded();
-                            _loadActiveGroups();
-                          },
-                          onCategoryAdded: () {
-                            _loadActiveGroups();
-                          },
-                        ),
+                  ? EmptyGroupsState(
+                      localizations: loc,
+                      theme: theme,
+                      onGroupAdded: () {
+                        widget.onTripAdded();
+                        _loadActiveGroups();
+                      },
+                    )
+                  : HorizontalGroupsList(
+                      groups: _activeGroups,
+                      localizations: loc,
+                      theme: theme,
+                      onGroupUpdated: () {
+                        widget.onTripAdded();
+                        _loadActiveGroups();
+                      },
+                      onCategoryAdded: () {
+                        _loadActiveGroups();
+                      },
+                    ),
             ),
 
             // Bottom bar semplificata d

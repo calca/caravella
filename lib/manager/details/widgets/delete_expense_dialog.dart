@@ -14,11 +14,11 @@ class DeleteExpenseDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  final gloc = gen.AppLocalizations.of(context);
+    final gloc = gen.AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     return AlertDialog(
-  title: Text(gloc.delete_expense),
-  content: Text(gloc.delete_expense_confirm),
+      title: Text(gloc.delete_expense),
+      content: Text(gloc.delete_expense_confirm),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
@@ -29,10 +29,7 @@ class DeleteExpenseDialog extends StatelessWidget {
             Navigator.of(context).pop();
             onDelete();
           },
-          child: Text(
-            gloc.delete,
-            style: TextStyle(color: colorScheme.error),
-          ),
+          child: Text(gloc.delete, style: TextStyle(color: colorScheme.error)),
         ),
       ],
     );
