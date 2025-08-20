@@ -470,9 +470,10 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (BuildContext context) {
+        final gloc = gen.AppLocalizations.of(context);
         return Semantics(
           container: true,
-          label: 'Image source selection dialog',
+          label: gloc.accessibility_image_source_dialog,
           child: SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(

@@ -138,8 +138,8 @@ class SettingsPage extends StatelessWidget {
                       child: Consumer<FlagSecureNotifier>(
                         builder: (context, notifier, _) => Semantics(
                           toggled: notifier.enabled,
-                          label: '${genLoc.settings_flag_secure_title} - Currently ${notifier.enabled ? 'enabled' : 'disabled'}',
-                          hint: 'Double tap to ${notifier.enabled ? 'disable' : 'enable'} screen security',
+                          label: '${genLoc.settings_flag_secure_title} - ${notifier.enabled ? genLoc.accessibility_currently_enabled : genLoc.accessibility_currently_disabled}',
+                          hint: notifier.enabled ? genLoc.accessibility_double_tap_disable : genLoc.accessibility_double_tap_enable,
                           child: ListTile(
                             leading: const Icon(Icons.privacy_tip_outlined),
                             title: Text(
@@ -151,7 +151,7 @@ class SettingsPage extends StatelessWidget {
                               style: textTheme.bodySmall,
                             ),
                             trailing: Semantics(
-                              label: 'Security switch - ${notifier.enabled ? 'On' : 'Off'}',
+                              label: genLoc.accessibility_security_switch(notifier.enabled ? genLoc.accessibility_switch_on : genLoc.accessibility_switch_off),
                               child: Switch(
                                 value: notifier.enabled,
                                 onChanged: (val) async {

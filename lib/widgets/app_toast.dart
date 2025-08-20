@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 
 /// Lightweight toast / inline feedback using Flutter's native SnackBar
 /// with Material 3 theming and automatic queue management.
@@ -42,7 +43,7 @@ class AppToast {
       SnackBar(
         content: Semantics(
           liveRegion: true,
-          label: '${_getTypeDescription(type)}: $message',
+          label: '${_getTypeDescription(context, type)}: $message',
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -50,7 +51,7 @@ class AppToast {
                 effectiveIcon,
                 color: textColor,
                 size: 20,
-                semanticLabel: _getTypeDescription(type),
+                semanticLabel: _getTypeDescription(context, type),
               ),
               const SizedBox(width: 10),
               Flexible(
@@ -80,14 +81,15 @@ class AppToast {
     );
   }
 
-  static String _getTypeDescription(ToastType type) {
+  static String _getTypeDescription(BuildContext context, ToastType type) {
+    final localizations = AppLocalizations.of(context);
     switch (type) {
       case ToastType.success:
-        return 'Success';
+        return localizations.accessibility_toast_success;
       case ToastType.error:
-        return 'Error';
+        return localizations.accessibility_toast_error;
       case ToastType.info:
-        return 'Information';
+        return localizations.accessibility_toast_info;
     }
   }
 }

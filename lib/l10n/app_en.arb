@@ -264,4 +264,44 @@
   ,"@welcome_logo_semantic": {"description": "Semantic label for the welcome screen logo"}
   ,"create_new_group": "Create new group"
   ,"@create_new_group": {"description": "Create new group action label"}
+  ,"accessibility_add_new_item": "Add new item"
+  ,"@accessibility_add_new_item": {"description": "Default accessibility label for add button"}
+  ,"accessibility_navigation_bar": "Navigation bar"
+  ,"@accessibility_navigation_bar": {"description": "Navigation bar accessibility label"}
+  ,"accessibility_back_button": "Back"
+  ,"@accessibility_back_button": {"description": "Back button accessibility label"}
+  ,"accessibility_loading_groups": "Loading groups"
+  ,"@accessibility_loading_groups": {"description": "Loading state accessibility label"}
+  ,"accessibility_loading_your_groups": "Loading your groups"
+  ,"@accessibility_loading_your_groups": {"description": "Loading groups progress indicator label"}
+  ,"accessibility_groups_list": "Groups list"
+  ,"@accessibility_groups_list": {"description": "Groups list section accessibility label"}
+  ,"accessibility_welcome_screen": "Welcome screen"
+  ,"@accessibility_welcome_screen": {"description": "Welcome screen accessibility label"}
+  ,"accessibility_total_expenses": "Total expenses: {amount}€"
+  ,"@accessibility_total_expenses": {"description": "Total expenses accessibility label", "placeholders": {"amount": {}}}
+  ,"accessibility_add_expense": "Add expense"
+  ,"@accessibility_add_expense": {"description": "Add expense button accessibility label"}
+  ,"accessibility_security_switch": "Security switch - {state}"
+  ,"@accessibility_security_switch": {"description": "Security switch accessibility label", "placeholders": {"state": {}}}
+  ,"accessibility_switch_on": "On"
+  ,"@accessibility_switch_on": {"description": "Switch on state label"}
+  ,"accessibility_switch_off": "Off"
+  ,"@accessibility_switch_off": {"description": "Switch off state label"}
+  ,"accessibility_image_source_dialog": "Image source selection dialog"
+  ,"@accessibility_image_source_dialog": {"description": "Image source selection dialog accessibility label"}
+  ,"accessibility_currently_enabled": "Currently enabled"
+  ,"@accessibility_currently_enabled": {"description": "Currently enabled state label"}
+  ,"accessibility_currently_disabled": "Currently disabled"
+  ,"@accessibility_currently_disabled": {"description": "Currently disabled state label"}
+  ,"accessibility_double_tap_disable": "Double tap to disable screen security"
+  ,"@accessibility_double_tap_disable": {"description": "Double tap to disable hint"}
+  ,"accessibility_double_tap_enable": "Double tap to enable screen security"
+  ,"@accessibility_double_tap_enable": {"description": "Double tap to enable hint"}
+  ,"accessibility_toast_success": "Success"
+  ,"@accessibility_toast_success": {"description": "Success toast type description"}
+  ,"accessibility_toast_error": "Error"
+  ,"@accessibility_toast_error": {"description": "Error toast type description"}
+  ,"accessibility_toast_info": "Information"
+  ,"@accessibility_toast_info": {"description": "Information toast type description"}
 }

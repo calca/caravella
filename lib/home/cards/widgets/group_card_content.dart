@@ -183,7 +183,7 @@ class GroupCardContent extends StatelessWidget {
           children: [
             _buildHeader(currentGroup),
             _buildDateRange(currentGroup),
-            _buildTotalAmount(currentGroup),
+            _buildTotalAmount(context, currentGroup),
             const SizedBox(height: _largSpacing),
             const Spacer(),
             _buildStatistics(currentGroup),
@@ -249,7 +249,8 @@ class GroupCardContent extends StatelessWidget {
     );
   }
 
-  Widget _buildTotalAmount(ExpenseGroup currentGroup) {
+  Widget _buildTotalAmount(BuildContext context, ExpenseGroup currentGroup) {
+    final localizations = gen.AppLocalizations.of(context);
     final totalExpenses = currentGroup.expenses.fold<double>(
       0,
       (sum, expense) => sum + (expense.amount ?? 0),
@@ -259,7 +260,7 @@ class GroupCardContent extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Semantics(
-          label: 'Total expenses: ${totalExpenses.toStringAsFixed(2)}€',
+          label: localizations.accessibility_total_expenses(totalExpenses.toStringAsFixed(2)),
           child: CurrencyDisplay(
             value: totalExpenses,
             currency: '€',
@@ -460,10 +461,11 @@ class GroupCardContent extends StatelessWidget {
   }
 
   Widget _buildAddButton(BuildContext context, ExpenseGroup currentGroup) {
+    final localizations = gen.AppLocalizations.of(context);
     return SizedBox(
       width: double.infinity,
       child: Semantics(
-        label: 'Add expense',
+        label: localizations.accessibility_add_expense,
         child: TextButton(
           onPressed: () => _showAddExpenseSheet(context, currentGroup),
           style: TextButton.styleFrom(

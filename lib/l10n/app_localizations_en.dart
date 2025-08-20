@@ -734,4 +734,74 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get filter_status_tooltip => 'Filter groups';
+
+  @override
+  String get welcome_logo_semantic => 'Caravella app logo';
+
+  @override
+  String get create_new_group => 'Create new group';
+
+  @override
+  String get accessibility_add_new_item => 'Add new item';
+
+  @override
+  String get accessibility_navigation_bar => 'Navigation bar';
+
+  @override
+  String get accessibility_back_button => 'Back';
+
+  @override
+  String get accessibility_loading_groups => 'Loading groups';
+
+  @override
+  String get accessibility_loading_your_groups => 'Loading your groups';
+
+  @override
+  String get accessibility_groups_list => 'Groups list';
+
+  @override
+  String get accessibility_welcome_screen => 'Welcome screen';
+
+  @override
+  String accessibility_total_expenses(String amount) {
+    return 'Total expenses: ${amount}€';
+  }
+
+  @override
+  String get accessibility_add_expense => 'Add expense';
+
+  @override
+  String accessibility_security_switch(String state) {
+    return 'Security switch - $state';
+  }
+
+  @override
+  String get accessibility_switch_on => 'On';
+
+  @override
+  String get accessibility_switch_off => 'Off';
+
+  @override
+  String get accessibility_image_source_dialog => 'Image source selection dialog';
+
+  @override
+  String get accessibility_currently_enabled => 'Currently enabled';
+
+  @override
+  String get accessibility_currently_disabled => 'Currently disabled';
+
+  @override
+  String get accessibility_double_tap_disable => 'Double tap to disable screen security';
+
+  @override
+  String get accessibility_double_tap_enable => 'Double tap to enable screen security';
+
+  @override
+  String get accessibility_toast_success => 'Success';
+
+  @override
+  String get accessibility_toast_error => 'Error';
+
+  @override
+  String get accessibility_toast_info => 'Information';
 }

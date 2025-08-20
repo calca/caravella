@@ -114,10 +114,10 @@ class _HomePageState extends State<HomePage> with RouteAware {
       body: _loading
           ? Semantics(
               liveRegion: true,
-              label: 'Loading groups',
-              child: const Center(
+              label: gloc.accessibility_loading_groups,
+              child: Center(
                 child: CircularProgressIndicator(
-                  semanticsLabel: 'Loading your groups',
+                  semanticsLabel: gloc.accessibility_loading_your_groups,
                 ),
               ),
             )
@@ -130,7 +130,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
                   if (hasGroups) {
                     return SafeArea(
                       child: Semantics(
-                        label: 'Groups list',
+                        label: gloc.accessibility_groups_list,
                         child: HomeCardsSection(
                           onTripAdded: () {
                             _refresh();
@@ -148,7 +148,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
                     );
                   } else {
                     return Semantics(
-                      label: 'Welcome screen',
+                      label: gloc.accessibility_welcome_screen,
                       child: HomeWelcomeSection(
                         onTripAdded: () {
                           _refresh();
