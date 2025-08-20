@@ -184,21 +184,7 @@ class GroupCardContent extends StatelessWidget {
             _buildHeader(currentGroup),
             _buildDateRange(currentGroup),
             _buildTotalAmount(currentGroup),
-            // Numero partecipanti subito sotto al totale
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-              child: Row(
-                children: [
-                  Semantics(
-                    label: 'Participants: ${currentGroup.participants.length}',
-                    child: _buildCompactStat(
-                      icon: Icons.people_outline,
-                      value: currentGroup.participants.length.toString(),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            _buildParticipantsStat(currentGroup),
             const SizedBox(height: _largSpacing),
             const Spacer(),
             _buildStatistics(currentGroup),
@@ -289,12 +275,6 @@ class GroupCardContent extends StatelessWidget {
     );
   }
 
-  /// Check if the group duration is less than 30 days
-  bool _isShortDuration(ExpenseGroup group) {
-    if (group.startDate == null || group.endDate == null) return false;
-    final duration = group.endDate!.difference(group.startDate!);
-    return duration.inDays < 30;
-  }
 
   /// Calculate daily average spending for the group
   double _calculateDailyAverage(ExpenseGroup group) {
@@ -523,6 +503,24 @@ class GroupCardContent extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  // Numero partecipanti subito sotto al totale estratto in funzione dedicata
+  Widget _buildParticipantsStat(ExpenseGroup currentGroup) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+      child: Row(
+        children: [
+          Semantics(
+            label: 'Participants: \\${currentGroup.participants.length}',
+            child: _buildCompactStat(
+              icon: Icons.people_outline,
+              value: currentGroup.participants.length.toString(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
