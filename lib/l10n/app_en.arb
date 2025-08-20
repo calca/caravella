@@ -213,4 +213,9 @@
   ,"discard_changes_message": "Are you sure you want to discard unsaved changes?"
   ,"discard": "Discard"
   ,"category_placeholder": "Category"
+  ,"image_requirements": "PNG, JPG, GIF (max 10MB)"
+  ,"error_saving_group": "Error saving: {error}"
+  ,"error_selecting_image": "Error selecting image"
+  ,"error_saving_image": "Error saving image"
+  ,"@error_saving_group": {"placeholders": {"error": {}}}
 }

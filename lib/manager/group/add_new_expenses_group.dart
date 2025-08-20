@@ -364,10 +364,10 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
     } catch (e) {
       if (!mounted) return;
       // Dopo await ExpenseGroupStorage.writeTrips/trips.add, ricontrolla mounted
+      final gl = gen.AppLocalizations.of(context);
       AppToast.show(
         context,
-        // TODO localize error saving group
-        'Errore durante il salvataggio: ${e.toString()}',
+        gl.error_saving_group(e.toString()),
         type: ToastType.error,
       );
     }
@@ -396,8 +396,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       if (mounted) {
         AppToast.show(
           context,
-          // TODO localize image selection error
-          'Errore durante la selezione dell\'immagine',
+          gen.AppLocalizations.of(context).error_selecting_image,
           type: ToastType.error,
         );
       }
@@ -436,8 +435,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       if (mounted) {
         AppToast.show(
           context,
-          // TODO localize image save error
-          'Errore durante il salvataggio dell\'immagine',
+          gen.AppLocalizations.of(context).error_saving_image,
           type: ToastType.error,
         );
       }
@@ -837,8 +835,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                       ),
                                       const SizedBox(height: 4),
                                       Text(
-                                        // TODO add localization e.g. gloc.image_requirements
-                                        'PNG, JPG, GIF (max 10MB)',
+                                        gloc.image_requirements,
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodySmall

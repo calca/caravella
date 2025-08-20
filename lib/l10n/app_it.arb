@@ -213,4 +213,9 @@
   ,"discard_changes_title": "Scartare le modifiche?"
   ,"discard_changes_message": "Sei sicuro di voler scartare le modifiche non salvate?"
   ,"discard": "Scarta"
+  ,"image_requirements": "PNG, JPG, GIF (max 10MB)"
+  ,"error_saving_group": "Errore durante il salvataggio: {error}"
+  ,"error_selecting_image": "Errore durante la selezione dell'immagine"
+  ,"error_saving_image": "Errore durante il salvataggio dell'immagine"
+  ,"@error_saving_group": {"placeholders": {"error": {}}}
 }

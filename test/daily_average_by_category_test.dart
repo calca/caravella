@@ -4,14 +4,14 @@ import 'package:org_app_caravella/data/expense_details.dart';
 import 'package:org_app_caravella/data/expense_category.dart';
 import 'package:org_app_caravella/data/expense_participant.dart';
 import 'package:org_app_caravella/manager/details/tabs/widgets/daily_average_by_category.dart';
-import 'package:org_app_caravella/app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:flutter/material.dart';
 
 void main() {
   group('DailyAverageByCategoryWidget', () {
     late ExpenseCategory foodCategory;
     late ExpenseCategory transportCategory;
     late ExpenseParticipant participant;
-    late AppLocalizations loc;
 
     setUp(() {
       foodCategory = ExpenseCategory(
@@ -25,7 +25,6 @@ void main() {
         createdAt: DateTime(2023, 12, 1),
       );
       participant = ExpenseParticipant(name: 'John', id: 'john');
-      loc = AppLocalizations('en');
     });
 
     test('calculates daily averages correctly for group with dates', () {
@@ -66,8 +65,7 @@ void main() {
 
       final averages = DailyAverageByCategoryWidget(
         trip: trip,
-        loc: loc,
-      )._calculateDailyAveragesByCategory();
+      ).testCalculateDailyAveragesByCategory();
 
       // Food: 150.0 / 10 days = 15.0 per day
       // Transport: 30.0 / 10 days = 3.0 per day
@@ -112,8 +110,7 @@ void main() {
 
         final averages = DailyAverageByCategoryWidget(
           trip: trip,
-          loc: loc,
-        )._calculateDailyAveragesByCategory();
+        ).testCalculateDailyAveragesByCategory();
 
         // Duration is 10 days (from first expense to now)
         // Food: 100.0 / 10 days = 10.0 per day
@@ -123,13 +120,32 @@ void main() {
       },
     );
 
-    test('uses localized per_day text', () {
-      final trip = ExpenseGroup.empty();
-      // Instantiate to mirror typical usage (no direct need to keep reference)
-      DailyAverageByCategoryWidget(trip: trip, loc: loc);
-      expect(loc.get('per_day'), '/day'); // English
-      final locIT = AppLocalizations('it');
-      expect(locIT.get('per_day'), '/giorno'); // Italian
+    testWidgets('uses localized per_day text (generated l10n)', (tester) async {
+      // English
+      await tester.pumpWidget(MaterialApp(
+        locale: const Locale('en'),
+        localizationsDelegates: gen.AppLocalizations.localizationsDelegates,
+        supportedLocales: gen.AppLocalizations.supportedLocales,
+        home: Builder(
+          builder: (context) {
+            expect(gen.AppLocalizations.of(context).per_day, '/day');
+            return const SizedBox.shrink();
+          },
+        ),
+      ));
+
+      // Italian
+      await tester.pumpWidget(MaterialApp(
+        locale: const Locale('it'),
+        localizationsDelegates: gen.AppLocalizations.localizationsDelegates,
+        supportedLocales: gen.AppLocalizations.supportedLocales,
+        home: Builder(
+          builder: (context) {
+            expect(gen.AppLocalizations.of(context).per_day, '/giorno');
+            return const SizedBox.shrink();
+          },
+        ),
+      ));
     });
 
     test('handles group with end date in future by using current date', () {
@@ -165,8 +181,7 @@ void main() {
 
       final averages = DailyAverageByCategoryWidget(
         trip: trip,
-        loc: loc,
-      )._calculateDailyAveragesByCategory();
+      ).testCalculateDailyAveragesByCategory();
 
       // Should use startDate to current date (10 days), not to future endDate
       // Food: 100.0 / 10 days = 10.0 per day
@@ -186,103 +201,57 @@ void main() {
 
       final averages = DailyAverageByCategoryWidget(
         trip: trip,
-        loc: loc,
-      )._calculateDailyAveragesByCategory();
+      ).testCalculateDailyAveragesByCategory();
 
       expect(averages.isEmpty, isTrue);
     });
   });
 }
 
-// Extension to access private method for testing
+// Lightweight test-only exposure of calculation logic mirroring production
 extension DailyAverageByCategoryWidgetTesting on DailyAverageByCategoryWidget {
-  Map<ExpenseCategory, double> _calculateDailyAveragesByCategory() {
-    if (trip.expenses.isEmpty) {
-      return {};
-    }
-
-    // Calculate the date range according to the requirements
-    final dateRange = _calculateDateRange();
+  Map<ExpenseCategory, double> testCalculateDailyAveragesByCategory() {
+    if (trip.expenses.isEmpty) return {};
+    final dateRange = _testCalculateDateRange();
     final totalDays = dateRange.end.difference(dateRange.start).inDays + 1;
-
-    if (totalDays <= 0) {
-      return {};
-    }
+    if (totalDays <= 0) return {};
 
     final Map<ExpenseCategory, double> categoryTotals = {};
-
-    // Calculate totals for known categories
     for (final category in trip.categories) {
       final total = trip.expenses
           .where((e) => e.category.id == category.id)
           .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
-      if (total > 0) {
-        categoryTotals[category] = total / totalDays;
-      }
+      if (total > 0) categoryTotals[category] = total / totalDays;
     }
-
-    // Add uncategorized expenses (expenses with categories not in the trip's categories list)
     final uncategorizedTotal = trip.expenses
         .where((e) => !trip.categories.any((c) => c.id == e.category.id))
         .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
-
     if (uncategorizedTotal > 0) {
-      // Create a placeholder category for uncategorized expenses
-      final uncategorized = ExpenseCategory(
-        name: loc.get('uncategorized'),
+      categoryTotals[ExpenseCategory(
+        name: 'UNCATEGORIZED_PLACEHOLDER',
         id: 'uncategorized',
         createdAt: DateTime(2000),
-      );
-      categoryTotals[uncategorized] = uncategorizedTotal / totalDays;
+      )] = uncategorizedTotal / totalDays;
     }
-
     return categoryTotals;
   }
 
-  ({DateTime start, DateTime end}) _calculateDateRange() {
+  ({DateTime start, DateTime end}) _testCalculateDateRange() {
     final now = DateTime.now();
-
-    // If the group has no dates, use first expense date to current date
     if (trip.startDate == null || trip.endDate == null) {
       if (trip.expenses.isEmpty) {
-        // If no expenses and no dates, use current month
         final firstDay = DateTime(now.year, now.month, 1);
         final lastDay = DateTime(now.year, now.month + 1, 0);
         return (start: firstDay, end: lastDay);
       }
-
-      // Find the first expense date
-      final sortedExpenses = [...trip.expenses]
-        ..sort((a, b) => a.date.compareTo(b.date));
+      final sortedExpenses = [...trip.expenses]..sort((a, b) => a.date.compareTo(b.date));
       final firstExpenseDate = sortedExpenses.first.date;
-
-      return (
-        start: DateTime(
-          firstExpenseDate.year,
-          firstExpenseDate.month,
-          firstExpenseDate.day,
-        ),
-        end: DateTime(now.year, now.month, now.day),
-      );
+      return (start: DateTime(firstExpenseDate.year, firstExpenseDate.month, firstExpenseDate.day), end: DateTime(now.year, now.month, now.day));
     }
-
-    // If group has dates, use start date to min(end date, current date)
-    final startDate = DateTime(
-      trip.startDate!.year,
-      trip.startDate!.month,
-      trip.startDate!.day,
-    );
-    final endDate = DateTime(
-      trip.endDate!.year,
-      trip.endDate!.month,
-      trip.endDate!.day,
-    );
+    final startDate = DateTime(trip.startDate!.year, trip.startDate!.month, trip.startDate!.day);
+    final endDate = DateTime(trip.endDate!.year, trip.endDate!.month, trip.endDate!.day);
     final currentDate = DateTime(now.year, now.month, now.day);
-
-    final effectiveEndDate = endDate.isBefore(currentDate)
-        ? endDate
-        : currentDate;
-
+    final effectiveEndDate = endDate.isBefore(currentDate) ? endDate : currentDate;
     return (start: startDate, end: effectiveEndDate);
   }
 }

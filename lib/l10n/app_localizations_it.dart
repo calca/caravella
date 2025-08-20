@@ -666,4 +666,20 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get category_placeholder => 'Categoria';
+
+  @override
+  String get image_requirements => 'PNG, JPG, GIF (max 10MB)';
+
+  @override
+  String error_saving_group(Object error) {
+    return 'Errore durante il salvataggio: $error';
+  }
+
+  @override
+  String get error_selecting_image =>
+      'Errore durante la selezione dell\'immagine';
+
+  @override
+  String get error_saving_image =>
+      'Errore durante il salvataggio dell\'immagine';
 }

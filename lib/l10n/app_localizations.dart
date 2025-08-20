@@ -1375,6 +1375,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Category'**
   String get category_placeholder;
+
+  /// No description provided for @image_requirements.
+  ///
+  /// In en, this message translates to:
+  /// **'PNG, JPG, GIF (max 10MB)'**
+  String get image_requirements;
+
+  /// No description provided for @error_saving_group.
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving: {error}'**
+  String error_saving_group(Object error);
+
+  /// No description provided for @error_selecting_image.
+  ///
+  /// In en, this message translates to:
+  /// **'Error selecting image'**
+  String get error_selecting_image;
+
+  /// No description provided for @error_saving_image.
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving image'**
+  String get error_saving_image;
 }
 
 class _AppLocalizationsDelegate
