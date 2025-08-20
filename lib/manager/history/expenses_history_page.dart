@@ -220,7 +220,6 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     });
   }
 
-
   Future<void> _updateTrip(ExpenseGroup updatedTrip) async {
     final allTrips = await ExpenseGroupStorage.getAllGroups();
     final index = allTrips.indexWhere((t) => t.id == updatedTrip.id);
@@ -233,7 +232,6 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
       await _loadTrips();
     }
   }
-
 
   Widget _buildStatusFilterButton(
     BuildContext context,
