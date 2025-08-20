@@ -98,6 +98,30 @@ abstract class AppLocalizations {
     Locale('it'),
   ];
 
+  /// Letter indicator for weekly chart badge
+  ///
+  /// In en, this message translates to:
+  /// **'W'**
+  String get weeklyChartBadge;
+
+  /// Letter indicator for monthly chart badge
+  ///
+  /// In en, this message translates to:
+  /// **'M'**
+  String get monthlyChartBadge;
+
+  /// Label for weekly expenses chart
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly expenses'**
+  String get weeklyExpensesChart;
+
+  /// Label for monthly expenses chart
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly expenses'**
+  String get monthlyExpensesChart;
+
   /// No description provided for @settings_flag_secure_desc.
   ///
   /// In en, this message translates to:
@@ -1367,13 +1391,13 @@ abstract class AppLocalizations {
   /// Label shown before the computed overall daily average spending value
   ///
   /// In en, this message translates to:
-  /// **'Daily'**
+  /// **'Daily average'**
   String get daily_average;
 
   /// Label shown before the amount spent today
   ///
   /// In en, this message translates to:
-  /// **'Today'**
+  /// **'Spent today'**
   String get spent_today;
 
   /// No description provided for @average_expense.

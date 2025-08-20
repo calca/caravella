@@ -9,6 +9,18 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get weeklyChartBadge => 'W';
+
+  @override
+  String get monthlyChartBadge => 'M';
+
+  @override
+  String get weeklyExpensesChart => 'Weekly expenses';
+
+  @override
+  String get monthlyExpensesChart => 'Monthly expenses';
+
+  @override
   String get settings_flag_secure_desc =>
       'Prevents screenshots and screen recording';
 
@@ -661,10 +673,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get overview_and_statistics => 'Overview and statistics';
 
   @override
-  String get daily_average => 'Daily';
+  String get daily_average => 'Daily average';
 
   @override
-  String get spent_today => 'Today';
+  String get spent_today => 'Spent today';
 
   @override
   String get average_expense => 'Average expense';
