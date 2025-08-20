@@ -1,4 +1,5 @@
-library expense_form_component;
+library;
+
 import 'package:flutter/material.dart';
 import '../../data/expense_category.dart';
 import '../../data/expense_details.dart';
@@ -43,7 +44,7 @@ class ExpenseFormComponent extends StatefulWidget {
     this.newlyAddedCategory, // Nuova proprietà
     this.groupTitle,
     this.currency,
-  this.fullEdit = false,
+    this.fullEdit = false,
   });
 
   @override
@@ -128,7 +129,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         });
       }
     });
-    
+
     // Listener per aggiornare lo stato quando il nome cambia
     _nameController.addListener(() {
       setState(() {
@@ -306,9 +307,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
             size: 22,
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
-          validator: (v) => v == null || v.trim().isEmpty
-              ? gloc.enter_title
-              : null,
+          validator: (v) =>
+              v == null || v.trim().isEmpty ? gloc.enter_title : null,
           onSaved: (v) {},
           onSubmitted: () {},
           isText: true,
@@ -439,7 +439,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   }
 
   Widget _buildExtendedFields(String locale, TextStyle? style) {
-    final shouldShow = widget.fullEdit ||
+    final shouldShow =
+        widget.fullEdit ||
         widget.initialExpense != null ||
         (ModalRoute.of(context)?.settings.name != null);
     if (!shouldShow) return const SizedBox.shrink();
@@ -468,42 +469,39 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
           }),
         ),
         _spacer(),
-        NoteInputWidget(
-          controller: _noteController,
-          textStyle: style,
-        ),
+        NoteInputWidget(controller: _noteController, textStyle: style),
       ],
     );
   }
 
   Widget _buildDivider(BuildContext context) => Divider(
-        height: 24,
-        thickness: 1,
-        color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.4),
-      );
+    height: 24,
+    thickness: 1,
+    color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.4),
+  );
 
   Widget _buildActionsRow(gen.AppLocalizations gloc, TextStyle? style) => Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          if (widget.groupTitle != null)
-            Expanded(
-              child: Text(
-                widget.groupTitle!,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-              ),
-            )
-          else
-            const Spacer(),
-          ExpenseFormActionsWidget(
-            onSave: _isFormValid() ? _saveExpense : null,
-            isEdit: widget.initialExpense != null,
-            textStyle: style,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      if (widget.groupTitle != null)
+        Expanded(
+          child: Text(
+            widget.groupTitle!,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(
+              context,
+            ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
           ),
-        ],
-      );
+        )
+      else
+        const Spacer(),
+      ExpenseFormActionsWidget(
+        onSave: _isFormValid() ? _saveExpense : null,
+        isEdit: widget.initialExpense != null,
+        textStyle: style,
+      ),
+    ],
+  );
 
   @override
   void dispose() {
