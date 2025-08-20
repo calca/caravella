@@ -494,11 +494,20 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     );
   }
 
-  Widget _buildDivider(BuildContext context) => Divider(
-    height: 24,
-    thickness: 1,
-    color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.4),
-  );
+  Widget _buildDivider(BuildContext context) {
+    if (widget.fullEdit) {
+      // In full edit mode: reserve vertical space but no visual divider
+      return const SizedBox(height: 24);
+    }
+    return Divider(
+      height: 24,
+      thickness: 1,
+      color: Theme.of(context)
+          .colorScheme
+          .outlineVariant
+          .withValues(alpha: 0.4),
+    );
+  }
 
   Widget _buildActionsRow(gen.AppLocalizations gloc, TextStyle? style) => Row(
     crossAxisAlignment: CrossAxisAlignment.center,
