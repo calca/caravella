@@ -550,375 +550,384 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
           }
         },
         child: Scaffold(
-        appBar: CaravellaAppBar(
-          actions: [
-            if (widget.trip != null)
-              IconButton(
-                icon: const Icon(Icons.delete),
-                tooltip: gloc.delete,
-                onPressed: () async {
-                  final confirm = await showDialog<bool>(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: Text(gloc.delete_trip),
-                      content: Text(gloc.delete_trip_confirm),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(false),
-                          child: Text(gloc.cancel),
-                        ),
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(true),
-                          child: Text(gloc.delete),
-                        ),
-                      ],
-                    ),
-                  );
-                  if (confirm == true) {
-                    final trips = await ExpenseGroupStorage.getAllGroups();
-                    trips.removeWhere((v) => v.id == widget.trip!.id);
-                    await ExpenseGroupStorage.writeTrips(trips);
-                    if (!context.mounted) return;
-                    Navigator.of(context).pop(true);
-                    if (widget.onTripDeleted != null) {
-                      widget.onTripDeleted!();
+          appBar: CaravellaAppBar(
+            actions: [
+              if (widget.trip != null)
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  tooltip: gloc.delete,
+                  onPressed: () async {
+                    final confirm = await showDialog<bool>(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text(gloc.delete_trip),
+                        content: Text(gloc.delete_trip_confirm),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(false),
+                            child: Text(gloc.cancel),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(true),
+                            child: Text(gloc.delete),
+                          ),
+                        ],
+                      ),
+                    );
+                    if (confirm == true) {
+                      final trips = await ExpenseGroupStorage.getAllGroups();
+                      trips.removeWhere((v) => v.id == widget.trip!.id);
+                      await ExpenseGroupStorage.writeTrips(trips);
+                      if (!context.mounted) return;
+                      Navigator.of(context).pop(true);
+                      if (widget.onTripDeleted != null) {
+                        widget.onTripDeleted!();
+                      }
                     }
-                  }
-                },
-              ),
-          ],
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Form(
-            key: _formKey,
-            child: ListView(
-              children: [
-                // Titolo principale dinamico
-                Text(
-                  widget.trip != null ? gloc.edit_group : gloc.new_group,
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
+                  },
+                ),
+            ],
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Form(
+              key: _formKey,
+              child: ListView(
+                children: [
+                  // Titolo principale dinamico
+                  Text(
+                    widget.trip != null ? gloc.edit_group : gloc.new_group,
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 24),
+                  const SizedBox(height: 24),
 
-                // Sezione 1: Informazioni di base
-                SectionFlat(
-                  title: '',
-                  children: [
-                    // Nome gruppo
-                    Row(
-                      children: [
-                        Text(
-                          gloc.group_name,
-                          style: Theme.of(context).textTheme.titleLarge
-                              ?.copyWith(fontWeight: FontWeight.w600),
-                        ),
-                        const SizedBox(width: 4),
-                        const Text(
-                          '*',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    TextFormField(
-                      controller: _titleController,
-                      focusNode: _titleFocusNode,
-                      autofocus: widget.trip == null,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w600,
+                  // Sezione 1: Informazioni di base
+                  SectionFlat(
+                    title: '',
+                    children: [
+                      // Nome gruppo
+                      Row(
+                        children: [
+                          Text(
+                            gloc.group_name,
+                            style: Theme.of(context).textTheme.titleLarge
+                                ?.copyWith(fontWeight: FontWeight.w600),
+                          ),
+                          const SizedBox(width: 4),
+                          const Text(
+                            '*',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
-                      decoration: InputDecoration(
-                        labelText: '',
-                        hintText: gloc.group_name,
-                        // rely on theme hintStyle
-                        border: const UnderlineInputBorder(),
-                        enabledBorder: const UnderlineInputBorder(
-                          borderSide: BorderSide(),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        controller: _titleController,
+                        focusNode: _titleFocusNode,
+                        autofocus: widget.trip == null,
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
                         ),
-                        focusedBorder: const UnderlineInputBorder(
-                          borderSide: BorderSide(width: 2),
+                        decoration: InputDecoration(
+                          labelText: '',
+                          hintText: gloc.group_name,
+                          // rely on theme hintStyle
+                          border: const UnderlineInputBorder(),
+                          enabledBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(),
+                          ),
+                          focusedBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(width: 2),
+                          ),
                         ),
+                        validator: (v) =>
+                            v == null || v.isEmpty ? gloc.enter_title : null,
+                        onChanged: (value) {
+                          setState(() {});
+                        },
                       ),
-                      validator: (v) =>
-                          v == null || v.isEmpty ? gloc.enter_title : null,
-                      onChanged: (value) {
-                        setState(() {});
-                      },
-                    ),
 
-                    if (_dateError != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Text(
-                          _dateError!,
-                          style: TextStyle(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.error, // Use theme error color
-                            fontSize: 13,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 24),
-
-                // Sezione 2: Partecipanti
-                ParticipantsSection(
-                  participants: _participants,
-                  participantController: _participantController,
-                  onAddParticipant: (String name) {
-                    setState(() {
-                      _participants.add(ExpenseParticipant(name: name));
-                      _isDirty = true;
-                    });
-                  },
-                  onEditParticipant: (int i, String name) {
-                    setState(() {
-                      _participants[i] = _participants[i].copyWith(name: name);
-                      _isDirty = true;
-                    });
-                  },
-                  onRemoveParticipant: (int i) {
-                    setState(() {
-                      _participants.removeAt(i);
-                      _isDirty = true;
-                    });
-                  },
-                ),
-                const SizedBox(height: 24),
-
-                // Sezione 3: Categorie
-                CategoriesSection(
-                  categories: _categories,
-                  onAddCategory: (String name) {
-                    setState(() {
-                      _categories.add(ExpenseCategory(name: name));
-                      _isDirty = true;
-                    });
-                  },
-                  onEditCategory: (int i, String name) {
-                    setState(() {
-                      _categories[i] = _categories[i].copyWith(name: name);
-                      _isDirty = true;
-                    });
-                  },
-                  onRemoveCategory: (int i) {
-                    setState(() {
-                      _categories.removeAt(i);
-                      _isDirty = true;
-                    });
-                  },
-                ),
-                const SizedBox(height: 24),
-
-                // Sezione 4: Periodo
-                SectionPeriod(
-                  startDate: _startDate,
-                  endDate: _endDate,
-                  onPickDate: (isStart) => _pickDate(context, isStart),
-                  onClearDates: () {
-                    setState(() {
-                      _startDate = null;
-                      _endDate = null;
-                    });
-                  },
-                ),
-                const SizedBox(height: 24),
-
-                // Sezione 5: Impostazioni (label rimossa)
-                SectionFlat(
-                  title: '',
-                  children: [
-                    // Currency selector PRIMA
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          gloc.currency,
-                          style: Theme.of(context).textTheme.titleMedium
-                              ?.copyWith(fontWeight: FontWeight.w600),
-                        ),
-                        const SizedBox(height: 8),
-                        SelectionTile(
-                          leading: const Icon(
-                            Icons.account_balance_wallet_outlined,
-                            size: 32,
-                          ),
-                          title: _selectedCurrency['name']!,
-                          subtitle:
-                              '0${_selectedCurrency['symbol']} ${_selectedCurrency['code']}',
-                          trailing: Icon(
-                            Icons.chevron_right,
-                            size: 24,
-                            color: Theme.of(context).colorScheme.outline,
-                          ),
-                          onTap: _showCurrencySheet,
-                          borderRadius: 8,
-                          padding: const EdgeInsets.only(
-                            left: 8,
-                            top: 8,
-                            bottom: 8,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 32),
-                    // Image selection DOPO
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          gloc.image,
-                          style: Theme.of(context).textTheme.titleMedium
-                              ?.copyWith(fontWeight: FontWeight.w600),
-                        ),
-                        const SizedBox(height: 8),
-                        InkWell(
-                          onTap: () {
-                            _unfocusAll();
-                            if (_selectedImageFile != null) {
-                              showModalBottomSheet(
-                                context: context,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(20),
-                                  ),
-                                ),
-                                builder: (BuildContext context) {
-                                  return SafeArea(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        ListTile(
-                                          leading: const Icon(Icons.edit),
-                                          title: Text(gloc.change_image),
-                                          onTap: () {
-                                            Navigator.of(context).pop();
-                                            _showImagePickerDialog();
-                                          },
-                                        ),
-                                        ListTile(
-                                          leading: const Icon(Icons.delete),
-                                          title: Text(gloc.remove_image),
-                                          onTap: () {
-                                            Navigator.of(context).pop();
-                                            _removeImage();
-                                          },
-                                        ),
-                                        const SizedBox(height: 8),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              );
-                            } else {
-                              _showImagePickerDialog();
-                            }
-                          },
-                          borderRadius: BorderRadius.circular(8),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 2.0),
-                            child: Row(
-                              children: [
-                                // Leading icon or image
-                                SizedBox(
-                                  width: 48,
-                                  height: 48,
-                                  child: _loadingImage
-                                      ? const Center(
-                                          child: SizedBox(
-                                            width: 28,
-                                            height: 28,
-                                            child: CircularProgressIndicator(
-                                              strokeWidth: 3,
-                                            ),
-                                          ),
-                                        )
-                                      : (_selectedImageFile == null
-                                            ? Icon(
-                                                Icons.image_outlined,
-                                                size: 32,
-                                                color: Theme.of(
-                                                  context,
-                                                ).colorScheme.onSurface,
-                                              )
-                                            : ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                                child: Image.file(
-                                                  _selectedImageFile!,
-                                                  fit: BoxFit.cover,
-                                                  width: 48,
-                                                  height: 48,
-                                                ),
-                                              )),
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        _selectedImageFile == null
-                                            ? gloc.select_image
-                                            : gloc.change_image,
-                                        style: Theme.of(
-                                          context,
-                                        ).textTheme.bodyLarge,
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        gloc.image_requirements,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall
-                                            ?.copyWith(color: Colors.grey[700]),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Icon(
-                                  Icons.chevron_right,
-                                  size: 24,
-                                  color: Theme.of(context).colorScheme.outline,
-                                ),
-                              ],
+                      if (_dateError != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            _dateError!,
+                            style: TextStyle(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.error, // Use theme error color
+                              fontSize: 13,
                             ),
                           ),
                         ),
-                        // ...existing code...
-                      ],
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 32),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
 
-                // Bottoni di azione
-                Column(
-                  children: [
-                    // Bottone Salva
-                    SizedBox(
-                      width: double.infinity,
-                      child: OutlinedButton(
-                        onPressed: _isFormValid() ? _saveTrip : null,
-                        child: Text(gloc.save),
+                  // Sezione 2: Partecipanti
+                  ParticipantsSection(
+                    participants: _participants,
+                    participantController: _participantController,
+                    onAddParticipant: (String name) {
+                      setState(() {
+                        _participants.add(ExpenseParticipant(name: name));
+                        _isDirty = true;
+                      });
+                    },
+                    onEditParticipant: (int i, String name) {
+                      setState(() {
+                        _participants[i] = _participants[i].copyWith(
+                          name: name,
+                        );
+                        _isDirty = true;
+                      });
+                    },
+                    onRemoveParticipant: (int i) {
+                      setState(() {
+                        _participants.removeAt(i);
+                        _isDirty = true;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Sezione 3: Categorie
+                  CategoriesSection(
+                    categories: _categories,
+                    onAddCategory: (String name) {
+                      setState(() {
+                        _categories.add(ExpenseCategory(name: name));
+                        _isDirty = true;
+                      });
+                    },
+                    onEditCategory: (int i, String name) {
+                      setState(() {
+                        _categories[i] = _categories[i].copyWith(name: name);
+                        _isDirty = true;
+                      });
+                    },
+                    onRemoveCategory: (int i) {
+                      setState(() {
+                        _categories.removeAt(i);
+                        _isDirty = true;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Sezione 4: Periodo
+                  SectionPeriod(
+                    startDate: _startDate,
+                    endDate: _endDate,
+                    onPickDate: (isStart) => _pickDate(context, isStart),
+                    onClearDates: () {
+                      setState(() {
+                        _startDate = null;
+                        _endDate = null;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Sezione 5: Impostazioni (label rimossa)
+                  SectionFlat(
+                    title: '',
+                    children: [
+                      // Currency selector PRIMA
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            gloc.currency,
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(fontWeight: FontWeight.w600),
+                          ),
+                          const SizedBox(height: 8),
+                          SelectionTile(
+                            leading: const Icon(
+                              Icons.account_balance_wallet_outlined,
+                              size: 32,
+                            ),
+                            title: _selectedCurrency['name']!,
+                            subtitle:
+                                '0${_selectedCurrency['symbol']} ${_selectedCurrency['code']}',
+                            trailing: Icon(
+                              Icons.chevron_right,
+                              size: 24,
+                              color: Theme.of(context).colorScheme.outline,
+                            ),
+                            onTap: _showCurrencySheet,
+                            borderRadius: 8,
+                            padding: const EdgeInsets.only(
+                              left: 8,
+                              top: 8,
+                              bottom: 8,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-                // Spazio extra per la navigation bar
-                const SizedBox(height: 80),
-              ],
+                      const SizedBox(height: 32),
+                      // Image selection DOPO
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            gloc.image,
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(fontWeight: FontWeight.w600),
+                          ),
+                          const SizedBox(height: 8),
+                          InkWell(
+                            onTap: () {
+                              _unfocusAll();
+                              if (_selectedImageFile != null) {
+                                showModalBottomSheet(
+                                  context: context,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(20),
+                                    ),
+                                  ),
+                                  builder: (BuildContext context) {
+                                    return SafeArea(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          ListTile(
+                                            leading: const Icon(Icons.edit),
+                                            title: Text(gloc.change_image),
+                                            onTap: () {
+                                              Navigator.of(context).pop();
+                                              _showImagePickerDialog();
+                                            },
+                                          ),
+                                          ListTile(
+                                            leading: const Icon(Icons.delete),
+                                            title: Text(gloc.remove_image),
+                                            onTap: () {
+                                              Navigator.of(context).pop();
+                                              _removeImage();
+                                            },
+                                          ),
+                                          const SizedBox(height: 8),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              } else {
+                                _showImagePickerDialog();
+                              }
+                            },
+                            borderRadius: BorderRadius.circular(8),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 2.0,
+                              ),
+                              child: Row(
+                                children: [
+                                  // Leading icon or image
+                                  SizedBox(
+                                    width: 48,
+                                    height: 48,
+                                    child: _loadingImage
+                                        ? const Center(
+                                            child: SizedBox(
+                                              width: 28,
+                                              height: 28,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 3,
+                                              ),
+                                            ),
+                                          )
+                                        : (_selectedImageFile == null
+                                              ? Icon(
+                                                  Icons.image_outlined,
+                                                  size: 32,
+                                                  color: Theme.of(
+                                                    context,
+                                                  ).colorScheme.onSurface,
+                                                )
+                                              : ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  child: Image.file(
+                                                    _selectedImageFile!,
+                                                    fit: BoxFit.cover,
+                                                    width: 48,
+                                                    height: 48,
+                                                  ),
+                                                )),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          _selectedImageFile == null
+                                              ? gloc.select_image
+                                              : gloc.change_image,
+                                          style: Theme.of(
+                                            context,
+                                          ).textTheme.bodyLarge,
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          gloc.image_requirements,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall
+                                              ?.copyWith(
+                                                color: Colors.grey[700],
+                                              ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Icon(
+                                    Icons.chevron_right,
+                                    size: 24,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.outline,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          // ...existing code...
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 32),
+
+                  // Bottoni di azione
+                  Column(
+                    children: [
+                      // Bottone Salva
+                      SizedBox(
+                        width: double.infinity,
+                        child: FilledButton(
+                          onPressed: _isFormValid() ? _saveTrip : null,
+                          child: Text(gloc.save),
+                        ),
+                      ),
+                    ],
+                  ),
+                  // Spazio extra per la navigation bar
+                  const SizedBox(height: 80),
+                ],
+              ),
             ),
           ),
-        ),
         ),
       ),
     );

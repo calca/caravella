@@ -51,17 +51,17 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   void initState() {
     super.initState();
     _loadTrips();
-  _scrollController = ScrollController();
-  _scrollController.addListener(_onScroll);
+    _scrollController = ScrollController();
+    _scrollController.addListener(_onScroll);
   }
 
   @override
   void dispose() {
     _searchController.dispose();
     _searchDebounce?.cancel();
-  _scrollController.removeListener(_onScroll);
-  _scrollController.dispose();
-  _fabIdleTimer?.cancel();
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    _fabIdleTimer?.cancel();
     super.dispose();
   }
 
@@ -356,8 +356,8 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                       }
                     },
                   )
-        : ListView.builder(
-          controller: _scrollController,
+                : ListView.builder(
+                    controller: _scrollController,
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
                     itemCount: _filteredTrips.length,
                     itemBuilder: (context, index) {
