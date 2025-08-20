@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'icon_leading_field.dart';
 import '../../../data/expense_location.dart';
 
 class LocationInputWidget extends StatefulWidget {
@@ -144,81 +145,67 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                gen.AppLocalizations.of(context).location,
-                style:
-                    widget.textStyle ?? Theme.of(context).textTheme.bodySmall,
-              ),
-            ),
-            // Pulsante per ottenere posizione corrente
-            IconButton(
-              onPressed: _isGettingLocation ? null : _getCurrentLocation,
-              icon: _isGettingLocation
-                  ? SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    )
-                  : Icon(
+    final gloc = gen.AppLocalizations.of(context);
+    final field = TextFormField(
+      controller: _controller,
+      style: widget.textStyle ?? Theme.of(context).textTheme.bodySmall,
+      onChanged: _onTextChanged,
+      decoration: InputDecoration(
+        hintText: gloc.location_hint,
+        hintStyle: widget.textStyle?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ) ??
+            Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+        border: const OutlineInputBorder(),
+        isDense: true,
+        contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
+        suffixIcon: _isGettingLocation
+            ? Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+              )
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    tooltip: gloc.get_current_location,
+                    icon: Icon(
                       Icons.my_location,
                       size: 20,
                       color: Theme.of(context).colorScheme.primary,
                     ),
-              tooltip: gen.AppLocalizations.of(context).get_current_location,
-            ),
-            // Pulsante per pulire
-            if (_currentLocation != null)
-              IconButton(
-                onPressed: _clearLocation,
-                icon: Icon(
-                  Icons.clear,
-                  size: 20,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-                tooltip: gen.AppLocalizations.of(context).cancel,
-              ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        TextFormField(
-          controller: _controller,
-          style: widget.textStyle ?? Theme.of(context).textTheme.bodySmall,
-          decoration: InputDecoration(
-            hintText: gen.AppLocalizations.of(context).location_hint,
-            hintStyle:
-                widget.textStyle?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ) ??
-                Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-            border: const OutlineInputBorder(),
-            suffixIcon: _isGettingLocation
-                ? Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Theme.of(context).colorScheme.primary,
+                    onPressed: _getCurrentLocation,
+                  ),
+                  if (_currentLocation != null)
+                    IconButton(
+                      tooltip: gloc.cancel,
+                      icon: Icon(
+                        Icons.clear,
+                        size: 20,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
+                      onPressed: _clearLocation,
                     ),
-                  )
-                : null,
-          ),
-          onChanged: _onTextChanged,
-        ),
-      ],
+                ],
+              ),
+      ),
+    );
+
+    return IconLeadingField(
+      icon: const Icon(Icons.place_outlined),
+      semanticsLabel: gloc.location,
+      tooltip: gloc.location,
+      alignTop: false,
+      child: field,
     );
   }
 }

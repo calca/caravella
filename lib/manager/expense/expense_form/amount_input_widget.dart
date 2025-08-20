@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../data/expense_category.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
+import 'icon_leading_field.dart';
 
 class AmountInputWidget extends StatelessWidget {
   final TextEditingController controller;
@@ -14,6 +15,8 @@ class AmountInputWidget extends StatelessWidget {
   final bool isText;
   final TextStyle? textStyle;
   final String? currency; // currency override
+  final Widget? trailing; // optional trailing icon for text mode
+  final Widget? leading; // optional leading icon for text mode aligned like currency
 
   const AmountInputWidget({
     super.key,
@@ -27,18 +30,18 @@ class AmountInputWidget extends StatelessWidget {
     this.isText = false,
     this.textStyle,
     this.currency,
+  this.trailing,
+  this.leading,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     if (isText) {
-      // Campo testo normale (riuso del widget per il nome spesa)
-      return TextFormField(
+      final textField = TextFormField(
         controller: controller,
         focusNode: focusNode,
-        style:
-            textStyle ??
+        style: textStyle ??
             theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
         decoration: InputDecoration(
           hintText: label != null ? '${label!} *' : null,
@@ -47,6 +50,15 @@ class AmountInputWidget extends StatelessWidget {
             color: theme.colorScheme.outline,
           ),
           floatingLabelBehavior: FloatingLabelBehavior.never,
+          isDense: true,
+          suffixIcon: leading == null && trailing != null
+              ? Padding(
+                  padding: const EdgeInsets.only(right: 4),
+                  child: trailing,
+                )
+              : null,
+          suffixIconConstraints:
+              const BoxConstraints(minHeight: 32, minWidth: 32),
           contentPadding: const EdgeInsets.symmetric(
             vertical: 8,
             horizontal: 0,
@@ -58,56 +70,63 @@ class AmountInputWidget extends StatelessWidget {
         onSaved: onSaved,
         onFieldSubmitted: (_) => onSubmitted?.call(),
       );
+
+      if (leading == null) return textField; // default behavior
+
+      return IconLeadingField(
+        icon: leading!,
+        semanticsLabel: (label ?? '').replaceAll(' *', ''),
+        tooltip: (label ?? '').replaceAll(' *', ''),
+        child: textField,
+      );
     }
 
     // Campo importo: valuta sempre visibile anche senza focus o testo
     final currencySymbol = currency ?? '€';
-    final currencyStyle = (textStyle ?? theme.textTheme.titleLarge)?.copyWith(
+    // Style the currency symbol to visually match the 22px icon size used elsewhere
+    final currencyStyle = TextStyle(
+      fontSize: 20, // user requested slightly smaller than icon size
+      height: 1.0, // compact to center vertically inside padding
       fontWeight: FontWeight.w600,
       color: theme.colorScheme.onSurfaceVariant,
     );
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(right: 6, top: 8, bottom: 8),
-          child: Text(currencySymbol, style: currencyStyle),
-        ),
-        Expanded(
-          child: TextFormField(
-            controller: controller,
-            focusNode: focusNode,
-            style:
-                textStyle ??
-                theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-            decoration: InputDecoration(
-              hintText: label != null ? '${label!} *' : null,
-              hintStyle: (textStyle ?? theme.textTheme.titleLarge)?.copyWith(
-                fontWeight: FontWeight.w400,
-                color: theme.colorScheme.outline,
-              ),
-              floatingLabelBehavior: FloatingLabelBehavior.never,
-              isDense: true,
-              contentPadding: const EdgeInsets.symmetric(
-                vertical: 8,
-                horizontal: 0,
-              ),
-            ),
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            textInputAction: TextInputAction.next,
-            validator: validator,
-            onSaved: onSaved,
-            onFieldSubmitted: (_) => onSubmitted?.call(),
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]')),
-              _AmountFormatter(),
-            ],
+    final amountField = TextFormField(
+      controller: controller,
+      focusNode: focusNode,
+      style: textStyle ??
+          theme.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.w600,
           ),
+      decoration: InputDecoration(
+        hintText: label != null ? '${label!} *' : null,
+        hintStyle: (textStyle ?? theme.textTheme.titleLarge)?.copyWith(
+          fontWeight: FontWeight.w400,
+          color: theme.colorScheme.outline,
         ),
+        floatingLabelBehavior: FloatingLabelBehavior.never,
+        isDense: true,
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 8,
+          horizontal: 0,
+        ),
+      ),
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      textInputAction: TextInputAction.next,
+      validator: validator,
+      onSaved: onSaved,
+      onFieldSubmitted: (_) => onSubmitted?.call(),
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]')),
+        _AmountFormatter(),
       ],
+    );
+
+    return IconLeadingField(
+      icon: Text(currencySymbol, style: currencyStyle),
+      semanticsLabel: label,
+      tooltip: label,
+      child: amountField,
     );
   }
 }

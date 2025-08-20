@@ -49,6 +49,7 @@ class ExpenseFormComponent extends StatefulWidget {
 }
 
 class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
+  static const double _rowSpacing = 16.0;
   final _formKey = GlobalKey<FormState>();
   ExpenseCategory? _category;
   double? _amount;
@@ -254,6 +255,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
           key: _formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // IMPORTO + CURRENCY con status (ora prima del nome)
               _buildFieldWithStatus(
@@ -277,13 +279,18 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                 _isAmountValid,
                 _amountTouched,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: _rowSpacing),
               // CAMPO NOME SPESA (dopo amount)
               _buildFieldWithStatus(
                 AmountInputWidget(
                   controller: _nameController,
                   focusNode: _nameFocus,
                   label: gloc.expense_name,
+                  leading: Icon(
+                    Icons.description_outlined,
+                    size: 22,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
                   // TODO: replace with generated localization key (e.g., gloc.expense_name_required) once added to ARB
                   validator: (v) =>
                       v == null || v.trim().isEmpty ? gloc.enter_title : null,
@@ -295,7 +302,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                 _nameController.text.trim().isNotEmpty,
                 _amountTouched,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: _rowSpacing),
 
               // PAID BY + CATEGORY dinamici e allineati a sinistra
               Align(
@@ -396,7 +403,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
               // DATA (bottone con data + icona, angoli arrotondati, sfondo grigio coerente col tema)
               if (widget.showDateAndNote ||
                   widget.initialExpense != null ||
-                  (ModalRoute.of(context)?.settings.name != null))
+                  (ModalRoute.of(context)?.settings.name != null)) ...[
+                const SizedBox(height: _rowSpacing),
                 DateSelectorWidget(
                   selectedDate: _date,
                   tripStartDate: widget.tripStartDate,
@@ -410,9 +418,11 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                   locale: locale,
                   textStyle: smallStyle,
                 ),
+              ],
 
               // LOCATION (spostato prima di NOTE)
               if (widget.showDateAndNote || widget.initialExpense != null) ...[
+                const SizedBox(height: _rowSpacing),
                 LocationInputWidget(
                   initialLocation: _location,
                   textStyle: smallStyle,
@@ -423,16 +433,15 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                     });
                   },
                 ),
-                const SizedBox(height: 16),
               ],
 
               // NOTE (ora dopo LOCATION)
               if (widget.showDateAndNote || widget.initialExpense != null) ...[
+                const SizedBox(height: _rowSpacing),
                 NoteInputWidget(
                   controller: _noteController,
                   textStyle: smallStyle,
                 ),
-                const SizedBox(height: 16),
               ],
               Divider(
                 height: 24,
