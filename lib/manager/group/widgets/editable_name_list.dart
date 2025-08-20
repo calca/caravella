@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../themes/app_text_styles.dart';
 
 /// Generic inline editable list for simple name-based items (participants, categories, etc.).
 /// Supports add, edit (inline), delete. Parent owns the source of truth list; this widget
@@ -141,7 +142,7 @@ class _EditableNameListState extends State<EditableNameList> {
                   horizontal: 16.0,
                   vertical: 14.0,
                 ),
-                child: Text(name, style: Theme.of(context).textTheme.bodyLarge),
+                child: Text(name, style: AppTextStyles.listItem(context)),
               ),
             ),
             IconButton.filledTonal(
@@ -272,12 +273,7 @@ class _EditableNameListState extends State<EditableNameList> {
       children: [
         Row(
           children: [
-            Text(
-              widget.title,
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
-            ),
+            Text(widget.title, style: AppTextStyles.sectionTitle(context)),
             if (widget.requiredMark) ...[
               const SizedBox(width: 4),
               const Text('*', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -313,7 +309,7 @@ class _EditableNameListState extends State<EditableNameList> {
                     Expanded(
                       child: Text(
                         widget.addLabel,
-                        style: Theme.of(context).textTheme.bodyLarge,
+                        style: AppTextStyles.listItem(context),
                       ),
                     ),
                   ],
