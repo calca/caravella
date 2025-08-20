@@ -200,7 +200,6 @@ class GroupCardContent extends StatelessWidget {
               ),
             ),
             const SizedBox(height: _largSpacing),
-            _buildRecentActivity(currentGroup),
             const Spacer(),
             _buildStatistics(currentGroup),
             const SizedBox(height: 24),
@@ -300,10 +299,10 @@ class GroupCardContent extends StatelessWidget {
   /// Calculate daily average spending for the group
   double _calculateDailyAverage(ExpenseGroup group) {
     if (group.expenses.isEmpty) return 0.0;
-    
+
     final now = DateTime.now();
     DateTime startDate, endDate;
-    
+
     if (group.startDate != null && group.endDate != null) {
       startDate = group.startDate!;
       endDate = group.endDate!.isBefore(now) ? group.endDate! : now;
@@ -314,15 +313,15 @@ class GroupCardContent extends StatelessWidget {
       startDate = sortedExpenses.first.date;
       endDate = now;
     }
-    
+
     final days = endDate.difference(startDate).inDays + 1;
     if (days <= 0) return 0.0;
-    
+
     final totalSpent = group.expenses.fold<double>(
       0,
       (sum, expense) => sum + (expense.amount ?? 0),
     );
-    
+
     return totalSpent / days;
   }
 
@@ -330,20 +329,22 @@ class GroupCardContent extends StatelessWidget {
   double _calculateTodaySpending(ExpenseGroup group) {
     final today = DateTime.now();
     return group.expenses
-        .where((e) => 
-            e.date.year == today.year &&
-            e.date.month == today.month &&
-            e.date.day == today.day)
+        .where(
+          (e) =>
+              e.date.year == today.year &&
+              e.date.month == today.month &&
+              e.date.day == today.day,
+        )
         .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
   }
 
   Widget _buildExtraInfo(ExpenseGroup group) {
     if (!_isShortDuration(group)) return const SizedBox.shrink();
-    
+
     final dailyAverage = _calculateDailyAverage(group);
     final todaySpending = _calculateTodaySpending(group);
     final textColor = theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7);
-    
+
     return Column(
       children: [
         // Daily average
@@ -423,9 +424,7 @@ class GroupCardContent extends StatelessWidget {
     });
 
     return Column(
-      children: [
-        DateRangeExpenseChart(dailyTotals: dailyTotals, theme: theme),
-      ],
+      children: [DateRangeExpenseChart(dailyTotals: dailyTotals, theme: theme)],
     );
   }
 
@@ -475,11 +474,6 @@ class GroupCardContent extends StatelessWidget {
         MonthlyExpenseChart(dailyTotals: dailyMonthTotals, theme: theme),
       ],
     );
-  }
-
-  Widget _buildRecentActivity(ExpenseGroup currentGroup) {
-    // Recent activity and chart removed for cleaner UI
-    return Container();
   }
 
   Widget _buildAddButton(BuildContext context, ExpenseGroup currentGroup) {

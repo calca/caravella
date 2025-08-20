@@ -8,11 +8,19 @@ bool useWeeklyAggregation(ExpenseGroup trip) {
   return duration.inDays > 7; // strictly greater than 7
 }
 
-/// Decide se mostrare solo un grafico da-a per la home page.
-/// Regola: se entrambe le date sono impostate e durata ≤ 30 giorni (1 mese).
+/// Decide se mostrare il grafico "date range" (giorno per giorno) nella home.
+/// Regola aggiornata: mostra se entrambe le date sono presenti, end >= start,
+/// e il numero di giorni INCLUSIVO (start + end compresi) è <= 30.
+/// Esempi:
+///  - start = 1, end = 1  => 1 giorno (mostra)
+///  - start = 1, end = 30 => 30 giorni (mostra)
+///  - start = 1, end = 31 => 31 giorni (NON mostra)
 bool shouldShowDateRangeChart(ExpenseGroup group) {
-	if (group.startDate == null || group.endDate == null) return false;
-	final duration = group.endDate!.difference(group.startDate!);
-	return duration.inDays >= 0 && duration.inDays <= 30; // 0 to 30 days inclusive
+	final start = group.startDate;
+	final end = group.endDate;
+	if (start == null || end == null) return false;
+	if (end.isBefore(start)) return false; // dati incoerenti
+	final inclusiveDays = end.difference(start).inDays + 1; // inclusive span
+	return inclusiveDays <= 30;
 }
 

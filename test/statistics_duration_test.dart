@@ -130,9 +130,10 @@ void main() {
       expect(duration.inDays == 0, isTrue);
     });
 
-    testWidgets('Should show date range chart for exactly 30 days', (tester) async {
+    testWidgets('Should show date range chart for exactly 30 days span (inclusive)', (tester) async {
+      // 30 inclusive days means difference == 29
       final startDate = DateTime(2023, 12, 1);
-      final endDate = DateTime(2023, 12, 31); // 30 days duration
+      final endDate = DateTime(2023, 12, 30); // difference = 29, inclusiveDays = 30
       
       final trip = ExpenseGroup(
         title: 'Month Trip',
@@ -146,7 +147,27 @@ void main() {
       expect(shouldShowDateRangeChart(trip), isTrue);
       
       final duration = endDate.difference(startDate);
-      expect(duration.inDays == 30, isTrue);
+      expect(duration.inDays, 29); // diff
+      expect(duration.inDays + 1, 30); // inclusive span
+    });
+
+    testWidgets('Should NOT show date range chart when inclusive span > 30', (tester) async {
+      final startDate = DateTime(2023, 12, 1);
+      final endDate = DateTime(2023, 12, 31); // difference = 30, inclusiveDays = 31
+
+      final trip = ExpenseGroup(
+        title: 'Over Month Trip',
+        expenses: [],
+        participants: [],
+        startDate: startDate,
+        endDate: endDate,
+        currency: 'EUR',
+      );
+
+      expect(shouldShowDateRangeChart(trip), isFalse);
+      final duration = endDate.difference(startDate);
+      expect(duration.inDays, 30);
+      expect(duration.inDays + 1, 31);
     });
   });
 }
