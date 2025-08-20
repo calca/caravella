@@ -4,7 +4,7 @@ import '../data/expense_group.dart';
 import '../data/expense_group_storage.dart';
 import '../state/expense_group_notifier.dart';
 import '../../main.dart';
-import '../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import 'welcome/home_welcome_section.dart';
 import 'cards/home_cards_section.dart';
 import '../widgets/app_toast.dart';
@@ -64,11 +64,11 @@ class _HomePageState extends State<HomePage> with RouteAware {
       _groupNotifier?.clearUpdatedGroups();
       final event = _groupNotifier?.consumeLastEvent();
       if (event == 'expense_added') {
-        final loc = AppLocalizations.of(context);
+        final gloc = gen.AppLocalizations.of(context);
         WidgetsBinding.instance.addPostFrameCallback((_) {
           AppToast.show(
             context,
-            loc.get('expense_added_success'),
+            gloc.expense_added_success,
             type: ToastType.success,
           );
         });
@@ -100,7 +100,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
     if (mounted) {
       AppToast.show(
         context,
-        AppLocalizations.of(context).get('data_refreshed'),
+        gen.AppLocalizations.of(context).data_refreshed,
         type: ToastType.info,
       );
     }
@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
-    final loc = AppLocalizations.of(context);
+    final gloc = gen.AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: _loading
@@ -127,7 +127,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
                           WidgetsBinding.instance.addPostFrameCallback((_) {
                             AppToast.show(
                               context,
-                              loc.get('group_added_success'),
+                              gloc.group_added_success,
                               type: ToastType.success,
                             );
                           });
@@ -142,7 +142,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
                         WidgetsBinding.instance.addPostFrameCallback((_) {
                           AppToast.show(
                             context,
-                            loc.get('group_added_success'),
+                            gloc.group_added_success,
                             type: ToastType.success,
                           );
                         });

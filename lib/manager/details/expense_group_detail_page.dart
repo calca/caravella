@@ -14,8 +14,8 @@ import '../../data/expense_details.dart';
 import '../../data/expense_group.dart';
 import '../../state/expense_group_notifier.dart';
 import '../../data/expense_group_storage.dart';
-import '../../app_localizations.dart';
-import '../../state/locale_notifier.dart';
+// Removed legacy localization bridge imports (migration in progress)
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../widgets/app_toast.dart';
 import 'widgets/group_header.dart';
 import 'widgets/group_actions.dart';
@@ -44,17 +44,16 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     if (_trip == null || _trip!.expenses.isEmpty) return '';
     final buffer = StringBuffer();
     // Header localizzato
-    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    final loc = AppLocalizations(locale);
+    final gloc = gen.AppLocalizations.of(context);
     buffer.writeln(
       [
-        loc.get('csv_expense_name'),
-        loc.get('csv_amount'),
-        loc.get('csv_paid_by'),
-        loc.get('csv_category'),
-        loc.get('csv_date'),
-        loc.get('csv_note'),
-        loc.get('csv_location'),
+        gloc.csv_expense_name,
+        gloc.csv_amount,
+        gloc.csv_paid_by,
+        gloc.csv_category,
+        gloc.csv_date,
+        gloc.csv_note,
+        gloc.csv_location,
       ].join(','),
     );
     for (final e in _trip!.expenses) {
@@ -247,9 +246,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           await _refreshGroup();
         },
         onDownloadCsv: () async {
-          final preLoc = AppLocalizations(
-            LocaleNotifier.of(context)?.locale ?? 'it',
-          );
+          final gloc = gen.AppLocalizations.of(context);
           final nav = Navigator.of(sheetCtx);
           final rootContext = context; // capture for toasts
           final csv = _generateCsvContent();
@@ -257,7 +254,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             if (rootContext.mounted) {
               AppToast.show(
                 rootContext,
-                preLoc.get('no_expenses_to_export'),
+                gloc.no_expenses_to_export,
                 type: ToastType.info,
               );
             }
@@ -267,7 +264,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           String? dirPath;
           try {
             dirPath = await FilePicker.platform.getDirectoryPath(
-              dialogTitle: preLoc.get('csv_select_directory_title'),
+              dialogTitle: gloc.csv_select_directory_title,
             );
           } catch (_) {
             dirPath = null;
@@ -276,7 +273,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             if (!rootContext.mounted) return;
             AppToast.show(
               rootContext,
-              preLoc.get('csv_save_cancelled'),
+              gloc.csv_save_cancelled,
               type: ToastType.info,
             );
             return;
@@ -285,22 +282,20 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             final file = File('$dirPath/$filename');
             await file.writeAsString(csv);
             if (!rootContext.mounted) return;
-            final msg = preLoc.get('csv_saved_in', params: {'path': file.path});
+            final msg = gloc.csv_saved_in(file.path);
             AppToast.show(rootContext, msg, type: ToastType.success);
             nav.pop();
           } catch (e) {
             if (!rootContext.mounted) return;
             AppToast.show(
               rootContext,
-              preLoc.get('csv_save_error'),
+              gloc.csv_save_error,
               type: ToastType.error,
             );
           }
         },
         onShareCsv: () async {
-          final preLoc = AppLocalizations(
-            LocaleNotifier.of(context)?.locale ?? 'it',
-          );
+          final gloc = gen.AppLocalizations.of(context);
           final nav = Navigator.of(sheetCtx);
           final rootContext = context;
           final csv = _generateCsvContent();
@@ -308,7 +303,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             if (rootContext.mounted) {
               AppToast.show(
                 rootContext,
-                preLoc.get('no_expenses_to_export'),
+                gloc.no_expenses_to_export,
                 type: ToastType.info,
               );
             }
@@ -330,26 +325,25 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           nav.pop();
         },
         onDelete: () async {
-          final preLoc = AppLocalizations(
-            LocaleNotifier.of(context)?.locale ?? 'it',
-          );
           final nav = Navigator.of(sheetCtx);
           final theme = Theme.of(context);
           final rootNav = Navigator.of(context);
           final confirmed = await showDialog<bool>(
             context: context,
             builder: (dialogCtx) => AlertDialog(
-              title: Text(preLoc.get('delete_group')),
-              content: Text(preLoc.get('delete_group_confirm')),
+              title: Text(gen.AppLocalizations.of(dialogCtx).delete_group),
+              content: Text(
+                gen.AppLocalizations.of(dialogCtx).delete_group_confirm,
+              ),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(dialogCtx).pop(false),
-                  child: Text(preLoc.get('cancel')),
+                  child: Text(gen.AppLocalizations.of(dialogCtx).cancel),
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(dialogCtx).pop(true),
                   child: Text(
-                    preLoc.get('delete'),
+                    gen.AppLocalizations.of(dialogCtx).delete,
                     style: TextStyle(color: theme.colorScheme.error),
                   ),
                 ),
@@ -405,9 +399,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         onExpenseSaved: (newExpense) async {
           final sheetCtx = context; // bottom sheet context
           final nav = Navigator.of(sheetCtx);
-          final preLoc = AppLocalizations(
-            LocaleNotifier.of(sheetCtx)?.locale ?? 'it',
-          );
+          final gloc = gen.AppLocalizations.of(sheetCtx);
           final expenseWithId = newExpense.copyWith(
             id: DateTime.now().millisecondsSinceEpoch.toString(),
           );
@@ -416,7 +408,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           if (!sheetCtx.mounted) return;
           AppToast.show(
             sheetCtx,
-            preLoc.get('expense_added_success'),
+            gloc.expense_added_success,
             type: ToastType.success,
           );
           nav.pop();
@@ -446,9 +438,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         group: _trip!,
         expense: expense,
         onExpenseAdded: (updatedExpense) async {
-          final preLoc = AppLocalizations(
-            LocaleNotifier.of(sheetCtx)?.locale ?? 'it',
-          );
+          final gloc = gen.AppLocalizations.of(sheetCtx);
           final nav = Navigator.of(sheetCtx);
           final expenseWithId = updatedExpense.copyWith(id: expense.id);
           final updatedExpenses = _trip!.expenses.map((e) {
@@ -472,7 +462,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           if (!sheetCtx.mounted) return;
           AppToast.show(
             sheetCtx,
-            preLoc.get('expense_updated_success'),
+            gloc.expense_updated_success,
             type: ToastType.success,
           );
           nav.pop();
@@ -512,7 +502,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     }
   }
 
-  Widget _buildAnimatedFab(AppLocalizations loc, ColorScheme colorScheme) {
+  Widget _buildAnimatedFab(ColorScheme colorScheme) {
     if (_trip?.archived == true) return const SizedBox.shrink();
 
     return AnimatedSlide(
@@ -539,14 +529,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     }
     final trip = _trip;
     if (trip == null) {
-      return const Scaffold(
-        // backgroundColor centralizzato nel tema
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
-
-    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    final loc = AppLocalizations(locale);
     final colorScheme = Theme.of(context).colorScheme;
     final totalExpenses = trip.expenses.fold<double>(
       0,
@@ -554,16 +538,13 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     );
 
     return Scaffold(
-      // backgroundColor centralizzato nel tema
       body: CustomScrollView(
         controller: _scrollController,
         slivers: [
-          // Hero AppBar con gradiente
           SliverAppBar(
             expandedHeight: 10.0,
             floating: false,
             pinned: true,
-            // backgroundColor centralizzato nel tema
             foregroundColor: colorScheme.onSurface,
             elevation: 0,
             leading: IconButton(
@@ -571,7 +552,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               onPressed: () => Navigator.of(context).pop(),
             ),
           ),
-          // Header custom sotto l'AppBar
           SliverToBoxAdapter(
             child: AnimatedSize(
               duration: const Duration(milliseconds: 300),
@@ -581,16 +561,14 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                 duration: const Duration(milliseconds: 220),
                 switchInCurve: Curves.easeOut,
                 switchOutCurve: Curves.easeIn,
-                transitionBuilder: (child, animation) {
-                  return FadeTransition(
-                    opacity: animation,
-                    child: SizeTransition(
-                      sizeFactor: animation,
-                      axisAlignment: -1.0,
-                      child: child,
-                    ),
-                  );
-                },
+                transitionBuilder: (child, animation) => FadeTransition(
+                  opacity: animation,
+                  child: SizeTransition(
+                    sizeFactor: animation,
+                    axisAlignment: -1.0,
+                    child: child,
+                  ),
+                ),
                 child: _hideHeader
                     ? const SizedBox.shrink(key: ValueKey('header-hidden'))
                     : Padding(
@@ -626,8 +604,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               ),
             ),
           ),
-
-          // Expenses Content
           SliverToBoxAdapter(
             child: Container(
               width: double.infinity,
@@ -670,7 +646,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           ),
         ],
       ),
-      floatingActionButton: _buildAnimatedFab(loc, colorScheme),
+      floatingActionButton: _buildAnimatedFab(colorScheme),
     );
   }
 }

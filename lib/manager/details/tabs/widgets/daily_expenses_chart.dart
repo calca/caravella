@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../../data/expense_group.dart';
-import '../../../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 
 class DailyExpensesChart extends StatelessWidget {
   final ExpenseGroup trip;
   final Map<DateTime, double> dailyStats;
-  final AppLocalizations loc;
   final String titleKey;
 
   const DailyExpensesChart({
     super.key,
     required this.trip,
     required this.dailyStats,
-    required this.loc,
     this.titleKey = 'daily_expenses_chart',
   });
 
@@ -36,15 +34,17 @@ class DailyExpensesChart extends StatelessWidget {
     }
 
     // Filtra per mostrare solo dall'inizio fino all'ultimo giorno con spese
-    final filteredEntries =
-        sortedEntries.take(lastDayWithExpenses + 1).toList();
+    final filteredEntries = sortedEntries
+        .take(lastDayWithExpenses + 1)
+        .toList();
 
     if (filteredEntries.isEmpty) {
       return const SizedBox.shrink();
     }
 
-    final maxAmount =
-        filteredEntries.map((e) => e.value).reduce((a, b) => a > b ? a : b);
+    final maxAmount = filteredEntries
+        .map((e) => e.value)
+        .reduce((a, b) => a > b ? a : b);
     final minAmount = filteredEntries
         .map((e) => e.value)
         .where((v) => v > 0)
@@ -54,20 +54,19 @@ class DailyExpensesChart extends StatelessWidget {
     final useLogScale =
         maxAmount > 0 && minAmount > 0 && (maxAmount / minAmount) > 100;
 
-  // Altezza compatta: massimo 25% dell'altezza schermo (nessun extra spazio)
-  final screenHeight = MediaQuery.of(context).size.height;
-  final chartHeight = screenHeight * 0.25; // compatto e limitato al 25%
+    // Altezza compatta: massimo 25% dell'altezza schermo (nessun extra spazio)
+    final screenHeight = MediaQuery.of(context).size.height;
+    final chartHeight = screenHeight * 0.25; // compatto e limitato al 25%
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          loc.get(titleKey),
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+          _resolveTitle(context),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
         ),
-  // Nessuno spazio aggiuntivo sotto il titolo per compattezza
         SizedBox(
           height: chartHeight,
           child: SingleChildScrollView(
@@ -76,17 +75,18 @@ class DailyExpensesChart extends StatelessWidget {
               width: _calculateChartWidth(context, filteredEntries.length),
               child: LineChart(
                 LineChartData(
-                  gridData: const FlGridData(
-                    show: false, // Rimuove tutte le righe orizzontali
-                  ),
+                  gridData: const FlGridData(show: false),
                   titlesData: FlTitlesData(
                     show: true,
                     topTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false)),
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
                     rightTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false)),
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
                     leftTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false)),
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
                     bottomTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
@@ -100,28 +100,28 @@ class DailyExpensesChart extends StatelessWidget {
 
                           final date = filteredEntries[index].key;
                           String dateText;
-                          
+
                           // If this looks like weekly data (first day of week),
                           // show week range format, otherwise show day/month
-                          if (titleKey == 'weekly_expenses_chart' && date.weekday == 1) {
+                          if (titleKey == 'weekly_expenses_chart' &&
+                              date.weekday == 1) {
                             final endWeek = date.add(const Duration(days: 6));
-                            dateText = '${date.day}/${date.month}-${endWeek.day}/${endWeek.month}';
+                            dateText =
+                                '${date.day}/${date.month}-${endWeek.day}/${endWeek.month}';
                           } else {
                             dateText = '${date.day}/${date.month}';
                           }
-                          
+
                           return Padding(
                             padding: const EdgeInsets.only(top: 8.0),
                             child: Text(
                               dateText,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
+                              style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(
                                     fontSize: 10,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurfaceVariant,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurfaceVariant,
                                   ),
                             ),
                           );
@@ -133,19 +133,20 @@ class DailyExpensesChart extends StatelessWidget {
                     show: true,
                     border: Border(
                       bottom: BorderSide(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .outline
-                            .withValues(alpha: 0.3),
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.outline.withValues(alpha: 0.3),
                       ),
                     ),
                   ),
                   minX: 0,
                   maxX: (filteredEntries.length - 1).toDouble(),
-                  minY:
-                      useLogScale ? (minAmount > 0 ? minAmount * 0.5 : 0.1) : 0,
-                  maxY:
-                      useLogScale ? maxAmount * 1.5 : _calculateMaxY(maxAmount),
+                  minY: useLogScale
+                      ? (minAmount > 0 ? minAmount * 0.5 : 0.1)
+                      : 0,
+                  maxY: useLogScale
+                      ? maxAmount * 1.5
+                      : _calculateMaxY(maxAmount),
                   lineBarsData: [
                     LineChartBarData(
                       spots: filteredEntries.asMap().entries.map((entry) {
@@ -169,10 +170,9 @@ class DailyExpensesChart extends StatelessWidget {
                       ),
                       belowBarData: BarAreaData(
                         show: true,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .primary
-                            .withValues(alpha: 0.1),
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.primary.withValues(alpha: 0.1),
                       ),
                     ),
                   ],
@@ -228,6 +228,17 @@ class DailyExpensesChart extends StatelessWidget {
       // Se ci sono più di 15 giorni, calcola la larghezza per mostrare esattamente 15 giorni inizialmente
       final widthPerDay = availableWidth / minDaysVisible;
       return widthPerDay * numberOfDays;
+    }
+  }
+
+  String _resolveTitle(BuildContext context) {
+    final gloc = gen.AppLocalizations.of(context);
+    switch (titleKey) {
+      case 'weekly_expenses_chart':
+        return gloc.weekly_expenses_chart;
+      case 'daily_expenses_chart':
+      default:
+        return gloc.daily_expenses_chart;
     }
   }
 }

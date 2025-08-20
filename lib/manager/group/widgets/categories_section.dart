@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../data/expense_category.dart';
 import 'section_list_tile.dart';
 import 'selection_tile.dart';
@@ -9,7 +9,6 @@ class CategoriesSection extends StatelessWidget {
   final void Function(String) onAddCategory;
   final void Function(int, String) onEditCategory;
   final void Function(int) onRemoveCategory;
-  final AppLocalizations loc;
 
   const CategoriesSection({
     super.key,
@@ -17,7 +16,6 @@ class CategoriesSection extends StatelessWidget {
     required this.onAddCategory,
     required this.onEditCategory,
     required this.onRemoveCategory,
-    required this.loc,
   });
 
   @override
@@ -28,11 +26,10 @@ class CategoriesSection extends StatelessWidget {
         Row(
           children: [
             Text(
-              loc.get('categories'),
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium
-                  ?.copyWith(fontWeight: FontWeight.w600),
+              gen.AppLocalizations.of(context).categories,
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(width: 4),
             const Text('*', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -48,20 +45,23 @@ class CategoriesSection extends StatelessWidget {
             title: c.name,
             subtitle: null,
             backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-            borderColor:
-                Theme.of(context).colorScheme.primaryFixed.withAlpha(128),
+            borderColor: Theme.of(
+              context,
+            ).colorScheme.primaryFixed.withAlpha(128),
             onEdit: () {
               final editController = TextEditingController(text: c.name);
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: Text(loc.get('edit_category')),
+                  title: Text(gen.AppLocalizations.of(context).edit_category),
                   content: TextField(
                     controller: editController,
                     autofocus: true,
                     decoration: InputDecoration(
-                      labelText: loc.get('category_name'),
-                      hintText: loc.get('category_name_hint'),
+                      labelText: gen.AppLocalizations.of(context).category_name,
+                      hintText: gen.AppLocalizations.of(
+                        context,
+                      ).category_name_hint,
                     ),
                     onSubmitted: (val) {
                       if (val.trim().isNotEmpty) {
@@ -73,7 +73,7 @@ class CategoriesSection extends StatelessWidget {
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      child: Text(loc.get('cancel')),
+                      child: Text(gen.AppLocalizations.of(context).cancel),
                     ),
                     TextButton(
                       onPressed: () {
@@ -83,7 +83,7 @@ class CategoriesSection extends StatelessWidget {
                           Navigator.of(context).pop();
                         }
                       },
-                      child: Text(loc.get('save')),
+                      child: Text(gen.AppLocalizations.of(context).save),
                     ),
                   ],
                 ),
@@ -95,49 +95,52 @@ class CategoriesSection extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: SelectionTile(
-              leading: const Icon(Icons.add),
-              title: loc.get('add_category'),
-              onTap: () {
-                final TextEditingController categoryController =
-                    TextEditingController();
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: Text(loc.get('add_category')),
-                    content: TextField(
-                      controller: categoryController,
-                      autofocus: true,
-                      decoration: InputDecoration(
-                        labelText: loc.get('category_name'),
-                        hintText: loc.get('category_name_hint'),
-                      ),
-                      onSubmitted: (val) {
-                        if (val.trim().isNotEmpty) {
-                          onAddCategory(val.trim());
+            leading: const Icon(Icons.add),
+            title: gen.AppLocalizations.of(context).add_category,
+            onTap: () {
+              final TextEditingController categoryController =
+                  TextEditingController();
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text(gen.AppLocalizations.of(context).add_category),
+                  content: TextField(
+                    controller: categoryController,
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      labelText: gen.AppLocalizations.of(context).category_name,
+                      hintText: gen.AppLocalizations.of(
+                        context,
+                      ).category_name_hint,
+                    ),
+                    onSubmitted: (val) {
+                      if (val.trim().isNotEmpty) {
+                        onAddCategory(val.trim());
+                        Navigator.of(context).pop();
+                      }
+                    },
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text(gen.AppLocalizations.of(context).cancel),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        final val = categoryController.text.trim();
+                        if (val.isNotEmpty) {
+                          onAddCategory(val);
                           Navigator.of(context).pop();
                         }
                       },
+                      child: Text(gen.AppLocalizations.of(context).add),
                     ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: Text(loc.get('cancel')),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          final val = categoryController.text.trim();
-                          if (val.isNotEmpty) {
-                            onAddCategory(val);
-                            Navigator.of(context).pop();
-                          }
-                        },
-                        child: Text(loc.get('add')),
-                      ),
-                    ],
-                  ),
-                );
-              },
-              backgroundColor: Theme.of(context).colorScheme.surfaceContainer),
+                  ],
+                ),
+              );
+            },
+            backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+          ),
         ),
       ],
     );

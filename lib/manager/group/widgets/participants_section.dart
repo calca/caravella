@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../data/expense_participant.dart';
 import 'section_list_tile.dart';
 import 'selection_tile.dart';
@@ -10,7 +10,6 @@ class ParticipantsSection extends StatelessWidget {
   final void Function(int, String) onEditParticipant;
   final void Function(int) onRemoveParticipant;
   final TextEditingController participantController;
-  final AppLocalizations loc;
 
   const ParticipantsSection({
     super.key,
@@ -19,7 +18,6 @@ class ParticipantsSection extends StatelessWidget {
     required this.onEditParticipant,
     required this.onRemoveParticipant,
     required this.participantController,
-    required this.loc,
   });
 
   @override
@@ -30,11 +28,10 @@ class ParticipantsSection extends StatelessWidget {
         Row(
           children: [
             Text(
-              loc.get('participants'),
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium
-                  ?.copyWith(fontWeight: FontWeight.w600),
+              gen.AppLocalizations.of(context).participants,
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(width: 4),
             const Text('*', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -50,20 +47,27 @@ class ParticipantsSection extends StatelessWidget {
             title: p.name,
             subtitle: null,
             backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-            borderColor:
-                Theme.of(context).colorScheme.primaryFixedDim.withAlpha(128),
+            borderColor: Theme.of(
+              context,
+            ).colorScheme.primaryFixedDim.withAlpha(128),
             onEdit: () {
               final editController = TextEditingController(text: p.name);
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: Text(loc.get('edit_participant')),
+                  title: Text(
+                    gen.AppLocalizations.of(context).edit_participant,
+                  ),
                   content: TextField(
                     controller: editController,
                     autofocus: true,
                     decoration: InputDecoration(
-                      labelText: loc.get('participant_name'),
-                      hintText: loc.get('participant_name_hint'),
+                      labelText: gen.AppLocalizations.of(
+                        context,
+                      ).participant_name,
+                      hintText: gen.AppLocalizations.of(
+                        context,
+                      ).participant_name_hint,
                     ),
                     onSubmitted: (val) {
                       if (val.trim().isNotEmpty) {
@@ -75,7 +79,7 @@ class ParticipantsSection extends StatelessWidget {
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      child: Text(loc.get('cancel')),
+                      child: Text(gen.AppLocalizations.of(context).cancel),
                     ),
                     TextButton(
                       onPressed: () {
@@ -85,7 +89,7 @@ class ParticipantsSection extends StatelessWidget {
                           Navigator.of(context).pop();
                         }
                       },
-                      child: Text(loc.get('save')),
+                      child: Text(gen.AppLocalizations.of(context).save),
                     ),
                   ],
                 ),
@@ -98,18 +102,22 @@ class ParticipantsSection extends StatelessWidget {
           padding: const EdgeInsets.only(top: 8.0),
           child: SelectionTile(
             leading: const Icon(Icons.add),
-            title: loc.get('add_participant'),
+            title: gen.AppLocalizations.of(context).add_participant,
             onTap: () {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: Text(loc.get('add_participant')),
+                  title: Text(gen.AppLocalizations.of(context).add_participant),
                   content: TextField(
                     controller: participantController,
                     autofocus: true,
                     decoration: InputDecoration(
-                      labelText: loc.get('participant_name'),
-                      hintText: loc.get('participant_name_hint'),
+                      labelText: gen.AppLocalizations.of(
+                        context,
+                      ).participant_name,
+                      hintText: gen.AppLocalizations.of(
+                        context,
+                      ).participant_name_hint,
                     ),
                     onSubmitted: (val) {
                       if (val.trim().isNotEmpty) {
@@ -122,7 +130,7 @@ class ParticipantsSection extends StatelessWidget {
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      child: Text(loc.get('cancel')),
+                      child: Text(gen.AppLocalizations.of(context).cancel),
                     ),
                     TextButton(
                       onPressed: () {
@@ -133,7 +141,7 @@ class ParticipantsSection extends StatelessWidget {
                           Navigator.of(context).pop();
                         }
                       },
-                      child: Text(loc.get('add')),
+                      child: Text(gen.AppLocalizations.of(context).add),
                     ),
                   ],
                 ),

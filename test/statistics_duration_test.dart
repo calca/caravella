@@ -7,7 +7,7 @@ void main() {
     testWidgets('Should use daily stats for trips ≤ 7 days', (tester) async {
       final startDate = DateTime(2023, 12, 1);
       final endDate = DateTime(2023, 12, 7); // 6 days duration
-      
+
       final trip = ExpenseGroup(
         title: 'Short Trip',
         expenses: [],
@@ -16,9 +16,9 @@ void main() {
         endDate: endDate,
         currency: 'EUR',
       );
-      
-  expect(useWeeklyAggregation(trip), isFalse);
-      
+
+      expect(useWeeklyAggregation(trip), isFalse);
+
       // Access the private method through a test-friendly way
       // For now, we'll test the duration calculation directly
       final duration = endDate.difference(startDate);
@@ -28,7 +28,7 @@ void main() {
     testWidgets('Should use weekly stats for trips > 7 days', (tester) async {
       final startDate = DateTime(2023, 12, 1);
       final endDate = DateTime(2023, 12, 15); // 14 days duration
-      
+
       final trip = ExpenseGroup(
         title: 'Long Trip',
         expenses: [],
@@ -37,23 +37,25 @@ void main() {
         endDate: endDate,
         currency: 'EUR',
       );
-      
-  expect(useWeeklyAggregation(trip), isTrue);
-      
+
+      expect(useWeeklyAggregation(trip), isTrue);
+
       final duration = endDate.difference(startDate);
       expect(duration.inDays > 7, isTrue);
     });
 
-    testWidgets('Should use weekly stats when no dates defined', (tester) async {
+    testWidgets('Should use weekly stats when no dates defined', (
+      tester,
+    ) async {
       final trip = ExpenseGroup(
         title: 'No Date Trip',
         expenses: [],
         participants: [],
         currency: 'EUR',
       );
-      
-  expect(useWeeklyAggregation(trip), isTrue);
-      
+
+      expect(useWeeklyAggregation(trip), isTrue);
+
       expect(trip.startDate, isNull);
       expect(trip.endDate, isNull);
     });

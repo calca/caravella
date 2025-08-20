@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../app_localizations.dart';
 import '../../../data/expense_group.dart';
 import '../../../widgets/currency_display.dart';
-import '../../../state/locale_notifier.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import 'overview_stats_logic.dart';
 import 'widgets/daily_expenses_chart.dart';
 import 'widgets/categories_pie_chart.dart';
@@ -208,7 +207,7 @@ class UnifiedOverviewTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final loc = AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it');
+    final gloc = gen.AppLocalizations.of(context);
     final settlements = _calculateSettlements(trip);
 
     if (trip.expenses.isEmpty) {
@@ -223,7 +222,7 @@ class UnifiedOverviewTab extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              loc.get('no_expenses_for_statistics'),
+              gloc.no_expenses_for_statistics,
               style: theme.textTheme.bodyLarge?.copyWith(
                 color: theme.colorScheme.outline,
               ),
@@ -249,7 +248,7 @@ class UnifiedOverviewTab extends StatelessWidget {
             const SizedBox(height: 8),
             // Sezione partecipanti
             Text(
-              loc.get('expenses_by_participant'),
+              gloc.expenses_by_participant,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -300,7 +299,7 @@ class UnifiedOverviewTab extends StatelessWidget {
 
             // 2. SETTLEMENT
             Text(
-              loc.get('settlement'),
+              gloc.settlement,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -319,7 +318,7 @@ class UnifiedOverviewTab extends StatelessWidget {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        loc.get('all_balanced'),
+                        gloc.all_balanced,
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: theme.colorScheme.primary,
                           fontWeight: FontWeight.w600,
@@ -361,7 +360,7 @@ class UnifiedOverviewTab extends StatelessWidget {
                                 ),
                               ),
                               TextSpan(
-                                text: loc.get('owes_to'),
+                                text: gloc.owes_to,
                                 style: TextStyle(
                                   color: theme.colorScheme.onSurfaceVariant,
                                 ),
@@ -393,7 +392,7 @@ class UnifiedOverviewTab extends StatelessWidget {
             const SizedBox(height: 32),
 
             // Daily average by category
-            DailyAverageByCategoryWidget(trip: trip, loc: loc),
+            DailyAverageByCategoryWidget(trip: trip),
 
             const SizedBox(height: 32),
 
@@ -402,14 +401,13 @@ class UnifiedOverviewTab extends StatelessWidget {
               DailyExpensesChart(
                 trip: trip,
                 dailyStats: stats,
-                loc: loc,
                 titleKey: chartTitleKey,
               ),
               const SizedBox(height: 32),
             ],
 
             // 4. BY CATEGORY (chart widget prints its own bold title)
-            CategoriesPieChart(trip: trip, loc: loc),
+            CategoriesPieChart(trip: trip),
           ],
         ),
       ),

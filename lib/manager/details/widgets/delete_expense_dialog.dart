@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../data/expense_details.dart';
-import '../../../app_localizations.dart';
-import '../../../state/locale_notifier.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 
 class DeleteExpenseDialog extends StatelessWidget {
   final ExpenseDetails expense;
@@ -15,25 +14,22 @@ class DeleteExpenseDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final loc = AppLocalizations(LocaleNotifier.of(context)?.locale ?? 'it');
+    final gloc = gen.AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     return AlertDialog(
-      title: Text(loc.get('delete_expense')),
-      content: Text(loc.get('delete_expense_confirm')),
+      title: Text(gloc.delete_expense),
+      content: Text(gloc.delete_expense_confirm),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: Text(loc.get('cancel')),
+          child: Text(gloc.cancel),
         ),
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
             onDelete();
           },
-          child: Text(
-            loc.get('delete'),
-            style: TextStyle(color: colorScheme.error),
-          ),
+          child: Text(gloc.delete, style: TextStyle(color: colorScheme.error)),
         ),
       ],
     );

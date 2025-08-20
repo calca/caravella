@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 
 class GroupActions extends StatelessWidget {
   final bool hasExpenses;
@@ -22,12 +23,14 @@ class GroupActions extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Tooltip(
-            message: hasExpenses ? 'Panoramica e statistiche' : 'Nessuna spesa',
+            message: hasExpenses
+                ? gen.AppLocalizations.of(context).overview_and_statistics
+                : gen.AppLocalizations.of(context).no_expenses_to_display,
             child: IconButton.filledTonal(
               onPressed: hasExpenses ? onOverview : null,
               icon: const Icon(Icons.dashboard_customize_outlined),
               iconSize: 24,
-              tooltip: 'Panoramica',
+              tooltip: gen.AppLocalizations.of(context).overview,
               style: IconButton.styleFrom(
                 backgroundColor: colorScheme.surfaceContainer,
                 foregroundColor: colorScheme.onSurface,
@@ -37,12 +40,12 @@ class GroupActions extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           Tooltip(
-            message: 'Opzioni',
+            message: gen.AppLocalizations.of(context).options,
             child: IconButton.filledTonal(
               onPressed: onOptions,
               icon: const Icon(Icons.settings_outlined),
               iconSize: 24,
-              tooltip: 'Opzioni',
+              tooltip: gen.AppLocalizations.of(context).options,
               style: IconButton.styleFrom(
                 backgroundColor: colorScheme.surfaceContainer,
                 foregroundColor: colorScheme.onSurface,

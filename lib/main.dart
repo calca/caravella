@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'themes/caravella_themes.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import 'state/locale_notifier.dart';
 import 'state/theme_mode_notifier.dart';
 import 'state/expense_group_notifier.dart';
@@ -143,7 +144,8 @@ class _CaravellaAppState extends State<CaravellaApp> {
             themeMode: _themeMode,
             locale: Locale(_locale),
             supportedLocales: const [Locale('it'), Locale('en')],
-            localizationsDelegates: const [
+            localizationsDelegates: [
+              gen.AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,

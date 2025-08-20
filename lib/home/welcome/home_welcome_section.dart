@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../manager/group/add_new_expenses_group.dart';
-import '../../state/locale_notifier.dart';
 import '../../settings/settings_page.dart';
 
 typedef RefreshCallback = void Function();
@@ -12,8 +11,7 @@ class HomeWelcomeSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localeNotifier = LocaleNotifier.of(context);
-    final loc = AppLocalizations(localeNotifier?.locale ?? 'it');
+    final gloc = gen.AppLocalizations.of(context);
     final theme = Theme.of(context);
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
@@ -31,7 +29,8 @@ class HomeWelcomeSection extends StatelessWidget {
             end: Alignment.bottomRight,
             colors: [
               theme.colorScheme.primaryFixedDim,
-              theme.colorScheme
+              theme
+                  .colorScheme
                   .onPrimaryFixed, // Replace deprecated surfaceVariant
             ],
           )
@@ -44,18 +43,21 @@ class HomeWelcomeSection extends StatelessWidget {
             ],
           );
 
-    final titleColor =
-        isDarkMode ? theme.colorScheme.onSurface : theme.colorScheme.onPrimary;
+    final titleColor = isDarkMode
+        ? theme.colorScheme.onSurface
+        : theme.colorScheme.onPrimary;
 
-    final buttonBackgroundColor =
-        isDarkMode ? theme.colorScheme.primary : theme.colorScheme.onPrimary;
+    final buttonBackgroundColor = isDarkMode
+        ? theme.colorScheme.primary
+        : theme.colorScheme.onPrimary;
 
     final buttonForegroundColor = isDarkMode
         ? theme.colorScheme.onPrimaryContainer
         : theme.colorScheme.primary;
 
-    final settingsTextColor =
-        isDarkMode ? theme.colorScheme.onPrimary : theme.colorScheme.onPrimary;
+    final settingsTextColor = isDarkMode
+        ? theme.colorScheme.onPrimary
+        : theme.colorScheme.onPrimary;
 
     return SizedBox(
       width: screenWidth,
@@ -79,7 +81,7 @@ class HomeWelcomeSection extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.bottomLeft,
                   child: Text(
-                    loc.get('welcome_v3_title'),
+                    gloc.welcome_v3_title,
                     style: theme.textTheme.headlineLarge?.copyWith(
                       fontSize: 36,
                       height: 1.2,
@@ -126,7 +128,7 @@ class HomeWelcomeSection extends StatelessWidget {
                           );
                         },
                         child: Text(
-                          loc.get('settings_tab').toUpperCase(),
+                          gloc.settings_tab.toUpperCase(),
                           style: theme.textTheme.labelLarge?.copyWith(
                             color: settingsTextColor,
                             letterSpacing: 1.2,
@@ -161,11 +163,8 @@ class HomeWelcomeSection extends StatelessWidget {
                               ? 2
                               : 0, // Subtle elevation in dark mode
                         ),
-                        icon: const Icon(
-                          Icons.arrow_forward,
-                          size: 32,
-                        ),
-                        tooltip: loc.get('welcome_v3_cta'),
+                        icon: const Icon(Icons.arrow_forward, size: 32),
+                        tooltip: gloc.welcome_v3_cta,
                       ),
                     ),
                   ],

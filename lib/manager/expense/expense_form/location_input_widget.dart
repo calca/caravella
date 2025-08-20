@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import '../../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../data/expense_location.dart';
 
 class LocationInputWidget extends StatefulWidget {
   final ExpenseLocation? initialLocation;
-  final AppLocalizations loc;
   final TextStyle? textStyle;
   final Function(ExpenseLocation?) onLocationChanged;
 
   const LocationInputWidget({
     super.key,
     this.initialLocation,
-    required this.loc,
     this.textStyle,
     required this.onLocationChanged,
   });
@@ -51,7 +49,11 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
       if (!serviceEnabled) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(widget.loc.get('location_service_disabled'))),
+            SnackBar(
+              content: Text(
+                gen.AppLocalizations.of(context).location_service_disabled,
+              ),
+            ),
           );
         }
         return;
@@ -63,7 +65,11 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
         if (permission == LocationPermission.denied) {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(widget.loc.get('location_permission_denied'))),
+              SnackBar(
+                content: Text(
+                  gen.AppLocalizations.of(context).location_permission_denied,
+                ),
+              ),
             );
           }
           return;
@@ -73,18 +79,23 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
       if (permission == LocationPermission.deniedForever) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(widget.loc.get('location_permission_denied'))),
+            SnackBar(
+              content: Text(
+                gen.AppLocalizations.of(context).location_permission_denied,
+              ),
+            ),
           );
         }
         return;
       }
 
       Position position = await Geolocator.getCurrentPosition();
-      
+
       final location = ExpenseLocation(
         latitude: position.latitude,
         longitude: position.longitude,
-        name: '${position.latitude.toStringAsFixed(6)}, ${position.longitude.toStringAsFixed(6)}',
+        name:
+            '${position.latitude.toStringAsFixed(6)}, ${position.longitude.toStringAsFixed(6)}',
       );
 
       setState(() {
@@ -96,7 +107,9 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(widget.loc.get('location_error'))),
+          SnackBar(
+            content: Text(gen.AppLocalizations.of(context).location_error),
+          ),
         );
       }
     } finally {
@@ -138,8 +151,9 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
           children: [
             Expanded(
               child: Text(
-                widget.loc.get('location'),
-                style: widget.textStyle ?? Theme.of(context).textTheme.bodySmall,
+                gen.AppLocalizations.of(context).location,
+                style:
+                    widget.textStyle ?? Theme.of(context).textTheme.bodySmall,
               ),
             ),
             // Pulsante per ottenere posizione corrente
@@ -159,7 +173,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
                       size: 20,
                       color: Theme.of(context).colorScheme.primary,
                     ),
-              tooltip: widget.loc.get('get_current_location'),
+              tooltip: gen.AppLocalizations.of(context).get_current_location,
             ),
             // Pulsante per pulire
             if (_currentLocation != null)
@@ -170,7 +184,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
                   size: 20,
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
-                tooltip: widget.loc.get('cancel'),
+                tooltip: gen.AppLocalizations.of(context).cancel,
               ),
           ],
         ),
@@ -179,13 +193,14 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
           controller: _controller,
           style: widget.textStyle ?? Theme.of(context).textTheme.bodySmall,
           decoration: InputDecoration(
-            hintText: widget.loc.get('location_hint'),
-            hintStyle: widget.textStyle?.copyWith(
+            hintText: gen.AppLocalizations.of(context).location_hint,
+            hintStyle:
+                widget.textStyle?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ) ??
                 Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
             border: const OutlineInputBorder(),
             suffixIcon: _isGettingLocation
                 ? Padding(

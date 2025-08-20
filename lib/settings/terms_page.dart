@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import '../app_localizations.dart';
-import '../state/locale_notifier.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import 'package:url_launcher/url_launcher.dart';
 import '../widgets/app_toast.dart';
 
@@ -9,8 +8,7 @@ class TermsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    final loc = AppLocalizations(locale);
+    final loc = gen.AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
@@ -41,13 +39,13 @@ class TermsPage extends StatelessWidget {
                       size: 20,
                     ),
                     title: Text(
-                      loc.get('terms_github_title'),
+                      loc.terms_github_title,
                       style: textTheme.bodyMedium?.copyWith(
                         color: colorScheme.onSurface,
                       ),
                     ),
                     subtitle: Text(
-                      loc.get('terms_github_desc'),
+                      loc.terms_github_desc,
                       style: textTheme.bodySmall?.copyWith(
                         color: colorScheme.onSurface,
                       ),
@@ -69,13 +67,13 @@ class TermsPage extends StatelessWidget {
                       size: 20,
                     ),
                     title: Text(
-                      loc.get('terms_repo_title'),
+                      loc.terms_repo_title,
                       style: textTheme.bodyMedium?.copyWith(
                         color: colorScheme.onSurface,
                       ),
                     ),
                     subtitle: Text(
-                      loc.get('terms_repo_desc'),
+                      loc.terms_repo_desc,
                       style: textTheme.bodySmall?.copyWith(
                         color: colorScheme.onSurface,
                       ),
@@ -99,13 +97,13 @@ class TermsPage extends StatelessWidget {
                       size: 20,
                     ),
                     title: Text(
-                      loc.get('terms_issue_title'),
+                      loc.terms_issue_title,
                       style: textTheme.bodyMedium?.copyWith(
                         color: colorScheme.onSurface,
                       ),
                     ),
                     subtitle: Text(
-                      loc.get('terms_issue_desc'),
+                      loc.terms_issue_desc,
                       style: textTheme.bodySmall?.copyWith(
                         color: colorScheme.onSurface,
                       ),
@@ -129,13 +127,13 @@ class TermsPage extends StatelessWidget {
                       size: 20,
                     ),
                     title: Text(
-                      loc.get('license_link'),
+                      loc.license_link,
                       style: textTheme.bodyMedium?.copyWith(
                         color: colorScheme.onSurface,
                       ),
                     ),
                     subtitle: Text(
-                      loc.get('terms_license_desc'),
+                      loc.terms_license_desc,
                       style: textTheme.bodySmall?.copyWith(
                         color: colorScheme.onSurface,
                       ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../app_localizations.dart';
-import '../../../state/locale_notifier.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../data/expense_group.dart';
 
 class OptionsSheet extends StatelessWidget {
@@ -25,8 +24,7 @@ class OptionsSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    final loc = AppLocalizations(locale);
+    final gloc = gen.AppLocalizations.of(context);
     return DraggableScrollableSheet(
       initialChildSize: 0.4,
       maxChildSize: 0.6,
@@ -50,7 +48,7 @@ class OptionsSheet extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(16),
               child: Text(
-                loc.get('options'),
+                gloc.options,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
@@ -84,9 +82,7 @@ class OptionsSheet extends StatelessWidget {
                               ).colorScheme.onPrimaryFixed,
                             ),
                             title: Text(
-                              trip.pinned
-                                  ? loc.get('unpin_group')
-                                  : loc.get('pin_group'),
+                              trip.pinned ? gloc.unpin_group : gloc.pin_group,
                             ),
                             onTap: onPinToggle,
                           ),
@@ -100,9 +96,7 @@ class OptionsSheet extends StatelessWidget {
                               ).colorScheme.onPrimaryFixed,
                             ),
                             title: Text(
-                              trip.archived
-                                  ? loc.get('unarchive')
-                                  : loc.get('archive'),
+                              trip.archived ? gloc.unarchive : gloc.archive,
                             ),
                             onTap: onArchiveToggle,
                           ),
@@ -114,7 +108,7 @@ class OptionsSheet extends StatelessWidget {
                                 context,
                               ).colorScheme.onPrimaryFixed,
                             ),
-                            title: Text(loc.get('edit_group')),
+                            title: Text(gloc.edit_group),
                             onTap: onEdit,
                           ),
                           const Divider(),
@@ -125,7 +119,7 @@ class OptionsSheet extends StatelessWidget {
                                 context,
                               ).colorScheme.onPrimaryFixed,
                             ),
-                            title: Text(loc.get('download_all_csv')),
+                            title: Text(gloc.download_all_csv),
                             onTap: onDownloadCsv,
                           ),
                           ListTile(
@@ -135,7 +129,7 @@ class OptionsSheet extends StatelessWidget {
                                 context,
                               ).colorScheme.onPrimaryFixed,
                             ),
-                            title: Text(loc.get('share_all_csv')),
+                            title: Text(gloc.share_all_csv),
                             onTap: onShareCsv,
                           ),
                           const Divider(),
@@ -145,7 +139,7 @@ class OptionsSheet extends StatelessWidget {
                               color: Theme.of(context).colorScheme.tertiary,
                             ),
                             title: Text(
-                              loc.get('delete_group'),
+                              gloc.delete_group,
                               style: TextStyle(
                                 color: Theme.of(context).colorScheme.tertiary,
                               ),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart'
+    as gen; // generated
 import '../../data/expense_group.dart';
 import '../../data/expense_group_storage.dart';
-import '../../state/locale_notifier.dart';
+// Removed locale_notifier import after migration
+// locale_notifier no longer needed after migration
 import 'widgets/widgets.dart';
 
 class HomeCardsSection extends StatefulWidget {
@@ -46,8 +48,9 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
           // Se c'è un gruppo pinnato, mettiamolo sempre al primo posto
           if (widget.pinnedTrip != null) {
             // Rimuovi il gruppo pinnato dalla lista se è già presente
-            final filteredGroups =
-                groups.where((g) => g.id != widget.pinnedTrip!.id).toList();
+            final filteredGroups = groups
+                .where((g) => g.id != widget.pinnedTrip!.id)
+                .toList();
             // Metti il gruppo pinnato come primo elemento
             _activeGroups = [widget.pinnedTrip!, ...filteredGroups];
           } else {
@@ -65,8 +68,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
 
   @override
   Widget build(BuildContext context) {
-    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    final loc = AppLocalizations(locale);
+    final loc = gen.AppLocalizations.of(context);
     final theme = Theme.of(context);
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -86,10 +88,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
             // Header con avatar e saluto dinamico
             SizedBox(
               height: headerHeight,
-              child: HomeCardsHeader(
-                localizations: loc,
-                theme: theme,
-              ),
+              child: HomeCardsHeader(localizations: loc, theme: theme),
             ),
 
             // Content area - riempie lo spazio tra header e bottom bar
@@ -98,34 +97,30 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
               child: _loading
                   ? const Center(child: CircularProgressIndicator())
                   : _activeGroups.isEmpty
-                      ? EmptyGroupsState(
-                          localizations: loc,
-                          theme: theme,
-                          onGroupAdded: () {
-                            widget.onTripAdded();
-                            _loadActiveGroups();
-                          },
-                        )
-                      : HorizontalGroupsList(
-                          groups: _activeGroups,
-                          localizations: loc,
-                          theme: theme,
-                          onGroupUpdated: () {
-                            widget.onTripAdded();
-                            _loadActiveGroups();
-                          },
-                          onCategoryAdded: () {
-                            // Ricarica i gruppi per aggiornare le categorie
-                            _loadActiveGroups();
-                          },
-                        ),
+                  ? EmptyGroupsState(
+                      localizations: loc,
+                      theme: theme,
+                      onGroupAdded: () {
+                        widget.onTripAdded();
+                        _loadActiveGroups();
+                      },
+                    )
+                  : HorizontalGroupsList(
+                      groups: _activeGroups,
+                      localizations: loc,
+                      theme: theme,
+                      onGroupUpdated: () {
+                        widget.onTripAdded();
+                        _loadActiveGroups();
+                      },
+                      onCategoryAdded: () {
+                        _loadActiveGroups();
+                      },
+                    ),
             ),
 
             // Bottom bar semplificata d
-            SimpleBottomBar(
-              localizations: loc,
-              theme: theme,
-            ),
+            SimpleBottomBar(localizations: loc, theme: theme),
           ],
         ),
       ),

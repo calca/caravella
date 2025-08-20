@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 
 class NoExpense extends StatelessWidget {
   final String semanticLabel;
@@ -17,25 +18,25 @@ class NoExpense extends StatelessWidget {
             semanticLabel: semanticLabel,
           ),
           const SizedBox(height: 16),
-          Text(
-            'Nessuna spesa',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .outline
-                      .withValues(alpha: 0.6),
-                ),
-          ),
+      Text(
+    gen.AppLocalizations.of(context).no_expense_label,
+    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+      color: Theme.of(context)
+          .colorScheme
+          .outline
+          .withValues(alpha: 0.6),
+        ),
+      ),
           const SizedBox(height: 8),
-          Text(
-            'Aggiungi la prima spesa per iniziare',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .outline
-                      .withValues(alpha: 0.5),
-                ),
-          ),
+      Text(
+    gen.AppLocalizations.of(context).add_first_expense,
+    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+      color: Theme.of(context)
+          .colorScheme
+          .outline
+          .withValues(alpha: 0.5),
+        ),
+      ),
         ],
       ),
     );

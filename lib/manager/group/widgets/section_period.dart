@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import 'date_card.dart';
 
 class SectionPeriod extends StatelessWidget {
@@ -7,7 +7,6 @@ class SectionPeriod extends StatelessWidget {
   final DateTime? endDate;
   final void Function(bool) onPickDate;
   final void Function() onClearDates;
-  final AppLocalizations loc;
 
   const SectionPeriod({
     super.key,
@@ -15,7 +14,6 @@ class SectionPeriod extends StatelessWidget {
     required this.endDate,
     required this.onPickDate,
     required this.onClearDates,
-    required this.loc,
   });
 
   @override
@@ -27,18 +25,19 @@ class SectionPeriod extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              loc.get('dates'),
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              gen.AppLocalizations.of(context).dates,
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             if (startDate != null || endDate != null)
               IconButton.filledTonal(
                 onPressed: onClearDates,
                 icon: const Icon(Icons.delete_outline, size: 22),
                 style: FilledButton.styleFrom(
-                  backgroundColor:
-                      Theme.of(context).colorScheme.surfaceContainer,
+                  backgroundColor: Theme.of(
+                    context,
+                  ).colorScheme.surfaceContainer,
                   foregroundColor: Theme.of(context).colorScheme.error,
                   minimumSize: const Size(44, 44),
                   padding: EdgeInsets.zero,
@@ -69,7 +68,8 @@ class SectionPeriod extends StatelessWidget {
             },
             child: DateCard(
               day: startDate?.day,
-              label: 'Data Inizio',
+              // TODO add dedicated key if needed; using from as placeholder
+              label: gen.AppLocalizations.of(context).from,
               date: startDate,
               isActive: startDate != null,
               icon: startDate == null ? Icons.calendar_today : null,
@@ -98,7 +98,8 @@ class SectionPeriod extends StatelessWidget {
             },
             child: DateCard(
               day: endDate?.day,
-              label: 'Data Fine',
+              // TODO add dedicated key if needed; using to as placeholder
+              label: gen.AppLocalizations.of(context).to,
               date: endDate,
               isActive: endDate != null,
               icon: endDate == null ? Icons.calendar_today : null,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/caravella_app_bar.dart';
-import '../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart'
+    as gen; // generated strongly-typed
 import '../state/locale_notifier.dart';
 import '../state/theme_mode_notifier.dart';
 import 'flag_secure_notifier.dart';
@@ -17,23 +18,16 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    final loc = AppLocalizations(locale);
+    final genLoc = gen.AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     final currentThemeMode =
         ThemeModeNotifier.of(context)?.themeMode ?? ThemeMode.system;
-    String currentThemeLabel;
-    switch (currentThemeMode) {
-      case ThemeMode.light:
-        currentThemeLabel = loc.get('theme_light');
-        break;
-      case ThemeMode.dark:
-        currentThemeLabel = loc.get('theme_dark');
-        break;
-      case ThemeMode.system:
-        currentThemeLabel = loc.get('theme_automatic');
-        break;
-    }
+    String currentThemeLabel = switch (currentThemeMode) {
+      ThemeMode.light => genLoc.theme_light,
+      ThemeMode.dark => genLoc.theme_dark,
+      ThemeMode.system => genLoc.theme_automatic,
+    };
 
     return ChangeNotifierProvider<FlagSecureNotifier>(
       create: (_) => FlagSecureNotifier(),
@@ -50,7 +44,7 @@ class SettingsPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
               child: Text(
-                loc.get('settings_general'),
+                genLoc.settings_general,
                 style: textTheme.titleSmall?.copyWith(
                   color: colorScheme.onSurface,
                   fontWeight: FontWeight.bold,
@@ -71,17 +65,17 @@ class SettingsPage extends StatelessWidget {
                     child: ListTile(
                       leading: const Icon(Icons.language),
                       title: Text(
-                        loc.get('settings_language'),
+                        genLoc.settings_language,
                         style: textTheme.titleMedium,
                       ),
                       subtitle: Text(
                         locale == 'it'
-                            ? loc.get('settings_language_it')
-                            : loc.get('settings_language_en'),
+                            ? genLoc.settings_language_it
+                            : genLoc.settings_language_en,
                       ),
                       trailing: const Icon(Icons.arrow_drop_down),
                       onTap: () {
-                        _showLanguagePicker(context, locale, loc);
+                        _showLanguagePicker(context, locale, genLoc);
                       },
                     ),
                   ),
@@ -95,13 +89,13 @@ class SettingsPage extends StatelessWidget {
                     child: ListTile(
                       leading: const Icon(Icons.brightness_6),
                       title: Text(
-                        loc.get('settings_theme'),
+                        genLoc.settings_theme,
                         style: textTheme.titleMedium,
                       ),
                       subtitle: Text(currentThemeLabel),
                       trailing: const Icon(Icons.arrow_drop_down),
                       onTap: () {
-                        _showThemePicker(context, loc);
+                        _showThemePicker(context, genLoc);
                       },
                     ),
                   ),
@@ -135,11 +129,11 @@ class SettingsPage extends StatelessWidget {
                         builder: (context, notifier, _) => ListTile(
                           leading: const Icon(Icons.privacy_tip_outlined),
                           title: Text(
-                            loc.get('settings_flag_secure_title'),
+                            genLoc.settings_flag_secure_title,
                             style: textTheme.titleMedium,
                           ),
                           subtitle: Text(
-                            loc.get('settings_flag_secure_desc'),
+                            genLoc.settings_flag_secure_desc,
                             style: textTheme.bodySmall,
                           ),
                           trailing: Switch(
@@ -158,7 +152,7 @@ class SettingsPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
               child: Text(
-                loc.get('settings_data'),
+                genLoc.settings_data,
                 style: textTheme.titleSmall?.copyWith(
                   color: colorScheme.onSurface,
                   fontWeight: FontWeight.bold,
@@ -177,10 +171,10 @@ class SettingsPage extends StatelessWidget {
                 child: ListTile(
                   leading: const Icon(Icons.storage_outlined),
                   title: Text(
-                    loc.get('settings_data_manage'),
+                    genLoc.settings_data_manage,
                     style: textTheme.titleMedium,
                   ),
-                  subtitle: Text(loc.get('settings_data_desc')),
+                  subtitle: Text(genLoc.settings_data_desc),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                   onTap: () {
                     Navigator.of(context).push(
@@ -193,7 +187,7 @@ class SettingsPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
               child: Text(
-                loc.get('settings_info'),
+                genLoc.settings_info,
                 style: textTheme.titleSmall?.copyWith(
                   color: colorScheme.onSurface,
                   fontWeight: FontWeight.bold,
@@ -214,7 +208,7 @@ class SettingsPage extends StatelessWidget {
                     child: ListTile(
                       leading: const Icon(Icons.info_outline),
                       title: Text(
-                        loc.get('settings_app_version'),
+                        genLoc.settings_app_version,
                         style: textTheme.titleMedium,
                       ),
                       subtitle: FutureBuilder<String>(
@@ -235,11 +229,11 @@ class SettingsPage extends StatelessWidget {
                     child: ListTile(
                       leading: const Icon(Icons.info_outline),
                       title: Text(
-                        loc.get('settings_info_card'),
+                        genLoc.settings_info_card,
                         style: textTheme.titleMedium,
                       ),
                       subtitle: Text(
-                        loc.get('settings_info_card_desc'),
+                        genLoc.settings_info_card_desc,
                         style: textTheme.bodySmall,
                       ),
                       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
@@ -274,7 +268,7 @@ class SettingsPage extends StatelessWidget {
 void _showLanguagePicker(
   BuildContext context,
   String currentLocale,
-  AppLocalizations loc,
+  gen.AppLocalizations loc,
 ) {
   showModalBottomSheet(
     context: context,
@@ -284,8 +278,8 @@ void _showLanguagePicker(
     ),
     builder: (ctx) {
       final entries = [
-        ('it', loc.get('settings_language_it')),
-        ('en', loc.get('settings_language_en')),
+        ('it', loc.settings_language_it),
+        ('en', loc.settings_language_en),
       ];
       return SafeArea(
         child: Padding(
@@ -299,7 +293,7 @@ void _showLanguagePicker(
                   children: [
                     Expanded(
                       child: Text(
-                        loc.get('settings_select_language'),
+                        loc.settings_select_language,
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                     ),
@@ -352,17 +346,13 @@ void _showLanguagePicker(
   );
 }
 
-void _showThemePicker(BuildContext context, AppLocalizations loc) {
+void _showThemePicker(BuildContext context, gen.AppLocalizations loc) {
   final currentMode =
       ThemeModeNotifier.of(context)?.themeMode ?? ThemeMode.system;
   final entries = <(ThemeMode, String, IconData)>[
-    (
-      ThemeMode.system,
-      loc.get('theme_automatic'),
-      Icons.settings_suggest_outlined,
-    ),
-    (ThemeMode.light, loc.get('theme_light'), Icons.light_mode_outlined),
-    (ThemeMode.dark, loc.get('theme_dark'), Icons.dark_mode_outlined),
+    (ThemeMode.system, loc.theme_automatic, Icons.settings_suggest_outlined),
+    (ThemeMode.light, loc.theme_light, Icons.light_mode_outlined),
+    (ThemeMode.dark, loc.theme_dark, Icons.dark_mode_outlined),
   ];
   showModalBottomSheet(
     context: context,
@@ -382,7 +372,7 @@ void _showThemePicker(BuildContext context, AppLocalizations loc) {
                   children: [
                     Expanded(
                       child: Text(
-                        loc.get('settings_select_theme'),
+                        loc.settings_select_theme,
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                     ),

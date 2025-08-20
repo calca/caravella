@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../../data/expense_group.dart';
-import '../../../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../../widgets/currency_display.dart';
 import '../../../../data/expense_category.dart';
 
 class CategoriesPieChart extends StatelessWidget {
   final ExpenseGroup trip;
-  final AppLocalizations loc;
 
-  const CategoriesPieChart({
-    super.key,
-    required this.trip,
-    required this.loc,
-  });
+  const CategoriesPieChart({super.key, required this.trip});
 
   @override
   Widget build(BuildContext context) {
+    final gloc = gen.AppLocalizations.of(context);
     // Calcola i totali per categoria (ExpenseCategory come chiave)
     final Map<ExpenseCategory, double> categoryTotals = {};
 
@@ -37,7 +33,7 @@ class CategoriesPieChart extends StatelessWidget {
     if (uncategorizedTotal > 0) {
       // Crea una categoria fittizia per "Senza categoria"
       final uncategorized = ExpenseCategory(
-        name: loc.get('uncategorized'),
+        name: gloc.uncategorized,
         id: 'uncategorized',
         createdAt: DateTime(2000),
       );
@@ -70,10 +66,10 @@ class CategoriesPieChart extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          loc.get('expenses_by_category'),
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+          gloc.expenses_by_category,
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 24),
         // Pie chart centrato
@@ -89,7 +85,8 @@ class CategoriesPieChart extends StatelessWidget {
                 sections: sortedEntries.asMap().entries.map((entry) {
                   final index = entry.key;
                   final categoryEntry = entry.value;
-                  final percentage = (categoryEntry.value /
+                  final percentage =
+                      (categoryEntry.value /
                           categoryTotals.values.reduce((a, b) => a + b)) *
                       100;
 
@@ -106,9 +103,7 @@ class CategoriesPieChart extends StatelessWidget {
                     badgeWidget: null,
                   );
                 }).toList(),
-                pieTouchData: const PieTouchData(
-                  enabled: false,
-                ),
+                pieTouchData: PieTouchData(enabled: false),
               ),
             ),
           ),
@@ -117,7 +112,7 @@ class CategoriesPieChart extends StatelessWidget {
         // Legenda sotto il grafico (wrap responsivo)
         Wrap(
           spacing: 24,
-            runSpacing: 16,
+          runSpacing: 16,
           children: sortedEntries.asMap().entries.map((entry) {
             final index = entry.key;
             final categoryEntry = entry.value;
@@ -141,8 +136,8 @@ class CategoriesPieChart extends StatelessWidget {
                       categoryEntry.key.name,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w500,
-                          ),
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 6),

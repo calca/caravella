@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../data/expense_category.dart';
 import '../../../widgets/selection_bottom_sheet.dart';
 
@@ -8,7 +8,6 @@ class CategorySelectorWidget extends StatelessWidget {
   final ExpenseCategory? selectedCategory;
   final void Function(ExpenseCategory?) onCategorySelected;
   final Future<void> Function() onAddCategory;
-  final AppLocalizations loc;
   final TextStyle? textStyle;
   const CategorySelectorWidget({
     super.key,
@@ -16,7 +15,6 @@ class CategorySelectorWidget extends StatelessWidget {
     required this.selectedCategory,
     required this.onCategorySelected,
     required this.onAddCategory,
-    required this.loc,
     this.textStyle,
   });
 
@@ -36,12 +34,12 @@ class CategorySelectorWidget extends StatelessWidget {
           context: context,
           items: categories,
           selected: selectedCategory,
-          loc: loc,
+          gloc: gen.AppLocalizations.of(context),
           itemLabel: (c) => c.name,
           onAddItem: () async {
             await onAddCategory();
           },
-          addItemTooltip: loc.get('add_category'),
+          addItemTooltip: gen.AppLocalizations.of(context).add_category,
         );
         if (picked != null && picked != selectedCategory) {
           onCategorySelected(picked);
@@ -58,7 +56,8 @@ class CategorySelectorWidget extends StatelessWidget {
           const SizedBox(width: 8),
           Flexible(
             child: Text(
-              selectedCategory?.name ?? loc.get('category_placeholder'),
+              selectedCategory?.name ??
+                  gen.AppLocalizations.of(context).category_placeholder,
               overflow: TextOverflow.ellipsis,
               style: (textStyle ?? theme.textTheme.bodyMedium)?.copyWith(
                 color: theme.colorScheme.onSurface,

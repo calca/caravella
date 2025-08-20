@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
-import '../../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../widgets/selection_bottom_sheet.dart';
 
 class ParticipantSelectorWidget extends StatelessWidget {
   final List<String> participants;
   final String? selectedParticipant;
   final void Function(String) onParticipantSelected;
-  final AppLocalizations loc;
   final TextStyle? textStyle;
   const ParticipantSelectorWidget({
     super.key,
     required this.participants,
     required this.selectedParticipant,
     required this.onParticipantSelected,
-    required this.loc,
     this.textStyle,
   });
 
@@ -36,7 +34,7 @@ class ParticipantSelectorWidget extends StatelessWidget {
                 context: context,
                 items: participants,
                 selected: selected,
-                loc: loc,
+                gloc: gen.AppLocalizations.of(context),
                 itemLabel: (p) => p,
               );
               if (picked != null && picked != selectedParticipant) {
@@ -54,7 +52,7 @@ class ParticipantSelectorWidget extends StatelessWidget {
           const SizedBox(width: 8),
           Flexible(
             child: Text(
-              selected ?? loc.get('participants_label'),
+              selected ?? gen.AppLocalizations.of(context).participants_label,
               overflow: TextOverflow.ellipsis,
               style: (textStyle ?? theme.textTheme.bodyMedium)?.copyWith(
                 color: theme.colorScheme.onSurface,
