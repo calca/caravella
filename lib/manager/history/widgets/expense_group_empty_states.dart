@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
-import '../../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../group/add_new_expenses_group.dart';
 
 class ExpsenseGroupEmptyStates extends StatelessWidget {
   final String searchQuery;
   final String periodFilter;
-  final AppLocalizations localizations;
   final VoidCallback onTripAdded;
 
   const ExpsenseGroupEmptyStates({
     super.key,
     required this.searchQuery,
     required this.periodFilter,
-    required this.localizations,
     required this.onTripAdded,
   });
 
@@ -63,13 +61,13 @@ class ExpsenseGroupEmptyStates extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          '${localizations.get('no_search_results')} "$searchQuery"',
+          '${gen.AppLocalizations.of(context).no_search_results} "$searchQuery"',
           style: Theme.of(context).textTheme.titleMedium,
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 8),
         Text(
-          localizations.get('try_different_search'),
+          gen.AppLocalizations.of(context).try_different_search,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: Theme.of(context)
                     .colorScheme
@@ -93,13 +91,13 @@ class ExpsenseGroupEmptyStates extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          localizations.get('no_trips_found'),
+          gen.AppLocalizations.of(context).no_trips_found,
           style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 16),
         ElevatedButton.icon(
           icon: const Icon(Icons.add),
-          label: Text(localizations.get('add_trip')),
+          label: Text(gen.AppLocalizations.of(context).add_trip),
           onPressed: () async {
             final result = await Navigator.of(context).push(
               MaterialPageRoute(

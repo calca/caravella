@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 
 /// Generic modal bottom sheet for selecting an item from a list.
 /// Supports an optional add-item action shown within the sheet.
@@ -8,10 +8,11 @@ Future<T?> showSelectionBottomSheet<T>({
   required List<T> items,
   required T? selected,
   required String Function(T) itemLabel,
-  required AppLocalizations loc,
+  gen.AppLocalizations? gloc,
   Future<void> Function()? onAddItem,
   String? addItemTooltip,
 }) async {
+  final resolved = gloc ?? gen.AppLocalizations.of(context);
   return showModalBottomSheet<T>(
     context: context,
     isScrollControlled: true,
@@ -23,7 +24,7 @@ Future<T?> showSelectionBottomSheet<T>({
         itemLabel: itemLabel,
         onAddItem: onAddItem,
         addItemTooltip: addItemTooltip,
-        loc: loc,
+        gloc: resolved,
       );
     },
   );
@@ -35,12 +36,12 @@ class _SelectionSheet<T> extends StatefulWidget {
   final String Function(T) itemLabel;
   final Future<void> Function()? onAddItem;
   final String? addItemTooltip;
-  final AppLocalizations loc;
+  final gen.AppLocalizations gloc;
   const _SelectionSheet({
     required this.items,
     required this.selected,
     required this.itemLabel,
-    required this.loc,
+  required this.gloc,
     this.onAddItem,
     this.addItemTooltip,
   });
@@ -91,7 +92,7 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
                   children: [
                     Expanded(
                       child: Text(
-                        widget.addItemTooltip ?? widget.loc.get('add'),
+                        widget.addItemTooltip ?? widget.gloc.add,
                         style: theme.textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
@@ -111,7 +112,7 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
                               ),
                             )
                           : const Icon(Icons.add),
-                      tooltip: widget.addItemTooltip ?? widget.loc.get('add'),
+                      tooltip: widget.addItemTooltip ?? widget.gloc.add,
                     ),
                   ],
                 ),

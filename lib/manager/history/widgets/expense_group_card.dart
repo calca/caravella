@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../data/expense_group.dart';
 import '../../../widgets/currency_display.dart';
 import '../../../widgets/base_card.dart';
-import '../../../app_localizations.dart';
-import '../../../state/locale_notifier.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../details/expense_group_detail_page.dart';
 
 class ExpenseGroupCard extends StatelessWidget {
@@ -90,15 +89,14 @@ class ExpenseGroupCard extends StatelessWidget {
   }
 
   Widget _buildDismissBackground(BuildContext context) {
-    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    final loc = AppLocalizations(locale);
+  final gloc = gen.AppLocalizations.of(context);
 
     final isArchived = trip.archived;
     final backgroundColor =
         Theme.of(context).colorScheme.surfaceContainerHighest;
     final iconData =
         isArchived ? Icons.unarchive_outlined : Icons.archive_outlined;
-    final actionText = isArchived ? loc.get('unarchive') : loc.get('archive');
+  final actionText = isArchived ? gloc.unarchive : gloc.archive;
 
     return Container(
       alignment: Alignment.centerRight,
@@ -129,13 +127,12 @@ class ExpenseGroupCard extends StatelessWidget {
   }
 
   Future<bool?> _confirmArchive(BuildContext context) async {
-    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    final loc = AppLocalizations(locale);
+  final gloc = gen.AppLocalizations.of(context);
 
     final isArchived = trip.archived;
-    final actionText = isArchived ? loc.get('unarchive') : loc.get('archive');
-    final confirmText =
-        isArchived ? loc.get('unarchive_confirm') : loc.get('archive_confirm');
+  final actionText = isArchived ? gloc.unarchive : gloc.archive;
+  final confirmText =
+    isArchived ? gloc.unarchive_confirm : gloc.archive_confirm;
 
     return await showDialog<bool>(
       context: context,
@@ -159,7 +156,7 @@ class ExpenseGroupCard extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: Text(loc.get('cancel')),
+            child: Text(gloc.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),

@@ -37,7 +37,7 @@ class CategorySelectorWidget extends StatelessWidget {
           context: context,
           items: categories,
           selected: selectedCategory,
-          loc: loc,
+          gloc: gen.AppLocalizations.of(context),
           itemLabel: (c) => c.name,
           onAddItem: () async {
             await onAddCategory();

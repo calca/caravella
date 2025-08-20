@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import '../app_localizations.dart';
-import '../state/locale_notifier.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../data/expense_group_storage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -11,13 +10,11 @@ import 'dart:io';
 import '../widgets/app_toast.dart';
 
 class DataPage extends StatelessWidget {
-  final AppLocalizations? loc;
-  const DataPage({super.key, this.loc});
+  const DataPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    final localization = loc ?? AppLocalizations(locale);
+  final gloc = gen.AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
@@ -32,7 +29,7 @@ class DataPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Backup & Ripristino',
+              gloc.data_title,
               style: textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -48,13 +45,13 @@ class DataPage extends StatelessWidget {
                 leading: const Icon(Icons.cloud_upload_outlined),
                 minLeadingWidth: 0,
                 title: Text(
-                  localization.get('backup'),
+                  gloc.backup,
                   style: textTheme.titleMedium,
                 ),
-                subtitle: const Text('Crea un file di backup delle tue spese.'),
+                subtitle: Text(gloc.data_backup_desc),
                 trailing: const Icon(Icons.arrow_forward_ios, size: 18),
                 onTap: () async {
-                  await _backupTrips(context, localization);
+                  await _backupTrips(context, gloc);
                 },
                 contentPadding: const EdgeInsets.symmetric(
                   vertical: 8,
@@ -72,13 +69,11 @@ class DataPage extends StatelessWidget {
               child: ListTile(
                 leading: const Icon(Icons.download_outlined),
                 minLeadingWidth: 0,
-                title: Text('Ripristino', style: textTheme.titleMedium),
-                subtitle: const Text(
-                  'Importa un backup per ripristinare i dati.',
-                ),
+                title: Text(gloc.data_restore_title, style: textTheme.titleMedium),
+                subtitle: Text(gloc.data_restore_desc),
                 trailing: const Icon(Icons.arrow_forward_ios, size: 18),
                 onTap: () async {
-                  await _importTrips(context, localization);
+                  await _importTrips(context, gloc);
                 },
                 contentPadding: const EdgeInsets.symmetric(
                   vertical: 8,
@@ -92,7 +87,7 @@ class DataPage extends StatelessWidget {
     );
   }
 
-  Future<void> _backupTrips(BuildContext context, AppLocalizations loc) async {
+  Future<void> _backupTrips(BuildContext context, gen.AppLocalizations loc) async {
     try {
       final dir = await getApplicationDocumentsDirectory();
       final tripsFile = File('${dir.path}/${ExpenseGroupStorage.fileName}');
@@ -101,7 +96,7 @@ class DataPage extends StatelessWidget {
         if (!context.mounted) return;
         AppToast.show(
           context,
-          loc.get('no_trips_to_backup'),
+          loc.no_trips_to_backup,
           type: ToastType.info,
         );
         return;
@@ -112,7 +107,7 @@ class DataPage extends StatelessWidget {
         if (!context.mounted) return;
         AppToast.show(
           context,
-          loc.get('no_trips_to_backup'),
+          loc.no_trips_to_backup,
           type: ToastType.info,
         );
         return;
@@ -135,7 +130,7 @@ class DataPage extends StatelessWidget {
       if (!context.mounted) return;
 
       final params = ShareParams(
-        text: loc.get('backup_share_message'),
+  text: loc.backup_share_message,
         files: [XFile(zipPath)],
       );
       await SharePlus.instance.share(params);
@@ -143,13 +138,13 @@ class DataPage extends StatelessWidget {
       if (!context.mounted) return;
       AppToast.show(
         context,
-        '${loc.get('backup_error')}: ${e.toString()}',
+  '${loc.backup_error}: ${e.toString()}',
         type: ToastType.error,
       );
     }
   }
 
-  Future<void> _importTrips(BuildContext context, AppLocalizations loc) async {
+  Future<void> _importTrips(BuildContext context, gen.AppLocalizations loc) async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['zip', 'json'],
@@ -164,18 +159,18 @@ class DataPage extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          title: Text(loc.get('import_confirm_title')),
+          title: Text(loc.import_confirm_title),
           content: Text(
-            loc.get('import_confirm_message', params: {'file': fileName}),
+            loc.import_confirm_message(fileName),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: Text(loc.get('cancel')),
+              child: Text(loc.cancel),
             ),
             FilledButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: Text(loc.get('ok')),
+              child: Text(loc.ok),
             ),
           ],
         ),
@@ -206,7 +201,7 @@ class DataPage extends StatelessWidget {
           if (!context.mounted) return;
           AppToast.show(
             context,
-            loc.get('import_success'),
+            loc.import_success,
             type: ToastType.success,
           );
           Navigator.of(context).popUntil((route) => route.isFirst);
@@ -214,7 +209,7 @@ class DataPage extends StatelessWidget {
           if (!context.mounted) return;
           AppToast.show(
             context,
-            '${loc.get('import_error')}: ${e.toString()}',
+            '${loc.import_error}: ${e.toString()}',
             type: ToastType.error,
           );
         }

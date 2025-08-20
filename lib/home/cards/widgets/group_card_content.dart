@@ -3,7 +3,7 @@ import 'monthly_expense_chart.dart';
 import 'date_range_expense_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../state/expense_group_notifier.dart';
 import '../../../data/expense_group.dart';
 import '../../../manager/expense/expense_form_component.dart';
@@ -22,7 +22,7 @@ class GroupCardContent extends StatelessWidget {
   static const double _largSpacing = 24.0;
 
   final ExpenseGroup group;
-  final AppLocalizations localizations;
+  final gen.AppLocalizations localizations;
   final ThemeData theme;
   final VoidCallback onExpenseAdded;
   final VoidCallback? onCategoryAdded;
@@ -36,7 +36,7 @@ class GroupCardContent extends StatelessWidget {
     this.onCategoryAdded,
   });
 
-  String _formatDateRange(ExpenseGroup group, AppLocalizations loc) {
+  String _formatDateRange(ExpenseGroup group, gen.AppLocalizations loc) {
     final start = group.startDate;
     final end = group.endDate;
 

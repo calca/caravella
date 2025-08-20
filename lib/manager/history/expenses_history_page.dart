@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import '../../data/expense_group.dart';
 import '../../../data/expense_group_storage.dart';
-import '../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../group/add_new_expenses_group.dart';
-import '../../state/locale_notifier.dart';
 import '../../widgets/caravella_app_bar.dart';
 import 'widgets/expense_group_empty_states.dart';
 import 'widgets/expandable_search_bar.dart';
@@ -30,11 +29,14 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   final TextEditingController _searchController = TextEditingController();
   Timer? _searchDebounce;
 
-  final List<Map<String, dynamic>> _statusOptions = [
-    {'key': 'all', 'label': 'Tutti', 'icon': Icons.all_inclusive_outlined},
-    {'key': 'active', 'label': 'Attivi', 'icon': Icons.play_circle_outline},
-    {'key': 'archived', 'label': 'Archiviati', 'icon': Icons.archive_outlined},
-  ];
+  List<Map<String, dynamic>> _statusOptions(BuildContext context) {
+    // TODO: Replace hardcoded Italian with localized getters when keys added
+    return [
+      {'key': 'all', 'label': 'Tutti', 'icon': Icons.all_inclusive_outlined},
+      {'key': 'active', 'label': 'Attivi', 'icon': Icons.play_circle_outline},
+      {'key': 'archived', 'label': 'Archiviati', 'icon': Icons.archive_outlined},
+    ];
+  }
 
   @override
   void initState() {
@@ -199,8 +201,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
 
   @override
   Widget build(BuildContext context) {
-    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    final loc = AppLocalizations(locale);
+  final gloc = gen.AppLocalizations.of(context);
 
     return Scaffold(
       // backgroundColor centralizzato nel tema
@@ -229,7 +230,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
               await _loadTrips();
             }
           },
-          tooltip: loc.get('add_trip'),
+          tooltip: gloc.add_trip,
           backgroundColor: Theme.of(context).colorScheme.primary,
           foregroundColor: Theme.of(context).colorScheme.onPrimary,
           elevation: 0,
@@ -264,7 +265,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                           width: _isSearchExpanded ? 0 : null,
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
-                            children: _statusOptions.map((option) {
+                            children: _statusOptions(context).map((option) {
                               final isSelected = _statusFilter == option['key'];
                               return Padding(
                                 padding: const EdgeInsets.only(right: 8),
@@ -311,7 +312,6 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                 ? ExpsenseGroupEmptyStates(
                     searchQuery: _searchQuery,
                     periodFilter: _statusFilter,
-                    localizations: loc,
                     onTripAdded: () async {
                       final result = await Navigator.of(context).push(
                         MaterialPageRoute(

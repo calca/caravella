@@ -37,7 +37,7 @@ class ParticipantSelectorWidget extends StatelessWidget {
                 context: context,
                 items: participants,
                 selected: selected,
-                loc: loc,
+                gloc: gen.AppLocalizations.of(context),
                 itemLabel: (p) => p,
               );
               if (picked != null && picked != selectedParticipant) {

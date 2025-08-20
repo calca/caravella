@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 
 class HomeCardsHeader extends StatelessWidget {
-  final AppLocalizations localizations;
+  final gen.AppLocalizations localizations;
   final ThemeData theme;
 
   const HomeCardsHeader({
@@ -11,7 +11,7 @@ class HomeCardsHeader extends StatelessWidget {
     required this.theme,
   });
 
-  String _getGreeting() {
+  String _getGreetingKey() {
     final hour = DateTime.now().hour;
     if (hour < 12) return 'good_morning';
     if (hour < 18) return 'good_afternoon';
@@ -63,7 +63,7 @@ class HomeCardsHeader extends StatelessWidget {
           // Saluto dinamico
           Expanded(
             child: Text(
-              localizations.get(_getGreeting()),
+              _resolveGreeting(),
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.w400,
                 color: theme.colorScheme.onSurface,
@@ -73,5 +73,11 @@ class HomeCardsHeader extends StatelessWidget {
         ],
       ),
     );
+  }
+  String _resolveGreeting() {
+    final key = _getGreetingKey();
+    if (key == 'good_morning') return localizations.good_morning;
+    if (key == 'good_afternoon') return localizations.good_afternoon;
+    return localizations.good_evening;
   }
 }

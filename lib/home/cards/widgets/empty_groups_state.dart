@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../manager/group/add_new_expenses_group.dart';
 
 class EmptyGroupsState extends StatelessWidget {
-  final AppLocalizations localizations;
+  final gen.AppLocalizations localizations;
   final ThemeData theme;
   final VoidCallback onGroupAdded;
 
@@ -27,7 +27,7 @@ class EmptyGroupsState extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           Text(
-            localizations.get('no_active_groups'),
+            localizations.no_active_groups,
             style: theme.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.w600,
               color: theme.colorScheme.onSurface,
@@ -36,7 +36,7 @@ class EmptyGroupsState extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            localizations.get('no_active_groups_subtitle'),
+            localizations.no_active_groups_subtitle,
             style: theme.textTheme.bodyLarge?.copyWith(
               color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
             ),
@@ -55,7 +55,7 @@ class EmptyGroupsState extends StatelessWidget {
               }
             },
             icon: const Icon(Icons.add),
-            label: Text(localizations.get('create_first_group')),
+            label: Text(localizations.create_first_group),
             style: FilledButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             ),

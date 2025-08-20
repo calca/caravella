@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../data/expense_group.dart';
 import '../../../manager/details/expense_group_detail_page.dart';
 import '../../../widgets/widgets.dart';
@@ -7,7 +7,7 @@ import 'group_card_content.dart';
 
 class GroupCard extends StatelessWidget {
   final ExpenseGroup group;
-  final AppLocalizations localizations;
+  final gen.AppLocalizations localizations;
   final ThemeData theme;
   final VoidCallback onGroupUpdated;
   final VoidCallback? onCategoryAdded;

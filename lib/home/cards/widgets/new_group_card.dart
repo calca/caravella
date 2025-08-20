@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../manager/group/add_new_expenses_group.dart';
 import '../../../widgets/base_card.dart';
 
 class NewGroupCard extends StatelessWidget {
-  final AppLocalizations localizations;
+  final gen.AppLocalizations localizations;
   final ThemeData theme;
   final VoidCallback onGroupAdded;
   final bool isSelected;
@@ -70,7 +70,7 @@ class NewGroupCard extends StatelessWidget {
         ),
         const SizedBox(height: 24),
         Text(
-          localizations.get('new_expense_group'),
+          localizations.new_expense_group,
           style: theme.textTheme.headlineSmall?.copyWith(
             fontWeight: FontWeight.w400,
             fontSize: 22,
@@ -80,7 +80,7 @@ class NewGroupCard extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          localizations.get('tap_to_create'),
+          localizations.tap_to_create,
           style: theme.textTheme.bodyMedium?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
           ),

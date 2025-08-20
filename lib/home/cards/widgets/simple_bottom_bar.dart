@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../manager/history/expenses_history_page.dart';
 import '../../../settings/settings_page.dart';
 
 class SimpleBottomBar extends StatelessWidget {
-  final AppLocalizations localizations;
+  final gen.AppLocalizations localizations;
   final ThemeData theme;
 
   const SimpleBottomBar({
@@ -34,7 +34,7 @@ class SimpleBottomBar extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             ),
             child: Text(
-              localizations.get('all').toUpperCase(),
+              localizations.all.toUpperCase(),
               style: theme.textTheme.labelLarge?.copyWith(
                 fontWeight: FontWeight.w600,
                 letterSpacing: 1.2,
@@ -56,7 +56,7 @@ class SimpleBottomBar extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             ),
             child: Text(
-              localizations.get('options').toUpperCase(),
+              localizations.options.toUpperCase(),
               style: theme.textTheme.labelLarge?.copyWith(
                 fontWeight: FontWeight.w600,
                 letterSpacing: 1.2,

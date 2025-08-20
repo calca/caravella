@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../app_localizations.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen; // generated
 import '../../data/expense_group.dart';
 import '../../data/expense_group_storage.dart';
-import '../../state/locale_notifier.dart';
+// Removed locale_notifier import after migration
+// locale_notifier no longer needed after migration
 import 'widgets/widgets.dart';
 
 class HomeCardsSection extends StatefulWidget {
@@ -65,8 +66,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
 
   @override
   Widget build(BuildContext context) {
-    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    final loc = AppLocalizations(locale);
+  final loc = gen.AppLocalizations.of(context);
     final theme = Theme.of(context);
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -86,10 +86,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
             // Header con avatar e saluto dinamico
             SizedBox(
               height: headerHeight,
-              child: HomeCardsHeader(
-                localizations: loc,
-                theme: theme,
-              ),
+              child: HomeCardsHeader(localizations: loc, theme: theme),
             ),
 
             // Content area - riempie lo spazio tra header e bottom bar
@@ -115,17 +112,13 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
                             _loadActiveGroups();
                           },
                           onCategoryAdded: () {
-                            // Ricarica i gruppi per aggiornare le categorie
                             _loadActiveGroups();
                           },
                         ),
             ),
 
             // Bottom bar semplificata d
-            SimpleBottomBar(
-              localizations: loc,
-              theme: theme,
-            ),
+            SimpleBottomBar(localizations: loc, theme: theme),
           ],
         ),
       ),
