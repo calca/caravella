@@ -130,6 +130,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   File? _selectedImageFile;
   String? _savedImagePath;
   final ImagePicker _imagePicker = ImagePicker();
+  bool _isDirty = false; // traccia modifiche non salvate
   @override
   void initState() {
     super.initState();
@@ -150,6 +151,9 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       _startDate = widget.trip!.startDate;
       _endDate = widget.trip!.endDate;
     }
+    _titleController.addListener(() {
+      if (!_isDirty) setState(() => _isDirty = true);
+    });
   }
 
   // Remove stray constructor declaration
@@ -518,7 +522,34 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
     return GestureDetector(
       onTap: _unfocusAll,
       behavior: HitTestBehavior.translucent,
-      child: Scaffold(
+      child: PopScope(
+        canPop: !_isDirty,
+        onPopInvokedWithResult: (didPop, result) async {
+          if (didPop) return;
+          if (_isDirty) {
+            final confirm = await showDialog<bool>(
+              context: context,
+              builder: (ctx) => AlertDialog(
+                title: Text(gloc.discard_changes_title),
+                content: Text(gloc.discard_changes_message),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(ctx).pop(false),
+                    child: Text(gloc.cancel),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.of(ctx).pop(true),
+                    child: Text(gloc.discard),
+                  ),
+                ],
+              ),
+            );
+            if (confirm == true && mounted) {
+              Navigator.of(context).pop(false);
+            }
+          }
+        },
+        child: Scaffold(
         appBar: CaravellaAppBar(
           actions: [
             if (widget.trip != null)
@@ -642,16 +673,19 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                   onAddParticipant: (String name) {
                     setState(() {
                       _participants.add(ExpenseParticipant(name: name));
+                      _isDirty = true;
                     });
                   },
                   onEditParticipant: (int i, String name) {
                     setState(() {
                       _participants[i] = _participants[i].copyWith(name: name);
+                      _isDirty = true;
                     });
                   },
                   onRemoveParticipant: (int i) {
                     setState(() {
                       _participants.removeAt(i);
+                      _isDirty = true;
                     });
                   },
                 ),
@@ -663,16 +697,19 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                   onAddCategory: (String name) {
                     setState(() {
                       _categories.add(ExpenseCategory(name: name));
+                      _isDirty = true;
                     });
                   },
                   onEditCategory: (int i, String name) {
                     setState(() {
                       _categories[i] = _categories[i].copyWith(name: name);
+                      _isDirty = true;
                     });
                   },
                   onRemoveCategory: (int i) {
                     setState(() {
                       _categories.removeAt(i);
+                      _isDirty = true;
                     });
                   },
                 ),
@@ -866,15 +903,6 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                 // Bottoni di azione
                 Column(
                   children: [
-                    // Bottone Annulla
-                    SizedBox(
-                      width: double.infinity,
-                      child: OutlinedButton(
-                        onPressed: () => Navigator.of(context).pop(false),
-                        child: Text(gloc.cancel),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
                     // Bottone Salva
                     SizedBox(
                       width: double.infinity,
@@ -890,6 +918,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
               ],
             ),
           ),
+        ),
         ),
       ),
     );
