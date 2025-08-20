@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'chart_badge.dart';
+import 'chart_type.dart';
 
 class WeeklyExpenseChart extends StatelessWidget {
   final List<double> dailyTotals;
@@ -17,6 +19,18 @@ class WeeklyExpenseChart extends StatelessWidget {
     if (!hasExpenses) {
       return const SizedBox.shrink();
     }
+    
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        ChartBadge(chartType: ChartType.weekly, theme: theme),
+        const SizedBox(width: 12),
+        Expanded(child: _buildChart()),
+      ],
+    );
+  }
+  
+  Widget _buildChart() {
     final spots = List.generate(7, (i) => FlSpot(i.toDouble(), dailyTotals[i]));
     return SizedBox(
       height: 40,

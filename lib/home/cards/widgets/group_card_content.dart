@@ -464,12 +464,13 @@ class GroupCardContent extends StatelessWidget {
 
     // Statistiche base
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Extra info for short duration trips
         _buildExtraInfo(currentGroup),
         // Settimana
         WeeklyExpenseChart(dailyTotals: dailyTotals, theme: theme),
-        const SizedBox(height: 12),
+        const SizedBox(height: 16),
         // Mese
         MonthlyExpenseChart(dailyTotals: dailyMonthTotals, theme: theme),
       ],

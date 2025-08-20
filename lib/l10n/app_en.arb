@@ -1,5 +1,21 @@
 {
   "@@locale": "en",
+  "weeklyChartBadge": "W",
+  "@weeklyChartBadge": {
+    "description": "Letter indicator for weekly chart badge"
+  },
+  "monthlyChartBadge": "M",
+  "@monthlyChartBadge": {
+    "description": "Letter indicator for monthly chart badge"
+  },
+  "weeklyExpensesChart": "Weekly expenses",
+  "@weeklyExpensesChart": {
+    "description": "Label for weekly expenses chart"
+  },
+  "monthlyExpensesChart": "Monthly expenses",
+  "@monthlyExpensesChart": {
+    "description": "Label for monthly expenses chart"
+  }
   "settings_flag_secure_desc": "Prevents screenshots and screen recording",
   "settings_flag_secure_title": "Secure screen",
   "select_currency": "Select currency",

@@ -1,5 +1,9 @@
 {
   "@@locale": "it",
+  "weeklyChartBadge": "S",
+  "monthlyChartBadge": "M",
+  "weeklyExpensesChart": "Spese settimanali",
+  "monthlyExpensesChart": "Spese mensili"
   "settings_flag_secure_desc": "Impedisce screenshot e registrazione schermo",
   "settings_flag_secure_title": "Proteggi schermata",
   "select_currency": "Seleziona valuta",
