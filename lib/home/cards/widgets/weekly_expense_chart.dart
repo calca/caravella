@@ -19,17 +19,17 @@ class WeeklyExpenseChart extends StatelessWidget {
     if (!hasExpenses) {
       return const SizedBox.shrink();
     }
-    
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        ChartBadge(chartType: ChartType.weekly, theme: theme),
-        const SizedBox(width: 12),
         Expanded(child: _buildChart()),
+        const SizedBox(width: 12),
+        ChartBadge(chartType: ChartType.weekly, theme: theme),
       ],
     );
   }
-  
+
   Widget _buildChart() {
     final spots = List.generate(7, (i) => FlSpot(i.toDouble(), dailyTotals[i]));
     return SizedBox(
@@ -45,17 +45,16 @@ class WeeklyExpenseChart extends StatelessWidget {
               dotData: const FlDotData(show: false),
               belowBarData: BarAreaData(
                 show: true,
-                color:
-                    theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.12),
+                color: theme.colorScheme.onSurfaceVariant.withValues(
+                  alpha: 0.12,
+                ),
               ),
             ),
           ],
           titlesData: const FlTitlesData(show: false),
           gridData: const FlGridData(show: false),
           borderData: FlBorderData(show: false),
-          lineTouchData: const LineTouchData(
-            enabled: false,
-          ),
+          lineTouchData: const LineTouchData(enabled: false),
         ),
       ),
     );
