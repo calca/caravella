@@ -661,6 +661,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get overview_and_statistics => 'Overview and statistics';
 
   @override
+  String get daily_average => 'Daily';
+
+  @override
+  String get spent_today => 'Today';
+
+  @override
   String get average_expense => 'Average expense';
 
   @override

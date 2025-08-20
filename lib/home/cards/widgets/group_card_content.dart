@@ -351,7 +351,7 @@ class GroupCardContent extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Text(
-              '${localizations.get('daily_average')}: ',
+              '${localizations.daily_average}: ',
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: textColor,
                 fontSize: 14,
@@ -373,7 +373,7 @@ class GroupCardContent extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Text(
-              '${localizations.get('spent_today')}: ',
+              '${localizations.spent_today}: ',
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: textColor,
                 fontSize: 14,

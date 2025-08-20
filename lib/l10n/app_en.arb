@@ -215,6 +215,10 @@
   ,"add_first_expense": "Add the first expense to get started"
   ,"@add_first_expense": {"description": "Empty state subtitle encouraging user to add first expense"}
   ,"overview_and_statistics": "Overview and statistics"
+  ,"daily_average": "Daily"
+  ,"spent_today": "Today"
+  ,"@daily_average": {"description": "Label shown before the computed overall daily average spending value"}
+  ,"@spent_today": {"description": "Label shown before the amount spent today"}
   ,"@overview_and_statistics": {"description": "Tooltip text when overview/statistics button is enabled"}
   ,"average_expense": "Average expense"
   ,"welcome_v3_cta": "Get started!"

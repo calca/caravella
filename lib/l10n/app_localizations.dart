@@ -1364,6 +1364,18 @@ abstract class AppLocalizations {
   /// **'Overview and statistics'**
   String get overview_and_statistics;
 
+  /// Label shown before the computed overall daily average spending value
+  ///
+  /// In en, this message translates to:
+  /// **'Daily'**
+  String get daily_average;
+
+  /// Label shown before the amount spent today
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get spent_today;
+
   /// No description provided for @average_expense.
   ///
   /// In en, this message translates to:

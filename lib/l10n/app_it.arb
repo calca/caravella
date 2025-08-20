@@ -221,6 +221,10 @@
   ,"add_first_expense": "Aggiungi la prima spesa per iniziare"
   ,"@add_first_expense": {"description": "Sottotitolo dello stato vuoto per la lista spese"}
   ,"overview_and_statistics": "Panoramica e statistiche"
+  ,"daily_average": "Media"
+  ,"spent_today": "Oggi"
+  ,"@daily_average": {"description": "Etichetta mostrata prima del valore di spesa media giornaliera"}
+  ,"@spent_today": {"description": "Etichetta mostrata prima dell'importo speso oggi"}
   ,"@overview_and_statistics": {"description": "Tooltip per bottone panoramica/statistiche"}
   ,"error_saving_group": "Errore durante il salvataggio: {error}"
   ,"error_selecting_image": "Errore durante la selezione dell'immagine"
