@@ -65,7 +65,6 @@ class DailyExpensesChart extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
         ),
-  // Nessuno spazio aggiuntivo sotto il titolo per compattezza
         SizedBox(
           height: chartHeight,
           child: SingleChildScrollView(
@@ -74,9 +73,7 @@ class DailyExpensesChart extends StatelessWidget {
               width: _calculateChartWidth(context, filteredEntries.length),
               child: LineChart(
                 LineChartData(
-                  gridData: const FlGridData(
-                    show: false, // Rimuove tutte le righe orizzontali
-                  ),
+                  gridData: const FlGridData(show: false),
                   titlesData: FlTitlesData(
                     show: true,
                     topTitles: const AxisTitles(
@@ -140,10 +137,8 @@ class DailyExpensesChart extends StatelessWidget {
                   ),
                   minX: 0,
                   maxX: (filteredEntries.length - 1).toDouble(),
-                  minY:
-                      useLogScale ? (minAmount > 0 ? minAmount * 0.5 : 0.1) : 0,
-                  maxY:
-                      useLogScale ? maxAmount * 1.5 : _calculateMaxY(maxAmount),
+                  minY: useLogScale ? (minAmount > 0 ? minAmount * 0.5 : 0.1) : 0,
+                  maxY: useLogScale ? maxAmount * 1.5 : _calculateMaxY(maxAmount),
                   lineBarsData: [
                     LineChartBarData(
                       spots: filteredEntries.asMap().entries.map((entry) {
@@ -226,15 +221,17 @@ class DailyExpensesChart extends StatelessWidget {
       // Se ci sono più di 15 giorni, calcola la larghezza per mostrare esattamente 15 giorni inizialmente
       final widthPerDay = availableWidth / minDaysVisible;
       return widthPerDay * numberOfDays;
-      String _resolveTitle(BuildContext context) {
-        final gloc = gen.AppLocalizations.of(context);
-        switch (titleKey) {
-          case 'weekly_expenses_chart':
-            return gloc.weekly_expenses_chart;
-          case 'daily_expenses_chart':
-          default:
-            return gloc.daily_expenses_chart;
-        }
-      }
     }
+  }
+
+  String _resolveTitle(BuildContext context) {
+    final gloc = gen.AppLocalizations.of(context);
+    switch (titleKey) {
+      case 'weekly_expenses_chart':
+        return gloc.weekly_expenses_chart;
+      case 'daily_expenses_chart':
+      default:
+        return gloc.daily_expenses_chart;
+    }
+  }
 }
