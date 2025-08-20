@@ -1160,6 +1160,18 @@ abstract class AppLocalizations {
   /// **'Error getting location'**
   String get location_error;
 
+  /// No description provided for @resolving_address.
+  ///
+  /// In en, this message translates to:
+  /// **'Resolving address…'**
+  String get resolving_address;
+
+  /// No description provided for @address_resolved.
+  ///
+  /// In en, this message translates to:
+  /// **'Address resolved'**
+  String get address_resolved;
+
   /// No description provided for @settings_general.
   ///
   /// In en, this message translates to:

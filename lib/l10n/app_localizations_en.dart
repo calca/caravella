@@ -557,6 +557,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get location_error => 'Error getting location';
 
   @override
+  String get resolving_address => 'Resolving address…';
+
+  @override
+  String get address_resolved => 'Address resolved';
+
+  @override
   String get settings_general => 'General';
 
   @override

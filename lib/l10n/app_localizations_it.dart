@@ -558,6 +558,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get location_error => 'Errore nel rilevare la posizione';
 
   @override
+  String get resolving_address => 'Risolvo indirizzo…';
+
+  @override
+  String get address_resolved => 'Indirizzo trovato';
+
+  @override
   String get settings_general => 'Generali';
 
   @override

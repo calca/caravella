@@ -187,6 +187,8 @@
   "location_service_disabled": "Servizio posizione disabilitato",
   "getting_location": "Rilevamento posizione...",
   "location_error": "Errore nel rilevare la posizione",
+  "resolving_address": "Risolvo indirizzo…",
+  "address_resolved": "Indirizzo trovato",
   "settings_general": "Generali",
   "settings_language": "Lingua",
   "settings_language_it": "Italiano",

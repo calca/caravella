@@ -189,6 +189,8 @@
   "location_service_disabled": "Location service disabled",
   "getting_location": "Getting location...",
   "location_error": "Error getting location",
+  "resolving_address": "Resolving address…",
+  "address_resolved": "Address resolved",
   "settings_general": "General",
   "settings_language": "Language",
   "settings_language_it": "Italian",

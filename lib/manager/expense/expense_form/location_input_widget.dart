@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import 'icon_leading_field.dart';
 import '../../../data/expense_location.dart';
@@ -23,7 +24,9 @@ class LocationInputWidget extends StatefulWidget {
 class _LocationInputWidgetState extends State<LocationInputWidget> {
   final TextEditingController _controller = TextEditingController();
   bool _isGettingLocation = false;
+  bool _isResolvingAddress = false;
   ExpenseLocation? _currentLocation;
+  final FocusNode _fieldFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -37,6 +40,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
   @override
   void dispose() {
     _controller.dispose();
+    _fieldFocusNode.dispose();
     super.dispose();
   }
 
@@ -92,17 +96,58 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
 
       Position position = await Geolocator.getCurrentPosition();
 
+      if (mounted) {
+        setState(() => _isResolvingAddress = true);
+      }
+
+      // Reverse geocoding to human-readable address
+      String? address;
+      try {
+        final placemarks = await geocoding.placemarkFromCoordinates(
+          position.latitude,
+          position.longitude,
+        );
+        if (placemarks.isNotEmpty) {
+          final p = placemarks.first;
+          final parts = [
+            if ((p.thoroughfare ?? '').isNotEmpty) p.thoroughfare,
+            if ((p.subThoroughfare ?? '').isNotEmpty) p.subThoroughfare,
+            if ((p.locality ?? '').isNotEmpty) p.locality,
+            if ((p.administrativeArea ?? '').isNotEmpty) p.administrativeArea,
+            if ((p.country ?? '').isNotEmpty) p.country,
+          ].whereType<String>().where((e) => e.trim().isNotEmpty).toList();
+          if (parts.isNotEmpty) {
+            address = parts.join(', ');
+          }
+        }
+      } catch (_) {
+        // Ignore reverse geocoding failure; fallback below
+      }
+
       final location = ExpenseLocation(
         latitude: position.latitude,
         longitude: position.longitude,
-        name:
-            '${position.latitude.toStringAsFixed(6)}, ${position.longitude.toStringAsFixed(6)}',
+        address: address,
       );
 
       setState(() {
         _currentLocation = location;
-        _controller.text = location.displayText;
+        _controller.text = location.displayText.isNotEmpty
+            ? location.displayText
+            : '${position.latitude.toStringAsFixed(6)}, ${position.longitude.toStringAsFixed(6)}';
+        _isResolvingAddress = false;
       });
+
+      // Optional lightweight feedback when an address gets resolved
+      if (address != null && mounted) {
+        final gloc = gen.AppLocalizations.of(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            duration: const Duration(seconds: 2),
+            content: Text(gloc.address_resolved),
+          ),
+        );
+      }
 
       widget.onLocationChanged(location);
     } catch (e) {
@@ -117,6 +162,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
       if (mounted) {
         setState(() {
           _isGettingLocation = false;
+          _isResolvingAddress = false;
         });
       }
     }
@@ -131,14 +177,23 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
   }
 
   void _onTextChanged(String value) {
-    if (value.trim().isEmpty) {
+    final trimmed = value.trim();
+    if (trimmed.isEmpty) {
+      // Preserve nothing if user clears completely
       _currentLocation = null;
       widget.onLocationChanged(null);
+      return;
+    }
+    // If we already have coordinates, keep them and treat user text as refined address
+    if (_currentLocation != null &&
+        _currentLocation!.latitude != null &&
+        _currentLocation!.longitude != null) {
+      final updated = _currentLocation!.copyWith(address: trimmed, name: null);
+      setState(() => _currentLocation = updated);
+      widget.onLocationChanged(updated);
     } else {
-      final location = ExpenseLocation(name: value.trim());
-      setState(() {
-        _currentLocation = location;
-      });
+      final location = ExpenseLocation(name: trimmed);
+      setState(() => _currentLocation = location);
       widget.onLocationChanged(location);
     }
   }
@@ -148,15 +203,23 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
     final gloc = gen.AppLocalizations.of(context);
     final field = TextFormField(
       controller: _controller,
+      focusNode: _fieldFocusNode,
       style: widget.textStyle ?? Theme.of(context).textTheme.bodySmall,
       onChanged: _onTextChanged,
       decoration: InputDecoration(
-        hintText: gloc.location_hint,
-  // rely on theme hintStyle
+        hintText: _isGettingLocation
+            ? gloc.getting_location
+            : _isResolvingAddress
+            ? gloc.resolving_address
+            : gloc.location_hint,
+        // rely on theme hintStyle
         border: InputBorder.none,
         isDense: true,
         contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
-        suffixIconConstraints: const BoxConstraints(minHeight: 32, minWidth: 32),
+        suffixIconConstraints: const BoxConstraints(
+          minHeight: 32,
+          minWidth: 32,
+        ),
         suffixIcon: _buildSuffixIcons(context, gloc),
       ),
     );
@@ -188,15 +251,13 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
           child: SizedBox(
             width: 32,
             height: 32,
-            child: Center(
-              child: Icon(icon, size: 20, color: color),
-            ),
+            child: Center(child: Icon(icon, size: 20, color: color)),
           ),
         ),
       );
     }
 
-    if (_isGettingLocation) {
+    if (_isGettingLocation || _isResolvingAddress) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: SizedBox(
@@ -222,6 +283,20 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
           icon: Icons.clear,
           tooltip: gloc.cancel,
           onTap: _clearLocation,
+          color: colorScheme.onSurfaceVariant,
+        ),
+      if (_currentLocation != null)
+        buildAction(
+          icon: Icons.edit_location_alt_outlined,
+          tooltip: gloc.enter_location_manually,
+          onTap: () {
+            // Allow manual refinement while keeping stored lat/long in _currentLocation
+            _controller.selection = TextSelection(
+              baseOffset: 0,
+              extentOffset: _controller.text.length,
+            );
+            _fieldFocusNode.requestFocus();
+          },
           color: colorScheme.onSurfaceVariant,
         ),
     ];

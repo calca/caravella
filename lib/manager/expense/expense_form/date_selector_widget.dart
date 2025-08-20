@@ -31,7 +31,7 @@ class DateSelectorWidget extends StatelessWidget {
 
     final iconColor = Theme.of(context).colorScheme.onSurfaceVariant;
 
-    Future<void> _pickDate() async {
+  Future<void> pickDate() async {
       final picked = await showDatePicker(
         context: context,
         initialDate: selectedDate ?? DateTime.now(),
@@ -60,7 +60,7 @@ class DateSelectorWidget extends StatelessWidget {
         button: true,
         child: InkWell(
           borderRadius: BorderRadius.circular(4),
-          onTap: _pickDate,
+          onTap: pickDate,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: Text(
