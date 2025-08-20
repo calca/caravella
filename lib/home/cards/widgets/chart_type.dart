@@ -5,18 +5,18 @@ enum ChartType {
   String getBadgeKey() {
     switch (this) {
       case ChartType.weekly:
-        return 'weekly_chart_badge';
+        return 'weeklyChartBadge';
       case ChartType.monthly:
-        return 'monthly_chart_badge';
+        return 'monthlyChartBadge';
     }
   }
   
   String getSemanticLabelKey() {
     switch (this) {
       case ChartType.weekly:
-        return 'weekly_expenses_chart';
+        return 'weeklyExpensesChart';
       case ChartType.monthly:
-        return 'monthly_expenses_chart';
+        return 'monthlyExpensesChart';
     }
   }
 }

@@ -174,6 +174,11 @@ class AppLocalizations {
       'monthly_expenses_chart': 'Monthly expenses',
       'weekly_chart_badge': 'W',
       'monthly_chart_badge': 'M',
+      // .arb compatible camelCase keys
+      'weeklyChartBadge': 'W',
+      'monthlyChartBadge': 'M',
+      'weeklyExpensesChart': 'Weekly expenses',
+      'monthlyExpensesChart': 'Monthly expenses',
       'daily_average_by_category': 'Daily average by category',
       'daily_average': 'Daily average',
       'spent_today': 'Spent today',
@@ -368,6 +373,11 @@ class AppLocalizations {
       'monthly_expenses_chart': 'Spese mensili',
       'weekly_chart_badge': 'S',
       'monthly_chart_badge': 'M',
+      // .arb compatible camelCase keys
+      'weeklyChartBadge': 'S',
+      'monthlyChartBadge': 'M',
+      'weeklyExpensesChart': 'Spese settimanali',
+      'monthlyExpensesChart': 'Spese mensili',
       'daily_average_by_category': 'Media giornaliera per categoria',
       'daily_average': 'Media giornaliera',
       'spent_today': 'Speso oggi',
