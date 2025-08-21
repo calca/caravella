@@ -68,6 +68,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   final TextEditingController _noteController = TextEditingController();
   late List<ExpenseCategory> _categories; // Lista locale delle categorie
   bool _isDirty = false; // traccia modifiche non salvate
+  bool _initializing = true; // traccia se siamo in fase di inizializzazione
 
   // Stato per validazione in tempo reale
   bool _amountTouched = false;
@@ -127,16 +128,25 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         setState(() {
           _amount = parsed;
           _amountTouched = true;
-          _isDirty = true;
+          if (!_initializing) {
+            _isDirty = true;
+          }
         });
       }
     });
 
     // Listener per aggiornare lo stato quando il nome cambia
     _nameController.addListener(() {
-      setState(() {
-        _isDirty = true;
-      });
+      if (!_initializing) {
+        setState(() {
+          _isDirty = true;
+        });
+      }
+    });
+
+    // Mark initialization as complete after first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializing = false;
     });
   }
 
@@ -414,7 +424,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
             : ExpenseParticipant(name: ''),
       );
       _paidByTouched = true;
-      _isDirty = true;
+      if (!_initializing) {
+        _isDirty = true;
+      }
     });
   }
 
@@ -422,7 +434,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     setState(() {
       _category = selected;
       _categoryTouched = true;
-      _isDirty = true;
+      if (!_initializing) {
+        _isDirty = true;
+      }
     });
   }
 
@@ -441,7 +455,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
           _categories.add(found);
           _category = found;
           _categoryTouched = true;
-          _isDirty = true;
+          if (!_initializing) {
+            _isDirty = true;
+          }
         }
       });
       await Future.delayed(const Duration(milliseconds: 100));
@@ -455,7 +471,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         _categories = List.from(widget.categories);
         _category = foundAfter;
         _categoryTouched = true;
-        _isDirty = true;
+        if (!_initializing) {
+          _isDirty = true;
+        }
       });
     }
   }
@@ -476,7 +494,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
           tripEndDate: widget.tripEndDate,
           onDateSelected: (picked) => setState(() {
             _date = picked;
-            _isDirty = true;
+            if (!_initializing) {
+              _isDirty = true;
+            }
           }),
           locale: locale,
           textStyle: style,
@@ -487,7 +507,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
           textStyle: style,
           onLocationChanged: (location) => setState(() {
             _location = location;
-            _isDirty = true;
+            if (!_initializing) {
+              _isDirty = true;
+            }
           }),
         ),
         _spacer(),
