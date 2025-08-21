@@ -16,7 +16,9 @@ void main() {
 
   group('WCAG 2.2 Accessibility Tests', () {
     testWidgets('Welcome screen image has semantic label', (tester) async {
-      await tester.pumpWidget(localizedApp(home: const Scaffold(body: HomeWelcomeSection())));
+      await tester.pumpWidget(
+        localizedApp(home: const Scaffold(body: HomeWelcomeSection())),
+      );
       await tester.pumpAndSettle();
 
       // Find the welcome logo by its localized semantics label
@@ -29,7 +31,8 @@ void main() {
             logoFinderIt.evaluate().isNotEmpty ||
             logoKey.evaluate().isNotEmpty,
         true,
-        reason: 'Expected one Semantics node with the welcome logo (label or key).',
+        reason:
+            'Expected one Semantics node with the welcome logo (label or key).',
       );
     });
 
@@ -95,20 +98,27 @@ void main() {
       expect(toastSemantics, findsOneWidget);
     });
 
-    testWidgets('Navigation buttons have proper accessibility labels', (tester) async {
-      await tester.pumpWidget(localizedApp(home: const Scaffold(body: HomeWelcomeSection())));
+    testWidgets('Navigation buttons have proper accessibility labels', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        localizedApp(home: const Scaffold(body: HomeWelcomeSection())),
+      );
       await tester.pumpAndSettle();
 
-    // Look for settings button by its semantics label (English or Italian)
+      // Look for settings button by its semantics label (English or Italian)
       final settingsEn = find.bySemanticsLabel('Settings');
       final settingsIt = find.bySemanticsLabel('Impostazioni');
-      final settingsKey = find.byKey(const ValueKey('settings_button_semantics'));
+      final settingsKey = find.byKey(
+        const ValueKey('settings_button_semantics'),
+      );
       expect(
         settingsEn.evaluate().isNotEmpty ||
             settingsIt.evaluate().isNotEmpty ||
             settingsKey.evaluate().isNotEmpty,
         true,
-        reason: 'Expected a settings button with proper semantics (label or key).',
+        reason:
+            'Expected a settings button with proper semantics (label or key).',
       );
     });
 
@@ -232,9 +242,9 @@ void main() {
       await tester.tap(find.text('Show Dialog'));
       await tester.pumpAndSettle();
 
-  // The dialog Semantics hierarchy may not set scopesRoute; match by label only.
-  final dialogFinder = find.bySemanticsLabel('Test dialog');
-  expect(dialogFinder, findsOneWidget);
+      // The dialog Semantics hierarchy may not set scopesRoute; match by label only.
+      final dialogFinder = find.bySemanticsLabel('Test dialog');
+      expect(dialogFinder, findsOneWidget);
     });
 
     testWidgets('Focus management works correctly', (

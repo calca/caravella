@@ -21,16 +21,18 @@ class SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final titleStyle = Theme.of(context)
-        .textTheme
-        .titleMedium
-        ?.copyWith(fontWeight: FontWeight.w600);
+    final titleStyle = Theme.of(
+      context,
+    ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600);
     final titleWidget = requiredMark
         ? RichText(
             text: TextSpan(
               children: [
                 TextSpan(text: title, style: titleStyle),
-                const TextSpan(text: ' *', style: TextStyle(fontWeight: FontWeight.w600)),
+                const TextSpan(
+                  text: ' *',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
               ],
             ),
           )

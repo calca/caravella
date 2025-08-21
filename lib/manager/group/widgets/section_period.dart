@@ -43,7 +43,7 @@ class SectionPeriod extends StatelessWidget {
               : null,
           padding: EdgeInsets.zero,
         ),
-  const SizedBox(height: 12),
+        const SizedBox(height: 12),
         // Start date row
         Material(
           color: Colors.transparent,

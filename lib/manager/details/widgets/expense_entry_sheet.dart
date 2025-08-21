@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../data/expense_details.dart';
 import '../../../data/expense_group.dart';
 import '../../expense/expense_form_component.dart';
+import '../../../../widgets/bottom_sheet_scaffold.dart';
 
 /// Unified sheet for creating or editing an expense.
 /// If [initialExpense] is provided we are editing, otherwise creating a new one.
@@ -25,59 +26,30 @@ class ExpenseEntrySheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return Container(
-      constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height * 0.9,
-      ),
-      decoration: BoxDecoration(
-        color: colorScheme.surface,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
+    final bottomInset = MediaQuery.of(context).padding.bottom;
+    final keyboard = MediaQuery.of(context).viewInsets.bottom;
+    // Avoid double bottom padding: we override scaffold padding bottom to 0 and manage internally.
+    const baseExtra = 8.0; // uniform bottom extra spacing for all modes
+    final internalBottom = bottomInset + baseExtra + keyboard;
+    return GroupBottomSheetScaffold(
+      scrollable: true,
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+      child: Padding(
+        padding: EdgeInsets.only(bottom: internalBottom),
+        child: ExpenseFormComponent(
+          initialExpense: initialExpense,
+          participants: group.participants,
+          categories: group.categories,
+          tripStartDate: group.startDate,
+          tripEndDate: group.endDate,
+          shouldAutoClose: false,
+          fullEdit: fullEdit,
+          groupTitle: group.title,
+          currency: group.currency,
+          onExpenseAdded: onExpenseSaved,
+          onCategoryAdded: onCategoryAdded,
+          onDelete: onDelete,
         ),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Flexible(
-            child: SafeArea(
-              top: false,
-              left: false,
-              right: false,
-              bottom: true,
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  final bottomInset = MediaQuery.of(context).padding.bottom;
-                  final keyboard = MediaQuery.of(context).viewInsets.bottom;
-                  const extra = 24.0;
-                  return SingleChildScrollView(
-                    padding: EdgeInsets.fromLTRB(
-                      20,
-                      20,
-                      20,
-                      20 + bottomInset + extra + keyboard,
-                    ),
-                    child: ExpenseFormComponent(
-                      initialExpense: initialExpense,
-                      participants: group.participants,
-                      categories: group.categories,
-                      tripStartDate: group.startDate,
-                      tripEndDate: group.endDate,
-                      shouldAutoClose: false,
-                      fullEdit: fullEdit,
-                      groupTitle: group.title,
-                      currency: group.currency,
-                      onExpenseAdded: onExpenseSaved,
-                      onCategoryAdded: onCategoryAdded,
-                      onDelete: onDelete,
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

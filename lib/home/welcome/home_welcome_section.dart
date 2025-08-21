@@ -127,8 +127,8 @@ class HomeWelcomeSection extends StatelessWidget {
                     Positioned(
                       bottom: 0,
                       left: 0,
-            child: Semantics(
-              key: const ValueKey('settings_button_semantics'),
+                      child: Semantics(
+                        key: const ValueKey('settings_button_semantics'),
                         button: true,
                         // Short predictable label containing 'settings'
                         label: gloc.settings_tab,
@@ -155,8 +155,8 @@ class HomeWelcomeSection extends StatelessWidget {
                     Positioned(
                       bottom: 60, // Posizionato sopra al bottone impostazioni
                       right: 0,
-            child: Semantics(
-              key: const ValueKey('forward_button_semantics'),
+                      child: Semantics(
+                        key: const ValueKey('forward_button_semantics'),
                         button: true,
                         label: gloc.welcome_v3_cta,
                         child: IconButton.filled(
