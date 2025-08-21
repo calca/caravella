@@ -31,6 +31,7 @@ class ExpenseFormComponent extends StatefulWidget {
   final String? newlyAddedCategory; // Nuova proprietà
   final String? groupTitle; // Titolo del gruppo per la riga azioni
   final String? currency; // Currency del gruppo
+  final ScrollController? scrollController; // Controller for scrolling to focused fields
 
   const ExpenseFormComponent({
     super.key,
@@ -47,6 +48,7 @@ class ExpenseFormComponent extends StatefulWidget {
     this.groupTitle,
     this.currency,
     this.fullEdit = false,
+    this.scrollController,
   });
 
   @override
@@ -82,6 +84,35 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
 
   // Scroll controller callback per CategorySelectorWidget
   // Removed _scrollToCategoryEnd: no longer needed with new category selector bottom sheet.
+
+  /// Scrolls to make the focused field visible when keyboard opens
+  void _scrollToFocusedField() {
+    if (widget.scrollController == null || !widget.scrollController!.hasClients) return;
+    
+    // Use a short delay to ensure the keyboard animation has started
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (!mounted) return;
+      
+      final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+      if (keyboardHeight == 0) return;
+      
+      // Scroll to ensure focused field is visible above keyboard
+      final screenHeight = MediaQuery.of(context).size.height;
+      final visibleHeight = screenHeight - keyboardHeight;
+      final currentScrollOffset = widget.scrollController!.offset;
+      
+      // Calculate required scroll to bring focused field into view
+      // We want to position focused field in the upper part of visible area
+      const fieldBuffer = 150.0; // Extra space above focused field
+      final targetScrollOffset = currentScrollOffset + fieldBuffer;
+      
+      widget.scrollController!.animateTo(
+        targetScrollOffset.clamp(0.0, widget.scrollController!.position.maxScrollExtent),
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    });
+  }
 
   @override
   void initState() {
@@ -119,7 +150,23 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
 
     // Autofocus su amount dopo primo frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _amountFocus.requestFocus();
+      if (mounted) {
+        _amountFocus.requestFocus();
+        _scrollToFocusedField();
+      }
+    });
+
+    // Add focus listeners to trigger scrolling when fields receive focus
+    _amountFocus.addListener(() {
+      if (_amountFocus.hasFocus) {
+        _scrollToFocusedField();
+      }
+    });
+
+    _nameFocus.addListener(() {
+      if (_nameFocus.hasFocus) {
+        _scrollToFocusedField();
+      }
     });
     // Listener per aggiornare _amount in tempo reale (mantiene valore anche quando perde focus)
     _amountController.addListener(() {
@@ -255,23 +302,21 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     return PopScope(
       canPop: !_isDirty,
       onPopInvokedWithResult: _handlePop,
-      child: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildGroupHeader(),
-              _buildAmountField(gloc, smallStyle),
-              _spacer(),
-              _buildNameField(gloc, smallStyle),
-              _spacer(),
-              _buildParticipantCategorySection(smallStyle),
-              _buildExtendedFields(locale, smallStyle),
-              _buildDivider(context),
-              _buildActionsRow(gloc, smallStyle),
-            ],
-          ),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildGroupHeader(),
+            _buildAmountField(gloc, smallStyle),
+            _spacer(),
+            _buildNameField(gloc, smallStyle),
+            _spacer(),
+            _buildParticipantCategorySection(smallStyle),
+            _buildExtendedFields(locale, smallStyle),
+            _buildDivider(context),
+            _buildActionsRow(gloc, smallStyle),
+          ],
         ),
       ),
     );
