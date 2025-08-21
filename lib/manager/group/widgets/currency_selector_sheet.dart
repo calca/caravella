@@ -134,8 +134,10 @@ class _CurrencySelectorSheetState extends State<CurrencySelectorSheet> {
                       final name = localizedCurrencyName(l, currency['code']!);
                       final query = _query;
                       return ListTile(
-                        leading: const Icon(
-                          Icons.account_balance_wallet_outlined,
+                        leading: _buildHighlighted(
+                          currency['code']!,
+                          query,
+                          Theme.of(context).textTheme.labelLarge,
                         ),
                         title: _buildHighlighted(
                           name,
@@ -143,7 +145,7 @@ class _CurrencySelectorSheetState extends State<CurrencySelectorSheet> {
                           Theme.of(context).textTheme.bodyLarge,
                         ),
                         subtitle: _buildHighlighted(
-                          '${currency['symbol']} 0   ${currency['code']}',
+                          '${currency['symbol']}',
                           query,
                           Theme.of(context).textTheme.bodySmall,
                         ),
