@@ -7,7 +7,7 @@ import '../data/group_form_state.dart';
 import '../group_form_controller.dart';
 import '../pages/image_crop_page.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
-import 'bottom_sheet_scaffold.dart';
+import '../../../widgets/bottom_sheet_scaffold.dart';
 
 class BackgroundPicker extends StatelessWidget {
   const BackgroundPicker({super.key});

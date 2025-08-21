@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import '../data/currencies.dart';
 import '../../../l10n/app_localizations.dart';
-import 'bottom_sheet_scaffold.dart';
+import '../../../widgets/bottom_sheet_scaffold.dart';
 
 class CurrencySelectorSheet extends StatefulWidget {
   const CurrencySelectorSheet({super.key});
