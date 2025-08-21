@@ -32,8 +32,9 @@ class SectionPeriod extends StatelessWidget {
                   onPressed: onClearDates,
                   icon: const Icon(Icons.delete_outline, size: 22),
                   style: FilledButton.styleFrom(
-                    backgroundColor:
-                        Theme.of(context).colorScheme.surfaceContainer,
+                    backgroundColor: Theme.of(
+                      context,
+                    ).colorScheme.surfaceContainer,
                     foregroundColor: Theme.of(context).colorScheme.error,
                     minimumSize: const Size(44, 44),
                     padding: EdgeInsets.zero,
@@ -42,7 +43,7 @@ class SectionPeriod extends StatelessWidget {
               : null,
           padding: EdgeInsets.zero,
         ),
-        const SizedBox(height: 8),
+  const SizedBox(height: 12),
         // Start date row
         Material(
           color: Colors.transparent,
@@ -72,9 +73,9 @@ class SectionPeriod extends StatelessWidget {
             ),
           ),
         ),
-  const SizedBox(height: 8),
-  // End date row
-  Material(
+        const SizedBox(height: 8),
+        // End date row
+        Material(
           color: Colors.transparent,
           child: InkWell(
             borderRadius: BorderRadius.circular(12),

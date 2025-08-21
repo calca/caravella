@@ -7,6 +7,7 @@ import '../../../widgets/caravella_app_bar.dart';
 import '../../expense/expense_form/icon_leading_field.dart';
 import '../../../themes/app_text_styles.dart';
 import '../widgets/section_flat.dart';
+import '../widgets/section_header.dart';
 import '../widgets/selection_tile.dart';
 import '../data/group_form_state.dart';
 import '../group_form_controller.dart';
@@ -283,16 +284,11 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  gloc.currency,
-                                  style: Theme.of(context).textTheme.bodyMedium
-                                      ?.copyWith(fontWeight: FontWeight.w600),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  gloc.currency_description,
-                                  style: Theme.of(context).textTheme.bodySmall
-                                      ?.copyWith(color: Colors.grey[700]),
+                                SectionHeader(
+                                  title: gloc.currency,
+                                  description: gloc.currency_description,
+                                  padding: EdgeInsets.zero,
+                                  spacing: 4,
                                 ),
                                 const SizedBox(height: 8),
                                 Selector<GroupFormState, Map<String, String>>(
@@ -351,16 +347,11 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  gloc.background,
-                                  style: Theme.of(context).textTheme.bodyMedium
-                                      ?.copyWith(fontWeight: FontWeight.w600),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  gloc.choose_image_or_color,
-                                  style: Theme.of(context).textTheme.bodySmall
-                                      ?.copyWith(color: Colors.grey[700]),
+                                SectionHeader(
+                                  title: gloc.background,
+                                  description: gloc.choose_image_or_color,
+                                  padding: EdgeInsets.zero,
+                                  spacing: 4,
                                 ),
                                 const SizedBox(height: 12),
                                 const BackgroundPicker(),
