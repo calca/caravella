@@ -36,10 +36,6 @@ class CategorySelectorWidget extends StatelessWidget {
         selected: selectedCategory,
         gloc: gloc,
         itemLabel: (c) => c.name,
-        onAddItem: () async {
-          await onAddCategory();
-        },
-        addItemTooltip: gloc.add_category,
         onAddItemInline: onAddCategoryInline,
         addItemHint: gloc.category_name,
       );
