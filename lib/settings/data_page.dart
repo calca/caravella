@@ -8,9 +8,17 @@ import 'package:archive/archive.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 import '../widgets/app_toast.dart';
+import '../services/google_drive_backup_service.dart';
 
-class DataPage extends StatelessWidget {
+class DataPage extends StatefulWidget {
   const DataPage({super.key});
+
+  @override
+  State<DataPage> createState() => _DataPageState();
+}
+
+class _DataPageState extends State<DataPage> {
+  final GoogleDriveBackupService _googleDriveService = GoogleDriveBackupService();
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +42,8 @@ class DataPage extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 16),
+            // Local Backup Card
             Card(
               elevation: 0,
               color: colorScheme.surface,
@@ -57,6 +66,7 @@ class DataPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
+            // Local Restore Card
             Card(
               elevation: 0,
               color: colorScheme.surface,
@@ -81,6 +91,101 @@ class DataPage extends StatelessWidget {
                 ),
               ),
             ),
+            // Google Drive Section - Android only
+            if (Platform.isAndroid) ...[
+              const SizedBox(height: 32),
+              Text(
+                'Google Drive',
+                style: textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16),
+              // Google Drive Authentication Status
+              Card(
+                elevation: 0,
+                color: colorScheme.surface,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: ListTile(
+                  leading: Icon(_googleDriveService.isSignedIn 
+                    ? Icons.account_circle 
+                    : Icons.account_circle_outlined),
+                  minLeadingWidth: 0,
+                  title: Text(
+                    _googleDriveService.isSignedIn 
+                      ? gloc.google_drive_signed_in_as(_googleDriveService.currentUser?.email ?? '')
+                      : gloc.google_drive_sign_in,
+                    style: textTheme.titleMedium,
+                  ),
+                  trailing: TextButton(
+                    onPressed: () async {
+                      if (_googleDriveService.isSignedIn) {
+                        await _googleDriveSignOut(context, gloc);
+                      } else {
+                        await _googleDriveSignIn(context, gloc);
+                      }
+                    },
+                    child: Text(_googleDriveService.isSignedIn 
+                      ? gloc.google_drive_sign_out 
+                      : gloc.google_drive_sign_in),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 16,
+                  ),
+                ),
+              ),
+              // Google Drive Backup Card  
+              if (_googleDriveService.isSignedIn) ...[
+                const SizedBox(height: 16),
+                Card(
+                  elevation: 0,
+                  color: colorScheme.surface,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: ListTile(
+                    leading: const Icon(Icons.cloud_upload),
+                    minLeadingWidth: 0,
+                    title: Text(gloc.google_drive_backup, style: textTheme.titleMedium),
+                    subtitle: Text(gloc.google_drive_backup_desc),
+                    trailing: const Icon(Icons.arrow_forward_ios, size: 18),
+                    onTap: () async {
+                      await _googleDriveBackup(context, gloc);
+                    },
+                    contentPadding: const EdgeInsets.symmetric(
+                      vertical: 8,
+                      horizontal: 16,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                // Google Drive Restore Card
+                Card(
+                  elevation: 0,
+                  color: colorScheme.surface,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: ListTile(
+                    leading: const Icon(Icons.cloud_download),
+                    minLeadingWidth: 0,
+                    title: Text(gloc.google_drive_restore, style: textTheme.titleMedium),
+                    subtitle: Text(gloc.google_drive_restore_desc),
+                    trailing: const Icon(Icons.arrow_forward_ios, size: 18),
+                    onTap: () async {
+                      await _googleDriveRestore(context, gloc);
+                    },
+                    contentPadding: const EdgeInsets.symmetric(
+                      vertical: 8,
+                      horizontal: 16,
+                    ),
+                  ),
+                ),
+              ],
+            ],
           ],
         ),
       ),
@@ -210,6 +315,143 @@ class DataPage extends StatelessWidget {
           );
         }
       }
+    }
+  }
+
+  Future<void> _googleDriveSignIn(
+    BuildContext context,
+    gen.AppLocalizations loc,
+  ) async {
+    try {
+      final account = await _googleDriveService.signIn();
+      if (account != null && context.mounted) {
+        AppToast.show(
+          context,
+          loc.google_drive_signed_in_as(account.email),
+          type: ToastType.success,
+        );
+        setState(() {}); // Refresh UI
+      }
+    } catch (e) {
+      if (!context.mounted) return;
+      AppToast.show(
+        context,
+        '${loc.google_drive_auth_error}: ${e.toString()}',
+        type: ToastType.error,
+      );
+    }
+  }
+
+  Future<void> _googleDriveSignOut(
+    BuildContext context,
+    gen.AppLocalizations loc,
+  ) async {
+    try {
+      await _googleDriveService.signOut();
+      if (context.mounted) {
+        AppToast.show(
+          context,
+          loc.google_drive_sign_out,
+          type: ToastType.info,
+        );
+        setState(() {}); // Refresh UI
+      }
+    } catch (e) {
+      if (!context.mounted) return;
+      AppToast.show(
+        context,
+        '${loc.google_drive_auth_error}: ${e.toString()}',
+        type: ToastType.error,
+      );
+    }
+  }
+
+  Future<void> _googleDriveBackup(
+    BuildContext context,
+    gen.AppLocalizations loc,
+  ) async {
+    try {
+      // Show uploading message
+      AppToast.show(context, loc.google_drive_uploading, type: ToastType.info);
+      
+      await _googleDriveService.uploadBackup();
+      
+      if (!context.mounted) return;
+      AppToast.show(
+        context,
+        loc.google_drive_backup_success,
+        type: ToastType.success,
+      );
+    } catch (e) {
+      if (!context.mounted) return;
+      AppToast.show(
+        context,
+        '${loc.google_drive_backup_error}: ${e.toString()}',
+        type: ToastType.error,
+      );
+    }
+  }
+
+  Future<void> _googleDriveRestore(
+    BuildContext context,
+    gen.AppLocalizations loc,
+  ) async {
+    // Check if backup exists first
+    final hasBackup = await _googleDriveService.hasBackupOnDrive();
+    if (!hasBackup) {
+      if (!context.mounted) return;
+      AppToast.show(
+        context,
+        loc.google_drive_no_backup_found,
+        type: ToastType.info,
+      );
+      return;
+    }
+
+    // Confirm restore
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: Text(loc.import_confirm_title),
+        content: Text(loc.import_confirm_message('Google Drive backup')),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(loc.cancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(loc.ok),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm != true) return;
+
+    try {
+      // Show downloading message
+      AppToast.show(context, loc.google_drive_downloading, type: ToastType.info);
+      
+      await _googleDriveService.downloadBackup();
+      
+      if (!context.mounted) return;
+      AppToast.show(
+        context,
+        loc.google_drive_restore_success,
+        type: ToastType.success,
+      );
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    } catch (e) {
+      if (!context.mounted) return;
+      AppToast.show(
+        context,
+        '${loc.google_drive_restore_error}: ${e.toString()}',
+        type: ToastType.error,
+      );
     }
   }
 }

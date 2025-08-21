@@ -232,7 +232,27 @@
   "data_backup_title": "Backup",
   "data_backup_desc": "Crea un file di backup delle tue spese.",
   "data_restore_title": "Ripristino",
-  "data_restore_desc": "Importa un backup per ripristinare i dati."
+  "data_restore_desc": "Importa un backup per ripristinare i dati.",
+  "google_drive_backup": "Backup Google Drive",
+  "google_drive_backup_desc": "Salva il backup su Google Drive",
+  "google_drive_restore": "Ripristino Google Drive", 
+  "google_drive_restore_desc": "Ripristina da Google Drive",
+  "google_drive_sign_in": "Accedi a Google",
+  "google_drive_sign_out": "Disconnetti da Google",
+  "google_drive_backup_success": "Backup salvato su Google Drive",
+  "google_drive_backup_error": "Errore nel backup su Google Drive",
+  "google_drive_restore_success": "Dati ripristinati da Google Drive",
+  "google_drive_restore_error": "Errore nel ripristino da Google Drive",
+  "google_drive_auth_error": "Errore di autenticazione Google",
+  "google_drive_no_backup_found": "Nessun backup trovato su Google Drive",
+  "google_drive_uploading": "Caricamento su Google Drive...",
+  "google_drive_downloading": "Scaricamento da Google Drive...",
+  "google_drive_signed_in_as": "Connesso come: {email}",
+  "@google_drive_signed_in_as": {
+    "placeholders": {
+      "email": {}
+    }
+  }
   ,"category_placeholder": "Categoria"
   ,"discard_changes_title": "Scartare le modifiche?"
   ,"discard_changes_message": "Sei sicuro di voler scartare le modifiche non salvate?"
