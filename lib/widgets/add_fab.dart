@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 
 /// Reusable styled FAB with consistent shadow and primary coloring.
 class AddFab extends StatelessWidget {
@@ -20,6 +21,7 @@ class AddFab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final localizations = AppLocalizations.of(context);
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
@@ -31,14 +33,18 @@ class AddFab extends StatelessWidget {
           ),
         ],
       ),
-      child: FloatingActionButton(
-        heroTag: heroTag,
-        onPressed: onPressed,
-        tooltip: tooltip,
-        backgroundColor: scheme.primary,
-        foregroundColor: scheme.onPrimary,
-        elevation: 0,
-        child: Icon(icon, size: iconSize),
+      child: Semantics(
+        button: true,
+        label: tooltip ?? localizations.accessibility_add_new_item,
+        child: FloatingActionButton(
+          heroTag: heroTag,
+          onPressed: onPressed,
+          tooltip: tooltip,
+          backgroundColor: scheme.primary,
+          foregroundColor: scheme.onPrimary,
+          elevation: 0,
+          child: Icon(icon, size: iconSize),
+        ),
       ),
     );
   }

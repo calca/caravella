@@ -1525,6 +1525,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Filter groups'**
   String get filter_status_tooltip;
+
+  /// Semantic label for the welcome screen logo
+  ///
+  /// In en, this message translates to:
+  /// **'Caravella app logo'**
+  String get welcome_logo_semantic;
+
+  /// Create new group action label
+  ///
+  /// In en, this message translates to:
+  /// **'Create new group'**
+  String get create_new_group;
+
+  /// Default accessibility label for add button
+  ///
+  /// In en, this message translates to:
+  /// **'Add new item'**
+  String get accessibility_add_new_item;
+
+  /// Navigation bar accessibility label
+  ///
+  /// In en, this message translates to:
+  /// **'Navigation bar'**
+  String get accessibility_navigation_bar;
+
+  /// Back button accessibility label
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get accessibility_back_button;
+
+  /// Loading state accessibility label
+  ///
+  /// In en, this message translates to:
+  /// **'Loading groups'**
+  String get accessibility_loading_groups;
+
+  /// Loading groups progress indicator label
+  ///
+  /// In en, this message translates to:
+  /// **'Loading your groups'**
+  String get accessibility_loading_your_groups;
+
+  /// Groups list section accessibility label
+  ///
+  /// In en, this message translates to:
+  /// **'Groups list'**
+  String get accessibility_groups_list;
+
+  /// Welcome screen accessibility label
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome screen'**
+  String get accessibility_welcome_screen;
+
+  /// Total expenses accessibility label
+  ///
+  /// In en, this message translates to:
+  /// **'Total expenses: {amount}€'**
+  String accessibility_total_expenses(String amount);
+
+  /// Add expense button accessibility label
+  ///
+  /// In en, this message translates to:
+  /// **'Add expense'**
+  String get accessibility_add_expense;
+
+  /// Security switch accessibility label
+  ///
+  /// In en, this message translates to:
+  /// **'Security switch - {state}'**
+  String accessibility_security_switch(String state);
+
+  /// Switch on state label
+  ///
+  /// In en, this message translates to:
+  /// **'On'**
+  String get accessibility_switch_on;
+
+  /// Switch off state label
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get accessibility_switch_off;
+
+  /// Image source selection dialog accessibility label
+  ///
+  /// In en, this message translates to:
+  /// **'Image source selection dialog'**
+  String get accessibility_image_source_dialog;
+
+  /// Currently enabled state label
+  ///
+  /// In en, this message translates to:
+  /// **'Currently enabled'**
+  String get accessibility_currently_enabled;
+
+  /// Currently disabled state label
+  ///
+  /// In en, this message translates to:
+  /// **'Currently disabled'**
+  String get accessibility_currently_disabled;
+
+  /// Double tap to disable hint
+  ///
+  /// In en, this message translates to:
+  /// **'Double tap to disable screen security'**
+  String get accessibility_double_tap_disable;
+
+  /// Double tap to enable hint
+  ///
+  /// In en, this message translates to:
+  /// **'Double tap to enable screen security'**
+  String get accessibility_double_tap_enable;
+
+  /// Success toast type description
+  ///
+  /// In en, this message translates to:
+  /// **'Success'**
+  String get accessibility_toast_success;
+
+  /// Error toast type description
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get accessibility_toast_error;
+
+  /// Information toast type description
+  ///
+  /// In en, this message translates to:
+  /// **'Information'**
+  String get accessibility_toast_info;
 }
 
 class _AppLocalizationsDelegate

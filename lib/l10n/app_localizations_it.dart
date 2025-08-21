@@ -746,4 +746,74 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get filter_status_tooltip => 'Filtra gruppi';
+
+  @override
+  String get welcome_logo_semantic => 'Logo dell\'app Caravella';
+
+  @override
+  String get create_new_group => 'Crea nuovo gruppo';
+
+  @override
+  String get accessibility_add_new_item => 'Aggiungi nuovo elemento';
+
+  @override
+  String get accessibility_navigation_bar => 'Barra di navigazione';
+
+  @override
+  String get accessibility_back_button => 'Indietro';
+
+  @override
+  String get accessibility_loading_groups => 'Caricamento gruppi';
+
+  @override
+  String get accessibility_loading_your_groups => 'Caricamento dei tuoi gruppi';
+
+  @override
+  String get accessibility_groups_list => 'Elenco gruppi';
+
+  @override
+  String get accessibility_welcome_screen => 'Schermata di benvenuto';
+
+  @override
+  String accessibility_total_expenses(String amount) {
+    return 'Spese totali: ${amount}€';
+  }
+
+  @override
+  String get accessibility_add_expense => 'Aggiungi spesa';
+
+  @override
+  String accessibility_security_switch(String state) {
+    return 'Interruttore sicurezza - $state';
+  }
+
+  @override
+  String get accessibility_switch_on => 'Attivo';
+
+  @override
+  String get accessibility_switch_off => 'Inattivo';
+
+  @override
+  String get accessibility_image_source_dialog => 'Finestra di selezione sorgente immagine';
+
+  @override
+  String get accessibility_currently_enabled => 'Attualmente attivo';
+
+  @override
+  String get accessibility_currently_disabled => 'Attualmente inattivo';
+
+  @override
+  String get accessibility_double_tap_disable => 'Tocca due volte per disattivare la sicurezza dello schermo';
+
+  @override
+  String get accessibility_double_tap_enable => 'Tocca due volte per attivare la sicurezza dello schermo';
+
+  @override
+  String get accessibility_toast_success => 'Successo';
+
+  @override
+  String get accessibility_toast_error => 'Errore';
+
+  @override
+  String get accessibility_toast_info => 'Informazione';
 }

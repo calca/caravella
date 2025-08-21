@@ -62,21 +62,26 @@ class SettingsPage extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    child: ListTile(
-                      leading: const Icon(Icons.language),
-                      title: Text(
-                        genLoc.settings_language,
-                        style: textTheme.titleMedium,
+                    child: Semantics(
+                      button: true,
+                      label: '${genLoc.settings_language} - Current: ${locale == 'it' ? genLoc.settings_language_it : genLoc.settings_language_en}',
+                      hint: 'Double tap to change language',
+                      child: ListTile(
+                        leading: const Icon(Icons.language),
+                        title: Text(
+                          genLoc.settings_language,
+                          style: textTheme.titleMedium,
+                        ),
+                        subtitle: Text(
+                          locale == 'it'
+                              ? genLoc.settings_language_it
+                              : genLoc.settings_language_en,
+                        ),
+                        trailing: const Icon(Icons.arrow_drop_down),
+                        onTap: () {
+                          _showLanguagePicker(context, locale, genLoc);
+                        },
                       ),
-                      subtitle: Text(
-                        locale == 'it'
-                            ? genLoc.settings_language_it
-                            : genLoc.settings_language_en,
-                      ),
-                      trailing: const Icon(Icons.arrow_drop_down),
-                      onTap: () {
-                        _showLanguagePicker(context, locale, genLoc);
-                      },
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -86,17 +91,22 @@ class SettingsPage extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    child: ListTile(
-                      leading: const Icon(Icons.brightness_6),
-                      title: Text(
-                        genLoc.settings_theme,
-                        style: textTheme.titleMedium,
+                    child: Semantics(
+                      button: true,
+                      label: '${genLoc.settings_theme} - Current: $currentThemeLabel',
+                      hint: 'Double tap to change theme',
+                      child: ListTile(
+                        leading: const Icon(Icons.brightness_6),
+                        title: Text(
+                          genLoc.settings_theme,
+                          style: textTheme.titleMedium,
+                        ),
+                        subtitle: Text(currentThemeLabel),
+                        trailing: const Icon(Icons.arrow_drop_down),
+                        onTap: () {
+                          _showThemePicker(context, genLoc);
+                        },
                       ),
-                      subtitle: Text(currentThemeLabel),
-                      trailing: const Icon(Icons.arrow_drop_down),
-                      onTap: () {
-                        _showThemePicker(context, genLoc);
-                      },
                     ),
                   ),
                   // ...existing code...
@@ -126,22 +136,30 @@ class SettingsPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Consumer<FlagSecureNotifier>(
-                        builder: (context, notifier, _) => ListTile(
-                          leading: const Icon(Icons.privacy_tip_outlined),
-                          title: Text(
-                            genLoc.settings_flag_secure_title,
-                            style: textTheme.titleMedium,
-                          ),
-                          subtitle: Text(
-                            genLoc.settings_flag_secure_desc,
-                            style: textTheme.bodySmall,
-                          ),
-                          trailing: Switch(
-                            value: notifier.enabled,
-                            onChanged: (val) async {
-                              notifier.setEnabled(val);
-                              await FlagSecureAndroid.setFlagSecure(val);
-                            },
+                        builder: (context, notifier, _) => Semantics(
+                          toggled: notifier.enabled,
+                          label: '${genLoc.settings_flag_secure_title} - ${notifier.enabled ? genLoc.accessibility_currently_enabled : genLoc.accessibility_currently_disabled}',
+                          hint: notifier.enabled ? genLoc.accessibility_double_tap_disable : genLoc.accessibility_double_tap_enable,
+                          child: ListTile(
+                            leading: const Icon(Icons.privacy_tip_outlined),
+                            title: Text(
+                              genLoc.settings_flag_secure_title,
+                              style: textTheme.titleMedium,
+                            ),
+                            subtitle: Text(
+                              genLoc.settings_flag_secure_desc,
+                              style: textTheme.bodySmall,
+                            ),
+                            trailing: Semantics(
+                              label: genLoc.accessibility_security_switch(notifier.enabled ? genLoc.accessibility_switch_on : genLoc.accessibility_switch_off),
+                              child: Switch(
+                                value: notifier.enabled,
+                                onChanged: (val) async {
+                                  notifier.setEnabled(val);
+                                  await FlagSecureAndroid.setFlagSecure(val);
+                                },
+                              ),
+                            ),
                           ),
                         ),
                       ),

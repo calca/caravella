@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 
 class CaravellaAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
@@ -18,16 +19,30 @@ class CaravellaAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      backgroundColor:
-          backgroundColor ?? Theme.of(context).scaffoldBackgroundColor,
-      elevation: elevation,
-      iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onSurface),
-      foregroundColor: Theme.of(context).colorScheme.onSurface,
-      centerTitle: centerTitle,
-      title: null,
-      leading: leading,
-      actions: actions,
+    final localizations = AppLocalizations.of(context);
+    return Semantics(
+      header: true,
+      label: localizations.accessibility_navigation_bar,
+      child: AppBar(
+        backgroundColor:
+            backgroundColor ?? Theme.of(context).scaffoldBackgroundColor,
+        elevation: elevation,
+        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onSurface),
+        foregroundColor: Theme.of(context).colorScheme.onSurface,
+        centerTitle: centerTitle,
+        title: null,
+        leading: leading != null 
+            ? Semantics(
+                button: true,
+                label: localizations.accessibility_back_button,
+                child: leading,
+              )
+            : null,
+        actions: actions?.map((action) => Semantics(
+          button: true,
+          child: action,
+        )).toList(),
+      ),
     );
   }
 

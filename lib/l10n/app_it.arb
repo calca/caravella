@@ -254,4 +254,48 @@
   ,"@status_archived": {"description": "Etichetta filtro: gruppi archiviati"}
   ,"filter_status_tooltip": "Filtra gruppi"
   ,"@filter_status_tooltip": {"description": "Tooltip per la riga dei pulsanti filtro stato"}
+  ,"welcome_logo_semantic": "Logo dell'app Caravella"
+  ,"@welcome_logo_semantic": {"description": "Semantic label for the welcome screen logo"}
+  ,"create_new_group": "Crea nuovo gruppo"
+  ,"@create_new_group": {"description": "Create new group action label"}
+  ,"accessibility_add_new_item": "Aggiungi nuovo elemento"
+  ,"@accessibility_add_new_item": {"description": "Default accessibility label for add button"}
+  ,"accessibility_navigation_bar": "Barra di navigazione"
+  ,"@accessibility_navigation_bar": {"description": "Navigation bar accessibility label"}
+  ,"accessibility_back_button": "Indietro"
+  ,"@accessibility_back_button": {"description": "Back button accessibility label"}
+  ,"accessibility_loading_groups": "Caricamento gruppi"
+  ,"@accessibility_loading_groups": {"description": "Loading state accessibility label"}
+  ,"accessibility_loading_your_groups": "Caricamento dei tuoi gruppi"
+  ,"@accessibility_loading_your_groups": {"description": "Loading groups progress indicator label"}
+  ,"accessibility_groups_list": "Elenco gruppi"
+  ,"@accessibility_groups_list": {"description": "Groups list section accessibility label"}
+  ,"accessibility_welcome_screen": "Schermata di benvenuto"
+  ,"@accessibility_welcome_screen": {"description": "Welcome screen accessibility label"}
+  ,"accessibility_total_expenses": "Spese totali: {amount}€"
+  ,"@accessibility_total_expenses": {"description": "Total expenses accessibility label", "placeholders": {"amount": {}}}
+  ,"accessibility_add_expense": "Aggiungi spesa"
+  ,"@accessibility_add_expense": {"description": "Add expense button accessibility label"}
+  ,"accessibility_security_switch": "Interruttore sicurezza - {state}"
+  ,"@accessibility_security_switch": {"description": "Security switch accessibility label", "placeholders": {"state": {}}}
+  ,"accessibility_switch_on": "Attivo"
+  ,"@accessibility_switch_on": {"description": "Switch on state label"}
+  ,"accessibility_switch_off": "Inattivo"
+  ,"@accessibility_switch_off": {"description": "Switch off state label"}
+  ,"accessibility_image_source_dialog": "Finestra di selezione sorgente immagine"
+  ,"@accessibility_image_source_dialog": {"description": "Image source selection dialog accessibility label"}
+  ,"accessibility_currently_enabled": "Attualmente attivo"
+  ,"@accessibility_currently_enabled": {"description": "Currently enabled state label"}
+  ,"accessibility_currently_disabled": "Attualmente inattivo"
+  ,"@accessibility_currently_disabled": {"description": "Currently disabled state label"}
+  ,"accessibility_double_tap_disable": "Tocca due volte per disattivare la sicurezza dello schermo"
+  ,"@accessibility_double_tap_disable": {"description": "Double tap to disable hint"}
+  ,"accessibility_double_tap_enable": "Tocca due volte per attivare la sicurezza dello schermo"
+  ,"@accessibility_double_tap_enable": {"description": "Double tap to enable hint"}
+  ,"accessibility_toast_success": "Successo"
+  ,"@accessibility_toast_success": {"description": "Success toast type description"}
+  ,"accessibility_toast_error": "Errore"
+  ,"@accessibility_toast_error": {"description": "Error toast type description"}
+  ,"accessibility_toast_info": "Informazione"
+  ,"@accessibility_toast_info": {"description": "Information toast type description"}
 }

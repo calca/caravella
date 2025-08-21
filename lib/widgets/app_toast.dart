@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 
 /// Lightweight toast / inline feedback using Flutter's native SnackBar
 /// with Material 3 theming and automatic queue management.
@@ -40,24 +41,29 @@ class AppToast {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              effectiveIcon,
-              color: textColor,
-              size: 20,
-            ),
-            const SizedBox(width: 10),
-            Flexible(
-              child: Text(
-                message,
-                style: theme.textTheme.bodyMedium?.copyWith(color: textColor),
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
+        content: Semantics(
+          liveRegion: true,
+          label: '${_getTypeDescription(context, type)}: $message',
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                effectiveIcon,
+                color: textColor,
+                size: 20,
+                semanticLabel: _getTypeDescription(context, type),
               ),
-            ),
-          ],
+              const SizedBox(width: 10),
+              Flexible(
+                child: Text(
+                  message,
+                  style: theme.textTheme.bodyMedium?.copyWith(color: textColor),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
         ),
         backgroundColor: backgroundColor,
         duration: duration,
@@ -73,6 +79,18 @@ class AppToast {
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       ),
     );
+  }
+
+  static String _getTypeDescription(BuildContext context, ToastType type) {
+    final localizations = AppLocalizations.of(context);
+    switch (type) {
+      case ToastType.success:
+        return localizations.accessibility_toast_success;
+      case ToastType.error:
+        return localizations.accessibility_toast_error;
+      case ToastType.info:
+        return localizations.accessibility_toast_info;
+    }
   }
 }
 

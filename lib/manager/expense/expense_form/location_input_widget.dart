@@ -243,29 +243,43 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
       required VoidCallback onTap,
       required Color color,
     }) {
-      return Tooltip(
-        message: tooltip,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(16),
-          onTap: onTap,
-          child: SizedBox(
-            width: 32,
-            height: 32,
-            child: Center(child: Icon(icon, size: 20, color: color)),
+      return Semantics(
+        button: true,
+        label: tooltip,
+        hint: 'Double tap to $tooltip',
+        child: Tooltip(
+          message: tooltip,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(16),
+            onTap: onTap,
+            child: SizedBox(
+              width: 32,
+              height: 32,
+              child: Center(child: Icon(icon, size: 20, color: color)),
+            ),
           ),
         ),
       );
     }
 
     if (_isGettingLocation || _isResolvingAddress) {
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SizedBox(
-          width: 20,
-          height: 20,
-          child: CircularProgressIndicator(
-            strokeWidth: 2,
-            color: colorScheme.primary,
+      return Semantics(
+        liveRegion: true,
+        label: _isGettingLocation 
+            ? gloc.get_current_location 
+            : 'Resolving address',
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              color: colorScheme.primary,
+              semanticsLabel: _isGettingLocation 
+                  ? 'Getting your current location' 
+                  : 'Resolving address from coordinates',
+            ),
           ),
         ),
       );
