@@ -177,9 +177,16 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder: (context) => FractionallySizedBox(
-        heightFactor: 0.85,
-        child: UnifiedOverviewSheet(trip: _trip!),
+      enableDrag: true,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.85,
+        minChildSize: 0.5,
+        maxChildSize: 0.95,
+        expand: false,
+        builder: (context, scrollController) => UnifiedOverviewSheet(
+          trip: _trip!,
+          scrollController: scrollController,
+        ),
       ),
     );
   }
