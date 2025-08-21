@@ -136,6 +136,12 @@ abstract class AppLocalizations {
   /// **'Secure screen'**
   String get settings_flag_secure_title;
 
+  /// No description provided for @settings_privacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy'**
+  String get settings_privacy;
+
   /// No description provided for @select_currency.
   ///
   /// In en, this message translates to:
@@ -325,7 +331,7 @@ abstract class AppLocalizations {
   /// No description provided for @choose_image_or_color.
   ///
   /// In en, this message translates to:
-  /// **'Choose an image or color to customize the group'**
+  /// **'Choose image or color'**
   String get choose_image_or_color;
 
   /// No description provided for @participants_description.
@@ -1318,11 +1324,23 @@ abstract class AppLocalizations {
   /// **'General'**
   String get settings_general;
 
+  /// No description provided for @settings_general_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Language and appearance settings'**
+  String get settings_general_desc;
+
   /// No description provided for @settings_language.
   ///
   /// In en, this message translates to:
   /// **'Language'**
   String get settings_language;
+
+  /// No description provided for @settings_language_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your preferred language'**
+  String get settings_language_desc;
 
   /// No description provided for @settings_language_it.
   ///
@@ -1354,11 +1372,23 @@ abstract class AppLocalizations {
   /// **'Theme'**
   String get settings_theme;
 
+  /// No description provided for @settings_theme_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Light, dark or system'**
+  String get settings_theme_desc;
+
   /// No description provided for @settings_select_theme.
   ///
   /// In en, this message translates to:
   /// **'Select theme'**
   String get settings_select_theme;
+
+  /// No description provided for @settings_privacy_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Security and privacy options'**
+  String get settings_privacy_desc;
 
   /// No description provided for @settings_data.
   ///
@@ -1366,23 +1396,29 @@ abstract class AppLocalizations {
   /// **'Data'**
   String get settings_data;
 
+  /// No description provided for @settings_data_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your information'**
+  String get settings_data_desc;
+
   /// No description provided for @settings_data_manage.
   ///
   /// In en, this message translates to:
   /// **'Data management'**
   String get settings_data_manage;
 
-  /// No description provided for @settings_data_desc.
-  ///
-  /// In en, this message translates to:
-  /// **'Backup and restore'**
-  String get settings_data_desc;
-
   /// No description provided for @settings_info.
   ///
   /// In en, this message translates to:
   /// **'Information'**
   String get settings_info;
+
+  /// No description provided for @settings_info_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'App details and support'**
+  String get settings_info_desc;
 
   /// No description provided for @settings_app_version.
   ///
@@ -2764,7 +2800,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en', 'it', 'es'].contains(locale.languageCode);
+      <String>['en', 'es', 'it'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;

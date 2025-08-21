@@ -28,6 +28,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_flag_secure_title => 'Secure screen';
 
   @override
+  String get settings_privacy => 'Privacy';
+
+  @override
   String get select_currency => 'Select currency';
 
   @override
@@ -122,8 +125,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get background_options => 'Background Options';
 
   @override
-  String get choose_image_or_color =>
-      'Choose image or color';
+  String get choose_image_or_color => 'Choose image or color';
 
   @override
   String get participants_description => 'People sharing costs';
@@ -636,7 +638,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_general => 'General';
 
   @override
+  String get settings_general_desc => 'Language and appearance settings';
+
+  @override
   String get settings_language => 'Language';
+
+  @override
+  String get settings_language_desc => 'Choose your preferred language';
 
   @override
   String get settings_language_it => 'Italian';
@@ -645,25 +653,37 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_language_en => 'English';
 
   @override
+  String get settings_language_es => 'Spanish';
+
+  @override
   String get settings_select_language => 'Select language';
 
   @override
   String get settings_theme => 'Theme';
 
   @override
+  String get settings_theme_desc => 'Light, dark or system';
+
+  @override
   String get settings_select_theme => 'Select theme';
+
+  @override
+  String get settings_privacy_desc => 'Security and privacy options';
 
   @override
   String get settings_data => 'Data';
 
   @override
+  String get settings_data_desc => 'Manage your information';
+
+  @override
   String get settings_data_manage => 'Data management';
 
   @override
-  String get settings_data_desc => 'Backup and restore';
+  String get settings_info => 'Information';
 
   @override
-  String get settings_info => 'Information';
+  String get settings_info_desc => 'App details and support';
 
   @override
   String get settings_app_version => 'App version';

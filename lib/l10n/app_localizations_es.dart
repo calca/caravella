@@ -4,7 +4,7 @@ import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
 
-/// The translations for Spanish (`es`).
+/// The translations for Spanish Castilian (`es`).
 class AppLocalizationsEs extends AppLocalizations {
   AppLocalizationsEs([String locale = 'es']) : super(locale);
 
@@ -26,6 +26,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settings_flag_secure_title => 'Pantalla segura';
+
+  @override
+  String get settings_privacy => 'Privacidad';
 
   @override
   String get select_currency => 'Seleccionar moneda';
@@ -122,8 +125,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get background_options => 'Opciones de Fondo';
 
   @override
-  String get choose_image_or_color =>
-      'Elige imagen o color';
+  String get choose_image_or_color => 'Elige imagen o color';
 
   @override
   String get participants_description => 'Personas que comparten costos';
@@ -147,8 +149,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get background_tap_to_change => 'Tocar para cambiar';
 
   @override
-  String get background_select_image_or_color =>
-      'Seleccionar imagen o color';
+  String get background_select_image_or_color => 'Seleccionar imagen o color';
 
   @override
   String get background_random_color => 'Color aleatorio';
@@ -254,7 +255,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ok => 'OK';
 
   @override
-  String from_to(Object start, Object end) {
+  String from_to(Object end, Object start) {
     return '$start - $end';
   }
 
@@ -338,7 +339,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String import_confirm_message(Object file) {
-    return '¿Estás seguro de que quieres sobrescribir todos los viajes con el archivo "$file"? Esta acción no se puede deshacer.';
+    return '¿Estás seguro de que quieres sobrescribir todos los viajes con el archivo \"$file\"? Esta acción no se puede deshacer.';
   }
 
   @override
@@ -622,8 +623,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get location_permission_denied => 'Permiso de ubicación denegado';
 
   @override
-  String get location_service_disabled =>
-      'Servicio de ubicación deshabilitado';
+  String get location_service_disabled => 'Servicio de ubicación deshabilitado';
 
   @override
   String get getting_location => 'Obteniendo ubicación...';
@@ -641,7 +641,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settings_general => 'General';
 
   @override
+  String get settings_general_desc => 'Configuración idioma y apariencia';
+
+  @override
   String get settings_language => 'Idioma';
+
+  @override
+  String get settings_language_desc => 'Elige tu idioma preferido';
 
   @override
   String get settings_language_it => 'Italiano';
@@ -659,19 +665,28 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settings_theme => 'Tema';
 
   @override
+  String get settings_theme_desc => 'Claro, oscuro o sistema';
+
+  @override
   String get settings_select_theme => 'Seleccionar tema';
+
+  @override
+  String get settings_privacy_desc => 'Opciones seguridad y privacidad';
 
   @override
   String get settings_data => 'Datos';
 
   @override
+  String get settings_data_desc => 'Administra tu información';
+
+  @override
   String get settings_data_manage => 'Gestión de datos';
 
   @override
-  String get settings_data_desc => 'Respaldo y restauración';
+  String get settings_info => 'Información';
 
   @override
-  String get settings_info => 'Información';
+  String get settings_info_desc => 'Detalles app y soporte';
 
   @override
   String get settings_app_version => 'Versión de la aplicación';
