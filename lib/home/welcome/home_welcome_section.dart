@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
-import '../../manager/group/add_new_expenses_group.dart';
+import '../../manager/group/pages/add_new_expenses_group.dart';
 import '../../settings/settings_page.dart';
 
 typedef RefreshCallback = void Function();
@@ -125,7 +125,8 @@ class HomeWelcomeSection extends StatelessWidget {
                       left: 0,
                       child: Semantics(
                         button: true,
-                        label: '${gloc.settings_tab} - ${gloc.settings_tab.toLowerCase()} menu',
+                        label:
+                            '${gloc.settings_tab} - ${gloc.settings_tab.toLowerCase()} menu',
                         child: TextButton(
                           onPressed: () {
                             Navigator.of(context).push(
@@ -151,7 +152,8 @@ class HomeWelcomeSection extends StatelessWidget {
                       right: 0,
                       child: Semantics(
                         button: true,
-                        label: '${gloc.welcome_v3_cta} - ${gloc.create_new_group}',
+                        label:
+                            '${gloc.welcome_v3_cta} - ${gloc.create_new_group}',
                         child: IconButton.filled(
                           onPressed: () async {
                             final result = await Navigator.of(context).push(

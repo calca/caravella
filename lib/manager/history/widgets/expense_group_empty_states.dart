@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
-import '../../group/add_new_expenses_group.dart';
+import '../../group/pages/add_new_expenses_group.dart';
 
 class ExpsenseGroupEmptyStates extends StatelessWidget {
   final String searchQuery;

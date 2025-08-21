@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'section_period.dart';
-import '../group_form_state.dart';
+import '../data/group_form_state.dart';
 
 class PeriodSectionEditor extends StatelessWidget {
   final Future<DateTime?> Function(bool isStart) onPickDate;

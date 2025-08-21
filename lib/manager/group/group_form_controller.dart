@@ -5,7 +5,7 @@ import '../../data/expense_group.dart';
 import '../../data/expense_group_storage.dart';
 import '../../data/expense_participant.dart';
 import '../../data/expense_category.dart';
-import 'group_form_state.dart';
+import 'data/group_form_state.dart';
 
 /// Controller encapsulates business logic for the group form.
 class GroupFormController {

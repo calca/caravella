@@ -1,4 +1,4 @@
-import '../../l10n/app_localizations.dart';
+import '../../../l10n/app_localizations.dart';
 
 /// Lista di valute (solo simbolo + codice). I nomi sono localizzati via ARB.
 final List<Map<String, String>> kCurrencies = [

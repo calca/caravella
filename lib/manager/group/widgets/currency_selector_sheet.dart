@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../currencies.dart';
+import '../data/currencies.dart';
 import '../../../l10n/app_localizations.dart';
 
 class CurrencySelectorSheet extends StatelessWidget {

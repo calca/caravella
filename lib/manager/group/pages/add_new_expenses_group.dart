@@ -1,22 +1,22 @@
 // Widget simile a quello incollato per la selezione valuta
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../data/expense_group.dart';
+import '../../../data/expense_group.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
-import '../../widgets/caravella_app_bar.dart';
-import '../expense/expense_form/icon_leading_field.dart';
-import '../../themes/app_text_styles.dart';
-import 'widgets/section_flat.dart';
-import 'widgets/selection_tile.dart';
-import 'group_form_state.dart';
-import 'group_form_controller.dart';
-import 'widgets/group_title_field.dart';
-import 'widgets/participants_editor.dart';
-import 'widgets/categories_editor.dart';
-import 'widgets/period_section_editor.dart';
-import 'widgets/background_picker.dart';
-import 'widgets/currency_selector_sheet.dart';
-import 'widgets/save_button_bar.dart';
+import '../../../widgets/caravella_app_bar.dart';
+import '../../expense/expense_form/icon_leading_field.dart';
+import '../../../themes/app_text_styles.dart';
+import '../widgets/section_flat.dart';
+import '../widgets/selection_tile.dart';
+import '../data/group_form_state.dart';
+import '../group_form_controller.dart';
+import '../widgets/group_title_field.dart';
+import '../widgets/participants_editor.dart';
+import '../widgets/categories_editor.dart';
+import '../widgets/period_section_editor.dart';
+import '../widgets/background_picker.dart';
+import '../widgets/currency_selector_sheet.dart';
+import '../widgets/save_button_bar.dart';
 
 class AddNewExpensesGroupPage extends StatelessWidget {
   final ExpenseGroup? trip;
