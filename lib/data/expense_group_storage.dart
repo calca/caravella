@@ -112,7 +112,7 @@ class ExpenseGroupStorage {
     final index = trips.indexWhere((trip) => trip.id == groupId);
 
     if (index != -1) {
-      trips[index] = trips[index].copyWith(archived: true);
+      trips[index] = trips[index].copyWith(archived: true, pinned: false);
       await writeTrips(trips);
     }
   }
