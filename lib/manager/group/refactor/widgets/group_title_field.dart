@@ -59,12 +59,13 @@ class _GroupTitleFieldState extends State<GroupTitleField> {
       _syncing = false;
     }
     return TextField(
-        controller: _controller,
-        textInputAction: TextInputAction.next,
-        decoration: const InputDecoration(
-          hintText: 'Nome gruppo',
-          border: InputBorder.none,
-          isDense: true,
-        ));
+      controller: _controller,
+      textInputAction: TextInputAction.next,
+      decoration: const InputDecoration(
+        hintText: 'Nome gruppo',
+        border: InputBorder.none,
+        isDense: true,
+      ),
+    );
   }
 }

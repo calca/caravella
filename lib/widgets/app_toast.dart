@@ -29,15 +29,15 @@ class AppToast {
     final theme = contextMounted
         ? Theme.of(context)
         : (rootScaffoldMessenger?.context != null
-            ? Theme.of(rootScaffoldMessenger!.context)
-            : ThemeData());
+              ? Theme.of(rootScaffoldMessenger!.context)
+              : ThemeData());
     final colorScheme = theme.colorScheme;
-    
+
     // Determine colors and icon based on type
     Color backgroundColor;
     Color textColor;
     IconData effectiveIcon;
-    
+
     switch (type) {
       case ToastType.success:
         backgroundColor = colorScheme.surfaceContainerHigh;
@@ -56,13 +56,13 @@ class AppToast {
         break;
     }
 
-  scaffoldMessenger.clearSnackBars();
-  scaffoldMessenger.showSnackBar(
+    scaffoldMessenger.clearSnackBars();
+    scaffoldMessenger.showSnackBar(
       SnackBar(
         content: Semantics(
-      liveRegion: true,
-      label:
-        '${_getTypeDescription(contextMounted ? context : scaffoldMessenger.context, type)}: $message',
+          liveRegion: true,
+          label:
+              '${_getTypeDescription(contextMounted ? context : scaffoldMessenger.context, type)}: $message',
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -70,8 +70,10 @@ class AppToast {
                 effectiveIcon,
                 color: textColor,
                 size: 20,
-        semanticLabel: _getTypeDescription(
-          contextMounted ? context : scaffoldMessenger.context, type),
+                semanticLabel: _getTypeDescription(
+                  contextMounted ? context : scaffoldMessenger.context,
+                  type,
+                ),
               ),
               const SizedBox(width: 10),
               Flexible(

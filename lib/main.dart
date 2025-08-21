@@ -168,7 +168,7 @@ class _CaravellaAppState extends State<CaravellaApp> {
 // classes (e.g. AppToast) can fallback to it when the original context
 // becomes unmounted between an async operation and UI feedback.
 ScaffoldMessengerState? get rootScaffoldMessenger =>
-  _CaravellaAppState._scaffoldMessengerKey.currentState;
+    _CaravellaAppState._scaffoldMessengerKey.currentState;
 
 class CaravellaHomePage extends StatefulWidget {
   const CaravellaHomePage({super.key, required this.title});

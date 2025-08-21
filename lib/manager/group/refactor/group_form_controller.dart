@@ -86,25 +86,25 @@ class GroupFormController {
   Future<ExpenseGroup> save() async {
     state.setSaving(true);
     try {
-    final now = DateTime.now();
-    final group = (_original ?? ExpenseGroup.empty()).copyWith(
-      title: state.title.trim(),
-      participants: state.participants
-          .map((e) => ExpenseParticipant(name: e.name))
-          .toList(),
-      categories: state.categories
-          .map((e) => ExpenseCategory(name: e.name))
-          .toList(),
-      startDate: state.startDate,
-      endDate: state.endDate,
-      currency: state.currency['code'] ?? state.currency['symbol'] ?? 'EUR',
-      file: state.imagePath,
-      color: state.color,
-      timestamp: _original?.timestamp ?? now,
-    );
-    await ExpenseGroupStorage.saveTrip(group);
-    _original = group;
-    return group;
+      final now = DateTime.now();
+      final group = (_original ?? ExpenseGroup.empty()).copyWith(
+        title: state.title.trim(),
+        participants: state.participants
+            .map((e) => ExpenseParticipant(name: e.name))
+            .toList(),
+        categories: state.categories
+            .map((e) => ExpenseCategory(name: e.name))
+            .toList(),
+        startDate: state.startDate,
+        endDate: state.endDate,
+        currency: state.currency['code'] ?? state.currency['symbol'] ?? 'EUR',
+        file: state.imagePath,
+        color: state.color,
+        timestamp: _original?.timestamp ?? now,
+      );
+      await ExpenseGroupStorage.saveTrip(group);
+      _original = group;
+      return group;
     } finally {
       state.setSaving(false);
     }

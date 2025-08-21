@@ -12,8 +12,8 @@ class BackgroundPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  final state = context.watch<GroupFormState>();
-  final loc = gen.AppLocalizations.of(context);
+    final state = context.watch<GroupFormState>();
+    final loc = gen.AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -29,15 +29,15 @@ class BackgroundPicker extends StatelessWidget {
                     state.imagePath != null
                         ? loc.change_image
                         : state.color != null
-                            ? loc.background_color_selected
-                            : loc.background,
+                        ? loc.background_color_selected
+                        : loc.background,
                   ),
                   Text(
                     state.imagePath != null
                         ? loc.background_tap_to_replace
                         : state.color != null
-                            ? loc.background_tap_to_change
-                            : loc.background_select_image_or_color,
+                        ? loc.background_tap_to_change
+                        : loc.background_select_image_or_color,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
@@ -84,7 +84,11 @@ class BackgroundPicker extends StatelessWidget {
         ),
       );
     } else {
-      child = const Icon(Icons.palette_outlined, size: 48, key: ValueKey('icon'));
+      child = const Icon(
+        Icons.palette_outlined,
+        size: 48,
+        key: ValueKey('icon'),
+      );
     }
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 280),
@@ -92,7 +96,10 @@ class BackgroundPicker extends StatelessWidget {
       switchOutCurve: Curves.easeInQuad,
       transitionBuilder: (c, anim) => FadeTransition(
         opacity: anim,
-        child: ScaleTransition(scale: Tween<double>(begin: 0.95, end: 1).animate(anim), child: c),
+        child: ScaleTransition(
+          scale: Tween<double>(begin: 0.95, end: 1).animate(anim),
+          child: c,
+        ),
       ),
       child: child,
     );
@@ -106,7 +113,7 @@ class BackgroundPicker extends StatelessWidget {
       builder: (ctx) => _BackgroundSheet(
         state: state,
         controller: controller,
-    parentContext: context,
+        parentContext: context,
       ),
     );
   }
@@ -116,12 +123,16 @@ class _BackgroundSheet extends StatelessWidget {
   final GroupFormState state;
   final GroupFormController controller;
   final BuildContext parentContext; // per navigazione dopo chiusura sheet
-  const _BackgroundSheet({required this.state, required this.controller, required this.parentContext});
+  const _BackgroundSheet({
+    required this.state,
+    required this.controller,
+    required this.parentContext,
+  });
 
   @override
   Widget build(BuildContext context) {
-  final loc = gen.AppLocalizations.of(context);
-  final picker = ImagePicker();
+    final loc = gen.AppLocalizations.of(context);
+    final picker = ImagePicker();
     return SafeArea(
       child: Wrap(
         children: [
