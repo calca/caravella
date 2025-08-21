@@ -113,6 +113,19 @@ class AppLocalizationsIt extends AppLocalizations {
   String get color_alternative => 'Alternativa all\'immagine';
 
   @override
+  String get background => 'Sfondo';
+
+  @override
+  String get select_background => 'Seleziona Sfondo';
+
+  @override
+  String get background_options => 'Opzioni Sfondo';
+
+  @override
+  String get choose_image_or_color =>
+      'Scegli un\'immagine o un colore per personalizzare il gruppo';
+
+  @override
   String get no_trips_found => 'Dove vuoi andare?';
 
   @override
@@ -775,15 +788,15 @@ class AppLocalizationsIt extends AppLocalizations {
   String get accessibility_welcome_screen => 'Schermata di benvenuto';
 
   @override
-  String accessibility_total_expenses(String amount) {
-    return 'Spese totali: ${amount}€';
+  String accessibility_total_expenses(Object amount) {
+    return 'Spese totali: $amount€';
   }
 
   @override
   String get accessibility_add_expense => 'Aggiungi spesa';
 
   @override
-  String accessibility_security_switch(String state) {
+  String accessibility_security_switch(Object state) {
     return 'Interruttore sicurezza - $state';
   }
 
@@ -794,7 +807,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get accessibility_switch_off => 'Inattivo';
 
   @override
-  String get accessibility_image_source_dialog => 'Finestra di selezione sorgente immagine';
+  String get accessibility_image_source_dialog =>
+      'Finestra di selezione sorgente immagine';
 
   @override
   String get accessibility_currently_enabled => 'Attualmente attivo';
@@ -803,10 +817,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get accessibility_currently_disabled => 'Attualmente inattivo';
 
   @override
-  String get accessibility_double_tap_disable => 'Tocca due volte per disattivare la sicurezza dello schermo';
+  String get accessibility_double_tap_disable =>
+      'Tocca due volte per disattivare la sicurezza dello schermo';
 
   @override
-  String get accessibility_double_tap_enable => 'Tocca due volte per attivare la sicurezza dello schermo';
+  String get accessibility_double_tap_enable =>
+      'Tocca due volte per attivare la sicurezza dello schermo';
 
   @override
   String get accessibility_toast_success => 'Successo';

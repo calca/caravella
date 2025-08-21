@@ -113,6 +113,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get color_alternative => 'Alternative to image';
 
   @override
+  String get background => 'Background';
+
+  @override
+  String get select_background => 'Select Background';
+
+  @override
+  String get background_options => 'Background Options';
+
+  @override
+  String get choose_image_or_color =>
+      'Choose an image or color to customize the group';
+
+  @override
   String get no_trips_found => 'Where do you want to go?';
 
   @override
@@ -772,15 +785,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get accessibility_welcome_screen => 'Welcome screen';
 
   @override
-  String accessibility_total_expenses(String amount) {
-    return 'Total expenses: ${amount}€';
+  String accessibility_total_expenses(Object amount) {
+    return 'Total expenses: $amount€';
   }
 
   @override
   String get accessibility_add_expense => 'Add expense';
 
   @override
-  String accessibility_security_switch(String state) {
+  String accessibility_security_switch(Object state) {
     return 'Security switch - $state';
   }
 
@@ -791,7 +804,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get accessibility_switch_off => 'Off';
 
   @override
-  String get accessibility_image_source_dialog => 'Image source selection dialog';
+  String get accessibility_image_source_dialog =>
+      'Image source selection dialog';
 
   @override
   String get accessibility_currently_enabled => 'Currently enabled';
@@ -800,10 +814,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get accessibility_currently_disabled => 'Currently disabled';
 
   @override
-  String get accessibility_double_tap_disable => 'Double tap to disable screen security';
+  String get accessibility_double_tap_disable =>
+      'Double tap to disable screen security';
 
   @override
-  String get accessibility_double_tap_enable => 'Double tap to enable screen security';
+  String get accessibility_double_tap_enable =>
+      'Double tap to enable screen security';
 
   @override
   String get accessibility_toast_success => 'Success';

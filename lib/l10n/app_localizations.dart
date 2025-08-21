@@ -302,6 +302,30 @@ abstract class AppLocalizations {
   /// **'Alternative to image'**
   String get color_alternative;
 
+  /// No description provided for @background.
+  ///
+  /// In en, this message translates to:
+  /// **'Background'**
+  String get background;
+
+  /// No description provided for @select_background.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Background'**
+  String get select_background;
+
+  /// No description provided for @background_options.
+  ///
+  /// In en, this message translates to:
+  /// **'Background Options'**
+  String get background_options;
+
+  /// No description provided for @choose_image_or_color.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an image or color to customize the group'**
+  String get choose_image_or_color;
+
   /// No description provided for @no_trips_found.
   ///
   /// In en, this message translates to:
@@ -1584,7 +1608,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Total expenses: {amount}€'**
-  String accessibility_total_expenses(String amount);
+  String accessibility_total_expenses(Object amount);
 
   /// Add expense button accessibility label
   ///
@@ -1596,7 +1620,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Security switch - {state}'**
-  String accessibility_security_switch(String state);
+  String accessibility_security_switch(Object state);
 
   /// Switch on state label
   ///
