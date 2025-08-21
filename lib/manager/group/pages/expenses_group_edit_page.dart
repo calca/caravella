@@ -292,13 +292,17 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                                 Selector<GroupFormState, Map<String, String>>(
                                   selector: (context, s) => s.currency,
                                   builder: (context, cur, child) => SelectionTile(
-                                    leading: const Icon(
-                                      Icons.account_balance_wallet_outlined,
-                                      size: 32,
+                                    leading: Text(
+                                      cur['symbol'] ?? '',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge
+                                          ?.copyWith(fontSize: 28),
+                                      semanticsLabel:
+                                          '${cur['symbol']} ${cur['code']}',
                                     ),
                                     title: cur['name']!,
-                                    subtitle:
-                                        '0${cur['symbol']} ${cur['code']}',
+                                    subtitle: '${cur['code']}',
                                     trailing: Icon(
                                       Icons.chevron_right,
                                       size: 24,

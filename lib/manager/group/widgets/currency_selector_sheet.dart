@@ -134,10 +134,11 @@ class _CurrencySelectorSheetState extends State<CurrencySelectorSheet> {
                       final name = localizedCurrencyName(l, currency['code']!);
                       final query = _query;
                       return ListTile(
-                        leading: _buildHighlighted(
-                          currency['code']!,
-                          query,
-                          Theme.of(context).textTheme.labelLarge,
+                        leading: Text(
+                          currency['symbol'] ?? '',
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.w600),
+                          semanticsLabel: currency['symbol'] ?? '',
                         ),
                         title: _buildHighlighted(
                           name,
@@ -145,7 +146,7 @@ class _CurrencySelectorSheetState extends State<CurrencySelectorSheet> {
                           Theme.of(context).textTheme.bodyLarge,
                         ),
                         subtitle: _buildHighlighted(
-                          '${currency['symbol']}',
+                          '${currency['code']}',
                           query,
                           Theme.of(context).textTheme.bodySmall,
                         ),
