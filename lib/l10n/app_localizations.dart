@@ -1030,6 +1030,12 @@ abstract class AppLocalizations {
   /// **'Unpin group'**
   String get unpin_group;
 
+  /// No description provided for @pin.
+  ///
+  /// In en, this message translates to:
+  /// **'Pin'**
+  String get pin;
+
   /// No description provided for @theme_automatic.
   ///
   /// In en, this message translates to:
