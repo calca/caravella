@@ -45,6 +45,8 @@
   "background_remove": "Rimuovi sfondo",
   "crop_image_title": "Ritaglia immagine",
   "crop_confirm": "Conferma",
+  "saving": "Salvataggio...",
+  "processing_image": "Elaborazione immagine...",
   "no_trips_found": "Dove vuoi andare?",
   "expenses": "Spese",
   "participants_label": "Partecipanti",

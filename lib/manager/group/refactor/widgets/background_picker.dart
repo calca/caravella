@@ -54,15 +54,17 @@ class BackgroundPicker extends StatelessWidget {
   }
 
   Widget _preview(GroupFormState state) {
+    Widget child;
     if (state.loadingImage) {
-      return const SizedBox(
+      child = const SizedBox(
+        key: ValueKey('loading'),
         width: 48,
         height: 48,
         child: CircularProgressIndicator(strokeWidth: 3),
       );
-    }
-    if (state.imagePath != null) {
-      return ClipRRect(
+    } else if (state.imagePath != null) {
+      child = ClipRRect(
+        key: ValueKey(state.imagePath),
         borderRadius: BorderRadius.circular(8),
         child: Image.file(
           File(state.imagePath!),
@@ -71,9 +73,9 @@ class BackgroundPicker extends StatelessWidget {
           fit: BoxFit.cover,
         ),
       );
-    }
-    if (state.color != null) {
-      return Container(
+    } else if (state.color != null) {
+      child = Container(
+        key: ValueKey(state.color),
         width: 48,
         height: 48,
         decoration: BoxDecoration(
@@ -81,8 +83,19 @@ class BackgroundPicker extends StatelessWidget {
           shape: BoxShape.circle,
         ),
       );
+    } else {
+      child = const Icon(Icons.palette_outlined, size: 48, key: ValueKey('icon'));
     }
-    return const Icon(Icons.palette_outlined, size: 48);
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 280),
+      switchInCurve: Curves.easeOutQuad,
+      switchOutCurve: Curves.easeInQuad,
+      transitionBuilder: (c, anim) => FadeTransition(
+        opacity: anim,
+        child: ScaleTransition(scale: Tween<double>(begin: 0.95, end: 1).animate(anim), child: c),
+      ),
+      child: child,
+    );
   }
 
   void _showPicker(BuildContext context) async {
@@ -93,6 +106,7 @@ class BackgroundPicker extends StatelessWidget {
       builder: (ctx) => _BackgroundSheet(
         state: state,
         controller: controller,
+    parentContext: context,
       ),
     );
   }
@@ -101,7 +115,8 @@ class BackgroundPicker extends StatelessWidget {
 class _BackgroundSheet extends StatelessWidget {
   final GroupFormState state;
   final GroupFormController controller;
-  const _BackgroundSheet({required this.state, required this.controller});
+  final BuildContext parentContext; // per navigazione dopo chiusura sheet
+  const _BackgroundSheet({required this.state, required this.controller, required this.parentContext});
 
   @override
   Widget build(BuildContext context) {
@@ -114,47 +129,67 @@ class _BackgroundSheet extends StatelessWidget {
             leading: const Icon(Icons.photo_library),
             title: Text(loc.from_gallery),
             onTap: () async {
-              final nav = Navigator.of(context); // capture before await
+              final sheetNav = Navigator.of(context); // navigator della sheet
+              // Chiudi SUBITO la sheet per migliorare UX
+              if (sheetNav.mounted) sheetNav.pop();
+              // Usa il navigator del parent
+              final parentNav = Navigator.of(parentContext);
               final x = await picker.pickImage(
                 source: ImageSource.gallery,
                 imageQuality: 85,
               );
               if (x != null) {
                 final original = File(x.path);
-                // Apri pagina di crop, ritorna file ritagliato (o null se annullato)
-                final cropped = await nav.push<File?>(
+                // Mostra loader mentre si prepara la pagina di crop
+                state.setLoading(true);
+                // Attendi un frame (e un piccolo delay) per permettere al loader di apparire prima del push
+                await Future.delayed(const Duration(milliseconds: 120));
+                final cropped = await parentNav.push<File?>(
                   MaterialPageRoute(
-                    builder: (_) => ImageCropPage(imageFile: original),
+                    builder: (_) => _CropPageWrapper(
+                      image: original,
+                      onFirstFrame: () => state.setLoading(false),
+                    ),
                   ),
                 );
                 if (cropped != null) {
                   await controller.persistPickedImage(cropped);
+                  return;
                 }
+                // Se annullato assicura che il loader sia nascosto
+                state.setLoading(false);
               }
-              if (nav.mounted) nav.pop(); // chiudi sheet
             },
           ),
           ListTile(
             leading: const Icon(Icons.photo_camera),
             title: Text(loc.from_camera),
             onTap: () async {
-              final nav = Navigator.of(context); // capture before await
+              final sheetNav = Navigator.of(context);
+              if (sheetNav.mounted) sheetNav.pop();
+              final parentNav = Navigator.of(parentContext);
               final x = await picker.pickImage(
                 source: ImageSource.camera,
                 imageQuality: 85,
               );
               if (x != null) {
                 final original = File(x.path);
-                final cropped = await nav.push<File?>(
+                state.setLoading(true);
+                await Future.delayed(const Duration(milliseconds: 120));
+                final cropped = await parentNav.push<File?>(
                   MaterialPageRoute(
-                    builder: (_) => ImageCropPage(imageFile: original),
+                    builder: (_) => _CropPageWrapper(
+                      image: original,
+                      onFirstFrame: () => state.setLoading(false),
+                    ),
                   ),
                 );
                 if (cropped != null) {
                   await controller.persistPickedImage(cropped);
+                  return;
                 }
+                state.setLoading(false);
               }
-              if (nav.mounted) nav.pop();
             },
           ),
           ListTile(
@@ -180,6 +215,52 @@ class _BackgroundSheet extends StatelessWidget {
             ),
         ],
       ),
+    );
+  }
+}
+
+/// Wrapper per mostrare loader finché la pagina di crop non ha renderizzato il primo frame.
+class _CropPageWrapper extends StatefulWidget {
+  final File image;
+  final VoidCallback onFirstFrame;
+  const _CropPageWrapper({required this.image, required this.onFirstFrame});
+
+  @override
+  State<_CropPageWrapper> createState() => _CropPageWrapperState();
+}
+
+class _CropPageWrapperState extends State<_CropPageWrapper> {
+  bool _firstFrame = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Programma callback dopo primo frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        widget.onFirstFrame();
+        setState(() => _firstFrame = true);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        ImageCropPage(imageFile: widget.image),
+        if (!_firstFrame)
+          const ColoredBox(
+            color: Colors.black26,
+            child: Center(
+              child: SizedBox(
+                width: 48,
+                height: 48,
+                child: CircularProgressIndicator(strokeWidth: 3),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

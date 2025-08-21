@@ -150,6 +150,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get crop_confirm => 'Confirm';
 
   @override
+  String get saving => 'Saving...';
+
+  @override
+  String get processing_image => 'Processing image...';
+
+  @override
   String get no_trips_found => 'Where do you want to go?';
 
   @override

@@ -58,6 +58,8 @@
   "background_remove": "Remove background",
   "crop_image_title": "Crop image",
   "crop_confirm": "Confirm",
+  "saving": "Saving...",
+  "processing_image": "Processing image...",
   "no_trips_found": "Where do you want to go?",
   "expenses": "Expenses",
   "participants": "Participants",

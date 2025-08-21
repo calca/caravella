@@ -374,6 +374,18 @@ abstract class AppLocalizations {
   /// **'Confirm'**
   String get crop_confirm;
 
+  /// No description provided for @saving.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving...'**
+  String get saving;
+
+  /// No description provided for @processing_image.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing image...'**
+  String get processing_image;
+
   /// No description provided for @no_trips_found.
   ///
   /// In en, this message translates to:

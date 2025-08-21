@@ -208,13 +208,15 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                 ),
             ],
           ),
-          body: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Form(
-              key: _formKey,
-              child: DefaultTextStyle.merge(
-                style: Theme.of(context).textTheme.bodyMedium,
-                child: ListView(
+          body: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Form(
+                  key: _formKey,
+                  child: DefaultTextStyle.merge(
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    child: ListView(
                   children: [
                     Text(
                       widget.trip != null ? gloc.edit_group : gloc.new_group,
@@ -346,9 +348,66 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                     const SaveButtonBar(),
                     const SizedBox(height: 80),
                   ],
+                    ),
+                  ),
                 ),
               ),
-            ),
+              Selector<GroupFormState, bool>(
+                selector: (_, s) => s.isBusy,
+                builder: (ctx, busy, _) {
+                  final loc = gen.AppLocalizations.of(ctx);
+                  final state = ctx.read<GroupFormState>();
+                  final message = state.isSaving
+                      ? loc.saving
+                      : loc.processing_image;
+                  return IgnorePointer(
+                    ignoring: !busy,
+                    child: AnimatedOpacity(
+                      opacity: busy ? 1 : 0,
+                      duration: const Duration(milliseconds: 220),
+                      curve: Curves.easeOutQuad,
+                      child: Container(
+                        color: Theme.of(ctx)
+                            .colorScheme
+                            .surface
+                            .withValues(alpha: 0.72),
+                        child: Center(
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 260),
+                            switchInCurve: Curves.easeOutBack,
+                            switchOutCurve: Curves.easeIn,
+                            child: !busy
+                                ? const SizedBox.shrink()
+                                : Column(
+                                    key: const ValueKey('busy_overlay'),
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const SizedBox(
+                                        width: 46,
+                                        height: 46,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 3.2,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 18),
+                                      Text(
+                                        message,
+                                        textAlign: TextAlign.center,
+                                        style: Theme.of(ctx)
+                                            .textTheme
+                                            .bodyMedium
+                                            ?.copyWith(fontWeight: FontWeight.w600),
+                                      ),
+                                    ],
+                                  ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
         ),
       ),

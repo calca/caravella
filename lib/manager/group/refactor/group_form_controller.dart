@@ -84,6 +84,8 @@ class GroupFormController {
   }
 
   Future<ExpenseGroup> save() async {
+    state.setSaving(true);
+    try {
     final now = DateTime.now();
     final group = (_original ?? ExpenseGroup.empty()).copyWith(
       title: state.title.trim(),
@@ -103,6 +105,9 @@ class GroupFormController {
     await ExpenseGroupStorage.saveTrip(group);
     _original = group;
     return group;
+    } finally {
+      state.setSaving(false);
+    }
   }
 
   Future<void> deleteGroup() async {

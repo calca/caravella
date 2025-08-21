@@ -16,6 +16,9 @@ class GroupFormState extends ChangeNotifier {
     'name': 'Euro',
   };
   bool loadingImage = false;
+  bool isSaving = false;
+
+  bool get isBusy => loadingImage || isSaving;
 
   bool get isValid => title.trim().isNotEmpty && participants.isNotEmpty;
 
@@ -87,6 +90,12 @@ class GroupFormState extends ChangeNotifier {
   void setLoading(bool v) {
     if (loadingImage == v) return;
     loadingImage = v;
+    notifyListeners();
+  }
+
+  void setSaving(bool v) {
+    if (isSaving == v) return;
+    isSaving = v;
     notifyListeners();
   }
 
