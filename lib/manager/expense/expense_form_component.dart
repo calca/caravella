@@ -70,6 +70,15 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   bool _isDirty = false; // traccia modifiche non salvate
   bool _initializing = true; // traccia se siamo in fase di inizializzazione
 
+  // Original values for change detection in edit mode
+  ExpenseCategory? _originalCategory;
+  double? _originalAmount;
+  ExpenseParticipant? _originalPaidBy;
+  DateTime? _originalDate;
+  ExpenseLocation? _originalLocation;
+  String? _originalName;
+  String? _originalNote;
+
   // Stato per validazione in tempo reale
   bool _amountTouched = false;
   bool _paidByTouched = false;
@@ -79,6 +88,28 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   bool get _isAmountValid => _amount != null && _amount! > 0;
   bool get _isPaidByValid => _paidBy != null;
   bool get _isCategoryValid => _categories.isEmpty || _category != null;
+
+  // Check if actual changes have been made compared to original values
+  bool get _hasActualChanges {
+    if (widget.initialExpense == null) {
+      // For new expenses, any non-empty field is a change
+      return _amount != null && _amount! > 0 ||
+          _nameController.text.trim().isNotEmpty ||
+          _noteController.text.trim().isNotEmpty;
+    }
+    
+    // For editing existing expenses, compare with original values
+    final originalLocationJson = _originalLocation?.toJson().toString();
+    final currentLocationJson = _location?.toJson().toString();
+    
+    return _category?.id != _originalCategory?.id ||
+        _amount != _originalAmount ||
+        _paidBy?.name != _originalPaidBy?.name ||
+        _date != _originalDate ||
+        currentLocationJson != originalLocationJson ||
+        _nameController.text.trim() != (_originalName ?? '') ||
+        _noteController.text.trim() != (_originalNote ?? '');
+  }
 
   // Scroll controller callback per CategorySelectorWidget
   // Removed _scrollToCategoryEnd: no longer needed with new category selector bottom sheet.
@@ -104,6 +135,15 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
           ? ''
           : widget.initialExpense!.amount.toString();
       _noteController.text = widget.initialExpense!.note ?? '';
+      
+      // Store original values for change detection
+      _originalCategory = _category;
+      _originalAmount = _amount;
+      _originalPaidBy = _paidBy;
+      _originalDate = _date;
+      _originalLocation = _location;
+      _originalName = widget.initialExpense!.name;
+      _originalNote = widget.initialExpense!.note;
     } else {
       _date = DateTime.now();
       _nameController.text = '';
@@ -129,7 +169,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
           _amount = parsed;
           _amountTouched = true;
           if (!_initializing) {
-            _isDirty = true;
+            _isDirty = _hasActualChanges;
           }
         });
       }
@@ -139,7 +179,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     _nameController.addListener(() {
       if (!_initializing) {
         setState(() {
-          _isDirty = true;
+          _isDirty = _hasActualChanges;
         });
       }
     });
@@ -253,7 +293,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     final gloc = gen.AppLocalizations.of(context);
     final smallStyle = Theme.of(context).textTheme.bodyMedium;
     return PopScope(
-      canPop: !_isDirty,
+      canPop: !_hasActualChanges,
       onPopInvokedWithResult: _handlePop,
       child: SingleChildScrollView(
         child: Form(
@@ -298,7 +338,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
 
   Future<void> _handlePop(bool didPop, Object? result) async {
     if (didPop) return;
-    if (_isDirty) {
+    if (_hasActualChanges) {
       final navigator = Navigator.of(context);
       final discard = await _confirmDiscardChanges();
       if (discard && mounted && navigator.canPop()) navigator.pop();
@@ -425,7 +465,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       );
       _paidByTouched = true;
       if (!_initializing) {
-        _isDirty = true;
+        _isDirty = _hasActualChanges;
       }
     });
   }
@@ -435,7 +475,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       _category = selected;
       _categoryTouched = true;
       if (!_initializing) {
-        _isDirty = true;
+        _isDirty = _hasActualChanges;
       }
     });
   }
@@ -456,7 +496,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
           _category = found;
           _categoryTouched = true;
           if (!_initializing) {
-            _isDirty = true;
+            _isDirty = _hasActualChanges;
           }
         }
       });
@@ -472,7 +512,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         _category = foundAfter;
         _categoryTouched = true;
         if (!_initializing) {
-          _isDirty = true;
+          _isDirty = _hasActualChanges;
         }
       });
     }
@@ -495,7 +535,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
           onDateSelected: (picked) => setState(() {
             _date = picked;
             if (!_initializing) {
-              _isDirty = true;
+              _isDirty = _hasActualChanges;
             }
           }),
           locale: locale,
@@ -508,7 +548,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
           onLocationChanged: (location) => setState(() {
             _location = location;
             if (!_initializing) {
-              _isDirty = true;
+              _isDirty = _hasActualChanges;
             }
           }),
         ),
