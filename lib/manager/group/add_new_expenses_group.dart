@@ -134,6 +134,9 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   final ImagePicker _imagePicker = ImagePicker();
   bool _isDirty = false; // traccia modifiche non salvate
   
+  // Original state for comparison when editing
+  ExpenseGroup? _originalTrip;
+  
   // Color handling
   int? _selectedColor;
   // Removed auto bottom sheet prompt flag (inline editing now)
@@ -141,6 +144,9 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   void initState() {
     super.initState();
     if (widget.trip != null) {
+      // Store original trip for comparison
+      _originalTrip = widget.trip;
+      
       final found = _currencies.firstWhere(
         (c) => c['symbol'] == widget.trip!.currency,
         orElse: () => _currencies[0],
@@ -164,6 +170,50 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
 
     // Apri automaticamente l'editor nome se nuovo gruppo e nome vuoto
     // Nessun bottom sheet automatico: il campo è inline ora
+  }
+
+  /// Check if there are actual changes compared to the original trip
+  bool _hasActualChanges() {
+    if (_originalTrip == null) {
+      // New trip - any content means changes
+      return _titleController.text.trim().isNotEmpty ||
+          _participants.isNotEmpty ||
+          _categories.isNotEmpty ||
+          _startDate != null ||
+          _endDate != null ||
+          _selectedImageFile != null ||
+          _savedImagePath != null ||
+          _selectedColor != null ||
+          _selectedCurrency['symbol'] != '€';
+    }
+
+    // Editing existing trip - compare with original
+    return _titleController.text.trim() != _originalTrip!.title ||
+        _participants.length != _originalTrip!.participants.length ||
+        !_participantsEqual(_participants, _originalTrip!.participants) ||
+        _categories.length != _originalTrip!.categories.length ||
+        !_categoriesEqual(_categories, _originalTrip!.categories) ||
+        _startDate != _originalTrip!.startDate ||
+        _endDate != _originalTrip!.endDate ||
+        _savedImagePath != _originalTrip!.file ||
+        _selectedColor != _originalTrip!.color ||
+        _selectedCurrency['symbol'] != _originalTrip!.currency;
+  }
+
+  bool _participantsEqual(List<ExpenseParticipant> a, List<ExpenseParticipant> b) {
+    if (a.length != b.length) return false;
+    for (int i = 0; i < a.length; i++) {
+      if (a[i].name != b[i].name) return false;
+    }
+    return true;
+  }
+
+  bool _categoriesEqual(List<ExpenseCategory> a, List<ExpenseCategory> b) {
+    if (a.length != b.length) return false;
+    for (int i = 0; i < a.length; i++) {
+      if (a[i].name != b[i].name) return false;
+    }
+    return true;
   }
 
   // Remove stray constructor declaration
@@ -574,10 +624,10 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       onTap: _unfocusAll,
       behavior: HitTestBehavior.translucent,
       child: PopScope(
-        canPop: !_isDirty,
+        canPop: !_hasActualChanges(),
         onPopInvokedWithResult: (didPop, result) async {
           if (didPop) return;
-          if (_isDirty) {
+          if (_hasActualChanges()) {
             final confirm = await showDialog<bool>(
               context: context,
               builder: (ctx) => AlertDialog(
