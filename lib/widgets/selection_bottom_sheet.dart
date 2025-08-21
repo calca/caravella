@@ -65,24 +65,6 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
   bool _inlineAdding = false;
   final TextEditingController _inlineController = TextEditingController();
   final FocusNode _inlineFocus = FocusNode();
-  List<T> _currentItems = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _currentItems = List<T>.from(widget.items);
-  }
-
-  @override
-  void didUpdateWidget(_SelectionSheet<T> oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // Update the current items when the widget's items list changes
-    if (widget.items != oldWidget.items) {
-      setState(() {
-        _currentItems = List<T>.from(widget.items);
-      });
-    }
-  }
 
   @override
   void dispose() {
@@ -136,10 +118,11 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
 
     try {
       await widget.onAddItemInline!(val);
-      setState(() {
-        _inlineAdding = false;
-        _inlineController.clear();
-      });
+      // Close the modal after successfully adding the category
+      // The parent will handle selecting the newly added category
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -242,7 +225,7 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
     final bottom = MediaQuery.of(context).viewInsets.bottom;
     final theme = Theme.of(context);
     
-    // Use widget.items directly to get the most up-to-date list
+    // Use widget.items directly 
     final itemsToShow = widget.items;
     
     final list = ConstrainedBox(
