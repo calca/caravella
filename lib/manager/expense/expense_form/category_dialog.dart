@@ -8,7 +8,6 @@ class CategoryDialog {
     return showDialog<String>(
       context: context,
       builder: (context) => Semantics(
-        dialog: true,
         label: gen.AppLocalizations.of(context).add_category,
         child: AlertDialog(
           title: Text(gen.AppLocalizations.of(context).add_category),

@@ -76,7 +76,7 @@ class AmountInputWidget extends StatelessWidget {
       if (leading == null) {
         return Semantics(
           textField: true,
-          label: label != null ? label!.replaceAll(' *', '') : null,
+          label: label?.replaceAll(' *', ''),
           child: textField,
         );
       }
@@ -87,7 +87,7 @@ class AmountInputWidget extends StatelessWidget {
         tooltip: (label ?? '').replaceAll(' *', ''),
         child: Semantics(
           textField: true,
-          label: label != null ? label!.replaceAll(' *', '') : null,
+          label: label?.replaceAll(' *', ''),
           child: textField,
         ),
       );

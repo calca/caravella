@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:org_app_caravella/main.dart';
-import 'package:org_app_caravella/home/welcome/home_welcome_section.dart';
 import 'package:org_app_caravella/widgets/add_fab.dart';
 import 'package:org_app_caravella/widgets/app_toast.dart';
 
@@ -191,7 +190,6 @@ void main() {
                   showDialog(
                     context: context,
                     builder: (context) => Semantics(
-                      dialog: true,
                       label: 'Test dialog',
                       child: const AlertDialog(
                         title: Text('Test'),
@@ -239,20 +237,11 @@ void main() {
       );
 
       // Test tab navigation between fields
-      final firstField = find.byWidgetPredicate(
-        (widget) => widget is TextFormField && 
-        (widget.decoration?.labelText == 'First field'),
-      );
-      final secondField = find.byWidgetPredicate(
-        (widget) => widget is TextFormField && 
-        (widget.decoration?.labelText == 'Second field'),
-      );
-
-      expect(firstField, findsOneWidget);
-      expect(secondField, findsOneWidget);
+      final textFields = find.byType(TextFormField);
+      expect(textFields, findsNWidgets(2));
 
       // Focus first field
-      await tester.tap(firstField);
+      await tester.tap(textFields.first);
       await tester.pump();
 
       // Navigate to second field with tab

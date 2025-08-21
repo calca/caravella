@@ -103,7 +103,7 @@ class HomeWelcomeSection extends StatelessWidget {
                     width:
                         screenWidth * 0.8, // 80% della larghezza dello schermo
                     child: Semantics(
-                      label: gloc.welcome_logo_semantic ?? 'Caravella app logo',
+                      label: gloc.welcome_logo_semantic,
                       image: true,
                       child: Image.asset(
                         'assets/images/home/welcome/welcome-logo.png',
@@ -151,7 +151,7 @@ class HomeWelcomeSection extends StatelessWidget {
                       right: 0,
                       child: Semantics(
                         button: true,
-                        label: '${gloc.welcome_v3_cta} - ${gloc.create_new_group ?? "Create new group"}',
+                        label: '${gloc.welcome_v3_cta} - ${gloc.create_new_group}',
                         child: IconButton.filled(
                           onPressed: () async {
                             final result = await Navigator.of(context).push(

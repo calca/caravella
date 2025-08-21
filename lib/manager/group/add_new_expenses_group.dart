@@ -704,8 +704,6 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   }
 
   void _showImagePickerDialog() {
-    final gloc = gen.AppLocalizations.of(context);
-
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
