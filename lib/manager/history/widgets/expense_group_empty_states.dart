@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
-import '../../group/add_new_expenses_group.dart';
+import '../../group/pages/expenses_group_edit_page.dart';
 
 class ExpsenseGroupEmptyStates extends StatelessWidget {
   final String searchQuery;
@@ -100,7 +100,7 @@ class ExpsenseGroupEmptyStates extends StatelessWidget {
           onPressed: () async {
             final result = await Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => const AddNewExpensesGroupPage(),
+                builder: (context) => const ExpensesGroupEditPage(),
               ),
             );
             if (result == true) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'bottom_sheet_scaffold.dart';
 
 /// Generic modal bottom sheet for selecting an item from a list.
 /// Supports an optional add-item action shown within the sheet.
@@ -17,16 +18,17 @@ Future<T?> showSelectionBottomSheet<T>({
     context: context,
     isScrollControlled: true,
     backgroundColor: Theme.of(context).colorScheme.surface,
-    builder: (ctx) {
-      return _SelectionSheet<T>(
-        items: items,
-        selected: selected,
-        itemLabel: itemLabel,
-        onAddItem: onAddItem,
-        addItemTooltip: addItemTooltip,
-        gloc: resolved,
-      );
-    },
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    builder: (ctx) => _SelectionSheet<T>(
+      items: items,
+      selected: selected,
+      itemLabel: itemLabel,
+      onAddItem: onAddItem,
+      addItemTooltip: addItemTooltip,
+      gloc: resolved,
+    ),
   );
 }
 
@@ -67,76 +69,66 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
   Widget build(BuildContext context) {
     final bottom = MediaQuery.of(context).viewInsets.bottom;
     final theme = Theme.of(context);
-    return SafeArea(
-      top: false,
+    final list = ConstrainedBox(
+      constraints: const BoxConstraints(maxHeight: 400),
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: widget.items.length,
+        itemBuilder: (ctx, i) {
+          final item = widget.items[i];
+          final isSel = widget.selected == item;
+          return ListTile(
+            title: Text(widget.itemLabel(item)),
+            trailing: isSel
+                ? Icon(Icons.check, color: theme.colorScheme.primary)
+                : null,
+            onTap: () => Navigator.of(context).pop(item),
+          );
+        },
+      ),
+    );
+    return GroupBottomSheetScaffold(
+      title: widget.onAddItem != null
+          ? (widget.addItemTooltip ?? widget.gloc.add)
+          : null,
+      showHandle: true,
+      scrollable: false,
       child: Padding(
-        padding: EdgeInsets.only(bottom: bottom + 24),
+        padding: EdgeInsets.only(bottom: bottom),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Drag handle
-            const SizedBox(height: 8),
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: theme.colorScheme.outlineVariant,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            const SizedBox(height: 8),
             if (widget.onAddItem != null)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        widget.addItemTooltip ?? widget.gloc.add,
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      widget.addItemTooltip ?? widget.gloc.add,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                    IconButton.filledTonal(
-                      onPressed: _adding ? null : _handleAdd,
-                      icon: _adding
-                          ? SizedBox(
-                              width: 18,
-                              height: 18,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation(
-                                  theme.colorScheme.primary,
-                                ),
+                  ),
+                  IconButton.filledTonal(
+                    onPressed: _adding ? null : _handleAdd,
+                    icon: _adding
+                        ? SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation(
+                                theme.colorScheme.primary,
                               ),
-                            )
-                          : const Icon(Icons.add),
-                      tooltip: widget.addItemTooltip ?? widget.gloc.add,
-                    ),
-                  ],
-                ),
+                            ),
+                          )
+                        : const Icon(Icons.add),
+                    tooltip: widget.addItemTooltip ?? widget.gloc.add,
+                  ),
+                ],
               ),
-            Flexible(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxHeight: 400),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: widget.items.length,
-                  itemBuilder: (ctx, i) {
-                    final item = widget.items[i];
-                    final isSel = widget.selected == item;
-                    return ListTile(
-                      title: Text(widget.itemLabel(item)),
-                      trailing: isSel
-                          ? Icon(Icons.check, color: theme.colorScheme.primary)
-                          : null,
-                      onTap: () => Navigator.of(context).pop(item),
-                    );
-                  },
-                ),
-              ),
-            ),
+            if (widget.onAddItem != null) const SizedBox(height: 8),
+            list,
           ],
         ),
       ),

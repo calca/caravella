@@ -23,6 +23,7 @@ class CategoriesSection extends StatelessWidget {
     return EditableNameList(
       title: loc.categories,
       requiredMark: true,
+      description: loc.categories_description,
       items: categories.map((e) => e.name).toList(),
       addLabel: loc.add_category,
       hintLabel: loc.category_name,

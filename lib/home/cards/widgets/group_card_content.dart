@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../state/expense_group_notifier.dart';
 import '../../../data/expense_group.dart';
-import '../../../manager/expense/expense_form_component.dart';
+import '../../../manager/details/widgets/expense_entry_sheet.dart';
 import '../../../widgets/currency_display.dart';
 import '../../../manager/details/tabs/overview_stats_logic.dart';
 
@@ -67,85 +67,19 @@ class GroupCardContent extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
       builder: (context) => Consumer<ExpenseGroupNotifier>(
         builder: (context, groupNotifier, child) {
           final currentGroup = groupNotifier.currentGroup ?? group;
-
-          return Container(
-            constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height * 0.9,
-            ),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surface,
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(20),
-              ),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Handle bar fisso
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    children: [
-                      Container(
-                        width: 28,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.outline,
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      // Removed title text per UX request (icon-only header)
-                    ],
-                  ),
-                ),
-
-                // Contenuto scrollabile
-                Flexible(
-                  child: SafeArea(
-                    child: SingleChildScrollView(
-                      padding: EdgeInsets.only(
-                        left: 20,
-                        right: 20,
-                        top: 0,
-                        bottom:
-                            MediaQuery.of(context).viewInsets.bottom +
-                            MediaQuery.of(context).padding.bottom +
-                            20,
-                      ),
-                      child: ExpenseFormComponent(
-                        groupTitle: currentGroup.title,
-                        currency: currentGroup.currency,
-                        participants: currentGroup.participants,
-                        categories: currentGroup.categories,
-                        onExpenseAdded: (expense) async {
-                          // Usa il notifier per aggiungere la spesa
-                          await groupNotifier.addExpense(expense);
-                          // Callback per aggiornare la UI della home
-                          onExpenseAdded();
-                          // Chiudi il modal
-                          if (context.mounted) {
-                            Navigator.pop(context);
-                          }
-                        },
-                        onCategoryAdded: (newCategory) async {
-                          // Usa il notifier per aggiungere la categoria
-                          await groupNotifier.addCategory(newCategory);
-                          // La UI del form si aggiornerà automaticamente grazie al Consumer e didUpdateWidget
-                        },
-                        shouldAutoClose: false,
-                        // Passa la nuova categoria al form per la pre-selezione
-                        newlyAddedCategory: groupNotifier.lastAddedCategory,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          return ExpenseEntrySheet(
+            group: currentGroup,
+            onExpenseSaved: (expense) async {
+              await groupNotifier.addExpense(expense);
+              onExpenseAdded();
+            },
+            onCategoryAdded: (newCategory) async {
+              await groupNotifier.addCategory(newCategory);
+            },
+            fullEdit: false,
           );
         },
       ),
@@ -260,7 +194,9 @@ class GroupCardContent extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Semantics(
-          label: localizations.accessibility_total_expenses(totalExpenses.toStringAsFixed(2)),
+          label: localizations.accessibility_total_expenses(
+            totalExpenses.toStringAsFixed(2),
+          ),
           child: CurrencyDisplay(
             value: totalExpenses,
             currency: '€',

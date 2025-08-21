@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
-import '../../../manager/group/add_new_expenses_group.dart';
+import '../../../manager/group/pages/expenses_group_edit_page.dart';
 
 class EmptyGroupsState extends StatelessWidget {
   final gen.AppLocalizations localizations;
@@ -47,7 +47,7 @@ class EmptyGroupsState extends StatelessWidget {
             onPressed: () async {
               final result = await Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => const AddNewExpensesGroupPage(),
+                  builder: (context) => const ExpensesGroupEditPage(),
                 ),
               );
               if (result == true) {

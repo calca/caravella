@@ -4,7 +4,7 @@ import 'dart:async';
 import '../../data/expense_group.dart';
 import '../../../data/expense_group_storage.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
-import '../group/add_new_expenses_group.dart';
+import '../group/pages/expenses_group_edit_page.dart';
 import '../../widgets/caravella_app_bar.dart';
 import 'widgets/expense_group_empty_states.dart';
 import 'widgets/expandable_search_bar.dart';
@@ -171,7 +171,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
             onPressed: () async {
               final result = await Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => const AddNewExpensesGroupPage(),
+                  builder: (context) => const ExpensesGroupEditPage(),
                 ),
               );
               if (result == true) await _loadTrips();
@@ -334,7 +334,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                     onTripAdded: () async {
                       final result = await Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => const AddNewExpensesGroupPage(),
+                          builder: (context) => const ExpensesGroupEditPage(),
                         ),
                       );
                       if (result == true) {
