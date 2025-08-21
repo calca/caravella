@@ -171,7 +171,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
             onPressed: () async {
               final result = await Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => const AddNewExpensesGroupPage(),
+                  builder: (context) => const ExpensesGroupEditPage(),
                 ),
               );
               if (result == true) await _loadTrips();
@@ -334,7 +334,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                     onTripAdded: () async {
                       final result = await Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => const AddNewExpensesGroupPage(),
+                          builder: (context) => const ExpensesGroupEditPage(),
                         ),
                       );
                       if (result == true) {

@@ -47,7 +47,7 @@ class EmptyGroupsState extends StatelessWidget {
             onPressed: () async {
               final result = await Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => const AddNewExpensesGroupPage(),
+                  builder: (context) => const ExpensesGroupEditPage(),
                 ),
               );
               if (result == true) {

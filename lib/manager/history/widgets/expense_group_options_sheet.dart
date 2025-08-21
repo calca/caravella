@@ -145,7 +145,7 @@ class ExpenseGroupOptionsSheet extends StatelessWidget {
     Navigator.of(context).pop();
     final result = await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => AddNewExpensesGroupPage(trip: trip),
+        builder: (context) => ExpensesGroupEditPage(trip: trip),
       ),
     );
     if (result == true) {

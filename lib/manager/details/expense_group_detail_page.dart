@@ -241,7 +241,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           if (!mounted) return;
           await nav.push(
             MaterialPageRoute(
-              builder: (ctx) => AddNewExpensesGroupPage(trip: _trip!),
+              builder: (ctx) => ExpensesGroupEditPage(trip: _trip!),
             ),
           );
           await _refreshGroup();

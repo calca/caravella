@@ -159,7 +159,7 @@ class HomeWelcomeSection extends StatelessWidget {
                             final result = await Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    const AddNewExpensesGroupPage(),
+                                    const ExpensesGroupEditPage(),
                               ),
                             );
                             if (result == true && onTripAdded != null) {

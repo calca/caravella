@@ -18,10 +18,10 @@ import '../widgets/background_picker.dart';
 import '../widgets/currency_selector_sheet.dart';
 import '../widgets/save_button_bar.dart';
 
-class AddNewExpensesGroupPage extends StatelessWidget {
+class ExpensesGroupEditPage extends StatelessWidget {
   final ExpenseGroup? trip;
   final VoidCallback? onTripDeleted;
-  const AddNewExpensesGroupPage({super.key, this.trip, this.onTripDeleted});
+  const ExpensesGroupEditPage({super.key, this.trip, this.onTripDeleted});
 
   @override
   Widget build(BuildContext context) {
