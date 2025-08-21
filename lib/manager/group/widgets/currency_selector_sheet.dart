@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import '../data/currencies.dart';
 import '../../../l10n/app_localizations.dart';
+import 'bottom_sheet_scaffold.dart';
 
 class CurrencySelectorSheet extends StatefulWidget {
   const CurrencySelectorSheet({super.key});
@@ -88,12 +89,13 @@ class _CurrencySelectorSheetState extends State<CurrencySelectorSheet> {
             return name.contains(lower) || code.contains(lower);
           }).toList();
 
-    return SafeArea(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-            child: TextField(
+    return GroupBottomSheetScaffold(
+      title: l.select_currency,
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height * 0.65,
+        child: Column(
+          children: [
+            TextField(
               controller: _controller,
               autofocus: true,
               textInputAction: TextInputAction.search,
@@ -115,55 +117,67 @@ class _CurrencySelectorSheetState extends State<CurrencySelectorSheet> {
                         },
                       ),
                 border: const OutlineInputBorder(),
+                isDense: true,
               ),
               onChanged: _onSearchChanged,
             ),
-          ),
-          Expanded(
-            child: filtered.isEmpty
-                ? Center(
-                    child: Text(
-                      '—',
-                      style: Theme.of(context).textTheme.bodySmall,
+            const SizedBox(height: 16),
+            Expanded(
+              child: filtered.isEmpty
+                  ? Center(
+                      child: Text(
+                        '—',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: filtered.length,
+                      itemBuilder: (c, i) {
+                        final currency = filtered[i];
+                        final name = localizedCurrencyName(
+                          l,
+                          currency['code']!,
+                        );
+                        final query = _query;
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          child: ListTile(
+                            dense: true,
+                            minVerticalPadding: 8,
+                            contentPadding: EdgeInsets.zero,
+                            leading: Text(
+                              currency['symbol'] ?? '',
+                              style: Theme.of(context).textTheme.titleMedium
+                                  ?.copyWith(fontWeight: FontWeight.w600),
+                              semanticsLabel: currency['symbol'] ?? '',
+                            ),
+                            title: _buildHighlighted(
+                              name,
+                              query,
+                              Theme.of(context).textTheme.bodyLarge,
+                            ),
+                            subtitle: _buildHighlighted(
+                              '${currency['code']}',
+                              query,
+                              Theme.of(context).textTheme.bodySmall,
+                            ),
+                            onTap: () {
+                              final selected = Map<String, String>.from(
+                                currency,
+                              );
+                              selected['name'] = name;
+                              Navigator.pop<Map<String, String>>(
+                                context,
+                                selected,
+                              );
+                            },
+                          ),
+                        );
+                      },
                     ),
-                  )
-                : ListView.separated(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                    itemBuilder: (c, i) {
-                      final currency = filtered[i];
-                      final name = localizedCurrencyName(l, currency['code']!);
-                      final query = _query;
-                      return ListTile(
-                        leading: Text(
-                          currency['symbol'] ?? '',
-                          style: Theme.of(context).textTheme.titleMedium
-                              ?.copyWith(fontWeight: FontWeight.w600),
-                          semanticsLabel: currency['symbol'] ?? '',
-                        ),
-                        title: _buildHighlighted(
-                          name,
-                          query,
-                          Theme.of(context).textTheme.bodyLarge,
-                        ),
-                        subtitle: _buildHighlighted(
-                          '${currency['code']}',
-                          query,
-                          Theme.of(context).textTheme.bodySmall,
-                        ),
-                        onTap: () {
-                          final selected = Map<String, String>.from(currency);
-                          selected['name'] = name;
-                          Navigator.pop<Map<String, String>>(context, selected);
-                        },
-                      );
-                    },
-                    // Lint fix: use a descriptive second parameter name
-                    separatorBuilder: (_, itemIndex) =>
-                        const Divider(height: 0),
-                    itemCount: filtered.length,
-                  ),
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
