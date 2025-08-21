@@ -19,7 +19,10 @@ void main() {
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(createAppForTest());
-      await tester.pumpAndSettle();
+      // Avoid pumpAndSettle timeout: allow async init to complete with fixed pumps.
+      for (var i = 0; i < 10; i++) {
+        await tester.pump(const Duration(milliseconds: 200));
+      }
 
       // Find the welcome logo image
       final imageSemantics = find.byWidgetPredicate(
@@ -98,7 +101,9 @@ void main() {
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(createAppForTest());
-      await tester.pumpAndSettle();
+      for (var i = 0; i < 10; i++) {
+        await tester.pump(const Duration(milliseconds: 200));
+      }
 
       // Look for settings button semantics
       final settingsSemantics = find.byWidgetPredicate(
