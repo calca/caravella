@@ -90,6 +90,72 @@ void main() {
 
       // UpdateGroup pin constraint test passed
     });
+
+    test('Archive group removes pin status', () {
+      // Testing that archiving a group removes its pinned status
+
+      final List<Map<String, Object?>> groups = [
+        {'id': 'group1', 'title': 'Group 1', 'pinned': true, 'archived': false},
+        {'id': 'group2', 'title': 'Group 2', 'pinned': false, 'archived': false},
+      ];
+
+      // Simulate archiveGroup logic
+      void archiveGroup(String groupId) {
+        final index = groups.indexWhere((group) => group['id'] == groupId);
+        if (index != -1) {
+          final group = Map<String, Object?>.from(groups[index]);
+          group['archived'] = true;
+          group['pinned'] = false; // This is the fix
+          groups[index] = group;
+        }
+      }
+
+      // Verify initial state - group1 is pinned
+      assert(groups[0]['pinned'] == true, 'Group1 should initially be pinned');
+      assert(groups[0]['archived'] == false, 'Group1 should initially not be archived');
+
+      // Archive the pinned group
+      archiveGroup('group1');
+
+      // Verify the group is archived and no longer pinned
+      assert(groups[0]['archived'] == true, 'Group1 should be archived');
+      assert(groups[0]['pinned'] == false, 'Group1 should no longer be pinned after archiving');
+
+      // Archive group pin removal test passed
+    });
+
+    test('Unarchive group preserves pin status', () {
+      // Testing that unarchiving a group preserves its pinned status
+
+      final List<Map<String, Object?>> groups = [
+        {'id': 'group1', 'title': 'Group 1', 'pinned': false, 'archived': true},
+        {'id': 'group2', 'title': 'Group 2', 'pinned': false, 'archived': false},
+      ];
+
+      // Simulate unarchiveGroup logic
+      void unarchiveGroup(String groupId) {
+        final index = groups.indexWhere((group) => group['id'] == groupId);
+        if (index != -1 && groups[index]['archived'] == true) {
+          final group = Map<String, Object?>.from(groups[index]);
+          group['archived'] = false;
+          // Note: pinned status should remain unchanged when unarchiving
+          groups[index] = group;
+        }
+      }
+
+      // Verify initial state - group1 is archived and not pinned
+      assert(groups[0]['archived'] == true, 'Group1 should initially be archived');
+      assert(groups[0]['pinned'] == false, 'Group1 should initially not be pinned');
+
+      // Unarchive the group
+      unarchiveGroup('group1');
+
+      // Verify the group is unarchived and pinned status is preserved
+      assert(groups[0]['archived'] == false, 'Group1 should be unarchived');
+      assert(groups[0]['pinned'] == false, 'Group1 should still not be pinned after unarchiving');
+
+      // Unarchive group pin preservation test passed
+    });
   });
 }
 

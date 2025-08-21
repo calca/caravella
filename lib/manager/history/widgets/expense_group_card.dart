@@ -171,7 +171,10 @@ class ExpenseGroupCard extends StatelessWidget {
   }
 
   void _onArchiveToggle() {
-    final updatedTrip = trip.copyWith(archived: !trip.archived);
+    final updatedTrip = trip.copyWith(
+      archived: !trip.archived,
+      pinned: !trip.archived ? false : trip.pinned, // Remove pin when archiving
+    );
     onTripUpdated(updatedTrip);
   }
 

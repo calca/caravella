@@ -233,7 +233,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             timestamp: _trip!.timestamp,
             id: _trip!.id,
             file: _trip!.file,
-            pinned: _trip!.pinned,
+            pinned: !_trip!.archived ? false : _trip!.pinned, // Remove pin when archiving
             archived: !_trip!.archived,
           );
           await _groupNotifier?.updateGroup(updatedGroup);
