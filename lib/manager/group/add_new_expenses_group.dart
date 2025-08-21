@@ -133,6 +133,9 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   String? _savedImagePath;
   final ImagePicker _imagePicker = ImagePicker();
   bool _isDirty = false; // traccia modifiche non salvate
+  
+  // Color handling
+  int? _selectedColor;
   // Removed auto bottom sheet prompt flag (inline editing now)
   @override
   void initState() {
@@ -145,6 +148,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       _selectedCurrency = found;
       _categories.addAll(widget.trip!.categories);
       _savedImagePath = widget.trip!.file;
+      _selectedColor = widget.trip!.color;
       if (_savedImagePath != null) {
         _selectedImageFile = File(_savedImagePath!);
       }
@@ -330,6 +334,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
             timestamp: trips[idx].timestamp, // mantieni il timestamp originale
             id: trips[idx].id, // mantieni l'id originale
             file: _savedImagePath, // save image path
+            color: _selectedColor, // save color
             pinned: trips[idx].pinned, // mantieni lo stato pinned
           );
 
@@ -362,6 +367,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
         currency: _selectedCurrency['symbol']!,
         categories: List.from(_categories), // Copia la lista delle categorie
         file: _savedImagePath, // save image path
+        color: _selectedColor, // save color
         // timestamp: default a now
       );
 
@@ -439,6 +445,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
         setState(() {
           _selectedImageFile = savedFile;
           _savedImagePath = filePath;
+          _selectedColor = null; // Clear color when image is set
         });
       }
     } catch (e) {
@@ -458,8 +465,44 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
     setState(() {
       _selectedImageFile = null;
       _savedImagePath = null;
+      // Don't auto-restore color when removing image
     });
   }
+
+  void _selectColor(int color) {
+    setState(() {
+      _selectedColor = color;
+      // Clear image when color is selected (mutual exclusivity)
+      if (_selectedImageFile != null || _savedImagePath != null) {
+        _selectedImageFile = null;
+        _savedImagePath = null;
+      }
+      _isDirty = true;
+    });
+  }
+
+  void _removeColor() {
+    setState(() {
+      _selectedColor = null;
+      _isDirty = true;
+    });
+  }
+
+  // Predefined color palette
+  static const List<int> _predefinedColors = [
+    0xFFE57373, // Red
+    0xFFFFB74D, // Orange  
+    0xFFFFF176, // Yellow
+    0xFFAED581, // Light Green
+    0xFF81C784, // Green
+    0xFF4DB6AC, // Teal
+    0xFF64B5F6, // Blue
+    0xFF9575CD, // Purple
+    0xFFF06292, // Pink
+    0xFFFF8A65, // Deep Orange
+    0xFFDCE775, // Lime
+    0xFF4FC3F7, // Light Blue
+  ];
 
   void _showImagePickerDialog() {
     final gloc = gen.AppLocalizations.of(context);
@@ -903,6 +946,89 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                               ),
                             ),
                             // ...existing code...
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+
+                    // Sezione 6: Colore
+                    SectionFlat(
+                      title: '',
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              gloc.color,
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(fontWeight: FontWeight.w600),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              gloc.color_alternative,
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(color: Colors.grey[700]),
+                            ),
+                            const SizedBox(height: 12),
+                            // Color palette
+                            Wrap(
+                              spacing: 12,
+                              runSpacing: 12,
+                              children: _predefinedColors.map((colorValue) {
+                                final color = Color(colorValue);
+                                final isSelected = _selectedColor == colorValue;
+                                return GestureDetector(
+                                  onTap: () {
+                                    if (isSelected) {
+                                      _removeColor();
+                                    } else {
+                                      _selectColor(colorValue);
+                                    }
+                                  },
+                                  child: Container(
+                                    width: 48,
+                                    height: 48,
+                                    decoration: BoxDecoration(
+                                      color: color,
+                                      shape: BoxShape.circle,
+                                      border: isSelected
+                                          ? Border.all(
+                                              color: Theme.of(context).colorScheme.primary,
+                                              width: 3,
+                                            )
+                                          : Border.all(
+                                              color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
+                                              width: 1,
+                                            ),
+                                    ),
+                                    child: isSelected
+                                        ? Icon(
+                                            Icons.check,
+                                            color: color.computeLuminance() > 0.5 
+                                                ? Colors.black 
+                                                : Colors.white,
+                                            size: 24,
+                                          )
+                                        : null,
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                            if (_selectedColor != null) ...[
+                              const SizedBox(height: 16),
+                              OutlinedButton.icon(
+                                onPressed: _removeColor,
+                                icon: const Icon(Icons.clear),
+                                label: Text(gloc.remove_color),
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: Theme.of(context).colorScheme.error,
+                                  side: BorderSide(
+                                    color: Theme.of(context).colorScheme.error,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ],
                         ),
                       ],
