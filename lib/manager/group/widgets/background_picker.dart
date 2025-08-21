@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'group_form_state.dart';
-import 'group_form_controller.dart';
+import '../group_form_state.dart';
+import '../group_form_controller.dart';
 import '../image_crop_page.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 

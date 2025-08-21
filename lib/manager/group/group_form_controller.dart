@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
-import '../../../data/expense_group.dart';
-import '../../../data/expense_group_storage.dart';
-import '../../../data/expense_participant.dart';
-import '../../../data/expense_category.dart';
+import '../../data/expense_group.dart';
+import '../../data/expense_group_storage.dart';
+import '../../data/expense_participant.dart';
+import '../../data/expense_category.dart';
 import 'group_form_state.dart';
 
 /// Controller encapsulates business logic for the group form.

@@ -1,5 +1,5 @@
-import '../../../data/expense_participant.dart';
-import '../../../data/expense_category.dart';
+import '../../data/expense_participant.dart';
+import '../../data/expense_category.dart';
 import 'package:flutter/foundation.dart';
 
 class GroupFormState extends ChangeNotifier {
