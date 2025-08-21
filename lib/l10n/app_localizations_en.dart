@@ -104,6 +104,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get remove_image => 'Remove Image';
 
   @override
+  String get color => 'Color';
+
+  @override
+  String get remove_color => 'Remove Color';
+
+  @override
+  String get color_alternative => 'Alternative to image';
+
+  @override
   String get no_trips_found => 'Where do you want to go?';
 
   @override
