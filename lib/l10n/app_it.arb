@@ -308,4 +308,10 @@
   ,"@accessibility_toast_error": {"description": "Error toast type description"}
   ,"accessibility_toast_info": "Informazione"
   ,"@accessibility_toast_info": {"description": "Information toast type description"}
+  ,"color_suggested_title": "Colori suggeriti"
+  ,"@color_suggested_title": {"description": "Titolo della sezione dei colori suggeriti"}
+  ,"color_suggested_subtitle": "Scegli uno dei colori compatibili col tema"
+  ,"@color_suggested_subtitle": {"description": "Sottotitolo che spiega la sezione colori suggeriti"}
+  ,"color_random_subtitle": "Lascia che l'app scelga un colore per te"
+  ,"@color_random_subtitle": {"description": "Sottotitolo per la sezione colore casuale"}
 }

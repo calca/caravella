@@ -4,10 +4,20 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:org_app_caravella/main.dart';
 import 'package:org_app_caravella/widgets/add_fab.dart';
 import 'package:org_app_caravella/widgets/app_toast.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart';
 
 void main() {
+  Widget localizedApp({required Widget home, ThemeMode? mode}) => MaterialApp(
+    themeMode: mode,
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
+    home: home,
+  );
+
   group('WCAG 2.2 Accessibility Tests', () {
-    testWidgets('Welcome screen image has semantic label', (WidgetTester tester) async {
+    testWidgets('Welcome screen image has semantic label', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(createAppForTest());
       await tester.pumpAndSettle();
 
@@ -22,14 +32,13 @@ void main() {
       expect(imageSemantics, findsOneWidget);
     });
 
-    testWidgets('AddFab has proper semantic button properties', (WidgetTester tester) async {
+    testWidgets('AddFab has proper semantic button properties', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
-        MaterialApp(
+        localizedApp(
           home: Scaffold(
-            body: AddFab(
-              onPressed: () {},
-              tooltip: 'Add new item',
-            ),
+            body: AddFab(onPressed: () {}, tooltip: 'Add new item'),
           ),
         ),
       );
@@ -44,17 +53,23 @@ void main() {
       expect(fabSemantics, findsOneWidget);
     });
 
-    testWidgets('App toast has live region for screen readers', (WidgetTester tester) async {
+    testWidgets('App toast has live region for screen readers', (
+      WidgetTester tester,
+    ) async {
       final scaffoldKey = GlobalKey<ScaffoldState>();
-      
+
       await tester.pumpWidget(
-        MaterialApp(
+        localizedApp(
           home: Scaffold(
             key: scaffoldKey,
             body: Builder(
               builder: (context) => ElevatedButton(
                 onPressed: () {
-                  AppToast.show(context, 'Test message', type: ToastType.success);
+                  AppToast.show(
+                    context,
+                    'Test message',
+                    type: ToastType.success,
+                  );
                 },
                 child: const Text('Show Toast'),
               ),
@@ -79,7 +94,9 @@ void main() {
       expect(toastSemantics, findsOneWidget);
     });
 
-    testWidgets('Navigation buttons have proper accessibility labels', (WidgetTester tester) async {
+    testWidgets('Navigation buttons have proper accessibility labels', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(createAppForTest());
       await tester.pumpAndSettle();
 
@@ -95,11 +112,13 @@ void main() {
       expect(settingsSemantics, findsOneWidget);
     });
 
-    testWidgets('Form inputs have proper accessibility attributes', (WidgetTester tester) async {
+    testWidgets('Form inputs have proper accessibility attributes', (
+      WidgetTester tester,
+    ) async {
       // This test would need to navigate to a form page
       // For now, we'll test the widget in isolation
       await tester.pumpWidget(
-        MaterialApp(
+        localizedApp(
           home: Scaffold(
             body: TextFormField(
               decoration: const InputDecoration(
@@ -116,13 +135,13 @@ void main() {
       expect(inputWidget, findsOneWidget);
     });
 
-    testWidgets('Loading indicators have semantic labels', (WidgetTester tester) async {
+    testWidgets('Loading indicators have semantic labels', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(
-            body: CircularProgressIndicator(
-              semanticsLabel: 'Loading data',
-            ),
+        localizedApp(
+          home: const Scaffold(
+            body: CircularProgressIndicator(semanticsLabel: 'Loading data'),
           ),
         ),
       );
@@ -136,14 +155,13 @@ void main() {
       expect(progressSemantics, findsOneWidget);
     });
 
-    testWidgets('Minimum touch target sizes are maintained', (WidgetTester tester) async {
+    testWidgets('Minimum touch target sizes are maintained', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
-        MaterialApp(
+        localizedApp(
           home: Scaffold(
-            body: AddFab(
-              onPressed: () {},
-              tooltip: 'Add item',
-            ),
+            body: AddFab(onPressed: () {}, tooltip: 'Add item'),
           ),
         ),
       );
@@ -157,24 +175,30 @@ void main() {
       expect(fabRenderBox.size.height, greaterThanOrEqualTo(44.0));
     });
 
-    testWidgets('Contrast ratios are adequate in themes', (WidgetTester tester) async {
+    testWidgets('Contrast ratios are adequate in themes', (
+      WidgetTester tester,
+    ) async {
       // Test both light and dark themes
       for (final themeMode in [ThemeMode.light, ThemeMode.dark]) {
         await tester.pumpWidget(
-          MaterialApp(
-            themeMode: themeMode,
-            home: const Scaffold(
-              body: Text('Test text'),
-            ),
+          localizedApp(
+            mode: themeMode,
+            home: const Scaffold(body: Text('Test text')),
           ),
         );
 
         final context = tester.element(find.byType(Text));
         final theme = Theme.of(context);
-        
+
         // Verify that text color contrasts with background
-        expect(theme.colorScheme.onSurface, isNot(equals(theme.colorScheme.surface)));
-        expect(theme.colorScheme.onPrimary, isNot(equals(theme.colorScheme.primary)));
+        expect(
+          theme.colorScheme.onSurface,
+          isNot(equals(theme.colorScheme.surface)),
+        );
+        expect(
+          theme.colorScheme.onPrimary,
+          isNot(equals(theme.colorScheme.primary)),
+        );
       }
     });
   });
@@ -182,7 +206,7 @@ void main() {
   group('Screen Reader Support Tests', () {
     testWidgets('Dialogs are properly announced', (WidgetTester tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        localizedApp(
           home: Scaffold(
             body: Builder(
               builder: (context) => ElevatedButton(
@@ -218,9 +242,11 @@ void main() {
       expect(dialogSemantics, findsOneWidget);
     });
 
-    testWidgets('Focus management works correctly', (WidgetTester tester) async {
+    testWidgets('Focus management works correctly', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
-        MaterialApp(
+        localizedApp(
           home: Scaffold(
             body: Column(
               children: [

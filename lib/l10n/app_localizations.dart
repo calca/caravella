@@ -1741,6 +1741,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Information'**
   String get accessibility_toast_info;
+
+  /// Title for the suggested colors section
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested colors'**
+  String get color_suggested_title;
+
+  /// Subtitle explaining the suggested colors section
+  ///
+  /// In en, this message translates to:
+  /// **'Pick one of the theme compatible colors'**
+  String get color_suggested_subtitle;
+
+  /// Subtitle for the random color section
+  ///
+  /// In en, this message translates to:
+  /// **'Let the app pick a color for you'**
+  String get color_random_subtitle;
 }
 
 class _AppLocalizationsDelegate

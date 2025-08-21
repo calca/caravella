@@ -862,4 +862,15 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get accessibility_toast_info => 'Informazione';
+
+  @override
+  String get color_suggested_title => 'Colori suggeriti';
+
+  @override
+  String get color_suggested_subtitle =>
+      'Scegli uno dei colori compatibili col tema';
+
+  @override
+  String get color_random_subtitle =>
+      'Lascia che l\'app scelga un colore per te';
 }

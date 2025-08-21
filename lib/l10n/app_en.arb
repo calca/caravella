@@ -321,4 +321,10 @@
   ,"@accessibility_toast_error": {"description": "Error toast type description"}
   ,"accessibility_toast_info": "Information"
   ,"@accessibility_toast_info": {"description": "Information toast type description"}
+  ,"color_suggested_title": "Suggested colors"
+  ,"@color_suggested_title": {"description": "Title for the suggested colors section"}
+  ,"color_suggested_subtitle": "Pick one of the theme compatible colors"
+  ,"@color_suggested_subtitle": {"description": "Subtitle explaining the suggested colors section"}
+  ,"color_random_subtitle": "Let the app pick a color for you"
+  ,"@color_random_subtitle": {"description": "Subtitle for the random color section"}
 }
