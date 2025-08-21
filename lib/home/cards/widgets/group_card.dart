@@ -36,12 +36,31 @@ class GroupCard extends StatelessWidget {
     final selectedColor = _getSelectedColor(isDarkMode);
     final defaultBackgroundColor = theme.colorScheme.surface;
 
-    // Interpola tra il colore di default e quello selezionato
-    final backgroundColor = Color.lerp(
-      defaultBackgroundColor,
-      selectedColor,
-      selectionProgress * 0.3, // 30% di intensità massima
-    );
+    // Use group color if set and no image, otherwise use selection color
+    Color? backgroundColor;
+    if (group.file != null && group.file!.isNotEmpty) {
+      // Image is present, use interpolated selection color
+      backgroundColor = Color.lerp(
+        defaultBackgroundColor,
+        selectedColor,
+        selectionProgress * 0.3, // 30% di intensità massima
+      );
+    } else if (group.color != null) {
+      // No image but color is set, use group color with selection overlay
+      final groupColor = Color(group.color!);
+      backgroundColor = Color.lerp(
+        groupColor,
+        selectedColor,
+        selectionProgress * 0.3, // 30% di intensità massima per la selezione
+      );
+    } else {
+      // No image and no color, use selection color
+      backgroundColor = Color.lerp(
+        defaultBackgroundColor,
+        selectedColor,
+        selectionProgress * 0.3, // 30% di intensità massima
+      );
+    }
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),

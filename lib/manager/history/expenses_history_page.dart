@@ -9,7 +9,6 @@ import '../../widgets/caravella_app_bar.dart';
 import 'widgets/expense_group_empty_states.dart';
 import 'widgets/expandable_search_bar.dart';
 import 'widgets/expense_group_card.dart';
-import 'widgets/expense_group_options_sheet.dart';
 import '../../widgets/app_toast.dart';
 
 class ExpesensHistoryPage extends StatefulWidget {
@@ -221,14 +220,6 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     });
   }
 
-  Future<void> _deleteTrip(ExpenseGroup trip) async {
-    final allTrips = await ExpenseGroupStorage.getAllGroups();
-    allTrips.removeWhere((t) => t.id == trip.id);
-    await ExpenseGroupStorage.writeTrips(allTrips);
-    // Ricarica i dati con il filtro corrente
-    await _loadTrips();
-  }
-
   Future<void> _updateTrip(ExpenseGroup updatedTrip) async {
     final allTrips = await ExpenseGroupStorage.getAllGroups();
     final index = allTrips.indexWhere((t) => t.id == updatedTrip.id);
@@ -240,18 +231,6 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
       // Ricarica i dati con il filtro corrente
       await _loadTrips();
     }
-  }
-
-  void _showTripOptions(ExpenseGroup trip) async {
-    await showModalBottomSheet<void>(
-      context: context,
-      // backgroundColor centralizzato nel tema
-      builder: (context) => ExpenseGroupOptionsSheet(
-        trip: trip,
-        onTripDeleted: () => _deleteTrip(trip),
-        onTripUpdated: _loadTrips,
-      ),
-    );
   }
 
   Widget _buildStatusFilterButton(
@@ -329,9 +308,8 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                       duration: const Duration(milliseconds: 350),
                       curve: Curves.easeOutCubic,
                       width: _isSearchExpanded
-                          ? MediaQuery.of(context).size.width -
-                                32 // Full width minus padding
-                          : 48, // Collapsed width
+                          ? MediaQuery.of(context).size.width - 32
+                          : 54, // Collapsed width aligned to filter buttons
                       child: ExpandableSearchBar(
                         controller: _searchController,
                         isExpanded: _isSearchExpanded,
@@ -373,7 +351,6 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                       return ExpenseGroupCard(
                         trip: trip,
                         onTripUpdated: _updateTrip,
-                        onTripOptionsPressed: _showTripOptions,
                       );
                     },
                   ),

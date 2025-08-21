@@ -284,6 +284,24 @@ abstract class AppLocalizations {
   /// **'Remove Image'**
   String get remove_image;
 
+  /// No description provided for @color.
+  ///
+  /// In en, this message translates to:
+  /// **'Color'**
+  String get color;
+
+  /// No description provided for @remove_color.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Color'**
+  String get remove_color;
+
+  /// No description provided for @color_alternative.
+  ///
+  /// In en, this message translates to:
+  /// **'Alternative to image'**
+  String get color_alternative;
+
   /// No description provided for @no_trips_found.
   ///
   /// In en, this message translates to:

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 
 class ExpandableSearchBar extends StatefulWidget {
   final bool isExpanded;
@@ -24,6 +25,7 @@ class _ExpandableSearchBarState extends State<ExpandableSearchBar>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _animation;
+  final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
@@ -57,6 +59,7 @@ class _ExpandableSearchBarState extends State<ExpandableSearchBar>
   @override
   void dispose() {
     _animationController.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -65,12 +68,8 @@ class _ExpandableSearchBarState extends State<ExpandableSearchBar>
     return AnimatedBuilder(
       animation: _animation,
       builder: (context, child) {
-        return Container(
-          height: 48,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(24),
-            color: Theme.of(context).colorScheme.surfaceContainerHighest,
-          ),
+        return SizedBox(
+          height: 54,
           child: widget.isExpanded
               ? _buildExpandedSearch(context)
               : _buildCollapsedSearch(context),
@@ -80,55 +79,81 @@ class _ExpandableSearchBarState extends State<ExpandableSearchBar>
   }
 
   Widget _buildExpandedSearch(BuildContext context) {
-    return TextField(
-      controller: widget.controller,
-      onChanged: widget.onSearchChanged,
-      autofocus: true,
-      style: Theme.of(context).textTheme.bodyLarge,
-      decoration: InputDecoration(
-        hintText: 'Cerca gruppi...',
-        // rely on theme hintStyle
-        prefixIcon: Icon(
-          Icons.search_rounded,
-          color: widget.searchQuery.isNotEmpty
-              ? Theme.of(context).colorScheme.primary
-              : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-          size: 20,
-        ),
-        suffixIcon: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (widget.searchQuery.isNotEmpty)
-              IconButton(
-                icon: Icon(
-                  Icons.clear_rounded,
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurface.withValues(alpha: 0.6),
-                  size: 20,
-                ),
-                onPressed: () {
-                  widget.controller.clear();
-                  widget.onSearchChanged('');
-                },
-              ),
-            IconButton(
+    final scheme = Theme.of(context).colorScheme;
+    final gloc = gen.AppLocalizations.of(context);
+    return SizedBox(
+      height: 54,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // Leading search icon button (same width/padding of action icons)
+          SizedBox(
+            width: 54,
+            height: 54,
+            child: IconButton(
+              tooltip: gloc.search_groups,
+              padding: EdgeInsets.zero,
+              onPressed: () => _focusNode.requestFocus(),
               icon: Icon(
-                Icons.arrow_back_rounded,
-                color: Theme.of(
-                  context,
-                ).colorScheme.onSurface.withValues(alpha: 0.6),
+                Icons.search_rounded,
+                color: widget.searchQuery.isNotEmpty
+                    ? scheme.primary
+                    : scheme.onSurface.withValues(alpha: 0.6),
                 size: 20,
               ),
-              onPressed: widget.onToggle,
             ),
-          ],
-        ),
-        border: InputBorder.none,
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 12,
-        ),
+          ),
+          // Text field expanded
+          Expanded(
+            child: TextField(
+              controller: widget.controller,
+              onChanged: widget.onSearchChanged,
+              focusNode: _focusNode,
+              autofocus: true,
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(fontSize: 14, height: 1.2),
+            ),
+          ),
+          // Trailing actions
+          Row(
+            children: [
+              if (widget.searchQuery.isNotEmpty)
+                SizedBox(
+                  width: 54,
+                  height: 54,
+                  child: IconButton(
+                    tooltip: 'Clear',
+                    padding: EdgeInsets.zero,
+                    icon: Icon(
+                      Icons.clear_rounded,
+                      color: scheme.onSurface.withValues(alpha: 0.6),
+                      size: 20,
+                    ),
+                    onPressed: () {
+                      widget.controller.clear();
+                      widget.onSearchChanged('');
+                    },
+                  ),
+                ),
+              SizedBox(
+                width: 54,
+                height: 54,
+                child: IconButton(
+                  tooltip: 'Close',
+                  padding: EdgeInsets.zero,
+                  icon: Icon(
+                    Icons.arrow_back_rounded,
+                    color: scheme.onSurface.withValues(alpha: 0.6),
+                    size: 20,
+                  ),
+                  onPressed: widget.onToggle,
+                ),
+              ),
+              const SizedBox(width: 2),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -141,6 +166,8 @@ class _ExpandableSearchBarState extends State<ExpandableSearchBar>
       style: IconButton.styleFrom(
         backgroundColor: colorScheme.surfaceContainer,
         minimumSize: const Size(54, 54),
+        fixedSize: const Size(54, 54),
+        padding: EdgeInsets.zero,
       ),
     );
   }

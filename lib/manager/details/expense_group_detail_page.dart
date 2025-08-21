@@ -23,8 +23,7 @@ import 'widgets/group_total.dart';
 import 'widgets/filtered_expense_list.dart';
 import 'widgets/unified_overview_sheet.dart';
 import 'widgets/options_sheet.dart';
-import 'widgets/expense_form_sheet.dart';
-import 'widgets/edit_expense_sheet.dart';
+import 'widgets/expense_entry_sheet.dart';
 import 'widgets/delete_expense_dialog.dart';
 import '../../widgets/add_fab.dart';
 
@@ -107,6 +106,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   late final ScrollController _scrollController;
   bool _fabVisible = true; // controllo visibilità totale
   Timer? _fabIdleTimer; // timer per ri-mostrare il FAB dopo inattività
+  bool _collapsedTitleVisible = false; // mostra titolo in appbar dopo scroll
 
   @override
   void initState() {
@@ -395,7 +395,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => ExpenseFormSheet(
+      builder: (context) => ExpenseEntrySheet(
         group: _trip!,
         onExpenseSaved: (newExpense) async {
           final sheetCtx = context; // bottom sheet context
@@ -435,19 +435,21 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (sheetCtx) => EditExpenseSheet(
+      builder: (sheetCtx) => ExpenseEntrySheet(
         group: _trip!,
-        expense: expense,
-        onExpenseAdded: (updatedExpense) async {
+        initialExpense: expense,
+        onExpenseSaved: (updatedExpense) async {
           final gloc = gen.AppLocalizations.of(sheetCtx);
           final nav = Navigator.of(sheetCtx);
           final expenseWithId = updatedExpense.copyWith(id: expense.id);
-          final updatedExpenses = _trip!.expenses.map((e) {
-            return e.id == expense.id ? expenseWithId : e;
-          }).toList();
+          final updatedExpenses = _trip!.expenses
+              .map((e) {
+                return e.id == expense.id ? expenseWithId : e;
+              })
+              .toList(growable: false);
           final updatedGroup = ExpenseGroup(
             title: _trip!.title,
-            expenses: updatedExpenses,
+            expenses: List<ExpenseDetails>.from(updatedExpenses),
             participants: _trip!.participants,
             startDate: _trip!.startDate,
             endDate: _trip!.endDate,
@@ -501,6 +503,12 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       // reset timer perché già visibile
       _fabIdleTimer?.cancel();
     }
+
+    // Aggiorna visibilità titolo collassato in base allo scroll offset
+    final shouldShow = _scrollController.offset > 40;
+    if (shouldShow != _collapsedTitleVisible && mounted) {
+      setState(() => _collapsedTitleVisible = shouldShow);
+    }
   }
 
   Widget _buildAnimatedFab(ColorScheme colorScheme) {
@@ -537,17 +545,39 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       0,
       (sum, s) => sum + (s.amount ?? 0),
     );
+    final showCollapsedTitle = _hideHeader || _collapsedTitleVisible;
 
     return Scaffold(
       body: CustomScrollView(
         controller: _scrollController,
         slivers: [
           SliverAppBar(
-            expandedHeight: 10.0,
-            floating: false,
             pinned: true,
-            foregroundColor: colorScheme.onSurface,
+            floating: false,
             elevation: 0,
+            scrolledUnderElevation: 1,
+            backgroundColor: colorScheme.surface,
+            foregroundColor: colorScheme.onSurface,
+            toolbarHeight: 56,
+            collapsedHeight: 56,
+            centerTitle: false,
+            title: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 220),
+              switchInCurve: Curves.easeOut,
+              switchOutCurve: Curves.easeIn,
+              child: showCollapsedTitle
+                  ? Text(
+                      trip.title,
+                      key: const ValueKey('appbar-title'),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: colorScheme.onSurface,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    )
+                  : const SizedBox(key: ValueKey('appbar-empty')),
+            ),
             leading: IconButton(
               icon: const Icon(Icons.arrow_back_rounded),
               onPressed: () => Navigator.of(context).pop(),

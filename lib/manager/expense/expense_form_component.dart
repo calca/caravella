@@ -24,6 +24,7 @@ class ExpenseFormComponent extends StatefulWidget {
   final List<ExpenseCategory> categories;
   final Function(ExpenseDetails) onExpenseAdded;
   final Function(String) onCategoryAdded;
+  final VoidCallback? onDelete; // optional delete action for edit mode
   final bool shouldAutoClose;
   final DateTime? tripStartDate;
   final DateTime? tripEndDate;
@@ -38,6 +39,7 @@ class ExpenseFormComponent extends StatefulWidget {
     required this.categories,
     required this.onExpenseAdded,
     required this.onCategoryAdded,
+    this.onDelete,
     this.shouldAutoClose = true,
     this.tripStartDate,
     this.tripEndDate,
@@ -66,6 +68,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   final TextEditingController _noteController = TextEditingController();
   late List<ExpenseCategory> _categories; // Lista locale delle categorie
   bool _isDirty = false; // traccia modifiche non salvate
+  bool _initializing = true; // traccia se siamo in fase di inizializzazione
 
   // Stato per validazione in tempo reale
   bool _amountTouched = false;
@@ -125,16 +128,25 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         setState(() {
           _amount = parsed;
           _amountTouched = true;
-          _isDirty = true;
+          if (!_initializing) {
+            _isDirty = true;
+          }
         });
       }
     });
 
     // Listener per aggiornare lo stato quando il nome cambia
     _nameController.addListener(() {
-      setState(() {
-        _isDirty = true;
-      });
+      if (!_initializing) {
+        setState(() {
+          _isDirty = true;
+        });
+      }
+    });
+
+    // Mark initialization as complete after first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializing = false;
     });
   }
 
@@ -412,7 +424,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
             : ExpenseParticipant(name: ''),
       );
       _paidByTouched = true;
-      _isDirty = true;
+      if (!_initializing) {
+        _isDirty = true;
+      }
     });
   }
 
@@ -420,7 +434,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     setState(() {
       _category = selected;
       _categoryTouched = true;
-      _isDirty = true;
+      if (!_initializing) {
+        _isDirty = true;
+      }
     });
   }
 
@@ -439,7 +455,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
           _categories.add(found);
           _category = found;
           _categoryTouched = true;
-          _isDirty = true;
+          if (!_initializing) {
+            _isDirty = true;
+          }
         }
       });
       await Future.delayed(const Duration(milliseconds: 100));
@@ -453,7 +471,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         _categories = List.from(widget.categories);
         _category = foundAfter;
         _categoryTouched = true;
-        _isDirty = true;
+        if (!_initializing) {
+          _isDirty = true;
+        }
       });
     }
   }
@@ -474,7 +494,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
           tripEndDate: widget.tripEndDate,
           onDateSelected: (picked) => setState(() {
             _date = picked;
-            _isDirty = true;
+            if (!_initializing) {
+              _isDirty = true;
+            }
           }),
           locale: locale,
           textStyle: style,
@@ -485,7 +507,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
           textStyle: style,
           onLocationChanged: (location) => setState(() {
             _location = location;
-            _isDirty = true;
+            if (!_initializing) {
+              _isDirty = true;
+            }
           }),
         ),
         _spacer(),
@@ -526,6 +550,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       ExpenseFormActionsWidget(
         onSave: _isFormValid() ? _saveExpense : null,
         isEdit: widget.initialExpense != null,
+        onDelete: widget.initialExpense != null ? widget.onDelete : null,
         textStyle: style,
       ),
     ],

@@ -133,11 +133,20 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
   String? _savedImagePath;
   final ImagePicker _imagePicker = ImagePicker();
   bool _isDirty = false; // traccia modifiche non salvate
+  
+  // Original state for comparison when editing
+  ExpenseGroup? _originalTrip;
+  
+  // Color handling
+  int? _selectedColor;
   // Removed auto bottom sheet prompt flag (inline editing now)
   @override
   void initState() {
     super.initState();
     if (widget.trip != null) {
+      // Store original trip for comparison
+      _originalTrip = widget.trip;
+      
       final found = _currencies.firstWhere(
         (c) => c['symbol'] == widget.trip!.currency,
         orElse: () => _currencies[0],
@@ -145,6 +154,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       _selectedCurrency = found;
       _categories.addAll(widget.trip!.categories);
       _savedImagePath = widget.trip!.file;
+      _selectedColor = widget.trip!.color;
       if (_savedImagePath != null) {
         _selectedImageFile = File(_savedImagePath!);
       }
@@ -160,6 +170,50 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
 
     // Apri automaticamente l'editor nome se nuovo gruppo e nome vuoto
     // Nessun bottom sheet automatico: il campo è inline ora
+  }
+
+  /// Check if there are actual changes compared to the original trip
+  bool _hasActualChanges() {
+    if (_originalTrip == null) {
+      // New trip - any content means changes
+      return _titleController.text.trim().isNotEmpty ||
+          _participants.isNotEmpty ||
+          _categories.isNotEmpty ||
+          _startDate != null ||
+          _endDate != null ||
+          _selectedImageFile != null ||
+          _savedImagePath != null ||
+          _selectedColor != null ||
+          _selectedCurrency['symbol'] != '€';
+    }
+
+    // Editing existing trip - compare with original
+    return _titleController.text.trim() != _originalTrip!.title ||
+        _participants.length != _originalTrip!.participants.length ||
+        !_participantsEqual(_participants, _originalTrip!.participants) ||
+        _categories.length != _originalTrip!.categories.length ||
+        !_categoriesEqual(_categories, _originalTrip!.categories) ||
+        _startDate != _originalTrip!.startDate ||
+        _endDate != _originalTrip!.endDate ||
+        _savedImagePath != _originalTrip!.file ||
+        _selectedColor != _originalTrip!.color ||
+        _selectedCurrency['symbol'] != _originalTrip!.currency;
+  }
+
+  bool _participantsEqual(List<ExpenseParticipant> a, List<ExpenseParticipant> b) {
+    if (a.length != b.length) return false;
+    for (int i = 0; i < a.length; i++) {
+      if (a[i].name != b[i].name) return false;
+    }
+    return true;
+  }
+
+  bool _categoriesEqual(List<ExpenseCategory> a, List<ExpenseCategory> b) {
+    if (a.length != b.length) return false;
+    for (int i = 0; i < a.length; i++) {
+      if (a[i].name != b[i].name) return false;
+    }
+    return true;
   }
 
   // Remove stray constructor declaration
@@ -330,6 +384,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
             timestamp: trips[idx].timestamp, // mantieni il timestamp originale
             id: trips[idx].id, // mantieni l'id originale
             file: _savedImagePath, // save image path
+            color: _selectedColor, // save color
             pinned: trips[idx].pinned, // mantieni lo stato pinned
           );
 
@@ -362,6 +417,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
         currency: _selectedCurrency['symbol']!,
         categories: List.from(_categories), // Copia la lista delle categorie
         file: _savedImagePath, // save image path
+        color: _selectedColor, // save color
         // timestamp: default a now
       );
 
@@ -439,6 +495,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
         setState(() {
           _selectedImageFile = savedFile;
           _savedImagePath = filePath;
+          _selectedColor = null; // Clear color when image is set
         });
       }
     } catch (e) {
@@ -458,7 +515,192 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
     setState(() {
       _selectedImageFile = null;
       _savedImagePath = null;
+      // Don't auto-restore color when removing image
     });
+  }
+
+  void _selectColor(int color) {
+    setState(() {
+      _selectedColor = color;
+      // Clear image when color is selected (mutual exclusivity)
+      if (_selectedImageFile != null || _savedImagePath != null) {
+        _selectedImageFile = null;
+        _savedImagePath = null;
+      }
+      _isDirty = true;
+    });
+  }
+
+  void _removeColor() {
+    setState(() {
+      _selectedColor = null;
+      _isDirty = true;
+    });
+  }
+
+  // Predefined color palette
+  static const List<int> _predefinedColors = [
+    0xFFE57373, // Red
+    0xFFFFB74D, // Orange  
+    0xFFFFF176, // Yellow
+    0xFFAED581, // Light Green
+    0xFF81C784, // Green
+    0xFF4DB6AC, // Teal
+    0xFF64B5F6, // Blue
+    0xFF9575CD, // Purple
+    0xFFF06292, // Pink
+    0xFFFF8A65, // Deep Orange
+    0xFFDCE775, // Lime
+    0xFF4FC3F7, // Light Blue
+  ];
+
+  void _showBackgroundPickerDialog() {
+    final gloc = gen.AppLocalizations.of(context);
+
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20.0,
+              vertical: 16.0,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  gloc.background_options,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 16),
+                ListTile(
+                  leading: const Icon(Icons.image_outlined),
+                  title: Text(gloc.image),
+                  subtitle: Text(gloc.image_requirements),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    _showImagePickerDialog();
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.palette_outlined),
+                  title: Text(gloc.color),
+                  subtitle: Text(gloc.color_alternative),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    _showColorPickerDialog();
+                  },
+                ),
+                if (_selectedImageFile != null || _selectedColor != null) ...[
+                  const Divider(),
+                  ListTile(
+                    leading: const Icon(Icons.clear),
+                    title: Text(_selectedImageFile != null ? gloc.remove_image : gloc.remove_color),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      if (_selectedImageFile != null) {
+                        _removeImage();
+                      } else {
+                        _removeColor();
+                      }
+                    },
+                  ),
+                ],
+                const SizedBox(height: 8),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showColorPickerDialog() {
+    final gloc = gen.AppLocalizations.of(context);
+
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20.0,
+              vertical: 16.0,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  gloc.color,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  gloc.color_alternative,
+                  style: Theme.of(context).textTheme.bodySmall
+                      ?.copyWith(color: Colors.grey[700]),
+                ),
+                const SizedBox(height: 16),
+                // Color palette
+                SizedBox(
+                  height: 200, // Fixed height for scrollable content
+                  child: SingleChildScrollView(
+                    child: Wrap(
+                      spacing: 12,
+                      runSpacing: 12,
+                      children: _predefinedColors.map((colorValue) {
+                        final color = Color(colorValue);
+                        final isSelected = _selectedColor == colorValue;
+                        return GestureDetector(
+                          onTap: () {
+                            _selectColor(colorValue);
+                            Navigator.of(context).pop();
+                          },
+                          child: Container(
+                            width: 48,
+                            height: 48,
+                            decoration: BoxDecoration(
+                              color: color,
+                              shape: BoxShape.circle,
+                              border: isSelected
+                                  ? Border.all(
+                                      color: Theme.of(context).colorScheme.primary,
+                                      width: 3,
+                                    )
+                                  : Border.all(
+                                      color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
+                                      width: 1,
+                                    ),
+                            ),
+                            child: isSelected
+                                ? Icon(
+                                    Icons.check,
+                                    color: color.computeLuminance() > 0.5 
+                                        ? Colors.black 
+                                        : Colors.white,
+                                    size: 24,
+                                  )
+                                : null,
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   void _showImagePickerDialog() {
@@ -548,10 +790,10 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
       onTap: _unfocusAll,
       behavior: HitTestBehavior.translucent,
       child: PopScope(
-        canPop: !_isDirty,
+        canPop: !_hasActualChanges(),
         onPopInvokedWithResult: (didPop, result) async {
           if (didPop) return;
-          if (_isDirty) {
+          if (_hasActualChanges()) {
             final confirm = await showDialog<bool>(
               context: context,
               builder: (ctx) => AlertDialog(
@@ -783,57 +1025,26 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                           ],
                         ),
                         const SizedBox(height: 32),
-                        // Image selection DOPO
+                        // Background selection (unified image and color)
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              gloc.image,
+                              gloc.background,
                               style: Theme.of(context).textTheme.bodyMedium
                                   ?.copyWith(fontWeight: FontWeight.w600),
                             ),
                             const SizedBox(height: 8),
+                            Text(
+                              gloc.choose_image_or_color,
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(color: Colors.grey[700]),
+                            ),
+                            const SizedBox(height: 12),
                             InkWell(
                               onTap: () {
                                 _unfocusAll();
-                                if (_selectedImageFile != null) {
-                                  showModalBottomSheet(
-                                    context: context,
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.vertical(
-                                        top: Radius.circular(20),
-                                      ),
-                                    ),
-                                    builder: (BuildContext context) {
-                                      return SafeArea(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            ListTile(
-                                              leading: const Icon(Icons.edit),
-                                              title: Text(gloc.change_image),
-                                              onTap: () {
-                                                Navigator.of(context).pop();
-                                                _showImagePickerDialog();
-                                              },
-                                            ),
-                                            ListTile(
-                                              leading: const Icon(Icons.delete),
-                                              title: Text(gloc.remove_image),
-                                              onTap: () {
-                                                Navigator.of(context).pop();
-                                                _removeImage();
-                                              },
-                                            ),
-                                            const SizedBox(height: 8),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  );
-                                } else {
-                                  _showImagePickerDialog();
-                                }
+                                _showBackgroundPickerDialog();
                               },
                               borderRadius: BorderRadius.circular(8),
                               child: Padding(
@@ -842,7 +1053,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                 ),
                                 child: Row(
                                   children: [
-                                    // Leading icon or image
+                                    // Leading icon, image or color
                                     SizedBox(
                                       width: 48,
                                       height: 48,
@@ -851,52 +1062,61 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                               child: SizedBox(
                                                 width: 28,
                                                 height: 28,
-                                                child:
-                                                    CircularProgressIndicator(
-                                                      strokeWidth: 3,
-                                                    ),
+                                                child: CircularProgressIndicator(
+                                                  strokeWidth: 3,
+                                                ),
                                               ),
                                             )
-                                          : (_selectedImageFile == null
-                                                ? Icon(
-                                                    Icons.image_outlined,
-                                                    size: 32,
-                                                    color: Theme.of(
-                                                      context,
-                                                    ).colorScheme.onSurface,
-                                                  )
-                                                : ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          8,
-                                                        ),
+                                          : (_selectedImageFile != null
+                                                ? ClipRRect(
+                                                    borderRadius: BorderRadius.circular(8),
                                                     child: Image.file(
                                                       _selectedImageFile!,
                                                       fit: BoxFit.cover,
                                                       width: 48,
                                                       height: 48,
                                                     ),
-                                                  )),
+                                                  )
+                                                : _selectedColor != null
+                                                    ? Container(
+                                                        width: 48,
+                                                        height: 48,
+                                                        decoration: BoxDecoration(
+                                                          color: Color(_selectedColor!),
+                                                          shape: BoxShape.circle,
+                                                          border: Border.all(
+                                                            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
+                                                            width: 1,
+                                                          ),
+                                                        ),
+                                                      )
+                                                    : Icon(
+                                                        Icons.palette_outlined,
+                                                        size: 32,
+                                                        color: Theme.of(context).colorScheme.onSurface,
+                                                      )),
                                     ),
                                     const SizedBox(width: 16),
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            _selectedImageFile == null
-                                                ? gloc.select_image
-                                                : gloc.change_image,
-                                            style: Theme.of(
-                                              context,
-                                            ).textTheme.bodyMedium,
+                                            _selectedImageFile != null
+                                                ? gloc.change_image
+                                                : _selectedColor != null
+                                                    ? gloc.color
+                                                    : gloc.select_background,
+                                            style: Theme.of(context).textTheme.bodyMedium,
                                           ),
                                           const SizedBox(height: 4),
                                           Text(
-                                            gloc.image_requirements,
+                                            _selectedImageFile != null
+                                                ? gloc.image_requirements
+                                                : _selectedColor != null
+                                                    ? gloc.color_alternative
+                                                    : gloc.background_options,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodyMedium
@@ -911,15 +1131,12 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                     Icon(
                                       Icons.chevron_right,
                                       size: 24,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.outline,
+                                      color: Theme.of(context).colorScheme.outline,
                                     ),
                                   ],
                                 ),
                               ),
                             ),
-                            // ...existing code...
                           ],
                         ),
                       ],
