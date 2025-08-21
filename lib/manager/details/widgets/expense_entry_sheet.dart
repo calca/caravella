@@ -23,8 +23,6 @@ class ExpenseEntrySheet extends StatelessWidget {
     this.fullEdit = true,
   });
 
-  bool get _isEdit => initialExpense != null;
-
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -42,29 +40,6 @@ class ExpenseEntrySheet extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                if (_isEdit && onDelete != null)
-                  IconButton.filledTonal(
-                    style: IconButton.styleFrom(
-                      minimumSize: const Size(48, 48),
-                      padding: EdgeInsets.zero,
-                      backgroundColor: colorScheme.surfaceContainer,
-                    ),
-                    tooltip: 'Delete', // TODO localize
-                    onPressed: onDelete,
-                    icon: Icon(
-                      Icons.delete_outline_outlined,
-                      color: colorScheme.error,
-                      size: 22,
-                    ),
-                  ),
-              ],
-            ),
-          ),
           Flexible(
             child: SafeArea(
               top: false,
@@ -79,7 +54,7 @@ class ExpenseEntrySheet extends StatelessWidget {
                   return SingleChildScrollView(
                     padding: EdgeInsets.fromLTRB(
                       20,
-                      0,
+                      20,
                       20,
                       20 + bottomInset + extra + keyboard,
                     ),
@@ -95,6 +70,7 @@ class ExpenseEntrySheet extends StatelessWidget {
                       currency: group.currency,
                       onExpenseAdded: onExpenseSaved,
                       onCategoryAdded: onCategoryAdded,
+                      onDelete: onDelete,
                     ),
                   );
                 },

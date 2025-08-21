@@ -24,6 +24,7 @@ class ExpenseFormComponent extends StatefulWidget {
   final List<ExpenseCategory> categories;
   final Function(ExpenseDetails) onExpenseAdded;
   final Function(String) onCategoryAdded;
+  final VoidCallback? onDelete; // optional delete action for edit mode
   final bool shouldAutoClose;
   final DateTime? tripStartDate;
   final DateTime? tripEndDate;
@@ -38,6 +39,7 @@ class ExpenseFormComponent extends StatefulWidget {
     required this.categories,
     required this.onExpenseAdded,
     required this.onCategoryAdded,
+    this.onDelete,
     this.shouldAutoClose = true,
     this.tripStartDate,
     this.tripEndDate,
@@ -526,6 +528,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       ExpenseFormActionsWidget(
         onSave: _isFormValid() ? _saveExpense : null,
         isEdit: widget.initialExpense != null,
+        onDelete: widget.initialExpense != null ? widget.onDelete : null,
         textStyle: style,
       ),
     ],
