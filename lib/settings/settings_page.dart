@@ -65,8 +65,7 @@ class SettingsPage extends StatelessWidget {
                     ),
                     child: Semantics(
                       button: true,
-                      label:
-                          '${genLoc.settings_language} - Current: ${locale == 'it' ? genLoc.settings_language_it : genLoc.settings_language_en}',
+                      label: '${genLoc.settings_language} - Current: ${_getLanguageLabel(locale, genLoc)}',
                       hint: 'Double tap to change language',
                       child: ListTile(
                         leading: const Icon(Icons.language),
@@ -75,9 +74,7 @@ class SettingsPage extends StatelessWidget {
                           style: textTheme.titleMedium,
                         ),
                         subtitle: Text(
-                          locale == 'it'
-                              ? genLoc.settings_language_it
-                              : genLoc.settings_language_en,
+                          _getLanguageLabel(locale, genLoc),
                         ),
                         trailing: const Icon(Icons.arrow_drop_down),
                         onTap: () {
@@ -291,6 +288,18 @@ class SettingsPage extends StatelessWidget {
       return '-';
     }
   }
+
+  String _getLanguageLabel(String locale, gen.AppLocalizations genLoc) {
+    switch (locale) {
+      case 'it':
+        return genLoc.settings_language_it;
+      case 'es':
+        return genLoc.settings_language_es;
+      case 'en':
+      default:
+        return genLoc.settings_language_en;
+    }
+  }
 }
 
 void _showLanguagePicker(
@@ -307,6 +316,7 @@ void _showLanguagePicker(
       final entries = [
         ('it', loc.settings_language_it),
         ('en', loc.settings_language_en),
+        ('es', loc.settings_language_es),
       ];
       return GroupBottomSheetScaffold(
         title: loc.settings_select_language,
