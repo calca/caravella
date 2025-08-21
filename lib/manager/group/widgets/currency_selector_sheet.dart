@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
+import '../currencies.dart';
 
 class CurrencySelectorSheet extends StatelessWidget {
   const CurrencySelectorSheet({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final currencies = const [
-      {'symbol': '€', 'code': 'EUR', 'name': 'Euro'},
-      {'symbol': '£', 'code': 'GBP', 'name': 'Sterlina'},
-      {'symbol': r'$', 'code': 'USD', 'name': 'Dollaro USA'},
-    ];
+  final currencies = kCurrencies;
     return SafeArea(
       child: ListView.separated(
         padding: const EdgeInsets.all(16),
