@@ -504,6 +504,155 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
     0xFF4FC3F7, // Light Blue
   ];
 
+  void _showBackgroundPickerDialog() {
+    final gloc = gen.AppLocalizations.of(context);
+
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20.0,
+              vertical: 16.0,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  gloc.background_options,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 16),
+                ListTile(
+                  leading: const Icon(Icons.image_outlined),
+                  title: Text(gloc.image),
+                  subtitle: Text(gloc.image_requirements),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    _showImagePickerDialog();
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.palette_outlined),
+                  title: Text(gloc.color),
+                  subtitle: Text(gloc.color_alternative),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    _showColorPickerDialog();
+                  },
+                ),
+                if (_selectedImageFile != null || _selectedColor != null) ...[
+                  const Divider(),
+                  ListTile(
+                    leading: const Icon(Icons.clear),
+                    title: Text(_selectedImageFile != null ? gloc.remove_image : gloc.remove_color),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      if (_selectedImageFile != null) {
+                        _removeImage();
+                      } else {
+                        _removeColor();
+                      }
+                    },
+                  ),
+                ],
+                const SizedBox(height: 8),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showColorPickerDialog() {
+    final gloc = gen.AppLocalizations.of(context);
+
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20.0,
+              vertical: 16.0,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  gloc.color,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  gloc.color_alternative,
+                  style: Theme.of(context).textTheme.bodySmall
+                      ?.copyWith(color: Colors.grey[700]),
+                ),
+                const SizedBox(height: 16),
+                // Color palette
+                SizedBox(
+                  height: 200, // Fixed height for scrollable content
+                  child: SingleChildScrollView(
+                    child: Wrap(
+                      spacing: 12,
+                      runSpacing: 12,
+                      children: _predefinedColors.map((colorValue) {
+                        final color = Color(colorValue);
+                        final isSelected = _selectedColor == colorValue;
+                        return GestureDetector(
+                          onTap: () {
+                            _selectColor(colorValue);
+                            Navigator.of(context).pop();
+                          },
+                          child: Container(
+                            width: 48,
+                            height: 48,
+                            decoration: BoxDecoration(
+                              color: color,
+                              shape: BoxShape.circle,
+                              border: isSelected
+                                  ? Border.all(
+                                      color: Theme.of(context).colorScheme.primary,
+                                      width: 3,
+                                    )
+                                  : Border.all(
+                                      color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
+                                      width: 1,
+                                    ),
+                            ),
+                            child: isSelected
+                                ? Icon(
+                                    Icons.check,
+                                    color: color.computeLuminance() > 0.5 
+                                        ? Colors.black 
+                                        : Colors.white,
+                                    size: 24,
+                                  )
+                                : null,
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   void _showImagePickerDialog() {
     final gloc = gen.AppLocalizations.of(context);
 
@@ -809,57 +958,26 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                           ],
                         ),
                         const SizedBox(height: 32),
-                        // Image selection DOPO
+                        // Background selection (unified image and color)
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              gloc.image,
+                              gloc.background,
                               style: Theme.of(context).textTheme.bodyMedium
                                   ?.copyWith(fontWeight: FontWeight.w600),
                             ),
                             const SizedBox(height: 8),
+                            Text(
+                              gloc.choose_image_or_color,
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(color: Colors.grey[700]),
+                            ),
+                            const SizedBox(height: 12),
                             InkWell(
                               onTap: () {
                                 _unfocusAll();
-                                if (_selectedImageFile != null) {
-                                  showModalBottomSheet(
-                                    context: context,
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.vertical(
-                                        top: Radius.circular(20),
-                                      ),
-                                    ),
-                                    builder: (BuildContext context) {
-                                      return SafeArea(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            ListTile(
-                                              leading: const Icon(Icons.edit),
-                                              title: Text(gloc.change_image),
-                                              onTap: () {
-                                                Navigator.of(context).pop();
-                                                _showImagePickerDialog();
-                                              },
-                                            ),
-                                            ListTile(
-                                              leading: const Icon(Icons.delete),
-                                              title: Text(gloc.remove_image),
-                                              onTap: () {
-                                                Navigator.of(context).pop();
-                                                _removeImage();
-                                              },
-                                            ),
-                                            const SizedBox(height: 8),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  );
-                                } else {
-                                  _showImagePickerDialog();
-                                }
+                                _showBackgroundPickerDialog();
                               },
                               borderRadius: BorderRadius.circular(8),
                               child: Padding(
@@ -868,7 +986,7 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                 ),
                                 child: Row(
                                   children: [
-                                    // Leading icon or image
+                                    // Leading icon, image or color
                                     SizedBox(
                                       width: 48,
                                       height: 48,
@@ -877,52 +995,61 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                               child: SizedBox(
                                                 width: 28,
                                                 height: 28,
-                                                child:
-                                                    CircularProgressIndicator(
-                                                      strokeWidth: 3,
-                                                    ),
+                                                child: CircularProgressIndicator(
+                                                  strokeWidth: 3,
+                                                ),
                                               ),
                                             )
-                                          : (_selectedImageFile == null
-                                                ? Icon(
-                                                    Icons.image_outlined,
-                                                    size: 32,
-                                                    color: Theme.of(
-                                                      context,
-                                                    ).colorScheme.onSurface,
-                                                  )
-                                                : ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          8,
-                                                        ),
+                                          : (_selectedImageFile != null
+                                                ? ClipRRect(
+                                                    borderRadius: BorderRadius.circular(8),
                                                     child: Image.file(
                                                       _selectedImageFile!,
                                                       fit: BoxFit.cover,
                                                       width: 48,
                                                       height: 48,
                                                     ),
-                                                  )),
+                                                  )
+                                                : _selectedColor != null
+                                                    ? Container(
+                                                        width: 48,
+                                                        height: 48,
+                                                        decoration: BoxDecoration(
+                                                          color: Color(_selectedColor!),
+                                                          shape: BoxShape.circle,
+                                                          border: Border.all(
+                                                            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
+                                                            width: 1,
+                                                          ),
+                                                        ),
+                                                      )
+                                                    : Icon(
+                                                        Icons.palette_outlined,
+                                                        size: 32,
+                                                        color: Theme.of(context).colorScheme.onSurface,
+                                                      )),
                                     ),
                                     const SizedBox(width: 16),
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            _selectedImageFile == null
-                                                ? gloc.select_image
-                                                : gloc.change_image,
-                                            style: Theme.of(
-                                              context,
-                                            ).textTheme.bodyMedium,
+                                            _selectedImageFile != null
+                                                ? gloc.change_image
+                                                : _selectedColor != null
+                                                    ? gloc.color
+                                                    : gloc.select_background,
+                                            style: Theme.of(context).textTheme.bodyMedium,
                                           ),
                                           const SizedBox(height: 4),
                                           Text(
-                                            gloc.image_requirements,
+                                            _selectedImageFile != null
+                                                ? gloc.image_requirements
+                                                : _selectedColor != null
+                                                    ? gloc.color_alternative
+                                                    : gloc.background_options,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodyMedium
@@ -937,98 +1064,12 @@ class AddNewExpensesGroupPageState extends State<AddNewExpensesGroupPage> {
                                     Icon(
                                       Icons.chevron_right,
                                       size: 24,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.outline,
+                                      color: Theme.of(context).colorScheme.outline,
                                     ),
                                   ],
                                 ),
                               ),
                             ),
-                            // ...existing code...
-                          ],
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 24),
-
-                    // Sezione 6: Colore
-                    SectionFlat(
-                      title: '',
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              gloc.color,
-                              style: Theme.of(context).textTheme.bodyMedium
-                                  ?.copyWith(fontWeight: FontWeight.w600),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              gloc.color_alternative,
-                              style: Theme.of(context).textTheme.bodySmall
-                                  ?.copyWith(color: Colors.grey[700]),
-                            ),
-                            const SizedBox(height: 12),
-                            // Color palette
-                            Wrap(
-                              spacing: 12,
-                              runSpacing: 12,
-                              children: _predefinedColors.map((colorValue) {
-                                final color = Color(colorValue);
-                                final isSelected = _selectedColor == colorValue;
-                                return GestureDetector(
-                                  onTap: () {
-                                    if (isSelected) {
-                                      _removeColor();
-                                    } else {
-                                      _selectColor(colorValue);
-                                    }
-                                  },
-                                  child: Container(
-                                    width: 48,
-                                    height: 48,
-                                    decoration: BoxDecoration(
-                                      color: color,
-                                      shape: BoxShape.circle,
-                                      border: isSelected
-                                          ? Border.all(
-                                              color: Theme.of(context).colorScheme.primary,
-                                              width: 3,
-                                            )
-                                          : Border.all(
-                                              color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
-                                              width: 1,
-                                            ),
-                                    ),
-                                    child: isSelected
-                                        ? Icon(
-                                            Icons.check,
-                                            color: color.computeLuminance() > 0.5 
-                                                ? Colors.black 
-                                                : Colors.white,
-                                            size: 24,
-                                          )
-                                        : null,
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                            if (_selectedColor != null) ...[
-                              const SizedBox(height: 16),
-                              OutlinedButton.icon(
-                                onPressed: _removeColor,
-                                icon: const Icon(Icons.clear),
-                                label: Text(gloc.remove_color),
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor: Theme.of(context).colorScheme.error,
-                                  side: BorderSide(
-                                    color: Theme.of(context).colorScheme.error,
-                                  ),
-                                ),
-                              ),
-                            ],
                           ],
                         ),
                       ],
