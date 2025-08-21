@@ -155,7 +155,8 @@ class _CurrencySelectorSheetState extends State<CurrencySelectorSheet> {
                       );
                     },
                     // Lint fix: use a descriptive second parameter name
-                    separatorBuilder: (_, itemIndex) => const Divider(height: 0),
+                    separatorBuilder: (_, itemIndex) =>
+                        const Divider(height: 0),
                     itemCount: filtered.length,
                   ),
           ),
