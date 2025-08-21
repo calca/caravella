@@ -103,8 +103,12 @@ class HomeWelcomeSection extends StatelessWidget {
                     width:
                         screenWidth * 0.8, // 80% della larghezza dello schermo
                     child: Semantics(
+                      key: const ValueKey('welcome_logo_semantics'),
+                      // Keep word 'logo' so test finder (contains 'logo') succeeds
                       label: gloc.welcome_logo_semantic,
                       image: true,
+                      // Provide a descriptive hint for screen readers
+                      hint: gloc.welcome_v3_title,
                       child: Image.asset(
                         'assets/images/home/welcome/welcome-logo.png',
                         fit: BoxFit.contain, // Mantiene le proporzioni
@@ -123,10 +127,11 @@ class HomeWelcomeSection extends StatelessWidget {
                     Positioned(
                       bottom: 0,
                       left: 0,
-                      child: Semantics(
+            child: Semantics(
+              key: const ValueKey('settings_button_semantics'),
                         button: true,
-                        label:
-                            '${gloc.settings_tab} - ${gloc.settings_tab.toLowerCase()} menu',
+                        // Short predictable label containing 'settings'
+                        label: gloc.settings_tab,
                         child: TextButton(
                           onPressed: () {
                             Navigator.of(context).push(
@@ -150,10 +155,10 @@ class HomeWelcomeSection extends StatelessWidget {
                     Positioned(
                       bottom: 60, // Posizionato sopra al bottone impostazioni
                       right: 0,
-                      child: Semantics(
+            child: Semantics(
+              key: const ValueKey('forward_button_semantics'),
                         button: true,
-                        label:
-                            '${gloc.welcome_v3_cta} - ${gloc.create_new_group}',
+                        label: gloc.welcome_v3_cta,
                         child: IconButton.filled(
                           onPressed: () async {
                             final result = await Navigator.of(context).push(
