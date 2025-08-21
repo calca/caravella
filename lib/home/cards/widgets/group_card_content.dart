@@ -73,8 +73,15 @@ class GroupCardContent extends StatelessWidget {
           return ExpenseEntrySheet(
             group: currentGroup,
             onExpenseSaved: (expense) async {
-              await groupNotifier.addExpense(expense);
+              final sheetCtx = context; // Save bottom sheet context
+              final nav = Navigator.of(sheetCtx);
+              final expenseWithId = expense.copyWith(
+                id: DateTime.now().millisecondsSinceEpoch.toString(),
+              );
+              await groupNotifier.addExpense(expenseWithId);
               onExpenseAdded();
+              if (!sheetCtx.mounted) return;
+              nav.pop(); // Close the modal sheet
             },
             onCategoryAdded: (newCategory) async {
               await groupNotifier.addCategory(newCategory);
@@ -102,6 +109,46 @@ class GroupCardContent extends StatelessWidget {
         (e) => e.date.isAfter(DateTime.now().subtract(const Duration(days: 7))),
       )
       .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
+
+  // Memoized expensive calculations
+  late final Map<String, dynamic> _memoizedStats = _calculateMemoizedStats();
+  
+  Map<String, dynamic> _calculateMemoizedStats() {
+    final now = DateTime.now();
+    final todayStart = DateTime(now.year, now.month, now.day);
+    final weekStart = now.subtract(Duration(days: now.weekday - 1));
+    final monthStart = DateTime(now.year, now.month, 1);
+    
+    double todayTotal = 0;
+    double weekTotal = 0;
+    double monthTotal = 0;
+    
+    for (final expense in group.expenses) {
+      final amount = expense.amount ?? 0;
+      final expenseDate = expense.date;
+      
+      // Today's expenses
+      if (expenseDate.isAfter(todayStart.subtract(const Duration(seconds: 1)))) {
+        todayTotal += amount;
+      }
+      
+      // Week's expenses  
+      if (expenseDate.isAfter(weekStart.subtract(const Duration(seconds: 1)))) {
+        weekTotal += amount;
+      }
+      
+      // Month's expenses
+      if (expenseDate.isAfter(monthStart.subtract(const Duration(seconds: 1)))) {
+        monthTotal += amount;
+      }
+    }
+    
+    return {
+      'todayTotal': todayTotal,
+      'weekTotal': weekTotal,
+      'monthTotal': monthTotal,
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -259,15 +306,7 @@ class GroupCardContent extends StatelessWidget {
 
   /// Calculate today's total spending
   double _calculateTodaySpending(ExpenseGroup group) {
-    final today = DateTime.now();
-    return group.expenses
-        .where(
-          (e) =>
-              e.date.year == today.year &&
-              e.date.month == today.month &&
-              e.date.day == today.day,
-        )
-        .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
+    return _memoizedStats['todayTotal'] ?? 0.0;
   }
 
   Widget _buildExtraInfo(ExpenseGroup group) {
@@ -344,18 +383,8 @@ class GroupCardContent extends StatelessWidget {
     final endDate = currentGroup.endDate!;
     final duration = endDate.difference(startDate).inDays + 1; // inclusive
 
-    // Calculate daily totals for each day in the date range
-    final dailyTotals = List<double>.generate(duration, (i) {
-      final day = startDate.add(Duration(days: i));
-      return currentGroup.expenses
-          .where(
-            (e) =>
-                e.date.year == day.year &&
-                e.date.month == day.month &&
-                e.date.day == day.day,
-          )
-          .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
-    });
+    // Usa il metodo ottimizzato per calcolare i totali giornalieri
+    final dailyTotals = _calculateOptimizedDailyTotals(currentGroup, startDate, duration);
 
     return Column(
       children: [
@@ -370,35 +399,13 @@ class GroupCardContent extends StatelessWidget {
     final now = DateTime.now();
     // Calcola il lunedì della settimana corrente
     final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
-    // Genera i 7 giorni da lunedì a domenica
-    final dailyTotals = List<double>.generate(7, (i) {
-      final day = startOfWeek.add(Duration(days: i));
-      return currentGroup.expenses
-          .where(
-            (e) =>
-                e.date.year == day.year &&
-                e.date.month == day.month &&
-                e.date.day == day.day,
-          )
-          .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
-    });
-    // weeklyTotal non più usato
+    // Usa calcoli ottimizzati per le statistiche settimanali
+    final dailyTotals = _calculateOptimizedDailyTotals(currentGroup, startOfWeek, 7);
 
-    // Spesa per ogni giorno del mese corrente
+    // Spesa per ogni giorno del mese corrente  
     final daysInMonth = DateTime(now.year, now.month + 1, 0).day;
     final startOfMonth = DateTime(now.year, now.month, 1);
-    final dailyMonthTotals = List<double>.generate(daysInMonth, (i) {
-      final day = startOfMonth.add(Duration(days: i));
-      return currentGroup.expenses
-          .where(
-            (e) =>
-                e.date.year == day.year &&
-                e.date.month == day.month &&
-                e.date.day == day.day,
-          )
-          .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
-    });
-    // monthlyTotal non più usato
+    final dailyMonthTotals = _calculateOptimizedDailyTotals(currentGroup, startOfMonth, daysInMonth);
 
     // Statistiche base
     return Column(
@@ -411,6 +418,28 @@ class GroupCardContent extends StatelessWidget {
         MonthlyExpenseChart(dailyTotals: dailyMonthTotals, theme: theme),
       ],
     );
+  }
+
+  // Metodo ottimizzato per calcolare i totali giornalieri
+  List<double> _calculateOptimizedDailyTotals(ExpenseGroup group, DateTime startDate, int days) {
+    final dailyTotals = List<double>.filled(days, 0.0);
+    
+    for (final expense in group.expenses) {
+      final expenseDate = expense.date;
+      final dayDiff = expenseDate.difference(startDate).inDays;
+      
+      if (dayDiff >= 0 && dayDiff < days) {
+        // Verifica che sia lo stesso giorno (non solo differenza in giorni)
+        final targetDay = startDate.add(Duration(days: dayDiff));
+        if (expenseDate.year == targetDay.year &&
+            expenseDate.month == targetDay.month &&
+            expenseDate.day == targetDay.day) {
+          dailyTotals[dayDiff] += expense.amount ?? 0;
+        }
+      }
+    }
+    
+    return dailyTotals;
   }
 
   Widget _buildAddButton(BuildContext context, ExpenseGroup currentGroup) {

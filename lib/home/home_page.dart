@@ -58,8 +58,15 @@ class _HomePageState extends State<HomePage> with RouteAware {
     final updatedGroupIds = _groupNotifier?.updatedGroupIds ?? [];
 
     if (updatedGroupIds.isNotEmpty && mounted) {
-      // Ricarica i dati se ci sono gruppi aggiornati
-      _loadLocaleAndTrip();
+      // Usa state-based updates invece di ricaricare tutto
+      setState(() {
+        // Trigger rebuild of the UI with updated state
+        // La UI si aggiornerà automaticamente grazie al Consumer pattern
+      });
+      
+      // Aggiorna solo il pinned trip se necessario
+      _updatePinnedTripIfNeeded(updatedGroupIds);
+      
       // Pulisci la lista degli aggiornamenti
       _groupNotifier?.clearUpdatedGroups();
       final event = _groupNotifier?.consumeLastEvent();
@@ -72,6 +79,22 @@ class _HomePageState extends State<HomePage> with RouteAware {
             type: ToastType.success,
           );
         });
+      }
+    }
+  }
+
+  Future<void> _updatePinnedTripIfNeeded(List<String> updatedGroupIds) async {
+    if (_pinnedTrip != null && updatedGroupIds.contains(_pinnedTrip!.id)) {
+      try {
+        final updatedPinnedTrip = await ExpenseGroupStorage.getTripById(_pinnedTrip!.id);
+        if (mounted && updatedPinnedTrip != null) {
+          setState(() {
+            _pinnedTrip = updatedPinnedTrip;
+          });
+        }
+      } catch (e) {
+        // Fallback to full reload only if there's an error
+        _loadLocaleAndTrip();
       }
     }
   }
