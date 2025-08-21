@@ -9,6 +9,7 @@ class CategorySelectorWidget extends StatelessWidget {
   final ExpenseCategory? selectedCategory;
   final void Function(ExpenseCategory?) onCategorySelected;
   final Future<void> Function() onAddCategory;
+  final Future<void> Function(String)? onAddCategoryInline;
   final TextStyle? textStyle;
   final bool fullEdit;
   const CategorySelectorWidget({
@@ -17,6 +18,7 @@ class CategorySelectorWidget extends StatelessWidget {
     required this.selectedCategory,
     required this.onCategorySelected,
     required this.onAddCategory,
+    this.onAddCategoryInline,
     this.textStyle,
     this.fullEdit = false,
   });
@@ -38,6 +40,8 @@ class CategorySelectorWidget extends StatelessWidget {
           await onAddCategory();
         },
         addItemTooltip: gloc.add_category,
+        onAddItemInline: onAddCategoryInline,
+        addItemHint: gloc.category_name,
       );
       if (picked != null && picked != selectedCategory) {
         onCategorySelected(picked);
