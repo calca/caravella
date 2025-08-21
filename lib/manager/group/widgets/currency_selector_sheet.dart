@@ -100,7 +100,7 @@ class _CurrencySelectorSheetState extends State<CurrencySelectorSheet> {
               autofocus: true,
               textInputAction: TextInputAction.search,
               decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.search),
+                prefixIcon: const Icon(Icons.search_outlined),
                 hintText: l.search_currency,
                 suffixIcon: _query.isEmpty
                     ? null

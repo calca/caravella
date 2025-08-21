@@ -120,7 +120,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                 ),
               IconButton(
                 icon: Icon(
-                  _showFilters ? Icons.filter_list_off : Icons.filter_list,
+                  _showFilters ? Icons.filter_list_off_outlined : Icons.filter_list_outlined,
                   size: 20,
                 ),
                 onPressed: widget.expenses.isEmpty ? null : () {
@@ -152,7 +152,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                   controller: _searchController,
                   decoration: InputDecoration(
                     hintText: 'Cerca per nome o nota...',
-                    prefixIcon: Icon(Icons.search, size: 20),
+                    prefixIcon: Icon(Icons.search_outlined, size: 20),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -260,7 +260,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
               children: [
                 Icon(
                   _hasActiveFilters
-                      ? Icons.search_off
+                      ? Icons.search_off_outlined
                       : Icons.receipt_long_outlined,
                   size: 48,
                   color: colorScheme.onSurface.withValues(alpha: 0.4),
