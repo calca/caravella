@@ -96,5 +96,38 @@ void main() {
       expect(find.text('Categoria'), findsOneWidget);
       expect(find.text('Pagato da'), findsOneWidget);
     });
+
+    testWidgets('Filter button is disabled when no expenses present', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FilteredExpenseList(
+              expenses: [], // Empty expenses list
+              currency: '€',
+              onExpenseTap: (expense) {},
+              categories: testCategories,
+              participants: testParticipants,
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // Find the filter toggle button
+      final filterButton = find.byIcon(Icons.filter_list);
+      expect(filterButton, findsOneWidget);
+
+      // Verify the button is disabled (onPressed should be null)
+      final IconButton button = tester.widget(filterButton);
+      expect(button.onPressed, isNull);
+
+      // Try tapping the disabled button - should not show filters
+      await tester.tap(filterButton);
+      await tester.pumpAndSettle();
+
+      // Filters should not be visible since button is disabled
+      expect(find.text('Cerca per nome o nota...'), findsNothing);
+    });
   });
 }

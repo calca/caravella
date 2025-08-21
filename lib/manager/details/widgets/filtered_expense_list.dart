@@ -123,7 +123,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                   _showFilters ? Icons.filter_list_off : Icons.filter_list,
                   size: 20,
                 ),
-                onPressed: () {
+                onPressed: widget.expenses.isEmpty ? null : () {
                   setState(() {
                     _showFilters = !_showFilters;
                   });
