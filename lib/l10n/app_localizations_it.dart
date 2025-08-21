@@ -126,6 +126,30 @@ class AppLocalizationsIt extends AppLocalizations {
       'Scegli un\'immagine o un colore per personalizzare il gruppo';
 
   @override
+  String get background_color_selected => 'Colore selezionato';
+
+  @override
+  String get background_tap_to_replace => 'Tocca per sostituire';
+
+  @override
+  String get background_tap_to_change => 'Tocca per cambiare';
+
+  @override
+  String get background_select_image_or_color => 'Seleziona immagine o colore';
+
+  @override
+  String get background_random_color => 'Colore casuale';
+
+  @override
+  String get background_remove => 'Rimuovi sfondo';
+
+  @override
+  String get crop_image_title => 'Ritaglia immagine';
+
+  @override
+  String get crop_confirm => 'Conferma';
+
+  @override
   String get no_trips_found => 'Dove vuoi andare?';
 
   @override

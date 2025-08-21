@@ -126,6 +126,30 @@ class AppLocalizationsEn extends AppLocalizations {
       'Choose an image or color to customize the group';
 
   @override
+  String get background_color_selected => 'Color selected';
+
+  @override
+  String get background_tap_to_replace => 'Tap to replace';
+
+  @override
+  String get background_tap_to_change => 'Tap to change';
+
+  @override
+  String get background_select_image_or_color => 'Select image or color';
+
+  @override
+  String get background_random_color => 'Random color';
+
+  @override
+  String get background_remove => 'Remove background';
+
+  @override
+  String get crop_image_title => 'Crop image';
+
+  @override
+  String get crop_confirm => 'Confirm';
+
+  @override
   String get no_trips_found => 'Where do you want to go?';
 
   @override

@@ -326,6 +326,54 @@ abstract class AppLocalizations {
   /// **'Choose an image or color to customize the group'**
   String get choose_image_or_color;
 
+  /// No description provided for @background_color_selected.
+  ///
+  /// In en, this message translates to:
+  /// **'Color selected'**
+  String get background_color_selected;
+
+  /// No description provided for @background_tap_to_replace.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to replace'**
+  String get background_tap_to_replace;
+
+  /// No description provided for @background_tap_to_change.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to change'**
+  String get background_tap_to_change;
+
+  /// No description provided for @background_select_image_or_color.
+  ///
+  /// In en, this message translates to:
+  /// **'Select image or color'**
+  String get background_select_image_or_color;
+
+  /// No description provided for @background_random_color.
+  ///
+  /// In en, this message translates to:
+  /// **'Random color'**
+  String get background_random_color;
+
+  /// No description provided for @background_remove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove background'**
+  String get background_remove;
+
+  /// No description provided for @crop_image_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Crop image'**
+  String get crop_image_title;
+
+  /// No description provided for @crop_confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get crop_confirm;
+
   /// No description provided for @no_trips_found.
   ///
   /// In en, this message translates to:

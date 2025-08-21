@@ -4,13 +4,16 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../group_form_state.dart';
 import '../group_form_controller.dart';
+import '../../image_crop_page.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 
 class BackgroundPicker extends StatelessWidget {
   const BackgroundPicker({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<GroupFormState>();
+  final state = context.watch<GroupFormState>();
+  final loc = gen.AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -24,17 +27,17 @@ class BackgroundPicker extends StatelessWidget {
                 children: [
                   Text(
                     state.imagePath != null
-                        ? 'Cambia immagine'
+                        ? loc.change_image
                         : state.color != null
-                        ? 'Colore selezionato'
-                        : 'Sfondo',
+                            ? loc.background_color_selected
+                            : loc.background,
                   ),
                   Text(
                     state.imagePath != null
-                        ? 'Tap per sostituire'
+                        ? loc.background_tap_to_replace
                         : state.color != null
-                        ? 'Tap per cambiare'
-                        : 'Seleziona immagine o colore',
+                            ? loc.background_tap_to_change
+                            : loc.background_select_image_or_color,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
@@ -102,41 +105,61 @@ class _BackgroundSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+  final loc = gen.AppLocalizations.of(context);
   final picker = ImagePicker();
     return SafeArea(
       child: Wrap(
         children: [
           ListTile(
             leading: const Icon(Icons.photo_library),
-            title: const Text('Galleria'),
+            title: Text(loc.from_gallery),
             onTap: () async {
+              final nav = Navigator.of(context); // capture before await
               final x = await picker.pickImage(
                 source: ImageSource.gallery,
                 imageQuality: 85,
               );
               if (x != null) {
-                await controller.persistPickedImage(File(x.path));
+                final original = File(x.path);
+                // Apri pagina di crop, ritorna file ritagliato (o null se annullato)
+                final cropped = await nav.push<File?>(
+                  MaterialPageRoute(
+                    builder: (_) => ImageCropPage(imageFile: original),
+                  ),
+                );
+                if (cropped != null) {
+                  await controller.persistPickedImage(cropped);
+                }
               }
-              if (context.mounted) Navigator.pop(context);
+              if (nav.mounted) nav.pop(); // chiudi sheet
             },
           ),
           ListTile(
             leading: const Icon(Icons.photo_camera),
-            title: const Text('Fotocamera'),
+            title: Text(loc.from_camera),
             onTap: () async {
+              final nav = Navigator.of(context); // capture before await
               final x = await picker.pickImage(
                 source: ImageSource.camera,
                 imageQuality: 85,
               );
               if (x != null) {
-                await controller.persistPickedImage(File(x.path));
+                final original = File(x.path);
+                final cropped = await nav.push<File?>(
+                  MaterialPageRoute(
+                    builder: (_) => ImageCropPage(imageFile: original),
+                  ),
+                );
+                if (cropped != null) {
+                  await controller.persistPickedImage(cropped);
+                }
               }
-              if (context.mounted) Navigator.pop(context);
+              if (nav.mounted) nav.pop();
             },
           ),
           ListTile(
             leading: const Icon(Icons.color_lens_outlined),
-            title: const Text('Colore casuale'),
+            title: Text(loc.background_random_color),
             onTap: () {
               final color =
                   Colors.primaries[(DateTime.now().millisecondsSinceEpoch) %
@@ -148,7 +171,7 @@ class _BackgroundSheet extends StatelessWidget {
           if (state.imagePath != null || state.color != null)
             ListTile(
               leading: const Icon(Icons.clear),
-              title: const Text('Rimuovi sfondo'),
+              title: Text(loc.background_remove),
               onTap: () {
                 state.setImage(null);
                 state.setColor(null);

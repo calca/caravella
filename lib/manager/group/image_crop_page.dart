@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import 'package:image/image.dart' as img;
 
 class ImageCropPage extends StatefulWidget {
@@ -126,12 +127,12 @@ class _ImageCropPageState extends State<ImageCropPage> {
     return Scaffold(
       // backgroundColor centralizzato nel tema
       appBar: AppBar(
-        title: const Text('Ritaglia immagine'),
+    title: Text(gen.AppLocalizations.of(context).crop_image_title),
         actions: [
           IconButton(
             icon: const Icon(Icons.check),
-            onPressed: _cropAndReturn,
-            tooltip: 'Conferma',
+      onPressed: _cropAndReturn,
+      tooltip: gen.AppLocalizations.of(context).crop_confirm,
           ),
         ],
       ),
