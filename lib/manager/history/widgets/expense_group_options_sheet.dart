@@ -3,7 +3,7 @@ import '../../../data/expense_group.dart';
 import '../../../data/expense_participant.dart';
 import '../../../data/expense_category.dart';
 import '../../../data/expense_group_storage.dart';
-import '../../group/pages/add_new_expenses_group.dart';
+import '../../group/pages/expenses_group_edit_page.dart';
 
 class ExpenseGroupOptionsSheet extends StatelessWidget {
   final ExpenseGroup trip;

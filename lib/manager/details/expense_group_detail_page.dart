@@ -1,4 +1,4 @@
-import '../group/pages/add_new_expenses_group.dart';
+import '../group/pages/expenses_group_edit_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:async';
