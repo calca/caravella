@@ -164,164 +164,322 @@ final List<Map<String, String>> kCurrencies = [
 
 String localizedCurrencyName(AppLocalizations l, String code) {
   switch (code) {
-    case 'AED': return l.currency_AED;
-    case 'AFN': return l.currency_AFN;
-    case 'ALL': return l.currency_ALL;
-    case 'AMD': return l.currency_AMD;
-    case 'ANG': return l.currency_ANG;
-    case 'AOA': return l.currency_AOA;
-    case 'ARS': return l.currency_ARS;
-    case 'AUD': return l.currency_AUD;
-    case 'AWG': return l.currency_AWG;
-    case 'AZN': return l.currency_AZN;
-    case 'BAM': return l.currency_BAM;
-    case 'BBD': return l.currency_BBD;
-    case 'BDT': return l.currency_BDT;
-    case 'BGN': return l.currency_BGN;
-    case 'BHD': return l.currency_BHD;
-    case 'BIF': return l.currency_BIF;
-    case 'BMD': return l.currency_BMD;
-    case 'BND': return l.currency_BND;
-    case 'BOB': return l.currency_BOB;
-    case 'BRL': return l.currency_BRL;
-    case 'BSD': return l.currency_BSD;
-    case 'BTN': return l.currency_BTN;
-    case 'BWP': return l.currency_BWP;
-    case 'BYN': return l.currency_BYN;
-    case 'BZD': return l.currency_BZD;
-    case 'CAD': return l.currency_CAD;
-    case 'CDF': return l.currency_CDF;
-    case 'CHF': return l.currency_CHF;
-    case 'CLP': return l.currency_CLP;
-    case 'CNY': return l.currency_CNY;
-    case 'COP': return l.currency_COP;
-    case 'CRC': return l.currency_CRC;
-    case 'CUP': return l.currency_CUP;
-    case 'CVE': return l.currency_CVE;
-    case 'CZK': return l.currency_CZK;
-    case 'DJF': return l.currency_DJF;
-    case 'DKK': return l.currency_DKK;
-    case 'DOP': return l.currency_DOP;
-    case 'DZD': return l.currency_DZD;
-    case 'EGP': return l.currency_EGP;
-    case 'ERN': return l.currency_ERN;
-    case 'ETB': return l.currency_ETB;
-    case 'EUR': return l.currency_EUR;
-    case 'FJD': return l.currency_FJD;
-    case 'FKP': return l.currency_FKP;
-    case 'GBP': return l.currency_GBP;
-    case 'GEL': return l.currency_GEL;
-    case 'GHS': return l.currency_GHS;
-    case 'GIP': return l.currency_GIP;
-    case 'GMD': return l.currency_GMD;
-    case 'GNF': return l.currency_GNF;
-    case 'GTQ': return l.currency_GTQ;
-    case 'GYD': return l.currency_GYD;
-    case 'HKD': return l.currency_HKD;
-    case 'HNL': return l.currency_HNL;
-    case 'HTG': return l.currency_HTG;
-    case 'HUF': return l.currency_HUF;
-    case 'IDR': return l.currency_IDR;
-    case 'ILS': return l.currency_ILS;
-    case 'INR': return l.currency_INR;
-    case 'IQD': return l.currency_IQD;
-    case 'IRR': return l.currency_IRR;
-    case 'ISK': return l.currency_ISK;
-    case 'JMD': return l.currency_JMD;
-    case 'JOD': return l.currency_JOD;
-    case 'JPY': return l.currency_JPY;
-    case 'KES': return l.currency_KES;
-    case 'KGS': return l.currency_KGS;
-    case 'KHR': return l.currency_KHR;
-    case 'KID': return l.currency_KID;
-    case 'KMF': return l.currency_KMF;
-    case 'KPW': return l.currency_KPW;
-    case 'KRW': return l.currency_KRW;
-    case 'KWD': return l.currency_KWD;
-    case 'KYD': return l.currency_KYD;
-    case 'KZT': return l.currency_KZT;
-    case 'LAK': return l.currency_LAK;
-    case 'LBP': return l.currency_LBP;
-    case 'LKR': return l.currency_LKR;
-    case 'LRD': return l.currency_LRD;
-    case 'LSL': return l.currency_LSL;
-    case 'LYD': return l.currency_LYD;
-    case 'MAD': return l.currency_MAD;
-    case 'MDL': return l.currency_MDL;
-    case 'MGA': return l.currency_MGA;
-    case 'MKD': return l.currency_MKD;
-    case 'MMK': return l.currency_MMK;
-    case 'MNT': return l.currency_MNT;
-    case 'MOP': return l.currency_MOP;
-    case 'MRU': return l.currency_MRU;
-    case 'MUR': return l.currency_MUR;
-    case 'MVR': return l.currency_MVR;
-    case 'MWK': return l.currency_MWK;
-    case 'MXN': return l.currency_MXN;
-    case 'MYR': return l.currency_MYR;
-    case 'MZN': return l.currency_MZN;
-    case 'NAD': return l.currency_NAD;
-    case 'NGN': return l.currency_NGN;
-    case 'NIO': return l.currency_NIO;
-    case 'NOK': return l.currency_NOK;
-    case 'NPR': return l.currency_NPR;
-    case 'NZD': return l.currency_NZD;
-    case 'OMR': return l.currency_OMR;
-    case 'PAB': return l.currency_PAB;
-    case 'PEN': return l.currency_PEN;
-    case 'PGK': return l.currency_PGK;
-    case 'PHP': return l.currency_PHP;
-    case 'PKR': return l.currency_PKR;
-    case 'PLN': return l.currency_PLN;
-    case 'PYG': return l.currency_PYG;
-    case 'QAR': return l.currency_QAR;
-    case 'RON': return l.currency_RON;
-    case 'RSD': return l.currency_RSD;
-    case 'RUB': return l.currency_RUB;
-    case 'RWF': return l.currency_RWF;
-    case 'SAR': return l.currency_SAR;
-    case 'SBD': return l.currency_SBD;
-    case 'SCR': return l.currency_SCR;
-    case 'SDG': return l.currency_SDG;
-    case 'SEK': return l.currency_SEK;
-    case 'SGD': return l.currency_SGD;
-    case 'SHP': return l.currency_SHP;
-    case 'SLE': return l.currency_SLE;
-    case 'SLL': return l.currency_SLL;
-    case 'SOS': return l.currency_SOS;
-    case 'SRD': return l.currency_SRD;
-    case 'SSP': return l.currency_SSP;
-    case 'STN': return l.currency_STN;
-    case 'SVC': return l.currency_SVC;
-    case 'SYP': return l.currency_SYP;
-    case 'SZL': return l.currency_SZL;
-    case 'THB': return l.currency_THB;
-    case 'TJS': return l.currency_TJS;
-    case 'TMT': return l.currency_TMT;
-    case 'TND': return l.currency_TND;
-    case 'TOP': return l.currency_TOP;
-    case 'TRY': return l.currency_TRY;
-    case 'TTD': return l.currency_TTD;
-    case 'TVD': return l.currency_TVD;
-    case 'TWD': return l.currency_TWD;
-    case 'TZS': return l.currency_TZS;
-    case 'UAH': return l.currency_UAH;
-    case 'UGX': return l.currency_UGX;
-    case 'USD': return l.currency_USD;
-    case 'UYU': return l.currency_UYU;
-    case 'UZS': return l.currency_UZS;
-    case 'VED': return l.currency_VED;
-    case 'VES': return l.currency_VES;
-    case 'VND': return l.currency_VND;
-    case 'VUV': return l.currency_VUV;
-    case 'WST': return l.currency_WST;
-    case 'XAF': return l.currency_XAF;
-    case 'XOF': return l.currency_XOF;
-    case 'XPF': return l.currency_XPF;
-    case 'YER': return l.currency_YER;
-    case 'ZAR': return l.currency_ZAR;
-    case 'ZMW': return l.currency_ZMW;
-    case 'ZWL': return l.currency_ZWL;
+    case 'AED':
+      return l.currency_AED;
+    case 'AFN':
+      return l.currency_AFN;
+    case 'ALL':
+      return l.currency_ALL;
+    case 'AMD':
+      return l.currency_AMD;
+    case 'ANG':
+      return l.currency_ANG;
+    case 'AOA':
+      return l.currency_AOA;
+    case 'ARS':
+      return l.currency_ARS;
+    case 'AUD':
+      return l.currency_AUD;
+    case 'AWG':
+      return l.currency_AWG;
+    case 'AZN':
+      return l.currency_AZN;
+    case 'BAM':
+      return l.currency_BAM;
+    case 'BBD':
+      return l.currency_BBD;
+    case 'BDT':
+      return l.currency_BDT;
+    case 'BGN':
+      return l.currency_BGN;
+    case 'BHD':
+      return l.currency_BHD;
+    case 'BIF':
+      return l.currency_BIF;
+    case 'BMD':
+      return l.currency_BMD;
+    case 'BND':
+      return l.currency_BND;
+    case 'BOB':
+      return l.currency_BOB;
+    case 'BRL':
+      return l.currency_BRL;
+    case 'BSD':
+      return l.currency_BSD;
+    case 'BTN':
+      return l.currency_BTN;
+    case 'BWP':
+      return l.currency_BWP;
+    case 'BYN':
+      return l.currency_BYN;
+    case 'BZD':
+      return l.currency_BZD;
+    case 'CAD':
+      return l.currency_CAD;
+    case 'CDF':
+      return l.currency_CDF;
+    case 'CHF':
+      return l.currency_CHF;
+    case 'CLP':
+      return l.currency_CLP;
+    case 'CNY':
+      return l.currency_CNY;
+    case 'COP':
+      return l.currency_COP;
+    case 'CRC':
+      return l.currency_CRC;
+    case 'CUP':
+      return l.currency_CUP;
+    case 'CVE':
+      return l.currency_CVE;
+    case 'CZK':
+      return l.currency_CZK;
+    case 'DJF':
+      return l.currency_DJF;
+    case 'DKK':
+      return l.currency_DKK;
+    case 'DOP':
+      return l.currency_DOP;
+    case 'DZD':
+      return l.currency_DZD;
+    case 'EGP':
+      return l.currency_EGP;
+    case 'ERN':
+      return l.currency_ERN;
+    case 'ETB':
+      return l.currency_ETB;
+    case 'EUR':
+      return l.currency_EUR;
+    case 'FJD':
+      return l.currency_FJD;
+    case 'FKP':
+      return l.currency_FKP;
+    case 'GBP':
+      return l.currency_GBP;
+    case 'GEL':
+      return l.currency_GEL;
+    case 'GHS':
+      return l.currency_GHS;
+    case 'GIP':
+      return l.currency_GIP;
+    case 'GMD':
+      return l.currency_GMD;
+    case 'GNF':
+      return l.currency_GNF;
+    case 'GTQ':
+      return l.currency_GTQ;
+    case 'GYD':
+      return l.currency_GYD;
+    case 'HKD':
+      return l.currency_HKD;
+    case 'HNL':
+      return l.currency_HNL;
+    case 'HTG':
+      return l.currency_HTG;
+    case 'HUF':
+      return l.currency_HUF;
+    case 'IDR':
+      return l.currency_IDR;
+    case 'ILS':
+      return l.currency_ILS;
+    case 'INR':
+      return l.currency_INR;
+    case 'IQD':
+      return l.currency_IQD;
+    case 'IRR':
+      return l.currency_IRR;
+    case 'ISK':
+      return l.currency_ISK;
+    case 'JMD':
+      return l.currency_JMD;
+    case 'JOD':
+      return l.currency_JOD;
+    case 'JPY':
+      return l.currency_JPY;
+    case 'KES':
+      return l.currency_KES;
+    case 'KGS':
+      return l.currency_KGS;
+    case 'KHR':
+      return l.currency_KHR;
+    case 'KID':
+      return l.currency_KID;
+    case 'KMF':
+      return l.currency_KMF;
+    case 'KPW':
+      return l.currency_KPW;
+    case 'KRW':
+      return l.currency_KRW;
+    case 'KWD':
+      return l.currency_KWD;
+    case 'KYD':
+      return l.currency_KYD;
+    case 'KZT':
+      return l.currency_KZT;
+    case 'LAK':
+      return l.currency_LAK;
+    case 'LBP':
+      return l.currency_LBP;
+    case 'LKR':
+      return l.currency_LKR;
+    case 'LRD':
+      return l.currency_LRD;
+    case 'LSL':
+      return l.currency_LSL;
+    case 'LYD':
+      return l.currency_LYD;
+    case 'MAD':
+      return l.currency_MAD;
+    case 'MDL':
+      return l.currency_MDL;
+    case 'MGA':
+      return l.currency_MGA;
+    case 'MKD':
+      return l.currency_MKD;
+    case 'MMK':
+      return l.currency_MMK;
+    case 'MNT':
+      return l.currency_MNT;
+    case 'MOP':
+      return l.currency_MOP;
+    case 'MRU':
+      return l.currency_MRU;
+    case 'MUR':
+      return l.currency_MUR;
+    case 'MVR':
+      return l.currency_MVR;
+    case 'MWK':
+      return l.currency_MWK;
+    case 'MXN':
+      return l.currency_MXN;
+    case 'MYR':
+      return l.currency_MYR;
+    case 'MZN':
+      return l.currency_MZN;
+    case 'NAD':
+      return l.currency_NAD;
+    case 'NGN':
+      return l.currency_NGN;
+    case 'NIO':
+      return l.currency_NIO;
+    case 'NOK':
+      return l.currency_NOK;
+    case 'NPR':
+      return l.currency_NPR;
+    case 'NZD':
+      return l.currency_NZD;
+    case 'OMR':
+      return l.currency_OMR;
+    case 'PAB':
+      return l.currency_PAB;
+    case 'PEN':
+      return l.currency_PEN;
+    case 'PGK':
+      return l.currency_PGK;
+    case 'PHP':
+      return l.currency_PHP;
+    case 'PKR':
+      return l.currency_PKR;
+    case 'PLN':
+      return l.currency_PLN;
+    case 'PYG':
+      return l.currency_PYG;
+    case 'QAR':
+      return l.currency_QAR;
+    case 'RON':
+      return l.currency_RON;
+    case 'RSD':
+      return l.currency_RSD;
+    case 'RUB':
+      return l.currency_RUB;
+    case 'RWF':
+      return l.currency_RWF;
+    case 'SAR':
+      return l.currency_SAR;
+    case 'SBD':
+      return l.currency_SBD;
+    case 'SCR':
+      return l.currency_SCR;
+    case 'SDG':
+      return l.currency_SDG;
+    case 'SEK':
+      return l.currency_SEK;
+    case 'SGD':
+      return l.currency_SGD;
+    case 'SHP':
+      return l.currency_SHP;
+    case 'SLE':
+      return l.currency_SLE;
+    case 'SLL':
+      return l.currency_SLL;
+    case 'SOS':
+      return l.currency_SOS;
+    case 'SRD':
+      return l.currency_SRD;
+    case 'SSP':
+      return l.currency_SSP;
+    case 'STN':
+      return l.currency_STN;
+    case 'SVC':
+      return l.currency_SVC;
+    case 'SYP':
+      return l.currency_SYP;
+    case 'SZL':
+      return l.currency_SZL;
+    case 'THB':
+      return l.currency_THB;
+    case 'TJS':
+      return l.currency_TJS;
+    case 'TMT':
+      return l.currency_TMT;
+    case 'TND':
+      return l.currency_TND;
+    case 'TOP':
+      return l.currency_TOP;
+    case 'TRY':
+      return l.currency_TRY;
+    case 'TTD':
+      return l.currency_TTD;
+    case 'TVD':
+      return l.currency_TVD;
+    case 'TWD':
+      return l.currency_TWD;
+    case 'TZS':
+      return l.currency_TZS;
+    case 'UAH':
+      return l.currency_UAH;
+    case 'UGX':
+      return l.currency_UGX;
+    case 'USD':
+      return l.currency_USD;
+    case 'UYU':
+      return l.currency_UYU;
+    case 'UZS':
+      return l.currency_UZS;
+    case 'VED':
+      return l.currency_VED;
+    case 'VES':
+      return l.currency_VES;
+    case 'VND':
+      return l.currency_VND;
+    case 'VUV':
+      return l.currency_VUV;
+    case 'WST':
+      return l.currency_WST;
+    case 'XAF':
+      return l.currency_XAF;
+    case 'XOF':
+      return l.currency_XOF;
+    case 'XPF':
+      return l.currency_XPF;
+    case 'YER':
+      return l.currency_YER;
+    case 'ZAR':
+      return l.currency_ZAR;
+    case 'ZMW':
+      return l.currency_ZMW;
+    case 'ZWL':
+      return l.currency_ZWL;
   }
   return code;
 }
