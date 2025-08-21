@@ -268,7 +268,7 @@ class UnifiedOverviewTab extends StatelessWidget {
                         (0.1 * 255).toInt(),
                       ),
                       child: Icon(
-                        Icons.person,
+                        Icons.person_outline,
                         size: 18,
                         color: theme.colorScheme.primary,
                       ),

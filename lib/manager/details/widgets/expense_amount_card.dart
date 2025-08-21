@@ -114,7 +114,7 @@ class ExpenseAmountCard extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
-                          Icons.schedule_rounded,
+                          Icons.schedule_outlined,
                           size: 13,
                           color: colorScheme.onSurface.withValues(alpha: 0.7),
                         ),

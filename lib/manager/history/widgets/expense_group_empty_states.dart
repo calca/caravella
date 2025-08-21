@@ -30,7 +30,7 @@ class ExpsenseGroupEmptyStates extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Icon(
-          Icons.search_off_rounded,
+          Icons.search_off_outlined,
           size: 64,
           color: Theme.of(context).colorScheme.outline,
         ),
@@ -55,7 +55,7 @@ class ExpsenseGroupEmptyStates extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Icon(
-          Icons.search_off,
+          Icons.search_off_outlined,
           size: 64,
           color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
         ),

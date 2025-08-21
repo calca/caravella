@@ -165,7 +165,7 @@ class GroupCardContent extends StatelessWidget {
         Row(
           children: [
             Icon(
-              Icons.calendar_today,
+              Icons.event_outlined,
               size: 8,
               color: theme.colorScheme.onSurfaceVariant,
             ),
