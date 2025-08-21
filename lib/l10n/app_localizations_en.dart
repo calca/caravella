@@ -123,7 +123,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get choose_image_or_color =>
-      'Choose an image or color to customize the group';
+      'Choose image or color';
 
   @override
   String get participants_description => 'People sharing costs';
