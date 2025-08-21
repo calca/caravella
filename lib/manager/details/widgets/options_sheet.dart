@@ -55,7 +55,6 @@ class OptionsSheet extends StatelessWidget {
             title: Text(trip.archived ? gloc.unarchive : gloc.archive),
             onTap: onArchiveToggle,
           ),
-          const Divider(),
           ListTile(
             leading: Icon(
               Icons.edit_outlined,
@@ -64,7 +63,6 @@ class OptionsSheet extends StatelessWidget {
             title: Text(gloc.edit_group),
             onTap: onEdit,
           ),
-          const Divider(),
           ListTile(
             leading: Icon(
               Icons.file_download_outlined,
@@ -81,7 +79,6 @@ class OptionsSheet extends StatelessWidget {
             title: Text(gloc.share_all_csv),
             onTap: onShareCsv,
           ),
-          const Divider(),
           ListTile(
             leading: Icon(
               Icons.delete_outline,
