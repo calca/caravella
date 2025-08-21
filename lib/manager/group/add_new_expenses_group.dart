@@ -296,15 +296,21 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                                   size: 24,
                                   color: Theme.of(context).colorScheme.outline,
                                 ),
-                                onTap: () => showModalBottomSheet(
-                                  context: context,
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(20),
+                                onTap: () async {
+                                  final selected = await showModalBottomSheet<
+                                      Map<String, String>>(
+                                    context: context,
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(20),
+                                      ),
                                     ),
-                                  ),
-                                  builder: (_) => const CurrencySelectorSheet(),
-                                ),
+                                    builder: (_) => const CurrencySelectorSheet(),
+                                  );
+                                  if (selected != null && context.mounted) {
+                                    context.read<GroupFormState>().setCurrency(selected);
+                                  }
+                                },
                                 borderRadius: 8,
                                 padding: const EdgeInsets.only(
                                   left: 8,

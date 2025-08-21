@@ -83,18 +83,26 @@ class BackgroundPicker extends StatelessWidget {
   }
 
   void _showPicker(BuildContext context) async {
-    showModalBottomSheet(context: context, builder: (ctx) => const _Sheet());
+    final state = context.read<GroupFormState>();
+    final controller = context.read<GroupFormController>();
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) => _BackgroundSheet(
+        state: state,
+        controller: controller,
+      ),
+    );
   }
 }
 
-class _Sheet extends StatelessWidget {
-  const _Sheet();
+class _BackgroundSheet extends StatelessWidget {
+  final GroupFormState state;
+  final GroupFormController controller;
+  const _BackgroundSheet({required this.state, required this.controller});
 
   @override
   Widget build(BuildContext context) {
-    final picker = ImagePicker();
-    final state = context.read<GroupFormState>();
-    final controller = context.read<GroupFormController>();
+  final picker = ImagePicker();
     return SafeArea(
       child: Wrap(
         children: [

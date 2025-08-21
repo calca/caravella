@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../group_form_state.dart';
 
 class CurrencySelectorSheet extends StatelessWidget {
   const CurrencySelectorSheet({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final state = context.read<GroupFormState>();
     final currencies = const [
       {'symbol': '€', 'code': 'EUR', 'name': 'Euro'},
       {'symbol': '£', 'code': 'GBP', 'name': 'Sterlina'},
@@ -23,8 +20,7 @@ class CurrencySelectorSheet extends StatelessWidget {
             '${currencies[i]['symbol']} 0   ${currencies[i]['code']}',
           ),
           onTap: () {
-            state.setCurrency(currencies[i]);
-            Navigator.pop(context);
+            Navigator.pop<Map<String, String>>(context, currencies[i]);
           },
         ),
         separatorBuilder: (context, index) => const Divider(height: 0),
