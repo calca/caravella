@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../widgets/participants_section.dart';
-import '../group_form_state.dart';
-import '../../../../../data/expense_participant.dart';
+import 'participants_section.dart';
+import 'group_form_state.dart';
+import '../../../../data/expense_participant.dart';
 
 class ParticipantsEditor extends StatelessWidget {
   const ParticipantsEditor({super.key});

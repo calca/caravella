@@ -8,15 +8,15 @@ import '../expense/expense_form/icon_leading_field.dart';
 import '../../themes/app_text_styles.dart';
 import 'widgets/section_flat.dart';
 import 'widgets/selection_tile.dart';
-import 'refactor/group_form_state.dart';
-import 'refactor/group_form_controller.dart';
-import 'refactor/widgets/group_title_field.dart';
-import 'refactor/widgets/participants_editor.dart';
-import 'refactor/widgets/categories_editor.dart';
-import 'refactor/widgets/period_section_editor.dart';
-import 'refactor/widgets/background_picker.dart';
-import 'refactor/widgets/currency_selector_sheet.dart';
-import 'refactor/widgets/save_button_bar.dart';
+import 'widgets/group_form_state.dart';
+import 'widgets/group_form_controller.dart';
+import 'widgets/group_title_field.dart';
+import 'widgets/participants_editor.dart';
+import 'widgets/categories_editor.dart';
+import 'widgets/period_section_editor.dart';
+import 'widgets/background_picker.dart';
+import 'widgets/currency_selector_sheet.dart';
+import 'widgets/save_button_bar.dart';
 
 class AddNewExpensesGroupPage extends StatelessWidget {
   final ExpenseGroup? trip;

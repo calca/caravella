@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../group_form_state.dart';
-import '../group_form_controller.dart';
+import 'group_form_state.dart';
+import 'group_form_controller.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 
 class SaveButtonBar extends StatelessWidget {

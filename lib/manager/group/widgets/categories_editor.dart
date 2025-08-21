@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../widgets/categories_section.dart';
-import '../group_form_state.dart';
-import '../../../../../data/expense_category.dart';
+import 'categories_section.dart';
+import 'group_form_state.dart';
+import '../../../../data/expense_category.dart';
 
 class CategoriesEditor extends StatelessWidget {
   const CategoriesEditor({super.key});

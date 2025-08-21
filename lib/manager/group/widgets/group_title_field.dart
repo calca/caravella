@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../group_form_state.dart';
+import 'group_form_state.dart';
 
 class GroupTitleField extends StatefulWidget {
   const GroupTitleField({super.key});
