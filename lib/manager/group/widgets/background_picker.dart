@@ -489,7 +489,7 @@ class _RandomColorButtonState extends State<_RandomColorButton>
 
   @override
   Widget build(BuildContext context) {
-    final button = IconButton.filledTonal(
+    final button = IconButton.filled(
       onPressed: _roll,
       tooltip: widget.semanticLabel,
       icon: AnimatedBuilder(
