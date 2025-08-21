@@ -288,6 +288,14 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                                   style: Theme.of(context).textTheme.bodyMedium
                                       ?.copyWith(fontWeight: FontWeight.w600),
                                 ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  gloc.currency_description,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(color: Colors.grey[700]),
+                                ),
                                 const SizedBox(height: 8),
                                 Selector<GroupFormState, Map<String, String>>(
                                   selector: (context, s) => s.currency,

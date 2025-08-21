@@ -23,6 +23,7 @@ class ParticipantsSection extends StatelessWidget {
     return EditableNameList(
       title: loc.participants,
       requiredMark: true,
+      description: loc.participants_description,
       items: participants.map((e) => e.name).toList(),
       addLabel: loc.add_participant,
       hintLabel: loc.participant_name,

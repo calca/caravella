@@ -126,6 +126,18 @@ class AppLocalizationsEn extends AppLocalizations {
       'Choose an image or color to customize the group';
 
   @override
+  String get participants_description => 'People sharing costs';
+
+  @override
+  String get categories_description => 'Group expenses by type';
+
+  @override
+  String get dates_description => 'Optional start and end';
+
+  @override
+  String get currency_description => 'Base currency for group';
+
+  @override
   String get background_color_selected => 'Color selected';
 
   @override

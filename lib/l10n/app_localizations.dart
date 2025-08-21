@@ -326,6 +326,30 @@ abstract class AppLocalizations {
   /// **'Choose an image or color to customize the group'**
   String get choose_image_or_color;
 
+  /// No description provided for @participants_description.
+  ///
+  /// In en, this message translates to:
+  /// **'People sharing costs'**
+  String get participants_description;
+
+  /// No description provided for @categories_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Group expenses by type'**
+  String get categories_description;
+
+  /// No description provided for @dates_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional start and end'**
+  String get dates_description;
+
+  /// No description provided for @currency_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Base currency for group'**
+  String get currency_description;
+
   /// No description provided for @background_color_selected.
   ///
   /// In en, this message translates to:

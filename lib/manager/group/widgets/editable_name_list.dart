@@ -21,6 +21,7 @@ class EditableNameList extends StatefulWidget {
   final void Function(int) onDelete;
   final IconData itemIcon;
   final Color? borderColor;
+  final String? description;
 
   const EditableNameList({
     super.key,
@@ -40,6 +41,7 @@ class EditableNameList extends StatefulWidget {
     this.requiredMark = false,
     this.itemIcon = Icons.label_outline,
     this.borderColor,
+    this.description,
   });
 
   @override
@@ -277,7 +279,19 @@ class _EditableNameListState extends State<EditableNameList> {
             ],
           ],
         ),
-        const SizedBox(height: 12),
+        if (widget.description != null && widget.description!.isNotEmpty) ...[
+          const SizedBox(height: 4),
+          Text(
+            widget.description!,
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall
+                ?.copyWith(color: Theme.of(context).colorScheme.outline),
+          ),
+          const SizedBox(height: 12),
+        ] else ...[
+          const SizedBox(height: 12),
+        ],
         ...List.generate(widget.items.length, (index) {
           if (_editingIndex == index) return _buildEditRow();
           return _buildStaticRow(index, widget.items[index]);

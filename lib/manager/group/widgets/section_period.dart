@@ -7,6 +7,7 @@ class SectionPeriod extends StatelessWidget {
   final DateTime? endDate;
   final void Function(bool) onPickDate;
   final void Function() onClearDates;
+  final String? description;
 
   const SectionPeriod({
     super.key,
@@ -14,6 +15,7 @@ class SectionPeriod extends StatelessWidget {
     required this.endDate,
     required this.onPickDate,
     required this.onClearDates,
+    this.description,
   });
 
   @override
@@ -45,7 +47,19 @@ class SectionPeriod extends StatelessWidget {
               ),
           ],
         ),
-        const SizedBox(height: 8),
+        if (description != null && description!.isNotEmpty) ...[
+          const SizedBox(height: 4),
+          Text(
+            description!,
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall
+                ?.copyWith(color: Theme.of(context).colorScheme.outline),
+          ),
+          const SizedBox(height: 8),
+        ] else ...[
+          const SizedBox(height: 8),
+        ],
         // Always show two separate rows for start and end date
         Material(
           color: Colors.transparent,
