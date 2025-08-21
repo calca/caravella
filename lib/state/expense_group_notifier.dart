@@ -59,6 +59,28 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     }
   }
 
+  /// Aggiorna solo i metadati del gruppo preservando le spese esistenti
+  Future<void> updateGroupMetadata(ExpenseGroup updatedGroup) async {
+    // Aggiorna lo stato corrente preservando le spese se presente
+    if (_currentGroup != null && _currentGroup!.id == updatedGroup.id) {
+      _currentGroup = updatedGroup.copyWith(expenses: _currentGroup!.expenses);
+    }
+
+    // Aggiungi l'ID alla lista dei gruppi aggiornati
+    if (!_updatedGroupIds.contains(updatedGroup.id)) {
+      _updatedGroupIds.add(updatedGroup.id);
+    }
+
+    notifyListeners();
+
+    // Persisti le modifiche preservando le spese
+    try {
+      await ExpenseGroupStorage.updateGroupMetadata(updatedGroup);
+    } catch (e) {
+      debugPrint('Error updating group metadata: $e');
+    }
+  }
+
   Future<void> addExpense(ExpenseDetails expense) async {
     if (_currentGroup == null) return;
 

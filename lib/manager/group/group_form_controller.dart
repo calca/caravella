@@ -89,7 +89,6 @@ class GroupFormController {
       final now = DateTime.now();
       final group = (_original ?? ExpenseGroup.empty()).copyWith(
         title: state.title.trim(),
-        expenses: _original?.expenses ?? [], // Preserve existing expenses
         participants: state.participants
             .map((e) => ExpenseParticipant(name: e.name))
             .toList(),
@@ -103,7 +102,15 @@ class GroupFormController {
         color: state.color,
         timestamp: _original?.timestamp ?? now,
       );
-      await ExpenseGroupStorage.saveTrip(group);
+      
+      if (_original != null) {
+        // Se stiamo modificando un gruppo esistente, usa il nuovo metodo che preserva le spese
+        await ExpenseGroupStorage.updateGroupMetadata(group);
+      } else {
+        // Se stiamo creando un nuovo gruppo, usa il metodo normale
+        await ExpenseGroupStorage.saveTrip(group);
+      }
+      
       _original = group;
       return group;
     } finally {

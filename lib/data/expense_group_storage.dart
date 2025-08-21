@@ -159,4 +159,17 @@ class ExpenseGroupStorage {
 
     return trips;
   }
+
+  /// Aggiorna solo i metadati di un gruppo preservando le spese esistenti
+  static Future<void> updateGroupMetadata(ExpenseGroup updatedGroup) async {
+    final trips = await _readAllGroups();
+    final index = trips.indexWhere((trip) => trip.id == updatedGroup.id);
+
+    if (index != -1) {
+      // Preserva le spese esistenti quando aggiorna i metadati del gruppo
+      final existingExpenses = trips[index].expenses;
+      trips[index] = updatedGroup.copyWith(expenses: existingExpenses);
+      await writeTrips(trips);
+    }
+  }
 }
