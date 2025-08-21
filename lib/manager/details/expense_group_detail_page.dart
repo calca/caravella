@@ -23,8 +23,7 @@ import 'widgets/group_total.dart';
 import 'widgets/filtered_expense_list.dart';
 import 'widgets/unified_overview_sheet.dart';
 import 'widgets/options_sheet.dart';
-import 'widgets/expense_form_sheet.dart';
-import 'widgets/edit_expense_sheet.dart';
+import 'widgets/expense_entry_sheet.dart';
 import 'widgets/delete_expense_dialog.dart';
 import '../../widgets/add_fab.dart';
 
@@ -396,7 +395,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => ExpenseFormSheet(
+      builder: (context) => ExpenseEntrySheet(
         group: _trip!,
         onExpenseSaved: (newExpense) async {
           final sheetCtx = context; // bottom sheet context
@@ -436,19 +435,21 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (sheetCtx) => EditExpenseSheet(
+      builder: (sheetCtx) => ExpenseEntrySheet(
         group: _trip!,
-        expense: expense,
-        onExpenseAdded: (updatedExpense) async {
+        initialExpense: expense,
+        onExpenseSaved: (updatedExpense) async {
           final gloc = gen.AppLocalizations.of(sheetCtx);
           final nav = Navigator.of(sheetCtx);
           final expenseWithId = updatedExpense.copyWith(id: expense.id);
-          final updatedExpenses = _trip!.expenses.map((e) {
-            return e.id == expense.id ? expenseWithId : e;
-          }).toList();
+          final updatedExpenses = _trip!.expenses
+              .map((e) {
+                return e.id == expense.id ? expenseWithId : e;
+              })
+              .toList(growable: false);
           final updatedGroup = ExpenseGroup(
             title: _trip!.title,
-            expenses: updatedExpenses,
+            expenses: List<ExpenseDetails>.from(updatedExpenses),
             participants: _trip!.participants,
             startDate: _trip!.startDate,
             endDate: _trip!.endDate,
