@@ -1347,4 +1347,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get currency_ZWL => 'Dollaro zimbabwiano';
+
+  @override
+  String get search_currency => 'Cerca valuta...';
 }

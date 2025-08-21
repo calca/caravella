@@ -2707,6 +2707,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Zimbabwean Dollar'**
   String get currency_ZWL;
+
+  /// No description provided for @search_currency.
+  ///
+  /// In en, this message translates to:
+  /// **'Search currency...'**
+  String get search_currency;
 }
 
 class _AppLocalizationsDelegate
