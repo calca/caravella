@@ -291,9 +291,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                                 const SizedBox(height: 4),
                                 Text(
                                   gloc.currency_description,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
+                                  style: Theme.of(context).textTheme.bodySmall
                                       ?.copyWith(color: Colors.grey[700]),
                                 ),
                                 const SizedBox(height: 8),

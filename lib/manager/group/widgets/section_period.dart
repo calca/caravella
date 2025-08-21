@@ -51,10 +51,9 @@ class SectionPeriod extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             description!,
-            style: Theme.of(context)
-                .textTheme
-                .bodySmall
-                ?.copyWith(color: Theme.of(context).colorScheme.outline),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Theme.of(context).colorScheme.outline,
+            ),
           ),
           const SizedBox(height: 8),
         ] else ...[
