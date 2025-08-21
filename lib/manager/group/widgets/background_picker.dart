@@ -18,37 +18,41 @@ class BackgroundPicker extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            _preview(state),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    state.imagePath != null
-                        ? loc.change_image
-                        : state.color != null
-                        ? loc.background_color_selected
-                        : loc.background,
+        InkWell(
+          onTap: () => _showPicker(context),
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Row(
+              children: [
+                _preview(state),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        state.imagePath != null
+                            ? loc.change_image
+                            : state.color != null
+                                ? loc.background_color_selected
+                                : loc.background,
+                      ),
+                      Text(
+                        state.imagePath != null
+                            ? loc.background_tap_to_replace
+                            : state.color != null
+                                ? loc.background_tap_to_change
+                                : loc.background_select_image_or_color,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
                   ),
-                  Text(
-                    state.imagePath != null
-                        ? loc.background_tap_to_replace
-                        : state.color != null
-                        ? loc.background_tap_to_change
-                        : loc.background_select_image_or_color,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                ],
-              ),
+                ),
+                const Icon(Icons.edit),
+              ],
             ),
-            IconButton(
-              icon: const Icon(Icons.edit),
-              onPressed: () => _showPicker(context),
-            ),
-          ],
+          ),
         ),
       ],
     );
