@@ -11,6 +11,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'terms_page.dart';
 import 'data_page.dart';
 import '../widgets/bottom_sheet_scaffold.dart';
+import '../manager/group/widgets/section_header.dart';
 
 class SettingsPage extends StatelessWidget {
   final void Function(String)? onLocaleChanged;
@@ -42,16 +43,10 @@ class SettingsPage extends StatelessWidget {
             MediaQuery.of(context).padding.bottom + 24,
           ),
           children: [
-            Padding(
+            SectionHeader(
+              title: genLoc.settings_general,
+              description: genLoc.settings_general_desc,
               padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-              child: Text(
-                genLoc.settings_general,
-                style: textTheme.titleSmall?.copyWith(
-                  color: colorScheme.onSurface,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -113,16 +108,10 @@ class SettingsPage extends StatelessWidget {
                 ],
               ),
             ),
-            Padding(
+            SectionHeader(
+              title: genLoc.settings_privacy,
+              description: genLoc.settings_privacy_desc,
               padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-              child: Text(
-                'Privacy',
-                style: textTheme.titleSmall?.copyWith(
-                  color: colorScheme.onSurface,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -174,16 +163,10 @@ class SettingsPage extends StatelessWidget {
                 ],
               ),
             ),
-            Padding(
+            SectionHeader(
+              title: genLoc.settings_data,
+              description: genLoc.settings_data_desc,
               padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-              child: Text(
-                genLoc.settings_data,
-                style: textTheme.titleSmall?.copyWith(
-                  color: colorScheme.onSurface,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -209,16 +192,10 @@ class SettingsPage extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(
+            SectionHeader(
+              title: genLoc.settings_info,
+              description: genLoc.settings_info_desc,
               padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-              child: Text(
-                genLoc.settings_info,
-                style: textTheme.titleSmall?.copyWith(
-                  color: colorScheme.onSurface,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
