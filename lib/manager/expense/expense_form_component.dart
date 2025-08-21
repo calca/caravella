@@ -451,6 +451,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> with Widget
               selectedCategory: _category,
               onCategorySelected: _onCategorySelected,
               onAddCategory: _onAddCategory,
+              onAddCategoryInline: _onAddCategoryInline,
               textStyle: style,
               fullEdit: true,
             ),
@@ -483,6 +484,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> with Widget
               selectedCategory: _category,
               onCategorySelected: _onCategorySelected,
               onAddCategory: _onAddCategory,
+              onAddCategoryInline: _onAddCategoryInline,
               textStyle: style,
               fullEdit: false,
             ),
@@ -555,6 +557,44 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> with Widget
         }
       });
     }
+  }
+
+  Future<void> _onAddCategoryInline(String categoryName) async {
+    widget.onCategoryAdded(categoryName);
+    // Wait a bit for the category to be added to the widget.categories list
+    await Future.delayed(const Duration(milliseconds: 100));
+    final found = widget.categories.firstWhere(
+      (c) => c.name == categoryName,
+      orElse: () => widget.categories.isNotEmpty
+          ? widget.categories.first
+          : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000)),
+    );
+    setState(() {
+      if (!_categories.contains(found)) {
+        _categories.add(found);
+      }
+      _category = found;
+      _categoryTouched = true;
+      if (!_initializing) {
+        _isDirty = true;
+      }
+    });
+    // Wait again to ensure the state has settled
+    await Future.delayed(const Duration(milliseconds: 100));
+    final foundAfter = widget.categories.firstWhere(
+      (c) => c.name == categoryName,
+      orElse: () => widget.categories.isNotEmpty
+          ? widget.categories.first
+          : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000)),
+    );
+    setState(() {
+      _categories = List.from(widget.categories);
+      _category = foundAfter;
+      _categoryTouched = true;
+      if (!_initializing) {
+        _isDirty = true;
+      }
+    });
   }
 
   Widget _buildExtendedFields(String locale, TextStyle? style) {
