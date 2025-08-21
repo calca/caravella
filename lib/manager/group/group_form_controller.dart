@@ -89,6 +89,7 @@ class GroupFormController {
       final now = DateTime.now();
       final group = (_original ?? ExpenseGroup.empty()).copyWith(
         title: state.title.trim(),
+        expenses: _original?.expenses ?? [], // Preserve existing expenses
         participants: state.participants
             .map((e) => ExpenseParticipant(name: e.name))
             .toList(),
