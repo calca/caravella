@@ -35,15 +35,15 @@ class BackgroundPicker extends StatelessWidget {
                         state.imagePath != null
                             ? loc.change_image
                             : state.color != null
-                                ? loc.background_color_selected
-                                : loc.background,
+                            ? loc.background_color_selected
+                            : loc.background,
                       ),
                       Text(
                         state.imagePath != null
                             ? loc.background_tap_to_replace
                             : state.color != null
-                                ? loc.background_tap_to_change
-                                : loc.background_select_image_or_color,
+                            ? loc.background_tap_to_change
+                            : loc.background_select_image_or_color,
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],
