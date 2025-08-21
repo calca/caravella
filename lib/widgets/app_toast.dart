@@ -47,7 +47,7 @@ class AppToast {
       case ToastType.error:
         backgroundColor = colorScheme.errorContainer;
         textColor = colorScheme.onErrorContainer;
-        effectiveIcon = icon ?? Icons.error_outline_outlined;
+        effectiveIcon = icon ?? Icons.error_outline;
         break;
       case ToastType.info:
         backgroundColor = colorScheme.surfaceContainerHigh;
