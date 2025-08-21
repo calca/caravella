@@ -6,7 +6,7 @@ import '../../../../widgets/bottom_sheet_scaffold.dart';
 
 /// Unified sheet for creating or editing an expense.
 /// If [initialExpense] is provided we are editing, otherwise creating a new one.
-class ExpenseEntrySheet extends StatelessWidget {
+class ExpenseEntrySheet extends StatefulWidget {
   final ExpenseGroup group;
   final ExpenseDetails? initialExpense;
   final void Function(ExpenseDetails) onExpenseSaved; // add or update
@@ -25,6 +25,25 @@ class ExpenseEntrySheet extends StatelessWidget {
   });
 
   @override
+  State<ExpenseEntrySheet> createState() => _ExpenseEntrySheetState();
+}
+
+class _ExpenseEntrySheetState extends State<ExpenseEntrySheet> {
+  late ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.of(context).padding.bottom;
     final keyboard = MediaQuery.of(context).viewInsets.bottom;
@@ -33,22 +52,24 @@ class ExpenseEntrySheet extends StatelessWidget {
     final internalBottom = bottomInset + baseExtra + keyboard;
     return GroupBottomSheetScaffold(
       scrollable: true,
+      scrollController: _scrollController,
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
       child: Padding(
         padding: EdgeInsets.only(bottom: internalBottom),
         child: ExpenseFormComponent(
-          initialExpense: initialExpense,
-          participants: group.participants,
-          categories: group.categories,
-          tripStartDate: group.startDate,
-          tripEndDate: group.endDate,
+          initialExpense: widget.initialExpense,
+          participants: widget.group.participants,
+          categories: widget.group.categories,
+          tripStartDate: widget.group.startDate,
+          tripEndDate: widget.group.endDate,
           shouldAutoClose: false,
-          fullEdit: fullEdit,
-          groupTitle: group.title,
-          currency: group.currency,
-          onExpenseAdded: onExpenseSaved,
-          onCategoryAdded: onCategoryAdded,
-          onDelete: onDelete,
+          fullEdit: widget.fullEdit,
+          groupTitle: widget.group.title,
+          currency: widget.group.currency,
+          onExpenseAdded: widget.onExpenseSaved,
+          onCategoryAdded: widget.onCategoryAdded,
+          onDelete: widget.onDelete,
+          scrollController: _scrollController,
         ),
       ),
     );

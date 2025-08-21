@@ -31,6 +31,7 @@ class ExpenseFormComponent extends StatefulWidget {
   final String? newlyAddedCategory; // Nuova proprietà
   final String? groupTitle; // Titolo del gruppo per la riga azioni
   final String? currency; // Currency del gruppo
+  final ScrollController? scrollController; // Controller for scrolling to focused fields
 
   const ExpenseFormComponent({
     super.key,
@@ -47,13 +48,14 @@ class ExpenseFormComponent extends StatefulWidget {
     this.groupTitle,
     this.currency,
     this.fullEdit = false,
+    this.scrollController,
   });
 
   @override
   State<ExpenseFormComponent> createState() => _ExpenseFormComponentState();
 }
 
-class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
+class _ExpenseFormComponentState extends State<ExpenseFormComponent> with WidgetsBindingObserver {
   static const double _rowSpacing = 16.0;
   final _formKey = GlobalKey<FormState>();
   ExpenseCategory? _category;
@@ -69,6 +71,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   late List<ExpenseCategory> _categories; // Lista locale delle categorie
   bool _isDirty = false; // traccia modifiche non salvate
   bool _initializing = true; // traccia se siamo in fase di inizializzazione
+  double _lastKeyboardHeight = 0; // Track keyboard height changes
 
   // Stato per validazione in tempo reale
   bool _amountTouched = false;
@@ -83,9 +86,65 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   // Scroll controller callback per CategorySelectorWidget
   // Removed _scrollToCategoryEnd: no longer needed with new category selector bottom sheet.
 
+  /// Scrolls to make the focused field visible when keyboard opens
+  void _scrollToFocusedField() {
+    if (widget.scrollController == null || !widget.scrollController!.hasClients) return;
+    
+    // Use a short delay to ensure the keyboard animation has started
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (!mounted || widget.scrollController == null || !widget.scrollController!.hasClients) return;
+      
+      final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+      if (keyboardHeight == 0) return;
+      
+      try {
+        // Scroll to ensure focused field is visible above keyboard
+        final currentScrollOffset = widget.scrollController!.offset;
+        final maxScrollExtent = widget.scrollController!.position.maxScrollExtent;
+        
+        // Calculate required scroll to bring focused field into view
+        // We want to position focused field in the upper part of visible area
+        const fieldBuffer = 120.0; // Extra space above focused field for better visibility
+        final targetScrollOffset = (currentScrollOffset + fieldBuffer).clamp(0.0, maxScrollExtent);
+        
+        // Only scroll if there's a meaningful change
+        if ((targetScrollOffset - currentScrollOffset).abs() > 10.0) {
+          widget.scrollController!.animateTo(
+            targetScrollOffset,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        }
+      } catch (e) {
+        // Gracefully handle any scrolling errors
+        debugPrint('Error during scroll-to-focus: $e');
+      }
+    });
+  }
+
+  @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+    // Monitor keyboard height changes
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      
+      final currentKeyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+      if (currentKeyboardHeight != _lastKeyboardHeight) {
+        _lastKeyboardHeight = currentKeyboardHeight;
+        
+        // If keyboard is opening and a field has focus, trigger scroll
+        if (currentKeyboardHeight > 0 && (_amountFocus.hasFocus || _nameFocus.hasFocus)) {
+          _scrollToFocusedField();
+        }
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _categories = List.from(widget.categories); // Copia della lista originale
     if (widget.initialExpense != null) {
       _category = widget.categories.firstWhere(
@@ -119,7 +178,29 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
 
     // Autofocus su amount dopo primo frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _amountFocus.requestFocus();
+      if (mounted) {
+        _amountFocus.requestFocus();
+        _scrollToFocusedField();
+      }
+    });
+
+    // Add focus listeners to trigger scrolling when fields receive focus
+    _amountFocus.addListener(() {
+      if (_amountFocus.hasFocus) {
+        // Delay to ensure keyboard is starting to appear
+        Future.delayed(const Duration(milliseconds: 200), () {
+          _scrollToFocusedField();
+        });
+      }
+    });
+
+    _nameFocus.addListener(() {
+      if (_nameFocus.hasFocus) {
+        // Delay to ensure keyboard is starting to appear
+        Future.delayed(const Duration(milliseconds: 200), () {
+          _scrollToFocusedField();
+        });
+      }
     });
     // Listener per aggiornare _amount in tempo reale (mantiene valore anche quando perde focus)
     _amountController.addListener(() {
@@ -255,23 +336,21 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     return PopScope(
       canPop: !_isDirty,
       onPopInvokedWithResult: _handlePop,
-      child: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildGroupHeader(),
-              _buildAmountField(gloc, smallStyle),
-              _spacer(),
-              _buildNameField(gloc, smallStyle),
-              _spacer(),
-              _buildParticipantCategorySection(smallStyle),
-              _buildExtendedFields(locale, smallStyle),
-              _buildDivider(context),
-              _buildActionsRow(gloc, smallStyle),
-            ],
-          ),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildGroupHeader(),
+            _buildAmountField(gloc, smallStyle),
+            _spacer(),
+            _buildNameField(gloc, smallStyle),
+            _spacer(),
+            _buildParticipantCategorySection(smallStyle),
+            _buildExtendedFields(locale, smallStyle),
+            _buildDivider(context),
+            _buildActionsRow(gloc, smallStyle),
+          ],
         ),
       ),
     );
@@ -558,6 +637,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _amountController.dispose();
     _amountFocus.dispose();
     _nameController.dispose();
