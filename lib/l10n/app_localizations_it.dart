@@ -715,7 +715,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get select_paid_by => 'Seleziona chi ha pagato';
 
   @override
-  String get select_category => 'Seleziona una categoria';
+  String get select_category => 'Seleziona categoria';
 
   @override
   String get check_form => 'Controlla i dati inseriti';

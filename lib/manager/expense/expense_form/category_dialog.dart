@@ -1,54 +1,86 @@
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import '../../../widgets/bottom_sheet_scaffold.dart';
 
 class CategoryDialog {
   static Future<String?> show({required BuildContext context}) async {
     final controller = TextEditingController();
 
-    return showDialog<String>(
+    return showModalBottomSheet<String>(
       context: context,
-      builder: (context) => Semantics(
-        label: gen.AppLocalizations.of(context).add_category,
-        child: AlertDialog(
-          title: Text(gen.AppLocalizations.of(context).add_category),
-          content: Semantics(
-            textField: true,
-            label: gen.AppLocalizations.of(context).category_name,
-            child: TextField(
-              controller: controller,
-              autofocus: true,
-              decoration: InputDecoration(
-                labelText: gen.AppLocalizations.of(context).category_name,
-                semanticCounterText: '',
-              ),
-              onSubmitted: (val) {
-                if (val.trim().isNotEmpty) {
-                  Navigator.of(context).pop(val.trim());
-                }
-              },
-            ),
-          ),
-          actions: [
+      isScrollControlled: true,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => _CategoryBottomSheet(controller: controller),
+    );
+  }
+}
+
+class _CategoryBottomSheet extends StatelessWidget {
+  final TextEditingController controller;
+  
+  const _CategoryBottomSheet({required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    final gloc = gen.AppLocalizations.of(context);
+    final bottom = MediaQuery.of(context).viewInsets.bottom;
+    
+    return GroupBottomSheetScaffold(
+      title: gloc.select_category,
+      showHandle: true,
+      scrollable: false,
+      child: Padding(
+        padding: EdgeInsets.only(bottom: bottom),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
             Semantics(
-              button: true,
-              label: '${gen.AppLocalizations.of(context).cancel} dialog',
-              child: TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text(gen.AppLocalizations.of(context).cancel),
-              ),
-            ),
-            Semantics(
-              button: true,
-              label: '${gen.AppLocalizations.of(context).add} category',
-              child: TextButton(
-                onPressed: () {
-                  final val = controller.text.trim();
-                  if (val.isNotEmpty) {
-                    Navigator.of(context).pop(val);
+              textField: true,
+              label: gloc.category_name,
+              child: TextField(
+                controller: controller,
+                autofocus: true,
+                decoration: InputDecoration(
+                  labelText: gloc.category_name,
+                  semanticCounterText: '',
+                ),
+                onSubmitted: (val) {
+                  if (val.trim().isNotEmpty) {
+                    Navigator.of(context).pop(val.trim());
                   }
                 },
-                child: Text(gen.AppLocalizations.of(context).add),
               ),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Semantics(
+                  button: true,
+                  label: '${gloc.cancel} dialog',
+                  child: TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text(gloc.cancel),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Semantics(
+                  button: true,
+                  label: '${gloc.add} category',
+                  child: FilledButton.tonal(
+                    onPressed: () {
+                      final val = controller.text.trim();
+                      if (val.isNotEmpty) {
+                        Navigator.of(context).pop(val);
+                      }
+                    },
+                    child: Text(gloc.add),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
