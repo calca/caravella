@@ -67,7 +67,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   final FocusNode _amountFocus = FocusNode();
   final TextEditingController _noteController = TextEditingController();
   late List<ExpenseCategory> _categories; // Lista locale delle categorie
-  bool _isDirty = false; // traccia modifiche non salvate
   bool _initializing = true; // traccia se siamo in fase di inizializzazione
 
   // Original values for change detection in edit mode
@@ -168,9 +167,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         setState(() {
           _amount = parsed;
           _amountTouched = true;
-          if (!_initializing) {
-            _isDirty = _hasActualChanges;
-          }
         });
       }
     });
@@ -178,9 +174,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     // Listener per aggiornare lo stato quando il nome cambia
     _nameController.addListener(() {
       if (!_initializing) {
-        setState(() {
-          _isDirty = _hasActualChanges;
-        });
+        setState(() {});
       }
     });
 
@@ -279,7 +273,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       location: _location,
     );
     widget.onExpenseAdded(expense);
-    _isDirty = false;
     if (widget.shouldAutoClose && Navigator.of(context).canPop()) {
       Navigator.of(context).pop();
     }
@@ -464,9 +457,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
             : ExpenseParticipant(name: ''),
       );
       _paidByTouched = true;
-      if (!_initializing) {
-        _isDirty = _hasActualChanges;
-      }
     });
   }
 
@@ -474,9 +464,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     setState(() {
       _category = selected;
       _categoryTouched = true;
-      if (!_initializing) {
-        _isDirty = _hasActualChanges;
-      }
     });
   }
 
@@ -495,9 +482,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
           _categories.add(found);
           _category = found;
           _categoryTouched = true;
-          if (!_initializing) {
-            _isDirty = _hasActualChanges;
-          }
         }
       });
       await Future.delayed(const Duration(milliseconds: 100));
@@ -511,9 +495,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         _categories = List.from(widget.categories);
         _category = foundAfter;
         _categoryTouched = true;
-        if (!_initializing) {
-          _isDirty = _hasActualChanges;
-        }
       });
     }
   }
@@ -534,9 +515,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
           tripEndDate: widget.tripEndDate,
           onDateSelected: (picked) => setState(() {
             _date = picked;
-            if (!_initializing) {
-              _isDirty = _hasActualChanges;
-            }
           }),
           locale: locale,
           textStyle: style,
@@ -547,9 +525,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
           textStyle: style,
           onLocationChanged: (location) => setState(() {
             _location = location;
-            if (!_initializing) {
-              _isDirty = _hasActualChanges;
-            }
           }),
         ),
         _spacer(),
