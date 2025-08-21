@@ -500,7 +500,7 @@ class _RandomColorButtonState extends State<_RandomColorButton>
             child: Transform.scale(scale: _scale.value, child: child),
           );
         },
-        child: const Icon(Icons.casino),
+        child: const Icon(Icons.colorize_outlined),
       ),
     );
     return Semantics(
