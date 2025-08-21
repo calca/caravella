@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import 'date_card.dart';
+import 'section_header.dart';
 
 class SectionPeriod extends StatelessWidget {
   final DateTime? startDate;
@@ -23,43 +24,26 @@ class SectionPeriod extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              gen.AppLocalizations.of(context).dates,
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
-            ),
-            if (startDate != null || endDate != null)
-              IconButton.filledTonal(
-                onPressed: onClearDates,
-                icon: const Icon(Icons.delete_outline, size: 22),
-                style: FilledButton.styleFrom(
-                  backgroundColor: Theme.of(
-                    context,
-                  ).colorScheme.surfaceContainer,
-                  foregroundColor: Theme.of(context).colorScheme.error,
-                  minimumSize: const Size(44, 44),
-                  padding: EdgeInsets.zero,
-                ),
-              ),
-          ],
+        SectionHeader(
+          title: gen.AppLocalizations.of(context).dates,
+          description: description,
+          trailing: (startDate != null || endDate != null)
+              ? IconButton.filledTonal(
+                  onPressed: onClearDates,
+                  icon: const Icon(Icons.delete_outline, size: 22),
+                  style: FilledButton.styleFrom(
+                    backgroundColor:
+                        Theme.of(context).colorScheme.surfaceContainer,
+                    foregroundColor: Theme.of(context).colorScheme.error,
+                    minimumSize: const Size(44, 44),
+                    padding: EdgeInsets.zero,
+                  ),
+                )
+              : null,
+          padding: EdgeInsets.zero,
         ),
-        if (description != null && description!.isNotEmpty) ...[
-          const SizedBox(height: 4),
-          Text(
-            description!,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.outline,
-            ),
-          ),
-          const SizedBox(height: 8),
-        ] else ...[
-          const SizedBox(height: 8),
-        ],
-        // Always show two separate rows for start and end date
+        const SizedBox(height: 8),
+        // Start date row
         Material(
           color: Colors.transparent,
           child: InkWell(
@@ -88,8 +72,9 @@ class SectionPeriod extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 8),
-        Material(
+  const SizedBox(height: 8),
+  // End date row
+  Material(
           color: Colors.transparent,
           child: InkWell(
             borderRadius: BorderRadius.circular(12),
