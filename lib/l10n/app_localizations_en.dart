@@ -489,6 +489,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unpin_group => 'Unpin group';
 
   @override
+  String get pin => 'Pin';
+
+  @override
   String get theme_automatic => 'Automatic';
 
   @override

@@ -492,6 +492,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get unpin_group => 'Desfijar grupo';
 
   @override
+  String get pin => 'Pin';
+
+  @override
   String get theme_automatic => 'Automático';
 
   @override

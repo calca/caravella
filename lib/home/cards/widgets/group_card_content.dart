@@ -143,18 +143,15 @@ class GroupCardContent extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        if (currentGroup.pinned)
-          Icon(
-            Icons.push_pin_outlined,
-            size: _iconSize,
-            color: theme.colorScheme.onSurface,
-          ),
       ],
     );
   }
 
   Widget _buildDateRange(ExpenseGroup currentGroup) {
-    if (currentGroup.startDate == null && currentGroup.endDate == null) {
+    // Show pin badge even if there are no dates
+    if (currentGroup.startDate == null && 
+        currentGroup.endDate == null && 
+        !currentGroup.pinned) {
       return const SizedBox(height: _spacing);
     }
 
@@ -164,18 +161,38 @@ class GroupCardContent extends StatelessWidget {
         const SizedBox(height: _spacing),
         Row(
           children: [
-            Icon(
-              Icons.event_outlined,
-              size: 8,
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-            const SizedBox(width: 4),
-            Text(
-              _formatDateRange(currentGroup, localizations),
-              style: theme.textTheme.bodySmall?.copyWith(
+            if (currentGroup.startDate != null || currentGroup.endDate != null) ...[
+              Icon(
+                Icons.event_outlined,
+                size: 8,
                 color: theme.colorScheme.onSurfaceVariant,
               ),
-            ),
+              const SizedBox(width: 4),
+              Expanded(
+                child: Text(
+                  _formatDateRange(currentGroup, localizations),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            ] else
+              const Spacer(),
+            if (currentGroup.pinned)
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  localizations.pin,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.colorScheme.onPrimaryContainer,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
           ],
         ),
         const SizedBox(height: _spacing),
