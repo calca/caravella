@@ -175,7 +175,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
             actions: [
               if (widget.trip != null)
                 IconButton(
-                  icon: const Icon(Icons.delete),
+                  icon: const Icon(Icons.delete_outline),
                   tooltip: gloc.delete,
                   onPressed: () async {
                     final nav = Navigator.of(context);

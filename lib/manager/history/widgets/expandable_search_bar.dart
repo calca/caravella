@@ -95,7 +95,7 @@ class _ExpandableSearchBarState extends State<ExpandableSearchBar>
               padding: EdgeInsets.zero,
               onPressed: () => _focusNode.requestFocus(),
               icon: Icon(
-                Icons.search_rounded,
+                Icons.search_outlined,
                 color: widget.searchQuery.isNotEmpty
                     ? scheme.primary
                     : scheme.onSurface.withValues(alpha: 0.6),

@@ -123,7 +123,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get choose_image_or_color =>
-      'Choose an image or color to customize the group';
+      'Choose image or color';
 
   @override
   String get participants_description => 'People sharing costs';
@@ -487,6 +487,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get unpin_group => 'Unpin group';
+
+  @override
+  String get pin => 'Pin';
 
   @override
   String get theme_automatic => 'Automatic';

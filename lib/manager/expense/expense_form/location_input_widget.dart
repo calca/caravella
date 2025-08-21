@@ -287,7 +287,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
 
     final actions = <Widget>[
       buildAction(
-        icon: Icons.my_location,
+        icon: Icons.my_location_outlined,
         tooltip: gloc.get_current_location,
         onTap: _getCurrentLocation,
         color: colorScheme.primary,

@@ -9,6 +9,7 @@ class GroupBottomSheetScaffold extends StatelessWidget {
   final double spacing;
   final bool scrollable;
   final bool showHandle;
+  final ScrollController? scrollController;
   const GroupBottomSheetScaffold({
     super.key,
     this.title,
@@ -17,6 +18,7 @@ class GroupBottomSheetScaffold extends StatelessWidget {
     this.spacing = 12,
     this.scrollable = false,
     this.showHandle = true,
+    this.scrollController,
   });
 
   @override
@@ -55,7 +57,10 @@ class GroupBottomSheetScaffold extends StatelessWidget {
     final padded = Padding(padding: padding, child: content);
     return SafeArea(
       top: false,
-      child: scrollable ? SingleChildScrollView(child: padded) : padded,
+      child: scrollable ? SingleChildScrollView(
+        controller: scrollController,
+        child: padded,
+      ) : padded,
     );
   }
 }

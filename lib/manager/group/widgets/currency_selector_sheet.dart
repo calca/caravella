@@ -92,7 +92,7 @@ class _CurrencySelectorSheetState extends State<CurrencySelectorSheet> {
     return GroupBottomSheetScaffold(
       title: l.select_currency,
       child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.65,
+        height: MediaQuery.of(context).size.height * 0.8,
         child: Column(
           children: [
             TextField(
@@ -100,7 +100,7 @@ class _CurrencySelectorSheetState extends State<CurrencySelectorSheet> {
               autofocus: true,
               textInputAction: TextInputAction.search,
               decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.search),
+                prefixIcon: const Icon(Icons.search_outlined),
                 hintText: l.search_currency,
                 suffixIcon: _query.isEmpty
                     ? null

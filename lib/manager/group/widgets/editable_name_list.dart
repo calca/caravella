@@ -209,7 +209,7 @@ class _EditableNameListState extends State<EditableNameList> {
             ),
             IconButton(
               tooltip: widget.cancelTooltip,
-              icon: const Icon(Icons.close_rounded),
+              icon: const Icon(Icons.close_outlined),
               onPressed: _cancelEdit,
             ),
           ],
@@ -251,7 +251,7 @@ class _EditableNameListState extends State<EditableNameList> {
             ),
             IconButton(
               tooltip: widget.cancelTooltip,
-              icon: const Icon(Icons.close_rounded),
+              icon: const Icon(Icons.close_outlined),
               onPressed: _cancelAdd,
             ),
           ],

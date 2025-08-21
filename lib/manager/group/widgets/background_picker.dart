@@ -50,7 +50,7 @@ class BackgroundPicker extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Icon(Icons.edit),
+                const Icon(Icons.edit_outlined),
               ],
             ),
           ),
@@ -145,7 +145,7 @@ class _BackgroundSheet extends StatelessWidget {
     final tiles = [
       ListTile(
         contentPadding: EdgeInsets.zero,
-        leading: const Icon(Icons.photo_library),
+        leading: const Icon(Icons.photo_library_outlined),
         title: Text(loc.from_gallery),
         onTap: () async {
           final sheetNav = Navigator.of(context); // navigator della sheet
@@ -182,7 +182,7 @@ class _BackgroundSheet extends StatelessWidget {
       ),
       ListTile(
         contentPadding: EdgeInsets.zero,
-        leading: const Icon(Icons.photo_camera),
+        leading: const Icon(Icons.photo_camera_outlined),
         title: Text(loc.from_camera),
         onTap: () async {
           final sheetNav = Navigator.of(context);

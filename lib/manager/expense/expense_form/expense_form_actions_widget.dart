@@ -37,7 +37,7 @@ class ExpenseFormActionsWidget extends StatelessWidget {
               tooltip: gloc.delete_expense, // Assume localization key exists
               onPressed: onDelete,
               icon: Icon(
-                Icons.delete_outline_outlined,
+                Icons.delete_outline,
                 color: colorScheme.error,
                 size: 22,
               ),

@@ -34,7 +34,7 @@ class TermsPage extends StatelessWidget {
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: Icon(
-                      Icons.person,
+                      Icons.person_outline,
                       color: colorScheme.onSurface,
                       size: 20,
                     ),
@@ -62,7 +62,7 @@ class TermsPage extends StatelessWidget {
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: Icon(
-                      Icons.code,
+                      Icons.code_outlined,
                       color: colorScheme.onSurface,
                       size: 20,
                     ),
@@ -92,7 +92,7 @@ class TermsPage extends StatelessWidget {
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: Icon(
-                      Icons.bug_report,
+                      Icons.bug_report_outlined,
                       color: colorScheme.onSurface,
                       size: 20,
                     ),

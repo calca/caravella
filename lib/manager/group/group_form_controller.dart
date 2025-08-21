@@ -89,6 +89,7 @@ class GroupFormController {
       final now = DateTime.now();
       final group = (_original ?? ExpenseGroup.empty()).copyWith(
         title: state.title.trim(),
+        expenses: _original?.expenses ?? [], // Preserve existing expenses
         participants: state.participants
             .map((e) => ExpenseParticipant(name: e.name))
             .toList(),
@@ -97,7 +98,7 @@ class GroupFormController {
             .toList(),
         startDate: state.startDate,
         endDate: state.endDate,
-        currency: state.currency['code'] ?? state.currency['symbol'] ?? 'EUR',
+        currency: state.currency['symbol'] ?? state.currency['code'] ?? 'EUR',
         file: state.imagePath,
         color: state.color,
         timestamp: _original?.timestamp ?? now,

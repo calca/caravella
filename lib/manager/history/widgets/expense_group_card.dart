@@ -148,7 +148,7 @@ class ExpenseGroupCard extends StatelessWidget {
         title: Row(
           children: [
             Icon(
-              isArchived ? Icons.unarchive_rounded : Icons.archive_rounded,
+              isArchived ? Icons.unarchive_outlined : Icons.archive_outlined,
               color: Theme.of(context).colorScheme.primary,
             ),
             const SizedBox(width: 12),
@@ -171,7 +171,10 @@ class ExpenseGroupCard extends StatelessWidget {
   }
 
   void _onArchiveToggle() {
-    final updatedTrip = trip.copyWith(archived: !trip.archived);
+    final updatedTrip = trip.copyWith(
+      archived: !trip.archived,
+      pinned: !trip.archived ? false : trip.pinned, // Remove pin when archiving
+    );
     onTripUpdated(updatedTrip);
   }
 
@@ -203,7 +206,7 @@ class ExpenseGroupCard extends StatelessWidget {
     return Row(
       children: [
         Icon(
-          Icons.calendar_today_rounded,
+          Icons.event_outlined,
           size: 16,
           color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
         ),
@@ -228,7 +231,7 @@ class ExpenseGroupCard extends StatelessWidget {
     return Row(
       children: [
         Icon(
-          Icons.group_rounded,
+          Icons.group_outlined,
           size: 16,
           color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
         ),
