@@ -177,6 +177,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                   icon: const Icon(Icons.delete),
                   tooltip: gloc.delete,
                   onPressed: () async {
+                    final nav = Navigator.of(context);
                     final confirm = await showDialog<bool>(
                       context: context,
                       builder: (d) => AlertDialog(
@@ -194,9 +195,14 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                         ],
                       ),
                     );
-                    if (confirm == true && context.mounted) {
+                    if (confirm == true) {
                       await _controller.deleteGroup();
-                      widget.onTripDeleted?.call();
+                      if (mounted && nav.canPop()) {
+                        nav.pop(true);
+                      }
+                      if (widget.onTripDeleted != null) {
+                        Future.microtask(() => widget.onTripDeleted!.call());
+                      }
                     }
                   },
                 ),
@@ -331,11 +337,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                       ],
                     ),
                     const SizedBox(height: 32),
-                    SaveButtonBar(
-                      onSaved: () {
-                        if (mounted) Navigator.pop(context, true);
-                      },
-                    ),
+                    const SaveButtonBar(),
                     const SizedBox(height: 80),
                   ],
                 ),

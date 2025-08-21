@@ -63,8 +63,9 @@ class GroupFormController {
     }
     final g = _original!;
     if (g.title != state.title) return true;
-    if (g.startDate != state.startDate || g.endDate != state.endDate)
+    if (g.startDate != state.startDate || g.endDate != state.endDate) {
       return true;
+    }
     if (g.participants.length != state.participants.length) return true;
     for (int i = 0; i < g.participants.length; i++) {
       if (g.participants[i].name != state.participants[i].name) return true;
@@ -74,8 +75,9 @@ class GroupFormController {
       if (g.categories[i].name != state.categories[i].name) return true;
     }
     if (g.currency != state.currency['code'] &&
-        g.currency != state.currency['symbol'])
+        g.currency != state.currency['symbol']) {
       return true;
+    }
     if (g.file != state.imagePath) return true;
     if (g.color != state.color) return true;
     return false;

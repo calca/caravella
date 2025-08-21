@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
+import '../main.dart' show rootScaffoldMessenger; // for fallback usage
 
 /// Lightweight toast / inline feedback using Flutter's native SnackBar
 /// with Material 3 theming and automatic queue management.
@@ -13,7 +14,23 @@ class AppToast {
     ToastType type = ToastType.info,
     IconData? icon,
   }) {
-    final theme = Theme.of(context);
+    // If the context is no longer mounted we use the root scaffold messenger.
+    // This avoids "Looking up a deactivated widget's ancestor" errors when an
+    // async operation finishes after a route/sheet was closed.
+    final bool contextMounted = context.mounted;
+    final scaffoldMessenger = contextMounted
+        ? ScaffoldMessenger.maybeOf(context)
+        : rootScaffoldMessenger;
+    if (scaffoldMessenger == null) {
+      // Nowhere safe to show the toast; silently ignore.
+      return;
+    }
+
+    final theme = contextMounted
+        ? Theme.of(context)
+        : (rootScaffoldMessenger?.context != null
+            ? Theme.of(rootScaffoldMessenger!.context)
+            : ThemeData());
     final colorScheme = theme.colorScheme;
     
     // Determine colors and icon based on type
@@ -39,11 +56,13 @@ class AppToast {
         break;
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(
+  scaffoldMessenger.clearSnackBars();
+  scaffoldMessenger.showSnackBar(
       SnackBar(
         content: Semantics(
-          liveRegion: true,
-          label: '${_getTypeDescription(context, type)}: $message',
+      liveRegion: true,
+      label:
+        '${_getTypeDescription(contextMounted ? context : scaffoldMessenger.context, type)}: $message',
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -51,7 +70,8 @@ class AppToast {
                 effectiveIcon,
                 color: textColor,
                 size: 20,
-                semanticLabel: _getTypeDescription(context, type),
+        semanticLabel: _getTypeDescription(
+          contextMounted ? context : scaffoldMessenger.context, type),
               ),
               const SizedBox(width: 10),
               Flexible(

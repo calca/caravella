@@ -11,13 +11,33 @@ class GroupTitleField extends StatefulWidget {
 
 class _GroupTitleFieldState extends State<GroupTitleField> {
   late final TextEditingController _controller;
+  late GroupFormState _state;
+  bool _syncing = false;
 
   @override
   void initState() {
     super.initState();
-    final state = context.read<GroupFormState>();
-    _controller = TextEditingController(text: state.title);
-    _controller.addListener(() => state.setTitle(_controller.text));
+    _state = context.read<GroupFormState>();
+    _controller = TextEditingController(text: _state.title);
+    _controller.addListener(() {
+      if (_syncing) return; // skip updates originating from external sync
+      if (_state.title != _controller.text) {
+        _state.setTitle(_controller.text);
+      }
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // If state title changed externally (e.g., after async load), sync controller.
+    final current = context.read<GroupFormState>().title;
+    if (current != _controller.text) {
+      _controller.text = current;
+      _controller.selection = TextSelection.fromPosition(
+        TextPosition(offset: _controller.text.length),
+      );
+    }
   }
 
   @override
@@ -28,14 +48,23 @@ class _GroupTitleFieldState extends State<GroupTitleField> {
 
   @override
   Widget build(BuildContext context) {
+    // Listen to title changes to update field when editing existing group.
+    final title = context.select<GroupFormState, String>((s) => s.title);
+    if (title != _controller.text) {
+      _syncing = true;
+      _controller.text = title;
+      _controller.selection = TextSelection.fromPosition(
+        TextPosition(offset: _controller.text.length),
+      );
+      _syncing = false;
+    }
     return TextField(
-      controller: _controller,
-      textInputAction: TextInputAction.next,
-      decoration: const InputDecoration(
-        hintText: 'Nome gruppo',
-        border: InputBorder.none,
-        isDense: true,
-      ),
-    );
+        controller: _controller,
+        textInputAction: TextInputAction.next,
+        decoration: const InputDecoration(
+          hintText: 'Nome gruppo',
+          border: InputBorder.none,
+          isDense: true,
+        ));
   }
 }
