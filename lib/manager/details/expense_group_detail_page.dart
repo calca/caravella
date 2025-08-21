@@ -202,7 +202,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           final nav = Navigator.of(sheetCtx);
           final updatedGroup = ExpenseGroup(
             title: _trip!.title,
-            expenses: _trip!.expenses,
             participants: _trip!.participants,
             startDate: _trip!.startDate,
             endDate: _trip!.endDate,
@@ -214,7 +213,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             pinned: !_trip!.pinned,
             archived: _trip!.archived,
           );
-          await _groupNotifier?.updateGroup(updatedGroup);
+          await _groupNotifier?.updateGroupMetadata(updatedGroup);
           await _refreshGroup();
           if (!mounted) return;
           nav.pop();
@@ -224,7 +223,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           final nav = Navigator.of(sheetCtx);
           final updatedGroup = ExpenseGroup(
             title: _trip!.title,
-            expenses: _trip!.expenses,
             participants: _trip!.participants,
             startDate: _trip!.startDate,
             endDate: _trip!.endDate,
@@ -236,7 +234,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             pinned: !_trip!.archived ? false : _trip!.pinned, // Remove pin when archiving
             archived: !_trip!.archived,
           );
-          await _groupNotifier?.updateGroup(updatedGroup);
+          await _groupNotifier?.updateGroupMetadata(updatedGroup);
           await _refreshGroup();
           if (!mounted) return;
           nav.pop();
