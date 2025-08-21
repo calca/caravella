@@ -6,7 +6,12 @@ import '../../../../widgets/bottom_sheet_scaffold.dart';
 
 class UnifiedOverviewSheet extends StatelessWidget {
   final ExpenseGroup trip;
-  const UnifiedOverviewSheet({super.key, required this.trip});
+  final ScrollController? scrollController;
+  const UnifiedOverviewSheet({
+    super.key, 
+    required this.trip, 
+    this.scrollController,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +20,7 @@ class UnifiedOverviewSheet extends StatelessWidget {
     return GroupBottomSheetScaffold(
       title: gloc.overview,
       scrollable: true,
+      scrollController: scrollController,
       child: Padding(
         padding: EdgeInsets.only(bottom: bottomInset + 16),
         child: UnifiedOverviewTab(trip: trip),
