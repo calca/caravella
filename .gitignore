@@ -47,6 +47,7 @@ app.*.map.json
 # Local Flutter SDK installation
 flutter/
 flutter-sdk/
+flutter_sdk/
 flutter*.tar.xz
 flutter_linux_*.tar.xz
 flutter_sdk/

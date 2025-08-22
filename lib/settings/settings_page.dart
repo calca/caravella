@@ -5,6 +5,7 @@ import 'package:org_app_caravella/l10n/app_localizations.dart'
 import '../state/locale_notifier.dart';
 import '../state/theme_mode_notifier.dart';
 import 'flag_secure_notifier.dart';
+
 import 'flag_secure_android.dart';
 import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -31,8 +32,12 @@ class SettingsPage extends StatelessWidget {
       ThemeMode.system => genLoc.theme_automatic,
     };
 
-    return ChangeNotifierProvider<FlagSecureNotifier>(
-      create: (_) => FlagSecureNotifier(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<FlagSecureNotifier>(
+          create: (_) => FlagSecureNotifier(),
+        ),
+      ],
       child: Scaffold(
         appBar: const CaravellaAppBar(),
         body: ListView(
@@ -170,26 +175,30 @@ class SettingsPage extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Card(
-                elevation: 0,
-                color: colorScheme.surface,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: ListTile(
-                  leading: const Icon(Icons.storage_outlined),
-                  title: Text(
-                    genLoc.settings_data_manage,
-                    style: textTheme.titleMedium,
+              child: Column(
+                children: [
+                  Card(
+                    elevation: 0,
+                    color: colorScheme.surface,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: ListTile(
+                      leading: const Icon(Icons.storage_outlined),
+                      title: Text(
+                        genLoc.settings_data_manage,
+                        style: textTheme.titleMedium,
+                      ),
+                      subtitle: Text(genLoc.settings_data_desc),
+                      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (ctx) => const DataPage()),
+                        );
+                      },
+                    ),
                   ),
-                  subtitle: Text(genLoc.settings_data_desc),
-                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (ctx) => const DataPage()),
-                    );
-                  },
-                ),
+                ],
               ),
             ),
             SectionHeader(
