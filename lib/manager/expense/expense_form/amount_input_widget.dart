@@ -3,6 +3,7 @@ import '../../../data/model/expense_category.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'icon_leading_field.dart';
+import '../../../themes/form_theme.dart';
 
 class AmountInputWidget extends StatelessWidget {
   final TextEditingController controller;
@@ -43,8 +44,7 @@ class AmountInputWidget extends StatelessWidget {
         controller: controller,
         focusNode: focusNode,
         style:
-            textStyle ??
-            theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
+            textStyle ?? FormTheme.getFieldTextStyle(context),
         decoration: InputDecoration(
           hintText: label != null ? '${label!} *' : null,
           // rely on theme hintStyle
@@ -60,10 +60,7 @@ class AmountInputWidget extends StatelessWidget {
             minHeight: 32,
             minWidth: 32,
           ),
-          contentPadding: const EdgeInsets.symmetric(
-            vertical: 8,
-            horizontal: 0,
-          ),
+          contentPadding: FormTheme.standardContentPadding,
           semanticCounterText: '',
         ),
         keyboardType: TextInputType.text,
@@ -107,14 +104,13 @@ class AmountInputWidget extends StatelessWidget {
       controller: controller,
       focusNode: focusNode,
       style:
-          textStyle ??
-          theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
+          textStyle ?? FormTheme.getAmountTextStyle(context),
       decoration: InputDecoration(
         hintText: label != null ? '${label!} *' : null,
         // rely on theme hintStyle
         floatingLabelBehavior: FloatingLabelBehavior.never,
         isDense: true,
-        contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
+        contentPadding: FormTheme.standardContentPadding,
         semanticCounterText: '',
       ),
       keyboardType: const TextInputType.numberWithOptions(decimal: true),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'form_theme.dart';
 
 // https://rydmike.com/flexcolorscheme/themesplayground-latest/?config=H4sIAKZob2gA_3WRPWvDMBRF9_wKoTkY2cGk8VZKhw6BgEuHLkaNXlOBvpCe0piQ_15JtRNoqMZzLvcK3nlB0qNO8fHgbTRiEBw57Qh9_QINgeyuhmRD4OSsRxCkZhVbVw1rWsI2Xd12LaPLu7Yj-CCtyYUPVVNdI2Gf61-MgFNy65lKHRVH6x-dm1391z1Z7awBg-HfyJuE73drda5mbLKYF7dWQKLnggoW3OOAo8uYgol6KMFB5-TyljtyFUsmjAFB02Iuc7d1cl--82xEL8vG5s71mLYm20w2BthyBC-5WiX8yVWAm-rjx-8dZrW4_AALBabTsgEAAA==
 
@@ -233,7 +234,7 @@ class CaravellaThemes {
         color: lightColorScheme.outline,
         fontWeight: FontWeight.w400,
       ),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+      contentPadding: FormTheme.standardContentPadding,
     ),
   );
 
@@ -289,7 +290,7 @@ class CaravellaThemes {
         color: darkColorScheme.outline,
         fontWeight: FontWeight.w400,
       ),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+      contentPadding: FormTheme.standardContentPadding,
     ),
   );
 }
