@@ -1403,4 +1403,32 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get search_currency => 'Cerca valuta...';
+
+  @override
+  String get activity => 'Attività';
+
+  @override
+  String get search_expenses_hint => 'Cerca per nome o nota...';
+
+  @override
+  String get clear_filters => 'Pulisci';
+
+  @override
+  String get show_filters => 'Mostra filtri';
+
+  @override
+  String get hide_filters => 'Nascondi filtri';
+
+  @override
+  String get all_categories => 'Tutte';
+
+  @override
+  String get all_participants => 'Tutti';
+
+  @override
+  String get no_expenses_with_filters =>
+      'Nessuna spesa trovata con i filtri selezionati';
+
+  @override
+  String get no_expenses_yet => 'Nessuna spesa ancora aggiunta';
 }

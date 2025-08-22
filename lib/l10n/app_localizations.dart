@@ -2823,6 +2823,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Search currency...'**
   String get search_currency;
+
+  /// Section title for expense list recent activity
+  ///
+  /// In en, this message translates to:
+  /// **'Activity'**
+  String get activity;
+
+  /// Placeholder for searching expenses by name or note
+  ///
+  /// In en, this message translates to:
+  /// **'Search by name or note...'**
+  String get search_expenses_hint;
+
+  /// Button to clear expense filters
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clear_filters;
+
+  /// Label to show filters
+  ///
+  /// In en, this message translates to:
+  /// **'Show filters'**
+  String get show_filters;
+
+  /// Label to hide filters
+  ///
+  /// In en, this message translates to:
+  /// **'Hide filters'**
+  String get hide_filters;
+
+  /// Chip label for all categories
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all_categories;
+
+  /// Chip label for all participants
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all_participants;
+
+  /// Empty state when active filters return no expenses
+  ///
+  /// In en, this message translates to:
+  /// **'No expenses match the selected filters'**
+  String get no_expenses_with_filters;
+
+  /// Empty state when there are no expenses yet
+  ///
+  /// In en, this message translates to:
+  /// **'No expenses added yet'**
+  String get no_expenses_yet;
 }
 
 class _AppLocalizationsDelegate

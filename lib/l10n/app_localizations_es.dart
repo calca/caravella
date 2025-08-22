@@ -1405,4 +1405,32 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get search_currency => 'Buscar moneda...';
+
+  @override
+  String get activity => 'Actividad';
+
+  @override
+  String get search_expenses_hint => 'Buscar por nombre o nota...';
+
+  @override
+  String get clear_filters => 'Limpiar';
+
+  @override
+  String get show_filters => 'Mostrar filtros';
+
+  @override
+  String get hide_filters => 'Ocultar filtros';
+
+  @override
+  String get all_categories => 'Todas';
+
+  @override
+  String get all_participants => 'Todos';
+
+  @override
+  String get no_expenses_with_filters =>
+      'Ningún gasto coincide con los filtros seleccionados';
+
+  @override
+  String get no_expenses_yet => 'Aún no hay gastos';
 }

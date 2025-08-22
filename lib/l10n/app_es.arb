@@ -511,4 +511,22 @@
   ,"currency_ZMW": "Kwacha zambiano"
   ,"currency_ZWL": "Dólar zimbabuense"
   ,"search_currency": "Buscar moneda..."
+  ,"activity": "Actividad"
+  ,"@activity": {"description": "Título de sección actividad reciente lista de gastos"}
+  ,"search_expenses_hint": "Buscar por nombre o nota..."
+  ,"@search_expenses_hint": {"description": "Placeholder para buscar gastos por nombre o nota"}
+  ,"clear_filters": "Limpiar"
+  ,"@clear_filters": {"description": "Botón para limpiar filtros de gastos"}
+  ,"show_filters": "Mostrar filtros"
+  ,"@show_filters": {"description": "Etiqueta para mostrar filtros"}
+  ,"hide_filters": "Ocultar filtros"
+  ,"@hide_filters": {"description": "Etiqueta para ocultar filtros"}
+  ,"all_categories": "Todas"
+  ,"@all_categories": {"description": "Chip para todas las categorías"}
+  ,"all_participants": "Todos"
+  ,"@all_participants": {"description": "Chip para todos los participantes"}
+  ,"no_expenses_with_filters": "Ningún gasto coincide con los filtros seleccionados"
+  ,"@no_expenses_with_filters": {"description": "Estado vacío cuando filtros activos no devuelven gastos"}
+  ,"no_expenses_yet": "Aún no hay gastos"
+  ,"@no_expenses_yet": {"description": "Estado vacío cuando aún no hay gastos"}
 }

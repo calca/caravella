@@ -498,4 +498,22 @@
   ,"currency_ZMW": "Kwacha dello Zambia"
   ,"currency_ZWL": "Dollaro zimbabwiano"
   ,"search_currency": "Cerca valuta..."
+  ,"activity": "Attività"
+  ,"@activity": {"description": "Titolo sezione attività elenco spese"}
+  ,"search_expenses_hint": "Cerca per nome o nota..."
+  ,"@search_expenses_hint": {"description": "Placeholder ricerca spese per nome o nota"}
+  ,"clear_filters": "Pulisci"
+  ,"@clear_filters": {"description": "Pulsante per pulire i filtri delle spese"}
+  ,"show_filters": "Mostra filtri"
+  ,"@show_filters": {"description": "Tooltip/etichetta per mostrare i filtri"}
+  ,"hide_filters": "Nascondi filtri"
+  ,"@hide_filters": {"description": "Tooltip/etichetta per nascondere i filtri"}
+  ,"all_categories": "Tutte"
+  ,"@all_categories": {"description": "Chip per tutte le categorie"}
+  ,"all_participants": "Tutti"
+  ,"@all_participants": {"description": "Chip per tutti i partecipanti"}
+  ,"no_expenses_with_filters": "Nessuna spesa trovata con i filtri selezionati"
+  ,"@no_expenses_with_filters": {"description": "Stato vuoto quando filtri attivi nessun risultato"}
+  ,"no_expenses_yet": "Nessuna spesa ancora aggiunta"
+  ,"@no_expenses_yet": {"description": "Stato vuoto iniziale senza spese"}
 }

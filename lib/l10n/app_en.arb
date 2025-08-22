@@ -511,4 +511,22 @@
   ,"currency_ZMW": "Zambian Kwacha"
   ,"currency_ZWL": "Zimbabwean Dollar"
   ,"search_currency": "Search currency..."
+  ,"activity": "Activity"
+  ,"@activity": {"description": "Section title for expense list recent activity"}
+  ,"search_expenses_hint": "Search by name or note..."
+  ,"@search_expenses_hint": {"description": "Placeholder for searching expenses by name or note"}
+  ,"clear_filters": "Clear"
+  ,"@clear_filters": {"description": "Button to clear expense filters"}
+  ,"show_filters": "Show filters"
+  ,"@show_filters": {"description": "Label to show filters"}
+  ,"hide_filters": "Hide filters"
+  ,"@hide_filters": {"description": "Label to hide filters"}
+  ,"all_categories": "All"
+  ,"@all_categories": {"description": "Chip label for all categories"}
+  ,"all_participants": "All"
+  ,"@all_participants": {"description": "Chip label for all participants"}
+  ,"no_expenses_with_filters": "No expenses match the selected filters"
+  ,"@no_expenses_with_filters": {"description": "Empty state when active filters return no expenses"}
+  ,"no_expenses_yet": "No expenses added yet"
+  ,"@no_expenses_yet": {"description": "Empty state when there are no expenses yet"}
 }

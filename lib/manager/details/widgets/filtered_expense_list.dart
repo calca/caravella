@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../l10n/app_localizations.dart' as gen;
 import '../../../data/model/expense_details.dart';
 import '../../../data/model/expense_category.dart';
 import '../../../data/model/expense_participant.dart';
@@ -90,6 +91,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
   @override
   Widget build(BuildContext context) {
     final filteredExpenses = _filteredExpenses;
+    final gloc = gen.AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
 
     return Column(
@@ -101,7 +103,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
             children: [
               Expanded(
                 child: Text(
-                  'Attività${filteredExpenses.length != widget.expenses.length ? ' (${filteredExpenses.length}/${widget.expenses.length})' : ''}',
+                  '${gloc.activity}${filteredExpenses.length != widget.expenses.length ? ' (${filteredExpenses.length}/${widget.expenses.length})' : ''}',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: colorScheme.onSurface,
@@ -113,7 +115,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                 TextButton.icon(
                   onPressed: _clearAllFilters,
                   icon: Icon(Icons.clear, size: 16),
-                  label: Text('Pulisci'),
+                  label: Text(gloc.clear_filters),
                   style: TextButton.styleFrom(
                     foregroundColor: colorScheme.primary,
                   ),
@@ -133,7 +135,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                         });
                         widget.onFiltersVisibilityChanged?.call(_showFilters);
                       },
-                tooltip: _showFilters ? 'Nascondi filtri' : 'Mostra filtri',
+                tooltip: _showFilters ? gloc.hide_filters : gloc.show_filters,
               ),
             ],
           ),
@@ -155,7 +157,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                 TextField(
                   controller: _searchController,
                   decoration: InputDecoration(
-                    hintText: 'Cerca per nome o nota...',
+                    hintText: gloc.search_expenses_hint,
                     prefixIcon: Icon(Icons.search_outlined, size: 20),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -177,7 +179,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                 // Category Filter
                 if (widget.categories.isNotEmpty) ...[
                   Text(
-                    'Categoria',
+                    gloc.category,
                     style: Theme.of(context).textTheme.labelMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -191,7 +193,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                       child: Row(
                         children: [
                           _CategoryParticipantChip(
-                            label: 'Tutte',
+                            label: gloc.all_categories,
                             selected: _selectedCategoryId == null,
                             onSelected: () {
                               setState(() => _selectedCategoryId = null);
@@ -229,7 +231,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                 // Participant Filter
                 if (widget.participants.isNotEmpty) ...[
                   Text(
-                    'Pagato da',
+                    gloc.paid_by,
                     style: Theme.of(context).textTheme.labelMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -243,7 +245,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                       child: Row(
                         children: [
                           _CategoryParticipantChip(
-                            label: 'Tutti',
+                            label: gloc.all_participants,
                             selected: _selectedParticipantId == null,
                             onSelected: () {
                               setState(() => _selectedParticipantId = null);
@@ -300,8 +302,8 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                 const SizedBox(height: 16),
                 Text(
                   _hasActiveFilters
-                      ? 'Nessuna spesa trovata con i filtri selezionati'
-                      : 'Nessuna spesa ancora aggiunta',
+                      ? gloc.no_expenses_with_filters
+                      : gloc.no_expenses_yet,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     color: colorScheme.onSurface.withValues(alpha: 0.6),
                   ),

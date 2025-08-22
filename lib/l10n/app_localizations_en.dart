@@ -1399,4 +1399,32 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get search_currency => 'Search currency...';
+
+  @override
+  String get activity => 'Activity';
+
+  @override
+  String get search_expenses_hint => 'Search by name or note...';
+
+  @override
+  String get clear_filters => 'Clear';
+
+  @override
+  String get show_filters => 'Show filters';
+
+  @override
+  String get hide_filters => 'Hide filters';
+
+  @override
+  String get all_categories => 'All';
+
+  @override
+  String get all_participants => 'All';
+
+  @override
+  String get no_expenses_with_filters =>
+      'No expenses match the selected filters';
+
+  @override
+  String get no_expenses_yet => 'No expenses added yet';
 }
