@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_print, unused_element, unnecessary_brace_in_string_interps
 import 'expense_group.dart';
 import 'expense_details.dart';
 import 'expense_group_repository.dart';
@@ -7,9 +8,10 @@ import 'file_based_expense_group_repository.dart';
 /// Maintains the same API while using the improved repository internally
 class ExpenseGroupStorageV2 {
   static const String fileName = 'expense_group_storage.json';
-  
+
   // Singleton repository instance
-  static final IExpenseGroupRepository _repository = FileBasedExpenseGroupRepository();
+  static final IExpenseGroupRepository _repository =
+      FileBasedExpenseGroupRepository();
 
   /// Private method to read all groups (for internal use)
   static Future<List<ExpenseGroup>> _readAllGroups() async {
@@ -45,7 +47,10 @@ class ExpenseGroupStorageV2 {
   }
 
   /// Gets an expense by ID within a trip
-  static Future<ExpenseDetails?> getExpenseById(String tripId, String expenseId) async {
+  static Future<ExpenseDetails?> getExpenseById(
+    String tripId,
+    String expenseId,
+  ) async {
     final result = await _repository.getExpenseById(tripId, expenseId);
     return result.unwrapOr(null);
   }
@@ -54,7 +59,7 @@ class ExpenseGroupStorageV2 {
   static Future<void> setPinnedTrip(String tripId) async {
     final result = await _repository.setPinnedGroup(tripId);
     if (result.isFailure) {
-      print('Warning: Failed to set pinned trip ${tripId}: ${result.error}');
+      print('Warning: Failed to set pinned trip $tripId: ${result.error}');
     }
   }
 
@@ -62,7 +67,7 @@ class ExpenseGroupStorageV2 {
   static Future<void> removePinnedTrip(String tripId) async {
     final result = await _repository.removePinnedGroup(tripId);
     if (result.isFailure) {
-      print('Warning: Failed to remove pinned trip ${tripId}: ${result.error}');
+      print('Warning: Failed to remove pinned trip $tripId: ${result.error}');
     }
   }
 
@@ -76,7 +81,7 @@ class ExpenseGroupStorageV2 {
   static Future<void> archiveGroup(String groupId) async {
     final result = await _repository.archiveGroup(groupId);
     if (result.isFailure) {
-      print('Warning: Failed to archive group ${groupId}: ${result.error}');
+      print('Warning: Failed to archive group $groupId: ${result.error}');
     }
   }
 
@@ -84,7 +89,7 @@ class ExpenseGroupStorageV2 {
   static Future<void> unarchiveGroup(String groupId) async {
     final result = await _repository.unarchiveGroup(groupId);
     if (result.isFailure) {
-      print('Warning: Failed to unarchive group ${groupId}: ${result.error}');
+      print('Warning: Failed to unarchive group $groupId: ${result.error}');
     }
   }
 
@@ -110,7 +115,9 @@ class ExpenseGroupStorageV2 {
   static Future<void> updateGroupMetadata(ExpenseGroup updatedGroup) async {
     final result = await _repository.updateGroupMetadata(updatedGroup);
     if (result.isFailure) {
-      print('Warning: Failed to update group metadata ${updatedGroup.id}: ${result.error}');
+      print(
+        'Warning: Failed to update group metadata ${updatedGroup.id}: ${result.error}',
+      );
     }
   }
 

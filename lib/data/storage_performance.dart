@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_print
 import 'dart:async';
 
 /// Performance metrics for storage operations
@@ -19,7 +20,7 @@ class StorageMetrics {
   @override
   String toString() {
     final cacheStatus = wasFromCache ? ' (cached)' : '';
-    final sizeInfo = dataSize != null ? ' [${dataSize} bytes]' : '';
+    final sizeInfo = dataSize != null ? ' [$dataSize bytes]' : '';
     return '$operation: ${duration.inMilliseconds}ms$cacheStatus$sizeInfo';
   }
 }
@@ -54,7 +55,7 @@ class StoragePerformanceMonitor {
   static void record(StorageMetrics metric) {
     if (_isEnabled) {
       _metrics.add(metric);
-      
+
       // Keep only last 1000 metrics to prevent memory leaks
       if (_metrics.length > 1000) {
         _metrics.removeRange(0, _metrics.length - 1000);
@@ -71,11 +72,11 @@ class StoragePerformanceMonitor {
   static Duration? getAverageDuration(String operation) {
     final operationMetrics = getMetricsFor(operation);
     if (operationMetrics.isEmpty) return null;
-    
+
     final totalMs = operationMetrics
         .map((m) => m.duration.inMilliseconds)
         .reduce((a, b) => a + b);
-    
+
     return Duration(milliseconds: totalMs ~/ operationMetrics.length);
   }
 
@@ -83,7 +84,7 @@ class StoragePerformanceMonitor {
   static double? getCacheHitRate(String operation) {
     final operationMetrics = getMetricsFor(operation);
     if (operationMetrics.isEmpty) return null;
-    
+
     final cacheHits = operationMetrics.where((m) => m.wasFromCache).length;
     return cacheHits / operationMetrics.length;
   }
@@ -91,15 +92,17 @@ class StoragePerformanceMonitor {
   /// Get summary statistics
   static Map<String, dynamic> getSummary() {
     if (_metrics.isEmpty) return {};
-    
+
     final operations = _metrics.map((m) => m.operation).toSet();
     final summary = <String, dynamic>{};
-    
+
     for (final operation in operations) {
       final opMetrics = getMetricsFor(operation);
-      final durations = opMetrics.map((m) => m.duration.inMilliseconds).toList();
+      final durations = opMetrics
+          .map((m) => m.duration.inMilliseconds)
+          .toList();
       durations.sort();
-      
+
       summary[operation] = {
         'count': opMetrics.length,
         'avgDuration': getAverageDuration(operation)!.inMilliseconds,
@@ -114,7 +117,7 @@ class StoragePerformanceMonitor {
             .fold<int>(0, (sum, size) => sum + size),
       };
     }
-    
+
     return summary;
   }
 
@@ -125,12 +128,12 @@ class StoragePerformanceMonitor {
       print('No performance metrics recorded');
       return;
     }
-    
+
     print('=== Storage Performance Summary ===');
     for (final entry in summary.entries) {
       final operation = entry.key;
       final stats = entry.value as Map<String, dynamic>;
-      
+
       print('$operation:');
       print('  Count: ${stats['count']}');
       print('  Avg Duration: ${stats['avgDuration']}ms');
@@ -138,17 +141,18 @@ class StoragePerformanceMonitor {
       print('  Max Duration: ${stats['maxDuration']}ms');
       print('  P50 Duration: ${stats['p50Duration']}ms');
       print('  P95 Duration: ${stats['p95Duration']}ms');
-      
+
       if (stats['cacheHitRate'] != null) {
-        final hitRate = (stats['cacheHitRate'] as double * 100).toStringAsFixed(1);
+        final hitRate = ((stats['cacheHitRate'] as double) * 100)
+            .toStringAsFixed(1);
         print('  Cache Hit Rate: $hitRate%');
       }
-      
+
       if (stats['totalDataBytes'] > 0) {
         final totalKB = (stats['totalDataBytes'] / 1024).toStringAsFixed(1);
         print('  Total Data: ${totalKB}KB');
       }
-      
+
       print('');
     }
   }
@@ -166,34 +170,38 @@ mixin PerformanceMonitoring {
     if (!StoragePerformanceMonitor.isEnabled) {
       return await operation();
     }
-    
+
     final stopwatch = Stopwatch()..start();
-    
+
     try {
       final result = await operation();
-      
+
       stopwatch.stop();
-      StoragePerformanceMonitor.record(StorageMetrics(
-        operation: operationName,
-        duration: stopwatch.elapsed,
-        wasFromCache: wasFromCache,
-        dataSize: dataSize,
-      ));
-      
+      StoragePerformanceMonitor.record(
+        StorageMetrics(
+          operation: operationName,
+          duration: stopwatch.elapsed,
+          wasFromCache: wasFromCache,
+          dataSize: dataSize,
+        ),
+      );
+
       return result;
     } catch (e) {
       stopwatch.stop();
-      StoragePerformanceMonitor.record(StorageMetrics(
-        operation: '$operationName (error)',
-        duration: stopwatch.elapsed,
-        wasFromCache: wasFromCache,
-        dataSize: dataSize,
-      ));
-      
+      StoragePerformanceMonitor.record(
+        StorageMetrics(
+          operation: '$operationName (error)',
+          duration: stopwatch.elapsed,
+          wasFromCache: wasFromCache,
+          dataSize: dataSize,
+        ),
+      );
+
       rethrow;
     }
   }
-  
+
   /// Measures the performance of a synchronous operation
   T measureSyncOperation<T>(
     String operationName,
@@ -204,30 +212,34 @@ mixin PerformanceMonitoring {
     if (!StoragePerformanceMonitor.isEnabled) {
       return operation();
     }
-    
+
     final stopwatch = Stopwatch()..start();
-    
+
     try {
       final result = operation();
-      
+
       stopwatch.stop();
-      StoragePerformanceMonitor.record(StorageMetrics(
-        operation: operationName,
-        duration: stopwatch.elapsed,
-        wasFromCache: wasFromCache,
-        dataSize: dataSize,
-      ));
-      
+      StoragePerformanceMonitor.record(
+        StorageMetrics(
+          operation: operationName,
+          duration: stopwatch.elapsed,
+          wasFromCache: wasFromCache,
+          dataSize: dataSize,
+        ),
+      );
+
       return result;
     } catch (e) {
       stopwatch.stop();
-      StoragePerformanceMonitor.record(StorageMetrics(
-        operation: '$operationName (error)',
-        duration: stopwatch.elapsed,
-        wasFromCache: wasFromCache,
-        dataSize: dataSize,
-      ));
-      
+      StoragePerformanceMonitor.record(
+        StorageMetrics(
+          operation: '$operationName (error)',
+          duration: stopwatch.elapsed,
+          wasFromCache: wasFromCache,
+          dataSize: dataSize,
+        ),
+      );
+
       rethrow;
     }
   }

@@ -18,7 +18,7 @@ void main() {
 
     setUp(() async {
       repository = FileBasedExpenseGroupRepository();
-      
+
       // Clean up any existing test data
       try {
         final dir = await getApplicationDocumentsDirectory();
@@ -67,10 +67,10 @@ void main() {
         // Retrieve group
         final getResult = await repository.getGroupById(testGroup.id);
         expect(getResult.isSuccess, isTrue);
-        
+
         final retrievedGroup = getResult.data!;
         expect(retrievedGroup, isNotNull);
-        expect(retrievedGroup!.id, equals(testGroup.id));
+        expect(retrievedGroup.id, equals(testGroup.id));
         expect(retrievedGroup.title, equals(testGroup.title));
         expect(retrievedGroup.expenses.length, equals(1));
       });
@@ -217,7 +217,7 @@ void main() {
         // Verify group2 is pinned and group1 is not
         final updatedGroup1 = await repository.getGroupById('group1');
         final updatedGroup2 = await repository.getGroupById('group2');
-        
+
         expect(updatedGroup1.data!.pinned, isFalse);
         expect(updatedGroup2.data!.pinned, isTrue);
       });
@@ -296,7 +296,10 @@ void main() {
         final retrievedGroup = await repository.getGroupById(testGroup.id);
         expect(retrievedGroup.data!.title, equals('Updated Title'));
         expect(retrievedGroup.data!.participants.length, equals(3));
-        expect(retrievedGroup.data!.expenses.length, equals(1)); // Original expenses preserved
+        expect(
+          retrievedGroup.data!.expenses.length,
+          equals(1),
+        ); // Original expenses preserved
       });
 
       test('should fail to update non-existent group metadata', () async {
@@ -328,7 +331,7 @@ void main() {
       test('should check data integrity', () async {
         // Save some valid groups
         await repository.saveGroup(testGroup);
-        
+
         final result = await repository.checkDataIntegrity();
         expect(result.isSuccess, isTrue);
         expect(result.data, isEmpty); // No issues
@@ -348,7 +351,10 @@ void main() {
       test('should return null for non-existent expense', () async {
         await repository.saveGroup(testGroup);
 
-        final result = await repository.getExpenseById(testGroup.id, 'non-existent');
+        final result = await repository.getExpenseById(
+          testGroup.id,
+          'non-existent',
+        );
         expect(result.isSuccess, isTrue);
         expect(result.data, isNull);
       });
@@ -446,17 +452,14 @@ void main() {
     group('Sorting', () {
       test('should sort groups by timestamp (newest first)', () async {
         final now = DateTime.now();
-        
+
         final oldGroup = testGroup.copyWith(
           id: 'old',
           timestamp: now.subtract(const Duration(days: 2)),
         );
-        
-        final newGroup = testGroup.copyWith(
-          id: 'new',
-          timestamp: now,
-        );
-        
+
+        final newGroup = testGroup.copyWith(id: 'new', timestamp: now);
+
         final middleGroup = testGroup.copyWith(
           id: 'middle',
           timestamp: now.subtract(const Duration(days: 1)),
@@ -469,12 +472,12 @@ void main() {
 
         final result = await repository.getAllGroups();
         expect(result.isSuccess, isTrue);
-        
+
         final groups = result.data!;
         expect(groups.length, equals(3));
-        expect(groups[0].id, equals('new'));    // Newest first
+        expect(groups[0].id, equals('new')); // Newest first
         expect(groups[1].id, equals('middle'));
-        expect(groups[2].id, equals('old'));    // Oldest last
+        expect(groups[2].id, equals('old')); // Oldest last
       });
     });
   });

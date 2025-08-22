@@ -6,10 +6,10 @@ class GroupIndex {
   final Set<String> _pinnedGroups = {};
   final Set<String> _archivedGroups = {};
   final Set<String> _activeGroups = {};
-  
+
   /// Tracks if the index is up-to-date
   bool _isDirty = true;
-  
+
   /// Last update timestamp
   DateTime? _lastUpdate;
 
@@ -19,30 +19,30 @@ class GroupIndex {
     _pinnedGroups.clear();
     _archivedGroups.clear();
     _activeGroups.clear();
-    
+
     for (final group in groups) {
       _byId[group.id] = group;
-      
+
       if (group.pinned && !group.archived) {
         _pinnedGroups.add(group.id);
       }
-      
+
       if (group.archived) {
         _archivedGroups.add(group.id);
       } else {
         _activeGroups.add(group.id);
       }
     }
-    
+
     _isDirty = false;
     _lastUpdate = DateTime.now();
   }
-  
+
   /// Updates a single group in the index
   void updateGroup(ExpenseGroup group) {
     final oldGroup = _byId[group.id];
     _byId[group.id] = group;
-    
+
     // Update pin status
     if (oldGroup?.pinned == true && oldGroup?.archived == false) {
       _pinnedGroups.remove(group.id);
@@ -50,7 +50,7 @@ class GroupIndex {
     if (group.pinned && !group.archived) {
       _pinnedGroups.add(group.id);
     }
-    
+
     // Update archive status
     if (oldGroup?.archived == true) {
       _archivedGroups.remove(group.id);
@@ -58,7 +58,7 @@ class GroupIndex {
     if (oldGroup?.archived == false) {
       _activeGroups.remove(group.id);
     }
-    
+
     if (group.archived) {
       _archivedGroups.add(group.id);
       _activeGroups.remove(group.id);
@@ -66,10 +66,10 @@ class GroupIndex {
       _activeGroups.add(group.id);
       _archivedGroups.remove(group.id);
     }
-    
+
     _lastUpdate = DateTime.now();
   }
-  
+
   /// Removes a group from the index
   void removeGroup(String groupId) {
     final group = _byId.remove(groupId);
@@ -80,43 +80,39 @@ class GroupIndex {
       _lastUpdate = DateTime.now();
     }
   }
-  
+
   /// Gets a group by ID (O(1) lookup)
   ExpenseGroup? getById(String id) {
     return _byId[id];
   }
-  
+
   /// Gets all groups as a sorted list
   List<ExpenseGroup> getAllGroups() {
     final groups = _byId.values.toList();
     groups.sort((a, b) => b.timestamp.compareTo(a.timestamp));
     return groups;
   }
-  
+
   /// Gets active groups as a sorted list
   List<ExpenseGroup> getActiveGroups() {
-    final groups = _activeGroups
-        .map((id) => _byId[id]!)
-        .toList();
+    final groups = _activeGroups.map((id) => _byId[id]!).toList();
     groups.sort((a, b) => b.timestamp.compareTo(a.timestamp));
     return groups;
   }
-  
+
   /// Gets archived groups as a sorted list
   List<ExpenseGroup> getArchivedGroups() {
-    final groups = _archivedGroups
-        .map((id) => _byId[id]!)
-        .toList();
+    final groups = _archivedGroups.map((id) => _byId[id]!).toList();
     groups.sort((a, b) => b.timestamp.compareTo(a.timestamp));
     return groups;
   }
-  
+
   /// Gets the pinned group (should be at most one)
   ExpenseGroup? getPinnedGroup() {
     if (_pinnedGroups.isEmpty) return null;
     return _byId[_pinnedGroups.first];
   }
-  
+
   /// Gets groups by participant ID
   List<ExpenseGroup> getGroupsByParticipant(String participantId) {
     final groups = _byId.values
@@ -125,7 +121,7 @@ class GroupIndex {
     groups.sort((a, b) => b.timestamp.compareTo(a.timestamp));
     return groups;
   }
-  
+
   /// Gets groups by category ID
   List<ExpenseGroup> getGroupsByCategory(String categoryId) {
     final groups = _byId.values
@@ -134,7 +130,7 @@ class GroupIndex {
     groups.sort((a, b) => b.timestamp.compareTo(a.timestamp));
     return groups;
   }
-  
+
   /// Gets groups by currency
   List<ExpenseGroup> getGroupsByCurrency(String currency) {
     final groups = _byId.values
@@ -143,14 +139,21 @@ class GroupIndex {
     groups.sort((a, b) => b.timestamp.compareTo(a.timestamp));
     return groups;
   }
-  
+
   /// Gets groups within a date range
-  List<ExpenseGroup> getGroupsByDateRange(DateTime? startDate, DateTime? endDate) {
+  List<ExpenseGroup> getGroupsByDateRange(
+    DateTime? startDate,
+    DateTime? endDate,
+  ) {
     final groups = _byId.values.where((group) {
-      if (startDate != null && group.endDate != null && group.endDate!.isBefore(startDate)) {
+      if (startDate != null &&
+          group.endDate != null &&
+          group.endDate!.isBefore(startDate)) {
         return false;
       }
-      if (endDate != null && group.startDate != null && group.startDate!.isAfter(endDate)) {
+      if (endDate != null &&
+          group.startDate != null &&
+          group.startDate!.isAfter(endDate)) {
         return false;
       }
       return true;
@@ -158,7 +161,7 @@ class GroupIndex {
     groups.sort((a, b) => b.timestamp.compareTo(a.timestamp));
     return groups;
   }
-  
+
   /// Searches groups by title (case-insensitive)
   List<ExpenseGroup> searchByTitle(String query) {
     final lowerQuery = query.toLowerCase();
@@ -168,7 +171,7 @@ class GroupIndex {
     groups.sort((a, b) => b.timestamp.compareTo(a.timestamp));
     return groups;
   }
-  
+
   /// Gets index statistics
   Map<String, dynamic> getStats() {
     return {
@@ -180,15 +183,15 @@ class GroupIndex {
       'isDirty': _isDirty,
     };
   }
-  
+
   /// Checks if the index needs rebuilding
   bool get isDirty => _isDirty;
-  
+
   /// Marks the index as dirty (needs rebuilding)
   void markDirty() {
     _isDirty = true;
   }
-  
+
   /// Clears the index
   void clear() {
     _byId.clear();
@@ -198,17 +201,17 @@ class GroupIndex {
     _isDirty = true;
     _lastUpdate = null;
   }
-  
+
   /// Gets the number of groups in the index
   int get size => _byId.length;
-  
+
   /// Checks if the index is empty
   bool get isEmpty => _byId.isEmpty;
-  
+
   /// Validates index consistency
   List<String> validateConsistency() {
     final issues = <String>[];
-    
+
     // Check that pinned groups are not archived
     for (final pinnedId in _pinnedGroups) {
       final group = _byId[pinnedId];
@@ -220,18 +223,20 @@ class GroupIndex {
         issues.add('Group $pinnedId in pinned set but not marked as pinned');
       }
     }
-    
+
     // Check that archived/active sets are mutually exclusive
     final intersection = _archivedGroups.intersection(_activeGroups);
     if (intersection.isNotEmpty) {
-      issues.add('Groups in both archived and active sets: ${intersection.join(', ')}');
+      issues.add(
+        'Groups in both archived and active sets: ${intersection.join(', ')}',
+      );
     }
-    
+
     // Check that all groups are in either archived or active
     for (final group in _byId.values) {
       final inArchived = _archivedGroups.contains(group.id);
       final inActive = _activeGroups.contains(group.id);
-      
+
       if (group.archived && !inArchived) {
         issues.add('Archived group ${group.id} not in archived set');
       }
@@ -245,19 +250,20 @@ class GroupIndex {
         issues.add('Active group ${group.id} in archived set');
       }
     }
-    
+
     return issues;
   }
 }
 
 /// Expense index for fast expense lookups within groups
 class ExpenseIndex {
-  final Map<String, Map<String, int>> _expenseToGroupIndex = {};
-  
+  // Map expenseId -> { 'groupId': String, 'expenseIndex': int }
+  final Map<String, Map<String, dynamic>> _expenseToGroupIndex = {};
+
   /// Rebuilds the expense index from groups
   void rebuild(List<ExpenseGroup> groups) {
     _expenseToGroupIndex.clear();
-    
+
     for (final group in groups) {
       for (int i = 0; i < group.expenses.length; i++) {
         final expense = group.expenses[i];
@@ -268,24 +274,28 @@ class ExpenseIndex {
       }
     }
   }
-  
+
   /// Finds which group contains an expense
   String? getGroupIdForExpense(String expenseId) {
     final info = _expenseToGroupIndex[expenseId];
     return info != null ? info['groupId'] as String? : null;
   }
-  
+
   /// Gets expense location info (group ID and index within group)
   Map<String, dynamic>? getExpenseLocation(String expenseId) {
     return _expenseToGroupIndex[expenseId];
   }
-  
+
+  /// Whether the index is empty
+  bool get isEmpty => _expenseToGroupIndex.isEmpty;
+
   /// Updates expense index when a group changes
   void updateGroup(ExpenseGroup group) {
     // Remove old entries for this group
-    _expenseToGroupIndex.removeWhere((expenseId, info) => 
-        info['groupId'] == group.id);
-    
+    _expenseToGroupIndex.removeWhere(
+      (expenseId, info) => info['groupId'] == group.id,
+    );
+
     // Add new entries
     for (int i = 0; i < group.expenses.length; i++) {
       final expense = group.expenses[i];
@@ -295,18 +305,19 @@ class ExpenseIndex {
       };
     }
   }
-  
+
   /// Removes all expenses for a group
   void removeGroup(String groupId) {
-    _expenseToGroupIndex.removeWhere((expenseId, info) => 
-        info['groupId'] == groupId);
+    _expenseToGroupIndex.removeWhere(
+      (expenseId, info) => info['groupId'] == groupId,
+    );
   }
-  
+
   /// Clears the expense index
   void clear() {
     _expenseToGroupIndex.clear();
   }
-  
+
   /// Gets statistics about the expense index
   Map<String, dynamic> getStats() {
     final groupCounts = <String, int>{};
@@ -314,7 +325,7 @@ class ExpenseIndex {
       final groupId = info['groupId'] as String;
       groupCounts[groupId] = (groupCounts[groupId] ?? 0) + 1;
     }
-    
+
     return {
       'totalExpenses': _expenseToGroupIndex.length,
       'groupsWithExpenses': groupCounts.length,

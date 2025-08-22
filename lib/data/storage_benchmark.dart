@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_print
 import 'dart:math';
 import 'expense_group.dart';
 import 'expense_participant.dart';
@@ -5,6 +6,8 @@ import 'expense_category.dart';
 import 'expense_details.dart';
 import 'expense_group_repository.dart';
 import 'storage_performance.dart';
+import 'file_based_expense_group_repository.dart';
+import 'storage_transaction.dart';
 
 /// Benchmark configuration
 class BenchmarkConfig {
@@ -42,7 +45,8 @@ class BenchmarkConfig {
       expensesPerGroup: expensesPerGroup ?? this.expensesPerGroup,
       iterations: iterations ?? this.iterations,
       enableCaching: enableCaching ?? this.enableCaching,
-      enablePerformanceMonitoring: enablePerformanceMonitoring ?? this.enablePerformanceMonitoring,
+      enablePerformanceMonitoring:
+          enablePerformanceMonitoring ?? this.enablePerformanceMonitoring,
     );
   }
 }
@@ -62,7 +66,9 @@ class BenchmarkResult {
   });
 
   Duration get averageDuration {
-    final totalMs = durations.map((d) => d.inMicroseconds).reduce((a, b) => a + b);
+    final totalMs = durations
+        .map((d) => d.inMicroseconds)
+        .reduce((a, b) => a + b);
     return Duration(microseconds: totalMs ~/ durations.length);
   }
 
@@ -70,25 +76,30 @@ class BenchmarkResult {
   Duration get maxDuration => durations.reduce((a, b) => a > b ? a : b);
 
   Duration get p50Duration {
-    final sorted = List<Duration>.from(durations)..sort((a, b) => a.compareTo(b));
+    final sorted = List<Duration>.from(durations)
+      ..sort((a, b) => a.compareTo(b));
     return sorted[sorted.length ~/ 2];
   }
 
   Duration get p95Duration {
-    final sorted = List<Duration>.from(durations)..sort((a, b) => a.compareTo(b));
+    final sorted = List<Duration>.from(durations)
+      ..sort((a, b) => a.compareTo(b));
     return sorted[(sorted.length * 0.95).floor()];
   }
 
   Duration get p99Duration {
-    final sorted = List<Duration>.from(durations)..sort((a, b) => a.compareTo(b));
+    final sorted = List<Duration>.from(durations)
+      ..sort((a, b) => a.compareTo(b));
     return sorted[(sorted.length * 0.99).floor()];
   }
 
   double get standardDeviation {
     final avg = averageDuration.inMicroseconds.toDouble();
-    final variance = durations
-        .map((d) => pow(d.inMicroseconds - avg, 2))
-        .reduce((a, b) => a + b) / durations.length;
+    final variance =
+        durations
+            .map((d) => pow(d.inMicroseconds - avg, 2))
+            .reduce((a, b) => a + b) /
+        durations.length;
     return sqrt(variance);
   }
 
@@ -117,10 +128,10 @@ class BenchmarkResult {
   @override
   String toString() {
     return '$operation: avg=${averageDuration.inMilliseconds}ms, '
-           'min=${minDuration.inMilliseconds}ms, '
-           'max=${maxDuration.inMilliseconds}ms, '
-           'p95=${p95Duration.inMilliseconds}ms, '
-           'stddev=${standardDeviation.toStringAsFixed(1)}μs';
+        'min=${minDuration.inMilliseconds}ms, '
+        'max=${maxDuration.inMilliseconds}ms, '
+        'p95=${p95Duration.inMilliseconds}ms, '
+        'stddev=${standardDeviation.toStringAsFixed(1)}μs';
   }
 }
 
@@ -143,9 +154,11 @@ class StorageBenchmark {
       StoragePerformanceMonitor.disable();
     }
 
-    print('Running storage benchmarks with config: ${config.groupCount} groups, '
-          '${config.participantsPerGroup} participants, ${config.categoriesPerGroup} categories, '
-          '${config.expensesPerGroup} expenses per group');
+    print(
+      'Running storage benchmarks with config: ${config.groupCount} groups, '
+      '${config.participantsPerGroup} participants, ${config.categoriesPerGroup} categories, '
+      '${config.expensesPerGroup} expenses per group',
+    );
 
     // Generate test data
     final testGroups = _generateTestGroups(config);
@@ -180,11 +193,15 @@ class StorageBenchmark {
     final groups = <ExpenseGroup>[];
 
     for (int i = 0; i < config.groupCount; i++) {
-      final participants = List.generate(config.participantsPerGroup,
-          (j) => ExpenseParticipant(name: 'Participant ${i}_$j'));
+      final participants = List.generate(
+        config.participantsPerGroup,
+        (j) => ExpenseParticipant(name: 'Participant ${i}_$j'),
+      );
 
-      final categories = List.generate(config.categoriesPerGroup,
-          (j) => ExpenseCategory(name: 'Category ${i}_$j'));
+      final categories = List.generate(
+        config.categoriesPerGroup,
+        (j) => ExpenseCategory(name: 'Category ${i}_$j'),
+      );
 
       final expenses = List.generate(config.expensesPerGroup, (j) {
         return ExpenseDetails(
@@ -196,17 +213,19 @@ class StorageBenchmark {
         );
       });
 
-      groups.add(ExpenseGroup(
-        id: 'test-group-$i',
-        title: 'Test Group $i',
-        currency: ['USD', 'EUR', 'GBP'][_random.nextInt(3)],
-        participants: participants,
-        categories: categories,
-        expenses: expenses,
-        timestamp: DateTime.now().subtract(Duration(hours: i)),
-        pinned: i == 0, // Pin first group
-        archived: i > config.groupCount * 0.8, // Archive last 20%
-      ));
+      groups.add(
+        ExpenseGroup(
+          id: 'test-group-$i',
+          title: 'Test Group $i',
+          currency: ['USD', 'EUR', 'GBP'][_random.nextInt(3)],
+          participants: participants,
+          categories: categories,
+          expenses: expenses,
+          timestamp: DateTime.now().subtract(Duration(hours: i)),
+          pinned: i == 0, // Pin first group
+          archived: i > config.groupCount * 0.8, // Archive last 20%
+        ),
+      );
     }
 
     return groups;
@@ -214,7 +233,9 @@ class StorageBenchmark {
 
   /// Benchmarks saving groups
   Future<BenchmarkResult> _benchmarkSaveGroups(
-      List<ExpenseGroup> groups, BenchmarkConfig config) async {
+    List<ExpenseGroup> groups,
+    BenchmarkConfig config,
+  ) async {
     final durations = <Duration>[];
 
     for (int i = 0; i < config.iterations; i++) {
@@ -245,12 +266,15 @@ class StorageBenchmark {
   }
 
   /// Benchmarks loading all groups
-  Future<BenchmarkResult> _benchmarkLoadAllGroups(BenchmarkConfig config) async {
+  Future<BenchmarkResult> _benchmarkLoadAllGroups(
+    BenchmarkConfig config,
+  ) async {
     final durations = <Duration>[];
 
     for (int i = 0; i < config.iterations; i++) {
       // Clear cache if caching is disabled for this test
-      if (!config.enableCaching && repository is FileBasedExpenseGroupRepository) {
+      if (!config.enableCaching &&
+          repository is FileBasedExpenseGroupRepository) {
         (repository as FileBasedExpenseGroupRepository).clearCache();
       }
 
@@ -274,7 +298,9 @@ class StorageBenchmark {
 
   /// Benchmarks loading groups by ID
   Future<BenchmarkResult> _benchmarkLoadGroupsById(
-      List<ExpenseGroup> groups, BenchmarkConfig config) async {
+    List<ExpenseGroup> groups,
+    BenchmarkConfig config,
+  ) async {
     final durations = <Duration>[];
 
     for (int i = 0; i < config.iterations; i++) {
@@ -300,7 +326,9 @@ class StorageBenchmark {
   }
 
   /// Benchmarks filter operations
-  Future<BenchmarkResult> _benchmarkFilterOperations(BenchmarkConfig config) async {
+  Future<BenchmarkResult> _benchmarkFilterOperations(
+    BenchmarkConfig config,
+  ) async {
     final durations = <Duration>[];
 
     for (int i = 0; i < config.iterations; i++) {
@@ -323,7 +351,9 @@ class StorageBenchmark {
 
   /// Benchmarks pin operations
   Future<BenchmarkResult> _benchmarkPinOperations(
-      List<ExpenseGroup> groups, BenchmarkConfig config) async {
+    List<ExpenseGroup> groups,
+    BenchmarkConfig config,
+  ) async {
     final durations = <Duration>[];
     final testGroupIds = groups.take(5).map((g) => g.id).toList();
 
@@ -348,7 +378,9 @@ class StorageBenchmark {
   }
 
   /// Benchmarks search operations
-  Future<BenchmarkResult> _benchmarkSearchOperations(BenchmarkConfig config) async {
+  Future<BenchmarkResult> _benchmarkSearchOperations(
+    BenchmarkConfig config,
+  ) async {
     final durations = <Duration>[];
 
     for (int i = 0; i < config.iterations; i++) {
@@ -357,7 +389,9 @@ class StorageBenchmark {
       // Simulate various data integrity checks
       final integrityResult = await repository.checkDataIntegrity();
       if (integrityResult.isFailure) {
-        throw Exception('Data integrity check failed: ${integrityResult.error}');
+        throw Exception(
+          'Data integrity check failed: ${integrityResult.error}',
+        );
       }
 
       stopwatch.stop();
@@ -373,7 +407,9 @@ class StorageBenchmark {
 
   /// Benchmarks transaction operations
   Future<BenchmarkResult> _benchmarkTransactionOperations(
-      List<ExpenseGroup> groups, BenchmarkConfig config) async {
+    List<ExpenseGroup> groups,
+    BenchmarkConfig config,
+  ) async {
     final durations = <Duration>[];
     final testGroups = groups.take(3).toList();
 
@@ -406,7 +442,7 @@ class StorageBenchmark {
   /// Prints benchmark results
   static void printResults(List<BenchmarkResult> results) {
     print('\n=== Storage Benchmark Results ===');
-    
+
     for (final result in results) {
       print('');
       print('${result.operation}:');
@@ -418,29 +454,39 @@ class StorageBenchmark {
       print('  P95: ${result.p95Duration.inMilliseconds}ms');
       print('  P99: ${result.p99Duration.inMilliseconds}ms');
       print('  Std Dev: ${result.standardDeviation.toStringAsFixed(1)}μs');
-      
+
       if (result.metadata.isNotEmpty) {
         print('  Metadata: ${result.metadata}');
       }
     }
-    
+
     print('\n=== Summary ===');
     final totalOperations = results.length;
-    final avgDuration = results
-        .map((r) => r.averageDuration.inMilliseconds)
-        .reduce((a, b) => a + b) / totalOperations;
-    
+    final avgDuration =
+        results
+            .map((r) => r.averageDuration.inMilliseconds)
+            .reduce((a, b) => a + b) /
+        totalOperations;
+
     print('Total operations: $totalOperations');
-    print('Average duration across all operations: ${avgDuration.toStringAsFixed(1)}ms');
-    
+    print(
+      'Average duration across all operations: ${avgDuration.toStringAsFixed(1)}ms',
+    );
+
     // Find slowest operation
-    final slowest = results.reduce((a, b) =>
-        a.averageDuration > b.averageDuration ? a : b);
-    print('Slowest operation: ${slowest.operation} (${slowest.averageDuration.inMilliseconds}ms)');
-    
+    final slowest = results.reduce(
+      (a, b) => a.averageDuration > b.averageDuration ? a : b,
+    );
+    print(
+      'Slowest operation: ${slowest.operation} (${slowest.averageDuration.inMilliseconds}ms)',
+    );
+
     // Find fastest operation
-    final fastest = results.reduce((a, b) =>
-        a.averageDuration < b.averageDuration ? a : b);
-    print('Fastest operation: ${fastest.operation} (${fastest.averageDuration.inMilliseconds}ms)');
+    final fastest = results.reduce(
+      (a, b) => a.averageDuration < b.averageDuration ? a : b,
+    );
+    print(
+      'Fastest operation: ${fastest.operation} (${fastest.averageDuration.inMilliseconds}ms)',
+    );
   }
 }

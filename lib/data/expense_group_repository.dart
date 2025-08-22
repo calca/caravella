@@ -15,8 +15,11 @@ class StorageResult<T> {
 
   /// Throws the error if this is a failure, otherwise returns the data
   T unwrap() {
-    if (error != null) throw error!;
-    return data!;
+    if (error != null) {
+      throw error!;
+    }
+    // At this point data may still be null if T is nullable; caller responsibility.
+    return data as T;
   }
 
   /// Returns the data if success, otherwise returns the fallback value
@@ -27,7 +30,8 @@ class StorageResult<T> {
   /// Maps the success value to a new type
   StorageResult<U> map<U>(U Function(T) transform) {
     if (isFailure) return StorageResult.failure(error!);
-    return StorageResult.success(transform(data!));
+    final value = data;
+    return StorageResult.success(transform(value as T));
   }
 }
 
@@ -47,7 +51,10 @@ abstract class IExpenseGroupRepository {
   Future<StorageResult<ExpenseGroup?>> getGroupById(String id);
 
   /// Gets a specific expense within a group
-  Future<StorageResult<ExpenseDetails?>> getExpenseById(String groupId, String expenseId);
+  Future<StorageResult<ExpenseDetails?>> getExpenseById(
+    String groupId,
+    String expenseId,
+  );
 
   /// Gets the currently pinned group (if any)
   Future<StorageResult<ExpenseGroup?>> getPinnedGroup();
@@ -123,23 +130,25 @@ class ExpenseGroupValidator {
     // Expense validation
     for (int i = 0; i < group.expenses.length; i++) {
       final expense = group.expenses[i];
-      
+
       if (expense.amount == null || expense.amount! <= 0) {
         errors['expense_$i'] = 'Expense amount must be positive';
       }
 
       if (!participantIds.contains(expense.paidBy.id)) {
-        errors['expense_$i'] = 'Expense paidBy refers to non-existent participant';
+        errors['expense_$i'] =
+            'Expense paidBy refers to non-existent participant';
       }
 
       if (!categoryIds.contains(expense.category.id)) {
-        errors['expense_$i'] = 'Expense category refers to non-existent category';
+        errors['expense_$i'] =
+            'Expense category refers to non-existent category';
       }
     }
 
     if (errors.isNotEmpty) {
       return StorageResult.failure(
-        ValidationError('Group validation failed', fieldErrors: errors)
+        ValidationError('Group validation failed', fieldErrors: errors),
       );
     }
 
@@ -147,7 +156,9 @@ class ExpenseGroupValidator {
   }
 
   /// Validates data integrity across multiple groups
-  static StorageResult<List<String>> validateDataIntegrity(List<ExpenseGroup> groups) {
+  static StorageResult<List<String>> validateDataIntegrity(
+    List<ExpenseGroup> groups,
+  ) {
     final issues = <String>[];
 
     // Check for duplicate group IDs
@@ -159,14 +170,18 @@ class ExpenseGroupValidator {
     // Check pin constraint (only one group can be pinned)
     final pinnedGroups = groups.where((g) => g.pinned && !g.archived).toList();
     if (pinnedGroups.length > 1) {
-      issues.add('Multiple groups are pinned: ${pinnedGroups.map((g) => g.title).join(', ')}');
+      issues.add(
+        'Multiple groups are pinned: ${pinnedGroups.map((g) => g.title).join(', ')}',
+      );
     }
 
     // Validate individual groups
     for (final group in groups) {
       final validation = validate(group);
       if (validation.isFailure) {
-        issues.add('Group "${group.title}" (${group.id}): ${validation.error!.message}');
+        issues.add(
+          'Group "${group.title}" (${group.id}): ${validation.error!.message}',
+        );
       }
     }
 
