@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../widgets/selection_bottom_sheet.dart';
 import 'inline_select_field.dart';
+import '../../../themes/form_theme.dart';
 
 class ParticipantSelectorWidget extends StatelessWidget {
   final List<String> participants;
@@ -71,7 +72,7 @@ class ParticipantSelectorWidget extends StatelessWidget {
             child: Text(
               selected ?? gloc.participants_label,
               overflow: TextOverflow.ellipsis,
-              style: (textStyle ?? theme.textTheme.bodyMedium)?.copyWith(
+              style: (textStyle ?? FormTheme.getSelectTextStyle(context))?.copyWith(
                 color: theme.colorScheme.onSurface,
                 fontWeight: FontWeight.w400,
               ),
