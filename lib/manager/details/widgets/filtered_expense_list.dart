@@ -183,32 +183,45 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Wrap(
-                    spacing: 8,
-                    children: [
-                      FilterChip(
-                        label: Text('Tutte'),
-                        selected: _selectedCategoryId == null,
-                        onSelected: (selected) {
-                          setState(() {
-                            _selectedCategoryId = null;
-                          });
-                        },
+                  SizedBox(
+                    height: 40, // ensure enough height for chips
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      physics: const BouncingScrollPhysics(),
+                      child: Row(
+                        children: [
+                          _CategoryParticipantChip(
+                            label: 'Tutte',
+                            selected: _selectedCategoryId == null,
+                            onSelected: () {
+                              setState(() => _selectedCategoryId = null);
+                            },
+                          ),
+                          const SizedBox(width: 8),
+                          ...List.generate(widget.categories.length, (i) {
+                            final category = widget.categories[i];
+                            return Row(
+                              children: [
+                                _CategoryParticipantChip(
+                                  label: category.name,
+                                  selected: _selectedCategoryId == category.id,
+                                  onSelected: () {
+                                    setState(
+                                      () => _selectedCategoryId =
+                                          _selectedCategoryId == category.id
+                                          ? null
+                                          : category.id,
+                                    );
+                                  },
+                                ),
+                                if (i != widget.categories.length - 1)
+                                  const SizedBox(width: 8),
+                              ],
+                            );
+                          }),
+                        ],
                       ),
-                      ...widget.categories.map(
-                        (category) => FilterChip(
-                          label: Text(category.name),
-                          selected: _selectedCategoryId == category.id,
-                          onSelected: (selected) {
-                            setState(() {
-                              _selectedCategoryId = selected
-                                  ? category.id
-                                  : null;
-                            });
-                          },
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                   const SizedBox(height: 16),
                 ],
@@ -222,32 +235,47 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Wrap(
-                    spacing: 8,
-                    children: [
-                      FilterChip(
-                        label: Text('Tutti'),
-                        selected: _selectedParticipantId == null,
-                        onSelected: (selected) {
-                          setState(() {
-                            _selectedParticipantId = null;
-                          });
-                        },
+                  SizedBox(
+                    height: 40,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      physics: const BouncingScrollPhysics(),
+                      child: Row(
+                        children: [
+                          _CategoryParticipantChip(
+                            label: 'Tutti',
+                            selected: _selectedParticipantId == null,
+                            onSelected: () {
+                              setState(() => _selectedParticipantId = null);
+                            },
+                          ),
+                          const SizedBox(width: 8),
+                          ...List.generate(widget.participants.length, (i) {
+                            final participant = widget.participants[i];
+                            return Row(
+                              children: [
+                                _CategoryParticipantChip(
+                                  label: participant.name,
+                                  selected:
+                                      _selectedParticipantId == participant.id,
+                                  onSelected: () {
+                                    setState(
+                                      () => _selectedParticipantId =
+                                          _selectedParticipantId ==
+                                              participant.id
+                                          ? null
+                                          : participant.id,
+                                    );
+                                  },
+                                ),
+                                if (i != widget.participants.length - 1)
+                                  const SizedBox(width: 8),
+                              ],
+                            );
+                          }),
+                        ],
                       ),
-                      ...widget.participants.map(
-                        (participant) => FilterChip(
-                          label: Text(participant.name),
-                          selected: _selectedParticipantId == participant.id,
-                          onSelected: (selected) {
-                            setState(() {
-                              _selectedParticipantId = selected
-                                  ? participant.id
-                                  : null;
-                            });
-                          },
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ],
               ],
@@ -309,6 +337,41 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
           ),
         ],
       ],
+    );
+  }
+}
+
+class _CategoryParticipantChip extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final VoidCallback onSelected;
+
+  const _CategoryParticipantChip({
+    required this.label,
+    required this.selected,
+    required this.onSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return FilterChip(
+      label: Text(label),
+      selected: selected,
+      onSelected: (_) => onSelected(),
+      showCheckmark: false,
+      side: BorderSide(
+        color: selected
+            ? scheme.primaryFixedDim
+            : scheme.outlineVariant.withValues(alpha: 0.4),
+      ),
+      backgroundColor: scheme.surfaceContainerHigh,
+      selectedColor: scheme.primaryFixedDim,
+      labelStyle: Theme.of(context).textTheme.labelMedium?.copyWith(
+        fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+        color: selected ? scheme.onPrimaryContainer : scheme.onSurfaceVariant,
+      ),
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
     );
   }
 }
