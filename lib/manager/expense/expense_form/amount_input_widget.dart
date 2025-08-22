@@ -163,12 +163,15 @@ class _SimpleDecimalFormatter extends TextInputFormatter {
     // Only allow one decimal point
     final parts = sanitized.split('.');
     if (parts.length > 2) {
-      // If more than one decimal point, keep only the first one
+      // If more than one decimal point, keep only the first one and combine the rest
       sanitized = '${parts[0]}.${parts.sublist(1).join('')}';
-    }
-    
-    // Limit decimal places to 2
-    if (parts.length == 2 && parts[1].length > 2) {
+      // Re-split after combining
+      final newParts = sanitized.split('.');
+      if (newParts.length == 2 && newParts[1].length > 2) {
+        sanitized = '${newParts[0]}.${newParts[1].substring(0, 2)}';
+      }
+    } else if (parts.length == 2 && parts[1].length > 2) {
+      // Limit decimal places to 2
       sanitized = '${parts[0]}.${parts[1].substring(0, 2)}';
     }
     
