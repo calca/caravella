@@ -253,12 +253,36 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
               itemBuilder: (ctx, i) {
                 final item = itemsToShow[i];
                 final isSel = widget.selected == item;
-                return ListTile(
-                  title: Text(widget.itemLabel(item)),
-                  trailing: isSel
-                      ? Icon(Icons.check, color: theme.colorScheme.primary)
-                      : null,
-                  onTap: () => Navigator.of(context).pop(item),
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 2,
+                  ),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: () => Navigator.of(context).pop(item),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: isSel
+                            ? theme.colorScheme.surfaceContainerHigh
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      child: Text(
+                        widget.itemLabel(item),
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: isSel
+                              ? theme.colorScheme.onPrimaryContainer
+                              : theme.textTheme.bodyMedium?.color,
+                          fontWeight: isSel ? FontWeight.w600 : null,
+                        ),
+                      ),
+                    ),
+                  ),
                 );
               },
             ),
