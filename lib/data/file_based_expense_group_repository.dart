@@ -335,8 +335,9 @@ class FileBasedExpenseGroupRepository
 
       // Fallback to standard lookup
       final groupResult = await getGroupById(groupId);
-      if (groupResult.isFailure)
+      if (groupResult.isFailure) {
         return StorageResult.failure(groupResult.error!);
+      }
 
       final group = groupResult.data;
       if (group == null) {
