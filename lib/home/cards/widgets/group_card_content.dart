@@ -190,13 +190,15 @@ class GroupCardContent extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.primaryContainer,
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: 0.05,
+                  ),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   localizations.pin,
                   style: theme.textTheme.labelSmall?.copyWith(
-                    color: theme.colorScheme.onPrimaryContainer,
+                    color: theme.colorScheme.onSurfaceVariant,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
