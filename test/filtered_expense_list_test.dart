@@ -4,6 +4,7 @@ import 'package:org_app_caravella/manager/details/widgets/filtered_expense_list.
 import 'package:org_app_caravella/data/model/expense_details.dart';
 import 'package:org_app_caravella/data/model/expense_category.dart';
 import 'package:org_app_caravella/data/model/expense_participant.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart';
 
 void main() {
   group('FilteredExpenseList Tests', () {
@@ -49,6 +50,9 @@ void main() {
     ) async {
       await tester.pumpWidget(
         MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('it'),
           home: Scaffold(
             body: FilteredExpenseList(
               expenses: testExpenses,
@@ -72,6 +76,9 @@ void main() {
     testWidgets('Filter toggle shows filter controls', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('it'),
           home: Scaffold(
             body: FilteredExpenseList(
               expenses: testExpenses,
@@ -87,6 +94,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Initially filters should be hidden
+      // Italian localization for search hint
       expect(find.text('Cerca per nome o nota...'), findsNothing);
 
       // Tap the filter toggle button
@@ -104,6 +112,9 @@ void main() {
     ) async {
       await tester.pumpWidget(
         MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('it'),
           home: Scaffold(
             body: FilteredExpenseList(
               expenses: [], // Empty expenses list

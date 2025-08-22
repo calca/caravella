@@ -25,25 +25,18 @@ class MainActivity : FlutterActivity() {
         
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
             when (call.method) {
-                "requestBackup" -> {
+                "triggerBackup" -> {
                     try {
-                        val backupManager = BackupManager(this)
-                        backupManager.requestBackup()
+                        // Notify the BackupManager that data changed; OS will schedule backup.
+                        BackupManager(this).dataChanged()
                         result.success(true)
                     } catch (e: Exception) {
-                        result.error("BACKUP_ERROR", "Failed to request backup: ${e.message}", null)
+                        result.error("BACKUP_ERROR", "Failed to signal backup: ${e.message}", null)
                     }
                 }
                 "isBackupEnabled" -> {
-                    try {
-                        // Check if auto backup is enabled for this app
-                        val backupManager = BackupManager(this)
-                        // Note: There's no direct API to check if backup is enabled
-                        // We'll assume it's enabled if allowBackup is true in manifest
-                        result.success(true)
-                    } catch (e: Exception) {
-                        result.error("BACKUP_ERROR", "Failed to check backup status: ${e.message}", null)
-                    }
+                    // No direct runtime check API; assume true if manifest allows backup.
+                    result.success(true)
                 }
                 else -> {
                     result.notImplemented()

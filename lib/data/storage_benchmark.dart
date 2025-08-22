@@ -462,13 +462,19 @@ class StorageBenchmark {
 
     print('\n=== Summary ===');
     final totalOperations = results.length;
+    print('Total operations: $totalOperations');
+
+    if (results.isEmpty) {
+      print('No benchmark results to summarize.');
+      return;
+    }
+
     final avgDuration =
         results
             .map((r) => r.averageDuration.inMilliseconds)
             .reduce((a, b) => a + b) /
         totalOperations;
 
-    print('Total operations: $totalOperations');
     print(
       'Average duration across all operations: ${avgDuration.toStringAsFixed(1)}ms',
     );

@@ -151,13 +151,17 @@ class ExpenseAmountCard extends StatelessWidget {
 // End of ExpenseAmountCard
 
 extension on ExpenseAmountCard {
-  Widget _buildHighlightedTitle(BuildContext context, String text, String? query) {
+  Widget _buildHighlightedTitle(
+    BuildContext context,
+    String text,
+    String? query,
+  ) {
     final colorScheme = Theme.of(context).colorScheme;
     final style = Theme.of(context).textTheme.titleMedium?.copyWith(
-          color: colorScheme.onSurface,
-          fontWeight: FontWeight.w600,
-          height: 1.1,
-        );
+      color: colorScheme.onSurface,
+      fontWeight: FontWeight.w600,
+      height: 1.1,
+    );
     if (query == null || query.trim().isEmpty) {
       return Text(
         text,
