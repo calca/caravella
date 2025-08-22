@@ -125,9 +125,9 @@ class SettingsPage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Column(
             children: [
-              _buildAppVersionRow(context, loc),
-              const SizedBox(height: 8),
               _buildInfoCardRow(context, loc),
+              const SizedBox(height: 8),
+              _buildAppVersionRow(context, loc),
             ],
           ),
         ),
