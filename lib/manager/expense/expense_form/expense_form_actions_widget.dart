@@ -18,9 +18,7 @@ class ExpenseFormActionsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
-    final saveLabel = isEdit
-        ? gloc.save_change_expense
-        : 'Save'; // TODO localize generic save
+    final saveLabel = gloc.save_change_expense;
     final colorScheme = Theme.of(context).colorScheme;
     return Align(
       alignment: Alignment.centerRight,
