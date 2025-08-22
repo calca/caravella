@@ -64,10 +64,19 @@ class OptionsSheet extends StatelessWidget {
           ListTile(
             leading: Icon(
               Icons.ios_share_outlined,
-              color: Theme.of(context).colorScheme.onPrimaryFixed,
+              color: trip.expenses.isEmpty
+                  ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38)
+                  : Theme.of(context).colorScheme.onPrimaryFixed,
             ),
-            title: Text(gloc.export_share),
-            onTap: onExportShare,
+            title: Text(
+              gloc.export_share,
+              style: trip.expenses.isEmpty
+                  ? TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
+                    )
+                  : null,
+            ),
+            onTap: trip.expenses.isEmpty ? null : onExportShare,
           ),
           ListTile(
             leading: Icon(
