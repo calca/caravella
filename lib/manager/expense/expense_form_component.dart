@@ -528,11 +528,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
       if (!_categories.contains(found)) {
         _categories.add(found);
       }
-      _category = found;
-      _categoryTouched = true;
-      if (!_initializing) {
-        _isDirty = true;
-      }
+      _formState.category = found;
+      _formState.categoryTouched = true;
     });
     // Wait again to ensure the state has settled
     await Future.delayed(const Duration(milliseconds: 100));
@@ -544,11 +541,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     );
     setState(() {
       _categories = List.from(widget.categories);
-      _category = foundAfter;
-      _categoryTouched = true;
-      if (!_initializing) {
-        _isDirty = true;
-      }
+      _formState.category = foundAfter;
+      _formState.categoryTouched = true;
     });
   }
 

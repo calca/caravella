@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../data/expense_category.dart';
-import '../../data/expense_details.dart';
-import '../../data/expense_participant.dart';
-import '../../data/expense_location.dart';
+import '../../data/model/expense_category.dart';
+import '../../data/model/expense_details.dart';
+import '../../data/model/expense_participant.dart';
+import '../../data/model/expense_location.dart';
 
 /// Centralized state management for expense form
 /// Handles original values storage, change detection, and validation
