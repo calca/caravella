@@ -245,7 +245,9 @@
   "data_backup_title": "Backup",
   "data_backup_desc": "Crea un file di backup delle tue spese.",
   "data_restore_title": "Ripristino",
-  "data_restore_desc": "Importa un backup per ripristinare i dati."
+  "data_restore_desc": "Importa un backup per ripristinare i dati.",
+  "auto_backup_title": "Backup automatico",
+  "auto_backup_desc": "Abilita il backup automatico del sistema operativo"
   ,"category_placeholder": "Categoria"
   ,"discard_changes_title": "Scartare le modifiche?"
   ,"discard_changes_message": "Sei sicuro di voler scartare le modifiche non salvate?"

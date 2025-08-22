@@ -247,7 +247,9 @@
   "data_backup_title": "Backup",
   "data_backup_desc": "Create a backup file of your expenses.",
   "data_restore_title": "Restore",
-  "data_restore_desc": "Import a backup to restore your data."
+  "data_restore_desc": "Import a backup to restore your data.",
+  "auto_backup_title": "Automatic backup",
+  "auto_backup_desc": "Enable operating system automatic backup"
   ,"info_tab": "Info"
   ,"select_paid_by": "Select payer"
   ,"select_category": "Select a category"

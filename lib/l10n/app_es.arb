@@ -248,6 +248,8 @@
   "data_backup_desc": "Crear un archivo de respaldo de tus gastos.",
   "data_restore_title": "Restauración",
   "data_restore_desc": "Importar un respaldo para restaurar tus datos.",
+  "auto_backup_title": "Respaldo automático",
+  "auto_backup_desc": "Habilitar el respaldo automático del sistema operativo",
   "info_tab": "Info",
   "select_paid_by": "Seleccionar pagador",
   "select_category": "Seleccionar una categoría",
