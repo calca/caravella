@@ -90,15 +90,18 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
 
   /// Scrolls to make the focused field visible when keyboard opens
   void _scrollToFocusedField() {
-    if (widget.scrollController == null || !widget.scrollController!.hasClients)
+    if (widget.scrollController == null ||
+        !widget.scrollController!.hasClients) {
       return;
+    }
 
     // Use a short delay to ensure the keyboard animation has started
     Future.delayed(const Duration(milliseconds: 100), () {
       if (!mounted ||
           widget.scrollController == null ||
-          !widget.scrollController!.hasClients)
+          !widget.scrollController!.hasClients) {
         return;
+      }
 
       final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
       if (keyboardHeight == 0) return;
