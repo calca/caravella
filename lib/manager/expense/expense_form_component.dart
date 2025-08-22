@@ -536,37 +536,19 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: SizedBox(
-        width: double.infinity,
+      child: Align(
+        alignment: Alignment.centerRight,
         child: Semantics(
           label: gloc.expand_form_tooltip,
-          child: TextButton.icon(
+          child: IconButton.filled(
             onPressed: () {
               setState(() {
                 _isExpanded = true;
                 _isDirty = true;
               });
             },
-            style: TextButton.styleFrom(
-              foregroundColor: theme.colorScheme.primary,
-              backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.08),
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            icon: Icon(
-              Icons.expand_more,
-              size: 20,
-              color: theme.colorScheme.primary,
-            ),
-            label: Text(
-              gloc.expand_form,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.primary,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
+            tooltip: gloc.expand_form,
+            icon: const Icon(Icons.expand_more),
           ),
         ),
       ),
