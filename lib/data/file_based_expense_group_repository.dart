@@ -6,6 +6,7 @@ import 'expense_details.dart';
 import 'expense_group_repository.dart';
 import 'storage_errors.dart';
 import 'storage_performance.dart';
+import 'storage_index.dart';
 
 /// Improved implementation of ExpenseGroupRepository with caching and proper error handling
 class FileBasedExpenseGroupRepository implements IExpenseGroupRepository with PerformanceMonitoring {
@@ -15,6 +16,10 @@ class FileBasedExpenseGroupRepository implements IExpenseGroupRepository with Pe
   List<ExpenseGroup>? _cachedGroups;
   DateTime? _lastCacheUpdate;
   DateTime? _lastFileModification;
+  
+  // Indexes for fast lookups
+  final GroupIndex _groupIndex = GroupIndex();
+  final ExpenseIndex _expenseIndex = ExpenseIndex();
   
   // Cache validity duration (5 minutes)
   static const Duration cacheValidityDuration = Duration(minutes: 5);
@@ -47,6 +52,8 @@ class FileBasedExpenseGroupRepository implements IExpenseGroupRepository with Pe
     _cachedGroups = null;
     _lastCacheUpdate = null;
     _lastFileModification = null;
+    _groupIndex.clear();
+    _expenseIndex.clear();
   }
 
   /// Loads groups from file with caching
@@ -132,6 +139,10 @@ class FileBasedExpenseGroupRepository implements IExpenseGroupRepository with Pe
           _lastCacheUpdate = DateTime.now();
           _lastFileModification = stat.modified;
 
+          // Update indexes
+          _groupIndex.rebuild(groups);
+          _expenseIndex.rebuild(groups);
+
           return StorageResult.success(groups);
         } catch (e) {
           if (e is StorageError) {
@@ -198,6 +209,10 @@ class FileBasedExpenseGroupRepository implements IExpenseGroupRepository with Pe
           final stat = await file.stat();
           _lastFileModification = stat.modified;
 
+          // Update indexes
+          _groupIndex.rebuild(groupsToSave);
+          _expenseIndex.rebuild(groupsToSave);
+
           return const StorageResult.success(null);
         } catch (e) {
           if (e is StorageError) {
@@ -219,71 +234,154 @@ class FileBasedExpenseGroupRepository implements IExpenseGroupRepository with Pe
 
   @override
   Future<StorageResult<List<ExpenseGroup>>> getAllGroups() async {
-    final result = await _loadGroups();
-    if (result.isFailure) return result;
-    
-    final groups = List<ExpenseGroup>.from(result.data!);
-    groups.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-    
-    return StorageResult.success(groups);
+    return await measureOperation(
+      'getAllGroups',
+      () async {
+        final result = await _loadGroups();
+        if (result.isFailure) return result;
+        
+        // Use index for faster sorting if available
+        if (!_groupIndex.isEmpty) {
+          return StorageResult.success(_groupIndex.getAllGroups());
+        }
+        
+        final groups = List<ExpenseGroup>.from(result.data!);
+        groups.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+        
+        return StorageResult.success(groups);
+      },
+      wasFromCache: _isCacheValid(),
+    );
   }
 
   @override
   Future<StorageResult<List<ExpenseGroup>>> getActiveGroups() async {
-    final result = await getAllGroups();
-    if (result.isFailure) return result;
-    
-    final activeGroups = result.data!
-        .where((group) => !group.archived)
-        .toList();
-    
-    return StorageResult.success(activeGroups);
+    return await measureOperation(
+      'getActiveGroups',
+      () async {
+        final result = await _loadGroups();
+        if (result.isFailure) return result;
+        
+        // Use index for faster filtering if available
+        if (!_groupIndex.isEmpty) {
+          return StorageResult.success(_groupIndex.getActiveGroups());
+        }
+        
+        final activeGroups = result.data!
+            .where((group) => !group.archived)
+            .toList();
+        activeGroups.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+        
+        return StorageResult.success(activeGroups);
+      },
+      wasFromCache: _isCacheValid(),
+    );
   }
 
   @override
   Future<StorageResult<List<ExpenseGroup>>> getArchivedGroups() async {
-    final result = await getAllGroups();
-    if (result.isFailure) return result;
-    
-    final archivedGroups = result.data!
-        .where((group) => group.archived)
-        .toList();
-    
-    return StorageResult.success(archivedGroups);
+    return await measureOperation(
+      'getArchivedGroups',
+      () async {
+        final result = await _loadGroups();
+        if (result.isFailure) return result;
+        
+        // Use index for faster filtering if available
+        if (!_groupIndex.isEmpty) {
+          return StorageResult.success(_groupIndex.getArchivedGroups());
+        }
+        
+        final archivedGroups = result.data!
+            .where((group) => group.archived)
+            .toList();
+        archivedGroups.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+        
+        return StorageResult.success(archivedGroups);
+      },
+      wasFromCache: _isCacheValid(),
+    );
   }
 
   @override
   Future<StorageResult<ExpenseGroup?>> getGroupById(String id) async {
-    final result = await _loadGroups();
-    if (result.isFailure) return StorageResult.failure(result.error!);
-    
-    final found = result.data!.where((group) => group.id == id);
-    return StorageResult.success(found.isNotEmpty ? found.first : null);
+    return await measureOperation(
+      'getGroupById',
+      () async {
+        // Try index first for O(1) lookup
+        if (!_groupIndex.isEmpty) {
+          final group = _groupIndex.getById(id);
+          return StorageResult.success(group);
+        }
+        
+        // Fallback to loading all groups
+        final result = await _loadGroups();
+        if (result.isFailure) return StorageResult.failure(result.error!);
+        
+        final found = result.data!.where((group) => group.id == id);
+        return StorageResult.success(found.isNotEmpty ? found.first : null);
+      },
+      wasFromCache: _isCacheValid() && !_groupIndex.isEmpty,
+    );
   }
 
   @override
   Future<StorageResult<ExpenseDetails?>> getExpenseById(String groupId, String expenseId) async {
-    final groupResult = await getGroupById(groupId);
-    if (groupResult.isFailure) return StorageResult.failure(groupResult.error!);
-    
-    final group = groupResult.data;
-    if (group == null) {
-      return StorageResult.failure(
-        EntityNotFoundError('ExpenseGroup', groupId),
-      );
-    }
-    
-    final found = group.expenses.where((expense) => expense.id == expenseId);
-    return StorageResult.success(found.isNotEmpty ? found.first : null);
+    return await measureOperation(
+      'getExpenseById',
+      () async {
+        // Try expense index first
+        if (!_expenseIndex.isEmpty) {
+          final location = _expenseIndex.getExpenseLocation(expenseId);
+          if (location != null && location['groupId'] == groupId) {
+            final group = _groupIndex.getById(groupId);
+            if (group != null) {
+              final expenseIndex = location['expenseIndex'] as int;
+              if (expenseIndex < group.expenses.length) {
+                return StorageResult.success(group.expenses[expenseIndex]);
+              }
+            }
+          }
+          return StorageResult.success(null);
+        }
+        
+        // Fallback to standard lookup
+        final groupResult = await getGroupById(groupId);
+        if (groupResult.isFailure) return StorageResult.failure(groupResult.error!);
+        
+        final group = groupResult.data;
+        if (group == null) {
+          return StorageResult.failure(
+            EntityNotFoundError('ExpenseGroup', groupId),
+          );
+        }
+        
+        final found = group.expenses.where((expense) => expense.id == expenseId);
+        return StorageResult.success(found.isNotEmpty ? found.first : null);
+      },
+      wasFromCache: _isCacheValid() && !_expenseIndex.isEmpty,
+    );
   }
 
   @override
   Future<StorageResult<ExpenseGroup?>> getPinnedGroup() async {
-    final result = await getActiveGroups();
-    if (result.isFailure) return StorageResult.failure(result.error!);
-    
-    final found = result.data!.where((group) => group.pinned);
-    return StorageResult.success(found.isNotEmpty ? found.first : null);
+    return await measureOperation(
+      'getPinnedGroup',
+      () async {
+        // Use index for O(1) lookup if available
+        if (!_groupIndex.isEmpty) {
+          final group = _groupIndex.getPinnedGroup();
+          return StorageResult.success(group);
+        }
+        
+        // Fallback to filtering
+        final result = await getActiveGroups();
+        if (result.isFailure) return StorageResult.failure(result.error!);
+        
+        final found = result.data!.where((group) => group.pinned);
+        return StorageResult.success(found.isNotEmpty ? found.first : null);
+      },
+      wasFromCache: _isCacheValid() && !_groupIndex.isEmpty,
+    );
   }
 
   @override
@@ -477,5 +575,128 @@ class FileBasedExpenseGroupRepository implements IExpenseGroupRepository with Pe
   /// Saves all groups atomically (for transaction support)
   Future<StorageResult<void>> saveAllGroups(List<ExpenseGroup> groups) async {
     return await _saveGroups(groups);
+  }
+
+  /// Gets groups by participant ID (indexed query)
+  Future<StorageResult<List<ExpenseGroup>>> getGroupsByParticipant(String participantId) async {
+    return await measureOperation(
+      'getGroupsByParticipant',
+      () async {
+        await _loadGroups(); // Ensure index is loaded
+        
+        if (!_groupIndex.isEmpty) {
+          final groups = _groupIndex.getGroupsByParticipant(participantId);
+          return StorageResult.success(groups);
+        }
+        
+        // Fallback to manual filtering
+        final allResult = await getAllGroups();
+        if (allResult.isFailure) return allResult;
+        
+        final groups = allResult.data!
+            .where((group) => group.participants.any((p) => p.id == participantId))
+            .toList();
+        
+        return StorageResult.success(groups);
+      },
+      wasFromCache: _isCacheValid() && !_groupIndex.isEmpty,
+    );
+  }
+
+  /// Gets groups by category ID (indexed query)
+  Future<StorageResult<List<ExpenseGroup>>> getGroupsByCategory(String categoryId) async {
+    return await measureOperation(
+      'getGroupsByCategory',
+      () async {
+        await _loadGroups(); // Ensure index is loaded
+        
+        if (!_groupIndex.isEmpty) {
+          final groups = _groupIndex.getGroupsByCategory(categoryId);
+          return StorageResult.success(groups);
+        }
+        
+        // Fallback to manual filtering
+        final allResult = await getAllGroups();
+        if (allResult.isFailure) return allResult;
+        
+        final groups = allResult.data!
+            .where((group) => group.categories.any((c) => c.id == categoryId))
+            .toList();
+        
+        return StorageResult.success(groups);
+      },
+      wasFromCache: _isCacheValid() && !_groupIndex.isEmpty,
+    );
+  }
+
+  /// Gets groups by currency (indexed query)
+  Future<StorageResult<List<ExpenseGroup>>> getGroupsByCurrency(String currency) async {
+    return await measureOperation(
+      'getGroupsByCurrency',
+      () async {
+        await _loadGroups(); // Ensure index is loaded
+        
+        if (!_groupIndex.isEmpty) {
+          final groups = _groupIndex.getGroupsByCurrency(currency);
+          return StorageResult.success(groups);
+        }
+        
+        // Fallback to manual filtering
+        final allResult = await getAllGroups();
+        if (allResult.isFailure) return allResult;
+        
+        final groups = allResult.data!
+            .where((group) => group.currency == currency)
+            .toList();
+        
+        return StorageResult.success(groups);
+      },
+      wasFromCache: _isCacheValid() && !_groupIndex.isEmpty,
+    );
+  }
+
+  /// Searches groups by title (indexed query)
+  Future<StorageResult<List<ExpenseGroup>>> searchGroupsByTitle(String query) async {
+    return await measureOperation(
+      'searchGroupsByTitle',
+      () async {
+        await _loadGroups(); // Ensure index is loaded
+        
+        if (!_groupIndex.isEmpty) {
+          final groups = _groupIndex.searchByTitle(query);
+          return StorageResult.success(groups);
+        }
+        
+        // Fallback to manual search
+        final allResult = await getAllGroups();
+        if (allResult.isFailure) return allResult;
+        
+        final lowerQuery = query.toLowerCase();
+        final groups = allResult.data!
+            .where((group) => group.title.toLowerCase().contains(lowerQuery))
+            .toList();
+        
+        return StorageResult.success(groups);
+      },
+      wasFromCache: _isCacheValid() && !_groupIndex.isEmpty,
+    );
+  }
+
+  /// Gets storage statistics including index information
+  Map<String, dynamic> getStorageStats() {
+    return {
+      'cache': {
+        'isValid': _isCacheValid(),
+        'lastUpdate': _lastCacheUpdate?.toIso8601String(),
+        'groupCount': _cachedGroups?.length ?? 0,
+      },
+      'groupIndex': _groupIndex.getStats(),
+      'expenseIndex': _expenseIndex.getStats(),
+    };
+  }
+
+  /// Validates index consistency (for debugging)
+  List<String> validateIndexConsistency() {
+    return _groupIndex.validateConsistency();
   }
 }
