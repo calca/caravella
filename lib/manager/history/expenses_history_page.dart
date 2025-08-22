@@ -8,7 +8,6 @@ import '../group/pages/expenses_group_edit_page.dart';
 import '../group/group_edit_mode.dart';
 import '../../widgets/caravella_app_bar.dart';
 import 'widgets/expense_group_empty_states.dart';
-import 'widgets/expandable_search_bar.dart';
 import 'widgets/expense_group_card.dart';
 import '../../widgets/app_toast.dart';
 
@@ -23,10 +22,9 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     with TickerProviderStateMixin {
   List<ExpenseGroup> _allTrips = [];
   List<ExpenseGroup> _filteredTrips = [];
-  String _statusFilter = 'all'; // active, all, archived
+  String _statusFilter = 'active'; // active, archived
   String _searchQuery = '';
   bool _loading = true;
-  bool _isSearchExpanded = false;
   final TextEditingController _searchController = TextEditingController();
   Timer? _searchDebounce;
   // Scroll + FAB state
@@ -37,11 +35,6 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   List<Map<String, dynamic>> _statusOptions(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
     return [
-      {
-        'key': 'all',
-        'label': gloc.status_all,
-        'icon': Icons.all_inclusive_outlined,
-      },
       {
         'key': 'active',
         'label': gloc.status_active,
@@ -82,9 +75,6 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
 
       // Carica i dati in base al filtro di stato
       switch (_statusFilter) {
-        case 'all':
-          trips = await ExpenseGroupStorage.getAllGroups();
-          break;
         case 'archived':
           trips = await ExpenseGroupStorage.getArchivedGroups();
           break;
@@ -200,16 +190,6 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     });
   }
 
-  void _toggleSearch() {
-    setState(() {
-      _isSearchExpanded = !_isSearchExpanded;
-      if (!_isSearchExpanded) {
-        _searchController.clear();
-        _onSearchChanged('');
-      }
-    });
-  }
-
   void _onSearchChanged(String query) {
     _searchDebounce?.cancel();
     _searchDebounce = Timer(const Duration(milliseconds: 300), () {
@@ -235,25 +215,64 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     }
   }
 
-  Widget _buildStatusFilterButton(
-    BuildContext context,
-    String label,
-    IconData icon,
-    bool isSelected,
-    VoidCallback onTap,
-  ) {
+  Widget _buildSearchBar(BuildContext context, gen.AppLocalizations gloc) {
     final colorScheme = Theme.of(context).colorScheme;
-    return IconButton.filledTonal(
-      onPressed: onTap,
-      icon: Icon(
-        icon,
-        size: 20,
-        color: isSelected ? colorScheme.primary : colorScheme.onSurface,
+    return TextField(
+      controller: _searchController,
+      onChanged: _onSearchChanged,
+      decoration: InputDecoration(
+        labelText: gloc.search_groups,
+        hintText: gloc.search_groups,
+        prefixIcon: Icon(
+          Icons.search_outlined,
+          color: _searchQuery.isNotEmpty
+              ? colorScheme.primary
+              : colorScheme.onSurface.withValues(alpha: 0.6),
+        ),
+        suffixIcon: _searchQuery.isNotEmpty
+            ? IconButton(
+                icon: Icon(
+                  Icons.clear_rounded,
+                  color: colorScheme.onSurface.withValues(alpha: 0.6),
+                ),
+                onPressed: () {
+                  _searchController.clear();
+                  _onSearchChanged('');
+                },
+              )
+            : null,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        filled: true,
+        fillColor: colorScheme.surfaceContainerHighest,
       ),
-      style: IconButton.styleFrom(
+    );
+  }
+
+  Widget _buildStatusSegmentedButton(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final options = _statusOptions(context);
+    
+    return SegmentedButton<String>(
+      segments: options.map((option) {
+        return ButtonSegment<String>(
+          value: option['key'],
+          label: Text(option['label']),
+          icon: Icon(option['icon']),
+        );
+      }).toList(),
+      selected: {_statusFilter},
+      onSelectionChanged: (selected) {
+        if (selected.isNotEmpty) {
+          _onStatusFilterChanged(selected.first);
+        }
+      },
+      style: SegmentedButton.styleFrom(
         backgroundColor: colorScheme.surfaceContainer,
         foregroundColor: colorScheme.onSurface,
-        minimumSize: const Size(54, 54),
+        selectedBackgroundColor: colorScheme.primaryContainer,
+        selectedForegroundColor: colorScheme.onPrimaryContainer,
       ),
     );
   }
@@ -268,62 +287,15 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
       floatingActionButton: _buildAnimatedFab(colorScheme, gloc),
       body: Column(
         children: [
-          // HEADER SECTION CON FILTRI E RICERCA
-          Column(
-            children: [
-              // FILTRI E SEARCH BAR SULLA STESSA RIGA
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                child: Row(
-                  children: [
-                    // STATUS FILTER BUTTONS con animazione di fade
-                    if (!_isSearchExpanded)
-                      AnimatedOpacity(
-                        opacity: _isSearchExpanded ? 0.0 : 1.0,
-                        duration: const Duration(milliseconds: 250),
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                          width: _isSearchExpanded ? 0 : null,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: _statusOptions(context).map((option) {
-                              final isSelected = _statusFilter == option['key'];
-                              return Padding(
-                                padding: const EdgeInsets.only(right: 8),
-                                child: _buildStatusFilterButton(
-                                  context,
-                                  option['label'],
-                                  option['icon'],
-                                  isSelected,
-                                  () => _onStatusFilterChanged(option['key']),
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      ),
-                    // SPACER per spingere la search a destra
-                    const Spacer(),
-                    // SEARCH BOX ESPANDIBILE ALLINEATO A DESTRA
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 350),
-                      curve: Curves.easeOutCubic,
-                      width: _isSearchExpanded
-                          ? MediaQuery.of(context).size.width - 32
-                          : 54, // Collapsed width aligned to filter buttons
-                      child: ExpandableSearchBar(
-                        controller: _searchController,
-                        isExpanded: _isSearchExpanded,
-                        searchQuery: _searchQuery,
-                        onToggle: _toggleSearch,
-                        onSearchChanged: _onSearchChanged,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          // HEADER SECTION - SEARCH BAR AT TOP
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: _buildSearchBar(context, gloc),
+          ),
+          // STATUS FILTER SEGMENTED BUTTONS
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+            child: _buildStatusSegmentedButton(context),
           ),
           // MAIN CONTENT
           Expanded(
@@ -355,6 +327,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                       return ExpenseGroupCard(
                         trip: trip,
                         onTripUpdated: _updateTrip,
+                        searchQuery: _searchQuery,
                       );
                     },
                   ),
