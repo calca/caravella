@@ -9,12 +9,14 @@ class LocationInputWidget extends StatefulWidget {
   final ExpenseLocation? initialLocation;
   final TextStyle? textStyle;
   final Function(ExpenseLocation?) onLocationChanged;
+  final FocusNode? externalFocusNode;
 
   const LocationInputWidget({
     super.key,
     this.initialLocation,
     this.textStyle,
     required this.onLocationChanged,
+    this.externalFocusNode,
   });
 
   @override
@@ -26,11 +28,12 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
   bool _isGettingLocation = false;
   bool _isResolvingAddress = false;
   ExpenseLocation? _currentLocation;
-  final FocusNode _fieldFocusNode = FocusNode();
+  late final FocusNode _fieldFocusNode;
 
   @override
   void initState() {
     super.initState();
+    _fieldFocusNode = widget.externalFocusNode ?? FocusNode();
     _currentLocation = widget.initialLocation;
     if (_currentLocation != null) {
       _controller.text = _currentLocation!.displayText;
@@ -40,7 +43,9 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
   @override
   void dispose() {
     _controller.dispose();
-    _fieldFocusNode.dispose();
+    if (widget.externalFocusNode == null) {
+      _fieldFocusNode.dispose();
+    }
     super.dispose();
   }
 

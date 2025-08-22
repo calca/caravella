@@ -76,6 +76,14 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
   bool _initializing = true; // traccia se siamo in fase di inizializzazione
   double _lastKeyboardHeight = 0; // Track keyboard height changes
 
+  // Keys for scrolling calculations
+  final GlobalKey _amountFieldKey = GlobalKey();
+  final GlobalKey _nameFieldKey = GlobalKey();
+  final GlobalKey _locationFieldKey = GlobalKey();
+  final GlobalKey _noteFieldKey = GlobalKey();
+  final FocusNode _locationFocus = FocusNode();
+  final FocusNode _noteFocus = FocusNode();
+
   // Stato per validazione in tempo reale
   bool _amountTouched = false;
   bool _paidByTouched = false;
@@ -103,8 +111,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
       return;
     }
 
-    // Use a short delay to ensure the keyboard animation has started
-    Future.delayed(const Duration(milliseconds: 100), () {
+    // Delay to allow layout & keyboard metrics update
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted ||
           widget.scrollController == null ||
           !widget.scrollController!.hasClients) {
@@ -112,34 +120,62 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
       }
 
       final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-      if (keyboardHeight == 0) return;
+      final scrollController = widget.scrollController!;
+      final focusedKey = _amountFocus.hasFocus
+          ? _amountFieldKey
+          : _nameFocus.hasFocus
+          ? _nameFieldKey
+          : _locationFocus.hasFocus
+          ? _locationFieldKey
+          : _noteFocus.hasFocus
+          ? _noteFieldKey
+          : _focusedExtendedFieldKey();
+      if (focusedKey == null) {
+        return;
+      }
+      final ctx = focusedKey.currentContext;
+      if (ctx == null) {
+        return;
+      }
 
       try {
-        // Scroll to ensure focused field is visible above keyboard
-        final currentScrollOffset = widget.scrollController!.offset;
-        final maxScrollExtent =
-            widget.scrollController!.position.maxScrollExtent;
+        final renderBox = ctx.findRenderObject() as RenderBox?;
+        if (renderBox == null) {
+          return;
+        }
+        final fieldTop = renderBox.localToGlobal(Offset.zero).dy;
+        final fieldHeight = renderBox.size.height;
+        final fieldBottom = fieldTop + fieldHeight;
+        final screenHeight = MediaQuery.of(context).size.height;
+        final availableBottom = screenHeight - keyboardHeight - 12; // padding
+        double scrollDelta = 0;
 
-        // Calculate required scroll to bring focused field into view
-        // We want to position focused field in the upper part of visible area
-        const fieldBuffer =
-            120.0; // Extra space above focused field for better visibility
-        final targetScrollOffset = (currentScrollOffset + fieldBuffer).clamp(
-          0.0,
-          maxScrollExtent,
-        );
+        // If bottom obscured by keyboard -> scroll down just enough
+        if (keyboardHeight > 0 && fieldBottom > availableBottom) {
+          scrollDelta = fieldBottom - availableBottom + 8; // extra offset
+        }
+        // If top too high (negative) -> scroll up
+        const topMargin = 24.0; // desired margin from top when focusing
+        if (fieldTop < topMargin) {
+          scrollDelta = fieldTop - topMargin; // negative value scrolls up
+        }
 
-        // Only scroll if there's a meaningful change
-        if ((targetScrollOffset - currentScrollOffset).abs() > 10.0) {
-          widget.scrollController!.animateTo(
-            targetScrollOffset,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
+        if (scrollDelta.abs() > 4) {
+          // threshold
+          final target = (scrollController.offset + scrollDelta).clamp(
+            0.0,
+            scrollController.position.maxScrollExtent,
           );
+          if ((target - scrollController.offset).abs() > 2) {
+            scrollController.animateTo(
+              target,
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeInOut,
+            );
+          }
         }
       } catch (e) {
-        // Gracefully handle any scrolling errors
-        debugPrint('Error during scroll-to-focus: $e');
+        debugPrint('Scroll adjust error: $e');
       }
     });
   }
@@ -157,7 +193,10 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
 
         // If keyboard is opening and a field has focus, trigger scroll
         if (currentKeyboardHeight > 0 &&
-            (_amountFocus.hasFocus || _nameFocus.hasFocus)) {
+            (_amountFocus.hasFocus ||
+                _nameFocus.hasFocus ||
+                _locationFocus.hasFocus ||
+                _noteFocus.hasFocus)) {
           _scrollToFocusedField();
         }
       }
@@ -220,6 +259,20 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     _nameFocus.addListener(() {
       if (_nameFocus.hasFocus) {
         // Delay to ensure keyboard is starting to appear
+        Future.delayed(const Duration(milliseconds: 200), () {
+          _scrollToFocusedField();
+        });
+      }
+    });
+    _locationFocus.addListener(() {
+      if (_locationFocus.hasFocus) {
+        Future.delayed(const Duration(milliseconds: 200), () {
+          _scrollToFocusedField();
+        });
+      }
+    });
+    _noteFocus.addListener(() {
+      if (_noteFocus.hasFocus) {
         Future.delayed(const Duration(milliseconds: 200), () {
           _scrollToFocusedField();
         });
@@ -413,46 +466,52 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
   Widget _spacer() => const SizedBox(height: _rowSpacing);
 
   Widget _buildAmountField(gen.AppLocalizations gloc, TextStyle? style) =>
-      _buildFieldWithStatus(
-        AmountInputWidget(
-          controller: _amountController,
-          focusNode: _amountFocus,
-          categories: _categories,
-          label: gloc.amount,
-          currency: widget.currency,
-          validator: (v) {
-            final parsed = _parseLocalizedAmount(v ?? '');
-            if (parsed == null || parsed <= 0) return gloc.invalid_amount;
-            return null;
-          },
-          onSaved: (v) {},
-          onSubmitted: _saveExpense,
-          textStyle: style,
+      KeyedSubtree(
+        key: _amountFieldKey,
+        child: _buildFieldWithStatus(
+          AmountInputWidget(
+            controller: _amountController,
+            focusNode: _amountFocus,
+            categories: _categories,
+            label: gloc.amount,
+            currency: widget.currency,
+            validator: (v) {
+              final parsed = _parseLocalizedAmount(v ?? '');
+              if (parsed == null || parsed <= 0) return gloc.invalid_amount;
+              return null;
+            },
+            onSaved: (v) {},
+            onSubmitted: _saveExpense,
+            textStyle: style,
+          ),
+          _isAmountValid,
+          _amountTouched,
         ),
-        _isAmountValid,
-        _amountTouched,
       );
 
   Widget _buildNameField(gen.AppLocalizations gloc, TextStyle? style) =>
-      _buildFieldWithStatus(
-        AmountInputWidget(
-          controller: _nameController,
-          focusNode: _nameFocus,
-          label: gloc.expense_name,
-          leading: Icon(
-            Icons.description_outlined,
-            size: 22,
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
+      KeyedSubtree(
+        key: _nameFieldKey,
+        child: _buildFieldWithStatus(
+          AmountInputWidget(
+            controller: _nameController,
+            focusNode: _nameFocus,
+            label: gloc.expense_name,
+            leading: Icon(
+              Icons.description_outlined,
+              size: 22,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+            validator: (v) =>
+                v == null || v.trim().isEmpty ? gloc.enter_title : null,
+            onSaved: (v) {},
+            onSubmitted: () {},
+            isText: true,
+            textStyle: style,
           ),
-          validator: (v) =>
-              v == null || v.trim().isEmpty ? gloc.enter_title : null,
-          onSaved: (v) {},
-          onSubmitted: () {},
-          isText: true,
-          textStyle: style,
+          _nameController.text.trim().isNotEmpty,
+          _amountTouched,
         ),
-        _nameController.text.trim().isNotEmpty,
-        _amountTouched,
       );
 
   Widget _buildParticipantCategorySection(TextStyle? style) {
@@ -645,20 +704,62 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
           textStyle: style,
         ),
         _spacer(),
-        LocationInputWidget(
-          initialLocation: _location,
-          textStyle: style,
-          onLocationChanged: (location) => setState(() {
-            _location = location;
-            if (!_initializing) {
-              _isDirty = true;
-            }
-          }),
+        KeyedSubtree(
+          key: _locationFieldKey,
+          child: LocationInputWidget(
+            initialLocation: _location,
+            textStyle: style,
+            onLocationChanged: (location) => setState(() {
+              _location = location;
+              if (!_initializing) {
+                _isDirty = true;
+              }
+            }),
+            externalFocusNode: _locationFocus,
+          ),
         ),
         _spacer(),
-        NoteInputWidget(controller: _noteController, textStyle: style),
+        KeyedSubtree(
+          key: _noteFieldKey,
+          child: NoteInputWidget(
+            controller: _noteController,
+            textStyle: style,
+            focusNode: _noteFocus,
+          ),
+        ),
       ],
     );
+  }
+
+  GlobalKey? _focusedExtendedFieldKey() {
+    // Try to detect focus indirectly for location / note using primary focus
+    final currentFocus = FocusManager.instance.primaryFocus;
+    if (currentFocus == null) return null;
+    // Heuristic: match by widget type in context chain
+    if (_locationFieldKey.currentContext != null &&
+        _locationFieldKey.currentContext!.findRenderObject() != null &&
+        _contextContainsFocus(
+          _locationFieldKey.currentContext!,
+          currentFocus,
+        )) {
+      return _locationFieldKey;
+    }
+    if (_noteFieldKey.currentContext != null &&
+        _noteFieldKey.currentContext!.findRenderObject() != null &&
+        _contextContainsFocus(_noteFieldKey.currentContext!, currentFocus)) {
+      return _noteFieldKey;
+    }
+    return null;
+  }
+
+  bool _contextContainsFocus(BuildContext ctx, FocusNode focus) {
+    // Walk up the focus ancestors
+    FocusNode? node = focus;
+    while (node != null) {
+      if (node.context == ctx) return true;
+      node = node.parent;
+    }
+    return false;
   }
 
   Widget _buildDivider(BuildContext context) {
@@ -699,6 +800,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     _nameController.dispose();
     _nameFocus.dispose();
     _noteController.dispose();
+    _locationFocus.dispose();
+    _noteFocus.dispose();
     super.dispose();
   }
 }
