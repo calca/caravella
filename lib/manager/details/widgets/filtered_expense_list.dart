@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../data/expense_details.dart';
-import '../../../data/expense_category.dart';
-import '../../../data/expense_participant.dart';
+import '../../../data/model/expense_details.dart';
+import '../../../data/model/expense_category.dart';
+import '../../../data/model/expense_participant.dart';
 import 'expense_amount_card.dart';
 
 class FilteredExpenseList extends StatefulWidget {
@@ -120,15 +120,19 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                 ),
               IconButton(
                 icon: Icon(
-                  _showFilters ? Icons.filter_list_off_outlined : Icons.filter_list_outlined,
+                  _showFilters
+                      ? Icons.filter_list_off_outlined
+                      : Icons.filter_list_outlined,
                   size: 20,
                 ),
-                onPressed: widget.expenses.isEmpty ? null : () {
-                  setState(() {
-                    _showFilters = !_showFilters;
-                  });
-                  widget.onFiltersVisibilityChanged?.call(_showFilters);
-                },
+                onPressed: widget.expenses.isEmpty
+                    ? null
+                    : () {
+                        setState(() {
+                          _showFilters = !_showFilters;
+                        });
+                        widget.onFiltersVisibilityChanged?.call(_showFilters);
+                      },
                 tooltip: _showFilters ? 'Nascondi filtri' : 'Mostra filtri',
               ),
             ],

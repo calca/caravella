@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../data/expense_details.dart';
+import '../../../data/model/expense_details.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 
 class DeleteExpenseDialog extends StatelessWidget {

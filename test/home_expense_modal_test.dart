@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
-import 'package:org_app_caravella/data/expense_group.dart';
-import 'package:org_app_caravella/data/expense_participant.dart';
-import 'package:org_app_caravella/data/expense_category.dart';
-import 'package:org_app_caravella/data/expense_details.dart';
+import 'package:org_app_caravella/data/model/expense_group.dart';
+import 'package:org_app_caravella/data/model/expense_participant.dart';
+import 'package:org_app_caravella/data/model/expense_category.dart';
+import 'package:org_app_caravella/data/model/expense_details.dart';
 import 'package:org_app_caravella/state/expense_group_notifier.dart';
 import 'package:org_app_caravella/home/cards/widgets/group_card_content.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;

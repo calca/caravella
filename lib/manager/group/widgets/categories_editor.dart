@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'categories_section.dart';
 import '../data/group_form_state.dart';
-import '../../../../data/expense_category.dart';
+import '../../../data/model/expense_category.dart';
 
 class CategoriesEditor extends StatelessWidget {
   const CategoriesEditor({super.key});

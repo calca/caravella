@@ -1,11 +1,11 @@
 library;
 
 import 'package:flutter/material.dart';
-import '../../data/expense_category.dart';
-import '../../data/expense_details.dart';
+import '../../data/model/expense_category.dart';
+import '../../data/model/expense_details.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
-import '../../data/expense_participant.dart';
-import '../../data/expense_location.dart';
+import '../../data/model/expense_participant.dart';
+import '../../data/model/expense_location.dart';
 import '../../state/locale_notifier.dart';
 import 'expense_form/amount_input_widget.dart';
 import 'expense_form/participant_selector_widget.dart';
@@ -31,7 +31,8 @@ class ExpenseFormComponent extends StatefulWidget {
   final String? newlyAddedCategory; // Nuova proprietà
   final String? groupTitle; // Titolo del gruppo per la riga azioni
   final String? currency; // Currency del gruppo
-  final ScrollController? scrollController; // Controller for scrolling to focused fields
+  final ScrollController?
+  scrollController; // Controller for scrolling to focused fields
 
   const ExpenseFormComponent({
     super.key,
@@ -55,7 +56,8 @@ class ExpenseFormComponent extends StatefulWidget {
   State<ExpenseFormComponent> createState() => _ExpenseFormComponentState();
 }
 
-class _ExpenseFormComponentState extends State<ExpenseFormComponent> with WidgetsBindingObserver {
+class _ExpenseFormComponentState extends State<ExpenseFormComponent>
+    with WidgetsBindingObserver {
   static const double _rowSpacing = 16.0;
   final _formKey = GlobalKey<FormState>();
   ExpenseCategory? _category;
@@ -88,25 +90,34 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> with Widget
 
   /// Scrolls to make the focused field visible when keyboard opens
   void _scrollToFocusedField() {
-    if (widget.scrollController == null || !widget.scrollController!.hasClients) return;
-    
+    if (widget.scrollController == null || !widget.scrollController!.hasClients)
+      return;
+
     // Use a short delay to ensure the keyboard animation has started
     Future.delayed(const Duration(milliseconds: 100), () {
-      if (!mounted || widget.scrollController == null || !widget.scrollController!.hasClients) return;
-      
+      if (!mounted ||
+          widget.scrollController == null ||
+          !widget.scrollController!.hasClients)
+        return;
+
       final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
       if (keyboardHeight == 0) return;
-      
+
       try {
         // Scroll to ensure focused field is visible above keyboard
         final currentScrollOffset = widget.scrollController!.offset;
-        final maxScrollExtent = widget.scrollController!.position.maxScrollExtent;
-        
+        final maxScrollExtent =
+            widget.scrollController!.position.maxScrollExtent;
+
         // Calculate required scroll to bring focused field into view
         // We want to position focused field in the upper part of visible area
-        const fieldBuffer = 120.0; // Extra space above focused field for better visibility
-        final targetScrollOffset = (currentScrollOffset + fieldBuffer).clamp(0.0, maxScrollExtent);
-        
+        const fieldBuffer =
+            120.0; // Extra space above focused field for better visibility
+        final targetScrollOffset = (currentScrollOffset + fieldBuffer).clamp(
+          0.0,
+          maxScrollExtent,
+        );
+
         // Only scroll if there's a meaningful change
         if ((targetScrollOffset - currentScrollOffset).abs() > 10.0) {
           widget.scrollController!.animateTo(
@@ -128,13 +139,14 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> with Widget
     // Monitor keyboard height changes
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      
+
       final currentKeyboardHeight = MediaQuery.of(context).viewInsets.bottom;
       if (currentKeyboardHeight != _lastKeyboardHeight) {
         _lastKeyboardHeight = currentKeyboardHeight;
-        
+
         // If keyboard is opening and a field has focus, trigger scroll
-        if (currentKeyboardHeight > 0 && (_amountFocus.hasFocus || _nameFocus.hasFocus)) {
+        if (currentKeyboardHeight > 0 &&
+            (_amountFocus.hasFocus || _nameFocus.hasFocus)) {
           _scrollToFocusedField();
         }
       }

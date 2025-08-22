@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart'
     as gen; // generated
-import '../../data/expense_group.dart';
+import '../../data/model/expense_group.dart';
 import '../../data/expense_group_storage.dart';
 import '../../state/expense_group_notifier.dart';
 // Removed locale_notifier import after migration
@@ -37,7 +37,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    
+
     // Setup state listener for efficient updates
     _groupNotifier?.removeListener(_onGroupsUpdated);
     _groupNotifier = context.read<ExpenseGroupNotifier>();
@@ -61,18 +61,20 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
 
   void _onGroupsUpdated() {
     final updatedGroupIds = _groupNotifier?.updatedGroupIds ?? [];
-    
+
     if (updatedGroupIds.isNotEmpty && mounted) {
       // Update only affected groups instead of reloading everything
       _updateAffectedGroupsLocally(updatedGroupIds);
     }
   }
 
-  Future<void> _updateAffectedGroupsLocally(List<String> updatedGroupIds) async {
+  Future<void> _updateAffectedGroupsLocally(
+    List<String> updatedGroupIds,
+  ) async {
     try {
       bool needsUpdate = false;
       final newGroups = List<ExpenseGroup>.from(_activeGroups);
-      
+
       for (final groupId in updatedGroupIds) {
         final groupIndex = newGroups.indexWhere((g) => g.id == groupId);
         if (groupIndex != -1) {
@@ -83,7 +85,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
           }
         }
       }
-      
+
       if (needsUpdate && mounted) {
         setState(() {
           _activeGroups = newGroups;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../data/expense_group.dart';
-import '../../../data/expense_participant.dart';
-import '../../../data/expense_category.dart';
+import '../../../data/model/expense_group.dart';
+import '../../../data/model/expense_participant.dart';
+import '../../../data/model/expense_category.dart';
 import '../../../data/expense_group_storage.dart';
 import '../../group/pages/expenses_group_edit_page.dart';
 

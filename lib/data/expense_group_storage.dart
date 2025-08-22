@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import 'expense_group.dart';
-import 'expense_details.dart';
+import 'model/expense_group.dart';
+import 'model/expense_details.dart';
 
 class ExpenseGroupStorage {
   static const String fileName = 'expense_group_storage.json';
@@ -40,7 +40,7 @@ class ExpenseGroupStorage {
         }
       }
     }
-    
+
     final file = await _getFile();
     final jsonList = trips.map((v) => v.toJson()).toList();
     await file.writeAsString(jsonEncode(jsonList));
@@ -66,7 +66,9 @@ class ExpenseGroupStorage {
   }
 
   static Future<ExpenseDetails?> getExpenseById(
-      String tripId, String expenseId) async {
+    String tripId,
+    String expenseId,
+  ) async {
     final trip = await getTripById(tripId);
     if (trip == null) return null;
     final found = trip.expenses.where((expense) => expense.id == expenseId);

@@ -1,5 +1,5 @@
-import 'expense_group.dart';
-import 'expense_details.dart';
+import 'model/expense_group.dart';
+import 'model/expense_details.dart';
 import 'storage_errors.dart';
 
 /// Result wrapper for storage operations that can fail

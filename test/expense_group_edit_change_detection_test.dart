@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:org_app_caravella/data/expense_group.dart';
-import 'package:org_app_caravella/data/expense_participant.dart';
-import 'package:org_app_caravella/data/expense_category.dart';
+import 'package:org_app_caravella/data/model/expense_group.dart';
+import 'package:org_app_caravella/data/model/expense_participant.dart';
+import 'package:org_app_caravella/data/model/expense_category.dart';
 
 void main() {
   group('ExpenseGroup Edit Change Detection Logic Tests', () {
@@ -10,19 +10,22 @@ void main() {
         ExpenseParticipant(name: 'Alice'),
         ExpenseParticipant(name: 'Bob'),
       ];
-      
+
       final participants2 = [
         ExpenseParticipant(name: 'Alice'),
         ExpenseParticipant(name: 'Bob'),
       ];
-      
+
       final participants3 = [
         ExpenseParticipant(name: 'Alice'),
         ExpenseParticipant(name: 'Charlie'),
       ];
 
       // Mock the _participantsEqual logic
-      bool participantsEqual(List<ExpenseParticipant> a, List<ExpenseParticipant> b) {
+      bool participantsEqual(
+        List<ExpenseParticipant> a,
+        List<ExpenseParticipant> b,
+      ) {
         if (a.length != b.length) return false;
         for (int i = 0; i < a.length; i++) {
           if (a[i].name != b[i].name) return false;
@@ -31,14 +34,23 @@ void main() {
       }
 
       // Test equal participants
-      assert(participantsEqual(participants1, participants2), 'Equal participants should return true');
-      
+      assert(
+        participantsEqual(participants1, participants2),
+        'Equal participants should return true',
+      );
+
       // Test different participants
-      assert(!participantsEqual(participants1, participants3), 'Different participants should return false');
-      
+      assert(
+        !participantsEqual(participants1, participants3),
+        'Different participants should return false',
+      );
+
       // Test different length
       final shortList = [ExpenseParticipant(name: 'Alice')];
-      assert(!participantsEqual(participants1, shortList), 'Different length lists should return false');
+      assert(
+        !participantsEqual(participants1, shortList),
+        'Different length lists should return false',
+      );
     });
 
     test('Category comparison logic works correctly', () {
@@ -46,12 +58,12 @@ void main() {
         ExpenseCategory(name: 'Food'),
         ExpenseCategory(name: 'Transport'),
       ];
-      
+
       final categories2 = [
         ExpenseCategory(name: 'Food'),
         ExpenseCategory(name: 'Transport'),
       ];
-      
+
       final categories3 = [
         ExpenseCategory(name: 'Food'),
         ExpenseCategory(name: 'Entertainment'),
@@ -67,14 +79,23 @@ void main() {
       }
 
       // Test equal categories
-      assert(categoriesEqual(categories1, categories2), 'Equal categories should return true');
-      
+      assert(
+        categoriesEqual(categories1, categories2),
+        'Equal categories should return true',
+      );
+
       // Test different categories
-      assert(!categoriesEqual(categories1, categories3), 'Different categories should return false');
-      
+      assert(
+        !categoriesEqual(categories1, categories3),
+        'Different categories should return false',
+      );
+
       // Test different length
       final shortList = [ExpenseCategory(name: 'Food')];
-      assert(!categoriesEqual(categories1, shortList), 'Different length lists should return false');
+      assert(
+        !categoriesEqual(categories1, shortList),
+        'Different length lists should return false',
+      );
     });
 
     test('Change detection logic works correctly', () {
@@ -107,7 +128,10 @@ void main() {
         required int? currentColor,
         required String currentCurrency,
       }) {
-        bool participantsEqual(List<ExpenseParticipant> a, List<ExpenseParticipant> b) {
+        bool participantsEqual(
+          List<ExpenseParticipant> a,
+          List<ExpenseParticipant> b,
+        ) {
           if (a.length != b.length) return false;
           for (int i = 0; i < a.length; i++) {
             if (a[i].name != b[i].name) return false;
@@ -125,7 +149,10 @@ void main() {
 
         return currentTitle.trim() != originalGroup.title ||
             currentParticipants.length != originalGroup.participants.length ||
-            !participantsEqual(currentParticipants, originalGroup.participants) ||
+            !participantsEqual(
+              currentParticipants,
+              originalGroup.participants,
+            ) ||
             currentCategories.length != originalGroup.categories.length ||
             !categoriesEqual(currentCategories, originalGroup.categories) ||
             currentStartDate != originalGroup.startDate ||
@@ -136,61 +163,73 @@ void main() {
       }
 
       // Test no changes
-      assert(!hasActualChanges(
-        currentTitle: 'Test Trip',
-        currentParticipants: [
-          ExpenseParticipant(name: 'Alice'),
-          ExpenseParticipant(name: 'Bob'),
-        ],
-        currentCategories: [
-          ExpenseCategory(name: 'Food'),
-          ExpenseCategory(name: 'Transport'),
-        ],
-        currentStartDate: DateTime(2024, 1, 1),
-        currentEndDate: DateTime(2024, 1, 7),
-        currentImagePath: null,
-        currentColor: 0xFFE57373,
-        currentCurrency: '€',
-      ), 'No changes should return false');
+      assert(
+        !hasActualChanges(
+          currentTitle: 'Test Trip',
+          currentParticipants: [
+            ExpenseParticipant(name: 'Alice'),
+            ExpenseParticipant(name: 'Bob'),
+          ],
+          currentCategories: [
+            ExpenseCategory(name: 'Food'),
+            ExpenseCategory(name: 'Transport'),
+          ],
+          currentStartDate: DateTime(2024, 1, 1),
+          currentEndDate: DateTime(2024, 1, 7),
+          currentImagePath: null,
+          currentColor: 0xFFE57373,
+          currentCurrency: '€',
+        ),
+        'No changes should return false',
+      );
 
       // Test title change
-      assert(hasActualChanges(
-        currentTitle: 'Modified Test Trip',
-        currentParticipants: originalGroup.participants,
-        currentCategories: originalGroup.categories,
-        currentStartDate: originalGroup.startDate,
-        currentEndDate: originalGroup.endDate,
-        currentImagePath: originalGroup.file,
-        currentColor: originalGroup.color,
-        currentCurrency: originalGroup.currency,
-      ), 'Title change should return true');
+      assert(
+        hasActualChanges(
+          currentTitle: 'Modified Test Trip',
+          currentParticipants: originalGroup.participants,
+          currentCategories: originalGroup.categories,
+          currentStartDate: originalGroup.startDate,
+          currentEndDate: originalGroup.endDate,
+          currentImagePath: originalGroup.file,
+          currentColor: originalGroup.color,
+          currentCurrency: originalGroup.currency,
+        ),
+        'Title change should return true',
+      );
 
       // Test participant change
-      assert(hasActualChanges(
-        currentTitle: originalGroup.title,
-        currentParticipants: [
-          ExpenseParticipant(name: 'Alice'),
-          ExpenseParticipant(name: 'Charlie'), // Changed from Bob to Charlie
-        ],
-        currentCategories: originalGroup.categories,
-        currentStartDate: originalGroup.startDate,
-        currentEndDate: originalGroup.endDate,
-        currentImagePath: originalGroup.file,
-        currentColor: originalGroup.color,
-        currentCurrency: originalGroup.currency,
-      ), 'Participant change should return true');
+      assert(
+        hasActualChanges(
+          currentTitle: originalGroup.title,
+          currentParticipants: [
+            ExpenseParticipant(name: 'Alice'),
+            ExpenseParticipant(name: 'Charlie'), // Changed from Bob to Charlie
+          ],
+          currentCategories: originalGroup.categories,
+          currentStartDate: originalGroup.startDate,
+          currentEndDate: originalGroup.endDate,
+          currentImagePath: originalGroup.file,
+          currentColor: originalGroup.color,
+          currentCurrency: originalGroup.currency,
+        ),
+        'Participant change should return true',
+      );
 
       // Test color change
-      assert(hasActualChanges(
-        currentTitle: originalGroup.title,
-        currentParticipants: originalGroup.participants,
-        currentCategories: originalGroup.categories,
-        currentStartDate: originalGroup.startDate,
-        currentEndDate: originalGroup.endDate,
-        currentImagePath: originalGroup.file,
-        currentColor: 0xFF42A5F5, // Different color
-        currentCurrency: originalGroup.currency,
-      ), 'Color change should return true');
+      assert(
+        hasActualChanges(
+          currentTitle: originalGroup.title,
+          currentParticipants: originalGroup.participants,
+          currentCategories: originalGroup.categories,
+          currentStartDate: originalGroup.startDate,
+          currentEndDate: originalGroup.endDate,
+          currentImagePath: originalGroup.file,
+          currentColor: 0xFF42A5F5, // Different color
+          currentCurrency: originalGroup.currency,
+        ),
+        'Color change should return true',
+      );
     });
   });
 }

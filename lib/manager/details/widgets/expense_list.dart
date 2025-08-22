@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../data/expense_details.dart';
+import '../../../data/model/expense_details.dart';
 import 'expense_amount_card.dart';
 
 class ExpenseList extends StatelessWidget {
@@ -22,20 +22,22 @@ class ExpenseList extends StatelessWidget {
       ..sort((a, b) => b.date.compareTo(a.date));
     return Column(
       children: [
-        ...sorted.map((expense) => Container(
-              width: double.infinity,
-              margin: const EdgeInsets.symmetric(vertical: 4),
-              child: ExpenseAmountCard(
-                title: expense.name ?? '',
-                coins: (expense.amount ?? 0).toInt(),
-                checked: true,
-                paidBy: expense.paidBy.name,
-                category: expense.category.name,
-                date: expense.date,
-                currency: currency,
-                onTap: () => onExpenseTap(expense),
-              ),
-            )),
+        ...sorted.map(
+          (expense) => Container(
+            width: double.infinity,
+            margin: const EdgeInsets.symmetric(vertical: 4),
+            child: ExpenseAmountCard(
+              title: expense.name ?? '',
+              coins: (expense.amount ?? 0).toInt(),
+              checked: true,
+              paidBy: expense.paidBy.name,
+              category: expense.category.name,
+              date: expense.date,
+              currency: currency,
+              onTap: () => onExpenseTap(expense),
+            ),
+          ),
+        ),
         const SizedBox(height: 12),
       ],
     );

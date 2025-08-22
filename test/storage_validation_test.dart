@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:org_app_caravella/data/expense_group_repository.dart';
 import 'package:org_app_caravella/data/storage_errors.dart';
-import 'package:org_app_caravella/data/expense_group.dart';
-import 'package:org_app_caravella/data/expense_participant.dart';
-import 'package:org_app_caravella/data/expense_category.dart';
-import 'package:org_app_caravella/data/expense_details.dart';
+import 'package:org_app_caravella/data/model/expense_group.dart';
+import 'package:org_app_caravella/data/model/expense_participant.dart';
+import 'package:org_app_caravella/data/model/expense_category.dart';
+import 'package:org_app_caravella/data/model/expense_details.dart';
 
 void main() {
   group('Storage Errors', () {
@@ -34,7 +34,10 @@ void main() {
     test('EntityNotFoundError should format correctly', () {
       final error = EntityNotFoundError('ExpenseGroup', 'test-id');
 
-      expect(error.toString(), contains('ExpenseGroup with id "test-id" not found'));
+      expect(
+        error.toString(),
+        contains('ExpenseGroup with id "test-id" not found'),
+      );
     });
   });
 
@@ -59,7 +62,7 @@ void main() {
       expect(result.data, isNull);
       expect(result.error, equals(error));
       expect(result.unwrapOr('fallback'), equals('fallback'));
-      
+
       expect(() => result.unwrap(), throwsA(isA<ValidationError>()));
     });
 
@@ -120,7 +123,7 @@ void main() {
     test('should reject empty title', () {
       final invalidGroup = validGroup.copyWith(title: '');
       final result = ExpenseGroupValidator.validate(invalidGroup);
-      
+
       expect(result.isFailure, isTrue);
       expect(result.error, isA<ValidationError>());
       final error = result.error as ValidationError;
@@ -130,7 +133,7 @@ void main() {
     test('should reject empty currency', () {
       final invalidGroup = validGroup.copyWith(currency: '');
       final result = ExpenseGroupValidator.validate(invalidGroup);
-      
+
       expect(result.isFailure, isTrue);
       expect(result.error, isA<ValidationError>());
       final error = result.error as ValidationError;
@@ -140,32 +143,41 @@ void main() {
     test('should reject invalid date range', () {
       final startDate = DateTime.now();
       final endDate = startDate.subtract(const Duration(days: 1));
-      
+
       final invalidGroup = validGroup.copyWith(
         startDate: startDate,
         endDate: endDate,
       );
-      
+
       final result = ExpenseGroupValidator.validate(invalidGroup);
-      
+
       expect(result.isFailure, isTrue);
       expect(result.error, isA<ValidationError>());
       final error = result.error as ValidationError;
-      expect(error.fieldErrors!['dates'], contains('Start date cannot be after end date'));
+      expect(
+        error.fieldErrors!['dates'],
+        contains('Start date cannot be after end date'),
+      );
     });
 
     test('should reject duplicate participant IDs', () {
-      final duplicateParticipant = ExpenseParticipant(name: 'Duplicate', id: 'p1'); // Same ID as participant1
+      final duplicateParticipant = ExpenseParticipant(
+        name: 'Duplicate',
+        id: 'p1',
+      ); // Same ID as participant1
       final invalidGroup = validGroup.copyWith(
         participants: [participant1, participant2, duplicateParticipant],
       );
-      
+
       final result = ExpenseGroupValidator.validate(invalidGroup);
-      
+
       expect(result.isFailure, isTrue);
       expect(result.error, isA<ValidationError>());
       final error = result.error as ValidationError;
-      expect(error.fieldErrors!['participants'], contains('Duplicate participant IDs'));
+      expect(
+        error.fieldErrors!['participants'],
+        contains('Duplicate participant IDs'),
+      );
     });
 
     test('should reject empty participant name', () {
@@ -173,9 +185,9 @@ void main() {
       final invalidGroup = validGroup.copyWith(
         participants: [participant1, emptyParticipant],
       );
-      
+
       final result = ExpenseGroupValidator.validate(invalidGroup);
-      
+
       expect(result.isFailure, isTrue);
       expect(result.error, isA<ValidationError>());
       final error = result.error as ValidationError;
@@ -183,17 +195,23 @@ void main() {
     });
 
     test('should reject duplicate category IDs', () {
-      final duplicateCategory = ExpenseCategory(name: 'Duplicate', id: 'c1'); // Same ID as category
+      final duplicateCategory = ExpenseCategory(
+        name: 'Duplicate',
+        id: 'c1',
+      ); // Same ID as category
       final invalidGroup = validGroup.copyWith(
         categories: [category, duplicateCategory],
       );
-      
+
       final result = ExpenseGroupValidator.validate(invalidGroup);
-      
+
       expect(result.isFailure, isTrue);
       expect(result.error, isA<ValidationError>());
       final error = result.error as ValidationError;
-      expect(error.fieldErrors!['categories'], contains('Duplicate category IDs'));
+      expect(
+        error.fieldErrors!['categories'],
+        contains('Duplicate category IDs'),
+      );
     });
 
     test('should reject negative expense amount', () {
@@ -205,13 +223,11 @@ void main() {
         date: DateTime.now(),
         name: 'Invalid',
       );
-      
-      final invalidGroup = validGroup.copyWith(
-        expenses: [invalidExpense],
-      );
-      
+
+      final invalidGroup = validGroup.copyWith(expenses: [invalidExpense]);
+
       final result = ExpenseGroupValidator.validate(invalidGroup);
-      
+
       expect(result.isFailure, isTrue);
       expect(result.error, isA<ValidationError>());
       final error = result.error as ValidationError;
@@ -219,7 +235,10 @@ void main() {
     });
 
     test('should reject expense with non-existent participant', () {
-      final unknownParticipant = ExpenseParticipant(name: 'Unknown', id: 'unknown');
+      final unknownParticipant = ExpenseParticipant(
+        name: 'Unknown',
+        id: 'unknown',
+      );
       final invalidExpense = ExpenseDetails(
         id: 'e2',
         category: category,
@@ -228,17 +247,18 @@ void main() {
         date: DateTime.now(),
         name: 'Invalid',
       );
-      
-      final invalidGroup = validGroup.copyWith(
-        expenses: [invalidExpense],
-      );
-      
+
+      final invalidGroup = validGroup.copyWith(expenses: [invalidExpense]);
+
       final result = ExpenseGroupValidator.validate(invalidGroup);
-      
+
       expect(result.isFailure, isTrue);
       expect(result.error, isA<ValidationError>());
       final error = result.error as ValidationError;
-      expect(error.fieldErrors!['expense_0'], contains('non-existent participant'));
+      expect(
+        error.fieldErrors!['expense_0'],
+        contains('non-existent participant'),
+      );
     });
 
     test('should reject expense with non-existent category', () {
@@ -251,17 +271,18 @@ void main() {
         date: DateTime.now(),
         name: 'Invalid',
       );
-      
-      final invalidGroup = validGroup.copyWith(
-        expenses: [invalidExpense],
-      );
-      
+
+      final invalidGroup = validGroup.copyWith(expenses: [invalidExpense]);
+
       final result = ExpenseGroupValidator.validate(invalidGroup);
-      
+
       expect(result.isFailure, isTrue);
       expect(result.error, isA<ValidationError>());
       final error = result.error as ValidationError;
-      expect(error.fieldErrors!['expense_0'], contains('non-existent category'));
+      expect(
+        error.fieldErrors!['expense_0'],
+        contains('non-existent category'),
+      );
     });
   });
 
@@ -276,7 +297,7 @@ void main() {
         expenses: [],
         timestamp: DateTime.now(),
       );
-      
+
       final group2 = ExpenseGroup(
         id: 'duplicate-id', // Same ID!
         title: 'Group 2',
@@ -286,9 +307,12 @@ void main() {
         expenses: [],
         timestamp: DateTime.now(),
       );
-      
-      final result = ExpenseGroupValidator.validateDataIntegrity([group1, group2]);
-      
+
+      final result = ExpenseGroupValidator.validateDataIntegrity([
+        group1,
+        group2,
+      ]);
+
       expect(result.isSuccess, isTrue);
       final issues = result.unwrap();
       expect(issues, contains('Duplicate group IDs found'));
@@ -306,7 +330,7 @@ void main() {
         pinned: true,
         archived: false,
       );
-      
+
       final group2 = ExpenseGroup(
         id: 'group2',
         title: 'Group 2',
@@ -318,12 +342,18 @@ void main() {
         pinned: true,
         archived: false,
       );
-      
-      final result = ExpenseGroupValidator.validateDataIntegrity([group1, group2]);
-      
+
+      final result = ExpenseGroupValidator.validateDataIntegrity([
+        group1,
+        group2,
+      ]);
+
       expect(result.isSuccess, isTrue);
       final issues = result.unwrap();
-      expect(issues.any((issue) => issue.contains('Multiple groups are pinned')), isTrue);
+      expect(
+        issues.any((issue) => issue.contains('Multiple groups are pinned')),
+        isTrue,
+      );
     });
 
     test('should allow multiple pinned groups if they are archived', () {
@@ -338,7 +368,7 @@ void main() {
         pinned: true,
         archived: true, // Archived
       );
-      
+
       final group2 = ExpenseGroup(
         id: 'group2',
         title: 'Group 2',
@@ -350,13 +380,19 @@ void main() {
         pinned: true,
         archived: false, // Active
       );
-      
-      final result = ExpenseGroupValidator.validateDataIntegrity([group1, group2]);
-      
+
+      final result = ExpenseGroupValidator.validateDataIntegrity([
+        group1,
+        group2,
+      ]);
+
       expect(result.isSuccess, isTrue);
       final issues = result.unwrap();
       // Should not complain about multiple pinned groups since one is archived
-      expect(issues.any((issue) => issue.contains('Multiple groups are pinned')), isFalse);
+      expect(
+        issues.any((issue) => issue.contains('Multiple groups are pinned')),
+        isFalse,
+      );
     });
 
     test('should detect individual group validation errors', () {
@@ -369,12 +405,19 @@ void main() {
         expenses: [],
         timestamp: DateTime.now(),
       );
-      
-      final result = ExpenseGroupValidator.validateDataIntegrity([invalidGroup]);
-      
+
+      final result = ExpenseGroupValidator.validateDataIntegrity([
+        invalidGroup,
+      ]);
+
       expect(result.isSuccess, isTrue);
       final issues = result.unwrap();
-      expect(issues.any((issue) => issue.contains('Group "') && issue.contains('invalid')), isTrue);
+      expect(
+        issues.any(
+          (issue) => issue.contains('Group "') && issue.contains('invalid'),
+        ),
+        isTrue,
+      );
     });
 
     test('should pass for valid data', () {
@@ -388,7 +431,7 @@ void main() {
         timestamp: DateTime.now(),
         pinned: true,
       );
-      
+
       final group2 = ExpenseGroup(
         id: 'group2',
         title: 'Group 2',
@@ -399,9 +442,12 @@ void main() {
         timestamp: DateTime.now(),
         pinned: false,
       );
-      
-      final result = ExpenseGroupValidator.validateDataIntegrity([group1, group2]);
-      
+
+      final result = ExpenseGroupValidator.validateDataIntegrity([
+        group1,
+        group2,
+      ]);
+
       expect(result.isSuccess, isTrue);
       final issues = result.unwrap();
       expect(issues, isEmpty);

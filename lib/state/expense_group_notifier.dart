@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
-import '../data/expense_details.dart';
-import '../data/expense_group.dart';
-import '../data/expense_category.dart';
+import '../data/model/expense_details.dart';
+import '../data/model/expense_group.dart';
+import '../data/model/expense_category.dart';
 import '../data/expense_group_storage.dart';
 
 class ExpenseGroupNotifier extends ChangeNotifier {

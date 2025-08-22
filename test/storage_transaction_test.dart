@@ -3,10 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:org_app_caravella/data/file_based_expense_group_repository.dart';
 import 'package:org_app_caravella/data/storage_transaction.dart';
 import 'package:org_app_caravella/data/storage_errors.dart';
-import 'package:org_app_caravella/data/expense_group.dart';
-import 'package:org_app_caravella/data/expense_participant.dart';
-import 'package:org_app_caravella/data/expense_category.dart';
-import 'package:org_app_caravella/data/expense_details.dart';
+import 'package:org_app_caravella/data/model/expense_group.dart';
+import 'package:org_app_caravella/data/model/expense_participant.dart';
+import 'package:org_app_caravella/data/model/expense_category.dart';
+import 'package:org_app_caravella/data/model/expense_details.dart';
 import 'package:path_provider/path_provider.dart';
 
 void main() {

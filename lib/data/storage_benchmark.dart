@@ -1,9 +1,9 @@
 // ignore_for_file: avoid_print
 import 'dart:math';
-import 'expense_group.dart';
-import 'expense_participant.dart';
-import 'expense_category.dart';
-import 'expense_details.dart';
+import 'model/expense_group.dart';
+import 'model/expense_participant.dart';
+import 'model/expense_category.dart';
+import 'model/expense_details.dart';
 import 'expense_group_repository.dart';
 import 'storage_performance.dart';
 import 'file_based_expense_group_repository.dart';

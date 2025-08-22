@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../data/expense_details.dart';
-import '../../../data/expense_group.dart';
+import '../../../data/model/expense_details.dart';
+import '../../../data/model/expense_group.dart';
 import '../../expense/expense_form_component.dart';
 import '../../../../widgets/bottom_sheet_scaffold.dart';
 

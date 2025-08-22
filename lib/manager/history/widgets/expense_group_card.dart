@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../data/expense_group.dart';
+import '../../../data/model/expense_group.dart';
 import '../../../widgets/currency_display.dart';
 import '../../../widgets/base_card.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;

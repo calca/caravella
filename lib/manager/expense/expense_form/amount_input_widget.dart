@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../data/expense_category.dart';
+import '../../../data/model/expense_category.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'icon_leading_field.dart';
@@ -134,7 +134,9 @@ class AmountInputWidget extends StatelessWidget {
       tooltip: label,
       child: Semantics(
         textField: true,
-        label: label != null ? '${label!.replaceAll(' *', '')} amount in $currencySymbol' : 'Amount input',
+        label: label != null
+            ? '${label!.replaceAll(' *', '')} amount in $currencySymbol'
+            : 'Amount input',
         child: amountField,
       ),
     );

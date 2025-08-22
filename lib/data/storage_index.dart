@@ -1,4 +1,4 @@
-import 'expense_group.dart';
+import 'model/expense_group.dart';
 
 /// Index for fast group lookups
 class GroupIndex {

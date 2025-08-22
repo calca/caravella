@@ -10,8 +10,8 @@ import 'package:path_provider/path_provider.dart'; // still used for share temp 
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 
-import '../../data/expense_details.dart';
-import '../../data/expense_group.dart';
+import '../../data/model/expense_details.dart';
+import '../../data/model/expense_group.dart';
 import '../../state/expense_group_notifier.dart';
 import '../../data/expense_group_storage.dart';
 // Removed legacy localization bridge imports (migration in progress)

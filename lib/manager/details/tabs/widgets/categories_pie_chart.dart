@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../../../../data/expense_group.dart';
+import '../../../../data/model/expense_group.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../../widgets/currency_display.dart';
-import '../../../../data/expense_category.dart';
+import '../../../../data/model/expense_category.dart';
 
 class CategoriesPieChart extends StatelessWidget {
   final ExpenseGroup trip;

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:org_app_caravella/data/expense_group.dart';
+import 'package:org_app_caravella/data/model/expense_group.dart';
 import 'package:org_app_caravella/manager/details/tabs/overview_stats_logic.dart';
 
 void main() {

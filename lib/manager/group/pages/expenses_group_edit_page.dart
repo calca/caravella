@@ -1,7 +1,7 @@
 // Widget simile a quello incollato per la selezione valuta
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../data/expense_group.dart';
+import '../../../data/model/expense_group.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../widgets/caravella_app_bar.dart';
 import '../../expense/expense_form/icon_leading_field.dart';

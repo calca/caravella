@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
-import '../../../data/expense_group.dart';
+import '../../../data/model/expense_group.dart';
 import '../tabs/unified_overview_tab.dart';
 import '../../../../widgets/bottom_sheet_scaffold.dart';
 
@@ -8,8 +8,8 @@ class UnifiedOverviewSheet extends StatelessWidget {
   final ExpenseGroup trip;
   final ScrollController? scrollController;
   const UnifiedOverviewSheet({
-    super.key, 
-    required this.trip, 
+    super.key,
+    required this.trip,
     this.scrollController,
   });
 

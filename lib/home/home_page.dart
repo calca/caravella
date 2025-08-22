@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../data/expense_group.dart';
+import '../data/model/expense_group.dart';
 import '../data/expense_group_storage.dart';
 import '../state/expense_group_notifier.dart';
 import '../../main.dart';
@@ -63,10 +63,10 @@ class _HomePageState extends State<HomePage> with RouteAware {
         // Trigger rebuild of the UI with updated state
         // La UI si aggiornerà automaticamente grazie al Consumer pattern
       });
-      
+
       // Aggiorna solo il pinned trip se necessario
       _updatePinnedTripIfNeeded(updatedGroupIds);
-      
+
       // Pulisci la lista degli aggiornamenti
       _groupNotifier?.clearUpdatedGroups();
       final event = _groupNotifier?.consumeLastEvent();
@@ -86,7 +86,9 @@ class _HomePageState extends State<HomePage> with RouteAware {
   Future<void> _updatePinnedTripIfNeeded(List<String> updatedGroupIds) async {
     if (_pinnedTrip != null && updatedGroupIds.contains(_pinnedTrip!.id)) {
       try {
-        final updatedPinnedTrip = await ExpenseGroupStorage.getTripById(_pinnedTrip!.id);
+        final updatedPinnedTrip = await ExpenseGroupStorage.getTripById(
+          _pinnedTrip!.id,
+        );
         if (mounted && updatedPinnedTrip != null) {
           setState(() {
             _pinnedTrip = updatedPinnedTrip;
