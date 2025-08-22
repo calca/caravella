@@ -11,6 +11,8 @@ class ExpenseAmountCard extends StatelessWidget {
   final DateTime? date;
   final String currency;
   final VoidCallback? onTap;
+  // Optional: text to highlight (case-insensitive) inside title
+  final String? highlightQuery;
   const ExpenseAmountCard({
     required this.title,
     required this.coins,
@@ -20,6 +22,7 @@ class ExpenseAmountCard extends StatelessWidget {
     this.date,
     this.currency = '€',
     this.onTap,
+    this.highlightQuery,
     super.key,
   });
 
@@ -57,17 +60,8 @@ class ExpenseAmountCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Title
-                  Text(
-                    title,
-                    style: textTheme.titleMedium?.copyWith(
-                      color: colorScheme.onSurface,
-                      fontWeight: FontWeight.w600,
-                      height: 1.1,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                  // Title with optional highlight
+                  _buildHighlightedTitle(context, title, highlightQuery),
                   if ((paidBy != null && paidBy!.isNotEmpty) ||
                       (category != null && category!.isNotEmpty)) ...[
                     const SizedBox(height: 6),
@@ -155,3 +149,51 @@ class ExpenseAmountCard extends StatelessWidget {
   }
 }
 // End of ExpenseAmountCard
+
+extension on ExpenseAmountCard {
+  Widget _buildHighlightedTitle(BuildContext context, String text, String? query) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final style = Theme.of(context).textTheme.titleMedium?.copyWith(
+          color: colorScheme.onSurface,
+          fontWeight: FontWeight.w600,
+          height: 1.1,
+        );
+    if (query == null || query.trim().isEmpty) {
+      return Text(
+        text,
+        style: style,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      );
+    }
+    final q = query.toLowerCase();
+    final lower = text.toLowerCase();
+    final spans = <TextSpan>[];
+    int start = 0;
+    while (true) {
+      final index = lower.indexOf(q, start);
+      if (index < 0) {
+        spans.add(TextSpan(text: text.substring(start)));
+        break;
+      }
+      if (index > start) {
+        spans.add(TextSpan(text: text.substring(start, index)));
+      }
+      spans.add(
+        TextSpan(
+          text: text.substring(index, index + q.length),
+          style: TextStyle(
+            color: colorScheme.primary,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      );
+      start = index + q.length;
+    }
+    return RichText(
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      text: TextSpan(style: style, children: spans),
+    );
+  }
+}

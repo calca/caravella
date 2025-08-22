@@ -330,6 +330,8 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                     category: expense.category.name,
                     date: expense.date,
                     currency: widget.currency,
+                    highlightQuery:
+                        _searchQuery.trim().isEmpty ? null : _searchQuery,
                     onTap: () => widget.onExpenseTap(expense),
                   ),
                 ),
