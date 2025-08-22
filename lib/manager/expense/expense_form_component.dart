@@ -80,10 +80,19 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
   bool _paidByTouched = false;
   bool _categoryTouched = false;
 
+  // Stato per espansione del form (solo quando fullEdit è false inizialmente)
+  bool _isExpanded = false;
+
   // Getters per stato dei campi
   bool get _isAmountValid => _amount != null && _amount! > 0;
   bool get _isPaidByValid => _paidBy != null;
   bool get _isCategoryValid => _categories.isEmpty || _category != null;
+
+  // Getter per determinare se mostrare i campi estesi
+  bool get _shouldShowExtendedFields => 
+      widget.fullEdit || 
+      widget.initialExpense != null || 
+      _isExpanded;
 
   // Scroll controller callback per CategorySelectorWidget
   // Removed _scrollToCategoryEnd: no longer needed with new category selector bottom sheet.
@@ -362,6 +371,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
             _buildNameField(gloc, smallStyle),
             _spacer(),
             _buildParticipantCategorySection(smallStyle),
+            _buildExpandButton(),
             _buildExtendedFields(locale, smallStyle),
             _buildDivider(context),
             _buildActionsRow(gloc, smallStyle),
@@ -445,7 +455,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
       );
 
   Widget _buildParticipantCategorySection(TextStyle? style) {
-    if (widget.fullEdit) {
+    if (_shouldShowExtendedFields) {
       return Column(
         children: [
           _buildFieldWithStatus(
@@ -507,6 +517,58 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
             _categoryTouched,
           ),
         ],
+      ),
+    );
+  }
+
+  /// Costruisce il pulsante per espandere il form (solo quando fullEdit=false)
+  Widget _buildExpandButton() {
+    // Mostra il pulsante solo se:
+    // 1. Non siamo già in fullEdit mode
+    // 2. Non siamo in modalità modifica
+    // 3. Non abbiamo già espanso il form
+    if (widget.fullEdit || widget.initialExpense != null || _isExpanded) {
+      return const SizedBox.shrink();
+    }
+
+    final gloc = gen.AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: SizedBox(
+        width: double.infinity,
+        child: Semantics(
+          label: gloc.expand_form_tooltip,
+          child: TextButton.icon(
+            onPressed: () {
+              setState(() {
+                _isExpanded = true;
+                _isDirty = true;
+              });
+            },
+            style: TextButton.styleFrom(
+              foregroundColor: theme.colorScheme.primary,
+              backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.08),
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            icon: Icon(
+              Icons.expand_more,
+              size: 20,
+              color: theme.colorScheme.primary,
+            ),
+            label: Text(
+              gloc.expand_form,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.primary,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -613,11 +675,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
   }
 
   Widget _buildExtendedFields(String locale, TextStyle? style) {
-    final shouldShow =
-        widget.fullEdit ||
-        widget.initialExpense != null ||
-        (ModalRoute.of(context)?.settings.name != null);
-    if (!shouldShow) return const SizedBox.shrink();
+    if (!_shouldShowExtendedFields) return const SizedBox.shrink();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

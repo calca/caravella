@@ -96,6 +96,8 @@
   "from_to": "{start} - {end}",
   "add_expense": "New expense",
   "edit_expense": "Edit expense",
+  "expand_form": "Expand form",
+  "expand_form_tooltip": "Add date, location and notes",
   "category": "Category",
   "amount": "Amount",
   "invalid_amount": "Invalid amount",
