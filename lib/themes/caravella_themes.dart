@@ -186,7 +186,7 @@ class CaravellaThemes {
     textTheme: _createTextTheme(lightColorScheme),
     useMaterial3: true,
     scaffoldBackgroundColor: lightColorScheme.surface,
-    dialogTheme: DialogTheme(
+  dialogTheme: DialogThemeData(
       backgroundColor: lightColorScheme.surfaceContainerHigh,
       surfaceTintColor: lightColorScheme.surfaceTint,
       elevation: 6,
@@ -245,7 +245,7 @@ class CaravellaThemes {
     textTheme: _createTextTheme(darkColorScheme),
     useMaterial3: true,
     scaffoldBackgroundColor: darkColorScheme.surface,
-    dialogTheme: DialogTheme(
+  dialogTheme: DialogThemeData(
       backgroundColor: darkColorScheme.surfaceContainerHigh,
       surfaceTintColor: darkColorScheme.surfaceTint,
       elevation: 6,

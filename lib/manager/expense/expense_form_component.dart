@@ -441,15 +441,68 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
       return const SizedBox.shrink();
     }
     final gloc = gen.AppLocalizations.of(context);
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12.0),
-      child: Text(
-        '${gloc.in_group_prefix} ${widget.groupTitle}',
-        style: Theme.of(
-          context,
-        ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
-        overflow: TextOverflow.ellipsis,
-        maxLines: 1,
+    final title = widget.groupTitle!.trim();
+    if (title.isEmpty) return const SizedBox.shrink();
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final prefixStyle = theme.textTheme.bodyMedium?.copyWith(
+      color: colorScheme.onSurfaceVariant,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0.15,
+    );
+    final titleStyle = theme.textTheme.titleMedium?.copyWith(
+      fontWeight: FontWeight.w700,
+      color: colorScheme.onSurface,
+      overflow: TextOverflow.ellipsis,
+    );
+    return Semantics(
+      container: true,
+      header: true,
+      label: '${gloc.in_group_prefix} $title',
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 16.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            DecoratedBox(
+              decoration: BoxDecoration(
+                color: colorScheme.surfaceContainerHighest.withValues(
+                  alpha: 0.6,
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(6.0),
+                child: Icon(
+                  Icons.folder_open_outlined,
+                  size: 20,
+                  color: colorScheme.primary,
+                  semanticLabel: gloc.in_group_prefix,
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Tooltip(
+                message: title,
+                waitDuration: const Duration(milliseconds: 400),
+                child: RichText(
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: '${gloc.in_group_prefix} ',
+                        style: prefixStyle,
+                      ),
+                      TextSpan(text: title, style: titleStyle),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

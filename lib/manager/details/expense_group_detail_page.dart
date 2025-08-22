@@ -104,13 +104,15 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   /// Genera il contenuto OFX delle spese del gruppo
   String _generateOfxContent() {
     if (_trip == null || _trip!.expenses.isEmpty) return '';
-    
+
     final now = DateTime.now();
     final buffer = StringBuffer();
-    
+
     // OFX Header
     buffer.writeln('<?xml version="1.0" encoding="UTF-8"?>');
-    buffer.writeln('<?OFX OFXHEADER="200" VERSION="200" SECURITY="NONE" OLDFILEUID="NONE" NEWFILEUID="NONE"?>');
+    buffer.writeln(
+      '<?OFX OFXHEADER="200" VERSION="200" SECURITY="NONE" OLDFILEUID="NONE" NEWFILEUID="NONE"?>',
+    );
     buffer.writeln('<OFX>');
     buffer.writeln('  <SIGNONMSGSRSV1>');
     buffer.writeln('    <SONRS>');
@@ -137,56 +139,75 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     buffer.writeln('          <ACCTTYPE>CHECKING</ACCTTYPE>');
     buffer.writeln('        </BANKACCTFROM>');
     buffer.writeln('        <BANKTRANLIST>');
-    buffer.writeln('          <DTSTART>${_formatOfxDate(_trip!.startDate ?? _trip!.expenses.first.date)}</DTSTART>');
-    buffer.writeln('          <DTEND>${_formatOfxDate(_trip!.endDate ?? _trip!.expenses.last.date)}</DTEND>');
-    
+    buffer.writeln(
+      '          <DTSTART>${_formatOfxDate(_trip!.startDate ?? _trip!.expenses.first.date)}</DTSTART>',
+    );
+    buffer.writeln(
+      '          <DTEND>${_formatOfxDate(_trip!.endDate ?? _trip!.expenses.last.date)}</DTEND>',
+    );
+
     // Add each expense as a transaction
     for (final expense in _trip!.expenses) {
       buffer.writeln('          <STMTTRN>');
       buffer.writeln('            <TRNTYPE>DEBIT</TRNTYPE>');
-      buffer.writeln('            <DTPOSTED>${_formatOfxDate(expense.date)}</DTPOSTED>');
-      buffer.writeln('            <TRNAMT>-${expense.amount?.toStringAsFixed(2) ?? '0.00'}</TRNAMT>');
+      buffer.writeln(
+        '            <DTPOSTED>${_formatOfxDate(expense.date)}</DTPOSTED>',
+      );
+      buffer.writeln(
+        '            <TRNAMT>-${expense.amount?.toStringAsFixed(2) ?? '0.00'}</TRNAMT>',
+      );
       buffer.writeln('            <FITID>${expense.id}</FITID>');
-      final description = _sanitizeXmlValue(expense.name ?? expense.category.name);
+      final description = _sanitizeXmlValue(
+        expense.name ?? expense.category.name,
+      );
       buffer.writeln('            <NAME>$description</NAME>');
       final payee = _sanitizeXmlValue(expense.paidBy.name);
       buffer.writeln('            <PAYEE>$payee</PAYEE>');
       if (expense.note != null && expense.note!.isNotEmpty) {
-        final memo = _sanitizeXmlValue('${expense.category.name} - ${expense.note}');
+        final memo = _sanitizeXmlValue(
+          '${expense.category.name} - ${expense.note}',
+        );
         buffer.writeln('            <MEMO>$memo</MEMO>');
       } else {
-        buffer.writeln('            <MEMO>${_sanitizeXmlValue(expense.category.name)}</MEMO>');
+        buffer.writeln(
+          '            <MEMO>${_sanitizeXmlValue(expense.category.name)}</MEMO>',
+        );
       }
       buffer.writeln('          </STMTTRN>');
     }
-    
+
     buffer.writeln('        </BANKTRANLIST>');
     buffer.writeln('        <LEDGERBAL>');
-    final totalAmount = _trip!.expenses.fold<double>(0.0, (sum, expense) => sum + (expense.amount ?? 0.0));
-    buffer.writeln('          <BALAMT>-${totalAmount.toStringAsFixed(2)}</BALAMT>');
+    final totalAmount = _trip!.expenses.fold<double>(
+      0.0,
+      (sum, expense) => sum + (expense.amount ?? 0.0),
+    );
+    buffer.writeln(
+      '          <BALAMT>-${totalAmount.toStringAsFixed(2)}</BALAMT>',
+    );
     buffer.writeln('          <DTASOF>${_formatOfxDateTime(now)}</DTASOF>');
     buffer.writeln('        </LEDGERBAL>');
     buffer.writeln('      </STMTRS>');
     buffer.writeln('    </STMTTRNRS>');
     buffer.writeln('  </BANKMSGSRSV1>');
     buffer.writeln('</OFX>');
-    
+
     return buffer.toString();
   }
 
   /// Formatta la data per OFX (YYYYMMDD)
   String _formatOfxDate(DateTime date) {
     return '${date.year.toString().padLeft(4, '0')}'
-           '${date.month.toString().padLeft(2, '0')}'
-           '${date.day.toString().padLeft(2, '0')}';
+        '${date.month.toString().padLeft(2, '0')}'
+        '${date.day.toString().padLeft(2, '0')}';
   }
 
   /// Formatta data e ora per OFX (YYYYMMDDHHMMSS)
   String _formatOfxDateTime(DateTime dateTime) {
     return '${_formatOfxDate(dateTime)}'
-           '${dateTime.hour.toString().padLeft(2, '0')}'
-           '${dateTime.minute.toString().padLeft(2, '0')}'
-           '${dateTime.second.toString().padLeft(2, '0')}';
+        '${dateTime.hour.toString().padLeft(2, '0')}'
+        '${dateTime.minute.toString().padLeft(2, '0')}'
+        '${dateTime.second.toString().padLeft(2, '0')}';
   }
 
   /// Sanitizza i valori per XML (escape caratteri speciali)
@@ -550,7 +571,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         },
         onDelete: () async {
           final nav = Navigator.of(sheetCtx);
-          final theme = Theme.of(context);
           final rootNav = Navigator.of(context);
           final confirmed = await showDialog<bool>(
             context: context,
@@ -566,7 +586,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               ),
               actions: [
                 Material3DialogActions.cancel(
-                  dialogCtx, 
+                  dialogCtx,
                   gen.AppLocalizations.of(dialogCtx).cancel,
                 ),
                 Material3DialogActions.destructive(
