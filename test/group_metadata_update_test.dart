@@ -6,8 +6,17 @@ import 'package:org_app_caravella/data/expense_category.dart';
 import 'package:org_app_caravella/data/expense_group_storage.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
+
+class _FakePathProvider extends PathProviderPlatform {
+  late final String _tempDir = Directory.systemTemp.createTempSync('eg_test').path;
+  @override
+  Future<String?> getApplicationDocumentsPath() async => _tempDir;
+}
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  PathProviderPlatform.instance = _FakePathProvider();
   group('Group Metadata Update', () {
     setUp(() async {
       // Clean up any existing test data
@@ -30,21 +39,19 @@ void main() {
         expenses: [
           ExpenseDetails(
             id: 'expense-1',
-            title: 'Test Expense',
+            name: 'Test Expense',
             amount: 100.0,
-            paidBy: 'user1',
-            splitBetween: ['user1', 'user2'],
-            category: 'food',
-            timestamp: DateTime.now(),
+            paidBy: ExpenseParticipant(name: 'user1'),
+            category: ExpenseCategory(name: 'food'),
+            date: DateTime.now(),
           ),
           ExpenseDetails(
             id: 'expense-2',
-            title: 'Another Expense',
+            name: 'Another Expense',
             amount: 50.0,
-            paidBy: 'user2',
-            splitBetween: ['user1', 'user2'],
-            category: 'transport',
-            timestamp: DateTime.now(),
+            paidBy: ExpenseParticipant(name: 'user2'),
+            category: ExpenseCategory(name: 'transport'),
+            date: DateTime.now(),
           ),
         ],
         participants: [
@@ -105,10 +112,10 @@ void main() {
       // Most importantly: verify expenses were preserved
       expect(retrievedGroup.expenses.length, equals(2));
       expect(retrievedGroup.expenses[0].id, equals('expense-1'));
-      expect(retrievedGroup.expenses[0].title, equals('Test Expense'));
+  expect(retrievedGroup.expenses[0].name, equals('Test Expense'));
       expect(retrievedGroup.expenses[0].amount, equals(100.0));
       expect(retrievedGroup.expenses[1].id, equals('expense-2'));
-      expect(retrievedGroup.expenses[1].title, equals('Another Expense'));
+  expect(retrievedGroup.expenses[1].name, equals('Another Expense'));
       expect(retrievedGroup.expenses[1].amount, equals(50.0));
     });
 

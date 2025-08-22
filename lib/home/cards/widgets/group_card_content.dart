@@ -27,7 +27,7 @@ class GroupCardContent extends StatelessWidget {
   final VoidCallback onExpenseAdded;
   final VoidCallback? onCategoryAdded;
 
-  const GroupCardContent({
+  GroupCardContent({
     super.key,
     required this.group,
     required this.localizations,
@@ -110,45 +110,6 @@ class GroupCardContent extends StatelessWidget {
       )
       .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
 
-  // Memoized expensive calculations
-  late final Map<String, dynamic> _memoizedStats = _calculateMemoizedStats();
-  
-  Map<String, dynamic> _calculateMemoizedStats() {
-    final now = DateTime.now();
-    final todayStart = DateTime(now.year, now.month, now.day);
-    final weekStart = now.subtract(Duration(days: now.weekday - 1));
-    final monthStart = DateTime(now.year, now.month, 1);
-    
-    double todayTotal = 0;
-    double weekTotal = 0;
-    double monthTotal = 0;
-    
-    for (final expense in group.expenses) {
-      final amount = expense.amount ?? 0;
-      final expenseDate = expense.date;
-      
-      // Today's expenses
-      if (expenseDate.isAfter(todayStart.subtract(const Duration(seconds: 1)))) {
-        todayTotal += amount;
-      }
-      
-      // Week's expenses  
-      if (expenseDate.isAfter(weekStart.subtract(const Duration(seconds: 1)))) {
-        weekTotal += amount;
-      }
-      
-      // Month's expenses
-      if (expenseDate.isAfter(monthStart.subtract(const Duration(seconds: 1)))) {
-        monthTotal += amount;
-      }
-    }
-    
-    return {
-      'todayTotal': todayTotal,
-      'weekTotal': weekTotal,
-      'monthTotal': monthTotal,
-    };
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -306,7 +267,11 @@ class GroupCardContent extends StatelessWidget {
 
   /// Calculate today's total spending
   double _calculateTodaySpending(ExpenseGroup group) {
-    return _memoizedStats['todayTotal'] ?? 0.0;
+  if (group.expenses.isEmpty) return 0.0;
+  final now = DateTime.now();
+  return group.expenses
+    .where((e) => e.date.year == now.year && e.date.month == now.month && e.date.day == now.day)
+    .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
   }
 
   Widget _buildExtraInfo(ExpenseGroup group) {

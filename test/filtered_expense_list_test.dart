@@ -88,7 +88,7 @@ void main() {
       expect(find.text('Cerca per nome o nota...'), findsNothing);
 
       // Tap the filter toggle button
-      await tester.tap(find.byIcon(Icons.filter_list));
+  await tester.tap(find.byIcon(Icons.filter_list_outlined));
       await tester.pumpAndSettle();
 
       // Now filters should be visible
@@ -115,15 +115,15 @@ void main() {
       await tester.pumpAndSettle();
 
       // Find the filter toggle button
-      final filterButton = find.byIcon(Icons.filter_list);
-      expect(filterButton, findsOneWidget);
-
-      // Verify the button is disabled (onPressed should be null)
-      final IconButton button = tester.widget(filterButton);
-      expect(button.onPressed, isNull);
+  final filterIcon = find.byIcon(Icons.filter_list_outlined);
+  expect(filterIcon, findsOneWidget);
+  final iconButton = find.ancestor(of: filterIcon, matching: find.byType(IconButton));
+  expect(iconButton, findsOneWidget);
+  final IconButton buttonWidget = tester.widget(iconButton);
+  expect(buttonWidget.onPressed, isNull);
 
       // Try tapping the disabled button - should not show filters
-      await tester.tap(filterButton);
+  await tester.tap(iconButton);
       await tester.pumpAndSettle();
 
       // Filters should not be visible since button is disabled

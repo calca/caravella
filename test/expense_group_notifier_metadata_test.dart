@@ -7,8 +7,18 @@ import 'package:org_app_caravella/data/expense_category.dart';
 import 'package:org_app_caravella/data/expense_group_storage.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
+
+class _FakePathProvider extends PathProviderPlatform {
+  late final String _tempDir = Directory.systemTemp.createTempSync('eg_test').path;
+  @override
+  Future<String?> getApplicationDocumentsPath() async => _tempDir;
+}
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  // Inject fake path provider to avoid platform channel dependency
+  PathProviderPlatform.instance = _FakePathProvider();
   group('ExpenseGroupNotifier Metadata Update', () {
     late ExpenseGroupNotifier notifier;
 
@@ -35,12 +45,11 @@ void main() {
         expenses: [
           ExpenseDetails(
             id: 'expense-1',
-            title: 'Test Expense',
+            name: 'Test Expense',
             amount: 100.0,
-            paidBy: 'user1',
-            splitBetween: ['user1', 'user2'],
-            category: 'food',
-            timestamp: DateTime.now(),
+            paidBy: ExpenseParticipant(name: 'user1'),
+            category: ExpenseCategory(name: 'food'),
+            date: DateTime.now(),
           ),
         ],
         participants: [
@@ -73,7 +82,7 @@ void main() {
       expect(notifier.currentGroup!.title, equals('Updated Title'));
       expect(notifier.currentGroup!.pinned, isTrue);
       expect(notifier.currentGroup!.expenses.length, equals(1)); // Expenses preserved
-      expect(notifier.currentGroup!.expenses[0].title, equals('Test Expense'));
+  expect(notifier.currentGroup!.expenses[0].name, equals('Test Expense'));
 
       // Verify persistence
       final savedGroup = await ExpenseGroupStorage.getTripById('test-group-1');
@@ -118,12 +127,11 @@ void main() {
         expenses: [
           ExpenseDetails(
             id: 'expense-1',
-            title: 'Remote Expense',
+            name: 'Remote Expense',
             amount: 200.0,
-            paidBy: 'user1',
-            splitBetween: ['user1'],
-            category: 'food',
-            timestamp: DateTime.now(),
+            paidBy: ExpenseParticipant(name: 'user1'),
+            category: ExpenseCategory(name: 'food'),
+            date: DateTime.now(),
           ),
         ],
         participants: [ExpenseParticipant(name: 'user1')],
@@ -146,7 +154,7 @@ void main() {
       expect(savedGroup, isNotNull);
       expect(savedGroup!.title, equals('Updated Remote Group'));
       expect(savedGroup.expenses.length, equals(1)); // Expenses preserved
-      expect(savedGroup.expenses[0].title, equals('Remote Expense'));
+  expect(savedGroup.expenses[0].name, equals('Remote Expense'));
 
       // Verify tracking
       expect(notifier.updatedGroupIds, contains('test-group-3'));

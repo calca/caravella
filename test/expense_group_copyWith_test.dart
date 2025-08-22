@@ -14,12 +14,11 @@ void main() {
         expenses: [
           ExpenseDetails(
             id: 'expense-1',
-            title: 'Hotel',
+            name: 'Hotel',
             amount: 200.0,
-            paidBy: 'Alice',
-            splitBetween: ['Alice', 'Bob'],
-            category: 'accommodation',
-            timestamp: DateTime.now(),
+            paidBy: ExpenseParticipant(name: 'Alice'),
+            category: ExpenseCategory(name: 'accommodation'),
+            date: DateTime.now(),
           ),
         ],
         participants: [
@@ -44,7 +43,7 @@ void main() {
       
       // Most importantly: verify expenses were preserved
       expect(updatedGroup.expenses.length, equals(1));
-      expect(updatedGroup.expenses[0].title, equals('Hotel'));
+  expect(updatedGroup.expenses[0].name, equals('Hotel'));
       expect(updatedGroup.expenses[0].amount, equals(200.0));
       
       // Verify other fields were preserved
@@ -59,56 +58,52 @@ void main() {
         expenses: [
           ExpenseDetails(
             id: 'expense-1',
-            title: 'Old Expense',
+            name: 'Old Expense',
             amount: 100.0,
-            paidBy: 'Alice',
-            splitBetween: ['Alice'],
-            category: 'food',
-            timestamp: DateTime.now(),
+            paidBy: ExpenseParticipant(name: 'Alice'),
+            category: ExpenseCategory(name: 'food'),
+            date: DateTime.now(),
           ),
         ],
-        participants: [],
-        categories: [],
+        participants: const [],
+        categories: const [],
         currency: 'EUR',
       );
 
-      // Explicitly update expenses
       final updatedGroup = originalGroup.copyWith(
         expenses: [
           ExpenseDetails(
             id: 'expense-2',
-            title: 'New Expense',
+            name: 'New Expense',
             amount: 150.0,
-            paidBy: 'Bob',
-            splitBetween: ['Bob'],
-            category: 'transport',
-            timestamp: DateTime.now(),
+            paidBy: ExpenseParticipant(name: 'Bob'),
+            category: ExpenseCategory(name: 'transport'),
+            date: DateTime.now(),
           ),
         ],
       );
 
       // Verify expenses were updated
-      expect(updatedGroup.expenses.length, equals(1));
-      expect(updatedGroup.expenses[0].title, equals('New Expense'));
-      expect(updatedGroup.expenses[0].amount, equals(150.0));
+      expect(updatedGroup.expenses, hasLength(1));
+  expect(updatedGroup.expenses.first.name, 'New Expense');
+      expect(updatedGroup.expenses.first.amount, 150.0);
     });
 
     test('copyWith with empty expenses list', () {
       final originalGroup = ExpenseGroup(
-        title: 'Test Group',
+        title: 'Another Group',
         expenses: [
           ExpenseDetails(
             id: 'expense-1',
-            title: 'Will be removed',
+            name: 'Will be removed',
             amount: 100.0,
-            paidBy: 'Alice',
-            splitBetween: ['Alice'],
-            category: 'food',
-            timestamp: DateTime.now(),
+            paidBy: ExpenseParticipant(name: 'Alice'),
+            category: ExpenseCategory(name: 'food'),
+            date: DateTime.now(),
           ),
         ],
-        participants: [],
-        categories: [],
+        participants: const [],
+        categories: const [],
         currency: 'EUR',
       );
 
@@ -118,7 +113,7 @@ void main() {
       );
 
       // Verify expenses were cleared
-      expect(updatedGroup.expenses.length, equals(0));
+  expect(updatedGroup.expenses, isEmpty);
     });
   });
 }

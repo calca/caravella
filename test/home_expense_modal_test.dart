@@ -8,6 +8,7 @@ import 'package:org_app_caravella/data/expense_details.dart';
 import 'package:org_app_caravella/state/expense_group_notifier.dart';
 import 'package:org_app_caravella/home/cards/widgets/group_card_content.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   group('Home Expense Modal Tests', () {
@@ -38,8 +39,13 @@ void main() {
     testWidgets('GroupCardContent builds correctly with state management', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: [gen.AppLocalizations.delegate],
-          supportedLocales: const [Locale('it'), Locale('en')],
+          localizationsDelegates: const [
+            gen.AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+            supportedLocales: const [Locale('it'), Locale('en')],
           home: Scaffold(
             body: ChangeNotifierProvider<ExpenseGroupNotifier>(
               create: (_) => notifier,
@@ -81,7 +87,12 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: [gen.AppLocalizations.delegate],
+          localizationsDelegates: const [
+            gen.AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
           supportedLocales: const [Locale('it')],
           home: Scaffold(
             body: ChangeNotifierProvider<ExpenseGroupNotifier>(
@@ -113,17 +124,7 @@ void main() {
       expect(notifier.currentGroup, equals(testGroup));
 
       // Test event tracking
-      final testExpense = ExpenseDetails(
-        id: 'test-expense',
-        amount: 25.0,
-        paidBy: ExpenseParticipant(id: '1', name: 'Test User'),
-        category: ExpenseCategory(id: '1', name: 'Food'),
-        date: DateTime.now(),
-        name: 'Test Expense',
-      );
-
-      // Note: addExpense is async but we're testing the state tracking
-      expect(notifier.lastEvent, isNull);
+  expect(notifier.lastEvent, isNull);
       
       // Test the state before calling async method
       notifier.setCurrentGroup(testGroup);

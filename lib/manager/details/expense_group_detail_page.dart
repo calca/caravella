@@ -201,6 +201,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           if (_trip == null) return;
           final nav = Navigator.of(sheetCtx);
           final updatedGroup = ExpenseGroup(
+            expenses: [], // only metadata is needed
             title: _trip!.title,
             participants: _trip!.participants,
             startDate: _trip!.startDate,
@@ -222,6 +223,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           if (_trip == null) return;
           final nav = Navigator.of(sheetCtx);
           final updatedGroup = ExpenseGroup(
+            expenses: [], // only metadata is needed
             title: _trip!.title,
             participants: _trip!.participants,
             startDate: _trip!.startDate,
@@ -231,7 +233,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             timestamp: _trip!.timestamp,
             id: _trip!.id,
             file: _trip!.file,
-            pinned: !_trip!.archived ? false : _trip!.pinned, // Remove pin when archiving
+            pinned: !_trip!.archived
+                ? false
+                : _trip!.pinned, // Remove pin when archiving
             archived: !_trip!.archived,
           );
           await _groupNotifier?.updateGroupMetadata(updatedGroup);
