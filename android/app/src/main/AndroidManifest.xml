@@ -1,6 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.app.caravella">
     
+    <!-- Internet permission for Google Drive API -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    
     <!-- Permissions for image picker and file operations -->
     <uses-permission android:name="android.permission.CAMERA" />
     <!-- For API 33+ (Android 13+), use granular media permissions -->
