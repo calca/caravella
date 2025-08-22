@@ -55,6 +55,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get share_all_csv => 'Share all (CSV)';
 
   @override
+  String get download_all_ofx => 'Download all (OFX)';
+
+  @override
+  String get share_all_ofx => 'Share all (OFX)';
+
+  @override
+  String get export_share => 'Export & Share';
+
+  @override
+  String get export_options => 'Export Options';
+
+  @override
   String get welcome_v3_title => 'Organize.\nShare.\nSettle.\n ';
 
   @override
