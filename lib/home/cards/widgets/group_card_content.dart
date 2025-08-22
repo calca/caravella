@@ -27,7 +27,7 @@ class GroupCardContent extends StatelessWidget {
   final VoidCallback onExpenseAdded;
   final VoidCallback? onCategoryAdded;
 
-  GroupCardContent({
+  const GroupCardContent({
     super.key,
     required this.group,
     required this.localizations,
