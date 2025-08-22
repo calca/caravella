@@ -25,10 +25,8 @@ class NoteInputWidget extends StatelessWidget {
       style: textStyle ?? Theme.of(context).textTheme.bodySmall,
       decoration: InputDecoration(
         hintText: gloc.note_hint,
-        // rely on theme hintStyle
-        border: const OutlineInputBorder(),
+        // rely on theme hintStyle and borders
         isDense: true,
-        contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
       ),
     );
 

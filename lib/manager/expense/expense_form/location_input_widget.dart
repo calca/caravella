@@ -217,10 +217,8 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
             : _isResolvingAddress
             ? gloc.resolving_address
             : gloc.location_hint,
-        // rely on theme hintStyle
-        border: InputBorder.none,
+        // rely on theme hintStyle and borders
         isDense: true,
-        contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
         suffixIconConstraints: const BoxConstraints(
           minHeight: 32,
           minWidth: 32,

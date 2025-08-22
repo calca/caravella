@@ -62,7 +62,7 @@ class AmountInputWidget extends StatelessWidget {
           ),
           contentPadding: const EdgeInsets.symmetric(
             vertical: 8,
-            horizontal: 0,
+            horizontal: 12,
           ),
           semanticCounterText: '',
         ),
@@ -114,7 +114,7 @@ class AmountInputWidget extends StatelessWidget {
         // rely on theme hintStyle
         floatingLabelBehavior: FloatingLabelBehavior.never,
         isDense: true,
-        contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
+        contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
         semanticCounterText: '',
       ),
       keyboardType: const TextInputType.numberWithOptions(decimal: true),

@@ -202,40 +202,47 @@ class CaravellaThemes {
     ),
     inputDecorationTheme: InputDecorationTheme(
       isDense: true,
-      filled: false,
-      // Always show a bottom border (underline style)
-      border: UnderlineInputBorder(
+      filled: true,
+      fillColor: lightColorScheme.surfaceContainerHighest,
+      // Material 3 outlined style
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide(
-          color: lightColorScheme.outlineVariant,
-          width: 0.5,
+          color: lightColorScheme.outline,
+          width: 1.0,
         ),
       ),
-      enabledBorder: UnderlineInputBorder(
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide(
-          color: lightColorScheme.outlineVariant,
-          width: 0.5,
+          color: lightColorScheme.outline,
+          width: 1.0,
         ),
       ),
-      focusedBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: lightColorScheme.primary, width: 1),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: lightColorScheme.primary, width: 2.0),
       ),
-      disabledBorder: UnderlineInputBorder(
+      disabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide(
-          color: lightColorScheme.outline.withValues(alpha: 0.3),
-          width: 1,
+          color: lightColorScheme.outline.withValues(alpha: 0.12),
+          width: 1.0,
         ),
       ),
-      errorBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: lightColorScheme.error, width: 0.5),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: lightColorScheme.error, width: 1.0),
       ),
-      focusedErrorBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: lightColorScheme.error, width: 1),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: lightColorScheme.error, width: 2.0),
       ),
       hintStyle: TextStyle(
         color: lightColorScheme.outline,
         fontWeight: FontWeight.w400,
       ),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
     ),
   );
 
@@ -261,39 +268,47 @@ class CaravellaThemes {
     ),
     inputDecorationTheme: InputDecorationTheme(
       isDense: true,
-      filled: false,
-      border: UnderlineInputBorder(
+      filled: true,
+      fillColor: darkColorScheme.surfaceContainerHighest,
+      // Material 3 outlined style
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide(
-          color: darkColorScheme.outlineVariant,
-          width: 0.5,
+          color: darkColorScheme.outline,
+          width: 1.0,
         ),
       ),
-      enabledBorder: UnderlineInputBorder(
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide(
-          color: darkColorScheme.outlineVariant,
-          width: 0.5,
+          color: darkColorScheme.outline,
+          width: 1.0,
         ),
       ),
-      focusedBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: darkColorScheme.primary, width: 1),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: darkColorScheme.primary, width: 2.0),
       ),
-      disabledBorder: UnderlineInputBorder(
+      disabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide(
-          color: darkColorScheme.outline.withValues(alpha: 0.3),
-          width: 1,
+          color: darkColorScheme.outline.withValues(alpha: 0.12),
+          width: 1.0,
         ),
       ),
-      errorBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: darkColorScheme.error, width: 0.5),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: darkColorScheme.error, width: 1.0),
       ),
-      focusedErrorBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: darkColorScheme.error, width: 1),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: darkColorScheme.error, width: 2.0),
       ),
       hintStyle: TextStyle(
         color: darkColorScheme.outline,
         fontWeight: FontWeight.w400,
       ),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
     ),
   );
 }

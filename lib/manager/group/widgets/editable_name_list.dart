@@ -194,8 +194,8 @@ class _EditableNameListState extends State<EditableNameList> {
                   focusNode: _editFocus,
                   autofocus: true,
                   decoration: InputDecoration(
-                    border: InputBorder.none,
                     hintText: widget.hintLabel,
+                    isDense: true,
                   ),
                   textInputAction: TextInputAction.done,
                   onSubmitted: (_) => _saveEdit(),
@@ -236,8 +236,8 @@ class _EditableNameListState extends State<EditableNameList> {
                   focusNode: _addFocus,
                   autofocus: true,
                   decoration: InputDecoration(
-                    border: InputBorder.none,
                     hintText: widget.hintLabel,
+                    isDense: true,
                   ),
                   textInputAction: TextInputAction.done,
                   onSubmitted: (_) => _commitAdd(),
