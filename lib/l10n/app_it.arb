@@ -257,8 +257,12 @@
   "data_restore_title": "Ripristino",
   "data_restore_desc": "Importa un backup per ripristinare i dati.",
   "auto_backup_title": "Backup automatico",
-  "auto_backup_desc": "Abilita il backup automatico del sistema operativo"
-  ,"category_placeholder": "Categoria"
+  "auto_backup_desc": "Abilita il backup automatico del sistema operativo",
+  "last_backup_never": "Mai",
+  "last_backup_label": "Ultimo backup:",
+  "last_auto_backup_label": "Ultimo backup automatico:",
+  "last_manual_backup_label": "Ultimo backup manuale:",
+  "category_placeholder": "Categoria"
   ,"discard_changes_title": "Scartare le modifiche?"
   ,"discard_changes_message": "Sei sicuro di voler scartare le modifiche non salvate?"
   ,"discard": "Scarta"

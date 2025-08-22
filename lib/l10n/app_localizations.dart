@@ -1582,6 +1582,30 @@ abstract class AppLocalizations {
   /// **'Enable operating system automatic backup'**
   String get auto_backup_desc;
 
+  /// No description provided for @last_backup_never.
+  ///
+  /// In en, this message translates to:
+  /// **'Never'**
+  String get last_backup_never;
+
+  /// No description provided for @last_backup_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Last backup:'**
+  String get last_backup_label;
+
+  /// No description provided for @last_auto_backup_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Last automatic backup:'**
+  String get last_auto_backup_label;
+
+  /// No description provided for @last_manual_backup_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Last manual backup:'**
+  String get last_manual_backup_label;
+
   /// No description provided for @info_tab.
   ///
   /// In en, this message translates to:

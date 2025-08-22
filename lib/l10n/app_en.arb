@@ -259,8 +259,12 @@
   "data_restore_title": "Restore",
   "data_restore_desc": "Import a backup to restore your data.",
   "auto_backup_title": "Automatic backup",
-  "auto_backup_desc": "Enable operating system automatic backup"
-  ,"info_tab": "Info"
+  "auto_backup_desc": "Enable operating system automatic backup",
+  "last_backup_never": "Never",
+  "last_backup_label": "Last backup:",
+  "last_auto_backup_label": "Last automatic backup:",
+  "last_manual_backup_label": "Last manual backup:",
+  "info_tab": "Info"
   ,"select_paid_by": "Select payer"
   ,"select_category": "Select a category"
   ,"check_form": "Check the entered data"
