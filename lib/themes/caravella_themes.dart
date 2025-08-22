@@ -186,6 +186,18 @@ class CaravellaThemes {
     textTheme: _createTextTheme(lightColorScheme),
     useMaterial3: true,
     scaffoldBackgroundColor: lightColorScheme.surface,
+    dialogTheme: DialogThemeData(
+      backgroundColor: lightColorScheme.surfaceContainerHigh,
+      surfaceTintColor: lightColorScheme.surfaceTint,
+      elevation: 6,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+      titleTextStyle: _createTextTheme(
+        lightColorScheme,
+      ).titleLarge?.copyWith(color: lightColorScheme.onSurface),
+      contentTextStyle: _createTextTheme(
+        lightColorScheme,
+      ).bodyMedium?.copyWith(color: lightColorScheme.onSurfaceVariant),
+    ),
     inputDecorationTheme: InputDecorationTheme(
       isDense: true,
       filled: false,
@@ -231,6 +243,18 @@ class CaravellaThemes {
     textTheme: _createTextTheme(darkColorScheme),
     useMaterial3: true,
     scaffoldBackgroundColor: darkColorScheme.surface,
+    dialogTheme: DialogThemeData(
+      backgroundColor: darkColorScheme.surfaceContainerHigh,
+      surfaceTintColor: darkColorScheme.surfaceTint,
+      elevation: 6,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+      titleTextStyle: _createTextTheme(
+        darkColorScheme,
+      ).titleLarge?.copyWith(color: darkColorScheme.onSurface),
+      contentTextStyle: _createTextTheme(
+        darkColorScheme,
+      ).bodyMedium?.copyWith(color: darkColorScheme.onSurfaceVariant),
+    ),
     inputDecorationTheme: InputDecorationTheme(
       isDense: true,
       filled: false,

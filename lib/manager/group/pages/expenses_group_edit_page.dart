@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../data/model/expense_group.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../widgets/caravella_app_bar.dart';
+import '../../../widgets/material3_dialog.dart';
 import '../../expense/expense_form/icon_leading_field.dart';
 import '../../../themes/app_text_styles.dart';
 import '../widgets/section_flat.dart';
@@ -170,17 +171,20 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
           if (_controller.hasChanges) {
             final confirm = await showDialog<bool>(
               context: context,
-              builder: (ctx) => AlertDialog(
+              builder: (ctx) => Material3Dialog(
+                icon: Icon(
+                  Icons.warning_amber_outlined,
+                  color: Theme.of(context).colorScheme.error,
+                  size: 24,
+                ),
                 title: Text(gloc.discard_changes_title),
                 content: Text(gloc.discard_changes_message),
                 actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(ctx).pop(false),
-                    child: Text(gloc.cancel),
-                  ),
-                  TextButton(
+                  Material3DialogActions.cancel(ctx, gloc.cancel),
+                  Material3DialogActions.destructive(
+                    ctx,
+                    gloc.discard,
                     onPressed: () => Navigator.of(ctx).pop(true),
-                    child: Text(gloc.discard),
                   ),
                 ],
               ),
@@ -202,17 +206,20 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                     final nav = Navigator.of(context);
                     final confirm = await showDialog<bool>(
                       context: context,
-                      builder: (d) => AlertDialog(
+                      builder: (d) => Material3Dialog(
+                        icon: Icon(
+                          Icons.delete_outline,
+                          color: Theme.of(context).colorScheme.error,
+                          size: 24,
+                        ),
                         title: Text(gloc.delete_trip),
                         content: Text(gloc.delete_trip_confirm),
                         actions: [
-                          TextButton(
-                            onPressed: () => Navigator.of(d).pop(false),
-                            child: Text(gloc.cancel),
-                          ),
-                          TextButton(
+                          Material3DialogActions.cancel(d, gloc.cancel),
+                          Material3DialogActions.destructive(
+                            d,
+                            gloc.delete,
                             onPressed: () => Navigator.of(d).pop(true),
-                            child: Text(gloc.delete),
                           ),
                         ],
                       ),

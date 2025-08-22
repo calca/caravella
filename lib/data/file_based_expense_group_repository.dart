@@ -134,10 +134,7 @@ class FileBasedExpenseGroupRepository
             groups,
           );
           if (integrityCheck.isFailure) {
-            throw DataIntegrityError(
-              'Data integrity validation failed',
-              details: integrityCheck.error!.message,
-            );
+            throw integrityCheck.error!; // Already a DataIntegrityError
           }
 
           // Update cache
@@ -178,12 +175,7 @@ class FileBasedExpenseGroupRepository
           groups,
         );
         if (integrityCheck.isFailure) {
-          return StorageResult.failure(
-            DataIntegrityError(
-              'Cannot save: data integrity validation failed',
-              details: integrityCheck.error!.message,
-            ),
-          );
+          return StorageResult.failure(integrityCheck.error!);
         }
 
         // Enforce pin constraint: only one group can be pinned at a time
@@ -544,7 +536,11 @@ class FileBasedExpenseGroupRepository
       return StorageResult.failure(result.error!);
     }
 
-    return ExpenseGroupValidator.validateDataIntegrity(result.data!);
+    final integrity = ExpenseGroupValidator.validateDataIntegrity(result.data!);
+    if (integrity.isFailure) {
+      return StorageResult.failure(integrity.error!);
+    }
+    return StorageResult.success(const <String>[]);
   }
 
   /// Clears the cache (useful for testing)

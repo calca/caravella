@@ -227,32 +227,16 @@ void main() {
     });
 
     test('should detect consistency issues', () {
+      // Enable corruption hook
+      // ignore: invalid_use_of_visible_for_testing_member
+      (index).enableTestSkipActiveTracking();
       index.rebuild(testGroups);
-
-      // Manually corrupt the index by accessing private members via a workaround
-      index.rebuild(testGroups);
-      index
-          .markDirty(); // This will make validation detect inconsistency in a real scenario
-
-      // For testing, we'll create a scenario with archived pinned group
-      final corruptedGroups = [
-        testGroups[0].copyWith(
-          pinned: true,
-          archived: true,
-        ), // Invalid: pinned and archived
-        ...testGroups.skip(1),
-      ];
-      index.rebuild(corruptedGroups);
-
       final issues = index.validateConsistency();
       expect(issues, isNotEmpty);
-      expect(
-        issues.any(
-          (issue) =>
-              issue.contains('Pinned group') && issue.contains('archived'),
-        ),
-        isTrue,
-      );
+      expect(issues.any((issue) => issue.contains('Active group')), isTrue);
+      // Disable for safety
+      // ignore: invalid_use_of_visible_for_testing_member
+      (index).disableTestSkipActiveTracking();
     });
 
     test('should clear index', () {

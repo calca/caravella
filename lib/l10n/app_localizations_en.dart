@@ -55,6 +55,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get share_all_csv => 'Share all (CSV)';
 
   @override
+  String get download_all_ofx => 'Download all (OFX)';
+
+  @override
+  String get share_all_ofx => 'Share all (OFX)';
+
+  @override
+  String get export_share => 'Export & Share';
+
+  @override
+  String get export_options => 'Export Options';
+
+  @override
   String get welcome_v3_title => 'Organize.\nShare.\nSettle.\n ';
 
   @override
@@ -264,6 +276,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get edit_expense => 'Edit expense';
+
+  @override
+  String get expand_form => 'Expand form';
+
+  @override
+  String get expand_form_tooltip => 'Add date, location and notes';
 
   @override
   String get category => 'Category';
@@ -584,6 +602,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get csv_save_error => 'Error saving CSV file';
 
   @override
+  String get ofx_select_directory_title => 'Select folder to save OFX';
+
+  @override
+  String ofx_saved_in(Object path) {
+    return 'OFX saved in: $path';
+  }
+
+  @override
+  String get ofx_save_cancelled => 'OFX export cancelled';
+
+  @override
+  String get ofx_save_error => 'Error saving OFX file';
+
+  @override
   String get csv_expense_name => 'Description';
 
   @override
@@ -729,6 +761,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get data_restore_desc => 'Import a backup to restore your data.';
+
+  @override
+  String get auto_backup_title => 'Automatic backup';
+
+  @override
+  String get auto_backup_desc => 'Enable operating system automatic backup';
 
   @override
   String get info_tab => 'Info';
@@ -1381,4 +1419,32 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get search_currency => 'Search currency...';
+
+  @override
+  String get activity => 'Activity';
+
+  @override
+  String get search_expenses_hint => 'Search by name or note...';
+
+  @override
+  String get clear_filters => 'Clear';
+
+  @override
+  String get show_filters => 'Show filters';
+
+  @override
+  String get hide_filters => 'Hide filters';
+
+  @override
+  String get all_categories => 'All';
+
+  @override
+  String get all_participants => 'All';
+
+  @override
+  String get no_expenses_with_filters =>
+      'No expenses match the selected filters';
+
+  @override
+  String get no_expenses_yet => 'No expenses added yet';
 }

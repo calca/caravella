@@ -5,14 +5,21 @@ import 'icon_leading_field.dart';
 class NoteInputWidget extends StatelessWidget {
   final TextEditingController controller;
   final TextStyle? textStyle;
+  final FocusNode? focusNode;
 
-  const NoteInputWidget({super.key, required this.controller, this.textStyle});
+  const NoteInputWidget({
+    super.key,
+    required this.controller,
+    this.textStyle,
+    this.focusNode,
+  });
 
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
     final field = TextFormField(
       controller: controller,
+      focusNode: focusNode,
       maxLines: null, // auto-grow illimitato
       minLines: 4, // minimo 4 righe visibili
       style: textStyle ?? Theme.of(context).textTheme.bodySmall,

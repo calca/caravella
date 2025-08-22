@@ -190,6 +190,30 @@ abstract class AppLocalizations {
   /// **'Share all (CSV)'**
   String get share_all_csv;
 
+  /// No description provided for @download_all_ofx.
+  ///
+  /// In en, this message translates to:
+  /// **'Download all (OFX)'**
+  String get download_all_ofx;
+
+  /// No description provided for @share_all_ofx.
+  ///
+  /// In en, this message translates to:
+  /// **'Share all (OFX)'**
+  String get share_all_ofx;
+
+  /// No description provided for @export_share.
+  ///
+  /// In en, this message translates to:
+  /// **'Export & Share'**
+  String get export_share;
+
+  /// No description provided for @export_options.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Options'**
+  String get export_options;
+
   /// No description provided for @welcome_v3_title.
   ///
   /// In en, this message translates to:
@@ -603,6 +627,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Edit expense'**
   String get edit_expense;
+
+  /// No description provided for @expand_form.
+  ///
+  /// In en, this message translates to:
+  /// **'Expand form'**
+  String get expand_form;
+
+  /// No description provided for @expand_form_tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Add date, location and notes'**
+  String get expand_form_tooltip;
 
   /// No description provided for @category.
   ///
@@ -1216,6 +1252,30 @@ abstract class AppLocalizations {
   /// **'Error saving CSV file'**
   String get csv_save_error;
 
+  /// No description provided for @ofx_select_directory_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Select folder to save OFX'**
+  String get ofx_select_directory_title;
+
+  /// No description provided for @ofx_saved_in.
+  ///
+  /// In en, this message translates to:
+  /// **'OFX saved in: {path}'**
+  String ofx_saved_in(Object path);
+
+  /// No description provided for @ofx_save_cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'OFX export cancelled'**
+  String get ofx_save_cancelled;
+
+  /// No description provided for @ofx_save_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving OFX file'**
+  String get ofx_save_error;
+
   /// No description provided for @csv_expense_name.
   ///
   /// In en, this message translates to:
@@ -1509,6 +1569,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Import a backup to restore your data.'**
   String get data_restore_desc;
+
+  /// No description provided for @auto_backup_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic backup'**
+  String get auto_backup_title;
+
+  /// No description provided for @auto_backup_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable operating system automatic backup'**
+  String get auto_backup_desc;
 
   /// No description provided for @info_tab.
   ///
@@ -2787,6 +2859,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Search currency...'**
   String get search_currency;
+
+  /// Section title for expense list recent activity
+  ///
+  /// In en, this message translates to:
+  /// **'Activity'**
+  String get activity;
+
+  /// Placeholder for searching expenses by name or note
+  ///
+  /// In en, this message translates to:
+  /// **'Search by name or note...'**
+  String get search_expenses_hint;
+
+  /// Button to clear expense filters
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clear_filters;
+
+  /// Label to show filters
+  ///
+  /// In en, this message translates to:
+  /// **'Show filters'**
+  String get show_filters;
+
+  /// Label to hide filters
+  ///
+  /// In en, this message translates to:
+  /// **'Hide filters'**
+  String get hide_filters;
+
+  /// Chip label for all categories
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all_categories;
+
+  /// Chip label for all participants
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all_participants;
+
+  /// Empty state when active filters return no expenses
+  ///
+  /// In en, this message translates to:
+  /// **'No expenses match the selected filters'**
+  String get no_expenses_with_filters;
+
+  /// Empty state when there are no expenses yet
+  ///
+  /// In en, this message translates to:
+  /// **'No expenses added yet'**
+  String get no_expenses_yet;
 }
 
 class _AppLocalizationsDelegate

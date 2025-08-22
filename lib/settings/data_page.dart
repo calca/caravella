@@ -8,6 +8,10 @@ import 'package:archive/archive.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 import '../widgets/app_toast.dart';
+import '../widgets/material3_dialog.dart';
+import 'auto_backup_notifier.dart';
+import 'package:provider/provider.dart';
+import '../manager/group/widgets/section_header.dart';
 
 class DataPage extends StatelessWidget {
   const DataPage({super.key});
@@ -17,68 +21,134 @@ class DataPage extends StatelessWidget {
     final gloc = gen.AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: colorScheme.surface,
-        foregroundColor: colorScheme.onSurface,
-        elevation: 0,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return ChangeNotifierProvider<AutoBackupNotifier>(
+      create: (_) => AutoBackupNotifier(),
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: colorScheme.surface,
+          foregroundColor: colorScheme.onSurface,
+          elevation: 0,
+        ),
+        body: ListView(
+          padding: EdgeInsets.fromLTRB(
+            0,
+            0,
+            0,
+            MediaQuery.of(context).padding.bottom + 24,
+          ),
           children: [
-            Text(
-              gloc.data_title,
-              style: textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
+            // Auto Backup Section
+            SectionHeader(
+              title: gloc.auto_backup_title,
+              description: gloc.auto_backup_desc,
+              padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Card(
+                elevation: 0,
+                color: colorScheme.surface,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Consumer<AutoBackupNotifier>(
+                  builder: (context, notifier, _) => Semantics(
+                    toggled: notifier.enabled,
+                    label:
+                        '${gloc.auto_backup_title} - ${notifier.enabled ? gloc.accessibility_currently_enabled : gloc.accessibility_currently_disabled}',
+                    hint: notifier.enabled
+                        ? gloc.accessibility_double_tap_disable
+                        : gloc.accessibility_double_tap_enable,
+                    child: ListTile(
+                      leading: const Icon(Icons.backup_outlined),
+                      title: Text(
+                        gloc.auto_backup_title,
+                        style: textTheme.titleMedium,
+                      ),
+                      subtitle: Text(
+                        gloc.auto_backup_desc,
+                        style: textTheme.bodySmall,
+                      ),
+                      trailing: Semantics(
+                        label: gloc.accessibility_security_switch(
+                          notifier.enabled
+                              ? gloc.accessibility_switch_on
+                              : gloc.accessibility_switch_off,
+                        ),
+                        child: Switch(
+                          value: notifier.enabled,
+                          onChanged: (val) async {
+                            notifier.setEnabled(val);
+                          },
+                        ),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 8,
+                        horizontal: 16,
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
-            const SizedBox(height: 32),
-            Card(
-              elevation: 0,
-              color: colorScheme.surface,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: ListTile(
-                leading: const Icon(Icons.cloud_upload_outlined),
-                minLeadingWidth: 0,
-                title: Text(gloc.backup, style: textTheme.titleMedium),
-                subtitle: Text(gloc.data_backup_desc),
-                trailing: const Icon(Icons.arrow_forward_ios, size: 18),
-                onTap: () async {
-                  await _backupTrips(context, gloc);
-                },
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 16,
-                ),
-              ),
+
+            // Manual Backup & Restore Section
+            SectionHeader(
+              title: gloc.data_title,
+              description: gloc.settings_data_desc,
+              padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
             ),
-            const SizedBox(height: 16),
-            Card(
-              elevation: 0,
-              color: colorScheme.surface,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: ListTile(
-                leading: const Icon(Icons.download_outlined),
-                minLeadingWidth: 0,
-                title: Text(
-                  gloc.data_restore_title,
-                  style: textTheme.titleMedium,
-                ),
-                subtitle: Text(gloc.data_restore_desc),
-                trailing: const Icon(Icons.arrow_forward_ios, size: 18),
-                onTap: () async {
-                  await _importTrips(context, gloc);
-                },
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 16,
-                ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Column(
+                children: [
+                  Card(
+                    elevation: 0,
+                    color: colorScheme.surface,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: ListTile(
+                      leading: const Icon(Icons.cloud_upload_outlined),
+                      minLeadingWidth: 0,
+                      title: Text(gloc.backup, style: textTheme.titleMedium),
+                      subtitle: Text(gloc.data_backup_desc),
+                      trailing: const Icon(Icons.arrow_forward_ios, size: 18),
+                      onTap: () async {
+                        await _backupTrips(context, gloc);
+                      },
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 8,
+                        horizontal: 16,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Card(
+                    elevation: 0,
+                    color: colorScheme.surface,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: ListTile(
+                      leading: const Icon(Icons.download_outlined),
+                      minLeadingWidth: 0,
+                      title: Text(
+                        gloc.data_restore_title,
+                        style: textTheme.titleMedium,
+                      ),
+                      subtitle: Text(gloc.data_restore_desc),
+                      trailing: const Icon(Icons.arrow_forward_ios, size: 18),
+                      onTap: () async {
+                        await _importTrips(context, gloc);
+                      },
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 8,
+                        horizontal: 16,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -157,20 +227,20 @@ class DataPage extends StatelessWidget {
       final fileName = result.files.single.name;
       final confirm = await showDialog<bool>(
         context: context,
-        builder: (context) => AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+        builder: (context) => Material3Dialog(
+          icon: Icon(
+            Icons.upload_file_outlined,
+            color: Theme.of(context).colorScheme.primary,
+            size: 24,
           ),
           title: Text(loc.import_confirm_title),
           content: Text(loc.import_confirm_message(fileName)),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: Text(loc.cancel),
-            ),
-            FilledButton(
+            Material3DialogActions.cancel(context, loc.cancel),
+            Material3DialogActions.primary(
+              context,
+              loc.ok,
               onPressed: () => Navigator.of(context).pop(true),
-              child: Text(loc.ok),
             ),
           ],
         ),

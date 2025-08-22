@@ -55,6 +55,18 @@ class AppLocalizationsIt extends AppLocalizations {
   String get share_all_csv => 'Condividi tutto (CSV)';
 
   @override
+  String get download_all_ofx => 'Scarica tutto (OFX)';
+
+  @override
+  String get share_all_ofx => 'Condividi tutto (OFX)';
+
+  @override
+  String get export_share => 'Esporta e Condividi';
+
+  @override
+  String get export_options => 'Opzioni di Esportazione';
+
+  @override
   String get welcome_v3_title => 'Organizza.\nCondividi.\nBilancia.\n ';
 
   @override
@@ -264,6 +276,12 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get edit_expense => 'Modifica spesa';
+
+  @override
+  String get expand_form => 'Espandi modulo';
+
+  @override
+  String get expand_form_tooltip => 'Aggiungi data, luogo e note';
 
   @override
   String get category => 'Categoria';
@@ -585,6 +603,20 @@ class AppLocalizationsIt extends AppLocalizations {
   String get csv_save_error => 'Errore nel salvataggio del file CSV';
 
   @override
+  String get ofx_select_directory_title => 'Seleziona cartella per salvare OFX';
+
+  @override
+  String ofx_saved_in(Object path) {
+    return 'OFX salvato in: $path';
+  }
+
+  @override
+  String get ofx_save_cancelled => 'Esportazione OFX annullata';
+
+  @override
+  String get ofx_save_error => 'Errore nel salvataggio del file OFX';
+
+  @override
   String get csv_expense_name => 'Descrizione';
 
   @override
@@ -730,6 +762,13 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get data_restore_desc => 'Importa un backup per ripristinare i dati.';
+
+  @override
+  String get auto_backup_title => 'Backup automatico';
+
+  @override
+  String get auto_backup_desc =>
+      'Abilita il backup automatico del sistema operativo';
 
   @override
   String get info_tab => 'Info';
@@ -1385,4 +1424,32 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get search_currency => 'Cerca valuta...';
+
+  @override
+  String get activity => 'Attività';
+
+  @override
+  String get search_expenses_hint => 'Cerca per nome o nota...';
+
+  @override
+  String get clear_filters => 'Pulisci';
+
+  @override
+  String get show_filters => 'Mostra filtri';
+
+  @override
+  String get hide_filters => 'Nascondi filtri';
+
+  @override
+  String get all_categories => 'Tutte';
+
+  @override
+  String get all_participants => 'Tutti';
+
+  @override
+  String get no_expenses_with_filters =>
+      'Nessuna spesa trovata con i filtri selezionati';
+
+  @override
+  String get no_expenses_yet => 'Nessuna spesa ancora aggiunta';
 }

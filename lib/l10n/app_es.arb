@@ -27,6 +27,10 @@
   "group_total": "Total",
   "download_all_csv": "Descargar todo (CSV)",
   "share_all_csv": "Compartir todo (CSV)",
+  "download_all_ofx": "Descargar todo (OFX)",
+  "share_all_ofx": "Compartir todo (OFX)",
+  "export_share": "Exportar y Compartir",
+  "export_options": "Opciones de Exportación",
   "welcome_v3_title": "Organiza.\nComparte.\nLiquida.\n ",
   "good_morning": "Buenos días",
   "good_afternoon": "Buenas tardes",
@@ -96,6 +100,8 @@
   "from_to": "{start} - {end}",
   "add_expense": "Nuevo gasto",
   "edit_expense": "Editar gasto",
+  "expand_form": "Expandir formulario",
+  "expand_form_tooltip": "Agregar fecha, ubicación y notas",
   "category": "Categoría",
   "amount": "Cantidad",
   "invalid_amount": "Cantidad inválida",
@@ -198,6 +204,10 @@
   "csv_saved_in": "CSV guardado en: {path}",
   "csv_save_cancelled": "Exportación cancelada",
   "csv_save_error": "Error guardando archivo CSV",
+  "ofx_select_directory_title": "Seleccionar carpeta para guardar OFX",
+  "ofx_saved_in": "OFX guardado en: {path}",
+  "ofx_save_cancelled": "Exportación OFX cancelada",
+  "ofx_save_error": "Error guardando archivo OFX",
   "csv_expense_name": "Descripción",
   "csv_amount": "Cantidad",
   "csv_paid_by": "Pagado por",
@@ -248,6 +258,8 @@
   "data_backup_desc": "Crear un archivo de respaldo de tus gastos.",
   "data_restore_title": "Restauración",
   "data_restore_desc": "Importar un respaldo para restaurar tus datos.",
+  "auto_backup_title": "Respaldo automático",
+  "auto_backup_desc": "Habilitar el respaldo automático del sistema operativo",
   "info_tab": "Info",
   "select_paid_by": "Seleccionar pagador",
   "select_category": "Seleccionar una categoría",
@@ -499,4 +511,22 @@
   ,"currency_ZMW": "Kwacha zambiano"
   ,"currency_ZWL": "Dólar zimbabuense"
   ,"search_currency": "Buscar moneda..."
+  ,"activity": "Actividad"
+  ,"@activity": {"description": "Título de sección actividad reciente lista de gastos"}
+  ,"search_expenses_hint": "Buscar por nombre o nota..."
+  ,"@search_expenses_hint": {"description": "Placeholder para buscar gastos por nombre o nota"}
+  ,"clear_filters": "Limpiar"
+  ,"@clear_filters": {"description": "Botón para limpiar filtros de gastos"}
+  ,"show_filters": "Mostrar filtros"
+  ,"@show_filters": {"description": "Etiqueta para mostrar filtros"}
+  ,"hide_filters": "Ocultar filtros"
+  ,"@hide_filters": {"description": "Etiqueta para ocultar filtros"}
+  ,"all_categories": "Todas"
+  ,"@all_categories": {"description": "Chip para todas las categorías"}
+  ,"all_participants": "Todos"
+  ,"@all_participants": {"description": "Chip para todos los participantes"}
+  ,"no_expenses_with_filters": "Ningún gasto coincide con los filtros seleccionados"
+  ,"@no_expenses_with_filters": {"description": "Estado vacío cuando filtros activos no devuelven gastos"}
+  ,"no_expenses_yet": "Aún no hay gastos"
+  ,"@no_expenses_yet": {"description": "Estado vacío cuando aún no hay gastos"}
 }

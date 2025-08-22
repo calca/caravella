@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../data/model/expense_details.dart';
+import '../../../widgets/material3_dialog.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 
 class DeleteExpenseDialog extends StatelessWidget {
@@ -15,21 +16,24 @@ class DeleteExpenseDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
-    final colorScheme = Theme.of(context).colorScheme;
-    return AlertDialog(
+    
+    return Material3Dialog(
+      icon: Icon(
+        Icons.delete_outline,
+        color: Theme.of(context).colorScheme.error,
+        size: 24,
+      ),
       title: Text(gloc.delete_expense),
       content: Text(gloc.delete_expense_confirm),
       actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text(gloc.cancel),
-        ),
-        TextButton(
+        Material3DialogActions.cancel(context, gloc.cancel),
+        Material3DialogActions.destructive(
+          context,
+          gloc.delete,
           onPressed: () {
             Navigator.of(context).pop();
             onDelete();
           },
-          child: Text(gloc.delete, style: TextStyle(color: colorScheme.error)),
         ),
       ],
     );

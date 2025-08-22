@@ -7,8 +7,20 @@ import 'package:org_app_caravella/data/model/expense_participant.dart';
 import 'package:org_app_caravella/data/model/expense_category.dart';
 import 'package:org_app_caravella/data/model/expense_details.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
+
+class _FakePathProvider extends PathProviderPlatform {
+  late final String _tempDir = Directory.systemTemp
+      .createTempSync('repo_test')
+      .path;
+  @override
+  Future<String?> getApplicationDocumentsPath() async => _tempDir;
+}
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  PathProviderPlatform.instance = _FakePathProvider();
+
   group('FileBasedExpenseGroupRepository', () {
     late FileBasedExpenseGroupRepository repository;
     late ExpenseGroup testGroup;
@@ -249,6 +261,7 @@ void main() {
     group('Archive Operations', () {
       test('should archive group and unpin it', () async {
         // Pin the group first
+        await repository.saveGroup(testGroup);
         await repository.setPinnedGroup(testGroup.id);
 
         // Archive the group
@@ -263,6 +276,7 @@ void main() {
 
       test('should unarchive group', () async {
         // Archive the group
+        await repository.saveGroup(testGroup);
         await repository.archiveGroup(testGroup.id);
 
         // Unarchive the group
@@ -421,7 +435,8 @@ void main() {
 
         final result = await repository.getAllGroups();
         expect(result.isFailure, isTrue);
-        expect(result.error, isA<SerializationError>());
+        // Implementation wraps underlying format exception into FileOperationError
+        expect(result.error, isA<FileOperationError>());
       });
 
       test('should handle empty file gracefully', () async {

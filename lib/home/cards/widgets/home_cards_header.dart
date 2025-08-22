@@ -31,12 +31,11 @@ class HomeCardsHeader extends StatelessWidget {
       const flavor = String.fromEnvironment('FLAVOR', defaultValue: 'staging');
       switch (flavor) {
         case 'prod':
-          return theme.colorScheme.surfaceContainerHigh;
+          return theme.colorScheme.onSurface;
         case 'dev':
-          return theme.colorScheme.tertiaryFixed;
         case 'staging':
         default:
-          return theme.colorScheme.secondaryFixed;
+          return theme.colorScheme.tertiary;
       }
     }
 
@@ -49,13 +48,13 @@ class HomeCardsHeader extends StatelessWidget {
             width: 56,
             height: 56,
             decoration: BoxDecoration(
-              color: getFlavorBgColor(),
+              color: theme.colorScheme.surfaceContainerHigh,
               shape: BoxShape.circle,
             ),
             child: Icon(
               _getGreetingIcon(),
               size: 28,
-              color: theme.colorScheme.onSurface,
+              color: getFlavorBgColor(),
             ),
           ),
           const SizedBox(width: 16),

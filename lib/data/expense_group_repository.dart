@@ -185,6 +185,15 @@ class ExpenseGroupValidator {
       }
     }
 
-    return StorageResult.success(issues);
+    if (issues.isEmpty) {
+      return StorageResult.success(issues);
+    } else {
+      return StorageResult.failure(
+        DataIntegrityError(
+          'Data integrity validation failed',
+          details: issues.join('; '),
+        ),
+      );
+    }
   }
 }

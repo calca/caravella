@@ -27,6 +27,10 @@
   "group_total": "Total",
   "download_all_csv": "Download all (CSV)",
   "share_all_csv": "Share all (CSV)",
+  "download_all_ofx": "Download all (OFX)",
+  "share_all_ofx": "Share all (OFX)",
+  "export_share": "Export & Share",
+  "export_options": "Export Options",
   "welcome_v3_title": "Organize.\nShare.\nSettle.\n ",
   "good_morning": "Good morning",
   "good_afternoon": "Good afternoon",
@@ -96,6 +100,8 @@
   "from_to": "{start} - {end}",
   "add_expense": "New expense",
   "edit_expense": "Edit expense",
+  "expand_form": "Expand form",
+  "expand_form_tooltip": "Add date, location and notes",
   "category": "Category",
   "amount": "Amount",
   "invalid_amount": "Invalid amount",
@@ -198,6 +204,10 @@
   "csv_saved_in": "CSV saved in: {path}",
   "csv_save_cancelled": "Export cancelled",
   "csv_save_error": "Error saving CSV file",
+  "ofx_select_directory_title": "Select folder to save OFX",
+  "ofx_saved_in": "OFX saved in: {path}",
+  "ofx_save_cancelled": "OFX export cancelled",
+  "ofx_save_error": "Error saving OFX file",
   "csv_expense_name": "Description",
   "csv_amount": "Amount",
   "csv_paid_by": "Paid by",
@@ -247,7 +257,9 @@
   "data_backup_title": "Backup",
   "data_backup_desc": "Create a backup file of your expenses.",
   "data_restore_title": "Restore",
-  "data_restore_desc": "Import a backup to restore your data."
+  "data_restore_desc": "Import a backup to restore your data.",
+  "auto_backup_title": "Automatic backup",
+  "auto_backup_desc": "Enable operating system automatic backup"
   ,"info_tab": "Info"
   ,"select_paid_by": "Select payer"
   ,"select_category": "Select a category"
@@ -499,4 +511,22 @@
   ,"currency_ZMW": "Zambian Kwacha"
   ,"currency_ZWL": "Zimbabwean Dollar"
   ,"search_currency": "Search currency..."
+  ,"activity": "Activity"
+  ,"@activity": {"description": "Section title for expense list recent activity"}
+  ,"search_expenses_hint": "Search by name or note..."
+  ,"@search_expenses_hint": {"description": "Placeholder for searching expenses by name or note"}
+  ,"clear_filters": "Clear"
+  ,"@clear_filters": {"description": "Button to clear expense filters"}
+  ,"show_filters": "Show filters"
+  ,"@show_filters": {"description": "Label to show filters"}
+  ,"hide_filters": "Hide filters"
+  ,"@hide_filters": {"description": "Label to hide filters"}
+  ,"all_categories": "All"
+  ,"@all_categories": {"description": "Chip label for all categories"}
+  ,"all_participants": "All"
+  ,"@all_participants": {"description": "Chip label for all participants"}
+  ,"no_expenses_with_filters": "No expenses match the selected filters"
+  ,"@no_expenses_with_filters": {"description": "Empty state when active filters return no expenses"}
+  ,"no_expenses_yet": "No expenses added yet"
+  ,"@no_expenses_yet": {"description": "Empty state when there are no expenses yet"}
 }

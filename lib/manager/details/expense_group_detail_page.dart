@@ -15,6 +15,7 @@ import '../../data/model/expense_details.dart';
 import '../../data/model/expense_group.dart';
 import '../../state/expense_group_notifier.dart';
 import '../../data/expense_group_storage.dart';
+import '../../widgets/material3_dialog.dart';
 // Removed legacy localization bridge imports (migration in progress)
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../widgets/app_toast.dart';
@@ -24,9 +25,12 @@ import 'widgets/group_total.dart';
 import 'widgets/filtered_expense_list.dart';
 import 'widgets/unified_overview_sheet.dart';
 import 'widgets/options_sheet.dart';
+import 'widgets/export_options_sheet.dart';
 import 'widgets/expense_entry_sheet.dart';
 import 'widgets/delete_expense_dialog.dart';
 import '../../widgets/add_fab.dart';
+import 'export/ofx_exporter.dart';
+import 'export/csv_exporter.dart';
 
 class ExpenseGroupDetailPage extends StatefulWidget {
   final ExpenseGroup trip;
@@ -40,51 +44,12 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   // Opacità lista spese (default 1.0, manual refresh stato rimosso)
   // final double _listOpacity = 1.0; // RIMOSSO: non più necessario
 
-  /// Genera il contenuto CSV delle spese del gruppo
-  String _generateCsvContent() {
-    if (_trip == null || _trip!.expenses.isEmpty) return '';
-    final buffer = StringBuffer();
-    // Header localizzato
-    final gloc = gen.AppLocalizations.of(context);
-    buffer.writeln(
-      [
-        gloc.csv_expense_name,
-        gloc.csv_amount,
-        gloc.csv_paid_by,
-        gloc.csv_category,
-        gloc.csv_date,
-        gloc.csv_note,
-        gloc.csv_location,
-      ].join(','),
-    );
-    for (final e in _trip!.expenses) {
-      buffer.writeln(
-        [
-          _escapeCsvValue(e.name ?? ''),
-          e.amount?.toStringAsFixed(2) ?? '',
-          _escapeCsvValue(e.paidBy.name),
-          _escapeCsvValue(e.category.name),
-          e.date.toIso8601String().split('T').first,
-          _escapeCsvValue(e.note ?? ''),
-          _escapeCsvValue(e.location?.displayText ?? ''),
-        ].join(','),
-      );
-    }
-    return buffer.toString();
-  }
+  // CSV export moved to CsvExporter
 
-  /// Escape per valori CSV
-  String _escapeCsvValue(String value) {
-    if (value.contains(',') || value.contains('"') || value.contains('\n')) {
-      value = value.replaceAll('"', '""');
-      return '"$value"';
-    }
-    return value;
-  }
+  // OFX export moved to OfxExporter.generate
 
-  /// Costruisce il nome file CSV includendo la data odierna in formato YYYY-MM-DD
-  /// ed una versione "sanitizzata" del titolo del gruppo.
-  String _buildCsvFilename() {
+  /// Costruisce il nome file OFX
+  String _buildOfxFilename() {
     final now = DateTime.now();
     final date =
         '${now.year.toString().padLeft(4, '0')}-'
@@ -96,7 +61,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         .replaceAll(RegExp(r'[^a-z0-9_-]+'), '_')
         .replaceAll(RegExp(r'_+'), '_')
         .trim();
-    return '${date}_${safeTitle}_export.csv';
+    return '${date}_${safeTitle}_export.ofx';
   }
 
   ExpenseGroup? _trip;
@@ -192,6 +157,173 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     );
   }
 
+  void _showExportOptionsSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (sheetCtx) => ExportOptionsSheet(
+        onDownloadCsv: () async {
+          final gloc = gen.AppLocalizations.of(context);
+          final nav = Navigator.of(sheetCtx);
+          final rootContext = context; // capture for toasts
+          final csv = CsvExporter.generate(_trip, gloc);
+          if (csv.isEmpty) {
+            if (rootContext.mounted) {
+              AppToast.show(
+                rootContext,
+                gloc.no_expenses_to_export,
+                type: ToastType.info,
+              );
+            }
+            return;
+          }
+          final filename = CsvExporter.buildFilename(_trip);
+          String? dirPath;
+          try {
+            dirPath = await FilePicker.platform.getDirectoryPath(
+              dialogTitle: gloc.csv_select_directory_title,
+            );
+          } catch (_) {
+            dirPath = null;
+          }
+          if (dirPath == null) {
+            if (!rootContext.mounted) return;
+            AppToast.show(
+              rootContext,
+              gloc.csv_save_cancelled,
+              type: ToastType.info,
+            );
+            return;
+          }
+          try {
+            final file = File('$dirPath/$filename');
+            await file.writeAsString(csv);
+            if (!rootContext.mounted) return;
+            final msg = gloc.csv_saved_in(file.path);
+            AppToast.show(rootContext, msg, type: ToastType.success);
+            nav.pop();
+          } catch (e) {
+            if (!rootContext.mounted) return;
+            AppToast.show(
+              rootContext,
+              gloc.csv_save_error,
+              type: ToastType.error,
+            );
+          }
+        },
+        onShareCsv: () async {
+          final gloc = gen.AppLocalizations.of(context);
+          final nav = Navigator.of(sheetCtx);
+          final rootContext = context;
+          final csv = CsvExporter.generate(_trip, gloc);
+          if (csv.isEmpty) {
+            if (rootContext.mounted) {
+              AppToast.show(
+                rootContext,
+                gloc.no_expenses_to_export,
+                type: ToastType.info,
+              );
+            }
+            return;
+          }
+          final tempDir = await getTemporaryDirectory();
+          final file = await File(
+            '${tempDir.path}/${CsvExporter.buildFilename(_trip)}',
+          ).create();
+          await file.writeAsString(csv);
+          if (!rootContext.mounted) return; // ensure still alive before share
+          await SharePlus.instance.share(
+            ShareParams(
+              text: '${_trip!.title} - CSV',
+              files: [XFile(file.path)],
+            ),
+          );
+          if (!rootContext.mounted) return;
+          nav.pop();
+        },
+        onDownloadOfx: () async {
+          final gloc = gen.AppLocalizations.of(context);
+          final nav = Navigator.of(sheetCtx);
+          final rootContext = context; // capture for toasts
+          final ofx = OfxExporter.generate(_trip);
+          if (ofx.isEmpty) {
+            if (rootContext.mounted) {
+              AppToast.show(
+                rootContext,
+                gloc.no_expenses_to_export,
+                type: ToastType.info,
+              );
+            }
+            return;
+          }
+          final filename = _buildOfxFilename();
+          String? dirPath;
+          try {
+            dirPath = await FilePicker.platform.getDirectoryPath(
+              dialogTitle: gloc.ofx_select_directory_title,
+            );
+          } catch (_) {
+            dirPath = null;
+          }
+          if (dirPath == null) {
+            if (!rootContext.mounted) return;
+            AppToast.show(
+              rootContext,
+              gloc.ofx_save_cancelled,
+              type: ToastType.info,
+            );
+            return;
+          }
+          try {
+            final file = File('$dirPath/$filename');
+            await file.writeAsString(ofx);
+            if (!rootContext.mounted) return;
+            final msg = gloc.ofx_saved_in(file.path);
+            AppToast.show(rootContext, msg, type: ToastType.success);
+            nav.pop();
+          } catch (e) {
+            if (!rootContext.mounted) return;
+            AppToast.show(
+              rootContext,
+              gloc.ofx_save_error,
+              type: ToastType.error,
+            );
+          }
+        },
+        onShareOfx: () async {
+          final gloc = gen.AppLocalizations.of(context);
+          final nav = Navigator.of(sheetCtx);
+          final rootContext = context;
+          final ofx = OfxExporter.generate(_trip);
+          if (ofx.isEmpty) {
+            if (rootContext.mounted) {
+              AppToast.show(
+                rootContext,
+                gloc.no_expenses_to_export,
+                type: ToastType.info,
+              );
+            }
+            return;
+          }
+          final tempDir = await getTemporaryDirectory();
+          final file = await File(
+            '${tempDir.path}/${_buildOfxFilename()}',
+          ).create();
+          await file.writeAsString(ofx);
+          if (!rootContext.mounted) return; // ensure still alive before share
+          await SharePlus.instance.share(
+            ShareParams(
+              text: '${_trip!.title} - OFX',
+              files: [XFile(file.path)],
+            ),
+          );
+          if (!rootContext.mounted) return;
+          nav.pop();
+        },
+      ),
+    );
+  }
+
   void _showOptionsSheet() {
     showModalBottomSheet(
       context: context,
@@ -258,107 +390,37 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           );
           await _refreshGroup();
         },
-        onDownloadCsv: () async {
-          final gloc = gen.AppLocalizations.of(context);
+        onExportShare: () async {
           final nav = Navigator.of(sheetCtx);
-          final rootContext = context; // capture for toasts
-          final csv = _generateCsvContent();
-          if (csv.isEmpty) {
-            if (rootContext.mounted) {
-              AppToast.show(
-                rootContext,
-                gloc.no_expenses_to_export,
-                type: ToastType.info,
-              );
-            }
-            return;
-          }
-          final filename = _buildCsvFilename();
-          String? dirPath;
-          try {
-            dirPath = await FilePicker.platform.getDirectoryPath(
-              dialogTitle: gloc.csv_select_directory_title,
-            );
-          } catch (_) {
-            dirPath = null;
-          }
-          if (dirPath == null) {
-            if (!rootContext.mounted) return;
-            AppToast.show(
-              rootContext,
-              gloc.csv_save_cancelled,
-              type: ToastType.info,
-            );
-            return;
-          }
-          try {
-            final file = File('$dirPath/$filename');
-            await file.writeAsString(csv);
-            if (!rootContext.mounted) return;
-            final msg = gloc.csv_saved_in(file.path);
-            AppToast.show(rootContext, msg, type: ToastType.success);
-            nav.pop();
-          } catch (e) {
-            if (!rootContext.mounted) return;
-            AppToast.show(
-              rootContext,
-              gloc.csv_save_error,
-              type: ToastType.error,
-            );
-          }
-        },
-        onShareCsv: () async {
-          final gloc = gen.AppLocalizations.of(context);
-          final nav = Navigator.of(sheetCtx);
-          final rootContext = context;
-          final csv = _generateCsvContent();
-          if (csv.isEmpty) {
-            if (rootContext.mounted) {
-              AppToast.show(
-                rootContext,
-                gloc.no_expenses_to_export,
-                type: ToastType.info,
-              );
-            }
-            return;
-          }
-          final tempDir = await getTemporaryDirectory();
-          final file = await File(
-            '${tempDir.path}/${_buildCsvFilename()}',
-          ).create();
-          await file.writeAsString(csv);
-          if (!rootContext.mounted) return; // ensure still alive before share
-          await SharePlus.instance.share(
-            ShareParams(
-              text: '${_trip!.title} - CSV',
-              files: [XFile(file.path)],
-            ),
-          );
-          if (!rootContext.mounted) return;
           nav.pop();
+          await Future.delayed(const Duration(milliseconds: 200));
+          if (!mounted) return;
+          _showExportOptionsSheet();
         },
         onDelete: () async {
           final nav = Navigator.of(sheetCtx);
-          final theme = Theme.of(context);
           final rootNav = Navigator.of(context);
           final confirmed = await showDialog<bool>(
             context: context,
-            builder: (dialogCtx) => AlertDialog(
+            builder: (dialogCtx) => Material3Dialog(
+              icon: Icon(
+                Icons.delete_outline,
+                color: Theme.of(context).colorScheme.error,
+                size: 24,
+              ),
               title: Text(gen.AppLocalizations.of(dialogCtx).delete_group),
               content: Text(
                 gen.AppLocalizations.of(dialogCtx).delete_group_confirm,
               ),
               actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(dialogCtx).pop(false),
-                  child: Text(gen.AppLocalizations.of(dialogCtx).cancel),
+                Material3DialogActions.cancel(
+                  dialogCtx,
+                  gen.AppLocalizations.of(dialogCtx).cancel,
                 ),
-                TextButton(
+                Material3DialogActions.destructive(
+                  dialogCtx,
+                  gen.AppLocalizations.of(dialogCtx).delete,
                   onPressed: () => Navigator.of(dialogCtx).pop(true),
-                  child: Text(
-                    gen.AppLocalizations.of(dialogCtx).delete,
-                    style: TextStyle(color: theme.colorScheme.error),
-                  ),
                 ),
               ],
             ),

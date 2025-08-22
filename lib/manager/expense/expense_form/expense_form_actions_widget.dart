@@ -6,6 +6,9 @@ class ExpenseFormActionsWidget extends StatelessWidget {
   final VoidCallback? onDelete; // Shown only in edit mode
   final bool isEdit;
   final TextStyle? textStyle;
+  final bool
+  showExpandButton; // When true shows an expand button (only in add/compact mode)
+  final VoidCallback? onExpand;
 
   const ExpenseFormActionsWidget({
     super.key,
@@ -13,44 +16,71 @@ class ExpenseFormActionsWidget extends StatelessWidget {
     this.onDelete,
     this.isEdit = false,
     this.textStyle,
+    this.showExpandButton = false,
+    this.onExpand,
   });
 
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
-    final saveLabel = isEdit
-        ? gloc.save_change_expense
-        : 'Save'; // TODO localize generic save
+    final saveLabel = gloc.save_change_expense;
     final colorScheme = Theme.of(context).colorScheme;
-    return Align(
-      alignment: Alignment.centerRight,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (isEdit && onDelete != null)
-            IconButton.filledTonal(
-              style: IconButton.styleFrom(
-                minimumSize: const Size(48, 48),
-                padding: EdgeInsets.zero,
-                backgroundColor: colorScheme.surfaceContainer,
-              ),
-              tooltip: gloc.delete_expense, // Assume localization key exists
-              onPressed: onDelete,
-              icon: Icon(
-                Icons.delete_outline,
-                color: colorScheme.error,
-                size: 22,
-              ),
-            ),
-          if (isEdit && onDelete != null) const SizedBox(width: 8),
-          IconButton.filled(
-            onPressed: onSave,
-            tooltip: saveLabel,
-            icon: const Icon(Icons.send_outlined, size: 24),
-            style: IconButton.styleFrom(padding: const EdgeInsets.all(8)),
+    final leftButtons = <Widget>[];
+    if (showExpandButton && onExpand != null) {
+      leftButtons.add(
+        IconButton(
+          tooltip: gloc.expand_form_tooltip.isNotEmpty
+              ? gloc.expand_form_tooltip
+              : gloc.expand_form,
+          onPressed: onExpand,
+          icon: const Icon(Icons.arrow_circle_up_outlined, size: 24),
+          style: IconButton.styleFrom(
+            // Ensures transparent background while keeping minimum hit area
+            backgroundColor: Colors.transparent,
+            minimumSize: const Size(48, 48),
+            padding: EdgeInsets.zero,
           ),
-        ],
-      ),
+        ),
+      );
+    }
+    if (isEdit && onDelete != null) {
+      leftButtons.add(
+        IconButton.filledTonal(
+          style: IconButton.styleFrom(
+            minimumSize: const Size(48, 48),
+            padding: EdgeInsets.zero,
+            backgroundColor: colorScheme.surfaceContainer,
+          ),
+          tooltip: gloc.delete_expense,
+          onPressed: onDelete,
+          icon: Icon(Icons.delete_outline, color: colorScheme.error, size: 24),
+        ),
+      );
+    }
+
+    // Intersperse spacing between left buttons
+    final leftChildren = <Widget>[];
+    for (var i = 0; i < leftButtons.length; i++) {
+      leftChildren.add(leftButtons[i]);
+      if (i != leftButtons.length - 1) {
+        leftChildren.add(const SizedBox(width: 12));
+      }
+    }
+
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        ...leftChildren,
+        if (leftChildren.isNotEmpty) const SizedBox(width: 12),
+        const Spacer(),
+        IconButton.filled(
+          onPressed: onSave,
+          tooltip: saveLabel,
+          icon: const Icon(Icons.send_outlined, size: 24),
+          style: IconButton.styleFrom(padding: const EdgeInsets.all(8)),
+        ),
+      ],
     );
   }
 }

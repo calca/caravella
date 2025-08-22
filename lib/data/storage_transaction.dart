@@ -298,17 +298,15 @@ class TransactionExecutor {
         workingGroups = _applyOperation(operation, workingGroups);
       }
 
+      // Enforce pin constraint (only one non-archived pinned group)
+      workingGroups = _enforcePinConstraint(workingGroups);
+
       // Validate final state
       final integrityResult = ExpenseGroupValidator.validateDataIntegrity(
         workingGroups,
       );
       if (integrityResult.isFailure) {
-        return StorageResult.failure(
-          DataIntegrityError(
-            'Transaction would violate data integrity',
-            details: integrityResult.error!.message,
-          ),
-        );
+        return StorageResult.failure(integrityResult.error!);
       }
 
       // Save the final state (this is the atomic commit point)
@@ -403,6 +401,25 @@ class TransactionExecutor {
       }
       return const StorageResult.success(null);
     }
+  }
+
+  /// Ensures only one group remains pinned among non-archived groups
+  List<ExpenseGroup> _enforcePinConstraint(List<ExpenseGroup> groups) {
+    bool foundPinned = false;
+    final result = <ExpenseGroup>[];
+    for (final g in groups) {
+      if (g.pinned && !g.archived) {
+        if (!foundPinned) {
+          foundPinned = true;
+          result.add(g); // Keep first pinned
+        } else {
+          result.add(g.copyWith(pinned: false)); // Unpin subsequent
+        }
+      } else {
+        result.add(g);
+      }
+    }
+    return result;
   }
 }
 
