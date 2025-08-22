@@ -28,16 +28,18 @@ class ExpenseFormActionsWidget extends StatelessWidget {
     final leftButtons = <Widget>[];
     if (showExpandButton && onExpand != null) {
       leftButtons.add(
-        IconButton.outlined(
+        IconButton(
           tooltip: gloc.expand_form_tooltip.isNotEmpty
               ? gloc.expand_form_tooltip
               : gloc.expand_form,
           onPressed: onExpand,
+          icon: const Icon(Icons.arrow_circle_up_outlined, size: 24),
           style: IconButton.styleFrom(
+            // Ensures transparent background while keeping minimum hit area
+            backgroundColor: Colors.transparent,
             minimumSize: const Size(48, 48),
             padding: EdgeInsets.zero,
           ),
-          icon: const Icon(Icons.unfold_more_outlined, size: 24),
         ),
       );
     }
@@ -51,7 +53,7 @@ class ExpenseFormActionsWidget extends StatelessWidget {
           ),
           tooltip: gloc.delete_expense,
           onPressed: onDelete,
-          icon: Icon(Icons.delete_outline, color: colorScheme.error, size: 22),
+          icon: Icon(Icons.delete_outline, color: colorScheme.error, size: 24),
         ),
       );
     }
