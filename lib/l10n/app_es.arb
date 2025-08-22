@@ -29,6 +29,8 @@
   "share_all_csv": "Compartir todo (CSV)",
   "download_all_ofx": "Descargar todo (OFX)",
   "share_all_ofx": "Compartir todo (OFX)",
+  "export_share": "Exportar y Compartir",
+  "export_options": "Opciones de Exportación",
   "welcome_v3_title": "Organiza.\nComparte.\nLiquida.\n ",
   "good_morning": "Buenos días",
   "good_afternoon": "Buenas tardes",

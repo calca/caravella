@@ -190,6 +190,30 @@ abstract class AppLocalizations {
   /// **'Share all (CSV)'**
   String get share_all_csv;
 
+  /// No description provided for @download_all_ofx.
+  ///
+  /// In en, this message translates to:
+  /// **'Download all (OFX)'**
+  String get download_all_ofx;
+
+  /// No description provided for @share_all_ofx.
+  ///
+  /// In en, this message translates to:
+  /// **'Share all (OFX)'**
+  String get share_all_ofx;
+
+  /// No description provided for @export_share.
+  ///
+  /// In en, this message translates to:
+  /// **'Export & Share'**
+  String get export_share;
+
+  /// No description provided for @export_options.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Options'**
+  String get export_options;
+
   /// No description provided for @welcome_v3_title.
   ///
   /// In en, this message translates to:

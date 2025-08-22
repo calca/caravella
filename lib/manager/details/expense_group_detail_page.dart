@@ -24,6 +24,7 @@ import 'widgets/group_total.dart';
 import 'widgets/filtered_expense_list.dart';
 import 'widgets/unified_overview_sheet.dart';
 import 'widgets/options_sheet.dart';
+import 'widgets/export_options_sheet.dart';
 import 'widgets/expense_entry_sheet.dart';
 import 'widgets/delete_expense_dialog.dart';
 import '../../widgets/add_fab.dart';
@@ -306,72 +307,11 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     );
   }
 
-  void _showOptionsSheet() {
+  void _showExportOptionsSheet() {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder: (sheetCtx) => OptionsSheet(
-        trip: _trip!,
-        onPinToggle: () async {
-          if (_trip == null) return;
-          final nav = Navigator.of(sheetCtx);
-          final updatedGroup = ExpenseGroup(
-            expenses: [], // only metadata is needed
-            title: _trip!.title,
-            participants: _trip!.participants,
-            startDate: _trip!.startDate,
-            endDate: _trip!.endDate,
-            currency: _trip!.currency,
-            categories: _trip!.categories,
-            timestamp: _trip!.timestamp,
-            id: _trip!.id,
-            file: _trip!.file,
-            pinned: !_trip!.pinned,
-            archived: _trip!.archived,
-          );
-          await _groupNotifier?.updateGroupMetadata(updatedGroup);
-          await _refreshGroup();
-          if (!mounted) return;
-          nav.pop();
-        },
-        onArchiveToggle: () async {
-          if (_trip == null) return;
-          final nav = Navigator.of(sheetCtx);
-          final updatedGroup = ExpenseGroup(
-            expenses: [], // only metadata is needed
-            title: _trip!.title,
-            participants: _trip!.participants,
-            startDate: _trip!.startDate,
-            endDate: _trip!.endDate,
-            currency: _trip!.currency,
-            categories: _trip!.categories,
-            timestamp: _trip!.timestamp,
-            id: _trip!.id,
-            file: _trip!.file,
-            pinned: !_trip!.archived
-                ? false
-                : _trip!.pinned, // Remove pin when archiving
-            archived: !_trip!.archived,
-          );
-          await _groupNotifier?.updateGroupMetadata(updatedGroup);
-          await _refreshGroup();
-          if (!mounted) return;
-          nav.pop();
-        },
-        onEdit: () async {
-          if (_trip == null) return;
-          final nav = Navigator.of(sheetCtx);
-          nav.pop();
-          await Future.delayed(const Duration(milliseconds: 200));
-          if (!mounted) return;
-          await nav.push(
-            MaterialPageRoute(
-              builder: (ctx) =>
-                  ExpensesGroupEditPage(trip: _trip!, mode: GroupEditMode.edit),
-            ),
-          );
-          await _refreshGroup();
-        },
+      builder: (sheetCtx) => ExportOptionsSheet(
         onDownloadCsv: () async {
           final gloc = gen.AppLocalizations.of(context);
           final nav = Navigator.of(sheetCtx);
@@ -529,6 +469,83 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           );
           if (!rootContext.mounted) return;
           nav.pop();
+        },
+      ),
+    );
+  }
+
+  void _showOptionsSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (sheetCtx) => OptionsSheet(
+        trip: _trip!,
+        onPinToggle: () async {
+          if (_trip == null) return;
+          final nav = Navigator.of(sheetCtx);
+          final updatedGroup = ExpenseGroup(
+            expenses: [], // only metadata is needed
+            title: _trip!.title,
+            participants: _trip!.participants,
+            startDate: _trip!.startDate,
+            endDate: _trip!.endDate,
+            currency: _trip!.currency,
+            categories: _trip!.categories,
+            timestamp: _trip!.timestamp,
+            id: _trip!.id,
+            file: _trip!.file,
+            pinned: !_trip!.pinned,
+            archived: _trip!.archived,
+          );
+          await _groupNotifier?.updateGroupMetadata(updatedGroup);
+          await _refreshGroup();
+          if (!mounted) return;
+          nav.pop();
+        },
+        onArchiveToggle: () async {
+          if (_trip == null) return;
+          final nav = Navigator.of(sheetCtx);
+          final updatedGroup = ExpenseGroup(
+            expenses: [], // only metadata is needed
+            title: _trip!.title,
+            participants: _trip!.participants,
+            startDate: _trip!.startDate,
+            endDate: _trip!.endDate,
+            currency: _trip!.currency,
+            categories: _trip!.categories,
+            timestamp: _trip!.timestamp,
+            id: _trip!.id,
+            file: _trip!.file,
+            pinned: !_trip!.archived
+                ? false
+                : _trip!.pinned, // Remove pin when archiving
+            archived: !_trip!.archived,
+          );
+          await _groupNotifier?.updateGroupMetadata(updatedGroup);
+          await _refreshGroup();
+          if (!mounted) return;
+          nav.pop();
+        },
+        onEdit: () async {
+          if (_trip == null) return;
+          final nav = Navigator.of(sheetCtx);
+          nav.pop();
+          await Future.delayed(const Duration(milliseconds: 200));
+          if (!mounted) return;
+          await nav.push(
+            MaterialPageRoute(
+              builder: (ctx) =>
+                  ExpensesGroupEditPage(trip: _trip!, mode: GroupEditMode.edit),
+            ),
+          );
+          await _refreshGroup();
+        },
+        onExportShare: () async {
+          final nav = Navigator.of(sheetCtx);
+          nav.pop();
+          await Future.delayed(const Duration(milliseconds: 200));
+          if (!mounted) return;
+          _showExportOptionsSheet();
         },
         onDelete: () async {
           final nav = Navigator.of(sheetCtx);
