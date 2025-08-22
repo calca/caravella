@@ -21,12 +21,8 @@ void main() {
         id: 'test-group-1',
         title: 'Test Group',
         expenses: [],
-        participants: [
-          ExpenseParticipant(id: '1', name: 'Test User'),
-        ],
-        categories: [
-          ExpenseCategory(id: '1', name: 'Food'),
-        ],
+        participants: [ExpenseParticipant(id: '1', name: 'Test User')],
+        categories: [ExpenseCategory(id: '1', name: 'Food')],
         startDate: DateTime.now().subtract(const Duration(days: 7)),
         endDate: DateTime.now().add(const Duration(days: 7)),
         currency: '€',
@@ -36,7 +32,9 @@ void main() {
       );
     });
 
-    testWidgets('GroupCardContent builds correctly with state management', (tester) async {
+    testWidgets('GroupCardContent builds correctly with state management', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           localizationsDelegates: const [
@@ -45,7 +43,7 @@ void main() {
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-            supportedLocales: const [Locale('it'), Locale('en')],
+          supportedLocales: const [Locale('it'), Locale('en')],
           home: Scaffold(
             body: ChangeNotifierProvider<ExpenseGroupNotifier>(
               create: (_) => notifier,
@@ -66,15 +64,16 @@ void main() {
 
       // Wait for localization to load
       await tester.pumpAndSettle();
-      
+
       expect(find.byType(GroupCardContent), findsOneWidget);
     });
 
     testWidgets('Performance optimizations work correctly', (tester) async {
       // Test that memoized calculations don't cause rebuilds
       final groupWithExpenses = testGroup.copyWith(
-        expenses: List.generate(10, (i) => 
-          ExpenseDetails(
+        expenses: List.generate(
+          10,
+          (i) => ExpenseDetails(
             id: 'expense-$i',
             amount: 10.0,
             paidBy: ExpenseParticipant(id: '1', name: 'Test User'),
@@ -113,7 +112,7 @@ void main() {
       );
 
       await tester.pumpAndSettle();
-      
+
       // Verify the widget builds without performance issues
       expect(find.byType(GroupCardContent), findsOneWidget);
     });
@@ -124,8 +123,8 @@ void main() {
       expect(notifier.currentGroup, equals(testGroup));
 
       // Test event tracking
-  expect(notifier.lastEvent, isNull);
-      
+      expect(notifier.lastEvent, isNull);
+
       // Test the state before calling async method
       notifier.setCurrentGroup(testGroup);
       expect(notifier.currentGroup?.id, equals('test-group-1'));

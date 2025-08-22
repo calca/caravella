@@ -10,7 +10,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 
 class _FakePathProvider extends PathProviderPlatform {
-  late final String _tempDir = Directory.systemTemp.createTempSync('eg_test').path;
+  late final String _tempDir = Directory.systemTemp
+      .createTempSync('eg_test')
+      .path;
   @override
   Future<String?> getApplicationDocumentsPath() async => _tempDir;
 }
@@ -24,7 +26,7 @@ void main() {
 
     setUp(() async {
       notifier = ExpenseGroupNotifier();
-      
+
       // Clean up any existing test data
       try {
         final dir = await getApplicationDocumentsDirectory();
@@ -81,15 +83,21 @@ void main() {
       expect(notifier.currentGroup, isNotNull);
       expect(notifier.currentGroup!.title, equals('Updated Title'));
       expect(notifier.currentGroup!.pinned, isTrue);
-      expect(notifier.currentGroup!.expenses.length, equals(1)); // Expenses preserved
-  expect(notifier.currentGroup!.expenses[0].name, equals('Test Expense'));
+      expect(
+        notifier.currentGroup!.expenses.length,
+        equals(1),
+      ); // Expenses preserved
+      expect(notifier.currentGroup!.expenses[0].name, equals('Test Expense'));
 
       // Verify persistence
       final savedGroup = await ExpenseGroupStorage.getTripById('test-group-1');
       expect(savedGroup, isNotNull);
       expect(savedGroup!.title, equals('Updated Title'));
       expect(savedGroup.pinned, isTrue);
-      expect(savedGroup.expenses.length, equals(1)); // Expenses preserved in storage
+      expect(
+        savedGroup.expenses.length,
+        equals(1),
+      ); // Expenses preserved in storage
     });
 
     test('updateGroupMetadata updates tracking lists correctly', () async {
@@ -154,7 +162,7 @@ void main() {
       expect(savedGroup, isNotNull);
       expect(savedGroup!.title, equals('Updated Remote Group'));
       expect(savedGroup.expenses.length, equals(1)); // Expenses preserved
-  expect(savedGroup.expenses[0].name, equals('Remote Expense'));
+      expect(savedGroup.expenses[0].name, equals('Remote Expense'));
 
       // Verify tracking
       expect(notifier.updatedGroupIds, contains('test-group-3'));

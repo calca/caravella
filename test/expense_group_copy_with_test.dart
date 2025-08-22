@@ -9,7 +9,7 @@ void main() {
     test('copyWith preserves expenses when not specified', () {
       final originalGroup = ExpenseGroup(
         id: 'test-1',
-        title: 'Original Title', 
+        title: 'Original Title',
         expenses: [
           ExpenseDetails(
             id: 'expense-1',
@@ -98,9 +98,7 @@ void main() {
         currency: 'EUR',
       );
 
-      final updatedGroup = originalGroup.copyWith(
-        expenses: [],
-      );
+      final updatedGroup = originalGroup.copyWith(expenses: []);
 
       expect(updatedGroup.expenses, isEmpty);
     });

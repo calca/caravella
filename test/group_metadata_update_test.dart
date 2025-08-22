@@ -9,7 +9,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 
 class _FakePathProvider extends PathProviderPlatform {
-  late final String _tempDir = Directory.systemTemp.createTempSync('eg_test').path;
+  late final String _tempDir = Directory.systemTemp
+      .createTempSync('eg_test')
+      .path;
   @override
   Future<String?> getApplicationDocumentsPath() async => _tempDir;
 }
@@ -98,24 +100,29 @@ void main() {
       await ExpenseGroupStorage.updateGroupMetadata(updatedGroup);
 
       // Retrieve the updated group
-      final retrievedGroup = await ExpenseGroupStorage.getTripById('test-group-1');
-      
+      final retrievedGroup = await ExpenseGroupStorage.getTripById(
+        'test-group-1',
+      );
+
       // Verify metadata was updated
       expect(retrievedGroup, isNotNull);
       expect(retrievedGroup!.title, equals('Updated Title'));
       expect(retrievedGroup.participants.length, equals(3));
       expect(retrievedGroup.participants.map((p) => p.name), contains('user3'));
       expect(retrievedGroup.categories.length, equals(3));
-      expect(retrievedGroup.categories.map((c) => c.name), contains('entertainment'));
+      expect(
+        retrievedGroup.categories.map((c) => c.name),
+        contains('entertainment'),
+      );
       expect(retrievedGroup.pinned, isTrue);
-      
+
       // Most importantly: verify expenses were preserved
       expect(retrievedGroup.expenses.length, equals(2));
       expect(retrievedGroup.expenses[0].id, equals('expense-1'));
-  expect(retrievedGroup.expenses[0].name, equals('Test Expense'));
+      expect(retrievedGroup.expenses[0].name, equals('Test Expense'));
       expect(retrievedGroup.expenses[0].amount, equals(100.0));
       expect(retrievedGroup.expenses[1].id, equals('expense-2'));
-  expect(retrievedGroup.expenses[1].name, equals('Another Expense'));
+      expect(retrievedGroup.expenses[1].name, equals('Another Expense'));
       expect(retrievedGroup.expenses[1].amount, equals(50.0));
     });
 
@@ -146,7 +153,9 @@ void main() {
       await ExpenseGroupStorage.updateGroupMetadata(updatedGroup);
 
       // Retrieve and verify
-      final retrievedGroup = await ExpenseGroupStorage.getTripById('test-group-2');
+      final retrievedGroup = await ExpenseGroupStorage.getTripById(
+        'test-group-2',
+      );
       expect(retrievedGroup, isNotNull);
       expect(retrievedGroup!.title, equals('Updated Empty Group'));
       expect(retrievedGroup.pinned, isTrue);
@@ -171,7 +180,9 @@ void main() {
       await ExpenseGroupStorage.updateGroupMetadata(nonExistentGroup);
 
       // Verify the group still doesn't exist
-      final retrievedGroup = await ExpenseGroupStorage.getTripById('non-existent');
+      final retrievedGroup = await ExpenseGroupStorage.getTripById(
+        'non-existent',
+      );
       expect(retrievedGroup, isNull);
     });
   });

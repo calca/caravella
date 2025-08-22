@@ -44,7 +44,9 @@ void main() {
       ];
     });
 
-    testWidgets('FilteredExpenseList displays expenses correctly', (tester) async {
+    testWidgets('FilteredExpenseList displays expenses correctly', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -88,7 +90,7 @@ void main() {
       expect(find.text('Cerca per nome o nota...'), findsNothing);
 
       // Tap the filter toggle button
-  await tester.tap(find.byIcon(Icons.filter_list_outlined));
+      await tester.tap(find.byIcon(Icons.filter_list_outlined));
       await tester.pumpAndSettle();
 
       // Now filters should be visible
@@ -97,7 +99,9 @@ void main() {
       expect(find.text('Pagato da'), findsOneWidget);
     });
 
-    testWidgets('Filter button is disabled when no expenses present', (tester) async {
+    testWidgets('Filter button is disabled when no expenses present', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -115,15 +119,18 @@ void main() {
       await tester.pumpAndSettle();
 
       // Find the filter toggle button
-  final filterIcon = find.byIcon(Icons.filter_list_outlined);
-  expect(filterIcon, findsOneWidget);
-  final iconButton = find.ancestor(of: filterIcon, matching: find.byType(IconButton));
-  expect(iconButton, findsOneWidget);
-  final IconButton buttonWidget = tester.widget(iconButton);
-  expect(buttonWidget.onPressed, isNull);
+      final filterIcon = find.byIcon(Icons.filter_list_outlined);
+      expect(filterIcon, findsOneWidget);
+      final iconButton = find.ancestor(
+        of: filterIcon,
+        matching: find.byType(IconButton),
+      );
+      expect(iconButton, findsOneWidget);
+      final IconButton buttonWidget = tester.widget(iconButton);
+      expect(buttonWidget.onPressed, isNull);
 
       // Try tapping the disabled button - should not show filters
-  await tester.tap(iconButton);
+      await tester.tap(iconButton);
       await tester.pumpAndSettle();
 
       // Filters should not be visible since button is disabled
