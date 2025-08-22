@@ -604,6 +604,18 @@ abstract class AppLocalizations {
   /// **'Edit expense'**
   String get edit_expense;
 
+  /// No description provided for @expand_form.
+  ///
+  /// In en, this message translates to:
+  /// **'Expand form'**
+  String get expand_form;
+
+  /// No description provided for @expand_form_tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Add date, location and notes'**
+  String get expand_form_tooltip;
+
   /// No description provided for @category.
   ///
   /// In en, this message translates to:

@@ -96,6 +96,8 @@
   "from_to": "{start} - {end}",
   "add_expense": "Nuevo gasto",
   "edit_expense": "Editar gasto",
+  "expand_form": "Expandir formulario",
+  "expand_form_tooltip": "Agregar fecha, ubicación y notas",
   "category": "Categoría",
   "amount": "Cantidad",
   "invalid_amount": "Cantidad inválida",
