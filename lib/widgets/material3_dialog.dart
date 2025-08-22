@@ -28,34 +28,37 @@ class Material3Dialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     return AlertDialog(
       // Material 3 dialog shape with 28dp radius
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(28),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
       // Use M3 surface container high for elevation
       backgroundColor: colorScheme.surfaceContainerHigh,
       // Material 3 elevation for dialogs
       elevation: 6,
       // Standard M3 content padding
-      contentPadding: contentPadding ?? const EdgeInsets.fromLTRB(24, 20, 24, 24),
+      contentPadding:
+          contentPadding ?? const EdgeInsets.fromLTRB(24, 20, 24, 24),
       titlePadding: titlePadding ?? const EdgeInsets.fromLTRB(24, 24, 24, 0),
-      actionsPadding: actionsPadding ?? const EdgeInsets.fromLTRB(24, 0, 24, 24),
+      actionsPadding:
+          actionsPadding ?? const EdgeInsets.fromLTRB(24, 0, 24, 24),
       actionsAlignment: actionsAlignment,
-      icon: icon,
-      title: title != null ? DefaultTextStyle(
-        style: theme.textTheme.titleLarge!.copyWith(
-          color: colorScheme.onSurface,
-        ),
-        child: title!,
-      ) : null,
-      content: content != null ? DefaultTextStyle(
-        style: theme.textTheme.bodyMedium!.copyWith(
-          color: colorScheme.onSurfaceVariant,
-        ),
-        child: content!,
-      ) : null,
+      title: title != null
+          ? DefaultTextStyle(
+              style: theme.textTheme.titleLarge!.copyWith(
+                color: colorScheme.onSurface,
+              ),
+              child: title!,
+            )
+          : null,
+      content: content != null
+          ? DefaultTextStyle(
+              style: theme.textTheme.bodyMedium!.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
+              child: content!,
+            )
+          : null,
       actions: actions,
     );
   }
@@ -65,7 +68,7 @@ class Material3Dialog extends StatelessWidget {
 class Material3DialogActions {
   /// Creates a standard cancel button (TextButton)
   static Widget cancel(
-    BuildContext context, 
+    BuildContext context,
     String text, {
     VoidCallback? onPressed,
   }) {
@@ -83,27 +86,26 @@ class Material3DialogActions {
     bool isDestructive = false,
   }) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     return FilledButton(
       onPressed: onPressed,
-      style: isDestructive ? FilledButton.styleFrom(
-        backgroundColor: colorScheme.error,
-        foregroundColor: colorScheme.onError,
-      ) : null,
+      style: isDestructive
+          ? FilledButton.styleFrom(
+              backgroundColor: colorScheme.error,
+              foregroundColor: colorScheme.onError,
+            )
+          : null,
       child: Text(text),
     );
   }
 
-  /// Creates a secondary action button (OutlinedButton) 
+  /// Creates a secondary action button (OutlinedButton)
   static Widget secondary(
     BuildContext context,
     String text, {
     VoidCallback? onPressed,
   }) {
-    return OutlinedButton(
-      onPressed: onPressed,
-      child: Text(text),
-    );
+    return OutlinedButton(onPressed: onPressed, child: Text(text));
   }
 
   /// Creates a destructive text button for dangerous actions
@@ -113,12 +115,10 @@ class Material3DialogActions {
     VoidCallback? onPressed,
   }) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     return TextButton(
       onPressed: onPressed,
-      style: TextButton.styleFrom(
-        foregroundColor: colorScheme.error,
-      ),
+      style: TextButton.styleFrom(foregroundColor: colorScheme.error),
       child: Text(text),
     );
   }
@@ -137,7 +137,7 @@ class Material3Dialogs {
     Widget? icon,
   }) {
     final localizations = MaterialLocalizations.of(context);
-    
+
     return showDialog<bool>(
       context: context,
       builder: (context) => Material3Dialog(
@@ -169,7 +169,7 @@ class Material3Dialogs {
     Widget? icon,
   }) {
     final localizations = MaterialLocalizations.of(context);
-    
+
     return showDialog<void>(
       context: context,
       builder: (context) => Material3Dialog(
