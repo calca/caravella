@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
-import '../../../data/expense_group.dart';
+import '../../../data/model/expense_group.dart';
 import '../../../manager/details/expense_group_detail_page.dart';
 import '../../../widgets/widgets.dart';
 import 'group_card_content.dart';
@@ -26,7 +26,8 @@ class GroupCard extends StatelessWidget {
   });
 
   Color _getSelectedColor(bool isDarkMode) {
-    return theme.colorScheme
+    return theme
+        .colorScheme
         .primaryFixed; //const Color(0xFFC9E9CA); // Colore tema chiaro
   }
 

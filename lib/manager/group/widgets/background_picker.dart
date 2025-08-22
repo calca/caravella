@@ -7,6 +7,7 @@ import '../data/group_form_state.dart';
 import '../group_form_controller.dart';
 import '../pages/image_crop_page.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import '../../../widgets/bottom_sheet_scaffold.dart';
 
 class BackgroundPicker extends StatelessWidget {
   const BackgroundPicker({super.key});
@@ -49,7 +50,7 @@ class BackgroundPicker extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Icon(Icons.edit),
+                const Icon(Icons.edit_outlined),
               ],
             ),
           ),
@@ -115,6 +116,9 @@ class BackgroundPicker extends StatelessWidget {
     final controller = context.read<GroupFormController>();
     showModalBottomSheet(
       context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (ctx) => _BackgroundSheet(
         state: state,
         controller: controller,
@@ -138,98 +142,114 @@ class _BackgroundSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
     final picker = ImagePicker();
-    return SafeArea(
-      child: Wrap(
+    final tiles = [
+      ListTile(
+        contentPadding: EdgeInsets.zero,
+        leading: const Icon(Icons.photo_library_outlined),
+        title: Text(loc.from_gallery),
+        onTap: () async {
+          final sheetNav = Navigator.of(context); // navigator della sheet
+          // Chiudi SUBITO la sheet per migliorare UX
+          if (sheetNav.mounted) sheetNav.pop();
+          // Usa il navigator del parent
+          final parentNav = Navigator.of(parentContext);
+          final x = await picker.pickImage(
+            source: ImageSource.gallery,
+            imageQuality: 85,
+          );
+          if (x != null) {
+            final original = File(x.path);
+            // Mostra loader mentre si prepara la pagina di crop
+            state.setLoading(true);
+            // Attendi un frame (e un piccolo delay) per permettere al loader di apparire prima del push
+            await Future.delayed(const Duration(milliseconds: 120));
+            final cropped = await parentNav.push<File?>(
+              MaterialPageRoute(
+                builder: (_) => _CropPageWrapper(
+                  image: original,
+                  onFirstFrame: () => state.setLoading(false),
+                ),
+              ),
+            );
+            if (cropped != null) {
+              await controller.persistPickedImage(cropped);
+              return;
+            }
+            // Se annullato assicura che il loader sia nascosto
+            state.setLoading(false);
+          }
+        },
+      ),
+      ListTile(
+        contentPadding: EdgeInsets.zero,
+        leading: const Icon(Icons.photo_camera_outlined),
+        title: Text(loc.from_camera),
+        onTap: () async {
+          final sheetNav = Navigator.of(context);
+          if (sheetNav.mounted) sheetNav.pop();
+          final parentNav = Navigator.of(parentContext);
+          final x = await picker.pickImage(
+            source: ImageSource.camera,
+            imageQuality: 85,
+          );
+          if (x != null) {
+            final original = File(x.path);
+            state.setLoading(true);
+            await Future.delayed(const Duration(milliseconds: 120));
+            final cropped = await parentNav.push<File?>(
+              MaterialPageRoute(
+                builder: (_) => _CropPageWrapper(
+                  image: original,
+                  onFirstFrame: () => state.setLoading(false),
+                ),
+              ),
+            );
+            if (cropped != null) {
+              await controller.persistPickedImage(cropped);
+              return;
+            }
+            state.setLoading(false);
+          }
+        },
+      ),
+      ListTile(
+        contentPadding: EdgeInsets.zero,
+        leading: const Icon(Icons.color_lens_outlined),
+        title: Text(loc.color),
+        onTap: () {
+          final sheetNav = Navigator.of(context);
+          if (sheetNav.mounted) sheetNav.pop();
+          showModalBottomSheet(
+            context: parentContext,
+            builder: (_) => _ColorSheet(state: state),
+          );
+        },
+      ),
+      if (state.imagePath != null || state.color != null)
+        ListTile(
+          contentPadding: EdgeInsets.zero,
+          leading: const Icon(Icons.clear),
+          title: Text(loc.background_remove),
+          onTap: () {
+            state.setImage(null);
+            state.setColor(null);
+            Navigator.pop(context);
+          },
+        ),
+    ];
+    return GroupBottomSheetScaffold(
+      title: loc.background,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          ListTile(
-            leading: const Icon(Icons.photo_library),
-            title: Text(loc.from_gallery),
-            onTap: () async {
-              final sheetNav = Navigator.of(context); // navigator della sheet
-              // Chiudi SUBITO la sheet per migliorare UX
-              if (sheetNav.mounted) sheetNav.pop();
-              // Usa il navigator del parent
-              final parentNav = Navigator.of(parentContext);
-              final x = await picker.pickImage(
-                source: ImageSource.gallery,
-                imageQuality: 85,
-              );
-              if (x != null) {
-                final original = File(x.path);
-                // Mostra loader mentre si prepara la pagina di crop
-                state.setLoading(true);
-                // Attendi un frame (e un piccolo delay) per permettere al loader di apparire prima del push
-                await Future.delayed(const Duration(milliseconds: 120));
-                final cropped = await parentNav.push<File?>(
-                  MaterialPageRoute(
-                    builder: (_) => _CropPageWrapper(
-                      image: original,
-                      onFirstFrame: () => state.setLoading(false),
-                    ),
-                  ),
-                );
-                if (cropped != null) {
-                  await controller.persistPickedImage(cropped);
-                  return;
-                }
-                // Se annullato assicura che il loader sia nascosto
-                state.setLoading(false);
-              }
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.photo_camera),
-            title: Text(loc.from_camera),
-            onTap: () async {
-              final sheetNav = Navigator.of(context);
-              if (sheetNav.mounted) sheetNav.pop();
-              final parentNav = Navigator.of(parentContext);
-              final x = await picker.pickImage(
-                source: ImageSource.camera,
-                imageQuality: 85,
-              );
-              if (x != null) {
-                final original = File(x.path);
-                state.setLoading(true);
-                await Future.delayed(const Duration(milliseconds: 120));
-                final cropped = await parentNav.push<File?>(
-                  MaterialPageRoute(
-                    builder: (_) => _CropPageWrapper(
-                      image: original,
-                      onFirstFrame: () => state.setLoading(false),
-                    ),
-                  ),
-                );
-                if (cropped != null) {
-                  await controller.persistPickedImage(cropped);
-                  return;
-                }
-                state.setLoading(false);
-              }
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.color_lens_outlined),
-            title: Text(loc.color),
-            onTap: () {
-              final sheetNav = Navigator.of(context);
-              if (sheetNav.mounted) sheetNav.pop();
-              showModalBottomSheet(
-                context: parentContext,
-                builder: (_) => _ColorSheet(state: state),
-              );
-            },
-          ),
-          if (state.imagePath != null || state.color != null)
-            ListTile(
-              leading: const Icon(Icons.clear),
-              title: Text(loc.background_remove),
-              onTap: () {
-                state.setImage(null);
-                state.setColor(null);
-                Navigator.pop(context);
-              },
+          const SizedBox(height: 4),
+          ...List.generate(
+            tiles.length,
+            (i) => Padding(
+              padding: EdgeInsets.only(bottom: i == tiles.length - 1 ? 0 : 4),
+              child: tiles[i],
             ),
+          ),
         ],
       ),
     );
@@ -341,80 +361,70 @@ class _ColorSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              loc.color_suggested_title,
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              loc.color_suggested_subtitle,
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-            const SizedBox(height: 20),
-            // 12 colori su due righe
-            Builder(
-              builder: (ctx) {
-                final scheme = Theme.of(ctx).colorScheme;
-                final List<Color> palette = [
-                  scheme.primary,
-                  scheme.tertiary,
-                  scheme.secondary,
-                  scheme.errorContainer.withValues(alpha: 0.85),
-                  scheme.primaryContainer,
-                  scheme.secondaryContainer,
-                  scheme.primaryFixedDim,
-                  scheme.secondaryFixedDim,
-                  scheme.tertiaryFixed,
-                  scheme.error,
-                  scheme.outlineVariant,
-                  scheme.inversePrimary,
-                ];
-                final firstRow = palette.take(6).toList();
-                final secondRow = palette.skip(6).take(6).toList();
-                return Column(
-                  children: [
-                    _ColorPaletteRow(state: state, colors: firstRow),
-                    const SizedBox(height: 14),
-                    _ColorPaletteRow(state: state, colors: secondRow),
-                  ],
-                );
-              },
-            ),
-            const SizedBox(height: 32),
-            Text(
-              loc.background_random_color,
-              style: Theme.of(
-                context,
-              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 4),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Text(
-                    loc.color_random_subtitle,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
+    return GroupBottomSheetScaffold(
+      title: loc.color_suggested_title,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            loc.color_suggested_subtitle,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+          const SizedBox(height: 20),
+          Builder(
+            builder: (ctx) {
+              final scheme = Theme.of(ctx).colorScheme;
+              final List<Color> palette = [
+                scheme.primary,
+                scheme.tertiary,
+                scheme.secondary,
+                scheme.errorContainer.withValues(alpha: 0.85),
+                scheme.primaryContainer,
+                scheme.secondaryContainer,
+                scheme.primaryFixedDim,
+                scheme.secondaryFixedDim,
+                scheme.tertiaryFixed,
+                scheme.error,
+                scheme.outlineVariant,
+                scheme.inversePrimary,
+              ];
+              final firstRow = palette.take(6).toList();
+              final secondRow = palette.skip(6).take(6).toList();
+              return Column(
+                children: [
+                  _ColorPaletteRow(state: state, colors: firstRow),
+                  const SizedBox(height: 14),
+                  _ColorPaletteRow(state: state, colors: secondRow),
+                ],
+              );
+            },
+          ),
+          const SizedBox(height: 32),
+          Text(
+            loc.background_random_color,
+            style: Theme.of(
+              context,
+            ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: 4),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Text(
+                  loc.color_random_subtitle,
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
-                _RandomColorButton(
-                  state: state,
-                  semanticLabel: loc.background_random_color,
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-          ],
-        ),
+              ),
+              _RandomColorButton(
+                state: state,
+                semanticLabel: loc.background_random_color,
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+        ],
       ),
     );
   }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'participants_section.dart';
 import '../data/group_form_state.dart';
-import '../../../../data/expense_participant.dart';
+import '../../../data/model/expense_participant.dart';
 
 class ParticipantsEditor extends StatelessWidget {
   const ParticipantsEditor({super.key});

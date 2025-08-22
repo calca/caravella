@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../data/expense_details.dart';
-import '../../../data/expense_category.dart';
-import '../../../data/expense_participant.dart';
+import '../../../data/model/expense_details.dart';
+import '../../../data/model/expense_category.dart';
+import '../../../data/model/expense_participant.dart';
 import 'expense_amount_card.dart';
 
 class FilteredExpenseList extends StatefulWidget {
@@ -120,15 +120,19 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                 ),
               IconButton(
                 icon: Icon(
-                  _showFilters ? Icons.filter_list_off : Icons.filter_list,
+                  _showFilters
+                      ? Icons.filter_list_off_outlined
+                      : Icons.filter_list_outlined,
                   size: 20,
                 ),
-                onPressed: () {
-                  setState(() {
-                    _showFilters = !_showFilters;
-                  });
-                  widget.onFiltersVisibilityChanged?.call(_showFilters);
-                },
+                onPressed: widget.expenses.isEmpty
+                    ? null
+                    : () {
+                        setState(() {
+                          _showFilters = !_showFilters;
+                        });
+                        widget.onFiltersVisibilityChanged?.call(_showFilters);
+                      },
                 tooltip: _showFilters ? 'Nascondi filtri' : 'Mostra filtri',
               ),
             ],
@@ -152,7 +156,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                   controller: _searchController,
                   decoration: InputDecoration(
                     hintText: 'Cerca per nome o nota...',
-                    prefixIcon: Icon(Icons.search, size: 20),
+                    prefixIcon: Icon(Icons.search_outlined, size: 20),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -260,7 +264,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
               children: [
                 Icon(
                   _hasActiveFilters
-                      ? Icons.search_off
+                      ? Icons.search_off_outlined
                       : Icons.receipt_long_outlined,
                   size: 48,
                   color: colorScheme.onSurface.withValues(alpha: 0.4),

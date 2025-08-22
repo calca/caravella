@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
-import '../data/expense_details.dart';
-import '../data/expense_group.dart';
-import '../data/expense_category.dart';
+import '../data/model/expense_details.dart';
+import '../data/model/expense_group.dart';
+import '../data/model/expense_category.dart';
 import '../data/expense_group_storage.dart';
 
 class ExpenseGroupNotifier extends ChangeNotifier {
@@ -56,6 +56,28 @@ class ExpenseGroupNotifier extends ChangeNotifier {
       }
     } catch (e) {
       debugPrint('Error updating group: $e');
+    }
+  }
+
+  /// Aggiorna solo i metadati del gruppo preservando le spese esistenti
+  Future<void> updateGroupMetadata(ExpenseGroup updatedGroup) async {
+    // Aggiorna lo stato corrente preservando le spese se presente
+    if (_currentGroup != null && _currentGroup!.id == updatedGroup.id) {
+      _currentGroup = updatedGroup.copyWith(expenses: _currentGroup!.expenses);
+    }
+
+    // Aggiungi l'ID alla lista dei gruppi aggiornati
+    if (!_updatedGroupIds.contains(updatedGroup.id)) {
+      _updatedGroupIds.add(updatedGroup.id);
+    }
+
+    notifyListeners();
+
+    // Persisti le modifiche preservando le spese
+    try {
+      await ExpenseGroupStorage.updateGroupMetadata(updatedGroup);
+    } catch (e) {
+      debugPrint('Error updating group metadata: $e');
     }
   }
 

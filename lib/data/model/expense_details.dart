@@ -28,8 +28,9 @@ class ExpenseDetails {
     return ExpenseDetails(
       id: json['id'],
       category: ExpenseCategory.fromJson(json['category']),
-      amount:
-          json['amount'] != null ? (json['amount'] as num).toDouble() : null,
+      amount: json['amount'] != null
+          ? (json['amount'] as num).toDouble()
+          : null,
       paidBy: ExpenseParticipant.fromJson(json['paidBy']),
       date: DateTime.parse(json['date']),
       note: json['note'],
@@ -41,15 +42,15 @@ class ExpenseDetails {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'category': category.toJson(),
-        if (amount != null) 'amount': amount,
-        'paidBy': paidBy.toJson(),
-        'date': date.toIso8601String(),
-        if (note != null) 'note': note,
-        if (name != null) 'name': name,
-        if (location != null) 'location': location!.toJson(),
-      };
+    'id': id,
+    'category': category.toJson(),
+    if (amount != null) 'amount': amount,
+    'paidBy': paidBy.toJson(),
+    'date': date.toIso8601String(),
+    if (note != null) 'note': note,
+    if (name != null) 'name': name,
+    if (location != null) 'location': location!.toJson(),
+  };
 
   ExpenseDetails copyWith({
     String? id,

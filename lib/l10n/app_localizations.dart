@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_en.dart';
+import 'app_localizations_es.dart';
 import 'app_localizations_it.dart';
 
 // ignore_for_file: type=lint
@@ -95,6 +96,7 @@ abstract class AppLocalizations {
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
+    Locale('es'),
     Locale('it'),
   ];
 
@@ -133,6 +135,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Secure screen'**
   String get settings_flag_secure_title;
+
+  /// No description provided for @settings_privacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy'**
+  String get settings_privacy;
 
   /// No description provided for @select_currency.
   ///
@@ -323,8 +331,32 @@ abstract class AppLocalizations {
   /// No description provided for @choose_image_or_color.
   ///
   /// In en, this message translates to:
-  /// **'Choose an image or color to customize the group'**
+  /// **'Choose image or color'**
   String get choose_image_or_color;
+
+  /// No description provided for @participants_description.
+  ///
+  /// In en, this message translates to:
+  /// **'People sharing costs'**
+  String get participants_description;
+
+  /// No description provided for @categories_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Group expenses by type'**
+  String get categories_description;
+
+  /// No description provided for @dates_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional start and end'**
+  String get dates_description;
+
+  /// No description provided for @currency_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Base currency for group'**
+  String get currency_description;
 
   /// No description provided for @background_color_selected.
   ///
@@ -1004,6 +1036,12 @@ abstract class AppLocalizations {
   /// **'Unpin group'**
   String get unpin_group;
 
+  /// No description provided for @pin.
+  ///
+  /// In en, this message translates to:
+  /// **'Pin'**
+  String get pin;
+
   /// No description provided for @theme_automatic.
   ///
   /// In en, this message translates to:
@@ -1286,11 +1324,23 @@ abstract class AppLocalizations {
   /// **'General'**
   String get settings_general;
 
+  /// No description provided for @settings_general_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Language and appearance settings'**
+  String get settings_general_desc;
+
   /// No description provided for @settings_language.
   ///
   /// In en, this message translates to:
   /// **'Language'**
   String get settings_language;
+
+  /// No description provided for @settings_language_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your preferred language'**
+  String get settings_language_desc;
 
   /// No description provided for @settings_language_it.
   ///
@@ -1304,6 +1354,12 @@ abstract class AppLocalizations {
   /// **'English'**
   String get settings_language_en;
 
+  /// No description provided for @settings_language_es.
+  ///
+  /// In en, this message translates to:
+  /// **'Spanish'**
+  String get settings_language_es;
+
   /// No description provided for @settings_select_language.
   ///
   /// In en, this message translates to:
@@ -1316,11 +1372,23 @@ abstract class AppLocalizations {
   /// **'Theme'**
   String get settings_theme;
 
+  /// No description provided for @settings_theme_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Light, dark or system'**
+  String get settings_theme_desc;
+
   /// No description provided for @settings_select_theme.
   ///
   /// In en, this message translates to:
   /// **'Select theme'**
   String get settings_select_theme;
+
+  /// No description provided for @settings_privacy_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Security and privacy options'**
+  String get settings_privacy_desc;
 
   /// No description provided for @settings_data.
   ///
@@ -1328,23 +1396,29 @@ abstract class AppLocalizations {
   /// **'Data'**
   String get settings_data;
 
+  /// No description provided for @settings_data_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your information'**
+  String get settings_data_desc;
+
   /// No description provided for @settings_data_manage.
   ///
   /// In en, this message translates to:
   /// **'Data management'**
   String get settings_data_manage;
 
-  /// No description provided for @settings_data_desc.
-  ///
-  /// In en, this message translates to:
-  /// **'Backup and restore'**
-  String get settings_data_desc;
-
   /// No description provided for @settings_info.
   ///
   /// In en, this message translates to:
   /// **'Information'**
   String get settings_info;
+
+  /// No description provided for @settings_info_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'App details and support'**
+  String get settings_info_desc;
 
   /// No description provided for @settings_app_version.
   ///
@@ -2726,7 +2800,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en', 'it'].contains(locale.languageCode);
+      <String>['en', 'es', 'it'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -2737,6 +2811,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   switch (locale.languageCode) {
     case 'en':
       return AppLocalizationsEn();
+    case 'es':
+      return AppLocalizationsEs();
     case 'it':
       return AppLocalizationsIt();
   }

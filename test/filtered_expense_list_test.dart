@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/manager/details/widgets/filtered_expense_list.dart';
-import 'package:org_app_caravella/data/expense_details.dart';
-import 'package:org_app_caravella/data/expense_category.dart';
-import 'package:org_app_caravella/data/expense_participant.dart';
+import 'package:org_app_caravella/data/model/expense_details.dart';
+import 'package:org_app_caravella/data/model/expense_category.dart';
+import 'package:org_app_caravella/data/model/expense_participant.dart';
 
 void main() {
   group('FilteredExpenseList Tests', () {
@@ -44,7 +44,9 @@ void main() {
       ];
     });
 
-    testWidgets('FilteredExpenseList displays expenses correctly', (tester) async {
+    testWidgets('FilteredExpenseList displays expenses correctly', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -88,13 +90,51 @@ void main() {
       expect(find.text('Cerca per nome o nota...'), findsNothing);
 
       // Tap the filter toggle button
-      await tester.tap(find.byIcon(Icons.filter_list));
+      await tester.tap(find.byIcon(Icons.filter_list_outlined));
       await tester.pumpAndSettle();
 
       // Now filters should be visible
       expect(find.text('Cerca per nome o nota...'), findsOneWidget);
       expect(find.text('Categoria'), findsOneWidget);
       expect(find.text('Pagato da'), findsOneWidget);
+    });
+
+    testWidgets('Filter button is disabled when no expenses present', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FilteredExpenseList(
+              expenses: [], // Empty expenses list
+              currency: '€',
+              onExpenseTap: (expense) {},
+              categories: testCategories,
+              participants: testParticipants,
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // Find the filter toggle button
+      final filterIcon = find.byIcon(Icons.filter_list_outlined);
+      expect(filterIcon, findsOneWidget);
+      final iconButton = find.ancestor(
+        of: filterIcon,
+        matching: find.byType(IconButton),
+      );
+      expect(iconButton, findsOneWidget);
+      final IconButton buttonWidget = tester.widget(iconButton);
+      expect(buttonWidget.onPressed, isNull);
+
+      // Try tapping the disabled button - should not show filters
+      await tester.tap(iconButton);
+      await tester.pumpAndSettle();
+
+      // Filters should not be visible since button is disabled
+      expect(find.text('Cerca per nome o nota...'), findsNothing);
     });
   });
 }

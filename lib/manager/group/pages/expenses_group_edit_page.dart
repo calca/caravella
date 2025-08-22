@@ -1,12 +1,13 @@
 // Widget simile a quello incollato per la selezione valuta
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../data/expense_group.dart';
+import '../../../data/model/expense_group.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../widgets/caravella_app_bar.dart';
 import '../../expense/expense_form/icon_leading_field.dart';
 import '../../../themes/app_text_styles.dart';
 import '../widgets/section_flat.dart';
+import '../widgets/section_header.dart';
 import '../widgets/selection_tile.dart';
 import '../data/group_form_state.dart';
 import '../group_form_controller.dart';
@@ -174,7 +175,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
             actions: [
               if (widget.trip != null)
                 IconButton(
-                  icon: const Icon(Icons.delete),
+                  icon: const Icon(Icons.delete_outline),
                   tooltip: gloc.delete,
                   onPressed: () async {
                     final nav = Navigator.of(context);
@@ -283,22 +284,27 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  gloc.currency,
-                                  style: Theme.of(context).textTheme.bodyMedium
-                                      ?.copyWith(fontWeight: FontWeight.w600),
+                                SectionHeader(
+                                  title: gloc.currency,
+                                  description: gloc.currency_description,
+                                  padding: EdgeInsets.zero,
+                                  spacing: 4,
                                 ),
                                 const SizedBox(height: 8),
                                 Selector<GroupFormState, Map<String, String>>(
                                   selector: (context, s) => s.currency,
                                   builder: (context, cur, child) => SelectionTile(
-                                    leading: const Icon(
-                                      Icons.account_balance_wallet_outlined,
-                                      size: 32,
+                                    leading: Text(
+                                      cur['symbol'] ?? '',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge
+                                          ?.copyWith(fontSize: 28),
+                                      semanticsLabel:
+                                          '${cur['symbol']} ${cur['code']}',
                                     ),
                                     title: cur['name']!,
-                                    subtitle:
-                                        '0${cur['symbol']} ${cur['code']}',
+                                    subtitle: '${cur['code']}',
                                     trailing: Icon(
                                       Icons.chevron_right,
                                       size: 24,
@@ -341,16 +347,11 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  gloc.background,
-                                  style: Theme.of(context).textTheme.bodyMedium
-                                      ?.copyWith(fontWeight: FontWeight.w600),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  gloc.choose_image_or_color,
-                                  style: Theme.of(context).textTheme.bodySmall
-                                      ?.copyWith(color: Colors.grey[700]),
+                                SectionHeader(
+                                  title: gloc.background,
+                                  description: gloc.choose_image_or_color,
+                                  padding: EdgeInsets.zero,
+                                  spacing: 4,
                                 ),
                                 const SizedBox(height: 12),
                                 const BackgroundPicker(),

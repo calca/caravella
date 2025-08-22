@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
-import '../../../data/expense_participant.dart';
+import '../../../data/model/expense_participant.dart';
 import 'editable_name_list.dart';
 
 class ParticipantsSection extends StatelessWidget {
@@ -23,6 +23,7 @@ class ParticipantsSection extends StatelessWidget {
     return EditableNameList(
       title: loc.participants,
       requiredMark: true,
+      description: loc.participants_description,
       items: participants.map((e) => e.name).toList(),
       addLabel: loc.add_participant,
       hintLabel: loc.participant_name,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
-import '../../../data/expense_category.dart';
+import '../../../data/model/expense_category.dart';
 import '../../../widgets/selection_bottom_sheet.dart';
 import 'inline_select_field.dart';
 
@@ -9,6 +9,7 @@ class CategorySelectorWidget extends StatelessWidget {
   final ExpenseCategory? selectedCategory;
   final void Function(ExpenseCategory?) onCategorySelected;
   final Future<void> Function() onAddCategory;
+  final Future<void> Function(String)? onAddCategoryInline;
   final TextStyle? textStyle;
   final bool fullEdit;
   const CategorySelectorWidget({
@@ -17,6 +18,7 @@ class CategorySelectorWidget extends StatelessWidget {
     required this.selectedCategory,
     required this.onCategorySelected,
     required this.onAddCategory,
+    this.onAddCategoryInline,
     this.textStyle,
     this.fullEdit = false,
   });
@@ -34,10 +36,8 @@ class CategorySelectorWidget extends StatelessWidget {
         selected: selectedCategory,
         gloc: gloc,
         itemLabel: (c) => c.name,
-        onAddItem: () async {
-          await onAddCategory();
-        },
-        addItemTooltip: gloc.add_category,
+        onAddItemInline: onAddCategoryInline,
+        addItemHint: gloc.category_name,
       );
       if (picked != null && picked != selectedCategory) {
         onCategorySelected(picked);

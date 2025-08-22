@@ -1,10 +1,11 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
-import '../../data/expense_group.dart';
+import '../../data/model/expense_group.dart';
 import '../../data/expense_group_storage.dart';
-import '../../data/expense_participant.dart';
-import '../../data/expense_category.dart';
+import '../../data/model/expense_participant.dart';
+import '../../data/model/expense_category.dart';
+import '../../data/model/expense_details.dart';
 import 'data/group_form_state.dart';
 
 /// Controller encapsulates business logic for the group form.
@@ -97,12 +98,24 @@ class GroupFormController {
             .toList(),
         startDate: state.startDate,
         endDate: state.endDate,
-        currency: state.currency['code'] ?? state.currency['symbol'] ?? 'EUR',
+        currency: state.currency['symbol'] ?? state.currency['code'] ?? 'EUR',
         file: state.imagePath,
         color: state.color,
         timestamp: _original?.timestamp ?? now,
+        // Preserve existing expenses explicitly when editing an existing group
+        expenses: _original != null
+            ? List<ExpenseDetails>.from(_original!.expenses)
+            : const [],
       );
-      await ExpenseGroupStorage.saveTrip(group);
+
+      if (_original != null) {
+        // Se stiamo modificando un gruppo esistente, usa il nuovo metodo che preserva le spese
+        await ExpenseGroupStorage.updateGroupMetadata(group);
+      } else {
+        // Se stiamo creando un nuovo gruppo, usa il metodo normale
+        await ExpenseGroupStorage.saveTrip(group);
+      }
+
       _original = group;
       return group;
     } finally {

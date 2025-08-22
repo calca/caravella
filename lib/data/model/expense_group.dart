@@ -32,27 +32,32 @@ class ExpenseGroup {
     this.archived = false, // Default a false
     this.file, // Opzionale, path del file
     this.color, // Opzionale, colore del gruppo
-  })  : timestamp = timestamp ?? DateTime.now(),
-        id = id ?? const Uuid().v4();
+  }) : timestamp = timestamp ?? DateTime.now(),
+       id = id ?? const Uuid().v4();
 
   factory ExpenseGroup.fromJson(Map<String, dynamic> json) {
     return ExpenseGroup(
       id: json['id'],
       title: json['title'],
-      expenses: (json['expenses'] as List<dynamic>?)
+      expenses:
+          (json['expenses'] as List<dynamic>?)
               ?.map((e) => ExpenseDetails.fromJson(e))
               .toList() ??
           [],
-      participants: (json['participants'] as List<dynamic>?)
+      participants:
+          (json['participants'] as List<dynamic>?)
               ?.map(
-                  (p) => ExpenseParticipant.fromJson(p as Map<String, dynamic>))
+                (p) => ExpenseParticipant.fromJson(p as Map<String, dynamic>),
+              )
               .toList() ??
           [],
-      startDate:
-          json['startDate'] != null ? DateTime.parse(json['startDate']) : null,
+      startDate: json['startDate'] != null
+          ? DateTime.parse(json['startDate'])
+          : null,
       endDate: json['endDate'] != null ? DateTime.parse(json['endDate']) : null,
       currency: json['currency'] ?? '€', // Default a euro se mancante
-      categories: (json['categories'] as List<dynamic>?)
+      categories:
+          (json['categories'] as List<dynamic>?)
               ?.map((c) => ExpenseCategory.fromJson(c as Map<String, dynamic>))
               .toList() ??
           [],
@@ -67,20 +72,20 @@ class ExpenseGroup {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': title,
-        'expenses': expenses.map((e) => e.toJson()).toList(),
-        'participants': participants.map((p) => p.toJson()).toList(),
-        'startDate': startDate?.toIso8601String(),
-        'endDate': endDate?.toIso8601String(),
-        'currency': currency,
-        'categories': categories.map((c) => c.toJson()).toList(),
-        'timestamp': timestamp.toIso8601String(),
-        'pinned': pinned, // Salva il valore pinnato
-        'archived': archived, // Salva il valore archiviato
-        'file': file, // Salva il valore del file
-        'color': color, // Salva il valore del colore
-      };
+    'id': id,
+    'title': title,
+    'expenses': expenses.map((e) => e.toJson()).toList(),
+    'participants': participants.map((p) => p.toJson()).toList(),
+    'startDate': startDate?.toIso8601String(),
+    'endDate': endDate?.toIso8601String(),
+    'currency': currency,
+    'categories': categories.map((c) => c.toJson()).toList(),
+    'timestamp': timestamp.toIso8601String(),
+    'pinned': pinned, // Salva il valore pinnato
+    'archived': archived, // Salva il valore archiviato
+    'file': file, // Salva il valore del file
+    'color': color, // Salva il valore del colore
+  };
 
   ExpenseGroup copyWith({
     String? id,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../data/expense_group.dart';
-import '../../../data/expense_participant.dart';
-import '../../../data/expense_category.dart';
+import '../../../data/model/expense_group.dart';
+import '../../../data/model/expense_participant.dart';
+import '../../../data/model/expense_category.dart';
 import '../../../data/expense_group_storage.dart';
 import '../../group/pages/expenses_group_edit_page.dart';
 
@@ -56,21 +56,21 @@ class ExpenseGroupOptionsSheet extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   _buildOptionTile(
-                    icon: Icons.edit_rounded,
+                    icon: Icons.edit_outlined,
                     title: 'Modifica gruppo',
                     subtitle: 'Modifica nome, date e partecipanti',
                     onTap: () => _handleEdit(context),
                     context: context,
                   ),
                   _buildOptionTile(
-                    icon: Icons.copy_rounded,
+                    icon: Icons.content_copy_outlined,
                     title: 'Duplica gruppo',
                     subtitle: 'Crea una copia con gli stessi dati',
                     onTap: () => _handleDuplicate(context),
                     context: context,
                   ),
                   _buildOptionTile(
-                    icon: Icons.delete_rounded,
+                    icon: Icons.delete_outline,
                     title: 'Elimina gruppo',
                     subtitle: 'Rimuovi definitivamente questo gruppo',
                     onTap: () => _handleDelete(context),

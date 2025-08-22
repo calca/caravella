@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../../../../data/expense_group.dart';
+import '../../../../data/model/expense_group.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 
 class DailyExpensesChart extends StatelessWidget {
@@ -176,9 +176,7 @@ class DailyExpensesChart extends StatelessWidget {
                       ),
                     ),
                   ],
-                  lineTouchData: const LineTouchData(
-                    enabled: false,
-                  ),
+                  lineTouchData: const LineTouchData(enabled: false),
                 ),
               ),
             ),

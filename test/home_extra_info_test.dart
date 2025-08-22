@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:org_app_caravella/data/expense_group.dart';
-import 'package:org_app_caravella/data/expense_details.dart';
-import 'package:org_app_caravella/data/expense_category.dart';
-import 'package:org_app_caravella/data/expense_participant.dart';
+import 'package:org_app_caravella/data/model/expense_group.dart';
+import 'package:org_app_caravella/data/model/expense_details.dart';
+import 'package:org_app_caravella/data/model/expense_category.dart';
+import 'package:org_app_caravella/data/model/expense_participant.dart';
 
 void main() {
   group('Home Page Extra Info Logic', () {
@@ -18,7 +18,7 @@ void main() {
         id: 'user1',
         createdAt: DateTime.now(),
       );
-      
+
       category = ExpenseCategory(
         name: 'Food',
         id: 'food',
@@ -28,7 +28,7 @@ void main() {
       // Short trip (14 days)
       final startDate = DateTime.now().subtract(const Duration(days: 13));
       final endDate = DateTime.now().add(const Duration(days: 1));
-      
+
       shortTrip = ExpenseGroup(
         title: 'Short Trip',
         expenses: [
@@ -57,7 +57,7 @@ void main() {
       // Long trip (60 days)
       final longStartDate = DateTime.now().subtract(const Duration(days: 30));
       final longEndDate = DateTime.now().add(const Duration(days: 30));
-      
+
       longTrip = ExpenseGroup(
         title: 'Long Trip',
         expenses: [
@@ -112,10 +112,10 @@ void main() {
     test('should calculate daily average correctly for short trips', () {
       double calculateDailyAverage(ExpenseGroup group) {
         if (group.expenses.isEmpty) return 0.0;
-        
+
         final now = DateTime.now();
         DateTime startDate, endDate;
-        
+
         if (group.startDate != null && group.endDate != null) {
           startDate = group.startDate!;
           endDate = group.endDate!.isBefore(now) ? group.endDate! : now;
@@ -126,20 +126,20 @@ void main() {
           startDate = sortedExpenses.first.date;
           endDate = now;
         }
-        
+
         final days = endDate.difference(startDate).inDays + 1;
         if (days <= 0) return 0.0;
-        
+
         final totalSpent = group.expenses.fold<double>(
           0,
           (sum, expense) => sum + (expense.amount ?? 0),
         );
-        
+
         return totalSpent / days;
       }
 
       final dailyAverage = calculateDailyAverage(shortTrip);
-      
+
       // Total spending: 100 + 50 = 150
       // Duration: approximately 14 days (from startDate to now)
       expect(dailyAverage, greaterThan(10.0)); // Should be around 150/14 ≈ 10.7
@@ -150,10 +150,12 @@ void main() {
       double calculateTodaySpending(ExpenseGroup group) {
         final today = DateTime.now();
         return group.expenses
-            .where((e) => 
-                e.date.year == today.year &&
-                e.date.month == today.month &&
-                e.date.day == today.day)
+            .where(
+              (e) =>
+                  e.date.year == today.year &&
+                  e.date.month == today.month &&
+                  e.date.day == today.day,
+            )
             .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
       }
 
@@ -161,7 +163,10 @@ void main() {
       expect(todaySpending, equals(50.0)); // Only the coffee expense is today
 
       final longTripTodaySpending = calculateTodaySpending(longTrip);
-      expect(longTripTodaySpending, equals(0.0)); // No expenses today in long trip
+      expect(
+        longTripTodaySpending,
+        equals(0.0),
+      ); // No expenses today in long trip
     });
 
     test('should handle trips with no expenses', () {
@@ -183,10 +188,12 @@ void main() {
       double calculateTodaySpending(ExpenseGroup group) {
         final today = DateTime.now();
         return group.expenses
-            .where((e) => 
-                e.date.year == today.year &&
-                e.date.month == today.month &&
-                e.date.day == today.day)
+            .where(
+              (e) =>
+                  e.date.year == today.year &&
+                  e.date.month == today.month &&
+                  e.date.day == today.day,
+            )
             .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
       }
 

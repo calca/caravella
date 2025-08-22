@@ -28,6 +28,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settings_flag_secure_title => 'Proteggi schermata';
 
   @override
+  String get settings_privacy => 'Privacy';
+
+  @override
   String get select_currency => 'Seleziona valuta';
 
   @override
@@ -122,8 +125,19 @@ class AppLocalizationsIt extends AppLocalizations {
   String get background_options => 'Opzioni Sfondo';
 
   @override
-  String get choose_image_or_color =>
-      'Scegli un\'immagine o un colore per personalizzare il gruppo';
+  String get choose_image_or_color => 'Scegli immagine o colore';
+
+  @override
+  String get participants_description => 'Persone che condividono spese';
+
+  @override
+  String get categories_description => 'Organizza spese per tipo';
+
+  @override
+  String get dates_description => 'Date inizio/fine opzionali';
+
+  @override
+  String get currency_description => 'Valuta base del gruppo';
 
   @override
   String get background_color_selected => 'Colore selezionato';
@@ -478,6 +492,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get unpin_group => 'Rimuovi pin';
 
   @override
+  String get pin => 'Pin';
+
+  @override
   String get theme_automatic => 'Automatico';
 
   @override
@@ -622,7 +639,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settings_general => 'Generali';
 
   @override
+  String get settings_general_desc => 'Impostazioni lingua e aspetto';
+
+  @override
   String get settings_language => 'Lingua';
+
+  @override
+  String get settings_language_desc => 'Scegli la lingua preferita';
 
   @override
   String get settings_language_it => 'Italiano';
@@ -631,25 +654,37 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settings_language_en => 'Inglese';
 
   @override
+  String get settings_language_es => 'Spagnolo';
+
+  @override
   String get settings_select_language => 'Seleziona lingua';
 
   @override
   String get settings_theme => 'Tema';
 
   @override
+  String get settings_theme_desc => 'Chiaro, scuro o sistema';
+
+  @override
   String get settings_select_theme => 'Seleziona tema';
+
+  @override
+  String get settings_privacy_desc => 'Opzioni sicurezza e privacy';
 
   @override
   String get settings_data => 'Dati';
 
   @override
+  String get settings_data_desc => 'Gestisci le tue informazioni';
+
+  @override
   String get settings_data_manage => 'Gestione dati';
 
   @override
-  String get settings_data_desc => 'Backup e ripristino';
+  String get settings_info => 'Informazioni';
 
   @override
-  String get settings_info => 'Informazioni';
+  String get settings_info_desc => 'Dettagli app e supporto';
 
   @override
   String get settings_app_version => 'Versione dell\'app';
@@ -703,7 +738,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get select_paid_by => 'Seleziona chi ha pagato';
 
   @override
-  String get select_category => 'Seleziona una categoria';
+  String get select_category => 'Seleziona categoria';
 
   @override
   String get check_form => 'Controlla i dati inseriti';

@@ -10,6 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'terms_page.dart';
 import 'data_page.dart';
+import '../widgets/bottom_sheet_scaffold.dart';
+import '../manager/group/widgets/section_header.dart';
 
 class SettingsPage extends StatelessWidget {
   final void Function(String)? onLocaleChanged;
@@ -41,16 +43,10 @@ class SettingsPage extends StatelessWidget {
             MediaQuery.of(context).padding.bottom + 24,
           ),
           children: [
-            Padding(
+            SectionHeader(
+              title: genLoc.settings_general,
+              description: genLoc.settings_general_desc,
               padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-              child: Text(
-                genLoc.settings_general,
-                style: textTheme.titleSmall?.copyWith(
-                  color: colorScheme.onSurface,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -64,7 +60,7 @@ class SettingsPage extends StatelessWidget {
                     ),
                     child: Semantics(
                       button: true,
-                      label: '${genLoc.settings_language} - Current: ${locale == 'it' ? genLoc.settings_language_it : genLoc.settings_language_en}',
+                      label: '${genLoc.settings_language} - Current: ${_getLanguageLabel(locale, genLoc)}',
                       hint: 'Double tap to change language',
                       child: ListTile(
                         leading: const Icon(Icons.language),
@@ -73,9 +69,7 @@ class SettingsPage extends StatelessWidget {
                           style: textTheme.titleMedium,
                         ),
                         subtitle: Text(
-                          locale == 'it'
-                              ? genLoc.settings_language_it
-                              : genLoc.settings_language_en,
+                          _getLanguageLabel(locale, genLoc),
                         ),
                         trailing: const Icon(Icons.arrow_drop_down),
                         onTap: () {
@@ -93,7 +87,8 @@ class SettingsPage extends StatelessWidget {
                     ),
                     child: Semantics(
                       button: true,
-                      label: '${genLoc.settings_theme} - Current: $currentThemeLabel',
+                      label:
+                          '${genLoc.settings_theme} - Current: $currentThemeLabel',
                       hint: 'Double tap to change theme',
                       child: ListTile(
                         leading: const Icon(Icons.brightness_6),
@@ -113,16 +108,10 @@ class SettingsPage extends StatelessWidget {
                 ],
               ),
             ),
-            Padding(
+            SectionHeader(
+              title: genLoc.settings_privacy,
+              description: genLoc.settings_privacy_desc,
               padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-              child: Text(
-                'Privacy',
-                style: textTheme.titleSmall?.copyWith(
-                  color: colorScheme.onSurface,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -138,8 +127,11 @@ class SettingsPage extends StatelessWidget {
                       child: Consumer<FlagSecureNotifier>(
                         builder: (context, notifier, _) => Semantics(
                           toggled: notifier.enabled,
-                          label: '${genLoc.settings_flag_secure_title} - ${notifier.enabled ? genLoc.accessibility_currently_enabled : genLoc.accessibility_currently_disabled}',
-                          hint: notifier.enabled ? genLoc.accessibility_double_tap_disable : genLoc.accessibility_double_tap_enable,
+                          label:
+                              '${genLoc.settings_flag_secure_title} - ${notifier.enabled ? genLoc.accessibility_currently_enabled : genLoc.accessibility_currently_disabled}',
+                          hint: notifier.enabled
+                              ? genLoc.accessibility_double_tap_disable
+                              : genLoc.accessibility_double_tap_enable,
                           child: ListTile(
                             leading: const Icon(Icons.privacy_tip_outlined),
                             title: Text(
@@ -151,7 +143,11 @@ class SettingsPage extends StatelessWidget {
                               style: textTheme.bodySmall,
                             ),
                             trailing: Semantics(
-                              label: genLoc.accessibility_security_switch(notifier.enabled ? genLoc.accessibility_switch_on : genLoc.accessibility_switch_off),
+                              label: genLoc.accessibility_security_switch(
+                                notifier.enabled
+                                    ? genLoc.accessibility_switch_on
+                                    : genLoc.accessibility_switch_off,
+                              ),
                               child: Switch(
                                 value: notifier.enabled,
                                 onChanged: (val) async {
@@ -167,16 +163,10 @@ class SettingsPage extends StatelessWidget {
                 ],
               ),
             ),
-            Padding(
+            SectionHeader(
+              title: genLoc.settings_data,
+              description: genLoc.settings_data_desc,
               padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-              child: Text(
-                genLoc.settings_data,
-                style: textTheme.titleSmall?.copyWith(
-                  color: colorScheme.onSurface,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -202,16 +192,10 @@ class SettingsPage extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(
+            SectionHeader(
+              title: genLoc.settings_info,
+              description: genLoc.settings_info_desc,
               padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-              child: Text(
-                genLoc.settings_info,
-                style: textTheme.titleSmall?.copyWith(
-                  color: colorScheme.onSurface,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -281,6 +265,18 @@ class SettingsPage extends StatelessWidget {
       return '-';
     }
   }
+
+  String _getLanguageLabel(String locale, gen.AppLocalizations genLoc) {
+    switch (locale) {
+      case 'it':
+        return genLoc.settings_language_it;
+      case 'es':
+        return genLoc.settings_language_es;
+      case 'en':
+      default:
+        return genLoc.settings_language_en;
+    }
+  }
 }
 
 void _showLanguagePicker(
@@ -290,7 +286,6 @@ void _showLanguagePicker(
 ) {
   showModalBottomSheet(
     context: context,
-    isScrollControlled: false,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
     ),
@@ -298,66 +293,43 @@ void _showLanguagePicker(
       final entries = [
         ('it', loc.settings_language_it),
         ('en', loc.settings_language_en),
+        ('es', loc.settings_language_es),
       ];
-      return SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        loc.settings_select_language,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                    ),
-                    IconButton(
-                      tooltip: MaterialLocalizations.of(
-                        context,
-                      ).closeButtonLabel,
-                      icon: const Icon(Icons.close),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                  ],
+      return GroupBottomSheetScaffold(
+        title: loc.settings_select_language,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ...entries.map((e) {
+              final selected = e.$1 == currentLocale;
+              return ListTile(
+                visualDensity: VisualDensity.compact,
+                title: Text(e.$2),
+                trailing: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 180),
+                  child: selected
+                      ? Icon(
+                          Icons.check,
+                          key: ValueKey(e.$1),
+                          color: Theme.of(context).colorScheme.primary,
+                        )
+                      : const SizedBox.shrink(),
                 ),
-              ),
-              const SizedBox(height: 8),
-              ...entries.map((e) {
-                final selected = e.$1 == currentLocale;
-                return ListTile(
-                  visualDensity: VisualDensity.compact,
-                  title: Text(e.$2),
-                  trailing: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 180),
-                    child: selected
-                        ? Icon(
-                            Icons.check,
-                            key: ValueKey(e.$1),
-                            color: Theme.of(context).colorScheme.primary,
-                          )
-                        : const SizedBox.shrink(),
-                  ),
-                  onTap: selected
-                      ? null
-                      : () {
-                          LocaleNotifier.of(context)?.changeLocale(e.$1);
-                          final stateWidget = context
-                              .findAncestorWidgetOfExactType<SettingsPage>();
-                          if (stateWidget != null &&
-                              stateWidget.onLocaleChanged != null) {
-                            stateWidget.onLocaleChanged!(e.$1);
-                          }
-                          Navigator.of(context).pop();
-                        },
-                );
-              }),
-              const SizedBox(height: 8),
-            ],
-          ),
+                onTap: selected
+                    ? null
+                    : () {
+                        LocaleNotifier.of(context)?.changeLocale(e.$1);
+                        final stateWidget = context
+                            .findAncestorWidgetOfExactType<SettingsPage>();
+                        if (stateWidget != null &&
+                            stateWidget.onLocaleChanged != null) {
+                          stateWidget.onLocaleChanged!(e.$1);
+                        }
+                        Navigator.of(context).pop();
+                      },
+              );
+            }),
+          ],
         ),
       );
     },
@@ -378,64 +350,40 @@ void _showThemePicker(BuildContext context, gen.AppLocalizations loc) {
       borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
     ),
     builder: (ctx) {
-      return SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        loc.settings_select_theme,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                    ),
-                    IconButton(
-                      tooltip: MaterialLocalizations.of(
-                        context,
-                      ).closeButtonLabel,
-                      icon: const Icon(Icons.close),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                  ],
+      return GroupBottomSheetScaffold(
+        title: loc.settings_select_theme,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ...entries.map((e) {
+              final selected = e.$1 == currentMode;
+              return ListTile(
+                leading: Icon(
+                  e.$3,
+                  color: selected
+                      ? Theme.of(context).colorScheme.primary
+                      : null,
                 ),
-              ),
-              const SizedBox(height: 8),
-              ...entries.map((e) {
-                final selected = e.$1 == currentMode;
-                return ListTile(
-                  leading: Icon(
-                    e.$3,
-                    color: selected
-                        ? Theme.of(context).colorScheme.primary
-                        : null,
-                  ),
-                  title: Text(e.$2),
-                  trailing: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 180),
-                    child: selected
-                        ? Icon(
-                            Icons.check,
-                            key: ValueKey(e.$1),
-                            color: Theme.of(context).colorScheme.primary,
-                          )
-                        : const SizedBox.shrink(),
-                  ),
-                  onTap: selected
-                      ? null
-                      : () {
-                          ThemeModeNotifier.of(context)?.changeTheme(e.$1);
-                          Navigator.of(context).pop();
-                        },
-                );
-              }),
-              const SizedBox(height: 8),
-            ],
-          ),
+                title: Text(e.$2),
+                trailing: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 180),
+                  child: selected
+                      ? Icon(
+                          Icons.check,
+                          key: ValueKey(e.$1),
+                          color: Theme.of(context).colorScheme.primary,
+                        )
+                      : const SizedBox.shrink(),
+                ),
+                onTap: selected
+                    ? null
+                    : () {
+                        ThemeModeNotifier.of(context)?.changeTheme(e.$1);
+                        Navigator.of(context).pop();
+                      },
+              );
+            }),
+          ],
         ),
       );
     },

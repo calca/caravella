@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
-import '../../../data/expense_group.dart';
+import '../../../data/model/expense_group.dart';
 
 class GroupHeader extends StatelessWidget {
   final ExpenseGroup trip;
@@ -22,8 +22,8 @@ class GroupHeader extends StatelessWidget {
                 height: circleSize,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: trip.color != null 
-                      ? Color(trip.color!) 
+                  color: trip.color != null
+                      ? Color(trip.color!)
                       : colorScheme.surfaceContainer,
                 ),
                 child: trip.file != null && trip.file!.isNotEmpty
@@ -38,9 +38,7 @@ class GroupHeader extends StatelessWidget {
                               trip.title.length >= 2
                                   ? trip.title.substring(0, 2).toUpperCase()
                                   : trip.title.toUpperCase(),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineMedium
+                              style: Theme.of(context).textTheme.headlineMedium
                                   ?.copyWith(
                                     color: colorScheme.onSurface,
                                     fontWeight: FontWeight.bold,
@@ -55,9 +53,7 @@ class GroupHeader extends StatelessWidget {
                           trip.title.length >= 2
                               ? trip.title.substring(0, 2).toUpperCase()
                               : trip.title.toUpperCase(),
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineMedium
+                          style: Theme.of(context).textTheme.headlineMedium
                               ?.copyWith(
                                 color: colorScheme.onSurface,
                                 fontWeight: FontWeight.bold,
@@ -95,10 +91,10 @@ class GroupHeader extends StatelessWidget {
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                color: colorScheme.onSurface,
-                fontWeight: FontWeight.bold,
-                fontSize: 28,
-              ),
+            color: colorScheme.onSurface,
+            fontWeight: FontWeight.bold,
+            fontSize: 28,
+          ),
         ),
       ],
     );
