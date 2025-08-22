@@ -29,6 +29,8 @@ import 'widgets/export_options_sheet.dart';
 import 'widgets/expense_entry_sheet.dart';
 import 'widgets/delete_expense_dialog.dart';
 import '../../widgets/add_fab.dart';
+import 'export/ofx_exporter.dart';
+import 'export/csv_exporter.dart';
 
 class ExpenseGroupDetailPage extends StatefulWidget {
   final ExpenseGroup trip;
@@ -42,162 +44,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   // Opacità lista spese (default 1.0, manual refresh stato rimosso)
   // final double _listOpacity = 1.0; // RIMOSSO: non più necessario
 
-  /// Genera il contenuto CSV delle spese del gruppo
-  String _generateCsvContent() {
-    if (_trip == null || _trip!.expenses.isEmpty) return '';
-    final buffer = StringBuffer();
-    // Header localizzato
-    final gloc = gen.AppLocalizations.of(context);
-    buffer.writeln(
-      [
-        gloc.csv_expense_name,
-        gloc.csv_amount,
-        gloc.csv_paid_by,
-        gloc.csv_category,
-        gloc.csv_date,
-        gloc.csv_note,
-        gloc.csv_location,
-      ].join(','),
-    );
-    for (final e in _trip!.expenses) {
-      buffer.writeln(
-        [
-          _escapeCsvValue(e.name ?? ''),
-          e.amount?.toStringAsFixed(2) ?? '',
-          _escapeCsvValue(e.paidBy.name),
-          _escapeCsvValue(e.category.name),
-          e.date.toIso8601String().split('T').first,
-          _escapeCsvValue(e.note ?? ''),
-          _escapeCsvValue(e.location?.displayText ?? ''),
-        ].join(','),
-      );
-    }
-    return buffer.toString();
-  }
+  // CSV export moved to CsvExporter
 
-  /// Escape per valori CSV
-  String _escapeCsvValue(String value) {
-    if (value.contains(',') || value.contains('"') || value.contains('\n')) {
-      value = value.replaceAll('"', '""');
-      return '"$value"';
-    }
-    return value;
-  }
-
-  /// Costruisce il nome file CSV includendo la data odierna in formato YYYY-MM-DD
-  /// ed una versione "sanitizzata" del titolo del gruppo.
-  String _buildCsvFilename() {
-    final now = DateTime.now();
-    final date =
-        '${now.year.toString().padLeft(4, '0')}-'
-        '${now.month.toString().padLeft(2, '0')}-'
-        '${now.day.toString().padLeft(2, '0')}';
-    final rawTitle = _trip?.title ?? 'export';
-    final safeTitle = rawTitle
-        .toLowerCase()
-        .replaceAll(RegExp(r'[^a-z0-9_-]+'), '_')
-        .replaceAll(RegExp(r'_+'), '_')
-        .trim();
-    return '${date}_${safeTitle}_export.csv';
-  }
-
-  /// Genera il contenuto OFX delle spese del gruppo
-  String _generateOfxContent() {
-    if (_trip == null || _trip!.expenses.isEmpty) return '';
-    
-    final now = DateTime.now();
-    final buffer = StringBuffer();
-    
-    // OFX Header
-    buffer.writeln('<?xml version="1.0" encoding="UTF-8"?>');
-    buffer.writeln('<?OFX OFXHEADER="200" VERSION="200" SECURITY="NONE" OLDFILEUID="NONE" NEWFILEUID="NONE"?>');
-    buffer.writeln('<OFX>');
-    buffer.writeln('  <SIGNONMSGSRSV1>');
-    buffer.writeln('    <SONRS>');
-    buffer.writeln('      <STATUS>');
-    buffer.writeln('        <CODE>0</CODE>');
-    buffer.writeln('        <SEVERITY>INFO</SEVERITY>');
-    buffer.writeln('      </STATUS>');
-    buffer.writeln('      <DTSERVER>${_formatOfxDateTime(now)}</DTSERVER>');
-    buffer.writeln('      <LANGUAGE>ENG</LANGUAGE>');
-    buffer.writeln('    </SONRS>');
-    buffer.writeln('  </SIGNONMSGSRSV1>');
-    buffer.writeln('  <BANKMSGSRSV1>');
-    buffer.writeln('    <STMTTRNRS>');
-    buffer.writeln('      <TRNUID>1</TRNUID>');
-    buffer.writeln('      <STATUS>');
-    buffer.writeln('        <CODE>0</CODE>');
-    buffer.writeln('        <SEVERITY>INFO</SEVERITY>');
-    buffer.writeln('      </STATUS>');
-    buffer.writeln('      <STMTRS>');
-    buffer.writeln('        <CURDEF>${_trip!.currency}</CURDEF>');
-    buffer.writeln('        <BANKACCTFROM>');
-    buffer.writeln('          <BANKID>CARAVELLA</BANKID>');
-    buffer.writeln('          <ACCTID>${_trip!.id}</ACCTID>');
-    buffer.writeln('          <ACCTTYPE>CHECKING</ACCTTYPE>');
-    buffer.writeln('        </BANKACCTFROM>');
-    buffer.writeln('        <BANKTRANLIST>');
-    buffer.writeln('          <DTSTART>${_formatOfxDate(_trip!.startDate ?? _trip!.expenses.first.date)}</DTSTART>');
-    buffer.writeln('          <DTEND>${_formatOfxDate(_trip!.endDate ?? _trip!.expenses.last.date)}</DTEND>');
-    
-    // Add each expense as a transaction
-    for (final expense in _trip!.expenses) {
-      buffer.writeln('          <STMTTRN>');
-      buffer.writeln('            <TRNTYPE>DEBIT</TRNTYPE>');
-      buffer.writeln('            <DTPOSTED>${_formatOfxDate(expense.date)}</DTPOSTED>');
-      buffer.writeln('            <TRNAMT>-${expense.amount?.toStringAsFixed(2) ?? '0.00'}</TRNAMT>');
-      buffer.writeln('            <FITID>${expense.id}</FITID>');
-      final description = _sanitizeXmlValue(expense.name ?? expense.category.name);
-      buffer.writeln('            <NAME>$description</NAME>');
-      final payee = _sanitizeXmlValue(expense.paidBy.name);
-      buffer.writeln('            <PAYEE>$payee</PAYEE>');
-      if (expense.note != null && expense.note!.isNotEmpty) {
-        final memo = _sanitizeXmlValue('${expense.category.name} - ${expense.note}');
-        buffer.writeln('            <MEMO>$memo</MEMO>');
-      } else {
-        buffer.writeln('            <MEMO>${_sanitizeXmlValue(expense.category.name)}</MEMO>');
-      }
-      buffer.writeln('          </STMTTRN>');
-    }
-    
-    buffer.writeln('        </BANKTRANLIST>');
-    buffer.writeln('        <LEDGERBAL>');
-    final totalAmount = _trip!.expenses.fold<double>(0.0, (sum, expense) => sum + (expense.amount ?? 0.0));
-    buffer.writeln('          <BALAMT>-${totalAmount.toStringAsFixed(2)}</BALAMT>');
-    buffer.writeln('          <DTASOF>${_formatOfxDateTime(now)}</DTASOF>');
-    buffer.writeln('        </LEDGERBAL>');
-    buffer.writeln('      </STMTRS>');
-    buffer.writeln('    </STMTTRNRS>');
-    buffer.writeln('  </BANKMSGSRSV1>');
-    buffer.writeln('</OFX>');
-    
-    return buffer.toString();
-  }
-
-  /// Formatta la data per OFX (YYYYMMDD)
-  String _formatOfxDate(DateTime date) {
-    return '${date.year.toString().padLeft(4, '0')}'
-           '${date.month.toString().padLeft(2, '0')}'
-           '${date.day.toString().padLeft(2, '0')}';
-  }
-
-  /// Formatta data e ora per OFX (YYYYMMDDHHMMSS)
-  String _formatOfxDateTime(DateTime dateTime) {
-    return '${_formatOfxDate(dateTime)}'
-           '${dateTime.hour.toString().padLeft(2, '0')}'
-           '${dateTime.minute.toString().padLeft(2, '0')}'
-           '${dateTime.second.toString().padLeft(2, '0')}';
-  }
-
-  /// Sanitizza i valori per XML (escape caratteri speciali)
-  String _sanitizeXmlValue(String value) {
-    return value
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&apos;');
-  }
+  // OFX export moved to OfxExporter.generate
 
   /// Costruisce il nome file OFX
   String _buildOfxFilename() {
@@ -317,7 +166,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           final gloc = gen.AppLocalizations.of(context);
           final nav = Navigator.of(sheetCtx);
           final rootContext = context; // capture for toasts
-          final csv = _generateCsvContent();
+          final csv = CsvExporter.generate(_trip, gloc);
           if (csv.isEmpty) {
             if (rootContext.mounted) {
               AppToast.show(
@@ -328,7 +177,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             }
             return;
           }
-          final filename = _buildCsvFilename();
+          final filename = CsvExporter.buildFilename(_trip);
           String? dirPath;
           try {
             dirPath = await FilePicker.platform.getDirectoryPath(
@@ -366,7 +215,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           final gloc = gen.AppLocalizations.of(context);
           final nav = Navigator.of(sheetCtx);
           final rootContext = context;
-          final csv = _generateCsvContent();
+          final csv = CsvExporter.generate(_trip, gloc);
           if (csv.isEmpty) {
             if (rootContext.mounted) {
               AppToast.show(
@@ -379,7 +228,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           }
           final tempDir = await getTemporaryDirectory();
           final file = await File(
-            '${tempDir.path}/${_buildCsvFilename()}',
+            '${tempDir.path}/${CsvExporter.buildFilename(_trip)}',
           ).create();
           await file.writeAsString(csv);
           if (!rootContext.mounted) return; // ensure still alive before share
@@ -396,7 +245,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           final gloc = gen.AppLocalizations.of(context);
           final nav = Navigator.of(sheetCtx);
           final rootContext = context; // capture for toasts
-          final ofx = _generateOfxContent();
+          final ofx = OfxExporter.generate(_trip);
           if (ofx.isEmpty) {
             if (rootContext.mounted) {
               AppToast.show(
@@ -445,7 +294,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           final gloc = gen.AppLocalizations.of(context);
           final nav = Navigator.of(sheetCtx);
           final rootContext = context;
-          final ofx = _generateOfxContent();
+          final ofx = OfxExporter.generate(_trip);
           if (ofx.isEmpty) {
             if (rootContext.mounted) {
               AppToast.show(
@@ -550,7 +399,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         },
         onDelete: () async {
           final nav = Navigator.of(sheetCtx);
-          final theme = Theme.of(context);
           final rootNav = Navigator.of(context);
           final confirmed = await showDialog<bool>(
             context: context,
@@ -566,7 +414,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               ),
               actions: [
                 Material3DialogActions.cancel(
-                  dialogCtx, 
+                  dialogCtx,
                   gen.AppLocalizations.of(dialogCtx).cancel,
                 ),
                 Material3DialogActions.destructive(
