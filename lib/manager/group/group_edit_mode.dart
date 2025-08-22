@@ -1,0 +1,1 @@
+enum GroupEditMode { create, edit }

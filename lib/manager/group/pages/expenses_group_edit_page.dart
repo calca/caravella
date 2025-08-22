@@ -18,11 +18,22 @@ import '../widgets/period_section_editor.dart';
 import '../widgets/background_picker.dart';
 import '../widgets/currency_selector_sheet.dart';
 import '../widgets/save_button_bar.dart';
+import '../group_edit_mode.dart';
 
 class ExpensesGroupEditPage extends StatelessWidget {
   final ExpenseGroup? trip;
   final VoidCallback? onTripDeleted;
-  const ExpensesGroupEditPage({super.key, this.trip, this.onTripDeleted});
+
+  /// Specifica se la pagina opera in modalità creazione o modifica.
+  /// Se non fornito, viene dedotto automaticamente: trip == null => create, altrimenti edit.
+  final GroupEditMode mode;
+
+  const ExpensesGroupEditPage({
+    super.key,
+    this.trip,
+    this.onTripDeleted,
+    required this.mode,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +41,15 @@ class ExpensesGroupEditPage extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => GroupFormState()),
         ProxyProvider<GroupFormState, GroupFormController>(
-          update: (context, state, previous) => GroupFormController(state),
+          update: (context, state, previous) =>
+              GroupFormController(state, mode),
         ),
       ],
-      child: _GroupFormScaffold(trip: trip, onTripDeleted: onTripDeleted),
+      child: _GroupFormScaffold(
+        trip: trip,
+        onTripDeleted: onTripDeleted,
+        mode: mode,
+      ),
     );
   }
 }
@@ -41,7 +57,12 @@ class ExpensesGroupEditPage extends StatelessWidget {
 class _GroupFormScaffold extends StatefulWidget {
   final ExpenseGroup? trip;
   final VoidCallback? onTripDeleted;
-  const _GroupFormScaffold({required this.trip, this.onTripDeleted});
+  final GroupEditMode mode;
+  const _GroupFormScaffold({
+    required this.trip,
+    this.onTripDeleted,
+    required this.mode,
+  });
   @override
   State<_GroupFormScaffold> createState() => _GroupFormScaffoldState();
 }
@@ -56,7 +77,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
   @override
   void initState() {
     super.initState();
-    if (widget.trip != null) {
+    if (widget.trip != null && widget.mode == GroupEditMode.edit) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted && _state.title.isEmpty) {
           _controller.load(widget.trip!);
@@ -173,7 +194,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
         child: Scaffold(
           appBar: CaravellaAppBar(
             actions: [
-              if (widget.trip != null)
+              if (widget.trip != null && widget.mode == GroupEditMode.edit)
                 IconButton(
                   icon: const Icon(Icons.delete_outline),
                   tooltip: gloc.delete,
@@ -220,7 +241,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                     child: ListView(
                       children: [
                         Text(
-                          widget.trip != null
+                          widget.mode == GroupEditMode.edit
                               ? gloc.edit_group
                               : gloc.new_group,
                           style: Theme.of(context).textTheme.headlineMedium

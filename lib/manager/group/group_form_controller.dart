@@ -7,15 +7,18 @@ import '../../data/model/expense_participant.dart';
 import '../../data/model/expense_category.dart';
 import '../../data/model/expense_details.dart';
 import 'data/group_form_state.dart';
+import 'group_edit_mode.dart';
 
 /// Controller encapsulates business logic for the group form.
 class GroupFormController {
   final GroupFormState state;
+  final GroupEditMode mode;
   ExpenseGroup? _original;
 
-  GroupFormController(this.state);
+  GroupFormController(this.state, this.mode);
 
   void load(ExpenseGroup? group) {
+    if (mode == GroupEditMode.create) return; // nothing to load in create mode
     if (group == null) return;
     _original = group;
     state.title = group.title;
@@ -57,11 +60,16 @@ class GroupFormController {
   }
 
   bool get hasChanges {
-    if (_original == null) {
+    if (mode == GroupEditMode.create) {
       return state.title.isNotEmpty ||
           state.participants.isNotEmpty ||
-          state.categories.isNotEmpty;
+          state.categories.isNotEmpty ||
+          state.startDate != null ||
+          state.endDate != null ||
+          state.imagePath != null ||
+          state.color != null;
     }
+    if (_original == null) return false;
     final g = _original!;
     if (g.title != state.title) return true;
     if (g.startDate != state.startDate || g.endDate != state.endDate) {
@@ -108,11 +116,9 @@ class GroupFormController {
             : const [],
       );
 
-      if (_original != null) {
-        // Se stiamo modificando un gruppo esistente, usa il nuovo metodo che preserva le spese
+      if (mode == GroupEditMode.edit) {
         await ExpenseGroupStorage.updateGroupMetadata(group);
       } else {
-        // Se stiamo creando un nuovo gruppo, usa il metodo normale
         await ExpenseGroupStorage.saveTrip(group);
       }
 
@@ -124,7 +130,7 @@ class GroupFormController {
   }
 
   Future<void> deleteGroup() async {
-    if (_original == null) return;
+    if (mode == GroupEditMode.create || _original == null) return;
     final all = await ExpenseGroupStorage.getAllGroups();
     all.removeWhere((e) => e.id == _original!.id);
     await ExpenseGroupStorage.writeTrips(all);

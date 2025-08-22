@@ -1,4 +1,5 @@
 import '../group/pages/expenses_group_edit_page.dart';
+import '../group/group_edit_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:async';
@@ -251,7 +252,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           if (!mounted) return;
           await nav.push(
             MaterialPageRoute(
-              builder: (ctx) => ExpensesGroupEditPage(trip: _trip!),
+              builder: (ctx) =>
+                  ExpensesGroupEditPage(trip: _trip!, mode: GroupEditMode.edit),
             ),
           );
           await _refreshGroup();

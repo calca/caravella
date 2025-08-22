@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../manager/group/pages/expenses_group_edit_page.dart';
+import '../../manager/group/group_edit_mode.dart';
 import '../../settings/settings_page.dart';
 
 typedef RefreshCallback = void Function();
@@ -164,7 +165,9 @@ class HomeWelcomeSection extends StatelessWidget {
                             final result = await Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    const ExpensesGroupEditPage(),
+                                    const ExpensesGroupEditPage(
+                                      mode: GroupEditMode.create,
+                                    ),
                               ),
                             );
                             if (result == true && onTripAdded != null) {

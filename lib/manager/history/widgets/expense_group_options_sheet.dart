@@ -4,6 +4,7 @@ import '../../../data/model/expense_participant.dart';
 import '../../../data/model/expense_category.dart';
 import '../../../data/expense_group_storage.dart';
 import '../../group/pages/expenses_group_edit_page.dart';
+import '../../group/group_edit_mode.dart';
 
 class ExpenseGroupOptionsSheet extends StatelessWidget {
   final ExpenseGroup trip;
@@ -145,7 +146,8 @@ class ExpenseGroupOptionsSheet extends StatelessWidget {
     Navigator.of(context).pop();
     final result = await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => ExpensesGroupEditPage(trip: trip),
+        builder: (context) =>
+            ExpensesGroupEditPage(trip: trip, mode: GroupEditMode.edit),
       ),
     );
     if (result == true) {
