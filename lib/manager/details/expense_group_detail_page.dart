@@ -15,6 +15,7 @@ import '../../data/model/expense_details.dart';
 import '../../data/model/expense_group.dart';
 import '../../state/expense_group_notifier.dart';
 import '../../data/expense_group_storage.dart';
+import '../../widgets/material3_dialog.dart';
 // Removed legacy localization bridge imports (migration in progress)
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../widgets/app_toast.dart';
@@ -553,22 +554,25 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           final rootNav = Navigator.of(context);
           final confirmed = await showDialog<bool>(
             context: context,
-            builder: (dialogCtx) => AlertDialog(
+            builder: (dialogCtx) => Material3Dialog(
+              icon: Icon(
+                Icons.delete_outline,
+                color: Theme.of(context).colorScheme.error,
+                size: 24,
+              ),
               title: Text(gen.AppLocalizations.of(dialogCtx).delete_group),
               content: Text(
                 gen.AppLocalizations.of(dialogCtx).delete_group_confirm,
               ),
               actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(dialogCtx).pop(false),
-                  child: Text(gen.AppLocalizations.of(dialogCtx).cancel),
+                Material3DialogActions.cancel(
+                  dialogCtx, 
+                  gen.AppLocalizations.of(dialogCtx).cancel,
                 ),
-                TextButton(
+                Material3DialogActions.destructive(
+                  dialogCtx,
+                  gen.AppLocalizations.of(dialogCtx).delete,
                   onPressed: () => Navigator.of(dialogCtx).pop(true),
-                  child: Text(
-                    gen.AppLocalizations.of(dialogCtx).delete,
-                    style: TextStyle(color: theme.colorScheme.error),
-                  ),
                 ),
               ],
             ),

@@ -8,6 +8,7 @@ import 'package:archive/archive.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 import '../widgets/app_toast.dart';
+import '../widgets/material3_dialog.dart';
 import 'auto_backup_notifier.dart';
 import 'package:provider/provider.dart';
 import '../manager/group/widgets/section_header.dart';
@@ -226,20 +227,20 @@ class DataPage extends StatelessWidget {
       final fileName = result.files.single.name;
       final confirm = await showDialog<bool>(
         context: context,
-        builder: (context) => AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+        builder: (context) => Material3Dialog(
+          icon: Icon(
+            Icons.upload_file_outlined,
+            color: Theme.of(context).colorScheme.primary,
+            size: 24,
           ),
           title: Text(loc.import_confirm_title),
           content: Text(loc.import_confirm_message(fileName)),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: Text(loc.cancel),
-            ),
-            FilledButton(
+            Material3DialogActions.cancel(context, loc.cancel),
+            Material3DialogActions.primary(
+              context,
+              loc.ok,
               onPressed: () => Navigator.of(context).pop(true),
-              child: Text(loc.ok),
             ),
           ],
         ),

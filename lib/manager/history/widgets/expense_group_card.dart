@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../data/model/expense_group.dart';
 import '../../../widgets/currency_display.dart';
 import '../../../widgets/base_card.dart';
+import '../../../widgets/material3_dialog.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../details/expense_group_detail_page.dart';
 
@@ -143,27 +144,20 @@ class ExpenseGroupCard extends StatelessWidget {
 
     return await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Row(
-          children: [
-            Icon(
-              isArchived ? Icons.unarchive_outlined : Icons.archive_outlined,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            const SizedBox(width: 12),
-            Text(actionText),
-          ],
+      builder: (context) => Material3Dialog(
+        icon: Icon(
+          isArchived ? Icons.unarchive_outlined : Icons.archive_outlined,
+          color: Theme.of(context).colorScheme.primary,
+          size: 24,
         ),
+        title: Text(actionText),
         content: Text('$confirmText "${trip.title}"?'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text(gloc.cancel),
-          ),
-          FilledButton(
+          Material3DialogActions.cancel(context, gloc.cancel),
+          Material3DialogActions.primary(
+            context,
+            actionText,
             onPressed: () => Navigator.of(context).pop(true),
-            child: Text(actionText),
           ),
         ],
       ),
