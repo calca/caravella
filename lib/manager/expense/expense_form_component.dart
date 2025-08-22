@@ -16,6 +16,7 @@ import 'expense_form/note_input_widget.dart';
 import 'expense_form/location_input_widget.dart';
 import 'expense_form/expense_form_actions_widget.dart';
 import 'expense_form/category_dialog.dart';
+import 'expense_form_state.dart';
 
 class ExpenseFormComponent extends StatefulWidget {
   // When true shows date, location and note fields (full edit mode). In edit mode (initialExpense != null) these are always shown.
@@ -61,18 +62,11 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     with WidgetsBindingObserver {
   static const double _rowSpacing = 16.0;
   final _formKey = GlobalKey<FormState>();
-  ExpenseCategory? _category;
-  double? _amount;
-  ExpenseParticipant? _paidBy;
-  DateTime? _date;
-  ExpenseLocation? _location;
-  final TextEditingController _nameController = TextEditingController();
-  final FocusNode _nameFocus = FocusNode();
+  late ExpenseFormState _formState;
   final _amountController = TextEditingController();
+  final FocusNode _nameFocus = FocusNode();
   final FocusNode _amountFocus = FocusNode();
-  final TextEditingController _noteController = TextEditingController();
   late List<ExpenseCategory> _categories; // Lista locale delle categorie
-  bool _isDirty = false; // traccia modifiche non salvate
   bool _initializing = true; // traccia se siamo in fase di inizializzazione
   double _lastKeyboardHeight = 0; // Track keyboard height changes
 
@@ -84,23 +78,12 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
   final FocusNode _locationFocus = FocusNode();
   final FocusNode _noteFocus = FocusNode();
 
-  // Stato per validazione in tempo reale
-  bool _amountTouched = false;
-  bool _paidByTouched = false;
-  bool _categoryTouched = false;
-
   // Stato per espansione del form (solo quando fullEdit è false inizialmente)
   bool _isExpanded = false;
-
-  // Getters per stato dei campi
-  bool get _isAmountValid => _amount != null && _amount! > 0;
-  bool get _isPaidByValid => _paidBy != null;
-  bool get _isCategoryValid => _categories.isEmpty || _category != null;
 
   // Getter per determinare se mostrare i campi estesi
   bool get _shouldShowExtendedFields =>
       widget.fullEdit || widget.initialExpense != null || _isExpanded;
-
   // Scroll controller callback per CategorySelectorWidget
   // Removed _scrollToCategoryEnd: no longer needed with new category selector bottom sheet.
 
@@ -208,32 +191,21 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _categories = List.from(widget.categories); // Copia della lista originale
+    _formState = ExpenseFormState(categories: _categories);
+    
     if (widget.initialExpense != null) {
-      _category = widget.categories.firstWhere(
-        (c) => c.id == widget.initialExpense!.category.id,
-        orElse: () => widget.categories.isNotEmpty
-            ? widget.categories.first
-            : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000)),
-      );
-      _amount = widget.initialExpense!.amount;
-      _paidBy = widget.initialExpense!.paidBy;
-      _date = widget.initialExpense!.date;
-      _location = widget.initialExpense!.location;
-      _nameController.text = widget.initialExpense!.name ?? '';
+      _formState.initializeFromExpense(widget.initialExpense!);
       // Se amount è null o 0, lascia il campo vuoto
       _amountController.text = (widget.initialExpense!.amount == 0)
           ? ''
           : widget.initialExpense!.amount.toString();
-      _noteController.text = widget.initialExpense!.note ?? '';
     } else {
-      _date = DateTime.now();
-      _nameController.text = '';
-      _location = null;
+      _formState.initializeForNewExpense();
       // Preseleziona il primo elemento di paidBy e category se disponibili
-      _paidBy = widget.participants.isNotEmpty
+      _formState.paidBy = widget.participants.isNotEmpty
           ? widget.participants.first
           : ExpenseParticipant(name: '');
-      _category = widget.categories.isNotEmpty
+      _formState.category = widget.categories.isNotEmpty
           ? widget.categories.first
           : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000));
     }
@@ -281,23 +253,18 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     // Listener per aggiornare _amount in tempo reale (mantiene valore anche quando perde focus)
     _amountController.addListener(() {
       final parsed = _parseLocalizedAmount(_amountController.text);
-      if (parsed != _amount) {
+      if (parsed != _formState.amount) {
         setState(() {
-          _amount = parsed;
-          _amountTouched = true;
-          if (!_initializing) {
-            _isDirty = true;
-          }
+          _formState.amount = parsed;
+          _formState.amountTouched = true;
         });
       }
     });
 
     // Listener per aggiornare lo stato quando il nome cambia
-    _nameController.addListener(() {
+    _formState.nameController.addListener(() {
       if (!_initializing) {
-        setState(() {
-          _isDirty = true;
-        });
+        setState(() {});
       }
     });
 
@@ -339,19 +306,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
   }
 
   bool _isFormValid() {
-    // SET MINIMO DI INFORMAZIONI NECESSARIE per abilitare il pulsante:
-    // 1. Importo valido (> 0)
-    bool hasPaidBy = _paidBy != null && _paidBy!.name.isNotEmpty;
-
-    // 2. Categoria selezionata (solo se esistono categorie)
-    bool hasCategoryIfRequired = _categories.isEmpty || _category != null;
-
-    // Il pulsante è abilitato SOLO se tutti i requisiti sono soddisfatti
-    final nameValue = _nameController.text.trim();
-    return _isAmountValid &&
-        hasPaidBy &&
-        hasCategoryIfRequired &&
-        nameValue.isNotEmpty;
+    return _formState.isFormValid();
   }
 
   // Widget per indicatori di stato - versione minimalista
@@ -374,32 +329,28 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
   void _saveExpense() {
     final valid = _formKey.currentState?.validate() ?? false;
     if (!valid) {
-      setState(() {
-        _amountTouched = true;
-        _paidByTouched = true;
-        _categoryTouched = true;
-      });
+      _formState.markAllFieldsTouched();
+      setState(() {});
       return;
     }
     if (!_isFormValid()) return;
-    final nameValue = _nameController.text.trim();
+    final nameValue = _formState.nameController.text.trim();
     final expense = ExpenseDetails(
-      amount: _amount ?? _parseLocalizedAmount(_amountController.text) ?? 0,
-      paidBy: _paidBy ?? ExpenseParticipant(name: ''),
+      amount: _formState.amount ?? _parseLocalizedAmount(_amountController.text) ?? 0,
+      paidBy: _formState.paidBy ?? ExpenseParticipant(name: ''),
       category:
-          _category ??
+          _formState.category ??
           (_categories.isNotEmpty
               ? _categories.first
               : ExpenseCategory(name: '', id: '', createdAt: DateTime.now())),
-      date: _date ?? DateTime.now(),
-      note: _noteController.text.trim().isNotEmpty
-          ? _noteController.text.trim()
+      date: _formState.date ?? DateTime.now(),
+      note: _formState.noteController.text.trim().isNotEmpty
+          ? _formState.noteController.text.trim()
           : null,
       name: nameValue,
-      location: _location,
+      location: _formState.location,
     );
     widget.onExpenseAdded(expense);
-    _isDirty = false;
     if (widget.shouldAutoClose && Navigator.of(context).canPop()) {
       Navigator.of(context).pop();
     }
@@ -413,7 +364,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     final gloc = gen.AppLocalizations.of(context);
     final smallStyle = Theme.of(context).textTheme.bodyMedium;
     return PopScope(
-      canPop: !_isDirty,
+      canPop: !_formState.hasActualChanges,
       onPopInvokedWithResult: _handlePop,
       child: Form(
         key: _formKey,
@@ -491,7 +442,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
 
   Future<void> _handlePop(bool didPop, Object? result) async {
     if (didPop) return;
-    if (_isDirty) {
+    if (_formState.hasActualChanges) {
       final navigator = Navigator.of(context);
       final discard = await _confirmDiscardChanges();
       if (discard && mounted && navigator.canPop()) navigator.pop();
@@ -519,8 +470,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
             onSubmitted: _saveExpense,
             textStyle: style,
           ),
-          _isAmountValid,
-          _amountTouched,
+          _formState.isAmountValid,
+          _formState.amountTouched,
         ),
       );
 
@@ -529,7 +480,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         key: _nameFieldKey,
         child: _buildFieldWithStatus(
           AmountInputWidget(
-            controller: _nameController,
+            controller: _formState.nameController,
             focusNode: _nameFocus,
             label: gloc.expense_name,
             leading: Icon(
@@ -544,8 +495,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
             isText: true,
             textStyle: style,
           ),
-          _nameController.text.trim().isNotEmpty,
-          _amountTouched,
+          _formState.nameController.text.trim().isNotEmpty,
+          _formState.amountTouched,
         ),
       );
 
@@ -556,27 +507,27 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
           _buildFieldWithStatus(
             ParticipantSelectorWidget(
               participants: widget.participants.map((p) => p.name).toList(),
-              selectedParticipant: _paidBy?.name,
+              selectedParticipant: _formState.paidBy?.name,
               onParticipantSelected: _onParticipantSelected,
               textStyle: style,
               fullEdit: true,
             ),
-            _isPaidByValid,
-            _paidByTouched,
+            _formState.isPaidByValid,
+            _formState.paidByTouched,
           ),
           _spacer(),
           _buildFieldWithStatus(
             CategorySelectorWidget(
               categories: _categories,
-              selectedCategory: _category,
+              selectedCategory: _formState.category,
               onCategorySelected: _onCategorySelected,
               onAddCategory: _onAddCategory,
               onAddCategoryInline: _onAddCategoryInline,
               textStyle: style,
               fullEdit: true,
             ),
-            _isCategoryValid,
-            _categoryTouched,
+            _formState.isCategoryValid,
+            _formState.categoryTouched,
           ),
         ],
       );
@@ -590,26 +541,26 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
           _buildFieldWithStatus(
             ParticipantSelectorWidget(
               participants: widget.participants.map((p) => p.name).toList(),
-              selectedParticipant: _paidBy?.name,
+              selectedParticipant: _formState.paidBy?.name,
               onParticipantSelected: _onParticipantSelected,
               textStyle: style,
               fullEdit: false,
             ),
-            _isPaidByValid,
-            _paidByTouched,
+            _formState.isPaidByValid,
+            _formState.paidByTouched,
           ),
           _buildFieldWithStatus(
             CategorySelectorWidget(
               categories: _categories,
-              selectedCategory: _category,
+              selectedCategory: _formState.category,
               onCategorySelected: _onCategorySelected,
               onAddCategory: _onAddCategory,
               onAddCategoryInline: _onAddCategoryInline,
               textStyle: style,
               fullEdit: false,
             ),
-            _isCategoryValid,
-            _categoryTouched,
+            _formState.isCategoryValid,
+            _formState.categoryTouched,
           ),
         ],
       ),
@@ -620,26 +571,20 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
 
   void _onParticipantSelected(String selectedName) {
     setState(() {
-      _paidBy = widget.participants.firstWhere(
+      _formState.paidBy = widget.participants.firstWhere(
         (p) => p.name == selectedName,
         orElse: () => widget.participants.isNotEmpty
             ? widget.participants.first
             : ExpenseParticipant(name: ''),
       );
-      _paidByTouched = true;
-      if (!_initializing) {
-        _isDirty = true;
-      }
+      _formState.paidByTouched = true;
     });
   }
 
   void _onCategorySelected(ExpenseCategory? selected) {
     setState(() {
-      _category = selected;
-      _categoryTouched = true;
-      if (!_initializing) {
-        _isDirty = true;
-      }
+      _formState.category = selected;
+      _formState.categoryTouched = true;
     });
   }
 
@@ -656,11 +601,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
       setState(() {
         if (!_categories.contains(found)) {
           _categories.add(found);
-          _category = found;
-          _categoryTouched = true;
-          if (!_initializing) {
-            _isDirty = true;
-          }
+          _formState.category = found;
+          _formState.categoryTouched = true;
         }
       });
       await Future.delayed(const Duration(milliseconds: 100));
@@ -672,11 +614,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
       );
       setState(() {
         _categories = List.from(widget.categories);
-        _category = foundAfter;
-        _categoryTouched = true;
-        if (!_initializing) {
-          _isDirty = true;
-        }
+        _formState.category = foundAfter;
+        _formState.categoryTouched = true;
       });
     }
   }
@@ -695,11 +634,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
       if (!_categories.contains(found)) {
         _categories.add(found);
       }
-      _category = found;
-      _categoryTouched = true;
-      if (!_initializing) {
-        _isDirty = true;
-      }
+      _formState.category = found;
+      _formState.categoryTouched = true;
     });
     // Wait again to ensure the state has settled
     await Future.delayed(const Duration(milliseconds: 100));
@@ -711,11 +647,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     );
     setState(() {
       _categories = List.from(widget.categories);
-      _category = foundAfter;
-      _categoryTouched = true;
-      if (!_initializing) {
-        _isDirty = true;
-      }
+      _formState.category = foundAfter;
+      _formState.categoryTouched = true;
     });
   }
 
@@ -726,14 +659,11 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
       children: [
         _spacer(),
         DateSelectorWidget(
-          selectedDate: _date,
+          selectedDate: _formState.date,
           tripStartDate: widget.tripStartDate,
           tripEndDate: widget.tripEndDate,
           onDateSelected: (picked) => setState(() {
-            _date = picked;
-            if (!_initializing) {
-              _isDirty = true;
-            }
+            _formState.date = picked;
           }),
           locale: locale,
           textStyle: style,
@@ -742,13 +672,10 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         KeyedSubtree(
           key: _locationFieldKey,
           child: LocationInputWidget(
-            initialLocation: _location,
+            initialLocation: _formState.location,
             textStyle: style,
             onLocationChanged: (location) => setState(() {
-              _location = location;
-              if (!_initializing) {
-                _isDirty = true;
-              }
+              _formState.location = location;
             }),
             externalFocusNode: _locationFocus,
           ),
@@ -757,7 +684,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         KeyedSubtree(
           key: _noteFieldKey,
           child: NoteInputWidget(
-            controller: _noteController,
+            controller: _formState.noteController,
             textStyle: style,
             focusNode: _noteFocus,
           ),
@@ -822,7 +749,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         onExpand: () {
           setState(() {
             _isExpanded = true;
-            _isDirty = true;
           });
         },
       );
@@ -832,9 +758,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     WidgetsBinding.instance.removeObserver(this);
     _amountController.dispose();
     _amountFocus.dispose();
-    _nameController.dispose();
     _nameFocus.dispose();
-    _noteController.dispose();
+    _formState.dispose();
     _locationFocus.dispose();
     _noteFocus.dispose();
     super.dispose();
