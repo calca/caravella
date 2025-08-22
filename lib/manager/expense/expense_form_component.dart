@@ -381,9 +381,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     );
   }
 
-  /// Intestazione con il titolo del gruppo (solo in fullEdit, se presente)
+  /// Intestazione con il titolo del gruppo (solo quando mostriamo i campi estesi, se presente)
   Widget _buildGroupHeader() {
-    if (!(widget.fullEdit && widget.groupTitle != null)) {
+    if (!(_shouldShowExtendedFields && widget.groupTitle != null)) {
       return const SizedBox.shrink();
     }
     final gloc = gen.AppLocalizations.of(context);
@@ -711,7 +711,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
   }
 
   Widget _buildDivider(BuildContext context) {
-    if (widget.fullEdit) {
+    if (_shouldShowExtendedFields) {
       // In full edit mode: reserve vertical space but no visual divider
       return const SizedBox(height: 24);
     }
@@ -727,7 +727,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
   Widget _buildActionsRow(gen.AppLocalizations gloc, TextStyle? style) => Row(
     crossAxisAlignment: CrossAxisAlignment.center,
     children: [
-      if (widget.groupTitle != null && !widget.fullEdit)
+      if (widget.groupTitle != null && !_shouldShowExtendedFields)
         Expanded(
           child: Text(
             widget.groupTitle!,

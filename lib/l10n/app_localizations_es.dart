@@ -266,6 +266,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get edit_expense => 'Editar gasto';
 
   @override
+  String get expand_form => 'Expandir formulario';
+
+  @override
+  String get expand_form_tooltip => 'Agregar fecha, ubicación y notas';
+
+  @override
   String get category => 'Categoría';
 
   @override
