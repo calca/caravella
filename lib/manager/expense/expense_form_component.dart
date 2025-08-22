@@ -89,10 +89,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
   bool get _isCategoryValid => _categories.isEmpty || _category != null;
 
   // Getter per determinare se mostrare i campi estesi
-  bool get _shouldShowExtendedFields => 
-      widget.fullEdit || 
-      widget.initialExpense != null || 
-      _isExpanded;
+  bool get _shouldShowExtendedFields =>
+      widget.fullEdit || widget.initialExpense != null || _isExpanded;
 
   // Scroll controller callback per CategorySelectorWidget
   // Removed _scrollToCategoryEnd: no longer needed with new category selector bottom sheet.
@@ -532,8 +530,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     }
 
     final gloc = gen.AppLocalizations.of(context);
-    final theme = Theme.of(context);
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Align(
