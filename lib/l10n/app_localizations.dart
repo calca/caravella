@@ -1042,11 +1042,59 @@ abstract class AppLocalizations {
   /// **'Edit Group'**
   String get edit_group;
 
+  /// No description provided for @duplicate_group.
+  ///
+  /// In en, this message translates to:
+  /// **'Duplicate group'**
+  String get duplicate_group;
+
+  /// No description provided for @duplicate_group_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a copy with the same data'**
+  String get duplicate_group_desc;
+
+  /// No description provided for @copy_as_new_group.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy as new'**
+  String get copy_as_new_group;
+
+  /// No description provided for @copy_as_new_group_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Create new group starting from here'**
+  String get copy_as_new_group_desc;
+
+  /// No description provided for @new_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get new_prefix;
+
+  /// No description provided for @edit_group_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit name, dates and participants'**
+  String get edit_group_desc;
+
   /// No description provided for @delete_group.
   ///
   /// In en, this message translates to:
   /// **'Delete group'**
   String get delete_group;
+
+  /// No description provided for @delete_group_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this group permanently'**
+  String get delete_group_desc;
+
+  /// No description provided for @delete_group_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete group'**
+  String get delete_group_title;
 
   /// No description provided for @delete_group_confirm.
   ///

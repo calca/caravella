@@ -494,7 +494,31 @@ class AppLocalizationsIt extends AppLocalizations {
   String get edit_group => 'Modifica gruppo';
 
   @override
+  String get duplicate_group => 'Duplica gruppo';
+
+  @override
+  String get duplicate_group_desc => 'Crea una copia con gli stessi dati';
+
+  @override
+  String get copy_as_new_group => 'Nuovo da qui';
+
+  @override
+  String get copy_as_new_group_desc => 'Crea nuovo gruppo partendo da qui';
+
+  @override
+  String get new_prefix => 'Nuovo';
+
+  @override
+  String get edit_group_desc => 'Modifica nome, date e partecipanti';
+
+  @override
   String get delete_group => 'Elimina gruppo';
+
+  @override
+  String get delete_group_desc => 'Rimuovi definitivamente questo gruppo';
+
+  @override
+  String get delete_group_title => 'Elimina gruppo';
 
   @override
   String get delete_group_confirm =>
