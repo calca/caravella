@@ -6,6 +6,7 @@ import '../../../data/expense_group_storage.dart';
 import '../../../widgets/material3_dialog.dart';
 import '../../group/pages/expenses_group_edit_page.dart';
 import '../../group/group_edit_mode.dart';
+import '../../../l10n/app_localizations.dart' as gen;
 
 class ExpenseGroupOptionsSheet extends StatelessWidget {
   final ExpenseGroup trip;
@@ -21,6 +22,8 @@ class ExpenseGroupOptionsSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final gloc = gen.AppLocalizations.of(context);
+    
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
@@ -59,22 +62,29 @@ class ExpenseGroupOptionsSheet extends StatelessWidget {
                   const SizedBox(height: 16),
                   _buildOptionTile(
                     icon: Icons.edit_outlined,
-                    title: 'Modifica gruppo',
-                    subtitle: 'Modifica nome, date e partecipanti',
+                    title: gloc.edit_group,
+                    subtitle: gloc.edit_group_desc,
                     onTap: () => _handleEdit(context),
                     context: context,
                   ),
                   _buildOptionTile(
                     icon: Icons.content_copy_outlined,
-                    title: 'Duplica gruppo',
-                    subtitle: 'Crea una copia con gli stessi dati',
+                    title: gloc.duplicate_group,
+                    subtitle: gloc.duplicate_group_desc,
                     onTap: () => _handleDuplicate(context),
                     context: context,
                   ),
                   _buildOptionTile(
+                    icon: Icons.add_outlined,
+                    title: gloc.copy_as_new_group,
+                    subtitle: gloc.copy_as_new_group_desc,
+                    onTap: () => _handleCopyAsNew(context),
+                    context: context,
+                  ),
+                  _buildOptionTile(
                     icon: Icons.delete_outline,
-                    title: 'Elimina gruppo',
-                    subtitle: 'Rimuovi definitivamente questo gruppo',
+                    title: gloc.delete_group,
+                    subtitle: gloc.delete_group_desc,
                     onTap: () => _handleDelete(context),
                     context: context,
                     isDestructive: true,
@@ -180,7 +190,43 @@ class ExpenseGroupOptionsSheet extends StatelessWidget {
     onTripUpdated();
   }
 
+  void _handleCopyAsNew(BuildContext context) async {
+    final gloc = gen.AppLocalizations.of(context);
+    Navigator.of(context).pop();
+
+    final newTrip = ExpenseGroup(
+      title: "(${gloc.new_prefix}) ${trip.title}",
+      expenses: [], // No expenses - empty list 
+      participants: trip.participants
+          .map((p) => ExpenseParticipant(name: p.name))
+          .toList(),
+      startDate: trip.startDate,
+      endDate: trip.endDate,
+      currency: trip.currency,
+      categories: trip.categories
+          .map((c) => ExpenseCategory(name: c.name))
+          .toList(),
+    );
+
+    final allTrips = await ExpenseGroupStorage.getAllGroups();
+    allTrips.add(newTrip);
+    await ExpenseGroupStorage.writeTrips(allTrips);
+
+    // Navigate to edit page for the newly created group
+    final result = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) =>
+            ExpensesGroupEditPage(trip: newTrip, mode: GroupEditMode.edit),
+      ),
+    );
+    
+    if (result == true) {
+      onTripUpdated();
+    }
+  }
+
   void _handleDelete(BuildContext context) async {
+    final gloc = gen.AppLocalizations.of(context);
     Navigator.of(context).pop();
 
     final confirm = await showDialog<bool>(
@@ -191,13 +237,13 @@ class ExpenseGroupOptionsSheet extends StatelessWidget {
           color: Theme.of(context).colorScheme.error,
           size: 24,
         ),
-        title: const Text('Elimina viaggio'),
-        content: Text('Vuoi davvero eliminare "${trip.title}"?'),
+        title: Text(gloc.delete_group_title),
+        content: Text('${gloc.delete_group_confirm}'),
         actions: [
-          Material3DialogActions.cancel(context, 'Annulla'),
+          Material3DialogActions.cancel(context, gloc.cancel),
           Material3DialogActions.destructive(
             context,
-            'Elimina',
+            gloc.delete,
             onPressed: () => Navigator.of(context).pop(true),
           ),
         ],
