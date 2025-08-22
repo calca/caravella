@@ -373,7 +373,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
             _buildNameField(gloc, smallStyle),
             _spacer(),
             _buildParticipantCategorySection(smallStyle),
-            _buildExpandButton(),
             _buildExtendedFields(locale, smallStyle),
             _buildDivider(context),
             _buildActionsRow(gloc, smallStyle),
@@ -523,38 +522,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     );
   }
 
-  /// Costruisce il pulsante per espandere il form (solo quando fullEdit=false)
-  Widget _buildExpandButton() {
-    // Mostra il pulsante solo se:
-    // 1. Non siamo già in fullEdit mode
-    // 2. Non siamo in modalità modifica
-    // 3. Non abbiamo già espanso il form
-    if (widget.fullEdit || widget.initialExpense != null || _isExpanded) {
-      return const SizedBox.shrink();
-    }
-
-    final gloc = gen.AppLocalizations.of(context);
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Align(
-        alignment: Alignment.centerRight,
-        child: Semantics(
-          label: gloc.expand_form_tooltip,
-          child: IconButton.filled(
-            onPressed: () {
-              setState(() {
-                _isExpanded = true;
-                _isDirty = true;
-              });
-            },
-            tooltip: gloc.expand_form,
-            icon: const Icon(Icons.expand_more),
-          ),
-        ),
-      ),
-    );
-  }
+  // (Expand button moved into ExpenseFormActionsWidget)
 
   void _onParticipantSelected(String selectedName) {
     setState(() {
@@ -707,29 +675,21 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     );
   }
 
-  Widget _buildActionsRow(gen.AppLocalizations gloc, TextStyle? style) => Row(
-    crossAxisAlignment: CrossAxisAlignment.center,
-    children: [
-      if (widget.groupTitle != null && !_shouldShowExtendedFields)
-        Expanded(
-          child: Text(
-            widget.groupTitle!,
-            overflow: TextOverflow.ellipsis,
-            style: Theme.of(
-              context,
-            ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
-          ),
-        )
-      else
-        const Spacer(),
+  Widget _buildActionsRow(gen.AppLocalizations gloc, TextStyle? style) =>
       ExpenseFormActionsWidget(
         onSave: _isFormValid() ? _saveExpense : null,
         isEdit: widget.initialExpense != null,
         onDelete: widget.initialExpense != null ? widget.onDelete : null,
         textStyle: style,
-      ),
-    ],
-  );
+        showExpandButton:
+            !(widget.fullEdit || widget.initialExpense != null || _isExpanded),
+        onExpand: () {
+          setState(() {
+            _isExpanded = true;
+            _isDirty = true;
+          });
+        },
+      );
 
   @override
   void dispose() {
