@@ -5,9 +5,10 @@ import 'expense_group.dart';
 import 'expense_details.dart';
 import 'expense_group_repository.dart';
 import 'storage_errors.dart';
+import 'storage_performance.dart';
 
 /// Improved implementation of ExpenseGroupRepository with caching and proper error handling
-class FileBasedExpenseGroupRepository implements IExpenseGroupRepository {
+class FileBasedExpenseGroupRepository implements IExpenseGroupRepository with PerformanceMonitoring {
   static const String fileName = 'expense_group_storage.json';
   
   // In-memory cache to improve performance
@@ -50,157 +51,170 @@ class FileBasedExpenseGroupRepository implements IExpenseGroupRepository {
 
   /// Loads groups from file with caching
   Future<StorageResult<List<ExpenseGroup>>> _loadGroups({bool forceReload = false}) async {
-    try {
-      final file = await _getFile();
-      
-      // Check if we can use cached data
-      if (!forceReload && _isCacheValid()) {
-        // Additional check: has file been modified since cache?
-        if (_lastFileModification != null && await file.exists()) {
-          final stat = await file.stat();
-          if (stat.modified.isAtSameMomentAs(_lastFileModification!)) {
+    return await measureOperation(
+      'loadGroups',
+      () async {
+        try {
+          final file = await _getFile();
+          
+          // Check if we can use cached data
+          if (!forceReload && _isCacheValid()) {
+            // Additional check: has file been modified since cache?
+            if (_lastFileModification != null && await file.exists()) {
+              final stat = await file.stat();
+              if (stat.modified.isAtSameMomentAs(_lastFileModification!)) {
+                return StorageResult.success(_cachedGroups!);
+              }
+            } else if (!await file.exists() && _cachedGroups!.isEmpty) {
+              // File doesn't exist and cache is empty - valid state
+              return StorageResult.success(_cachedGroups!);
+            }
+          }
+
+          // Load from file
+          if (!await file.exists()) {
+            _cachedGroups = [];
+            _lastCacheUpdate = DateTime.now();
+            _lastFileModification = null;
             return StorageResult.success(_cachedGroups!);
           }
-        } else if (!await file.exists() && _cachedGroups!.isEmpty) {
-          // File doesn't exist and cache is empty - valid state
-          return StorageResult.success(_cachedGroups!);
-        }
-      }
 
-      // Load from file
-      if (!await file.exists()) {
-        _cachedGroups = [];
-        _lastCacheUpdate = DateTime.now();
-        _lastFileModification = null;
-        return StorageResult.success(_cachedGroups!);
-      }
+          final stat = await file.stat();
+          final contents = await file.readAsString();
+          
+          if (contents.trim().isEmpty) {
+            _cachedGroups = [];
+            _lastCacheUpdate = DateTime.now();
+            _lastFileModification = stat.modified;
+            return StorageResult.success(_cachedGroups!);
+          }
 
-      final stat = await file.stat();
-      final contents = await file.readAsString();
-      
-      if (contents.trim().isEmpty) {
-        _cachedGroups = [];
-        _lastCacheUpdate = DateTime.now();
-        _lastFileModification = stat.modified;
-        return StorageResult.success(_cachedGroups!);
-      }
-
-      final dynamic jsonData = jsonDecode(contents);
-      
-      if (jsonData is! List) {
-        throw SerializationError(
-          'Invalid JSON format: expected list at root level',
-          details: 'Found ${jsonData.runtimeType}',
-        );
-      }
-
-      final groups = <ExpenseGroup>[];
-      for (int i = 0; i < jsonData.length; i++) {
-        try {
-          final groupData = jsonData[i];
-          if (groupData is! Map<String, dynamic>) {
+          final dynamic jsonData = jsonDecode(contents);
+          
+          if (jsonData is! List) {
             throw SerializationError(
-              'Invalid group data at index $i: expected object',
-              details: 'Found ${groupData.runtimeType}',
+              'Invalid JSON format: expected list at root level',
+              details: 'Found ${jsonData.runtimeType}',
             );
           }
-          groups.add(ExpenseGroup.fromJson(groupData));
+
+          final groups = <ExpenseGroup>[];
+          for (int i = 0; i < jsonData.length; i++) {
+            try {
+              final groupData = jsonData[i];
+              if (groupData is! Map<String, dynamic>) {
+                throw SerializationError(
+                  'Invalid group data at index $i: expected object',
+                  details: 'Found ${groupData.runtimeType}',
+                );
+              }
+              groups.add(ExpenseGroup.fromJson(groupData));
+            } catch (e) {
+              throw SerializationError(
+                'Failed to deserialize group at index $i',
+                details: e.toString(),
+                cause: e is Exception ? e : Exception(e.toString()),
+              );
+            }
+          }
+
+          // Validate data integrity
+          final integrityCheck = ExpenseGroupValidator.validateDataIntegrity(groups);
+          if (integrityCheck.isFailure) {
+            throw DataIntegrityError(
+              'Data integrity validation failed',
+              details: integrityCheck.error!.message,
+            );
+          }
+
+          // Update cache
+          _cachedGroups = groups;
+          _lastCacheUpdate = DateTime.now();
+          _lastFileModification = stat.modified;
+
+          return StorageResult.success(groups);
         } catch (e) {
-          throw SerializationError(
-            'Failed to deserialize group at index $i',
-            details: e.toString(),
-            cause: e is Exception ? e : Exception(e.toString()),
+          if (e is StorageError) {
+            return StorageResult.failure(e);
+          }
+          
+          return StorageResult.failure(
+            FileOperationError(
+              'Failed to load groups',
+              details: e.toString(),
+              cause: e is Exception ? e : Exception(e.toString()),
+            ),
           );
         }
-      }
-
-      // Validate data integrity
-      final integrityCheck = ExpenseGroupValidator.validateDataIntegrity(groups);
-      if (integrityCheck.isFailure) {
-        throw DataIntegrityError(
-          'Data integrity validation failed',
-          details: integrityCheck.error!.message,
-        );
-      }
-
-      // Update cache
-      _cachedGroups = groups;
-      _lastCacheUpdate = DateTime.now();
-      _lastFileModification = stat.modified;
-
-      return StorageResult.success(groups);
-    } catch (e) {
-      if (e is StorageError) {
-        return StorageResult.failure(e);
-      }
-      
-      return StorageResult.failure(
-        FileOperationError(
-          'Failed to load groups',
-          details: e.toString(),
-          cause: e is Exception ? e : Exception(e.toString()),
-        ),
-      );
-    }
+      },
+      wasFromCache: _isCacheValid() && !forceReload,
+      dataSize: _cachedGroups?.length,
+    );
   }
 
   /// Saves groups to file and updates cache
   Future<StorageResult<void>> _saveGroups(List<ExpenseGroup> groups) async {
-    try {
-      // Validate data integrity first
-      final integrityCheck = ExpenseGroupValidator.validateDataIntegrity(groups);
-      if (integrityCheck.isFailure) {
-        return StorageResult.failure(
-          DataIntegrityError(
-            'Cannot save: data integrity validation failed',
-            details: integrityCheck.error!.message,
-          ),
-        );
-      }
-
-      // Enforce pin constraint: only one group can be pinned at a time
-      final groupsToSave = List<ExpenseGroup>.from(groups);
-      String? pinnedGroupId;
-      for (int i = 0; i < groupsToSave.length; i++) {
-        final group = groupsToSave[i];
-        if (group.pinned && !group.archived) {
-          if (pinnedGroupId == null) {
-            pinnedGroupId = group.id;
-          } else {
-            // Multiple pinned groups found, unpin this one
-            groupsToSave[i] = group.copyWith(pinned: false);
+    return await measureOperation(
+      'saveGroups',
+      () async {
+        try {
+          // Validate data integrity first
+          final integrityCheck = ExpenseGroupValidator.validateDataIntegrity(groups);
+          if (integrityCheck.isFailure) {
+            return StorageResult.failure(
+              DataIntegrityError(
+                'Cannot save: data integrity validation failed',
+                details: integrityCheck.error!.message,
+              ),
+            );
           }
+
+          // Enforce pin constraint: only one group can be pinned at a time
+          final groupsToSave = List<ExpenseGroup>.from(groups);
+          String? pinnedGroupId;
+          for (int i = 0; i < groupsToSave.length; i++) {
+            final group = groupsToSave[i];
+            if (group.pinned && !group.archived) {
+              if (pinnedGroupId == null) {
+                pinnedGroupId = group.id;
+              } else {
+                // Multiple pinned groups found, unpin this one
+                groupsToSave[i] = group.copyWith(pinned: false);
+              }
+            }
+          }
+
+          final file = await _getFile();
+          final jsonList = groupsToSave.map((group) => group.toJson()).toList();
+          final jsonString = jsonEncode(jsonList);
+          
+          await file.writeAsString(jsonString);
+          
+          // Update cache
+          _cachedGroups = groupsToSave;
+          _lastCacheUpdate = DateTime.now();
+          
+          // Update file modification time
+          final stat = await file.stat();
+          _lastFileModification = stat.modified;
+
+          return const StorageResult.success(null);
+        } catch (e) {
+          if (e is StorageError) {
+            return StorageResult.failure(e);
+          }
+          
+          return StorageResult.failure(
+            FileOperationError(
+              'Failed to save groups',
+              details: e.toString(),
+              cause: e is Exception ? e : Exception(e.toString()),
+            ),
+          );
         }
-      }
-
-      final file = await _getFile();
-      final jsonList = groupsToSave.map((group) => group.toJson()).toList();
-      final jsonString = jsonEncode(jsonList);
-      
-      await file.writeAsString(jsonString);
-      
-      // Update cache
-      _cachedGroups = groupsToSave;
-      _lastCacheUpdate = DateTime.now();
-      
-      // Update file modification time
-      final stat = await file.stat();
-      _lastFileModification = stat.modified;
-
-      return const StorageResult.success(null);
-    } catch (e) {
-      if (e is StorageError) {
-        return StorageResult.failure(e);
-      }
-      
-      return StorageResult.failure(
-        FileOperationError(
-          'Failed to save groups',
-          details: e.toString(),
-          cause: e is Exception ? e : Exception(e.toString()),
-        ),
-      );
-    }
+      },
+      dataSize: groups.length,
+    );
   }
 
   @override
@@ -458,5 +472,10 @@ class FileBasedExpenseGroupRepository implements IExpenseGroupRepository {
   /// Forces a reload from disk on next access
   void forceReload() {
     _invalidateCache();
+  }
+
+  /// Saves all groups atomically (for transaction support)
+  Future<StorageResult<void>> saveAllGroups(List<ExpenseGroup> groups) async {
+    return await _saveGroups(groups);
   }
 }
