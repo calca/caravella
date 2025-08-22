@@ -1,8 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.app.caravella">
+    package="io.github.calca.caravella">
     
-    <!-- Permissions for image picker and file operations -->
+    <!-- Camera permission for taking photos of group backgrounds and expense attachments (optional feature) -->
     <uses-permission android:name="android.permission.CAMERA" />
+    
+    <!-- Media permissions for selecting existing photos (optional feature) -->
     <!-- For API 33+ (Android 13+), use granular media permissions -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
@@ -10,16 +12,27 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
     
-    <!-- Location permissions -->
+    <!-- Location permissions for adding location context to expenses (optional feature) -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    
+    <!-- Declare that these permissions are not required for basic app functionality -->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.location" android:required="false" />
+    <uses-feature android:name="android.hardware.location.gps" android:required="false" />
+    <uses-feature android:name="android.hardware.location.network" android:required="false" />
     
     <application
         android:label="@string/app_name"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:allowBackup="true"
-        android:fullBackupContent="@xml/backup_rules">
+        android:fullBackupContent="@xml/backup_rules"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:localeConfig="@xml/locales_config"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:requestLegacyExternalStorage="false"
+        android:hasFragileUserData="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"
