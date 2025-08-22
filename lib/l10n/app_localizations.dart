@@ -1252,6 +1252,30 @@ abstract class AppLocalizations {
   /// **'Error saving CSV file'**
   String get csv_save_error;
 
+  /// No description provided for @ofx_select_directory_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Select folder to save OFX'**
+  String get ofx_select_directory_title;
+
+  /// No description provided for @ofx_saved_in.
+  ///
+  /// In en, this message translates to:
+  /// **'OFX saved in: {path}'**
+  String ofx_saved_in(Object path);
+
+  /// No description provided for @ofx_save_cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'OFX export cancelled'**
+  String get ofx_save_cancelled;
+
+  /// No description provided for @ofx_save_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving OFX file'**
+  String get ofx_save_error;
+
   /// No description provided for @csv_expense_name.
   ///
   /// In en, this message translates to:
@@ -1545,6 +1569,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Import a backup to restore your data.'**
   String get data_restore_desc;
+
+  /// No description provided for @auto_backup_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic backup'**
+  String get auto_backup_title;
+
+  /// No description provided for @auto_backup_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable operating system automatic backup'**
+  String get auto_backup_desc;
 
   /// No description provided for @info_tab.
   ///

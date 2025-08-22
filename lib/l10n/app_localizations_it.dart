@@ -603,6 +603,20 @@ class AppLocalizationsIt extends AppLocalizations {
   String get csv_save_error => 'Errore nel salvataggio del file CSV';
 
   @override
+  String get ofx_select_directory_title => 'Seleziona cartella per salvare OFX';
+
+  @override
+  String ofx_saved_in(Object path) {
+    return 'OFX salvato in: $path';
+  }
+
+  @override
+  String get ofx_save_cancelled => 'Esportazione OFX annullata';
+
+  @override
+  String get ofx_save_error => 'Errore nel salvataggio del file OFX';
+
+  @override
   String get csv_expense_name => 'Descrizione';
 
   @override
@@ -748,6 +762,13 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get data_restore_desc => 'Importa un backup per ripristinare i dati.';
+
+  @override
+  String get auto_backup_title => 'Backup automatico';
+
+  @override
+  String get auto_backup_desc =>
+      'Abilita il backup automatico del sistema operativo';
 
   @override
   String get info_tab => 'Info';
