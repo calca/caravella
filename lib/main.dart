@@ -8,6 +8,9 @@ import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import 'state/locale_notifier.dart';
 import 'state/theme_mode_notifier.dart';
 import 'state/expense_group_notifier.dart';
+import 'data/expense_group_repository.dart';
+import 'data/file_based_expense_group_repository.dart';
+import 'data/category_service.dart';
 import 'home/home_page.dart';
 import 'config/app_config.dart';
 import 'settings/flag_secure_android.dart';
@@ -132,7 +135,26 @@ class _CaravellaAppState extends State<CaravellaApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ExpenseGroupNotifier()),
+        // Repository provider
+        Provider<IExpenseGroupRepository>(
+          create: (_) => FileBasedExpenseGroupRepository(),
+        ),
+        // Category service provider
+        ProxyProvider<IExpenseGroupRepository, CategoryService>(
+          create: (context) => CategoryService(
+            Provider.of<IExpenseGroupRepository>(context, listen: false),
+          ),
+          update: (context, repository, _) => CategoryService(repository),
+        ),
+        // Expense group notifier with category service
+        ProxyProvider<CategoryService, ExpenseGroupNotifier>(
+          create: (context) => ExpenseGroupNotifier(
+            categoryService: Provider.of<CategoryService>(context, listen: false),
+          ),
+          update: (context, categoryService, _) => ExpenseGroupNotifier(
+            categoryService: categoryService,
+          ),
+        ),
       ],
       child: LocaleNotifier(
         locale: _locale,
