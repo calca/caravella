@@ -10,7 +10,7 @@ import '../flag_secure_android.dart';
 import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'terms_page.dart';
-import 'data_page.dart';
+import 'data_backup_page.dart';
 import '../../widgets/bottom_sheet_scaffold.dart';
 import '../../manager/group/widgets/section_header.dart';
 
@@ -277,7 +277,7 @@ class SettingsPage extends StatelessWidget {
         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
         onTap: () => Navigator.of(
           context,
-        ).push(MaterialPageRoute(builder: (ctx) => const TermsPage())),
+        ).push(MaterialPageRoute(builder: (ctx) => const DeveloperPage())),
       ),
       color: colorScheme.surface,
     );
