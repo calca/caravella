@@ -253,6 +253,8 @@
   "terms_issue_title": "Report a problem",
   "terms_issue_desc": "Go to the GitHub issues page.",
   "terms_license_desc": "View the open source license.",
+  "support_developer_title": "Buy me a coffee",
+  "support_developer_desc": "Support the development of this app.",
   "data_title": "Backup & Restore",
   "data_backup_title": "Backup",
   "data_backup_desc": "Create a backup file of your expenses.",

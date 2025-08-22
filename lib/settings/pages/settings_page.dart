@@ -9,6 +9,7 @@ import '../flag_secure_notifier.dart';
 import '../flag_secure_android.dart';
 import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'developer_page.dart';
 import 'data_backup_page.dart';
 import '../../widgets/bottom_sheet_scaffold.dart';
@@ -126,6 +127,8 @@ class SettingsPage extends StatelessWidget {
           child: Column(
             children: [
               _buildInfoCardRow(context, loc),
+              const SizedBox(height: 8),
+              _buildBuyMeCoffeeRow(context, loc),
               const SizedBox(height: 8),
               _buildAppVersionRow(context, loc),
             ],
@@ -283,6 +286,25 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
+  Widget _buildBuyMeCoffeeRow(BuildContext context, gen.AppLocalizations loc) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+    return _buildSettingCard(
+      context: context,
+      semanticsButton: true,
+      semanticsLabel: loc.support_developer_title,
+      semanticsHint: 'Double tap to support the developer',
+      child: ListTile(
+        leading: const Icon(Icons.coffee_outlined),
+        title: Text(loc.support_developer_title, style: textTheme.titleMedium),
+        subtitle: Text(loc.support_developer_desc, style: textTheme.bodySmall),
+        trailing: const Icon(Icons.launch, size: 16),
+        onTap: () => _launchBuyMeCoffee(),
+      ),
+      color: colorScheme.surface,
+    );
+  }
+
   // GENERIC CARD WRAPPER ---------------------------------------------------
   Widget _buildSettingCard({
     required BuildContext context,
@@ -318,6 +340,19 @@ class SettingsPage extends StatelessWidget {
       return info.version;
     } catch (_) {
       return '-';
+    }
+  }
+
+  Future<void> _launchBuyMeCoffee() async {
+    const url = 'https://buymeacoffee.com/caravella';
+    final uri = Uri.parse(url);
+    
+    try {
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      }
+    } catch (e) {
+      // Handle error silently - user can try again if needed
     }
   }
 

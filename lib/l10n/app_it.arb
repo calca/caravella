@@ -251,6 +251,8 @@
   "terms_issue_title": "Segnala un problema",
   "terms_issue_desc": "Vai alla pagina delle issue su GitHub.",
   "terms_license_desc": "Visualizza la licenza open source.",
+  "support_developer_title": "Offrimi un caffè",
+  "support_developer_desc": "Sostieni lo sviluppo di questa app.",
   "data_title": "Backup & Ripristino",
   "data_backup_title": "Backup",
   "data_backup_desc": "Crea un file di backup delle tue spese.",

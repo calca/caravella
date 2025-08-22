@@ -253,6 +253,8 @@
   "terms_issue_title": "Reportar un problema",
   "terms_issue_desc": "Ir a la página de issues en GitHub.",
   "terms_license_desc": "Ver la licencia de código abierto.",
+  "support_developer_title": "Cómprame un café",
+  "support_developer_desc": "Apoya el desarrollo de esta aplicación.",
   "data_title": "Respaldo y Restauración",
   "data_backup_title": "Respaldo",
   "data_backup_desc": "Crear un archivo de respaldo de tus gastos.",
