@@ -5,7 +5,7 @@ import 'package:org_app_caravella/l10n/app_localizations.dart'
 import '../state/locale_notifier.dart';
 import '../state/theme_mode_notifier.dart';
 import 'flag_secure_notifier.dart';
-import 'auto_backup_notifier.dart';
+
 import 'flag_secure_android.dart';
 import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -36,9 +36,6 @@ class SettingsPage extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<FlagSecureNotifier>(
           create: (_) => FlagSecureNotifier(),
-        ),
-        ChangeNotifierProvider<AutoBackupNotifier>(
-          create: (_) => AutoBackupNotifier(),
         ),
       ],
       child: Scaffold(
@@ -199,48 +196,6 @@ class SettingsPage extends StatelessWidget {
                           MaterialPageRoute(builder: (ctx) => const DataPage()),
                         );
                       },
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Card(
-                    elevation: 0,
-                    color: colorScheme.surface,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Consumer<AutoBackupNotifier>(
-                      builder: (context, notifier, _) => Semantics(
-                        toggled: notifier.enabled,
-                        label:
-                            '${genLoc.auto_backup_title} - ${notifier.enabled ? genLoc.accessibility_currently_enabled : genLoc.accessibility_currently_disabled}',
-                        hint: notifier.enabled
-                            ? genLoc.accessibility_double_tap_disable
-                            : genLoc.accessibility_double_tap_enable,
-                        child: ListTile(
-                          leading: const Icon(Icons.backup_outlined),
-                          title: Text(
-                            genLoc.auto_backup_title,
-                            style: textTheme.titleMedium,
-                          ),
-                          subtitle: Text(
-                            genLoc.auto_backup_desc,
-                            style: textTheme.bodySmall,
-                          ),
-                          trailing: Semantics(
-                            label: genLoc.accessibility_security_switch(
-                              notifier.enabled
-                                  ? genLoc.accessibility_switch_on
-                                  : genLoc.accessibility_switch_off,
-                            ),
-                            child: Switch(
-                              value: notifier.enabled,
-                              onChanged: (val) async {
-                                notifier.setEnabled(val);
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
                     ),
                   ),
                 ],
