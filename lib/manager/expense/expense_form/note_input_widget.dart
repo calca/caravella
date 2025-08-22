@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import 'icon_leading_field.dart';
+import '../../../themes/form_theme.dart';
 
 class NoteInputWidget extends StatelessWidget {
   final TextEditingController controller;
@@ -22,13 +23,9 @@ class NoteInputWidget extends StatelessWidget {
       focusNode: focusNode,
       maxLines: null, // auto-grow illimitato
       minLines: 4, // minimo 4 righe visibili
-      style: textStyle ?? Theme.of(context).textTheme.bodySmall,
-      decoration: InputDecoration(
+      style: textStyle ?? FormTheme.getMultilineTextStyle(context),
+      decoration: FormTheme.getMultilineDecoration(
         hintText: gloc.note_hint,
-        // rely on theme hintStyle
-        border: const OutlineInputBorder(),
-        isDense: true,
-        contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
       ),
     );
 

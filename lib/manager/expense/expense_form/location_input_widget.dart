@@ -4,6 +4,7 @@ import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import 'icon_leading_field.dart';
 import '../../../data/model/expense_location.dart';
+import '../../../themes/form_theme.dart';
 
 class LocationInputWidget extends StatefulWidget {
   final ExpenseLocation? initialLocation;
@@ -209,7 +210,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
     final field = TextFormField(
       controller: _controller,
       focusNode: _fieldFocusNode,
-      style: widget.textStyle ?? Theme.of(context).textTheme.bodySmall,
+      style: widget.textStyle ?? FormTheme.getFieldTextStyle(context),
       onChanged: _onTextChanged,
       decoration: InputDecoration(
         hintText: _isGettingLocation
@@ -220,7 +221,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
         // rely on theme hintStyle
         border: InputBorder.none,
         isDense: true,
-        contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
+        contentPadding: FormTheme.standardContentPadding,
         suffixIconConstraints: const BoxConstraints(
           minHeight: 32,
           minWidth: 32,
@@ -234,7 +235,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
       semanticsLabel: gloc.location,
       tooltip: gloc.location,
       alignTop: false,
-      iconPadding: const EdgeInsets.only(top: 8, bottom: 8, right: 6),
+      iconPadding: FormTheme.standardIconPadding,
       child: field,
     );
   }

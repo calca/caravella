@@ -16,6 +16,7 @@ import 'expense_form/note_input_widget.dart';
 import 'expense_form/location_input_widget.dart';
 import 'expense_form/expense_form_actions_widget.dart';
 import 'expense_form/category_dialog.dart';
+import '../../themes/form_theme.dart';
 
 class ExpenseFormComponent extends StatefulWidget {
   // When true shows date, location and note fields (full edit mode). In edit mode (initialExpense != null) these are always shown.
@@ -59,7 +60,7 @@ class ExpenseFormComponent extends StatefulWidget {
 
 class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     with WidgetsBindingObserver {
-  static const double _rowSpacing = 16.0;
+  // static const double _rowSpacing = 16.0; // Replaced by FormTheme.fieldSpacing
   final _formKey = GlobalKey<FormState>();
   ExpenseCategory? _category;
   double? _amount;
@@ -498,7 +499,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     }
   }
 
-  Widget _spacer() => const SizedBox(height: _rowSpacing);
+  Widget _spacer() => const SizedBox(height: FormTheme.fieldSpacing);
 
   Widget _buildAmountField(gen.AppLocalizations gloc, TextStyle? style) =>
       KeyedSubtree(
@@ -800,10 +801,10 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
   Widget _buildDivider(BuildContext context) {
     if (_shouldShowExtendedFields) {
       // In full edit mode: reserve vertical space but no visual divider
-      return const SizedBox(height: 24);
+      return const SizedBox(height: FormTheme.sectionSpacing);
     }
     return Divider(
-      height: 24,
+      height: FormTheme.sectionSpacing,
       thickness: 1,
       color: Theme.of(
         context,
