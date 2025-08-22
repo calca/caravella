@@ -10,6 +10,7 @@ import 'dart:io';
 import '../widgets/app_toast.dart';
 import 'auto_backup_notifier.dart';
 import 'package:provider/provider.dart';
+import '../manager/group/widgets/section_header.dart';
 
 class DataPage extends StatelessWidget {
   const DataPage({super.key});
@@ -27,19 +28,23 @@ class DataPage extends StatelessWidget {
           foregroundColor: colorScheme.onSurface,
           elevation: 0,
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                gloc.data_title,
-                style: textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 32),
-              Card(
+        body: ListView(
+          padding: EdgeInsets.fromLTRB(
+            0,
+            0,
+            0,
+            MediaQuery.of(context).padding.bottom + 24,
+          ),
+          children: [
+            // Auto Backup Section
+            SectionHeader(
+              title: gloc.auto_backup_title,
+              description: gloc.auto_backup_desc,
+              padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Card(
                 elevation: 0,
                 color: colorScheme.surface,
                 shape: RoundedRectangleBorder(
@@ -84,55 +89,68 @@ class DataPage extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
-              Card(
-                elevation: 0,
-                color: colorScheme.surface,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: ListTile(
-                  leading: const Icon(Icons.cloud_upload_outlined),
-                  minLeadingWidth: 0,
-                  title: Text(gloc.backup, style: textTheme.titleMedium),
-                  subtitle: Text(gloc.data_backup_desc),
-                  trailing: const Icon(Icons.arrow_forward_ios, size: 18),
-                  onTap: () async {
-                    await _backupTrips(context, gloc);
-                  },
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 8,
-                    horizontal: 16,
+            ),
+
+            // Manual Backup & Restore Section
+            SectionHeader(
+              title: gloc.data_title,
+              description: gloc.settings_data_desc,
+              padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Column(
+                children: [
+                  Card(
+                    elevation: 0,
+                    color: colorScheme.surface,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: ListTile(
+                      leading: const Icon(Icons.cloud_upload_outlined),
+                      minLeadingWidth: 0,
+                      title: Text(gloc.backup, style: textTheme.titleMedium),
+                      subtitle: Text(gloc.data_backup_desc),
+                      trailing: const Icon(Icons.arrow_forward_ios, size: 18),
+                      onTap: () async {
+                        await _backupTrips(context, gloc);
+                      },
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 8,
+                        horizontal: 16,
+                      ),
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 8),
+                  Card(
+                    elevation: 0,
+                    color: colorScheme.surface,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: ListTile(
+                      leading: const Icon(Icons.download_outlined),
+                      minLeadingWidth: 0,
+                      title: Text(
+                        gloc.data_restore_title,
+                        style: textTheme.titleMedium,
+                      ),
+                      subtitle: Text(gloc.data_restore_desc),
+                      trailing: const Icon(Icons.arrow_forward_ios, size: 18),
+                      onTap: () async {
+                        await _importTrips(context, gloc);
+                      },
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 8,
+                        horizontal: 16,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
-              Card(
-                elevation: 0,
-                color: colorScheme.surface,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: ListTile(
-                  leading: const Icon(Icons.download_outlined),
-                  minLeadingWidth: 0,
-                  title: Text(
-                    gloc.data_restore_title,
-                    style: textTheme.titleMedium,
-                  ),
-                  subtitle: Text(gloc.data_restore_desc),
-                  trailing: const Icon(Icons.arrow_forward_ios, size: 18),
-                  onTap: () async {
-                    await _importTrips(context, gloc);
-                  },
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 8,
-                    horizontal: 16,
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
