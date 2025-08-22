@@ -450,7 +450,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
       fontWeight: FontWeight.w500,
       letterSpacing: 0.15,
     );
-    final titleStyle = theme.textTheme.titleMedium?.copyWith(
+    final titleStyle = theme.textTheme.titleLarge?.copyWith(
       fontWeight: FontWeight.w700,
       color: colorScheme.onSurface,
       overflow: TextOverflow.ellipsis,
@@ -464,24 +464,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            DecoratedBox(
-              decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHighest.withValues(
-                  alpha: 0.6,
-                ),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(6.0),
-                child: Icon(
-                  Icons.folder_open_outlined,
-                  size: 20,
-                  color: colorScheme.primary,
-                  semanticLabel: gloc.in_group_prefix,
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
             Expanded(
               child: Tooltip(
                 message: title,
