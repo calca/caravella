@@ -42,10 +42,12 @@ void main() {
           );
     });
 
-    test('should initialize with default value false', () async {
+    test('should initialize with default values', () async {
       // Wait for the initial load to complete
       await Future.delayed(const Duration(milliseconds: 100));
       expect(notifier.enabled, false);
+      expect(notifier.lastAutoBackup, null);
+      expect(notifier.lastManualBackup, null);
     });
 
     test('should handle platform backup state sync', () async {
@@ -124,6 +126,22 @@ void main() {
 
       // State should remain unchanged due to platform error
       expect(notifier.enabled, initialState);
+    });
+
+    test('should update manual backup timestamp', () async {
+      await Future.delayed(const Duration(milliseconds: 100));
+      
+      expect(notifier.lastManualBackup, null);
+      
+      await notifier.updateManualBackupTimestamp();
+      
+      expect(notifier.lastManualBackup, isNotNull);
+      expect(notifier.lastManualBackup!.isBefore(DateTime.now()), true);
+      // Should be within the last second
+      expect(
+        DateTime.now().difference(notifier.lastManualBackup!).inSeconds < 1,
+        true,
+      );
     });
   });
 }

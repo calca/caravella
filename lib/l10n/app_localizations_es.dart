@@ -776,6 +776,18 @@ class AppLocalizationsEs extends AppLocalizations {
       'Habilitar el respaldo automático del sistema operativo';
 
   @override
+  String get last_backup_never => 'Nunca';
+
+  @override
+  String get last_backup_label => 'Último respaldo:';
+
+  @override
+  String get last_auto_backup_label => 'Último respaldo automático:';
+
+  @override
+  String get last_manual_backup_label => 'Último respaldo manual:';
+
+  @override
   String get info_tab => 'Info';
 
   @override
