@@ -13,8 +13,8 @@ import '../auto_backup_notifier.dart';
 import 'package:provider/provider.dart';
 import '../../manager/group/widgets/section_header.dart';
 
-class DataPage extends StatelessWidget {
-  const DataPage({super.key});
+class DataBackupPage extends StatelessWidget {
+  const DataBackupPage({super.key});
 
   @override
   Widget build(BuildContext context) {

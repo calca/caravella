@@ -242,7 +242,7 @@ class SettingsPage extends StatelessWidget {
         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
         onTap: () => Navigator.of(
           context,
-        ).push(MaterialPageRoute(builder: (ctx) => const DataPage())),
+        ).push(MaterialPageRoute(builder: (ctx) => const DataBackupPage())),
       ),
       color: colorScheme.surface,
     );
