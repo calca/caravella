@@ -566,6 +566,15 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
 
   void _onScroll() {
     if (!_scrollController.hasClients) return;
+    
+    // Keep FAB visible when there are no expenses
+    if (_trip?.expenses.isEmpty == true) {
+      if (!_fabVisible && mounted) {
+        setState(() => _fabVisible = true);
+      }
+      return;
+    }
+    
     final direction = _scrollController.position.userScrollDirection;
     if (direction == ScrollDirection.reverse) {
       if (_fabVisible && mounted) setState(() => _fabVisible = false);
@@ -738,6 +747,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                           setState(() => _hideHeader = visible);
                         }
                       },
+                      onAddExpense: _showAddExpenseSheet,
                     ),
                   ],
                 ),
@@ -748,7 +758,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             padding: const EdgeInsets.only(bottom: 0),
             sliver: SliverToBoxAdapter(
               child: Container(
-                height: 100,
+                height: trip.expenses.isEmpty ? 200 : 100, // More space when empty
                 color: colorScheme.surfaceContainer,
               ),
             ),

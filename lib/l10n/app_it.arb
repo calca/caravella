@@ -516,4 +516,10 @@
   ,"@no_expenses_with_filters": {"description": "Stato vuoto quando filtri attivi nessun risultato"}
   ,"no_expenses_yet": "Nessuna spesa ancora aggiunta"
   ,"@no_expenses_yet": {"description": "Stato vuoto iniziale senza spese"}
+  ,"empty_expenses_title": "Pronti per iniziare?"
+  ,"@empty_expenses_title": {"description": "Titolo per stato vuoto spese"}
+  ,"empty_expenses_subtitle": "Aggiungi la prima spesa per iniziare con questo gruppo!"
+  ,"@empty_expenses_subtitle": {"description": "Sottotitolo per stato vuoto spese"}
+  ,"add_first_expense_button": "Aggiungi Prima Spesa"
+  ,"@add_first_expense_button": {"description": "Testo pulsante per aggiungere prima spesa"}
 }

@@ -529,4 +529,10 @@
   ,"@no_expenses_with_filters": {"description": "Empty state when active filters return no expenses"}
   ,"no_expenses_yet": "No expenses added yet"
   ,"@no_expenses_yet": {"description": "Empty state when there are no expenses yet"}
+  ,"empty_expenses_title": "Ready to start tracking?"
+  ,"@empty_expenses_title": {"description": "Title for empty expenses state"}
+  ,"empty_expenses_subtitle": "Add your first expense to get started with this group!"
+  ,"@empty_expenses_subtitle": {"description": "Subtitle for empty expenses state"}
+  ,"add_first_expense_button": "Add First Expense"
+  ,"@add_first_expense_button": {"description": "Button text for adding the first expense in empty state"}
 }

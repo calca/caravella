@@ -1,9 +1,11 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../../../l10n/app_localizations.dart' as gen;
 import '../../../data/model/expense_details.dart';
 import '../../../data/model/expense_category.dart';
 import '../../../data/model/expense_participant.dart';
 import 'expense_amount_card.dart';
+import 'empty_expense_state.dart';
 
 class FilteredExpenseList extends StatefulWidget {
   final List<ExpenseDetails> expenses;
@@ -12,6 +14,7 @@ class FilteredExpenseList extends StatefulWidget {
   final List<ExpenseCategory> categories;
   final List<ExpenseParticipant> participants;
   final ValueChanged<bool>? onFiltersVisibilityChanged;
+  final VoidCallback? onAddExpense;
 
   const FilteredExpenseList({
     super.key,
@@ -21,6 +24,7 @@ class FilteredExpenseList extends StatefulWidget {
     required this.categories,
     required this.participants,
     this.onFiltersVisibilityChanged,
+    this.onAddExpense,
   });
 
   @override
@@ -288,30 +292,46 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
 
         // Expense List
         if (filteredExpenses.isEmpty) ...[
-          Container(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              children: [
-                Icon(
-                  _hasActiveFilters
-                      ? Icons.search_off_outlined
-                      : Icons.receipt_long_outlined,
-                  size: 48,
-                  color: colorScheme.onSurface.withValues(alpha: 0.4),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  _hasActiveFilters
-                      ? gloc.no_expenses_with_filters
-                      : gloc.no_expenses_yet,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: colorScheme.onSurface.withValues(alpha: 0.6),
+          // Enhanced empty state when no expenses exist (not filtered)
+          if (!_hasActiveFilters && widget.onAddExpense != null) ...[
+            // Calculate available height for proper centering
+            LayoutBuilder(
+              builder: (context, constraints) {
+                return SizedBox(
+                  height: math.max(400, constraints.maxHeight),
+                  child: EmptyExpenseState(
+                    onAddFirstExpense: widget.onAddExpense!,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+                );
+              },
             ),
-          ),
+          ] else ...[
+            // Simple empty state for filtered results or when no callback provided
+            Container(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                children: [
+                  Icon(
+                    _hasActiveFilters
+                        ? Icons.search_off_outlined
+                        : Icons.receipt_long_outlined,
+                    size: 48,
+                    color: colorScheme.onSurface.withValues(alpha: 0.4),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    _hasActiveFilters
+                        ? gloc.no_expenses_with_filters
+                        : gloc.no_expenses_yet,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: colorScheme.onSurface.withValues(alpha: 0.6),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          ],
         ] else ...[
           Column(
             children: [
