@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../manager/history/expenses_history_page.dart';
-import '../../../settings/settings_page.dart';
+import '../../../settings/pages/settings_page.dart';
 
 class SimpleBottomBar extends StatelessWidget {
   final gen.AppLocalizations localizations;

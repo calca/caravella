@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import '../widgets/caravella_app_bar.dart';
+import '../../widgets/caravella_app_bar.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart'
     as gen; // generated strongly-typed
-import '../state/locale_notifier.dart';
-import '../state/theme_mode_notifier.dart';
-import 'flag_secure_notifier.dart';
+import '../../state/locale_notifier.dart';
+import '../../state/theme_mode_notifier.dart';
+import '../flag_secure_notifier.dart';
 
-import 'flag_secure_android.dart';
+import '../flag_secure_android.dart';
 import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'terms_page.dart';
 import 'data_page.dart';
-import '../widgets/bottom_sheet_scaffold.dart';
-import '../manager/group/widgets/section_header.dart';
+import '../../widgets/bottom_sheet_scaffold.dart';
+import '../../manager/group/widgets/section_header.dart';
 
 class SettingsPage extends StatelessWidget {
   final void Function(String)? onLocaleChanged;

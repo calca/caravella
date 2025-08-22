@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import 'package:url_launcher/url_launcher.dart';
-import '../widgets/app_toast.dart';
+import '../../widgets/app_toast.dart';
 
 class TermsPage extends StatelessWidget {
   const TermsPage({super.key});
