@@ -13,7 +13,9 @@ class OfxExporter {
     final buffer = StringBuffer();
 
     buffer.writeln('<?xml version="1.0" encoding="UTF-8"?>');
-    buffer.writeln('<?OFX OFXHEADER="200" VERSION="200" SECURITY="NONE" OLDFILEUID="NONE" NEWFILEUID="NONE"?>');
+    buffer.writeln(
+      '<?OFX OFXHEADER="200" VERSION="200" SECURITY="NONE" OLDFILEUID="NONE" NEWFILEUID="NONE"?>',
+    );
     buffer.writeln('<OFX>');
     buffer.writeln('  <SIGNONMSGSRSV1>');
     buffer.writeln('    <SONRS>');
@@ -40,32 +42,51 @@ class OfxExporter {
     buffer.writeln('          <ACCTTYPE>CHECKING</ACCTTYPE>');
     buffer.writeln('        </BANKACCTFROM>');
     buffer.writeln('        <BANKTRANLIST>');
-    buffer.writeln('          <DTSTART>${_formatOfxDate(group.startDate ?? group.expenses.first.date)}</DTSTART>');
-    buffer.writeln('          <DTEND>${_formatOfxDate(group.endDate ?? group.expenses.last.date)}</DTEND>');
+    buffer.writeln(
+      '          <DTSTART>${_formatOfxDate(group.startDate ?? group.expenses.first.date)}</DTSTART>',
+    );
+    buffer.writeln(
+      '          <DTEND>${_formatOfxDate(group.endDate ?? group.expenses.last.date)}</DTEND>',
+    );
 
     for (final expense in group.expenses) {
       buffer.writeln('          <STMTTRN>');
       buffer.writeln('            <TRNTYPE>DEBIT</TRNTYPE>');
-      buffer.writeln('            <DTPOSTED>${_formatOfxDate(expense.date)}</DTPOSTED>');
-      buffer.writeln('            <TRNAMT>-${expense.amount?.toStringAsFixed(2) ?? '0.00'}</TRNAMT>');
+      buffer.writeln(
+        '            <DTPOSTED>${_formatOfxDate(expense.date)}</DTPOSTED>',
+      );
+      buffer.writeln(
+        '            <TRNAMT>-${expense.amount?.toStringAsFixed(2) ?? '0.00'}</TRNAMT>',
+      );
       buffer.writeln('            <FITID>${expense.id}</FITID>');
-      final description = _sanitizeXmlValue(expense.name ?? expense.category.name);
+      final description = _sanitizeXmlValue(
+        expense.name ?? expense.category.name,
+      );
       buffer.writeln('            <NAME>$description</NAME>');
       final payee = _sanitizeXmlValue(expense.paidBy.name);
       buffer.writeln('            <PAYEE>$payee</PAYEE>');
       if (expense.note != null && expense.note!.isNotEmpty) {
-        final memo = _sanitizeXmlValue('${expense.category.name} - ${expense.note}');
+        final memo = _sanitizeXmlValue(
+          '${expense.category.name} - ${expense.note}',
+        );
         buffer.writeln('            <MEMO>$memo</MEMO>');
       } else {
-        buffer.writeln('            <MEMO>${_sanitizeXmlValue(expense.category.name)}</MEMO>');
+        buffer.writeln(
+          '            <MEMO>${_sanitizeXmlValue(expense.category.name)}</MEMO>',
+        );
       }
       buffer.writeln('          </STMTTRN>');
     }
 
     buffer.writeln('        </BANKTRANLIST>');
     buffer.writeln('        <LEDGERBAL>');
-    final totalAmount = group.expenses.fold<double>(0.0, (sum, expense) => sum + (expense.amount ?? 0.0));
-    buffer.writeln('          <BALAMT>-${totalAmount.toStringAsFixed(2)}</BALAMT>');
+    final totalAmount = group.expenses.fold<double>(
+      0.0,
+      (sum, expense) => sum + (expense.amount ?? 0.0),
+    );
+    buffer.writeln(
+      '          <BALAMT>-${totalAmount.toStringAsFixed(2)}</BALAMT>',
+    );
     buffer.writeln('          <DTASOF>${_formatOfxDateTime(now)}</DTASOF>');
     buffer.writeln('        </LEDGERBAL>');
     buffer.writeln('      </STMTRS>');
