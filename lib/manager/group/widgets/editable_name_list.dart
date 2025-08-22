@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../themes/app_text_styles.dart';
+import 'section_header.dart';
 
 /// Generic inline editable list for simple name-based items (participants, categories, etc.).
 /// Supports add, edit (inline), delete. Parent owns the source of truth list; this widget
@@ -21,6 +22,7 @@ class EditableNameList extends StatefulWidget {
   final void Function(int) onDelete;
   final IconData itemIcon;
   final Color? borderColor;
+  final String? description;
 
   const EditableNameList({
     super.key,
@@ -40,6 +42,7 @@ class EditableNameList extends StatefulWidget {
     this.requiredMark = false,
     this.itemIcon = Icons.label_outline,
     this.borderColor,
+    this.description,
   });
 
   @override
@@ -130,9 +133,7 @@ class _EditableNameListState extends State<EditableNameList> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
         child: Row(
           children: [
             Expanded(
@@ -179,9 +180,7 @@ class _EditableNameListState extends State<EditableNameList> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
         child: Row(
           children: [
             Expanded(
@@ -210,7 +209,7 @@ class _EditableNameListState extends State<EditableNameList> {
             ),
             IconButton(
               tooltip: widget.cancelTooltip,
-              icon: const Icon(Icons.close_rounded),
+              icon: const Icon(Icons.close_outlined),
               onPressed: _cancelEdit,
             ),
           ],
@@ -223,9 +222,7 @@ class _EditableNameListState extends State<EditableNameList> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
         child: Row(
           children: [
             Expanded(
@@ -254,7 +251,7 @@ class _EditableNameListState extends State<EditableNameList> {
             ),
             IconButton(
               tooltip: widget.cancelTooltip,
-              icon: const Icon(Icons.close_rounded),
+              icon: const Icon(Icons.close_outlined),
               onPressed: _cancelAdd,
             ),
           ],
@@ -268,14 +265,12 @@ class _EditableNameListState extends State<EditableNameList> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Text(widget.title, style: AppTextStyles.sectionTitle(context)),
-            if (widget.requiredMark) ...[
-              const SizedBox(width: 4),
-              const Text('*', style: TextStyle(fontWeight: FontWeight.bold)),
-            ],
-          ],
+        SectionHeader(
+          title: widget.title,
+          description: widget.description,
+          requiredMark: widget.requiredMark,
+          padding: EdgeInsets.zero,
+          spacing: 4,
         ),
         const SizedBox(height: 12),
         ...List.generate(widget.items.length, (index) {

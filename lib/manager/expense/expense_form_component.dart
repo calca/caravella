@@ -1,11 +1,11 @@
 library;
 
 import 'package:flutter/material.dart';
-import '../../data/expense_category.dart';
-import '../../data/expense_details.dart';
+import '../../data/model/expense_category.dart';
+import '../../data/model/expense_details.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
-import '../../data/expense_participant.dart';
-import '../../data/expense_location.dart';
+import '../../data/model/expense_participant.dart';
+import '../../data/model/expense_location.dart';
 import '../../state/locale_notifier.dart';
 import 'expense_form/amount_input_widget.dart';
 import 'expense_form/participant_selector_widget.dart';
@@ -32,6 +32,8 @@ class ExpenseFormComponent extends StatefulWidget {
   final String? newlyAddedCategory; // Nuova proprietà
   final String? groupTitle; // Titolo del gruppo per la riga azioni
   final String? currency; // Currency del gruppo
+  final ScrollController?
+  scrollController; // Controller for scrolling to focused fields
 
   const ExpenseFormComponent({
     super.key,
@@ -48,13 +50,15 @@ class ExpenseFormComponent extends StatefulWidget {
     this.groupTitle,
     this.currency,
     this.fullEdit = false,
+    this.scrollController,
   });
 
   @override
   State<ExpenseFormComponent> createState() => _ExpenseFormComponentState();
 }
 
-class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
+class _ExpenseFormComponentState extends State<ExpenseFormComponent>
+    with WidgetsBindingObserver {
   static const double _rowSpacing = 16.0;
   final _formKey = GlobalKey<FormState>();
   late ExpenseFormState _formState;
@@ -63,13 +67,83 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   final FocusNode _amountFocus = FocusNode();
   late List<ExpenseCategory> _categories; // Lista locale delle categorie
   bool _initializing = true; // traccia se siamo in fase di inizializzazione
+  double _lastKeyboardHeight = 0; // Track keyboard height changes
 
   // Scroll controller callback per CategorySelectorWidget
   // Removed _scrollToCategoryEnd: no longer needed with new category selector bottom sheet.
 
+  /// Scrolls to make the focused field visible when keyboard opens
+  void _scrollToFocusedField() {
+    if (widget.scrollController == null ||
+        !widget.scrollController!.hasClients) {
+      return;
+    }
+
+    // Use a short delay to ensure the keyboard animation has started
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (!mounted ||
+          widget.scrollController == null ||
+          !widget.scrollController!.hasClients) {
+        return;
+      }
+
+      final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+      if (keyboardHeight == 0) return;
+
+      try {
+        // Scroll to ensure focused field is visible above keyboard
+        final currentScrollOffset = widget.scrollController!.offset;
+        final maxScrollExtent =
+            widget.scrollController!.position.maxScrollExtent;
+
+        // Calculate required scroll to bring focused field into view
+        // We want to position focused field in the upper part of visible area
+        const fieldBuffer =
+            120.0; // Extra space above focused field for better visibility
+        final targetScrollOffset = (currentScrollOffset + fieldBuffer).clamp(
+          0.0,
+          maxScrollExtent,
+        );
+
+        // Only scroll if there's a meaningful change
+        if ((targetScrollOffset - currentScrollOffset).abs() > 10.0) {
+          widget.scrollController!.animateTo(
+            targetScrollOffset,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        }
+      } catch (e) {
+        // Gracefully handle any scrolling errors
+        debugPrint('Error during scroll-to-focus: $e');
+      }
+    });
+  }
+
+  @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+    // Monitor keyboard height changes
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+
+      final currentKeyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+      if (currentKeyboardHeight != _lastKeyboardHeight) {
+        _lastKeyboardHeight = currentKeyboardHeight;
+
+        // If keyboard is opening and a field has focus, trigger scroll
+        if (currentKeyboardHeight > 0 &&
+            (_amountFocus.hasFocus || _nameFocus.hasFocus)) {
+          _scrollToFocusedField();
+        }
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _categories = List.from(widget.categories); // Copia della lista originale
     _formState = ExpenseFormState(categories: _categories);
     
@@ -92,7 +166,29 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
 
     // Autofocus su amount dopo primo frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _amountFocus.requestFocus();
+      if (mounted) {
+        _amountFocus.requestFocus();
+        _scrollToFocusedField();
+      }
+    });
+
+    // Add focus listeners to trigger scrolling when fields receive focus
+    _amountFocus.addListener(() {
+      if (_amountFocus.hasFocus) {
+        // Delay to ensure keyboard is starting to appear
+        Future.delayed(const Duration(milliseconds: 200), () {
+          _scrollToFocusedField();
+        });
+      }
+    });
+
+    _nameFocus.addListener(() {
+      if (_nameFocus.hasFocus) {
+        // Delay to ensure keyboard is starting to appear
+        Future.delayed(const Duration(milliseconds: 200), () {
+          _scrollToFocusedField();
+        });
+      }
     });
     // Listener per aggiornare _amount in tempo reale (mantiene valore anche quando perde focus)
     _amountController.addListener(() {
@@ -207,23 +303,21 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     return PopScope(
       canPop: !_formState.hasActualChanges,
       onPopInvokedWithResult: _handlePop,
-      child: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildGroupHeader(),
-              _buildAmountField(gloc, smallStyle),
-              _spacer(),
-              _buildNameField(gloc, smallStyle),
-              _spacer(),
-              _buildParticipantCategorySection(smallStyle),
-              _buildExtendedFields(locale, smallStyle),
-              _buildDivider(context),
-              _buildActionsRow(gloc, smallStyle),
-            ],
-          ),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildGroupHeader(),
+            _buildAmountField(gloc, smallStyle),
+            _spacer(),
+            _buildNameField(gloc, smallStyle),
+            _spacer(),
+            _buildParticipantCategorySection(smallStyle),
+            _buildExtendedFields(locale, smallStyle),
+            _buildDivider(context),
+            _buildActionsRow(gloc, smallStyle),
+          ],
         ),
       ),
     );
@@ -324,6 +418,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
               selectedCategory: _formState.category,
               onCategorySelected: _onCategorySelected,
               onAddCategory: _onAddCategory,
+              onAddCategoryInline: _onAddCategoryInline,
               textStyle: style,
               fullEdit: true,
             ),
@@ -356,6 +451,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
               selectedCategory: _formState.category,
               onCategorySelected: _onCategorySelected,
               onAddCategory: _onAddCategory,
+              onAddCategoryInline: _onAddCategoryInline,
               textStyle: style,
               fullEdit: false,
             ),
@@ -416,6 +512,44 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         _formState.categoryTouched = true;
       });
     }
+  }
+
+  Future<void> _onAddCategoryInline(String categoryName) async {
+    widget.onCategoryAdded(categoryName);
+    // Wait a bit for the category to be added to the widget.categories list
+    await Future.delayed(const Duration(milliseconds: 100));
+    final found = widget.categories.firstWhere(
+      (c) => c.name == categoryName,
+      orElse: () => widget.categories.isNotEmpty
+          ? widget.categories.first
+          : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000)),
+    );
+    setState(() {
+      if (!_categories.contains(found)) {
+        _categories.add(found);
+      }
+      _category = found;
+      _categoryTouched = true;
+      if (!_initializing) {
+        _isDirty = true;
+      }
+    });
+    // Wait again to ensure the state has settled
+    await Future.delayed(const Duration(milliseconds: 100));
+    final foundAfter = widget.categories.firstWhere(
+      (c) => c.name == categoryName,
+      orElse: () => widget.categories.isNotEmpty
+          ? widget.categories.first
+          : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000)),
+    );
+    setState(() {
+      _categories = List.from(widget.categories);
+      _category = foundAfter;
+      _categoryTouched = true;
+      if (!_initializing) {
+        _isDirty = true;
+      }
+    });
   }
 
   Widget _buildExtendedFields(String locale, TextStyle? style) {
@@ -492,6 +626,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _amountController.dispose();
     _amountFocus.dispose();
     _nameFocus.dispose();

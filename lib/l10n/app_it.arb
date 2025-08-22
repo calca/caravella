@@ -6,6 +6,7 @@
   "monthlyExpensesChart": "Spese mensili",
   "settings_flag_secure_desc": "Impedisce screenshot e registrazione schermo",
   "settings_flag_secure_title": "Proteggi schermata",
+  "settings_privacy": "Privacy",
   "select_currency": "Seleziona valuta",
   "select_period_hint_short": "Imposta date",
   "select_period_hint": "Seleziona un intervallo di date",
@@ -36,7 +37,21 @@
   "background": "Sfondo",
   "select_background": "Seleziona Sfondo",
   "background_options": "Opzioni Sfondo",
-  "choose_image_or_color": "Scegli un'immagine o un colore per personalizzare il gruppo",
+  "choose_image_or_color": "Scegli immagine o colore",
+  "participants_description": "Persone che condividono spese",
+  "categories_description": "Organizza spese per tipo",
+  "dates_description": "Date inizio/fine opzionali",
+  "currency_description": "Valuta base del gruppo",
+  "background_color_selected": "Colore selezionato",
+  "background_tap_to_replace": "Tocca per sostituire",
+  "background_tap_to_change": "Tocca per cambiare",
+  "background_select_image_or_color": "Seleziona immagine o colore",
+  "background_random_color": "Colore casuale",
+  "background_remove": "Rimuovi sfondo",
+  "crop_image_title": "Ritaglia immagine",
+  "crop_confirm": "Conferma",
+  "saving": "Salvataggio...",
+  "processing_image": "Elaborazione immagine...",
   "no_trips_found": "Dove vuoi andare?",
   "expenses": "Spese",
   "participants_label": "Partecipanti",
@@ -120,7 +135,7 @@
   "try_different_search": "Prova a cercare con parole diverse",
   "info_tab": "Info",
   "select_paid_by": "Seleziona chi ha pagato",
-  "select_category": "Seleziona una categoria",
+  "select_category": "Seleziona categoria",
   "check_form": "Controlla i dati inseriti",
   "delete_expense": "Elimina spesa",
   "delete_expense_confirm": "Sei sicuro di voler eliminare questa spesa?",
@@ -159,6 +174,7 @@
   "add_expense_fab": "Aggiungi Spesa",
   "pin_group": "Aggiungi pin",
   "unpin_group": "Rimuovi pin",
+  "pin": "Pin",
   "theme_automatic": "Automatico",
   "theme_light": "Chiaro",
   "theme_dark": "Scuro",
@@ -198,16 +214,23 @@
   "resolving_address": "Risolvo indirizzo…",
   "address_resolved": "Indirizzo trovato",
   "settings_general": "Generali",
+  "settings_general_desc": "Impostazioni lingua e aspetto",
   "settings_language": "Lingua",
+  "settings_language_desc": "Scegli la lingua preferita",
   "settings_language_it": "Italiano",
   "settings_language_en": "Inglese",
+  "settings_language_es": "Spagnolo",
   "settings_select_language": "Seleziona lingua",
   "settings_theme": "Tema",
+  "settings_theme_desc": "Chiaro, scuro o sistema",
   "settings_select_theme": "Seleziona tema",
+  "settings_privacy": "Privacy",
+  "settings_privacy_desc": "Opzioni sicurezza e privacy",
   "settings_data": "Dati",
+  "settings_data_desc": "Gestisci le tue informazioni",
   "settings_data_manage": "Gestione dati",
-  "settings_data_desc": "Backup e ripristino",
   "settings_info": "Informazioni",
+  "settings_info_desc": "Dettagli app e supporto",
   "settings_app_version": "Versione dell'app",
   "settings_info_card": "Informazioni",
   "settings_info_card_desc": "Sviluppatore, Source code e Licenza",
@@ -298,4 +321,169 @@
   ,"@accessibility_toast_error": {"description": "Error toast type description"}
   ,"accessibility_toast_info": "Informazione"
   ,"@accessibility_toast_info": {"description": "Information toast type description"}
+  ,"color_suggested_title": "Colori suggeriti"
+  ,"@color_suggested_title": {"description": "Titolo della sezione dei colori suggeriti"}
+  ,"color_suggested_subtitle": "Scegli uno dei colori compatibili col tema"
+  ,"@color_suggested_subtitle": {"description": "Sottotitolo che spiega la sezione colori suggeriti"}
+  ,"color_random_subtitle": "Lascia che l'app scelga un colore per te"
+  ,"@color_random_subtitle": {"description": "Sottotitolo per la sezione colore casuale"}
+  ,"currency_AED": "Dirham Emirati Arabi Uniti"
+  ,"currency_AFN": "Afghani afghano"
+  ,"currency_ALL": "Lek albanese"
+  ,"currency_AMD": "Dram armeno"
+  ,"currency_ANG": "Fiorino Antille Olandesi"
+  ,"currency_AOA": "Kwanza angolano"
+  ,"currency_ARS": "Peso argentino"
+  ,"currency_AUD": "Dollaro australiano"
+  ,"currency_AWG": "Fiorino arubano"
+  ,"currency_AZN": "Manat azero"
+  ,"currency_BAM": "Marco convertibile bosniaco"
+  ,"currency_BBD": "Dollaro barbadiano"
+  ,"currency_BDT": "Taka bengalese"
+  ,"currency_BGN": "Lev bulgaro"
+  ,"currency_BHD": "Dinaro bahreinita"
+  ,"currency_BIF": "Franco burundese"
+  ,"currency_BMD": "Dollaro bermudiano"
+  ,"currency_BND": "Dollaro del Brunei"
+  ,"currency_BOB": "Boliviano"
+  ,"currency_BRL": "Real brasiliano"
+  ,"currency_BSD": "Dollaro bahamense"
+  ,"currency_BTN": "Ngultrum bhutanese"
+  ,"currency_BWP": "Pula del Botswana"
+  ,"currency_BYN": "Rublo bielorusso"
+  ,"currency_BZD": "Dollaro beliziano"
+  ,"currency_CAD": "Dollaro canadese"
+  ,"currency_CDF": "Franco congolese"
+  ,"currency_CHF": "Franco svizzero"
+  ,"currency_CLP": "Peso cileno"
+  ,"currency_CNY": "Yuan Renminbi cinese"
+  ,"currency_COP": "Peso colombiano"
+  ,"currency_CRC": "Colón costaricano"
+  ,"currency_CUP": "Peso cubano"
+  ,"currency_CVE": "Escudo capoverdiano"
+  ,"currency_CZK": "Corona ceca"
+  ,"currency_DJF": "Franco gibutiano"
+  ,"currency_DKK": "Corona danese"
+  ,"currency_DOP": "Peso dominicano"
+  ,"currency_DZD": "Dinaro algerino"
+  ,"currency_EGP": "Sterlina egiziana"
+  ,"currency_ERN": "Nakfa eritrea"
+  ,"currency_ETB": "Birr etiope"
+  ,"currency_EUR": "Euro"
+  ,"currency_FJD": "Dollaro figiano"
+  ,"currency_FKP": "Sterlina delle Falkland"
+  ,"currency_GBP": "Sterlina britannica"
+  ,"currency_GEL": "Lari georgiano"
+  ,"currency_GHS": "Cedi ghanese"
+  ,"currency_GIP": "Sterlina di Gibilterra"
+  ,"currency_GMD": "Dalasi gambiano"
+  ,"currency_GNF": "Franco della Guinea"
+  ,"currency_GTQ": "Quetzal guatemalteco"
+  ,"currency_GYD": "Dollaro della Guyana"
+  ,"currency_HKD": "Dollaro di Hong Kong"
+  ,"currency_HNL": "Lempira honduregna"
+  ,"currency_HTG": "Gourde haitiano"
+  ,"currency_HUF": "Fiorino ungherese"
+  ,"currency_IDR": "Rupia indonesiana"
+  ,"currency_ILS": "Nuovo shekel israeliano"
+  ,"currency_INR": "Rupia indiana"
+  ,"currency_IQD": "Dinaro iracheno"
+  ,"currency_IRR": "Rial iraniano"
+  ,"currency_ISK": "Corona islandese"
+  ,"currency_JMD": "Dollaro giamaicano"
+  ,"currency_JOD": "Dinaro giordano"
+  ,"currency_JPY": "Yen giapponese"
+  ,"currency_KES": "Scellino keniota"
+  ,"currency_KGS": "Som kirghiso"
+  ,"currency_KHR": "Riel cambogiano"
+  ,"currency_KID": "Dollaro di Kiribati"
+  ,"currency_KMF": "Franco comoriano"
+  ,"currency_KPW": "Won nordcoreano"
+  ,"currency_KRW": "Won sudcoreano"
+  ,"currency_KWD": "Dinaro kuwaitiano"
+  ,"currency_KYD": "Dollaro delle Cayman"
+  ,"currency_KZT": "Tenge kazako"
+  ,"currency_LAK": "Kip laotiano"
+  ,"currency_LBP": "Lira libanese"
+  ,"currency_LKR": "Rupia singalese"
+  ,"currency_LRD": "Dollaro liberiano"
+  ,"currency_LSL": "Loti del Lesotho"
+  ,"currency_LYD": "Dinaro libico"
+  ,"currency_MAD": "Dirham marocchino"
+  ,"currency_MDL": "Leu moldavo"
+  ,"currency_MGA": "Ariary malgascio"
+  ,"currency_MKD": "Denar macedone"
+  ,"currency_MMK": "Kyat del Myanmar"
+  ,"currency_MNT": "Tugrik mongolo"
+  ,"currency_MOP": "Pataca di Macao"
+  ,"currency_MRU": "Ouguiya mauritana"
+  ,"currency_MUR": "Rupia mauriziana"
+  ,"currency_MVR": "Rufiyaa maldiviana"
+  ,"currency_MWK": "Kwacha malawiano"
+  ,"currency_MXN": "Peso messicano"
+  ,"currency_MYR": "Ringgit malese"
+  ,"currency_MZN": "Metical mozambicano"
+  ,"currency_NAD": "Dollaro namibiano"
+  ,"currency_NGN": "Naira nigeriana"
+  ,"currency_NIO": "Córdoba oro nicaraguense"
+  ,"currency_NOK": "Corona norvegese"
+  ,"currency_NPR": "Rupia nepalese"
+  ,"currency_NZD": "Dollaro neozelandese"
+  ,"currency_OMR": "Rial omanita"
+  ,"currency_PAB": "Balboa panamense"
+  ,"currency_PEN": "Sol peruviano"
+  ,"currency_PGK": "Kina papuana"
+  ,"currency_PHP": "Peso filippino"
+  ,"currency_PKR": "Rupia pakistana"
+  ,"currency_PLN": "Złoty polacco"
+  ,"currency_PYG": "Guaraní paraguaiano"
+  ,"currency_QAR": "Rial qatariano"
+  ,"currency_RON": "Leu rumeno"
+  ,"currency_RSD": "Dinaro serbo"
+  ,"currency_RUB": "Rublo russo"
+  ,"currency_RWF": "Franco ruandese"
+  ,"currency_SAR": "Riyal saudita"
+  ,"currency_SBD": "Dollaro delle Isole Salomone"
+  ,"currency_SCR": "Rupia delle Seychelles"
+  ,"currency_SDG": "Sterlina sudanese"
+  ,"currency_SEK": "Corona svedese"
+  ,"currency_SGD": "Dollaro di Singapore"
+  ,"currency_SHP": "Sterlina di Sant’Elena"
+  ,"currency_SLE": "Leone sierraleonese (nuovo)"
+  ,"currency_SLL": "Leone sierraleonese (vecchio)"
+  ,"currency_SOS": "Scellino somalo"
+  ,"currency_SRD": "Dollaro surinamese"
+  ,"currency_SSP": "Sterlina sud-sudanese"
+  ,"currency_STN": "Dobra di São Tomé e Príncipe"
+  ,"currency_SVC": "Colón salvadoregno (storico)"
+  ,"currency_SYP": "Lira siriana"
+  ,"currency_SZL": "Lilangeni eSwatini"
+  ,"currency_THB": "Baht thailandese"
+  ,"currency_TJS": "Somoni tagiko"
+  ,"currency_TMT": "Manat turkmeno"
+  ,"currency_TND": "Dinaro tunisino"
+  ,"currency_TOP": "Paʻanga tongano"
+  ,"currency_TRY": "Lira turca"
+  ,"currency_TTD": "Dollaro Trinidad e Tobago"
+  ,"currency_TVD": "Dollaro di Tuvalu"
+  ,"currency_TWD": "Nuovo dollaro di Taiwan"
+  ,"currency_TZS": "Scellino tanzaniano"
+  ,"currency_UAH": "Grivnia ucraina"
+  ,"currency_UGX": "Scellino ugandese"
+  ,"currency_USD": "Dollaro USA"
+  ,"currency_UYU": "Peso uruguaiano"
+  ,"currency_UZS": "Som uzbeko"
+  ,"currency_VED": "Bolívar venezuelano digitale"
+  ,"currency_VES": "Bolívar venezuelano"
+  ,"currency_VND": "Dong vietnamita"
+  ,"currency_VUV": "Vatu vanuatiano"
+  ,"currency_WST": "Tala samoano"
+  ,"currency_XAF": "Franco CFA BEAC"
+  ,"currency_XOF": "Franco CFA BCEAO"
+  ,"currency_XPF": "Franco CFP"
+  ,"currency_YER": "Rial yemenita"
+  ,"currency_ZAR": "Rand sudafricano"
+  ,"currency_ZMW": "Kwacha dello Zambia"
+  ,"currency_ZWL": "Dollaro zimbabwiano"
+  ,"search_currency": "Cerca valuta..."
 }

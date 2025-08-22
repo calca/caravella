@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_en.dart';
+import 'app_localizations_es.dart';
 import 'app_localizations_it.dart';
 
 // ignore_for_file: type=lint
@@ -95,6 +96,7 @@ abstract class AppLocalizations {
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
+    Locale('es'),
     Locale('it'),
   ];
 
@@ -133,6 +135,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Secure screen'**
   String get settings_flag_secure_title;
+
+  /// No description provided for @settings_privacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy'**
+  String get settings_privacy;
 
   /// No description provided for @select_currency.
   ///
@@ -323,8 +331,92 @@ abstract class AppLocalizations {
   /// No description provided for @choose_image_or_color.
   ///
   /// In en, this message translates to:
-  /// **'Choose an image or color to customize the group'**
+  /// **'Choose image or color'**
   String get choose_image_or_color;
+
+  /// No description provided for @participants_description.
+  ///
+  /// In en, this message translates to:
+  /// **'People sharing costs'**
+  String get participants_description;
+
+  /// No description provided for @categories_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Group expenses by type'**
+  String get categories_description;
+
+  /// No description provided for @dates_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional start and end'**
+  String get dates_description;
+
+  /// No description provided for @currency_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Base currency for group'**
+  String get currency_description;
+
+  /// No description provided for @background_color_selected.
+  ///
+  /// In en, this message translates to:
+  /// **'Color selected'**
+  String get background_color_selected;
+
+  /// No description provided for @background_tap_to_replace.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to replace'**
+  String get background_tap_to_replace;
+
+  /// No description provided for @background_tap_to_change.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to change'**
+  String get background_tap_to_change;
+
+  /// No description provided for @background_select_image_or_color.
+  ///
+  /// In en, this message translates to:
+  /// **'Select image or color'**
+  String get background_select_image_or_color;
+
+  /// No description provided for @background_random_color.
+  ///
+  /// In en, this message translates to:
+  /// **'Random color'**
+  String get background_random_color;
+
+  /// No description provided for @background_remove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove background'**
+  String get background_remove;
+
+  /// No description provided for @crop_image_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Crop image'**
+  String get crop_image_title;
+
+  /// No description provided for @crop_confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get crop_confirm;
+
+  /// No description provided for @saving.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving...'**
+  String get saving;
+
+  /// No description provided for @processing_image.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing image...'**
+  String get processing_image;
 
   /// No description provided for @no_trips_found.
   ///
@@ -944,6 +1036,12 @@ abstract class AppLocalizations {
   /// **'Unpin group'**
   String get unpin_group;
 
+  /// No description provided for @pin.
+  ///
+  /// In en, this message translates to:
+  /// **'Pin'**
+  String get pin;
+
   /// No description provided for @theme_automatic.
   ///
   /// In en, this message translates to:
@@ -1226,11 +1324,23 @@ abstract class AppLocalizations {
   /// **'General'**
   String get settings_general;
 
+  /// No description provided for @settings_general_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Language and appearance settings'**
+  String get settings_general_desc;
+
   /// No description provided for @settings_language.
   ///
   /// In en, this message translates to:
   /// **'Language'**
   String get settings_language;
+
+  /// No description provided for @settings_language_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your preferred language'**
+  String get settings_language_desc;
 
   /// No description provided for @settings_language_it.
   ///
@@ -1244,6 +1354,12 @@ abstract class AppLocalizations {
   /// **'English'**
   String get settings_language_en;
 
+  /// No description provided for @settings_language_es.
+  ///
+  /// In en, this message translates to:
+  /// **'Spanish'**
+  String get settings_language_es;
+
   /// No description provided for @settings_select_language.
   ///
   /// In en, this message translates to:
@@ -1256,11 +1372,23 @@ abstract class AppLocalizations {
   /// **'Theme'**
   String get settings_theme;
 
+  /// No description provided for @settings_theme_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Light, dark or system'**
+  String get settings_theme_desc;
+
   /// No description provided for @settings_select_theme.
   ///
   /// In en, this message translates to:
   /// **'Select theme'**
   String get settings_select_theme;
+
+  /// No description provided for @settings_privacy_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Security and privacy options'**
+  String get settings_privacy_desc;
 
   /// No description provided for @settings_data.
   ///
@@ -1268,23 +1396,29 @@ abstract class AppLocalizations {
   /// **'Data'**
   String get settings_data;
 
+  /// No description provided for @settings_data_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your information'**
+  String get settings_data_desc;
+
   /// No description provided for @settings_data_manage.
   ///
   /// In en, this message translates to:
   /// **'Data management'**
   String get settings_data_manage;
 
-  /// No description provided for @settings_data_desc.
-  ///
-  /// In en, this message translates to:
-  /// **'Backup and restore'**
-  String get settings_data_desc;
-
   /// No description provided for @settings_info.
   ///
   /// In en, this message translates to:
   /// **'Information'**
   String get settings_info;
+
+  /// No description provided for @settings_info_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'App details and support'**
+  String get settings_info_desc;
 
   /// No description provided for @settings_app_version.
   ///
@@ -1681,6 +1815,978 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Information'**
   String get accessibility_toast_info;
+
+  /// Title for the suggested colors section
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested colors'**
+  String get color_suggested_title;
+
+  /// Subtitle explaining the suggested colors section
+  ///
+  /// In en, this message translates to:
+  /// **'Pick one of the theme compatible colors'**
+  String get color_suggested_subtitle;
+
+  /// Subtitle for the random color section
+  ///
+  /// In en, this message translates to:
+  /// **'Let the app pick a color for you'**
+  String get color_random_subtitle;
+
+  /// No description provided for @currency_AED.
+  ///
+  /// In en, this message translates to:
+  /// **'United Arab Emirates Dirham'**
+  String get currency_AED;
+
+  /// No description provided for @currency_AFN.
+  ///
+  /// In en, this message translates to:
+  /// **'Afghan Afghani'**
+  String get currency_AFN;
+
+  /// No description provided for @currency_ALL.
+  ///
+  /// In en, this message translates to:
+  /// **'Albanian Lek'**
+  String get currency_ALL;
+
+  /// No description provided for @currency_AMD.
+  ///
+  /// In en, this message translates to:
+  /// **'Armenian Dram'**
+  String get currency_AMD;
+
+  /// No description provided for @currency_ANG.
+  ///
+  /// In en, this message translates to:
+  /// **'Netherlands Antillean Guilder'**
+  String get currency_ANG;
+
+  /// No description provided for @currency_AOA.
+  ///
+  /// In en, this message translates to:
+  /// **'Angolan Kwanza'**
+  String get currency_AOA;
+
+  /// No description provided for @currency_ARS.
+  ///
+  /// In en, this message translates to:
+  /// **'Argentine Peso'**
+  String get currency_ARS;
+
+  /// No description provided for @currency_AUD.
+  ///
+  /// In en, this message translates to:
+  /// **'Australian Dollar'**
+  String get currency_AUD;
+
+  /// No description provided for @currency_AWG.
+  ///
+  /// In en, this message translates to:
+  /// **'Aruban Florin'**
+  String get currency_AWG;
+
+  /// No description provided for @currency_AZN.
+  ///
+  /// In en, this message translates to:
+  /// **'Azerbaijani Manat'**
+  String get currency_AZN;
+
+  /// No description provided for @currency_BAM.
+  ///
+  /// In en, this message translates to:
+  /// **'Bosnia and Herzegovina Convertible Mark'**
+  String get currency_BAM;
+
+  /// No description provided for @currency_BBD.
+  ///
+  /// In en, this message translates to:
+  /// **'Barbadian Dollar'**
+  String get currency_BBD;
+
+  /// No description provided for @currency_BDT.
+  ///
+  /// In en, this message translates to:
+  /// **'Bangladeshi Taka'**
+  String get currency_BDT;
+
+  /// No description provided for @currency_BGN.
+  ///
+  /// In en, this message translates to:
+  /// **'Bulgarian Lev'**
+  String get currency_BGN;
+
+  /// No description provided for @currency_BHD.
+  ///
+  /// In en, this message translates to:
+  /// **'Bahraini Dinar'**
+  String get currency_BHD;
+
+  /// No description provided for @currency_BIF.
+  ///
+  /// In en, this message translates to:
+  /// **'Burundian Franc'**
+  String get currency_BIF;
+
+  /// No description provided for @currency_BMD.
+  ///
+  /// In en, this message translates to:
+  /// **'Bermudian Dollar'**
+  String get currency_BMD;
+
+  /// No description provided for @currency_BND.
+  ///
+  /// In en, this message translates to:
+  /// **'Brunei Dollar'**
+  String get currency_BND;
+
+  /// No description provided for @currency_BOB.
+  ///
+  /// In en, this message translates to:
+  /// **'Bolivian Boliviano'**
+  String get currency_BOB;
+
+  /// No description provided for @currency_BRL.
+  ///
+  /// In en, this message translates to:
+  /// **'Brazilian Real'**
+  String get currency_BRL;
+
+  /// No description provided for @currency_BSD.
+  ///
+  /// In en, this message translates to:
+  /// **'Bahamian Dollar'**
+  String get currency_BSD;
+
+  /// No description provided for @currency_BTN.
+  ///
+  /// In en, this message translates to:
+  /// **'Bhutanese Ngultrum'**
+  String get currency_BTN;
+
+  /// No description provided for @currency_BWP.
+  ///
+  /// In en, this message translates to:
+  /// **'Botswana Pula'**
+  String get currency_BWP;
+
+  /// No description provided for @currency_BYN.
+  ///
+  /// In en, this message translates to:
+  /// **'Belarusian Ruble'**
+  String get currency_BYN;
+
+  /// No description provided for @currency_BZD.
+  ///
+  /// In en, this message translates to:
+  /// **'Belize Dollar'**
+  String get currency_BZD;
+
+  /// No description provided for @currency_CAD.
+  ///
+  /// In en, this message translates to:
+  /// **'Canadian Dollar'**
+  String get currency_CAD;
+
+  /// No description provided for @currency_CDF.
+  ///
+  /// In en, this message translates to:
+  /// **'Congolese Franc'**
+  String get currency_CDF;
+
+  /// No description provided for @currency_CHF.
+  ///
+  /// In en, this message translates to:
+  /// **'Swiss Franc'**
+  String get currency_CHF;
+
+  /// No description provided for @currency_CLP.
+  ///
+  /// In en, this message translates to:
+  /// **'Chilean Peso'**
+  String get currency_CLP;
+
+  /// No description provided for @currency_CNY.
+  ///
+  /// In en, this message translates to:
+  /// **'Chinese Yuan'**
+  String get currency_CNY;
+
+  /// No description provided for @currency_COP.
+  ///
+  /// In en, this message translates to:
+  /// **'Colombian Peso'**
+  String get currency_COP;
+
+  /// No description provided for @currency_CRC.
+  ///
+  /// In en, this message translates to:
+  /// **'Costa Rican Colón'**
+  String get currency_CRC;
+
+  /// No description provided for @currency_CUP.
+  ///
+  /// In en, this message translates to:
+  /// **'Cuban Peso'**
+  String get currency_CUP;
+
+  /// No description provided for @currency_CVE.
+  ///
+  /// In en, this message translates to:
+  /// **'Cape Verdean Escudo'**
+  String get currency_CVE;
+
+  /// No description provided for @currency_CZK.
+  ///
+  /// In en, this message translates to:
+  /// **'Czech Koruna'**
+  String get currency_CZK;
+
+  /// No description provided for @currency_DJF.
+  ///
+  /// In en, this message translates to:
+  /// **'Djiboutian Franc'**
+  String get currency_DJF;
+
+  /// No description provided for @currency_DKK.
+  ///
+  /// In en, this message translates to:
+  /// **'Danish Krone'**
+  String get currency_DKK;
+
+  /// No description provided for @currency_DOP.
+  ///
+  /// In en, this message translates to:
+  /// **'Dominican Peso'**
+  String get currency_DOP;
+
+  /// No description provided for @currency_DZD.
+  ///
+  /// In en, this message translates to:
+  /// **'Algerian Dinar'**
+  String get currency_DZD;
+
+  /// No description provided for @currency_EGP.
+  ///
+  /// In en, this message translates to:
+  /// **'Egyptian Pound'**
+  String get currency_EGP;
+
+  /// No description provided for @currency_ERN.
+  ///
+  /// In en, this message translates to:
+  /// **'Eritrean Nakfa'**
+  String get currency_ERN;
+
+  /// No description provided for @currency_ETB.
+  ///
+  /// In en, this message translates to:
+  /// **'Ethiopian Birr'**
+  String get currency_ETB;
+
+  /// No description provided for @currency_EUR.
+  ///
+  /// In en, this message translates to:
+  /// **'Euro'**
+  String get currency_EUR;
+
+  /// No description provided for @currency_FJD.
+  ///
+  /// In en, this message translates to:
+  /// **'Fiji Dollar'**
+  String get currency_FJD;
+
+  /// No description provided for @currency_FKP.
+  ///
+  /// In en, this message translates to:
+  /// **'Falkland Islands Pound'**
+  String get currency_FKP;
+
+  /// No description provided for @currency_GBP.
+  ///
+  /// In en, this message translates to:
+  /// **'Pound Sterling'**
+  String get currency_GBP;
+
+  /// No description provided for @currency_GEL.
+  ///
+  /// In en, this message translates to:
+  /// **'Georgian Lari'**
+  String get currency_GEL;
+
+  /// No description provided for @currency_GHS.
+  ///
+  /// In en, this message translates to:
+  /// **'Ghanaian Cedi'**
+  String get currency_GHS;
+
+  /// No description provided for @currency_GIP.
+  ///
+  /// In en, this message translates to:
+  /// **'Gibraltar Pound'**
+  String get currency_GIP;
+
+  /// No description provided for @currency_GMD.
+  ///
+  /// In en, this message translates to:
+  /// **'Gambian Dalasi'**
+  String get currency_GMD;
+
+  /// No description provided for @currency_GNF.
+  ///
+  /// In en, this message translates to:
+  /// **'Guinean Franc'**
+  String get currency_GNF;
+
+  /// No description provided for @currency_GTQ.
+  ///
+  /// In en, this message translates to:
+  /// **'Guatemalan Quetzal'**
+  String get currency_GTQ;
+
+  /// No description provided for @currency_GYD.
+  ///
+  /// In en, this message translates to:
+  /// **'Guyanese Dollar'**
+  String get currency_GYD;
+
+  /// No description provided for @currency_HKD.
+  ///
+  /// In en, this message translates to:
+  /// **'Hong Kong Dollar'**
+  String get currency_HKD;
+
+  /// No description provided for @currency_HNL.
+  ///
+  /// In en, this message translates to:
+  /// **'Honduran Lempira'**
+  String get currency_HNL;
+
+  /// No description provided for @currency_HTG.
+  ///
+  /// In en, this message translates to:
+  /// **'Haitian Gourde'**
+  String get currency_HTG;
+
+  /// No description provided for @currency_HUF.
+  ///
+  /// In en, this message translates to:
+  /// **'Hungarian Forint'**
+  String get currency_HUF;
+
+  /// No description provided for @currency_IDR.
+  ///
+  /// In en, this message translates to:
+  /// **'Indonesian Rupiah'**
+  String get currency_IDR;
+
+  /// No description provided for @currency_ILS.
+  ///
+  /// In en, this message translates to:
+  /// **'Israeli New Shekel'**
+  String get currency_ILS;
+
+  /// No description provided for @currency_INR.
+  ///
+  /// In en, this message translates to:
+  /// **'Indian Rupee'**
+  String get currency_INR;
+
+  /// No description provided for @currency_IQD.
+  ///
+  /// In en, this message translates to:
+  /// **'Iraqi Dinar'**
+  String get currency_IQD;
+
+  /// No description provided for @currency_IRR.
+  ///
+  /// In en, this message translates to:
+  /// **'Iranian Rial'**
+  String get currency_IRR;
+
+  /// No description provided for @currency_ISK.
+  ///
+  /// In en, this message translates to:
+  /// **'Icelandic Króna'**
+  String get currency_ISK;
+
+  /// No description provided for @currency_JMD.
+  ///
+  /// In en, this message translates to:
+  /// **'Jamaican Dollar'**
+  String get currency_JMD;
+
+  /// No description provided for @currency_JOD.
+  ///
+  /// In en, this message translates to:
+  /// **'Jordanian Dinar'**
+  String get currency_JOD;
+
+  /// No description provided for @currency_JPY.
+  ///
+  /// In en, this message translates to:
+  /// **'Japanese Yen'**
+  String get currency_JPY;
+
+  /// No description provided for @currency_KES.
+  ///
+  /// In en, this message translates to:
+  /// **'Kenyan Shilling'**
+  String get currency_KES;
+
+  /// No description provided for @currency_KGS.
+  ///
+  /// In en, this message translates to:
+  /// **'Kyrgyzstani Som'**
+  String get currency_KGS;
+
+  /// No description provided for @currency_KHR.
+  ///
+  /// In en, this message translates to:
+  /// **'Cambodian Riel'**
+  String get currency_KHR;
+
+  /// No description provided for @currency_KID.
+  ///
+  /// In en, this message translates to:
+  /// **'Kiribati Dollar'**
+  String get currency_KID;
+
+  /// No description provided for @currency_KMF.
+  ///
+  /// In en, this message translates to:
+  /// **'Comorian Franc'**
+  String get currency_KMF;
+
+  /// No description provided for @currency_KPW.
+  ///
+  /// In en, this message translates to:
+  /// **'North Korean Won'**
+  String get currency_KPW;
+
+  /// No description provided for @currency_KRW.
+  ///
+  /// In en, this message translates to:
+  /// **'South Korean Won'**
+  String get currency_KRW;
+
+  /// No description provided for @currency_KWD.
+  ///
+  /// In en, this message translates to:
+  /// **'Kuwaiti Dinar'**
+  String get currency_KWD;
+
+  /// No description provided for @currency_KYD.
+  ///
+  /// In en, this message translates to:
+  /// **'Cayman Islands Dollar'**
+  String get currency_KYD;
+
+  /// No description provided for @currency_KZT.
+  ///
+  /// In en, this message translates to:
+  /// **'Kazakhstani Tenge'**
+  String get currency_KZT;
+
+  /// No description provided for @currency_LAK.
+  ///
+  /// In en, this message translates to:
+  /// **'Lao Kip'**
+  String get currency_LAK;
+
+  /// No description provided for @currency_LBP.
+  ///
+  /// In en, this message translates to:
+  /// **'Lebanese Pound'**
+  String get currency_LBP;
+
+  /// No description provided for @currency_LKR.
+  ///
+  /// In en, this message translates to:
+  /// **'Sri Lankan Rupee'**
+  String get currency_LKR;
+
+  /// No description provided for @currency_LRD.
+  ///
+  /// In en, this message translates to:
+  /// **'Liberian Dollar'**
+  String get currency_LRD;
+
+  /// No description provided for @currency_LSL.
+  ///
+  /// In en, this message translates to:
+  /// **'Lesotho Loti'**
+  String get currency_LSL;
+
+  /// No description provided for @currency_LYD.
+  ///
+  /// In en, this message translates to:
+  /// **'Libyan Dinar'**
+  String get currency_LYD;
+
+  /// No description provided for @currency_MAD.
+  ///
+  /// In en, this message translates to:
+  /// **'Moroccan Dirham'**
+  String get currency_MAD;
+
+  /// No description provided for @currency_MDL.
+  ///
+  /// In en, this message translates to:
+  /// **'Moldovan Leu'**
+  String get currency_MDL;
+
+  /// No description provided for @currency_MGA.
+  ///
+  /// In en, this message translates to:
+  /// **'Malagasy Ariary'**
+  String get currency_MGA;
+
+  /// No description provided for @currency_MKD.
+  ///
+  /// In en, this message translates to:
+  /// **'Macedonian Denar'**
+  String get currency_MKD;
+
+  /// No description provided for @currency_MMK.
+  ///
+  /// In en, this message translates to:
+  /// **'Myanmar Kyat'**
+  String get currency_MMK;
+
+  /// No description provided for @currency_MNT.
+  ///
+  /// In en, this message translates to:
+  /// **'Mongolian Tögrög'**
+  String get currency_MNT;
+
+  /// No description provided for @currency_MOP.
+  ///
+  /// In en, this message translates to:
+  /// **'Macanese Pataca'**
+  String get currency_MOP;
+
+  /// No description provided for @currency_MRU.
+  ///
+  /// In en, this message translates to:
+  /// **'Mauritanian Ouguiya'**
+  String get currency_MRU;
+
+  /// No description provided for @currency_MUR.
+  ///
+  /// In en, this message translates to:
+  /// **'Mauritian Rupee'**
+  String get currency_MUR;
+
+  /// No description provided for @currency_MVR.
+  ///
+  /// In en, this message translates to:
+  /// **'Maldivian Rufiyaa'**
+  String get currency_MVR;
+
+  /// No description provided for @currency_MWK.
+  ///
+  /// In en, this message translates to:
+  /// **'Malawian Kwacha'**
+  String get currency_MWK;
+
+  /// No description provided for @currency_MXN.
+  ///
+  /// In en, this message translates to:
+  /// **'Mexican Peso'**
+  String get currency_MXN;
+
+  /// No description provided for @currency_MYR.
+  ///
+  /// In en, this message translates to:
+  /// **'Malaysian Ringgit'**
+  String get currency_MYR;
+
+  /// No description provided for @currency_MZN.
+  ///
+  /// In en, this message translates to:
+  /// **'Mozambican Metical'**
+  String get currency_MZN;
+
+  /// No description provided for @currency_NAD.
+  ///
+  /// In en, this message translates to:
+  /// **'Namibian Dollar'**
+  String get currency_NAD;
+
+  /// No description provided for @currency_NGN.
+  ///
+  /// In en, this message translates to:
+  /// **'Nigerian Naira'**
+  String get currency_NGN;
+
+  /// No description provided for @currency_NIO.
+  ///
+  /// In en, this message translates to:
+  /// **'Nicaraguan Córdoba'**
+  String get currency_NIO;
+
+  /// No description provided for @currency_NOK.
+  ///
+  /// In en, this message translates to:
+  /// **'Norwegian Krone'**
+  String get currency_NOK;
+
+  /// No description provided for @currency_NPR.
+  ///
+  /// In en, this message translates to:
+  /// **'Nepalese Rupee'**
+  String get currency_NPR;
+
+  /// No description provided for @currency_NZD.
+  ///
+  /// In en, this message translates to:
+  /// **'New Zealand Dollar'**
+  String get currency_NZD;
+
+  /// No description provided for @currency_OMR.
+  ///
+  /// In en, this message translates to:
+  /// **'Omani Rial'**
+  String get currency_OMR;
+
+  /// No description provided for @currency_PAB.
+  ///
+  /// In en, this message translates to:
+  /// **'Panamanian Balboa'**
+  String get currency_PAB;
+
+  /// No description provided for @currency_PEN.
+  ///
+  /// In en, this message translates to:
+  /// **'Peruvian Sol'**
+  String get currency_PEN;
+
+  /// No description provided for @currency_PGK.
+  ///
+  /// In en, this message translates to:
+  /// **'Papua New Guinean Kina'**
+  String get currency_PGK;
+
+  /// No description provided for @currency_PHP.
+  ///
+  /// In en, this message translates to:
+  /// **'Philippine Peso'**
+  String get currency_PHP;
+
+  /// No description provided for @currency_PKR.
+  ///
+  /// In en, this message translates to:
+  /// **'Pakistani Rupee'**
+  String get currency_PKR;
+
+  /// No description provided for @currency_PLN.
+  ///
+  /// In en, this message translates to:
+  /// **'Polish Zloty'**
+  String get currency_PLN;
+
+  /// No description provided for @currency_PYG.
+  ///
+  /// In en, this message translates to:
+  /// **'Paraguayan Guaraní'**
+  String get currency_PYG;
+
+  /// No description provided for @currency_QAR.
+  ///
+  /// In en, this message translates to:
+  /// **'Qatari Riyal'**
+  String get currency_QAR;
+
+  /// No description provided for @currency_RON.
+  ///
+  /// In en, this message translates to:
+  /// **'Romanian Leu'**
+  String get currency_RON;
+
+  /// No description provided for @currency_RSD.
+  ///
+  /// In en, this message translates to:
+  /// **'Serbian Dinar'**
+  String get currency_RSD;
+
+  /// No description provided for @currency_RUB.
+  ///
+  /// In en, this message translates to:
+  /// **'Russian Ruble'**
+  String get currency_RUB;
+
+  /// No description provided for @currency_RWF.
+  ///
+  /// In en, this message translates to:
+  /// **'Rwandan Franc'**
+  String get currency_RWF;
+
+  /// No description provided for @currency_SAR.
+  ///
+  /// In en, this message translates to:
+  /// **'Saudi Riyal'**
+  String get currency_SAR;
+
+  /// No description provided for @currency_SBD.
+  ///
+  /// In en, this message translates to:
+  /// **'Solomon Islands Dollar'**
+  String get currency_SBD;
+
+  /// No description provided for @currency_SCR.
+  ///
+  /// In en, this message translates to:
+  /// **'Seychellois Rupee'**
+  String get currency_SCR;
+
+  /// No description provided for @currency_SDG.
+  ///
+  /// In en, this message translates to:
+  /// **'Sudanese Pound'**
+  String get currency_SDG;
+
+  /// No description provided for @currency_SEK.
+  ///
+  /// In en, this message translates to:
+  /// **'Swedish Krona'**
+  String get currency_SEK;
+
+  /// No description provided for @currency_SGD.
+  ///
+  /// In en, this message translates to:
+  /// **'Singapore Dollar'**
+  String get currency_SGD;
+
+  /// No description provided for @currency_SHP.
+  ///
+  /// In en, this message translates to:
+  /// **'Saint Helena Pound'**
+  String get currency_SHP;
+
+  /// No description provided for @currency_SLE.
+  ///
+  /// In en, this message translates to:
+  /// **'Sierra Leonean Leone (new)'**
+  String get currency_SLE;
+
+  /// No description provided for @currency_SLL.
+  ///
+  /// In en, this message translates to:
+  /// **'Sierra Leonean Leone (old)'**
+  String get currency_SLL;
+
+  /// No description provided for @currency_SOS.
+  ///
+  /// In en, this message translates to:
+  /// **'Somali Shilling'**
+  String get currency_SOS;
+
+  /// No description provided for @currency_SRD.
+  ///
+  /// In en, this message translates to:
+  /// **'Surinamese Dollar'**
+  String get currency_SRD;
+
+  /// No description provided for @currency_SSP.
+  ///
+  /// In en, this message translates to:
+  /// **'South Sudanese Pound'**
+  String get currency_SSP;
+
+  /// No description provided for @currency_STN.
+  ///
+  /// In en, this message translates to:
+  /// **'São Tomé and Príncipe Dobra'**
+  String get currency_STN;
+
+  /// No description provided for @currency_SVC.
+  ///
+  /// In en, this message translates to:
+  /// **'Salvadoran Colón (historic)'**
+  String get currency_SVC;
+
+  /// No description provided for @currency_SYP.
+  ///
+  /// In en, this message translates to:
+  /// **'Syrian Pound'**
+  String get currency_SYP;
+
+  /// No description provided for @currency_SZL.
+  ///
+  /// In en, this message translates to:
+  /// **'Eswatini Lilangeni'**
+  String get currency_SZL;
+
+  /// No description provided for @currency_THB.
+  ///
+  /// In en, this message translates to:
+  /// **'Thai Baht'**
+  String get currency_THB;
+
+  /// No description provided for @currency_TJS.
+  ///
+  /// In en, this message translates to:
+  /// **'Tajikistani Somoni'**
+  String get currency_TJS;
+
+  /// No description provided for @currency_TMT.
+  ///
+  /// In en, this message translates to:
+  /// **'Turkmenistan Manat'**
+  String get currency_TMT;
+
+  /// No description provided for @currency_TND.
+  ///
+  /// In en, this message translates to:
+  /// **'Tunisian Dinar'**
+  String get currency_TND;
+
+  /// No description provided for @currency_TOP.
+  ///
+  /// In en, this message translates to:
+  /// **'Tongan Paʻanga'**
+  String get currency_TOP;
+
+  /// No description provided for @currency_TRY.
+  ///
+  /// In en, this message translates to:
+  /// **'Turkish Lira'**
+  String get currency_TRY;
+
+  /// No description provided for @currency_TTD.
+  ///
+  /// In en, this message translates to:
+  /// **'Trinidad and Tobago Dollar'**
+  String get currency_TTD;
+
+  /// No description provided for @currency_TVD.
+  ///
+  /// In en, this message translates to:
+  /// **'Tuvaluan Dollar'**
+  String get currency_TVD;
+
+  /// No description provided for @currency_TWD.
+  ///
+  /// In en, this message translates to:
+  /// **'New Taiwan Dollar'**
+  String get currency_TWD;
+
+  /// No description provided for @currency_TZS.
+  ///
+  /// In en, this message translates to:
+  /// **'Tanzanian Shilling'**
+  String get currency_TZS;
+
+  /// No description provided for @currency_UAH.
+  ///
+  /// In en, this message translates to:
+  /// **'Ukrainian Hryvnia'**
+  String get currency_UAH;
+
+  /// No description provided for @currency_UGX.
+  ///
+  /// In en, this message translates to:
+  /// **'Ugandan Shilling'**
+  String get currency_UGX;
+
+  /// No description provided for @currency_USD.
+  ///
+  /// In en, this message translates to:
+  /// **'United States Dollar'**
+  String get currency_USD;
+
+  /// No description provided for @currency_UYU.
+  ///
+  /// In en, this message translates to:
+  /// **'Uruguayan Peso'**
+  String get currency_UYU;
+
+  /// No description provided for @currency_UZS.
+  ///
+  /// In en, this message translates to:
+  /// **'Uzbekistani So\'m'**
+  String get currency_UZS;
+
+  /// No description provided for @currency_VED.
+  ///
+  /// In en, this message translates to:
+  /// **'Venezuelan Digital Bolívar'**
+  String get currency_VED;
+
+  /// No description provided for @currency_VES.
+  ///
+  /// In en, this message translates to:
+  /// **'Venezuelan Bolívar'**
+  String get currency_VES;
+
+  /// No description provided for @currency_VND.
+  ///
+  /// In en, this message translates to:
+  /// **'Vietnamese Đồng'**
+  String get currency_VND;
+
+  /// No description provided for @currency_VUV.
+  ///
+  /// In en, this message translates to:
+  /// **'Vanuatu Vatu'**
+  String get currency_VUV;
+
+  /// No description provided for @currency_WST.
+  ///
+  /// In en, this message translates to:
+  /// **'Samoan Tala'**
+  String get currency_WST;
+
+  /// No description provided for @currency_XAF.
+  ///
+  /// In en, this message translates to:
+  /// **'CFA Franc BEAC'**
+  String get currency_XAF;
+
+  /// No description provided for @currency_XOF.
+  ///
+  /// In en, this message translates to:
+  /// **'CFA Franc BCEAO'**
+  String get currency_XOF;
+
+  /// No description provided for @currency_XPF.
+  ///
+  /// In en, this message translates to:
+  /// **'CFP Franc'**
+  String get currency_XPF;
+
+  /// No description provided for @currency_YER.
+  ///
+  /// In en, this message translates to:
+  /// **'Yemeni Rial'**
+  String get currency_YER;
+
+  /// No description provided for @currency_ZAR.
+  ///
+  /// In en, this message translates to:
+  /// **'South African Rand'**
+  String get currency_ZAR;
+
+  /// No description provided for @currency_ZMW.
+  ///
+  /// In en, this message translates to:
+  /// **'Zambian Kwacha'**
+  String get currency_ZMW;
+
+  /// No description provided for @currency_ZWL.
+  ///
+  /// In en, this message translates to:
+  /// **'Zimbabwean Dollar'**
+  String get currency_ZWL;
+
+  /// No description provided for @search_currency.
+  ///
+  /// In en, this message translates to:
+  /// **'Search currency...'**
+  String get search_currency;
 }
 
 class _AppLocalizationsDelegate
@@ -1694,7 +2800,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en', 'it'].contains(locale.languageCode);
+      <String>['en', 'es', 'it'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -1705,6 +2811,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   switch (locale.languageCode) {
     case 'en':
       return AppLocalizationsEn();
+    case 'es':
+      return AppLocalizationsEs();
     case 'it':
       return AppLocalizationsIt();
   }

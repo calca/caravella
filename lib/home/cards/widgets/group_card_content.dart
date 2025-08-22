@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../state/expense_group_notifier.dart';
-import '../../../data/expense_group.dart';
-import '../../../manager/expense/expense_form_component.dart';
+import '../../../data/model/expense_group.dart';
+import '../../../manager/details/widgets/expense_entry_sheet.dart';
 import '../../../widgets/currency_display.dart';
 import '../../../manager/details/tabs/overview_stats_logic.dart';
 
@@ -67,85 +67,26 @@ class GroupCardContent extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
       builder: (context) => Consumer<ExpenseGroupNotifier>(
         builder: (context, groupNotifier, child) {
           final currentGroup = groupNotifier.currentGroup ?? group;
-
-          return Container(
-            constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height * 0.9,
-            ),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surface,
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(20),
-              ),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Handle bar fisso
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    children: [
-                      Container(
-                        width: 28,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.outline,
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      // Removed title text per UX request (icon-only header)
-                    ],
-                  ),
-                ),
-
-                // Contenuto scrollabile
-                Flexible(
-                  child: SafeArea(
-                    child: SingleChildScrollView(
-                      padding: EdgeInsets.only(
-                        left: 20,
-                        right: 20,
-                        top: 0,
-                        bottom:
-                            MediaQuery.of(context).viewInsets.bottom +
-                            MediaQuery.of(context).padding.bottom +
-                            20,
-                      ),
-                      child: ExpenseFormComponent(
-                        groupTitle: currentGroup.title,
-                        currency: currentGroup.currency,
-                        participants: currentGroup.participants,
-                        categories: currentGroup.categories,
-                        onExpenseAdded: (expense) async {
-                          // Usa il notifier per aggiungere la spesa
-                          await groupNotifier.addExpense(expense);
-                          // Callback per aggiornare la UI della home
-                          onExpenseAdded();
-                          // Chiudi il modal
-                          if (context.mounted) {
-                            Navigator.pop(context);
-                          }
-                        },
-                        onCategoryAdded: (newCategory) async {
-                          // Usa il notifier per aggiungere la categoria
-                          await groupNotifier.addCategory(newCategory);
-                          // La UI del form si aggiornerà automaticamente grazie al Consumer e didUpdateWidget
-                        },
-                        shouldAutoClose: false,
-                        // Passa la nuova categoria al form per la pre-selezione
-                        newlyAddedCategory: groupNotifier.lastAddedCategory,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          return ExpenseEntrySheet(
+            group: currentGroup,
+            onExpenseSaved: (expense) async {
+              final sheetCtx = context; // Save bottom sheet context
+              final nav = Navigator.of(sheetCtx);
+              final expenseWithId = expense.copyWith(
+                id: DateTime.now().millisecondsSinceEpoch.toString(),
+              );
+              await groupNotifier.addExpense(expenseWithId);
+              onExpenseAdded();
+              if (!sheetCtx.mounted) return;
+              nav.pop(); // Close the modal sheet
+            },
+            onCategoryAdded: (newCategory) async {
+              await groupNotifier.addCategory(newCategory);
+            },
+            fullEdit: false,
           );
         },
       ),
@@ -209,18 +150,15 @@ class GroupCardContent extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        if (currentGroup.pinned)
-          Icon(
-            Icons.push_pin_outlined,
-            size: _iconSize,
-            color: theme.colorScheme.onSurface,
-          ),
       ],
     );
   }
 
   Widget _buildDateRange(ExpenseGroup currentGroup) {
-    if (currentGroup.startDate == null && currentGroup.endDate == null) {
+    // Show pin badge even if there are no dates
+    if (currentGroup.startDate == null &&
+        currentGroup.endDate == null &&
+        !currentGroup.pinned) {
       return const SizedBox(height: _spacing);
     }
 
@@ -230,18 +168,41 @@ class GroupCardContent extends StatelessWidget {
         const SizedBox(height: _spacing),
         Row(
           children: [
-            Icon(
-              Icons.calendar_today,
-              size: 8,
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-            const SizedBox(width: 4),
-            Text(
-              _formatDateRange(currentGroup, localizations),
-              style: theme.textTheme.bodySmall?.copyWith(
+            if (currentGroup.startDate != null ||
+                currentGroup.endDate != null) ...[
+              Icon(
+                Icons.event_outlined,
+                size: 8,
                 color: theme.colorScheme.onSurfaceVariant,
               ),
-            ),
+              const SizedBox(width: 4),
+              Expanded(
+                child: Text(
+                  _formatDateRange(currentGroup, localizations),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            ] else
+              const Spacer(),
+            if (currentGroup.pinned)
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: 0.05,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  localizations.pin,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
           ],
         ),
         const SizedBox(height: _spacing),
@@ -260,7 +221,9 @@ class GroupCardContent extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Semantics(
-          label: localizations.accessibility_total_expenses(totalExpenses.toStringAsFixed(2)),
+          label: localizations.accessibility_total_expenses(
+            totalExpenses.toStringAsFixed(2),
+          ),
           child: CurrencyDisplay(
             value: totalExpenses,
             currency: '€',
@@ -306,15 +269,16 @@ class GroupCardContent extends StatelessWidget {
 
   /// Calculate today's total spending
   double _calculateTodaySpending(ExpenseGroup group) {
-    final today = DateTime.now();
+    if (group.expenses.isEmpty) return 0.0;
+    final now = DateTime.now();
     return group.expenses
         .where(
           (e) =>
-              e.date.year == today.year &&
-              e.date.month == today.month &&
-              e.date.day == today.day,
+              e.date.year == now.year &&
+              e.date.month == now.month &&
+              e.date.day == now.day,
         )
-        .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
+        .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
   }
 
   Widget _buildExtraInfo(ExpenseGroup group) {
@@ -391,18 +355,12 @@ class GroupCardContent extends StatelessWidget {
     final endDate = currentGroup.endDate!;
     final duration = endDate.difference(startDate).inDays + 1; // inclusive
 
-    // Calculate daily totals for each day in the date range
-    final dailyTotals = List<double>.generate(duration, (i) {
-      final day = startDate.add(Duration(days: i));
-      return currentGroup.expenses
-          .where(
-            (e) =>
-                e.date.year == day.year &&
-                e.date.month == day.month &&
-                e.date.day == day.day,
-          )
-          .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
-    });
+    // Usa il metodo ottimizzato per calcolare i totali giornalieri
+    final dailyTotals = _calculateOptimizedDailyTotals(
+      currentGroup,
+      startDate,
+      duration,
+    );
 
     return Column(
       children: [
@@ -417,35 +375,21 @@ class GroupCardContent extends StatelessWidget {
     final now = DateTime.now();
     // Calcola il lunedì della settimana corrente
     final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
-    // Genera i 7 giorni da lunedì a domenica
-    final dailyTotals = List<double>.generate(7, (i) {
-      final day = startOfWeek.add(Duration(days: i));
-      return currentGroup.expenses
-          .where(
-            (e) =>
-                e.date.year == day.year &&
-                e.date.month == day.month &&
-                e.date.day == day.day,
-          )
-          .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
-    });
-    // weeklyTotal non più usato
+    // Usa calcoli ottimizzati per le statistiche settimanali
+    final dailyTotals = _calculateOptimizedDailyTotals(
+      currentGroup,
+      startOfWeek,
+      7,
+    );
 
     // Spesa per ogni giorno del mese corrente
     final daysInMonth = DateTime(now.year, now.month + 1, 0).day;
     final startOfMonth = DateTime(now.year, now.month, 1);
-    final dailyMonthTotals = List<double>.generate(daysInMonth, (i) {
-      final day = startOfMonth.add(Duration(days: i));
-      return currentGroup.expenses
-          .where(
-            (e) =>
-                e.date.year == day.year &&
-                e.date.month == day.month &&
-                e.date.day == day.day,
-          )
-          .fold<double>(0, (sum, expense) => sum + (expense.amount ?? 0));
-    });
-    // monthlyTotal non più usato
+    final dailyMonthTotals = _calculateOptimizedDailyTotals(
+      currentGroup,
+      startOfMonth,
+      daysInMonth,
+    );
 
     // Statistiche base
     return Column(
@@ -458,6 +402,32 @@ class GroupCardContent extends StatelessWidget {
         MonthlyExpenseChart(dailyTotals: dailyMonthTotals, theme: theme),
       ],
     );
+  }
+
+  // Metodo ottimizzato per calcolare i totali giornalieri
+  List<double> _calculateOptimizedDailyTotals(
+    ExpenseGroup group,
+    DateTime startDate,
+    int days,
+  ) {
+    final dailyTotals = List<double>.filled(days, 0.0);
+
+    for (final expense in group.expenses) {
+      final expenseDate = expense.date;
+      final dayDiff = expenseDate.difference(startDate).inDays;
+
+      if (dayDiff >= 0 && dayDiff < days) {
+        // Verifica che sia lo stesso giorno (non solo differenza in giorni)
+        final targetDay = startDate.add(Duration(days: dayDiff));
+        if (expenseDate.year == targetDay.year &&
+            expenseDate.month == targetDay.month &&
+            expenseDate.day == targetDay.day) {
+          dailyTotals[dayDiff] += expense.amount ?? 0;
+        }
+      }
+    }
+
+    return dailyTotals;
   }
 
   Widget _buildAddButton(BuildContext context, ExpenseGroup currentGroup) {

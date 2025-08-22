@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import 'expense_group.dart';
-import 'expense_details.dart';
+import 'model/expense_group.dart';
+import 'model/expense_details.dart';
 
 class ExpenseGroupStorage {
   static const String fileName = 'expense_group_storage.json';
@@ -40,7 +40,7 @@ class ExpenseGroupStorage {
         }
       }
     }
-    
+
     final file = await _getFile();
     final jsonList = trips.map((v) => v.toJson()).toList();
     await file.writeAsString(jsonEncode(jsonList));
@@ -66,7 +66,9 @@ class ExpenseGroupStorage {
   }
 
   static Future<ExpenseDetails?> getExpenseById(
-      String tripId, String expenseId) async {
+    String tripId,
+    String expenseId,
+  ) async {
     final trip = await getTripById(tripId);
     if (trip == null) return null;
     final found = trip.expenses.where((expense) => expense.id == expenseId);
@@ -112,7 +114,7 @@ class ExpenseGroupStorage {
     final index = trips.indexWhere((trip) => trip.id == groupId);
 
     if (index != -1) {
-      trips[index] = trips[index].copyWith(archived: true);
+      trips[index] = trips[index].copyWith(archived: true, pinned: false);
       await writeTrips(trips);
     }
   }
@@ -158,5 +160,18 @@ class ExpenseGroupStorage {
     trips.sort((a, b) => b.timestamp.compareTo(a.timestamp));
 
     return trips;
+  }
+
+  /// Aggiorna solo i metadati di un gruppo preservando le spese esistenti
+  static Future<void> updateGroupMetadata(ExpenseGroup updatedGroup) async {
+    final trips = await _readAllGroups();
+    final index = trips.indexWhere((trip) => trip.id == updatedGroup.id);
+
+    if (index != -1) {
+      // Preserva le spese esistenti quando aggiorna i metadati del gruppo
+      final existingExpenses = trips[index].expenses;
+      trips[index] = updatedGroup.copyWith(expenses: existingExpenses);
+      await writeTrips(trips);
+    }
   }
 }

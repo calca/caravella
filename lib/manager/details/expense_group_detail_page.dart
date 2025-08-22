@@ -1,4 +1,5 @@
-import '../group/add_new_expenses_group.dart';
+import '../group/pages/expenses_group_edit_page.dart';
+import '../group/group_edit_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:async';
@@ -10,8 +11,8 @@ import 'package:path_provider/path_provider.dart'; // still used for share temp 
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 
-import '../../data/expense_details.dart';
-import '../../data/expense_group.dart';
+import '../../data/model/expense_details.dart';
+import '../../data/model/expense_group.dart';
 import '../../state/expense_group_notifier.dart';
 import '../../data/expense_group_storage.dart';
 // Removed legacy localization bridge imports (migration in progress)
@@ -177,8 +178,17 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => UnifiedOverviewSheet(trip: _trip!),
+      enableDrag: true,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.85,
+        minChildSize: 0.5,
+        maxChildSize: 0.95,
+        expand: false,
+        builder: (context, scrollController) => UnifiedOverviewSheet(
+          trip: _trip!,
+          scrollController: scrollController,
+        ),
+      ),
     );
   }
 
@@ -186,15 +196,14 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
       builder: (sheetCtx) => OptionsSheet(
         trip: _trip!,
         onPinToggle: () async {
           if (_trip == null) return;
           final nav = Navigator.of(sheetCtx);
           final updatedGroup = ExpenseGroup(
+            expenses: [], // only metadata is needed
             title: _trip!.title,
-            expenses: _trip!.expenses,
             participants: _trip!.participants,
             startDate: _trip!.startDate,
             endDate: _trip!.endDate,
@@ -206,7 +215,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             pinned: !_trip!.pinned,
             archived: _trip!.archived,
           );
-          await _groupNotifier?.updateGroup(updatedGroup);
+          await _groupNotifier?.updateGroupMetadata(updatedGroup);
           await _refreshGroup();
           if (!mounted) return;
           nav.pop();
@@ -215,8 +224,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           if (_trip == null) return;
           final nav = Navigator.of(sheetCtx);
           final updatedGroup = ExpenseGroup(
+            expenses: [], // only metadata is needed
             title: _trip!.title,
-            expenses: _trip!.expenses,
             participants: _trip!.participants,
             startDate: _trip!.startDate,
             endDate: _trip!.endDate,
@@ -225,10 +234,12 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             timestamp: _trip!.timestamp,
             id: _trip!.id,
             file: _trip!.file,
-            pinned: _trip!.pinned,
+            pinned: !_trip!.archived
+                ? false
+                : _trip!.pinned, // Remove pin when archiving
             archived: !_trip!.archived,
           );
-          await _groupNotifier?.updateGroup(updatedGroup);
+          await _groupNotifier?.updateGroupMetadata(updatedGroup);
           await _refreshGroup();
           if (!mounted) return;
           nav.pop();
@@ -241,7 +252,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           if (!mounted) return;
           await nav.push(
             MaterialPageRoute(
-              builder: (ctx) => AddNewExpensesGroupPage(trip: _trip!),
+              builder: (ctx) =>
+                  ExpensesGroupEditPage(trip: _trip!, mode: GroupEditMode.edit),
             ),
           );
           await _refreshGroup();
@@ -394,31 +406,33 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => ExpenseEntrySheet(
-        group: _trip!,
-        onExpenseSaved: (newExpense) async {
-          final sheetCtx = context; // bottom sheet context
-          final nav = Navigator.of(sheetCtx);
-          final gloc = gen.AppLocalizations.of(sheetCtx);
-          final expenseWithId = newExpense.copyWith(
-            id: DateTime.now().millisecondsSinceEpoch.toString(),
-          );
-          await _groupNotifier?.addExpense(expenseWithId);
-          await _refreshGroup();
-          if (!sheetCtx.mounted) return;
-          AppToast.show(
-            sheetCtx,
-            gloc.expense_added_success,
-            type: ToastType.success,
-          );
-          nav.pop();
-        },
-        onCategoryAdded: (categoryName) async {
-          await _groupNotifier?.addCategory(categoryName);
-          await _refreshGroup();
-        },
-        fullEdit: true,
+      builder: (context) => FractionallySizedBox(
+        heightFactor: 0.85,
+        child: ExpenseEntrySheet(
+          group: _trip!,
+          onExpenseSaved: (newExpense) async {
+            final sheetCtx = context; // bottom sheet context
+            final nav = Navigator.of(sheetCtx);
+            final gloc = gen.AppLocalizations.of(sheetCtx);
+            final expenseWithId = newExpense.copyWith(
+              id: DateTime.now().millisecondsSinceEpoch.toString(),
+            );
+            await _groupNotifier?.addExpense(expenseWithId);
+            await _refreshGroup();
+            if (!sheetCtx.mounted) return;
+            AppToast.show(
+              sheetCtx,
+              gloc.expense_added_success,
+              type: ToastType.success,
+            );
+            nav.pop();
+          },
+          onCategoryAdded: (categoryName) async {
+            await _groupNotifier?.addCategory(categoryName);
+            await _refreshGroup();
+          },
+          fullEdit: true,
+        ),
       ),
     ).whenComplete(() {
       if (mounted) {
@@ -434,50 +448,52 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (sheetCtx) => ExpenseEntrySheet(
-        group: _trip!,
-        initialExpense: expense,
-        onExpenseSaved: (updatedExpense) async {
-          final gloc = gen.AppLocalizations.of(sheetCtx);
-          final nav = Navigator.of(sheetCtx);
-          final expenseWithId = updatedExpense.copyWith(id: expense.id);
-          final updatedExpenses = _trip!.expenses
-              .map((e) {
-                return e.id == expense.id ? expenseWithId : e;
-              })
-              .toList(growable: false);
-          final updatedGroup = ExpenseGroup(
-            title: _trip!.title,
-            expenses: List<ExpenseDetails>.from(updatedExpenses),
-            participants: _trip!.participants,
-            startDate: _trip!.startDate,
-            endDate: _trip!.endDate,
-            currency: _trip!.currency,
-            categories: _trip!.categories,
-            timestamp: _trip!.timestamp,
-            id: _trip!.id,
-            file: _trip!.file,
-            pinned: _trip!.pinned,
-          );
-          await _groupNotifier?.updateGroup(updatedGroup);
-          await _refreshGroup();
-          if (!sheetCtx.mounted) return;
-          AppToast.show(
-            sheetCtx,
-            gloc.expense_updated_success,
-            type: ToastType.success,
-          );
-          nav.pop();
-        },
-        onCategoryAdded: (categoryName) async {
-          await _groupNotifier?.addCategory(categoryName);
-          await _refreshGroup();
-        },
-        onDelete: () {
-          Navigator.of(context).pop();
-          _showDeleteExpenseDialog(expense);
-        },
+      builder: (sheetCtx) => FractionallySizedBox(
+        heightFactor: 0.85,
+        child: ExpenseEntrySheet(
+          group: _trip!,
+          initialExpense: expense,
+          onExpenseSaved: (updatedExpense) async {
+            final gloc = gen.AppLocalizations.of(sheetCtx);
+            final nav = Navigator.of(sheetCtx);
+            final expenseWithId = updatedExpense.copyWith(id: expense.id);
+            final updatedExpenses = _trip!.expenses
+                .map((e) {
+                  return e.id == expense.id ? expenseWithId : e;
+                })
+                .toList(growable: false);
+            final updatedGroup = ExpenseGroup(
+              title: _trip!.title,
+              expenses: List<ExpenseDetails>.from(updatedExpenses),
+              participants: _trip!.participants,
+              startDate: _trip!.startDate,
+              endDate: _trip!.endDate,
+              currency: _trip!.currency,
+              categories: _trip!.categories,
+              timestamp: _trip!.timestamp,
+              id: _trip!.id,
+              file: _trip!.file,
+              pinned: _trip!.pinned,
+            );
+            await _groupNotifier?.updateGroup(updatedGroup);
+            await _refreshGroup();
+            if (!sheetCtx.mounted) return;
+            AppToast.show(
+              sheetCtx,
+              gloc.expense_updated_success,
+              type: ToastType.success,
+            );
+            nav.pop();
+          },
+          onCategoryAdded: (categoryName) async {
+            await _groupNotifier?.addCategory(categoryName);
+            await _refreshGroup();
+          },
+          onDelete: () {
+            Navigator.of(context).pop();
+            _showDeleteExpenseDialog(expense);
+          },
+        ),
       ),
     ).whenComplete(() {
       if (mounted) {

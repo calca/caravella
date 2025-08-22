@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../../data/expense_group.dart';
-import '../../../data/expense_participant.dart';
-import '../../../data/expense_category.dart';
+import '../../../data/model/expense_group.dart';
+import '../../../data/model/expense_participant.dart';
+import '../../../data/model/expense_category.dart';
 import '../../../data/expense_group_storage.dart';
-import '../../group/add_new_expenses_group.dart';
+import '../../group/pages/expenses_group_edit_page.dart';
+import '../../group/group_edit_mode.dart';
 
 class ExpenseGroupOptionsSheet extends StatelessWidget {
   final ExpenseGroup trip;
@@ -37,10 +38,9 @@ class ExpenseGroupOptionsSheet extends StatelessWidget {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Theme.of(context)
-                    .colorScheme
-                    .onSurface
-                    .withValues(alpha: 0.3),
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -51,27 +51,27 @@ class ExpenseGroupOptionsSheet extends StatelessWidget {
                   Text(
                     trip.title,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
+                      fontWeight: FontWeight.w600,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),
                   _buildOptionTile(
-                    icon: Icons.edit_rounded,
+                    icon: Icons.edit_outlined,
                     title: 'Modifica gruppo',
                     subtitle: 'Modifica nome, date e partecipanti',
                     onTap: () => _handleEdit(context),
                     context: context,
                   ),
                   _buildOptionTile(
-                    icon: Icons.copy_rounded,
+                    icon: Icons.content_copy_outlined,
                     title: 'Duplica gruppo',
                     subtitle: 'Crea una copia con gli stessi dati',
                     onTap: () => _handleDuplicate(context),
                     context: context,
                   ),
                   _buildOptionTile(
-                    icon: Icons.delete_rounded,
+                    icon: Icons.delete_outline,
                     title: 'Elimina gruppo',
                     subtitle: 'Rimuovi definitivamente questo gruppo',
                     onTap: () => _handleDelete(context),
@@ -105,10 +105,7 @@ class ExpenseGroupOptionsSheet extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         color: color.withValues(alpha: 0.05),
-        border: Border.all(
-          color: color.withValues(alpha: 0.2),
-          width: 1,
-        ),
+        border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
       ),
       child: ListTile(
         onTap: onTap,
@@ -118,36 +115,29 @@ class ExpenseGroupOptionsSheet extends StatelessWidget {
             color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Icon(
-            icon,
-            color: color,
-            size: 20,
-          ),
+          child: Icon(icon, color: color, size: 20),
         ),
         title: Text(
           title,
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: isDestructive ? color : null,
-              ),
+            fontWeight: FontWeight.w600,
+            color: isDestructive ? color : null,
+          ),
         ),
         subtitle: Text(
           subtitle,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context)
-                    .colorScheme
-                    .onSurface
-                    .withValues(alpha: 0.7),
-              ),
+            color: Theme.of(
+              context,
+            ).colorScheme.onSurface.withValues(alpha: 0.7),
+          ),
         ),
         trailing: Icon(
           Icons.arrow_forward_ios_rounded,
           size: 16,
           color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
@@ -156,7 +146,8 @@ class ExpenseGroupOptionsSheet extends StatelessWidget {
     Navigator.of(context).pop();
     final result = await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => AddNewExpensesGroupPage(trip: trip),
+        builder: (context) =>
+            ExpensesGroupEditPage(trip: trip, mode: GroupEditMode.edit),
       ),
     );
     if (result == true) {
@@ -176,8 +167,9 @@ class ExpenseGroupOptionsSheet extends StatelessWidget {
       startDate: trip.startDate,
       endDate: trip.endDate,
       currency: trip.currency,
-      categories:
-          trip.categories.map((c) => ExpenseCategory(name: c.name)).toList(),
+      categories: trip.categories
+          .map((c) => ExpenseCategory(name: c.name))
+          .toList(),
     );
 
     final allTrips = await ExpenseGroupStorage.getAllGroups();

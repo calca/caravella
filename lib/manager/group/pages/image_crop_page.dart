@@ -1,13 +1,17 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import 'package:image/image.dart' as img;
 
 class ImageCropPage extends StatefulWidget {
   final File imageFile;
   final double aspectRatio;
-  const ImageCropPage(
-      {super.key, required this.imageFile, this.aspectRatio = 2 / 3});
+  const ImageCropPage({
+    super.key,
+    required this.imageFile,
+    this.aspectRatio = 2 / 3,
+  });
 
   @override
   State<ImageCropPage> createState() => _ImageCropPageState();
@@ -45,13 +49,21 @@ class _ImageCropPageState extends State<ImageCropPage> {
     double newLeft = _cropRectDisplay!.left + dx;
     double newTop = _cropRectDisplay!.top + dy;
     // Clamp to image bounds
-    newLeft =
-        newLeft.clamp(0.0, _imageDisplaySize!.width - _cropRectDisplay!.width);
-    newTop =
-        newTop.clamp(0.0, _imageDisplaySize!.height - _cropRectDisplay!.height);
+    newLeft = newLeft.clamp(
+      0.0,
+      _imageDisplaySize!.width - _cropRectDisplay!.width,
+    );
+    newTop = newTop.clamp(
+      0.0,
+      _imageDisplaySize!.height - _cropRectDisplay!.height,
+    );
     setState(() {
       _cropRectDisplay = Rect.fromLTWH(
-          newLeft, newTop, _cropRectDisplay!.width, _cropRectDisplay!.height);
+        newLeft,
+        newTop,
+        _cropRectDisplay!.width,
+        _cropRectDisplay!.height,
+      );
     });
   }
 
@@ -67,15 +79,20 @@ class _ImageCropPageState extends State<ImageCropPage> {
     _loadImage();
   }
 
-  void _onResize(DragUpdateDetails details,
-      {required bool fromLeft, required bool fromTop}) {
+  void _onResize(
+    DragUpdateDetails details, {
+    required bool fromLeft,
+    required bool fromTop,
+  }) {
     if (_cropRectDisplay == null || _imageDisplaySize == null) return;
     double dx = details.delta.dx * (fromLeft ? -1 : 1);
     double dy = details.delta.dy * (fromTop ? -1 : 1);
     // Use the greater movement to resize, keeping aspect ratio
     double delta = dx.abs() > dy.abs() ? dx : dy;
-    double newWidth =
-        (_cropRectDisplay!.width + delta).clamp(60.0, _imageDisplaySize!.width);
+    double newWidth = (_cropRectDisplay!.width + delta).clamp(
+      60.0,
+      _imageDisplaySize!.width,
+    );
     double newHeight = newWidth / widget.aspectRatio;
     if (newHeight > _imageDisplaySize!.height) {
       newHeight = _imageDisplaySize!.height;
@@ -119,19 +136,17 @@ class _ImageCropPageState extends State<ImageCropPage> {
   @override
   Widget build(BuildContext context) {
     if (_loading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
     return Scaffold(
       // backgroundColor centralizzato nel tema
       appBar: AppBar(
-        title: const Text('Ritaglia immagine'),
+        title: Text(gen.AppLocalizations.of(context).crop_image_title),
         actions: [
           IconButton(
             icon: const Icon(Icons.check),
             onPressed: _cropAndReturn,
-            tooltip: 'Conferma',
+            tooltip: gen.AppLocalizations.of(context).crop_confirm,
           ),
         ],
       ),
@@ -196,8 +211,11 @@ class _ImageCropPageState extends State<ImageCropPage> {
                                 left: 0,
                                 top: 0,
                                 child: _CornerHandle(
-                                  onPanUpdate: (details) => _onResize(details,
-                                      fromLeft: true, fromTop: true),
+                                  onPanUpdate: (details) => _onResize(
+                                    details,
+                                    fromLeft: true,
+                                    fromTop: true,
+                                  ),
                                 ),
                               ),
                               // Handle angolo in alto a destra
@@ -205,8 +223,11 @@ class _ImageCropPageState extends State<ImageCropPage> {
                                 right: 0,
                                 top: 0,
                                 child: _CornerHandle(
-                                  onPanUpdate: (details) => _onResize(details,
-                                      fromLeft: false, fromTop: true),
+                                  onPanUpdate: (details) => _onResize(
+                                    details,
+                                    fromLeft: false,
+                                    fromTop: true,
+                                  ),
                                 ),
                               ),
                               // Handle angolo in basso a sinistra
@@ -214,8 +235,11 @@ class _ImageCropPageState extends State<ImageCropPage> {
                                 left: 0,
                                 bottom: 0,
                                 child: _CornerHandle(
-                                  onPanUpdate: (details) => _onResize(details,
-                                      fromLeft: true, fromTop: false),
+                                  onPanUpdate: (details) => _onResize(
+                                    details,
+                                    fromLeft: true,
+                                    fromTop: false,
+                                  ),
                                 ),
                               ),
                               // Handle angolo in basso a destra
@@ -223,8 +247,11 @@ class _ImageCropPageState extends State<ImageCropPage> {
                                 right: 0,
                                 bottom: 0,
                                 child: _CornerHandle(
-                                  onPanUpdate: (details) => _onResize(details,
-                                      fromLeft: false, fromTop: false),
+                                  onPanUpdate: (details) => _onResize(
+                                    details,
+                                    fromLeft: false,
+                                    fromTop: false,
+                                  ),
                                 ),
                               ),
                             ],
@@ -268,10 +295,7 @@ class _CornerHandle extends StatelessWidget {
 class _DashedBorderPainter extends CustomPainter {
   final Color color;
   final double strokeWidth;
-  _DashedBorderPainter({
-    required this.color,
-    required this.strokeWidth,
-  });
+  _DashedBorderPainter({required this.color, required this.strokeWidth});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -293,8 +317,9 @@ class _DashedBorderPainter extends CustomPainter {
         const double len = dashLength;
         const double gap = gapLength;
         final double next = distance + len;
-        final extractLen =
-            next < metric.length ? len : metric.length - distance;
+        final extractLen = next < metric.length
+            ? len
+            : metric.length - distance;
         canvas.drawPath(
           metric.extractPath(distance, distance + extractLen),
           paint,

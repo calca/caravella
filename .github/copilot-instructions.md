@@ -217,7 +217,6 @@ flutter test
 
 ### Common File Patterns
 - **State management**: Provider pattern, check files in `lib/state/`
-- **Localization**: `lib/app_localizations.dart` for IT/EN support
 - **Themes**: Material 3 implementation in `lib/themes/`
 - **Storage**: Local JSON file persistence using `path_provider`
 
@@ -275,3 +274,53 @@ flutter clean && flutter pub get && flutter pub run flutter_launcher_icons:main
 - **Hot restart**: 5-10 seconds
 
 **CRITICAL**: Never cancel builds or long-running commands. Flutter release builds can take 12+ minutes (confirmed from CI), tests can take 3+ minutes. Always set appropriate timeouts and wait for completion.
+
+
+## Principi generali
+- Scrivere sempre codice **manutenibile, leggibile e scalabile**.
+- Applicare le **best practice di sicurezza** (validazione input, gestione errori, niente credenziali hardcoded).
+- Seguire un approccio **enterprise-grade**, adatto ad applicazioni di **complessità alta**.
+- Favorire sempre **riuso e astrazione**: non duplicare codice se può essere estratto in un componente/servizio condiviso.
+- Ogni modifica deve rispettare e rinforzare le convenzioni già presenti nel progetto.
+
+## Componenti e UI
+- Ogni nuovo widget o componente UI deve:
+  - Seguire **unico design system** definito dal progetto (colori, tipografia, spaziature, bordi, ecc.).
+  - Essere progettato come **riutilizzabile** e **parametrizzabile**.
+  - Essere **compatibile con la preview di Visual Studio Code** (se il linguaggio/framework lo supporta).
+- Verificare sempre se esiste già un widget simile prima di crearne uno nuovo.
+- Ogni componente deve avere una chiara separazione tra **presentazione (UI)** e **logica (stato/servizi)**.
+
+## Gestione dello stato
+- Lo stato deve essere **centralizzato e condiviso** (es. tramite state manager globale o pattern architetturale coerente).
+- Evitare gestione dello stato locale non necessaria.
+- La sincronizzazione dello stato tra componenti deve seguire i principi di **single source of truth**.
+
+## Servizi e data layer
+- Tutti i servizi per l’accesso ai dati devono essere:
+  - **Condivisi e riutilizzabili**.
+  - Integrati con un **sistema di caching** per ridurre le chiamate ridondanti.
+  - Strutturati in modo coerente (pattern repository o simili).
+- Gestire sempre gli errori e i fallback nei servizi.
+- Non accedere mai direttamente alle API dai widget: usare solo i servizi definiti.
+
+## Sicurezza
+- Validare sempre input e output dei servizi.
+- Usare protocolli sicuri (https, token, gestione sessioni).
+- Evitare injection e vulnerabilità comuni (es. SQLi, XSS).
+- Non esporre mai informazioni sensibili lato client.
+
+## Checklist per Copilot prima di generare/modificare codice
+1. Esiste già un componente/servizio che può essere riutilizzato?
+2. Il codice segue il design system unico del progetto?
+3. Lo stato è gestito in modo centralizzato e coerente?
+4. I dati passano attraverso un servizio condiviso con caching?
+5. La sicurezza è garantita (input, error handling, credenziali)?
+6. Il widget è pronto per la preview in Visual Studio Code?
+7. La soluzione proposta è scalabile e manutenibile nel lungo periodo?
+
+## Nota finale
+Se Copilot deve scegliere tra più soluzioni possibili:
+- Preferire sempre quella **più riutilizzabile e modulare**.
+- Preferire sempre quella **più sicura**.
+- Preferire sempre quella **più allineata alle convenzioni e best practice** già adottate.

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
-import '../../manager/group/add_new_expenses_group.dart';
+import '../../manager/group/pages/expenses_group_edit_page.dart';
+import '../../manager/group/group_edit_mode.dart';
 import '../../settings/settings_page.dart';
 
 typedef RefreshCallback = void Function();
@@ -103,8 +104,12 @@ class HomeWelcomeSection extends StatelessWidget {
                     width:
                         screenWidth * 0.8, // 80% della larghezza dello schermo
                     child: Semantics(
+                      key: const ValueKey('welcome_logo_semantics'),
+                      // Keep word 'logo' so test finder (contains 'logo') succeeds
                       label: gloc.welcome_logo_semantic,
                       image: true,
+                      // Provide a descriptive hint for screen readers
+                      hint: gloc.welcome_v3_title,
                       child: Image.asset(
                         'assets/images/home/welcome/welcome-logo.png',
                         fit: BoxFit.contain, // Mantiene le proporzioni
@@ -124,8 +129,10 @@ class HomeWelcomeSection extends StatelessWidget {
                       bottom: 0,
                       left: 0,
                       child: Semantics(
+                        key: const ValueKey('settings_button_semantics'),
                         button: true,
-                        label: '${gloc.settings_tab} - ${gloc.settings_tab.toLowerCase()} menu',
+                        // Short predictable label containing 'settings'
+                        label: gloc.settings_tab,
                         child: TextButton(
                           onPressed: () {
                             Navigator.of(context).push(
@@ -150,14 +157,17 @@ class HomeWelcomeSection extends StatelessWidget {
                       bottom: 60, // Posizionato sopra al bottone impostazioni
                       right: 0,
                       child: Semantics(
+                        key: const ValueKey('forward_button_semantics'),
                         button: true,
-                        label: '${gloc.welcome_v3_cta} - ${gloc.create_new_group}',
+                        label: gloc.welcome_v3_cta,
                         child: IconButton.filled(
                           onPressed: () async {
                             final result = await Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    const AddNewExpensesGroupPage(),
+                                    const ExpensesGroupEditPage(
+                                      mode: GroupEditMode.create,
+                                    ),
                               ),
                             );
                             if (result == true && onTripAdded != null) {

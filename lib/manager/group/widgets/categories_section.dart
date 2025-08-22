@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
-import '../../../data/expense_category.dart';
+import '../../../data/model/expense_category.dart';
 import 'editable_name_list.dart';
 
 class CategoriesSection extends StatelessWidget {
@@ -23,6 +23,7 @@ class CategoriesSection extends StatelessWidget {
     return EditableNameList(
       title: loc.categories,
       requiredMark: true,
+      description: loc.categories_description,
       items: categories.map((e) => e.name).toList(),
       addLabel: loc.add_category,
       hintLabel: loc.category_name,

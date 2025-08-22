@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
-import '../../../manager/group/add_new_expenses_group.dart';
+import '../../../manager/group/pages/expenses_group_edit_page.dart';
+import '../../../manager/group/group_edit_mode.dart';
 import '../../../widgets/base_card.dart';
 
 class NewGroupCard extends StatelessWidget {
@@ -46,7 +47,8 @@ class NewGroupCard extends StatelessWidget {
         onTap: () async {
           final result = await Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => const AddNewExpensesGroupPage(),
+              builder: (context) =>
+                  const ExpensesGroupEditPage(mode: GroupEditMode.create),
             ),
           );
           if (result == true) {

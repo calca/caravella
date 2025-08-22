@@ -59,6 +59,33 @@ void main() {
       expect(semanticsWithLabel, findsOneWidget);
     });
 
+    testWidgets('AddFab uses Spanish localized accessibility labels', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('es'),
+          home: Scaffold(
+            body: AddFab(
+              onPressed: () {},
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // Verify the semantic label is present and localized to Spanish
+      final semanticsWithLabel = find.byWidgetPredicate(
+        (Widget widget) =>
+            widget is Semantics &&
+            widget.properties.label != null &&
+            widget.properties.label!.contains('Agregar nuevo elemento'),
+      );
+
+      expect(semanticsWithLabel, findsOneWidget);
+    });
+
     testWidgets('CaravellaAppBar uses localized accessibility labels', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
@@ -212,11 +239,33 @@ void main() {
         expect(localizations.accessibility_toast_info, equals('Informazione'));
       });
 
+      test('Spanish localizations contain all accessibility keys', () {
+        const locale = Locale('es');
+        final localizations = lookupAppLocalizations(locale);
+
+        // Verify all accessibility keys are present and different from English/Italian
+        expect(localizations.accessibility_add_new_item, equals('Agregar nuevo elemento'));
+        expect(localizations.accessibility_navigation_bar, equals('Barra de navegación'));
+        expect(localizations.accessibility_back_button, equals('Atrás'));
+        expect(localizations.accessibility_loading_groups, equals('Cargando grupos'));
+        expect(localizations.accessibility_loading_your_groups, equals('Cargando tus grupos'));
+        expect(localizations.accessibility_groups_list, equals('Lista de grupos'));
+        expect(localizations.accessibility_welcome_screen, equals('Pantalla de bienvenida'));
+        expect(localizations.accessibility_add_expense, equals('Agregar gasto'));
+        expect(localizations.accessibility_switch_on, equals('Activado'));
+        expect(localizations.accessibility_switch_off, equals('Desactivado'));
+        expect(localizations.accessibility_toast_success, equals('Éxito'));
+        expect(localizations.accessibility_toast_error, equals('Error'));
+        expect(localizations.accessibility_toast_info, equals('Información'));
+      });
+
       test('Parameterized accessibility methods work correctly', () {
         const enLocale = Locale('en');
         const itLocale = Locale('it');
+        const esLocale = Locale('es');
         final enLocalizations = lookupAppLocalizations(enLocale);
         final itLocalizations = lookupAppLocalizations(itLocale);
+        final esLocalizations = lookupAppLocalizations(esLocale);
 
         // Test English parameterized methods
         expect(enLocalizations.accessibility_total_expenses('100.50'), 
@@ -229,6 +278,12 @@ void main() {
                equals('Spese totali: 100.50€'));
         expect(itLocalizations.accessibility_security_switch('Attivo'), 
                equals('Interruttore sicurezza - Attivo'));
+
+        // Test Spanish parameterized methods
+        expect(esLocalizations.accessibility_total_expenses('100.50'), 
+               equals('Gastos totales: 100.50€'));
+        expect(esLocalizations.accessibility_security_switch('Activado'), 
+               equals('Interruptor de seguridad - Activado'));
       });
     });
   });

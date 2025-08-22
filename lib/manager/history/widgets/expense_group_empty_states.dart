@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
-import '../../group/add_new_expenses_group.dart';
+import '../../group/pages/expenses_group_edit_page.dart';
+import '../../group/group_edit_mode.dart';
 
 class ExpsenseGroupEmptyStates extends StatelessWidget {
   final String searchQuery;
@@ -30,7 +31,7 @@ class ExpsenseGroupEmptyStates extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Icon(
-          Icons.search_off_rounded,
+          Icons.search_off_outlined,
           size: 64,
           color: Theme.of(context).colorScheme.outline,
         ),
@@ -55,7 +56,7 @@ class ExpsenseGroupEmptyStates extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Icon(
-          Icons.search_off,
+          Icons.search_off_outlined,
           size: 64,
           color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
         ),
@@ -100,7 +101,8 @@ class ExpsenseGroupEmptyStates extends StatelessWidget {
           onPressed: () async {
             final result = await Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => const AddNewExpensesGroupPage(),
+                builder: (context) =>
+                    const ExpensesGroupEditPage(mode: GroupEditMode.create),
               ),
             );
             if (result == true) {

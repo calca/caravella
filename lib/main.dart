@@ -72,6 +72,10 @@ class CaravellaApp extends StatefulWidget {
 class _CaravellaAppState extends State<CaravellaApp> {
   String _locale = 'it';
   ThemeMode _themeMode = ThemeMode.system;
+  // Global scaffold messenger key to allow showing SnackBars/toasts safely
+  // even when the local BuildContext that requested it is already disposed.
+  static final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
+      GlobalKey<ScaffoldMessengerState>();
 
   @override
   void initState() {
@@ -142,8 +146,9 @@ class _CaravellaAppState extends State<CaravellaApp> {
             theme: CaravellaThemes.light,
             darkTheme: CaravellaThemes.dark,
             themeMode: _themeMode,
+            scaffoldMessengerKey: _scaffoldMessengerKey,
             locale: Locale(_locale),
-            supportedLocales: const [Locale('it'), Locale('en')],
+            supportedLocales: const [Locale('it'), Locale('en'), Locale('es')],
             localizationsDelegates: [
               gen.AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
@@ -158,6 +163,12 @@ class _CaravellaAppState extends State<CaravellaApp> {
     );
   }
 }
+
+// Expose a top-level getter for the scaffold messenger state so utility
+// classes (e.g. AppToast) can fallback to it when the original context
+// becomes unmounted between an async operation and UI feedback.
+ScaffoldMessengerState? get rootScaffoldMessenger =>
+    _CaravellaAppState._scaffoldMessengerKey.currentState;
 
 class CaravellaHomePage extends StatefulWidget {
   const CaravellaHomePage({super.key, required this.title});

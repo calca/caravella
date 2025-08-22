@@ -1,32 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'bottom_sheet_scaffold.dart';
 
 /// Generic modal bottom sheet for selecting an item from a list.
-/// Supports an optional add-item action shown within the sheet.
+/// Supports inline add-item action shown within the sheet.
 Future<T?> showSelectionBottomSheet<T>({
   required BuildContext context,
   required List<T> items,
   required T? selected,
   required String Function(T) itemLabel,
   gen.AppLocalizations? gloc,
-  Future<void> Function()? onAddItem,
-  String? addItemTooltip,
+  Future<void> Function(String)? onAddItemInline,
+  String? addItemHint,
 }) async {
   final resolved = gloc ?? gen.AppLocalizations.of(context);
   return showModalBottomSheet<T>(
     context: context,
     isScrollControlled: true,
     backgroundColor: Theme.of(context).colorScheme.surface,
-    builder: (ctx) {
-      return _SelectionSheet<T>(
-        items: items,
-        selected: selected,
-        itemLabel: itemLabel,
-        onAddItem: onAddItem,
-        addItemTooltip: addItemTooltip,
-        gloc: resolved,
-      );
-    },
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    builder: (ctx) => _SelectionSheet<T>(
+      items: items,
+      selected: selected,
+      itemLabel: itemLabel,
+      onAddItemInline: onAddItemInline,
+      addItemHint: addItemHint,
+      gloc: resolved,
+    ),
   );
 }
 
@@ -34,16 +36,16 @@ class _SelectionSheet<T> extends StatefulWidget {
   final List<T> items;
   final T? selected;
   final String Function(T) itemLabel;
-  final Future<void> Function()? onAddItem;
-  final String? addItemTooltip;
+  final Future<void> Function(String)? onAddItemInline;
+  final String? addItemHint;
   final gen.AppLocalizations gloc;
   const _SelectionSheet({
     required this.items,
     required this.selected,
     required this.itemLabel,
     required this.gloc,
-    this.onAddItem,
-    this.addItemTooltip,
+    this.onAddItemInline,
+    this.addItemHint,
   });
 
   @override
@@ -51,93 +53,259 @@ class _SelectionSheet<T> extends StatefulWidget {
 }
 
 class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
-  bool _adding = false;
+  bool _inlineAdding = false;
+  final TextEditingController _inlineController = TextEditingController();
+  final FocusNode _inlineFocus = FocusNode();
+  final ScrollController _scrollController = ScrollController();
 
-  Future<void> _handleAdd() async {
-    if (widget.onAddItem == null) return;
-    setState(() => _adding = true);
-    try {
-      await widget.onAddItem!();
-    } finally {
-      if (mounted) setState(() => _adding = false);
-    }
+  @override
+  void dispose() {
+    _inlineController.dispose();
+    _inlineFocus.dispose();
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) {
-    final bottom = MediaQuery.of(context).viewInsets.bottom;
+  void initState() {
+    super.initState();
+    // Add focus listener to handle keyboard appearance and auto-scroll
+    _inlineFocus.addListener(() {
+      if (_inlineFocus.hasFocus) {
+        // Delay to ensure keyboard is starting to appear
+        Future.delayed(const Duration(milliseconds: 200), () {
+          _scrollToInputField();
+        });
+      }
+    });
+  }
+
+  /// Scrolls to make the input field visible when keyboard opens
+  void _scrollToInputField() {
+    if (!_scrollController.hasClients || !mounted) return;
+    
+    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+    if (keyboardHeight == 0) return;
+    
+    try {
+      // Scroll to bottom to ensure input field is visible above keyboard
+      final maxScrollExtent = _scrollController.position.maxScrollExtent;
+      if (maxScrollExtent > 0) {
+        _scrollController.animateTo(
+          maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
+    } catch (e) {
+      // Gracefully handle any scrolling errors
+      debugPrint('Error during scroll-to-input: $e');
+    }
+  }
+
+  void _startInlineAdd() {
+    setState(() {
+      _inlineAdding = true;
+      _inlineController.clear();
+    });
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _inlineFocus.requestFocus(),
+    );
+  }
+
+  void _cancelInlineAdd() {
+    setState(() {
+      _inlineAdding = false;
+      _inlineController.clear();
+    });
+  }
+
+  Future<void> _commitInlineAdd() async {
+    final val = _inlineController.text.trim();
+    if (val.isEmpty || widget.onAddItemInline == null) return;
+
+    // Check for duplicates (case-insensitive)
+    final lower = val.toLowerCase();
+    final isDuplicate = widget.items.any((item) => 
+      widget.itemLabel(item).toLowerCase() == lower);
+    
+    if (isDuplicate) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${widget.gloc.category_name} ${widget.gloc.already_exists}')),
+      );
+      return;
+    }
+
+    try {
+      await widget.onAddItemInline!(val);
+      // Close the modal after successfully adding the category
+      // The parent will handle selecting the newly added category
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error adding item: $e')),
+        );
+      }
+    }
+  }
+
+  Widget _buildInlineAddRow() {
     final theme = Theme.of(context);
-    return SafeArea(
-      top: false,
-      child: Padding(
-        padding: EdgeInsets.only(bottom: bottom + 24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: theme.colorScheme.outline.withValues(alpha: 0.3),
+          ),
+        ),
+        child: Row(
           children: [
-            // Drag handle
-            const SizedBox(height: 8),
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: theme.colorScheme.outlineVariant,
-                borderRadius: BorderRadius.circular(2),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12.0,
+                  vertical: 4.0,
+                ),
+                child: TextField(
+                  controller: _inlineController,
+                  focusNode: _inlineFocus,
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: widget.addItemHint ?? widget.gloc.category_name,
+                  ),
+                  textInputAction: TextInputAction.done,
+                  onSubmitted: (_) => _commitInlineAdd(),
+                ),
               ),
             ),
-            const SizedBox(height: 8),
-            if (widget.onAddItem != null)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        widget.addItemTooltip ?? widget.gloc.add,
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                    IconButton.filledTonal(
-                      onPressed: _adding ? null : _handleAdd,
-                      icon: _adding
-                          ? SizedBox(
-                              width: 18,
-                              height: 18,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation(
-                                  theme.colorScheme.primary,
-                                ),
-                              ),
-                            )
-                          : const Icon(Icons.add),
-                      tooltip: widget.addItemTooltip ?? widget.gloc.add,
-                    ),
-                  ],
-                ),
-              ),
-            Flexible(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxHeight: 400),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: widget.items.length,
-                  itemBuilder: (ctx, i) {
-                    final item = widget.items[i];
-                    final isSel = widget.selected == item;
-                    return ListTile(
-                      title: Text(widget.itemLabel(item)),
-                      trailing: isSel
-                          ? Icon(Icons.check, color: theme.colorScheme.primary)
-                          : null,
-                      onTap: () => Navigator.of(context).pop(item),
-                    );
-                  },
-                ),
-              ),
+            IconButton(
+              tooltip: widget.gloc.add,
+              icon: const Icon(Icons.check_rounded),
+              onPressed: _commitInlineAdd,
+            ),
+            IconButton(
+              tooltip: widget.gloc.cancel,
+              icon: const Icon(Icons.close_outlined),
+              onPressed: _cancelInlineAdd,
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInlineAddButton() {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(top: 4.0),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: _startInlineAdd,
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 12.0,
+            vertical: 14.0,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: theme.colorScheme.outline.withValues(alpha: 0.2),
+            ),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                Icons.add,
+                size: 24,
+                color: theme.colorScheme.primary,
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  widget.gloc.add_category,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.primary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+  @override
+  Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+    final theme = Theme.of(context);
+    
+    // Use widget.items directly 
+    final itemsToShow = widget.items;
+    
+    // Calculate dynamic height: 80% initially, but expand when keyboard is open or inline adding
+    final baseMaxHeight = screenHeight * 0.8;
+    final expandedMaxHeight = screenHeight * 0.95;
+    final currentMaxHeight = keyboardHeight > 0 || _inlineAdding ? expandedMaxHeight : baseMaxHeight;
+    
+    final listMaxHeight = currentMaxHeight - 200; // Account for title, padding, and add button space
+    
+    final list = itemsToShow.isEmpty 
+      ? const SizedBox.shrink()
+      : ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: listMaxHeight,
+            minHeight: 0,
+          ),
+          child: ListView.builder(
+            controller: _scrollController,
+            shrinkWrap: true,
+            itemCount: itemsToShow.length,
+            itemBuilder: (ctx, i) {
+              final item = itemsToShow[i];
+              final isSel = widget.selected == item;
+              return ListTile(
+                title: Text(widget.itemLabel(item)),
+                trailing: isSel
+                    ? Icon(Icons.check, color: theme.colorScheme.primary)
+                    : null,
+                onTap: () => Navigator.of(context).pop(item),
+              );
+            },
+          ),
+        );
+    
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxHeight: currentMaxHeight,
+        minHeight: screenHeight * 0.3, // Minimum 30% height
+      ),
+      child: GroupBottomSheetScaffold(
+        title: widget.onAddItemInline != null ? widget.gloc.add : null,
+        showHandle: true,
+        scrollable: false,
+        child: Padding(
+          padding: EdgeInsets.only(bottom: keyboardHeight),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              list,
+              // Inline add functionality
+              if (widget.onAddItemInline != null) ...[
+                const SizedBox(height: 8),
+                if (_inlineAdding)
+                  _buildInlineAddRow()
+                else
+                  _buildInlineAddButton(),
+              ],
+            ],
+          ),
         ),
       ),
     );

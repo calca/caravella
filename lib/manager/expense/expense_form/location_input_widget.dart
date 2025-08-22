@@ -3,7 +3,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import 'icon_leading_field.dart';
-import '../../../data/expense_location.dart';
+import '../../../data/model/expense_location.dart';
 
 class LocationInputWidget extends StatefulWidget {
   final ExpenseLocation? initialLocation;
@@ -265,8 +265,8 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
     if (_isGettingLocation || _isResolvingAddress) {
       return Semantics(
         liveRegion: true,
-        label: _isGettingLocation 
-            ? gloc.get_current_location 
+        label: _isGettingLocation
+            ? gloc.get_current_location
             : 'Resolving address',
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -276,8 +276,8 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
             child: CircularProgressIndicator(
               strokeWidth: 2,
               color: colorScheme.primary,
-              semanticsLabel: _isGettingLocation 
-                  ? 'Getting your current location' 
+              semanticsLabel: _isGettingLocation
+                  ? 'Getting your current location'
                   : 'Resolving address from coordinates',
             ),
           ),
@@ -287,7 +287,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
 
     final actions = <Widget>[
       buildAction(
-        icon: Icons.my_location,
+        icon: Icons.my_location_outlined,
         tooltip: gloc.get_current_location,
         onTap: _getCurrentLocation,
         color: colorScheme.primary,

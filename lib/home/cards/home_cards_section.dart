@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart'
     as gen; // generated
-import '../../data/expense_group.dart';
+import '../../data/model/expense_group.dart';
 import '../../data/expense_group_storage.dart';
+import '../../state/expense_group_notifier.dart';
 // Removed locale_notifier import after migration
 // locale_notifier no longer needed after migration
 import 'widgets/widgets.dart';
@@ -24,6 +26,7 @@ class HomeCardsSection extends StatefulWidget {
 class _HomeCardsSectionState extends State<HomeCardsSection> {
   List<ExpenseGroup> _activeGroups = [];
   bool _loading = true;
+  ExpenseGroupNotifier? _groupNotifier;
 
   @override
   void initState() {
@@ -32,10 +35,64 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // Setup state listener for efficient updates
+    _groupNotifier?.removeListener(_onGroupsUpdated);
+    _groupNotifier = context.read<ExpenseGroupNotifier>();
+    _groupNotifier?.addListener(_onGroupsUpdated);
+  }
+
+  @override
+  void dispose() {
+    _groupNotifier?.removeListener(_onGroupsUpdated);
+    super.dispose();
+  }
+
+  @override
   void didUpdateWidget(HomeCardsSection oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Se il pinnedTrip è cambiato, ricarica i gruppi
     if (oldWidget.pinnedTrip?.id != widget.pinnedTrip?.id) {
+      _loadActiveGroups();
+    }
+  }
+
+  void _onGroupsUpdated() {
+    final updatedGroupIds = _groupNotifier?.updatedGroupIds ?? [];
+
+    if (updatedGroupIds.isNotEmpty && mounted) {
+      // Update only affected groups instead of reloading everything
+      _updateAffectedGroupsLocally(updatedGroupIds);
+    }
+  }
+
+  Future<void> _updateAffectedGroupsLocally(
+    List<String> updatedGroupIds,
+  ) async {
+    try {
+      bool needsUpdate = false;
+      final newGroups = List<ExpenseGroup>.from(_activeGroups);
+
+      for (final groupId in updatedGroupIds) {
+        final groupIndex = newGroups.indexWhere((g) => g.id == groupId);
+        if (groupIndex != -1) {
+          final updatedGroup = await ExpenseGroupStorage.getTripById(groupId);
+          if (updatedGroup != null) {
+            newGroups[groupIndex] = updatedGroup;
+            needsUpdate = true;
+          }
+        }
+      }
+
+      if (needsUpdate && mounted) {
+        setState(() {
+          _activeGroups = newGroups;
+        });
+      }
+    } catch (e) {
+      // Fallback to full reload only on error
       _loadActiveGroups();
     }
   }

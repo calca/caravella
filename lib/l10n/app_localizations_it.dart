@@ -28,6 +28,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settings_flag_secure_title => 'Proteggi schermata';
 
   @override
+  String get settings_privacy => 'Privacy';
+
+  @override
   String get select_currency => 'Seleziona valuta';
 
   @override
@@ -122,8 +125,49 @@ class AppLocalizationsIt extends AppLocalizations {
   String get background_options => 'Opzioni Sfondo';
 
   @override
-  String get choose_image_or_color =>
-      'Scegli un\'immagine o un colore per personalizzare il gruppo';
+  String get choose_image_or_color => 'Scegli immagine o colore';
+
+  @override
+  String get participants_description => 'Persone che condividono spese';
+
+  @override
+  String get categories_description => 'Organizza spese per tipo';
+
+  @override
+  String get dates_description => 'Date inizio/fine opzionali';
+
+  @override
+  String get currency_description => 'Valuta base del gruppo';
+
+  @override
+  String get background_color_selected => 'Colore selezionato';
+
+  @override
+  String get background_tap_to_replace => 'Tocca per sostituire';
+
+  @override
+  String get background_tap_to_change => 'Tocca per cambiare';
+
+  @override
+  String get background_select_image_or_color => 'Seleziona immagine o colore';
+
+  @override
+  String get background_random_color => 'Colore casuale';
+
+  @override
+  String get background_remove => 'Rimuovi sfondo';
+
+  @override
+  String get crop_image_title => 'Ritaglia immagine';
+
+  @override
+  String get crop_confirm => 'Conferma';
+
+  @override
+  String get saving => 'Salvataggio...';
+
+  @override
+  String get processing_image => 'Elaborazione immagine...';
 
   @override
   String get no_trips_found => 'Dove vuoi andare?';
@@ -448,6 +492,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get unpin_group => 'Rimuovi pin';
 
   @override
+  String get pin => 'Pin';
+
+  @override
   String get theme_automatic => 'Automatico';
 
   @override
@@ -592,7 +639,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settings_general => 'Generali';
 
   @override
+  String get settings_general_desc => 'Impostazioni lingua e aspetto';
+
+  @override
   String get settings_language => 'Lingua';
+
+  @override
+  String get settings_language_desc => 'Scegli la lingua preferita';
 
   @override
   String get settings_language_it => 'Italiano';
@@ -601,25 +654,37 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settings_language_en => 'Inglese';
 
   @override
+  String get settings_language_es => 'Spagnolo';
+
+  @override
   String get settings_select_language => 'Seleziona lingua';
 
   @override
   String get settings_theme => 'Tema';
 
   @override
+  String get settings_theme_desc => 'Chiaro, scuro o sistema';
+
+  @override
   String get settings_select_theme => 'Seleziona tema';
+
+  @override
+  String get settings_privacy_desc => 'Opzioni sicurezza e privacy';
 
   @override
   String get settings_data => 'Dati';
 
   @override
+  String get settings_data_desc => 'Gestisci le tue informazioni';
+
+  @override
   String get settings_data_manage => 'Gestione dati';
 
   @override
-  String get settings_data_desc => 'Backup e ripristino';
+  String get settings_info => 'Informazioni';
 
   @override
-  String get settings_info => 'Informazioni';
+  String get settings_info_desc => 'Dettagli app e supporto';
 
   @override
   String get settings_app_version => 'Versione dell\'app';
@@ -673,7 +738,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get select_paid_by => 'Seleziona chi ha pagato';
 
   @override
-  String get select_category => 'Seleziona una categoria';
+  String get select_category => 'Seleziona categoria';
 
   @override
   String get check_form => 'Controlla i dati inseriti';
@@ -832,4 +897,492 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get accessibility_toast_info => 'Informazione';
+
+  @override
+  String get color_suggested_title => 'Colori suggeriti';
+
+  @override
+  String get color_suggested_subtitle =>
+      'Scegli uno dei colori compatibili col tema';
+
+  @override
+  String get color_random_subtitle =>
+      'Lascia che l\'app scelga un colore per te';
+
+  @override
+  String get currency_AED => 'Dirham Emirati Arabi Uniti';
+
+  @override
+  String get currency_AFN => 'Afghani afghano';
+
+  @override
+  String get currency_ALL => 'Lek albanese';
+
+  @override
+  String get currency_AMD => 'Dram armeno';
+
+  @override
+  String get currency_ANG => 'Fiorino Antille Olandesi';
+
+  @override
+  String get currency_AOA => 'Kwanza angolano';
+
+  @override
+  String get currency_ARS => 'Peso argentino';
+
+  @override
+  String get currency_AUD => 'Dollaro australiano';
+
+  @override
+  String get currency_AWG => 'Fiorino arubano';
+
+  @override
+  String get currency_AZN => 'Manat azero';
+
+  @override
+  String get currency_BAM => 'Marco convertibile bosniaco';
+
+  @override
+  String get currency_BBD => 'Dollaro barbadiano';
+
+  @override
+  String get currency_BDT => 'Taka bengalese';
+
+  @override
+  String get currency_BGN => 'Lev bulgaro';
+
+  @override
+  String get currency_BHD => 'Dinaro bahreinita';
+
+  @override
+  String get currency_BIF => 'Franco burundese';
+
+  @override
+  String get currency_BMD => 'Dollaro bermudiano';
+
+  @override
+  String get currency_BND => 'Dollaro del Brunei';
+
+  @override
+  String get currency_BOB => 'Boliviano';
+
+  @override
+  String get currency_BRL => 'Real brasiliano';
+
+  @override
+  String get currency_BSD => 'Dollaro bahamense';
+
+  @override
+  String get currency_BTN => 'Ngultrum bhutanese';
+
+  @override
+  String get currency_BWP => 'Pula del Botswana';
+
+  @override
+  String get currency_BYN => 'Rublo bielorusso';
+
+  @override
+  String get currency_BZD => 'Dollaro beliziano';
+
+  @override
+  String get currency_CAD => 'Dollaro canadese';
+
+  @override
+  String get currency_CDF => 'Franco congolese';
+
+  @override
+  String get currency_CHF => 'Franco svizzero';
+
+  @override
+  String get currency_CLP => 'Peso cileno';
+
+  @override
+  String get currency_CNY => 'Yuan Renminbi cinese';
+
+  @override
+  String get currency_COP => 'Peso colombiano';
+
+  @override
+  String get currency_CRC => 'Colón costaricano';
+
+  @override
+  String get currency_CUP => 'Peso cubano';
+
+  @override
+  String get currency_CVE => 'Escudo capoverdiano';
+
+  @override
+  String get currency_CZK => 'Corona ceca';
+
+  @override
+  String get currency_DJF => 'Franco gibutiano';
+
+  @override
+  String get currency_DKK => 'Corona danese';
+
+  @override
+  String get currency_DOP => 'Peso dominicano';
+
+  @override
+  String get currency_DZD => 'Dinaro algerino';
+
+  @override
+  String get currency_EGP => 'Sterlina egiziana';
+
+  @override
+  String get currency_ERN => 'Nakfa eritrea';
+
+  @override
+  String get currency_ETB => 'Birr etiope';
+
+  @override
+  String get currency_EUR => 'Euro';
+
+  @override
+  String get currency_FJD => 'Dollaro figiano';
+
+  @override
+  String get currency_FKP => 'Sterlina delle Falkland';
+
+  @override
+  String get currency_GBP => 'Sterlina britannica';
+
+  @override
+  String get currency_GEL => 'Lari georgiano';
+
+  @override
+  String get currency_GHS => 'Cedi ghanese';
+
+  @override
+  String get currency_GIP => 'Sterlina di Gibilterra';
+
+  @override
+  String get currency_GMD => 'Dalasi gambiano';
+
+  @override
+  String get currency_GNF => 'Franco della Guinea';
+
+  @override
+  String get currency_GTQ => 'Quetzal guatemalteco';
+
+  @override
+  String get currency_GYD => 'Dollaro della Guyana';
+
+  @override
+  String get currency_HKD => 'Dollaro di Hong Kong';
+
+  @override
+  String get currency_HNL => 'Lempira honduregna';
+
+  @override
+  String get currency_HTG => 'Gourde haitiano';
+
+  @override
+  String get currency_HUF => 'Fiorino ungherese';
+
+  @override
+  String get currency_IDR => 'Rupia indonesiana';
+
+  @override
+  String get currency_ILS => 'Nuovo shekel israeliano';
+
+  @override
+  String get currency_INR => 'Rupia indiana';
+
+  @override
+  String get currency_IQD => 'Dinaro iracheno';
+
+  @override
+  String get currency_IRR => 'Rial iraniano';
+
+  @override
+  String get currency_ISK => 'Corona islandese';
+
+  @override
+  String get currency_JMD => 'Dollaro giamaicano';
+
+  @override
+  String get currency_JOD => 'Dinaro giordano';
+
+  @override
+  String get currency_JPY => 'Yen giapponese';
+
+  @override
+  String get currency_KES => 'Scellino keniota';
+
+  @override
+  String get currency_KGS => 'Som kirghiso';
+
+  @override
+  String get currency_KHR => 'Riel cambogiano';
+
+  @override
+  String get currency_KID => 'Dollaro di Kiribati';
+
+  @override
+  String get currency_KMF => 'Franco comoriano';
+
+  @override
+  String get currency_KPW => 'Won nordcoreano';
+
+  @override
+  String get currency_KRW => 'Won sudcoreano';
+
+  @override
+  String get currency_KWD => 'Dinaro kuwaitiano';
+
+  @override
+  String get currency_KYD => 'Dollaro delle Cayman';
+
+  @override
+  String get currency_KZT => 'Tenge kazako';
+
+  @override
+  String get currency_LAK => 'Kip laotiano';
+
+  @override
+  String get currency_LBP => 'Lira libanese';
+
+  @override
+  String get currency_LKR => 'Rupia singalese';
+
+  @override
+  String get currency_LRD => 'Dollaro liberiano';
+
+  @override
+  String get currency_LSL => 'Loti del Lesotho';
+
+  @override
+  String get currency_LYD => 'Dinaro libico';
+
+  @override
+  String get currency_MAD => 'Dirham marocchino';
+
+  @override
+  String get currency_MDL => 'Leu moldavo';
+
+  @override
+  String get currency_MGA => 'Ariary malgascio';
+
+  @override
+  String get currency_MKD => 'Denar macedone';
+
+  @override
+  String get currency_MMK => 'Kyat del Myanmar';
+
+  @override
+  String get currency_MNT => 'Tugrik mongolo';
+
+  @override
+  String get currency_MOP => 'Pataca di Macao';
+
+  @override
+  String get currency_MRU => 'Ouguiya mauritana';
+
+  @override
+  String get currency_MUR => 'Rupia mauriziana';
+
+  @override
+  String get currency_MVR => 'Rufiyaa maldiviana';
+
+  @override
+  String get currency_MWK => 'Kwacha malawiano';
+
+  @override
+  String get currency_MXN => 'Peso messicano';
+
+  @override
+  String get currency_MYR => 'Ringgit malese';
+
+  @override
+  String get currency_MZN => 'Metical mozambicano';
+
+  @override
+  String get currency_NAD => 'Dollaro namibiano';
+
+  @override
+  String get currency_NGN => 'Naira nigeriana';
+
+  @override
+  String get currency_NIO => 'Córdoba oro nicaraguense';
+
+  @override
+  String get currency_NOK => 'Corona norvegese';
+
+  @override
+  String get currency_NPR => 'Rupia nepalese';
+
+  @override
+  String get currency_NZD => 'Dollaro neozelandese';
+
+  @override
+  String get currency_OMR => 'Rial omanita';
+
+  @override
+  String get currency_PAB => 'Balboa panamense';
+
+  @override
+  String get currency_PEN => 'Sol peruviano';
+
+  @override
+  String get currency_PGK => 'Kina papuana';
+
+  @override
+  String get currency_PHP => 'Peso filippino';
+
+  @override
+  String get currency_PKR => 'Rupia pakistana';
+
+  @override
+  String get currency_PLN => 'Złoty polacco';
+
+  @override
+  String get currency_PYG => 'Guaraní paraguaiano';
+
+  @override
+  String get currency_QAR => 'Rial qatariano';
+
+  @override
+  String get currency_RON => 'Leu rumeno';
+
+  @override
+  String get currency_RSD => 'Dinaro serbo';
+
+  @override
+  String get currency_RUB => 'Rublo russo';
+
+  @override
+  String get currency_RWF => 'Franco ruandese';
+
+  @override
+  String get currency_SAR => 'Riyal saudita';
+
+  @override
+  String get currency_SBD => 'Dollaro delle Isole Salomone';
+
+  @override
+  String get currency_SCR => 'Rupia delle Seychelles';
+
+  @override
+  String get currency_SDG => 'Sterlina sudanese';
+
+  @override
+  String get currency_SEK => 'Corona svedese';
+
+  @override
+  String get currency_SGD => 'Dollaro di Singapore';
+
+  @override
+  String get currency_SHP => 'Sterlina di Sant’Elena';
+
+  @override
+  String get currency_SLE => 'Leone sierraleonese (nuovo)';
+
+  @override
+  String get currency_SLL => 'Leone sierraleonese (vecchio)';
+
+  @override
+  String get currency_SOS => 'Scellino somalo';
+
+  @override
+  String get currency_SRD => 'Dollaro surinamese';
+
+  @override
+  String get currency_SSP => 'Sterlina sud-sudanese';
+
+  @override
+  String get currency_STN => 'Dobra di São Tomé e Príncipe';
+
+  @override
+  String get currency_SVC => 'Colón salvadoregno (storico)';
+
+  @override
+  String get currency_SYP => 'Lira siriana';
+
+  @override
+  String get currency_SZL => 'Lilangeni eSwatini';
+
+  @override
+  String get currency_THB => 'Baht thailandese';
+
+  @override
+  String get currency_TJS => 'Somoni tagiko';
+
+  @override
+  String get currency_TMT => 'Manat turkmeno';
+
+  @override
+  String get currency_TND => 'Dinaro tunisino';
+
+  @override
+  String get currency_TOP => 'Paʻanga tongano';
+
+  @override
+  String get currency_TRY => 'Lira turca';
+
+  @override
+  String get currency_TTD => 'Dollaro Trinidad e Tobago';
+
+  @override
+  String get currency_TVD => 'Dollaro di Tuvalu';
+
+  @override
+  String get currency_TWD => 'Nuovo dollaro di Taiwan';
+
+  @override
+  String get currency_TZS => 'Scellino tanzaniano';
+
+  @override
+  String get currency_UAH => 'Grivnia ucraina';
+
+  @override
+  String get currency_UGX => 'Scellino ugandese';
+
+  @override
+  String get currency_USD => 'Dollaro USA';
+
+  @override
+  String get currency_UYU => 'Peso uruguaiano';
+
+  @override
+  String get currency_UZS => 'Som uzbeko';
+
+  @override
+  String get currency_VED => 'Bolívar venezuelano digitale';
+
+  @override
+  String get currency_VES => 'Bolívar venezuelano';
+
+  @override
+  String get currency_VND => 'Dong vietnamita';
+
+  @override
+  String get currency_VUV => 'Vatu vanuatiano';
+
+  @override
+  String get currency_WST => 'Tala samoano';
+
+  @override
+  String get currency_XAF => 'Franco CFA BEAC';
+
+  @override
+  String get currency_XOF => 'Franco CFA BCEAO';
+
+  @override
+  String get currency_XPF => 'Franco CFP';
+
+  @override
+  String get currency_YER => 'Rial yemenita';
+
+  @override
+  String get currency_ZAR => 'Rand sudafricano';
+
+  @override
+  String get currency_ZMW => 'Kwacha dello Zambia';
+
+  @override
+  String get currency_ZWL => 'Dollaro zimbabwiano';
+
+  @override
+  String get search_currency => 'Cerca valuta...';
 }
