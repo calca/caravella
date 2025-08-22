@@ -11,6 +11,8 @@ class OptionsSheet extends StatelessWidget {
   final VoidCallback onEdit;
   final VoidCallback onDownloadCsv;
   final VoidCallback onShareCsv;
+  final VoidCallback onDownloadOfx;
+  final VoidCallback onShareOfx;
 
   const OptionsSheet({
     super.key,
@@ -21,6 +23,8 @@ class OptionsSheet extends StatelessWidget {
     required this.onEdit,
     required this.onDownloadCsv,
     required this.onShareCsv,
+    required this.onDownloadOfx,
+    required this.onShareOfx,
   });
 
   @override
@@ -78,6 +82,22 @@ class OptionsSheet extends StatelessWidget {
             ),
             title: Text(gloc.share_all_csv),
             onTap: onShareCsv,
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.file_download_outlined,
+              color: Theme.of(context).colorScheme.onPrimaryFixed,
+            ),
+            title: Text(gloc.download_all_ofx),
+            onTap: onDownloadOfx,
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.share_outlined,
+              color: Theme.of(context).colorScheme.onPrimaryFixed,
+            ),
+            title: Text(gloc.share_all_ofx),
+            onTap: onShareOfx,
           ),
           ListTile(
             leading: Icon(
