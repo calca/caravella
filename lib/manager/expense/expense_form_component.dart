@@ -7,6 +7,7 @@ import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../data/model/expense_participant.dart';
 import '../../data/model/expense_location.dart';
 import '../../state/locale_notifier.dart';
+import '../../widgets/material3_dialog.dart';
 import 'expense_form/amount_input_widget.dart';
 import 'expense_form/participant_selector_widget.dart';
 import 'expense_form/category_selector_widget.dart';
@@ -265,17 +266,20 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     final gloc = gen.AppLocalizations.of(context);
     return await showDialog<bool>(
           context: context,
-          builder: (ctx) => AlertDialog(
+          builder: (ctx) => Material3Dialog(
+            icon: Icon(
+              Icons.warning_amber_outlined,
+              color: Theme.of(context).colorScheme.error,
+              size: 24,
+            ),
             title: Text(gloc.discard_changes_title),
             content: Text(gloc.discard_changes_message),
             actions: [
-              TextButton(
-                onPressed: () => Navigator.of(ctx).pop(false),
-                child: Text(gloc.cancel),
-              ),
-              TextButton(
+              Material3DialogActions.cancel(ctx, gloc.cancel),
+              Material3DialogActions.destructive(
+                ctx,
+                gloc.discard,
                 onPressed: () => Navigator.of(ctx).pop(true),
-                child: Text(gloc.discard),
               ),
             ],
           ),

@@ -3,6 +3,7 @@ import '../../../data/model/expense_group.dart';
 import '../../../data/model/expense_participant.dart';
 import '../../../data/model/expense_category.dart';
 import '../../../data/expense_group_storage.dart';
+import '../../../widgets/material3_dialog.dart';
 import '../../group/pages/expenses_group_edit_page.dart';
 import '../../group/group_edit_mode.dart';
 
@@ -184,17 +185,20 @@ class ExpenseGroupOptionsSheet extends StatelessWidget {
 
     final confirm = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (context) => Material3Dialog(
+        icon: Icon(
+          Icons.delete_outline,
+          color: Theme.of(context).colorScheme.error,
+          size: 24,
+        ),
         title: const Text('Elimina viaggio'),
         content: Text('Vuoi davvero eliminare "${trip.title}"?'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Annulla'),
-          ),
-          TextButton(
+          Material3DialogActions.cancel(context, 'Annulla'),
+          Material3DialogActions.destructive(
+            context,
+            'Elimina',
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Elimina'),
           ),
         ],
       ),
