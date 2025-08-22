@@ -1,4 +1,5 @@
 import 'model/expense_group.dart';
+import 'model/expense_category.dart';
 
 /// Index for fast group lookups
 class GroupIndex {
@@ -6,6 +7,9 @@ class GroupIndex {
   final Set<String> _pinnedGroups = {};
   final Set<String> _archivedGroups = {};
   final Set<String> _activeGroups = {};
+  
+  /// Cached aggregated categories from all groups
+  List<ExpenseCategory>? _allCategories;
 
   /// Tracks if the index is up-to-date
   bool _isDirty = true;
@@ -24,6 +28,7 @@ class GroupIndex {
     _pinnedGroups.clear();
     _archivedGroups.clear();
     _activeGroups.clear();
+    _allCategories = null; // Clear cached categories
 
     for (final group in groups) {
       _byId[group.id] = group;
@@ -49,6 +54,11 @@ class GroupIndex {
   void updateGroup(ExpenseGroup group) {
     final oldGroup = _byId[group.id];
     _byId[group.id] = group;
+
+    // Invalidate category cache if categories changed
+    if (oldGroup?.categories != group.categories) {
+      _allCategories = null;
+    }
 
     // Update pin status
     if (oldGroup?.pinned == true && oldGroup?.archived == false) {
@@ -84,6 +94,7 @@ class GroupIndex {
       _pinnedGroups.remove(groupId);
       _archivedGroups.remove(groupId);
       _activeGroups.remove(groupId);
+      _allCategories = null; // Invalidate category cache
       _lastUpdate = DateTime.now();
     }
   }
@@ -259,6 +270,76 @@ class GroupIndex {
     }
 
     return issues;
+  }
+
+  /// Gets all unique categories from all groups (cached)
+  List<ExpenseCategory> getAllCategories() {
+    if (_allCategories != null) {
+      return _allCategories!;
+    }
+
+    final categoryMap = <String, ExpenseCategory>{};
+    
+    for (final group in _byId.values) {
+      for (final category in group.categories) {
+        // Use category name as key to deduplicate by name
+        // Keep the most recent category with the same name
+        final existing = categoryMap[category.name.toLowerCase()];
+        if (existing == null || category.createdAt.isAfter(existing.createdAt)) {
+          categoryMap[category.name.toLowerCase()] = category;
+        }
+      }
+    }
+
+    // Sort by name for consistent ordering
+    _allCategories = categoryMap.values.toList()
+      ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    
+    return _allCategories!;
+  }
+
+  /// Searches categories by name (case-insensitive) across all groups
+  List<ExpenseCategory> searchCategories(String query) {
+    if (query.trim().isEmpty) {
+      return getAllCategories();
+    }
+    
+    final lowerQuery = query.toLowerCase();
+    return getAllCategories()
+        .where((category) => category.name.toLowerCase().contains(lowerQuery))
+        .toList();
+  }
+
+  /// Gets the most frequently used categories across all groups
+  List<ExpenseCategory> getMostUsedCategories({int limit = 10}) {
+    final categoryUsage = <String, int>{};
+    final categoryMap = <String, ExpenseCategory>{};
+    
+    // Count usage across all groups and expenses
+    for (final group in _byId.values) {
+      for (final expense in group.expenses) {
+        if (expense.category != null) {
+          final categoryName = expense.category!.toLowerCase();
+          categoryUsage[categoryName] = (categoryUsage[categoryName] ?? 0) + 1;
+          
+          // Find the category definition
+          final categoryDef = group.categories.firstWhere(
+            (c) => c.name.toLowerCase() == categoryName,
+            orElse: () => ExpenseCategory(name: expense.category!),
+          );
+          categoryMap[categoryName] = categoryDef;
+        }
+      }
+    }
+    
+    // Sort by usage count and take the top categories
+    final sortedEntries = categoryUsage.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+    
+    return sortedEntries
+        .take(limit)
+        .map((entry) => categoryMap[entry.key]!)
+        .toList();
   }
 }
 

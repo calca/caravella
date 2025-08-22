@@ -1,5 +1,6 @@
 import 'model/expense_group.dart';
 import 'model/expense_details.dart';
+import 'model/expense_category.dart';
 import 'storage_errors.dart';
 
 /// Result wrapper for storage operations that can fail
@@ -85,6 +86,12 @@ abstract class IExpenseGroupRepository {
 
   /// Checks data integrity across all groups
   Future<StorageResult<List<String>>> checkDataIntegrity();
+
+  /// Gets all unique categories from all groups
+  Future<StorageResult<List<ExpenseCategory>>> getAllCategories();
+
+  /// Searches categories by name across all groups  
+  Future<StorageResult<List<ExpenseCategory>>> searchCategories(String query);
 }
 
 /// Validation helper for expense groups

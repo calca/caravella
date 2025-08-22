@@ -17,6 +17,7 @@ import 'expense_form/location_input_widget.dart';
 import 'expense_form/expense_form_actions_widget.dart';
 import 'expense_form/category_dialog.dart';
 import '../../themes/form_theme.dart';
+import '../../data/category_service.dart';
 
 class ExpenseFormComponent extends StatefulWidget {
   // When true shows date, location and note fields (full edit mode). In edit mode (initialExpense != null) these are always shown.
@@ -35,6 +36,7 @@ class ExpenseFormComponent extends StatefulWidget {
   final String? currency; // Currency del gruppo
   final ScrollController?
   scrollController; // Controller for scrolling to focused fields
+  final CategoryService? categoryService; // Service for global category search
 
   const ExpenseFormComponent({
     super.key,
@@ -52,6 +54,7 @@ class ExpenseFormComponent extends StatefulWidget {
     this.currency,
     this.fullEdit = false,
     this.scrollController,
+    this.categoryService, // New optional parameter
   });
 
   @override
@@ -575,6 +578,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
               onAddCategoryInline: _onAddCategoryInline,
               textStyle: style,
               fullEdit: true,
+              categoryService: widget.categoryService, // Pass category service
             ),
             _isCategoryValid,
             _categoryTouched,
@@ -608,6 +612,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
               onAddCategoryInline: _onAddCategoryInline,
               textStyle: style,
               fullEdit: false,
+              categoryService: widget.categoryService, // Pass category service
             ),
             _isCategoryValid,
             _categoryTouched,

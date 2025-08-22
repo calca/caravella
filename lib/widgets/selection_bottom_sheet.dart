@@ -4,6 +4,7 @@ import 'bottom_sheet_scaffold.dart';
 
 /// Generic modal bottom sheet for selecting an item from a list.
 /// Supports inline add-item action shown within the sheet.
+/// Supports autocomplete/filtering when searchFunction is provided.
 Future<T?> showSelectionBottomSheet<T>({
   required BuildContext context,
   required List<T> items,
@@ -12,6 +13,7 @@ Future<T?> showSelectionBottomSheet<T>({
   gen.AppLocalizations? gloc,
   Future<void> Function(String)? onAddItemInline,
   String? addItemHint,
+  Future<List<T>> Function(String)? searchFunction, // New parameter for autocomplete
 }) async {
   final resolved = gloc ?? gen.AppLocalizations.of(context);
   return showModalBottomSheet<T>(
@@ -28,6 +30,7 @@ Future<T?> showSelectionBottomSheet<T>({
       onAddItemInline: onAddItemInline,
       addItemHint: addItemHint,
       gloc: resolved,
+      searchFunction: searchFunction,
     ),
   );
 }
@@ -39,6 +42,8 @@ class _SelectionSheet<T> extends StatefulWidget {
   final Future<void> Function(String)? onAddItemInline;
   final String? addItemHint;
   final gen.AppLocalizations gloc;
+  final Future<List<T>> Function(String)? searchFunction;
+  
   const _SelectionSheet({
     required this.items,
     required this.selected,
@@ -46,6 +51,7 @@ class _SelectionSheet<T> extends StatefulWidget {
     required this.gloc,
     this.onAddItemInline,
     this.addItemHint,
+    this.searchFunction,
   });
 
   @override
@@ -57,18 +63,27 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
   final TextEditingController _inlineController = TextEditingController();
   final FocusNode _inlineFocus = FocusNode();
   final ScrollController _scrollController = ScrollController();
+  final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocus = FocusNode();
+  List<T> _filteredItems = [];
+  bool _isSearching = false;
 
   @override
   void dispose() {
     _inlineController.dispose();
     _inlineFocus.dispose();
     _scrollController.dispose();
+    _searchController.dispose();
+    _searchFocus.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
+    // Initialize filtered items with all items
+    _filteredItems = List.from(widget.items);
+    
     // Add focus listener to handle keyboard appearance and auto-scroll
     _inlineFocus.addListener(() {
       if (_inlineFocus.hasFocus) {
@@ -78,6 +93,11 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
         });
       }
     });
+
+    // Add search functionality if search function is provided
+    if (widget.searchFunction != null) {
+      _searchController.addListener(_onSearchChanged);
+    }
   }
 
   /// Scrolls to make the input field visible when keyboard opens
@@ -100,6 +120,43 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
     } catch (e) {
       // Gracefully handle any scrolling errors
       debugPrint('Error during scroll-to-input: $e');
+    }
+  }
+
+  /// Handles search text changes
+  void _onSearchChanged() async {
+    final query = _searchController.text;
+    
+    if (widget.searchFunction != null) {
+      setState(() {
+        _isSearching = true;
+      });
+      
+      try {
+        final results = await widget.searchFunction!(query);
+        if (mounted) {
+          setState(() {
+            _filteredItems = results;
+            _isSearching = false;
+          });
+        }
+      } catch (e) {
+        if (mounted) {
+          setState(() {
+            _filteredItems = widget.items;
+            _isSearching = false;
+          });
+        }
+        debugPrint('Search error: $e');
+      }
+    } else {
+      // Fallback to local filtering
+      final lowerQuery = query.toLowerCase();
+      setState(() {
+        _filteredItems = widget.items
+            .where((item) => widget.itemLabel(item).toLowerCase().contains(lowerQuery))
+            .toList();
+      });
     }
   }
 
@@ -155,6 +212,51 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
         ).showSnackBar(SnackBar(content: Text('Error adding item: $e')));
       }
     }
+  }
+
+  Widget _buildSearchField() {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: TextField(
+        controller: _searchController,
+        focusNode: _searchFocus,
+        decoration: InputDecoration(
+          hintText: 'Search categories...',
+          prefixIcon: const Icon(Icons.search),
+          suffixIcon: _searchController.text.isNotEmpty
+              ? IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: () {
+                    _searchController.clear();
+                  },
+                )
+              : _isSearching
+                  ? const Padding(
+                      padding: EdgeInsets.all(12.0),
+                      child: SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                    )
+                  : null,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: theme.colorScheme.outline),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: theme.colorScheme.outline),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
+          ),
+        ),
+        textInputAction: TextInputAction.search,
+      ),
+    );
   }
 
   Widget _buildInlineAddRow() {
@@ -228,8 +330,9 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
     final theme = Theme.of(context);
 
-    // Use widget.items directly
-    final itemsToShow = widget.items;
+    // Use filtered items for display
+    final itemsToShow = _filteredItems;
+    final hasSearchFunction = widget.searchFunction != null;
 
     // Calculate dynamic height: 80% initially, but expand when keyboard is open or inline adding
     final baseMaxHeight = screenHeight * 0.8;
@@ -240,7 +343,7 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
 
     final listMaxHeight =
         currentMaxHeight -
-        200; // Account for title, padding, and add button space
+        (hasSearchFunction ? 260 : 200); // Account for title, search field, padding, and add button space
 
     final list = itemsToShow.isEmpty
         ? const SizedBox.shrink()
@@ -302,6 +405,11 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              // Search field for autocomplete (if search function provided)
+              if (hasSearchFunction) ...[
+                _buildSearchField(),
+                const SizedBox(height: 8),
+              ],
               list,
               // Inline add functionality
               if (widget.onAddItemInline != null) ...[

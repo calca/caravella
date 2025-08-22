@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'model/expense_group.dart';
 import 'model/expense_details.dart';
+import 'model/expense_category.dart';
 import 'expense_group_repository.dart';
 import 'storage_errors.dart';
 import 'storage_performance.dart';
@@ -658,6 +659,64 @@ class FileBasedExpenseGroupRepository
           .toList();
 
       return StorageResult.success(groups);
+    }, wasFromCache: _isCacheValid() && !_groupIndex.isEmpty);
+  }
+
+  @override
+  Future<StorageResult<List<ExpenseCategory>>> getAllCategories() async {
+    return await measureOperation('getAllCategories', () async {
+      // Use index for fast category aggregation if available
+      if (!_groupIndex.isEmpty) {
+        return StorageResult.success(_groupIndex.getAllCategories());
+      }
+
+      // Fallback to loading all groups and aggregating manually
+      final result = await _loadGroups();
+      if (result.isFailure) return StorageResult.failure(result.error!);
+
+      final categoryMap = <String, ExpenseCategory>{};
+      
+      for (final group in result.data!) {
+        for (final category in group.categories) {
+          // Use category name as key to deduplicate by name
+          // Keep the most recent category with the same name
+          final existing = categoryMap[category.name.toLowerCase()];
+          if (existing == null || category.createdAt.isAfter(existing.createdAt)) {
+            categoryMap[category.name.toLowerCase()] = category;
+          }
+        }
+      }
+
+      // Sort by name for consistent ordering
+      final categories = categoryMap.values.toList()
+        ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+      
+      return StorageResult.success(categories);
+    }, wasFromCache: _isCacheValid() && !_groupIndex.isEmpty);
+  }
+
+  @override
+  Future<StorageResult<List<ExpenseCategory>>> searchCategories(String query) async {
+    return await measureOperation('searchCategories', () async {
+      // Use index for fast category search if available
+      if (!_groupIndex.isEmpty) {
+        return StorageResult.success(_groupIndex.searchCategories(query));
+      }
+
+      // Fallback to getting all categories and filtering
+      final result = await getAllCategories();
+      if (result.isFailure) return result;
+
+      if (query.trim().isEmpty) {
+        return result;
+      }
+      
+      final lowerQuery = query.toLowerCase();
+      final filteredCategories = result.data!
+          .where((category) => category.name.toLowerCase().contains(lowerQuery))
+          .toList();
+      
+      return StorageResult.success(filteredCategories);
     }, wasFromCache: _isCacheValid() && !_groupIndex.isEmpty);
   }
 
