@@ -147,13 +147,14 @@ class _CaravellaAppState extends State<CaravellaApp> {
           update: (context, repository, _) => CategoryService(repository),
         ),
         // Expense group notifier with category service
-        ProxyProvider<CategoryService, ExpenseGroupNotifier>(
+        ChangeNotifierProxyProvider<CategoryService, ExpenseGroupNotifier>(
           create: (context) => ExpenseGroupNotifier(
             categoryService: Provider.of<CategoryService>(context, listen: false),
           ),
-          update: (context, categoryService, _) => ExpenseGroupNotifier(
+          update: (context, categoryService, previous) => previous ?? ExpenseGroupNotifier(
             categoryService: categoryService,
           ),
+        ),
         ),
       ],
       child: LocaleNotifier(
