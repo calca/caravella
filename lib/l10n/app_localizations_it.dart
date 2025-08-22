@@ -1452,4 +1452,13 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get no_expenses_yet => 'Nessuna spesa ancora aggiunta';
+
+  @override
+  String get empty_expenses_title => 'Pronti per iniziare?';
+
+  @override
+  String get empty_expenses_subtitle => 'Aggiungi la prima spesa per iniziare con questo gruppo!';
+
+  @override
+  String get add_first_expense_button => 'Aggiungi Prima Spesa';
 }
