@@ -19,7 +19,7 @@ class EmptyExpenseState extends StatelessWidget {
         final mediaQuery = MediaQuery.of(context);
         final bottomInset = mediaQuery.viewPadding.bottom;
         final content = Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -88,7 +88,7 @@ class EmptyExpenseState extends StatelessWidget {
               minWidth: constraints.maxWidth,
             ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
+              padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Center(child: content),
             ),
           ),
