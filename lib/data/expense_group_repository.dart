@@ -1,6 +1,7 @@
 import 'model/expense_group.dart';
 import 'model/expense_details.dart';
 import 'model/expense_category.dart';
+import 'model/expense_participant.dart';
 import 'storage_errors.dart';
 
 /// Result wrapper for storage operations that can fail
@@ -92,6 +93,12 @@ abstract class IExpenseGroupRepository {
 
   /// Searches categories by name across all groups  
   Future<StorageResult<List<ExpenseCategory>>> searchCategories(String query);
+
+  /// Gets all unique participants from all groups
+  Future<StorageResult<List<ExpenseParticipant>>> getAllParticipants();
+
+  /// Searches participants by name across all groups
+  Future<StorageResult<List<ExpenseParticipant>>> searchParticipants(String query);
 }
 
 /// Validation helper for expense groups

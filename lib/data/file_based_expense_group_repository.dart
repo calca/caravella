@@ -4,6 +4,7 @@ import 'package:path_provider/path_provider.dart';
 import 'model/expense_group.dart';
 import 'model/expense_details.dart';
 import 'model/expense_category.dart';
+import 'model/expense_participant.dart';
 import 'expense_group_repository.dart';
 import 'storage_errors.dart';
 import 'storage_performance.dart';
@@ -717,6 +718,64 @@ class FileBasedExpenseGroupRepository
           .toList();
       
       return StorageResult.success(filteredCategories);
+    }, wasFromCache: _isCacheValid() && !_groupIndex.isEmpty);
+  }
+
+  @override
+  Future<StorageResult<List<ExpenseParticipant>>> getAllParticipants() async {
+    return await measureOperation('getAllParticipants', () async {
+      // Use index for fast participant aggregation if available
+      if (!_groupIndex.isEmpty) {
+        return StorageResult.success(_groupIndex.getAllParticipants());
+      }
+
+      // Fallback to loading all groups and aggregating manually
+      final result = await _loadGroups();
+      if (result.isFailure) return StorageResult.failure(result.error!);
+
+      final participantMap = <String, ExpenseParticipant>{};
+      
+      for (final group in result.data!) {
+        for (final participant in group.participants) {
+          // Use participant name as key to deduplicate by name
+          // Keep the most recent participant with the same name
+          final existing = participantMap[participant.name.toLowerCase()];
+          if (existing == null || participant.createdAt.isAfter(existing.createdAt)) {
+            participantMap[participant.name.toLowerCase()] = participant;
+          }
+        }
+      }
+
+      // Sort by name for consistent ordering
+      final participants = participantMap.values.toList()
+        ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+      
+      return StorageResult.success(participants);
+    }, wasFromCache: _isCacheValid() && !_groupIndex.isEmpty);
+  }
+
+  @override
+  Future<StorageResult<List<ExpenseParticipant>>> searchParticipants(String query) async {
+    return await measureOperation('searchParticipants', () async {
+      // Use index for fast participant search if available
+      if (!_groupIndex.isEmpty) {
+        return StorageResult.success(_groupIndex.searchParticipants(query));
+      }
+
+      // Fallback to getting all participants and filtering
+      final result = await getAllParticipants();
+      if (result.isFailure) return result;
+
+      if (query.trim().isEmpty) {
+        return result;
+      }
+      
+      final lowerQuery = query.toLowerCase();
+      final filteredParticipants = result.data!
+          .where((participant) => participant.name.toLowerCase().contains(lowerQuery))
+          .toList();
+      
+      return StorageResult.success(filteredParticipants);
     }, wasFromCache: _isCacheValid() && !_groupIndex.isEmpty);
   }
 
