@@ -18,18 +18,17 @@ class EmptyExpenseState extends StatelessWidget {
       builder: (context, constraints) {
         final mediaQuery = MediaQuery.of(context);
         final bottomInset = mediaQuery.viewPadding.bottom;
-        // Reduce top padding, add dynamic bottom padding
         final content = Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Welcoming illustration - using the existing welcome logo
             Container(
-              padding: const EdgeInsets.only(top: 8, left: 24, right: 24, bottom: 16),
-              decoration: BoxDecoration(
-                color: colorScheme.primaryContainer.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(20),
+              padding: const EdgeInsets.only(
+                top: 0,
+                left: 24,
+                right: 24,
+                bottom: 0,
               ),
               child: Image.asset(
                 'assets/images/home/welcome/welcome-logo.png',
@@ -37,19 +36,15 @@ class EmptyExpenseState extends StatelessWidget {
                 height: 120,
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) {
-                  // Fallback to icon if image fails to load
                   return Icon(
                     Icons.receipt_long_outlined,
                     size: 120,
-                    color: colorScheme.primary.withValues(alpha: 0.6),
+                    color: colorScheme.primary.withOpacity(0.6),
                   );
                 },
               ),
             ),
-
-            const SizedBox(height: 20),
-
-            // Encouraging title
+            const SizedBox(height: 8),
             Text(
               gloc.empty_expenses_title,
               style: textTheme.headlineSmall?.copyWith(
@@ -58,22 +53,16 @@ class EmptyExpenseState extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-
-            const SizedBox(height: 12),
-
-            // Subtitle with friendly messaging
+            const SizedBox(height: 8),
             Text(
               gloc.empty_expenses_subtitle,
               style: textTheme.bodyLarge?.copyWith(
-                color: colorScheme.onSurface.withValues(alpha: 0.7),
+                color: colorScheme.onSurface.withOpacity(0.7),
                 height: 1.4,
               ),
               textAlign: TextAlign.center,
             ),
-
-            const SizedBox(height: 24),
-
-            // Call-to-action button
+            const SizedBox(height: 12),
             FilledButton.icon(
               onPressed: onAddFirstExpense,
               icon: const Icon(Icons.add_rounded),
@@ -88,11 +77,9 @@ class EmptyExpenseState extends StatelessWidget {
                 ),
               ),
             ),
-
             SizedBox(height: 24 + bottomInset),
           ],
         );
-
         return SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: ConstrainedBox(
@@ -108,3 +95,5 @@ class EmptyExpenseState extends StatelessWidget {
         );
       },
     );
+  }
+}
