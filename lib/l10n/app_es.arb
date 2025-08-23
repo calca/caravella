@@ -169,8 +169,6 @@
   "select_expense_date_short": "Seleccionar fecha",
   "date": "Fecha",
   "edit_group": "Editar Grupo",
-  "duplicate_group": "Duplicar grupo",
-  "duplicate_group_desc": "Crear una copia con los mismos datos",
   "copy_as_new_group": "Nuevo desde aquí",
   "copy_as_new_group_desc": "Crear nuevo grupo a partir de aquí",
   "new_prefix": "Nuevo",
