@@ -2913,6 +2913,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No expenses added yet'**
   String get no_expenses_yet;
+
+  /// Title for empty expenses state
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to start tracking?'**
+  String get empty_expenses_title;
+
+  /// Subtitle for empty expenses state
+  ///
+  /// In en, this message translates to:
+  /// **'Add your first expense to get started with this group!'**
+  String get empty_expenses_subtitle;
+
+  /// Button text for adding the first expense in empty state
+  ///
+  /// In en, this message translates to:
+  /// **'Add First Expense'**
+  String get add_first_expense_button;
 }
 
 class _AppLocalizationsDelegate
