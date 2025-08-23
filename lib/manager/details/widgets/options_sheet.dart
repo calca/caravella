@@ -40,10 +40,19 @@ class OptionsSheet extends StatelessWidget {
           ListTile(
             leading: Icon(
               trip.pinned ? Icons.push_pin_outlined : Icons.push_pin_outlined,
-              color: Theme.of(context).colorScheme.onPrimaryFixed,
+              color: trip.archived
+                  ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38)
+                  : Theme.of(context).colorScheme.onPrimaryFixed,
             ),
-            title: Text(trip.pinned ? gloc.unpin_group : gloc.pin_group),
-            onTap: onPinToggle,
+            title: Text(
+              trip.pinned ? gloc.unpin_group : gloc.pin_group,
+              style: trip.archived
+                  ? TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
+                    )
+                  : null,
+            ),
+            onTap: trip.archived ? null : onPinToggle,
           ),
           ListTile(
             leading: Icon(
