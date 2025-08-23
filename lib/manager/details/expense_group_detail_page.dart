@@ -567,14 +567,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   void _onScroll() {
     if (!_scrollController.hasClients) return;
     
-    // Keep FAB visible when there are no expenses
-    if (_trip?.expenses.isEmpty == true) {
-      if (!_fabVisible && mounted) {
-        setState(() => _fabVisible = true);
-      }
-      return;
-    }
-    
     final direction = _scrollController.position.userScrollDirection;
     if (direction == ScrollDirection.reverse) {
       if (_fabVisible && mounted) setState(() => _fabVisible = false);
@@ -600,6 +592,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
 
   Widget _buildAnimatedFab(ColorScheme colorScheme) {
     if (_trip?.archived == true) return const SizedBox.shrink();
+    
+    // Hide FAB when there are no expenses (EmptyExpenseState handles the call-to-action)
+    if (_trip?.expenses.isEmpty == true) return const SizedBox.shrink();
 
     return AnimatedSlide(
       duration: const Duration(milliseconds: 260),
