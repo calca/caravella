@@ -9,11 +9,13 @@ import '../../details/expense_group_detail_page.dart';
 class ExpenseGroupCard extends StatelessWidget {
   final ExpenseGroup trip;
   final Function(ExpenseGroup) onTripUpdated;
+  final String? searchQuery;
 
   const ExpenseGroupCard({
     super.key,
     required this.trip,
     required this.onTripUpdated,
+    this.searchQuery,
   });
 
   @override
@@ -65,13 +67,7 @@ class ExpenseGroupCard extends StatelessWidget {
                         child: Row(
                           children: [
                             Expanded(
-                              child: Text(
-                                trip.title,
-                                style: Theme.of(context).textTheme.titleMedium
-                                    ?.copyWith(fontWeight: FontWeight.w600),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                              child: _buildHighlightedTitle(context),
                             ),
                           ],
                         ),
@@ -94,6 +90,68 @@ class ExpenseGroupCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildHighlightedTitle(BuildContext context) {
+    final title = trip.title;
+    final query = searchQuery?.toLowerCase().trim();
+    
+    if (query == null || query.isEmpty) {
+      return Text(
+        title,
+        style: Theme.of(context).textTheme.titleMedium
+            ?.copyWith(fontWeight: FontWeight.w600),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      );
+    }
+
+    final colorScheme = Theme.of(context).colorScheme;
+    final baseStyle = Theme.of(context).textTheme.titleMedium
+        ?.copyWith(fontWeight: FontWeight.w600);
+    final highlightStyle = baseStyle?.copyWith(
+      backgroundColor: colorScheme.primaryContainer,
+      color: colorScheme.onPrimaryContainer,
+    );
+
+    final lowerTitle = title.toLowerCase();
+    final spans = <TextSpan>[];
+    int currentIndex = 0;
+
+    while (currentIndex < title.length) {
+      final queryIndex = lowerTitle.indexOf(query, currentIndex);
+      
+      if (queryIndex == -1) {
+        // No more matches, add remaining text
+        spans.add(TextSpan(
+          text: title.substring(currentIndex),
+          style: baseStyle,
+        ));
+        break;
+      }
+
+      // Add text before the match
+      if (queryIndex > currentIndex) {
+        spans.add(TextSpan(
+          text: title.substring(currentIndex, queryIndex),
+          style: baseStyle,
+        ));
+      }
+
+      // Add the highlighted match
+      spans.add(TextSpan(
+        text: title.substring(queryIndex, queryIndex + query.length),
+        style: highlightStyle,
+      ));
+
+      currentIndex = queryIndex + query.length;
+    }
+
+    return RichText(
+      text: TextSpan(children: spans),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
     );
   }
 
