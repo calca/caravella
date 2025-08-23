@@ -406,6 +406,11 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
       location: _location,
     );
     widget.onExpenseAdded(expense);
+    
+    // Invalidate caches so new participants/categories appear in future searches
+    widget.participantService?.invalidateCache();
+    widget.categoryService?.invalidateCache();
+    
     _isDirty = false;
     if (widget.shouldAutoClose && Navigator.of(context).canPop()) {
       Navigator.of(context).pop();
@@ -629,13 +634,32 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
 
   // (Expand button moved into ExpenseFormActionsWidget)
 
-  void _onParticipantSelected(String selectedName) {
+  void _onParticipantSelected(String selectedName) async {
+    // If participant service is available, use it to create or reuse participant
+    if (widget.participantService != null) {
+      try {
+        final participant = await widget.participantService!.createOrReuseParticipant(selectedName);
+        setState(() {
+          _paidBy = participant;
+          _paidByTouched = true;
+          if (!_initializing) {
+            _isDirty = true;
+          }
+        });
+        return;
+      } catch (e) {
+        debugPrint('Error creating/reusing participant: $e');
+        // Fall back to local participant search
+      }
+    }
+    
+    // Fallback to local participant search (backward compatibility)
     setState(() {
       _paidBy = widget.participants.firstWhere(
         (p) => p.name == selectedName,
         orElse: () => widget.participants.isNotEmpty
             ? widget.participants.first
-            : ExpenseParticipant(name: ''),
+            : ExpenseParticipant(name: selectedName), // Use the selected name if not found
       );
       _paidByTouched = true;
       if (!_initializing) {

@@ -154,13 +154,15 @@ class _CaravellaAppState extends State<CaravellaApp> {
           ),
           update: (context, repository, _) => ParticipantService(repository),
         ),
-        // Expense group notifier with category service
-        ChangeNotifierProxyProvider<CategoryService, ExpenseGroupNotifier>(
+        // Expense group notifier with category and participant services
+        ChangeNotifierProxyProvider2<CategoryService, ParticipantService, ExpenseGroupNotifier>(
           create: (context) => ExpenseGroupNotifier(
             categoryService: Provider.of<CategoryService>(context, listen: false),
+            participantService: Provider.of<ParticipantService>(context, listen: false),
           ),
-          update: (context, categoryService, previous) => previous ?? ExpenseGroupNotifier(
+          update: (context, categoryService, participantService, previous) => previous ?? ExpenseGroupNotifier(
             categoryService: categoryService,
+            participantService: participantService,
           ),
         ),
         ),
