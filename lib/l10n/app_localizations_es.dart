@@ -1460,7 +1460,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get empty_expenses_title => '¿Listo para empezar?';
 
   @override
-  String get empty_expenses_subtitle => '¡Agrega tu primer gasto para comenzar con este grupo!';
+  String get empty_expenses_subtitle =>
+      '¡Agrega tu primer gasto para comenzar con este grupo!';
 
   @override
   String get add_first_expense_button => 'Agregar Primer Gasto';
