@@ -566,7 +566,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
 
   void _onScroll() {
     if (!_scrollController.hasClients) return;
-    
+
     final direction = _scrollController.position.userScrollDirection;
     if (direction == ScrollDirection.reverse) {
       if (_fabVisible && mounted) setState(() => _fabVisible = false);
@@ -590,9 +590,20 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     }
   }
 
+  double _calculateBottomPadding() {
+    final expenseCount = _trip?.expenses.length ?? 0;
+    if (expenseCount > 5) {
+      return 100.0;
+    } else {
+      // When there are few items, provide a larger bottom padding
+      // to ensure the content fills the view vertically, pushing the list up.
+      return 400.0;
+    }
+  }
+
   Widget _buildAnimatedFab(ColorScheme colorScheme) {
     if (_trip?.archived == true) return const SizedBox.shrink();
-    
+
     // Hide FAB when there are no expenses (EmptyExpenseState handles the call-to-action)
     if (_trip?.expenses.isEmpty == true) return const SizedBox.shrink();
 
@@ -753,7 +764,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             padding: const EdgeInsets.only(bottom: 0),
             sliver: SliverToBoxAdapter(
               child: Container(
-                height: trip.expenses.isEmpty ? 200 : 100, // More space when empty
+                height: _calculateBottomPadding(),
                 color: colorScheme.surfaceContainer,
               ),
             ),
