@@ -9,6 +9,24 @@ class AppLocalizationsEs extends AppLocalizations {
   AppLocalizationsEs([String locale = 'es']) : super(locale);
 
   @override
+  String get developer_section_title => 'Desarrollador y Soporte';
+
+  @override
+  String get developer_section_desc => 'Apoya al desarrollador o ver perfil';
+
+  @override
+  String get repo_section_title => 'Código fuente y problemas';
+
+  @override
+  String get repo_section_desc => 'Ver código fuente o reportar un problema';
+
+  @override
+  String get license_section_title => 'Licencia';
+
+  @override
+  String get license_section_desc => 'Ver la licencia de código abierto';
+
+  @override
   String get weeklyChartBadge => 'S';
 
   @override

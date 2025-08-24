@@ -1,5 +1,17 @@
 {
   "@@locale": "en",
+  "developer_section_title": "Developer & Support",
+  "@developer_section_title": {"description": "Section title for developer and support links in DeveloperPage"},
+  "developer_section_desc": "Support the developer or view profile",
+  "@developer_section_desc": {"description": "Section description for developer and support links in DeveloperPage"},
+  "repo_section_title": "Source & Issues",
+  "@repo_section_title": {"description": "Section title for repository and issues links in DeveloperPage"},
+  "repo_section_desc": "View source code or report a problem",
+  "@repo_section_desc": {"description": "Section description for repository and issues links in DeveloperPage"},
+  "license_section_title": "License",
+  "@license_section_title": {"description": "Section title for license link in DeveloperPage"},
+  "license_section_desc": "View the open source license",
+  "@license_section_desc": {"description": "Section description for license link in DeveloperPage"},
   "weeklyChartBadge": "W",
   "@weeklyChartBadge": {
     "description": "Letter indicator for weekly chart badge"

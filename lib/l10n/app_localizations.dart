@@ -100,6 +100,42 @@ abstract class AppLocalizations {
     Locale('it'),
   ];
 
+  /// Section title for developer and support links in DeveloperPage
+  ///
+  /// In en, this message translates to:
+  /// **'Developer & Support'**
+  String get developer_section_title;
+
+  /// Section description for developer and support links in DeveloperPage
+  ///
+  /// In en, this message translates to:
+  /// **'Support the developer or view profile'**
+  String get developer_section_desc;
+
+  /// Section title for repository and issues links in DeveloperPage
+  ///
+  /// In en, this message translates to:
+  /// **'Source & Issues'**
+  String get repo_section_title;
+
+  /// Section description for repository and issues links in DeveloperPage
+  ///
+  /// In en, this message translates to:
+  /// **'View source code or report a problem'**
+  String get repo_section_desc;
+
+  /// Section title for license link in DeveloperPage
+  ///
+  /// In en, this message translates to:
+  /// **'License'**
+  String get license_section_title;
+
+  /// Section description for license link in DeveloperPage
+  ///
+  /// In en, this message translates to:
+  /// **'View the open source license'**
+  String get license_section_desc;
+
   /// Letter indicator for weekly chart badge
   ///
   /// In en, this message translates to:

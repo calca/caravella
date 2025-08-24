@@ -121,8 +121,8 @@ class DeveloperPage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         children: [
           SettingsSection(
-            title: loc.support_developer_title,
-            description: loc.support_developer_desc,
+            title: loc.developer_section_title,
+            description: loc.developer_section_desc,
             children: [
               _buildBuyMeCoffeeRow(context, loc),
               _buildGithubRow(context, loc),
@@ -130,16 +130,16 @@ class DeveloperPage extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           SettingsSection(
-            title: loc.terms_repo_title,
-            description: loc.terms_repo_desc,
+            title: loc.repo_section_title,
+            description: loc.repo_section_desc,
             children: [
               _buildRepoRow(context, loc),
               _buildIssueRow(context, loc),
             ],
           ),
           SettingsSection(
-            title: loc.license_link,
-            description: loc.terms_license_desc,
+            title: loc.license_section_title,
+            description: loc.license_section_desc,
             children: [_buildLicenseRow(context, loc)],
           ),
         ],
