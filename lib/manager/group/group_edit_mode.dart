@@ -1,1 +1,5 @@
-enum GroupEditMode { create, edit }
+enum GroupEditMode {
+	create,
+	edit,
+	copy,
+}
