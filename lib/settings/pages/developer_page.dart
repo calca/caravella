@@ -118,7 +118,12 @@ class DeveloperPage extends StatelessWidget {
         elevation: 0,
       ),
       body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        padding: EdgeInsets.fromLTRB(
+          0,
+          0,
+          0,
+          MediaQuery.of(context).padding.bottom + 24,
+        ),
         children: [
           SettingsSection(
             title: loc.developer_section_title,
