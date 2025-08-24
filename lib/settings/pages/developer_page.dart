@@ -125,36 +125,22 @@ class DeveloperPage extends StatelessWidget {
             description: loc.support_developer_desc,
             children: [
               _buildBuyMeCoffeeRow(context, loc),
-            ],
-          ),
-          const SizedBox(height: 8),
-          SettingsSection(
-            title: loc.terms_github_title,
-            description: loc.terms_github_desc,
-            children: [
               _buildGithubRow(context, loc),
             ],
           ),
+          const SizedBox(height: 8),
           SettingsSection(
             title: loc.terms_repo_title,
             description: loc.terms_repo_desc,
             children: [
               _buildRepoRow(context, loc),
-            ],
-          ),
-          SettingsSection(
-            title: loc.terms_issue_title,
-            description: loc.terms_issue_desc,
-            children: [
               _buildIssueRow(context, loc),
             ],
           ),
           SettingsSection(
             title: loc.license_link,
             description: loc.terms_license_desc,
-            children: [
-              _buildLicenseRow(context, loc),
-            ],
+            children: [_buildLicenseRow(context, loc)],
           ),
         ],
       ),

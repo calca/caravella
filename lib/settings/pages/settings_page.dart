@@ -71,9 +71,7 @@ class SettingsPage extends StatelessWidget {
     return SettingsSection(
       title: loc.settings_privacy,
       description: loc.settings_privacy_desc,
-      children: [
-        if (isAndroid) _buildFlagSecureRow(context, loc),
-      ],
+      children: [if (isAndroid) _buildFlagSecureRow(context, loc)],
     );
   }
 
@@ -81,9 +79,7 @@ class SettingsPage extends StatelessWidget {
     return SettingsSection(
       title: loc.settings_data,
       description: loc.settings_data_desc,
-      children: [
-        _buildDataManageRow(context, loc),
-      ],
+      children: [_buildDataManageRow(context, loc)],
     );
   }
 

@@ -28,7 +28,9 @@ class SettingsSection extends StatelessWidget {
           padding: headerPadding ?? const EdgeInsets.fromLTRB(24, 24, 24, 0),
         ),
         Padding(
-          padding: contentPadding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding:
+              contentPadding ??
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Column(children: children),
         ),
       ],
