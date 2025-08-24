@@ -9,6 +9,26 @@ class AppLocalizationsIt extends AppLocalizations {
   AppLocalizationsIt([String locale = 'it']) : super(locale);
 
   @override
+  String get developer_section_title => 'Sviluppatore & Supporto';
+
+  @override
+  String get developer_section_desc =>
+      'Supporta lo sviluppatore o visualizza il profilo';
+
+  @override
+  String get repo_section_title => 'Codice & Segnalazioni';
+
+  @override
+  String get repo_section_desc =>
+      'Visualizza il codice sorgente o segnala un problema';
+
+  @override
+  String get license_section_title => 'Licenza';
+
+  @override
+  String get license_section_desc => 'Visualizza la licenza open source';
+
+  @override
   String get weeklyChartBadge => 'S';
 
   @override
@@ -747,6 +767,12 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get terms_license_desc => 'Visualizza la licenza open source.';
+
+  @override
+  String get support_developer_title => 'Offrimi un caffè';
+
+  @override
+  String get support_developer_desc => 'Sostieni lo sviluppo di questa app.';
 
   @override
   String get data_title => 'Backup & Ripristino';

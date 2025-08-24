@@ -25,10 +25,10 @@ class EmptyExpenseState extends StatelessWidget {
           children: [
             Container(
               padding: const EdgeInsets.only(
-                top: 8,
+                top: 16,
                 left: 24,
                 right: 24,
-                bottom: 16,
+                bottom: 8,
               ),
               child: ColorFiltered(
                 colorFilter: const ColorFilter.matrix(<double>[
@@ -111,8 +111,8 @@ class EmptyExpenseState extends StatelessWidget {
               minHeight: constraints.maxHeight,
               minWidth: constraints.maxWidth,
             ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Align(
+              alignment: Alignment.topCenter,
               child: Center(child: content),
             ),
           ),
