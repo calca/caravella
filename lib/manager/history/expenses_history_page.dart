@@ -359,7 +359,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                   )
                 : ListView.builder(
                     controller: _scrollController,
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
+                    padding: const EdgeInsets.fromLTRB(24, 8, 24, 100),
                     itemCount: _filteredTrips.length,
                     itemBuilder: (context, index) {
                       final trip = _filteredTrips[index];
