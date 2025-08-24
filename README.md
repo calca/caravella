@@ -1,51 +1,48 @@
+# Caravella - Group Expense & Travel Manager
 
+**Caravella** is a modern, multi-platform Flutter application designed to simplify expense management for groups, trips, and events. Built with Material 3, it offers an intuitive and clean user experience for tracking shared costs, managing participants, and settling debts.
 
-# Caravella
+Whether you're on a group trip, sharing an apartment with roommates, or organizing an event, Caravella helps you keep everything organized and transparent. All data is stored locally on your device, ensuring privacy and offline availability.
 
-Caravella è un'app Flutter moderna per la gestione di gruppi di spesa, viaggi e partecipanti, con persistenza locale e UX Material 3. Ideale per viaggi di gruppo, coinquilini, eventi o qualsiasi situazione in cui più persone condividono spese. Progettata per essere semplice, intuitiva, multi-piattaforma (Android/iOS/web/desktop) e facilmente estendibile.
+## ✨ Key Features
 
-## Funzionalità principali
-- **Gestione gruppi di spesa**: crea gruppi (viaggi, coinquilini, eventi, ecc.), aggiungi partecipanti e gestisci tutte le spese condivise.
-- **UI Material 3**: interfaccia moderna, flat, con card, colori dinamici e supporto dark/light mode.
-- **Home page**: mostra il gruppo/viaggio corrente, totale speso e accesso rapido ai dettagli.
-- **Storico gruppi/viaggi**: elenco di tutti i gruppi creati, con filtri, ordinamento e accesso ai dettagli.
-- **Dettaglio gruppo/viaggio**: partecipanti, periodo, tutte le spese, azioni rapide (pinna, archivia, esporta CSV, elimina, modifica).
-- **Aggiunta/modifica gruppo**: pagina dedicata per inserire/modificare dati, partecipanti e periodo.
-- **Aggiunta/modifica spesa**: sheet per inserire categoria, importo, chi ha pagato e chi partecipa, direttamente dalla home o dal dettaglio.
-- **Calcolo quote e riepilogo**: riepilogo delle quote per ogni partecipante e saldo finale del gruppo.
-- **Backup e ripristino**: esporta e importa tutti i dati in formato ZIP/JSON, con conferma e feedback.
-- **Persistenza dati**: tutti i dati sono salvati in locale su file JSON tramite `path_provider`.
-- **Esportazione CSV**: esporta le spese di un gruppo/viaggio in CSV e condividi con `SharePlus`.
-- **Icone personalizzate**: icona app generata da `assets/images/logo-w.png`.
-- **Multi-tema e multi-lingua**: selettore tema (chiaro, scuro, automatico) e lingua (IT/EN) integrati nei settings.
-- **Info e licenza**: sezione info con link, versione app, flavor, licenza e credits.
+- **Group Management**: Create and manage distinct groups for trips, events, or shared living arrangements. Add members and track expenses collectively.
+- **Expense Tracking**: Easily add new expenses, assign categories, specify who paid, and select which members participated in the cost.
+- **Material 3 UI**: A beautiful and modern user interface with support for dynamic colors and a native-feeling light/dark mode.
+- **Dashboard**: A central home page that provides a quick overview of the current pinned group, total expenses, and quick access to details.
+- **Detailed Summaries**: Get a clear breakdown of who owes what to whom, ensuring transparent and fair settlements.
+- **Data Persistence**: All your data is saved locally on your device using file-based storage, so it's always available, even offline.
+- **Backup & Restore**: Securely export all your app data to a single file and import it later, perfect for backups or migrating to a new device.
+- **CSV Export**: Export the expense list for any group into a CSV file, which can be easily shared or used in other applications.
+- **Multi-Language Support**: The app is localized for English, Italian, and Spanish.
+- **Cross-Platform**: Built with Flutter, Caravella is designed to run smoothly on Android, iOS, Web, and Desktop from a single codebase.
 
-## Struttura del progetto
-- `lib/` — codice sorgente principale (pagine, moduli, widgets, storage, stato)
-- `assets/` — immagini, icone, font
-- `pubspec.yaml` — configurazione dipendenze e asset
-- `flutter_launcher_icons.yaml` — configurazione icone app
-- `test/` — test widget/unitari
+## 🛠️ Tech Stack & Architecture
 
-## Avvio rapido
-1. **Installazione dipendenze**
-   ```sh
-   flutter pub get
-   ```
-2. **Generazione icone**
-   ```sh
-   flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons.yaml
-   ```
-3. **Avvio su emulatore/dispositivo**
-   ```sh
-   flutter run
-   ```
+- **Framework**: Flutter
+- **UI**: Material 3
+- **State Management**: `provider` for centralized and reactive state management.
+- **Storage**: Local file storage using `path_provider` for private, on-device data persistence.
+- **Architecture**: The app follows a clean architecture with a separation of concerns between UI, state management, and data services.
+- **Flavors**: Configured for different build environments (dev, staging, prod).
 
-## Build e debug
-- Usa le configurazioni VS Code in `.vscode/launch.json` per debug rapido su Android/iOS.
-- Hot reload e hot restart supportati.
-- Supporto a flavor (staging/prod) e build info tramite `package_info_plus`.
+## 🚀 Getting Started
 
-## Licenza
-MIT
+1.  **Install Dependencies**
+    ```sh
+    flutter pub get
+    ```
 
+2.  **Generate App Icons**
+    ```sh
+    flutter pub run flutter_launcher_icons:main
+    ```
+
+3.  **Run the App**
+    ```sh
+    flutter run
+    ```
+
+## 📄 License
+
+This project is licensed under the MIT License. See the `LICENSE` file for details.
