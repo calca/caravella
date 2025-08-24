@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
-import 'package:org_app_caravella/manager/group/widgets/section_header.dart';
 import 'package:org_app_caravella/settings/widgets/settings_card.dart';
+import '../../settings/widgets/settings_section.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../widgets/app_toast.dart';
 
@@ -118,28 +118,44 @@ class DeveloperPage extends StatelessWidget {
         elevation: 0,
       ),
       body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         children: [
-          SectionHeader(
-            title: "Developer",
-            description: "Information and links to support the developer",
-            padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+          SettingsSection(
+            title: loc.support_developer_title,
+            description: loc.support_developer_desc,
+            children: [
+              _buildBuyMeCoffeeRow(context, loc),
+            ],
           ),
-          _buildGithubRow(context, loc),
-          _buildBuyMeCoffeeRow(context, loc),
-          SectionHeader(
-            title: "Contribute",
-            description: "Information and links to support contributions",
-            padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+          const SizedBox(height: 8),
+          SettingsSection(
+            title: loc.terms_github_title,
+            description: loc.terms_github_desc,
+            children: [
+              _buildGithubRow(context, loc),
+            ],
           ),
-          _buildRepoRow(context, loc),
-          _buildIssueRow(context, loc),
-          SectionHeader(
-            title: "Other",
-            description: "Information and links to support other aspects",
-            padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+          SettingsSection(
+            title: loc.terms_repo_title,
+            description: loc.terms_repo_desc,
+            children: [
+              _buildRepoRow(context, loc),
+            ],
           ),
-          _buildLicenseRow(context, loc),
+          SettingsSection(
+            title: loc.terms_issue_title,
+            description: loc.terms_issue_desc,
+            children: [
+              _buildIssueRow(context, loc),
+            ],
+          ),
+          SettingsSection(
+            title: loc.license_link,
+            description: loc.terms_license_desc,
+            children: [
+              _buildLicenseRow(context, loc),
+            ],
+          ),
         ],
       ),
     );

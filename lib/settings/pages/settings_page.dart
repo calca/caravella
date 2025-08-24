@@ -13,7 +13,7 @@ import 'developer_page.dart';
 import 'data_backup_page.dart';
 import '../../widgets/bottom_sheet_scaffold.dart';
 import '../../settings/widgets/settings_card.dart';
-import '../../manager/group/widgets/section_header.dart';
+import '../../settings/widgets/settings_section.dart';
 
 class SettingsPage extends StatelessWidget {
   final void Function(String)? onLocaleChanged;
@@ -55,83 +55,46 @@ class SettingsPage extends StatelessWidget {
     gen.AppLocalizations loc,
     String locale,
   ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    return SettingsSection(
+      title: loc.settings_general,
+      description: loc.settings_general_desc,
       children: [
-        SectionHeader(
-          title: loc.settings_general,
-          description: loc.settings_general_desc,
-          padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Column(
-            children: [
-              _buildLanguageRow(context, loc, locale),
-              const SizedBox(height: 8),
-              _buildThemeRow(context, loc),
-            ],
-          ),
-        ),
+        _buildLanguageRow(context, loc, locale),
+        const SizedBox(height: 8),
+        _buildThemeRow(context, loc),
       ],
     );
   }
 
   Widget _buildPrivacySection(BuildContext context, gen.AppLocalizations loc) {
     final isAndroid = Theme.of(context).platform == TargetPlatform.android;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    return SettingsSection(
+      title: loc.settings_privacy,
+      description: loc.settings_privacy_desc,
       children: [
-        SectionHeader(
-          title: loc.settings_privacy,
-          description: loc.settings_privacy_desc,
-          padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-        ),
-        if (isAndroid)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Column(children: [_buildFlagSecureRow(context, loc)]),
-          ),
+        if (isAndroid) _buildFlagSecureRow(context, loc),
       ],
     );
   }
 
   Widget _buildDataSection(BuildContext context, gen.AppLocalizations loc) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    return SettingsSection(
+      title: loc.settings_data,
+      description: loc.settings_data_desc,
       children: [
-        SectionHeader(
-          title: loc.settings_data,
-          description: loc.settings_data_desc,
-          padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Column(children: [_buildDataManageRow(context, loc)]),
-        ),
+        _buildDataManageRow(context, loc),
       ],
     );
   }
 
   Widget _buildInfoSection(BuildContext context, gen.AppLocalizations loc) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    return SettingsSection(
+      title: loc.settings_info,
+      description: loc.settings_info_desc,
       children: [
-        SectionHeader(
-          title: loc.settings_info,
-          description: loc.settings_info_desc,
-          padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Column(
-            children: [
-              _buildInfoCardRow(context, loc),
-              const SizedBox(height: 8),
-              _buildAppVersionRow(context, loc),
-            ],
-          ),
-        ),
+        _buildInfoCardRow(context, loc),
+        const SizedBox(height: 8),
+        _buildAppVersionRow(context, loc),
       ],
     );
   }
