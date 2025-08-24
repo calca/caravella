@@ -47,7 +47,7 @@ class ExpenseGroupCard extends StatelessWidget {
               backgroundColor: Colors.transparent,
               noBorder: true,
               margin: EdgeInsets.zero,
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
@@ -76,6 +76,7 @@ class ExpenseGroupCard extends StatelessWidget {
                   _buildDateRow(context),
                   const SizedBox(height: 12),
                   _buildTotalExpensesContainer(context, total),
+                  Divider(),
                 ],
               ),
             ),
