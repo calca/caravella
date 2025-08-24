@@ -535,4 +535,10 @@
   ,"@no_expenses_with_filters": {"description": "Estado vacío cuando filtros activos no devuelven gastos"}
   ,"no_expenses_yet": "Aún no hay gastos"
   ,"@no_expenses_yet": {"description": "Estado vacío cuando aún no hay gastos"}
+  ,"empty_expenses_title": "¿Listo para empezar?"
+  ,"@empty_expenses_title": {"description": "Título para estado vacío de gastos"}
+  ,"empty_expenses_subtitle": "¡Agrega tu primer gasto para comenzar con este grupo!"
+  ,"@empty_expenses_subtitle": {"description": "Subtítulo para estado vacío de gastos"}
+  ,"add_first_expense_button": "Agregar Primer Gasto"
+  ,"@add_first_expense_button": {"description": "Texto del botón para agregar primer gasto"}
 }
