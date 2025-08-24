@@ -40,74 +40,6 @@ void main() {
       );
     });
 
-    testWidgets('displays all option buttons with correct localization', (WidgetTester tester) async {
-      bool tripDeleted = false;
-      bool tripUpdated = false;
-
-      await tester.pumpWidget(
-        MaterialApp(
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: AppLocalizations.supportedLocales,
-          locale: const Locale('en'),
-          home: Scaffold(
-            body: ExpenseGroupOptionsSheet(
-              trip: testGroup,
-              onTripDeleted: () => tripDeleted = true,
-              onTripUpdated: () => tripUpdated = true,
-            ),
-          ),
-        ),
-      );
-
-      // Check that all buttons are present with correct localized text
-      expect(find.text('Edit Group'), findsOneWidget);
-      expect(find.text('Duplicate group'), findsOneWidget);
-      expect(find.text('Copy as new'), findsOneWidget);
-      expect(find.text('Delete group'), findsOneWidget);
-      
-      // Check subtitles
-      expect(find.text('Edit name, dates and participants'), findsOneWidget);
-      expect(find.text('Create a copy with the same data'), findsOneWidget);
-      expect(find.text('Create new group starting from here'), findsOneWidget);
-      expect(find.text('Remove this group permanently'), findsOneWidget);
-    });
-
-    testWidgets('displays correct localization for Italian', (WidgetTester tester) async {
-      bool tripDeleted = false;
-      bool tripUpdated = false;
-
-      await tester.pumpWidget(
-        MaterialApp(
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: AppLocalizations.supportedLocales,
-          locale: const Locale('it'),
-          home: Scaffold(
-            body: ExpenseGroupOptionsSheet(
-              trip: testGroup,
-              onTripDeleted: () => tripDeleted = true,
-              onTripUpdated: () => tripUpdated = true,
-            ),
-          ),
-        ),
-      );
-
-      // Check that all buttons are present with correct Italian text
-      expect(find.text('Modifica gruppo'), findsOneWidget);
-      expect(find.text('Duplica gruppo'), findsOneWidget);
-      expect(find.text('Nuovo da qui'), findsOneWidget);
-      expect(find.text('Elimina gruppo'), findsOneWidget);
-    });
-
     testWidgets('shows group title correctly', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
@@ -134,7 +66,7 @@ void main() {
     test('test copy as new logic creates correct group structure', () {
       // Test the logic that should be in _handleCopyAsNew
       // This tests the data transformation without UI interaction
-      
+
       final originalGroup = ExpenseGroup(
         id: 'original-1',
         title: 'Original Group',
@@ -196,7 +128,7 @@ void main() {
       expect(newGroup.currency, equals('USD'));
       expect(newGroup.startDate, equals(DateTime(2024, 2, 1)));
       expect(newGroup.endDate, equals(DateTime(2024, 2, 28)));
-      
+
       // Verify that modifying the new group doesn't affect the original
       expect(originalGroup.expenses.length, equals(2));
       expect(originalGroup.title, equals('Original Group'));

@@ -495,12 +495,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get edit_group => 'Editar Grupo';
 
   @override
-  String get duplicate_group => 'Duplicar grupo';
-
-  @override
-  String get duplicate_group_desc => 'Crear una copia con los mismos datos';
-
-  @override
   String get copy_as_new_group => 'Nuevo desde aquí';
 
   @override
@@ -513,13 +507,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get edit_group_desc => 'Editar nombre, fechas y participantes';
 
   @override
-  String get delete_group => 'Eliminar grupo';
-
-  @override
   String get delete_group_desc => 'Eliminar este grupo permanentemente';
 
   @override
   String get delete_group_title => 'Eliminar grupo';
+
+  @override
+  String get delete_group => 'Eliminar grupo';
 
   @override
   String get delete_group_confirm =>
