@@ -25,23 +25,47 @@ class EmptyExpenseState extends StatelessWidget {
           children: [
             Container(
               padding: const EdgeInsets.only(
-                top: 0,
+                top: 8,
                 left: 24,
                 right: 24,
-                bottom: 0,
+                bottom: 16,
               ),
-              child: Image.asset(
-                'assets/images/home/welcome/welcome-logo.png',
-                width: 120,
-                height: 120,
-                fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) {
-                  return Icon(
-                    Icons.receipt_long_outlined,
-                    size: 120,
-                    color: colorScheme.primary.withOpacity(0.6),
-                  );
-                },
+              child: ColorFiltered(
+                colorFilter: const ColorFilter.matrix(<double>[
+                  0.2126,
+                  0.7152,
+                  0.0722,
+                  0,
+                  0,
+                  0.2126,
+                  0.7152,
+                  0.0722,
+                  0,
+                  0,
+                  0.2126,
+                  0.7152,
+                  0.0722,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  1,
+                  0,
+                ]),
+                child: Image.asset(
+                  'assets/images/home/welcome/welcome-logo.png',
+                  width: 120,
+                  height: 120,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Icon(
+                      Icons.receipt_long_outlined,
+                      size: 120,
+                      color: colorScheme.primary.withOpacity(0.6),
+                    );
+                  },
+                ),
               ),
             ),
             const SizedBox(height: 8),
