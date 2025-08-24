@@ -129,23 +129,149 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      // Find the filter toggle button
-      final filterIcon = find.byIcon(Icons.filter_list_outlined);
-      expect(filterIcon, findsOneWidget);
-      final iconButton = find.ancestor(
-        of: filterIcon,
-        matching: find.byType(IconButton),
-      );
-      expect(iconButton, findsOneWidget);
-      final IconButton buttonWidget = tester.widget(iconButton);
-      expect(buttonWidget.onPressed, isNull);
+      // Header and filter icon should be hidden entirely now
+      expect(find.byIcon(Icons.filter_list_outlined), findsNothing);
+      expect(find.text('Attività'), findsNothing); // activity label hidden
+    });
 
-      // Try tapping the disabled button - should not show filters
-      await tester.tap(iconButton);
+    testWidgets(
+      'Enhanced empty state appears when no expenses and callback provided',
+      (tester) async {
+        bool addExpenseCalled = false;
+
+        await tester.pumpWidget(
+          MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            locale: const Locale('it'),
+            home: Scaffold(
+              body: FilteredExpenseList(
+                expenses: [], // Empty expenses list
+                currency: '€',
+                onExpenseTap: (expense) {},
+                categories: testCategories,
+                participants: testParticipants,
+                onAddExpense: () {
+                  addExpenseCalled = true;
+                },
+              ),
+            ),
+          ),
+        );
+
+        await tester.pumpAndSettle();
+
+        // Check that the enhanced empty state is displayed
+        expect(
+          find.text('Pronti per iniziare?'),
+          findsOneWidget,
+        ); // Italian title
+        expect(
+          find.text('Aggiungi la prima spesa per iniziare con questo gruppo!'),
+          findsOneWidget,
+        ); // Italian subtitle
+        expect(
+          find.text('Aggiungi Prima Spesa'),
+          findsOneWidget,
+        ); // Italian button text
+
+        // Check that the call-to-action button is present and works
+        final addButton = find.text('Aggiungi Prima Spesa');
+        expect(addButton, findsOneWidget);
+
+        await tester.tap(addButton);
+        await tester.pumpAndSettle();
+
+        expect(addExpenseCalled, isTrue);
+      },
+    );
+
+    testWidgets('Enhanced empty state shows welcome image or fallback icon', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('en'),
+          home: Scaffold(
+            body: FilteredExpenseList(
+              expenses: [], // Empty expenses list
+              currency: '\$',
+              onExpenseTap: (expense) {},
+              categories: testCategories,
+              participants: testParticipants,
+              onAddExpense: () {},
+            ),
+          ),
+        ),
+      );
+
       await tester.pumpAndSettle();
 
-      // Filters should not be visible since button is disabled
-      expect(find.text('Cerca per nome o nota...'), findsNothing);
+      // Check for either the image or the fallback icon
+      final imageWidget = find.byType(Image);
+      final iconWidget = find.byIcon(Icons.receipt_long_outlined);
+
+      // Either the image should load or the fallback icon should be present
+      expect(
+        imageWidget.evaluate().isNotEmpty || iconWidget.evaluate().isNotEmpty,
+        isTrue,
+      );
+
+      // Check English text is displayed correctly
+      expect(find.text('Ready to start tracking?'), findsOneWidget);
+      expect(
+        find.text('Add your first expense to get started with this group!'),
+        findsOneWidget,
+      );
+      expect(find.text('Add First Expense'), findsOneWidget);
+    });
+
+    testWidgets('Simple empty state shown when filters are active', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('it'),
+          home: Scaffold(
+            body: FilteredExpenseList(
+              expenses: testExpenses, // Has expenses but will be filtered out
+              currency: '€',
+              onExpenseTap: (expense) {},
+              categories: testCategories,
+              participants: testParticipants,
+              onAddExpense: () {},
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // Show filters
+      await tester.tap(find.byIcon(Icons.filter_list_outlined));
+      await tester.pumpAndSettle();
+
+      // Enter a search query that won't match anything
+      await tester.enterText(find.byType(TextField), 'nonexistent');
+      await tester.pumpAndSettle();
+
+      // Should show simple empty state for filtered results, not enhanced empty state
+      expect(
+        find.text('Pronti per iniziare?'),
+        findsNothing,
+      ); // Enhanced state title
+      expect(
+        find.text('Nessuna spesa trovata con i filtri selezionati'),
+        findsOneWidget,
+      ); // Simple filtered state
+      expect(
+        find.byIcon(Icons.search_off_outlined),
+        findsOneWidget,
+      ); // Search off icon for filtered state
     });
   });
 }

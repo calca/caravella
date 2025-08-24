@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import '../../lib/manager/expense/expense_form/amount_input_widget.dart';
-import '../../lib/data/model/expense_details.dart';
-import '../../lib/data/model/expense_category.dart';
-import '../../lib/data/model/expense_participant.dart';
+import 'package:org_app_caravella/data/model/expense_category.dart';
+import 'package:org_app_caravella/data/model/expense_details.dart';
+import 'package:org_app_caravella/data/model/expense_participant.dart';
+import 'package:org_app_caravella/manager/expense/expense_form/amount_input_widget.dart';
 
 void main() {
   group('AmountInputWidget Integration Tests', () {
-    testWidgets('amount input with simplified formatter', (WidgetTester tester) async {
+    testWidgets('amount input with simplified formatter', (
+      WidgetTester tester,
+    ) async {
       final controller = TextEditingController();
-      
+
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -51,7 +53,9 @@ void main() {
       expect(controller.text, '12.99');
     });
 
-    testWidgets('parsing function works correctly', (WidgetTester tester) async {
+    testWidgets('parsing function works correctly', (
+      WidgetTester tester,
+    ) async {
       // Test the parsing logic that would be used in expense form
       double? parseAmount(String input) {
         if (input.isEmpty) return null;
@@ -71,12 +75,16 @@ void main() {
       // Test that amounts parsed from input can be properly stored and serialized
       const inputText = '123.45';
       final parsedAmount = double.tryParse(inputText);
-      
+
       expect(parsedAmount, 123.45);
 
       // Create an expense with this amount
       final expense = ExpenseDetails(
-        category: ExpenseCategory(name: 'Test', id: 'test-id', createdAt: DateTime.now()),
+        category: ExpenseCategory(
+          name: 'Test',
+          id: 'test-id',
+          createdAt: DateTime.now(),
+        ),
         amount: parsedAmount,
         paidBy: ExpenseParticipant(name: 'Test User'),
         date: DateTime.now(),
@@ -112,7 +120,7 @@ void main() {
       expect(parseAmount('1.00'), 1.0);
       expect(parseAmount('999.99'), 999.99);
       expect(parseAmount('1000.00'), 1000.0);
-      
+
       // Invalid inputs should return null
       expect(parseAmount('abc'), null);
       expect(parseAmount('12.34.56'), null);
