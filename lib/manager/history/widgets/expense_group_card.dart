@@ -2,11 +2,78 @@ import 'package:flutter/material.dart';
 import '../../../data/model/expense_group.dart';
 import '../../../widgets/currency_display.dart';
 import '../../../widgets/base_card.dart';
-import '../../../widgets/material3_dialog.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../details/expense_group_detail_page.dart';
 
 class ExpenseGroupCard extends StatelessWidget {
+  // Dismiss background for swipe actions
+  Widget _buildDismissBackground(BuildContext context) {
+    final isArchived = trip.archived;
+    final backgroundColor = Theme.of(
+      context,
+    ).colorScheme.surfaceContainerHighest;
+    final iconData = isArchived
+        ? Icons.unarchive_outlined
+        : Icons.archive_outlined;
+    final actionText = isArchived ? 'Unarchive' : 'Archive';
+    return Container(
+      alignment: Alignment.centerRight,
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      color: backgroundColor,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            iconData,
+            color: Theme.of(context).colorScheme.onSurface,
+            size: 28,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            actionText,
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Confirm archive dialog (returns Future<bool?>)
+  Future<bool?> _confirmArchive(BuildContext context) async {
+    final isArchived = trip.archived;
+    final actionText = isArchived ? 'Unarchive' : 'Archive';
+    final confirmText = isArchived
+        ? 'Do you want to unarchive'
+        : 'Do you want to archive';
+    return await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(actionText),
+        content: Text('$confirmText "${trip.title}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(actionText),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Archive toggle logic
+  void _onArchiveToggle() {
+    final updatedTrip = trip.copyWith(
+      archived: !trip.archived,
+      pinned: !trip.archived ? false : trip.pinned,
+    );
+    onTripUpdated(updatedTrip);
+  }
+
   final ExpenseGroup trip;
   final Function(ExpenseGroup) onTripUpdated;
   final String? searchQuery;
@@ -47,7 +114,7 @@ class ExpenseGroupCard extends StatelessWidget {
               backgroundColor: Colors.transparent,
               noBorder: true,
               margin: EdgeInsets.zero,
-              padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+              padding: const EdgeInsets.all(16),
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
@@ -55,28 +122,61 @@ class ExpenseGroupCard extends StatelessWidget {
                   ),
                 );
               },
-              child: Column(
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Row(
+                  // Left: Circle with initials
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Theme.of(context).colorScheme.primaryContainer,
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      _getInitials(trip.title),
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  // Center: Title, participants, dates
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
                           children: [
                             Expanded(child: _buildHighlightedTitle(context)),
+                            _buildStatusIcon(context),
                           ],
                         ),
+                        const SizedBox(height: 8),
+                        _buildParticipantsRow(context),
+                        const SizedBox(height: 4),
+                        _buildDateRow(context),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  // Right: Total expenses
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CurrencyDisplay(
+                        value: total,
+                        currency: trip.currency,
+                        valueFontSize: 20.0,
+                        currencyFontSize: 16.0,
+                        alignment: MainAxisAlignment.end,
+                        showDecimals: true,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
-                      _buildStatusIcon(context),
                     ],
                   ),
-                  const SizedBox(height: 12),
-                  _buildParticipantsRow(context),
-                  const SizedBox(height: 6),
-                  _buildDateRow(context),
-                  const SizedBox(height: 12),
-                  _buildTotalExpensesContainer(context, total),
-                  Divider(),
                 ],
               ),
             ),
@@ -118,14 +218,12 @@ class ExpenseGroupCard extends StatelessWidget {
       final queryIndex = lowerTitle.indexOf(query, currentIndex);
 
       if (queryIndex == -1) {
-        // No more matches, add remaining text
         spans.add(
           TextSpan(text: title.substring(currentIndex), style: baseStyle),
         );
         break;
       }
 
-      // Add text before the match
       if (queryIndex > currentIndex) {
         spans.add(
           TextSpan(
@@ -135,14 +233,12 @@ class ExpenseGroupCard extends StatelessWidget {
         );
       }
 
-      // Add the highlighted match
       spans.add(
         TextSpan(
           text: title.substring(queryIndex, queryIndex + query.length),
           style: highlightStyle,
         ),
       );
-
       currentIndex = queryIndex + query.length;
     }
 
@@ -153,79 +249,14 @@ class ExpenseGroupCard extends StatelessWidget {
     );
   }
 
-  Widget _buildDismissBackground(BuildContext context) {
-    final gloc = gen.AppLocalizations.of(context);
-
-    final isArchived = trip.archived;
-    final backgroundColor = Theme.of(
-      context,
-    ).colorScheme.surfaceContainerHighest;
-    final iconData = isArchived
-        ? Icons.unarchive_outlined
-        : Icons.archive_outlined;
-    final actionText = isArchived ? gloc.unarchive : gloc.archive;
-
-    return Container(
-      alignment: Alignment.centerRight,
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      color: backgroundColor,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            iconData,
-            color: Theme.of(context).colorScheme.onSurface,
-            size: 28,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            actionText,
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<bool?> _confirmArchive(BuildContext context) async {
-    final gloc = gen.AppLocalizations.of(context);
-
-    final isArchived = trip.archived;
-    final actionText = isArchived ? gloc.unarchive : gloc.archive;
-    final confirmText = isArchived
-        ? gloc.unarchive_confirm
-        : gloc.archive_confirm;
-
-    return await showDialog<bool>(
-      context: context,
-      builder: (context) => Material3Dialog(
-        icon: Icon(
-          isArchived ? Icons.unarchive_outlined : Icons.archive_outlined,
-          color: Theme.of(context).colorScheme.primary,
-          size: 24,
-        ),
-        title: Text(actionText),
-        content: Text('$confirmText "${trip.title}"?'),
-        actions: [
-          Material3DialogActions.cancel(context, gloc.cancel),
-          Material3DialogActions.primary(
-            context,
-            actionText,
-            onPressed: () => Navigator.of(context).pop(true),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _onArchiveToggle() {
-    final updatedTrip = trip.copyWith(
-      archived: !trip.archived,
-      pinned: !trip.archived ? false : trip.pinned, // Remove pin when archiving
-    );
-    onTripUpdated(updatedTrip);
+  String _getInitials(String title) {
+    final words = title.trim().split(RegExp(r'\s+'));
+    if (words.length == 1) {
+      return words.first.substring(0, 1).toUpperCase();
+    } else {
+      return (words[0].substring(0, 1) + words[1].substring(0, 1))
+          .toUpperCase();
+    }
   }
 
   Widget _buildStatusIcon(BuildContext context) {
@@ -299,23 +330,6 @@ class ExpenseGroupCard extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTotalExpensesContainer(BuildContext context, double total) {
-    return Row(
-      children: [
-        const Spacer(),
-        CurrencyDisplay(
-          value: total,
-          currency: trip.currency,
-          valueFontSize: 20.0,
-          currencyFontSize: 16.0,
-          alignment: MainAxisAlignment.end,
-          showDecimals: true,
-          color: Theme.of(context).colorScheme.onSurface,
         ),
       ],
     );
