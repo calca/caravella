@@ -292,15 +292,15 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
               padding: EdgeInsets.zero,
             ),
           ),
-          // STATUS FILTER SEGMENTED BUTTONS
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-            child: _buildStatusSegmentedButton(context),
-          ),
           // HEADER SECTION - SEARCH BAR AT TOP
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             child: _buildSearchBar(context, gloc),
+          ),
+          // STATUS FILTER SEGMENTED BUTTONS
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+            child: _buildStatusSegmentedButton(context),
           ),
           // MAIN CONTENT
           Expanded(
