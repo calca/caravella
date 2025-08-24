@@ -98,9 +98,7 @@ class GroupFormController {
     try {
       final now = DateTime.now();
       final group = (_original ?? ExpenseGroup.empty()).copyWith(
-        id: state.id.isNotEmpty
-            ? state.id
-            : (_original != null ? _original!.id : null),
+        id: state.id.isNotEmpty ? state.id : (_original?.id),
         title: state.title.trim(),
         participants: state.participants
             .map((e) => ExpenseParticipant(name: e.name))
