@@ -266,10 +266,11 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
           }
         },
         style: SegmentedButton.styleFrom(
-          backgroundColor: colorScheme.surfaceContainer,
-          foregroundColor: colorScheme.onSurface,
-          selectedBackgroundColor: colorScheme.primaryContainer,
-          selectedForegroundColor: colorScheme.onPrimaryContainer,
+          backgroundColor: colorScheme.surfaceContainerLow,
+          foregroundColor: colorScheme.outline,
+          selectedBackgroundColor: colorScheme.primaryFixedDim,
+          selectedForegroundColor: colorScheme.onPrimaryFixed,
+          side: BorderSide(color: colorScheme.surfaceContainerLow, width: 0),
         ),
       ),
     );
@@ -297,7 +298,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                   ),
                 ),
                 const SizedBox(width: 8),
-                IconButton.filledTonal(
+                IconButton(
                   icon: Icon(
                     _showSearchBar
                         ? Icons.search_off_rounded
@@ -314,11 +315,22 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
             ),
           ),
           // HEADER SECTION - SEARCH BAR AT TOP
-          if (_showSearchBar)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-              child: _buildSearchBar(context, gloc),
+          AnimatedSize(
+            duration: const Duration(milliseconds: 320),
+            curve: Curves.easeInOut,
+            alignment: Alignment.topCenter,
+            child: AnimatedOpacity(
+              duration: const Duration(milliseconds: 220),
+              curve: Curves.easeInOut,
+              opacity: _showSearchBar ? 1 : 0,
+              child: _showSearchBar
+                  ? Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                      child: _buildSearchBar(context, gloc),
+                    )
+                  : const SizedBox.shrink(),
             ),
+          ),
           // STATUS FILTER SEGMENTED BUTTONS
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
