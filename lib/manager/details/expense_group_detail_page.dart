@@ -467,8 +467,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           if (!mounted) return;
           await Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) =>
-                  ExpensesGroupEditPage(trip: newTrip, mode: GroupEditMode.edit),
+              builder: (context) => ExpensesGroupEditPage(
+                trip: newTrip,
+                mode: GroupEditMode.copy,
+              ),
             ),
           );
         },

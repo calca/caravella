@@ -21,6 +21,7 @@ class GroupFormController {
     if (mode == GroupEditMode.create) return; // nothing to load in create mode
     if (group == null) return;
     _original = group;
+    state.id = group.id;
     state.title = group.title;
     state.participants
       ..clear()
@@ -97,6 +98,9 @@ class GroupFormController {
     try {
       final now = DateTime.now();
       final group = (_original ?? ExpenseGroup.empty()).copyWith(
+        id: state.id.isNotEmpty
+            ? state.id
+            : (_original != null ? _original!.id : null),
         title: state.title.trim(),
         participants: state.participants
             .map((e) => ExpenseParticipant(name: e.name))
