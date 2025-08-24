@@ -753,6 +753,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get terms_license_desc => 'Ver la licencia de código abierto.';
 
   @override
+  String get support_developer_title => 'Cómprame un café';
+
+  @override
+  String get support_developer_desc =>
+      'Apoya el desarrollo de esta aplicación.';
+
+  @override
   String get data_title => 'Respaldo y Restauración';
 
   @override

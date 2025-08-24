@@ -748,6 +748,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get terms_license_desc => 'View the open source license.';
 
   @override
+  String get support_developer_title => 'Buy me a coffee';
+
+  @override
+  String get support_developer_desc => 'Support the development of this app.';
+
+  @override
   String get data_title => 'Backup & Restore';
 
   @override

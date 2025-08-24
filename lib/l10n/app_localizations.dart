@@ -1540,6 +1540,18 @@ abstract class AppLocalizations {
   /// **'View the open source license.'**
   String get terms_license_desc;
 
+  /// No description provided for @support_developer_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy me a coffee'**
+  String get support_developer_title;
+
+  /// No description provided for @support_developer_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Support the development of this app.'**
+  String get support_developer_desc;
+
   /// No description provided for @data_title.
   ///
   /// In en, this message translates to:
