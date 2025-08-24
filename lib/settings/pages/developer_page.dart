@@ -1,10 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:org_app_caravella/settings/widgets/settings_card.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../widgets/app_toast.dart';
 
 class DeveloperPage extends StatelessWidget {
   const DeveloperPage({super.key});
+
+  Future<void> _launchBuyMeCoffee() async {
+    const url = 'https://buymeacoffee.com/gianluigick';
+    final uri = Uri.parse(url);
+
+    try {
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      }
+    } catch (e) {
+      // Handle error silently - user can try again if needed
+    }
+  }
+
+  Widget _buildBuyMeCoffeeRow(BuildContext context, gen.AppLocalizations loc) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+    return SettingsCard(
+      context: context,
+      semanticsButton: true,
+      semanticsLabel: loc.support_developer_title,
+      semanticsHint: 'Double tap to support the developer',
+      color: colorScheme.surface,
+      child: ListTile(
+        leading: const Icon(Icons.coffee_outlined),
+        title: Text(loc.support_developer_title, style: textTheme.titleMedium),
+        subtitle: Text(loc.support_developer_desc, style: textTheme.bodySmall),
+        trailing: const Icon(Icons.launch, size: 16),
+        onTap: () => _launchBuyMeCoffee(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +53,11 @@ class DeveloperPage extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         children: [
-          Card(
-            elevation: 0,
+          _buildBuyMeCoffeeRow(context, loc),
+          const SizedBox(height: 8),
+          SettingsCard(
+            context: context,
             color: colorScheme.surface,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
               child: Column(
