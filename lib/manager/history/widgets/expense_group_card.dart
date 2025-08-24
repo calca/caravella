@@ -115,7 +115,7 @@ class ExpenseGroupCard extends StatelessWidget {
               backgroundColor: Colors.transparent,
               noBorder: true,
               margin: EdgeInsets.zero,
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
@@ -124,7 +124,7 @@ class ExpenseGroupCard extends StatelessWidget {
                 );
               },
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   ExpenseGroupAvatar(trip: trip, size: 48),
                   // Left: Circle with initials
