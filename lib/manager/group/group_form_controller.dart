@@ -110,14 +110,17 @@ class GroupFormController {
         file: state.imagePath,
         color: state.color,
         timestamp: _original?.timestamp ?? now,
-        // Preserve existing expenses explicitly when editing an existing group
-        expenses: _original != null
-            ? List<ExpenseDetails>.from(_original!.expenses)
-            : const [],
+        expenses: (mode == GroupEditMode.copy)
+            ? const []
+            : (_original != null
+                  ? List<ExpenseDetails>.from(_original!.expenses)
+                  : const []),
       );
 
       if (mode == GroupEditMode.edit) {
         await ExpenseGroupStorage.updateGroupMetadata(group);
+      } else if (mode == GroupEditMode.copy) {
+        await ExpenseGroupStorage.saveTrip(group);
       } else {
         await ExpenseGroupStorage.saveTrip(group);
       }
