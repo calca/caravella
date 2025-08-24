@@ -7,6 +7,7 @@ import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../group/pages/expenses_group_edit_page.dart';
 import '../group/group_edit_mode.dart';
 import '../../widgets/caravella_app_bar.dart';
+import '../group/widgets/section_header.dart';
 import 'widgets/expense_group_empty_states.dart';
 import 'widgets/expense_group_card.dart';
 import '../../widgets/app_toast.dart';
@@ -217,35 +218,28 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
 
   Widget _buildSearchBar(BuildContext context, gen.AppLocalizations gloc) {
     final colorScheme = Theme.of(context).colorScheme;
-    return TextField(
+    return SearchBar(
       controller: _searchController,
-      onChanged: _onSearchChanged,
-      decoration: InputDecoration(
-        labelText: gloc.search_groups,
-        hintText: gloc.search_groups,
-        prefixIcon: Icon(
-          Icons.search_outlined,
-          color: _searchQuery.isNotEmpty
-              ? colorScheme.primary
-              : colorScheme.onSurface.withValues(alpha: 0.6),
-        ),
-        suffixIcon: _searchQuery.isNotEmpty
-            ? IconButton(
-                icon: Icon(
-                  Icons.clear_rounded,
-                  color: colorScheme.onSurface.withValues(alpha: 0.6),
-                ),
+      hintText: gloc.search_groups,
+      leading: const Icon(Icons.search_outlined),
+      trailing: _searchQuery.isNotEmpty
+          ? [
+              IconButton(
+                icon: const Icon(Icons.clear_rounded),
                 onPressed: () {
                   _searchController.clear();
                   _onSearchChanged('');
                 },
-              )
-            : null,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        filled: true,
-        fillColor: colorScheme.surfaceContainerHighest,
+              ),
+            ]
+          : [],
+      onChanged: _onSearchChanged,
+      elevation: WidgetStateProperty.all(0),
+      backgroundColor: WidgetStateProperty.all(
+        colorScheme.surfaceContainerHighest,
+      ),
+      shape: WidgetStateProperty.all(
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
@@ -253,26 +247,29 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   Widget _buildStatusSegmentedButton(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final options = _statusOptions(context);
-    
-    return SegmentedButton<String>(
-      segments: options.map((option) {
-        return ButtonSegment<String>(
-          value: option['key'],
-          label: Text(option['label']),
-          icon: Icon(option['icon']),
-        );
-      }).toList(),
-      selected: {_statusFilter},
-      onSelectionChanged: (selected) {
-        if (selected.isNotEmpty) {
-          _onStatusFilterChanged(selected.first);
-        }
-      },
-      style: SegmentedButton.styleFrom(
-        backgroundColor: colorScheme.surfaceContainer,
-        foregroundColor: colorScheme.onSurface,
-        selectedBackgroundColor: colorScheme.primaryContainer,
-        selectedForegroundColor: colorScheme.onPrimaryContainer,
+
+    return SizedBox(
+      width: double.infinity,
+      child: SegmentedButton<String>(
+        segments: options.map((option) {
+          return ButtonSegment<String>(
+            value: option['key'],
+            label: Text(option['label']),
+            icon: Icon(option['icon']),
+          );
+        }).toList(),
+        selected: {_statusFilter},
+        onSelectionChanged: (selected) {
+          if (selected.isNotEmpty) {
+            _onStatusFilterChanged(selected.first);
+          }
+        },
+        style: SegmentedButton.styleFrom(
+          backgroundColor: colorScheme.surfaceContainer,
+          foregroundColor: colorScheme.onSurface,
+          selectedBackgroundColor: colorScheme.primaryContainer,
+          selectedForegroundColor: colorScheme.onPrimaryContainer,
+        ),
       ),
     );
   }
@@ -287,15 +284,23 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
       floatingActionButton: _buildAnimatedFab(colorScheme, gloc),
       body: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+            child: SectionHeader(
+              title: "Expense Groups",
+              description: "Manage your expense groups",
+              padding: EdgeInsets.zero,
+            ),
+          ),
+          // STATUS FILTER SEGMENTED BUTTONS
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+            child: _buildStatusSegmentedButton(context),
+          ),
           // HEADER SECTION - SEARCH BAR AT TOP
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             child: _buildSearchBar(context, gloc),
-          ),
-          // STATUS FILTER SEGMENTED BUTTONS
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-            child: _buildStatusSegmentedButton(context),
           ),
           // MAIN CONTENT
           Expanded(
