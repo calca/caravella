@@ -290,8 +290,8 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
               children: [
                 Expanded(
                   child: SectionHeader(
-                    title: "Expense Groups",
-                    description: "Manage your expense groups",
+                    title: gloc.expense_groups_title,
+                    description: gloc.expense_groups_desc,
                     padding: EdgeInsets.zero,
                   ),
                 ),

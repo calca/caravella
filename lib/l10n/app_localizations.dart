@@ -2991,6 +2991,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hide search bar'**
   String get hide_search;
+
+  /// Main section header for the list of expense groups/trips on the history page
+  ///
+  /// In en, this message translates to:
+  /// **'Expense Groups'**
+  String get expense_groups_title;
+
+  /// Short subtitle describing the purpose of the expense groups section (e.g. add, edit, view trips)
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your expense groups'**
+  String get expense_groups_desc;
 }
 
 class _AppLocalizationsDelegate

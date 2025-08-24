@@ -1494,4 +1494,10 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get hide_search => 'Nascondi barra di ricerca';
+
+  @override
+  String get expense_groups_title => 'Gruppi di spese';
+
+  @override
+  String get expense_groups_desc => 'Gestisci i tuoi gruppi di spese';
 }

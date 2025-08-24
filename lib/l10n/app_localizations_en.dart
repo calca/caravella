@@ -1487,4 +1487,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get hide_search => 'Hide search bar';
+
+  @override
+  String get expense_groups_title => 'Expense Groups';
+
+  @override
+  String get expense_groups_desc => 'Manage your expense groups';
 }
