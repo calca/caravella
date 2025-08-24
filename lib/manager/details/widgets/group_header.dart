@@ -2,6 +2,61 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import '../../../data/model/expense_group.dart';
 
+class ExpenseGroupAvatar extends StatelessWidget {
+  final ExpenseGroup trip;
+  final double size;
+  const ExpenseGroupAvatar({super.key, required this.trip, required this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Container(
+      margin: const EdgeInsets.only(top: 8, bottom: 8),
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: trip.color != null
+            ? Color(trip.color!)
+            : colorScheme.surfaceContainer,
+      ),
+      child: trip.file != null && trip.file!.isNotEmpty
+          ? ClipOval(
+              child: Image.file(
+                File(trip.file!),
+                fit: BoxFit.cover,
+                width: size,
+                height: size,
+                errorBuilder: (context, error, stackTrace) => Center(
+                  child: Text(
+                    trip.title.length >= 2
+                        ? trip.title.substring(0, 2).toUpperCase()
+                        : trip.title.toUpperCase(),
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      color: colorScheme.onSurface,
+                      fontWeight: FontWeight.bold,
+                      fontSize: size * 0.4,
+                    ),
+                  ),
+                ),
+              ),
+            )
+          : Center(
+              child: Text(
+                trip.title.length >= 2
+                    ? trip.title.substring(0, 2).toUpperCase()
+                    : trip.title.toUpperCase(),
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  color: colorScheme.onSurface,
+                  fontWeight: FontWeight.bold,
+                  fontSize: size * 0.4,
+                ),
+              ),
+            ),
+    );
+  }
+}
+
 class GroupHeader extends StatelessWidget {
   final ExpenseGroup trip;
   const GroupHeader({super.key, required this.trip});
@@ -16,52 +71,7 @@ class GroupHeader extends StatelessWidget {
         Center(
           child: Stack(
             children: [
-              Container(
-                margin: const EdgeInsets.only(top: 8, bottom: 8),
-                width: circleSize,
-                height: circleSize,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: trip.color != null
-                      ? Color(trip.color!)
-                      : colorScheme.surfaceContainer,
-                ),
-                child: trip.file != null && trip.file!.isNotEmpty
-                    ? ClipOval(
-                        child: Image.file(
-                          File(trip.file!),
-                          fit: BoxFit.cover,
-                          width: circleSize,
-                          height: circleSize,
-                          errorBuilder: (context, error, stackTrace) => Center(
-                            child: Text(
-                              trip.title.length >= 2
-                                  ? trip.title.substring(0, 2).toUpperCase()
-                                  : trip.title.toUpperCase(),
-                              style: Theme.of(context).textTheme.headlineMedium
-                                  ?.copyWith(
-                                    color: colorScheme.onSurface,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: circleSize * 0.4,
-                                  ),
-                            ),
-                          ),
-                        ),
-                      )
-                    : Center(
-                        child: Text(
-                          trip.title.length >= 2
-                              ? trip.title.substring(0, 2).toUpperCase()
-                              : trip.title.toUpperCase(),
-                          style: Theme.of(context).textTheme.headlineMedium
-                              ?.copyWith(
-                                color: colorScheme.onSurface,
-                                fontWeight: FontWeight.bold,
-                                fontSize: circleSize * 0.4,
-                              ),
-                        ),
-                      ),
-              ),
+              ExpenseGroupAvatar(trip: trip, size: circleSize),
               if (trip.pinned || trip.archived)
                 Positioned(
                   bottom: 0,

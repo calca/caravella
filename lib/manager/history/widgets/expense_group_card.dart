@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:org_app_caravella/manager/details/widgets/group_header.dart';
 import '../../../data/model/expense_group.dart';
 import '../../../widgets/currency_display.dart';
 import '../../../widgets/base_card.dart';
@@ -125,23 +126,8 @@ class ExpenseGroupCard extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  ExpenseGroupAvatar(trip: trip, size: 48),
                   // Left: Circle with initials
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Theme.of(context).colorScheme.primaryContainer,
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      _getInitials(trip.title),
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimaryContainer,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
                   const SizedBox(width: 16),
                   // Center: Title, participants, dates
                   Expanded(
@@ -156,8 +142,6 @@ class ExpenseGroupCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         _buildParticipantsRow(context),
-                        const SizedBox(height: 4),
-                        _buildDateRow(context),
                       ],
                     ),
                   ),
@@ -249,16 +233,6 @@ class ExpenseGroupCard extends StatelessWidget {
     );
   }
 
-  String _getInitials(String title) {
-    final words = title.trim().split(RegExp(r'\s+'));
-    if (words.length == 1) {
-      return words.first.substring(0, 1).toUpperCase();
-    } else {
-      return (words[0].substring(0, 1) + words[1].substring(0, 1))
-          .toUpperCase();
-    }
-  }
-
   Widget _buildStatusIcon(BuildContext context) {
     if (trip.pinned) {
       return Container(
@@ -281,31 +255,6 @@ class ExpenseGroupCard extends StatelessWidget {
     } else {
       return const SizedBox.shrink();
     }
-  }
-
-  Widget _buildDateRow(BuildContext context) {
-    return Row(
-      children: [
-        Icon(
-          Icons.event_outlined,
-          size: 16,
-          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-        ),
-        const SizedBox(width: 6),
-        Expanded(
-          child: Text(
-            trip.startDate != null && trip.endDate != null
-                ? '${trip.startDate!.day}/${trip.startDate!.month}/${trip.startDate!.year} - ${trip.endDate!.day}/${trip.endDate!.month}/${trip.endDate!.year}'
-                : '-',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(
-                context,
-              ).colorScheme.onSurface.withValues(alpha: 0.7),
-            ),
-          ),
-        ),
-      ],
-    );
   }
 
   Widget _buildParticipantsRow(BuildContext context) {
