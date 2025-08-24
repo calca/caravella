@@ -536,4 +536,8 @@
   ,"@empty_expenses_subtitle": {"description": "Sottotitolo per stato vuoto spese"}
   ,"add_first_expense_button": "Aggiungi Prima Spesa"
   ,"@add_first_expense_button": {"description": "Testo pulsante per aggiungere prima spesa"}
+  ,"show_search": "Mostra barra di ricerca"
+  ,"@show_search": {"description": "Tooltip per mostrare la barra di ricerca gruppi"}
+  ,"hide_search": "Nascondi barra di ricerca"
+  ,"@hide_search": {"description": "Tooltip per nascondere la barra di ricerca gruppi"}
 }

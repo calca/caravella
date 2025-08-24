@@ -26,6 +26,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   String _statusFilter = 'active'; // active, archived
   String _searchQuery = '';
   bool _loading = true;
+  bool _showSearchBar = false;
   final TextEditingController _searchController = TextEditingController();
   Timer? _searchDebounce;
   // Scroll + FAB state
@@ -286,17 +287,38 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            child: SectionHeader(
-              title: "Expense Groups",
-              description: "Manage your expense groups",
-              padding: EdgeInsets.zero,
+            child: Row(
+              children: [
+                Expanded(
+                  child: SectionHeader(
+                    title: "Expense Groups",
+                    description: "Manage your expense groups",
+                    padding: EdgeInsets.zero,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                IconButton.filledTonal(
+                  icon: Icon(
+                    _showSearchBar
+                        ? Icons.search_off_rounded
+                        : Icons.search_rounded,
+                  ),
+                  tooltip: _showSearchBar ? gloc.hide_search : gloc.show_search,
+                  onPressed: () {
+                    setState(() {
+                      _showSearchBar = !_showSearchBar;
+                    });
+                  },
+                ),
+              ],
             ),
           ),
           // HEADER SECTION - SEARCH BAR AT TOP
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-            child: _buildSearchBar(context, gloc),
-          ),
+          if (_showSearchBar)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+              child: _buildSearchBar(context, gloc),
+            ),
           // STATUS FILTER SEGMENTED BUTTONS
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),

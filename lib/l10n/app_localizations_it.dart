@@ -1488,4 +1488,10 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get add_first_expense_button => 'Aggiungi Prima Spesa';
+
+  @override
+  String get show_search => 'Mostra barra di ricerca';
+
+  @override
+  String get hide_search => 'Nascondi barra di ricerca';
 }

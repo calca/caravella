@@ -549,4 +549,8 @@
   ,"@empty_expenses_subtitle": {"description": "Subtitle for empty expenses state"}
   ,"add_first_expense_button": "Add First Expense"
   ,"@add_first_expense_button": {"description": "Button text for adding the first expense in empty state"}
+  ,"show_search": "Show search bar"
+  ,"@show_search": {"description": "Tooltip to show the group search bar"}
+  ,"hide_search": "Hide search bar"
+  ,"@hide_search": {"description": "Tooltip to hide the group search bar"}
 }

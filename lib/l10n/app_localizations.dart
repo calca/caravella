@@ -2979,6 +2979,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add First Expense'**
   String get add_first_expense_button;
+
+  /// Tooltip to show the group search bar
+  ///
+  /// In en, this message translates to:
+  /// **'Show search bar'**
+  String get show_search;
+
+  /// Tooltip to hide the group search bar
+  ///
+  /// In en, this message translates to:
+  /// **'Hide search bar'**
+  String get hide_search;
 }
 
 class _AppLocalizationsDelegate

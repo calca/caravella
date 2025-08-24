@@ -1490,4 +1490,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get add_first_expense_button => 'Agregar Primer Gasto';
+
+  @override
+  String get show_search => 'Show search bar';
+
+  @override
+  String get hide_search => 'Hide search bar';
 }

@@ -1,1 +1,6 @@
-{}
+{
+  "es": [
+    "show_search",
+    "hide_search"
+  ]
+}
