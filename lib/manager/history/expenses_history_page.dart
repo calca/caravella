@@ -236,9 +236,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
           : [],
       onChanged: _onSearchChanged,
       elevation: WidgetStateProperty.all(0),
-      backgroundColor: WidgetStateProperty.all(
-        colorScheme.surfaceContainerHighest,
-      ),
+      backgroundColor: WidgetStateProperty.all(colorScheme.surfaceContainer),
       shape: WidgetStateProperty.all(
         RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
