@@ -3,12 +3,22 @@ import '../data/model/expense_details.dart';
 import '../data/model/expense_group.dart';
 import '../data/model/expense_category.dart';
 import '../data/expense_group_storage.dart';
+import '../data/category_service.dart';
+import '../data/participant_service.dart';
 
 class ExpenseGroupNotifier extends ChangeNotifier {
   ExpenseGroup? _currentGroup;
   final List<String> _updatedGroupIds = [];
   String? _lastAddedCategory;
   String? _lastEvent; // es: 'expense_added', 'category_added'
+  final CategoryService? _categoryService; // Service for global category operations
+  final ParticipantService? _participantService; // Service for global participant operations
+
+  ExpenseGroupNotifier({
+    CategoryService? categoryService,
+    ParticipantService? participantService,
+  }) : _categoryService = categoryService,
+       _participantService = participantService;
 
   ExpenseGroup? get currentGroup => _currentGroup;
 
@@ -18,6 +28,12 @@ class ExpenseGroupNotifier extends ChangeNotifier {
   // Ultima categoria aggiunta
   String? get lastAddedCategory => _lastAddedCategory;
   String? get lastEvent => _lastEvent;
+  
+  // Category service for global category operations
+  CategoryService? get categoryService => _categoryService;
+  
+  // Participant service for global participant operations  
+  ParticipantService? get participantService => _participantService;
 
   String? consumeLastEvent() {
     final e = _lastEvent;
@@ -90,6 +106,10 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     _lastEvent = 'expense_added';
 
     await updateGroup(updatedGroup);
+    
+    // Invalidate participant service cache when new expense is added
+    // (in case new participant was created via global autocomplete)
+    _participantService?.invalidateCache();
   }
 
   Future<void> addCategory(String categoryName) async {
@@ -113,6 +133,9 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     _lastEvent = 'category_added';
 
     await updateGroup(updatedGroup);
+    
+    // Invalidate category service cache when new category is added
+    _categoryService?.invalidateCache();
   }
 
   // Nuovo metodo per aggiornare l'intero gruppo (per quando viene modificato dall'esterno)
