@@ -12,6 +12,7 @@ import '../../widgets/material3_dialog.dart';
 import '../auto_backup_notifier.dart';
 import 'package:provider/provider.dart';
 import '../../manager/group/widgets/section_header.dart';
+import 'package:intl/intl.dart';
 
 class DataBackupPage extends StatelessWidget {
   const DataBackupPage({super.key});
@@ -65,9 +66,21 @@ class DataBackupPage extends StatelessWidget {
                         gloc.auto_backup_title,
                         style: textTheme.titleMedium,
                       ),
-                      subtitle: Text(
-                        gloc.auto_backup_desc,
-                        style: textTheme.bodySmall,
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            gloc.auto_backup_desc,
+                            style: textTheme.bodySmall,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            '${gloc.last_auto_backup_label} ${_formatBackupTimestamp(notifier.lastAutoBackup, gloc)}',
+                            style: textTheme.bodySmall?.copyWith(
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
                       ),
                       trailing: Semantics(
                         label: gloc.accessibility_security_switch(
@@ -108,18 +121,32 @@ class DataBackupPage extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    child: ListTile(
-                      leading: const Icon(Icons.cloud_upload_outlined),
-                      minLeadingWidth: 0,
-                      title: Text(gloc.backup, style: textTheme.titleMedium),
-                      subtitle: Text(gloc.data_backup_desc),
-                      trailing: const Icon(Icons.arrow_forward_ios, size: 18),
-                      onTap: () async {
-                        await _backupTrips(context, gloc);
-                      },
-                      contentPadding: const EdgeInsets.symmetric(
-                        vertical: 8,
-                        horizontal: 16,
+                    child: Consumer<AutoBackupNotifier>(
+                      builder: (context, notifier, _) => ListTile(
+                        leading: const Icon(Icons.cloud_upload_outlined),
+                        minLeadingWidth: 0,
+                        title: Text(gloc.backup, style: textTheme.titleMedium),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(gloc.data_backup_desc),
+                            const SizedBox(height: 4),
+                            Text(
+                              '${gloc.last_manual_backup_label} ${_formatBackupTimestamp(notifier.lastManualBackup, gloc)}',
+                              style: textTheme.bodySmall?.copyWith(
+                                color: colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
+                        ),
+                        trailing: const Icon(Icons.arrow_forward_ios, size: 18),
+                        onTap: () async {
+                          await _backupTrips(context, gloc, notifier);
+                        },
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 8,
+                          horizontal: 16,
+                        ),
                       ),
                     ),
                   ),
@@ -157,9 +184,19 @@ class DataBackupPage extends StatelessWidget {
     );
   }
 
+  String _formatBackupTimestamp(DateTime? timestamp, gen.AppLocalizations loc) {
+    if (timestamp == null) {
+      return loc.last_backup_never;
+    }
+    
+    final formatter = DateFormat('dd/MM/yyyy HH:mm');
+    return formatter.format(timestamp);
+  }
+
   Future<void> _backupTrips(
     BuildContext context,
     gen.AppLocalizations loc,
+    AutoBackupNotifier notifier,
   ) async {
     try {
       final dir = await getApplicationDocumentsDirectory();
@@ -203,6 +240,9 @@ class DataBackupPage extends StatelessWidget {
         files: [XFile(zipPath)],
       );
       await SharePlus.instance.share(params);
+      
+      // Update manual backup timestamp on success
+      await notifier.updateManualBackupTimestamp();
     } catch (e) {
       if (!context.mounted) return;
       AppToast.show(
