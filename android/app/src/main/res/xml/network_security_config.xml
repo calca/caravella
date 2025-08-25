@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Default configuration for all domains -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system"/>
+        </trust-anchors>
+    </base-config>
+    
+    <!-- Allow specific trusted domains for geocoding and other services -->
+    <domain-config cleartextTrafficPermitted="false">
+        <!-- Google services for geocoding -->
+        <domain includeSubdomains="true">googleapis.com</domain>
+        <domain includeSubdomains="true">maps.googleapis.com</domain>
+        
+        <!-- GitHub for potential updates or documentation links -->
+        <domain includeSubdomains="true">github.com</domain>
+        <domain includeSubdomains="true">api.github.com</domain>
+        
+        <!-- App website -->
+        <domain includeSubdomains="true">calca.github.io</domain>
+    </domain-config>
+    
+    <!-- Debug overrides for development builds only -->
+    <debug-overrides>
+        <trust-anchors>
+            <!-- Trust user-added CA certificates for debugging -->
+            <certificates src="user"/>
+            <certificates src="system"/>
+        </trust-anchors>
+    </debug-overrides>
+</network-security-config>

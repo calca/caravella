@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-extraction-rules>
+    <!-- Controls which data can be extracted from the app during device-to-device transfers -->
+    <cloud-backup>
+        <!-- Include app data for cloud backup -->
+        <include domain="sharedpref" path="." />
+        <include domain="database" path="." />
+        <include domain="file" path="." />
+        
+        <!-- Exclude sensitive or temporary files -->
+        <exclude domain="sharedpref" path="FlutterSecureStorage" />
+        <exclude domain="file" path="cache/" />
+    </cloud-backup>
+    
+    <device-transfer>
+        <!-- Include app data for device-to-device transfers -->
+        <include domain="sharedpref" path="." />
+        <include domain="database" path="." />
+        <include domain="file" path="." />
+        
+        <!-- Exclude sensitive or temporary files -->
+        <exclude domain="sharedpref" path="FlutterSecureStorage" />
+        <exclude domain="file" path="cache/" />
+    </device-transfer>
+</data-extraction-rules>
