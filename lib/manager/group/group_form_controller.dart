@@ -21,6 +21,7 @@ class GroupFormController {
     if (mode == GroupEditMode.create) return; // nothing to load in create mode
     if (group == null) return;
     _original = group;
+    state.id = group.id;
     state.title = group.title;
     state.participants
       ..clear()
@@ -97,6 +98,7 @@ class GroupFormController {
     try {
       final now = DateTime.now();
       final group = (_original ?? ExpenseGroup.empty()).copyWith(
+        id: state.id.isNotEmpty ? state.id : (_original?.id),
         title: state.title.trim(),
         participants: state.participants
             .map((e) => ExpenseParticipant(name: e.name))
@@ -110,14 +112,17 @@ class GroupFormController {
         file: state.imagePath,
         color: state.color,
         timestamp: _original?.timestamp ?? now,
-        // Preserve existing expenses explicitly when editing an existing group
-        expenses: _original != null
-            ? List<ExpenseDetails>.from(_original!.expenses)
-            : const [],
+        expenses: (mode == GroupEditMode.copy)
+            ? const []
+            : (_original != null
+                  ? List<ExpenseDetails>.from(_original!.expenses)
+                  : const []),
       );
 
       if (mode == GroupEditMode.edit) {
         await ExpenseGroupStorage.updateGroupMetadata(group);
+      } else if (mode == GroupEditMode.copy) {
+        await ExpenseGroupStorage.saveTrip(group);
       } else {
         await ExpenseGroupStorage.saveTrip(group);
       }

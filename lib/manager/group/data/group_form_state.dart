@@ -3,6 +3,7 @@ import '../../../data/model/expense_category.dart';
 import 'package:flutter/foundation.dart';
 
 class GroupFormState extends ChangeNotifier {
+  String id = '';
   String title = '';
   final List<ExpenseParticipant> participants = [];
   final List<ExpenseCategory> categories = [];
