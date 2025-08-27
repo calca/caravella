@@ -399,9 +399,20 @@ class FileBasedExpenseGroupRepository
 
   @override
   Future<StorageResult<void>> addExpenseGroup(ExpenseGroup group) async {
-    // For backward compatibility the behavior is the same as saveGroup:
-    // replace existing group with same id or append if not present.
-    return await saveGroup(group);
+    // Load latest groups from disk to avoid cache-related overwrites and
+    // then append or replace atomically.
+    final loadResult = await _loadGroups(forceReload: true);
+    if (loadResult.isFailure) return StorageResult.failure(loadResult.error!);
+
+    final groups = List<ExpenseGroup>.from(loadResult.data!);
+    final index = groups.indexWhere((g) => g.id == group.id);
+    if (index != -1) {
+      groups[index] = group;
+    } else {
+      groups.add(group);
+    }
+
+    return await _saveGroups(groups);
   }
 
   @override
