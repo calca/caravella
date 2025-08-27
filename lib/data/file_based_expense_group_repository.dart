@@ -398,6 +398,13 @@ class FileBasedExpenseGroupRepository
   }
 
   @override
+  Future<StorageResult<void>> addExpenseGroup(ExpenseGroup group) async {
+    // For backward compatibility the behavior is the same as saveGroup:
+    // replace existing group with same id or append if not present.
+    return await saveGroup(group);
+  }
+
+  @override
   Future<StorageResult<void>> updateGroupMetadata(ExpenseGroup group) async {
     // Validate the group first
     final validation = validateGroup(group);
