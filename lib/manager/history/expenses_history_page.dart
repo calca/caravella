@@ -204,17 +204,13 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     });
   }
 
-  Future<void> _updateTrip(ExpenseGroup updatedTrip) async {
-    final allTrips = await ExpenseGroupStorageV2.getAllGroups();
-    final index = allTrips.indexWhere((t) => t.id == updatedTrip.id);
-    if (index != -1) {
-      allTrips[index] = updatedTrip;
-      await ExpenseGroupStorageV2.writeTrips(allTrips);
-      // Forza un breve delay per assicurare la persistenza
-      await Future.delayed(const Duration(milliseconds: 50));
-      // Ricarica i dati con il filtro corrente
-      await _loadTrips();
-    }
+  // Handler for archive toggle from the card: persist archive state and reload list.
+  Future<void> _onArchiveToggle(String groupId, bool archived) async {
+    // Persist archive state using the storage helper and then reload list.
+    await ExpenseGroupStorageV2.updateGroupArchive(groupId, archived);
+    // Small delay to allow storage to settle, then reload the list
+    await Future.delayed(const Duration(milliseconds: 50));
+    await _loadTrips();
   }
 
   Widget _buildSearchBar(BuildContext context, gen.AppLocalizations gloc) {
@@ -363,7 +359,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                       final trip = _filteredTrips[index];
                       return ExpenseGroupCard(
                         trip: trip,
-                        onTripUpdated: _updateTrip,
+                        onArchiveToggle: _onArchiveToggle,
                         searchQuery: _searchQuery,
                       );
                     },

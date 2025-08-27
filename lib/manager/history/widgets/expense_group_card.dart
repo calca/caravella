@@ -67,22 +67,21 @@ class ExpenseGroupCard extends StatelessWidget {
   }
 
   // Archive toggle logic
-  void _onArchiveToggle() {
-    final updatedTrip = trip.copyWith(
-      archived: !trip.archived,
-      pinned: !trip.archived ? false : trip.pinned,
-    );
-    onTripUpdated(updatedTrip);
+  Future<void> _onArchiveToggle() async {
+    // Delegate actual archive/unarchive persistence to the parent handler.
+    // The parent (history page) is responsible for calling storage helpers
+    // and refreshing the canonical group state.
+    await onArchiveToggle(trip.id, !trip.archived);
   }
 
   final ExpenseGroup trip;
-  final Function(ExpenseGroup) onTripUpdated;
+  final Future<void> Function(String groupId, bool archived) onArchiveToggle;
   final String? searchQuery;
 
   const ExpenseGroupCard({
     super.key,
     required this.trip,
-    required this.onTripUpdated,
+    required this.onArchiveToggle,
     this.searchQuery,
   });
 
