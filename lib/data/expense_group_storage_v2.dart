@@ -214,6 +214,15 @@ class ExpenseGroupStorageV2 {
     }
   }
 
+  /// Adds a whole ExpenseGroup to storage. If a group with the same id
+  /// already exists it will be replaced; otherwise the group is appended.
+  static Future<void> addExpenseGroup(ExpenseGroup group) async {
+    final result = await _repository.saveGroup(group);
+    if (result.isFailure) {
+      print('Warning: Failed to add group ${group.id}: ${result.error}');
+    }
+  }
+
   /// Updates an existing expense in an expense group
   static Future<void> updateExpenseToGroup(
     String groupId,

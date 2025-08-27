@@ -118,7 +118,7 @@ class GroupFormController {
       if (mode == GroupEditMode.edit) {
         await ExpenseGroupStorageV2.updateGroupMetadata(group);
       } else {
-        await ExpenseGroupStorageV2.saveTrip(group);
+        await ExpenseGroupStorageV2.addExpenseGroup(group);
       }
 
       _original = group;
