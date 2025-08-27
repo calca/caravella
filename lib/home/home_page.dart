@@ -157,6 +157,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
                       child: Semantics(
                         label: gloc.accessibility_groups_list,
                         child: HomeCardsSection(
+                          initialGroups: snapshot.data,
                           onTripAdded: () {
                             _refresh();
                             WidgetsBinding.instance.addPostFrameCallback((_) {

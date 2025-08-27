@@ -12,11 +12,13 @@ import 'widgets/widgets.dart';
 class HomeCardsSection extends StatefulWidget {
   final VoidCallback onTripAdded;
   final ExpenseGroup? pinnedTrip;
+  final List<ExpenseGroup>? initialGroups;
 
   const HomeCardsSection({
     super.key,
     required this.onTripAdded,
     this.pinnedTrip,
+    this.initialGroups,
   });
 
   @override
@@ -31,7 +33,12 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
   @override
   void initState() {
     super.initState();
-    _loadActiveGroups();
+    if (widget.initialGroups != null) {
+      _activeGroups = widget.initialGroups!;
+      _loading = false;
+    } else {
+      _loadActiveGroups();
+    }
   }
 
   @override
@@ -57,14 +64,40 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
     if (oldWidget.pinnedTrip?.id != widget.pinnedTrip?.id) {
       _loadActiveGroups();
     }
+
+    // If parent provided new initialGroups (e.g., FutureBuilder resolved again), update local state
+    if (widget.initialGroups != null &&
+        oldWidget.initialGroups != widget.initialGroups) {
+      setState(() {
+        _activeGroups = widget.pinnedTrip != null
+            ? [
+                widget.pinnedTrip!,
+                ...widget.initialGroups!
+                    .where((g) => g.id != widget.pinnedTrip!.id)
+                    .toList(),
+              ]
+            : widget.initialGroups!;
+        _loading = false;
+      });
+    }
   }
 
   void _onGroupsUpdated() {
     final updatedGroupIds = _groupNotifier?.updatedGroupIds ?? [];
 
     if (updatedGroupIds.isNotEmpty && mounted) {
-      // Update only affected groups instead of reloading everything
-      _updateAffectedGroupsLocally(updatedGroupIds);
+      
+      // If any updated group id is not present in the current list, perform full reload
+      final missing = updatedGroupIds.where(
+        (id) => !_activeGroups.any((g) => g.id == id),
+      );
+      if (missing.isNotEmpty) {
+  _loadActiveGroups();
+        return;
+      }
+
+      // Otherwise update only affected groups instead of reloading everything
+  _updateAffectedGroupsLocally(updatedGroupIds);
     }
   }
 

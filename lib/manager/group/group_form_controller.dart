@@ -7,14 +7,16 @@ import '../../data/expense_group_storage_v2.dart';
 import '../../data/model/expense_details.dart';
 import 'data/group_form_state.dart';
 import 'group_edit_mode.dart';
+import '../../state/expense_group_notifier.dart';
 
 /// Controller encapsulates business logic for the group form.
 class GroupFormController {
   final GroupFormState state;
   final GroupEditMode mode;
+  final ExpenseGroupNotifier? _notifier;
   ExpenseGroup? _original;
 
-  GroupFormController(this.state, this.mode);
+  GroupFormController(this.state, this.mode, [this._notifier]);
 
   void load(ExpenseGroup? group) {
     if (mode == GroupEditMode.create) return; // nothing to load in create mode
@@ -120,8 +122,12 @@ class GroupFormController {
       if (mode == GroupEditMode.edit) {
         await ExpenseGroupStorageV2.updateGroupMetadata(group);
       } else {
-        await ExpenseGroupStorageV2.addExpenseGroup(group);
+  await ExpenseGroupStorageV2.addExpenseGroup(group);
       }
+
+      // Ensure repository reloads fresh data and notify listeners globally
+  ExpenseGroupStorageV2.forceReload();
+  _notifier?.notifyGroupUpdated(group.id);
 
       _original = group;
       return group;
@@ -135,6 +141,9 @@ class GroupFormController {
     final all = await ExpenseGroupStorageV2.getAllGroups();
     all.removeWhere((e) => e.id == _original!.id);
     await ExpenseGroupStorageV2.writeTrips(all);
+  // Force reload and notify so UI updates across the app
+  ExpenseGroupStorageV2.forceReload();
+  _notifier?.notifyGroupUpdated(_original!.id);
   }
 
   Future<String?> persistPickedImage(File file) async {

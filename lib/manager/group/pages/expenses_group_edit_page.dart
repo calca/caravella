@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../data/model/expense_group.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../../../widgets/caravella_app_bar.dart';
+import '../../../state/expense_group_notifier.dart';
 import '../../../widgets/material3_dialog.dart';
 import '../../expense/expense_form/icon_leading_field.dart';
 import '../../../themes/app_text_styles.dart';
@@ -41,9 +42,13 @@ class ExpensesGroupEditPage extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => GroupFormState()),
-        ProxyProvider<GroupFormState, GroupFormController>(
-          update: (context, state, previous) =>
-              GroupFormController(state, mode),
+        ProxyProvider2<
+          GroupFormState,
+          ExpenseGroupNotifier,
+          GroupFormController
+        >(
+          update: (context, state, notifier, previous) =>
+              GroupFormController(state, mode, notifier),
         ),
       ],
       child: _GroupFormScaffold(
