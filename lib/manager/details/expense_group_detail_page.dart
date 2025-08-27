@@ -330,24 +330,11 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       isScrollControlled: true,
       builder: (sheetCtx) => OptionsSheet(
         trip: _trip!,
-        onPinToggle: () async {
+          onPinToggle: () async {
           if (_trip == null) return;
           final nav = Navigator.of(sheetCtx);
-          final updatedGroup = ExpenseGroup(
-            expenses: [], // only metadata is needed
-            title: _trip!.title,
-            participants: _trip!.participants,
-            startDate: _trip!.startDate,
-            endDate: _trip!.endDate,
-            currency: _trip!.currency,
-            categories: _trip!.categories,
-            timestamp: _trip!.timestamp,
-            id: _trip!.id,
-            file: _trip!.file,
-            pinned: !_trip!.pinned,
-            archived: _trip!.archived,
-          );
-          await _groupNotifier?.updateGroupMetadata(updatedGroup);
+          // Use the storage-level helper to toggle the pin atomically
+          await ExpenseGroupStorageV2.updateGroupPin(_trip!.id, !_trip!.pinned);
           await _refreshGroup();
           if (!mounted) return;
           nav.pop();

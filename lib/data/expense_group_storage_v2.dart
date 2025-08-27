@@ -77,6 +77,23 @@ class ExpenseGroupStorageV2 {
     return result.unwrapOr(null);
   }
 
+  /// Updates the pinned state of a group. If [pinned] is true, attempts to pin
+  /// the group (unpinning others). If false, removes the pin from the group.
+  /// This provides a single API that callers can use to toggle pin state.
+  static Future<void> updateGroupPin(String groupId, bool pinned) async {
+    if (pinned) {
+      final result = await _repository.setPinnedGroup(groupId);
+      if (result.isFailure) {
+        print('Warning: Failed to pin group $groupId: ${result.error}');
+      }
+    } else {
+      final result = await _repository.removePinnedGroup(groupId);
+      if (result.isFailure) {
+        print('Warning: Failed to remove pin from group $groupId: ${result.error}');
+      }
+    }
+  }
+
   /// Archives a group of expenses
   static Future<void> archiveGroup(String groupId) async {
     final result = await _repository.archiveGroup(groupId);
