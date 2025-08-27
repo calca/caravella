@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import '../data/model/expense_details.dart';
 import '../data/model/expense_group.dart';
 import '../data/model/expense_category.dart';
-import '../data/expense_group_storage.dart';
+import '../data/expense_group_storage_v2.dart';
 
 class ExpenseGroupNotifier extends ChangeNotifier {
   ExpenseGroup? _currentGroup;
@@ -48,11 +48,11 @@ class ExpenseGroupNotifier extends ChangeNotifier {
 
     // Persisti le modifiche
     try {
-      final trips = await ExpenseGroupStorage.getAllGroups();
+      final trips = await ExpenseGroupStorageV2.getAllGroups();
       final idx = trips.indexWhere((g) => g.id == updatedGroup.id);
       if (idx != -1) {
         trips[idx] = updatedGroup;
-        await ExpenseGroupStorage.writeTrips(trips);
+        await ExpenseGroupStorageV2.writeTrips(trips);
       }
     } catch (e) {
       debugPrint('Error updating group: $e');
@@ -75,7 +75,7 @@ class ExpenseGroupNotifier extends ChangeNotifier {
 
     // Persisti le modifiche preservando le spese
     try {
-      await ExpenseGroupStorage.updateGroupMetadata(updatedGroup);
+      await ExpenseGroupStorageV2.updateGroupMetadata(updatedGroup);
     } catch (e) {
       debugPrint('Error updating group metadata: $e');
     }
@@ -120,7 +120,7 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     if (_currentGroup == null) return;
 
     try {
-      final updatedGroup = await ExpenseGroupStorage.getTripById(
+      final updatedGroup = await ExpenseGroupStorageV2.getTripById(
         _currentGroup!.id,
       );
       if (updatedGroup != null) {

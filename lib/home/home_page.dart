@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../data/model/expense_group.dart';
-import '../data/expense_group_storage.dart';
+import '../data/expense_group_storage_v2.dart';
 import '../state/expense_group_notifier.dart';
 import '../../main.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
@@ -86,7 +86,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
   Future<void> _updatePinnedTripIfNeeded(List<String> updatedGroupIds) async {
     if (_pinnedTrip != null && updatedGroupIds.contains(_pinnedTrip!.id)) {
       try {
-        final updatedPinnedTrip = await ExpenseGroupStorage.getTripById(
+        final updatedPinnedTrip = await ExpenseGroupStorageV2.getTripById(
           _pinnedTrip!.id,
         );
         if (mounted && updatedPinnedTrip != null) {
@@ -107,7 +107,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
         _loading = true;
       });
     }
-    final pinnedTrip = await ExpenseGroupStorage.getPinnedTrip();
+    final pinnedTrip = await ExpenseGroupStorageV2.getPinnedTrip();
     if (!mounted) return;
     setState(() {
       _pinnedTrip = pinnedTrip;
@@ -149,7 +149,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
           : RefreshIndicator(
               onRefresh: _handleUserRefresh,
               child: FutureBuilder<List<ExpenseGroup>>(
-                future: ExpenseGroupStorage.getActiveGroups(),
+                future: ExpenseGroupStorageV2.getActiveGroups(),
                 builder: (context, snapshot) {
                   final hasGroups = snapshot.data?.isNotEmpty == true;
                   if (hasGroups) {

@@ -4,7 +4,7 @@ import 'package:org_app_caravella/data/model/expense_group.dart';
 import 'package:org_app_caravella/data/model/expense_details.dart';
 import 'package:org_app_caravella/data/model/expense_participant.dart';
 import 'package:org_app_caravella/data/model/expense_category.dart';
-import 'package:org_app_caravella/data/expense_group_storage.dart';
+import 'package:org_app_caravella/data/expense_group_storage_v2.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
@@ -41,6 +41,10 @@ void main() {
 
     test('updateGroupMetadata preserves current group expenses', () async {
       // Create a group with expenses
+      final catFood = ExpenseCategory(name: 'food', id: 'cat-food-1');
+      final participant1 = ExpenseParticipant(name: 'user1', id: 'p-user1');
+      final participant2 = ExpenseParticipant(name: 'user2', id: 'p-user2');
+
       final originalGroup = ExpenseGroup(
         id: 'test-group-1',
         title: 'Original Title',
@@ -49,16 +53,13 @@ void main() {
             id: 'expense-1',
             name: 'Test Expense',
             amount: 100.0,
-            paidBy: ExpenseParticipant(name: 'user1'),
-            category: ExpenseCategory(name: 'food'),
+            paidBy: participant1,
+            category: catFood,
             date: DateTime.now(),
           ),
         ],
-        participants: [
-          ExpenseParticipant(name: 'user1'),
-          ExpenseParticipant(name: 'user2'),
-        ],
-        categories: [ExpenseCategory(name: 'food')],
+        participants: [participant1, participant2],
+        categories: [catFood],
         timestamp: DateTime.now(),
         pinned: false,
         archived: false,
@@ -66,7 +67,7 @@ void main() {
       );
 
       // Save and set as current group
-      await ExpenseGroupStorage.saveTrip(originalGroup);
+      await ExpenseGroupStorageV2.saveTrip(originalGroup);
       notifier.setCurrentGroup(originalGroup);
 
       // Create an updated group without expenses
@@ -90,7 +91,9 @@ void main() {
       expect(notifier.currentGroup!.expenses[0].name, equals('Test Expense'));
 
       // Verify persistence
-      final savedGroup = await ExpenseGroupStorage.getTripById('test-group-1');
+      final savedGroup = await ExpenseGroupStorageV2.getTripById(
+        'test-group-1',
+      );
       expect(savedGroup, isNotNull);
       expect(savedGroup!.title, equals('Updated Title'));
       expect(savedGroup.pinned, isTrue);
@@ -113,7 +116,7 @@ void main() {
         currency: 'EUR',
       );
 
-      await ExpenseGroupStorage.saveTrip(group);
+      await ExpenseGroupStorageV2.saveTrip(group);
       notifier.setCurrentGroup(group);
 
       // Verify initial state
@@ -129,6 +132,11 @@ void main() {
 
     test('updateGroupMetadata handles group not in current state', () async {
       // Create and save a group
+      final catFoodRemote = ExpenseCategory(name: 'food', id: 'cat-food-3');
+      final participantRemote = ExpenseParticipant(
+        name: 'user1',
+        id: 'p-remote-1',
+      );
       final group = ExpenseGroup(
         id: 'test-group-3',
         title: 'Remote Group',
@@ -137,20 +145,20 @@ void main() {
             id: 'expense-1',
             name: 'Remote Expense',
             amount: 200.0,
-            paidBy: ExpenseParticipant(name: 'user1'),
-            category: ExpenseCategory(name: 'food'),
+            paidBy: participantRemote,
+            category: catFoodRemote,
             date: DateTime.now(),
           ),
         ],
-        participants: [ExpenseParticipant(name: 'user1')],
-        categories: [ExpenseCategory(name: 'food')],
+        participants: [participantRemote],
+        categories: [catFoodRemote],
         timestamp: DateTime.now(),
         pinned: false,
         archived: false,
         currency: 'EUR',
       );
 
-      await ExpenseGroupStorage.saveTrip(group);
+      await ExpenseGroupStorageV2.saveTrip(group);
       // Note: NOT setting as current group
 
       // Update a different group that's not currently loaded
@@ -158,7 +166,9 @@ void main() {
       await notifier.updateGroupMetadata(updatedGroup);
 
       // Verify persistence worked (expenses should be preserved)
-      final savedGroup = await ExpenseGroupStorage.getTripById('test-group-3');
+      final savedGroup = await ExpenseGroupStorageV2.getTripById(
+        'test-group-3',
+      );
       expect(savedGroup, isNotNull);
       expect(savedGroup!.title, equals('Updated Remote Group'));
       expect(savedGroup.expenses.length, equals(1)); // Expenses preserved

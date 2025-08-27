@@ -14,7 +14,7 @@ import 'package:file_picker/file_picker.dart';
 import '../../data/model/expense_details.dart';
 import '../../data/model/expense_group.dart';
 import '../../state/expense_group_notifier.dart';
-import '../../data/expense_group_storage.dart';
+import '../../data/expense_group_storage_v2.dart';
 import '../../widgets/material3_dialog.dart';
 // Removed legacy localization bridge imports (migration in progress)
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
@@ -119,7 +119,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   }
 
   Future<void> _loadTrip() async {
-    final trip = await ExpenseGroupStorage.getTripById(widget.trip.id);
+    final trip = await ExpenseGroupStorageV2.getTripById(widget.trip.id);
     if (!mounted) return;
     setState(() {
       _trip = trip;
@@ -133,7 +133,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   // _refreshTrip removed: state updates occur inline after each mutation.
   Future<void> _refreshGroup() async {
     if (_trip == null) return;
-    final refreshed = await ExpenseGroupStorage.getTripById(_trip!.id);
+    final refreshed = await ExpenseGroupStorageV2.getTripById(_trip!.id);
     if (!mounted || refreshed == null) return;
     setState(() => _trip = refreshed);
     _groupNotifier?.setCurrentGroup(refreshed);
@@ -426,9 +426,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             ),
           );
           if (confirmed == true && _trip != null) {
-            final trips = await ExpenseGroupStorage.getAllGroups();
+            final trips = await ExpenseGroupStorageV2.getAllGroups();
             trips.removeWhere((t) => t.id == _trip!.id);
-            await ExpenseGroupStorage.writeTrips(trips);
+            await ExpenseGroupStorageV2.writeTrips(trips);
             if (!context.mounted) return;
             nav.pop(); // close sheet
             rootNav.pop(true); // go back to list
@@ -450,11 +450,11 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           });
 
           // Salva le modifiche
-          final trips = await ExpenseGroupStorage.getAllGroups();
+          final trips = await ExpenseGroupStorageV2.getAllGroups();
           final tripIndex = trips.indexWhere((t) => t.id == _trip!.id);
           if (tripIndex != -1) {
             trips[tripIndex] = _trip!;
-            await ExpenseGroupStorage.writeTrips(trips);
+            await ExpenseGroupStorageV2.writeTrips(trips);
           }
         },
       ),
@@ -479,8 +479,17 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             final expenseWithId = newExpense.copyWith(
               id: DateTime.now().millisecondsSinceEpoch.toString(),
             );
-            await _groupNotifier?.addExpense(expenseWithId);
+
+            // Persist using the new storage API
+            await ExpenseGroupStorageV2.addExpenseToGroup(
+              widget.trip.id,
+              expenseWithId,
+            );
+
+            // Refresh local state and notifier
             await _refreshGroup();
+            _groupNotifier?.notifyGroupUpdated(widget.trip.id);
+
             if (!sheetCtx.mounted) return;
             AppToast.show(
               sheetCtx,
@@ -519,26 +528,17 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             final gloc = gen.AppLocalizations.of(sheetCtx);
             final nav = Navigator.of(sheetCtx);
             final expenseWithId = updatedExpense.copyWith(id: expense.id);
-            final updatedExpenses = _trip!.expenses
-                .map((e) {
-                  return e.id == expense.id ? expenseWithId : e;
-                })
-                .toList(growable: false);
-            final updatedGroup = ExpenseGroup(
-              title: _trip!.title,
-              expenses: List<ExpenseDetails>.from(updatedExpenses),
-              participants: _trip!.participants,
-              startDate: _trip!.startDate,
-              endDate: _trip!.endDate,
-              currency: _trip!.currency,
-              categories: _trip!.categories,
-              timestamp: _trip!.timestamp,
-              id: _trip!.id,
-              file: _trip!.file,
-              pinned: _trip!.pinned,
+
+            // Persist the updated expense using the new storage API
+            await ExpenseGroupStorageV2.updateExpenseToGroup(
+              _trip!.id,
+              expenseWithId,
             );
-            await _groupNotifier?.updateGroup(updatedGroup);
+
+            // Refresh local state and notifier
             await _refreshGroup();
+            _groupNotifier?.notifyGroupUpdated(_trip!.id);
+
             if (!sheetCtx.mounted) return;
             AppToast.show(
               sheetCtx,

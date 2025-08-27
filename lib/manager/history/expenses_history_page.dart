@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:async';
 import '../../data/model/expense_group.dart';
-import '../../../data/expense_group_storage.dart';
+import '../../../data/expense_group_storage_v2.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../group/pages/expenses_group_edit_page.dart';
 import '../group/group_edit_mode.dart';
@@ -78,11 +78,11 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
       // Carica i dati in base al filtro di stato
       switch (_statusFilter) {
         case 'archived':
-          trips = await ExpenseGroupStorage.getArchivedGroups();
+          trips = await ExpenseGroupStorageV2.getArchivedGroups();
           break;
         case 'active':
         default:
-          trips = await ExpenseGroupStorage.getActiveGroups();
+          trips = await ExpenseGroupStorageV2.getActiveGroups();
           break;
       }
 
@@ -205,11 +205,11 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   }
 
   Future<void> _updateTrip(ExpenseGroup updatedTrip) async {
-    final allTrips = await ExpenseGroupStorage.getAllGroups();
+    final allTrips = await ExpenseGroupStorageV2.getAllGroups();
     final index = allTrips.indexWhere((t) => t.id == updatedTrip.id);
     if (index != -1) {
       allTrips[index] = updatedTrip;
-      await ExpenseGroupStorage.writeTrips(allTrips);
+      await ExpenseGroupStorageV2.writeTrips(allTrips);
       // Forza un breve delay per assicurare la persistenza
       await Future.delayed(const Duration(milliseconds: 50));
       // Ricarica i dati con il filtro corrente

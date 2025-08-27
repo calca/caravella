@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart'
     as gen; // generated
 import '../../data/model/expense_group.dart';
-import '../../data/expense_group_storage.dart';
+import '../../data/expense_group_storage_v2.dart';
 import '../../state/expense_group_notifier.dart';
 // Removed locale_notifier import after migration
 // locale_notifier no longer needed after migration
@@ -78,7 +78,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
       for (final groupId in updatedGroupIds) {
         final groupIndex = newGroups.indexWhere((g) => g.id == groupId);
         if (groupIndex != -1) {
-          final updatedGroup = await ExpenseGroupStorage.getTripById(groupId);
+          final updatedGroup = await ExpenseGroupStorageV2.getTripById(groupId);
           if (updatedGroup != null) {
             newGroups[groupIndex] = updatedGroup;
             needsUpdate = true;
@@ -99,7 +99,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
 
   Future<void> _loadActiveGroups() async {
     try {
-      final groups = await ExpenseGroupStorage.getActiveGroups();
+      final groups = await ExpenseGroupStorageV2.getActiveGroups();
       if (mounted) {
         setState(() {
           // Se c'è un gruppo pinnato, mettiamolo sempre al primo posto

@@ -3,7 +3,7 @@ import 'package:org_app_caravella/data/model/expense_group.dart';
 import 'package:org_app_caravella/data/model/expense_details.dart';
 import 'package:org_app_caravella/data/model/expense_participant.dart';
 import 'package:org_app_caravella/data/model/expense_category.dart';
-import 'package:org_app_caravella/data/expense_group_storage.dart';
+import 'package:org_app_caravella/data/expense_group_storage_v2.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
@@ -35,6 +35,16 @@ void main() {
 
     test('updateGroupMetadata preserves existing expenses', () async {
       // Create a group with expenses
+      // Define stable category objects with explicit ids to satisfy V2 validation
+      final catFood = ExpenseCategory(name: 'food', id: 'cat-food');
+      final catTransport = ExpenseCategory(
+        name: 'transport',
+        id: 'cat-transport',
+      );
+
+      final participant1 = ExpenseParticipant(name: 'user1', id: 'p-user1');
+      final participant2 = ExpenseParticipant(name: 'user2', id: 'p-user2');
+
       final originalGroup = ExpenseGroup(
         id: 'test-group-1',
         title: 'Original Title',
@@ -43,27 +53,21 @@ void main() {
             id: 'expense-1',
             name: 'Test Expense',
             amount: 100.0,
-            paidBy: ExpenseParticipant(name: 'user1'),
-            category: ExpenseCategory(name: 'food'),
+            paidBy: participant1,
+            category: catFood,
             date: DateTime.now(),
           ),
           ExpenseDetails(
             id: 'expense-2',
             name: 'Another Expense',
             amount: 50.0,
-            paidBy: ExpenseParticipant(name: 'user2'),
-            category: ExpenseCategory(name: 'transport'),
+            paidBy: participant2,
+            category: catTransport,
             date: DateTime.now(),
           ),
         ],
-        participants: [
-          ExpenseParticipant(name: 'user1'),
-          ExpenseParticipant(name: 'user2'),
-        ],
-        categories: [
-          ExpenseCategory(name: 'food'),
-          ExpenseCategory(name: 'transport'),
-        ],
+        participants: [participant1, participant2],
+        categories: [catFood, catTransport],
         timestamp: DateTime.now(),
         pinned: false,
         archived: false,
@@ -71,10 +75,12 @@ void main() {
       );
 
       // Save the original group
-      await ExpenseGroupStorage.saveTrip(originalGroup);
+      await ExpenseGroupStorageV2.saveTrip(originalGroup);
 
       // Verify the group was saved correctly
-      final savedGroup = await ExpenseGroupStorage.getTripById('test-group-1');
+      final savedGroup = await ExpenseGroupStorageV2.getTripById(
+        'test-group-1',
+      );
       expect(savedGroup, isNotNull);
       expect(savedGroup!.expenses.length, equals(2));
       expect(savedGroup.title, equals('Original Title'));
@@ -82,25 +88,33 @@ void main() {
       // Update only the metadata (title, participants, etc.) using new API
       final updatedGroup = originalGroup.copyWith(
         title: 'Updated Title',
+        // Preserve original participants (with ids) and add a new one
         participants: [
-          ExpenseParticipant(name: 'user1'),
-          ExpenseParticipant(name: 'user2'),
-          ExpenseParticipant(name: 'user3'), // Add new participant
+          participant1,
+          participant2,
+          ExpenseParticipant(
+            name: 'user3',
+            id: 'p-user3',
+          ), // Add new participant
         ],
+        // Preserve original categories (with ids) and add a new one
         categories: [
-          ExpenseCategory(name: 'food'),
-          ExpenseCategory(name: 'transport'),
-          ExpenseCategory(name: 'entertainment'), // Add new category
+          catFood,
+          catTransport,
+          ExpenseCategory(
+            name: 'entertainment',
+            id: 'cat-ent',
+          ), // Add new category
         ],
         pinned: true, // Change pin status
         // Note: we're NOT passing expenses here - they should be preserved
       );
 
       // Use the new updateGroupMetadata method
-      await ExpenseGroupStorage.updateGroupMetadata(updatedGroup);
+      await ExpenseGroupStorageV2.updateGroupMetadata(updatedGroup);
 
       // Retrieve the updated group
-      final retrievedGroup = await ExpenseGroupStorage.getTripById(
+      final retrievedGroup = await ExpenseGroupStorageV2.getTripById(
         'test-group-1',
       );
 
@@ -132,8 +146,8 @@ void main() {
         id: 'test-group-2',
         title: 'Empty Group',
         expenses: [], // No expenses
-        participants: [ExpenseParticipant(name: 'user1')],
-        categories: [ExpenseCategory(name: 'food')],
+        participants: [ExpenseParticipant(name: 'user1', id: 'p-u1')],
+        categories: [ExpenseCategory(name: 'food', id: 'cat-food-2')],
         timestamp: DateTime.now(),
         pinned: false,
         archived: false,
@@ -141,7 +155,7 @@ void main() {
       );
 
       // Save the original group
-      await ExpenseGroupStorage.saveTrip(originalGroup);
+      await ExpenseGroupStorageV2.saveTrip(originalGroup);
 
       // Update metadata
       final updatedGroup = originalGroup.copyWith(
@@ -150,10 +164,10 @@ void main() {
       );
 
       // Use the new updateGroupMetadata method
-      await ExpenseGroupStorage.updateGroupMetadata(updatedGroup);
+      await ExpenseGroupStorageV2.updateGroupMetadata(updatedGroup);
 
       // Retrieve and verify
-      final retrievedGroup = await ExpenseGroupStorage.getTripById(
+      final retrievedGroup = await ExpenseGroupStorageV2.getTripById(
         'test-group-2',
       );
       expect(retrievedGroup, isNotNull);
@@ -177,10 +191,10 @@ void main() {
       );
 
       // This should not throw an error
-      await ExpenseGroupStorage.updateGroupMetadata(nonExistentGroup);
+      await ExpenseGroupStorageV2.updateGroupMetadata(nonExistentGroup);
 
       // Verify the group still doesn't exist
-      final retrievedGroup = await ExpenseGroupStorage.getTripById(
+      final retrievedGroup = await ExpenseGroupStorageV2.getTripById(
         'non-existent',
       );
       expect(retrievedGroup, isNull);

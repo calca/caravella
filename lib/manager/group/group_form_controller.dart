@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../data/model/expense_group.dart';
-import '../../data/expense_group_storage.dart';
+import '../../data/expense_group_storage_v2.dart';
 import '../../data/model/expense_participant.dart';
 import '../../data/model/expense_category.dart';
 import '../../data/model/expense_details.dart';
@@ -117,9 +117,9 @@ class GroupFormController {
       );
 
       if (mode == GroupEditMode.edit) {
-        await ExpenseGroupStorage.updateGroupMetadata(group);
+        await ExpenseGroupStorageV2.updateGroupMetadata(group);
       } else {
-        await ExpenseGroupStorage.saveTrip(group);
+        await ExpenseGroupStorageV2.saveTrip(group);
       }
 
       _original = group;
@@ -131,9 +131,9 @@ class GroupFormController {
 
   Future<void> deleteGroup() async {
     if (mode == GroupEditMode.create || _original == null) return;
-    final all = await ExpenseGroupStorage.getAllGroups();
+    final all = await ExpenseGroupStorageV2.getAllGroups();
     all.removeWhere((e) => e.id == _original!.id);
-    await ExpenseGroupStorage.writeTrips(all);
+    await ExpenseGroupStorageV2.writeTrips(all);
   }
 
   Future<String?> persistPickedImage(File file) async {
