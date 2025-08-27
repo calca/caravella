@@ -89,7 +89,25 @@ class ExpenseGroupStorageV2 {
     } else {
       final result = await _repository.removePinnedGroup(groupId);
       if (result.isFailure) {
-        print('Warning: Failed to remove pin from group $groupId: ${result.error}');
+        print(
+          'Warning: Failed to remove pin from group $groupId: ${result.error}',
+        );
+      }
+    }
+  }
+
+  /// Updates the archived state of a group. If [archived] is true, archives
+  /// the group (also unpins it). If false, unarchives the group.
+  static Future<void> updateGroupArchive(String groupId, bool archived) async {
+    if (archived) {
+      final result = await _repository.archiveGroup(groupId);
+      if (result.isFailure) {
+        print('Warning: Failed to archive group $groupId: ${result.error}');
+      }
+    } else {
+      final result = await _repository.unarchiveGroup(groupId);
+      if (result.isFailure) {
+        print('Warning: Failed to unarchive group $groupId: ${result.error}');
       }
     }
   }
@@ -234,6 +252,36 @@ class ExpenseGroupStorageV2 {
     if (saveResult.isFailure) {
       print(
         'Warning: Failed to save group $groupId after updating expense: ${saveResult.error}',
+      );
+    }
+  }
+
+  /// Removes an expense from an expense group
+  static Future<void> removeExpenseFromGroup(
+    String groupId,
+    String expenseId,
+  ) async {
+    final groupResult = await _repository.getGroupById(groupId);
+    if (groupResult.isFailure) {
+      print('Warning: Failed to get group $groupId: ${groupResult.error}');
+      return;
+    }
+
+    final group = groupResult.unwrapOr(null);
+    if (group == null) {
+      print('Warning: Group $groupId not found');
+      return;
+    }
+
+    final updatedExpenses = group.expenses
+        .where((e) => e.id != expenseId)
+        .toList();
+    final updatedGroup = group.copyWith(expenses: updatedExpenses);
+
+    final saveResult = await _repository.saveGroup(updatedGroup);
+    if (saveResult.isFailure) {
+      print(
+        'Warning: Failed to save group $groupId after removing expense: ${saveResult.error}',
       );
     }
   }
