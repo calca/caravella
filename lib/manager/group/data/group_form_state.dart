@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 
 class GroupFormState extends ChangeNotifier {
   String title = '';
+  String? id;
   final List<ExpenseParticipant> participants = [];
   final List<ExpenseCategory> categories = [];
   DateTime? startDate;
@@ -25,6 +26,12 @@ class GroupFormState extends ChangeNotifier {
   void setTitle(String v) {
     if (title == v) return;
     title = v;
+    notifyListeners();
+  }
+
+  void setId(String? v) {
+    if (id == v) return;
+    id = v;
     notifyListeners();
   }
 
