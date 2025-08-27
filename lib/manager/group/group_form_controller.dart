@@ -3,8 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../data/model/expense_group.dart';
 import '../../data/expense_group_storage_v2.dart';
-import '../../data/model/expense_participant.dart';
-import '../../data/model/expense_category.dart';
+// ...existing code...
 import '../../data/model/expense_details.dart';
 import 'data/group_form_state.dart';
 import 'group_edit_mode.dart';
@@ -98,12 +97,12 @@ class GroupFormController {
       final now = DateTime.now();
       final group = (_original ?? ExpenseGroup.empty()).copyWith(
         title: state.title.trim(),
-        participants: state.participants
-            .map((e) => ExpenseParticipant(name: e.name))
-            .toList(),
-        categories: state.categories
-            .map((e) => ExpenseCategory(name: e.name))
-            .toList(),
+        // Preserve existing participant IDs when editing: state.participants
+        // already contains ExpenseParticipant instances (loaded via copyWith),
+        // so reuse their ids by copying them instead of creating brand new ones.
+        participants: state.participants.map((e) => e.copyWith()).toList(),
+        // Same for categories: preserve ids to keep referential integrity
+        categories: state.categories.map((e) => e.copyWith()).toList(),
         startDate: state.startDate,
         endDate: state.endDate,
         currency: state.currency['symbol'] ?? state.currency['code'] ?? 'EUR',
