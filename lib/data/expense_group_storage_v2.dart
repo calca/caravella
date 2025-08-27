@@ -151,7 +151,10 @@ class ExpenseGroupStorageV2 {
   }
 
   /// Adds a new expense to an existing expense group
-  static Future<void> addExpenseToGroup(String groupId, ExpenseDetails expense) async {
+  static Future<void> addExpenseToGroup(
+    String groupId,
+    ExpenseDetails expense,
+  ) async {
     final groupResult = await _repository.getGroupById(groupId);
     if (groupResult.isFailure) {
       print('Warning: Failed to get group $groupId: ${groupResult.error}');
@@ -164,12 +167,57 @@ class ExpenseGroupStorageV2 {
       return;
     }
 
-    final updatedExpenses = List<ExpenseDetails>.from(group.expenses)..add(expense);
+    final updatedExpenses = List<ExpenseDetails>.from(group.expenses)
+      ..add(expense);
     final updatedGroup = group.copyWith(expenses: updatedExpenses);
 
     final saveResult = await _repository.saveGroup(updatedGroup);
     if (saveResult.isFailure) {
-      print('Warning: Failed to save group $groupId after adding expense: ${saveResult.error}');
+      print(
+        'Warning: Failed to save group $groupId after adding expense: ${saveResult.error}',
+      );
+    }
+  }
+
+  /// Updates an existing expense in an expense group
+  static Future<void> updateExpenseToGroup(
+    String groupId,
+    ExpenseDetails updatedExpense,
+  ) async {
+    final groupResult = await _repository.getGroupById(groupId);
+    if (groupResult.isFailure) {
+      print('Warning: Failed to get group $groupId: ${groupResult.error}');
+      return;
+    }
+
+    final group = groupResult.unwrapOr(null);
+    if (group == null) {
+      print('Warning: Group $groupId not found');
+      return;
+    }
+
+    // Find the expense to update by its ID
+    final expenseIndex = group.expenses.indexWhere(
+      (expense) => expense.id == updatedExpense.id,
+    );
+    if (expenseIndex == -1) {
+      print(
+        'Warning: Expense ${updatedExpense.id} not found in group $groupId',
+      );
+      return;
+    }
+
+    // Create updated expenses list with the modified expense
+    final updatedExpenses = List<ExpenseDetails>.from(group.expenses);
+    updatedExpenses[expenseIndex] = updatedExpense;
+
+    final updatedGroup = group.copyWith(expenses: updatedExpenses);
+
+    final saveResult = await _repository.saveGroup(updatedGroup);
+    if (saveResult.isFailure) {
+      print(
+        'Warning: Failed to save group $groupId after updating expense: ${saveResult.error}',
+      );
     }
   }
 }
