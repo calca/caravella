@@ -149,4 +149,27 @@ class ExpenseGroupStorageV2 {
       (_repository as FileBasedExpenseGroupRepository).forceReload();
     }
   }
+
+  /// Adds a new expense to an existing expense group
+  static Future<void> addExpenseToGroup(String groupId, ExpenseDetails expense) async {
+    final groupResult = await _repository.getGroupById(groupId);
+    if (groupResult.isFailure) {
+      print('Warning: Failed to get group $groupId: ${groupResult.error}');
+      return;
+    }
+
+    final group = groupResult.unwrapOr(null);
+    if (group == null) {
+      print('Warning: Group $groupId not found');
+      return;
+    }
+
+    final updatedExpenses = List<ExpenseDetails>.from(group.expenses)..add(expense);
+    final updatedGroup = group.copyWith(expenses: updatedExpenses);
+
+    final saveResult = await _repository.saveGroup(updatedGroup);
+    if (saveResult.isFailure) {
+      print('Warning: Failed to save group $groupId after adding expense: ${saveResult.error}');
+    }
+  }
 }
