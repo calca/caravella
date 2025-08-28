@@ -55,22 +55,6 @@ class ExpenseGroupStorageV2 {
     return result.unwrapOr(null);
   }
 
-  /// Sets a trip as pinned, removing the pin from all others
-  static Future<void> setPinnedTrip(String tripId) async {
-    final result = await _repository.setPinnedGroup(tripId);
-    if (result.isFailure) {
-      print('Warning: Failed to set pinned trip $tripId: ${result.error}');
-    }
-  }
-
-  /// Removes the pin from a trip
-  static Future<void> removePinnedTrip(String tripId) async {
-    final result = await _repository.removePinnedGroup(tripId);
-    if (result.isFailure) {
-      print('Warning: Failed to remove pinned trip $tripId: ${result.error}');
-    }
-  }
-
   /// Returns the currently pinned trip, if exists and not archived
   static Future<ExpenseGroup?> getPinnedTrip() async {
     final result = await _repository.getPinnedGroup();
@@ -109,22 +93,6 @@ class ExpenseGroupStorageV2 {
       if (result.isFailure) {
         print('Warning: Failed to unarchive group $groupId: ${result.error}');
       }
-    }
-  }
-
-  /// Archives a group of expenses
-  static Future<void> archiveGroup(String groupId) async {
-    final result = await _repository.archiveGroup(groupId);
-    if (result.isFailure) {
-      print('Warning: Failed to archive group $groupId: ${result.error}');
-    }
-  }
-
-  /// Unarchives a group of expenses
-  static Future<void> unarchiveGroup(String groupId) async {
-    final result = await _repository.unarchiveGroup(groupId);
-    if (result.isFailure) {
-      print('Warning: Failed to unarchive group $groupId: ${result.error}');
     }
   }
 
@@ -292,6 +260,14 @@ class ExpenseGroupStorageV2 {
       print(
         'Warning: Failed to save group $groupId after removing expense: ${saveResult.error}',
       );
+    }
+  }
+
+  /// Deletes a group by its id
+  static Future<void> deleteGroup(String groupId) async {
+    final result = await _repository.deleteGroup(groupId);
+    if (result.isFailure) {
+      print('Warning: Failed to delete group $groupId: ${result.error}');
     }
   }
 }

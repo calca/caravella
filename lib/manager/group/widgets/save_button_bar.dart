@@ -18,7 +18,15 @@ class SaveButtonBar extends StatelessWidget {
     return FilledButton(
       onPressed: state.isValid && !saving
           ? () async {
-              final navContext = context; // capture before await
+              // Capture context-dependent values before any awaits
+              final navigator = Navigator.of(context);
+              ExpenseGroupNotifier? notifier;
+              try {
+                notifier = context.read<ExpenseGroupNotifier>();
+              } catch (_) {
+                notifier = null;
+              }
+
               final saved = await controller.save();
 
               // Force repository reload so subsequent reads fetch latest data
@@ -26,15 +34,14 @@ class SaveButtonBar extends StatelessWidget {
 
               // Notify global notifier about the updated/added group so UI can react
               try {
-                final notifier = navContext.read<ExpenseGroupNotifier>();
-                notifier.notifyGroupUpdated(saved.id);
+                notifier?.notifyGroupUpdated(saved.id);
               } catch (_) {
                 // ignore if notifier not available
               }
 
               Future.microtask(() {
-                if (navContext.mounted) {
-                  Navigator.of(navContext).pop(true);
+                if (navigator.context.mounted) {
+                  navigator.pop(true);
                 }
               });
             }
