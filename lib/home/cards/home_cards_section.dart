@@ -72,8 +72,9 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
         _activeGroups = widget.pinnedTrip != null
             ? [
                 widget.pinnedTrip!,
-                ...widget.initialGroups!
-                    .where((g) => g.id != widget.pinnedTrip!.id),
+                ...widget.initialGroups!.where(
+                  (g) => g.id != widget.pinnedTrip!.id,
+                ),
               ]
             : widget.initialGroups!;
         _loading = false;
@@ -136,7 +137,9 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
           // Se c'è un gruppo pinnato, mettiamolo sempre al primo posto
           if (widget.pinnedTrip != null) {
             // Rimuovi il gruppo pinnato dalla lista se è già presente
-            final filteredGroups = groups.where((g) => g.id != widget.pinnedTrip!.id);
+            final filteredGroups = groups.where(
+              (g) => g.id != widget.pinnedTrip!.id,
+            );
             // Metti il gruppo pinnato come primo elemento
             _activeGroups = [widget.pinnedTrip!, ...filteredGroups];
           } else {

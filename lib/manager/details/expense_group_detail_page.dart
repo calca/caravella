@@ -401,9 +401,12 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             ),
           );
           if (confirmed == true && _trip != null) {
-            final trips = await ExpenseGroupStorageV2.getAllGroups();
-            trips.removeWhere((t) => t.id == _trip!.id);
-            await ExpenseGroupStorageV2.writeTrips(trips);
+            // Use the storage delete helper which handles persistence atomically
+            await ExpenseGroupStorageV2.deleteGroup(_trip!.id);
+            // Keep behavior consistent: invalidate cache and notify listeners
+            ExpenseGroupStorageV2.forceReload();
+            _groupNotifier?.notifyGroupUpdated(_trip!.id);
+
             if (!context.mounted) return;
             nav.pop(); // close sheet
             rootNav.pop(true); // go back to list

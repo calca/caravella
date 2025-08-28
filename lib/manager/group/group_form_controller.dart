@@ -138,9 +138,8 @@ class GroupFormController {
 
   Future<void> deleteGroup() async {
     if (mode == GroupEditMode.create || _original == null) return;
-    final all = await ExpenseGroupStorageV2.getAllGroups();
-    all.removeWhere((e) => e.id == _original!.id);
-    await ExpenseGroupStorageV2.writeTrips(all);
+    // Use the repository delete API which handles loading/saving atomically
+    await ExpenseGroupStorageV2.deleteGroup(_original!.id);
     // Force reload and notify so UI updates across the app
     ExpenseGroupStorageV2.forceReload();
     _notifier?.notifyGroupUpdated(_original!.id);
