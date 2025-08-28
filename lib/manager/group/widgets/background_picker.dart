@@ -230,9 +230,13 @@ class _BackgroundSheet extends StatelessWidget {
           contentPadding: EdgeInsets.zero,
           leading: const Icon(Icons.clear),
           title: Text(loc.background_remove),
-          onTap: () {
-            state.setImage(null);
-            state.setColor(null);
+          onTap: () async {
+            // Use controller to remove image file from disk when applicable
+            try {
+              await controller.removeImage();
+            } catch (_) {
+              // ignore errors here; controller handles logging
+            }
             Navigator.pop(context);
           },
         ),

@@ -161,4 +161,23 @@ class GroupFormController {
       state.setLoading(false);
     }
   }
+
+  /// Remove currently selected image from disk (if any) and clear state.
+  /// Safe to call even if no image is set.
+  Future<void> removeImage() async {
+    final path = state.imagePath;
+    if (path != null) {
+      try {
+        final f = File(path);
+        if (await f.exists()) {
+          await f.delete();
+        }
+      } catch (e, st) {
+        debugPrint('removeImage error: $e\n$st');
+      }
+    }
+    // clear state (also clears color if necessary inside setImage)
+    state.setImage(null);
+    state.setColor(null);
+  }
 }
