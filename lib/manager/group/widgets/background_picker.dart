@@ -231,13 +231,16 @@ class _BackgroundSheet extends StatelessWidget {
           leading: const Icon(Icons.clear),
           title: Text(loc.background_remove),
           onTap: () async {
+            // Capture the sheet navigator before the async gap to avoid
+            // using BuildContext across await (use_build_context_synchronously).
+            final sheetNav = Navigator.of(context);
             // Use controller to remove image file from disk when applicable
             try {
               await controller.removeImage();
             } catch (_) {
               // ignore errors here; controller handles logging
             }
-            Navigator.pop(context);
+            if (sheetNav.mounted) sheetNav.pop();
           },
         ),
     ];
