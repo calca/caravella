@@ -3,6 +3,8 @@ import 'package:flutter/rendering.dart';
 import 'dart:async';
 import '../../data/model/expense_group.dart';
 import '../../../data/expense_group_storage_v2.dart';
+import 'package:provider/provider.dart';
+import '../../state/expense_group_notifier.dart';
 import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import '../group/pages/expenses_group_edit_page.dart';
 import '../group/group_edit_mode.dart';
@@ -58,14 +60,40 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     _scrollController.addListener(_onScroll);
   }
 
+  ExpenseGroupNotifier? _groupNotifier;
+
   @override
   void dispose() {
+    _groupNotifier?.removeListener(_onNotifierChanged);
     _searchController.dispose();
     _searchDebounce?.cancel();
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     _fabIdleTimer?.cancel();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // Wire notifier listener for external updates/deletes
+    _groupNotifier?.removeListener(_onNotifierChanged);
+    _groupNotifier = context.read<ExpenseGroupNotifier>();
+    _groupNotifier?.addListener(_onNotifierChanged);
+  }
+
+  void _onNotifierChanged() async {
+    final deleted = _groupNotifier?.deletedGroupIds ?? [];
+    final updated = _groupNotifier?.updatedGroupIds ?? [];
+
+    if ((deleted.isNotEmpty || updated.isNotEmpty) && mounted) {
+      // Reload the trips to reflect external changes (deletions/updates)
+      await _loadTrips();
+      // Clear notifier queues after handling
+      _groupNotifier?.clearDeletedGroups();
+      _groupNotifier?.clearUpdatedGroups();
+    }
   }
 
   Future<void> _loadTrips() async {

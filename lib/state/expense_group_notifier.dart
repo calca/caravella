@@ -9,6 +9,7 @@ class ExpenseGroupNotifier extends ChangeNotifier {
   final List<String> _updatedGroupIds = [];
   String? _lastAddedCategory;
   String? _lastEvent; // es: 'expense_added', 'category_added'
+  final List<String> _deletedGroupIds = [];
 
   ExpenseGroup? get currentGroup => _currentGroup;
 
@@ -18,6 +19,8 @@ class ExpenseGroupNotifier extends ChangeNotifier {
   // Ultima categoria aggiunta
   String? get lastAddedCategory => _lastAddedCategory;
   String? get lastEvent => _lastEvent;
+  // Lista degli ID dei gruppi che sono stati cancellati
+  List<String> get deletedGroupIds => List.unmodifiable(_deletedGroupIds);
 
   String? consumeLastEvent() {
     final e = _lastEvent;
@@ -137,10 +140,23 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     _updatedGroupIds.clear();
   }
 
+  /// Metodo per pulire la lista dei gruppi cancellati
+  void clearDeletedGroups() {
+    _deletedGroupIds.clear();
+  }
+
   // Metodo per notificare un aggiornamento di gruppo dall'esterno
   void notifyGroupUpdated(String groupId) {
     if (!_updatedGroupIds.contains(groupId)) {
       _updatedGroupIds.add(groupId);
+    }
+    notifyListeners();
+  }
+
+  /// Metodo per notificare che un gruppo è stato cancellato
+  void notifyGroupDeleted(String groupId) {
+    if (!_deletedGroupIds.contains(groupId)) {
+      _deletedGroupIds.add(groupId);
     }
     notifyListeners();
   }

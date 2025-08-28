@@ -84,6 +84,23 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
 
   void _onGroupsUpdated() {
     final updatedGroupIds = _groupNotifier?.updatedGroupIds ?? [];
+    final deletedGroupIds = _groupNotifier?.deletedGroupIds ?? [];
+
+    if (deletedGroupIds.isNotEmpty && mounted) {
+      // Remove deleted groups from local list
+      setState(() {
+        _activeGroups.removeWhere((g) => deletedGroupIds.contains(g.id));
+      });
+
+      // If any deleted group was not present locally, ensure a full reload to be safe
+      final missingDeleted = deletedGroupIds.where(
+        (id) => !_activeGroups.any((g) => g.id == id),
+      );
+      if (missingDeleted.isNotEmpty) {
+        _loadActiveGroups();
+        return;
+      }
+    }
 
     if (updatedGroupIds.isNotEmpty && mounted) {
       // If any updated group id is not present in the current list, perform full reload

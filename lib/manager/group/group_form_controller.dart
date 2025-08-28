@@ -142,7 +142,7 @@ class GroupFormController {
     await ExpenseGroupStorageV2.deleteGroup(_original!.id);
     // Force reload and notify so UI updates across the app
     ExpenseGroupStorageV2.forceReload();
-    _notifier?.notifyGroupUpdated(_original!.id);
+    _notifier?.notifyGroupDeleted(_original!.id);
   }
 
   Future<String?> persistPickedImage(File file) async {

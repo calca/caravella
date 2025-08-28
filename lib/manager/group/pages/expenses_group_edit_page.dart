@@ -201,47 +201,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
           }
         },
         child: Scaffold(
-          appBar: CaravellaAppBar(
-            actions: [
-              if (widget.trip != null && widget.mode == GroupEditMode.edit)
-                IconButton(
-                  icon: const Icon(Icons.delete_outline),
-                  tooltip: gloc.delete,
-                  onPressed: () async {
-                    final nav = Navigator.of(context);
-                    final confirm = await showDialog<bool>(
-                      context: context,
-                      builder: (d) => Material3Dialog(
-                        icon: Icon(
-                          Icons.delete_outline,
-                          color: Theme.of(context).colorScheme.error,
-                          size: 24,
-                        ),
-                        title: Text(gloc.delete_trip),
-                        content: Text(gloc.delete_trip_confirm),
-                        actions: [
-                          Material3DialogActions.cancel(d, gloc.cancel),
-                          Material3DialogActions.destructive(
-                            d,
-                            gloc.delete,
-                            onPressed: () => Navigator.of(d).pop(true),
-                          ),
-                        ],
-                      ),
-                    );
-                    if (confirm == true) {
-                      await _controller.deleteGroup();
-                      if (mounted && nav.canPop()) {
-                        nav.pop(true);
-                      }
-                      if (widget.onTripDeleted != null) {
-                        Future.microtask(() => widget.onTripDeleted!.call());
-                      }
-                    }
-                  },
-                ),
-            ],
-          ),
+          appBar: CaravellaAppBar(actions: []),
           body: Stack(
             children: [
               Padding(

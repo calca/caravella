@@ -405,7 +405,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             await ExpenseGroupStorageV2.deleteGroup(_trip!.id);
             // Keep behavior consistent: invalidate cache and notify listeners
             ExpenseGroupStorageV2.forceReload();
-            _groupNotifier?.notifyGroupUpdated(_trip!.id);
+            _groupNotifier?.notifyGroupDeleted(_trip!.id);
 
             if (!context.mounted) return;
             nav.pop(); // close sheet
