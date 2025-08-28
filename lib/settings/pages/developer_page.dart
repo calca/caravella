@@ -8,19 +8,6 @@ import '../../widgets/app_toast.dart';
 class DeveloperPage extends StatelessWidget {
   const DeveloperPage({super.key});
 
-  Future<void> _launchBuyMeCoffee() async {
-    const url = 'https://buymeacoffee.com/gianluigick';
-    final uri = Uri.parse(url);
-
-    try {
-      if (await canLaunchUrl(uri)) {
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
-      }
-    } catch (e) {
-      // Handle error silently - user can try again if needed
-    }
-  }
-
   Widget _buildBuyMeCoffeeRow(BuildContext context, gen.AppLocalizations loc) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
@@ -35,7 +22,8 @@ class DeveloperPage extends StatelessWidget {
         title: Text(loc.support_developer_title, style: textTheme.titleMedium),
         subtitle: Text(loc.support_developer_desc, style: textTheme.bodySmall),
         trailing: const Icon(Icons.launch, size: 16),
-        onTap: () => _launchBuyMeCoffee(),
+        onTap: () =>
+            _launchUrl(context, 'https://buymeacoffee.com/gianluigick'),
       ),
     );
   }
