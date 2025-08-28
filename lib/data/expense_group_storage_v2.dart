@@ -19,27 +19,6 @@ class ExpenseGroupStorageV2 {
     return result.unwrapOr([]);
   }
 
-  /// Writes trips to storage with improved error handling
-  static Future<void> writeTrips(List<ExpenseGroup> trips) async {
-    for (final trip in trips) {
-      final result = await _repository.saveGroup(trip);
-      if (result.isFailure) {
-        // For backward compatibility, we'll just print the error
-        // In a future version, this should throw the error
-        print('Warning: Failed to save trip ${trip.id}: ${result.error}');
-      }
-    }
-  }
-
-  /// Saves a single trip
-  static Future<void> saveTrip(ExpenseGroup trip) async {
-    final result = await _repository.saveGroup(trip);
-    if (result.isFailure) {
-      // For backward compatibility, we'll just print the error
-      print('Warning: Failed to save trip ${trip.id}: ${result.error}');
-    }
-  }
-
   /// Gets a trip by ID
   static Future<ExpenseGroup?> getTripById(String id) async {
     final result = await _repository.getGroupById(id);

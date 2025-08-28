@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import '../data/model/expense_details.dart';
 import '../data/model/expense_group.dart';
 import '../data/model/expense_category.dart';
 import '../data/expense_group_storage_v2.dart';
@@ -39,29 +38,6 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateGroup(ExpenseGroup updatedGroup) async {
-    _currentGroup = updatedGroup;
-
-    // Aggiungi l'ID alla lista dei gruppi aggiornati
-    if (!_updatedGroupIds.contains(updatedGroup.id)) {
-      _updatedGroupIds.add(updatedGroup.id);
-    }
-
-    notifyListeners();
-
-    // Persisti le modifiche
-    try {
-      final trips = await ExpenseGroupStorageV2.getAllGroups();
-      final idx = trips.indexWhere((g) => g.id == updatedGroup.id);
-      if (idx != -1) {
-        trips[idx] = updatedGroup;
-        await ExpenseGroupStorageV2.writeTrips(trips);
-      }
-    } catch (e) {
-      debugPrint('Error updating group: $e');
-    }
-  }
-
   /// Aggiorna solo i metadati del gruppo preservando le spese esistenti
   Future<void> updateGroupMetadata(ExpenseGroup updatedGroup) async {
     // Aggiorna lo stato corrente preservando le spese se presente
@@ -84,17 +60,6 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     }
   }
 
-  Future<void> addExpense(ExpenseDetails expense) async {
-    if (_currentGroup == null) return;
-
-    final updatedExpenses = [..._currentGroup!.expenses, expense];
-    final updatedGroup = _currentGroup!.copyWith(expenses: updatedExpenses);
-
-    _lastEvent = 'expense_added';
-
-    await updateGroup(updatedGroup);
-  }
-
   Future<void> addCategory(String categoryName) async {
     if (_currentGroup == null) return;
 
@@ -109,13 +74,9 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     final updatedCategories = [..._currentGroup!.categories];
     updatedCategories.add(ExpenseCategory(name: categoryName));
 
-    final updatedGroup = _currentGroup!.copyWith(categories: updatedCategories);
-
     // Memorizza l'ultima categoria aggiunta
     _lastAddedCategory = categoryName;
     _lastEvent = 'category_added';
-
-    await updateGroup(updatedGroup);
   }
 
   // Nuovo metodo per aggiornare l'intero gruppo (per quando viene modificato dall'esterno)
