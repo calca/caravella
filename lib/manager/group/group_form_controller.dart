@@ -122,12 +122,12 @@ class GroupFormController {
       if (mode == GroupEditMode.edit) {
         await ExpenseGroupStorageV2.updateGroupMetadata(group);
       } else {
-  await ExpenseGroupStorageV2.addExpenseGroup(group);
+        await ExpenseGroupStorageV2.addExpenseGroup(group);
       }
 
       // Ensure repository reloads fresh data and notify listeners globally
-  ExpenseGroupStorageV2.forceReload();
-  _notifier?.notifyGroupUpdated(group.id);
+      ExpenseGroupStorageV2.forceReload();
+      _notifier?.notifyGroupUpdated(group.id);
 
       _original = group;
       return group;
@@ -141,9 +141,9 @@ class GroupFormController {
     final all = await ExpenseGroupStorageV2.getAllGroups();
     all.removeWhere((e) => e.id == _original!.id);
     await ExpenseGroupStorageV2.writeTrips(all);
-  // Force reload and notify so UI updates across the app
-  ExpenseGroupStorageV2.forceReload();
-  _notifier?.notifyGroupUpdated(_original!.id);
+    // Force reload and notify so UI updates across the app
+    ExpenseGroupStorageV2.forceReload();
+    _notifier?.notifyGroupUpdated(_original!.id);
   }
 
   Future<String?> persistPickedImage(File file) async {

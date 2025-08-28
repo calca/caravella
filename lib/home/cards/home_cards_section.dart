@@ -86,18 +86,17 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
     final updatedGroupIds = _groupNotifier?.updatedGroupIds ?? [];
 
     if (updatedGroupIds.isNotEmpty && mounted) {
-      
       // If any updated group id is not present in the current list, perform full reload
       final missing = updatedGroupIds.where(
         (id) => !_activeGroups.any((g) => g.id == id),
       );
       if (missing.isNotEmpty) {
-  _loadActiveGroups();
+        _loadActiveGroups();
         return;
       }
 
       // Otherwise update only affected groups instead of reloading everything
-  _updateAffectedGroupsLocally(updatedGroupIds);
+      _updateAffectedGroupsLocally(updatedGroupIds);
     }
   }
 
