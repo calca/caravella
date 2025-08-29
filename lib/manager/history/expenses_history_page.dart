@@ -309,7 +309,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+            padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
             child: Row(
               children: [
                 Expanded(
@@ -355,7 +355,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
           ),
           // STATUS FILTER SEGMENTED BUTTONS
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+            padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
             child: _buildStatusSegmentedButton(context),
           ),
           // MAIN CONTENT
@@ -381,7 +381,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                   )
                 : ListView.builder(
                     controller: _scrollController,
-                    padding: const EdgeInsets.fromLTRB(24, 8, 24, 100),
+                    padding: const EdgeInsets.fromLTRB(24, 0, 24, 100),
                     itemCount: _filteredTrips.length,
                     itemBuilder: (context, index) {
                       final trip = _filteredTrips[index];
