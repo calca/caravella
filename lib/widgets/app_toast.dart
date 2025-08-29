@@ -26,13 +26,20 @@ class AppToast {
       return;
     }
 
-  // Delegate to the centralized helper using an appropriate context for
-  // localization/theme. If the provided context is no longer mounted we
-  // fall back to the root scaffold messenger's context (if any).
-  final BuildContext referenceContext =
-    contextMounted ? context : (rootScaffoldMessenger?.context ?? context);
-  _showUsingMessenger(scaffoldMessenger, referenceContext, message,
-    duration: duration, type: type, icon: icon);
+    // Delegate to the centralized helper using an appropriate context for
+    // localization/theme. If the provided context is no longer mounted we
+    // fall back to the root scaffold messenger's context (if any).
+    final BuildContext referenceContext = contextMounted
+        ? context
+        : (rootScaffoldMessenger?.context ?? context);
+    _showUsingMessenger(
+      scaffoldMessenger,
+      referenceContext,
+      message,
+      duration: duration,
+      type: type,
+      icon: icon,
+    );
   }
 
   static String _getTypeDescription(BuildContext context, ToastType type) {
@@ -58,8 +65,14 @@ class AppToast {
     ToastType type = ToastType.info,
     IconData? icon,
   }) {
-    _showUsingMessenger(messenger, messenger.context, message,
-        duration: duration, type: type, icon: icon);
+    _showUsingMessenger(
+      messenger,
+      messenger.context,
+      message,
+      duration: duration,
+      type: type,
+      icon: icon,
+    );
   }
 
   /// Centralized helper that builds and shows the SnackBar using the given

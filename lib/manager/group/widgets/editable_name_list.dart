@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../themes/app_text_styles.dart';
+import '../../../widgets/app_toast.dart';
 import 'section_header.dart';
 
 /// Generic inline editable list for simple name-based items (participants, categories, etc.).
@@ -89,9 +90,7 @@ class _EditableNameListState extends State<EditableNameList> {
     final lower = val.toLowerCase();
     final unchanged = val == widget.items[_editingIndex!];
     if (!unchanged && widget.items.any((e) => e.toLowerCase() == lower)) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(widget.duplicateError)));
+      AppToast.show(context, widget.duplicateError, type: ToastType.info);
       return;
     }
     widget.onEdit(_editingIndex!, val);
@@ -120,9 +119,7 @@ class _EditableNameListState extends State<EditableNameList> {
     if (val.isEmpty) return;
     final lower = val.toLowerCase();
     if (widget.items.any((e) => e.toLowerCase() == lower)) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(widget.duplicateError)));
+      AppToast.show(context, widget.duplicateError, type: ToastType.info);
       return;
     }
     widget.onAdd(val);

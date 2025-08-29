@@ -23,7 +23,11 @@ class CategoriesEditor extends StatelessWidget {
         final messenger = ScaffoldMessenger.of(context);
         final removed = await controller.removeCategoryIfUnused(i);
         if (!removed) {
-          AppToast.showFromMessenger(messenger, loc.cannot_delete_assigned_category, type: ToastType.info);
+          AppToast.showFromMessenger(
+            messenger,
+            loc.cannot_delete_assigned_category,
+            type: ToastType.info,
+          );
         }
       },
     );
