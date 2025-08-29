@@ -26,81 +26,13 @@ class AppToast {
       return;
     }
 
-    final theme = contextMounted
-        ? Theme.of(context)
-        : (rootScaffoldMessenger?.context != null
-              ? Theme.of(rootScaffoldMessenger!.context)
-              : ThemeData());
-    final colorScheme = theme.colorScheme;
-
-    // Determine colors and icon based on type
-    Color backgroundColor;
-    Color textColor;
-    IconData effectiveIcon;
-
-    switch (type) {
-      case ToastType.success:
-        backgroundColor = colorScheme.primaryFixedDim;
-        textColor = colorScheme.onPrimaryFixed;
-        effectiveIcon = icon ?? Icons.check_circle_outline_rounded;
-        break;
-      case ToastType.error:
-        backgroundColor = colorScheme.errorContainer;
-        textColor = colorScheme.onErrorContainer;
-        effectiveIcon = icon ?? Icons.error_outline;
-        break;
-      case ToastType.info:
-        backgroundColor = colorScheme.primaryFixed;
-        textColor = colorScheme.onPrimaryFixed;
-        effectiveIcon = icon ?? Icons.info_outline;
-        break;
-    }
-
-    scaffoldMessenger.clearSnackBars();
-    scaffoldMessenger.showSnackBar(
-      SnackBar(
-        content: Semantics(
-          liveRegion: true,
-          label:
-              '${_getTypeDescription(contextMounted ? context : scaffoldMessenger.context, type)}: $message',
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                effectiveIcon,
-                color: textColor,
-                size: 20,
-                semanticLabel: _getTypeDescription(
-                  contextMounted ? context : scaffoldMessenger.context,
-                  type,
-                ),
-              ),
-              const SizedBox(width: 10),
-              Flexible(
-                child: Text(
-                  message,
-                  style: theme.textTheme.bodyMedium?.copyWith(color: textColor),
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-        ),
-        backgroundColor: backgroundColor,
-        duration: duration,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
-          side: BorderSide(
-            color: colorScheme.outlineVariant.withValues(alpha: 0.25),
-            width: 1,
-          ),
-        ),
-        elevation: 0,
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      ),
-    );
+  // Delegate to the centralized helper using an appropriate context for
+  // localization/theme. If the provided context is no longer mounted we
+  // fall back to the root scaffold messenger's context (if any).
+  final BuildContext referenceContext =
+    contextMounted ? context : (rootScaffoldMessenger?.context ?? context);
+  _showUsingMessenger(scaffoldMessenger, referenceContext, message,
+    duration: duration, type: type, icon: icon);
   }
 
   static String _getTypeDescription(BuildContext context, ToastType type) {
@@ -126,7 +58,22 @@ class AppToast {
     ToastType type = ToastType.info,
     IconData? icon,
   }) {
-    final theme = Theme.of(messenger.context);
+    _showUsingMessenger(messenger, messenger.context, message,
+        duration: duration, type: type, icon: icon);
+  }
+
+  /// Centralized helper that builds and shows the SnackBar using the given
+  /// [ScaffoldMessengerState] and a [BuildContext] suitable for localization
+  /// and theme resolution.
+  static void _showUsingMessenger(
+    ScaffoldMessengerState messenger,
+    BuildContext referenceContext,
+    String message, {
+    Duration duration = const Duration(milliseconds: 2400),
+    ToastType type = ToastType.info,
+    IconData? icon,
+  }) {
+    final theme = Theme.of(referenceContext);
     final colorScheme = theme.colorScheme;
 
     Color backgroundColor;
@@ -156,7 +103,7 @@ class AppToast {
       SnackBar(
         content: Semantics(
           liveRegion: true,
-          label: '${_getTypeDescription(messenger.context, type)}: $message',
+          label: '${_getTypeDescription(referenceContext, type)}: $message',
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -164,7 +111,7 @@ class AppToast {
                 effectiveIcon,
                 color: textColor,
                 size: 20,
-                semanticLabel: _getTypeDescription(messenger.context, type),
+                semanticLabel: _getTypeDescription(referenceContext, type),
               ),
               const SizedBox(width: 10),
               Flexible(
