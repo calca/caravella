@@ -1,13 +1,14 @@
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:path/path.dart' as p;
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:org_app_caravella/manager/group/group_form_controller.dart';
 import 'package:org_app_caravella/manager/group/data/group_form_state.dart';
 import 'package:org_app_caravella/manager/group/group_edit_mode.dart';
 
 class _FakePathProvider extends PathProviderPlatform {
-  late final String _tempDir = Directory.systemTemp.createTempSync('controller_test').path;
+  late final String _tempDir = Directory.systemTemp
+      .createTempSync('controller_test')
+      .path;
 
   @override
   Future<String?> getApplicationDocumentsPath() async => _tempDir;
@@ -25,7 +26,7 @@ void main() {
 
       // create a temporary file to act as picked image
       final tempDir = Directory.systemTemp.createTempSync('caravella_test');
-      final source = File(p.join(tempDir.path, 'source.jpg'));
+      final source = File('${tempDir.path}/source.jpg');
       await source.writeAsString('fake-image-bytes');
 
       final result = await controller.persistPickedImage(source);
@@ -47,7 +48,7 @@ void main() {
 
       // create a temporary file to simulate existing saved image
       final tempDir = Directory.systemTemp.createTempSync('caravella_test');
-      final saved = File(p.join(tempDir.path, 'saved.jpg'));
+      final saved = File('${tempDir.path}/saved.jpg');
       await saved.writeAsString('fake-image-bytes');
 
       state.setImage(saved.path);

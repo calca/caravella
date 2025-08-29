@@ -78,8 +78,8 @@ class _EditableNameListState extends State<EditableNameList> {
   }
 
   void _cancelEdit() {
-  setState(() => _editingIndex = null);
-  FocusScope.of(context).unfocus();
+    setState(() => _editingIndex = null);
+    FocusScope.of(context).unfocus();
   }
 
   void _saveEdit() {
@@ -95,8 +95,8 @@ class _EditableNameListState extends State<EditableNameList> {
       return;
     }
     widget.onEdit(_editingIndex!, val);
-  setState(() => _editingIndex = null);
-  FocusScope.of(context).unfocus();
+    setState(() => _editingIndex = null);
+    FocusScope.of(context).unfocus();
   }
 
   void _startAdd() {
@@ -111,8 +111,8 @@ class _EditableNameListState extends State<EditableNameList> {
   }
 
   void _cancelAdd() {
-  setState(() => _adding = false);
-  FocusScope.of(context).unfocus();
+    setState(() => _adding = false);
+    FocusScope.of(context).unfocus();
   }
 
   void _commitAdd() {
@@ -130,7 +130,7 @@ class _EditableNameListState extends State<EditableNameList> {
       _adding = false;
       _addController.clear();
     });
-  FocusScope.of(context).unfocus();
+    FocusScope.of(context).unfocus();
   }
 
   Widget _buildStaticRow(int index, String name) {

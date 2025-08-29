@@ -295,6 +295,10 @@
   ,"@error_saving_group": {"placeholders": {"error": {}}}
   ,"already_exists": "esiste già"
   ,"@already_exists": {"description": "Mostrato dopo il nome di un'entità quando si tenta di inserire un duplicato"}
+  ,"cannot_delete_assigned_participant": "Impossibile eliminare il partecipante: è assegnato a una o più spese"
+  ,"@cannot_delete_assigned_participant": {"description": "Errore mostrato quando si prova a eliminare un partecipante che ha spese assegnate"}
+  ,"cannot_delete_assigned_category": "Impossibile eliminare la categoria: è assegnata a una o più spese"
+  ,"@cannot_delete_assigned_category": {"description": "Errore mostrato quando si prova a eliminare una categoria che è assegnata a spese"}
   ,"status_all": "Tutti"
   ,"@status_all": {"description": "Etichetta filtro: tutti i gruppi"}
   ,"status_active": "Attivi"

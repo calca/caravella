@@ -137,6 +137,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get remove_image => 'Remove Image';
 
   @override
+  String get cannot_delete_assigned_participant =>
+      'Cannot delete participant: it\'s assigned to one or more expenses';
+
+  @override
+  String get cannot_delete_assigned_category =>
+      'Cannot delete category: it\'s assigned to one or more expenses';
+
+  @override
   String get color => 'Color';
 
   @override

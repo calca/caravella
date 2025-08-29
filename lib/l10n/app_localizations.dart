@@ -352,6 +352,18 @@ abstract class AppLocalizations {
   /// **'Remove Image'**
   String get remove_image;
 
+  /// Shown when attempting to delete a participant that is used by existing expenses
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot delete participant: it\'s assigned to one or more expenses'**
+  String get cannot_delete_assigned_participant;
+
+  /// Shown when attempting to delete a category that is used by existing expenses
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot delete category: it\'s assigned to one or more expenses'**
+  String get cannot_delete_assigned_category;
+
   /// No description provided for @color.
   ///
   /// In en, this message translates to:

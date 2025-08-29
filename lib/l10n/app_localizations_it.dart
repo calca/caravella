@@ -139,6 +139,14 @@ class AppLocalizationsIt extends AppLocalizations {
   String get remove_image => 'Rimuovi Immagine';
 
   @override
+  String get cannot_delete_assigned_participant =>
+      'Impossibile eliminare il partecipante: è assegnato a una o più spese';
+
+  @override
+  String get cannot_delete_assigned_category =>
+      'Impossibile eliminare la categoria: è assegnata a una o più spese';
+
+  @override
   String get color => 'Colore';
 
   @override

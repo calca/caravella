@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
 import 'participants_section.dart';
 import '../data/group_form_state.dart';
 import '../../../data/model/expense_participant.dart';
+import '../group_form_controller.dart';
 
 class ParticipantsEditor extends StatelessWidget {
   const ParticipantsEditor({super.key});
@@ -10,12 +12,22 @@ class ParticipantsEditor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<GroupFormState>();
+    final controller = context.read<GroupFormController>();
     return ParticipantsSection(
       participants: state.participants,
       onAddParticipant: (name) =>
           state.addParticipant(ExpenseParticipant(name: name)),
       onEditParticipant: (i, name) => state.editParticipant(i, name),
-      onRemoveParticipant: (i) => state.removeParticipant(i),
+      onRemoveParticipant: (i) async {
+        final loc = gen.AppLocalizations.of(context);
+        final messenger = ScaffoldMessenger.of(context);
+        final removed = await controller.removeParticipantIfUnused(i);
+        if (!removed) {
+          messenger.showSnackBar(
+            SnackBar(content: Text(loc.cannot_delete_assigned_participant)),
+          );
+        }
+      },
     );
   }
 }
