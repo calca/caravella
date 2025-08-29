@@ -5,6 +5,7 @@ import 'categories_section.dart';
 import '../data/group_form_state.dart';
 import '../../../data/model/expense_category.dart';
 import '../group_form_controller.dart';
+import '../../../widgets/app_toast.dart';
 
 class CategoriesEditor extends StatelessWidget {
   const CategoriesEditor({super.key});
@@ -22,9 +23,7 @@ class CategoriesEditor extends StatelessWidget {
         final messenger = ScaffoldMessenger.of(context);
         final removed = await controller.removeCategoryIfUnused(i);
         if (!removed) {
-          messenger.showSnackBar(
-            SnackBar(content: Text(loc.cannot_delete_assigned_category)),
-          );
+          AppToast.showFromMessenger(messenger, loc.cannot_delete_assigned_category, type: ToastType.info);
         }
       },
     );

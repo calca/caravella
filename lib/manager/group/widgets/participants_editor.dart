@@ -5,6 +5,7 @@ import 'participants_section.dart';
 import '../data/group_form_state.dart';
 import '../../../data/model/expense_participant.dart';
 import '../group_form_controller.dart';
+import '../../../widgets/app_toast.dart';
 
 class ParticipantsEditor extends StatelessWidget {
   const ParticipantsEditor({super.key});
@@ -23,8 +24,10 @@ class ParticipantsEditor extends StatelessWidget {
         final messenger = ScaffoldMessenger.of(context);
         final removed = await controller.removeParticipantIfUnused(i);
         if (!removed) {
-          messenger.showSnackBar(
-            SnackBar(content: Text(loc.cannot_delete_assigned_participant)),
+          AppToast.showFromMessenger(
+            messenger,
+            loc.cannot_delete_assigned_participant,
+            type: ToastType.info,
           );
         }
       },

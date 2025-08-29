@@ -40,8 +40,8 @@ class AppToast {
 
     switch (type) {
       case ToastType.success:
-        backgroundColor = colorScheme.surfaceContainerHigh;
-        textColor = colorScheme.onSurfaceVariant;
+        backgroundColor = colorScheme.primaryFixedDim;
+        textColor = colorScheme.onPrimaryFixed;
         effectiveIcon = icon ?? Icons.check_circle_outline_rounded;
         break;
       case ToastType.error:
@@ -50,8 +50,8 @@ class AppToast {
         effectiveIcon = icon ?? Icons.error_outline;
         break;
       case ToastType.info:
-        backgroundColor = colorScheme.surfaceContainerHigh;
-        textColor = colorScheme.onSurfaceVariant;
+        backgroundColor = colorScheme.primaryFixed;
+        textColor = colorScheme.onPrimaryFixed;
         effectiveIcon = icon ?? Icons.info_outline;
         break;
     }
@@ -113,6 +113,85 @@ class AppToast {
       case ToastType.info:
         return localizations.accessibility_toast_info;
     }
+  }
+
+  /// Variant that accepts an already-obtained [ScaffoldMessengerState].
+  ///
+  /// Useful when the call site needs to capture the messenger before an
+  /// async gap to avoid using a `BuildContext` after awaiting.
+  static void showFromMessenger(
+    ScaffoldMessengerState messenger,
+    String message, {
+    Duration duration = const Duration(milliseconds: 2400),
+    ToastType type = ToastType.info,
+    IconData? icon,
+  }) {
+    final theme = Theme.of(messenger.context);
+    final colorScheme = theme.colorScheme;
+
+    Color backgroundColor;
+    Color textColor;
+    IconData effectiveIcon;
+
+    switch (type) {
+      case ToastType.success:
+        backgroundColor = colorScheme.primaryFixedDim;
+        textColor = colorScheme.onPrimaryFixed;
+        effectiveIcon = icon ?? Icons.check_circle_outline_rounded;
+        break;
+      case ToastType.error:
+        backgroundColor = colorScheme.errorContainer;
+        textColor = colorScheme.onErrorContainer;
+        effectiveIcon = icon ?? Icons.error_outline;
+        break;
+      case ToastType.info:
+        backgroundColor = colorScheme.primaryFixed;
+        textColor = colorScheme.onPrimaryFixed;
+        effectiveIcon = icon ?? Icons.info_outline;
+        break;
+    }
+
+    messenger.clearSnackBars();
+    messenger.showSnackBar(
+      SnackBar(
+        content: Semantics(
+          liveRegion: true,
+          label: '${_getTypeDescription(messenger.context, type)}: $message',
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                effectiveIcon,
+                color: textColor,
+                size: 20,
+                semanticLabel: _getTypeDescription(messenger.context, type),
+              ),
+              const SizedBox(width: 10),
+              Flexible(
+                child: Text(
+                  message,
+                  style: theme.textTheme.bodyMedium?.copyWith(color: textColor),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+        ),
+        backgroundColor: backgroundColor,
+        duration: duration,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+          side: BorderSide(
+            color: colorScheme.outlineVariant.withValues(alpha: 0.25),
+            width: 1,
+          ),
+        ),
+        elevation: 0,
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      ),
+    );
   }
 }
 
