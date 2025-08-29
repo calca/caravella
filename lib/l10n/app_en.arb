@@ -317,6 +317,10 @@
   ,"status_active": "Active"
   ,"@status_active": {"description": "Filter label: active groups"}
   ,"status_archived": "Archived"
+  ,"no_archived_groups": "No archived groups"
+  ,"@no_archived_groups": {"description": "Empty state title for archived groups"}
+  ,"no_archived_groups_subtitle": "You have not archived any groups yet"
+  ,"@no_archived_groups_subtitle": {"description": "Empty state subtitle for archived groups"}
   ,"@status_archived": {"description": "Filter label: archived groups"}
   ,"filter_status_tooltip": "Filter groups"
   ,"@filter_status_tooltip": {"description": "Tooltip for status filter buttons row"}

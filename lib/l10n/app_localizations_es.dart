@@ -898,6 +898,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get status_archived => 'Archivados';
 
   @override
+  String get no_archived_groups => 'No hay grupos archivados';
+
+  @override
+  String get no_archived_groups_subtitle => 'Aún no has archivado ningún grupo';
+
+  @override
   String get filter_status_tooltip => 'Filtrar grupos';
 
   @override

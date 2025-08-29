@@ -1810,6 +1810,18 @@ abstract class AppLocalizations {
   /// **'Archived'**
   String get status_archived;
 
+  /// Empty state title for archived groups
+  ///
+  /// In en, this message translates to:
+  /// **'No archived groups'**
+  String get no_archived_groups;
+
+  /// Empty state subtitle for archived groups
+  ///
+  /// In en, this message translates to:
+  /// **'You have not archived any groups yet'**
+  String get no_archived_groups_subtitle;
+
   /// Tooltip for status filter buttons row
   ///
   /// In en, this message translates to:

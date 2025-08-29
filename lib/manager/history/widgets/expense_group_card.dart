@@ -136,7 +136,6 @@ class ExpenseGroupCard extends StatelessWidget {
                         Row(
                           children: [
                             Expanded(child: _buildHighlightedTitle(context)),
-                            _buildStatusIcon(context),
                           ],
                         ),
                         const SizedBox(height: 8),
@@ -230,30 +229,6 @@ class ExpenseGroupCard extends StatelessWidget {
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
     );
-  }
-
-  Widget _buildStatusIcon(BuildContext context) {
-    if (trip.pinned) {
-      return Container(
-        padding: const EdgeInsets.all(8),
-        child: Icon(
-          Icons.push_pin_outlined,
-          size: 20,
-          color: Theme.of(context).colorScheme.outline,
-        ),
-      );
-    } else if (trip.archived) {
-      return Container(
-        padding: const EdgeInsets.all(8),
-        child: Icon(
-          Icons.archive_outlined,
-          size: 20,
-          color: Theme.of(context).colorScheme.outline,
-        ),
-      );
-    } else {
-      return const SizedBox.shrink();
-    }
   }
 
   Widget _buildParticipantsRow(BuildContext context) {

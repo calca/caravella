@@ -17,13 +17,47 @@ class ExpsenseGroupEmptyStates extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Search has priority
     if (searchQuery.isNotEmpty) {
       return _buildSearchEmptyState(context);
-    } else if (periodFilter != 'all') {
-      return _buildNoResultsState(context);
-    } else {
-      return _buildNoTripsState(context);
     }
+
+    // Specific archived empty state
+    if (periodFilter == 'archived') {
+      return _buildArchivedEmptyState(context);
+    }
+
+    // Generic filter (non-search) empty state
+    if (periodFilter != 'all') {
+      return _buildNoResultsState(context);
+    }
+
+    return _buildNoTripsState(context);
+  }
+
+  Widget _buildArchivedEmptyState(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.archive_outlined,
+          size: 64,
+          color: Theme.of(context).colorScheme.outline,
+        ),
+        const SizedBox(height: 16),
+        Text(
+          gen.AppLocalizations.of(context).no_archived_groups,
+          style: Theme.of(context).textTheme.titleMedium,
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          gen.AppLocalizations.of(context).no_archived_groups_subtitle,
+          style: Theme.of(context).textTheme.bodyMedium,
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
   }
 
   Widget _buildNoResultsState(BuildContext context) {

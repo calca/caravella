@@ -304,6 +304,10 @@
   ,"status_active": "Attivi"
   ,"@status_active": {"description": "Etichetta filtro: gruppi attivi"}
   ,"status_archived": "Archiviati"
+  ,"no_archived_groups": "Nessun gruppo archiviato"
+  ,"@no_archived_groups": {"description": "Titolo stato vuoto per i gruppi archiviati"}
+  ,"no_archived_groups_subtitle": "Non hai ancora archiviato nessun gruppo"
+  ,"@no_archived_groups_subtitle": {"description": "Sottotitolo stato vuoto per i gruppi archiviati"}
   ,"@status_archived": {"description": "Etichetta filtro: gruppi archiviati"}
   ,"filter_status_tooltip": "Filtra gruppi"
   ,"@filter_status_tooltip": {"description": "Tooltip per la riga dei pulsanti filtro stato"}
