@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../data/model/expense_group.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../widgets/caravella_app_bar.dart';
 import '../../../state/expense_group_notifier.dart';
 import '../../../widgets/material3_dialog.dart';

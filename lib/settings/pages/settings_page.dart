@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../widgets/caravella_app_bar.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart'
+import 'package:io_caravella_egm/l10n/app_localizations.dart'
     as gen; // generated strongly-typed
 import '../../state/locale_notifier.dart';
 import '../../state/theme_mode_notifier.dart';

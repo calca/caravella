@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../data/model/expense_group.dart';
 import '../../../../widgets/bottom_sheet_scaffold.dart';
 
@@ -41,14 +41,18 @@ class OptionsSheet extends StatelessWidget {
             leading: Icon(
               trip.pinned ? Icons.push_pin_outlined : Icons.push_pin_outlined,
               color: trip.archived
-                  ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38)
+                  ? Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.38)
                   : Theme.of(context).colorScheme.onPrimaryFixed,
             ),
             title: Text(
               trip.pinned ? gloc.unpin_group : gloc.pin_group,
               style: trip.archived
                   ? TextStyle(
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withValues(alpha: 0.38),
                     )
                   : null,
             ),
@@ -74,14 +78,18 @@ class OptionsSheet extends StatelessWidget {
             leading: Icon(
               Icons.ios_share_outlined,
               color: trip.expenses.isEmpty
-                  ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38)
+                  ? Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.38)
                   : Theme.of(context).colorScheme.onPrimaryFixed,
             ),
             title: Text(
               gloc.export_share,
               style: trip.expenses.isEmpty
                   ? TextStyle(
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withValues(alpha: 0.38),
                     )
                   : null,
             ),

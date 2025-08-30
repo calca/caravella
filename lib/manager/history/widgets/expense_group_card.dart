@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:org_app_caravella/manager/details/widgets/group_header.dart';
+import 'package:io_caravella_egm/manager/details/widgets/group_header.dart';
 import '../../../data/model/expense_group.dart';
 import '../../../widgets/currency_display.dart';
 import '../../../widgets/base_card.dart';

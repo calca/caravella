@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart';
-import 'package:org_app_caravella/widgets/add_fab.dart';
-import 'package:org_app_caravella/widgets/caravella_app_bar.dart';
-import 'package:org_app_caravella/widgets/app_toast.dart';
+import 'package:io_caravella_egm/l10n/app_localizations.dart';
+import 'package:io_caravella_egm/widgets/add_fab.dart';
+import 'package:io_caravella_egm/widgets/caravella_app_bar.dart';
+import 'package:io_caravella_egm/widgets/app_toast.dart';
 
 void main() {
   group('Accessibility Localization Tests', () {
-    testWidgets('AddFab uses localized accessibility labels', (WidgetTester tester) async {
+    testWidgets('AddFab uses localized accessibility labels', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           locale: const Locale('en'),
-          home: Scaffold(
-            body: AddFab(
-              onPressed: () {},
-            ),
-          ),
+          home: Scaffold(body: AddFab(onPressed: () {})),
         ),
       );
 
@@ -32,17 +30,15 @@ void main() {
       expect(semanticsWithLabel, findsOneWidget);
     });
 
-    testWidgets('AddFab uses Italian localized accessibility labels', (WidgetTester tester) async {
+    testWidgets('AddFab uses Italian localized accessibility labels', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           locale: const Locale('it'),
-          home: Scaffold(
-            body: AddFab(
-              onPressed: () {},
-            ),
-          ),
+          home: Scaffold(body: AddFab(onPressed: () {})),
         ),
       );
 
@@ -59,17 +55,15 @@ void main() {
       expect(semanticsWithLabel, findsOneWidget);
     });
 
-    testWidgets('AddFab uses Spanish localized accessibility labels', (WidgetTester tester) async {
+    testWidgets('AddFab uses Spanish localized accessibility labels', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           locale: const Locale('es'),
-          home: Scaffold(
-            body: AddFab(
-              onPressed: () {},
-            ),
-          ),
+          home: Scaffold(body: AddFab(onPressed: () {})),
         ),
       );
 
@@ -86,37 +80,36 @@ void main() {
       expect(semanticsWithLabel, findsOneWidget);
     });
 
-    testWidgets('CaravellaAppBar uses localized accessibility labels', (WidgetTester tester) async {
+    testWidgets('CaravellaAppBar uses localized accessibility labels', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           locale: const Locale('en'),
-          home: const Scaffold(
-            appBar: CaravellaAppBar(),
-          ),
+          home: const Scaffold(appBar: CaravellaAppBar()),
         ),
       );
 
       // Verify navigation bar has English localized label
       final navBarSemantics = find.byWidgetPredicate(
         (Widget widget) =>
-            widget is Semantics &&
-            widget.properties.label == 'Navigation bar',
+            widget is Semantics && widget.properties.label == 'Navigation bar',
       );
 
       expect(navBarSemantics, findsOneWidget);
     });
 
-    testWidgets('CaravellaAppBar uses Italian localized accessibility labels', (WidgetTester tester) async {
+    testWidgets('CaravellaAppBar uses Italian localized accessibility labels', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           locale: const Locale('it'),
-          home: const Scaffold(
-            appBar: CaravellaAppBar(),
-          ),
+          home: const Scaffold(appBar: CaravellaAppBar()),
         ),
       );
 
@@ -132,7 +125,9 @@ void main() {
       expect(navBarSemantics, findsOneWidget);
     });
 
-    testWidgets('AppToast shows localized accessibility descriptions', (WidgetTester tester) async {
+    testWidgets('AppToast shows localized accessibility descriptions', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -142,7 +137,11 @@ void main() {
             builder: (context) => Scaffold(
               body: ElevatedButton(
                 onPressed: () {
-                  AppToast.show(context, 'Test message', type: ToastType.success);
+                  AppToast.show(
+                    context,
+                    'Test message',
+                    type: ToastType.success,
+                  );
                 },
                 child: const Text('Show Toast'),
               ),
@@ -165,7 +164,9 @@ void main() {
       expect(toastSemantics, findsOneWidget);
     });
 
-    testWidgets('AppToast shows Italian localized accessibility descriptions', (WidgetTester tester) async {
+    testWidgets('AppToast shows Italian localized accessibility descriptions', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -175,7 +176,11 @@ void main() {
             builder: (context) => Scaffold(
               body: ElevatedButton(
                 onPressed: () {
-                  AppToast.show(context, 'Messaggio di test', type: ToastType.success);
+                  AppToast.show(
+                    context,
+                    'Messaggio di test',
+                    type: ToastType.success,
+                  );
                 },
                 child: const Text('Mostra Toast'),
               ),
@@ -224,14 +229,35 @@ void main() {
         final localizations = lookupAppLocalizations(locale);
 
         // Verify all accessibility keys are present and different from English
-        expect(localizations.accessibility_add_new_item, equals('Aggiungi nuovo elemento'));
-        expect(localizations.accessibility_navigation_bar, equals('Barra di navigazione'));
+        expect(
+          localizations.accessibility_add_new_item,
+          equals('Aggiungi nuovo elemento'),
+        );
+        expect(
+          localizations.accessibility_navigation_bar,
+          equals('Barra di navigazione'),
+        );
         expect(localizations.accessibility_back_button, equals('Indietro'));
-        expect(localizations.accessibility_loading_groups, equals('Caricamento gruppi'));
-        expect(localizations.accessibility_loading_your_groups, equals('Caricamento dei tuoi gruppi'));
-        expect(localizations.accessibility_groups_list, equals('Elenco gruppi'));
-        expect(localizations.accessibility_welcome_screen, equals('Schermata di benvenuto'));
-        expect(localizations.accessibility_add_expense, equals('Aggiungi spesa'));
+        expect(
+          localizations.accessibility_loading_groups,
+          equals('Caricamento gruppi'),
+        );
+        expect(
+          localizations.accessibility_loading_your_groups,
+          equals('Caricamento dei tuoi gruppi'),
+        );
+        expect(
+          localizations.accessibility_groups_list,
+          equals('Elenco gruppi'),
+        );
+        expect(
+          localizations.accessibility_welcome_screen,
+          equals('Schermata di benvenuto'),
+        );
+        expect(
+          localizations.accessibility_add_expense,
+          equals('Aggiungi spesa'),
+        );
         expect(localizations.accessibility_switch_on, equals('Attivo'));
         expect(localizations.accessibility_switch_off, equals('Inattivo'));
         expect(localizations.accessibility_toast_success, equals('Successo'));
@@ -244,14 +270,35 @@ void main() {
         final localizations = lookupAppLocalizations(locale);
 
         // Verify all accessibility keys are present and different from English/Italian
-        expect(localizations.accessibility_add_new_item, equals('Agregar nuevo elemento'));
-        expect(localizations.accessibility_navigation_bar, equals('Barra de navegación'));
+        expect(
+          localizations.accessibility_add_new_item,
+          equals('Agregar nuevo elemento'),
+        );
+        expect(
+          localizations.accessibility_navigation_bar,
+          equals('Barra de navegación'),
+        );
         expect(localizations.accessibility_back_button, equals('Atrás'));
-        expect(localizations.accessibility_loading_groups, equals('Cargando grupos'));
-        expect(localizations.accessibility_loading_your_groups, equals('Cargando tus grupos'));
-        expect(localizations.accessibility_groups_list, equals('Lista de grupos'));
-        expect(localizations.accessibility_welcome_screen, equals('Pantalla de bienvenida'));
-        expect(localizations.accessibility_add_expense, equals('Agregar gasto'));
+        expect(
+          localizations.accessibility_loading_groups,
+          equals('Cargando grupos'),
+        );
+        expect(
+          localizations.accessibility_loading_your_groups,
+          equals('Cargando tus grupos'),
+        );
+        expect(
+          localizations.accessibility_groups_list,
+          equals('Lista de grupos'),
+        );
+        expect(
+          localizations.accessibility_welcome_screen,
+          equals('Pantalla de bienvenida'),
+        );
+        expect(
+          localizations.accessibility_add_expense,
+          equals('Agregar gasto'),
+        );
         expect(localizations.accessibility_switch_on, equals('Activado'));
         expect(localizations.accessibility_switch_off, equals('Desactivado'));
         expect(localizations.accessibility_toast_success, equals('Éxito'));
@@ -268,22 +315,34 @@ void main() {
         final esLocalizations = lookupAppLocalizations(esLocale);
 
         // Test English parameterized methods
-        expect(enLocalizations.accessibility_total_expenses('100.50'), 
-               equals('Total expenses: 100.50€'));
-        expect(enLocalizations.accessibility_security_switch('On'), 
-               equals('Security switch - On'));
+        expect(
+          enLocalizations.accessibility_total_expenses('100.50'),
+          equals('Total expenses: 100.50€'),
+        );
+        expect(
+          enLocalizations.accessibility_security_switch('On'),
+          equals('Security switch - On'),
+        );
 
         // Test Italian parameterized methods
-        expect(itLocalizations.accessibility_total_expenses('100.50'), 
-               equals('Spese totali: 100.50€'));
-        expect(itLocalizations.accessibility_security_switch('Attivo'), 
-               equals('Interruttore sicurezza - Attivo'));
+        expect(
+          itLocalizations.accessibility_total_expenses('100.50'),
+          equals('Spese totali: 100.50€'),
+        );
+        expect(
+          itLocalizations.accessibility_security_switch('Attivo'),
+          equals('Interruttore sicurezza - Attivo'),
+        );
 
         // Test Spanish parameterized methods
-        expect(esLocalizations.accessibility_total_expenses('100.50'), 
-               equals('Gastos totales: 100.50€'));
-        expect(esLocalizations.accessibility_security_switch('Activado'), 
-               equals('Interruptor de seguridad - Activado'));
+        expect(
+          esLocalizations.accessibility_total_expenses('100.50'),
+          equals('Gastos totales: 100.50€'),
+        );
+        expect(
+          esLocalizations.accessibility_security_switch('Activado'),
+          equals('Interruptor de seguridad - Activado'),
+        );
       });
     });
   });

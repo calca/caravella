@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:org_app_caravella/data/expense_group_storage_v2.dart';
+import 'package:io_caravella_egm/data/expense_group_storage_v2.dart';
 import 'dart:io';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 

@@ -1,4 +1,4 @@
-import 'package:org_app_caravella/data/model/expense_group.dart';
+import 'package:io_caravella_egm/data/model/expense_group.dart';
 
 /// Decide se usare aggregazione settimanale per i grafici.
 /// Regola: se mancano date oppure durata > 7 giorni.

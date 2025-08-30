@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:org_app_caravella/data/expense_group_repository.dart';
-import 'package:org_app_caravella/data/storage_errors.dart';
-import 'package:org_app_caravella/data/model/expense_group.dart';
-import 'package:org_app_caravella/data/model/expense_participant.dart';
-import 'package:org_app_caravella/data/model/expense_category.dart';
-import 'package:org_app_caravella/data/model/expense_details.dart';
+import 'package:io_caravella_egm/data/expense_group_repository.dart';
+import 'package:io_caravella_egm/data/storage_errors.dart';
+import 'package:io_caravella_egm/data/model/expense_group.dart';
+import 'package:io_caravella_egm/data/model/expense_participant.dart';
+import 'package:io_caravella_egm/data/model/expense_category.dart';
+import 'package:io_caravella_egm/data/model/expense_details.dart';
 
 void main() {
   group('Storage Errors', () {

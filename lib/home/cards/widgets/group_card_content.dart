@@ -3,7 +3,7 @@ import 'monthly_expense_chart.dart';
 import 'date_range_expense_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../state/expense_group_notifier.dart';
 import '../../../data/model/expense_group.dart';
 import '../../../manager/details/widgets/expense_entry_sheet.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:org_app_caravella/data/model/expense_group.dart';
-import 'package:org_app_caravella/data/model/expense_participant.dart';
-import 'package:org_app_caravella/data/model/expense_category.dart';
+import 'package:io_caravella_egm/data/model/expense_group.dart';
+import 'package:io_caravella_egm/data/model/expense_participant.dart';
+import 'package:io_caravella_egm/data/model/expense_category.dart';
 
 void main() {
   group('ExpenseGroup Edit Change Detection Logic Tests', () {

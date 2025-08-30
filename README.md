@@ -43,6 +43,11 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
     flutter run
     ```
 
+    ## Package & CI notes
+
+    - The project's Dart package name has been updated to `io_caravella_egm` (see `pubspec.yaml`).
+    - CI artifact names were updated to use the `io_caravella_egm` prefix.
+
 ## 📄 License
 
 This project is licensed under the MIT License. See the `LICENSE` file for details.

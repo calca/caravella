@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:org_app_caravella/manager/group/group_form_controller.dart';
-import 'package:org_app_caravella/manager/group/group_edit_mode.dart';
-import 'package:org_app_caravella/manager/group/data/group_form_state.dart';
-import 'package:org_app_caravella/data/model/expense_group.dart';
-import 'package:org_app_caravella/data/model/expense_details.dart';
-import 'package:org_app_caravella/data/model/expense_participant.dart';
-import 'package:org_app_caravella/data/model/expense_category.dart';
+import 'package:io_caravella_egm/manager/group/group_form_controller.dart';
+import 'package:io_caravella_egm/manager/group/group_edit_mode.dart';
+import 'package:io_caravella_egm/manager/group/data/group_form_state.dart';
+import 'package:io_caravella_egm/data/model/expense_group.dart';
+import 'package:io_caravella_egm/data/model/expense_details.dart';
+import 'package:io_caravella_egm/data/model/expense_participant.dart';
+import 'package:io_caravella_egm/data/model/expense_category.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

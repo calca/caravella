@@ -5,7 +5,7 @@ import '../../data/model/expense_group.dart';
 import '../../../data/expense_group_storage_v2.dart';
 import 'package:provider/provider.dart';
 import '../../state/expense_group_notifier.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../group/pages/expenses_group_edit_page.dart';
 import '../group/group_edit_mode.dart';
 import '../../widgets/caravella_app_bar.dart';

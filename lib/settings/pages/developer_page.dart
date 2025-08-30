@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
-import 'package:org_app_caravella/settings/widgets/settings_card.dart';
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/settings/widgets/settings_card.dart';
 import '../../settings/widgets/settings_section.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../widgets/app_toast.dart';

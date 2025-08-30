@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../data/model/expense_details.dart';
 import '../../../widgets/material3_dialog.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 class DeleteExpenseDialog extends StatelessWidget {
   final ExpenseDetails expense;
@@ -16,7 +16,7 @@ class DeleteExpenseDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
-    
+
     return Material3Dialog(
       icon: Icon(
         Icons.delete_outline,
