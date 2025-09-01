@@ -7,11 +7,7 @@ import 'themes/caravella_themes.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'state/locale_notifier.dart';
 import 'state/theme_mode_notifier.dart';
-import 'state/expense_group_notifier.dart';
-import 'data/expense_group_repository.dart';
-import 'data/file_based_expense_group_repository.dart';
-import 'data/category_service.dart';
-import 'data/participant_service.dart';
+import 'providers/app_providers.dart';
 import 'home/home_page.dart';
 import 'config/app_config.dart';
 import 'settings/flag_secure_android.dart';
@@ -134,39 +130,7 @@ class _CaravellaAppState extends State<CaravellaApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        // Repository provider
-        Provider<IExpenseGroupRepository>(
-          create: (_) => FileBasedExpenseGroupRepository(),
-        ),
-        // Category service provider
-        ProxyProvider<IExpenseGroupRepository, CategoryService>(
-          create: (context) => CategoryService(
-            Provider.of<IExpenseGroupRepository>(context, listen: false),
-          ),
-          update: (context, repository, _) => CategoryService(repository),
-        ),
-        // Participant service provider
-        ProxyProvider<IExpenseGroupRepository, ParticipantService>(
-          create: (context) => ParticipantService(
-            Provider.of<IExpenseGroupRepository>(context, listen: false),
-          ),
-          update: (context, repository, _) => ParticipantService(repository),
-        ),
-        // Expense group notifier with category and participant services
-        ChangeNotifierProxyProvider2<CategoryService, ParticipantService, ExpenseGroupNotifier>(
-          create: (context) => ExpenseGroupNotifier(
-            categoryService: Provider.of<CategoryService>(context, listen: false),
-            participantService: Provider.of<ParticipantService>(context, listen: false),
-          ),
-          update: (context, categoryService, participantService, previous) => previous ?? ExpenseGroupNotifier(
-            categoryService: categoryService,
-            participantService: participantService,
-          ),
-        ),
-        ),
-      ],
+    return AppProviders.create(
       child: LocaleNotifier(
         locale: _locale,
         changeLocale: _changeLocale,
