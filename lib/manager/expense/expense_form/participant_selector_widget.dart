@@ -33,6 +33,7 @@ class ParticipantSelectorWidget extends StatelessWidget {
         items: participants,
         selected: selected,
         gloc: gloc,
+  sheetTitle: gloc.participants_label,
         itemLabel: (p) => p,
       );
       if (picked != null && picked != selectedParticipant) {

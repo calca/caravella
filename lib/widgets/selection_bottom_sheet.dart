@@ -13,6 +13,7 @@ Future<T?> showSelectionBottomSheet<T>({
   gen.AppLocalizations? gloc,
   Future<void> Function(String)? onAddItemInline,
   String? addItemHint,
+  String? sheetTitle,
 }) async {
   final resolved = gloc ?? gen.AppLocalizations.of(context);
   return showModalBottomSheet<T>(
@@ -29,6 +30,7 @@ Future<T?> showSelectionBottomSheet<T>({
       onAddItemInline: onAddItemInline,
       addItemHint: addItemHint,
       gloc: resolved,
+      sheetTitle: sheetTitle,
     ),
   );
 }
@@ -40,6 +42,7 @@ class _SelectionSheet<T> extends StatefulWidget {
   final Future<void> Function(String)? onAddItemInline;
   final String? addItemHint;
   final gen.AppLocalizations gloc;
+  final String? sheetTitle;
   const _SelectionSheet({
     required this.items,
     required this.selected,
@@ -47,6 +50,7 @@ class _SelectionSheet<T> extends StatefulWidget {
     required this.gloc,
     this.onAddItemInline,
     this.addItemHint,
+    this.sheetTitle,
   });
 
   @override
@@ -298,7 +302,7 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
         minHeight: screenHeight * 0.3, // Minimum 30% height
       ),
       child: GroupBottomSheetScaffold(
-        title: widget.onAddItemInline != null ? widget.gloc.add : null,
+        title: widget.sheetTitle ?? (widget.onAddItemInline != null ? widget.gloc.add : null),
         showHandle: true,
         scrollable: false,
         child: Padding(
