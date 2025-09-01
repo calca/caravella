@@ -40,8 +40,9 @@ class ExpsenseGroupEmptyStates extends StatelessWidget {
   }) {
     final ThemeData theme = Theme.of(context);
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
+        Padding(padding: const EdgeInsets.only(bottom: 52)),
         Icon(icon, size: size, color: iconColor ?? theme.colorScheme.outline),
         const SizedBox(height: 16),
         Text(
