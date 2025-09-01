@@ -5,7 +5,7 @@ import 'dart:io';
 /// Service to interact with native platform backup functionality
 class BackupService {
   static const MethodChannel _channel = MethodChannel(
-    'org.app.caravella/backup',
+    'io.caravella.egm/backup',
   );
   // Test override to simulate Android environment in unit tests
   @visibleForTesting

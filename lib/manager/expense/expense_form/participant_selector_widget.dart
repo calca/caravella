@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../widgets/selection_bottom_sheet.dart';
 import 'inline_select_field.dart';
 import '../../../themes/form_theme.dart';
@@ -33,6 +33,7 @@ class ParticipantSelectorWidget extends StatelessWidget {
         items: participants,
         selected: selected,
         gloc: gloc,
+        sheetTitle: gloc.participants_label,
         itemLabel: (p) => p,
       );
       if (picked != null && picked != selectedParticipant) {
@@ -72,10 +73,11 @@ class ParticipantSelectorWidget extends StatelessWidget {
             child: Text(
               selected ?? gloc.participants_label,
               overflow: TextOverflow.ellipsis,
-              style: (textStyle ?? FormTheme.getSelectTextStyle(context))?.copyWith(
-                color: theme.colorScheme.onSurface,
-                fontWeight: FontWeight.w400,
-              ),
+              style: (textStyle ?? FormTheme.getSelectTextStyle(context))
+                  ?.copyWith(
+                    color: theme.colorScheme.onSurface,
+                    fontWeight: FontWeight.w400,
+                  ),
             ),
           ),
         ],

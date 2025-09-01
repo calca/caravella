@@ -62,6 +62,11 @@ abstract class IExpenseGroupRepository {
   /// Saves a group (create or update)
   Future<StorageResult<void>> saveGroup(ExpenseGroup group);
 
+  /// Adds a group to storage (append or replace existing with same id).
+  /// This is a convenience API that preserves the current behavior of
+  /// replacing an existing group with the same id.
+  Future<StorageResult<void>> addExpenseGroup(ExpenseGroup group);
+
   /// Updates only the metadata of a group, preserving expenses
   Future<StorageResult<void>> updateGroupMetadata(ExpenseGroup group);
 

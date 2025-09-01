@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.github.calca.caravella">
-    
+    package="io.caravella.egm">
+
     <!-- Camera permission for taking photos of group backgrounds and expense attachments (optional feature) -->
     <uses-permission android:name="android.permission.CAMERA" />
     

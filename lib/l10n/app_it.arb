@@ -1,5 +1,17 @@
 {
   "@@locale": "it",
+  "developer_section_title": "Sviluppatore & Supporto",
+  "@developer_section_title": {"description": "Titolo sezione per link sviluppatore e supporto in DeveloperPage"},
+  "developer_section_desc": "Supporta lo sviluppatore o visualizza il profilo",
+  "@developer_section_desc": {"description": "Descrizione sezione per link sviluppatore e supporto in DeveloperPage"},
+  "repo_section_title": "Codice & Segnalazioni",
+  "@repo_section_title": {"description": "Titolo sezione per link repository e segnalazioni in DeveloperPage"},
+  "repo_section_desc": "Visualizza il codice sorgente o segnala un problema",
+  "@repo_section_desc": {"description": "Descrizione sezione per link repository e segnalazioni in DeveloperPage"},
+  "license_section_title": "Licenza",
+  "@license_section_title": {"description": "Titolo sezione per link licenza in DeveloperPage"},
+  "license_section_desc": "Visualizza la licenza open source",
+  "@license_section_desc": {"description": "Descrizione sezione per link licenza in DeveloperPage"},
   "weeklyChartBadge": "S",
   "monthlyChartBadge": "M",
   "weeklyExpensesChart": "Spese settimanali",
@@ -24,8 +36,8 @@
   "good_evening": "Buonasera",
   "your_groups": "I tuoi gruppi",
   "no_active_groups": "Nessun gruppo attivo",
-  "no_active_groups_subtitle": "Crea il primo gruppo di spese per iniziare",
-  "create_first_group": "Crea primo gruppo",
+  "no_active_groups_subtitle": "Crea un gruppo di spese",
+  "create_first_group": "Crea un gruppo",
   "new_expense_group": "Nuovo Gruppo di Spese",
   "tap_to_create": "Tocca per creare",
   "no_expense_label": "Nessuna spesa trovata",
@@ -251,6 +263,8 @@
   "terms_issue_title": "Segnala un problema",
   "terms_issue_desc": "Vai alla pagina delle issue su GitHub.",
   "terms_license_desc": "Visualizza la licenza open source.",
+  "support_developer_title": "Offrimi un caffè",
+  "support_developer_desc": "Sostieni lo sviluppo di questa app.",
   "data_title": "Backup & Ripristino",
   "data_backup_title": "Backup",
   "data_backup_desc": "Crea un file di backup delle tue spese.",
@@ -281,11 +295,20 @@
   ,"@error_saving_group": {"placeholders": {"error": {}}}
   ,"already_exists": "esiste già"
   ,"@already_exists": {"description": "Mostrato dopo il nome di un'entità quando si tenta di inserire un duplicato"}
+  ,"cannot_delete_assigned_participant": "Impossibile eliminare il partecipante: è assegnato a una o più spese"
+  ,"@cannot_delete_assigned_participant": {"description": "Errore mostrato quando si prova a eliminare un partecipante che ha spese assegnate"}
+  ,"cannot_delete_assigned_category": "Impossibile eliminare la categoria: è assegnata a una o più spese"
+  ,"@cannot_delete_assigned_category": {"description": "Errore mostrato quando si prova a eliminare una categoria che è assegnata a spese"}
   ,"status_all": "Tutti"
   ,"@status_all": {"description": "Etichetta filtro: tutti i gruppi"}
   ,"status_active": "Attivi"
   ,"@status_active": {"description": "Etichetta filtro: gruppi attivi"}
   ,"status_archived": "Archiviati"
+  ,"no_archived_groups": "Nessun gruppo archiviato"
+  ,"@no_archived_groups": {"description": "Titolo stato vuoto per i gruppi archiviati"}
+  ,"no_archived_groups_subtitle": "Non hai ancora archiviato nessun gruppo"
+  ,"all_groups_archived_info": "Tutti i tuoi gruppi sono archiviati. Puoi recuperarli dalla sezione Archivio o crearne di nuovi."
+  ,"@no_archived_groups_subtitle": {"description": "Sottotitolo stato vuoto per i gruppi archiviati"}
   ,"@status_archived": {"description": "Etichetta filtro: gruppi archiviati"}
   ,"filter_status_tooltip": "Filtra gruppi"
   ,"@filter_status_tooltip": {"description": "Tooltip per la riga dei pulsanti filtro stato"}
@@ -516,4 +539,18 @@
   ,"@no_expenses_with_filters": {"description": "Stato vuoto quando filtri attivi nessun risultato"}
   ,"no_expenses_yet": "Nessuna spesa ancora aggiunta"
   ,"@no_expenses_yet": {"description": "Stato vuoto iniziale senza spese"}
+  ,"empty_expenses_title": "Pronti per iniziare?"
+  ,"@empty_expenses_title": {"description": "Titolo per stato vuoto spese"}
+  ,"empty_expenses_subtitle": "Aggiungi la prima spesa per iniziare con questo gruppo!"
+  ,"@empty_expenses_subtitle": {"description": "Sottotitolo per stato vuoto spese"}
+  ,"add_first_expense_button": "Aggiungi Prima Spesa"
+  ,"@add_first_expense_button": {"description": "Testo pulsante per aggiungere prima spesa"}
+  ,"show_search": "Mostra barra di ricerca"
+  ,"@show_search": {"description": "Tooltip per mostrare la barra di ricerca gruppi"}
+  ,"hide_search": "Nascondi barra di ricerca"
+  ,"@hide_search": {"description": "Tooltip per nascondere la barra di ricerca gruppi"}
+  ,"expense_groups_title": "Gruppi di spese"
+  ,"@expense_groups_title": {"description": "Titolo principale della sezione elenco gruppi di spese/viaggi nella cronologia"}
+  ,"expense_groups_desc": "Gestisci i tuoi gruppi di spese"
+  ,"@expense_groups_desc": {"description": "Sottotitolo breve che descrive lo scopo della sezione gruppi di spese (es. aggiungi, modifica, visualizza viaggi)"}
 }

@@ -9,6 +9,24 @@ class AppLocalizationsEs extends AppLocalizations {
   AppLocalizationsEs([String locale = 'es']) : super(locale);
 
   @override
+  String get developer_section_title => 'Desarrollador y Soporte';
+
+  @override
+  String get developer_section_desc => 'Apoya al desarrollador o ver perfil';
+
+  @override
+  String get repo_section_title => 'Código fuente y problemas';
+
+  @override
+  String get repo_section_desc => 'Ver código fuente o reportar un problema';
+
+  @override
+  String get license_section_title => 'Licencia';
+
+  @override
+  String get license_section_desc => 'Ver la licencia de código abierto';
+
+  @override
   String get weeklyChartBadge => 'S';
 
   @override
@@ -85,11 +103,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get no_active_groups => 'No hay grupos activos';
 
   @override
-  String get no_active_groups_subtitle =>
-      'Crea tu primer grupo de gastos para empezar';
+  String get no_active_groups_subtitle => 'Crea un grupo de gastos';
 
   @override
-  String get create_first_group => 'Crear primer grupo';
+  String get create_first_group => 'Crear un grupo';
 
   @override
   String get new_expense_group => 'Nuevo Grupo de Gastos';
@@ -117,6 +134,14 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get remove_image => 'Eliminar Imagen';
+
+  @override
+  String get cannot_delete_assigned_participant =>
+      'No se puede eliminar el participante: está asignado a uno o más gastos';
+
+  @override
+  String get cannot_delete_assigned_category =>
+      'No se puede eliminar la categoría: está asignada a uno o más gastos';
 
   @override
   String get color => 'Color';
@@ -753,6 +778,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get terms_license_desc => 'Ver la licencia de código abierto.';
 
   @override
+  String get support_developer_title => 'Cómprame un café';
+
+  @override
+  String get support_developer_desc =>
+      'Apoya el desarrollo de esta aplicación.';
+
+  @override
   String get data_title => 'Respaldo y Restauración';
 
   @override
@@ -863,6 +895,16 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get status_archived => 'Archivados';
+
+  @override
+  String get no_archived_groups => 'No hay grupos archivados';
+
+  @override
+  String get no_archived_groups_subtitle => 'Aún no has archivado ningún grupo';
+
+  @override
+  String get all_groups_archived_info =>
+      'Todos tus grupos están archivados. Puedes restaurarlos desde la sección Archivo o crear otros nuevos.';
 
   @override
   String get filter_status_tooltip => 'Filtrar grupos';
@@ -1455,4 +1497,26 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get no_expenses_yet => 'Aún no hay gastos';
+
+  @override
+  String get empty_expenses_title => '¿Listo para empezar?';
+
+  @override
+  String get empty_expenses_subtitle =>
+      '¡Agrega tu primer gasto para comenzar con este grupo!';
+
+  @override
+  String get add_first_expense_button => 'Agregar Primer Gasto';
+
+  @override
+  String get show_search => 'Mostrar barra de búsqueda';
+
+  @override
+  String get hide_search => 'Ocultar barra de búsqueda';
+
+  @override
+  String get expense_groups_title => 'Grupos de gastos';
+
+  @override
+  String get expense_groups_desc => 'Gestiona tus grupos de gastos';
 }

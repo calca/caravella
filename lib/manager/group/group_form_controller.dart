@@ -2,25 +2,27 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../data/model/expense_group.dart';
-import '../../data/expense_group_storage.dart';
 import '../../data/model/expense_participant.dart';
 import '../../data/model/expense_category.dart';
-import '../../data/model/expense_details.dart';
+import '../../data/expense_group_storage_v2.dart';
+// ...existing code...
 import 'data/group_form_state.dart';
 import 'group_edit_mode.dart';
+import '../../state/expense_group_notifier.dart';
 
 /// Controller encapsulates business logic for the group form.
 class GroupFormController {
   final GroupFormState state;
   final GroupEditMode mode;
-  ExpenseGroup? _original;
+  final ExpenseGroupNotifier? _notifier;
 
-  GroupFormController(this.state, this.mode);
+  GroupFormController(this.state, this.mode, [this._notifier]);
 
   void load(ExpenseGroup? group) {
     if (mode == GroupEditMode.create) return; // nothing to load in create mode
     if (group == null) return;
-    _original = group;
+    // controller no longer keeps a separate copy; state holds the original
+    state.id = group.id;
     state.title = group.title;
     state.participants
       ..clear()
@@ -33,6 +35,8 @@ class GroupFormController {
     state.currency = _currencyFromGroup(group.currency);
     state.imagePath = group.file;
     state.color = group.color;
+    // Keep a snapshot in the state to avoid extra repository fetches
+    state.setOriginalGroup(group.copyWith());
     state.refresh();
   }
 
@@ -69,8 +73,8 @@ class GroupFormController {
           state.imagePath != null ||
           state.color != null;
     }
-    if (_original == null) return false;
-    final g = _original!;
+    if (state.originalGroup == null) return false;
+    final g = state.originalGroup!;
     if (g.title != state.title) return true;
     if (g.startDate != state.startDate || g.endDate != state.endDate) {
       return true;
@@ -95,34 +99,110 @@ class GroupFormController {
   Future<ExpenseGroup> save() async {
     state.setSaving(true);
     try {
+      // If we're in edit mode but the controller was not initialized via
+      // load(...), attempt to fetch the original group from storage so
+      // subsequent diff-based updates have the correct baseline.
+      // If missing the baseline in state, fall back to repository fetch
+      if (mode == GroupEditMode.edit &&
+          state.originalGroup == null &&
+          state.id != null) {
+        try {
+          final fetched = await ExpenseGroupStorageV2.getTripById(state.id!);
+          if (fetched != null) {
+            state.setOriginalGroup(fetched.copyWith());
+          } else {
+            debugPrint(
+              'GroupFormController.save: original group not found for id ${state.id}',
+            );
+          }
+        } catch (e, st) {
+          debugPrint(
+            'GroupFormController.save: failed to fetch original group: $e\n$st',
+          );
+        }
+      }
+
       final now = DateTime.now();
-      final group = (_original ?? ExpenseGroup.empty()).copyWith(
+      final group = (state.originalGroup ?? ExpenseGroup.empty()).copyWith(
+        id: state.id,
         title: state.title.trim(),
-        participants: state.participants
-            .map((e) => ExpenseParticipant(name: e.name))
-            .toList(),
-        categories: state.categories
-            .map((e) => ExpenseCategory(name: e.name))
-            .toList(),
+        // Preserve existing participant IDs when editing: state.participants
+        // already contains ExpenseParticipant instances (loaded via copyWith),
+        // so reuse their ids by copying them instead of creating brand new ones.
+        participants: state.participants.map((e) => e.copyWith()).toList(),
+        // Same for categories: preserve ids to keep referential integrity
+        categories: state.categories.map((e) => e.copyWith()).toList(),
         startDate: state.startDate,
         endDate: state.endDate,
         currency: state.currency['symbol'] ?? state.currency['code'] ?? 'EUR',
         file: state.imagePath,
         color: state.color,
-        timestamp: _original?.timestamp ?? now,
-        // Preserve existing expenses explicitly when editing an existing group
-        expenses: _original != null
-            ? List<ExpenseDetails>.from(_original!.expenses)
-            : const [],
+        timestamp: state.originalGroup?.timestamp ?? now,
       );
 
       if (mode == GroupEditMode.edit) {
-        await ExpenseGroupStorage.updateGroupMetadata(group);
+        await ExpenseGroupStorageV2.updateGroupMetadata(group);
+
+        // After updating group metadata, propagate any participant or
+        // category renames into the persisted expenses so embedded
+        // references show the updated names. Compare with the original
+        // loaded group to detect renames.
+        if (state.originalGroup != null) {
+          final orig = state.originalGroup!;
+
+          // Build lists containing only the participants that were renamed
+          // (same id, different display fields). New participants (no
+          // matching id in orig) are ignored because they cannot be
+          // referenced by existing expenses.
+          final List<ExpenseParticipant> changedOrigParticipants = [];
+          final List<ExpenseParticipant> changedUpdatedParticipants = [];
+          for (final p in state.participants) {
+            final idx = orig.participants.indexWhere((op) => op.id == p.id);
+            if (idx == -1) continue;
+            final origP = orig.participants[idx];
+            if (origP.name != p.name) {
+              changedOrigParticipants.add(origP);
+              changedUpdatedParticipants.add(p.copyWith());
+            }
+          }
+          if (changedOrigParticipants.isNotEmpty) {
+            await ExpenseGroupStorageV2.updateParticipantReferencesFromDiff(
+              group.id,
+              changedOrigParticipants,
+              changedUpdatedParticipants,
+            );
+          }
+
+          // Same for categories
+          final List<ExpenseCategory> changedOrigCategories = [];
+          final List<ExpenseCategory> changedUpdatedCategories = [];
+          for (final c in state.categories) {
+            final idx = orig.categories.indexWhere((oc) => oc.id == c.id);
+            if (idx == -1) continue;
+            final origC = orig.categories[idx];
+            if (origC.name != c.name) {
+              changedOrigCategories.add(origC);
+              changedUpdatedCategories.add(c.copyWith());
+            }
+          }
+          if (changedOrigCategories.isNotEmpty) {
+            await ExpenseGroupStorageV2.updateCategoryReferencesFromDiff(
+              group.id,
+              changedOrigCategories,
+              changedUpdatedCategories,
+            );
+          }
+        }
       } else {
-        await ExpenseGroupStorage.saveTrip(group);
+        await ExpenseGroupStorageV2.addExpenseGroup(group);
       }
 
-      _original = group;
+      // Ensure repository reloads fresh data and notify listeners globally
+      ExpenseGroupStorageV2.forceReload();
+      _notifier?.notifyGroupUpdated(group.id);
+
+      // store snapshot in state (single source of truth for original)
+      state.setOriginalGroup(group.copyWith());
       return group;
     } finally {
       state.setSaving(false);
@@ -130,10 +210,55 @@ class GroupFormController {
   }
 
   Future<void> deleteGroup() async {
-    if (mode == GroupEditMode.create || _original == null) return;
-    final all = await ExpenseGroupStorage.getAllGroups();
-    all.removeWhere((e) => e.id == _original!.id);
-    await ExpenseGroupStorage.writeTrips(all);
+    if (mode == GroupEditMode.create || state.originalGroup == null) return;
+    // Use the repository delete API which handles loading/saving atomically
+    await ExpenseGroupStorageV2.deleteGroup(state.originalGroup!.id);
+    // Force reload and notify so UI updates across the app
+    ExpenseGroupStorageV2.forceReload();
+    _notifier?.notifyGroupDeleted(state.originalGroup!.id);
+  }
+
+  /// Attempt to remove a participant from the current group if it's unused.
+  /// Returns true if removal succeeded and the state was updated.
+  Future<bool> removeParticipantIfUnused(int index) async {
+    if (index < 0 || index >= state.participants.length) return false;
+    final participant = state.participants[index];
+    // If no original (create mode), we can remove locally.
+    if (state.originalGroup == null) {
+      state.removeParticipant(index);
+      return true;
+    }
+
+    final removed = await ExpenseGroupStorageV2.removeParticipantIfUnused(
+      state.originalGroup!.id,
+      participant.id,
+      state.originalGroup!,
+    );
+    if (removed) {
+      state.removeParticipant(index);
+    }
+    return removed;
+  }
+
+  /// Attempt to remove a category from the current group if it's unused.
+  /// Returns true if removal succeeded and the state was updated.
+  Future<bool> removeCategoryIfUnused(int index) async {
+    if (index < 0 || index >= state.categories.length) return false;
+    final category = state.categories[index];
+    if (state.originalGroup == null) {
+      state.removeCategory(index);
+      return true;
+    }
+
+    final removed = await ExpenseGroupStorageV2.removeCategoryIfUnused(
+      state.originalGroup!.id,
+      category.id,
+      state.originalGroup!,
+    );
+    if (removed) {
+      state.removeCategory(index);
+    }
+    return removed;
   }
 
   Future<String?> persistPickedImage(File file) async {
@@ -151,5 +276,24 @@ class GroupFormController {
     } finally {
       state.setLoading(false);
     }
+  }
+
+  /// Remove currently selected image from disk (if any) and clear state.
+  /// Safe to call even if no image is set.
+  Future<void> removeImage() async {
+    final path = state.imagePath;
+    if (path != null) {
+      try {
+        final f = File(path);
+        if (await f.exists()) {
+          await f.delete();
+        }
+      } catch (e, st) {
+        debugPrint('removeImage error: $e\n$st');
+      }
+    }
+    // clear state (also clears color if necessary inside setImage)
+    state.setImage(null);
+    state.setColor(null);
   }
 }

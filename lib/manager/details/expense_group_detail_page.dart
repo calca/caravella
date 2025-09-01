@@ -14,10 +14,10 @@ import 'package:file_picker/file_picker.dart';
 import '../../data/model/expense_details.dart';
 import '../../data/model/expense_group.dart';
 import '../../state/expense_group_notifier.dart';
-import '../../data/expense_group_storage.dart';
+import '../../data/expense_group_storage_v2.dart';
 import '../../widgets/material3_dialog.dart';
 // Removed legacy localization bridge imports (migration in progress)
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../widgets/app_toast.dart';
 import 'widgets/group_header.dart';
 import 'widgets/group_actions.dart';
@@ -119,7 +119,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   }
 
   Future<void> _loadTrip() async {
-    final trip = await ExpenseGroupStorage.getTripById(widget.trip.id);
+    final trip = await ExpenseGroupStorageV2.getTripById(widget.trip.id);
     if (!mounted) return;
     setState(() {
       _trip = trip;
@@ -133,7 +133,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   // _refreshTrip removed: state updates occur inline after each mutation.
   Future<void> _refreshGroup() async {
     if (_trip == null) return;
-    final refreshed = await ExpenseGroupStorage.getTripById(_trip!.id);
+    final refreshed = await ExpenseGroupStorageV2.getTripById(_trip!.id);
     if (!mounted || refreshed == null) return;
     setState(() => _trip = refreshed);
     _groupNotifier?.setCurrentGroup(refreshed);
@@ -333,21 +333,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         onPinToggle: () async {
           if (_trip == null) return;
           final nav = Navigator.of(sheetCtx);
-          final updatedGroup = ExpenseGroup(
-            expenses: [], // only metadata is needed
-            title: _trip!.title,
-            participants: _trip!.participants,
-            startDate: _trip!.startDate,
-            endDate: _trip!.endDate,
-            currency: _trip!.currency,
-            categories: _trip!.categories,
-            timestamp: _trip!.timestamp,
-            id: _trip!.id,
-            file: _trip!.file,
-            pinned: !_trip!.pinned,
-            archived: _trip!.archived,
-          );
-          await _groupNotifier?.updateGroupMetadata(updatedGroup);
+          // Use the storage-level helper to toggle the pin atomically
+          await ExpenseGroupStorageV2.updateGroupPin(_trip!.id, !_trip!.pinned);
           await _refreshGroup();
           if (!mounted) return;
           nav.pop();
@@ -355,23 +342,11 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         onArchiveToggle: () async {
           if (_trip == null) return;
           final nav = Navigator.of(sheetCtx);
-          final updatedGroup = ExpenseGroup(
-            expenses: [], // only metadata is needed
-            title: _trip!.title,
-            participants: _trip!.participants,
-            startDate: _trip!.startDate,
-            endDate: _trip!.endDate,
-            currency: _trip!.currency,
-            categories: _trip!.categories,
-            timestamp: _trip!.timestamp,
-            id: _trip!.id,
-            file: _trip!.file,
-            pinned: !_trip!.archived
-                ? false
-                : _trip!.pinned, // Remove pin when archiving
-            archived: !_trip!.archived,
+          // Use storage-level helper to archive/unarchive atomically
+          await ExpenseGroupStorageV2.updateGroupArchive(
+            _trip!.id,
+            !_trip!.archived,
           );
-          await _groupNotifier?.updateGroupMetadata(updatedGroup);
           await _refreshGroup();
           if (!mounted) return;
           nav.pop();
@@ -426,9 +401,12 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             ),
           );
           if (confirmed == true && _trip != null) {
-            final trips = await ExpenseGroupStorage.getAllGroups();
-            trips.removeWhere((t) => t.id == _trip!.id);
-            await ExpenseGroupStorage.writeTrips(trips);
+            // Use the storage delete helper which handles persistence atomically
+            await ExpenseGroupStorageV2.deleteGroup(_trip!.id);
+            // Keep behavior consistent: invalidate cache and notify listeners
+            ExpenseGroupStorageV2.forceReload();
+            _groupNotifier?.notifyGroupDeleted(_trip!.id);
+
             if (!context.mounted) return;
             nav.pop(); // close sheet
             rootNav.pop(true); // go back to list
@@ -449,13 +427,11 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             _trip!.expenses.removeWhere((e) => e.id == expense.id);
           });
 
-          // Salva le modifiche
-          final trips = await ExpenseGroupStorage.getAllGroups();
-          final tripIndex = trips.indexWhere((t) => t.id == _trip!.id);
-          if (tripIndex != -1) {
-            trips[tripIndex] = _trip!;
-            await ExpenseGroupStorage.writeTrips(trips);
-          }
+          // Salva le modifiche tramite storage helper
+          await ExpenseGroupStorageV2.removeExpenseFromGroup(
+            _trip!.id,
+            expense.id,
+          );
         },
       ),
     );
@@ -479,8 +455,17 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             final expenseWithId = newExpense.copyWith(
               id: DateTime.now().millisecondsSinceEpoch.toString(),
             );
-            await _groupNotifier?.addExpense(expenseWithId);
+
+            // Persist using the new storage API
+            await ExpenseGroupStorageV2.addExpenseToGroup(
+              widget.trip.id,
+              expenseWithId,
+            );
+
+            // Refresh local state and notifier
             await _refreshGroup();
+            _groupNotifier?.notifyGroupUpdated(widget.trip.id);
+
             if (!sheetCtx.mounted) return;
             AppToast.show(
               sheetCtx,
@@ -519,26 +504,17 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             final gloc = gen.AppLocalizations.of(sheetCtx);
             final nav = Navigator.of(sheetCtx);
             final expenseWithId = updatedExpense.copyWith(id: expense.id);
-            final updatedExpenses = _trip!.expenses
-                .map((e) {
-                  return e.id == expense.id ? expenseWithId : e;
-                })
-                .toList(growable: false);
-            final updatedGroup = ExpenseGroup(
-              title: _trip!.title,
-              expenses: List<ExpenseDetails>.from(updatedExpenses),
-              participants: _trip!.participants,
-              startDate: _trip!.startDate,
-              endDate: _trip!.endDate,
-              currency: _trip!.currency,
-              categories: _trip!.categories,
-              timestamp: _trip!.timestamp,
-              id: _trip!.id,
-              file: _trip!.file,
-              pinned: _trip!.pinned,
+
+            // Persist the updated expense using the new storage API
+            await ExpenseGroupStorageV2.updateExpenseToGroup(
+              _trip!.id,
+              expenseWithId,
             );
-            await _groupNotifier?.updateGroup(updatedGroup);
+
+            // Refresh local state and notifier
             await _refreshGroup();
+            _groupNotifier?.notifyGroupUpdated(_trip!.id);
+
             if (!sheetCtx.mounted) return;
             AppToast.show(
               sheetCtx,
@@ -566,6 +542,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
 
   void _onScroll() {
     if (!_scrollController.hasClients) return;
+
     final direction = _scrollController.position.userScrollDirection;
     if (direction == ScrollDirection.reverse) {
       if (_fabVisible && mounted) setState(() => _fabVisible = false);
@@ -589,8 +566,22 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     }
   }
 
+  double _calculateBottomPadding() {
+    final expenseCount = _trip?.expenses.length ?? 0;
+    if (expenseCount > 5) {
+      return 100.0;
+    } else {
+      // When there are few items, provide a larger bottom padding
+      // to ensure the content fills the view vertically, pushing the list up.
+      return 400.0;
+    }
+  }
+
   Widget _buildAnimatedFab(ColorScheme colorScheme) {
     if (_trip?.archived == true) return const SizedBox.shrink();
+
+    // Hide FAB when there are no expenses (EmptyExpenseState handles the call-to-action)
+    if (_trip?.expenses.isEmpty == true) return const SizedBox.shrink();
 
     return AnimatedSlide(
       duration: const Duration(milliseconds: 260),
@@ -738,6 +729,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                           setState(() => _hideHeader = visible);
                         }
                       },
+                      onAddExpense: _showAddExpenseSheet,
                     ),
                   ],
                 ),
@@ -748,7 +740,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             padding: const EdgeInsets.only(bottom: 0),
             sliver: SliverToBoxAdapter(
               child: Container(
-                height: 100,
+                height: _calculateBottomPadding(),
                 color: colorScheme.surfaceContainer,
               ),
             ),

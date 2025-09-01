@@ -100,6 +100,42 @@ abstract class AppLocalizations {
     Locale('it'),
   ];
 
+  /// Section title for developer and support links in DeveloperPage
+  ///
+  /// In en, this message translates to:
+  /// **'Developer & Support'**
+  String get developer_section_title;
+
+  /// Section description for developer and support links in DeveloperPage
+  ///
+  /// In en, this message translates to:
+  /// **'Support the developer or view profile'**
+  String get developer_section_desc;
+
+  /// Section title for repository and issues links in DeveloperPage
+  ///
+  /// In en, this message translates to:
+  /// **'Source & Issues'**
+  String get repo_section_title;
+
+  /// Section description for repository and issues links in DeveloperPage
+  ///
+  /// In en, this message translates to:
+  /// **'View source code or report a problem'**
+  String get repo_section_desc;
+
+  /// Section title for license link in DeveloperPage
+  ///
+  /// In en, this message translates to:
+  /// **'License'**
+  String get license_section_title;
+
+  /// Section description for license link in DeveloperPage
+  ///
+  /// In en, this message translates to:
+  /// **'View the open source license'**
+  String get license_section_desc;
+
   /// Letter indicator for weekly chart badge
   ///
   /// In en, this message translates to:
@@ -253,13 +289,13 @@ abstract class AppLocalizations {
   /// No description provided for @no_active_groups_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'Create your first expense group to get started'**
+  /// **'Create an expense group'**
   String get no_active_groups_subtitle;
 
   /// No description provided for @create_first_group.
   ///
   /// In en, this message translates to:
-  /// **'Create first group'**
+  /// **'Create a group'**
   String get create_first_group;
 
   /// No description provided for @new_expense_group.
@@ -315,6 +351,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Remove Image'**
   String get remove_image;
+
+  /// Shown when attempting to delete a participant that is used by existing expenses
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot delete participant: it\'s assigned to one or more expenses'**
+  String get cannot_delete_assigned_participant;
+
+  /// Shown when attempting to delete a category that is used by existing expenses
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot delete category: it\'s assigned to one or more expenses'**
+  String get cannot_delete_assigned_category;
 
   /// No description provided for @color.
   ///
@@ -1540,6 +1588,18 @@ abstract class AppLocalizations {
   /// **'View the open source license.'**
   String get terms_license_desc;
 
+  /// No description provided for @support_developer_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy me a coffee'**
+  String get support_developer_title;
+
+  /// No description provided for @support_developer_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Support the development of this app.'**
+  String get support_developer_desc;
+
   /// No description provided for @data_title.
   ///
   /// In en, this message translates to:
@@ -1749,6 +1809,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Archived'**
   String get status_archived;
+
+  /// Empty state title for archived groups
+  ///
+  /// In en, this message translates to:
+  /// **'No archived groups'**
+  String get no_archived_groups;
+
+  /// Empty state subtitle for archived groups
+  ///
+  /// In en, this message translates to:
+  /// **'You have not archived any groups yet'**
+  String get no_archived_groups_subtitle;
+
+  /// No description provided for @all_groups_archived_info.
+  ///
+  /// In en, this message translates to:
+  /// **'All your groups are archived. You can restore them from the Archive section or create new ones.'**
+  String get all_groups_archived_info;
 
   /// Tooltip for status filter buttons row
   ///
@@ -2913,6 +2991,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No expenses added yet'**
   String get no_expenses_yet;
+
+  /// Title for empty expenses state
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to start tracking?'**
+  String get empty_expenses_title;
+
+  /// Subtitle for empty expenses state
+  ///
+  /// In en, this message translates to:
+  /// **'Add your first expense to get started with this group!'**
+  String get empty_expenses_subtitle;
+
+  /// Button text for adding the first expense in empty state
+  ///
+  /// In en, this message translates to:
+  /// **'Add First Expense'**
+  String get add_first_expense_button;
+
+  /// Tooltip to show the group search bar
+  ///
+  /// In en, this message translates to:
+  /// **'Show search bar'**
+  String get show_search;
+
+  /// Tooltip to hide the group search bar
+  ///
+  /// In en, this message translates to:
+  /// **'Hide search bar'**
+  String get hide_search;
+
+  /// Main section header for the list of expense groups/trips on the history page
+  ///
+  /// In en, this message translates to:
+  /// **'Expense Groups'**
+  String get expense_groups_title;
+
+  /// Short subtitle describing the purpose of the expense groups section (e.g. add, edit, view trips)
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your expense groups'**
+  String get expense_groups_desc;
 }
 
 class _AppLocalizationsDelegate

@@ -9,6 +9,24 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get developer_section_title => 'Developer & Support';
+
+  @override
+  String get developer_section_desc => 'Support the developer or view profile';
+
+  @override
+  String get repo_section_title => 'Source & Issues';
+
+  @override
+  String get repo_section_desc => 'View source code or report a problem';
+
+  @override
+  String get license_section_title => 'License';
+
+  @override
+  String get license_section_desc => 'View the open source license';
+
+  @override
   String get weeklyChartBadge => 'W';
 
   @override
@@ -85,11 +103,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get no_active_groups => 'No active groups';
 
   @override
-  String get no_active_groups_subtitle =>
-      'Create your first expense group to get started';
+  String get no_active_groups_subtitle => 'Create an expense group';
 
   @override
-  String get create_first_group => 'Create first group';
+  String get create_first_group => 'Create a group';
 
   @override
   String get new_expense_group => 'New Expense Group';
@@ -117,6 +134,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get remove_image => 'Remove Image';
+
+  @override
+  String get cannot_delete_assigned_participant =>
+      'Cannot delete participant: it\'s assigned to one or more expenses';
+
+  @override
+  String get cannot_delete_assigned_category =>
+      'Cannot delete category: it\'s assigned to one or more expenses';
 
   @override
   String get color => 'Color';
@@ -748,6 +773,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get terms_license_desc => 'View the open source license.';
 
   @override
+  String get support_developer_title => 'Buy me a coffee';
+
+  @override
+  String get support_developer_desc => 'Support the development of this app.';
+
+  @override
   String get data_title => 'Backup & Restore';
 
   @override
@@ -856,6 +887,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get status_archived => 'Archived';
+
+  @override
+  String get no_archived_groups => 'No archived groups';
+
+  @override
+  String get no_archived_groups_subtitle =>
+      'You have not archived any groups yet';
+
+  @override
+  String get all_groups_archived_info =>
+      'All your groups are archived. You can restore them from the Archive section or create new ones.';
 
   @override
   String get filter_status_tooltip => 'Filter groups';
@@ -1447,4 +1489,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get no_expenses_yet => 'No expenses added yet';
+
+  @override
+  String get empty_expenses_title => 'Ready to start tracking?';
+
+  @override
+  String get empty_expenses_subtitle =>
+      'Add your first expense to get started with this group!';
+
+  @override
+  String get add_first_expense_button => 'Add First Expense';
+
+  @override
+  String get show_search => 'Show search bar';
+
+  @override
+  String get hide_search => 'Hide search bar';
+
+  @override
+  String get expense_groups_title => 'Expense Groups';
+
+  @override
+  String get expense_groups_desc => 'Manage your expense groups';
 }

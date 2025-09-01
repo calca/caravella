@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../data/model/expense_group.dart';
-import '../data/expense_group_storage.dart';
+import '../data/expense_group_storage_v2.dart';
 import '../state/expense_group_notifier.dart';
 import '../../main.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'welcome/home_welcome_section.dart';
 import 'cards/home_cards_section.dart';
 import '../widgets/app_toast.dart';
@@ -86,7 +86,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
   Future<void> _updatePinnedTripIfNeeded(List<String> updatedGroupIds) async {
     if (_pinnedTrip != null && updatedGroupIds.contains(_pinnedTrip!.id)) {
       try {
-        final updatedPinnedTrip = await ExpenseGroupStorage.getTripById(
+        final updatedPinnedTrip = await ExpenseGroupStorageV2.getTripById(
           _pinnedTrip!.id,
         );
         if (mounted && updatedPinnedTrip != null) {
@@ -107,7 +107,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
         _loading = true;
       });
     }
-    final pinnedTrip = await ExpenseGroupStorage.getPinnedTrip();
+    final pinnedTrip = await ExpenseGroupStorageV2.getPinnedTrip();
     if (!mounted) return;
     setState(() {
       _pinnedTrip = pinnedTrip;
@@ -148,15 +148,30 @@ class _HomePageState extends State<HomePage> with RouteAware {
             )
           : RefreshIndicator(
               onRefresh: _handleUserRefresh,
-              child: FutureBuilder<List<ExpenseGroup>>(
-                future: ExpenseGroupStorage.getActiveGroups(),
+              child: FutureBuilder<List<List<ExpenseGroup>>>(
+                future: Future.wait<List<ExpenseGroup>>([
+                  ExpenseGroupStorageV2.getActiveGroups(),
+                  ExpenseGroupStorageV2.getArchivedGroups(),
+                ]),
                 builder: (context, snapshot) {
-                  final hasGroups = snapshot.data?.isNotEmpty == true;
-                  if (hasGroups) {
+                  final active =
+                      snapshot.data != null && snapshot.data!.isNotEmpty
+                      ? snapshot.data![0]
+                      : <ExpenseGroup>[];
+                  final archived =
+                      snapshot.data != null && snapshot.data!.length > 1
+                      ? snapshot.data![1]
+                      : <ExpenseGroup>[];
+
+                  // Show HomeCardsSection when there are active groups.
+                  // If active is empty but archived groups exist, still show HomeCardsSection
+                  // with an empty list so the UI renders only the add-card.
+                  if (active.isNotEmpty) {
                     return SafeArea(
                       child: Semantics(
                         label: gloc.accessibility_groups_list,
                         child: HomeCardsSection(
+                          initialGroups: active,
                           onTripAdded: () {
                             _refresh();
                             WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -168,6 +183,31 @@ class _HomePageState extends State<HomePage> with RouteAware {
                             });
                           },
                           pinnedTrip: _pinnedTrip,
+                          allArchived: false,
+                        ),
+                      ),
+                    );
+                  }
+
+                  // If no active groups but there are archived groups, enter home with empty cards
+                  if (archived.isNotEmpty) {
+                    return SafeArea(
+                      child: Semantics(
+                        label: gloc.accessibility_groups_list,
+                        child: HomeCardsSection(
+                          initialGroups: <ExpenseGroup>[],
+                          onTripAdded: () {
+                            _refresh();
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              AppToast.show(
+                                context,
+                                gloc.group_added_success,
+                                type: ToastType.success,
+                              );
+                            });
+                          },
+                          pinnedTrip: _pinnedTrip,
+                          allArchived: true,
                         ),
                       ),
                     );

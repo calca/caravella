@@ -22,7 +22,7 @@ android {
             }
         }
     }
-    namespace = "io.github.calca.caravella"
+    namespace = "io.caravella.egm"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"
 
@@ -36,7 +36,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "io.github.calca.caravella"
+        applicationId = "io.caravella.egm"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

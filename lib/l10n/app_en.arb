@@ -1,5 +1,17 @@
 {
   "@@locale": "en",
+  "developer_section_title": "Developer & Support",
+  "@developer_section_title": {"description": "Section title for developer and support links in DeveloperPage"},
+  "developer_section_desc": "Support the developer or view profile",
+  "@developer_section_desc": {"description": "Section description for developer and support links in DeveloperPage"},
+  "repo_section_title": "Source & Issues",
+  "@repo_section_title": {"description": "Section title for repository and issues links in DeveloperPage"},
+  "repo_section_desc": "View source code or report a problem",
+  "@repo_section_desc": {"description": "Section description for repository and issues links in DeveloperPage"},
+  "license_section_title": "License",
+  "@license_section_title": {"description": "Section title for license link in DeveloperPage"},
+  "license_section_desc": "View the open source license",
+  "@license_section_desc": {"description": "Section description for license link in DeveloperPage"},
   "weeklyChartBadge": "W",
   "@weeklyChartBadge": {
     "description": "Letter indicator for weekly chart badge"
@@ -37,8 +49,8 @@
   "good_evening": "Good evening",
   "your_groups": "Your groups",
   "no_active_groups": "No active groups",
-  "no_active_groups_subtitle": "Create your first expense group to get started",
-  "create_first_group": "Create first group",
+  "no_active_groups_subtitle": "Create an expense group",
+  "create_first_group": "Create a group",
   "new_expense_group": "New Expense Group",
   "tap_to_create": "Tap to create",
   "no_expense_label": "No expenses found",
@@ -48,6 +60,10 @@
   "from_gallery": "From Gallery",
   "from_camera": "From Camera",
   "remove_image": "Remove Image",
+  "cannot_delete_assigned_participant": "Cannot delete participant: it's assigned to one or more expenses",
+  "@cannot_delete_assigned_participant": {"description": "Shown when attempting to delete a participant that is used by existing expenses"},
+  "cannot_delete_assigned_category": "Cannot delete category: it's assigned to one or more expenses",
+  "@cannot_delete_assigned_category": {"description": "Shown when attempting to delete a category that is used by existing expenses"},
   "color": "Color",
   "remove_color": "Remove Color",
   "color_alternative": "Alternative to image",
@@ -253,6 +269,8 @@
   "terms_issue_title": "Report a problem",
   "terms_issue_desc": "Go to the GitHub issues page.",
   "terms_license_desc": "View the open source license.",
+  "support_developer_title": "Buy me a coffee",
+  "support_developer_desc": "Support the development of this app.",
   "data_title": "Backup & Restore",
   "data_backup_title": "Backup",
   "data_backup_desc": "Create a backup file of your expenses.",
@@ -299,6 +317,11 @@
   ,"status_active": "Active"
   ,"@status_active": {"description": "Filter label: active groups"}
   ,"status_archived": "Archived"
+  ,"no_archived_groups": "No archived groups"
+  ,"@no_archived_groups": {"description": "Empty state title for archived groups"}
+  ,"no_archived_groups_subtitle": "You have not archived any groups yet"
+  ,"all_groups_archived_info": "All your groups are archived. You can restore them from the Archive section or create new ones."
+  ,"@no_archived_groups_subtitle": {"description": "Empty state subtitle for archived groups"}
   ,"@status_archived": {"description": "Filter label: archived groups"}
   ,"filter_status_tooltip": "Filter groups"
   ,"@filter_status_tooltip": {"description": "Tooltip for status filter buttons row"}
@@ -529,4 +552,18 @@
   ,"@no_expenses_with_filters": {"description": "Empty state when active filters return no expenses"}
   ,"no_expenses_yet": "No expenses added yet"
   ,"@no_expenses_yet": {"description": "Empty state when there are no expenses yet"}
+  ,"empty_expenses_title": "Ready to start tracking?"
+  ,"@empty_expenses_title": {"description": "Title for empty expenses state"}
+  ,"empty_expenses_subtitle": "Add your first expense to get started with this group!"
+  ,"@empty_expenses_subtitle": {"description": "Subtitle for empty expenses state"}
+  ,"add_first_expense_button": "Add First Expense"
+  ,"@add_first_expense_button": {"description": "Button text for adding the first expense in empty state"}
+  ,"show_search": "Show search bar"
+  ,"@show_search": {"description": "Tooltip to show the group search bar"}
+  ,"hide_search": "Hide search bar"
+  ,"@hide_search": {"description": "Tooltip to hide the group search bar"}
+  ,"expense_groups_title": "Expense Groups"
+  ,"@expense_groups_title": {"description": "Main section header for the list of expense groups/trips on the history page"}
+  ,"expense_groups_desc": "Manage your expense groups"
+  ,"@expense_groups_desc": {"description": "Short subtitle describing the purpose of the expense groups section (e.g. add, edit, view trips)"}
 }

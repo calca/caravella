@@ -3,7 +3,7 @@ library;
 import 'package:flutter/material.dart';
 import '../../data/model/expense_category.dart';
 import '../../data/model/expense_details.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../data/model/expense_participant.dart';
 import '../../data/model/expense_location.dart';
 import '../../state/locale_notifier.dart';

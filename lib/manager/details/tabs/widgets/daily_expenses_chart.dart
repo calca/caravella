@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../../data/model/expense_group.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 class DailyExpensesChart extends StatelessWidget {
   final ExpenseGroup trip;

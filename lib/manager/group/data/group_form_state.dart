@@ -1,9 +1,12 @@
 import '../../../data/model/expense_participant.dart';
 import '../../../data/model/expense_category.dart';
+import '../../../data/model/expense_group.dart';
 import 'package:flutter/foundation.dart';
 
 class GroupFormState extends ChangeNotifier {
   String title = '';
+  String? id;
+  ExpenseGroup? originalGroup;
   final List<ExpenseParticipant> participants = [];
   final List<ExpenseCategory> categories = [];
   DateTime? startDate;
@@ -25,6 +28,12 @@ class GroupFormState extends ChangeNotifier {
   void setTitle(String v) {
     if (title == v) return;
     title = v;
+    notifyListeners();
+  }
+
+  void setId(String? v) {
+    if (id == v) return;
+    id = v;
     notifyListeners();
   }
 
@@ -96,6 +105,12 @@ class GroupFormState extends ChangeNotifier {
   void setSaving(bool v) {
     if (isSaving == v) return;
     isSaving = v;
+    notifyListeners();
+  }
+
+  /// Store or clear the original group snapshot used for diffing/restore.
+  void setOriginalGroup(ExpenseGroup? g) {
+    originalGroup = g;
     notifyListeners();
   }
 
