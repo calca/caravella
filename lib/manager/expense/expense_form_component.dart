@@ -3,7 +3,7 @@ library;
 import 'package:flutter/material.dart';
 import '../../data/model/expense_category.dart';
 import '../../data/model/expense_details.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../data/model/expense_participant.dart';
 import '../../data/model/expense_location.dart';
 import '../../state/locale_notifier.dart';
@@ -316,8 +316,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
 
   double? _parseLocalizedAmount(String input) {
     if (input.isEmpty) return null;
-    final cleaned = input.replaceAll('.', '').replaceAll(',', '.');
-    return double.tryParse(cleaned);
+    // Since the new formatter normalizes to dot as decimal separator,
+    // we can directly parse the input
+    return double.tryParse(input);
   }
 
   Future<bool> _confirmDiscardChanges() async {

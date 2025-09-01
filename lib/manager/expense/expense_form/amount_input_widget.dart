@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../data/model/expense_category.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'icon_leading_field.dart';
 import '../../../themes/form_theme.dart';
@@ -120,7 +119,7 @@ class AmountInputWidget extends StatelessWidget {
       onFieldSubmitted: (_) => onSubmitted?.call(),
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]')),
-        _AmountFormatter(),
+        _SimpleDecimalFormatter(),
       ],
     );
 
@@ -139,102 +138,61 @@ class AmountInputWidget extends StatelessWidget {
   }
 }
 
-/// Formatter che formatta live il numero secondo la locale corrente
-class _AmountFormatter extends TextInputFormatter {
+/// Simple formatter for decimal input that handles basic decimal formatting
+/// without complex locale-specific thousands separators
+class _SimpleDecimalFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    // Preserve selection index relative to numeric characters
-    final oldDigitsBeforeCursor = _countDigitsBefore(
-      oldValue.text,
-      oldValue.selection.baseOffset,
-    );
-
-    // Normalize new raw input (allow both , and . as decimal separators)
-    String sanitized = newValue.text.replaceAll(RegExp(r'[^0-9,\.]'), '');
-    // If user just typed separator at start -> ignore
-    if (sanitized == ',' || sanitized == '.') {
-      return TextEditingValue(
-        text: '',
-        selection: const TextSelection.collapsed(offset: 0),
-      );
-    }
-
-    // Track if user is typing decimal part (keeps trailing comma or partial decimals)
-    bool endsWithSeparator = sanitized.endsWith(',') || sanitized.endsWith('.');
-
-    // Replace commas with dot for parsing
-    String parseCandidate = sanitized.replaceAll(',', '.');
-    // Allow single dot at end (partial decimal) without formatting yet
-    final partialDecimal =
-        endsWithSeparator && !parseCandidate.contains(RegExp(r'\.[0-9]{1,}'));
-
-    if (parseCandidate.isEmpty) {
+    // Basic filtering - remove invalid characters
+    String sanitized = newValue.text.replaceAll(RegExp(r'[^0-9.,]'), '');
+    
+    // Handle empty input
+    if (sanitized.isEmpty) {
       return const TextEditingValue(
         text: '',
         selection: TextSelection.collapsed(offset: 0),
       );
     }
-
-    double? value = double.tryParse(parseCandidate);
-    if (value == null) {
-      // Invalid new char: revert
-      return oldValue;
+    
+    // Convert commas to dots for consistent decimal handling
+    sanitized = sanitized.replaceAll(',', '.');
+    
+    // Only allow one decimal point
+    final parts = sanitized.split('.');
+    if (parts.length > 2) {
+      // If more than one decimal point, keep only the first one and combine the rest
+      sanitized = '${parts[0]}.${parts.sublist(1).join('')}';
+      // Re-split after combining
+      final newParts = sanitized.split('.');
+      if (newParts.length == 2 && newParts[1].length > 2) {
+        sanitized = '${newParts[0]}.${newParts[1].substring(0, 2)}';
+      }
+    } else if (parts.length == 2 && parts[1].length > 2) {
+      // Limit decimal places to 2
+      sanitized = '${parts[0]}.${parts[1].substring(0, 2)}';
     }
-
-    final locale = Intl.getCurrentLocale();
-    final formatter = NumberFormat.decimalPattern(locale);
-    final decimalSep = formatter.symbols.DECIMAL_SEP; // e.g. , or .
-
-    // Determine decimal digits typed (max 2)
-    String decimalPart = '';
-    final match = RegExp(r'[.,](\d{0,2})').firstMatch(parseCandidate);
-    if (match != null) {
-      decimalPart = match.group(1)!;
+    
+    // Don't allow leading decimal point without a number
+    if (sanitized.startsWith('.')) {
+      sanitized = '0$sanitized';
     }
-
-    final intPart = value.truncate();
-    final formattedInt = formatter.format(intPart);
-    String rebuilt;
-    if (partialDecimal) {
-      rebuilt = '$formattedInt$decimalSep';
-    } else if (decimalPart.isNotEmpty) {
-      rebuilt = '$formattedInt$decimalSep$decimalPart';
-    } else {
-      rebuilt = formattedInt;
-    }
-
-    // Compute new cursor: place after same count of digits as before (approx)
-    int targetDigitIndex = oldDigitsBeforeCursor;
-    int seenDigits = 0;
-    int caret = 0;
-    while (caret < rebuilt.length && seenDigits < targetDigitIndex) {
-      if (RegExp(r'\d').hasMatch(rebuilt[caret])) seenDigits++;
-      caret++;
-    }
-    // If user was at end typing
+    
+    // Preserve cursor position at end if user was typing at end
+    int cursorPosition = sanitized.length;
     if (oldValue.selection.baseOffset == oldValue.text.length &&
         newValue.selection.baseOffset == newValue.text.length) {
-      caret = rebuilt.length; // keep at end
+      cursorPosition = sanitized.length;
+    } else {
+      // Try to maintain relative cursor position
+      cursorPosition = (newValue.selection.baseOffset).clamp(0, sanitized.length);
     }
-
+    
     return TextEditingValue(
-      text: rebuilt,
-      selection: TextSelection.collapsed(
-        offset: caret.clamp(0, rebuilt.length),
-      ),
+      text: sanitized,
+      selection: TextSelection.collapsed(offset: cursorPosition),
     );
-  }
-
-  int _countDigitsBefore(String text, int offset) {
-    if (offset <= 0) return 0;
-    offset = offset.clamp(0, text.length);
-    int count = 0;
-    for (int i = 0; i < offset; i++) {
-      if (RegExp(r'\d').hasMatch(text[i])) count++;
-    }
-    return count;
   }
 }

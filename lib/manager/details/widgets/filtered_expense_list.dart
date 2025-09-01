@@ -4,6 +4,7 @@ import '../../../data/model/expense_details.dart';
 import '../../../data/model/expense_category.dart';
 import '../../../data/model/expense_participant.dart';
 import 'expense_amount_card.dart';
+import 'empty_expense_state.dart';
 
 class FilteredExpenseList extends StatefulWidget {
   final List<ExpenseDetails> expenses;
@@ -12,6 +13,7 @@ class FilteredExpenseList extends StatefulWidget {
   final List<ExpenseCategory> categories;
   final List<ExpenseParticipant> participants;
   final ValueChanged<bool>? onFiltersVisibilityChanged;
+  final VoidCallback? onAddExpense;
 
   const FilteredExpenseList({
     super.key,
@@ -21,6 +23,7 @@ class FilteredExpenseList extends StatefulWidget {
     required this.categories,
     required this.participants,
     this.onFiltersVisibilityChanged,
+    this.onAddExpense,
   });
 
   @override
@@ -93,56 +96,67 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
     final filteredExpenses = _filteredExpenses;
     final gloc = gen.AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
+    // Hide header & filter button entirely if no base expenses
+    if (widget.expenses.isEmpty && _showFilters) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        setState(() {
+          _showFilters = false;
+          _clearAllFilters();
+        });
+        widget.onFiltersVisibilityChanged?.call(false);
+      });
+    }
 
     return Column(
       children: [
-        // Filter Header with Toggle
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  '${gloc.activity}${filteredExpenses.length != widget.expenses.length ? ' (${filteredExpenses.length}/${widget.expenses.length})' : ''}',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: colorScheme.onSurface,
-                    fontSize: 20,
+        if (widget.expenses.isNotEmpty) ...[
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    '${gloc.activity}${filteredExpenses.length != widget.expenses.length ? ' (${filteredExpenses.length}/${widget.expenses.length})' : ''}',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: colorScheme.onSurface,
+                      fontSize: 20,
+                    ),
                   ),
                 ),
-              ),
-              if (_hasActiveFilters)
-                TextButton.icon(
-                  onPressed: _clearAllFilters,
-                  icon: Icon(Icons.clear, size: 16),
-                  label: Text(gloc.clear_filters),
-                  style: TextButton.styleFrom(
-                    foregroundColor: colorScheme.primary,
+                if (_hasActiveFilters)
+                  TextButton.icon(
+                    onPressed: _clearAllFilters,
+                    icon: Icon(Icons.clear, size: 16),
+                    label: Text(gloc.clear_filters),
+                    style: TextButton.styleFrom(
+                      foregroundColor: colorScheme.primary,
+                    ),
                   ),
+                IconButton(
+                  icon: Icon(
+                    _showFilters
+                        ? Icons.filter_list_off_outlined
+                        : Icons.filter_list_outlined,
+                    size: 20,
+                  ),
+                  onPressed: () {
+                    final next = !_showFilters;
+                    setState(() {
+                      _showFilters = next;
+                      if (!next) _clearAllFilters();
+                    });
+                    widget.onFiltersVisibilityChanged?.call(next);
+                  },
+                  tooltip: _showFilters ? gloc.hide_filters : gloc.show_filters,
                 ),
-              IconButton(
-                icon: Icon(
-                  _showFilters
-                      ? Icons.filter_list_off_outlined
-                      : Icons.filter_list_outlined,
-                  size: 20,
-                ),
-                onPressed: widget.expenses.isEmpty
-                    ? null
-                    : () {
-                        setState(() {
-                          _showFilters = !_showFilters;
-                        });
-                        widget.onFiltersVisibilityChanged?.call(_showFilters);
-                      },
-                tooltip: _showFilters ? gloc.hide_filters : gloc.show_filters,
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+        ],
 
-        // Filter Controls
-        if (_showFilters) ...[
+        if (_showFilters && widget.expenses.isNotEmpty) ...[
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -153,7 +167,6 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Search Bar
                 TextField(
                   controller: _searchController,
                   decoration: InputDecoration(
@@ -167,16 +180,9 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                       vertical: 12,
                     ),
                   ),
-                  onChanged: (value) {
-                    setState(() {
-                      _searchQuery = value;
-                    });
-                  },
+                  onChanged: (value) => setState(() => _searchQuery = value),
                 ),
-
                 const SizedBox(height: 16),
-
-                // Category Filter
                 if (widget.categories.isNotEmpty) ...[
                   Text(
                     gloc.category,
@@ -186,7 +192,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                   ),
                   const SizedBox(height: 8),
                   SizedBox(
-                    height: 40, // ensure enough height for chips
+                    height: 40,
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       physics: const BouncingScrollPhysics(),
@@ -195,9 +201,8 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                           _CategoryParticipantChip(
                             label: gloc.all_categories,
                             selected: _selectedCategoryId == null,
-                            onSelected: () {
-                              setState(() => _selectedCategoryId = null);
-                            },
+                            onSelected: () =>
+                                setState(() => _selectedCategoryId = null),
                           ),
                           const SizedBox(width: 8),
                           ...List.generate(widget.categories.length, (i) {
@@ -207,14 +212,12 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                                 _CategoryParticipantChip(
                                   label: category.name,
                                   selected: _selectedCategoryId == category.id,
-                                  onSelected: () {
-                                    setState(
-                                      () => _selectedCategoryId =
-                                          _selectedCategoryId == category.id
-                                          ? null
-                                          : category.id,
-                                    );
-                                  },
+                                  onSelected: () => setState(
+                                    () => _selectedCategoryId =
+                                        _selectedCategoryId == category.id
+                                        ? null
+                                        : category.id,
+                                  ),
                                 ),
                                 if (i != widget.categories.length - 1)
                                   const SizedBox(width: 8),
@@ -227,8 +230,6 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                   ),
                   const SizedBox(height: 16),
                 ],
-
-                // Participant Filter
                 if (widget.participants.isNotEmpty) ...[
                   Text(
                     gloc.paid_by,
@@ -247,9 +248,8 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                           _CategoryParticipantChip(
                             label: gloc.all_participants,
                             selected: _selectedParticipantId == null,
-                            onSelected: () {
-                              setState(() => _selectedParticipantId = null);
-                            },
+                            onSelected: () =>
+                                setState(() => _selectedParticipantId = null),
                           ),
                           const SizedBox(width: 8),
                           ...List.generate(widget.participants.length, (i) {
@@ -260,15 +260,12 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                                   label: participant.name,
                                   selected:
                                       _selectedParticipantId == participant.id,
-                                  onSelected: () {
-                                    setState(
-                                      () => _selectedParticipantId =
-                                          _selectedParticipantId ==
-                                              participant.id
-                                          ? null
-                                          : participant.id,
-                                    );
-                                  },
+                                  onSelected: () => setState(
+                                    () => _selectedParticipantId =
+                                        _selectedParticipantId == participant.id
+                                        ? null
+                                        : participant.id,
+                                  ),
                                 ),
                                 if (i != widget.participants.length - 1)
                                   const SizedBox(width: 8),
@@ -288,30 +285,52 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
 
         // Expense List
         if (filteredExpenses.isEmpty) ...[
-          Container(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              children: [
-                Icon(
-                  _hasActiveFilters
-                      ? Icons.search_off_outlined
-                      : Icons.receipt_long_outlined,
-                  size: 48,
-                  color: colorScheme.onSurface.withValues(alpha: 0.4),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  _hasActiveFilters
-                      ? gloc.no_expenses_with_filters
-                      : gloc.no_expenses_yet,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: colorScheme.onSurface.withValues(alpha: 0.6),
+          // Enhanced empty state when no expenses exist (not filtered)
+          if (!_hasActiveFilters && widget.onAddExpense != null) ...[
+            // NOTE: Cannot rely on constraints.maxHeight here because inside a Column
+            // in a SliverToBoxAdapter we receive an unbounded (infinite) height which
+            // breaks layout if we attempt to use it. Provide a reasonable fixed height
+            // so the empty state has space while avoiding unbounded layout assertions.
+            Builder(
+              builder: (context) {
+                final mq = MediaQuery.of(context);
+                // Use between 420 and 60% of available height (viewport)
+                final target = (mq.size.height * 0.6).clamp(420, 560);
+                return SizedBox(
+                  height: target.toDouble(),
+                  child: EmptyExpenseState(
+                    onAddFirstExpense: widget.onAddExpense!,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+                );
+              },
             ),
-          ),
+          ] else ...[
+            // Simple empty state for filtered results or when no callback provided
+            Container(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                children: [
+                  Icon(
+                    _hasActiveFilters
+                        ? Icons.search_off_outlined
+                        : Icons.receipt_long_outlined,
+                    size: 48,
+                    color: colorScheme.onSurface.withValues(alpha: 0.4),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    _hasActiveFilters
+                        ? gloc.no_expenses_with_filters
+                        : gloc.no_expenses_yet,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: colorScheme.onSurface.withValues(alpha: 0.6),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          ],
         ] else ...[
           Column(
             children: [

@@ -1,8 +1,7 @@
 import 'package:flutter/foundation.dart';
-import '../data/model/expense_details.dart';
 import '../data/model/expense_group.dart';
 import '../data/model/expense_category.dart';
-import '../data/expense_group_storage.dart';
+import '../data/expense_group_storage_v2.dart';
 import '../data/category_service.dart';
 import '../data/participant_service.dart';
 
@@ -11,6 +10,7 @@ class ExpenseGroupNotifier extends ChangeNotifier {
   final List<String> _updatedGroupIds = [];
   String? _lastAddedCategory;
   String? _lastEvent; // es: 'expense_added', 'category_added'
+  final List<String> _deletedGroupIds = [];
   final CategoryService? _categoryService; // Service for global category operations
   final ParticipantService? _participantService; // Service for global participant operations
 
@@ -34,6 +34,9 @@ class ExpenseGroupNotifier extends ChangeNotifier {
   
   // Participant service for global participant operations  
   ParticipantService? get participantService => _participantService;
+  
+  // Lista degli ID dei gruppi che sono stati cancellati
+  List<String> get deletedGroupIds => List.unmodifiable(_deletedGroupIds);
 
   String? consumeLastEvent() {
     final e = _lastEvent;
@@ -52,29 +55,6 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateGroup(ExpenseGroup updatedGroup) async {
-    _currentGroup = updatedGroup;
-
-    // Aggiungi l'ID alla lista dei gruppi aggiornati
-    if (!_updatedGroupIds.contains(updatedGroup.id)) {
-      _updatedGroupIds.add(updatedGroup.id);
-    }
-
-    notifyListeners();
-
-    // Persisti le modifiche
-    try {
-      final trips = await ExpenseGroupStorage.getAllGroups();
-      final idx = trips.indexWhere((g) => g.id == updatedGroup.id);
-      if (idx != -1) {
-        trips[idx] = updatedGroup;
-        await ExpenseGroupStorage.writeTrips(trips);
-      }
-    } catch (e) {
-      debugPrint('Error updating group: $e');
-    }
-  }
-
   /// Aggiorna solo i metadati del gruppo preservando le spese esistenti
   Future<void> updateGroupMetadata(ExpenseGroup updatedGroup) async {
     // Aggiorna lo stato corrente preservando le spese se presente
@@ -91,7 +71,7 @@ class ExpenseGroupNotifier extends ChangeNotifier {
 
     // Persisti le modifiche preservando le spese
     try {
-      await ExpenseGroupStorage.updateGroupMetadata(updatedGroup);
+      await ExpenseGroupStorageV2.updateGroupMetadata(updatedGroup);
     } catch (e) {
       debugPrint('Error updating group metadata: $e');
     }
@@ -125,7 +105,6 @@ class ExpenseGroupNotifier extends ChangeNotifier {
 
     final updatedCategories = [..._currentGroup!.categories];
     updatedCategories.add(ExpenseCategory(name: categoryName));
-
     final updatedGroup = _currentGroup!.copyWith(categories: updatedCategories);
 
     // Memorizza l'ultima categoria aggiunta
@@ -138,12 +117,31 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     _categoryService?.invalidateCache();
   }
 
+  // Helper method to update group with proper state management
+  Future<void> updateGroup(ExpenseGroup updatedGroup) async {
+    _currentGroup = updatedGroup;
+    
+    // Aggiungi l'ID alla lista dei gruppi aggiornati
+    if (!_updatedGroupIds.contains(updatedGroup.id)) {
+      _updatedGroupIds.add(updatedGroup.id);
+    }
+
+    notifyListeners();
+
+    // Persisti le modifiche
+    try {
+      await ExpenseGroupStorageV2.saveTrip(updatedGroup);
+    } catch (e) {
+      debugPrint('Error saving group: $e');
+    }
+  }
+
   // Nuovo metodo per aggiornare l'intero gruppo (per quando viene modificato dall'esterno)
   Future<void> refreshGroup() async {
     if (_currentGroup == null) return;
 
     try {
-      final updatedGroup = await ExpenseGroupStorage.getTripById(
+      final updatedGroup = await ExpenseGroupStorageV2.getTripById(
         _currentGroup!.id,
       );
       if (updatedGroup != null) {
@@ -160,10 +158,23 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     _updatedGroupIds.clear();
   }
 
+  /// Metodo per pulire la lista dei gruppi cancellati
+  void clearDeletedGroups() {
+    _deletedGroupIds.clear();
+  }
+
   // Metodo per notificare un aggiornamento di gruppo dall'esterno
   void notifyGroupUpdated(String groupId) {
     if (!_updatedGroupIds.contains(groupId)) {
       _updatedGroupIds.add(groupId);
+    }
+    notifyListeners();
+  }
+
+  /// Metodo per notificare che un gruppo è stato cancellato
+  void notifyGroupDeleted(String groupId) {
+    if (!_deletedGroupIds.contains(groupId)) {
+      _deletedGroupIds.add(groupId);
     }
     notifyListeners();
   }

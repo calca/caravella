@@ -129,7 +129,7 @@ class ExpenseGroup {
       currency: '€',
       categories: const <ExpenseCategory>[],
       timestamp: DateTime.now(),
-      id: 'empty',
+      id: const Uuid().v4(),
       pinned: false,
       archived: false,
       file: null, // Path del file inizialmente vuoto

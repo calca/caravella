@@ -9,6 +9,26 @@ class AppLocalizationsIt extends AppLocalizations {
   AppLocalizationsIt([String locale = 'it']) : super(locale);
 
   @override
+  String get developer_section_title => 'Sviluppatore & Supporto';
+
+  @override
+  String get developer_section_desc =>
+      'Supporta lo sviluppatore o visualizza il profilo';
+
+  @override
+  String get repo_section_title => 'Codice & Segnalazioni';
+
+  @override
+  String get repo_section_desc =>
+      'Visualizza il codice sorgente o segnala un problema';
+
+  @override
+  String get license_section_title => 'Licenza';
+
+  @override
+  String get license_section_desc => 'Visualizza la licenza open source';
+
+  @override
   String get weeklyChartBadge => 'S';
 
   @override
@@ -85,11 +105,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get no_active_groups => 'Nessun gruppo attivo';
 
   @override
-  String get no_active_groups_subtitle =>
-      'Crea il primo gruppo di spese per iniziare';
+  String get no_active_groups_subtitle => 'Crea un gruppo di spese';
 
   @override
-  String get create_first_group => 'Crea primo gruppo';
+  String get create_first_group => 'Crea un gruppo';
 
   @override
   String get new_expense_group => 'Nuovo Gruppo di Spese';
@@ -117,6 +136,14 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get remove_image => 'Rimuovi Immagine';
+
+  @override
+  String get cannot_delete_assigned_participant =>
+      'Impossibile eliminare il partecipante: è assegnato a una o più spese';
+
+  @override
+  String get cannot_delete_assigned_category =>
+      'Impossibile eliminare la categoria: è assegnata a una o più spese';
 
   @override
   String get color => 'Colore';
@@ -749,6 +776,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get terms_license_desc => 'Visualizza la licenza open source.';
 
   @override
+  String get support_developer_title => 'Offrimi un caffè';
+
+  @override
+  String get support_developer_desc => 'Sostieni lo sviluppo di questa app.';
+
+  @override
   String get data_title => 'Backup & Ripristino';
 
   @override
@@ -860,6 +893,17 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get status_archived => 'Archiviati';
+
+  @override
+  String get no_archived_groups => 'Nessun gruppo archiviato';
+
+  @override
+  String get no_archived_groups_subtitle =>
+      'Non hai ancora archiviato nessun gruppo';
+
+  @override
+  String get all_groups_archived_info =>
+      'Tutti i tuoi gruppi sono archiviati. Puoi recuperarli dalla sezione Archivio o crearne di nuovi.';
 
   @override
   String get filter_status_tooltip => 'Filtra gruppi';
@@ -1452,4 +1496,26 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get no_expenses_yet => 'Nessuna spesa ancora aggiunta';
+
+  @override
+  String get empty_expenses_title => 'Pronti per iniziare?';
+
+  @override
+  String get empty_expenses_subtitle =>
+      'Aggiungi la prima spesa per iniziare con questo gruppo!';
+
+  @override
+  String get add_first_expense_button => 'Aggiungi Prima Spesa';
+
+  @override
+  String get show_search => 'Mostra barra di ricerca';
+
+  @override
+  String get hide_search => 'Nascondi barra di ricerca';
+
+  @override
+  String get expense_groups_title => 'Gruppi di spese';
+
+  @override
+  String get expense_groups_desc => 'Gestisci i tuoi gruppi di spese';
 }

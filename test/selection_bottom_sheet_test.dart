@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:org_app_caravella/widgets/selection_bottom_sheet.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/widgets/selection_bottom_sheet.dart';
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 void main() {
   group('SelectionBottomSheet Tests', () {
     testWidgets('Modal sheet builds correctly with items', (tester) async {
       final testItems = ['Category 1', 'Category 2', 'Category 3'];
-      
+
       await tester.pumpWidget(
         MaterialApp(
           localizationsDelegates: gen.AppLocalizations.localizationsDelegates,
@@ -42,14 +42,14 @@ void main() {
       expect(find.text('Category 1'), findsOneWidget);
       expect(find.text('Category 2'), findsOneWidget);
       expect(find.text('Category 3'), findsOneWidget);
-      
+
       // Verify the add button is present (not the legacy one)
       expect(find.byIcon(Icons.add), findsOneWidget);
     });
 
     testWidgets('Modal sheet shows inline add functionality', (tester) async {
       final testItems = ['Category 1'];
-      
+
       await tester.pumpWidget(
         MaterialApp(
           localizationsDelegates: gen.AppLocalizations.localizationsDelegates,
@@ -86,13 +86,19 @@ void main() {
 
       // Verify that the input field appears
       expect(find.byType(TextField), findsOneWidget);
-      expect(find.byIcon(Icons.check_rounded), findsOneWidget); // Confirm button
-      expect(find.byIcon(Icons.close_outlined), findsOneWidget); // Cancel button
+      expect(
+        find.byIcon(Icons.check_rounded),
+        findsOneWidget,
+      ); // Confirm button
+      expect(
+        find.byIcon(Icons.close_outlined),
+        findsOneWidget,
+      ); // Cancel button
     });
 
     testWidgets('Modal sheet handles empty items list', (tester) async {
       final testItems = <String>[];
-      
+
       await tester.pumpWidget(
         MaterialApp(
           localizationsDelegates: gen.AppLocalizations.localizationsDelegates,

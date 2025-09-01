@@ -3,10 +3,12 @@ import 'monthly_expense_chart.dart';
 import 'date_range_expense_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../state/expense_group_notifier.dart';
 import '../../../data/model/expense_group.dart';
 import '../../../manager/details/widgets/expense_entry_sheet.dart';
+import '../../../data/expense_group_storage_v2.dart';
+import '../../../widgets/app_toast.dart';
 import '../../../widgets/currency_display.dart';
 import '../../../manager/details/tabs/overview_stats_logic.dart';
 
@@ -73,15 +75,31 @@ class GroupCardContent extends StatelessWidget {
           return ExpenseEntrySheet(
             group: currentGroup,
             onExpenseSaved: (expense) async {
-              final sheetCtx = context; // Save bottom sheet context
+              final sheetCtx = context;
               final nav = Navigator.of(sheetCtx);
+              final gloc = gen.AppLocalizations.of(sheetCtx);
+
               final expenseWithId = expense.copyWith(
                 id: DateTime.now().millisecondsSinceEpoch.toString(),
               );
-              await groupNotifier.addExpense(expenseWithId);
-              onExpenseAdded();
+
+              // Persist using the new storage API
+              await ExpenseGroupStorageV2.addExpenseToGroup(
+                currentGroup.id,
+                expenseWithId,
+              );
+
+              // Refresh notifier state and notify UI
+              await groupNotifier.refreshGroup();
+              groupNotifier.notifyGroupUpdated(currentGroup.id);
+
               if (!sheetCtx.mounted) return;
-              nav.pop(); // Close the modal sheet
+              AppToast.show(
+                sheetCtx,
+                gloc.expense_added_success,
+                type: ToastType.success,
+              );
+              nav.pop();
             },
             onCategoryAdded: (newCategory) async {
               await groupNotifier.addCategory(newCategory);

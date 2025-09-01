@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../manager/group/pages/expenses_group_edit_page.dart';
 import '../../../manager/group/group_edit_mode.dart';
 
@@ -7,12 +7,14 @@ class EmptyGroupsState extends StatelessWidget {
   final gen.AppLocalizations localizations;
   final ThemeData theme;
   final VoidCallback onGroupAdded;
+  final bool allArchived;
 
   const EmptyGroupsState({
     super.key,
     required this.localizations,
     required this.theme,
     required this.onGroupAdded,
+    this.allArchived = false,
   });
 
   @override
@@ -21,10 +23,39 @@ class EmptyGroupsState extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.group_add_outlined,
-            size: 80,
-            color: theme.colorScheme.primary.withValues(alpha: 0.6),
+          // Render the welcome logo in greyscale with muted opacity
+          ColorFiltered(
+            colorFilter: const ColorFilter.matrix(<double>[
+              0.2126,
+              0.7152,
+              0.0722,
+              0,
+              0,
+              0.2126,
+              0.7152,
+              0.0722,
+              0,
+              0,
+              0.2126,
+              0.7152,
+              0.0722,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+            ]),
+            child: Opacity(
+              opacity: 0.6,
+              child: Image.asset(
+                'assets/images/home/welcome/welcome-logo.png',
+                height: 80,
+                fit: BoxFit.contain,
+                semanticLabel: localizations.welcome_logo_semantic,
+              ),
+            ),
           ),
           const SizedBox(height: 24),
           Text(
@@ -43,6 +74,16 @@ class EmptyGroupsState extends StatelessWidget {
             ),
             textAlign: TextAlign.center,
           ),
+          if (allArchived) ...[
+            const SizedBox(height: 12),
+            Text(
+              localizations.all_groups_archived_info,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
           const SizedBox(height: 32),
           FilledButton.icon(
             onPressed: () async {

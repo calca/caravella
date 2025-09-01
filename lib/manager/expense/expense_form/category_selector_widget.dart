@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../data/model/expense_category.dart';
 import '../../../data/category_service.dart';
 import '../../../widgets/selection_bottom_sheet.dart';
@@ -43,6 +43,7 @@ class CategorySelectorWidget extends StatelessWidget {
         items: categories,
         selected: selectedCategory,
         gloc: gloc,
+        sheetTitle: gloc.category,
         itemLabel: (c) => c.name,
         onAddItemInline: onAddCategoryInline,
         addItemHint: gloc.category_name,
@@ -87,10 +88,11 @@ class CategorySelectorWidget extends StatelessWidget {
             child: Text(
               selectedCategory?.name ?? gloc.category_placeholder,
               overflow: TextOverflow.ellipsis,
-              style: (textStyle ?? FormTheme.getSelectTextStyle(context))?.copyWith(
-                color: theme.colorScheme.onSurface,
-                fontWeight: FontWeight.w400,
-              ),
+              style: (textStyle ?? FormTheme.getSelectTextStyle(context))
+                  ?.copyWith(
+                    color: theme.colorScheme.onSurface,
+                    fontWeight: FontWeight.w400,
+                  ),
             ),
           ),
         ],

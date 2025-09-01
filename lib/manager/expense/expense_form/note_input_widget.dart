@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'icon_leading_field.dart';
 import '../../../themes/form_theme.dart';
 
@@ -24,9 +24,7 @@ class NoteInputWidget extends StatelessWidget {
       maxLines: null, // auto-grow illimitato
       minLines: 4, // minimo 4 righe visibili
       style: textStyle ?? FormTheme.getMultilineTextStyle(context),
-      decoration: FormTheme.getMultilineDecoration(
-        hintText: gloc.note_hint,
-      ),
+      decoration: FormTheme.getMultilineDecoration(hintText: gloc.note_hint),
     );
 
     return IconLeadingField(
