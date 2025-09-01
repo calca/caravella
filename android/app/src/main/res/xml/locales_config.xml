@@ -3,4 +3,5 @@
     <!-- Supported locales for the app -->
     <locale android:name="en" />
     <locale android:name="it" />
+    <locale android:name="es" />
 </locale-config>
