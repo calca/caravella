@@ -13,12 +13,14 @@ class HomeCardsSection extends StatefulWidget {
   final VoidCallback onTripAdded;
   final ExpenseGroup? pinnedTrip;
   final List<ExpenseGroup>? initialGroups;
+  final bool allArchived;
 
   const HomeCardsSection({
     super.key,
     required this.onTripAdded,
     this.pinnedTrip,
     this.initialGroups,
+    this.allArchived = false,
   });
 
   @override
@@ -206,6 +208,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
                   ? EmptyGroupsState(
                       localizations: loc,
                       theme: theme,
+                      allArchived: widget.allArchived,
                       onGroupAdded: () {
                         widget.onTripAdded();
                         _loadActiveGroups();

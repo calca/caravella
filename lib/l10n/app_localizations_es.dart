@@ -103,11 +103,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get no_active_groups => 'No hay grupos activos';
 
   @override
-  String get no_active_groups_subtitle =>
-      'Crea tu primer grupo de gastos para empezar';
+  String get no_active_groups_subtitle => 'Crea un grupo de gastos';
 
   @override
-  String get create_first_group => 'Crear primer grupo';
+  String get create_first_group => 'Crear un grupo';
 
   @override
   String get new_expense_group => 'Nuevo Grupo de Gastos';
@@ -904,6 +903,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get no_archived_groups_subtitle => 'Aún no has archivado ningún grupo';
 
   @override
+  String get all_groups_archived_info =>
+      'Todos tus grupos están archivados. Puedes restaurarlos desde la sección Archivo o crear otros nuevos.';
+
+  @override
   String get filter_status_tooltip => 'Filtrar grupos';
 
   @override
@@ -1506,14 +1509,14 @@ class AppLocalizationsEs extends AppLocalizations {
   String get add_first_expense_button => 'Agregar Primer Gasto';
 
   @override
-  String get show_search => 'Show search bar';
+  String get show_search => 'Mostrar barra de búsqueda';
 
   @override
-  String get hide_search => 'Hide search bar';
+  String get hide_search => 'Ocultar barra de búsqueda';
 
   @override
-  String get expense_groups_title => 'Expense Groups';
+  String get expense_groups_title => 'Grupos de gastos';
 
   @override
-  String get expense_groups_desc => 'Manage your expense groups';
+  String get expense_groups_desc => 'Gestiona tus grupos de gastos';
 }

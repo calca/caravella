@@ -103,11 +103,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get no_active_groups => 'No active groups';
 
   @override
-  String get no_active_groups_subtitle =>
-      'Create your first expense group to get started';
+  String get no_active_groups_subtitle => 'Create an expense group';
 
   @override
-  String get create_first_group => 'Create first group';
+  String get create_first_group => 'Create a group';
 
   @override
   String get new_expense_group => 'New Expense Group';
@@ -895,6 +894,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get no_archived_groups_subtitle =>
       'You have not archived any groups yet';
+
+  @override
+  String get all_groups_archived_info =>
+      'All your groups are archived. You can restore them from the Archive section or create new ones.';
 
   @override
   String get filter_status_tooltip => 'Filter groups';

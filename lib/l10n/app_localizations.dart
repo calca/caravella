@@ -289,13 +289,13 @@ abstract class AppLocalizations {
   /// No description provided for @no_active_groups_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'Create your first expense group to get started'**
+  /// **'Create an expense group'**
   String get no_active_groups_subtitle;
 
   /// No description provided for @create_first_group.
   ///
   /// In en, this message translates to:
-  /// **'Create first group'**
+  /// **'Create a group'**
   String get create_first_group;
 
   /// No description provided for @new_expense_group.
@@ -1821,6 +1821,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You have not archived any groups yet'**
   String get no_archived_groups_subtitle;
+
+  /// No description provided for @all_groups_archived_info.
+  ///
+  /// In en, this message translates to:
+  /// **'All your groups are archived. You can restore them from the Archive section or create new ones.'**
+  String get all_groups_archived_info;
 
   /// Tooltip for status filter buttons row
   ///

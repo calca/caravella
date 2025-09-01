@@ -302,7 +302,9 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
         minHeight: screenHeight * 0.3, // Minimum 30% height
       ),
       child: GroupBottomSheetScaffold(
-        title: widget.sheetTitle ?? (widget.onAddItemInline != null ? widget.gloc.add : null),
+        title:
+            widget.sheetTitle ??
+            (widget.onAddItemInline != null ? widget.gloc.add : null),
         showHandle: true,
         scrollable: false,
         child: Padding(

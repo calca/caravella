@@ -49,8 +49,8 @@
   "good_evening": "Good evening",
   "your_groups": "Your groups",
   "no_active_groups": "No active groups",
-  "no_active_groups_subtitle": "Create your first expense group to get started",
-  "create_first_group": "Create first group",
+  "no_active_groups_subtitle": "Create an expense group",
+  "create_first_group": "Create a group",
   "new_expense_group": "New Expense Group",
   "tap_to_create": "Tap to create",
   "no_expense_label": "No expenses found",
@@ -320,6 +320,7 @@
   ,"no_archived_groups": "No archived groups"
   ,"@no_archived_groups": {"description": "Empty state title for archived groups"}
   ,"no_archived_groups_subtitle": "You have not archived any groups yet"
+  ,"all_groups_archived_info": "All your groups are archived. You can restore them from the Archive section or create new ones."
   ,"@no_archived_groups_subtitle": {"description": "Empty state subtitle for archived groups"}
   ,"@status_archived": {"description": "Filter label: archived groups"}
   ,"filter_status_tooltip": "Filter groups"

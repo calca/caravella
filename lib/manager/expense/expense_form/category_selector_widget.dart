@@ -36,7 +36,7 @@ class CategorySelectorWidget extends StatelessWidget {
         items: categories,
         selected: selectedCategory,
         gloc: gloc,
-  sheetTitle: gloc.category, 
+        sheetTitle: gloc.category,
         itemLabel: (c) => c.name,
         onAddItemInline: onAddCategoryInline,
         addItemHint: gloc.category_name,
