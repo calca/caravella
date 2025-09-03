@@ -201,6 +201,63 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_select_language => '选择语言';
 
   @override
+  String get settings_select_theme => '选择主题';
+
+  @override
+  String get settings_general => '一般';
+
+  @override
+  String get settings_general_desc => '应用程序通用设置';
+
+  @override
+  String get settings_info => '信息';
+
+  @override
+  String get settings_info_desc => '应用程序信息和版本';
+
+  @override
+  String get settings_info_card => '应用信息';
+
+  @override
+  String get settings_info_card_desc => '查看应用信息和版本';
+
+  @override
+  String get settings_data => '数据';
+
+  @override
+  String get settings_data_desc => '管理和备份数据';
+
+  @override
+  String get settings_data_manage => '管理数据';
+
+  @override
+  String get settings_privacy_desc => '安全和隐私选项';
+
+  @override
+  String get settings_app_version => '应用版本';
+
+  @override
+  String get accessibility_currently_disabled => '当前已禁用';
+
+  @override
+  String get accessibility_currently_enabled => '当前已启用';
+
+  @override
+  String get accessibility_double_tap_disable => '双击以禁用';
+
+  @override
+  String get accessibility_double_tap_enable => '双击以启用';
+
+  @override
+  String get accessibility_security_switch => '安全开关';
+
+  @override
+  String get accessibility_switch_off => '开关关闭';
+
+  @override
+  String get accessibility_switch_on => '开关开启';
+
+  @override
   String get settings_theme => '主题';
 
   @override
@@ -915,4 +972,209 @@ class AppLocalizationsZh extends AppLocalizations {
   // Add more methods as needed to match the base class interface
   // For brevity, I'm implementing the most important ones
   // The Flutter code generation will handle the complete implementation
+
+  @override
+  String get new_expense_group => '新费用群组';
+
+  @override
+  String get tap_to_create => '点击创建';
+
+  @override
+  String get no_expense_label => '未找到费用';
+
+  @override
+  String get image => '图片';
+
+  @override
+  String get select_image => '选择图片';
+
+  @override
+  String get change_image => '更改图片';
+
+  @override
+  String get from_gallery => '从相册';
+
+  @override
+  String get from_camera => '从相机';
+
+  @override
+  String get remove_image => '移除图片';
+
+  @override
+  String get color => '颜色';
+
+  @override
+  String get remove_color => '移除颜色';
+
+  @override
+  String get color_alternative => '图片的替代';
+
+  @override
+  String get background => '背景';
+
+  @override
+  String get select_background => '选择背景';
+
+  @override
+  String get background_options => '背景选项';
+
+  @override
+  String get choose_image_or_color => '选择图片或颜色';
+
+  @override
+  String get participants_description => '分摊费用的人员';
+
+  @override
+  String get expense_groups_settings => '费用群组设置';
+
+  @override
+  String get group_image => '群组图片';
+
+  @override
+  String get group_icon => '群组图标';
+
+  @override
+  String get save_group => '保存群组';
+
+  @override
+  String get edit_group => '编辑群组';
+
+  @override
+  String get delete_group => '删除群组';
+
+  @override
+  String get group_settings => '群组设置';
+
+  @override
+  String get group_participants => '群组参与者';
+
+  @override
+  String get group_expenses => '群组费用';
+
+  @override
+  String get group_summary => '群组摘要';
+
+  @override
+  String get add_expense_to => '添加费用至';
+
+  @override
+  String get expense_created => '费用已创建';
+
+  @override
+  String get expense_updated => '费用已更新';
+
+  @override
+  String get expense_deleted => '费用已删除';
+
+  @override
+  String get no_expense_message => '未添加任何费用';
+
+  @override
+  String get participant_added => '参与者已添加';
+
+  @override
+  String get participant_updated => '参与者已更新';
+
+  @override
+  String get participant_deleted => '参与者已删除';
+
+  @override
+  String get split_equally => '平均分摊';
+
+  @override
+  String get custom_split => '自定义分摊';
+
+  @override
+  String get who_paid => '谁付款了';
+
+  @override
+  String get split_details => '分摊详情';
+
+  @override
+  String get expense_note => '费用备注';
+
+  @override
+  String get optional => '可选';
+
+  @override
+  String get required => '必需';
+
+  @override
+  String get expense_amount => '费用金额';
+
+  @override
+  String get split_type => '分摊类型';
+
+  @override
+  String get equal_split => '平等分摊';
+
+  @override
+  String get unequal_split => '不等分摊';
+
+  @override
+  String get percentage_split => '百分比分摊';
+
+  @override
+  String get share_split => '份额分摊';
+
+  @override
+  String get activity => '活动';
+
+  @override
+  String get search_expenses_hint => '按名称或备注搜索...';
+
+  @override
+  String get clear_filters => '清除';
+
+  @override
+  String get show_filters => '显示筛选';
+
+  @override
+  String get hide_filters => '隐藏筛选';
+
+  @override
+  String get all_categories => '全部';
+
+  @override
+  String get no_expenses_with_filters => '没有符合筛选条件的费用';
+
+  @override
+  String get no_expenses_yet => '尚未添加费用';
+
+  @override
+  String get empty_expenses_title => '准备开始记录了吗？';
+
+  @override
+  String get empty_expenses_subtitle => '添加您的第一笔费用开始跟踪群组支出';
+
+  @override
+  String from_to(Object end, Object start) {
+    return '从 $start 到 $end';
+  }
+
+  @override
+  String participant_name_semantics(Object name) {
+    return '参与者姓名：$name';
+  }
+
+  @override
+  String category_name_semantics(Object name) {
+    return '类别名称：$name';
+  }
+
+  @override
+  String error_saving_group(Object error) {
+    return '保存群组时出错：$error';
+  }
+
+  @override
+  String accessibility_total_expenses(Object amount) {
+    return '总费用：$amount€';
+  }
+
+  @override
+  String accessibility_security_switch(Object state) {
+    return '安全开关 - $state';
+  }
+
 }
