@@ -1,0 +1,570 @@
+{
+  "@@locale": "pt",
+  "developer_section_title": "Desenvolvedor e Suporte",
+  "@developer_section_title": {"description": "Section title for developer and support links in DeveloperPage"},
+  "developer_section_desc": "Apoie o desenvolvedor ou veja o perfil",
+  "@developer_section_desc": {"description": "Section description for developer and support links in DeveloperPage"},
+  "repo_section_title": "Código e Problemas",
+  "@repo_section_title": {"description": "Section title for repository and issues links in DeveloperPage"},
+  "repo_section_desc": "Ver código fonte ou reportar um problema",
+  "@repo_section_desc": {"description": "Section description for repository and issues links in DeveloperPage"},
+  "license_section_title": "Licença",
+  "@license_section_title": {"description": "Section title for license link in DeveloperPage"},
+  "license_section_desc": "Ver a licença de código aberto",
+  "@license_section_desc": {"description": "Section description for license link in DeveloperPage"},
+  "weeklyChartBadge": "S",
+  "@weeklyChartBadge": {
+    "description": "Letter indicator for weekly chart badge"
+  },
+  "monthlyChartBadge": "M",
+  "@monthlyChartBadge": {
+    "description": "Letter indicator for monthly chart badge"
+  },
+  "weeklyExpensesChart": "Despesas semanais",
+  "@weeklyExpensesChart": {
+    "description": "Label for weekly expenses chart"
+  },
+  "monthlyExpensesChart": "Despesas mensais",
+  "@monthlyExpensesChart": {
+    "description": "Label for monthly expenses chart"
+  },
+  "settings_flag_secure_desc": "Impede capturas de tela e gravação de tela",
+  "settings_flag_secure_title": "Tela segura",
+  "settings_privacy": "Privacidade",
+  "select_currency": "Selecionar moeda",
+  "select_period_hint_short": "Definir datas",
+  "select_period_hint": "Selecionar um intervalo de datas",
+  "in_group_prefix": "em",
+  "save_change_expense": "Salvar alterações",
+  "group_total": "Total",
+  "download_all_csv": "Baixar tudo (CSV)",
+  "share_all_csv": "Compartilhar tudo (CSV)",
+  "download_all_ofx": "Baixar tudo (OFX)",
+  "share_all_ofx": "Compartilhar tudo (OFX)",
+  "export_share": "Exportar e Compartilhar",
+  "export_options": "Opções de Exportação",
+  "welcome_v3_title": "Organize.\nCompartilhe.\nAcerte.\n ",
+  "good_morning": "Bom dia",
+  "good_afternoon": "Boa tarde",
+  "good_evening": "Boa noite",
+  "your_groups": "Seus grupos",
+  "no_active_groups": "Nenhum grupo ativo",
+  "no_active_groups_subtitle": "Criar um grupo de despesas",
+  "create_first_group": "Criar um grupo",
+  "new_expense_group": "Novo Grupo de Despesas",
+  "tap_to_create": "Toque para criar",
+  "no_expense_label": "Nenhuma despesa encontrada",
+  "image": "Imagem",
+  "select_image": "Selecionar Imagem",
+  "change_image": "Alterar Imagem",
+  "from_gallery": "Da Galeria",
+  "from_camera": "Da Câmera",
+  "remove_image": "Remover Imagem",
+  "cannot_delete_assigned_participant": "Não é possível excluir participante: está atribuído a uma ou mais despesas",
+  "@cannot_delete_assigned_participant": {"description": "Shown when attempting to delete a participant that is used by existing expenses"},
+  "cannot_delete_assigned_category": "Não é possível excluir categoria: está atribuída a uma ou mais despesas",
+  "@cannot_delete_assigned_category": {"description": "Shown when attempting to delete a category that is used by existing expenses"},
+  "color": "Cor",
+  "remove_color": "Remover Cor",
+  "color_alternative": "Alternativa à imagem",
+  "background": "Fundo",
+  "select_background": "Selecionar Fundo",
+  "background_options": "Opções de Fundo",
+  "choose_image_or_color": "Escolher imagem ou cor",
+  "participants_description": "Pessoas compartilhando custos",
+  "categories_description": "Agrupar despesas por tipo",
+  "dates_description": "Início e fim opcionais",
+  "currency_description": "Moeda base do grupo",
+  "background_color_selected": "Cor selecionada",
+  "background_tap_to_replace": "Toque para substituir",
+  "background_tap_to_change": "Toque para alterar",
+  "background_select_image_or_color": "Selecionar imagem ou cor",
+  "background_random_color": "Cor aleatória",
+  "background_remove": "Remover fundo",
+  "crop_image_title": "Cortar imagem",
+  "crop_confirm": "Confirmar",
+  "saving": "Salvando...",
+  "processing_image": "Processando imagem...",
+  "no_trips_found": "Para onde você quer ir?",
+  "expenses": "Despesas",
+  "participants": "Participantes",
+  "participants_label": "Participantes",
+  "last_7_days": "7 dias",
+  "recent_activity": "Atividade recente",
+  "about": "Sobre",
+  "license_hint": "Este aplicativo é lançado sob a licença MIT.",
+  "license_link": "Ver Licença MIT no GitHub",
+  "license_section": "Licença",
+  "add_trip": "Adicionar grupo",
+  "new_group": "Novo Grupo",
+  "group_name": "Nome",
+  "enter_title": "Digite um nome",
+  "enter_participant": "Digite pelo menos um participante",
+  "select_start": "Selecionar início",
+  "select_end": "Selecionar fim",
+  "start_date_not_selected": "Selecionar início",
+  "end_date_not_selected": "Selecionar fim",
+  "select_from_date": "Selecionar de",
+  "select_to_date": "Selecionar até",
+  "date_range_not_selected": "Selecionar período",
+  "date_range_partial": "Selecionar ambas as datas",
+  "save": "Salvar",
+  "delete_trip": "Excluir viagem",
+  "delete_trip_confirm": "Tem certeza de que deseja excluir esta viagem?",
+  "cancel": "Cancelar",
+  "ok": "OK",
+  "from_to": "{start} - {end}",
+  "add_expense": "Nova despesa",
+  "edit_expense": "Editar despesa",
+  "expand_form": "Expandir formulário",
+  "expand_form_tooltip": "Adicionar data, localização e notas",
+  "category": "Categoria",
+  "amount": "Valor",
+  "invalid_amount": "Valor inválido",
+  "no_categories": "Nenhuma categoria",
+  "add_category": "Adicionar categoria",
+  "category_name": "Nome da categoria",
+  "note": "Nota",
+  "note_hint": "Nota",
+  "select_both_dates": "Se você selecionar uma data, deve selecionar ambas",
+  "select_both_dates_or_none": "Selecione ambas as datas ou deixe ambas vazias",
+  "end_date_after_start": "A data final deve ser posterior à data inicial",
+  "start_date_optional": "De",
+  "end_date_optional": "Até",
+  "dates": "Período",
+  "expenses_by_participant": "Por participante",
+  "expenses_by_category": "Por categoria",
+  "uncategorized": "Sem categoria",
+  "backup": "Backup",
+  "no_trips_to_backup": "Nenhuma viagem para fazer backup",
+  "backup_error": "Falha no backup",
+  "backup_share_message": "Aqui está seu backup do Caravella",
+  "import": "Importar",
+  "import_confirm_title": "Importar dados",
+  "import_confirm_message": "Tem certeza de que deseja substituir todas as viagens pelo arquivo \"{file}\"? Esta ação não pode ser desfeita.",
+  "import_success": "Importação bem-sucedida! Dados recarregados.",
+  "import_error": "Falha na importação. Verifique o formato do arquivo.",
+  "categories": "Categorias",
+  "from": "De",
+  "to": "Até",
+  "add": "Adicionar",
+  "participant_name": "Nome do participante",
+  "participant_name_hint": "Digite o nome do participante",
+  "edit_participant": "Editar participante",
+  "delete_participant": "Excluir participante",
+  "add_participant": "Adicionar participante",
+  "no_participants": "Nenhum participante",
+  "category_name_hint": "Digite o nome da categoria",
+  "edit_category": "Editar categoria",
+  "delete_category": "Excluir categoria",
+  "participant_name_semantics": "Participante: {name}",
+  "category_name_semantics": "Categoria: {name}",
+  "currency": "Moeda",
+  "settings_tab": "Configurações",
+  "basic_info": "Informações Básicas",
+  "settings": "Configurações",
+  "history": "Histórico",
+  "all": "TODOS",
+  "search_groups": "Buscar grupos...",
+  "no_search_results": "Nenhum grupo encontrado para",
+  "try_different_search": "Tente buscar com palavras diferentes",
+  "active": "Ativo",
+  "archived": "Arquivado",
+  "archive": "Arquivar",
+  "unarchive": "Desarquivar",
+  "archive_confirm": "Você quer arquivar",
+  "unarchive_confirm": "Você quer desarquivar",
+  "overview": "Visão geral",
+  "statistics": "Estatísticas",
+  "options": "Opções",
+  "show_overview": "Mostrar visão geral",
+  "show_statistics": "Mostrar estatísticas",
+  "no_expenses_to_display": "Nenhuma despesa para exibir",
+  "no_expenses_to_analyze": "Nenhuma despesa para analisar",
+  "select_expense_date": "Selecionar data da despesa",
+  "select_expense_date_short": "Selecionar data",
+  "date": "Data",
+  "edit_group": "Editar Grupo",
+  "delete_group": "Excluir grupo",
+  "delete_group_confirm": "Tem certeza de que deseja excluir este grupo de despesas? Esta ação não pode ser desfeita.",
+  "add_expense_fab": "Adicionar Despesa",
+  "pin_group": "Fixar grupo",
+  "unpin_group": "Desfixar grupo",
+  "pin": "Fixar",
+  "theme_automatic": "Automático",
+  "theme_light": "Claro",
+  "theme_dark": "Escuro",
+  "developed_by": "Desenvolvido por calca",
+  "links": "Links",
+  "daily_expenses_chart": "Despesas diárias",
+  "weekly_expenses_chart": "Despesas semanais",
+  "daily_average_by_category": "Média diária por categoria",
+  "per_day": "/dia",
+  "no_expenses_for_statistics": "Nenhuma despesa disponível para estatísticas",
+  "settlement": "Acerto",
+  "all_balanced": "Todas as contas estão equilibradas!",
+  "owes_to": " deve ",
+  "export_csv": "Exportar CSV",
+  "no_expenses_to_export": "Nenhuma despesa para exportar",
+  "export_csv_share_text": "Despesas exportadas de ",
+  "export_csv_error": "Erro ao exportar despesas",
+  "expense_name": "Descrição",
+  "paid_by": "Pago por",
+  "expense_added_success": "Despesa adicionada",
+  "expense_updated_success": "Despesa atualizada",
+  "data_refreshing": "Atualizando…",
+  "data_refreshed": "Atualizado",
+  "refresh": "Atualizar",
+  "group_added_success": "Grupo adicionado",
+  "csv_select_directory_title": "Selecionar pasta para salvar CSV",
+  "csv_saved_in": "CSV salvo em: {path}",
+  "csv_save_cancelled": "Exportação cancelada",
+  "csv_save_error": "Erro ao salvar arquivo CSV",
+  "ofx_select_directory_title": "Selecionar pasta para salvar OFX",
+  "ofx_saved_in": "OFX salvo em: {path}",
+  "ofx_save_cancelled": "Exportação OFX cancelada",
+  "ofx_save_error": "Erro ao salvar arquivo OFX",
+  "csv_expense_name": "Descrição",
+  "csv_amount": "Valor",
+  "csv_paid_by": "Pago por",
+  "csv_category": "Categoria",
+  "csv_date": "Data",
+  "csv_note": "Nota",
+  "csv_location": "Localização",
+  "location": "Localização",
+  "location_hint": "Localização",
+  "get_current_location": "Usar localização atual",
+  "enter_location_manually": "Inserir manualmente",
+  "location_permission_denied": "Permissão de localização negada",
+  "location_service_disabled": "Serviço de localização desabilitado",
+  "getting_location": "Obtendo localização...",
+  "location_error": "Erro ao obter localização",
+  "resolving_address": "Resolvendo endereço…",
+  "address_resolved": "Endereço resolvido",
+  "settings_general": "Geral",
+  "settings_general_desc": "Configurações de idioma e aparência",
+  "settings_language": "Idioma",
+  "settings_language_desc": "Escolha seu idioma preferido",
+  "settings_language_it": "Italiano",
+  "settings_language_en": "Inglês",
+  "settings_language_es": "Espanhol",
+  "settings_language_pt": "Português",
+  "settings_select_language": "Selecionar idioma",
+  "settings_theme": "Tema",
+  "settings_theme_desc": "Claro, escuro ou do sistema",
+  "settings_select_theme": "Selecionar tema",
+  "settings_privacy": "Privacidade",
+  "settings_privacy_desc": "Opções de segurança e privacidade",
+  "settings_data": "Dados",
+  "settings_data_desc": "Gerencie suas informações",
+  "settings_data_manage": "Gerenciamento de dados",
+  "settings_info": "Informações",
+  "settings_info_desc": "Detalhes do aplicativo e suporte",
+  "settings_app_version": "Versão do aplicativo",
+  "settings_info_card": "Informações",
+  "settings_info_card_desc": "Desenvolvedor, Código fonte e Licença",
+  "terms_github_title": "GitHub: calca",
+  "terms_github_desc": "Perfil do desenvolvedor no GitHub.",
+  "terms_repo_title": "Repositório GitHub",
+  "terms_repo_desc": "Código fonte da aplicação.",
+  "terms_issue_title": "Reportar um problema",
+  "terms_issue_desc": "Ir para a página de problemas do GitHub.",
+  "terms_license_desc": "Ver a licença de código aberto.",
+  "support_developer_title": "Me pague um café",
+  "support_developer_desc": "Apoie o desenvolvimento deste aplicativo.",
+  "data_title": "Backup e Restauração",
+  "data_backup_title": "Backup",
+  "data_backup_desc": "Criar um arquivo de backup de suas despesas.",
+  "data_restore_title": "Restaurar",
+  "data_restore_desc": "Importar um backup para restaurar seus dados.",
+  "auto_backup_title": "Backup automático",
+  "auto_backup_desc": "Ativar backup automático do sistema operacional",
+  "info_tab": "Info",
+  "select_paid_by": "Selecionar pagador",
+  "select_category": "Selecionar uma categoria",
+  "check_form": "Verificar os dados inseridos",
+  "delete_expense": "Excluir despesa",
+  "delete_expense_confirm": "Tem certeza de que deseja excluir esta despesa?",
+  "delete": "Excluir",
+  "no_results_found": "Nenhum resultado encontrado.",
+  "@no_results_found": {"description": "Shown when a filter (not search) returns no groups"},
+  "try_adjust_filter_or_search": "Tente ajustar o filtro ou busca.",
+  "@try_adjust_filter_or_search": {"description": "Secondary helper text suggesting to change filters or search"},
+  "general_statistics": "Estatísticas gerais",
+  "@general_statistics": {"description": "Header for general statistics section"},
+  "add_first_expense": "Adicione a primeira despesa para começar",
+  "@add_first_expense": {"description": "Empty state subtitle encouraging user to add first expense"},
+  "overview_and_statistics": "Visão geral e estatísticas",
+  "daily_average": "Diário",
+  "spent_today": "Hoje",
+  "@daily_average": {"description": "Label shown before the computed overall daily average spending value"},
+  "@spent_today": {"description": "Label shown before the amount spent today"},
+  "@overview_and_statistics": {"description": "Tooltip text when overview/statistics button is enabled"},
+  "average_expense": "Despesa média",
+  "welcome_v3_cta": "Começar!",
+  "discard_changes_title": "Descartar alterações?",
+  "discard_changes_message": "Tem certeza de que deseja descartar as alterações não salvas?",
+  "discard": "Descartar",
+  "category_placeholder": "Categoria",
+  "image_requirements": "PNG, JPG, GIF (máx 10MB)",
+  "error_saving_group": "Erro ao salvar: {error}",
+  "error_selecting_image": "Erro ao selecionar imagem",
+  "error_saving_image": "Erro ao salvar imagem",
+  "@error_saving_group": {"placeholders": {"error": {}}},
+  "already_exists": "já existe",
+  "@already_exists": {"description": "Shown after an entity name when a duplicate entry is attempted"},
+  "status_all": "Todos",
+  "@status_all": {"description": "Filter label: all groups"},
+  "status_active": "Ativo",
+  "@status_active": {"description": "Filter label: active groups"},
+  "status_archived": "Arquivado",
+  "no_archived_groups": "Nenhum grupo arquivado",
+  "@no_archived_groups": {"description": "Empty state title for archived groups"},
+  "no_archived_groups_subtitle": "Você ainda não arquivou nenhum grupo",
+  "all_groups_archived_info": "Todos os seus grupos estão arquivados. Você pode restaurá-los na seção Arquivo ou criar novos.",
+  "@no_archived_groups_subtitle": {"description": "Empty state subtitle for archived groups"},
+  "@status_archived": {"description": "Filter label: archived groups"},
+  "filter_status_tooltip": "Filtrar grupos",
+  "@filter_status_tooltip": {"description": "Tooltip for status filter buttons row"},
+  "welcome_logo_semantic": "Logo do aplicativo Caravella",
+  "@welcome_logo_semantic": {"description": "Semantic label for the welcome screen logo"},
+  "create_new_group": "Criar novo grupo",
+  "@create_new_group": {"description": "Create new group action label"},
+  "accessibility_add_new_item": "Adicionar novo item",
+  "@accessibility_add_new_item": {"description": "Default accessibility label for add button"},
+  "accessibility_navigation_bar": "Barra de navegação",
+  "@accessibility_navigation_bar": {"description": "Navigation bar accessibility label"},
+  "accessibility_back_button": "Voltar",
+  "@accessibility_back_button": {"description": "Back button accessibility label"},
+  "accessibility_loading_groups": "Carregando grupos",
+  "@accessibility_loading_groups": {"description": "Loading state accessibility label"},
+  "accessibility_loading_your_groups": "Carregando seus grupos",
+  "@accessibility_loading_your_groups": {"description": "Loading groups progress indicator label"},
+  "accessibility_groups_list": "Lista de grupos",
+  "@accessibility_groups_list": {"description": "Groups list section accessibility label"},
+  "accessibility_welcome_screen": "Tela de boas-vindas",
+  "@accessibility_welcome_screen": {"description": "Welcome screen accessibility label"},
+  "accessibility_total_expenses": "Total de despesas: {amount}€",
+  "@accessibility_total_expenses": {"description": "Total expenses accessibility label", "placeholders": {"amount": {}}},
+  "accessibility_add_expense": "Adicionar despesa",
+  "@accessibility_add_expense": {"description": "Add expense button accessibility label"},
+  "accessibility_security_switch": "Interruptor de segurança - {state}",
+  "@accessibility_security_switch": {"description": "Security switch accessibility label", "placeholders": {"state": {}}},
+  "accessibility_switch_on": "Ligado",
+  "@accessibility_switch_on": {"description": "Switch on state label"},
+  "accessibility_switch_off": "Desligado",
+  "@accessibility_switch_off": {"description": "Switch off state label"},
+  "accessibility_image_source_dialog": "Diálogo de seleção de fonte da imagem",
+  "@accessibility_image_source_dialog": {"description": "Image source selection dialog accessibility label"},
+  "accessibility_currently_enabled": "Atualmente habilitado",
+  "@accessibility_currently_enabled": {"description": "Currently enabled state label"},
+  "accessibility_currently_disabled": "Atualmente desabilitado",
+  "@accessibility_currently_disabled": {"description": "Currently disabled state label"},
+  "accessibility_double_tap_disable": "Toque duplo para desabilitar a segurança da tela",
+  "@accessibility_double_tap_disable": {"description": "Double tap to disable hint"},
+  "accessibility_double_tap_enable": "Toque duplo para habilitar a segurança da tela",
+  ,"@accessibility_double_tap_enable": {"description": "Double tap to enable hint"}
+  ,"accessibility_toast_success": "Success"
+  ,"@accessibility_toast_success": {"description": "Success toast type description"}
+  ,"accessibility_toast_error": "Error"
+  ,"@accessibility_toast_error": {"description": "Error toast type description"}
+  ,"accessibility_toast_info": "Information"
+  ,"@accessibility_toast_info": {"description": "Information toast type description"}
+  ,"color_suggested_title": "Suggested colors"
+  ,"@color_suggested_title": {"description": "Title for the suggested colors section"}
+  ,"color_suggested_subtitle": "Pick one of the theme compatible colors"
+  ,"@color_suggested_subtitle": {"description": "Subtitle explaining the suggested colors section"}
+  ,"color_random_subtitle": "Let the app pick a color for you"
+  ,"@color_random_subtitle": {"description": "Subtitle for the random color section"}
+  ,"currency_AED": "United Arab Emirates Dirham"
+  ,"currency_AFN": "Afghan Afghani"
+  ,"currency_ALL": "Albanian Lek"
+  ,"currency_AMD": "Armenian Dram"
+  ,"currency_ANG": "Netherlands Antillean Guilder"
+  ,"currency_AOA": "Angolan Kwanza"
+  ,"currency_ARS": "Argentine Peso"
+  ,"currency_AUD": "Australian Dollar"
+  ,"currency_AWG": "Aruban Florin"
+  ,"currency_AZN": "Azerbaijani Manat"
+  ,"currency_BAM": "Bosnia and Herzegovina Convertible Mark"
+  ,"currency_BBD": "Barbadian Dollar"
+  ,"currency_BDT": "Bangladeshi Taka"
+  ,"currency_BGN": "Bulgarian Lev"
+  ,"currency_BHD": "Bahraini Dinar"
+  ,"currency_BIF": "Burundian Franc"
+  ,"currency_BMD": "Bermudian Dollar"
+  ,"currency_BND": "Brunei Dollar"
+  ,"currency_BOB": "Bolivian Boliviano"
+  ,"currency_BRL": "Brazilian Real"
+  ,"currency_BSD": "Bahamian Dollar"
+  ,"currency_BTN": "Bhutanese Ngultrum"
+  ,"currency_BWP": "Botswana Pula"
+  ,"currency_BYN": "Belarusian Ruble"
+  ,"currency_BZD": "Belize Dollar"
+  ,"currency_CAD": "Canadian Dollar"
+  ,"currency_CDF": "Congolese Franc"
+  ,"currency_CHF": "Swiss Franc"
+  ,"currency_CLP": "Chilean Peso"
+  ,"currency_CNY": "Chinese Yuan"
+  ,"currency_COP": "Colombian Peso"
+  ,"currency_CRC": "Costa Rican Colón"
+  ,"currency_CUP": "Cuban Peso"
+  ,"currency_CVE": "Cape Verdean Escudo"
+  ,"currency_CZK": "Czech Koruna"
+  ,"currency_DJF": "Djiboutian Franc"
+  ,"currency_DKK": "Danish Krone"
+  ,"currency_DOP": "Dominican Peso"
+  ,"currency_DZD": "Algerian Dinar"
+  ,"currency_EGP": "Egyptian Pound"
+  ,"currency_ERN": "Eritrean Nakfa"
+  ,"currency_ETB": "Ethiopian Birr"
+  ,"currency_EUR": "Euro"
+  ,"currency_FJD": "Fiji Dollar"
+  ,"currency_FKP": "Falkland Islands Pound"
+  ,"currency_GBP": "Pound Sterling"
+  ,"currency_GEL": "Georgian Lari"
+  ,"currency_GHS": "Ghanaian Cedi"
+  ,"currency_GIP": "Gibraltar Pound"
+  ,"currency_GMD": "Gambian Dalasi"
+  ,"currency_GNF": "Guinean Franc"
+  ,"currency_GTQ": "Guatemalan Quetzal"
+  ,"currency_GYD": "Guyanese Dollar"
+  ,"currency_HKD": "Hong Kong Dollar"
+  ,"currency_HNL": "Honduran Lempira"
+  ,"currency_HTG": "Haitian Gourde"
+  ,"currency_HUF": "Hungarian Forint"
+  ,"currency_IDR": "Indonesian Rupiah"
+  ,"currency_ILS": "Israeli New Shekel"
+  ,"currency_INR": "Indian Rupee"
+  ,"currency_IQD": "Iraqi Dinar"
+  "currency_IRR": "Rial iraniano",
+  "currency_ISK": "Coroa islandesa",
+  "currency_JMD": "Dólar jamaicano",
+  "currency_JOD": "Dinar jordaniano",
+  "currency_JPY": "Iene japonês",
+  "currency_KES": "Xelim queniano",
+  "currency_KGS": "Som quirguiz",
+  "currency_KHR": "Riel cambojano",
+  "currency_KID": "Dólar de Kiribati",
+  "currency_KMF": "Franco comoriano",
+  "currency_KPW": "Won norte-coreano",
+  "currency_KRW": "Won sul-coreano",
+  "currency_KWD": "Dinar kuwaitiano",
+  "currency_KYD": "Dólar das Ilhas Cayman",
+  "currency_KZT": "Tenge cazaque",
+  "currency_LAK": "Kip laosiano",
+  "currency_LBP": "Libra libanesa",
+  "currency_LKR": "Rupia do Sri Lanka",
+  "currency_LRD": "Dólar liberiano",
+  "currency_LSL": "Loti do Lesoto",
+  "currency_LYD": "Dinar líbio",
+  "currency_MAD": "Dirham marroquino",
+  "currency_MDL": "Leu moldavo",
+  "currency_MGA": "Ariary malgaxe",
+  "currency_MKD": "Denar macedônio",
+  "currency_MMK": "Kyat de Mianmar",
+  "currency_MNT": "Tugrik mongol",
+  "currency_MOP": "Pataca de Macau",
+  "currency_MRU": "Ouguiya mauritana",
+  "currency_MUR": "Rupia mauriciana",
+  "currency_MVR": "Rufiyaa maldiva",
+  "currency_MWK": "Kwacha malauiano",
+  "currency_MXN": "Peso mexicano",
+  "currency_MYR": "Ringgit malaio",
+  "currency_MZN": "Metical moçambicano",
+  "currency_NAD": "Dólar namibiano",
+  "currency_NGN": "Naira nigeriana",
+  "currency_NIO": "Córdoba nicaraguense",
+  "currency_NOK": "Coroa norueguesa",
+  "currency_NPR": "Rupia nepalesa",
+  "currency_NZD": "Dólar neozelandês",
+  ,"currency_OMR": "Omani Rial"
+  ,"currency_PAB": "Panamanian Balboa"
+  ,"currency_PEN": "Peruvian Sol"
+  ,"currency_PGK": "Papua New Guinean Kina"
+  ,"currency_PHP": "Philippine Peso"
+  ,"currency_PKR": "Pakistani Rupee"
+  ,"currency_PLN": "Polish Zloty"
+  ,"currency_PYG": "Paraguayan Guaraní"
+  ,"currency_QAR": "Qatari Riyal"
+  ,"currency_RON": "Romanian Leu"
+  ,"currency_RSD": "Serbian Dinar"
+  ,"currency_RUB": "Russian Ruble"
+  ,"currency_RWF": "Rwandan Franc"
+  ,"currency_SAR": "Saudi Riyal"
+  ,"currency_SBD": "Solomon Islands Dollar"
+  ,"currency_SCR": "Seychellois Rupee"
+  ,"currency_SDG": "Sudanese Pound"
+  ,"currency_SEK": "Swedish Krona"
+  ,"currency_SGD": "Singapore Dollar"
+  ,"currency_SHP": "Saint Helena Pound"
+  ,"currency_SLE": "Sierra Leonean Leone (new)"
+  ,"currency_SLL": "Sierra Leonean Leone (old)"
+  ,"currency_SOS": "Somali Shilling"
+  ,"currency_SRD": "Surinamese Dollar"
+  ,"currency_SSP": "South Sudanese Pound"
+  ,"currency_STN": "São Tomé and Príncipe Dobra"
+  ,"currency_SVC": "Salvadoran Colón (historic)"
+  ,"currency_SYP": "Syrian Pound"
+  ,"currency_SZL": "Eswatini Lilangeni"
+  ,"currency_THB": "Thai Baht"
+  ,"currency_TJS": "Tajikistani Somoni"
+  ,"currency_TMT": "Turkmenistan Manat"
+  ,"currency_TND": "Tunisian Dinar"
+  ,"currency_TOP": "Tongan Paʻanga"
+  ,"currency_TRY": "Turkish Lira"
+  ,"currency_TTD": "Trinidad and Tobago Dollar"
+  ,"currency_TVD": "Tuvaluan Dollar"
+  ,"currency_TWD": "New Taiwan Dollar"
+  ,"currency_TZS": "Tanzanian Shilling"
+  ,"currency_UAH": "Ukrainian Hryvnia"
+  ,"currency_UGX": "Ugandan Shilling"
+  ,"currency_USD": "United States Dollar"
+  ,"currency_UYU": "Uruguayan Peso"
+  ,"currency_UZS": "Uzbekistani So'm"
+  ,"currency_VED": "Venezuelan Digital Bolívar"
+  ,"currency_VES": "Venezuelan Bolívar"
+  ,"currency_VND": "Vietnamese Đồng"
+  ,"currency_VUV": "Vanuatu Vatu"
+  ,"currency_WST": "Samoan Tala"
+  ,"currency_XAF": "CFA Franc BEAC"
+  ,"currency_XOF": "CFA Franc BCEAO"
+  ,"currency_XPF": "CFP Franc"
+  ,"currency_YER": "Yemeni Rial"
+  ,"currency_ZAR": "South African Rand"
+  ,"currency_ZMW": "Zambian Kwacha"
+  ,"currency_ZWL": "Zimbabwean Dollar"
+  ,"search_currency": "Search currency..."
+  ,"activity": "Activity"
+  ,"@activity": {"description": "Section title for expense list recent activity"}
+  ,"search_expenses_hint": "Search by name or note..."
+  ,"@search_expenses_hint": {"description": "Placeholder for searching expenses by name or note"}
+  ,"clear_filters": "Clear"
+  ,"@clear_filters": {"description": "Button to clear expense filters"}
+  ,"show_filters": "Show filters"
+  ,"@show_filters": {"description": "Label to show filters"}
+  ,"hide_filters": "Hide filters"
+  ,"@hide_filters": {"description": "Label to hide filters"}
+  ,"all_categories": "All"
+  ,"@all_categories": {"description": "Chip label for all categories"}
+  ,"all_participants": "All"
+  "@all_participants": {"description": "Chip label for all participants"},
+  "no_expenses_with_filters": "Nenhuma despesa corresponde aos filtros selecionados",
+  "@no_expenses_with_filters": {"description": "Empty state when active filters return no expenses"},
+  "no_expenses_yet": "Nenhuma despesa adicionada ainda",
+  "@no_expenses_yet": {"description": "Empty state when there are no expenses yet"},
+  "empty_expenses_title": "Pronto para começar a rastrear?",
+  "@empty_expenses_title": {"description": "Title for empty expenses state"},
+  "empty_expenses_subtitle": "Adicione sua primeira despesa para começar com este grupo!",
+  "@empty_expenses_subtitle": {"description": "Subtitle for empty expenses state"},
+  "add_first_expense_button": "Adicionar Primeira Despesa",
+  "@add_first_expense_button": {"description": "Button text for adding the first expense in empty state"},
+  "show_search": "Mostrar barra de busca",
+  "@show_search": {"description": "Tooltip to show the group search bar"},
+  "hide_search": "Ocultar barra de busca",
+  "@hide_search": {"description": "Tooltip to hide the group search bar"},
+  "expense_groups_title": "Grupos de Despesas",
+  "@expense_groups_title": {"description": "Main section header for the list of expense groups/trips on the history page"},
+  "expense_groups_desc": "Gerencie seus grupos de despesas",
+  "@expense_groups_desc": {"description": "Short subtitle describing the purpose of the expense groups section (e.g. add, edit, view trips)"}
+}
