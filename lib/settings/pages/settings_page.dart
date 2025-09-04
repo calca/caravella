@@ -259,6 +259,8 @@ class SettingsPage extends StatelessWidget {
     switch (locale) {
       case 'it':
         return genLoc.settings_language_it;
+      case 'pt':
+        return genLoc.settings_language_pt;
       case 'es':
         return genLoc.settings_language_es;
       case 'zh':
@@ -285,6 +287,7 @@ void _showLanguagePicker(
         ('it', loc.settings_language_it),
         ('en', loc.settings_language_en),
         ('es', loc.settings_language_es),
+        ('pt', loc.settings_language_pt),
         ('zh', loc.settings_language_zh),
       ];
       return GroupBottomSheetScaffold(
