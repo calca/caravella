@@ -36,7 +36,7 @@ android {
     }
 
     defaultConfig {
-    applicationId = "io.caravella.egm"
+        applicationId = "io.caravella.egm"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
