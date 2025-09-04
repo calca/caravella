@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'themes/caravella_themes.dart';
@@ -148,13 +147,9 @@ class _CaravellaAppState extends State<CaravellaApp> {
             themeMode: _themeMode,
             scaffoldMessengerKey: _scaffoldMessengerKey,
             locale: Locale(_locale),
-            supportedLocales: const [Locale('it'), Locale('en'), Locale('es'), Locale('zh')],
-            localizationsDelegates: [
-              gen.AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
+            // Use generated locales & delegates to avoid divergence and ensure pt is enabled
+            supportedLocales: gen.AppLocalizations.supportedLocales,
+            localizationsDelegates: gen.AppLocalizations.localizationsDelegates,
             home: const CaravellaHomePage(title: 'Caravella'),
             navigatorObservers: [routeObserver],
           ),

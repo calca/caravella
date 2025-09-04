@@ -9,22 +9,22 @@ class AppLocalizationsPt extends AppLocalizations {
   AppLocalizationsPt([String locale = 'pt']) : super(locale);
 
   @override
-  String get developer_section_title => 'Developer & Support';
+  String get developer_section_title => 'Desenvolvedor e Suporte';
 
   @override
-  String get developer_section_desc => 'Support the developer or view profile';
+  String get developer_section_desc => 'Apoie o desenvolvedor ou veja o perfil';
 
   @override
-  String get repo_section_title => 'Source & Issues';
+  String get repo_section_title => 'Código-fonte e Problemas';
 
   @override
-  String get repo_section_desc => 'View source code or report a problem';
+  String get repo_section_desc => 'Veja o código-fonte ou reporte um problema';
 
   @override
-  String get license_section_title => 'License';
+  String get license_section_title => 'Licença';
 
   @override
-  String get license_section_desc => 'View the open source license';
+  String get license_section_desc => 'Ver a licença open source';
 
   @override
   String get weeklyChartBadge => 'W';
@@ -33,59 +33,59 @@ class AppLocalizationsPt extends AppLocalizations {
   String get monthlyChartBadge => 'M';
 
   @override
-  String get weeklyExpensesChart => 'Weekly expenses';
+  String get weeklyExpensesChart => 'Despesas semanais';
 
   @override
-  String get monthlyExpensesChart => 'Monthly expenses';
+  String get monthlyExpensesChart => 'Despesas mensais';
 
   @override
   String get settings_flag_secure_desc =>
-      'Prevents screenshots and screen recording';
+      'Impede capturas de tela e gravação da tela';
 
   @override
-  String get settings_flag_secure_title => 'Secure screen';
+  String get settings_flag_secure_title => 'Tela segura';
 
   @override
-  String get settings_privacy => 'Privacy';
+  String get settings_privacy => 'Privacidade';
 
   @override
-  String get select_currency => 'Select currency';
+  String get select_currency => 'Selecionar moeda';
 
   @override
-  String get select_period_hint_short => 'Set dates';
+  String get select_period_hint_short => 'Definir datas';
 
   @override
-  String get select_period_hint => 'Select a date range';
+  String get select_period_hint => 'Selecione um intervalo de datas';
 
   @override
-  String get in_group_prefix => 'in';
+  String get in_group_prefix => 'em';
 
   @override
-  String get save_change_expense => 'Save changes';
+  String get save_change_expense => 'Salvar alterações';
 
   @override
   String get group_total => 'Total';
 
   @override
-  String get download_all_csv => 'Download all (CSV)';
+  String get download_all_csv => 'Baixar tudo (CSV)';
 
   @override
-  String get share_all_csv => 'Share all (CSV)';
+  String get share_all_csv => 'Compartilhar tudo (CSV)';
 
   @override
-  String get download_all_ofx => 'Download all (OFX)';
+  String get download_all_ofx => 'Baixar tudo (OFX)';
 
   @override
-  String get share_all_ofx => 'Share all (OFX)';
+  String get share_all_ofx => 'Compartilhar tudo (OFX)';
 
   @override
-  String get export_share => 'Export & Share';
+  String get export_share => 'Exportar e Compartilhar';
 
   @override
-  String get export_options => 'Export Options';
+  String get export_options => 'Opções de exportação';
 
   @override
-  String get welcome_v3_title => 'Organize.\nShare.\nSettle.\n ';
+  String get welcome_v3_title => 'Organize.\nCompartilhe.\nQuite.\n ';
 
   @override
   String get good_morning => 'Bom dia';
@@ -97,114 +97,114 @@ class AppLocalizationsPt extends AppLocalizations {
   String get good_evening => 'Boa noite';
 
   @override
-  String get your_groups => 'Your groups';
+  String get your_groups => 'Seus grupos';
 
   @override
-  String get no_active_groups => 'No active groups';
+  String get no_active_groups => 'Nenhum grupo ativo';
 
   @override
-  String get no_active_groups_subtitle => 'Create an expense group';
+  String get no_active_groups_subtitle => 'Crie um grupo de despesas';
 
   @override
-  String get create_first_group => 'Create a group';
+  String get create_first_group => 'Criar um grupo';
 
   @override
-  String get new_expense_group => 'New Expense Group';
+  String get new_expense_group => 'Novo grupo de despesas';
 
   @override
-  String get tap_to_create => 'Tap to create';
+  String get tap_to_create => 'Toque para criar';
 
   @override
-  String get no_expense_label => 'No expenses found';
+  String get no_expense_label => 'Nenhuma despesa encontrada';
 
   @override
-  String get image => 'Image';
+  String get image => 'Imagem';
 
   @override
-  String get select_image => 'Select Image';
+  String get select_image => 'Selecionar imagem';
 
   @override
-  String get change_image => 'Change Image';
+  String get change_image => 'Alterar imagem';
 
   @override
-  String get from_gallery => 'From Gallery';
+  String get from_gallery => 'Da galeria';
 
   @override
-  String get from_camera => 'From Camera';
+  String get from_camera => 'Da câmera';
 
   @override
-  String get remove_image => 'Remove Image';
+  String get remove_image => 'Remover imagem';
 
   @override
   String get cannot_delete_assigned_participant =>
-      'Cannot delete participant: it\'s assigned to one or more expenses';
+      'Não é possível excluir o participante: ele está atribuído a uma ou mais despesas';
 
   @override
   String get cannot_delete_assigned_category =>
-      'Cannot delete category: it\'s assigned to one or more expenses';
+      'Não é possível excluir a categoria: ela está atribuída a uma ou mais despesas';
 
   @override
-  String get color => 'Color';
+  String get color => 'Cor';
 
   @override
-  String get remove_color => 'Remove Color';
+  String get remove_color => 'Remover cor';
 
   @override
-  String get color_alternative => 'Alternative to image';
+  String get color_alternative => 'Alternativa à imagem';
 
   @override
-  String get background => 'Background';
+  String get background => 'Fundo';
 
   @override
-  String get select_background => 'Select Background';
+  String get select_background => 'Selecionar fundo';
 
   @override
-  String get background_options => 'Background Options';
+  String get background_options => 'Opções de fundo';
 
   @override
-  String get choose_image_or_color => 'Choose image or color';
+  String get choose_image_or_color => 'Escolha imagem ou cor';
 
   @override
-  String get participants_description => 'People sharing costs';
+  String get participants_description => 'Pessoas que dividem os custos';
 
   @override
-  String get categories_description => 'Group expenses by type';
+  String get categories_description => 'Agrupe despesas por tipo';
 
   @override
-  String get dates_description => 'Optional start and end';
+  String get dates_description => 'Início e fim opcionais';
 
   @override
-  String get currency_description => 'Base currency for group';
+  String get currency_description => 'Moeda base do grupo';
 
   @override
-  String get background_color_selected => 'Color selected';
+  String get background_color_selected => 'Cor selecionada';
 
   @override
-  String get background_tap_to_replace => 'Tap to replace';
+  String get background_tap_to_replace => 'Toque para substituir';
 
   @override
-  String get background_tap_to_change => 'Tap to change';
+  String get background_tap_to_change => 'Toque para alterar';
 
   @override
-  String get background_select_image_or_color => 'Select image or color';
+  String get background_select_image_or_color => 'Selecione imagem ou cor';
 
   @override
-  String get background_random_color => 'Random color';
+  String get background_random_color => 'Cor aleatória';
 
   @override
-  String get background_remove => 'Remove background';
+  String get background_remove => 'Remover fundo';
 
   @override
   String get crop_image_title => 'Crop image';
 
   @override
-  String get crop_confirm => 'Confirm';
+  String get crop_confirm => 'Confirmar';
 
   @override
   String get saving => 'Saving...';
 
   @override
-  String get processing_image => 'Processing image...';
+  String get processing_image => 'Processando imagem...';
 
   @override
   String get no_trips_found => 'Where do you want to go?';
@@ -216,74 +216,74 @@ class AppLocalizationsPt extends AppLocalizations {
   String get participants => 'Participants';
 
   @override
-  String get participants_label => 'Participants';
+  String get participants_label => 'Participantes';
 
   @override
   String get last_7_days => '7 days';
 
   @override
-  String get recent_activity => 'Recent activity';
+  String get recent_activity => 'Atividade recente';
 
   @override
   String get about => 'About';
 
   @override
-  String get license_hint => 'This app is released under the MIT license.';
+  String get license_hint => 'Este aplicativo é distribuído sob a licença MIT.';
 
   @override
   String get license_link => 'View MIT License on GitHub';
 
   @override
-  String get license_section => 'License';
+  String get license_section => 'Licença';
 
   @override
   String get add_trip => 'Add group';
 
   @override
-  String get new_group => 'New Group';
+  String get new_group => 'Novo grupo';
 
   @override
   String get group_name => 'Name';
 
   @override
-  String get enter_title => 'Enter a name';
+  String get enter_title => 'Digite um nome';
 
   @override
   String get enter_participant => 'Enter at least one participant';
 
   @override
-  String get select_start => 'Select start';
+  String get select_start => 'Selecionar início';
 
   @override
   String get select_end => 'Select end';
 
   @override
-  String get start_date_not_selected => 'Select start';
+  String get start_date_not_selected => 'Selecione o início';
 
   @override
   String get end_date_not_selected => 'Select end';
 
   @override
-  String get select_from_date => 'Select from';
+  String get select_from_date => 'Selecionar de';
 
   @override
   String get select_to_date => 'Select to';
 
   @override
-  String get date_range_not_selected => 'Select period';
+  String get date_range_not_selected => 'Selecione o período';
 
   @override
   String get date_range_partial => 'Select both dates';
 
   @override
-  String get save => 'Save';
+  String get save => 'Salvar';
 
   @override
   String get delete_trip => 'Delete trip';
 
   @override
   String get delete_trip_confirm =>
-      'Are you sure you want to delete this trip?';
+      'Tem certeza de que deseja excluir este grupo?';
 
   @override
   String get cancel => 'Cancel';
@@ -297,87 +297,86 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get add_expense => 'New expense';
+  String get add_expense => 'Nova despesa';
 
   @override
   String get edit_expense => 'Edit expense';
 
   @override
-  String get expand_form => 'Expand form';
+  String get expand_form => 'Expandir formulário';
 
   @override
   String get expand_form_tooltip => 'Add date, location and notes';
 
   @override
-  String get category => 'Category';
+  String get category => 'Categoria';
 
   @override
   String get amount => 'Amount';
 
   @override
-  String get invalid_amount => 'Invalid amount';
+  String get invalid_amount => 'Valor inválido';
 
   @override
   String get no_categories => 'No categories';
 
   @override
-  String get add_category => 'Add category';
+  String get add_category => 'Adicionar categoria';
 
   @override
   String get category_name => 'Category name';
 
   @override
-  String get note => 'Note';
+  String get note => 'Nota';
 
   @override
   String get note_hint => 'Note';
 
   @override
-  String get select_both_dates =>
-      'If you select one date, you must select both';
+  String get select_both_dates => 'Se selecionar uma data, selecione as duas';
 
   @override
   String get select_both_dates_or_none =>
       'Select both dates or leave both empty';
 
   @override
-  String get end_date_after_start => 'End date must be after start date';
+  String get end_date_after_start => 'Data final deve ser após a inicial';
 
   @override
   String get start_date_optional => 'From';
 
   @override
-  String get end_date_optional => 'To';
+  String get end_date_optional => 'Até';
 
   @override
   String get dates => 'Period';
 
   @override
-  String get expenses_by_participant => 'By participant';
+  String get expenses_by_participant => 'Por participante';
 
   @override
   String get expenses_by_category => 'By category';
 
   @override
-  String get uncategorized => 'Uncategorized';
+  String get uncategorized => 'Sem categoria';
 
   @override
   String get backup => 'Backup';
 
   @override
-  String get no_trips_to_backup => 'No trips to backup';
+  String get no_trips_to_backup => 'Nenhum grupo para backup';
 
   @override
   String get backup_error => 'Backup failed';
 
   @override
-  String get backup_share_message => 'Here is your Caravella backup';
+  String get backup_share_message => 'Aqui está o seu backup do Caravella';
 
   @override
   String get import => 'Import';
 
   @override
-  String get import_confirm_title => 'Import data';
+  String get import_confirm_title => 'Importar dados';
 
   @override
   String import_confirm_message(Object file) {
@@ -385,49 +384,49 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get import_success => 'Import successful! Data reloaded.';
+  String get import_success => 'Importação concluída! Dados recarregados.';
 
   @override
   String get import_error => 'Import failed. Check the file format.';
 
   @override
-  String get categories => 'Categories';
+  String get categories => 'Categorias';
 
   @override
   String get from => 'From';
 
   @override
-  String get to => 'To';
+  String get to => 'Até';
 
   @override
   String get add => 'Add';
 
   @override
-  String get participant_name => 'Participant name';
+  String get participant_name => 'Nome do participante';
 
   @override
   String get participant_name_hint => 'Enter participant name';
 
   @override
-  String get edit_participant => 'Edit participant';
+  String get edit_participant => 'Editar participante';
 
   @override
   String get delete_participant => 'Delete participant';
 
   @override
-  String get add_participant => 'Add participant';
+  String get add_participant => 'Adicionar participante';
 
   @override
   String get no_participants => 'No participants';
 
   @override
-  String get category_name_hint => 'Enter category name';
+  String get category_name_hint => 'Digite o nome da categoria';
 
   @override
   String get edit_category => 'Edit category';
 
   @override
-  String get delete_category => 'Delete category';
+  String get delete_category => 'Excluir categoria';
 
   @override
   String participant_name_semantics(Object name) {
@@ -436,14 +435,14 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String category_name_semantics(Object name) {
-    return 'Category: $name';
+    return 'Categoria: $name';
   }
 
   @override
   String get currency => 'Currency';
 
   @override
-  String get settings_tab => 'Settings';
+  String get settings_tab => 'Configurações';
 
   @override
   String get basic_info => 'Basic Information';
@@ -455,165 +454,165 @@ class AppLocalizationsPt extends AppLocalizations {
   String get history => 'History';
 
   @override
-  String get all => 'ALL';
+  String get all => 'Todos';
 
   @override
   String get search_groups => 'Search groups...';
 
   @override
-  String get no_search_results => 'No groups found for';
+  String get no_search_results => 'Nenhum grupo encontrado para';
 
   @override
   String get try_different_search => 'Try searching with different words';
 
   @override
-  String get active => 'Active';
+  String get active => 'Ativo';
 
   @override
   String get archived => 'Archived';
 
   @override
-  String get archive => 'Archive';
+  String get archive => 'Arquivar';
 
   @override
   String get unarchive => 'Unarchive';
 
   @override
-  String get archive_confirm => 'Do you want to archive';
+  String get archive_confirm => 'Deseja arquivar';
 
   @override
   String get unarchive_confirm => 'Do you want to unarchive';
 
   @override
-  String get overview => 'Overview';
+  String get overview => 'Visão geral';
 
   @override
   String get statistics => 'Statistics';
 
   @override
-  String get options => 'Options';
+  String get options => 'Opções';
 
   @override
   String get show_overview => 'Show overview';
 
   @override
-  String get show_statistics => 'Show statistics';
+  String get show_statistics => 'Mostrar estatísticas';
 
   @override
   String get no_expenses_to_display => 'No expenses to display';
 
   @override
-  String get no_expenses_to_analyze => 'No expenses to analyze';
+  String get no_expenses_to_analyze => 'Nenhuma despesa para analisar';
 
   @override
   String get select_expense_date => 'Select expense date';
 
   @override
-  String get select_expense_date_short => 'Select date';
+  String get select_expense_date_short => 'Selecionar data';
 
   @override
   String get date => 'Date';
 
   @override
-  String get edit_group => 'Edit Group';
+  String get edit_group => 'Editar grupo';
 
   @override
   String get delete_group => 'Delete group';
 
   @override
   String get delete_group_confirm =>
-      'Are you sure you want to delete this expense group? This action cannot be undone.';
+      'Tem certeza de que deseja excluir este grupo de despesas? Esta ação não pode ser desfeita.';
 
   @override
   String get add_expense_fab => 'Add Expense';
 
   @override
-  String get pin_group => 'Pin group';
+  String get pin_group => 'Fixar grupo';
 
   @override
   String get unpin_group => 'Unpin group';
 
   @override
-  String get pin => 'Pin';
+  String get pin => 'Fixar';
 
   @override
   String get theme_automatic => 'Automatic';
 
   @override
-  String get theme_light => 'Light';
+  String get theme_light => 'Claro';
 
   @override
   String get theme_dark => 'Dark';
 
   @override
-  String get developed_by => 'Developed by calca';
+  String get developed_by => 'Desenvolvido por calca';
 
   @override
   String get links => 'Links';
 
   @override
-  String get daily_expenses_chart => 'Daily expenses';
+  String get daily_expenses_chart => 'Despesas diárias';
 
   @override
   String get weekly_expenses_chart => 'Weekly expenses';
 
   @override
-  String get daily_average_by_category => 'Daily average by category';
+  String get daily_average_by_category => 'Média diária por categoria';
 
   @override
   String get per_day => '/day';
 
   @override
-  String get no_expenses_for_statistics =>
-      'No expenses available for statistics';
+  String get no_expenses_for_statistics => 'Sem despesas para estatísticas';
 
   @override
   String get settlement => 'Settlement';
 
   @override
-  String get all_balanced => 'All accounts are balanced!';
+  String get all_balanced => 'Todas as contas estão equilibradas!';
 
   @override
   String get owes_to => ' owes ';
 
   @override
-  String get export_csv => 'Export CSV';
+  String get export_csv => 'Exportar CSV';
 
   @override
   String get no_expenses_to_export => 'No expenses to export';
 
   @override
-  String get export_csv_share_text => 'Expenses exported from ';
+  String get export_csv_share_text => 'Despesas exportadas de ';
 
   @override
   String get export_csv_error => 'Error exporting expenses';
 
   @override
-  String get expense_name => 'Description';
+  String get expense_name => 'Descrição';
 
   @override
   String get paid_by => 'Paid by';
 
   @override
-  String get expense_added_success => 'Expense added';
+  String get expense_added_success => 'Despesa adicionada';
 
   @override
   String get expense_updated_success => 'Expense updated';
 
   @override
-  String get data_refreshing => 'Refreshing…';
+  String get data_refreshing => 'Atualizando…';
 
   @override
   String get data_refreshed => 'Updated';
 
   @override
-  String get refresh => 'Refresh';
+  String get refresh => 'Atualizar';
 
   @override
   String get group_added_success => 'Group added';
 
   @override
-  String get csv_select_directory_title => 'Select folder to save CSV';
+  String get csv_select_directory_title =>
+      'Selecione a pasta para salvar o CSV';
 
   @override
   String csv_saved_in(Object path) {
@@ -621,13 +620,14 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get csv_save_cancelled => 'Export cancelled';
+  String get csv_save_cancelled => 'Exportação cancelada';
 
   @override
   String get csv_save_error => 'Error saving CSV file';
 
   @override
-  String get ofx_select_directory_title => 'Select folder to save OFX';
+  String get ofx_select_directory_title =>
+      'Selecione a pasta para salvar o OFX';
 
   @override
   String ofx_saved_in(Object path) {
@@ -635,79 +635,79 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get ofx_save_cancelled => 'OFX export cancelled';
+  String get ofx_save_cancelled => 'Exportação OFX cancelada';
 
   @override
   String get ofx_save_error => 'Error saving OFX file';
 
   @override
-  String get csv_expense_name => 'Description';
+  String get csv_expense_name => 'Descrição';
 
   @override
   String get csv_amount => 'Amount';
 
   @override
-  String get csv_paid_by => 'Paid by';
+  String get csv_paid_by => 'Pago por';
 
   @override
   String get csv_category => 'Category';
 
   @override
-  String get csv_date => 'Date';
+  String get csv_date => 'Data';
 
   @override
-  String get csv_note => 'Note';
+  String get csv_note => 'Nota';
 
   @override
-  String get csv_location => 'Location';
+  String get csv_location => 'Local';
 
   @override
-  String get location => 'Location';
+  String get location => 'Local';
 
   @override
-  String get location_hint => 'Location';
+  String get location_hint => 'Local';
 
   @override
-  String get get_current_location => 'Use current location';
+  String get get_current_location => 'Usar localização atual';
 
   @override
-  String get enter_location_manually => 'Enter manually';
+  String get enter_location_manually => 'Inserir manualmente';
 
   @override
-  String get location_permission_denied => 'Location permission denied';
+  String get location_permission_denied => 'Permissão de localização negada';
 
   @override
-  String get location_service_disabled => 'Location service disabled';
+  String get location_service_disabled => 'Serviço de localização desativado';
 
   @override
-  String get getting_location => 'Getting location...';
+  String get getting_location => 'Obtendo localização...';
 
   @override
-  String get location_error => 'Error getting location';
+  String get location_error => 'Erro ao obter localização';
 
   @override
-  String get resolving_address => 'Resolving address…';
+  String get resolving_address => 'Resolvendo endereço…';
 
   @override
-  String get address_resolved => 'Address resolved';
+  String get address_resolved => 'Endereço resolvido';
 
   @override
-  String get settings_general => 'General';
+  String get settings_general => 'Geral';
 
   @override
-  String get settings_general_desc => 'Language and appearance settings';
+  String get settings_general_desc => 'Idioma e aparência';
 
   @override
-  String get settings_language => 'Language';
+  String get settings_language => 'Idioma';
 
   @override
-  String get settings_language_desc => 'Choose your preferred language';
+  String get settings_language_desc => 'Escolha o idioma preferido';
 
   @override
-  String get settings_language_it => 'Italian';
+  String get settings_language_it => 'Italiano';
 
   @override
-  String get settings_language_en => 'English';
+  String get settings_language_en => 'Inglês';
 
   @override
   String get settings_language_es => 'Spanish';
@@ -716,280 +716,282 @@ class AppLocalizationsPt extends AppLocalizations {
   String get settings_language_pt => 'Português';
 
   @override
-  String get settings_language_zh => 'Chinese (Simplified)';
+  String get settings_language_zh => 'Chinês (Simplificado)';
 
   @override
-  String get settings_select_language => 'Select language';
+  String get settings_select_language => 'Selecionar idioma';
 
   @override
-  String get settings_theme => 'Theme';
+  String get settings_theme => 'Tema';
 
   @override
-  String get settings_theme_desc => 'Light, dark or system';
+  String get settings_theme_desc => 'Claro, escuro ou sistema';
 
   @override
-  String get settings_select_theme => 'Select theme';
+  String get settings_select_theme => 'Selecionar tema';
 
   @override
-  String get settings_privacy_desc => 'Security and privacy options';
+  String get settings_privacy_desc => 'Opções de segurança e privacidade';
 
   @override
-  String get settings_data => 'Data';
+  String get settings_data => 'Dados';
 
   @override
-  String get settings_data_desc => 'Manage your information';
+  String get settings_data_desc => 'Gerencie suas informações';
 
   @override
-  String get settings_data_manage => 'Data management';
+  String get settings_data_manage => 'Gerenciamento de dados';
 
   @override
-  String get settings_info => 'Information';
+  String get settings_info => 'Informações';
 
   @override
-  String get settings_info_desc => 'App details and support';
+  String get settings_info_desc => 'Detalhes e suporte do app';
 
   @override
-  String get settings_app_version => 'App version';
+  String get settings_app_version => 'Versão do app';
 
   @override
-  String get settings_info_card => 'Information';
+  String get settings_info_card => 'Informações';
 
   @override
-  String get settings_info_card_desc => 'Developer, Source code and License';
+  String get settings_info_card_desc => 'Desenvolvedor, código-fonte e licença';
 
   @override
   String get terms_github_title => 'GitHub: calca';
 
   @override
-  String get terms_github_desc => 'Developer profile on GitHub.';
+  String get terms_github_desc => 'Perfil do desenvolvedor no GitHub.';
 
   @override
-  String get terms_repo_title => 'GitHub Repository';
+  String get terms_repo_title => 'Repositório GitHub';
 
   @override
-  String get terms_repo_desc => 'Application source code.';
+  String get terms_repo_desc => 'Código-fonte da aplicação.';
 
   @override
-  String get terms_issue_title => 'Report a problem';
+  String get terms_issue_title => 'Reportar um problema';
 
   @override
-  String get terms_issue_desc => 'Go to the GitHub issues page.';
+  String get terms_issue_desc => 'Ir para a página de issues no GitHub.';
 
   @override
-  String get terms_license_desc => 'View the open source license.';
+  String get terms_license_desc => 'Ver a licença open source.';
 
   @override
-  String get support_developer_title => 'Buy me a coffee';
+  String get support_developer_title => 'Pague um café';
 
   @override
-  String get support_developer_desc => 'Support the development of this app.';
+  String get support_developer_desc => 'Apoie o desenvolvimento deste app.';
 
   @override
-  String get data_title => 'Backup & Restore';
+  String get data_title => 'Backup e Restauração';
 
   @override
   String get data_backup_title => 'Backup';
 
   @override
-  String get data_backup_desc => 'Create a backup file of your expenses.';
+  String get data_backup_desc =>
+      'Crie um arquivo de backup dos seus grupos e despesas.';
 
   @override
-  String get data_restore_title => 'Restore';
+  String get data_restore_title => 'Restaurar';
 
   @override
-  String get data_restore_desc => 'Import a backup to restore your data.';
+  String get data_restore_desc =>
+      'Importe um backup para restaurar seus dados.';
 
   @override
-  String get auto_backup_title => 'Automatic backup';
+  String get auto_backup_title => 'Backup automático';
 
   @override
-  String get auto_backup_desc => 'Enable operating system automatic backup';
+  String get auto_backup_desc => 'Ativar backup automático do sistema';
 
   @override
-  String get info_tab => 'Info';
+  String get info_tab => 'Informações';
 
   @override
-  String get select_paid_by => 'Select payer';
+  String get select_paid_by => 'Selecionar pagador';
 
   @override
-  String get select_category => 'Select a category';
+  String get select_category => 'Selecionar categoria';
 
   @override
-  String get check_form => 'Check the entered data';
+  String get check_form => 'Verifique os dados inseridos';
 
   @override
-  String get delete_expense => 'Delete expense';
+  String get delete_expense => 'Excluir despesa';
 
   @override
   String get delete_expense_confirm =>
-      'Are you sure you want to delete this expense?';
+      'Tem certeza de que deseja excluir esta despesa?';
 
   @override
-  String get delete => 'Delete';
+  String get delete => 'Excluir';
 
   @override
-  String get no_results_found => 'No results found.';
+  String get no_results_found => 'Nenhum resultado encontrado.';
 
   @override
   String get try_adjust_filter_or_search =>
-      'Try adjusting the filter or search.';
+      'Tente ajustar o filtro ou a pesquisa.';
 
   @override
-  String get general_statistics => 'General statistics';
+  String get general_statistics => 'Estatísticas gerais';
 
   @override
-  String get add_first_expense => 'Add the first expense to get started';
+  String get add_first_expense => 'Adicione a primeira despesa para começar';
 
   @override
-  String get overview_and_statistics => 'Overview and statistics';
+  String get overview_and_statistics => 'Resumo e estatísticas';
 
   @override
-  String get daily_average => 'Daily';
+  String get daily_average => 'Diário';
 
   @override
-  String get spent_today => 'Today';
+  String get spent_today => 'Hoje';
 
   @override
-  String get average_expense => 'Average expense';
+  String get average_expense => 'Despesa média';
 
   @override
-  String get welcome_v3_cta => 'Get started!';
+  String get welcome_v3_cta => 'Começar!';
 
   @override
-  String get discard_changes_title => 'Discard changes?';
+  String get discard_changes_title => 'Descartar alterações?';
 
   @override
   String get discard_changes_message =>
-      'Are you sure you want to discard unsaved changes?';
+      'Tem certeza de que deseja descartar alterações não salvas?';
 
   @override
-  String get discard => 'Discard';
+  String get discard => 'Descartar';
 
   @override
-  String get category_placeholder => 'Category';
+  String get category_placeholder => 'Categoria';
 
   @override
-  String get image_requirements => 'PNG, JPG, GIF (max 10MB)';
+  String get image_requirements => 'PNG, JPG, GIF (máx 10MB)';
 
   @override
   String error_saving_group(Object error) {
-    return 'Error saving: $error';
+    return 'Erro ao salvar: $error';
   }
 
   @override
-  String get error_selecting_image => 'Error selecting image';
+  String get error_selecting_image => 'Erro ao selecionar imagem';
 
   @override
-  String get error_saving_image => 'Error saving image';
+  String get error_saving_image => 'Erro ao salvar imagem';
 
   @override
-  String get already_exists => 'already exists';
+  String get already_exists => 'já existe';
 
   @override
-  String get status_all => 'All';
+  String get status_all => 'Todos';
 
   @override
-  String get status_active => 'Active';
+  String get status_active => 'Ativos';
 
   @override
-  String get status_archived => 'Archived';
+  String get status_archived => 'Arquivados';
 
   @override
-  String get no_archived_groups => 'No archived groups';
+  String get no_archived_groups => 'Nenhum grupo arquivado';
 
   @override
   String get no_archived_groups_subtitle =>
-      'You have not archived any groups yet';
+      'Você ainda não arquivou nenhum grupo';
 
   @override
   String get all_groups_archived_info =>
-      'All your groups are archived. You can restore them from the Archive section or create new ones.';
+      'Todos os seus grupos estão arquivados. Você pode restaurá-los na seção Arquivo ou criar novos.';
 
   @override
-  String get filter_status_tooltip => 'Filter groups';
+  String get filter_status_tooltip => 'Filtrar grupos';
 
   @override
-  String get welcome_logo_semantic => 'Caravella app logo';
+  String get welcome_logo_semantic => 'Logo do app Caravella';
 
   @override
-  String get create_new_group => 'Create new group';
+  String get create_new_group => 'Criar novo grupo';
 
   @override
-  String get accessibility_add_new_item => 'Add new item';
+  String get accessibility_add_new_item => 'Adicionar novo item';
 
   @override
-  String get accessibility_navigation_bar => 'Navigation bar';
+  String get accessibility_navigation_bar => 'Barra de navegação';
 
   @override
-  String get accessibility_back_button => 'Back';
+  String get accessibility_back_button => 'Voltar';
 
   @override
-  String get accessibility_loading_groups => 'Loading groups';
+  String get accessibility_loading_groups => 'Carregando grupos';
 
   @override
-  String get accessibility_loading_your_groups => 'Loading your groups';
+  String get accessibility_loading_your_groups => 'Carregando seus grupos';
 
   @override
-  String get accessibility_groups_list => 'Groups list';
+  String get accessibility_groups_list => 'Lista de grupos';
 
   @override
-  String get accessibility_welcome_screen => 'Welcome screen';
+  String get accessibility_welcome_screen => 'Tela de boas-vindas';
 
   @override
   String accessibility_total_expenses(Object amount) {
-    return 'Total expenses: $amount€';
+    return 'Despesas totais: $amount€';
   }
 
   @override
-  String get accessibility_add_expense => 'Add expense';
+  String get accessibility_add_expense => 'Adicionar despesa';
 
   @override
   String accessibility_security_switch(Object state) {
-    return 'Security switch - $state';
+    return 'Interruptor de segurança - $state';
   }
 
   @override
-  String get accessibility_switch_on => 'On';
+  String get accessibility_switch_on => 'Ligado';
 
   @override
-  String get accessibility_switch_off => 'Off';
+  String get accessibility_switch_off => 'Desligado';
 
   @override
   String get accessibility_image_source_dialog =>
-      'Image source selection dialog';
+      'Diálogo de seleção de origem da imagem';
 
   @override
-  String get accessibility_currently_enabled => 'Currently enabled';
+  String get accessibility_currently_enabled => 'Atualmente ativado';
 
   @override
-  String get accessibility_currently_disabled => 'Currently disabled';
+  String get accessibility_currently_disabled => 'Atualmente desativado';
 
   @override
   String get accessibility_double_tap_disable =>
-      'Double tap to disable screen security';
+      'Toque duas vezes para desativar a segurança da tela';
 
   @override
   String get accessibility_double_tap_enable =>
-      'Double tap to enable screen security';
+      'Toque duas vezes para ativar a segurança da tela';
 
   @override
-  String get accessibility_toast_success => 'Success';
+  String get accessibility_toast_success => 'Sucesso';
 
   @override
-  String get accessibility_toast_error => 'Error';
+  String get accessibility_toast_error => 'Erro';
 
   @override
-  String get accessibility_toast_info => 'Information';
+  String get accessibility_toast_info => 'Informação';
 
   @override
-  String get color_suggested_title => 'Suggested colors';
+  String get color_suggested_title => 'Cores sugeridas';
 
   @override
   String get color_suggested_subtitle =>
-      'Pick one of the theme compatible colors';
+      'Escolha uma das cores compatíveis com o tema';
 
   @override
-  String get color_random_subtitle => 'Let the app pick a color for you';
+  String get color_random_subtitle => 'Deixe o app escolher uma cor';
 
   @override
   String get currency_AED => 'United Arab Emirates Dirham';
