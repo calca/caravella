@@ -23,7 +23,8 @@ import 'widgets/group_header.dart';
 import 'widgets/group_actions.dart';
 import 'widgets/group_total.dart';
 import 'widgets/filtered_expense_list.dart';
-import 'widgets/unified_overview_sheet.dart';
+// Replaced bottom sheet overview with full page navigation
+import 'pages/unified_overview_page.dart';
 import 'widgets/options_sheet.dart';
 import 'widgets/export_options_sheet.dart';
 import 'widgets/expense_entry_sheet.dart';
@@ -139,20 +140,11 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     _groupNotifier?.setCurrentGroup(refreshed);
   }
 
-  void _showUnifiedOverviewSheet() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      enableDrag: true,
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.85,
-        minChildSize: 0.5,
-        maxChildSize: 0.95,
-        expand: false,
-        builder: (context, scrollController) => UnifiedOverviewSheet(
-          trip: _trip!,
-          scrollController: scrollController,
-        ),
+  void _openUnifiedOverviewPage() {
+    if (_trip == null) return;
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (ctx) => UnifiedOverviewPage(trip: _trip!),
       ),
     );
   }
@@ -690,9 +682,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                                 ),
                                 GroupActions(
                                   hasExpenses: trip.expenses.isNotEmpty,
-                                  onOverview: trip.expenses.isNotEmpty
-                                      ? _showUnifiedOverviewSheet
-                                      : null,
+                  onOverview: trip.expenses.isNotEmpty
+                    ? _openUnifiedOverviewPage
+                    : null,
                                   onOptions: _showOptionsSheet,
                                 ),
                               ],
