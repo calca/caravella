@@ -4,9 +4,9 @@ import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
 
-/// The translations for English (`en`).
-class AppLocalizationsEn extends AppLocalizations {
-  AppLocalizationsEn([String locale = 'en']) : super(locale);
+/// The translations for Portuguese (`pt`).
+class AppLocalizationsPt extends AppLocalizations {
+  AppLocalizationsPt([String locale = 'pt']) : super(locale);
 
   @override
   String get developer_section_title => 'Developer & Support';
@@ -88,13 +88,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get welcome_v3_title => 'Organize.\nShare.\nSettle.\n ';
 
   @override
-  String get good_morning => 'Good morning';
+  String get good_morning => 'Bom dia';
 
   @override
-  String get good_afternoon => 'Good afternoon';
+  String get good_afternoon => 'Boa tarde';
 
   @override
-  String get good_evening => 'Good evening';
+  String get good_evening => 'Boa noite';
 
   @override
   String get your_groups => 'Your groups';
@@ -210,7 +210,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get no_trips_found => 'Where do you want to go?';
 
   @override
-  String get expenses => 'Expenses';
+  String get expenses => 'Despesas';
 
   @override
   String get participants => 'Participants';
@@ -449,7 +449,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get basic_info => 'Basic Information';
 
   @override
-  String get settings => 'Settings';
+  String get settings => 'Configurações';
 
   @override
   String get history => 'History';
@@ -713,7 +713,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_language_es => 'Spanish';
 
   @override
-  String get settings_language_pt => 'Portuguese';
+  String get settings_language_pt => 'Português';
 
   @override
   String get settings_language_zh => 'Chinese (Simplified)';

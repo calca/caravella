@@ -716,6 +716,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settings_language_es => 'Spagnolo';
 
   @override
+  String get settings_language_pt => 'Portoghese';
+
+  @override
+  String get settings_language_zh => 'Cinese (Semplificato)';
+
+  @override
   String get settings_select_language => 'Seleziona lingua';
 
   @override
