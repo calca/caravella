@@ -148,7 +148,7 @@ class _CaravellaAppState extends State<CaravellaApp> {
             themeMode: _themeMode,
             scaffoldMessengerKey: _scaffoldMessengerKey,
             locale: Locale(_locale),
-            supportedLocales: const [Locale('it'), Locale('en'), Locale('es')],
+            supportedLocales: const [Locale('it'), Locale('en'), Locale('es'), Locale('zh')],
             localizationsDelegates: [
               gen.AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
