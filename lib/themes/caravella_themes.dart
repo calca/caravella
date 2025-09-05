@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 import 'form_theme.dart';
 
 // https://rydmike.com/flexcolorscheme/themesplayground-latest/?config=H4sIAKZob2gA_3WRPWvDMBRF9_wKoTkY2cGk8VZKhw6BgEuHLkaNXlOBvpCe0piQ_15JtRNoqMZzLvcK3nlB0qNO8fHgbTRiEBw57Qh9_QINgeyuhmRD4OSsRxCkZhVbVw1rWsI2Xd12LaPLu7Yj-CCtyYUPVVNdI2Gf61-MgFNy65lKHRVH6x-dm1391z1Z7awBg-HfyJuE73drda5mbLKYF7dWQKLnggoW3OOAo8uYgol6KMFB5-TyljtyFUsmjAFB02Iuc7d1cl--82xEL8vG5s71mLYm20w2BthyBC-5WiX8yVWAm-rjx-8dZrW4_AALBabTsgEAAA==
@@ -181,116 +182,84 @@ class CaravellaThemes {
     ).apply(fontFamily: 'Montserrat');
   }
 
-  static final ThemeData light = ThemeData(
-    colorScheme: lightColorScheme,
-    fontFamily: 'Montserrat',
-    textTheme: _createTextTheme(lightColorScheme),
-    useMaterial3: true,
-    scaffoldBackgroundColor: lightColorScheme.surface,
-    dialogTheme: DialogThemeData(
-      backgroundColor: lightColorScheme.surfaceContainerHigh,
-      surfaceTintColor: lightColorScheme.surfaceTint,
-      elevation: 6,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
-      titleTextStyle: _createTextTheme(
-        lightColorScheme,
-      ).titleLarge?.copyWith(color: lightColorScheme.onSurface),
-      contentTextStyle: _createTextTheme(
-        lightColorScheme,
-      ).bodyMedium?.copyWith(color: lightColorScheme.onSurfaceVariant),
-    ),
-    inputDecorationTheme: InputDecorationTheme(
-      isDense: true,
-      filled: false,
-      // Always show a bottom border (underline style)
-      border: UnderlineInputBorder(
-        borderSide: BorderSide(
-          color: lightColorScheme.outlineVariant,
-          width: 0.5,
+  // Helper method to create theme with dynamic or fallback color scheme
+  static ThemeData _createThemeData({
+    required ColorScheme colorScheme,
+    required ColorScheme fallbackColorScheme,
+  }) {
+    final scheme = colorScheme;
+    return ThemeData(
+      colorScheme: scheme,
+      fontFamily: 'Montserrat',
+      textTheme: _createTextTheme(scheme),
+      useMaterial3: true,
+      scaffoldBackgroundColor: scheme.surface,
+      dialogTheme: DialogThemeData(
+        backgroundColor: scheme.surfaceContainerHigh,
+        surfaceTintColor: scheme.surfaceTint,
+        elevation: 6,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+        titleTextStyle: _createTextTheme(scheme).titleLarge?.copyWith(color: scheme.onSurface),
+        contentTextStyle: _createTextTheme(scheme).bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        isDense: true,
+        filled: false,
+        border: UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: scheme.outlineVariant,
+            width: 0.5,
+          ),
         ),
-      ),
-      enabledBorder: UnderlineInputBorder(
-        borderSide: BorderSide(
-          color: lightColorScheme.outlineVariant,
-          width: 0.5,
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: scheme.outlineVariant,
+            width: 0.5,
+          ),
         ),
-      ),
-      focusedBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: lightColorScheme.primary, width: 1),
-      ),
-      disabledBorder: UnderlineInputBorder(
-        borderSide: BorderSide(
-          color: lightColorScheme.outline.withValues(alpha: 0.3),
-          width: 1,
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: scheme.primary, width: 1),
         ),
+        disabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: scheme.outline.withValues(alpha: 0.3),
+            width: 1,
+          ),
+        ),
+        errorBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: scheme.error, width: 0.5),
+        ),
+        focusedErrorBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: scheme.error, width: 1),
+        ),
+        hintStyle: TextStyle(
+          color: scheme.outline,
+          fontWeight: FontWeight.w400,
+        ),
+        contentPadding: FormTheme.standardContentPadding,
       ),
-      errorBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: lightColorScheme.error, width: 0.5),
-      ),
-      focusedErrorBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: lightColorScheme.error, width: 1),
-      ),
-      hintStyle: TextStyle(
-        color: lightColorScheme.outline,
-        fontWeight: FontWeight.w400,
-      ),
-      contentPadding: FormTheme.standardContentPadding,
-    ),
-  );
+    );
+  }
 
-  static final ThemeData dark = ThemeData(
-    colorScheme: darkColorScheme,
-    fontFamily: 'Montserrat',
-    textTheme: _createTextTheme(darkColorScheme),
-    useMaterial3: true,
-    scaffoldBackgroundColor: darkColorScheme.surface,
-    dialogTheme: DialogThemeData(
-      backgroundColor: darkColorScheme.surfaceContainerHigh,
-      surfaceTintColor: darkColorScheme.surfaceTint,
-      elevation: 6,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
-      titleTextStyle: _createTextTheme(
-        darkColorScheme,
-      ).titleLarge?.copyWith(color: darkColorScheme.onSurface),
-      contentTextStyle: _createTextTheme(
-        darkColorScheme,
-      ).bodyMedium?.copyWith(color: darkColorScheme.onSurfaceVariant),
-    ),
-    inputDecorationTheme: InputDecorationTheme(
-      isDense: true,
-      filled: false,
-      border: UnderlineInputBorder(
-        borderSide: BorderSide(
-          color: darkColorScheme.outlineVariant,
-          width: 0.5,
-        ),
-      ),
-      enabledBorder: UnderlineInputBorder(
-        borderSide: BorderSide(
-          color: darkColorScheme.outlineVariant,
-          width: 0.5,
-        ),
-      ),
-      focusedBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: darkColorScheme.primary, width: 1),
-      ),
-      disabledBorder: UnderlineInputBorder(
-        borderSide: BorderSide(
-          color: darkColorScheme.outline.withValues(alpha: 0.3),
-          width: 1,
-        ),
-      ),
-      errorBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: darkColorScheme.error, width: 0.5),
-      ),
-      focusedErrorBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: darkColorScheme.error, width: 1),
-      ),
-      hintStyle: TextStyle(
-        color: darkColorScheme.outline,
-        fontWeight: FontWeight.w400,
-      ),
-      contentPadding: FormTheme.standardContentPadding,
-    ),
-  );
+  // Create light theme with optional dynamic colors
+  static ThemeData createLightTheme({ColorScheme? dynamicColorScheme}) {
+    final colorScheme = dynamicColorScheme ?? lightColorScheme;
+    return _createThemeData(
+      colorScheme: colorScheme,
+      fallbackColorScheme: lightColorScheme,
+    );
+  }
+
+  // Create dark theme with optional dynamic colors
+  static ThemeData createDarkTheme({ColorScheme? dynamicColorScheme}) {
+    final colorScheme = dynamicColorScheme ?? darkColorScheme;
+    return _createThemeData(
+      colorScheme: colorScheme,
+      fallbackColorScheme: darkColorScheme,
+    );
+  }
+
+  static final ThemeData light = createLightTheme();
+
+  static final ThemeData dark = createDarkTheme();
 }

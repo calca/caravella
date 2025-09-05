@@ -257,6 +257,8 @@
   "settings_theme": "Tema",
   "settings_theme_desc": "Chiaro, scuro o sistema",
   "settings_select_theme": "Seleziona tema",
+  "settings_dynamic_color": "Colori dinamici",
+  "settings_dynamic_color_desc": "Usa i colori del sistema",
   "settings_privacy": "Privacy",
   "settings_privacy_desc": "Opzioni sicurezza e privacy",
   "settings_data": "Dati",
