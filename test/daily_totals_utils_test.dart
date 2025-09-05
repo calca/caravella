@@ -10,23 +10,23 @@ ExpenseGroup _group({
   DateTime? start,
   DateTime? end,
 }) => ExpenseGroup(
-      title: 'G',
-      expenses: expenses,
-      participants: [ExpenseParticipant(id: 'p1', name: 'P1')],
-      startDate: start,
-      endDate: end,
-      currency: '€',
-      categories: [ExpenseCategory(id: 'c', name: 'Cat')],
-    );
+  title: 'G',
+  expenses: expenses,
+  participants: [ExpenseParticipant(id: 'p1', name: 'P1')],
+  startDate: start,
+  endDate: end,
+  currency: '€',
+  categories: [ExpenseCategory(id: 'c', name: 'Cat')],
+);
 
 ExpenseDetails _exp(String id, DateTime d, double amt) => ExpenseDetails(
-      id: id,
-      name: id,
-      amount: amt,
-      date: d,
-      category: ExpenseCategory(id: 'c', name: 'Cat'),
-      paidBy: ExpenseParticipant(id: 'p1', name: 'P1'),
-    );
+  id: id,
+  name: id,
+  amount: amt,
+  date: d,
+  category: ExpenseCategory(id: 'c', name: 'Cat'),
+  paidBy: ExpenseParticipant(id: 'p1', name: 'P1'),
+);
 
 void main() {
   group('daily_totals_utils', () {

@@ -375,7 +375,11 @@ class GroupCardContent extends StatelessWidget {
     final duration = endDate.difference(startDate).inDays + 1; // inclusive
 
     // Usa il metodo ottimizzato per calcolare i totali giornalieri
-  final dailyTotals = calculateDailyTotalsOptimized(currentGroup, startDate, duration);
+    final dailyTotals = calculateDailyTotalsOptimized(
+      currentGroup,
+      startDate,
+      duration,
+    );
 
     return Column(
       children: [
@@ -387,9 +391,9 @@ class GroupCardContent extends StatelessWidget {
   }
 
   Widget _buildDefaultStatistics(ExpenseGroup currentGroup) {
-  // Serie settimanale e mensile tramite helper condivisi
-  final dailyTotals = buildWeeklySeries(currentGroup);
-  final dailyMonthTotals = buildMonthlySeries(currentGroup);
+    // Serie settimanale e mensile tramite helper condivisi
+    final dailyTotals = buildWeeklySeries(currentGroup);
+    final dailyMonthTotals = buildMonthlySeries(currentGroup);
 
     // Statistiche base
     return Column(

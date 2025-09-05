@@ -40,9 +40,9 @@ Widget _app(Widget child, Locale locale) => MaterialApp(
 
 void main() {
   testWidgets('Info meta card shows localized full date range', (tester) async {
-  // Use a fixed past range not ending today to ensure date range is shown.
-  final start = DateTime(2025, 8, 1);
-  final end = DateTime(2025, 8, 5);
+    // Use a fixed past range not ending today to ensure date range is shown.
+    final start = DateTime(2025, 8, 1);
+    final end = DateTime(2025, 8, 5);
     final g = _group(start: start, end: end, participants: 3);
     await tester.pumpWidget(
       _app(GeneralOverviewTab(trip: g), const Locale('en')),
@@ -65,13 +65,17 @@ void main() {
         break;
       }
     }
-    expect(found, isTrue, reason: 'Expected to find date range "$expectedRange" in any Text widget');
+    expect(
+      found,
+      isTrue,
+      reason: 'Expected to find date range "$expectedRange" in any Text widget',
+    );
   });
 
   testWidgets('Info meta card shows single date when start==end', (
     tester,
   ) async {
-  final start = DateTime(2025, 8, 1);
+    final start = DateTime(2025, 8, 1);
     final g = _group(start: start, end: start, participants: 1);
     await tester.pumpWidget(
       _app(GeneralOverviewTab(trip: g), const Locale('en')),
