@@ -5,7 +5,7 @@ import 'widgets/stat_card.dart';
 import '../../../widgets/charts/weekly_expense_chart.dart';
 import '../../../widgets/charts/monthly_expense_chart.dart';
 import '../../../widgets/charts/date_range_expense_chart.dart';
-import 'overview_stats_logic.dart';
+import 'daily_totals_utils.dart';
 import 'date_range_formatter.dart';
 
 /// General statistics tab: shows high level KPIs (daily/monthly average)
@@ -36,27 +36,10 @@ class GeneralOverviewTab extends StatelessWidget {
     return _total() / months;
   }
 
-  // Helpers per calcolare le serie dei grafici usando la logica condivisa
-  List<double> _weeklySeries() {
-    final now = DateTime.now();
-    final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
-    return calculateDailyTotals(trip, startOfWeek, 7);
-  }
-
-  List<double> _monthlySeries() {
-    final now = DateTime.now();
-    final daysInMonth = DateTime(now.year, now.month + 1, 0).day;
-    final startOfMonth = DateTime(now.year, now.month, 1);
-    return calculateDailyTotals(trip, startOfMonth, daysInMonth);
-  }
-
-  List<double> _dateRangeSeries() {
-    if (!shouldShowDateRangeChart(trip)) return const [];
-    final start = trip.startDate!;
-    final end = trip.endDate!;
-    final duration = end.difference(start).inDays + 1;
-    return calculateDailyTotals(trip, start, duration);
-  }
+  // Delegated to shared helpers for consistency
+  List<double> _weeklySeries() => buildWeeklySeries(trip);
+  List<double> _monthlySeries() => buildMonthlySeries(trip);
+  List<double> _dateRangeSeries() => buildAdaptiveDateRangeSeries(trip);
 
   @override
   Widget build(BuildContext context) {

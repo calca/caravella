@@ -11,6 +11,7 @@ import '../../../data/expense_group_storage_v2.dart';
 import '../../../widgets/app_toast.dart';
 import '../../../widgets/currency_display.dart';
 import '../../../manager/details/tabs/overview_stats_logic.dart';
+import '../../../manager/details/tabs/daily_totals_utils.dart';
 
 class GroupCardContent extends StatelessWidget {
   // Design constants
@@ -374,11 +375,7 @@ class GroupCardContent extends StatelessWidget {
     final duration = endDate.difference(startDate).inDays + 1; // inclusive
 
     // Usa il metodo ottimizzato per calcolare i totali giornalieri
-    final dailyTotals = _calculateOptimizedDailyTotals(
-      currentGroup,
-      startDate,
-      duration,
-    );
+  final dailyTotals = calculateDailyTotalsOptimized(currentGroup, startDate, duration);
 
     return Column(
       children: [
@@ -390,24 +387,9 @@ class GroupCardContent extends StatelessWidget {
   }
 
   Widget _buildDefaultStatistics(ExpenseGroup currentGroup) {
-    final now = DateTime.now();
-    // Calcola il lunedì della settimana corrente
-    final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
-    // Usa calcoli ottimizzati per le statistiche settimanali
-    final dailyTotals = _calculateOptimizedDailyTotals(
-      currentGroup,
-      startOfWeek,
-      7,
-    );
-
-    // Spesa per ogni giorno del mese corrente
-    final daysInMonth = DateTime(now.year, now.month + 1, 0).day;
-    final startOfMonth = DateTime(now.year, now.month, 1);
-    final dailyMonthTotals = _calculateOptimizedDailyTotals(
-      currentGroup,
-      startOfMonth,
-      daysInMonth,
-    );
+  // Serie settimanale e mensile tramite helper condivisi
+  final dailyTotals = buildWeeklySeries(currentGroup);
+  final dailyMonthTotals = buildMonthlySeries(currentGroup);
 
     // Statistiche base
     return Column(
@@ -422,31 +404,7 @@ class GroupCardContent extends StatelessWidget {
     );
   }
 
-  // Metodo ottimizzato per calcolare i totali giornalieri
-  List<double> _calculateOptimizedDailyTotals(
-    ExpenseGroup group,
-    DateTime startDate,
-    int days,
-  ) {
-    final dailyTotals = List<double>.filled(days, 0.0);
-
-    for (final expense in group.expenses) {
-      final expenseDate = expense.date;
-      final dayDiff = expenseDate.difference(startDate).inDays;
-
-      if (dayDiff >= 0 && dayDiff < days) {
-        // Verifica che sia lo stesso giorno (non solo differenza in giorni)
-        final targetDay = startDate.add(Duration(days: dayDiff));
-        if (expenseDate.year == targetDay.year &&
-            expenseDate.month == targetDay.month &&
-            expenseDate.day == targetDay.day) {
-          dailyTotals[dayDiff] += expense.amount ?? 0;
-        }
-      }
-    }
-
-    return dailyTotals;
-  }
+  // (Funzione ottimizzata spostata in overview_stats_logic.dart per riuso)
 
   Widget _buildAddButton(BuildContext context, ExpenseGroup currentGroup) {
     final localizations = gen.AppLocalizations.of(context);

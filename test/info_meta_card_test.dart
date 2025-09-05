@@ -6,7 +6,7 @@ import 'package:io_caravella_egm/data/model/expense_participant.dart';
 import 'package:io_caravella_egm/data/model/expense_category.dart';
 import 'package:io_caravella_egm/data/model/expense_details.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart';
-import 'package:intl/intl.dart';
+import 'package:io_caravella_egm/manager/details/tabs/date_range_formatter.dart';
 
 ExpenseGroup _group({DateTime? start, DateTime? end, int participants = 2}) {
   return ExpenseGroup(
@@ -48,8 +48,13 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    final df = DateFormat.yMd('en');
-    final expectedRange = '${df.format(start)} - ${df.format(end)}';
+    final expectedRange = formatDateRange(
+      start: start,
+      end: end,
+      locale: const Locale('en'),
+    );
+    // The subtitle may include a newline + participants line; just ensure
+    // the date range portion appears somewhere.
     expect(find.textContaining(expectedRange), findsOneWidget);
   });
 
@@ -62,8 +67,11 @@ void main() {
       _app(GeneralOverviewTab(trip: g), const Locale('en')),
     );
     await tester.pumpAndSettle();
-    final df = DateFormat.yMd('en');
-    final single = df.format(start);
+    final single = formatDateRange(
+      start: start,
+      end: start,
+      locale: const Locale('en'),
+    );
     expect(find.textContaining(' - '), findsNothing);
     expect(find.textContaining(single), findsOneWidget);
   });
