@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import '../data/model/expense_group.dart';
 import '../data/model/expense_category.dart';
 import '../data/expense_group_storage_v2.dart';
+import '../data/category_service.dart';
+import '../data/participant_service.dart';
 
 class ExpenseGroupNotifier extends ChangeNotifier {
   ExpenseGroup? _currentGroup;
@@ -9,6 +11,14 @@ class ExpenseGroupNotifier extends ChangeNotifier {
   String? _lastAddedCategory;
   String? _lastEvent; // es: 'expense_added', 'category_added'
   final List<String> _deletedGroupIds = [];
+  final CategoryService? _categoryService; // Service for global category operations
+  final ParticipantService? _participantService; // Service for global participant operations
+
+  ExpenseGroupNotifier({
+    CategoryService? categoryService,
+    ParticipantService? participantService,
+  }) : _categoryService = categoryService,
+       _participantService = participantService;
 
   ExpenseGroup? get currentGroup => _currentGroup;
 
@@ -18,6 +28,13 @@ class ExpenseGroupNotifier extends ChangeNotifier {
   // Ultima categoria aggiunta
   String? get lastAddedCategory => _lastAddedCategory;
   String? get lastEvent => _lastEvent;
+  
+  // Category service for global category operations
+  CategoryService? get categoryService => _categoryService;
+  
+  // Participant service for global participant operations  
+  ParticipantService? get participantService => _participantService;
+  
   // Lista degli ID dei gruppi che sono stati cancellati
   List<String> get deletedGroupIds => List.unmodifiable(_deletedGroupIds);
 
@@ -60,6 +77,21 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     }
   }
 
+  Future<void> addExpense(ExpenseDetails expense) async {
+    if (_currentGroup == null) return;
+
+    final updatedExpenses = [..._currentGroup!.expenses, expense];
+    final updatedGroup = _currentGroup!.copyWith(expenses: updatedExpenses);
+
+    _lastEvent = 'expense_added';
+
+    await updateGroup(updatedGroup);
+    
+    // Invalidate participant service cache when new expense is added
+    // (in case new participant was created via global autocomplete)
+    _participantService?.invalidateCache();
+  }
+
   Future<void> addCategory(String categoryName) async {
     if (_currentGroup == null) return;
 
@@ -73,10 +105,35 @@ class ExpenseGroupNotifier extends ChangeNotifier {
 
     final updatedCategories = [..._currentGroup!.categories];
     updatedCategories.add(ExpenseCategory(name: categoryName));
+    final updatedGroup = _currentGroup!.copyWith(categories: updatedCategories);
 
     // Memorizza l'ultima categoria aggiunta
     _lastAddedCategory = categoryName;
     _lastEvent = 'category_added';
+
+    await updateGroup(updatedGroup);
+    
+    // Invalidate category service cache when new category is added
+    _categoryService?.invalidateCache();
+  }
+
+  // Helper method to update group with proper state management
+  Future<void> updateGroup(ExpenseGroup updatedGroup) async {
+    _currentGroup = updatedGroup;
+    
+    // Aggiungi l'ID alla lista dei gruppi aggiornati
+    if (!_updatedGroupIds.contains(updatedGroup.id)) {
+      _updatedGroupIds.add(updatedGroup.id);
+    }
+
+    notifyListeners();
+
+    // Persisti le modifiche
+    try {
+      await ExpenseGroupStorageV2.saveTrip(updatedGroup);
+    } catch (e) {
+      debugPrint('Error saving group: $e');
+    }
   }
 
   // Nuovo metodo per aggiornare l'intero gruppo (per quando viene modificato dall'esterno)
