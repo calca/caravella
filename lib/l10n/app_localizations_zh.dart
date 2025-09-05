@@ -233,8 +233,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get participants => '参与者';
 
   @override
-  String participant_count(Object count) {
-    return '$count 名参与者';
+  String participant_count(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '# 名参与者',
+    );
+    return '$_temp0';
   }
 
   @override

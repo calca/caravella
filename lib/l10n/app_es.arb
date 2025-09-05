@@ -578,6 +578,6 @@
   ,"@empty_expenses_subtitle": {"description": "Subtítulo para estado vacío de gastos"}
   ,"add_first_expense_button": "Agregar Primer Gasto"
   ,"@add_first_expense_button": {"description": "Texto del botón para agregar primer gasto"}
-  ,"participant_count": "{count} participante(s)"
+  ,"participant_count": "{count, plural, one {# participante} other {# participantes}}"
   ,"@participant_count": {"description": "Recuento de participantes con plural", "placeholders": {"count": {}}}
 }

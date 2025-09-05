@@ -235,8 +235,14 @@ class AppLocalizationsPt extends AppLocalizations {
   String get participants => 'Participants';
 
   @override
-  String participant_count(Object count) {
-    return '$count participante(s)';
+  String participant_count(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '# participantes',
+      one: '# participante',
+    );
+    return '$_temp0';
   }
 
   @override

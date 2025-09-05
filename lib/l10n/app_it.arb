@@ -79,7 +79,7 @@
   "expenses": "Spese",
   "participants_label": "Partecipanti",
   "participants": "Partecipanti",
-  "participant_count": "{count} partecipante(i)",
+  "participant_count": "{count, plural, one {# partecipante} other {# partecipanti}}",
   "@participant_count": {"description": "Conteggio partecipanti con plurale", "placeholders": {"count": {}}},
   "last_7_days": "7 giorni",
   "recent_activity": "Attività recente",
