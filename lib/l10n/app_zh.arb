@@ -350,6 +350,6 @@
   "@expense_groups_title": {"description": "Main section header for the list of expense groups/trips on the history page"},
   "expense_groups_desc": "管理您的支出群组",
   "@expense_groups_desc": {"description": "Short subtitle describing the purpose of the expense groups section (e.g. add, edit, view trips)"}
-  ,"participant_count": "{count, plural, other {# 名参与者}}"
+  ,"participant_count": "{count, plural, other {{count} 名参与者}}"
   ,"@participant_count": {"description": "参与者计数（中文无需复数, 使用other形式）", "placeholders": {"count": {}}}
 }

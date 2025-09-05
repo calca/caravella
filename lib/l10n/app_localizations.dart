@@ -551,7 +551,7 @@ abstract class AppLocalizations {
   /// Pluralized participant count
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, one {# participant} other {# participants}}'**
+  /// **'{count, plural, one {{count} participant} other {{count} participants}}'**
   String participant_count(num count);
 
   /// No description provided for @participants_label.
