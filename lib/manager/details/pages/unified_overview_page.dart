@@ -160,9 +160,12 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
             ),
             const SizedBox(height: 4),
             Padding(
+              // Symmetric horizontal padding so left/right match header (24px)
               padding: const EdgeInsets.symmetric(horizontal: 0),
               child: TabBar(
                 isScrollable: true,
+                // Center the group of tabs within available width
+                tabAlignment: TabAlignment.center,
                 tabs: [
                   Tab(text: gloc.settings_general),
                   Tab(text: gloc.participants),
