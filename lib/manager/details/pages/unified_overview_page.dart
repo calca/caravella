@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../data/model/expense_group.dart';
 import '../tabs/unified_overview_tab.dart';
+import '../../group/widgets/section_header.dart';
 
 /// Full screen page replacement for the previous bottom sheet overview/statistics.
 /// Adds a swipe-down gesture to dismiss (mimics modal sheet UX).
@@ -106,7 +107,6 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage>
         child: Scaffold(
           appBar: AppBar(
             automaticallyImplyLeading: false,
-            title: Text(gloc.overview),
             actions: [
               IconButton(
                 icon: const Icon(Icons.close_rounded),
@@ -151,6 +151,14 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage>
                       ),
                     ),
                   ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+                child: SectionHeader(
+                  title: widget.trip.title,
+                  description: gloc.overview,
+                  padding: EdgeInsets.zero,
                 ),
               ),
               Expanded(child: UnifiedOverviewTab(trip: widget.trip)),
