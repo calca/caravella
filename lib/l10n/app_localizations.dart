@@ -266,6 +266,18 @@ abstract class AppLocalizations {
   /// **'Export & Share'**
   String get export_share;
 
+  /// No description provided for @contribution_percentages.
+  ///
+  /// In en, this message translates to:
+  /// **'Contribution percentages'**
+  String get contribution_percentages;
+
+  /// No description provided for @contribution_percentages_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Share of total paid by each participant'**
+  String get contribution_percentages_desc;
+
   /// No description provided for @export_options.
   ///
   /// In en, this message translates to:

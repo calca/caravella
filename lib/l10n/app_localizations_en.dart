@@ -91,6 +91,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get export_share => 'Export & Share';
 
   @override
+  String get contribution_percentages => 'Contribution percentages';
+
+  @override
+  String get contribution_percentages_desc =>
+      'Share of total paid by each participant';
+
+  @override
   String get export_options => 'Export Options';
 
   @override

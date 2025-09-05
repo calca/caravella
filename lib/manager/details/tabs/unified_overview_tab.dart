@@ -3,6 +3,7 @@ import '../../../data/model/expense_group.dart';
 import '../../../widgets/currency_display.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'overview_stats_logic.dart';
+import 'settlements_logic.dart';
 import 'widgets/daily_expenses_chart.dart';
 import 'widgets/categories_pie_chart.dart';
 import 'widgets/daily_average_by_category.dart';
@@ -14,103 +15,6 @@ import 'widgets/daily_average_by_category.dart';
 class UnifiedOverviewTab extends StatelessWidget {
   final ExpenseGroup trip;
   const UnifiedOverviewTab({super.key, required this.trip});
-
-  /// Calcola i pareggi semplificati tra i partecipanti
-  List<Map<String, dynamic>> _calculateSettlements(ExpenseGroup trip) {
-    if (trip.participants.length < 2 || trip.expenses.isEmpty) {
-      return [];
-    }
-
-    // Calcola il bilancio di ogni partecipante
-    final Map<String, double> balances = {};
-    final totalExpenses = trip.expenses.fold(
-      0.0,
-      (sum, e) => sum + (e.amount ?? 0),
-    );
-    final fairShare = totalExpenses / trip.participants.length;
-
-    // Inizializza i bilanci
-    for (final participant in trip.participants) {
-      balances[participant.name] = 0.0;
-    }
-
-    // Calcola quanto ha pagato ogni partecipante
-    for (final expense in trip.expenses) {
-      if (expense.amount != null) {
-        balances[expense.paidBy.name] =
-            (balances[expense.paidBy.name] ?? 0) + expense.amount!;
-      }
-    }
-
-    // Sottrai la quota equa per ottenere il bilancio netto
-    for (final participant in trip.participants) {
-      balances[participant.name] =
-          (balances[participant.name] ?? 0) - fairShare;
-    }
-
-    // Separa creditori e debitori
-    final List<MapEntry<String, double>> creditors = [];
-    final List<MapEntry<String, double>> debtors = [];
-
-    balances.forEach((participant, balance) {
-      if (balance > 0.01) {
-        // Tolleranza per errori di arrotondamento
-        creditors.add(MapEntry(participant, balance));
-      } else if (balance < -0.01) {
-        debtors.add(
-          MapEntry(participant, -balance),
-        ); // Rendi positivo il debito
-      }
-    });
-
-    // Ordina per importo decrescente per ottimizzare
-    creditors.sort((a, b) => b.value.compareTo(a.value));
-    debtors.sort((a, b) => b.value.compareTo(a.value));
-
-    // Calcola i pareggi minimi
-    final List<Map<String, dynamic>> settlements = [];
-
-    // Copia le liste per non modificare quelle originali
-    final List<MapEntry<String, double>> remainingCreditors = List.from(
-      creditors,
-    );
-    final List<MapEntry<String, double>> remainingDebtors = List.from(debtors);
-
-    int creditorIndex = 0;
-    int debtorIndex = 0;
-
-    while (creditorIndex < remainingCreditors.length &&
-        debtorIndex < remainingDebtors.length) {
-      final creditor = remainingCreditors[creditorIndex];
-      final debtor = remainingDebtors[debtorIndex];
-
-      final settlement = creditor.value < debtor.value
-          ? creditor.value
-          : debtor.value;
-
-      settlements.add({
-        'from': debtor.key,
-        'to': creditor.key,
-        'amount': settlement,
-      });
-
-      // Aggiorna i bilanci
-      remainingCreditors[creditorIndex] = MapEntry(
-        creditor.key,
-        creditor.value - settlement,
-      );
-      remainingDebtors[debtorIndex] = MapEntry(
-        debtor.key,
-        debtor.value - settlement,
-      );
-
-      // Passa al prossimo se completamente pareggiato
-      if (remainingCreditors[creditorIndex].value < 0.01) creditorIndex++;
-      if (remainingDebtors[debtorIndex].value < 0.01) debtorIndex++;
-    }
-
-    return settlements;
-  }
 
   /// Calcola le statistiche giornaliere per il grafico
   Map<DateTime, double> _calculateDailyStats() {
@@ -208,7 +112,7 @@ class UnifiedOverviewTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final gloc = gen.AppLocalizations.of(context);
-    final settlements = _calculateSettlements(trip);
+    final settlements = computeSettlements(trip);
 
     if (trip.expenses.isEmpty) {
       return Center(
@@ -296,6 +200,70 @@ class UnifiedOverviewTab extends StatelessWidget {
             }),
 
             const SizedBox(height: 24),
+
+            // Percentuali di contributo
+            Builder(
+              builder: (context) {
+                final totalAll = trip.expenses.fold<double>(
+                  0,
+                  (s, e) => s + (e.amount ?? 0),
+                );
+                if (totalAll <= 0) return const SizedBox.shrink();
+                // Precompute and sort by percentage descending
+                final entries = trip.participants.map((p) {
+                  final total = trip.expenses
+                      .where((e) => e.paidBy.name == p.name)
+                      .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
+                  final pct = totalAll == 0 ? 0 : (total / totalAll) * 100;
+                  return (participant: p, total: total, pct: pct);
+                }).toList()..sort((a, b) => b.pct.compareTo(a.pct));
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      gen.AppLocalizations.of(context).contribution_percentages,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    ...entries.map((e) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                e.participant.name,
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 80,
+                              child: LinearProgressIndicator(
+                                value: (e.pct / 100).clamp(0, 1),
+                                minHeight: 6,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              '${e.pct.toStringAsFixed(1)}% ',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
+                    const SizedBox(height: 24),
+                  ],
+                );
+              },
+            ),
 
             // 2. SETTLEMENT
             Text(
