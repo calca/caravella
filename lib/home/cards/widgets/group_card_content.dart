@@ -1,6 +1,6 @@
-import 'weekly_expense_chart.dart';
-import 'monthly_expense_chart.dart';
-import 'date_range_expense_chart.dart';
+import '../../../widgets/charts/weekly_expense_chart.dart';
+import '../../../widgets/charts/monthly_expense_chart.dart';
+import '../../../widgets/charts/date_range_expense_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
