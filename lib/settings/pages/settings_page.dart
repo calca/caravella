@@ -4,6 +4,7 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart'
     as gen; // generated strongly-typed
 import '../../state/locale_notifier.dart';
 import '../../state/theme_mode_notifier.dart';
+import '../../state/dynamic_color_notifier.dart';
 import '../flag_secure_notifier.dart';
 
 import '../flag_secure_android.dart';
@@ -62,6 +63,8 @@ class SettingsPage extends StatelessWidget {
         _buildLanguageRow(context, loc, locale),
         const SizedBox(height: 8),
         _buildThemeRow(context, loc),
+        const SizedBox(height: 8),
+        _buildDynamicColorRow(context, loc),
       ],
     );
   }
@@ -142,6 +145,49 @@ class SettingsPage extends StatelessWidget {
         subtitle: Text(label),
         trailing: const Icon(Icons.arrow_drop_down),
         onTap: () => _showThemePicker(context, loc),
+      ),
+    );
+  }
+
+  Widget _buildDynamicColorRow(BuildContext context, gen.AppLocalizations loc) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+    final dynamicColorNotifier = DynamicColorNotifier.of(context);
+    final enabled = dynamicColorNotifier?.dynamicColorEnabled ?? false;
+    
+    return SettingsCard(
+      context: context,
+      color: colorScheme.surface,
+      child: Semantics(
+        toggled: enabled,
+        label: '${loc.settings_dynamic_color} - ${enabled ? loc.accessibility_currently_enabled : loc.accessibility_currently_disabled}',
+        hint: enabled
+            ? loc.accessibility_double_tap_disable
+            : loc.accessibility_double_tap_enable,
+        child: ListTile(
+          leading: const Icon(Icons.palette_outlined),
+          title: Text(
+            loc.settings_dynamic_color,
+            style: textTheme.titleMedium,
+          ),
+          subtitle: Text(
+            loc.settings_dynamic_color_desc,
+            style: textTheme.bodySmall,
+          ),
+          trailing: Semantics(
+            label: loc.accessibility_security_switch(
+              enabled
+                  ? loc.accessibility_switch_on
+                  : loc.accessibility_switch_off,
+            ),
+            child: Switch(
+              value: enabled,
+              onChanged: (val) {
+                dynamicColorNotifier?.changeDynamicColor(val);
+              },
+            ),
+          ),
+        ),
       ),
     );
   }
