@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../data/model/expense_group.dart';
-import 'widgets/daily_expenses_chart.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'widgets/stat_card.dart';
+import '../../../widgets/charts/weekly_expense_chart.dart';
+import '../../../widgets/charts/monthly_expense_chart.dart';
 
 /// General statistics tab: shows high level KPIs (daily/monthly average)
 /// and spending trend for the last 7 and 30 days.
@@ -72,8 +73,16 @@ class GeneralOverviewTab extends StatelessWidget {
 
     final dailyAvg = _dailyAverage();
     final monthlyAvg = _monthlyAverage();
-    final last7 = _lastNDays(7);
-    final last30 = _lastNDays(30);
+  final last7 = _lastNDays(7);
+  final last30 = _lastNDays(30);
+
+  // Convert maps to ordered lists of values by date (ascending)
+  final weeklySeries = (last7.keys.toList()..sort())
+    .map((d) => last7[d] ?? 0)
+    .toList(growable: false);
+  final monthlySeries = (last30.keys.toList()..sort())
+    .map((d) => last30[d] ?? 0)
+    .toList(growable: false);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 24),
@@ -101,7 +110,6 @@ class GeneralOverviewTab extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 28),
-          // Last 7 days chart
           Text(
             'Ultimi 7 giorni',
             style: theme.textTheme.titleMedium?.copyWith(
@@ -109,11 +117,11 @@ class GeneralOverviewTab extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          DailyExpensesChart(
-            trip: trip,
-            dailyStats: last7,
-            customTitle:
-                gloc.daily_expenses_chart, // Chart has internal title row
+          WeeklyExpenseChart(
+            dailyTotals: weeklySeries.length == 7
+                ? weeklySeries
+                : List<double>.filled(7, 0),
+            theme: theme,
           ),
           const SizedBox(height: 32),
           Text(
@@ -122,11 +130,10 @@ class GeneralOverviewTab extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(height: 12),
-          DailyExpensesChart(
-            trip: trip,
-            dailyStats: last30,
-            customTitle: gloc.daily_expenses_chart,
+            const SizedBox(height: 12),
+          MonthlyExpenseChart(
+            dailyTotals: monthlySeries,
+            theme: theme,
           ),
         ],
       ),
