@@ -28,7 +28,7 @@ class GroupActions extends StatelessWidget {
                 : gen.AppLocalizations.of(context).no_expenses_to_display,
             child: IconButton.filledTonal(
               onPressed: hasExpenses ? onOverview : null,
-              icon: const Icon(Icons.dashboard_customize_outlined),
+              icon: const Icon(Icons.analytics_outlined),
               iconSize: 24,
               tooltip: gen.AppLocalizations.of(context).overview,
               style: IconButton.styleFrom(

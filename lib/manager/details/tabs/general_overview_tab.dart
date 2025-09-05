@@ -6,6 +6,7 @@ import '../../../widgets/charts/weekly_expense_chart.dart';
 import '../../../widgets/charts/monthly_expense_chart.dart';
 import '../../../widgets/charts/date_range_expense_chart.dart';
 import 'overview_stats_logic.dart';
+import 'date_range_formatter.dart';
 
 /// General statistics tab: shows high level KPIs (daily/monthly average)
 /// and spending trend for the last 7 and 30 days.
@@ -85,36 +86,31 @@ class GeneralOverviewTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          GridView(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
+              childAspectRatio: 1.0, // square cards
+            ),
             children: [
-              Expanded(
-                child: StatCard(
-                  title: gloc.total_spent,
-                  value: _total(),
-                  currency: trip.currency,
-                ),
+              StatCard(
+                title: gloc.total_spent,
+                value: _total(),
+                currency: trip.currency,
               ),
-              const SizedBox(width: 12),
-              Expanded(child: _InfoMetaCard(trip: trip)),
-            ],
-          ),
-          const SizedBox(height: 24),
-          Row(
-            children: [
-              Expanded(
-                child: StatCard(
-                  title: gloc.daily_average,
-                  value: dailyAvg,
-                  currency: trip.currency,
-                ),
+              _InfoMetaCard(trip: trip),
+              StatCard(
+                title: gloc.daily_average,
+                value: dailyAvg,
+                currency: trip.currency,
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: StatCard(
-                  title: gloc.monthly_average,
-                  value: monthlyAvg,
-                  currency: trip.currency,
-                ),
+              StatCard(
+                title: gloc.monthly_average,
+                value: monthlyAvg,
+                currency: trip.currency,
               ),
             ],
           ),
@@ -138,35 +134,21 @@ class _InfoMetaCard extends StatelessWidget {
   final ExpenseGroup trip;
   const _InfoMetaCard({required this.trip});
 
-  String _dateRangeString() {
-    final start = trip.startDate;
-    final end = trip.endDate;
-    if (start != null && end != null) {
-      return _fmt(start) + ' - ' + _fmt(end);
-    } else if (start != null) {
-      return _fmt(start);
-    } else if (end != null) {
-      return _fmt(end);
-    }
-    return '';
-  }
-
-  String _fmt(DateTime d) {
-    final now = DateTime.now();
-    if (d.year == now.year) {
-      return '${d.day}/${d.month}';
-    }
-    return '${d.day}/${d.month}/${d.year}';
-  }
+  String _dateRangeString(BuildContext context) => formatDateRange(
+    start: trip.startDate,
+    end: trip.endDate,
+    locale: Localizations.localeOf(context),
+  );
 
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
     final participants = trip.participants.length;
-    final dateStr = _dateRangeString();
-    final parts = <String>[];
-    if (dateStr.isNotEmpty) parts.add(dateStr);
-    parts.add('${participants} ${gloc.participants.toLowerCase()}');
+    final dateStr = _dateRangeString(context); // always include (could be '–')
+    final parts = <String>[
+      dateStr,
+      '${participants} ${gloc.participants.toLowerCase()}',
+    ];
     final subtitle = parts.join('  •  ');
     return InfoCard(title: gloc.info_tab, subtitle: subtitle);
   }
