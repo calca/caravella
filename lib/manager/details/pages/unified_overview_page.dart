@@ -141,7 +141,7 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: AppBar(title: Text(widget.trip.title)),
+        appBar: AppBar(),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
