@@ -146,7 +146,7 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+              padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
               child: SectionHeader(
                 title: widget.trip.title,
                 description: gloc.overview,
@@ -160,7 +160,7 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
             ),
             const SizedBox(height: 4),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 0),
               child: TabBar(
                 isScrollable: true,
                 tabs: [
@@ -170,16 +170,18 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
                 ],
               ),
             ),
-            const Divider(height: 1),
             Expanded(
-              child: RepaintBoundary(
-                key: _captureKey,
-                child: TabBarView(
-                  children: [
-                    GeneralOverviewTab(trip: widget.trip),
-                    ParticipantsOverviewTab(trip: widget.trip),
-                    CategoriesOverviewTab(trip: widget.trip),
-                  ],
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: RepaintBoundary(
+                  key: _captureKey,
+                  child: TabBarView(
+                    children: [
+                      GeneralOverviewTab(trip: widget.trip),
+                      ParticipantsOverviewTab(trip: widget.trip),
+                      CategoriesOverviewTab(trip: widget.trip),
+                    ],
+                  ),
                 ),
               ),
             ),

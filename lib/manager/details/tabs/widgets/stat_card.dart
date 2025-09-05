@@ -21,8 +21,10 @@ class StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-  // Use latest Material 3 surface token (surfaceVariant deprecated)
-  final surface = theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3);
+    // Use latest Material 3 surface token (surfaceVariant deprecated)
+    final surface = theme.colorScheme.surfaceContainerHighest.withValues(
+      alpha: 0.3,
+    );
     return Container(
       decoration: BoxDecoration(
         color: surface,
