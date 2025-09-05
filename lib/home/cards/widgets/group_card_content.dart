@@ -10,7 +10,6 @@ import '../../../manager/details/widgets/expense_entry_sheet.dart';
 import '../../../data/expense_group_storage_v2.dart';
 import '../../../widgets/app_toast.dart';
 import '../../../widgets/currency_display.dart';
-import '../../../manager/details/tabs/overview_stats_logic.dart';
 import '../../../manager/details/tabs/daily_totals_utils.dart';
 
 class GroupCardContent extends StatelessWidget {

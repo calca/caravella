@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:io_caravella_egm/data/model/expense_group.dart';
-import 'package:io_caravella_egm/manager/details/tabs/overview_stats_logic.dart';
+import 'package:io_caravella_egm/manager/details/tabs/daily_totals_utils.dart';
 
 void main() {
   group('StatisticsTab Duration Logic', () {

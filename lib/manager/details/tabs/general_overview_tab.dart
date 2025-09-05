@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../data/model/expense_group.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'overview_stats_logic.dart';
 import 'widgets/stat_card.dart';
 import '../../../widgets/charts/weekly_expense_chart.dart';
 import '../../../widgets/charts/monthly_expense_chart.dart';
