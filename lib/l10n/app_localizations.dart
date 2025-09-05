@@ -242,6 +242,24 @@ abstract class AppLocalizations {
   /// **'Share all (OFX)'**
   String get share_all_ofx;
 
+  /// No description provided for @share_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get share_label;
+
+  /// No description provided for @share_text_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Share text'**
+  String get share_text_label;
+
+  /// No description provided for @share_image_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Share image'**
+  String get share_image_label;
+
   /// No description provided for @export_share.
   ///
   /// In en, this message translates to:

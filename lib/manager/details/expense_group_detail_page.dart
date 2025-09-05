@@ -143,10 +143,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   void _openUnifiedOverviewPage() {
     if (_trip == null) return;
     Navigator.of(context).push(
-      MaterialPageRoute(
-        fullscreenDialog: true,
-        builder: (ctx) => UnifiedOverviewPage(trip: _trip!),
-      ),
+      MaterialPageRoute(builder: (ctx) => UnifiedOverviewPage(trip: _trip!)),
     );
   }
 

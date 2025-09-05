@@ -79,6 +79,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get share_all_ofx => 'Share all (OFX)';
 
   @override
+  String get share_label => 'Share';
+
+  @override
+  String get share_text_label => 'Share text';
+
+  @override
+  String get share_image_label => 'Share image';
+
+  @override
   String get export_share => 'Export & Share';
 
   @override

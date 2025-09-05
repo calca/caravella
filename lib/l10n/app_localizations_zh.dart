@@ -78,6 +78,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get share_all_ofx => '分享全部 (OFX)';
 
   @override
+  String get share_label => '分享';
+
+  @override
+  String get share_text_label => '分享文本';
+
+  @override
+  String get share_image_label => '分享图片';
+
+  @override
   String get export_share => '导出和分享';
 
   @override
