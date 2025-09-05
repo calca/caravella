@@ -85,11 +85,18 @@ class GeneralOverviewTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Total spent card (full width)
-          StatCard(
-            title: gloc.total_spent,
-            value: _total(),
-            currency: trip.currency,
+          Row(
+            children: [
+              Expanded(
+                child: StatCard(
+                  title: gloc.total_spent,
+                  value: _total(),
+                  currency: trip.currency,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(child: _InfoMetaCard(trip: trip)),
+            ],
           ),
           const SizedBox(height: 24),
           Row(
@@ -124,5 +131,43 @@ class GeneralOverviewTab extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class _InfoMetaCard extends StatelessWidget {
+  final ExpenseGroup trip;
+  const _InfoMetaCard({required this.trip});
+
+  String _dateRangeString() {
+    final start = trip.startDate;
+    final end = trip.endDate;
+    if (start != null && end != null) {
+      return _fmt(start) + ' - ' + _fmt(end);
+    } else if (start != null) {
+      return _fmt(start);
+    } else if (end != null) {
+      return _fmt(end);
+    }
+    return '';
+  }
+
+  String _fmt(DateTime d) {
+    final now = DateTime.now();
+    if (d.year == now.year) {
+      return '${d.day}/${d.month}';
+    }
+    return '${d.day}/${d.month}/${d.year}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final gloc = gen.AppLocalizations.of(context);
+    final participants = trip.participants.length;
+    final dateStr = _dateRangeString();
+    final parts = <String>[];
+    if (dateStr.isNotEmpty) parts.add(dateStr);
+    parts.add('${participants} ${gloc.participants.toLowerCase()}');
+    final subtitle = parts.join('  •  ');
+    return InfoCard(title: gloc.info_tab, subtitle: subtitle);
   }
 }
