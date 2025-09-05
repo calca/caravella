@@ -137,16 +137,14 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.trip.title, overflow: TextOverflow.ellipsis),
-      ),
+      appBar: AppBar(),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
             child: SectionHeader(
-              title: gloc.overview,
-              description: gloc.expenses_by_participant,
+              title: widget.trip.title,
+              description: gloc.overview,
               padding: EdgeInsets.zero,
               trailing: IconButton(
                 icon: const Icon(Icons.ios_share_rounded),
