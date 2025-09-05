@@ -1,5 +1,5 @@
-import '../group/pages/expenses_group_edit_page.dart';
-import '../group/group_edit_mode.dart';
+import '../../group/pages/expenses_group_edit_page.dart';
+import '../../group/group_edit_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:async';
@@ -11,27 +11,27 @@ import 'package:path_provider/path_provider.dart'; // still used for share temp 
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 
-import '../../data/model/expense_details.dart';
-import '../../data/model/expense_group.dart';
-import '../../state/expense_group_notifier.dart';
-import '../../data/expense_group_storage_v2.dart';
-import '../../widgets/material3_dialog.dart';
+import '../../../data/model/expense_details.dart';
+import '../../../data/model/expense_group.dart';
+import '../../../state/expense_group_notifier.dart';
+import '../../../data/expense_group_storage_v2.dart';
+import '../../../widgets/material3_dialog.dart';
 // Removed legacy localization bridge imports (migration in progress)
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../widgets/app_toast.dart';
-import 'widgets/group_header.dart';
-import 'widgets/group_actions.dart';
-import 'widgets/group_total.dart';
-import 'widgets/filtered_expense_list.dart';
+import '../../../widgets/app_toast.dart';
+import '../widgets/group_header.dart';
+import '../widgets/group_actions.dart';
+import '../widgets/group_total.dart';
+import '../widgets/filtered_expense_list.dart';
 // Replaced bottom sheet overview with full page navigation
-import 'pages/unified_overview_page.dart';
-import 'widgets/options_sheet.dart';
-import 'widgets/export_options_sheet.dart';
-import 'widgets/expense_entry_sheet.dart';
-import 'widgets/delete_expense_dialog.dart';
-import '../../widgets/add_fab.dart';
-import 'export/ofx_exporter.dart';
-import 'export/csv_exporter.dart';
+import 'unified_overview_page.dart';
+import '../widgets/options_sheet.dart';
+import '../widgets/export_options_sheet.dart';
+import '../widgets/expense_entry_sheet.dart';
+import '../widgets/delete_expense_dialog.dart';
+import '../../../widgets/add_fab.dart';
+import '../export/ofx_exporter.dart';
+import '../export/csv_exporter.dart';
 
 class ExpenseGroupDetailPage extends StatefulWidget {
   final ExpenseGroup trip;
