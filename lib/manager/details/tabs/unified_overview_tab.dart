@@ -14,7 +14,6 @@ class UnifiedOverviewTab extends StatelessWidget {
   final ExpenseGroup trip;
   const UnifiedOverviewTab({super.key, required this.trip});
 
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -43,7 +42,7 @@ class UnifiedOverviewTab extends StatelessWidget {
       );
     }
 
-  // (Grafico daily/weekly rimosso in favore dei tab dedicati)
+    // (Grafico daily/weekly rimosso in favore dei tab dedicati)
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),

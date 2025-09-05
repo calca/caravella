@@ -76,9 +76,9 @@ class GeneralOverviewTab extends StatelessWidget {
 
     final dailyAvg = _dailyAverage();
     final monthlyAvg = _monthlyAverage();
-  final weekly = _weeklySeries();
-  final monthly = _monthlySeries();
-  final dateRange = _dateRangeSeries();
+    final weekly = _weeklySeries();
+    final monthly = _monthlySeries();
+    final dateRange = _dateRangeSeries();
 
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 24),
@@ -116,7 +116,7 @@ class GeneralOverviewTab extends StatelessWidget {
           WeeklyExpenseChart(dailyTotals: weekly, theme: theme),
           const SizedBox(height: 24),
           // Monthly chart
-            MonthlyExpenseChart(dailyTotals: monthly, theme: theme),
+          MonthlyExpenseChart(dailyTotals: monthly, theme: theme),
           if (dateRange.isNotEmpty) ...[
             const SizedBox(height: 24),
             DateRangeExpenseChart(dailyTotals: dateRange, theme: theme),
