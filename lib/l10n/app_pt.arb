@@ -480,4 +480,6 @@
   ,"@expense_groups_title": {"description": "Main section header for the list of expense groups/trips on the history page"}
   ,"expense_groups_desc": "Manage your expense groups"
   ,"@expense_groups_desc": {"description": "Short subtitle describing the purpose of the expense groups section (e.g. add, edit, view trips)"}
+  ,"participant_count": "{count} participante(s)"
+  ,"@participant_count": {"description": "Contagem de participantes com plural", "placeholders": {"count": {}}}
 }

@@ -95,6 +95,8 @@
   "no_trips_found": "Where do you want to go?",
   "expenses": "Expenses",
   "participants": "Participants",
+  "participant_count": "{count} participant(s)",
+  "@participant_count": {"description": "Pluralized participant count", "placeholders": {"count": {}}},
   "participants_label": "Participants",
   "last_7_days": "7 days",
   "recent_activity": "Recent activity",

@@ -86,6 +86,17 @@ class GeneralOverviewTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if (dateRange.isNotEmpty) ...[
+            const SizedBox(height: 24),
+            DateRangeExpenseChart(dailyTotals: dateRange, theme: theme),
+          ] else ...[
+            // Weekly chart
+            WeeklyExpenseChart(dailyTotals: weekly, theme: theme),
+            const SizedBox(height: 24),
+            // Monthly chart
+            MonthlyExpenseChart(dailyTotals: monthly, theme: theme),
+          ],
+          const SizedBox(height: 24),
           GridView(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -114,16 +125,6 @@ class GeneralOverviewTab extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 24),
-          // Weekly chart
-          WeeklyExpenseChart(dailyTotals: weekly, theme: theme),
-          const SizedBox(height: 24),
-          // Monthly chart
-          MonthlyExpenseChart(dailyTotals: monthly, theme: theme),
-          if (dateRange.isNotEmpty) ...[
-            const SizedBox(height: 24),
-            DateRangeExpenseChart(dailyTotals: dateRange, theme: theme),
-          ],
         ],
       ),
     );
@@ -144,12 +145,23 @@ class _InfoMetaCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
     final participants = trip.participants.length;
-    final dateStr = _dateRangeString(context); // always include (could be '–')
-    final parts = <String>[
-      dateStr,
-      '${participants} ${gloc.participants.toLowerCase()}',
-    ];
-    final subtitle = parts.join('  •  ');
+    // If both dates exist and end is today (ongoing), hide date range per requirement.
+    String dateStr = _dateRangeString(context);
+    if (trip.startDate != null && trip.endDate != null) {
+      final today = DateTime.now();
+      final end = trip.endDate!;
+      final isToday =
+          end.year == today.year &&
+          end.month == today.month &&
+          end.day == today.day;
+      if (isToday) {
+        dateStr = ''; // suppress date range
+      }
+    }
+    final participantLabel = gloc.participant_count(participants);
+    final subtitle = dateStr.isEmpty
+        ? participantLabel
+        : '$dateStr\n$participantLabel';
     return InfoCard(title: gloc.info_tab, subtitle: subtitle);
   }
 }

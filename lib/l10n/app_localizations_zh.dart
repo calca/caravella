@@ -233,6 +233,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get participants => '参与者';
 
   @override
+  String participant_count(Object count) {
+    return '$count 名参与者';
+  }
+
+  @override
   String get participants_label => 'Participants';
 
   @override

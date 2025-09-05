@@ -548,6 +548,12 @@ abstract class AppLocalizations {
   /// **'Participants'**
   String get participants;
 
+  /// Pluralized participant count
+  ///
+  /// In en, this message translates to:
+  /// **'{count} participant(s)'**
+  String participant_count(Object count);
+
   /// No description provided for @participants_label.
   ///
   /// In en, this message translates to:

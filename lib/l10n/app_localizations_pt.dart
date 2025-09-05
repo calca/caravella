@@ -235,6 +235,11 @@ class AppLocalizationsPt extends AppLocalizations {
   String get participants => 'Participants';
 
   @override
+  String participant_count(Object count) {
+    return '$count participante(s)';
+  }
+
+  @override
   String get participants_label => 'Participantes';
 
   @override

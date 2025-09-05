@@ -13,14 +13,30 @@ String formatDateRange({
   required Locale locale,
 }) {
   if (start == null && end == null) return '–';
-  final loc = locale.toString();
-  final df = DateFormat.yMd(loc);
-  if (start != null && end != null) {
-    if (_isSameDay(start, end)) return df.format(start);
-    return '${df.format(start)} - ${df.format(end)}';
+
+  final currentYear = DateTime.now().year;
+  String fmt(DateTime d) {
+    // Hide the year when it's the current year for a shorter, cleaner display.
+    if (d.year == currentYear) {
+      return DateFormat.Md(locale.toString()).format(d); // e.g. 9/5
+    }
+    return DateFormat.yMd(locale.toString()).format(d); // includes year
   }
+
+  if (start != null && end != null) {
+    if (_isSameDay(start, end)) return fmt(start);
+    final sameYear = start.year == end.year;
+    // If range spans different years always show years for clarity
+    if (!sameYear) {
+      final full = DateFormat.yMd(locale.toString());
+      return '${full.format(start)} - ${full.format(end)}';
+    }
+    // Same year: if it's current year we already hide year via fmt(), otherwise show year via yMd()
+    return '${fmt(start)} - ${fmt(end)}';
+  }
+
   final single = start ?? end!;
-  return df.format(single);
+  return fmt(single);
 }
 
 bool _isSameDay(DateTime a, DateTime b) =>

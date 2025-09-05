@@ -84,11 +84,14 @@ class StatCard extends StatelessWidget {
               ),
               if (subtitle != null) ...[
                 const SizedBox(height: 6),
+                const SizedBox(height: 6),
                 Text(
                   subtitle!,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ],
@@ -118,7 +121,7 @@ class InfoCard extends StatelessWidget {
     final surface = theme.colorScheme.surfaceContainerHighest.withValues(
       alpha: 0.3,
     );
-    final semanticLabel = '$title: $subtitle';
+    final semanticLabel = '$title: ${subtitle.replaceAll('\n', ', ')}';
     return Semantics(
       label: semanticLabel,
       container: true,
@@ -133,7 +136,7 @@ class InfoCard extends StatelessWidget {
           ),
           padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
@@ -150,13 +153,13 @@ class InfoCard extends StatelessWidget {
                     Icon(icon, size: 20, color: theme.colorScheme.primary),
                 ],
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               Text(
                 subtitle,
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
-                maxLines: 3,
+                maxLines: 4,
                 overflow: TextOverflow.ellipsis,
               ),
             ],
