@@ -37,6 +37,8 @@
   "in_group_prefix": "in",
   "save_change_expense": "Save changes",
   "group_total": "Total",
+  "total_spent": "Total spent",
+  "@total_spent": {"description": "Label shown before the total amount spent in the group"},
   "download_all_csv": "Download all (CSV)",
   "share_all_csv": "Share all (CSV)",
   "download_all_ofx": "Download all (OFX)",
@@ -304,6 +306,8 @@
   ,"daily_average": "Daily"
   ,"spent_today": "Today"
   ,"@daily_average": {"description": "Label shown before the computed overall daily average spending value"}
+    ,"monthly_average": "Monthly"
+    ,"@monthly_average": {"description": "Label shown before the computed overall monthly average spending value"}
   ,"@spent_today": {"description": "Label shown before the amount spent today"}
   ,"@overview_and_statistics": {"description": "Tooltip text when overview/statistics button is enabled"}
   ,"average_expense": "Average expense"

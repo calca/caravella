@@ -66,6 +66,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get group_total => '总计';
 
   @override
+  String get total_spent => '总支出';
+
+  @override
   String get download_all_csv => '下载全部 (CSV)';
 
   @override
@@ -858,10 +861,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get overview_and_statistics => 'Overview and statistics';
 
   @override
-  String get daily_average => 'Daily';
+  String get daily_average => '每日';
 
   @override
   String get spent_today => 'Today';
+
+  @override
+  String get monthly_average => '每月';
 
   @override
   String get average_expense => 'Average expense';

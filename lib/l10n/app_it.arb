@@ -25,6 +25,8 @@
   "in_group_prefix": "in",
   "save_change_expense": "Salva modifiche",
   "group_total": "Totale",
+  "total_spent": "Totale speso",
+  "@total_spent": {"description": "Etichetta mostrata prima del totale speso nel gruppo"},
   "download_all_csv": "Scarica tutto (CSV)",
   "share_all_csv": "Condividi tutto (CSV)",
   "download_all_ofx": "Scarica tutto (OFX)",
@@ -294,6 +296,8 @@
   ,"daily_average": "Media"
   ,"spent_today": "Oggi"
   ,"@daily_average": {"description": "Etichetta mostrata prima del valore di spesa media giornaliera"}
+  ,"monthly_average": "Mensile"
+  ,"@monthly_average": {"description": "Etichetta mostrata prima del valore della media mensile"}
   ,"@spent_today": {"description": "Etichetta mostrata prima dell'importo speso oggi"}
   ,"@overview_and_statistics": {"description": "Tooltip per bottone panoramica/statistiche"}
   ,"error_saving_group": "Errore durante il salvataggio: {error}"

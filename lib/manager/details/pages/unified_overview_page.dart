@@ -173,6 +173,7 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
                 ],
               ),
             ),
+            const SizedBox(height: 12),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../../data/model/expense_group.dart';
-import 'widgets/daily_expenses_chart.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'widgets/stat_card.dart';
+import '../../../widgets/charts/weekly_expense_chart.dart';
+import '../../../widgets/charts/monthly_expense_chart.dart';
+import '../../../widgets/charts/date_range_expense_chart.dart';
+import 'overview_stats_logic.dart';
 
 /// General statistics tab: shows high level KPIs (daily/monthly average)
 /// and spending trend for the last 7 and 30 days.
@@ -32,25 +35,26 @@ class GeneralOverviewTab extends StatelessWidget {
     return _total() / months;
   }
 
-  Map<DateTime, double> _lastNDays(int n) {
+  // Helpers per calcolare le serie dei grafici usando la logica condivisa
+  List<double> _weeklySeries() {
     final now = DateTime.now();
-    final start = DateTime(
-      now.year,
-      now.month,
-      now.day,
-    ).subtract(Duration(days: n - 1));
-    final map = <DateTime, double>{};
-    for (int i = 0; i < n; i++) {
-      final d = start.add(Duration(days: i));
-      map[d] = 0;
-    }
-    for (final e in trip.expenses) {
-      final d = DateTime(e.date.year, e.date.month, e.date.day);
-      if (d.isBefore(start)) continue;
-      if (d.isAfter(now)) continue;
-      map[d] = (map[d] ?? 0) + (e.amount ?? 0);
-    }
-    return map;
+    final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+    return calculateDailyTotals(trip, startOfWeek, 7);
+  }
+
+  List<double> _monthlySeries() {
+    final now = DateTime.now();
+    final daysInMonth = DateTime(now.year, now.month + 1, 0).day;
+    final startOfMonth = DateTime(now.year, now.month, 1);
+    return calculateDailyTotals(trip, startOfMonth, daysInMonth);
+  }
+
+  List<double> _dateRangeSeries() {
+    if (!shouldShowDateRangeChart(trip)) return const [];
+    final start = trip.startDate!;
+    final end = trip.endDate!;
+    final duration = end.difference(start).inDays + 1;
+    return calculateDailyTotals(trip, start, duration);
   }
 
   @override
@@ -72,14 +76,22 @@ class GeneralOverviewTab extends StatelessWidget {
 
     final dailyAvg = _dailyAverage();
     final monthlyAvg = _monthlyAverage();
-    final last7 = _lastNDays(7);
-    final last30 = _lastNDays(30);
+  final weekly = _weeklySeries();
+  final monthly = _monthlySeries();
+  final dateRange = _dateRangeSeries();
 
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Total spent card (full width)
+          StatCard(
+            title: gloc.total_spent,
+            value: _total(),
+            currency: trip.currency,
+          ),
+          const SizedBox(height: 24),
           Row(
             children: [
               Expanded(
@@ -92,42 +104,23 @@ class GeneralOverviewTab extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: StatCard(
-                  title:
-                      'Mese', // Keeping short neutral label (not yet localized)
+                  title: gloc.monthly_average,
                   value: monthlyAvg,
                   currency: trip.currency,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 28),
-          // Last 7 days chart
-          Text(
-            'Ultimi 7 giorni',
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 12),
-          DailyExpensesChart(
-            trip: trip,
-            dailyStats: last7,
-            customTitle:
-                gloc.daily_expenses_chart, // Chart has internal title row
-          ),
-          const SizedBox(height: 32),
-          Text(
-            'Ultimi 30 giorni',
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 12),
-          DailyExpensesChart(
-            trip: trip,
-            dailyStats: last30,
-            customTitle: gloc.daily_expenses_chart,
-          ),
+          const SizedBox(height: 24),
+          // Weekly chart
+          WeeklyExpenseChart(dailyTotals: weekly, theme: theme),
+          const SizedBox(height: 24),
+          // Monthly chart
+            MonthlyExpenseChart(dailyTotals: monthly, theme: theme),
+          if (dateRange.isNotEmpty) ...[
+            const SizedBox(height: 24),
+            DateRangeExpenseChart(dailyTotals: dateRange, theme: theme),
+          ],
         ],
       ),
     );

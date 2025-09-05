@@ -218,6 +218,12 @@ abstract class AppLocalizations {
   /// **'Total'**
   String get group_total;
 
+  /// Label shown before the total amount spent in the group
+  ///
+  /// In en, this message translates to:
+  /// **'Total spent'**
+  String get total_spent;
+
   /// No description provided for @download_all_csv.
   ///
   /// In en, this message translates to:
@@ -1771,6 +1777,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Today'**
   String get spent_today;
+
+  /// Label shown before the computed overall monthly average spending value
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get monthly_average;
 
   /// No description provided for @average_expense.
   ///

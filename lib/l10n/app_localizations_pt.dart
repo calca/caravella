@@ -67,6 +67,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get group_total => 'Total';
 
   @override
+  String get total_spent => 'Total gasto';
+
+  @override
   String get download_all_csv => 'Baixar tudo (CSV)';
 
   @override
@@ -866,6 +869,9 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get spent_today => 'Hoje';
+
+  @override
+  String get monthly_average => 'Mensal';
 
   @override
   String get average_expense => 'Despesa média';

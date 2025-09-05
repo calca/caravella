@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../data/model/expense_group.dart';
 import '../../../widgets/currency_display.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'overview_stats_logic.dart';
 import 'settlements_logic.dart';
-import 'widgets/daily_expenses_chart.dart';
 import 'widgets/categories_pie_chart.dart';
 import 'widgets/daily_average_by_category.dart';
 
@@ -16,97 +14,6 @@ class UnifiedOverviewTab extends StatelessWidget {
   final ExpenseGroup trip;
   const UnifiedOverviewTab({super.key, required this.trip});
 
-  /// Calcola le statistiche giornaliere per il grafico
-  Map<DateTime, double> _calculateDailyStats() {
-    final stats = <DateTime, double>{};
-
-    // Se non ci sono date definite, usa il mese corrente
-    if (trip.startDate == null || trip.endDate == null) {
-      final now = DateTime.now();
-      final firstDay = DateTime(now.year, now.month, 1);
-      final lastDay = DateTime(now.year, now.month + 1, 0);
-
-      DateTime currentDate = firstDay;
-      while (currentDate.isBefore(lastDay) ||
-          currentDate.isAtSameMomentAs(lastDay)) {
-        stats[currentDate] = 0.0;
-        currentDate = currentDate.add(const Duration(days: 1));
-      }
-
-      for (final expense in trip.expenses) {
-        final date = DateTime(
-          expense.date.year,
-          expense.date.month,
-          expense.date.day,
-        );
-        // Solo spese del mese corrente
-        if (date.month == now.month && date.year == now.year) {
-          stats[date] = (stats[date] ?? 0.0) + (expense.amount ?? 0.0);
-        }
-      }
-      return stats;
-    }
-
-    // Inizializza tutti i giorni del viaggio con 0
-    DateTime currentDate = DateTime(
-      trip.startDate!.year,
-      trip.startDate!.month,
-      trip.startDate!.day,
-    );
-    final endDate = DateTime(
-      trip.endDate!.year,
-      trip.endDate!.month,
-      trip.endDate!.day,
-    );
-
-    while (currentDate.isBefore(endDate) ||
-        currentDate.isAtSameMomentAs(endDate)) {
-      stats[currentDate] = 0.0;
-      currentDate = currentDate.add(const Duration(days: 1));
-    }
-
-    // Aggiungi le spese reali
-    for (final expense in trip.expenses) {
-      if (expense.amount != null) {
-        final expenseDate = DateTime(
-          expense.date.year,
-          expense.date.month,
-          expense.date.day,
-        );
-        stats[expenseDate] = (stats[expenseDate] ?? 0.0) + expense.amount!;
-      }
-    }
-
-    return stats;
-  }
-
-  /// Aggrega le spese per settimana (lunedì-domenica)
-  Map<DateTime, double> _calculateWeeklyStats() {
-    final dailyStats = _calculateDailyStats();
-    final weeklyStats = <DateTime, double>{};
-    if (dailyStats.isEmpty) return weeklyStats;
-
-    // Trova il primo giorno (lunedì) e l'ultimo giorno
-    final sortedDays = dailyStats.keys.toList()..sort();
-    DateTime firstDay = sortedDays.first;
-    DateTime lastDay = sortedDays.last;
-
-    // Allinea il primo giorno a lunedì
-    firstDay = firstDay.subtract(Duration(days: firstDay.weekday - 1));
-
-    DateTime currentWeekStart = firstDay;
-    while (currentWeekStart.isBefore(lastDay) ||
-        currentWeekStart.isAtSameMomentAs(lastDay)) {
-      double weekTotal = 0.0;
-      for (int i = 0; i < 7; i++) {
-        final day = currentWeekStart.add(Duration(days: i));
-        weekTotal += dailyStats[day] ?? 0.0;
-      }
-      weeklyStats[currentWeekStart] = weekTotal;
-      currentWeekStart = currentWeekStart.add(const Duration(days: 7));
-    }
-    return weeklyStats;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -136,12 +43,7 @@ class UnifiedOverviewTab extends StatelessWidget {
       );
     }
 
-    // Calcola le statistiche per i grafici (daily o weekly)
-    final bool weekly = useWeeklyAggregation(trip);
-    final stats = weekly ? _calculateWeeklyStats() : _calculateDailyStats();
-    final chartTitleKey = weekly
-        ? 'weekly_expenses_chart'
-        : 'daily_expenses_chart';
+  // (Grafico daily/weekly rimosso in favore dei tab dedicati)
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -363,16 +265,6 @@ class UnifiedOverviewTab extends StatelessWidget {
             DailyAverageByCategoryWidget(trip: trip),
 
             const SizedBox(height: 32),
-
-            // 3. DAILY / WEEKLY chart dinamico
-            if (stats.isNotEmpty) ...[
-              DailyExpensesChart(
-                trip: trip,
-                dailyStats: stats,
-                titleKey: chartTitleKey,
-              ),
-              const SizedBox(height: 32),
-            ],
 
             // 4. BY CATEGORY (chart widget prints its own bold title)
             CategoriesPieChart(trip: trip),
