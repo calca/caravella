@@ -6,7 +6,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../data/model/expense_group.dart';
-import '../tabs/unified_overview_tab.dart';
+import '../tabs/general_overview_tab.dart';
+import '../tabs/participants_overview_tab.dart';
+import '../tabs/categories_overview_tab.dart';
 import '../tabs/settlements_logic.dart';
 import '../../group/widgets/section_header.dart';
 import '../../../widgets/bottom_sheet_scaffold.dart';
@@ -136,30 +138,53 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
-    return Scaffold(
-      appBar: AppBar(),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-            child: SectionHeader(
-              title: widget.trip.title,
-              description: gloc.overview,
-              padding: EdgeInsets.zero,
-              trailing: IconButton(
-                icon: const Icon(Icons.ios_share_rounded),
-                tooltip: gloc.share_label,
-                onPressed: _showShareOptions,
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(title: Text(widget.trip.title)),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+              child: SectionHeader(
+                title: widget.trip.title,
+                description: gloc.overview,
+                padding: EdgeInsets.zero,
+                trailing: IconButton(
+                  icon: const Icon(Icons.ios_share_rounded),
+                  tooltip: gloc.share_label,
+                  onPressed: _showShareOptions,
+                ),
               ),
             ),
-          ),
-          Expanded(
-            child: RepaintBoundary(
-              key: _captureKey,
-              child: UnifiedOverviewTab(trip: widget.trip),
+            const SizedBox(height: 4),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: TabBar(
+                isScrollable: true,
+                tabs: [
+                  Tab(text: gloc.settings_general),
+                  Tab(text: gloc.participants),
+                  Tab(text: gloc.categories),
+                ],
+              ),
             ),
-          ),
-        ],
+            const Divider(height: 1),
+            Expanded(
+              child: RepaintBoundary(
+                key: _captureKey,
+                child: TabBarView(
+                  children: [
+                    GeneralOverviewTab(trip: widget.trip),
+                    ParticipantsOverviewTab(trip: widget.trip),
+                    CategoriesOverviewTab(trip: widget.trip),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
