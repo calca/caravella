@@ -1,4 +1,4 @@
-import 'package:io_caravella_egm/data/model/expense_group.dart';
+import '../../../data/model/expense_group.dart';
 
 /// Decide se mostrare il grafico "date range" (giorno per giorno) nella home.
 /// Regola aggiornata: mostra se entrambe le date sono presenti, end >= start,

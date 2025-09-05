@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../data/model/expense_group.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import 'overview_stats_logic.dart';
 import 'widgets/stat_card.dart';
 import '../../../widgets/charts/weekly_expense_chart.dart';
 import '../../../widgets/charts/monthly_expense_chart.dart';
@@ -69,17 +70,17 @@ class GeneralOverviewTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (dateRange.isNotEmpty) ...[
-            const SizedBox(height: 24),
+          const SizedBox(height: 32),
+          if (shouldShowDateRangeChart(trip)) ...[
             DateRangeExpenseChart(dailyTotals: dateRange, theme: theme),
           ] else ...[
             // Weekly chart
             WeeklyExpenseChart(dailyTotals: weekly, theme: theme),
-            const SizedBox(height: 24),
+            const SizedBox(height: 32),
             // Monthly chart
             MonthlyExpenseChart(dailyTotals: monthly, theme: theme),
           ],
-          const SizedBox(height: 24),
+          const SizedBox(height: 32),
           GridView(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -87,7 +88,7 @@ class GeneralOverviewTab extends StatelessWidget {
               crossAxisCount: 2,
               mainAxisSpacing: 12,
               crossAxisSpacing: 12,
-              childAspectRatio: 1.0, // square cards
+              childAspectRatio: 1, // square cards
             ),
             children: [
               StatCard(

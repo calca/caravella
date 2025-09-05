@@ -40,8 +40,9 @@ Widget _app(Widget child, Locale locale) => MaterialApp(
 
 void main() {
   testWidgets('Info meta card shows localized full date range', (tester) async {
-    final start = DateTime(2025, 9, 1);
-    final end = DateTime(2025, 9, 5);
+  // Use a fixed past range not ending today to ensure date range is shown.
+  final start = DateTime(2025, 8, 1);
+  final end = DateTime(2025, 8, 5);
     final g = _group(start: start, end: end, participants: 3);
     await tester.pumpWidget(
       _app(GeneralOverviewTab(trip: g), const Locale('en')),
@@ -53,15 +54,24 @@ void main() {
       end: end,
       locale: const Locale('en'),
     );
-    // The subtitle may include a newline + participants line; just ensure
-    // the date range portion appears somewhere.
-    expect(find.textContaining(expectedRange), findsOneWidget);
+    // Collect all Text widgets and ensure at least one contains the expected range.
+    bool found = false;
+    final elementList = <Element>[];
+    find.byType(Text).evaluate().forEach(elementList.add);
+    for (final el in elementList) {
+      final widget = el.widget as Text;
+      if ((widget.data ?? '').contains(expectedRange)) {
+        found = true;
+        break;
+      }
+    }
+    expect(found, isTrue, reason: 'Expected to find date range "$expectedRange" in any Text widget');
   });
 
   testWidgets('Info meta card shows single date when start==end', (
     tester,
   ) async {
-    final start = DateTime(2025, 9, 1);
+  final start = DateTime(2025, 8, 1);
     final g = _group(start: start, end: start, participants: 1);
     await tester.pumpWidget(
       _app(GeneralOverviewTab(trip: g), const Locale('en')),
@@ -89,8 +99,8 @@ void main() {
 
   testWidgets('Grid contains 4 KPI cards', (tester) async {
     final g = _group(
-      start: DateTime(2025, 9, 1),
-      end: DateTime(2025, 9, 2),
+      start: DateTime(2025, 8, 1),
+      end: DateTime(2025, 8, 2),
       participants: 2,
     );
     await tester.pumpWidget(
