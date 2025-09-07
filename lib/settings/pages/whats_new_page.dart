@@ -112,18 +112,18 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
     final mdTheme = GptMarkdownThemeData(
       brightness: theme.brightness,
       h1: theme.textTheme.headlineMedium?.copyWith(
-        color: theme.colorScheme.secondary,
+        color: theme.colorScheme.onSurface,
         fontWeight: FontWeight.bold,
       ),
       h2: theme.textTheme.titleLarge?.copyWith(
-        color: theme.colorScheme.secondary,
+        color: theme.colorScheme.onSurface,
         fontWeight: FontWeight.w600,
       ),
       h3: theme.textTheme.titleMedium?.copyWith(
-        color: theme.colorScheme.secondary,
+        color: theme.colorScheme.onSurface,
         fontWeight: FontWeight.w500,
       ),
-      linkColor: theme.colorScheme.primary,
+      linkColor: theme.colorScheme.onSurface,
       hrLineColor: theme.colorScheme.outlineVariant,
       hrLineThickness: 1.0,
     );
