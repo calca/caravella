@@ -1563,4 +1563,13 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get whats_new_desc => 'Scopri le ultime novità e aggiornamenti';
+
+  @override
+  String get settings_user_name_title => 'Il tuo nome';
+
+  @override
+  String get settings_user_name_desc => 'Nome o nickname da usare nell\'app';
+
+  @override
+  String get settings_user_name_hint => 'Inserisci il tuo nome';
 }
