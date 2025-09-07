@@ -19,12 +19,34 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
   @override
   void initState() {
     super.initState();
-    _loadMarkdownContent();
+    // Don't load content in initState, wait for didChangeDependencies
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_isLoading) {
+      _loadMarkdownContent();
+    }
   }
 
   Future<void> _loadMarkdownContent() async {
     try {
-      final content = await rootBundle.loadString('assets/docs/CHANGELOG.md');
+      // Get current locale
+      final locale = Localizations.localeOf(context);
+      final languageCode = locale.languageCode;
+      
+      // Try to load locale-specific changelog first
+      String filePath = 'assets/docs/CHANGELOG_$languageCode.md';
+      String content;
+      
+      try {
+        content = await rootBundle.loadString(filePath);
+      } catch (_) {
+        // Fallback to English if locale-specific file doesn't exist
+        content = await rootBundle.loadString('assets/docs/CHANGELOG_en.md');
+      }
+      
       if (mounted) {
         setState(() {
           _markdownContent = content;
