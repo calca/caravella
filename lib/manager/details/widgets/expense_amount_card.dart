@@ -29,9 +29,16 @@ class ExpenseAmountCard extends StatelessWidget {
     super.key,
   });
 
-  String _formatDateTime(DateTime date) {
+  String _formatDateTime(BuildContext context, DateTime date) {
     // Use timeago for relative dates
-    return timeago.format(date);
+    // Check the current locale and set timeago accordingly
+    final locale = Localizations.localeOf(context);
+    if (locale.languageCode == 'it') {
+      timeago.setLocaleMessages('it', timeago.ItMessages());
+      return timeago.format(date, locale: 'it');
+    } else {
+      return timeago.format(date);
+    }
   }
 
   @override
@@ -109,7 +116,7 @@ class ExpenseAmountCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 3),
                         Text(
-                          _formatDateTime(date!),
+                          _formatDateTime(context, date!),
                           style: textTheme.bodySmall?.copyWith(
                             color: colorScheme.onSurface.withValues(alpha: 0.7),
                             fontSize: 11,
