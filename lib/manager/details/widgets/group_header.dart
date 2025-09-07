@@ -15,21 +15,16 @@ class ParticipantAvatar extends StatelessWidget {
         ? participant.name.substring(0, 2).toUpperCase()
         : participant.name.toUpperCase();
     
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: colorScheme.primaryContainer,
-      ),
-      child: Center(
-        child: Text(
-          initials,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: colorScheme.onPrimaryContainer,
-            fontWeight: FontWeight.bold,
-            fontSize: size * 0.4,
-          ),
+    return CircleAvatar(
+      radius: size / 2,
+      backgroundColor: colorScheme.primaryContainer,
+      foregroundColor: colorScheme.onPrimaryContainer,
+      child: Text(
+        initials,
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          color: colorScheme.onPrimaryContainer,
+          fontWeight: FontWeight.bold,
+          fontSize: size * 0.4,
         ),
       ),
     );

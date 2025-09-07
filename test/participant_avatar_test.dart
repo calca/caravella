@@ -22,18 +22,17 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    // Find the avatar container
-    final containerFinder = find.byType(Container);
-    expect(containerFinder, findsOneWidget);
+    // Find the CircleAvatar widget
+    final avatarFinder = find.byType(CircleAvatar);
+    expect(avatarFinder, findsOneWidget);
 
     // Check that the initials are displayed
     final textFinder = find.text('JD');
     expect(textFinder, findsOneWidget);
 
-    // Check container properties
-    final container = tester.widget<Container>(containerFinder);
-    final decoration = container.decoration as BoxDecoration;
-    expect(decoration.shape, BoxShape.circle);
+    // Check CircleAvatar properties
+    final avatar = tester.widget<CircleAvatar>(avatarFinder);
+    expect(avatar.radius, 16.0); // size / 2 = 32 / 2 = 16
   });
 
   testWidgets('ParticipantAvatar handles single character names', (tester) async {
