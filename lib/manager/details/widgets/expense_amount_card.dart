@@ -58,10 +58,7 @@ class ExpenseAmountCard extends StatelessWidget {
           children: [
             // Participant Avatar on the left
             if (paidBy != null) ...[
-              ParticipantAvatar(
-                participant: paidBy!,
-                size: 32,
-              ),
+              ParticipantAvatar(participant: paidBy!, size: 52),
               const SizedBox(width: 12),
             ],
             // Main info (title, person, date)
