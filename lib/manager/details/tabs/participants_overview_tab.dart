@@ -64,7 +64,7 @@ class ParticipantsOverviewTab extends StatelessWidget {
                     child: Text(
                       p.name,
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
@@ -98,7 +98,7 @@ class ParticipantsOverviewTab extends StatelessWidget {
                     child: Text(
                       e.participant.name,
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
@@ -118,7 +118,7 @@ class ParticipantsOverviewTab extends StatelessWidget {
                   Text(
                     '${e.pct.toStringAsFixed(1)}%',
                     style: theme.textTheme.bodySmall?.copyWith(
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ],
@@ -148,7 +148,7 @@ class ParticipantsOverviewTab extends StatelessWidget {
                     gloc.all_balanced,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.primary,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ),
@@ -164,7 +164,7 @@ class ParticipantsOverviewTab extends StatelessWidget {
                       child: RichText(
                         text: TextSpan(
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w400,
                           ),
                           children: [
                             TextSpan(
