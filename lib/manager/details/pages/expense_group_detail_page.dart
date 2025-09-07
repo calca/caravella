@@ -615,7 +615,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             floating: false,
             elevation: 0,
             scrolledUnderElevation: 1,
-            backgroundColor: colorScheme.surface,
+            backgroundColor: colorScheme.surfaceContainer,
             foregroundColor: colorScheme.onSurface,
             toolbarHeight: 56,
             collapsedHeight: 56,
@@ -698,7 +698,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             child: Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                color: colorScheme.surfaceContainer,
+                color: colorScheme.surface,
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(24),
                 ),
@@ -731,7 +731,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             sliver: SliverToBoxAdapter(
               child: Container(
                 height: _calculateBottomPadding(),
-                color: colorScheme.surfaceContainer,
+                color: colorScheme.surface,
               ),
             ),
           ),

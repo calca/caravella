@@ -345,7 +345,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                     title: expense.name ?? '',
                     coins: (expense.amount ?? 0).toInt(),
                     checked: true,
-                    paidBy: expense.paidBy.name,
+                    paidBy: expense.paidBy,
                     category: expense.category.name,
                     date: expense.date,
                     currency: widget.currency,

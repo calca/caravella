@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:timeago/timeago.dart' as timeago;
 import '../../../widgets/base_card.dart';
 import '../../../widgets/currency_display.dart';
+import '../../../data/model/expense_participant.dart';
+import 'group_header.dart';
 
 class ExpenseAmountCard extends StatelessWidget {
   final String title;
   final int coins;
   final bool checked;
-  final String? paidBy;
+  final ExpenseParticipant? paidBy;
   final String? category;
   final DateTime? date;
   final String currency;
@@ -27,16 +30,8 @@ class ExpenseAmountCard extends StatelessWidget {
   });
 
   String _formatDateTime(DateTime date) {
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final d = DateTime(date.year, date.month, date.day);
-    final time =
-        '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
-    if (d == today) {
-      return 'Today, $time';
-    } else {
-      return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}, $time';
-    }
+    // Use timeago for relative dates
+    return timeago.format(date);
   }
 
   @override
@@ -46,7 +41,7 @@ class ExpenseAmountCard extends StatelessWidget {
 
     return BaseCard(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      backgroundColor: colorScheme.surfaceContainer,
+      backgroundColor: colorScheme.surfaceContainerHighest,
       noBorder: true,
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
@@ -62,13 +57,13 @@ class ExpenseAmountCard extends StatelessWidget {
                 children: [
                   // Title with optional highlight
                   _buildHighlightedTitle(context, title, highlightQuery),
-                  if ((paidBy != null && paidBy!.isNotEmpty) ||
+                  if ((paidBy != null) ||
                       (category != null && category!.isNotEmpty)) ...[
                     const SizedBox(height: 6),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        if (paidBy != null && paidBy!.isNotEmpty) ...[
+                        if (paidBy != null) ...[
                           Icon(
                             Icons.person_outline_rounded,
                             size: 15,
@@ -76,7 +71,7 @@ class ExpenseAmountCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            paidBy!,
+                            paidBy!.name,
                             style: textTheme.labelSmall?.copyWith(
                               color: colorScheme.onSurface,
                               fontWeight: FontWeight.w400,
@@ -126,12 +121,11 @@ class ExpenseAmountCard extends StatelessWidget {
                 ],
               ),
             ),
-            // Amount
-            Align(
-              alignment: Alignment.center,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 12.0),
-                child: CurrencyDisplay(
+            // Amount and Avatar
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CurrencyDisplay(
                   value: coins.toDouble(),
                   currency: currency,
                   valueFontSize: 32.0,
@@ -140,7 +134,14 @@ class ExpenseAmountCard extends StatelessWidget {
                   showDecimals: false,
                   fontWeight: FontWeight.w500,
                 ),
-              ),
+                if (paidBy != null) ...[
+                  const SizedBox(height: 8),
+                  ParticipantAvatar(
+                    participant: paidBy!,
+                    size: 32,
+                  ),
+                ],
+              ],
             ),
           ],
         ),
