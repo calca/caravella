@@ -782,6 +782,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get settings_app_version => 'Versão do app';
 
   @override
+  String get whats_new_title => 'Novidades';
+
+  @override
+  String get whats_new_desc => 'Descubra os recursos e atualizações mais recentes';
+
+  @override
   String get settings_info_card => 'Informações';
 
   @override

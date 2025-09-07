@@ -352,4 +352,8 @@
   "@expense_groups_desc": {"description": "Short subtitle describing the purpose of the expense groups section (e.g. add, edit, view trips)"}
   ,"participant_count": "{count, plural, other {{count} 名参与者}}"
   ,"@participant_count": {"description": "参与者计数（中文无需复数, 使用other形式）", "placeholders": {"count": {}}}
+  ,"whats_new_title": "新功能"
+  ,"@whats_new_title": {"description": "显示更新日志页面的标题"}
+  ,"whats_new_desc": "了解最新功能和更新"
+  ,"@whats_new_desc": {"description": "新功能页面的副标题"}
 }

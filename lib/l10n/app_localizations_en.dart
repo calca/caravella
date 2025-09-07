@@ -782,6 +782,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_app_version => 'App version';
 
   @override
+  String get whats_new_title => 'What\'s New';
+
+  @override
+  String get whats_new_desc => 'Discover the latest features and updates';
+
+  @override
   String get settings_info_card => 'Information';
 
   @override
