@@ -661,34 +661,38 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                 ),
                 child: _hideHeader
                     ? const SizedBox.shrink(key: ValueKey('header-hidden'))
-                    : Padding(
+                    : Container(
                         key: const ValueKey('header-visible'),
-                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            GroupHeader(trip: trip),
-                            const SizedBox(height: 32),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: GroupTotal(
-                                    total: totalExpenses,
-                                    currency: trip.currency,
+                        width: double.infinity,
+                        color: colorScheme.surfaceContainer,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              GroupHeader(trip: trip),
+                              const SizedBox(height: 32),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: GroupTotal(
+                                      total: totalExpenses,
+                                      currency: trip.currency,
+                                    ),
                                   ),
-                                ),
-                                GroupActions(
-                                  hasExpenses: trip.expenses.isNotEmpty,
-                                  onOverview: trip.expenses.isNotEmpty
-                                      ? _openUnifiedOverviewPage
-                                      : null,
-                                  onOptions: _showOptionsSheet,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 24),
-                          ],
+                                  GroupActions(
+                                    hasExpenses: trip.expenses.isNotEmpty,
+                                    onOverview: trip.expenses.isNotEmpty
+                                        ? _openUnifiedOverviewPage
+                                        : null,
+                                    onOptions: _showOptionsSheet,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 24),
+                            ],
+                          ),
                         ),
                       ),
               ),

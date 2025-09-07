@@ -48,7 +48,7 @@ class ExpenseAmountCard extends StatelessWidget {
 
     return BaseCard(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      backgroundColor: colorScheme.surfaceContainerHighest,
+      backgroundColor: Colors.transparent,
       noBorder: true,
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
@@ -56,7 +56,14 @@ class ExpenseAmountCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // ...existing code...
+            // Participant Avatar on the left
+            if (paidBy != null) ...[
+              ParticipantAvatar(
+                participant: paidBy!,
+                size: 32,
+              ),
+              const SizedBox(width: 12),
+            ],
             // Main info (title, person, date)
             Expanded(
               child: Column(
@@ -128,27 +135,15 @@ class ExpenseAmountCard extends StatelessWidget {
                 ],
               ),
             ),
-            // Amount and Avatar
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CurrencyDisplay(
-                  value: coins.toDouble(),
-                  currency: currency,
-                  valueFontSize: 32.0,
-                  currencyFontSize: 14.0,
-                  alignment: MainAxisAlignment.end,
-                  showDecimals: false,
-                  fontWeight: FontWeight.w500,
-                ),
-                if (paidBy != null) ...[
-                  const SizedBox(height: 8),
-                  ParticipantAvatar(
-                    participant: paidBy!,
-                    size: 32,
-                  ),
-                ],
-              ],
+            // Amount
+            CurrencyDisplay(
+              value: coins.toDouble(),
+              currency: currency,
+              valueFontSize: 32.0,
+              currencyFontSize: 14.0,
+              alignment: MainAxisAlignment.end,
+              showDecimals: false,
+              fontWeight: FontWeight.w500,
             ),
           ],
         ),
