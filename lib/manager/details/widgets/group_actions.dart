@@ -32,7 +32,7 @@ class GroupActions extends StatelessWidget {
               iconSize: 24,
               tooltip: gen.AppLocalizations.of(context).overview,
               style: IconButton.styleFrom(
-                backgroundColor: colorScheme.surfaceContainer,
+                backgroundColor: colorScheme.surfaceContainerLowest,
                 foregroundColor: colorScheme.onSurface,
                 minimumSize: const Size(54, 54),
               ),
@@ -47,7 +47,7 @@ class GroupActions extends StatelessWidget {
               iconSize: 24,
               tooltip: gen.AppLocalizations.of(context).options,
               style: IconButton.styleFrom(
-                backgroundColor: colorScheme.surfaceContainer,
+                backgroundColor: colorScheme.surfaceContainerLowest,
                 foregroundColor: colorScheme.onSurface,
                 minimumSize: const Size(54, 54),
               ),

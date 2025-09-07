@@ -6,7 +6,11 @@ import '../../../data/model/expense_participant.dart';
 class ParticipantAvatar extends StatelessWidget {
   final ExpenseParticipant participant;
   final double size;
-  const ParticipantAvatar({super.key, required this.participant, required this.size});
+  const ParticipantAvatar({
+    super.key,
+    required this.participant,
+    required this.size,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,10 +18,10 @@ class ParticipantAvatar extends StatelessWidget {
     final initials = participant.name.length >= 2
         ? participant.name.substring(0, 2).toUpperCase()
         : participant.name.toUpperCase();
-    
+
     return CircleAvatar(
       radius: size / 2,
-      backgroundColor: colorScheme.primaryContainer,
+      backgroundColor: colorScheme.surfaceContainer,
       foregroundColor: colorScheme.onPrimaryContainer,
       child: Text(
         initials,
@@ -47,7 +51,7 @@ class ExpenseGroupAvatar extends StatelessWidget {
         shape: BoxShape.circle,
         color: trip.color != null
             ? Color(trip.color!)
-            : colorScheme.surfaceContainer,
+            : colorScheme.surfaceContainerLowest,
       ),
       child: trip.file != null && trip.file!.isNotEmpty
           ? ClipOval(
