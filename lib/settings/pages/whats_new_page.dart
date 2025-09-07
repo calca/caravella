@@ -35,18 +35,18 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
       // Get current locale
       final locale = Localizations.localeOf(context);
       final languageCode = locale.languageCode;
-      
+
       // Try to load locale-specific changelog first
       String filePath = 'assets/docs/CHANGELOG_$languageCode.md';
       String content;
-      
+
       try {
         content = await rootBundle.loadString(filePath);
       } catch (_) {
         // Fallback to English if locale-specific file doesn't exist
         content = await rootBundle.loadString('assets/docs/CHANGELOG_en.md');
       }
-      
+
       if (mounted) {
         setState(() {
           _markdownContent = content;
@@ -66,7 +66,7 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
   @override
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: Text(loc.whats_new_title),
@@ -80,9 +80,7 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
 
   Widget _buildBody(gen.AppLocalizations loc) {
     if (_isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (_error != null) {
@@ -116,11 +114,11 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
       padding: const EdgeInsets.all(16),
       styleSheet: MarkdownStyleSheet(
         h1: Theme.of(context).textTheme.headlineMedium?.copyWith(
-          color: Theme.of(context).colorScheme.primary,
+          color: Theme.of(context).colorScheme.secondary,
           fontWeight: FontWeight.bold,
         ),
         h2: Theme.of(context).textTheme.titleLarge?.copyWith(
-          color: Theme.of(context).colorScheme.primary,
+          color: Theme.of(context).colorScheme.secondary,
           fontWeight: FontWeight.w600,
         ),
         h3: Theme.of(context).textTheme.titleMedium?.copyWith(
