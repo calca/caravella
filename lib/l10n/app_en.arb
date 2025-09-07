@@ -581,4 +581,8 @@
   ,"@expense_groups_title": {"description": "Main section header for the list of expense groups/trips on the history page"}
   ,"expense_groups_desc": "Manage your expense groups"
   ,"@expense_groups_desc": {"description": "Short subtitle describing the purpose of the expense groups section (e.g. add, edit, view trips)"}
+  ,"whats_new_title": "What's New"
+  ,"@whats_new_title": {"description": "Title of the page showing the changelog"}
+  ,"whats_new_desc": "Discover the latest features and updates"
+  ,"@whats_new_desc": {"description": "Subtitle of the what's new page"}
 }

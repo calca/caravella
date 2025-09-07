@@ -484,4 +484,8 @@
   ,"@expense_groups_desc": {"description": "Short subtitle describing the purpose of the expense groups section (e.g. add, edit, view trips)"}
   ,"participant_count": "{count, plural, one {{count} participante} other {{count} participantes}}"
   ,"@participant_count": {"description": "Contagem de participantes com plural", "placeholders": {"count": {}}}
+  ,"whats_new_title": "Novidades"
+  ,"@whats_new_title": {"description": "Título da página que mostra o changelog"}
+  ,"whats_new_desc": "Descubra os recursos e atualizações mais recentes"
+  ,"@whats_new_desc": {"description": "Subtítulo da página novidades"}
 }

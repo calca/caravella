@@ -1545,4 +1545,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get expense_groups_desc => '管理您的支出群组';
+
+  @override
+  String get whats_new_title => '新功能';
+
+  @override
+  String get whats_new_desc => '了解最新功能和更新';
 }

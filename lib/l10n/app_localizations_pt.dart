@@ -1552,4 +1552,11 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get expense_groups_desc => 'Manage your expense groups';
+
+  @override
+  String get whats_new_title => 'Novidades';
+
+  @override
+  String get whats_new_desc =>
+      'Descubra os recursos e atualizações mais recentes';
 }

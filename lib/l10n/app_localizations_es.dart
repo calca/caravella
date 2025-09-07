@@ -1558,4 +1558,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get expense_groups_desc => 'Gestiona tus grupos de gastos';
+
+  @override
+  String get whats_new_title => 'Novedades';
+
+  @override
+  String get whats_new_desc =>
+      'Descubre las últimas características y actualizaciones';
 }

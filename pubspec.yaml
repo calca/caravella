@@ -44,7 +44,7 @@ dependencies:
   path_provider: ^2.1.5
   shared_preferences: ^2.5.3
   url_launcher: ^6.3.1
-  fl_chart: ^1.0.0
+  fl_chart: 1.1.0
   uuid: ^4.2.2
   share_plus: ^11.0.0
   archive: ^4.0.7
@@ -53,6 +53,8 @@ dependencies:
   geocoding: ^4.0.0
   intl: ^0.20.2
   dynamic_color: ^1.7.0
+  timeago: ^3.7.0
+  gpt_markdown: ^1.1.4
 
 dev_dependencies:
   flutter_test:
@@ -60,8 +62,6 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   flutter_launcher_icons: ^0.14.4
   path_provider_platform_interface: ^2.1.0
-
-# Produzione
 flutter_launcher_icons:
   android: true
   ios: true
@@ -109,6 +109,8 @@ flutter:
     - assets/images/home/welcome/
     # File SVG per le icone
     - assets/icons/
+    # Markdown files
+    - assets/docs/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

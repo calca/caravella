@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'developer_page.dart';
 import 'data_backup_page.dart';
+import 'whats_new_page.dart';
 import '../../widgets/bottom_sheet_scaffold.dart';
 import '../../settings/widgets/settings_card.dart';
 import '../../settings/widgets/settings_section.dart';
@@ -267,6 +268,10 @@ class SettingsPage extends StatelessWidget {
           future: _getAppVersion(),
           builder: (context, snapshot) => Text(snapshot.data ?? '-'),
         ),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+        onTap: () => Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (ctx) => const WhatsNewPage())),
       ),
     );
   }

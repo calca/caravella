@@ -568,4 +568,8 @@
   ,"@expense_groups_title": {"description": "Titolo principale della sezione elenco gruppi di spese/viaggi nella cronologia"}
   ,"expense_groups_desc": "Gestisci i tuoi gruppi di spese"
   ,"@expense_groups_desc": {"description": "Sottotitolo breve che descrive lo scopo della sezione gruppi di spese (es. aggiungi, modifica, visualizza viaggi)"}
+  ,"whats_new_title": "Novità"
+  ,"@whats_new_title": {"description": "Titolo della pagina che mostra il changelog"}
+  ,"whats_new_desc": "Scopri le ultime novità e aggiornamenti"
+  ,"@whats_new_desc": {"description": "Sottotitolo della pagina novità"}
 }

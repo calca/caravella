@@ -1,3 +1,6 @@
+# Flutter repository (temporary installation)
+flutter/
+
 # Miscellaneous
 *.class
 *.log
@@ -55,3 +58,4 @@ flutter_sdk/
 # Local Dart SDK installation
 dart-sdk/
 dartsdk-linux-*.zip
+dart-sdk.zip
