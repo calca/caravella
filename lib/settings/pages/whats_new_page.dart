@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../widgets/caravella_app_bar.dart';
 
 class WhatsNewPage extends StatefulWidget {
   const WhatsNewPage({super.key});
@@ -109,28 +108,36 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
       );
     }
 
-    return Markdown(
-      data: _markdownContent,
+    final theme = Theme.of(context);
+    final mdTheme = GptMarkdownThemeData(
+      brightness: theme.brightness,
+      h1: theme.textTheme.headlineMedium?.copyWith(
+        color: theme.colorScheme.secondary,
+        fontWeight: FontWeight.bold,
+      ),
+      h2: theme.textTheme.titleLarge?.copyWith(
+        color: theme.colorScheme.secondary,
+        fontWeight: FontWeight.w600,
+      ),
+      h3: theme.textTheme.titleMedium?.copyWith(
+        color: theme.colorScheme.secondary,
+        fontWeight: FontWeight.w500,
+      ),
+      linkColor: theme.colorScheme.primary,
+      hrLineColor: theme.colorScheme.outlineVariant,
+      hrLineThickness: 1.0,
+    );
+
+    return Padding(
       padding: const EdgeInsets.all(16),
-      styleSheet: MarkdownStyleSheet(
-        h1: Theme.of(context).textTheme.headlineMedium?.copyWith(
-          color: Theme.of(context).colorScheme.secondary,
-          fontWeight: FontWeight.bold,
+      child: GptMarkdownTheme(
+        gptThemeData: mdTheme,
+        child: GptMarkdown(
+          _markdownContent,
+          style: theme.textTheme.bodyMedium,
+          textAlign: TextAlign.start,
+          textDirection: Directionality.of(context),
         ),
-        h2: Theme.of(context).textTheme.titleLarge?.copyWith(
-          color: Theme.of(context).colorScheme.secondary,
-          fontWeight: FontWeight.w600,
-        ),
-        h3: Theme.of(context).textTheme.titleMedium?.copyWith(
-          color: Theme.of(context).colorScheme.secondary,
-          fontWeight: FontWeight.w500,
-        ),
-        p: Theme.of(context).textTheme.bodyMedium,
-        listBullet: Theme.of(context).textTheme.bodyMedium?.copyWith(
-          color: Theme.of(context).colorScheme.primary,
-        ),
-        blockSpacing: 16,
-        listIndent: 24,
       ),
     );
   }
