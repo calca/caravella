@@ -700,32 +700,36 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           ),
           SliverToBoxAdapter(
             child: Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: colorScheme.surface,
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(24),
+              color: colorScheme
+                  .surfaceContainer, // background behind the decorated box
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: colorScheme.surface,
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(24),
+                  ),
                 ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    FilteredExpenseList(
-                      expenses: trip.expenses,
-                      currency: trip.currency,
-                      onExpenseTap: _openEditExpense,
-                      categories: trip.categories,
-                      participants: trip.participants,
-                      onFiltersVisibilityChanged: (visible) {
-                        if (mounted) {
-                          setState(() => _hideHeader = visible);
-                        }
-                      },
-                      onAddExpense: _showAddExpenseSheet,
-                    ),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      FilteredExpenseList(
+                        expenses: trip.expenses,
+                        currency: trip.currency,
+                        onExpenseTap: _openEditExpense,
+                        categories: trip.categories,
+                        participants: trip.participants,
+                        onFiltersVisibilityChanged: (visible) {
+                          if (mounted) {
+                            setState(() => _hideHeader = visible);
+                          }
+                        },
+                        onAddExpense: _showAddExpenseSheet,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
