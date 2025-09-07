@@ -278,8 +278,8 @@ class GroupFormController {
     }
   }
 
-  /// Remove currently selected image from disk (if any) and clear state.
-  /// Safe to call even if no image is set.
+  /// Remove currently selected background (image and/or color) from disk and clear state.
+  /// Safe to call even if no background is set.
   Future<void> removeImage() async {
     final path = state.imagePath;
     if (path != null) {
@@ -292,8 +292,10 @@ class GroupFormController {
         debugPrint('removeImage error: $e\n$st');
       }
     }
-    // clear state (also clears color if necessary inside setImage)
-    state.setImage(null);
-    state.setColor(null);
+    // Clear both background image and color completely by directly setting the fields
+    // to avoid any interdependency logic in the setters
+    state.imagePath = null;
+    state.color = null;
+    state.notifyListeners();
   }
 }

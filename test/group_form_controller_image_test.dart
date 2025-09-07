@@ -42,7 +42,7 @@ void main() {
       tempDir.deleteSync(recursive: true);
     });
 
-    test('removeImage deletes file and clears state', () async {
+    test('removeImage deletes file and clears state completely', () async {
       final state = GroupFormState();
       final controller = GroupFormController(state, GroupEditMode.create);
 
@@ -58,6 +58,52 @@ void main() {
 
       // file should be deleted and state cleared
       expect(state.imagePath, isNull);
+      expect(await saved.exists(), isFalse);
+
+      tempDir.deleteSync(recursive: true);
+    });
+
+    test('removeImage clears color when only color is set', () async {
+      final state = GroupFormState();
+      final controller = GroupFormController(state, GroupEditMode.create);
+
+      // Set only a color (no image)
+      const testColor = 0xFF42A5F5;
+      state.setColor(testColor);
+      expect(state.color, equals(testColor));
+      expect(state.imagePath, isNull);
+
+      // Remove background - should clear the color
+      await controller.removeImage();
+
+      // Verify both image and color are cleared
+      expect(state.imagePath, isNull);
+      expect(state.color, isNull);
+    });
+
+    test('removeImage clears both image and color completely', () async {
+      final state = GroupFormState();
+      final controller = GroupFormController(state, GroupEditMode.create);
+
+      // Set a color first
+      state.setColor(0xFF42A5F5);
+      expect(state.color, isNotNull);
+
+      // Create and set an image (this should clear the color)
+      final tempDir = Directory.systemTemp.createTempSync('caravella_test');
+      final saved = File('${tempDir.path}/saved.jpg');
+      await saved.writeAsString('fake-image-bytes');
+      
+      await controller.persistPickedImage(saved);
+      expect(state.imagePath, isNotNull);
+      expect(state.color, isNull, reason: 'Setting image should clear color');
+
+      // Now remove everything
+      await controller.removeImage();
+
+      // Both should be cleared
+      expect(state.imagePath, isNull);
+      expect(state.color, isNull);
       expect(await saved.exists(), isFalse);
 
       tempDir.deleteSync(recursive: true);
