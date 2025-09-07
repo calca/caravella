@@ -779,6 +779,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_app_version => '应用版本';
 
   @override
+  String get whats_new_title => '新功能';
+
+  @override
+  String get whats_new_desc => '了解最新功能和更新';
+
+  @override
   String get settings_info_card => '应用信息';
 
   @override
