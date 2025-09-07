@@ -100,6 +100,8 @@ class ParticipantsOverviewTab extends StatelessWidget {
                       style: theme.textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w400,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   SizedBox(
@@ -115,10 +117,16 @@ class ParticipantsOverviewTab extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  Text(
-                    '${e.pct.toStringAsFixed(1)}%',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      fontWeight: FontWeight.w400,
+                  SizedBox(
+                    width: 56, // enough for "100.0%"
+                    child: Text(
+                      '${e.pct.toStringAsFixed(1)}%',
+                      textAlign: TextAlign.right,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w400,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.clip,
                     ),
                   ),
                 ],
