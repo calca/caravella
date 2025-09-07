@@ -226,13 +226,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get processing_image => 'Processando imagem...';
 
   @override
-  String get no_trips_found => 'Para onde você quer ir?';
+  String get no_trips_found => 'Where do you want to go?';
 
   @override
   String get expenses => 'Despesas';
 
   @override
-  String get participants => 'Participantes';
+  String get participants => 'Participants';
 
   @override
   String participant_count(num count) {
@@ -261,13 +261,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get license_hint => 'Este aplicativo é distribuído sob a licença MIT.';
 
   @override
-  String get license_link => 'Ver Licença MIT no GitHub';
+  String get license_link => 'View MIT License on GitHub';
 
   @override
   String get license_section => 'Licença';
 
   @override
-  String get add_trip => 'Adicionar grupo';
+  String get add_trip => 'Add group';
 
   @override
   String get new_group => 'Novo grupo';
@@ -279,25 +279,25 @@ class AppLocalizationsPt extends AppLocalizations {
   String get enter_title => 'Digite um nome';
 
   @override
-  String get enter_participant => 'Insira pelo menos um participante';
+  String get enter_participant => 'Enter at least one participant';
 
   @override
   String get select_start => 'Selecionar início';
 
   @override
-  String get select_end => 'Selecionar fim';
+  String get select_end => 'Select end';
 
   @override
   String get start_date_not_selected => 'Selecione o início';
 
   @override
-  String get end_date_not_selected => 'Selecionar fim';
+  String get end_date_not_selected => 'Select end';
 
   @override
   String get select_from_date => 'Selecionar de';
 
   @override
-  String get select_to_date => 'Selecionar até';
+  String get select_to_date => 'Select to';
 
   @override
   String get date_range_not_selected => 'Selecione o período';
@@ -336,13 +336,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get expand_form => 'Expandir formulário';
 
   @override
-  String get expand_form_tooltip => 'Adicionar data, local e notas';
+  String get expand_form_tooltip => 'Add date, location and notes';
 
   @override
   String get category => 'Categoria';
 
   @override
-  String get amount => 'Valor';
+  String get amount => 'Amount';
 
   @override
   String get invalid_amount => 'Valor inválido';
@@ -373,7 +373,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get end_date_after_start => 'Data final deve ser após a inicial';
 
   @override
-  String get start_date_optional => 'Desde';
+  String get start_date_optional => 'From';
 
   @override
   String get end_date_optional => 'Até';
@@ -385,7 +385,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get expenses_by_participant => 'Por participante';
 
   @override
-  String get expenses_by_category => 'Por categoria';
+  String get expenses_by_category => 'By category';
 
   @override
   String get uncategorized => 'Sem categoria';
@@ -417,13 +417,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get import_success => 'Importação concluída! Dados recarregados.';
 
   @override
-  String get import_error => 'Falha na importação. Verifique o formato do arquivo.';
+  String get import_error => 'Import failed. Check the file format.';
 
   @override
   String get categories => 'Categorias';
 
   @override
-  String get from => 'De';
+  String get from => 'From';
 
   @override
   String get to => 'Até';
@@ -447,7 +447,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get add_participant => 'Adicionar participante';
 
   @override
-  String get no_participants => 'Sem participantes';
+  String get no_participants => 'No participants';
 
   @override
   String get category_name_hint => 'Digite o nome da categoria';
@@ -475,49 +475,49 @@ class AppLocalizationsPt extends AppLocalizations {
   String get settings_tab => 'Configurações';
 
   @override
-  String get basic_info => 'Informações Básicas';
+  String get basic_info => 'Basic Information';
 
   @override
   String get settings => 'Configurações';
 
   @override
-  String get history => 'Histórico';
+  String get history => 'History';
 
   @override
   String get all => 'Todos';
 
   @override
-  String get search_groups => 'Buscar grupos...';
+  String get search_groups => 'Search groups...';
 
   @override
   String get no_search_results => 'Nenhum grupo encontrado para';
 
   @override
-  String get try_different_search => 'Tente buscar com palavras diferentes';
+  String get try_different_search => 'Try searching with different words';
 
   @override
   String get active => 'Ativo';
 
   @override
-  String get archived => 'Arquivado';
+  String get archived => 'Archived';
 
   @override
   String get archive => 'Arquivar';
 
   @override
-  String get unarchive => 'Desarquivar';
+  String get unarchive => 'Unarchive';
 
   @override
   String get archive_confirm => 'Deseja arquivar';
 
   @override
-  String get unarchive_confirm => 'Deseja desarquivar';
+  String get unarchive_confirm => 'Do you want to unarchive';
 
   @override
   String get overview => 'Visão geral';
 
   @override
-  String get statistics => 'Estatísticas';
+  String get statistics => 'Statistics';
 
   @override
   String get options => 'Opções';
@@ -529,7 +529,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get show_statistics => 'Mostrar estatísticas';
 
   @override
-  String get no_expenses_to_display => 'Nenhuma despesa para exibir';
+  String get no_expenses_to_display => 'No expenses to display';
 
   @override
   String get no_expenses_to_analyze => 'Nenhuma despesa para analisar';
@@ -560,7 +560,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get pin_group => 'Fixar grupo';
 
   @override
-  String get unpin_group => 'Desfixar grupo';
+  String get unpin_group => 'Unpin group';
 
   @override
   String get pin => 'Fixar';
@@ -572,7 +572,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get theme_light => 'Claro';
 
   @override
-  String get theme_dark => 'Escuro';
+  String get theme_dark => 'Dark';
 
   @override
   String get developed_by => 'Desenvolvido por calca';
@@ -584,7 +584,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get daily_expenses_chart => 'Despesas diárias';
 
   @override
-  String get weekly_expenses_chart => 'Despesas semanais';
+  String get weekly_expenses_chart => 'Weekly expenses';
 
   @override
   String get daily_average_by_category => 'Média diária por categoria';
@@ -596,7 +596,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get no_expenses_for_statistics => 'Sem despesas para estatísticas';
 
   @override
-  String get settlement => 'Acerto';
+  String get settlement => 'Settlement';
 
   @override
   String get all_balanced => 'Todas as contas estão equilibradas!';
@@ -608,7 +608,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get export_csv => 'Exportar CSV';
 
   @override
-  String get no_expenses_to_export => 'Nenhuma despesa para exportar';
+  String get no_expenses_to_export => 'No expenses to export';
 
   @override
   String get export_csv_share_text => 'Despesas exportadas de ';
@@ -620,7 +620,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get expense_name => 'Descrição';
 
   @override
-  String get paid_by => 'Pago por';
+  String get paid_by => 'Paid by';
 
   @override
   String get expense_added_success => 'Despesa adicionada';
@@ -674,7 +674,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get csv_expense_name => 'Descrição';
 
   @override
-  String get csv_amount => 'Valor';
+  String get csv_amount => 'Amount';
 
   @override
   String get csv_paid_by => 'Pago por';
@@ -780,12 +780,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get settings_app_version => 'Versão do app';
-
-  @override
-  String get whats_new_title => 'Novidades';
-
-  @override
-  String get whats_new_desc => 'Descubra os recursos e atualizações mais recentes';
 
   @override
   String get settings_info_card => 'Informações';
@@ -1513,7 +1507,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get activity => 'Activity';
 
   @override
-  String get search_expenses_hint => 'Buscar por nome ou nota...';
+  String get search_expenses_hint => 'Search by name or note...';
 
   @override
   String get clear_filters => 'Clear';
@@ -1558,4 +1552,11 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get expense_groups_desc => 'Manage your expense groups';
+
+  @override
+  String get whats_new_title => 'Novidades';
+
+  @override
+  String get whats_new_desc =>
+      'Descubra os recursos e atualizações mais recentes';
 }

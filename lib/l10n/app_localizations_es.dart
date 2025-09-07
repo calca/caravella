@@ -786,12 +786,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settings_app_version => 'Versión de la aplicación';
 
   @override
-  String get whats_new_title => 'Novedades';
-
-  @override
-  String get whats_new_desc => 'Descubre las últimas características y actualizaciones';
-
-  @override
   String get settings_info_card => 'Información';
 
   @override
@@ -1564,4 +1558,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get expense_groups_desc => 'Gestiona tus grupos de gastos';
+
+  @override
+  String get whats_new_title => 'Novedades';
+
+  @override
+  String get whats_new_desc =>
+      'Descubre las últimas características y actualizaciones';
 }

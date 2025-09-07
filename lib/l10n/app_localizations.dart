@@ -1592,18 +1592,6 @@ abstract class AppLocalizations {
   /// **'App version'**
   String get settings_app_version;
 
-  /// No description provided for @whats_new_title.
-  ///
-  /// In en, this message translates to:
-  /// **'What's New'**
-  String get whats_new_title;
-
-  /// No description provided for @whats_new_desc.
-  ///
-  /// In en, this message translates to:
-  /// **'Discover the latest features and updates'**
-  String get whats_new_desc;
-
   /// No description provided for @settings_info_card.
   ///
   /// In en, this message translates to:
@@ -3109,6 +3097,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Manage your expense groups'**
   String get expense_groups_desc;
+
+  /// Title of the page showing the changelog
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s New'**
+  String get whats_new_title;
+
+  /// Subtitle of the what's new page
+  ///
+  /// In en, this message translates to:
+  /// **'Discover the latest features and updates'**
+  String get whats_new_desc;
 }
 
 class _AppLocalizationsDelegate
