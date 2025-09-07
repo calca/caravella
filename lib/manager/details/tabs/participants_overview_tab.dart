@@ -60,18 +60,6 @@ class ParticipantsOverviewTab extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 6),
               child: Row(
                 children: [
-                  CircleAvatar(
-                    radius: 16,
-                    backgroundColor: theme.colorScheme.primary.withAlpha(
-                      (0.1 * 255).toInt(),
-                    ),
-                    child: Icon(
-                      Icons.person_outline,
-                      size: 18,
-                      color: theme.colorScheme.primary,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       p.name,
@@ -120,6 +108,10 @@ class ParticipantsOverviewTab extends StatelessWidget {
                       value: (e.pct / 100).clamp(0, 1),
                       minHeight: 6,
                       borderRadius: BorderRadius.circular(4),
+                      color: theme.colorScheme.surfaceDim,
+                      backgroundColor: theme.colorScheme.surfaceDim.withAlpha(
+                        (0.4 * 255).toInt(),
+                      ),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -168,18 +160,6 @@ class ParticipantsOverviewTab extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 6),
                 child: Row(
                   children: [
-                    CircleAvatar(
-                      radius: 14,
-                      backgroundColor: theme.colorScheme.error.withAlpha(
-                        (0.1 * 255).toInt(),
-                      ),
-                      child: Icon(
-                        Icons.arrow_forward,
-                        size: 16,
-                        color: theme.colorScheme.error,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
                     Expanded(
                       child: RichText(
                         text: TextSpan(
