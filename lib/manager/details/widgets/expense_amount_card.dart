@@ -74,23 +74,23 @@ class ExpenseAmountCard extends StatelessWidget {
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        if (paidBy != null) ...[
-                          Icon(
-                            Icons.person_outline_rounded,
-                            size: 15,
-                            color: colorScheme.onSurface,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            paidBy!.name,
-                            style: textTheme.labelSmall?.copyWith(
-                              color: colorScheme.onSurface,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ],
+                        // if (paidBy != null) ...[
+                        //   Icon(
+                        //     Icons.person_outline_rounded,
+                        //     size: 15,
+                        //     color: colorScheme.onSurface,
+                        //   ),
+                        //   const SizedBox(width: 4),
+                        //   Text(
+                        //     paidBy!.name,
+                        //     style: textTheme.labelSmall?.copyWith(
+                        //       color: colorScheme.onSurface,
+                        //       fontWeight: FontWeight.w400,
+                        //     ),
+                        //   ),
+                        // ],
                         if (category != null && category!.isNotEmpty) ...[
-                          const SizedBox(width: 12),
+                          //const SizedBox(width: 12),
                           Icon(
                             Icons.local_offer_outlined,
                             size: 15,

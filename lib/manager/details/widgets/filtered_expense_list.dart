@@ -112,7 +112,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
       children: [
         if (widget.expenses.isNotEmpty) ...[
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
             child: Row(
               children: [
                 Expanded(
