@@ -74,9 +74,22 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     final updatedCategories = [..._currentGroup!.categories];
     updatedCategories.add(ExpenseCategory(name: categoryName));
 
+    // Aggiorna il gruppo corrente con le nuove categorie
+    _currentGroup = _currentGroup!.copyWith(categories: updatedCategories);
+
     // Memorizza l'ultima categoria aggiunta
     _lastAddedCategory = categoryName;
     _lastEvent = 'category_added';
+
+    // Notifica i listener prima di persistere
+    notifyListeners();
+
+    // Persisti le modifiche
+    try {
+      await ExpenseGroupStorageV2.updateGroupMetadata(_currentGroup!);
+    } catch (e) {
+      debugPrint('Error updating group metadata after adding category: $e');
+    }
   }
 
   // Nuovo metodo per aggiornare l'intero gruppo (per quando viene modificato dall'esterno)
