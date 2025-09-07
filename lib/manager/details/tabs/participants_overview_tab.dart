@@ -60,23 +60,11 @@ class ParticipantsOverviewTab extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 6),
               child: Row(
                 children: [
-                  CircleAvatar(
-                    radius: 16,
-                    backgroundColor: theme.colorScheme.primary.withAlpha(
-                      (0.1 * 255).toInt(),
-                    ),
-                    child: Icon(
-                      Icons.person_outline,
-                      size: 18,
-                      color: theme.colorScheme.primary,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       p.name,
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
@@ -110,8 +98,10 @@ class ParticipantsOverviewTab extends StatelessWidget {
                     child: Text(
                       e.participant.name,
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w400,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   SizedBox(
@@ -120,13 +110,23 @@ class ParticipantsOverviewTab extends StatelessWidget {
                       value: (e.pct / 100).clamp(0, 1),
                       minHeight: 6,
                       borderRadius: BorderRadius.circular(4),
+                      color: theme.colorScheme.surfaceDim,
+                      backgroundColor: theme.colorScheme.surfaceDim.withAlpha(
+                        (0.4 * 255).toInt(),
+                      ),
                     ),
                   ),
                   const SizedBox(width: 12),
-                  Text(
-                    '${e.pct.toStringAsFixed(1)}%',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      fontWeight: FontWeight.w600,
+                  SizedBox(
+                    width: 56, // enough for "100.0%"
+                    child: Text(
+                      '${e.pct.toStringAsFixed(1)}%',
+                      textAlign: TextAlign.right,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w400,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.clip,
                     ),
                   ),
                 ],
@@ -156,7 +156,7 @@ class ParticipantsOverviewTab extends StatelessWidget {
                     gloc.all_balanced,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.primary,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ),
@@ -168,23 +168,11 @@ class ParticipantsOverviewTab extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 6),
                 child: Row(
                   children: [
-                    CircleAvatar(
-                      radius: 14,
-                      backgroundColor: theme.colorScheme.error.withAlpha(
-                        (0.1 * 255).toInt(),
-                      ),
-                      child: Icon(
-                        Icons.arrow_forward,
-                        size: 16,
-                        color: theme.colorScheme.error,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
                     Expanded(
                       child: RichText(
                         text: TextSpan(
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w400,
                           ),
                           children: [
                             TextSpan(
