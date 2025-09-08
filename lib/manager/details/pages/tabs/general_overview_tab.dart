@@ -173,6 +173,9 @@ class _TopSummaryRow extends StatelessWidget {
 
     // Take up to 3 (third will be faded if exists)
     final top = participants.take(3).toList();
+    final overlap = avatarSize * 0.7;
+    final stackWidth =
+        avatarSize + (top.length > 1 ? (top.length - 1) * overlap : 0.0);
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -210,18 +213,19 @@ class _TopSummaryRow extends StatelessWidget {
           children: [
             // Overlapping avatars
             SizedBox(
-              width: avatarSize + 2 * (avatarSize * 0.7),
+              width: stackWidth,
               height: avatarSize,
               child: Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  for (int i = 0; i < top.length && i < 3; i++)
+                  // Paint least prominent first, most prominent last (on top)
+                  for (int j = top.length - 1; j >= 0; j--)
                     Positioned(
-                      left: i * (avatarSize * 0.7),
+                      right: j * overlap,
                       child: Opacity(
-                        opacity: i == 2 && top.length >= 3 ? 0.35 : 1.0,
+                        opacity: j == 2 && top.length >= 3 ? 0.35 : 1.0,
                         child: ParticipantAvatar(
-                          participant: top[i].participant,
+                          participant: top[j].participant,
                           size: avatarSize,
                         ),
                       ),
