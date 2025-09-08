@@ -1550,6 +1550,18 @@ abstract class AppLocalizations {
   /// **'Select theme'**
   String get settings_select_theme;
 
+  /// No description provided for @settings_dynamic_color.
+  ///
+  /// In en, this message translates to:
+  /// **'Dynamic colors'**
+  String get settings_dynamic_color;
+
+  /// No description provided for @settings_dynamic_color_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Use system colors'**
+  String get settings_dynamic_color_desc;
+
   /// No description provided for @settings_privacy_desc.
   ///
   /// In en, this message translates to:

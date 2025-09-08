@@ -163,7 +163,7 @@ class _CaravellaAppState extends State<CaravellaApp> {
             dynamicColorEnabled: _dynamicColorEnabled,
             changeDynamicColor: _changeDynamicColor,
             child: DynamicColorBuilder(
-              builder: (context, lightDynamic, darkDynamic) {
+              builder: (lightDynamic, darkDynamic) {
                 // Use dynamic colors only if enabled in settings
                 final lightTheme = _dynamicColorEnabled && lightDynamic != null
                     ? CaravellaThemes.createLightTheme(dynamicColorScheme: lightDynamic)
