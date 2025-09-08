@@ -3,6 +3,9 @@ import '../../../data/model/expense_group.dart';
 import '../../../widgets/currency_display.dart';
 import 'settlements_logic.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import '../widgets/group_header.dart'; // ParticipantAvatar
+import 'package:intl/intl.dart';
+import '../tabs/widgets/stat_card.dart';
 
 /// Participants tab: per participant totals, contribution percentages and settlements.
 class ParticipantsOverviewTab extends StatelessWidget {
@@ -39,166 +42,59 @@ class ParticipantsOverviewTab extends StatelessWidget {
       return (participant: p, total: total, pct: pct);
     }).toList()..sort((a, b) => b.total.compareTo(a.total));
 
+    // Helper for currency formatting in subtitles
+    String fmtCurrency(double amount) {
+      final locale = Localizations.maybeLocaleOf(context)?.toString();
+      try {
+        if (locale != null) {
+          return NumberFormat.currency(
+            locale: locale,
+            symbol: trip.currency,
+          ).format(amount);
+        }
+      } catch (_) {}
+      return '${amount.toStringAsFixed(2)}${trip.currency}';
+    }
+
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 32),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Totals per participant
-          const SizedBox(height: 6),
+          // Top summary: per participant card with avatar, total, %, and owes info
           ...contributionEntries.map((e) {
+            // Build owes summary for this participant (from settlements)
+            final owes = settlements
+                .where((s) => s['from'] == e.participant.name)
+                .toList();
+            String subtitle;
+            final pctText = '${e.pct.toStringAsFixed(1)}%';
+            if (owes.isNotEmpty) {
+              final parts = owes.map(
+                (s) => '${s['to']} (${fmtCurrency(s['amount'] as double)})',
+              );
+              // Put settlement on a new line, with localized connector
+              subtitle = '$pctText\n${gloc.owes_to}${parts.join(', ')}';
+            } else {
+              subtitle = pctText;
+            }
+
             return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 6),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      e.participant.name,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                  CurrencyDisplay(
-                    value: e.total,
-                    currency: trip.currency,
-                    valueFontSize: 14.0,
-                    currencyFontSize: 12.0,
-                    alignment: MainAxisAlignment.end,
-                    showDecimals: true,
-                  ),
-                ],
+              padding: const EdgeInsets.only(bottom: 10),
+              child: StatCard(
+                title: e.participant.name,
+                value: e.total,
+                currency: trip.currency,
+                subtitle: subtitle,
+                leading: ParticipantAvatar(
+                  participant: e.participant,
+                  size: 36,
+                ),
+                percent: e.pct.toDouble(),
+                inlineHeader: true,
               ),
             );
           }),
-          const SizedBox(height: 28),
-          // Contribution percentages
-          Text(
-            gloc.contribution_percentages,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 12),
-          ...contributionEntries.map(
-            (e) => Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      e.participant.name,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w400,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 90,
-                    child: LinearProgressIndicator(
-                      value: (e.pct / 100).clamp(0, 1),
-                      minHeight: 6,
-                      borderRadius: BorderRadius.circular(4),
-                      color: theme.colorScheme.surfaceDim,
-                      backgroundColor: theme.colorScheme.surfaceDim.withAlpha(
-                        (0.4 * 255).toInt(),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  SizedBox(
-                    width: 56, // enough for "100.0%"
-                    child: Text(
-                      '${e.pct.toStringAsFixed(1)}%',
-                      textAlign: TextAlign.right,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w400,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.clip,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 28),
-          // Settlements
-          Text(
-            gloc.settlement,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 12),
-          if (settlements.isEmpty)
-            Row(
-              children: [
-                Icon(
-                  Icons.check_circle_outline,
-                  size: 20,
-                  color: theme.colorScheme.primary,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    gloc.all_balanced,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.primary,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-              ],
-            )
-          else
-            ...settlements.map(
-              (s) => Padding(
-                padding: const EdgeInsets.symmetric(vertical: 6),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: RichText(
-                        text: TextSpan(
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w400,
-                          ),
-                          children: [
-                            TextSpan(
-                              text: s['from'],
-                              style: TextStyle(color: theme.colorScheme.error),
-                            ),
-                            TextSpan(
-                              text: gloc.owes_to,
-                              style: TextStyle(
-                                color: theme.colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                            TextSpan(
-                              text: s['to'],
-                              style: TextStyle(
-                                color: theme.colorScheme.primary,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    CurrencyDisplay(
-                      value: s['amount'],
-                      currency: trip.currency,
-                      valueFontSize: 14.0,
-                      currencyFontSize: 12.0,
-                      alignment: MainAxisAlignment.end,
-                      showDecimals: true,
-                      color: theme.colorScheme.error,
-                    ),
-                  ],
-                ),
-              ),
-            ),
         ],
       ),
     );
