@@ -93,7 +93,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get export_share => '导出和分享';
 
   @override
-  String get contribution_percentages => '贡献百分比';
+  String get contribution_percentages => '百分比';
 
   @override
   String get contribution_percentages_desc => '每位成员支付的总额占比';
