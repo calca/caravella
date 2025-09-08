@@ -129,7 +129,7 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
     );
 
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
       child: GptMarkdownTheme(
         gptThemeData: mdTheme,
         child: GptMarkdown(
