@@ -66,11 +66,13 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
     buffer.writeln(gloc.overview);
     buffer.writeln('');
     final currency = trip.currency;
+    // Build participant id->name map
+    final idToName = {for (final p in trip.participants) p.id: p.name};
     // Totals per participant
     buffer.writeln(gloc.expenses_by_participant);
     for (final p in trip.participants) {
       final total = trip.expenses
-          .where((e) => e.paidBy.name == p.name)
+          .where((e) => e.paidBy.id == p.id)
           .fold<double>(0, (s, e) => s + (e.amount ?? 0));
       buffer.writeln('- ${p.name}: ${total.toStringAsFixed(2)} $currency');
     }
@@ -82,8 +84,10 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
     } else {
       buffer.writeln(gloc.settlement);
       for (final s in settlements) {
+        final fromName = idToName[s.fromId] ?? s.fromId;
+        final toName = idToName[s.toId] ?? s.toId;
         buffer.writeln(
-          '${s.from} -> ${s.to}: ${s.amount.toStringAsFixed(2)} $currency',
+          '$fromName -> $toName: ${s.amount.toStringAsFixed(2)} $currency',
         );
       }
     }

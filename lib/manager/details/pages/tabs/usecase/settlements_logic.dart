@@ -1,39 +1,45 @@
 import 'package:io_caravella_egm/data/model/expense_group.dart';
 
-/// Strongly-typed settlement item instead of an untyped map.
+/// Strongly-typed settlement item using participant IDs (robust to name changes).
 class Settlement {
-  final String from; // debtor
-  final String to; // creditor
+  final String fromId; // debtor id
+  final String toId; // creditor id
   final double amount;
 
   const Settlement({
-    required this.from,
-    required this.to,
+    required this.fromId,
+    required this.toId,
     required this.amount,
   });
 
-  Settlement copyWith({String? from, String? to, double? amount}) => Settlement(
-    from: from ?? this.from,
-    to: to ?? this.to,
-    amount: amount ?? this.amount,
-  );
+  Settlement copyWith({String? fromId, String? toId, double? amount}) =>
+      Settlement(
+        fromId: fromId ?? this.fromId,
+        toId: toId ?? this.toId,
+        amount: amount ?? this.amount,
+      );
 
-  Map<String, dynamic> toJson() => {'from': from, 'to': to, 'amount': amount};
+  Map<String, dynamic> toJson() => {
+    'fromId': fromId,
+    'toId': toId,
+    'amount': amount,
+  };
 
   @override
-  String toString() => 'Settlement(from: $from, to: $to, amount: $amount)';
+  String toString() =>
+      'Settlement(fromId: $fromId, toId: $toId, amount: $amount)';
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is Settlement &&
           runtimeType == other.runtimeType &&
-          from == other.from &&
-          to == other.to &&
+          fromId == other.fromId &&
+          toId == other.toId &&
           amount == other.amount;
 
   @override
-  int get hashCode => Object.hash(from, to, amount);
+  int get hashCode => Object.hash(fromId, toId, amount);
 }
 
 /// Computes minimal settlements between participants to balance accounts.
@@ -41,6 +47,7 @@ class Settlement {
 List<Settlement> computeSettlements(ExpenseGroup trip) {
   if (trip.participants.length < 2 || trip.expenses.isEmpty) return [];
 
+  // Balances keyed by participant id
   final balances = <String, double>{};
   final total = trip.expenses.fold<double>(
     0.0,
@@ -49,19 +56,19 @@ List<Settlement> computeSettlements(ExpenseGroup trip) {
   final fairShare = total / trip.participants.length;
 
   for (final p in trip.participants) {
-    balances[p.name] = 0.0;
+    balances[p.id] = 0.0;
   }
   for (final e in trip.expenses) {
     if (e.amount != null) {
-      balances[e.paidBy.name] = (balances[e.paidBy.name] ?? 0) + e.amount!;
+      balances[e.paidBy.id] = (balances[e.paidBy.id] ?? 0) + e.amount!;
     }
   }
   for (final p in trip.participants) {
-    balances[p.name] = (balances[p.name] ?? 0) - fairShare;
+    balances[p.id] = (balances[p.id] ?? 0) - fairShare;
   }
 
-  final creditors = <MapEntry<String, double>>[];
-  final debtors = <MapEntry<String, double>>[];
+  final creditors = <MapEntry<String, double>>[]; // id -> credit
+  final debtors = <MapEntry<String, double>>[]; // id -> debt
   balances.forEach((k, v) {
     if (v > 0.01) {
       creditors.add(MapEntry(k, v));
@@ -79,7 +86,7 @@ List<Settlement> computeSettlements(ExpenseGroup trip) {
     final c = creditors[ci];
     final d = debtors[di];
     final amount = c.value < d.value ? c.value : d.value;
-    settlements.add(Settlement(from: d.key, to: c.key, amount: amount));
+    settlements.add(Settlement(fromId: d.key, toId: c.key, amount: amount));
     creditors[ci] = MapEntry(c.key, c.value - amount);
     debtors[di] = MapEntry(d.key, d.value - amount);
     if (creditors[ci].value < 0.01) ci++;

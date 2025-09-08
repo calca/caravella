@@ -16,6 +16,7 @@ class ParticipantsOverviewTab extends StatelessWidget {
     final theme = Theme.of(context);
     final gloc = gen.AppLocalizations.of(context);
     final settlements = computeSettlements(trip);
+    final idToName = {for (final p in trip.participants) p.id: p.name};
 
     if (trip.expenses.isEmpty) {
       return Center(
@@ -35,7 +36,7 @@ class ParticipantsOverviewTab extends StatelessWidget {
     );
     final contributionEntries = trip.participants.map((p) {
       final total = trip.expenses
-          .where((e) => e.paidBy.name == p.name)
+          .where((e) => e.paidBy.id == p.id)
           .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
       final pct = totalAll == 0 ? 0 : (total / totalAll) * 100;
       return (participant: p, total: total, pct: pct);
@@ -64,7 +65,7 @@ class ParticipantsOverviewTab extends StatelessWidget {
           ...contributionEntries.map((e) {
             // Build owes summary for this participant (from settlements)
             final owes = settlements
-                .where((s) => s.from == e.participant.name)
+                .where((s) => s.fromId == e.participant.id)
                 .toList();
             String? subtitle; // unused when using spans
             List<InlineSpan>? subtitleSpans;
@@ -74,7 +75,7 @@ class ParticipantsOverviewTab extends StatelessWidget {
               spans.add(TextSpan(text: gloc.owes_to));
               for (int i = 0; i < owes.length; i++) {
                 final s = owes[i];
-                final to = s.to;
+                final to = idToName[s.toId] ?? s.toId;
                 final amount = fmtCurrency(s.amount);
                 // Bold: ' destinatario importo' (note leading space)
                 spans.add(
