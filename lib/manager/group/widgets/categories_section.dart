@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import '../../../config/app_icons.dart';
 import '../../../data/model/expense_category.dart';
 import 'editable_name_list.dart';
 
@@ -36,7 +37,7 @@ class CategoriesSection extends StatelessWidget {
       onAdd: onAddCategory,
       onEdit: onEditCategory,
       onDelete: onRemoveCategory,
-      itemIcon: Icons.category_outlined,
+      itemIcon: AppIcons.category,
     );
   }
 }
