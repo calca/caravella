@@ -296,6 +296,6 @@ class GroupFormController {
     // to avoid any interdependency logic in the setters
     state.imagePath = null;
     state.color = null;
-    state.notifyListeners();
+    state.refresh();
   }
 }

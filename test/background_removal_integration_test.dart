@@ -11,47 +11,64 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('Background removal integration tests', () {
-    test('Complete workflow: Edit group with color -> add image -> remove -> verify clean state', () async {
-      final state = GroupFormState();
-      final controller = GroupFormController(state, GroupEditMode.edit);
+    test(
+      'Complete workflow: Edit group with color -> add image -> remove -> verify clean state',
+      () async {
+        final state = GroupFormState();
+        final controller = GroupFormController(state, GroupEditMode.edit);
 
-      // Scenario: User is editing an existing group that has a red background color
-      final originalGroup = ExpenseGroup(
-        id: 'workflow-test',
-        title: 'Trip to Italy',
-        participants: [ExpenseParticipant(name: 'Alice'), ExpenseParticipant(name: 'Bob')],
-        categories: [ExpenseCategory(name: 'Food'), ExpenseCategory(name: 'Transport')],
-        expenses: [],
-        color: 0xFFE57373, // Red color
-        file: null, // No image
-      );
+        // Scenario: User is editing an existing group that has a red background color
+        final originalGroup = ExpenseGroup(
+          id: 'workflow-test',
+          title: 'Trip to Italy',
+          participants: [
+            ExpenseParticipant(name: 'Alice'),
+            ExpenseParticipant(name: 'Bob'),
+          ],
+          categories: [
+            ExpenseCategory(name: 'Food'),
+            ExpenseCategory(name: 'Transport'),
+          ],
+          expenses: [],
+          currency: 'EUR',
+          color: 0xFFE57373, // Red color
+          file: null, // No image
+        );
 
-      // Load the group (simulates opening the edit form)
-      controller.load(originalGroup);
-      expect(state.color, equals(0xFFE57373));
-      expect(state.imagePath, isNull);
+        // Load the group (simulates opening the edit form)
+        controller.load(originalGroup);
+        expect(state.color, equals(0xFFE57373));
+        expect(state.imagePath, isNull);
 
-      // User decides to add an image instead of using the color
-      // (In real app, this would go through persistPickedImage, but we'll simulate the end result)
-      state.setImage('/fake/path/to/image.jpg');
-      expect(state.imagePath, equals('/fake/path/to/image.jpg'));
-      expect(state.color, isNull, reason: 'Setting image should clear color');
+        // User decides to add an image instead of using the color
+        // (In real app, this would go through persistPickedImage, but we'll simulate the end result)
+        state.setImage('/fake/path/to/image.jpg');
+        expect(state.imagePath, equals('/fake/path/to/image.jpg'));
+        expect(state.color, isNull, reason: 'Setting image should clear color');
 
-      // User changes their mind and removes the background entirely
-      await controller.removeImage();
+        // User changes their mind and removes the background entirely
+        await controller.removeImage();
 
-      // Verify the background is completely clear (this was the bug)
-      expect(state.imagePath, isNull);
-      expect(state.color, isNull);
+        // Verify the background is completely clear (this was the bug)
+        expect(state.imagePath, isNull);
+        expect(state.color, isNull);
 
-      // Verify the original group data is still intact for comparison
-      expect(state.originalGroup?.color, equals(0xFFE57373), 
-        reason: 'Original group should not be modified');
+        // Verify the original group data is still intact for comparison
+        expect(
+          state.originalGroup?.color,
+          equals(0xFFE57373),
+          reason: 'Original group should not be modified',
+        );
 
-      // Verify hasChanges correctly detects the background change
-      expect(controller.hasChanges, isTrue, 
-        reason: 'Controller should detect background was removed from original');
-    });
+        // Verify hasChanges correctly detects the background change
+        expect(
+          controller.hasChanges,
+          isTrue,
+          reason:
+              'Controller should detect background was removed from original',
+        );
+      },
+    );
 
     test('UI state consistency: removal option availability', () {
       final state = GroupFormState();
@@ -86,7 +103,7 @@ void main() {
       // Edge case: Manually set both (bypassing setter logic)
       state.imagePath = '/path/to/image.jpg';
       state.color = 0xFF42A5F5;
-      
+
       // Both are set (this shouldn't happen in normal UI flow, but test the fix handles it)
       expect(state.imagePath, isNotNull);
       expect(state.color, isNotNull);
