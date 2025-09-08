@@ -35,22 +35,9 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   late final ScrollController _scrollController;
   bool _fabVisible = true;
   Timer? _fabIdleTimer;
+  late final TabController _tabController;
 
-  List<Map<String, dynamic>> _statusOptions(BuildContext context) {
-    final gloc = gen.AppLocalizations.of(context);
-    return [
-      {
-        'key': 'active',
-        'label': gloc.status_active,
-        'icon': Icons.play_circle_outline,
-      },
-      {
-        'key': 'archived',
-        'label': gloc.status_archived,
-        'icon': Icons.archive_outlined,
-      },
-    ];
-  }
+  // (Removed) _statusOptions helper previously used for SegmentedButton.
 
   @override
   void initState() {
@@ -58,6 +45,21 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     _loadTrips();
     _scrollController = ScrollController();
     _scrollController.addListener(_onScroll);
+
+    // Tabs: Active | Archived
+    _tabController = TabController(
+      length: 2,
+      vsync: this,
+      initialIndex: _statusFilter == 'archived' ? 1 : 0,
+    );
+    _tabController.addListener(() {
+      if (!_tabController.indexIsChanging) {
+        final newKey = _tabController.index == 1 ? 'archived' : 'active';
+        if (newKey != _statusFilter) {
+          _onStatusFilterChanged(newKey);
+        }
+      }
+    });
   }
 
   ExpenseGroupNotifier? _groupNotifier;
@@ -70,6 +72,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     _fabIdleTimer?.cancel();
+    _tabController.dispose();
     super.dispose();
   }
 
@@ -268,32 +271,22 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   }
 
   Widget _buildStatusSegmentedButton(BuildContext context) {
+    // Replaced with a TabBar containing two tabs: Active | Archived
+    final gloc = gen.AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
-    final options = _statusOptions(context);
 
     return SizedBox(
       width: double.infinity,
-      child: SegmentedButton<String>(
-        segments: options.map((option) {
-          return ButtonSegment<String>(
-            value: option['key'],
-            label: Text(option['label']),
-            icon: Icon(option['icon']),
-          );
-        }).toList(),
-        selected: {_statusFilter},
-        onSelectionChanged: (selected) {
-          if (selected.isNotEmpty) {
-            _onStatusFilterChanged(selected.first);
-          }
-        },
-        style: SegmentedButton.styleFrom(
-          backgroundColor: colorScheme.surfaceContainerLow,
-          foregroundColor: colorScheme.outline,
-          selectedBackgroundColor: colorScheme.primaryFixedDim,
-          selectedForegroundColor: colorScheme.onPrimaryFixed,
-          side: BorderSide(color: colorScheme.surfaceContainerLow, width: 0),
-        ),
+      child: TabBar(
+        controller: _tabController,
+        tabs: [
+          Tab(text: gloc.status_active),
+          Tab(text: gloc.status_archived),
+        ],
+        labelColor: colorScheme.onSurface,
+        unselectedLabelColor: colorScheme.outline,
+        indicatorColor: colorScheme.primary,
+        indicatorSize: TabBarIndicatorSize.tab,
       ),
     );
   }
