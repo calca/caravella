@@ -45,13 +45,7 @@ class ParticipantsOverviewTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Totals per participant
-          Text(
-            gloc.expenses_by_participant,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 6),
           ...trip.participants.map((p) {
             final total = trip.expenses
                 .where((e) => e.paidBy.name == p.name)

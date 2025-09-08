@@ -22,11 +22,10 @@ class StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    // Use latest Material 3 surface token (surfaceVariant deprecated)
-    final surface = theme.colorScheme.surfaceContainerHighest.withValues(
-      alpha: 0.3,
-    );
+    // Use latest Material 3 surface token
+    final surface = theme.colorScheme.surface;
     final locale = Localizations.maybeLocaleOf(context)?.toString();
+
     String formattedValue;
     try {
       if (locale != null) {
@@ -40,9 +39,11 @@ class StatCard extends StatelessWidget {
     } catch (_) {
       formattedValue = '$value$currency';
     }
+
     final semanticLabel = subtitle != null
         ? '$title: $formattedValue (${subtitle!})'
         : '$title: $formattedValue';
+
     return Semantics(
       label: semanticLabel,
       container: true,
@@ -56,45 +57,51 @@ class StatCard extends StatelessWidget {
             ),
           ),
           padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      title,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  if (icon != null)
-                    Icon(icon, size: 20, color: theme.colorScheme.primary),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                if (icon != null) ...[
+                  Icon(icon, size: 24, color: theme.colorScheme.outline),
+                  const SizedBox(width: 12),
                 ],
-              ),
-              const SizedBox(height: 6),
-              CurrencyDisplay(
-                value: value,
-                currency: currency,
-                valueFontSize: 22,
-                currencyFontSize: 12,
-                showDecimals: true,
-                alignment: MainAxisAlignment.start,
-              ),
-              if (subtitle != null) ...[
-                const SizedBox(height: 6),
-                const SizedBox(height: 6),
-                Text(
-                  subtitle!,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      CurrencyDisplay(
+                        value: value,
+                        currency: currency,
+                        valueFontSize: 22,
+                        currencyFontSize: 12,
+                        showDecimals: true,
+                        alignment: MainAxisAlignment.start,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      if (subtitle != null) ...[
+                        const SizedBox(height: 12),
+                        Text(
+                          subtitle!,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ],
                   ),
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
                 ),
               ],
-            ],
+            ),
           ),
         ),
       ),
@@ -122,6 +129,7 @@ class InfoCard extends StatelessWidget {
       alpha: 0.3,
     );
     final semanticLabel = '$title: ${subtitle.replaceAll('\n', ', ')}';
+
     return Semantics(
       label: semanticLabel,
       container: true,

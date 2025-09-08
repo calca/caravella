@@ -29,6 +29,7 @@ class CategoriesOverviewTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(height: 8),
           DailyAverageByCategoryWidget(trip: trip),
           const SizedBox(height: 32),
           CategoriesPieChart(trip: trip),

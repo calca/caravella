@@ -275,7 +275,7 @@ abstract class AppLocalizations {
   /// No description provided for @contribution_percentages.
   ///
   /// In en, this message translates to:
-  /// **'Contribution percentages'**
+  /// **'Percentages'**
   String get contribution_percentages;
 
   /// No description provided for @contribution_percentages_desc.

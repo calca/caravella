@@ -24,13 +24,6 @@ class DailyAverageByCategoryWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          gen.AppLocalizations.of(context).daily_average_by_category,
-          style: Theme.of(
-            context,
-          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
-        ),
-        const SizedBox(height: 16),
         ...sortedEntries.map((entry) => _buildCategoryRow(context, entry)),
       ],
     );
@@ -101,14 +94,12 @@ class DailyAverageByCategoryWidget extends StatelessWidget {
 
     final Map<ExpenseCategory, double> categoryTotals = {};
 
-    // Calculate totals for known categories
+    // Calculate totals for known categories (include zero-spend categories)
     for (final category in trip.categories) {
       final total = trip.expenses
           .where((e) => e.category.id == category.id)
           .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
-      if (total > 0) {
-        categoryTotals[category] = total / totalDays;
-      }
+      categoryTotals[category] = total / totalDays;
     }
 
     // Add uncategorized expenses (expenses with categories not in the trip's categories list)

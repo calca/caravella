@@ -94,7 +94,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get export_share => 'Exportar y Compartir';
 
   @override
-  String get contribution_percentages => 'Porcentajes de contribución';
+  String get contribution_percentages => 'Porcentajes';
 
   @override
   String get contribution_percentages_desc =>
