@@ -16,12 +16,6 @@ class ExpenseGroupStorageV2 {
   static final IExpenseGroupRepository _repository =
       FileBasedExpenseGroupRepository();
 
-  /// Private method to read all groups (for internal use)
-  static Future<List<ExpenseGroup>> _readAllGroups() async {
-    final result = await _repository.getAllGroups();
-    return result.unwrapOr([]);
-  }
-
   /// Gets a trip by ID
   static Future<ExpenseGroup?> getTripById(String id) async {
     final result = await _repository.getGroupById(id);
@@ -50,7 +44,10 @@ class ExpenseGroupStorageV2 {
     if (pinned) {
       final result = await _repository.setPinnedGroup(groupId);
       if (result.isFailure) {
-        LoggerService.warning('Failed to pin group $groupId: ${result.error}', name: 'storage');
+        LoggerService.warning(
+          'Failed to pin group $groupId: ${result.error}',
+          name: 'storage',
+        );
       }
     } else {
       final result = await _repository.removePinnedGroup(groupId);
@@ -69,13 +66,18 @@ class ExpenseGroupStorageV2 {
     if (archived) {
       final result = await _repository.archiveGroup(groupId);
       if (result.isFailure) {
-        LoggerService.warning('Failed to archive group $groupId: ${result.error}', name: 'storage');
+        LoggerService.warning(
+          'Failed to archive group $groupId: ${result.error}',
+          name: 'storage',
+        );
       }
     } else {
       final result = await _repository.unarchiveGroup(groupId);
       if (result.isFailure) {
-        LoggerService.warning('Failed to unarchive group $groupId: ${result.error}', name: 'storage');
-      }
+        LoggerService.warning(
+          'Failed to unarchive group $groupId: ${result.error}',
+          name: 'storage',
+        );
       }
     }
   }
@@ -144,13 +146,19 @@ class ExpenseGroupStorageV2 {
   ) async {
     final groupResult = await _repository.getGroupById(groupId);
     if (groupResult.isFailure) {
-      LoggerService.warning('Warning: Failed to get group $groupId: ${groupResult.error}'), name: 'storage');
+      LoggerService.warning(
+        'Warning: Failed to get group $groupId: ${groupResult.error}',
+        name: 'storage',
+      );
       return;
     }
 
     final group = groupResult.unwrapOr(null);
     if (group == null) {
-      LoggerService.warning('Warning: Group $groupId not found'), name: 'storage');
+      LoggerService.warning(
+        'Warning: Group $groupId not found',
+        name: 'storage',
+      );
       return;
     }
 
@@ -171,7 +179,10 @@ class ExpenseGroupStorageV2 {
   static Future<void> addExpenseGroup(ExpenseGroup group) async {
     final result = await _repository.addExpenseGroup(group);
     if (result.isFailure) {
-      LoggerService.warning('Warning: Failed to add group ${group.id}: ${result.error}'), name: 'storage');
+      LoggerService.warning(
+        'Warning: Failed to add group ${group.id}: ${result.error}',
+        name: 'storage',
+      );
     }
   }
 
@@ -239,13 +250,19 @@ class ExpenseGroupStorageV2 {
   ) async {
     final groupResult = await _repository.getGroupById(groupId);
     if (groupResult.isFailure) {
-      LoggerService.warning('Warning: Failed to get group $groupId: ${groupResult.error}'), name: 'storage');
+      LoggerService.warning(
+        'Warning: Failed to get group $groupId: ${groupResult.error}',
+        name: 'storage',
+      );
       return;
     }
 
     final group = groupResult.unwrapOr(null);
     if (group == null) {
-      LoggerService.warning('Warning: Group $groupId not found'), name: 'storage');
+      LoggerService.warning(
+        'Warning: Group $groupId not found',
+        name: 'storage',
+      );
       return;
     }
 
@@ -300,12 +317,18 @@ class ExpenseGroupStorageV2 {
 
     final groupResult = await _repository.getGroupById(groupId);
     if (groupResult.isFailure) {
-      LoggerService.warning('Warning: Failed to get group $groupId: ${groupResult.error}'), name: 'storage');
+      LoggerService.warning(
+        'Warning: Failed to get group $groupId: ${groupResult.error}',
+        name: 'storage',
+      );
       return;
     }
     final group = groupResult.unwrapOr(null);
     if (group == null) {
-      LoggerService.warning('Warning: Group $groupId not found'), name: 'storage');
+      LoggerService.warning(
+        'Warning: Group $groupId not found',
+        name: 'storage',
+      );
       return;
     }
 
@@ -348,12 +371,18 @@ class ExpenseGroupStorageV2 {
 
     final groupResult = await _repository.getGroupById(groupId);
     if (groupResult.isFailure) {
-      LoggerService.warning('Warning: Failed to get group $groupId: ${groupResult.error}'), name: 'storage');
+      LoggerService.warning(
+        'Warning: Failed to get group $groupId: ${groupResult.error}',
+        name: 'storage',
+      );
       return;
     }
     final group = groupResult.unwrapOr(null);
     if (group == null) {
-      LoggerService.warning('Warning: Group $groupId not found'), name: 'storage');
+      LoggerService.warning(
+        'Warning: Group $groupId not found',
+        name: 'storage',
+      );
       return;
     }
 
@@ -410,13 +439,15 @@ class ExpenseGroupStorageV2 {
   ) async {
     final groupResult = await _repository.getGroupById(groupId);
     if (groupResult.isFailure) {
-      LoggerService.warning('Warning: Failed to get group $groupId: ${groupResult.error}'), name: 'storage');
+      LoggerService.warning(
+        'Warning: Failed to get group $groupId: ${groupResult.error}',
+      );
       return;
     }
 
     final group = groupResult.unwrapOr(null);
     if (group == null) {
-      LoggerService.warning('Warning: Group $groupId not found'), name: 'storage');
+      LoggerService.warning('Warning: Group $groupId not found');
       return;
     }
 
@@ -437,7 +468,9 @@ class ExpenseGroupStorageV2 {
   static Future<void> deleteGroup(String groupId) async {
     final result = await _repository.deleteGroup(groupId);
     if (result.isFailure) {
-      LoggerService.warning('Warning: Failed to delete group $groupId: ${result.error}'), name: 'storage');
+      LoggerService.warning(
+        'Warning: Failed to delete group $groupId: ${result.error}',
+      );
     }
   }
 }
