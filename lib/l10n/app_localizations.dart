@@ -3127,6 +3127,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Discover the latest features and updates'**
   String get whats_new_desc;
+
+  /// Label shown before the computed average spent per person in the Participants tab
+  ///
+  /// In en, this message translates to:
+  /// **'Average per person'**
+  String get average_per_person;
 }
 
 class _AppLocalizationsDelegate

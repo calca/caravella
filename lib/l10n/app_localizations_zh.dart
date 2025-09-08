@@ -1560,4 +1560,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get whats_new_desc => '了解最新功能和更新';
+
+  @override
+  String get average_per_person => '人均支出';
 }

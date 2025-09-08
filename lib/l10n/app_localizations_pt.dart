@@ -1568,4 +1568,7 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get whats_new_desc =>
       'Descubra os recursos e atualizações mais recentes';
+
+  @override
+  String get average_per_person => 'Média por pessoa';
 }

@@ -1565,4 +1565,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get whats_new_desc => 'Discover the latest features and updates';
+
+  @override
+  String get average_per_person => 'Average per person';
 }

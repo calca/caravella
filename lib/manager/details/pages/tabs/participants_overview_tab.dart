@@ -5,6 +5,8 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../widgets/group_header.dart'; // ParticipantAvatar
 import 'package:intl/intl.dart';
 import '../../widgets/stat_card.dart';
+import '../../../../widgets/currency_display.dart';
+import '../../../../data/model/expense_participant.dart';
 
 /// Participants tab: per participant totals, contribution percentages and settlements.
 class ParticipantsOverviewTab extends StatelessWidget {
@@ -34,6 +36,10 @@ class ParticipantsOverviewTab extends StatelessWidget {
       0,
       (s, e) => s + (e.amount ?? 0),
     );
+    final participantsCount = trip.participants.length;
+    final avgPerPerson = participantsCount == 0
+        ? 0.0
+        : totalAll / participantsCount;
     final contributionEntries = trip.participants.map((p) {
       final total = trip.expenses
           .where((e) => e.paidBy.id == p.id)
@@ -61,6 +67,14 @@ class ParticipantsOverviewTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(height: 8),
+          _AveragePerPersonRow(
+            average: avgPerPerson,
+            currency: trip.currency,
+            participants: trip.participants,
+            count: participantsCount,
+          ),
+          const SizedBox(height: 24),
           // Top summary: per participant card with avatar, total, %, and owes info
           ...contributionEntries.map((e) {
             // Build owes summary for this participant (from settlements)
@@ -111,6 +125,57 @@ class ParticipantsOverviewTab extends StatelessWidget {
           }),
         ],
       ),
+    );
+  }
+}
+
+class _AveragePerPersonRow extends StatelessWidget {
+  final double average;
+  final String currency;
+  final List<ExpenseParticipant> participants;
+  final int count;
+  const _AveragePerPersonRow({
+    required this.average,
+    required this.currency,
+    required this.participants,
+    required this.count,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final label = gen.AppLocalizations.of(context).average_per_person;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 6),
+              CurrencyDisplay(
+                value: average,
+                currency: currency,
+                showDecimals: true,
+                valueFontSize: 36,
+                currencyFontSize: 16,
+                fontWeight: FontWeight.w600,
+                alignment: MainAxisAlignment.start,
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

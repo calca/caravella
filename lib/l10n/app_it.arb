@@ -573,4 +573,6 @@
   ,"@whats_new_title": {"description": "Titolo della pagina che mostra il changelog"}
   ,"whats_new_desc": "Scopri le ultime novità e aggiornamenti"
   ,"@whats_new_desc": {"description": "Sottotitolo della pagina novità"}
+  ,"average_per_person": "Speso medio per persona"
+  ,"@average_per_person": {"description": "Etichetta mostrata prima della media spesa per persona nella tab Partecipanti"}
 }

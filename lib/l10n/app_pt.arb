@@ -486,4 +486,6 @@
   ,"@whats_new_title": {"description": "Título da página que mostra o changelog"}
   ,"whats_new_desc": "Descubra os recursos e atualizações mais recentes"
   ,"@whats_new_desc": {"description": "Subtítulo da página novidades"}
+  ,"average_per_person": "Média por pessoa"
+  ,"@average_per_person": {"description": "Rótulo mostrado antes da média gasta por pessoa na aba Participantes"}
 }
