@@ -6,7 +6,6 @@ import '../../../widgets/charts/weekly_expense_chart.dart';
 import '../../../widgets/charts/monthly_expense_chart.dart';
 import '../../../widgets/charts/date_range_expense_chart.dart';
 import 'daily_totals_utils.dart';
-import 'date_range_formatter.dart';
 import '../widgets/group_header.dart'; // for ParticipantAvatar
 import '../../../widgets/currency_display.dart';
 import '../../../data/model/expense_participant.dart';
@@ -120,18 +119,20 @@ class GeneralOverviewTab extends StatelessWidget {
               crossAxisCount: 2,
               mainAxisSpacing: 12,
               crossAxisSpacing: 12,
-              childAspectRatio: 1, // square cards
+              childAspectRatio: 1.6, // square cards
             ),
             children: [
               StatCard(
                 title: gloc.daily_average,
                 value: dailyAvg,
                 currency: trip.currency,
+                icon: Icons.calendar_today_outlined,
               ),
               StatCard(
                 title: gloc.monthly_average,
                 value: monthlyAvg,
                 currency: trip.currency,
+                icon: Icons.calendar_month_outlined,
               ),
             ],
           ),
