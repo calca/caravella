@@ -7,6 +7,9 @@ import '../../../widgets/charts/monthly_expense_chart.dart';
 import '../../../widgets/charts/date_range_expense_chart.dart';
 import 'daily_totals_utils.dart';
 import 'date_range_formatter.dart';
+import '../widgets/group_header.dart'; // for ParticipantAvatar
+import '../../../widgets/currency_display.dart';
+import '../../../data/model/expense_participant.dart';
 
 /// General statistics tab: shows high level KPIs (daily/monthly average)
 /// and spending trend for the last 7 and 30 days.
@@ -41,6 +44,29 @@ class GeneralOverviewTab extends StatelessWidget {
   List<double> _monthlySeries() => buildMonthlySeries(trip);
   List<double> _dateRangeSeries() => buildAdaptiveDateRangeSeries(trip);
 
+  // Returns participants ordered by activity (number of expenses paid)
+  List<ExpenseParticipantCount> _topParticipants() {
+    final counts = <String, int>{};
+    for (final e in trip.expenses) {
+      final id = e.paidBy.id;
+      counts[id] = (counts[id] ?? 0) + 1;
+    }
+    final byId = {for (final p in trip.participants) p.id: p};
+    final items = <ExpenseParticipantCount>[];
+    for (final entry in counts.entries) {
+      final p = byId[entry.key];
+      if (p != null) items.add(ExpenseParticipantCount(p, entry.value));
+    }
+    // Include participants with zero activity to avoid empty UI on new groups
+    for (final p in trip.participants) {
+      if (!counts.containsKey(p.id)) {
+        items.add(ExpenseParticipantCount(p, 0));
+      }
+    }
+    items.sort((a, b) => b.count.compareTo(a.count));
+    return items;
+  }
+
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
@@ -69,7 +95,14 @@ class GeneralOverviewTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 32),
+          const SizedBox(height: 8),
+          _TopSummaryRow(
+            total: _total(),
+            currency: trip.currency,
+            participants: _topParticipants(),
+            count: trip.participants.length,
+          ),
+          const SizedBox(height: 24),
           if (shouldShowDateRangeChart(trip)) ...[
             DateRangeExpenseChart(dailyTotals: dateRange, theme: theme),
           ] else ...[
@@ -146,5 +179,103 @@ class _InfoMetaCard extends StatelessWidget {
         ? participantLabel
         : '$dateStr\n$participantLabel';
     return InfoCard(title: gloc.info_tab, subtitle: subtitle);
+  }
+}
+
+class ExpenseParticipantCount {
+  final ExpenseParticipant participant;
+  final int count;
+  ExpenseParticipantCount(this.participant, this.count);
+}
+
+class _TopSummaryRow extends StatelessWidget {
+  final double total;
+  final String currency;
+  final List<ExpenseParticipantCount> participants;
+  final int count;
+  const _TopSummaryRow({
+    required this.total,
+    required this.currency,
+    required this.participants,
+    required this.count,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final gloc = gen.AppLocalizations.of(context);
+    final colorScheme = theme.colorScheme;
+    final avatarSize = 32.0;
+
+    // Take up to 3 (third will be faded if exists)
+    final top = participants.take(3).toList();
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        // Left: Total label + amount
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                gloc.total_spent,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 6),
+              CurrencyDisplay(
+                value: total,
+                currency: currency,
+                showDecimals: true,
+                valueFontSize: 36,
+                currencyFontSize: 16,
+                fontWeight: FontWeight.w600,
+                alignment: MainAxisAlignment.start,
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 12),
+        // Right: overlapping avatars + count
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Overlapping avatars
+            SizedBox(
+              width: avatarSize + 2 * (avatarSize * 0.7),
+              height: avatarSize,
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  for (int i = 0; i < top.length && i < 3; i++)
+                    Positioned(
+                      left: i * (avatarSize * 0.7),
+                      child: Opacity(
+                        opacity: i == 2 && top.length >= 3 ? 0.35 : 1.0,
+                        child: ParticipantAvatar(
+                          participant: top[i].participant,
+                          size: avatarSize,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              '$count',
+              style: theme.textTheme.titleMedium?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 }
