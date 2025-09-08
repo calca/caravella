@@ -13,6 +13,7 @@ class StatCard extends StatelessWidget {
   final Widget? leading;
   final double? percent; // 0-100
   final bool inlineHeader; // when true, show title and value on same row
+  final int? subtitleMaxLines; // allow override of max lines for subtitle
 
   const StatCard({
     super.key,
@@ -25,6 +26,7 @@ class StatCard extends StatelessWidget {
     this.leading,
     this.percent,
     this.inlineHeader = false,
+    this.subtitleMaxLines,
   });
 
   @override
@@ -161,7 +163,7 @@ class StatCard extends StatelessWidget {
                               ),
                               children: subtitleSpans,
                             ),
-                            maxLines: 3,
+                            maxLines: subtitleMaxLines ?? 3,
                             overflow: TextOverflow.ellipsis,
                           )
                         else
@@ -170,7 +172,7 @@ class StatCard extends StatelessWidget {
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: theme.colorScheme.onSurfaceVariant,
                             ),
-                            maxLines: 3,
+                            maxLines: subtitleMaxLines ?? 3,
                             overflow: TextOverflow.ellipsis,
                           ),
                       ],

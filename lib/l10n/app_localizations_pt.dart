@@ -1571,4 +1571,13 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get average_per_person => 'Média por pessoa';
+
+  @override
+  String get more => 'mais';
+
+  @override
+  String get less => 'menos';
+
+  @override
+  String get debt_prefix_to => 'a ';
 }

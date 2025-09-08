@@ -588,4 +588,10 @@
   ,"@whats_new_desc": {"description": "Subtitle of the what's new page"}
   ,"average_per_person": "Average per person"
   ,"@average_per_person": {"description": "Label shown before the computed average spent per person in the Participants tab"}
+  ,"more": "more"
+  ,"@more": {"description": "Inline toggle label to expand and show all items"}
+  ,"less": "less"
+  ,"@less": {"description": "Inline toggle label to collapse and show fewer items"}
+  ,"debt_prefix_to": "to "
+  ,"@debt_prefix_to": {"description": "Short prefix shown before the recipient in a debt/settlement line (e.g., 'to Alice 10€')"}
 }

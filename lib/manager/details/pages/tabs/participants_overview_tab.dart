@@ -48,19 +48,7 @@ class ParticipantsOverviewTab extends StatelessWidget {
       return (participant: p, total: total, pct: pct);
     }).toList()..sort((a, b) => b.total.compareTo(a.total));
 
-    // Helper for currency formatting in subtitles
-    String fmtCurrency(double amount) {
-      final locale = Localizations.maybeLocaleOf(context)?.toString();
-      try {
-        if (locale != null) {
-          return NumberFormat.currency(
-            locale: locale,
-            symbol: trip.currency,
-          ).format(amount);
-        }
-      } catch (_) {}
-      return '${amount.toStringAsFixed(2)}${trip.currency}';
-    }
+    // No local helpers needed here; formatting handled in sub-widgets
 
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 32),
@@ -77,49 +65,19 @@ class ParticipantsOverviewTab extends StatelessWidget {
           const SizedBox(height: 24),
           // Top summary: per participant card with avatar, total, %, and owes info
           ...contributionEntries.map((e) {
-            // Build owes summary for this participant (from settlements)
             final owes = settlements
                 .where((s) => s.fromId == e.participant.id)
                 .toList();
-            String? subtitle; // unused when using spans
-            List<InlineSpan>? subtitleSpans;
-            if (owes.isNotEmpty) {
-              final spans = <InlineSpan>[];
-              // Prefix connector (localized), normal weight
-              spans.add(TextSpan(text: gloc.owes_to));
-              for (int i = 0; i < owes.length; i++) {
-                final s = owes[i];
-                final to = idToName[s.toId] ?? s.toId;
-                final amount = fmtCurrency(s.amount);
-                // Bold: ' destinatario importo' (note leading space)
-                spans.add(
-                  TextSpan(
-                    text: '$to $amount',
-                    style: const TextStyle(fontWeight: FontWeight.w700),
-                  ),
-                );
-                if (i < owes.length - 1) {
-                  // Separator as normal text
-                  spans.add(const TextSpan(text: ', '));
-                }
-              }
-              subtitleSpans = spans;
-            }
 
             return Padding(
               padding: const EdgeInsets.only(bottom: 10),
-              child: StatCard(
-                title: e.participant.name,
-                value: e.total,
-                currency: trip.currency,
-                subtitle: subtitle,
-                subtitleSpans: subtitleSpans,
-                leading: ParticipantAvatar(
-                  participant: e.participant,
-                  size: 48,
-                ),
+              child: _ParticipantStatCard(
+                participant: e.participant,
+                total: e.total,
                 percent: e.pct.toDouble(),
-                inlineHeader: true,
+                currency: trip.currency,
+                owes: owes,
+                idToName: idToName,
               ),
             );
           }),
@@ -176,6 +134,151 @@ class _AveragePerPersonRow extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _ParticipantStatCard extends StatefulWidget {
+  final ExpenseParticipant participant;
+  final double total;
+  final double percent;
+  final String currency;
+  final List<Settlement> owes;
+  final Map<String, String> idToName;
+
+  const _ParticipantStatCard({
+    required this.participant,
+    required this.total,
+    required this.percent,
+    required this.currency,
+    required this.owes,
+    required this.idToName,
+  });
+
+  @override
+  State<_ParticipantStatCard> createState() => _ParticipantStatCardState();
+}
+
+class _ParticipantStatCardState extends State<_ParticipantStatCard> {
+  bool _expanded = false;
+
+  String _fmtCurrency(BuildContext context, double amount) {
+    final locale = Localizations.maybeLocaleOf(context)?.toString();
+    try {
+      if (locale != null) {
+        return NumberFormat.currency(
+          locale: locale,
+          symbol: widget.currency,
+        ).format(amount);
+      }
+    } catch (_) {}
+    return '${amount.toStringAsFixed(2)}${widget.currency}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    // Build per-line debts starting with "a " and bold content
+    final owes = widget.owes;
+    final totalItems = owes.length;
+    final showToggle = totalItems > 3;
+    final loc = gen.AppLocalizations.of(context);
+
+    List<InlineSpan> buildLines({required bool expanded}) {
+      final spans = <InlineSpan>[];
+      if (totalItems == 0) return spans;
+
+      final visibleCount = expanded
+          ? totalItems
+          : (showToggle ? 2 : totalItems);
+      for (int i = 0; i < visibleCount; i++) {
+        final s = owes[i];
+        final toName = widget.idToName[s.toId] ?? s.toId;
+        final amount = _fmtCurrency(context, s.amount);
+        spans.add(
+          TextSpan(
+            text: loc.debt_prefix_to,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        );
+        spans.add(
+          TextSpan(
+            text: '$toName $amount',
+            style: theme.textTheme.bodySmall?.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        );
+        if (i < visibleCount - 1) {
+          spans.add(const TextSpan(text: '\n'));
+        }
+      }
+      if (showToggle && !expanded) {
+        // Add a newline then an inline More button after the second line
+        spans.add(const TextSpan(text: '\n'));
+        spans.add(
+          WidgetSpan(
+            alignment: PlaceholderAlignment.baseline,
+            baseline: TextBaseline.alphabetic,
+            child: TextButton(
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.zero,
+                minimumSize: const Size(0, 0),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              onPressed: () => setState(() => _expanded = true),
+              child: Text(
+                loc.more,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+        );
+      } else if (showToggle && expanded) {
+        spans.add(const TextSpan(text: '\n'));
+        spans.add(
+          WidgetSpan(
+            alignment: PlaceholderAlignment.baseline,
+            baseline: TextBaseline.alphabetic,
+            child: TextButton(
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.zero,
+                minimumSize: const Size(0, 0),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              onPressed: () => setState(() => _expanded = false),
+              child: Text(
+                loc.less,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+        );
+      }
+      return spans;
+    }
+
+    final subtitleSpans = buildLines(expanded: _expanded);
+
+    return StatCard(
+      title: widget.participant.name,
+      value: widget.total,
+      currency: widget.currency,
+      subtitleSpans: subtitleSpans,
+      subtitleMaxLines: _expanded ? 100 : 3,
+      leading: ParticipantAvatar(participant: widget.participant, size: 48),
+      percent: widget.percent,
+      inlineHeader: true,
     );
   }
 }

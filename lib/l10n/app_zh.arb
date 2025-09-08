@@ -358,4 +358,10 @@
   ,"@whats_new_desc": {"description": "新功能页面的副标题"}
   ,"average_per_person": "人均支出"
   ,"@average_per_person": {"description": "参与者标签页中显示的人均支出标签"}
+  ,"more": "更多"
+  ,"@more": {"description": "展开并显示所有项目的内联按钮标签"}
+  ,"less": "更少"
+  ,"@less": {"description": "收起并显示更少项目的内联按钮标签"}
+  ,"debt_prefix_to": "给 "
+  ,"@debt_prefix_to": {"description": "在债务/结算行中显示在收款人之前的简短前缀（例如：'给 Alice 10€'）"}
 }

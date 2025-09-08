@@ -488,4 +488,10 @@
   ,"@whats_new_desc": {"description": "Subtítulo da página novidades"}
   ,"average_per_person": "Média por pessoa"
   ,"@average_per_person": {"description": "Rótulo mostrado antes da média gasta por pessoa na aba Participantes"}
+  ,"more": "mais"
+  ,"@more": {"description": "Rótulo inline para expandir e mostrar todos os itens"}
+  ,"less": "menos"
+  ,"@less": {"description": "Rótulo inline para recolher e mostrar menos itens"}
+  ,"debt_prefix_to": "a "
+  ,"@debt_prefix_to": {"description": "Prefixo curto mostrado antes do destinatário em uma linha de dívida/liquidação (ex.: 'a Alice 10€')"}
 }

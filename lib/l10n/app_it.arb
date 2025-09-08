@@ -575,4 +575,10 @@
   ,"@whats_new_desc": {"description": "Sottotitolo della pagina novità"}
   ,"average_per_person": "Speso medio per persona"
   ,"@average_per_person": {"description": "Etichetta mostrata prima della media spesa per persona nella tab Partecipanti"}
+  ,"more": "altro"
+  ,"@more": {"description": "Etichetta inline per espandere e mostrare tutti gli elementi"}
+  ,"less": "meno"
+  ,"@less": {"description": "Etichetta inline per comprimere e mostrare meno elementi"}
+  ,"debt_prefix_to": "a "
+  ,"@debt_prefix_to": {"description": "Prefisso breve mostrato prima del destinatario nella riga di debito/pareggio (es. 'a Alice 10€')"}
 }

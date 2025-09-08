@@ -3133,6 +3133,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Average per person'**
   String get average_per_person;
+
+  /// Inline toggle label to expand and show all items
+  ///
+  /// In en, this message translates to:
+  /// **'more'**
+  String get more;
+
+  /// Inline toggle label to collapse and show fewer items
+  ///
+  /// In en, this message translates to:
+  /// **'less'**
+  String get less;
+
+  /// Short prefix shown before the recipient in a debt/settlement line (e.g., 'to Alice 10€')
+  ///
+  /// In en, this message translates to:
+  /// **'to '**
+  String get debt_prefix_to;
 }
 
 class _AppLocalizationsDelegate

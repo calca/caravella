@@ -1563,4 +1563,13 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get average_per_person => '人均支出';
+
+  @override
+  String get more => '更多';
+
+  @override
+  String get less => '更少';
+
+  @override
+  String get debt_prefix_to => '给 ';
 }
