@@ -25,11 +25,18 @@
   "in_group_prefix": "in",
   "save_change_expense": "Salva modifiche",
   "group_total": "Totale",
+  "total_spent": "Totale speso",
+  "@total_spent": {"description": "Etichetta mostrata prima del totale speso nel gruppo"},
   "download_all_csv": "Scarica tutto (CSV)",
   "share_all_csv": "Condividi tutto (CSV)",
   "download_all_ofx": "Scarica tutto (OFX)",
   "share_all_ofx": "Condividi tutto (OFX)",
+  "share_label": "Condividi",
+  "share_text_label": "Condividi testo",
+  "share_image_label": "Condividi immagine",
   "export_share": "Esporta e Condividi",
+  "contribution_percentages": "Percentuali",
+  "contribution_percentages_desc": "Quota del totale pagata da ciascun partecipante",
   "export_options": "Opzioni di Esportazione",
   "good_morning": "Buongiorno",
   "good_afternoon": "Buon pomeriggio",
@@ -72,6 +79,8 @@
   "expenses": "Spese",
   "participants_label": "Partecipanti",
   "participants": "Partecipanti",
+  "participant_count": "{count, plural, one {{count} partecipante} other {{count} partecipanti}}",
+  "@participant_count": {"description": "Conteggio partecipanti con plurale", "placeholders": {"count": {}}},
   "last_7_days": "7 giorni",
   "recent_activity": "Attività recente",
   "about": "Informazioni",
@@ -242,6 +251,8 @@
   "settings_language_it": "Italiano",
   "settings_language_en": "Inglese",
   "settings_language_es": "Spagnolo",
+  "settings_language_pt": "Portoghese",
+  "settings_language_zh": "Cinese (Semplificato)",
   "settings_select_language": "Seleziona lingua",
   "settings_theme": "Tema",
   "settings_theme_desc": "Chiaro, scuro o sistema",
@@ -271,7 +282,10 @@
   "data_restore_title": "Ripristino",
   "data_restore_desc": "Importa un backup per ripristinare i dati.",
   "auto_backup_title": "Backup automatico",
-  "auto_backup_desc": "Abilita il backup automatico del sistema operativo"
+  "auto_backup_desc": "Abilita il backup automatico del sistema operativo",
+  "settings_user_name_title": "Il tuo nome",
+  "settings_user_name_desc": "Nome o nickname da usare nell'app",
+  "settings_user_name_hint": "Inserisci il tuo nome"
   ,"category_placeholder": "Categoria"
   ,"discard_changes_title": "Scartare le modifiche?"
   ,"discard_changes_message": "Sei sicuro di voler scartare le modifiche non salvate?"
@@ -287,6 +301,8 @@
   ,"daily_average": "Media"
   ,"spent_today": "Oggi"
   ,"@daily_average": {"description": "Etichetta mostrata prima del valore di spesa media giornaliera"}
+  ,"monthly_average": "Mensile"
+  ,"@monthly_average": {"description": "Etichetta mostrata prima del valore della media mensile"}
   ,"@spent_today": {"description": "Etichetta mostrata prima dell'importo speso oggi"}
   ,"@overview_and_statistics": {"description": "Tooltip per bottone panoramica/statistiche"}
   ,"error_saving_group": "Errore durante il salvataggio: {error}"
@@ -553,4 +569,8 @@
   ,"@expense_groups_title": {"description": "Titolo principale della sezione elenco gruppi di spese/viaggi nella cronologia"}
   ,"expense_groups_desc": "Gestisci i tuoi gruppi di spese"
   ,"@expense_groups_desc": {"description": "Sottotitolo breve che descrive lo scopo della sezione gruppi di spese (es. aggiungi, modifica, visualizza viaggi)"}
+  ,"whats_new_title": "Novità"
+  ,"@whats_new_title": {"description": "Titolo della pagina che mostra il changelog"}
+  ,"whats_new_desc": "Scopri le ultime novità e aggiornamenti"
+  ,"@whats_new_desc": {"description": "Sottotitolo della pagina novità"}
 }

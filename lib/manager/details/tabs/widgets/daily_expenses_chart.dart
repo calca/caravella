@@ -7,12 +7,14 @@ class DailyExpensesChart extends StatelessWidget {
   final ExpenseGroup trip;
   final Map<DateTime, double> dailyStats;
   final String titleKey;
+  final String? customTitle; // Allows overriding default localized title
 
   const DailyExpensesChart({
     super.key,
     required this.trip,
     required this.dailyStats,
     this.titleKey = 'daily_expenses_chart',
+    this.customTitle,
   });
 
   @override
@@ -62,7 +64,7 @@ class DailyExpensesChart extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          _resolveTitle(context),
+          customTitle ?? _resolveTitle(context),
           style: Theme.of(
             context,
           ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
