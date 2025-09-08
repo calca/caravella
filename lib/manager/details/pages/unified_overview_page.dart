@@ -6,10 +6,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../data/model/expense_group.dart';
-import '../tabs/general_overview_tab.dart';
-import '../tabs/participants_overview_tab.dart';
-import '../tabs/categories_overview_tab.dart';
-import '../tabs/settlements_logic.dart';
+import 'tabs/general_overview_tab.dart';
+import 'tabs/participants_overview_tab.dart';
+import 'tabs/categories_overview_tab.dart';
+import 'tabs/settlements_logic.dart';
 import '../../group/widgets/section_header.dart';
 import '../../../widgets/bottom_sheet_scaffold.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../data/model/expense_group.dart';
+import '../../../../data/model/expense_group.dart';
 
 /// Minimal legacy placeholder: original StatisticsTab merged into UnifiedOverviewTab.
 /// Kept only so existing duration tests compile. Remove after updating tests.

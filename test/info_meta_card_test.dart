@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:io_caravella_egm/manager/details/tabs/general_overview_tab.dart';
+import 'package:io_caravella_egm/manager/details/pages/tabs/general_overview_tab.dart';
 import 'package:io_caravella_egm/data/model/expense_group.dart';
 import 'package:io_caravella_egm/data/model/expense_participant.dart';
 import 'package:io_caravella_egm/data/model/expense_category.dart';
 import 'package:io_caravella_egm/data/model/expense_details.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart';
-import 'package:io_caravella_egm/manager/details/tabs/date_range_formatter.dart';
+import 'package:io_caravella_egm/manager/details/pages/tabs/date_range_formatter.dart';
 
 ExpenseGroup _group({DateTime? start, DateTime? end, int participants = 2}) {
   return ExpenseGroup(

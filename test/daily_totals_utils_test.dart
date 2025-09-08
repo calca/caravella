@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:io_caravella_egm/manager/details/tabs/daily_totals_utils.dart';
+import 'package:io_caravella_egm/manager/details/pages/tabs/daily_totals_utils.dart';
 import 'package:io_caravella_egm/data/model/expense_group.dart';
 import 'package:io_caravella_egm/data/model/expense_details.dart';
 import 'package:io_caravella_egm/data/model/expense_category.dart';
