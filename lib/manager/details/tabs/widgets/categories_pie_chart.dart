@@ -55,13 +55,6 @@ class CategoriesPieChart extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          gloc.expenses_by_category,
-          style: Theme.of(
-            context,
-          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
-        ),
-        const SizedBox(height: 24),
         // Pie chart centrato
         Center(
           child: SizedBox(

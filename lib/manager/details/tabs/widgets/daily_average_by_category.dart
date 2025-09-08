@@ -24,13 +24,6 @@ class DailyAverageByCategoryWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          gen.AppLocalizations.of(context).daily_average_by_category,
-          style: Theme.of(
-            context,
-          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
-        ),
-        const SizedBox(height: 16),
         ...sortedEntries.map((entry) => _buildCategoryRow(context, entry)),
       ],
     );
