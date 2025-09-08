@@ -279,6 +279,8 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
       width: double.infinity,
       child: TabBar(
         controller: _tabController,
+        isScrollable: true,
+        tabAlignment: TabAlignment.center,
         tabs: [
           Tab(text: gloc.status_active),
           Tab(text: gloc.status_archived),
@@ -286,7 +288,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
         labelColor: colorScheme.onSurface,
         unselectedLabelColor: colorScheme.outline,
         indicatorColor: colorScheme.primary,
-        indicatorSize: TabBarIndicatorSize.tab,
+        indicatorSize: TabBarIndicatorSize.label,
       ),
     );
   }
