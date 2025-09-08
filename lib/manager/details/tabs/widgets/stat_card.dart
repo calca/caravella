@@ -23,9 +23,7 @@ class StatCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     // Use latest Material 3 surface token (surfaceVariant deprecated)
-    final surface = theme.colorScheme.surfaceContainerHighest.withValues(
-      alpha: 0.3,
-    );
+    final surface = theme.colorScheme.surface;
     final locale = Localizations.maybeLocaleOf(context)?.toString();
     String formattedValue;
     try {
