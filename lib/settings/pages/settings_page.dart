@@ -4,29 +4,54 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart'
     as gen; // generated strongly-typed
 import '../../state/locale_notifier.dart';
 import '../../state/theme_mode_notifier.dart';
+import '../../state/app_version_notifier.dart';
 import '../flag_secure_notifier.dart';
 import '../user_name_notifier.dart';
 
 import '../flag_secure_android.dart';
 import 'package:provider/provider.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'developer_page.dart';
 import 'data_backup_page.dart';
 import 'whats_new_page.dart';
 import '../../widgets/bottom_sheet_scaffold.dart';
+import '../../widgets/async_value_builder.dart';
 import '../../settings/widgets/settings_card.dart';
 import '../../settings/widgets/settings_section.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   final void Function(String)? onLocaleChanged;
   const SettingsPage({super.key, this.onLocaleChanged});
+
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  late final AppVersionNotifier _appVersionNotifier;
+
+  @override
+  void initState() {
+    super.initState();
+    _appVersionNotifier = AppVersionNotifier();
+    // Load app version when the page initializes
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _appVersionNotifier.loadAppVersion();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    return ChangeNotifierProvider<FlagSecureNotifier>(
-      create: (_) => FlagSecureNotifier(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<FlagSecureNotifier>(
+          create: (_) => FlagSecureNotifier(),
+        ),
+        ChangeNotifierProvider<AppVersionNotifier>.value(
+          value: _appVersionNotifier,
+        ),
+      ],
       child: Scaffold(
         appBar: const CaravellaAppBar(),
         body: ListView(
@@ -246,9 +271,10 @@ class SettingsPage extends StatelessWidget {
       child: ListTile(
         leading: const Icon(Icons.info_outline),
         title: Text(loc.settings_app_version, style: textTheme.titleMedium),
-        subtitle: FutureBuilder<String>(
-          future: _getAppVersion(),
-          builder: (context, snapshot) => Text(snapshot.data ?? '-'),
+        subtitle: SimpleAsyncConsumer<AppVersionNotifier, String>(
+          data: (context, version, notifier) => Text(version),
+          loading: (context) => const Text('-'),
+          error: (context, error) => const Text('Unknown'),
         ),
         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
         onTap: () => Navigator.of(
@@ -278,15 +304,6 @@ class SettingsPage extends StatelessWidget {
 
   // GENERIC CARD WRAPPER ---------------------------------------------------
   // ...existing code...
-
-  Future<String> _getAppVersion() async {
-    try {
-      final info = await PackageInfo.fromPlatform();
-      return info.version;
-    } catch (_) {
-      return '-';
-    }
-  }
 
   String _getLanguageLabel(String locale, gen.AppLocalizations genLoc) {
     switch (locale) {

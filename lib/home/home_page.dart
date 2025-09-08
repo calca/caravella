@@ -3,11 +3,13 @@ import 'package:provider/provider.dart';
 import '../data/model/expense_group.dart';
 import '../data/expense_group_storage_v2.dart';
 import '../state/expense_group_notifier.dart';
+import '../state/expense_groups_async_notifier.dart';
 import '../../main.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'welcome/home_welcome_section.dart';
 import 'cards/home_cards_section.dart';
 import '../widgets/app_toast.dart';
+import '../widgets/async_value_builder.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,11 +22,13 @@ class _HomePageState extends State<HomePage> with RouteAware {
   ExpenseGroup? _pinnedTrip;
   bool _loading = true;
   ExpenseGroupNotifier? _groupNotifier;
+  late final ExpenseGroupsAsyncNotifier _groupsAsyncNotifier;
   bool _refreshing = false;
 
   @override
   void initState() {
     super.initState();
+    _groupsAsyncNotifier = ExpenseGroupsAsyncNotifier();
     WidgetsBinding.instance.addPostFrameCallback((_) => _loadLocaleAndTrip());
   }
 
@@ -107,13 +111,36 @@ class _HomePageState extends State<HomePage> with RouteAware {
         _loading = true;
       });
     }
-    final pinnedTrip = await ExpenseGroupStorageV2.getPinnedTrip();
+    
+    // Load both pinned trip and groups data
+    await Future.wait([
+      _loadPinnedTrip(),
+      _groupsAsyncNotifier.loadAllGroups(),
+    ]);
+    
     if (!mounted) return;
     setState(() {
-      _pinnedTrip = pinnedTrip;
       _loading = false;
       _refreshing = false;
     });
+  }
+  
+  Future<void> _loadPinnedTrip() async {
+    try {
+      final pinnedTrip = await ExpenseGroupStorageV2.getPinnedTrip();
+      if (mounted) {
+        setState(() {
+          _pinnedTrip = pinnedTrip;
+        });
+      }
+    } catch (e) {
+      // Handle error silently for pinned trip
+      if (mounted) {
+        setState(() {
+          _pinnedTrip = null;
+        });
+      }
+    }
   }
 
   void _refresh() => _loadLocaleAndTrip();
@@ -121,8 +148,15 @@ class _HomePageState extends State<HomePage> with RouteAware {
   Future<void> _handleUserRefresh() async {
     if (_refreshing) return;
     setState(() => _refreshing = true);
-    await _loadLocaleAndTrip();
+    
+    // Refresh both pinned trip and groups
+    await Future.wait([
+      _loadPinnedTrip(),
+      _groupsAsyncNotifier.refreshGroupsInBackground(),
+    ]);
+    
     if (mounted) {
+      setState(() => _refreshing = false);
       AppToast.show(
         context,
         gen.AppLocalizations.of(context).data_refreshed,
@@ -134,103 +168,89 @@ class _HomePageState extends State<HomePage> with RouteAware {
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      body: _loading
-          ? Semantics(
-              liveRegion: true,
-              label: gloc.accessibility_loading_groups,
-              child: Center(
-                child: CircularProgressIndicator(
-                  semanticsLabel: gloc.accessibility_loading_your_groups,
+    return ChangeNotifierProvider<ExpenseGroupsAsyncNotifier>.value(
+      value: _groupsAsyncNotifier,
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        body: _loading
+            ? Semantics(
+                liveRegion: true,
+                label: gloc.accessibility_loading_groups,
+                child: Center(
+                  child: CircularProgressIndicator(
+                    semanticsLabel: gloc.accessibility_loading_your_groups,
+                  ),
+                ),
+              )
+            : RefreshIndicator(
+                onRefresh: _handleUserRefresh,
+                child: SimpleAsyncConsumer<ExpenseGroupsAsyncNotifier, List<ExpenseGroup>>(
+                  data: (context, allGroups, notifier) {
+                    final active = notifier.activeGroups;
+                    final archived = notifier.archivedGroups;
+
+                    // Show HomeCardsSection when there are active groups.
+                    // If active is empty but archived groups exist, still show HomeCardsSection
+                    // with an empty list so the UI renders only the add-card.
+                    if (active.isNotEmpty) {
+                      return SafeArea(
+                        child: Semantics(
+                          label: gloc.accessibility_groups_list,
+                          child: HomeCardsSection(
+                            initialGroups: active,
+                            pinnedTrip: _pinnedTrip,
+                            onTripAdded: _refresh,
+                            allArchived: false,
+                          ),
+                        ),
+                      );
+                    } else if (archived.isNotEmpty) {
+                      return SafeArea(
+                        child: Semantics(
+                          label: gloc.accessibility_groups_list,
+                          child: HomeCardsSection(
+                            initialGroups: const [],
+                            pinnedTrip: _pinnedTrip,
+                            onTripAdded: _refresh,
+                            allArchived: true,
+                          ),
+                        ),
+                      );
+                    } else {
+                      return SafeArea(
+                        child: HomeWelcomeSection(
+                          onTripAdded: _refresh,
+                        ),
+                      );
+                    }
+                  },
+                  loading: (context) => Center(
+                    child: CircularProgressIndicator(
+                      semanticsLabel: gloc.accessibility_loading_your_groups,
+                    ),
+                  ),
+                  error: (context, error) => Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.error_outline, size: 48, color: Colors.red),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Error loading groups',
+                          style: Theme.of(context).textTheme.titleMedium,
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: () => _groupsAsyncNotifier.loadAllGroups(),
+                          child: const Text('Retry'),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            )
-          : RefreshIndicator(
-              onRefresh: _handleUserRefresh,
-              child: FutureBuilder<List<List<ExpenseGroup>>>(
-                future: Future.wait<List<ExpenseGroup>>([
-                  ExpenseGroupStorageV2.getActiveGroups(),
-                  ExpenseGroupStorageV2.getArchivedGroups(),
-                ]),
-                builder: (context, snapshot) {
-                  final active =
-                      snapshot.data != null && snapshot.data!.isNotEmpty
-                      ? snapshot.data![0]
-                      : <ExpenseGroup>[];
-                  final archived =
-                      snapshot.data != null && snapshot.data!.length > 1
-                      ? snapshot.data![1]
-                      : <ExpenseGroup>[];
-
-                  // Show HomeCardsSection when there are active groups.
-                  // If active is empty but archived groups exist, still show HomeCardsSection
-                  // with an empty list so the UI renders only the add-card.
-                  if (active.isNotEmpty) {
-                    return SafeArea(
-                      child: Semantics(
-                        label: gloc.accessibility_groups_list,
-                        child: HomeCardsSection(
-                          initialGroups: active,
-                          onTripAdded: () {
-                            _refresh();
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              AppToast.show(
-                                context,
-                                gloc.group_added_success,
-                                type: ToastType.success,
-                              );
-                            });
-                          },
-                          pinnedTrip: _pinnedTrip,
-                          allArchived: false,
-                        ),
-                      ),
-                    );
-                  }
-
-                  // If no active groups but there are archived groups, enter home with empty cards
-                  if (archived.isNotEmpty) {
-                    return SafeArea(
-                      child: Semantics(
-                        label: gloc.accessibility_groups_list,
-                        child: HomeCardsSection(
-                          initialGroups: <ExpenseGroup>[],
-                          onTripAdded: () {
-                            _refresh();
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              AppToast.show(
-                                context,
-                                gloc.group_added_success,
-                                type: ToastType.success,
-                              );
-                            });
-                          },
-                          pinnedTrip: _pinnedTrip,
-                          allArchived: true,
-                        ),
-                      ),
-                    );
-                  } else {
-                    return Semantics(
-                      label: gloc.accessibility_welcome_screen,
-                      child: HomeWelcomeSection(
-                        onTripAdded: () {
-                          _refresh();
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            AppToast.show(
-                              context,
-                              gloc.group_added_success,
-                              type: ToastType.success,
-                            );
-                          });
-                        },
-                      ),
-                    );
-                  }
-                },
-              ),
-            ),
+      ),
     );
   }
 }
