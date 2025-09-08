@@ -25,8 +25,10 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     with TickerProviderStateMixin {
   List<ExpenseGroup> _activeTrips = [];
   List<ExpenseGroup> _archivedTrips = [];
+  List<ExpenseGroup> _allTrips = []; // Combined active + archived for search
   List<ExpenseGroup> _filteredActiveTrips = [];
   List<ExpenseGroup> _filteredArchivedTrips = [];
+  List<ExpenseGroup> _filteredAllTrips = []; // Combined search results
   String _searchQuery = '';
   bool _loading = true;
   bool _showSearchBar = false;
@@ -105,8 +107,10 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
         setState(() {
           _activeTrips = activeTrips;
           _archivedTrips = archivedTrips;
-          _filteredActiveTrips = _applyFilter(_activeTrips);
-          _filteredArchivedTrips = _applyFilter(_archivedTrips);
+          _allTrips = [...activeTrips, ...archivedTrips]; // Combine both lists
+          _filteredActiveTrips = _applyFilter(_activeTrips, false);
+          _filteredArchivedTrips = _applyFilter(_archivedTrips, false);
+          _filteredAllTrips = _applyFilter(_allTrips, true);
           _loading = false;
         });
       }
@@ -122,7 +126,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     }
   }
 
-  List<ExpenseGroup> _applyFilter(List<ExpenseGroup> trips) {
+  List<ExpenseGroup> _applyFilter(List<ExpenseGroup> trips, bool isAllTrips) {
     // Applica solo il filtro di ricerca per titolo
     List<ExpenseGroup> filtered = trips;
     if (_searchQuery.isNotEmpty) {
@@ -134,9 +138,17 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
           .toList();
     }
     // Ordina: pinned prima, poi il resto
+    // Per la lista combinata, ordina anche per stato (attivi prima degli archiviati)
     filtered.sort((a, b) {
-      if (a.pinned == b.pinned) return 0;
-      return a.pinned ? -1 : 1;
+      // Prima ordina per pinned
+      if (a.pinned != b.pinned) {
+        return a.pinned ? -1 : 1;
+      }
+      // Per la lista combinata, ordina per stato (attivi prima)
+      if (isAllTrips && a.archived != b.archived) {
+        return a.archived ? 1 : -1;
+      }
+      return 0;
     });
     return filtered;
   }
@@ -204,8 +216,9 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
       if (mounted) {
         setState(() {
           _searchQuery = query;
-          _filteredActiveTrips = _applyFilter(_activeTrips);
-          _filteredArchivedTrips = _applyFilter(_archivedTrips);
+          _filteredActiveTrips = _applyFilter(_activeTrips, false);
+          _filteredArchivedTrips = _applyFilter(_archivedTrips, false);
+          _filteredAllTrips = _applyFilter(_allTrips, true);
         });
       }
     });
@@ -256,7 +269,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     if (trips.isEmpty) {
       return ExpsenseGroupEmptyStates(
         searchQuery: _searchQuery,
-        periodFilter: tabType,
+        periodFilter: tabType == 'search' ? 'all' : tabType,
         onTripAdded: () async {
           final result = await Navigator.of(context).push(
             MaterialPageRoute(
@@ -273,7 +286,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     }
     
     return ListView.builder(
-      controller: _scrollController,
+      controller: tabType == 'search' ? _scrollController : null,
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 100),
       itemCount: trips.length,
       itemBuilder: (context, index) {
@@ -342,6 +355,14 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                   onPressed: () {
                     setState(() {
                       _showSearchBar = !_showSearchBar;
+                      // Clear search when hiding search bar
+                      if (!_showSearchBar) {
+                        _searchController.clear();
+                        _searchQuery = '';
+                        _filteredActiveTrips = _applyFilter(_activeTrips, false);
+                        _filteredArchivedTrips = _applyFilter(_archivedTrips, false);
+                        _filteredAllTrips = _applyFilter(_allTrips, true);
+                      }
                     });
                   },
                 ),
@@ -365,20 +386,23 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                   : const SizedBox.shrink(),
             ),
           ),
-          // STATUS FILTER SEGMENTED BUTTONS
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-            child: _buildStatusSegmentedButton(context),
-          ),
-          // MAIN CONTENT WITH TABBARVIEW
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                _buildTabContent(_filteredActiveTrips, 'active'),
-                _buildTabContent(_filteredArchivedTrips, 'archived'),
-              ],
+          // STATUS FILTER SEGMENTED BUTTONS - Hide when search is active
+          if (!_showSearchBar)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+              child: _buildStatusSegmentedButton(context),
             ),
+          // MAIN CONTENT - Show search results when searching, tabs when not
+          Expanded(
+            child: _showSearchBar
+                ? _buildTabContent(_filteredAllTrips, 'search')
+                : TabBarView(
+                    controller: _tabController,
+                    children: [
+                      _buildTabContent(_filteredActiveTrips, 'active'),
+                      _buildTabContent(_filteredArchivedTrips, 'archived'),
+                    ],
+                  ),
           ),
         ],
       ),

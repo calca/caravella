@@ -91,6 +91,85 @@ void main() {
       );
     });
 
+    testWidgets('Tabs are hidden when search is active', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        createTestApp(home: const ExpesensHistoryPage()),
+      );
+      
+      await tester.pumpAndSettle();
+
+      // Initially tabs should be visible
+      expect(
+        find.byType(TabBar), 
+        findsOneWidget,
+        reason: 'TabBar should be visible initially'
+      );
+
+      // Find and tap the search icon
+      final searchIconFinder = find.byIcon(Icons.search_rounded);
+      expect(searchIconFinder, findsOneWidget);
+      await tester.tap(searchIconFinder);
+      await tester.pumpAndSettle();
+
+      // After opening search, tabs should be hidden
+      expect(
+        find.byType(TabBar), 
+        findsNothing,
+        reason: 'TabBar should be hidden when search is active'
+      );
+
+      // Search bar should be visible
+      expect(
+        find.byType(SearchBar), 
+        findsOneWidget,
+        reason: 'SearchBar should be visible when search is active'
+      );
+
+      // Turn off search
+      final searchOffIconFinder = find.byIcon(Icons.search_off_rounded);
+      expect(searchOffIconFinder, findsOneWidget);
+      await tester.tap(searchOffIconFinder);
+      await tester.pumpAndSettle();
+
+      // Tabs should be visible again
+      expect(
+        find.byType(TabBar), 
+        findsOneWidget,
+        reason: 'TabBar should be visible again when search is disabled'
+      );
+    });
+
+    testWidgets('Search works across all groups when active', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        createTestApp(home: const ExpesensHistoryPage()),
+      );
+      
+      await tester.pumpAndSettle();
+
+      // Open search
+      final searchIconFinder = find.byIcon(Icons.search_rounded);
+      await tester.tap(searchIconFinder);
+      await tester.pumpAndSettle();
+
+      // When search is active, TabBarView should not be present
+      expect(
+        find.byType(TabBarView), 
+        findsNothing,
+        reason: 'TabBarView should not be present when search is active'
+      );
+
+      // Search content should be visible (even if empty)
+      expect(
+        find.byType(ListView), 
+        findsOneWidget,
+        reason: 'Search results should be displayed as a ListView'
+      );
+    });
+
     testWidgets('User can swipe between Active and Archived tabs', (
       WidgetTester tester,
     ) async {
