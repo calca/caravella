@@ -6,7 +6,7 @@ import 'package:io_caravella_egm/data/model/expense_participant.dart';
 import 'package:io_caravella_egm/data/model/expense_category.dart';
 import 'package:io_caravella_egm/data/model/expense_details.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart';
-import 'package:io_caravella_egm/manager/details/pages/tabs/date_range_formatter.dart';
+import 'package:io_caravella_egm/manager/details/pages/tabs/usecase/date_range_formatter.dart';
 
 ExpenseGroup _group({DateTime? start, DateTime? end, int participants = 2}) {
   return ExpenseGroup(

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../../data/model/expense_group.dart';
 import '../../../../data/model/expense_category.dart';
-import 'widgets/daily_average_by_category.dart';
-import 'widgets/categories_pie_chart.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'widgets/stat_card.dart';
+import '../../widgets/stat_card.dart';
 import 'package:intl/intl.dart';
 
 /// Categories analysis tab: daily average by category + distribution pie chart.

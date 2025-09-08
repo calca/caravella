@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../../../data/model/expense_group.dart';
-import 'settlements_logic.dart';
+import 'usecase/settlements_logic.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../widgets/group_header.dart'; // ParticipantAvatar
 import 'package:intl/intl.dart';
-import 'widgets/stat_card.dart';
+import '../../widgets/stat_card.dart';
 
 /// Participants tab: per participant totals, contribution percentages and settlements.
 class ParticipantsOverviewTab extends StatelessWidget {
