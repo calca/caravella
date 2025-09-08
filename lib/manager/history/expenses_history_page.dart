@@ -23,9 +23,10 @@ class ExpesensHistoryPage extends StatefulWidget {
 
 class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     with TickerProviderStateMixin {
-  List<ExpenseGroup> _allTrips = [];
-  List<ExpenseGroup> _filteredTrips = [];
-  String _statusFilter = 'active'; // active, archived
+  List<ExpenseGroup> _activeTrips = [];
+  List<ExpenseGroup> _archivedTrips = [];
+  List<ExpenseGroup> _filteredActiveTrips = [];
+  List<ExpenseGroup> _filteredArchivedTrips = [];
   String _searchQuery = '';
   bool _loading = true;
   bool _showSearchBar = false;
@@ -50,16 +51,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     _tabController = TabController(
       length: 2,
       vsync: this,
-      initialIndex: _statusFilter == 'archived' ? 1 : 0,
     );
-    _tabController.addListener(() {
-      if (!_tabController.indexIsChanging) {
-        final newKey = _tabController.index == 1 ? 'archived' : 'active';
-        if (newKey != _statusFilter) {
-          _onStatusFilterChanged(newKey);
-        }
-      }
-    });
   }
 
   ExpenseGroupNotifier? _groupNotifier;
@@ -104,23 +96,17 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
 
     try {
       await Future.delayed(const Duration(milliseconds: 100));
-      List<ExpenseGroup> trips;
-
-      // Carica i dati in base al filtro di stato
-      switch (_statusFilter) {
-        case 'archived':
-          trips = await ExpenseGroupStorageV2.getArchivedGroups();
-          break;
-        case 'active':
-        default:
-          trips = await ExpenseGroupStorageV2.getActiveGroups();
-          break;
-      }
+      
+      // Load both active and archived trips simultaneously
+      final activeTrips = await ExpenseGroupStorageV2.getActiveGroups();
+      final archivedTrips = await ExpenseGroupStorageV2.getArchivedGroups();
 
       if (mounted) {
         setState(() {
-          _allTrips = trips;
-          _filteredTrips = _applyFilter(_allTrips);
+          _activeTrips = activeTrips;
+          _archivedTrips = archivedTrips;
+          _filteredActiveTrips = _applyFilter(_activeTrips);
+          _filteredArchivedTrips = _applyFilter(_archivedTrips);
           _loading = false;
         });
       }
@@ -212,24 +198,14 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     );
   }
 
-  void _onStatusFilterChanged(String key) {
-    setState(() {
-      _statusFilter = key;
-      _loading = true; // Forza loading state
-    });
-    // Forza un piccolo delay prima di ricaricare
-    Future.delayed(const Duration(milliseconds: 100), () {
-      _loadTrips(); // Ricarica i dati con il nuovo filtro
-    });
-  }
-
   void _onSearchChanged(String query) {
     _searchDebounce?.cancel();
     _searchDebounce = Timer(const Duration(milliseconds: 300), () {
       if (mounted) {
         setState(() {
           _searchQuery = query;
-          _filteredTrips = _applyFilter(_allTrips);
+          _filteredActiveTrips = _applyFilter(_activeTrips);
+          _filteredArchivedTrips = _applyFilter(_archivedTrips);
         });
       }
     });
@@ -267,6 +243,47 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
       shape: WidgetStateProperty.all(
         RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
+    );
+  }
+
+  Widget _buildTabContent(List<ExpenseGroup> trips, String tabType) {
+    final gloc = gen.AppLocalizations.of(context);
+    
+    if (_loading) {
+      return const Center(child: CircularProgressIndicator.adaptive());
+    }
+    
+    if (trips.isEmpty) {
+      return ExpsenseGroupEmptyStates(
+        searchQuery: _searchQuery,
+        periodFilter: tabType,
+        onTripAdded: () async {
+          final result = await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const ExpensesGroupEditPage(
+                mode: GroupEditMode.create,
+              ),
+            ),
+          );
+          if (result == true) {
+            await _loadTrips();
+          }
+        },
+      );
+    }
+    
+    return ListView.builder(
+      controller: _scrollController,
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 100),
+      itemCount: trips.length,
+      itemBuilder: (context, index) {
+        final trip = trips[index];
+        return ExpenseGroupCard(
+          trip: trip,
+          onArchiveToggle: _onArchiveToggle,
+          searchQuery: _searchQuery,
+        );
+      },
     );
   }
 
@@ -353,40 +370,15 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
             padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
             child: _buildStatusSegmentedButton(context),
           ),
-          // MAIN CONTENT
+          // MAIN CONTENT WITH TABBARVIEW
           Expanded(
-            child: _loading
-                ? const Center(child: CircularProgressIndicator.adaptive())
-                : _filteredTrips.isEmpty
-                ? ExpsenseGroupEmptyStates(
-                    searchQuery: _searchQuery,
-                    periodFilter: _statusFilter,
-                    onTripAdded: () async {
-                      final result = await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const ExpensesGroupEditPage(
-                            mode: GroupEditMode.create,
-                          ),
-                        ),
-                      );
-                      if (result == true) {
-                        await _loadTrips();
-                      }
-                    },
-                  )
-                : ListView.builder(
-                    controller: _scrollController,
-                    padding: const EdgeInsets.fromLTRB(24, 0, 24, 100),
-                    itemCount: _filteredTrips.length,
-                    itemBuilder: (context, index) {
-                      final trip = _filteredTrips[index];
-                      return ExpenseGroupCard(
-                        trip: trip,
-                        onArchiveToggle: _onArchiveToggle,
-                        searchQuery: _searchQuery,
-                      );
-                    },
-                  ),
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                _buildTabContent(_filteredActiveTrips, 'active'),
+                _buildTabContent(_filteredArchivedTrips, 'archived'),
+              ],
+            ),
           ),
         ],
       ),

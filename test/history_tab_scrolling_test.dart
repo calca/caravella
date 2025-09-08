@@ -17,7 +17,7 @@ void main() {
         ),
       );
 
-  group('History Page Tab Scrolling Tests', () {
+  group('History Page Tab Scrolling and Swipe Tests', () {
     testWidgets('TabBar has scrollable properties configured correctly', (
       WidgetTester tester,
     ) async {
@@ -55,6 +55,124 @@ void main() {
         tabBar.indicatorSize,
         TabBarIndicatorSize.label,
         reason: 'Indicator size should be label for better visual feedback when scrolling',
+      );
+    });
+
+    testWidgets('TabBarView is present and enables swipe gestures', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        createTestApp(home: const ExpesensHistoryPage()),
+      );
+      
+      await tester.pumpAndSettle();
+
+      // Find the TabBarView widget
+      final tabBarViewFinder = find.byType(TabBarView);
+      expect(
+        tabBarViewFinder, 
+        findsOneWidget,
+        reason: 'TabBarView should be present to enable swipe gestures between tabs'
+      );
+
+      // Get the TabBarView widget and verify it has correct controller
+      final TabBarView tabBarView = tester.widget(tabBarViewFinder);
+      expect(
+        tabBarView.controller, 
+        isNotNull,
+        reason: 'TabBarView should have a controller'
+      );
+      
+      // Verify that the controller has 2 tabs (Active and Archived)
+      expect(
+        tabBarView.controller!.length, 
+        2,
+        reason: 'TabBarView should have 2 tabs for Active and Archived'
+      );
+    });
+
+    testWidgets('User can swipe between Active and Archived tabs', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        createTestApp(home: const ExpesensHistoryPage()),
+      );
+      
+      await tester.pumpAndSettle();
+
+      // Find TabBar and TabBarView
+      final tabBarFinder = find.byType(TabBar);
+      final tabBarViewFinder = find.byType(TabBarView);
+      
+      expect(tabBarFinder, findsOneWidget);
+      expect(tabBarViewFinder, findsOneWidget);
+
+      // Get initial tab index (should be 0 for Active tab)
+      final TabBar tabBar = tester.widget(tabBarFinder);
+      final initialIndex = tabBar.controller?.index ?? 0;
+      expect(initialIndex, 0, reason: 'Should start on Active tab (index 0)');
+
+      // Perform swipe gesture from right to left (to go to next tab)
+      await tester.drag(tabBarViewFinder, const Offset(-300, 0));
+      await tester.pumpAndSettle();
+
+      // Verify that we've moved to the second tab (Archived)
+      final newIndex = tabBar.controller?.index ?? 0;
+      expect(
+        newIndex, 
+        1, 
+        reason: 'After swiping left, should be on Archived tab (index 1)'
+      );
+
+      // Perform swipe gesture from left to right (to go back to first tab)
+      await tester.drag(tabBarViewFinder, const Offset(300, 0));
+      await tester.pumpAndSettle();
+
+      // Verify that we've moved back to the first tab (Active)
+      final finalIndex = tabBar.controller?.index ?? 1;
+      expect(
+        finalIndex, 
+        0, 
+        reason: 'After swiping right, should be back on Active tab (index 0)'
+      );
+    });
+
+    testWidgets('Tab taps work correctly with TabBarView', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        createTestApp(home: const ExpesensHistoryPage()),
+      );
+      
+      await tester.pumpAndSettle();
+
+      // Find all tabs
+      final tabFinder = find.byType(Tab);
+      expect(tabFinder, findsNWidgets(2));
+
+      final TabBar tabBar = tester.widget(find.byType(TabBar));
+      expect(tabBar.controller?.index, 0, reason: 'Should start on first tab');
+
+      // Tap on the second tab (Archived)
+      await tester.tap(tabFinder.at(1));
+      await tester.pumpAndSettle();
+
+      // Verify we've switched to the second tab
+      expect(
+        tabBar.controller?.index, 
+        1, 
+        reason: 'Should be on second tab after tapping it'
+      );
+
+      // Tap on the first tab (Active)
+      await tester.tap(tabFinder.at(0));
+      await tester.pumpAndSettle();
+
+      // Verify we've switched back to the first tab
+      expect(
+        tabBar.controller?.index, 
+        0, 
+        reason: 'Should be back on first tab after tapping it'
       );
     });
 
