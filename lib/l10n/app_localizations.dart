@@ -1700,6 +1700,24 @@ abstract class AppLocalizations {
   /// **'Enable operating system automatic backup'**
   String get auto_backup_desc;
 
+  /// No description provided for @settings_user_name_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Your name'**
+  String get settings_user_name_title;
+
+  /// No description provided for @settings_user_name_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Name or nickname to use in the app'**
+  String get settings_user_name_desc;
+
+  /// No description provided for @settings_user_name_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your name'**
+  String get settings_user_name_hint;
+
   /// No description provided for @info_tab.
   ///
   /// In en, this message translates to:
@@ -3109,24 +3127,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Discover the latest features and updates'**
   String get whats_new_desc;
-
-  /// User name setting title
-  ///
-  /// In en, this message translates to:
-  /// **'Your name'**
-  String get settings_user_name_title;
-
-  /// User name setting description
-  ///
-  /// In en, this message translates to:
-  /// **'Name or nickname to use in the app'**
-  String get settings_user_name_desc;
-
-  /// User name setting hint
-  ///
-  /// In en, this message translates to:
-  /// **'Enter your name'**
-  String get settings_user_name_hint;
 }
 
 class _AppLocalizationsDelegate

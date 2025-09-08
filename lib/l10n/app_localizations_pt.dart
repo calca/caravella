@@ -838,6 +838,15 @@ class AppLocalizationsPt extends AppLocalizations {
   String get auto_backup_desc => 'Ativar backup automático do sistema';
 
   @override
+  String get settings_user_name_title => 'Your name';
+
+  @override
+  String get settings_user_name_desc => 'Name or nickname to use in the app';
+
+  @override
+  String get settings_user_name_hint => 'Enter your name';
+
+  @override
   String get info_tab => 'Informações';
 
   @override
