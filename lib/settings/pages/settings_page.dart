@@ -25,15 +25,8 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<FlagSecureNotifier>(
-          create: (_) => FlagSecureNotifier(),
-        ),
-        ChangeNotifierProvider<UserNameNotifier>(
-          create: (_) => UserNameNotifier(),
-        ),
-      ],
+    return ChangeNotifierProvider<FlagSecureNotifier>(
+      create: (_) => FlagSecureNotifier(),
       child: Scaffold(
         appBar: const CaravellaAppBar(),
         body: ListView(
