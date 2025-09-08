@@ -37,7 +37,7 @@ class ParticipantsOverviewTab extends StatelessWidget {
           .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
       final pct = totalAll == 0 ? 0 : (total / totalAll) * 100;
       return (participant: p, total: total, pct: pct);
-    }).toList()..sort((a, b) => b.pct.compareTo(a.pct));
+    }).toList()..sort((a, b) => b.total.compareTo(a.total));
 
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 32),
@@ -46,24 +46,21 @@ class ParticipantsOverviewTab extends StatelessWidget {
         children: [
           // Totals per participant
           const SizedBox(height: 6),
-          ...trip.participants.map((p) {
-            final total = trip.expenses
-                .where((e) => e.paidBy.name == p.name)
-                .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
+          ...contributionEntries.map((e) {
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 6),
               child: Row(
                 children: [
                   Expanded(
                     child: Text(
-                      p.name,
+                      e.participant.name,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
                   CurrencyDisplay(
-                    value: total,
+                    value: e.total,
                     currency: trip.currency,
                     valueFontSize: 14.0,
                     currencyFontSize: 12.0,
