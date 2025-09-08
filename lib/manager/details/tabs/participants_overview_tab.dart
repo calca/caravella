@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../data/model/expense_group.dart';
-import '../../../widgets/currency_display.dart';
 import 'settlements_logic.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../widgets/group_header.dart'; // ParticipantAvatar
@@ -67,16 +66,15 @@ class ParticipantsOverviewTab extends StatelessWidget {
             final owes = settlements
                 .where((s) => s['from'] == e.participant.name)
                 .toList();
-            String subtitle;
-            final pctText = '${e.pct.toStringAsFixed(1)}%';
+            String? subtitle;
             if (owes.isNotEmpty) {
               final parts = owes.map(
                 (s) => '${s['to']} (${fmtCurrency(s['amount'] as double)})',
               );
-              // Put settlement on a new line, with localized connector
-              subtitle = '$pctText\n${gloc.owes_to}${parts.join(', ')}';
+              // Only settlement info; percent is already shown via progress bar
+              subtitle = '${gloc.owes_to}${parts.join(', ')}';
             } else {
-              subtitle = pctText;
+              subtitle = null; // no subtitle when there is no settlement
             }
 
             return Padding(
@@ -88,7 +86,7 @@ class ParticipantsOverviewTab extends StatelessWidget {
                 subtitle: subtitle,
                 leading: ParticipantAvatar(
                   participant: e.participant,
-                  size: 36,
+                  size: 48,
                 ),
                 percent: e.pct.toDouble(),
                 inlineHeader: true,
