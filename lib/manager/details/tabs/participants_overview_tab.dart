@@ -79,7 +79,7 @@ class ParticipantsOverviewTab extends StatelessWidget {
                 // Bold: ' destinatario importo' (note leading space)
                 spans.add(
                   TextSpan(
-                    text: ' $to $amount',
+                    text: '$to $amount',
                     style: const TextStyle(fontWeight: FontWeight.w700),
                   ),
                 );
