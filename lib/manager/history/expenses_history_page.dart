@@ -348,7 +348,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
           ),
           // STATUS FILTER SEGMENTED BUTTONS
           Padding(
-            padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
+            padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
             child: _buildStatusSegmentedButton(context),
           ),
           // MAIN CONTENT
