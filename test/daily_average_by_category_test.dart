@@ -225,7 +225,8 @@ extension DailyAverageByCategoryWidgetTesting on DailyAverageByCategoryWidget {
       final total = trip.expenses
           .where((e) => e.category.id == category.id)
           .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
-      if (total > 0) categoryTotals[category] = total / totalDays;
+      // Include zero-spend categories as well
+      categoryTotals[category] = total / totalDays;
     }
     final uncategorizedTotal = trip.expenses
         .where((e) => !trip.categories.any((c) => c.id == e.category.id))

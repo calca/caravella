@@ -48,30 +48,13 @@ class CategoriesPieChart extends StatelessWidget {
     final sortedEntries = categoryTotals.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
 
-    // Colori per le fette - solo colori del tema
-    final colors = [
-      Theme.of(context).colorScheme.primary,
-      Theme.of(context).colorScheme.secondary,
-      Theme.of(context).colorScheme.tertiary,
-      Theme.of(context).colorScheme.error,
-      Theme.of(context).colorScheme.outline,
-      Theme.of(context).colorScheme.inversePrimary,
-      Theme.of(context).colorScheme.surface,
-      Theme.of(context).colorScheme.surfaceContainerHighest,
-      Theme.of(context).colorScheme.primaryContainer,
-      Theme.of(context).colorScheme.secondaryContainer,
-    ];
+    // Palette di grigi generata a partire da 0xFF919191 (light/dark in base al tema)
+    final brightness = Theme.of(context).brightness;
+    final colors = _generateGrayPalette(brightness, sortedEntries.length);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          gloc.expenses_by_category,
-          style: Theme.of(
-            context,
-          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
-        ),
-        const SizedBox(height: 24),
         // Pie chart centrato
         Center(
           child: SizedBox(
@@ -90,15 +73,16 @@ class CategoriesPieChart extends StatelessWidget {
                           categoryTotals.values.reduce((a, b) => a + b)) *
                       100;
 
+                  final sliceColor = colors[index % colors.length];
                   return PieChartSectionData(
-                    color: colors[index % colors.length],
+                    color: sliceColor,
                     value: categoryEntry.value,
                     title: '${percentage.toStringAsFixed(0)}%',
                     radius: 60,
-                    titleStyle: const TextStyle(
+                    titleStyle: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: _sliceLabelColor(sliceColor),
                     ),
                     badgeWidget: null,
                   );
@@ -157,4 +141,30 @@ class CategoriesPieChart extends StatelessWidget {
       ],
     );
   }
+}
+
+// Helpers
+List<Color> _generateGrayPalette(Brightness brightness, int needed) {
+  // Base gray: #737373 with larger gaps between steps
+  const base = Color(0xFF737373);
+  // Discrete stops with stronger separation
+  const stops = <double>[0.0, 0.18, 0.36, 0.56, 0.78, 0.95];
+  final List<Color> palette = [
+    for (final f in stops) _tintShade(base, f, brightness == Brightness.light),
+  ];
+  if (needed <= palette.length) return palette.take(needed).toList();
+  // Repeat if more needed
+  return List<Color>.generate(needed, (i) => palette[i % palette.length]);
+}
+
+Color _tintShade(Color c, double factor, bool lighten) {
+  // Blend with white (tint) or black (shade) using Color.lerp
+  final target = lighten ? Colors.white : Colors.black;
+  return Color.lerp(c, target, factor) ?? c;
+}
+
+Color _sliceLabelColor(Color bg) {
+  // Use luminance for contrast
+  final lum = bg.computeLuminance();
+  return lum > 0.5 ? Colors.black : Colors.white;
 }

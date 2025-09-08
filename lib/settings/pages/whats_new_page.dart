@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../widgets/caravella_app_bar.dart';
 
 class WhatsNewPage extends StatefulWidget {
   const WhatsNewPage({super.key});
@@ -35,18 +34,18 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
       // Get current locale
       final locale = Localizations.localeOf(context);
       final languageCode = locale.languageCode;
-      
+
       // Try to load locale-specific changelog first
       String filePath = 'assets/docs/CHANGELOG_$languageCode.md';
       String content;
-      
+
       try {
         content = await rootBundle.loadString(filePath);
       } catch (_) {
         // Fallback to English if locale-specific file doesn't exist
         content = await rootBundle.loadString('assets/docs/CHANGELOG_en.md');
       }
-      
+
       if (mounted) {
         setState(() {
           _markdownContent = content;
@@ -66,7 +65,7 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
   @override
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: Text(loc.whats_new_title),
@@ -80,9 +79,7 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
 
   Widget _buildBody(gen.AppLocalizations loc) {
     if (_isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (_error != null) {
@@ -111,28 +108,36 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
       );
     }
 
-    return Markdown(
-      data: _markdownContent,
+    final theme = Theme.of(context);
+    final mdTheme = GptMarkdownThemeData(
+      brightness: theme.brightness,
+      h1: theme.textTheme.headlineMedium?.copyWith(
+        color: theme.colorScheme.onSurface,
+        fontWeight: FontWeight.bold,
+      ),
+      h2: theme.textTheme.titleLarge?.copyWith(
+        color: theme.colorScheme.onSurface,
+        fontWeight: FontWeight.w600,
+      ),
+      h3: theme.textTheme.titleMedium?.copyWith(
+        color: theme.colorScheme.onSurface,
+        fontWeight: FontWeight.w500,
+      ),
+      linkColor: theme.colorScheme.onSurface,
+      hrLineColor: theme.colorScheme.outlineVariant,
+      hrLineThickness: 1.0,
+    );
+
+    return Padding(
       padding: const EdgeInsets.all(16),
-      styleSheet: MarkdownStyleSheet(
-        h1: Theme.of(context).textTheme.headlineMedium?.copyWith(
-          color: Theme.of(context).colorScheme.primary,
-          fontWeight: FontWeight.bold,
+      child: GptMarkdownTheme(
+        gptThemeData: mdTheme,
+        child: GptMarkdown(
+          _markdownContent,
+          style: theme.textTheme.bodyMedium,
+          textAlign: TextAlign.start,
+          textDirection: Directionality.of(context),
         ),
-        h2: Theme.of(context).textTheme.titleLarge?.copyWith(
-          color: Theme.of(context).colorScheme.primary,
-          fontWeight: FontWeight.w600,
-        ),
-        h3: Theme.of(context).textTheme.titleMedium?.copyWith(
-          color: Theme.of(context).colorScheme.secondary,
-          fontWeight: FontWeight.w500,
-        ),
-        p: Theme.of(context).textTheme.bodyMedium,
-        listBullet: Theme.of(context).textTheme.bodyMedium?.copyWith(
-          color: Theme.of(context).colorScheme.primary,
-        ),
-        blockSpacing: 16,
-        listIndent: 24,
       ),
     );
   }

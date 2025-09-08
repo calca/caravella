@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import '../../../config/app_icons.dart';
 import '../../../data/model/expense_category.dart';
 import '../../../widgets/selection_bottom_sheet.dart';
 import 'inline_select_field.dart';
@@ -48,7 +49,7 @@ class CategorySelectorWidget extends StatelessWidget {
 
     if (fullEdit) {
       return InlineSelectField(
-        icon: Icons.category_outlined,
+        icon: AppIcons.category,
         label: selectedCategory?.name ?? gloc.category_placeholder,
         onTap: openPicker,
         enabled: true,
@@ -69,7 +70,7 @@ class CategorySelectorWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            Icons.category_outlined,
+            AppIcons.category,
             size: 20,
             color: theme.colorScheme.onSurface,
           ),

@@ -45,13 +45,7 @@ class ParticipantsOverviewTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Totals per participant
-          Text(
-            gloc.expenses_by_participant,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 6),
           ...trip.participants.map((p) {
             final total = trip.expenses
                 .where((e) => e.paidBy.name == p.name)
@@ -64,7 +58,7 @@ class ParticipantsOverviewTab extends StatelessWidget {
                     child: Text(
                       p.name,
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
@@ -98,8 +92,10 @@ class ParticipantsOverviewTab extends StatelessWidget {
                     child: Text(
                       e.participant.name,
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w400,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   SizedBox(
@@ -115,10 +111,16 @@ class ParticipantsOverviewTab extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  Text(
-                    '${e.pct.toStringAsFixed(1)}%',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      fontWeight: FontWeight.w600,
+                  SizedBox(
+                    width: 56, // enough for "100.0%"
+                    child: Text(
+                      '${e.pct.toStringAsFixed(1)}%',
+                      textAlign: TextAlign.right,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w400,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.clip,
                     ),
                   ),
                 ],
@@ -148,7 +150,7 @@ class ParticipantsOverviewTab extends StatelessWidget {
                     gloc.all_balanced,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.primary,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ),
@@ -164,7 +166,7 @@ class ParticipantsOverviewTab extends StatelessWidget {
                       child: RichText(
                         text: TextSpan(
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w400,
                           ),
                           children: [
                             TextSpan(

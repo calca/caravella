@@ -615,7 +615,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             floating: false,
             elevation: 0,
             scrolledUnderElevation: 1,
-            backgroundColor: colorScheme.surface,
+            backgroundColor: colorScheme.surfaceContainer,
             foregroundColor: colorScheme.onSurface,
             toolbarHeight: 56,
             collapsedHeight: 56,
@@ -661,34 +661,38 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                 ),
                 child: _hideHeader
                     ? const SizedBox.shrink(key: ValueKey('header-hidden'))
-                    : Padding(
+                    : Container(
                         key: const ValueKey('header-visible'),
-                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            GroupHeader(trip: trip),
-                            const SizedBox(height: 32),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: GroupTotal(
-                                    total: totalExpenses,
-                                    currency: trip.currency,
+                        width: double.infinity,
+                        color: colorScheme.surfaceContainer,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              GroupHeader(trip: trip),
+                              const SizedBox(height: 32),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: GroupTotal(
+                                      total: totalExpenses,
+                                      currency: trip.currency,
+                                    ),
                                   ),
-                                ),
-                                GroupActions(
-                                  hasExpenses: trip.expenses.isNotEmpty,
-                                  onOverview: trip.expenses.isNotEmpty
-                                      ? _openUnifiedOverviewPage
-                                      : null,
-                                  onOptions: _showOptionsSheet,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 24),
-                          ],
+                                  GroupActions(
+                                    hasExpenses: trip.expenses.isNotEmpty,
+                                    onOverview: trip.expenses.isNotEmpty
+                                        ? _openUnifiedOverviewPage
+                                        : null,
+                                    onOptions: _showOptionsSheet,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 24),
+                            ],
+                          ),
                         ),
                       ),
               ),
@@ -696,32 +700,36 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           ),
           SliverToBoxAdapter(
             child: Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: colorScheme.surfaceContainer,
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(24),
+              color: colorScheme
+                  .surfaceContainer, // background behind the decorated box
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: colorScheme.surface,
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(24),
+                  ),
                 ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    FilteredExpenseList(
-                      expenses: trip.expenses,
-                      currency: trip.currency,
-                      onExpenseTap: _openEditExpense,
-                      categories: trip.categories,
-                      participants: trip.participants,
-                      onFiltersVisibilityChanged: (visible) {
-                        if (mounted) {
-                          setState(() => _hideHeader = visible);
-                        }
-                      },
-                      onAddExpense: _showAddExpenseSheet,
-                    ),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      FilteredExpenseList(
+                        expenses: trip.expenses,
+                        currency: trip.currency,
+                        onExpenseTap: _openEditExpense,
+                        categories: trip.categories,
+                        participants: trip.participants,
+                        onFiltersVisibilityChanged: (visible) {
+                          if (mounted) {
+                            setState(() => _hideHeader = visible);
+                          }
+                        },
+                        onAddExpense: _showAddExpenseSheet,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -731,7 +739,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             sliver: SliverToBoxAdapter(
               child: Container(
                 height: _calculateBottomPadding(),
-                color: colorScheme.surfaceContainer,
+                color: colorScheme.surface,
               ),
             ),
           ),

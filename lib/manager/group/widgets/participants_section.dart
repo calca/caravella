@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import '../../../config/app_icons.dart';
 import '../../../data/model/expense_participant.dart';
 import 'editable_name_list.dart';
 
@@ -36,7 +37,7 @@ class ParticipantsSection extends StatelessWidget {
       onAdd: onAddParticipant,
       onEdit: onEditParticipant,
       onDelete: onRemoveParticipant,
-      itemIcon: Icons.person_outline,
+      itemIcon: AppIcons.participant,
     );
   }
 }
