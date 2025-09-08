@@ -38,21 +38,25 @@ class ParticipantAvatar extends StatelessWidget {
 class ExpenseGroupAvatar extends StatelessWidget {
   final ExpenseGroup trip;
   final double size;
-  const ExpenseGroupAvatar({super.key, required this.trip, required this.size});
+  final Color? backgroundColor;
+  const ExpenseGroupAvatar({
+    super.key,
+    required this.trip,
+    required this.size,
+    this.backgroundColor,
+  });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final Color bgColor = trip.color != null
+        ? Color(trip.color!)
+        : (backgroundColor ?? colorScheme.surfaceContainerLowest);
     return Container(
       margin: const EdgeInsets.only(top: 8, bottom: 8),
       width: size,
       height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: trip.color != null
-            ? Color(trip.color!)
-            : colorScheme.surfaceContainerLowest,
-      ),
+      decoration: BoxDecoration(shape: BoxShape.circle, color: bgColor),
       child: trip.file != null && trip.file!.isNotEmpty
           ? ClipOval(
               child: Image.file(

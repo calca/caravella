@@ -125,7 +125,13 @@ class ExpenseGroupCard extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  ExpenseGroupAvatar(trip: trip, size: 48),
+                  ExpenseGroupAvatar(
+                    trip: trip,
+                    size: 48,
+                    backgroundColor: Theme.of(
+                      context,
+                    ).colorScheme.surfaceContainer,
+                  ),
                   // Left: Circle with initials
                   const SizedBox(width: 16),
                   // Center: Title, participants, dates
