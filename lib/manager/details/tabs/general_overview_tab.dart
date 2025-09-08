@@ -124,12 +124,6 @@ class GeneralOverviewTab extends StatelessWidget {
             ),
             children: [
               StatCard(
-                title: gloc.total_spent,
-                value: _total(),
-                currency: trip.currency,
-              ),
-              _InfoMetaCard(trip: trip),
-              StatCard(
                 title: gloc.daily_average,
                 value: dailyAvg,
                 currency: trip.currency,
@@ -144,41 +138,6 @@ class GeneralOverviewTab extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-class _InfoMetaCard extends StatelessWidget {
-  final ExpenseGroup trip;
-  const _InfoMetaCard({required this.trip});
-
-  String _dateRangeString(BuildContext context) => formatDateRange(
-    start: trip.startDate,
-    end: trip.endDate,
-    locale: Localizations.localeOf(context),
-  );
-
-  @override
-  Widget build(BuildContext context) {
-    final gloc = gen.AppLocalizations.of(context);
-    final participants = trip.participants.length;
-    // If both dates exist and end is today (ongoing), hide date range per requirement.
-    String dateStr = _dateRangeString(context);
-    if (trip.startDate != null && trip.endDate != null) {
-      final today = DateTime.now();
-      final end = trip.endDate!;
-      final isToday =
-          end.year == today.year &&
-          end.month == today.month &&
-          end.day == today.day;
-      if (isToday) {
-        dateStr = ''; // suppress date range
-      }
-    }
-    final participantLabel = gloc.participant_count(participants);
-    final subtitle = dateStr.isEmpty
-        ? participantLabel
-        : '$dateStr\n$participantLabel';
-    return InfoCard(title: gloc.info_tab, subtitle: subtitle);
   }
 }
 
