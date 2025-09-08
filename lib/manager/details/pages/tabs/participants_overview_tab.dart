@@ -202,6 +202,7 @@ class _ParticipantStatCardState extends State<_ParticipantStatCard> {
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
               fontWeight: FontWeight.w400,
+              fontStyle: FontStyle.italic,
             ),
           ),
         );
@@ -209,7 +210,8 @@ class _ParticipantStatCardState extends State<_ParticipantStatCard> {
           TextSpan(
             text: '$toName $amount',
             style: theme.textTheme.bodySmall?.copyWith(
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w400,
+              fontStyle: FontStyle.italic,
             ),
           ),
         );
