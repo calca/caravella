@@ -844,6 +844,15 @@ class AppLocalizationsEs extends AppLocalizations {
       'Habilitar el respaldo automático del sistema operativo';
 
   @override
+  String get settings_user_name_title => 'Your name';
+
+  @override
+  String get settings_user_name_desc => 'Name or nickname to use in the app';
+
+  @override
+  String get settings_user_name_hint => 'Enter your name';
+
+  @override
   String get info_tab => 'Info';
 
   @override

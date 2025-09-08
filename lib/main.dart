@@ -10,6 +10,7 @@ import 'state/expense_group_notifier.dart';
 import 'home/home_page.dart';
 import 'config/app_config.dart';
 import 'settings/flag_secure_android.dart';
+import 'settings/user_name_notifier.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
@@ -132,6 +133,7 @@ class _CaravellaAppState extends State<CaravellaApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ExpenseGroupNotifier()),
+        ChangeNotifierProvider(create: (_) => UserNameNotifier()),
       ],
       child: LocaleNotifier(
         locale: _locale,

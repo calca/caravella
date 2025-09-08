@@ -840,6 +840,15 @@ class AppLocalizationsIt extends AppLocalizations {
       'Abilita il backup automatico del sistema operativo';
 
   @override
+  String get settings_user_name_title => 'Il tuo nome';
+
+  @override
+  String get settings_user_name_desc => 'Nome o nickname da usare nell\'app';
+
+  @override
+  String get settings_user_name_hint => 'Inserisci il tuo nome';
+
+  @override
   String get info_tab => 'Info';
 
   @override

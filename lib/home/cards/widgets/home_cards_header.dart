@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import 'package:provider/provider.dart';
+import '../../../settings/user_name_notifier.dart';
 
 class HomeCardsHeader extends StatelessWidget {
   final gen.AppLocalizations localizations;
@@ -61,12 +63,16 @@ class HomeCardsHeader extends StatelessWidget {
 
           // Saluto dinamico
           Expanded(
-            child: Text(
-              _resolveGreeting(),
-              style: theme.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.w400,
-                color: theme.colorScheme.onSurface,
-              ),
+            child: Consumer<UserNameNotifier>(
+              builder: (context, userNameNotifier, child) {
+                return Text(
+                  _resolveGreetingWithName(userNameNotifier.hasName ? userNameNotifier.name : null),
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w400,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                );
+              },
             ),
           ),
         ],
@@ -76,8 +82,21 @@ class HomeCardsHeader extends StatelessWidget {
 
   String _resolveGreeting() {
     final key = _getGreetingKey();
-    if (key == 'good_morning') return localizations.good_morning;
-    if (key == 'good_afternoon') return localizations.good_afternoon;
-    return localizations.good_evening;
+    final baseGreeting = switch (key) {
+      'good_morning' => localizations.good_morning,
+      'good_afternoon' => localizations.good_afternoon,
+      _ => localizations.good_evening,
+    };
+    
+    // Try to get user name if available
+    return baseGreeting;
+  }
+
+  String _resolveGreetingWithName(String? userName) {
+    final baseGreeting = _resolveGreeting();
+    if (userName != null && userName.isNotEmpty) {
+      return '$baseGreeting, $userName';
+    }
+    return baseGreeting;
   }
 }

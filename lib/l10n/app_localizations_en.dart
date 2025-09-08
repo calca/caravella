@@ -836,6 +836,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get auto_backup_desc => 'Enable operating system automatic backup';
 
   @override
+  String get settings_user_name_title => 'Your name';
+
+  @override
+  String get settings_user_name_desc => 'Name or nickname to use in the app';
+
+  @override
+  String get settings_user_name_hint => 'Enter your name';
+
+  @override
   String get info_tab => 'Info';
 
   @override

@@ -1,4 +1,10 @@
 {
+  "es": [
+    "settings_user_name_title",
+    "settings_user_name_desc",
+    "settings_user_name_hint"
+  ],
+
   "pt": [
     "crop_image_title",
     "saving",
@@ -74,7 +80,10 @@
     "ofx_save_error",
     "csv_amount",
     "csv_category",
-    "settings_language_es"
+    "settings_language_es",
+    "settings_user_name_title",
+    "settings_user_name_desc",
+    "settings_user_name_hint"
   ],
 
   "zh": [
@@ -234,6 +243,9 @@
     "data_restore_desc",
     "auto_backup_title",
     "auto_backup_desc",
+    "settings_user_name_title",
+    "settings_user_name_desc",
+    "settings_user_name_hint",
     "info_tab",
     "select_paid_by",
     "select_category",

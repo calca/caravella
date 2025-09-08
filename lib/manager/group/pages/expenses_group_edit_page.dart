@@ -1,4 +1,3 @@
-// Widget simile a quello incollato per la selezione valuta
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../data/model/expense_group.dart';
@@ -21,6 +20,8 @@ import '../widgets/background_picker.dart';
 import '../widgets/currency_selector_sheet.dart';
 import '../widgets/save_button_bar.dart';
 import '../group_edit_mode.dart';
+import '../../../settings/user_name_notifier.dart';
+import '../../../data/model/expense_participant.dart';
 
 class ExpensesGroupEditPage extends StatelessWidget {
   final ExpenseGroup? trip;
@@ -87,6 +88,19 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted && _state.title.isEmpty) {
           _controller.load(widget.trip!);
+        }
+      });
+    } else if (widget.mode == GroupEditMode.create) {
+      // For new groups, add user as first participant if name is available
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          final userNameNotifier = context.read<UserNameNotifier>();
+          if (userNameNotifier.hasName) {
+            _state.addParticipant(ExpenseParticipant(
+              id: DateTime.now().millisecondsSinceEpoch.toString(),
+              name: userNameNotifier.name,
+            ));
+          }
         }
       });
     }
