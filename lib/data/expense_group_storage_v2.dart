@@ -1,10 +1,11 @@
-// ignore_for_file: avoid_print, unused_element, unnecessary_brace_in_string_interps
+// Updated wrapper for ExpenseGroupStorage - removes print statements
 import 'model/expense_group.dart';
 import 'model/expense_details.dart';
 import 'model/expense_participant.dart';
 import 'model/expense_category.dart';
 import 'expense_group_repository.dart';
 import 'file_based_expense_group_repository.dart';
+import 'services/logger_service.dart';
 
 /// Backward-compatible wrapper for ExpenseGroupStorage
 /// Maintains the same API while using the improved repository internally
@@ -49,13 +50,14 @@ class ExpenseGroupStorageV2 {
     if (pinned) {
       final result = await _repository.setPinnedGroup(groupId);
       if (result.isFailure) {
-        print('Warning: Failed to pin group $groupId: ${result.error}');
+        LoggerService.warning('Failed to pin group $groupId: ${result.error}', name: 'storage');
       }
     } else {
       final result = await _repository.removePinnedGroup(groupId);
       if (result.isFailure) {
-        print(
-          'Warning: Failed to remove pin from group $groupId: ${result.error}',
+        LoggerService.warning(
+          'Failed to remove pin from group $groupId: ${result.error}',
+          name: 'storage',
         );
       }
     }
@@ -67,12 +69,13 @@ class ExpenseGroupStorageV2 {
     if (archived) {
       final result = await _repository.archiveGroup(groupId);
       if (result.isFailure) {
-        print('Warning: Failed to archive group $groupId: ${result.error}');
+        LoggerService.warning('Failed to archive group $groupId: ${result.error}', name: 'storage');
       }
     } else {
       final result = await _repository.unarchiveGroup(groupId);
       if (result.isFailure) {
-        print('Warning: Failed to unarchive group $groupId: ${result.error}');
+        LoggerService.warning('Failed to unarchive group $groupId: ${result.error}', name: 'storage');
+      }
       }
     }
   }
@@ -99,7 +102,7 @@ class ExpenseGroupStorageV2 {
   static Future<void> updateGroupMetadata(ExpenseGroup updatedGroup) async {
     final result = await _repository.updateGroupMetadata(updatedGroup);
     if (result.isFailure) {
-      print(
+      LoggerService.warning(
         'Warning: Failed to update group metadata ${updatedGroup.id}: ${result.error}',
       );
     }
@@ -141,13 +144,13 @@ class ExpenseGroupStorageV2 {
   ) async {
     final groupResult = await _repository.getGroupById(groupId);
     if (groupResult.isFailure) {
-      print('Warning: Failed to get group $groupId: ${groupResult.error}');
+      LoggerService.warning('Warning: Failed to get group $groupId: ${groupResult.error}'), name: 'storage');
       return;
     }
 
     final group = groupResult.unwrapOr(null);
     if (group == null) {
-      print('Warning: Group $groupId not found');
+      LoggerService.warning('Warning: Group $groupId not found'), name: 'storage');
       return;
     }
 
@@ -157,7 +160,7 @@ class ExpenseGroupStorageV2 {
 
     final saveResult = await _repository.saveGroup(updatedGroup);
     if (saveResult.isFailure) {
-      print(
+      LoggerService.warning(
         'Warning: Failed to save group $groupId after adding expense: ${saveResult.error}',
       );
     }
@@ -168,7 +171,7 @@ class ExpenseGroupStorageV2 {
   static Future<void> addExpenseGroup(ExpenseGroup group) async {
     final result = await _repository.addExpenseGroup(group);
     if (result.isFailure) {
-      print('Warning: Failed to add group ${group.id}: ${result.error}');
+      LoggerService.warning('Warning: Failed to add group ${group.id}: ${result.error}'), name: 'storage');
     }
   }
 
@@ -221,7 +224,7 @@ class ExpenseGroupStorageV2 {
 
     final saveResult = await _repository.saveGroup(updatedGroup);
     if (saveResult.isFailure) {
-      print(
+      LoggerService.warning(
         'Warning: Failed to save group $groupId after removing participant: ${saveResult.error}',
       );
       return false;
@@ -236,13 +239,13 @@ class ExpenseGroupStorageV2 {
   ) async {
     final groupResult = await _repository.getGroupById(groupId);
     if (groupResult.isFailure) {
-      print('Warning: Failed to get group $groupId: ${groupResult.error}');
+      LoggerService.warning('Warning: Failed to get group $groupId: ${groupResult.error}'), name: 'storage');
       return;
     }
 
     final group = groupResult.unwrapOr(null);
     if (group == null) {
-      print('Warning: Group $groupId not found');
+      LoggerService.warning('Warning: Group $groupId not found'), name: 'storage');
       return;
     }
 
@@ -251,7 +254,7 @@ class ExpenseGroupStorageV2 {
       (expense) => expense.id == updatedExpense.id,
     );
     if (expenseIndex == -1) {
-      print(
+      LoggerService.warning(
         'Warning: Expense ${updatedExpense.id} not found in group $groupId',
       );
       return;
@@ -265,7 +268,7 @@ class ExpenseGroupStorageV2 {
 
     final saveResult = await _repository.saveGroup(updatedGroup);
     if (saveResult.isFailure) {
-      print(
+      LoggerService.warning(
         'Warning: Failed to save group $groupId after updating expense: ${saveResult.error}',
       );
     }
@@ -297,12 +300,12 @@ class ExpenseGroupStorageV2 {
 
     final groupResult = await _repository.getGroupById(groupId);
     if (groupResult.isFailure) {
-      print('Warning: Failed to get group $groupId: ${groupResult.error}');
+      LoggerService.warning('Warning: Failed to get group $groupId: ${groupResult.error}'), name: 'storage');
       return;
     }
     final group = groupResult.unwrapOr(null);
     if (group == null) {
-      print('Warning: Group $groupId not found');
+      LoggerService.warning('Warning: Group $groupId not found'), name: 'storage');
       return;
     }
 
@@ -317,7 +320,7 @@ class ExpenseGroupStorageV2 {
     final updatedGroup = group.copyWith(expenses: updatedExpenses);
     final saveResult = await _repository.saveGroup(updatedGroup);
     if (saveResult.isFailure) {
-      print(
+      LoggerService.warning(
         'Warning: Failed to save group $groupId after updating participant references: ${saveResult.error}',
       );
     }
@@ -345,12 +348,12 @@ class ExpenseGroupStorageV2 {
 
     final groupResult = await _repository.getGroupById(groupId);
     if (groupResult.isFailure) {
-      print('Warning: Failed to get group $groupId: ${groupResult.error}');
+      LoggerService.warning('Warning: Failed to get group $groupId: ${groupResult.error}'), name: 'storage');
       return;
     }
     final group = groupResult.unwrapOr(null);
     if (group == null) {
-      print('Warning: Group $groupId not found');
+      LoggerService.warning('Warning: Group $groupId not found'), name: 'storage');
       return;
     }
 
@@ -365,7 +368,7 @@ class ExpenseGroupStorageV2 {
     final updatedGroup = group.copyWith(expenses: updatedExpenses);
     final saveResult = await _repository.saveGroup(updatedGroup);
     if (saveResult.isFailure) {
-      print(
+      LoggerService.warning(
         'Warning: Failed to save group $groupId after updating category references: ${saveResult.error}',
       );
     }
@@ -392,7 +395,7 @@ class ExpenseGroupStorageV2 {
 
     final saveResult = await _repository.saveGroup(updatedGroup);
     if (saveResult.isFailure) {
-      print(
+      LoggerService.warning(
         'Warning: Failed to save group $groupId after removing category: ${saveResult.error}',
       );
       return false;
@@ -407,13 +410,13 @@ class ExpenseGroupStorageV2 {
   ) async {
     final groupResult = await _repository.getGroupById(groupId);
     if (groupResult.isFailure) {
-      print('Warning: Failed to get group $groupId: ${groupResult.error}');
+      LoggerService.warning('Warning: Failed to get group $groupId: ${groupResult.error}'), name: 'storage');
       return;
     }
 
     final group = groupResult.unwrapOr(null);
     if (group == null) {
-      print('Warning: Group $groupId not found');
+      LoggerService.warning('Warning: Group $groupId not found'), name: 'storage');
       return;
     }
 
@@ -424,7 +427,7 @@ class ExpenseGroupStorageV2 {
 
     final saveResult = await _repository.saveGroup(updatedGroup);
     if (saveResult.isFailure) {
-      print(
+      LoggerService.warning(
         'Warning: Failed to save group $groupId after removing expense: ${saveResult.error}',
       );
     }
@@ -434,7 +437,7 @@ class ExpenseGroupStorageV2 {
   static Future<void> deleteGroup(String groupId) async {
     final result = await _repository.deleteGroup(groupId);
     if (result.isFailure) {
-      print('Warning: Failed to delete group $groupId: ${result.error}');
+      LoggerService.warning('Warning: Failed to delete group $groupId: ${result.error}'), name: 'storage');
     }
   }
 }
