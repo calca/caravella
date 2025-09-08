@@ -44,6 +44,7 @@ class HomeCardsHeader extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 0),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // Avatar statico
           Container(
@@ -61,15 +62,45 @@ class HomeCardsHeader extends StatelessWidget {
           ),
           const SizedBox(width: 16),
 
-          // Saluto dinamico
+          // Saluto su due righe (saluto + nome), centrato verticalmente
           Expanded(
             child: Consumer<UserNameNotifier>(
               builder: (context, userNameNotifier, child) {
-                return Text(
-                  _resolveGreetingWithName(userNameNotifier.hasName ? userNameNotifier.name : null),
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w400,
-                    color: theme.colorScheme.onSurface,
+                final greeting = _resolveGreeting();
+                final hasName = userNameNotifier.hasName;
+                final name = hasName ? userNameNotifier.name : null;
+
+                return SizedBox(
+                  height: 56, // allinea verticalmente con l'avatar
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        greeting,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: (name == null || name.isEmpty)
+                            ? theme.textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.w500,
+                                color: theme.colorScheme.onSurface,
+                              )
+                            : theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w400,
+                                color: theme.colorScheme.onSurface,
+                              ),
+                      ),
+                      if (name != null && name.isNotEmpty)
+                        Text(
+                          name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: theme.colorScheme.onSurface,
+                          ),
+                        ),
+                    ],
                   ),
                 );
               },
@@ -87,16 +118,8 @@ class HomeCardsHeader extends StatelessWidget {
       'good_afternoon' => localizations.good_afternoon,
       _ => localizations.good_evening,
     };
-    
-    // Try to get user name if available
-    return baseGreeting;
-  }
 
-  String _resolveGreetingWithName(String? userName) {
-    final baseGreeting = _resolveGreeting();
-    if (userName != null && userName.isNotEmpty) {
-      return '$baseGreeting, $userName';
-    }
+    // Try to get user name if available
     return baseGreeting;
   }
 }
