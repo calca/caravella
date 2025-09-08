@@ -8,6 +8,7 @@ class StatCard extends StatelessWidget {
   final double value;
   final String currency;
   final String? subtitle;
+  final List<InlineSpan>? subtitleSpans;
   final IconData? icon;
   final Widget? leading;
   final double? percent; // 0-100
@@ -19,6 +20,7 @@ class StatCard extends StatelessWidget {
     required this.value,
     required this.currency,
     this.subtitle,
+    this.subtitleSpans,
     this.icon,
     this.leading,
     this.percent,
@@ -46,8 +48,9 @@ class StatCard extends StatelessWidget {
       formattedValue = '$value$currency';
     }
 
-    final semanticLabel = subtitle != null
-        ? '$title: $formattedValue (${subtitle!})'
+    final semanticLabel =
+        (subtitle ?? _inlineSpansToPlain(subtitleSpans)) != null
+        ? '$title: $formattedValue (${(subtitle ?? _inlineSpansToPlain(subtitleSpans))!})'
         : '$title: $formattedValue';
 
     return Semantics(
@@ -146,16 +149,30 @@ class StatCard extends StatelessWidget {
                           ],
                         ),
                       ],
-                      if (subtitle != null) ...[
+                      if ((subtitleSpans != null &&
+                              subtitleSpans!.isNotEmpty) ||
+                          subtitle != null) ...[
                         const SizedBox(height: 8),
-                        Text(
-                          subtitle!,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
+                        if (subtitleSpans != null && subtitleSpans!.isNotEmpty)
+                          RichText(
+                            text: TextSpan(
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                              children: subtitleSpans,
+                            ),
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                          )
+                        else
+                          Text(
+                            subtitle!,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                        ),
                       ],
                     ],
                   ),
@@ -166,6 +183,19 @@ class StatCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // Extract plain text from inline spans for semantic labels
+  String? _inlineSpansToPlain(List<InlineSpan>? spans) {
+    if (spans == null || spans.isEmpty) return null;
+    final buffer = StringBuffer();
+    for (final s in spans) {
+      if (s is TextSpan) {
+        buffer.write(s.text ?? '');
+      }
+    }
+    final text = buffer.toString().trim();
+    return text.isEmpty ? null : text;
   }
 }
 

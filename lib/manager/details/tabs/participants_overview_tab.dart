@@ -66,15 +66,29 @@ class ParticipantsOverviewTab extends StatelessWidget {
             final owes = settlements
                 .where((s) => s['from'] == e.participant.name)
                 .toList();
-            String? subtitle;
+            String? subtitle; // unused when using spans
+            List<InlineSpan>? subtitleSpans;
             if (owes.isNotEmpty) {
-              final parts = owes.map(
-                (s) => '${s['to']} (${fmtCurrency(s['amount'] as double)})',
-              );
-              // Only settlement info; percent is already shown via progress bar
-              subtitle = '${gloc.owes_to}${parts.join(', ')}';
-            } else {
-              subtitle = null; // no subtitle when there is no settlement
+              final spans = <InlineSpan>[];
+              // Prefix connector (localized), normal weight
+              spans.add(TextSpan(text: gloc.owes_to));
+              for (int i = 0; i < owes.length; i++) {
+                final s = owes[i];
+                final to = s['to'] as String;
+                final amount = fmtCurrency(s['amount'] as double);
+                // Bold: ' destinatario importo' (note leading space)
+                spans.add(
+                  TextSpan(
+                    text: ' $to $amount',
+                    style: const TextStyle(fontWeight: FontWeight.w700),
+                  ),
+                );
+                if (i < owes.length - 1) {
+                  // Separator as normal text
+                  spans.add(const TextSpan(text: ', '));
+                }
+              }
+              subtitleSpans = spans;
             }
 
             return Padding(
@@ -84,6 +98,7 @@ class ParticipantsOverviewTab extends StatelessWidget {
                 value: e.total,
                 currency: trip.currency,
                 subtitle: subtitle,
+                subtitleSpans: subtitleSpans,
                 leading: ParticipantAvatar(
                   participant: e.participant,
                   size: 48,
