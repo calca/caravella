@@ -1,8 +1,44 @@
 import 'package:io_caravella_egm/data/model/expense_group.dart';
 
+/// Strongly-typed settlement item instead of an untyped map.
+class Settlement {
+  final String from; // debtor
+  final String to; // creditor
+  final double amount;
+
+  const Settlement({
+    required this.from,
+    required this.to,
+    required this.amount,
+  });
+
+  Settlement copyWith({String? from, String? to, double? amount}) => Settlement(
+    from: from ?? this.from,
+    to: to ?? this.to,
+    amount: amount ?? this.amount,
+  );
+
+  Map<String, dynamic> toJson() => {'from': from, 'to': to, 'amount': amount};
+
+  @override
+  String toString() => 'Settlement(from: $from, to: $to, amount: $amount)';
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Settlement &&
+          runtimeType == other.runtimeType &&
+          from == other.from &&
+          to == other.to &&
+          amount == other.amount;
+
+  @override
+  int get hashCode => Object.hash(from, to, amount);
+}
+
 /// Computes minimal settlements between participants to balance accounts.
-/// Returns a list of maps with keys: 'from', 'to', 'amount'.
-List<Map<String, dynamic>> computeSettlements(ExpenseGroup trip) {
+/// Returns a typed list of [Settlement].
+List<Settlement> computeSettlements(ExpenseGroup trip) {
   if (trip.participants.length < 2 || trip.expenses.isEmpty) return [];
 
   final balances = <String, double>{};
@@ -36,14 +72,14 @@ List<Map<String, dynamic>> computeSettlements(ExpenseGroup trip) {
   creditors.sort((a, b) => b.value.compareTo(a.value));
   debtors.sort((a, b) => b.value.compareTo(a.value));
 
-  final settlements = <Map<String, dynamic>>[];
+  final settlements = <Settlement>[];
   var ci = 0;
   var di = 0;
   while (ci < creditors.length && di < debtors.length) {
     final c = creditors[ci];
     final d = debtors[di];
     final amount = c.value < d.value ? c.value : d.value;
-    settlements.add({'from': d.key, 'to': c.key, 'amount': amount});
+    settlements.add(Settlement(from: d.key, to: c.key, amount: amount));
     creditors[ci] = MapEntry(c.key, c.value - amount);
     debtors[di] = MapEntry(d.key, d.value - amount);
     if (creditors[ci].value < 0.01) ci++;

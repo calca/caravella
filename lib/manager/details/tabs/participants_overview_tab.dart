@@ -64,7 +64,7 @@ class ParticipantsOverviewTab extends StatelessWidget {
           ...contributionEntries.map((e) {
             // Build owes summary for this participant (from settlements)
             final owes = settlements
-                .where((s) => s['from'] == e.participant.name)
+                .where((s) => s.from == e.participant.name)
                 .toList();
             String? subtitle; // unused when using spans
             List<InlineSpan>? subtitleSpans;
@@ -74,8 +74,8 @@ class ParticipantsOverviewTab extends StatelessWidget {
               spans.add(TextSpan(text: gloc.owes_to));
               for (int i = 0; i < owes.length; i++) {
                 final s = owes[i];
-                final to = s['to'] as String;
-                final amount = fmtCurrency(s['amount'] as double);
+                final to = s.to;
+                final amount = fmtCurrency(s.amount);
                 // Bold: ' destinatario importo' (note leading space)
                 spans.add(
                   TextSpan(

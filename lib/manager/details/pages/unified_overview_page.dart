@@ -83,7 +83,7 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
       buffer.writeln(gloc.settlement);
       for (final s in settlements) {
         buffer.writeln(
-          '${s['from']} -> ${s['to']}: ${(s['amount'] as double).toStringAsFixed(2)} $currency',
+          '${s.from} -> ${s.to}: ${s.amount.toStringAsFixed(2)} $currency',
         );
       }
     }

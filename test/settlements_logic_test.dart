@@ -63,9 +63,9 @@ void main() {
       );
       final settlements = computeSettlements(g);
       expect(settlements.length, 1);
-      expect(settlements.first['from'], b.name);
-      expect(settlements.first['to'], a.name);
-      expect(settlements.first['amount'], closeTo(50, 0.0001));
+      expect(settlements.first.from, b.name);
+      expect(settlements.first.to, a.name);
+      expect(settlements.first.amount, closeTo(50, 0.0001));
     });
 
     test('three participants uneven payments', () {
@@ -86,9 +86,9 @@ void main() {
       // (A paid 150, should pay 100 => +50 credit; C paid 50, should pay 100 => -50)
       expect(settlements.length, 1);
       final s = settlements.first;
-      expect(s['from'], c.name);
-      expect(s['to'], a.name);
-      expect(s['amount'], closeTo(50, 0.0001));
+      expect(s.from, c.name);
+      expect(s.to, a.name);
+      expect(s.amount, closeTo(50, 0.0001));
     });
 
     test('four participants chain settlements', () {
@@ -111,8 +111,8 @@ void main() {
       // Expect 2 settlements (C->A 40, D->A 60) order may vary but amounts sum to 100
       expect(settlements.length, 2);
       final totalToA = settlements
-          .where((s) => s['to'] == a.name)
-          .fold<double>(0.0, (sum, s) => sum + (s['amount'] as double));
+          .where((s) => s.to == a.name)
+          .fold<double>(0.0, (sum, s) => sum + s.amount);
       expect(totalToA, closeTo(100, 0.001));
     });
 
@@ -143,11 +143,11 @@ void main() {
       );
       final settlements = computeSettlements(g);
       expect(settlements.length, 2);
-      final amounts = settlements.map((s) => s['amount'] as double).toList();
+      final amounts = settlements.map((s) => s.amount).toList();
       amounts.sort();
       expect(amounts, [30, 30]);
       // Ensure both B and C pay A
-      expect(settlements.every((s) => s['to'] == a.name), isTrue);
+      expect(settlements.every((s) => s.to == a.name), isTrue);
     });
   });
 }
