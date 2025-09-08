@@ -6,6 +6,7 @@ import '../../../widgets/charts/weekly_expense_chart.dart';
 import '../../../widgets/charts/monthly_expense_chart.dart';
 import '../../../widgets/charts/date_range_expense_chart.dart';
 import 'daily_totals_utils.dart';
+import 'date_range_formatter.dart';
 import '../widgets/group_header.dart'; // for ParticipantAvatar
 import '../../../widgets/currency_display.dart';
 import '../../../data/model/expense_participant.dart';
@@ -136,6 +137,8 @@ class GeneralOverviewTab extends StatelessWidget {
               ),
             ],
           ),
+          const SizedBox(height: 24),
+          _DetailsCard(trip: trip),
         ],
       ),
     );
@@ -234,6 +237,126 @@ class _TopSummaryRow extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ],
+    );
+  }
+}
+
+class _DetailsCard extends StatelessWidget {
+  final ExpenseGroup trip;
+  const _DetailsCard({required this.trip});
+
+  String _dateRangeString(BuildContext context) => formatDateRange(
+    start: trip.startDate,
+    end: trip.endDate,
+    locale: Localizations.localeOf(context),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final gloc = gen.AppLocalizations.of(context);
+    final colorScheme = theme.colorScheme;
+    final surface = colorScheme.surface;
+
+    final dateStr = _dateRangeString(context);
+    final participantsCount = trip.participants.length;
+    final participantsLabel = gloc.participant_count(participantsCount);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: colorScheme.outline.withValues(alpha: 0.2)),
+      ),
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 6),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  // Title as in screenshot
+                  Localizations.localeOf(context).languageCode == 'it'
+                      ? 'Dettagli'
+                      : 'Details',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          _DetailRow(
+            icon: Icons.info_outline,
+            title: gloc.dates,
+            subtitle: dateStr.isEmpty ? '-' : dateStr,
+          ),
+          const SizedBox(height: 10),
+          _DetailRow(
+            icon: Icons.group_outlined,
+            title: gloc.participants_label,
+            subtitle: participantsLabel,
+          ),
+          const SizedBox(height: 6),
+        ],
+      ),
+    );
+  }
+}
+
+class _DetailRow extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  const _DetailRow({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          width: 36,
+          height: 36,
+          decoration: BoxDecoration(
+            color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+            shape: BoxShape.circle,
+          ),
+          alignment: Alignment.center,
+          child: Icon(icon, color: colorScheme.outline, size: 20),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                subtitle,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
         ),
       ],
     );
