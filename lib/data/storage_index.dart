@@ -93,24 +93,45 @@ class GroupIndex {
     return _byId[id];
   }
 
-  /// Gets all groups as a sorted list
-  List<ExpenseGroup> getAllGroups() {
+  /// Gets all groups as a sorted list with optional pagination
+  List<ExpenseGroup> getAllGroups({int? limit, int? offset}) {
     final groups = _byId.values.toList();
     groups.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    
+    if (offset != null || limit != null) {
+      final start = offset ?? 0;
+      final end = limit != null ? start + limit : groups.length;
+      return groups.sublist(start, end.clamp(0, groups.length));
+    }
+    
     return groups;
   }
 
-  /// Gets active groups as a sorted list
-  List<ExpenseGroup> getActiveGroups() {
+  /// Gets active groups as a sorted list with optional pagination
+  List<ExpenseGroup> getActiveGroups({int? limit, int? offset}) {
     final groups = _activeGroups.map((id) => _byId[id]!).toList();
     groups.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    
+    if (offset != null || limit != null) {
+      final start = offset ?? 0;
+      final end = limit != null ? start + limit : groups.length;
+      return groups.sublist(start, end.clamp(0, groups.length));
+    }
+    
     return groups;
   }
 
-  /// Gets archived groups as a sorted list
-  List<ExpenseGroup> getArchivedGroups() {
+  /// Gets archived groups as a sorted list with optional pagination
+  List<ExpenseGroup> getArchivedGroups({int? limit, int? offset}) {
     final groups = _archivedGroups.map((id) => _byId[id]!).toList();
     groups.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    
+    if (offset != null || limit != null) {
+      final start = offset ?? 0;
+      final end = limit != null ? start + limit : groups.length;
+      return groups.sublist(start, end.clamp(0, groups.length));
+    }
+    
     return groups;
   }
 
@@ -120,38 +141,61 @@ class GroupIndex {
     return _byId[_pinnedGroups.first];
   }
 
-  /// Gets groups by participant ID
-  List<ExpenseGroup> getGroupsByParticipant(String participantId) {
+  /// Gets groups by participant ID with optional pagination
+  List<ExpenseGroup> getGroupsByParticipant(String participantId, {int? limit, int? offset}) {
     final groups = _byId.values
         .where((group) => group.participants.any((p) => p.id == participantId))
         .toList();
     groups.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    
+    if (offset != null || limit != null) {
+      final start = offset ?? 0;
+      final end = limit != null ? start + limit : groups.length;
+      return groups.sublist(start, end.clamp(0, groups.length));
+    }
+    
     return groups;
   }
 
-  /// Gets groups by category ID
-  List<ExpenseGroup> getGroupsByCategory(String categoryId) {
+  /// Gets groups by category ID with optional pagination
+  List<ExpenseGroup> getGroupsByCategory(String categoryId, {int? limit, int? offset}) {
     final groups = _byId.values
         .where((group) => group.categories.any((c) => c.id == categoryId))
         .toList();
     groups.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    
+    if (offset != null || limit != null) {
+      final start = offset ?? 0;
+      final end = limit != null ? start + limit : groups.length;
+      return groups.sublist(start, end.clamp(0, groups.length));
+    }
+    
     return groups;
   }
 
-  /// Gets groups by currency
-  List<ExpenseGroup> getGroupsByCurrency(String currency) {
+  /// Gets groups by currency with optional pagination
+  List<ExpenseGroup> getGroupsByCurrency(String currency, {int? limit, int? offset}) {
     final groups = _byId.values
         .where((group) => group.currency == currency)
         .toList();
     groups.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    
+    if (offset != null || limit != null) {
+      final start = offset ?? 0;
+      final end = limit != null ? start + limit : groups.length;
+      return groups.sublist(start, end.clamp(0, groups.length));
+    }
+    
     return groups;
   }
 
-  /// Gets groups within a date range
+  /// Gets groups within a date range with optional pagination
   List<ExpenseGroup> getGroupsByDateRange(
     DateTime? startDate,
-    DateTime? endDate,
-  ) {
+    DateTime? endDate, {
+    int? limit,
+    int? offset,
+  }) {
     final groups = _byId.values.where((group) {
       if (startDate != null &&
           group.endDate != null &&
@@ -166,16 +210,30 @@ class GroupIndex {
       return true;
     }).toList();
     groups.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    
+    if (offset != null || limit != null) {
+      final start = offset ?? 0;
+      final end = limit != null ? start + limit : groups.length;
+      return groups.sublist(start, end.clamp(0, groups.length));
+    }
+    
     return groups;
   }
 
-  /// Searches groups by title (case-insensitive)
-  List<ExpenseGroup> searchByTitle(String query) {
+  /// Searches groups by title (case-insensitive) with optional pagination
+  List<ExpenseGroup> searchByTitle(String query, {int? limit, int? offset}) {
     final lowerQuery = query.toLowerCase();
     final groups = _byId.values
         .where((group) => group.title.toLowerCase().contains(lowerQuery))
         .toList();
     groups.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    
+    if (offset != null || limit != null) {
+      final start = offset ?? 0;
+      final end = limit != null ? start + limit : groups.length;
+      return groups.sublist(start, end.clamp(0, groups.length));
+    }
+    
     return groups;
   }
 

@@ -7,10 +7,12 @@ import 'expense_group_repository.dart';
 import 'storage_errors.dart';
 import 'storage_performance.dart';
 import 'storage_index.dart';
+import 'cache/storage_cache.dart';
+import 'memory_monitor.dart';
 
 /// Improved implementation of ExpenseGroupRepository with caching and proper error handling
 class FileBasedExpenseGroupRepository
-    with PerformanceMonitoring
+    with PerformanceMonitoring, CacheableStorage, MemoryMonitoring
     implements IExpenseGroupRepository {
   static const String fileName = 'expense_group_storage.json';
 
@@ -25,6 +27,45 @@ class FileBasedExpenseGroupRepository
 
   // Cache validity duration (5 minutes)
   static const Duration cacheValidityDuration = Duration(minutes: 5);
+
+  /// Initialize performance optimizations
+  void initializePerformanceOptimizations() {
+    // Start automatic cache cleanup
+    CacheManager.startAutomaticCleanup();
+    
+    // Enable performance monitoring
+    StoragePerformanceMonitor.enable();
+    
+    // Enable memory monitoring
+    MemoryMonitor.enable();
+  }
+
+  /// Cleanup performance monitoring resources
+  void cleanupPerformanceOptimizations() {
+    CacheManager.stopAutomaticCleanup();
+    StoragePerformanceMonitor.disable();
+    MemoryMonitor.disable();
+  }
+
+  /// Gets performance metrics summary
+  Map<String, dynamic> getPerformanceMetrics() {
+    return {
+      'storage': StoragePerformanceMonitor.getSummary(),
+      'cache': StorageCache.getStats(),
+      'memory': MemoryMonitor.getMemoryStats(),
+      'index': {
+        'groups': _groupIndex.getStats(),
+        'expenses': _expenseIndex.getStats(),
+      },
+    };
+  }
+
+  /// Prints comprehensive performance report
+  void printPerformanceReport() {
+    StoragePerformanceMonitor.printSummary();
+    StorageCache.printStats();
+    MemoryMonitor.printStats();
+  }
 
   Future<File> _getFile() async {
     try {
@@ -62,25 +103,27 @@ class FileBasedExpenseGroupRepository
   Future<StorageResult<List<ExpenseGroup>>> _loadGroups({
     bool forceReload = false,
   }) async {
-    return await measureOperation(
+    return await measureMemoryUsage(
       'loadGroups',
-      () async {
-        try {
-          final file = await _getFile();
+      () => measureOperation(
+        'loadGroups',
+        () async {
+          try {
+            final file = await _getFile();
 
-          // Check if we can use cached data
-          if (!forceReload && _isCacheValid()) {
-            // Additional check: has file been modified since cache?
-            if (_lastFileModification != null && await file.exists()) {
-              final stat = await file.stat();
-              if (stat.modified.isAtSameMomentAs(_lastFileModification!)) {
+            // Check if we can use cached data
+            if (!forceReload && _isCacheValid()) {
+              // Additional check: has file been modified since cache?
+              if (_lastFileModification != null && await file.exists()) {
+                final stat = await file.stat();
+                if (stat.modified.isAtSameMomentAs(_lastFileModification!)) {
+                  return StorageResult.success(_cachedGroups!);
+                }
+              } else if (!await file.exists() && _cachedGroups!.isEmpty) {
+                // File doesn't exist and cache is empty - valid state
                 return StorageResult.success(_cachedGroups!);
               }
-            } else if (!await file.exists() && _cachedGroups!.isEmpty) {
-              // File doesn't exist and cache is empty - valid state
-              return StorageResult.success(_cachedGroups!);
             }
-          }
 
           // Load from file
           if (!await file.exists()) {
@@ -163,7 +206,9 @@ class FileBasedExpenseGroupRepository
       },
       wasFromCache: _isCacheValid() && !forceReload,
       dataSize: _cachedGroups?.length,
-    );
+    ),
+    metadata: {'forceReload': forceReload, 'groupCount': _cachedGroups?.length},
+  );
   }
 
   /// Saves groups to file and updates cache
@@ -211,6 +256,21 @@ class FileBasedExpenseGroupRepository
         _groupIndex.rebuild(groupsToSave);
         _expenseIndex.rebuild(groupsToSave);
 
+        // Invalidate StorageCache for all group-related operations
+        invalidateCache([
+          'getAllGroups',
+          'getActiveGroups',
+          'getArchivedGroups',
+        ]);
+        
+        // Clear paginated cache entries
+        final cacheKeys = StorageCache.keys.where((key) => 
+          key.startsWith('getAllGroups_') ||
+          key.startsWith('getActiveGroups_') ||
+          key.startsWith('getArchivedGroups_')
+        ).toList();
+        invalidateCache(cacheKeys);
+
         return const StorageResult.success(null);
       } catch (e) {
         if (e is StorageError) {
@@ -230,17 +290,53 @@ class FileBasedExpenseGroupRepository
 
   @override
   Future<StorageResult<List<ExpenseGroup>>> getAllGroups() async {
+    return await cachedOperation(
+      'getAllGroups',
+      () => _getAllGroupsImpl(),
+      ttl: const Duration(minutes: 2),
+    );
+  }
+
+  @override
+  Future<StorageResult<List<ExpenseGroup>>> getAllGroupsPaginated({
+    int? limit,
+    int? offset,
+  }) async {
+    final cacheKey = 'getAllGroups_${limit}_$offset';
+    return await cachedOperation(
+      cacheKey,
+      () => _getAllGroupsImpl(limit: limit, offset: offset),
+      customKey: cacheKey,
+      ttl: const Duration(minutes: 2),
+    );
+  }
+
+  /// Internal implementation for getting all groups
+  Future<StorageResult<List<ExpenseGroup>>> _getAllGroupsImpl({
+    int? limit,
+    int? offset,
+  }) async {
     return await measureOperation('getAllGroups', () async {
       final result = await _loadGroups();
       if (result.isFailure) return result;
 
       // Use index for faster sorting if available
       if (!_groupIndex.isEmpty) {
-        return StorageResult.success(_groupIndex.getAllGroups());
+        return StorageResult.success(
+          _groupIndex.getAllGroups(limit: limit, offset: offset),
+        );
       }
 
       final groups = List<ExpenseGroup>.from(result.data!);
       groups.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+
+      // Apply pagination if specified
+      if (offset != null || limit != null) {
+        final start = offset ?? 0;
+        final end = limit != null ? start + limit : groups.length;
+        final paginatedGroups = groups.sublist(start, end.clamp(0, groups.length));
+        return StorageResult.success(paginatedGroups);
+      }
 
       return StorageResult.success(groups);
     }, wasFromCache: _isCacheValid());
@@ -248,6 +344,32 @@ class FileBasedExpenseGroupRepository
 
   @override
   Future<StorageResult<List<ExpenseGroup>>> getActiveGroups() async {
+    return await cachedOperation(
+      'getActiveGroups',
+      () => _getActiveGroupsImpl(),
+      ttl: const Duration(minutes: 2),
+    );
+  }
+
+  @override
+  Future<StorageResult<List<ExpenseGroup>>> getActiveGroupsPaginated({
+    int? limit,
+    int? offset,
+  }) async {
+    final cacheKey = 'getActiveGroups_${limit}_$offset';
+    return await cachedOperation(
+      cacheKey,
+      () => _getActiveGroupsImpl(limit: limit, offset: offset),
+      customKey: cacheKey,
+      ttl: const Duration(minutes: 2),
+    );
+  }
+
+  /// Internal implementation for getting active groups
+  Future<StorageResult<List<ExpenseGroup>>> _getActiveGroupsImpl({
+    int? limit,
+    int? offset,
+  }) async {
     return await measureOperation('getActiveGroups', () async {
       final result = await _loadGroups();
       if (result.isFailure) return result;
@@ -255,14 +377,19 @@ class FileBasedExpenseGroupRepository
       // Use index for faster filtering if available, but validate index result
       if (!_groupIndex.isEmpty) {
         try {
-          final indexed = _groupIndex.getActiveGroups();
+          final indexed = _groupIndex.getActiveGroups(limit: limit, offset: offset);
           // If index returns a plausible set with same count as a full scan,
           // trust it. Otherwise fall back to scanning the loaded data to avoid
           // returning an incomplete subset due to index inconsistencies.
-          final scannedCount = result.data!
-              .where((group) => !group.archived)
-              .length;
-          if (indexed.length == scannedCount) {
+          if (limit == null && offset == null) {
+            final scannedCount = result.data!
+                .where((group) => !group.archived)
+                .length;
+            if (indexed.length == scannedCount) {
+              return StorageResult.success(indexed);
+            }
+          } else {
+            // For paginated requests, trust the index more
             return StorageResult.success(indexed);
           }
         } catch (_) {
@@ -275,25 +402,69 @@ class FileBasedExpenseGroupRepository
           .toList();
       activeGroups.sort((a, b) => b.timestamp.compareTo(a.timestamp));
 
+      // Apply pagination if specified
+      if (offset != null || limit != null) {
+        final start = offset ?? 0;
+        final end = limit != null ? start + limit : activeGroups.length;
+        final paginatedGroups = activeGroups.sublist(start, end.clamp(0, activeGroups.length));
+        return StorageResult.success(paginatedGroups);
+      }
+
       return StorageResult.success(activeGroups);
     }, wasFromCache: _isCacheValid());
   }
 
   @override
   Future<StorageResult<List<ExpenseGroup>>> getArchivedGroups() async {
+    return await cachedOperation(
+      'getArchivedGroups',
+      () => _getArchivedGroupsImpl(),
+      ttl: const Duration(minutes: 2),
+    );
+  }
+
+  @override
+  Future<StorageResult<List<ExpenseGroup>>> getArchivedGroupsPaginated({
+    int? limit,
+    int? offset,
+  }) async {
+    final cacheKey = 'getArchivedGroups_${limit}_$offset';
+    return await cachedOperation(
+      cacheKey,
+      () => _getArchivedGroupsImpl(limit: limit, offset: offset),
+      customKey: cacheKey,
+      ttl: const Duration(minutes: 2),
+    );
+  }
+
+  /// Internal implementation for getting archived groups
+  Future<StorageResult<List<ExpenseGroup>>> _getArchivedGroupsImpl({
+    int? limit,
+    int? offset,
+  }) async {
     return await measureOperation('getArchivedGroups', () async {
       final result = await _loadGroups();
       if (result.isFailure) return result;
 
       // Use index for faster filtering if available
       if (!_groupIndex.isEmpty) {
-        return StorageResult.success(_groupIndex.getArchivedGroups());
+        return StorageResult.success(
+          _groupIndex.getArchivedGroups(limit: limit, offset: offset),
+        );
       }
 
       final archivedGroups = result.data!
           .where((group) => group.archived)
           .toList();
       archivedGroups.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+
+      // Apply pagination if specified
+      if (offset != null || limit != null) {
+        final start = offset ?? 0;
+        final end = limit != null ? start + limit : archivedGroups.length;
+        final paginatedGroups = archivedGroups.sublist(start, end.clamp(0, archivedGroups.length));
+        return StorageResult.success(paginatedGroups);
+      }
 
       return StorageResult.success(archivedGroups);
     }, wasFromCache: _isCacheValid());
