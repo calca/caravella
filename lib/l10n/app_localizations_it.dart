@@ -1584,4 +1584,10 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get debt_prefix_to => 'a ';
+
+  @override
+  String get multi_payer_split_equally => 'Divisa equamente';
+
+  @override
+  String get multi_payer_each => 'ciascuno';
 }

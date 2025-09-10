@@ -9,14 +9,14 @@ import '../../data/model/expense_location.dart';
 import '../../state/locale_notifier.dart';
 import '../../widgets/material3_dialog.dart';
 import 'expense_form/amount_input_widget.dart';
-import 'expense_form/participant_selector_widget.dart';
-import 'expense_form/category_selector_widget.dart';
-import 'expense_form/date_selector_widget.dart';
-import 'expense_form/note_input_widget.dart';
-import 'expense_form/location_input_widget.dart';
 import 'expense_form/expense_form_actions_widget.dart';
 import 'expense_form/category_dialog.dart';
+import 'expense_form/group_header_widget.dart';
+import 'expense_form/field_status_wrapper.dart';
+import 'expense_form/participant_category_section_widget.dart';
+import 'expense_form/extended_fields_section_widget.dart';
 import '../../themes/form_theme.dart';
+import '../../data/model/expense_payer_share.dart';
 
 class ExpenseFormComponent extends StatefulWidget {
   // When true shows date, location and note fields (full edit mode). In edit mode (initialExpense != null) these are always shown.
@@ -65,6 +65,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
   ExpenseCategory? _category;
   double? _amount;
   ExpenseParticipant? _paidBy;
+  // Multi-payer support (max 2). When >1 selected, _paidBy represents primary for legacy usage,
+  // while _coPayers holds additional selected payers.
+  final List<ExpenseParticipant> _selectedPayers = [];
   DateTime? _date;
   ExpenseLocation? _location;
   final TextEditingController _nameController = TextEditingController();
@@ -96,6 +99,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
   // Getters per stato dei campi
   bool get _isAmountValid => _amount != null && _amount! > 0;
   bool get _isPaidByValid => _paidBy != null;
+  // ignore: unused_element -- reserved for future UI conditions (multi-payer badges etc.)
+  bool get _isMultiPayerActive => _selectedPayers.length > 1;
   bool get _isCategoryValid => _categories.isEmpty || _category != null;
 
   // Getter per determinare se mostrare i campi estesi
@@ -356,22 +361,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         nameValue.isNotEmpty;
   }
 
-  // Widget per indicatori di stato - versione minimalista
-  Widget _buildFieldWithStatus(Widget field, bool isValid, bool isTouched) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        // Solo sfondo colorato se c'è un errore
-        color: isTouched && !isValid
-            ? Theme.of(
-                context,
-              ).colorScheme.errorContainer.withValues(alpha: 0.08)
-            : null,
-      ),
-      child: field,
-    );
-  }
+  // Replaced by FieldStatusWrapper widget
 
   void _saveExpense() {
     final valid = _formKey.currentState?.validate() ?? false;
@@ -385,8 +375,35 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     }
     if (!_isFormValid()) return;
     final nameValue = _nameController.text.trim();
+    final totalAmount =
+        _amount ?? _parseLocalizedAmount(_amountController.text) ?? 0;
+    // Build payer shares list (equal split; last payer gets remainder)
+    final List<ExpensePayerShare>? payers;
+    if (_selectedPayers.isNotEmpty) {
+      final all = [_paidBy!, ..._selectedPayers];
+      final rawShare = totalAmount / all.length;
+      double allocated = 0;
+      final temp = <ExpensePayerShare>[];
+      for (var i = 0; i < all.length; i++) {
+        double share;
+        if (i == all.length - 1) {
+          share = totalAmount - allocated;
+        } else {
+          share = double.parse(rawShare.toStringAsFixed(2));
+          allocated += share;
+        }
+        temp.add(ExpensePayerShare(participant: all[i], share: share));
+      }
+      payers = temp;
+    } else {
+      if (_paidBy != null && totalAmount > 0) {
+        payers = [ExpensePayerShare(participant: _paidBy!, share: totalAmount)];
+      } else {
+        payers = null;
+      }
+    }
     final expense = ExpenseDetails(
-      amount: _amount ?? _parseLocalizedAmount(_amountController.text) ?? 0,
+      amount: totalAmount,
       paidBy: _paidBy ?? ExpenseParticipant(name: ''),
       category:
           _category ??
@@ -399,6 +416,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
           : null,
       name: nameValue,
       location: _location,
+      payers: payers,
     );
     widget.onExpenseAdded(expense);
     _isDirty = false;
@@ -422,13 +440,60 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildGroupHeader(),
+            GroupHeaderWidget(
+              show: _shouldShowExtendedFields && widget.groupTitle != null,
+              groupTitle: widget.groupTitle,
+            ),
             _buildAmountField(gloc, smallStyle),
             _spacer(),
             _buildNameField(gloc, smallStyle),
             _spacer(),
-            _buildParticipantCategorySection(smallStyle),
-            _buildExtendedFields(locale, smallStyle),
+            ParticipantCategorySectionWidget(
+              showExtendedLayout: _shouldShowExtendedFields,
+              participants: widget.participants,
+              categories: _categories,
+              selectedParticipant: _paidBy,
+              selectedPayers: [
+                _paidBy!,
+                ..._selectedPayers.where((p) => p.id != _paidBy!.id),
+              ],
+              selectedCategory: _category,
+              onParticipantSelected: _onParticipantSelected,
+              onTogglePayer: _onTogglePayer,
+              onCategorySelected: _onCategorySelected,
+              onAddCategory: _onAddCategory,
+              onAddCategoryInline: _onAddCategoryInline,
+              textStyle: smallStyle,
+              isPaidByValid: _isPaidByValid,
+              paidByTouched: _paidByTouched,
+              isCategoryValid: _isCategoryValid,
+              categoryTouched: _categoryTouched,
+              multiPayerEnabled: true,
+              totalAmount: _amount,
+              currency: widget.currency,
+            ),
+            ExtendedFieldsSectionWidget(
+              show: _shouldShowExtendedFields,
+              selectedDate: _date,
+              tripStartDate: widget.tripStartDate,
+              tripEndDate: widget.tripEndDate,
+              onDateSelected: (picked) => setState(() {
+                _date = picked;
+                if (!_initializing) _isDirty = true;
+              }),
+              location: _location,
+              onLocationChanged: (location) => setState(() {
+                _location = location;
+                if (!_initializing) _isDirty = true;
+              }),
+              noteController: _noteController,
+              noteFocus: _noteFocus,
+              locationFocus: _locationFocus,
+              textStyle: smallStyle,
+              locale: locale,
+              locationFieldKey: _locationFieldKey,
+              noteFieldKey: _noteFieldKey,
+            ),
             _buildDivider(context),
             _buildActionsRow(gloc, smallStyle),
           ],
@@ -437,59 +502,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     );
   }
 
-  /// Intestazione con il titolo del gruppo (solo quando mostriamo i campi estesi, se presente)
-  Widget _buildGroupHeader() {
-    if (!(_shouldShowExtendedFields && widget.groupTitle != null)) {
-      return const SizedBox.shrink();
-    }
-    final gloc = gen.AppLocalizations.of(context);
-    final title = widget.groupTitle!.trim();
-    if (title.isEmpty) return const SizedBox.shrink();
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final prefixStyle = theme.textTheme.bodyMedium?.copyWith(
-      color: colorScheme.onSurfaceVariant,
-      fontWeight: FontWeight.w500,
-      letterSpacing: 0.15,
-    );
-    final titleStyle = theme.textTheme.titleLarge?.copyWith(
-      fontWeight: FontWeight.w700,
-      color: colorScheme.onSurface,
-      overflow: TextOverflow.ellipsis,
-    );
-    return Semantics(
-      container: true,
-      header: true,
-      label: '${gloc.in_group_prefix} $title',
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 16.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Tooltip(
-                message: title,
-                waitDuration: const Duration(milliseconds: 400),
-                child: RichText(
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: '${gloc.in_group_prefix} ',
-                        style: prefixStyle,
-                      ),
-                      TextSpan(text: title, style: titleStyle),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // Group header now delegated to GroupHeaderWidget
 
   Future<void> _handlePop(bool didPop, Object? result) async {
     if (didPop) return;
@@ -505,8 +518,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
   Widget _buildAmountField(gen.AppLocalizations gloc, TextStyle? style) =>
       KeyedSubtree(
         key: _amountFieldKey,
-        child: _buildFieldWithStatus(
-          AmountInputWidget(
+        child: FieldStatusWrapper(
+          child: AmountInputWidget(
             controller: _amountController,
             focusNode: _amountFocus,
             categories: _categories,
@@ -521,16 +534,16 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
             onSubmitted: _saveExpense,
             textStyle: style,
           ),
-          _isAmountValid,
-          _amountTouched,
+          isValid: _isAmountValid,
+          isTouched: _amountTouched,
         ),
       );
 
   Widget _buildNameField(gen.AppLocalizations gloc, TextStyle? style) =>
       KeyedSubtree(
         key: _nameFieldKey,
-        child: _buildFieldWithStatus(
-          AmountInputWidget(
+        child: FieldStatusWrapper(
+          child: AmountInputWidget(
             controller: _nameController,
             focusNode: _nameFocus,
             label: gloc.expense_name,
@@ -546,77 +559,12 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
             isText: true,
             textStyle: style,
           ),
-          _nameController.text.trim().isNotEmpty,
-          _amountTouched,
+          isValid: _nameController.text.trim().isNotEmpty,
+          isTouched: _amountTouched,
         ),
       );
 
-  Widget _buildParticipantCategorySection(TextStyle? style) {
-    if (_shouldShowExtendedFields) {
-      return Column(
-        children: [
-          _buildFieldWithStatus(
-            ParticipantSelectorWidget(
-              participants: widget.participants.map((p) => p.name).toList(),
-              selectedParticipant: _paidBy?.name,
-              onParticipantSelected: _onParticipantSelected,
-              textStyle: style,
-              fullEdit: true,
-            ),
-            _isPaidByValid,
-            _paidByTouched,
-          ),
-          _spacer(),
-          _buildFieldWithStatus(
-            CategorySelectorWidget(
-              categories: _categories,
-              selectedCategory: _category,
-              onCategorySelected: _onCategorySelected,
-              onAddCategory: _onAddCategory,
-              onAddCategoryInline: _onAddCategoryInline,
-              textStyle: style,
-              fullEdit: true,
-            ),
-            _isCategoryValid,
-            _categoryTouched,
-          ),
-        ],
-      );
-    }
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Wrap(
-        spacing: 12,
-        runSpacing: 8,
-        children: [
-          _buildFieldWithStatus(
-            ParticipantSelectorWidget(
-              participants: widget.participants.map((p) => p.name).toList(),
-              selectedParticipant: _paidBy?.name,
-              onParticipantSelected: _onParticipantSelected,
-              textStyle: style,
-              fullEdit: false,
-            ),
-            _isPaidByValid,
-            _paidByTouched,
-          ),
-          _buildFieldWithStatus(
-            CategorySelectorWidget(
-              categories: _categories,
-              selectedCategory: _category,
-              onCategorySelected: _onCategorySelected,
-              onAddCategory: _onAddCategory,
-              onAddCategoryInline: _onAddCategoryInline,
-              textStyle: style,
-              fullEdit: false,
-            ),
-            _isCategoryValid,
-            _categoryTouched,
-          ),
-        ],
-      ),
-    );
-  }
+  // Participant & Category section extracted -> ParticipantCategorySectionWidget
 
   // (Expand button moved into ExpenseFormActionsWidget)
 
@@ -632,6 +580,37 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
       if (!_initializing) {
         _isDirty = true;
       }
+    });
+  }
+
+  void _onTogglePayer(ExpenseParticipant participant) {
+    setState(() {
+      // Ensure primary payer remains first (_paidBy). If tapping primary again and another selected -> swap.
+      if (_paidBy == null) {
+        _paidBy = participant;
+      }
+      final isPrimary = _paidBy?.id == participant.id;
+      if (isPrimary) {
+        // If already primary and there is a co-payer, cycle primary assignment
+        if (_selectedPayers.isNotEmpty) {
+          final newPrimary = _selectedPayers.removeAt(0);
+          _selectedPayers.add(_paidBy!);
+          _paidBy = newPrimary;
+        }
+      } else {
+        final already = _selectedPayers.any((p) => p.id == participant.id);
+        if (already) {
+          _selectedPayers.removeWhere((p) => p.id == participant.id);
+        } else {
+          if (_selectedPayers.length >= 1) {
+            // max additional payers =1 (total 2 including primary)
+            _selectedPayers.clear();
+          }
+          _selectedPayers.add(participant);
+        }
+      }
+      _paidByTouched = true;
+      if (!_initializing) _isDirty = true;
     });
   }
 
@@ -721,52 +700,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     });
   }
 
-  Widget _buildExtendedFields(String locale, TextStyle? style) {
-    if (!_shouldShowExtendedFields) return const SizedBox.shrink();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _spacer(),
-        DateSelectorWidget(
-          selectedDate: _date,
-          tripStartDate: widget.tripStartDate,
-          tripEndDate: widget.tripEndDate,
-          onDateSelected: (picked) => setState(() {
-            _date = picked;
-            if (!_initializing) {
-              _isDirty = true;
-            }
-          }),
-          locale: locale,
-          textStyle: style,
-        ),
-        _spacer(),
-        KeyedSubtree(
-          key: _locationFieldKey,
-          child: LocationInputWidget(
-            initialLocation: _location,
-            textStyle: style,
-            onLocationChanged: (location) => setState(() {
-              _location = location;
-              if (!_initializing) {
-                _isDirty = true;
-              }
-            }),
-            externalFocusNode: _locationFocus,
-          ),
-        ),
-        _spacer(),
-        KeyedSubtree(
-          key: _noteFieldKey,
-          child: NoteInputWidget(
-            controller: _noteController,
-            textStyle: style,
-            focusNode: _noteFocus,
-          ),
-        ),
-      ],
-    );
-  }
+  // Extended fields extracted -> ExtendedFieldsSectionWidget
 
   GlobalKey? _focusedExtendedFieldKey() {
     // Try to detect focus indirectly for location / note using primary focus

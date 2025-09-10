@@ -3,6 +3,7 @@ import 'model/expense_group.dart';
 import 'model/expense_details.dart';
 import 'model/expense_participant.dart';
 import 'model/expense_category.dart';
+import 'model/expense_payer_share.dart';
 import 'expense_group_repository.dart';
 import 'file_based_expense_group_repository.dart';
 import 'services/logger_service.dart';
@@ -197,7 +198,11 @@ class ExpenseGroupStorageV2 {
   ]) async {
     final group = hintGroup ?? (await getTripById(groupId));
     if (group == null) return false;
-    return group.expenses.any((e) => e.paidBy.id == participantId);
+    return group.expenses.any(
+      (e) =>
+          e.paidBy.id == participantId ||
+          (e.payers?.any((ps) => ps.participant.id == participantId) ?? false),
+    );
   }
 
   /// Returns true if the category with [categoryId] is referenced by any
@@ -225,7 +230,11 @@ class ExpenseGroupStorageV2 {
     if (group == null) return false;
 
     // If the participant is still referenced by any expense, do not remove.
-    final isAssigned = group.expenses.any((e) => e.paidBy.id == participantId);
+    final isAssigned = group.expenses.any(
+      (e) =>
+          e.paidBy.id == participantId ||
+          (e.payers?.any((ps) => ps.participant.id == participantId) ?? false),
+    );
     if (isAssigned) return false;
 
     final updatedParticipants = group.participants
@@ -334,8 +343,21 @@ class ExpenseGroupStorageV2 {
 
     final updatedExpenses = group.expenses.map((e) {
       final replacement = changed[e.paidBy.id];
+      List<ExpensePayerShare>? updatedShares = e.payers;
+      if (updatedShares != null) {
+        updatedShares = updatedShares.map((ps) {
+          final rep = changed[ps.participant.id];
+          return rep != null ? ps.copyWith(participant: rep.copyWith()) : ps;
+        }).toList();
+      }
       if (replacement != null) {
-        return e.copyWith(paidBy: replacement.copyWith());
+        return e.copyWith(
+          paidBy: replacement.copyWith(),
+          payers: updatedShares,
+        );
+      }
+      if (updatedShares != e.payers) {
+        return e.copyWith(payers: updatedShares);
       }
       return e;
     }).toList();

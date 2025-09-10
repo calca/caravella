@@ -24,11 +24,14 @@ class CsvExporter {
     );
 
     for (final e in group.expenses) {
+      final payerLabel = (e.payers != null && e.payers!.length > 1)
+          ? e.payers!.map((p) => p.participant.name).join('+')
+          : e.paidBy.name;
       buffer.writeln(
         [
           _escape(e.name ?? ''),
           e.amount?.toStringAsFixed(2) ?? '',
-          _escape(e.paidBy.name),
+          _escape(payerLabel),
           _escape(e.category.name),
           e.date.toIso8601String().split('T').first,
           _escape(e.note ?? ''),

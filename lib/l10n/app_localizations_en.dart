@@ -1577,4 +1577,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get debt_prefix_to => 'to ';
+
+  @override
+  String get multi_payer_split_equally => 'Split equally';
+
+  @override
+  String get multi_payer_each => 'each';
 }

@@ -494,4 +494,8 @@
   ,"@less": {"description": "Rótulo inline para recolher e mostrar menos itens"}
   ,"debt_prefix_to": "a "
   ,"@debt_prefix_to": {"description": "Prefixo curto mostrado antes do destinatário em uma linha de dívida/liquidação (ex.: 'a Alice 10€')"}
+  ,"multi_payer_split_equally": "Dividido igualmente"
+  ,"@multi_payer_split_equally": {"description": "Mostrado quando o valor está ausente ou não é positivo para indicar divisão igual entre vários pagadores"}
+  ,"multi_payer_each": "cada"
+  ,"@multi_payer_each": {"description": "Sufixo após um valor quando mais de dois pagadores dividem igualmente (ex. 10,00 cada)"}
 }

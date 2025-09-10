@@ -1572,4 +1572,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get debt_prefix_to => '给 ';
+
+  @override
+  String get multi_payer_split_equally => '平均分摊';
+
+  @override
+  String get multi_payer_each => '每人';
 }

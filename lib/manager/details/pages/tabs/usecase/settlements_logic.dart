@@ -60,7 +60,15 @@ List<Settlement> computeSettlements(ExpenseGroup trip) {
   }
   for (final e in trip.expenses) {
     if (e.amount != null) {
-      balances[e.paidBy.id] = (balances[e.paidBy.id] ?? 0) + e.amount!;
+      final payers = e.payers;
+      if (payers != null && payers.isNotEmpty) {
+        for (final ps in payers) {
+          balances[ps.participant.id] =
+              (balances[ps.participant.id] ?? 0) + ps.share;
+        }
+      } else {
+        balances[e.paidBy.id] = (balances[e.paidBy.id] ?? 0) + e.amount!;
+      }
     }
   }
   for (final p in trip.participants) {

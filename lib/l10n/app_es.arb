@@ -592,4 +592,8 @@
   ,"@less": {"description": "Etiqueta inline para contraer y mostrar menos elementos"}
   ,"debt_prefix_to": "a "
   ,"@debt_prefix_to": {"description": "Prefijo corto mostrado antes del destinatario en una línea de deuda/liquidación (p. ej., 'a Alicia 10€')"}
+  ,"multi_payer_split_equally": "Dividido equitativamente"
+  ,"@multi_payer_split_equally": {"description": "Mostrado cuando falta el monto o no es positivo para indicar que se divide equitativamente entre varios pagadores"}
+  ,"multi_payer_each": "cada uno"
+  ,"@multi_payer_each": {"description": "Sufijo después de un monto cuando más de dos pagadores dividen equitativamente (ej. 10,00 cada uno)"}
 }

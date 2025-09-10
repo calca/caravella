@@ -594,4 +594,8 @@
   ,"@less": {"description": "Inline toggle label to collapse and show fewer items"}
   ,"debt_prefix_to": "to "
   ,"@debt_prefix_to": {"description": "Short prefix shown before the recipient in a debt/settlement line (e.g., 'to Alice 10€')"}
+  ,"multi_payer_split_equally": "Split equally"
+  ,"@multi_payer_split_equally": {"description": "Shown when amount is missing or not positive to indicate equal split between multiple payers"}
+  ,"multi_payer_each": "each"
+  ,"@multi_payer_each": {"description": "Suffix after an amount when more than two payers are splitting equally (e.g. 10.00 each)"}
 }

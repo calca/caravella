@@ -364,4 +364,8 @@
   ,"@less": {"description": "收起并显示更少项目的内联按钮标签"}
   ,"debt_prefix_to": "给 "
   ,"@debt_prefix_to": {"description": "在债务/结算行中显示在收款人之前的简短前缀（例如：'给 Alice 10€'）"}
+  ,"multi_payer_split_equally": "平均分摊"
+  ,"@multi_payer_split_equally": {"description": "当金额缺失或非正数时显示，表示在多个付款人之间平均分摊"}
+  ,"multi_payer_each": "每人"
+  ,"@multi_payer_each": {"description": "当超过两位付款人平均分摊时显示在金额后面的后缀（例如：10.00 每人）"}
 }

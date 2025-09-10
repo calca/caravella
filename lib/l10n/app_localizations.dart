@@ -3151,6 +3151,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'to '**
   String get debt_prefix_to;
+
+  /// Shown when amount is missing or not positive to indicate equal split between multiple payers
+  ///
+  /// In en, this message translates to:
+  /// **'Split equally'**
+  String get multi_payer_split_equally;
+
+  /// Suffix after an amount when more than two payers are splitting equally (e.g. 10.00 each)
+  ///
+  /// In en, this message translates to:
+  /// **'each'**
+  String get multi_payer_each;
 }
 
 class _AppLocalizationsDelegate

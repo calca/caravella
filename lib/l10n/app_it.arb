@@ -581,4 +581,8 @@
   ,"@less": {"description": "Etichetta inline per comprimere e mostrare meno elementi"}
   ,"debt_prefix_to": "a "
   ,"@debt_prefix_to": {"description": "Prefisso breve mostrato prima del destinatario nella riga di debito/pareggio (es. 'a Alice 10€')"}
+  ,"multi_payer_split_equally": "Divisa equamente"
+  ,"@multi_payer_split_equally": {"description": "Mostrato quando l'importo manca o non è positivo per indicare che viene diviso equamente tra più paganti"}
+  ,"multi_payer_each": "ciascuno"
+  ,"@multi_payer_each": {"description": "Suffisso dopo un importo quando più di due paganti dividono equamente (es. 10,00 ciascuno)"}
 }

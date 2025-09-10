@@ -144,6 +144,24 @@ class ExpenseGroupValidator {
         errors['expense_$i'] =
             'Expense paidBy refers to non-existent participant';
       }
+      if (expense.payers != null) {
+        for (final ps in expense.payers!) {
+          if (!participantIds.contains(ps.participant.id)) {
+            errors['expense_$i'] =
+                'Expense payer share refers to non-existent participant';
+            break;
+          }
+        }
+        // Optional: check sum of shares ~ amount
+        final totalShares = expense.payers!.fold<double>(
+          0,
+          (s, p) => s + p.share,
+        );
+        if (expense.amount != null &&
+            (totalShares - expense.amount!).abs() > 0.05) {
+          errors['expense_$i'] = 'Expense payer shares do not sum to amount';
+        }
+      }
 
       if (!categoryIds.contains(expense.category.id)) {
         errors['expense_$i'] =

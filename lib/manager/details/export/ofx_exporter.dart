@@ -63,7 +63,11 @@ class OfxExporter {
         expense.name ?? expense.category.name,
       );
       buffer.writeln('            <NAME>$description</NAME>');
-      final payee = _sanitizeXmlValue(expense.paidBy.name);
+      final payee = _sanitizeXmlValue(
+        (expense.payers != null && expense.payers!.length > 1)
+            ? expense.payers!.map((p) => p.participant.name).join('+')
+            : expense.paidBy.name,
+      );
       buffer.writeln('            <PAYEE>$payee</PAYEE>');
       if (expense.note != null && expense.note!.isNotEmpty) {
         final memo = _sanitizeXmlValue(
