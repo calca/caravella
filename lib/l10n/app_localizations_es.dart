@@ -550,6 +550,24 @@ class AppLocalizationsEs extends AppLocalizations {
   String get edit_group => 'Editar Grupo';
 
   @override
+  String get copy_as_new_group => 'Nuevo desde aquí';
+
+  @override
+  String get copy_as_new_group_desc => 'Crear nuevo grupo a partir de aquí';
+
+  @override
+  String get new_prefix => 'Nuevo';
+
+  @override
+  String get edit_group_desc => 'Editar nombre, fechas y participantes';
+
+  @override
+  String get delete_group_desc => 'Eliminar este grupo permanentemente';
+
+  @override
+  String get delete_group_title => 'Eliminar grupo';
+
+  @override
   String get delete_group => 'Eliminar grupo';
 
   @override
