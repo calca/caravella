@@ -1,5 +1,5 @@
-import '../group/pages/expenses_group_edit_page.dart';
-import '../group/group_edit_mode.dart';
+import '../../group/pages/expenses_group_edit_page.dart';
+import '../../group/group_edit_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:async';
@@ -11,26 +11,27 @@ import 'package:path_provider/path_provider.dart'; // still used for share temp 
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 
-import '../../data/model/expense_details.dart';
-import '../../data/model/expense_group.dart';
-import '../../state/expense_group_notifier.dart';
-import '../../data/expense_group_storage_v2.dart';
-import '../../widgets/material3_dialog.dart';
+import '../../../data/model/expense_details.dart';
+import '../../../data/model/expense_group.dart';
+import '../../../state/expense_group_notifier.dart';
+import '../../../data/expense_group_storage_v2.dart';
+import '../../../widgets/material3_dialog.dart';
 // Removed legacy localization bridge imports (migration in progress)
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../widgets/app_toast.dart';
-import 'widgets/group_header.dart';
-import 'widgets/group_actions.dart';
-import 'widgets/group_total.dart';
-import 'widgets/filtered_expense_list.dart';
-import 'widgets/unified_overview_sheet.dart';
-import 'widgets/options_sheet.dart';
-import 'widgets/export_options_sheet.dart';
-import 'widgets/expense_entry_sheet.dart';
-import 'widgets/delete_expense_dialog.dart';
-import '../../widgets/add_fab.dart';
-import 'export/ofx_exporter.dart';
-import 'export/csv_exporter.dart';
+import '../../../widgets/app_toast.dart';
+import '../widgets/group_header.dart';
+import '../widgets/group_actions.dart';
+import '../widgets/group_total.dart';
+import '../widgets/filtered_expense_list.dart';
+// Replaced bottom sheet overview with full page navigation
+import 'unified_overview_page.dart';
+import '../widgets/options_sheet.dart';
+import '../widgets/export_options_sheet.dart';
+import '../widgets/expense_entry_sheet.dart';
+import '../widgets/delete_expense_dialog.dart';
+import '../../../widgets/add_fab.dart';
+import '../export/ofx_exporter.dart';
+import '../export/csv_exporter.dart';
 
 class ExpenseGroupDetailPage extends StatefulWidget {
   final ExpenseGroup trip;
@@ -139,21 +140,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     _groupNotifier?.setCurrentGroup(refreshed);
   }
 
-  void _showUnifiedOverviewSheet() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      enableDrag: true,
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.85,
-        minChildSize: 0.5,
-        maxChildSize: 0.95,
-        expand: false,
-        builder: (context, scrollController) => UnifiedOverviewSheet(
-          trip: _trip!,
-          scrollController: scrollController,
-        ),
-      ),
+  void _openUnifiedOverviewPage() {
+    if (_trip == null) return;
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (ctx) => UnifiedOverviewPage(trip: _trip!)),
     );
   }
 
@@ -625,7 +615,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             floating: false,
             elevation: 0,
             scrolledUnderElevation: 1,
-            backgroundColor: colorScheme.surface,
+            backgroundColor: colorScheme.surfaceContainer,
             foregroundColor: colorScheme.onSurface,
             toolbarHeight: 56,
             collapsedHeight: 56,
@@ -671,34 +661,38 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                 ),
                 child: _hideHeader
                     ? const SizedBox.shrink(key: ValueKey('header-hidden'))
-                    : Padding(
+                    : Container(
                         key: const ValueKey('header-visible'),
-                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            GroupHeader(trip: trip),
-                            const SizedBox(height: 32),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: GroupTotal(
-                                    total: totalExpenses,
-                                    currency: trip.currency,
+                        width: double.infinity,
+                        color: colorScheme.surfaceContainer,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              GroupHeader(trip: trip),
+                              const SizedBox(height: 32),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: GroupTotal(
+                                      total: totalExpenses,
+                                      currency: trip.currency,
+                                    ),
                                   ),
-                                ),
-                                GroupActions(
-                                  hasExpenses: trip.expenses.isNotEmpty,
-                                  onOverview: trip.expenses.isNotEmpty
-                                      ? _showUnifiedOverviewSheet
-                                      : null,
-                                  onOptions: _showOptionsSheet,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 24),
-                          ],
+                                  GroupActions(
+                                    hasExpenses: trip.expenses.isNotEmpty,
+                                    onOverview: trip.expenses.isNotEmpty
+                                        ? _openUnifiedOverviewPage
+                                        : null,
+                                    onOptions: _showOptionsSheet,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 24),
+                            ],
+                          ),
                         ),
                       ),
               ),
@@ -706,32 +700,36 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           ),
           SliverToBoxAdapter(
             child: Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: colorScheme.surfaceContainer,
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(24),
+              color: colorScheme
+                  .surfaceContainer, // background behind the decorated box
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: colorScheme.surface,
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(24),
+                  ),
                 ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    FilteredExpenseList(
-                      expenses: trip.expenses,
-                      currency: trip.currency,
-                      onExpenseTap: _openEditExpense,
-                      categories: trip.categories,
-                      participants: trip.participants,
-                      onFiltersVisibilityChanged: (visible) {
-                        if (mounted) {
-                          setState(() => _hideHeader = visible);
-                        }
-                      },
-                      onAddExpense: _showAddExpenseSheet,
-                    ),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      FilteredExpenseList(
+                        expenses: trip.expenses,
+                        currency: trip.currency,
+                        onExpenseTap: _openEditExpense,
+                        categories: trip.categories,
+                        participants: trip.participants,
+                        onFiltersVisibilityChanged: (visible) {
+                          if (mounted) {
+                            setState(() => _hideHeader = visible);
+                          }
+                        },
+                        onAddExpense: _showAddExpenseSheet,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -741,7 +739,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             sliver: SliverToBoxAdapter(
               child: Container(
                 height: _calculateBottomPadding(),
-                color: colorScheme.surfaceContainer,
+                color: colorScheme.surface,
               ),
             ),
           ),

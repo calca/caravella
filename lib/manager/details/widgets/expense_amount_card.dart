@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:timeago/timeago.dart' as timeago;
 import '../../../widgets/base_card.dart';
 import '../../../widgets/currency_display.dart';
+import '../../../data/model/expense_participant.dart';
+import 'group_header.dart';
 
 class ExpenseAmountCard extends StatelessWidget {
   final String title;
   final int coins;
   final bool checked;
-  final String? paidBy;
+  final ExpenseParticipant? paidBy;
   final String? category;
   final DateTime? date;
   final String currency;
@@ -26,16 +29,15 @@ class ExpenseAmountCard extends StatelessWidget {
     super.key,
   });
 
-  String _formatDateTime(DateTime date) {
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final d = DateTime(date.year, date.month, date.day);
-    final time =
-        '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
-    if (d == today) {
-      return 'Today, $time';
+  String _formatDateTime(BuildContext context, DateTime date) {
+    // Use timeago for relative dates
+    // Check the current locale and set timeago accordingly
+    final locale = Localizations.localeOf(context);
+    if (locale.languageCode == 'it') {
+      timeago.setLocaleMessages('it', timeago.ItMessages());
+      return timeago.format(date, locale: 'it');
     } else {
-      return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}, $time';
+      return timeago.format(date);
     }
   }
 
@@ -46,7 +48,7 @@ class ExpenseAmountCard extends StatelessWidget {
 
     return BaseCard(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      backgroundColor: colorScheme.surfaceContainer,
+      backgroundColor: Colors.transparent,
       noBorder: true,
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
@@ -54,7 +56,11 @@ class ExpenseAmountCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // ...existing code...
+            // Participant Avatar on the left
+            if (paidBy != null) ...[
+              ParticipantAvatar(participant: paidBy!, size: 52),
+              const SizedBox(width: 12),
+            ],
             // Main info (title, person, date)
             Expanded(
               child: Column(
@@ -62,29 +68,29 @@ class ExpenseAmountCard extends StatelessWidget {
                 children: [
                   // Title with optional highlight
                   _buildHighlightedTitle(context, title, highlightQuery),
-                  if ((paidBy != null && paidBy!.isNotEmpty) ||
+                  if ((paidBy != null) ||
                       (category != null && category!.isNotEmpty)) ...[
                     const SizedBox(height: 6),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        if (paidBy != null && paidBy!.isNotEmpty) ...[
-                          Icon(
-                            Icons.person_outline_rounded,
-                            size: 15,
-                            color: colorScheme.onSurface,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            paidBy!,
-                            style: textTheme.labelSmall?.copyWith(
-                              color: colorScheme.onSurface,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ],
+                        // if (paidBy != null) ...[
+                        //   Icon(
+                        //     Icons.person_outline_rounded,
+                        //     size: 15,
+                        //     color: colorScheme.onSurface,
+                        //   ),
+                        //   const SizedBox(width: 4),
+                        //   Text(
+                        //     paidBy!.name,
+                        //     style: textTheme.labelSmall?.copyWith(
+                        //       color: colorScheme.onSurface,
+                        //       fontWeight: FontWeight.w400,
+                        //     ),
+                        //   ),
+                        // ],
                         if (category != null && category!.isNotEmpty) ...[
-                          const SizedBox(width: 12),
+                          //const SizedBox(width: 12),
                           Icon(
                             Icons.local_offer_outlined,
                             size: 15,
@@ -114,7 +120,7 @@ class ExpenseAmountCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 3),
                         Text(
-                          _formatDateTime(date!),
+                          _formatDateTime(context, date!),
                           style: textTheme.bodySmall?.copyWith(
                             color: colorScheme.onSurface.withValues(alpha: 0.7),
                             fontSize: 11,
@@ -127,20 +133,14 @@ class ExpenseAmountCard extends StatelessWidget {
               ),
             ),
             // Amount
-            Align(
-              alignment: Alignment.center,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 12.0),
-                child: CurrencyDisplay(
-                  value: coins.toDouble(),
-                  currency: currency,
-                  valueFontSize: 32.0,
-                  currencyFontSize: 14.0,
-                  alignment: MainAxisAlignment.end,
-                  showDecimals: false,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+            CurrencyDisplay(
+              value: coins.toDouble(),
+              currency: currency,
+              valueFontSize: 32.0,
+              currencyFontSize: 14.0,
+              alignment: MainAxisAlignment.end,
+              showDecimals: false,
+              fontWeight: FontWeight.w500,
             ),
           ],
         ),

@@ -107,6 +107,9 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     updatedCategories.add(ExpenseCategory(name: categoryName));
     final updatedGroup = _currentGroup!.copyWith(categories: updatedCategories);
 
+    // Aggiorna il gruppo corrente con le nuove categorie
+    _currentGroup = _currentGroup!.copyWith(categories: updatedCategories);
+
     // Memorizza l'ultima categoria aggiunta
     _lastAddedCategory = categoryName;
     _lastEvent = 'category_added';

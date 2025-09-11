@@ -1,25 +1,62 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import '../../../data/model/expense_group.dart';
+import '../../../data/model/expense_participant.dart';
 
-class ExpenseGroupAvatar extends StatelessWidget {
-  final ExpenseGroup trip;
+class ParticipantAvatar extends StatelessWidget {
+  final ExpenseParticipant participant;
   final double size;
-  const ExpenseGroupAvatar({super.key, required this.trip, required this.size});
+  const ParticipantAvatar({
+    super.key,
+    required this.participant,
+    required this.size,
+  });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final initials = participant.name.length >= 2
+        ? participant.name.substring(0, 2).toUpperCase()
+        : participant.name.toUpperCase();
+
+    return CircleAvatar(
+      radius: size / 2,
+      backgroundColor: colorScheme.surfaceContainer,
+      foregroundColor: colorScheme.onPrimaryContainer,
+      child: Text(
+        initials,
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          color: colorScheme.onPrimaryContainer,
+          fontWeight: FontWeight.bold,
+          fontSize: size * 0.4,
+        ),
+      ),
+    );
+  }
+}
+
+class ExpenseGroupAvatar extends StatelessWidget {
+  final ExpenseGroup trip;
+  final double size;
+  final Color? backgroundColor;
+  const ExpenseGroupAvatar({
+    super.key,
+    required this.trip,
+    required this.size,
+    this.backgroundColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final Color bgColor = trip.color != null
+        ? Color(trip.color!)
+        : (backgroundColor ?? colorScheme.surfaceContainerLowest);
     return Container(
       margin: const EdgeInsets.only(top: 8, bottom: 8),
       width: size,
       height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: trip.color != null
-            ? Color(trip.color!)
-            : colorScheme.surfaceContainer,
-      ),
+      decoration: BoxDecoration(shape: BoxShape.circle, color: bgColor),
       child: trip.file != null && trip.file!.isNotEmpty
           ? ClipOval(
               child: Image.file(

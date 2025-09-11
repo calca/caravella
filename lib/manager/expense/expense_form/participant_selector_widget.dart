@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import '../../../config/app_icons.dart';
 import '../../../widgets/selection_bottom_sheet.dart';
 import '../../../data/participant_service.dart';
 import '../../../data/model/expense_participant.dart';
@@ -72,7 +73,7 @@ class ParticipantSelectorWidget extends StatelessWidget {
 
     if (fullEdit) {
       return InlineSelectField(
-        icon: Icons.person_outline,
+        icon: AppIcons.participant,
         label: selected ?? gloc.participants_label,
         onTap: openPicker,
         enabled: participants.isNotEmpty || participantService != null,
@@ -93,7 +94,7 @@ class ParticipantSelectorWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            Icons.person_outline,
+            AppIcons.participant,
             size: 20,
             color: theme.colorScheme.onSurface,
           ),

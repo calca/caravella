@@ -69,6 +69,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get group_total => 'Totale';
 
   @override
+  String get total_spent => 'Totale speso';
+
+  @override
   String get download_all_csv => 'Scarica tutto (CSV)';
 
   @override
@@ -81,7 +84,23 @@ class AppLocalizationsIt extends AppLocalizations {
   String get share_all_ofx => 'Condividi tutto (OFX)';
 
   @override
+  String get share_label => 'Condividi';
+
+  @override
+  String get share_text_label => 'Condividi testo';
+
+  @override
+  String get share_image_label => 'Condividi immagine';
+
+  @override
   String get export_share => 'Esporta e Condividi';
+
+  @override
+  String get contribution_percentages => 'Percentuali';
+
+  @override
+  String get contribution_percentages_desc =>
+      'Quota del totale pagata da ciascun partecipante';
 
   @override
   String get export_options => 'Opzioni di Esportazione';
@@ -216,6 +235,17 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get participants => 'Partecipanti';
+
+  @override
+  String participant_count(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count partecipanti',
+      one: '$count partecipante',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get participants_label => 'Partecipanti';
@@ -716,6 +746,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settings_language_es => 'Spagnolo';
 
   @override
+  String get settings_language_pt => 'Portoghese';
+
+  @override
+  String get settings_language_zh => 'Cinese (Semplificato)';
+
+  @override
   String get settings_select_language => 'Seleziona lingua';
 
   @override
@@ -804,6 +840,15 @@ class AppLocalizationsIt extends AppLocalizations {
       'Abilita il backup automatico del sistema operativo';
 
   @override
+  String get settings_user_name_title => 'Il tuo nome';
+
+  @override
+  String get settings_user_name_desc => 'Nome o nickname da usare nell\'app';
+
+  @override
+  String get settings_user_name_hint => 'Inserisci il tuo nome';
+
+  @override
   String get info_tab => 'Info';
 
   @override
@@ -846,6 +891,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get spent_today => 'Oggi';
+
+  @override
+  String get monthly_average => 'Mensile';
 
   @override
   String get average_expense => 'Spesa media';
@@ -1518,4 +1566,22 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get expense_groups_desc => 'Gestisci i tuoi gruppi di spese';
+
+  @override
+  String get whats_new_title => 'Novità';
+
+  @override
+  String get whats_new_desc => 'Scopri le ultime novità e aggiornamenti';
+
+  @override
+  String get average_per_person => 'Speso medio per persona';
+
+  @override
+  String get more => 'altro';
+
+  @override
+  String get less => 'meno';
+
+  @override
+  String get debt_prefix_to => 'a ';
 }

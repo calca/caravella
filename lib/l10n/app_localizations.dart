@@ -8,6 +8,8 @@ import 'package:intl/intl.dart' as intl;
 import 'app_localizations_en.dart';
 import 'app_localizations_es.dart';
 import 'app_localizations_it.dart';
+import 'app_localizations_pt.dart';
+import 'app_localizations_zh.dart';
 
 // ignore_for_file: type=lint
 
@@ -98,6 +100,8 @@ abstract class AppLocalizations {
     Locale('en'),
     Locale('es'),
     Locale('it'),
+    Locale('pt'),
+    Locale('zh'),
   ];
 
   /// Section title for developer and support links in DeveloperPage
@@ -214,6 +218,12 @@ abstract class AppLocalizations {
   /// **'Total'**
   String get group_total;
 
+  /// Label shown before the total amount spent in the group
+  ///
+  /// In en, this message translates to:
+  /// **'Total spent'**
+  String get total_spent;
+
   /// No description provided for @download_all_csv.
   ///
   /// In en, this message translates to:
@@ -238,11 +248,41 @@ abstract class AppLocalizations {
   /// **'Share all (OFX)'**
   String get share_all_ofx;
 
+  /// No description provided for @share_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get share_label;
+
+  /// No description provided for @share_text_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Share text'**
+  String get share_text_label;
+
+  /// No description provided for @share_image_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Share image'**
+  String get share_image_label;
+
   /// No description provided for @export_share.
   ///
   /// In en, this message translates to:
   /// **'Export & Share'**
   String get export_share;
+
+  /// No description provided for @contribution_percentages.
+  ///
+  /// In en, this message translates to:
+  /// **'Percentages'**
+  String get contribution_percentages;
+
+  /// No description provided for @contribution_percentages_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Share of total paid by each participant'**
+  String get contribution_percentages_desc;
 
   /// No description provided for @export_options.
   ///
@@ -507,6 +547,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Participants'**
   String get participants;
+
+  /// Pluralized participant count
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one {{count} participant} other {{count} participants}}'**
+  String participant_count(num count);
 
   /// No description provided for @participants_label.
   ///
@@ -1468,6 +1514,18 @@ abstract class AppLocalizations {
   /// **'Spanish'**
   String get settings_language_es;
 
+  /// No description provided for @settings_language_pt.
+  ///
+  /// In en, this message translates to:
+  /// **'Portuguese'**
+  String get settings_language_pt;
+
+  /// No description provided for @settings_language_zh.
+  ///
+  /// In en, this message translates to:
+  /// **'Chinese (Simplified)'**
+  String get settings_language_zh;
+
   /// No description provided for @settings_select_language.
   ///
   /// In en, this message translates to:
@@ -1642,6 +1700,24 @@ abstract class AppLocalizations {
   /// **'Enable operating system automatic backup'**
   String get auto_backup_desc;
 
+  /// No description provided for @settings_user_name_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Your name'**
+  String get settings_user_name_title;
+
+  /// No description provided for @settings_user_name_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Name or nickname to use in the app'**
+  String get settings_user_name_desc;
+
+  /// No description provided for @settings_user_name_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your name'**
+  String get settings_user_name_hint;
+
   /// No description provided for @info_tab.
   ///
   /// In en, this message translates to:
@@ -1725,6 +1801,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Today'**
   String get spent_today;
+
+  /// Label shown before the computed overall monthly average spending value
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get monthly_average;
 
   /// No description provided for @average_expense.
   ///
@@ -3033,6 +3115,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Manage your expense groups'**
   String get expense_groups_desc;
+
+  /// Title of the page showing the changelog
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s New'**
+  String get whats_new_title;
+
+  /// Subtitle of the what's new page
+  ///
+  /// In en, this message translates to:
+  /// **'Discover the latest features and updates'**
+  String get whats_new_desc;
+
+  /// Label shown before the computed average spent per person in the Participants tab
+  ///
+  /// In en, this message translates to:
+  /// **'Average per person'**
+  String get average_per_person;
+
+  /// Inline toggle label to expand and show all items
+  ///
+  /// In en, this message translates to:
+  /// **'more'**
+  String get more;
+
+  /// Inline toggle label to collapse and show fewer items
+  ///
+  /// In en, this message translates to:
+  /// **'less'**
+  String get less;
+
+  /// Short prefix shown before the recipient in a debt/settlement line (e.g., 'to Alice 10€')
+  ///
+  /// In en, this message translates to:
+  /// **'to '**
+  String get debt_prefix_to;
 }
 
 class _AppLocalizationsDelegate
@@ -3046,7 +3164,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en', 'es', 'it'].contains(locale.languageCode);
+      <String>['en', 'es', 'it', 'pt', 'zh'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -3061,6 +3179,10 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsEs();
     case 'it':
       return AppLocalizationsIt();
+    case 'pt':
+      return AppLocalizationsPt();
+    case 'zh':
+      return AppLocalizationsZh();
   }
 
   throw FlutterError(
