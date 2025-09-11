@@ -33,6 +33,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   bool _loading = true;
   bool _showSearchBar = false;
   final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocusNode = FocusNode();
   Timer? _searchDebounce;
   // Scroll + FAB state
   late final ScrollController _scrollController;
@@ -50,10 +51,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     _scrollController.addListener(_onScroll);
 
     // Tabs: Active | Archived
-    _tabController = TabController(
-      length: 2,
-      vsync: this,
-    );
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   ExpenseGroupNotifier? _groupNotifier;
@@ -62,6 +60,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   void dispose() {
     _groupNotifier?.removeListener(_onNotifierChanged);
     _searchController.dispose();
+    _searchFocusNode.dispose();
     _searchDebounce?.cancel();
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
@@ -98,7 +97,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
 
     try {
       await Future.delayed(const Duration(milliseconds: 100));
-      
+
       // Load both active and archived trips simultaneously
       final activeTrips = await ExpenseGroupStorageV2.getActiveGroups();
       final archivedTrips = await ExpenseGroupStorageV2.getArchivedGroups();
@@ -237,6 +236,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     final colorScheme = Theme.of(context).colorScheme;
     return SearchBar(
       controller: _searchController,
+      focusNode: _searchFocusNode,
       hintText: gloc.search_groups,
       leading: const Icon(Icons.search_outlined),
       trailing: _searchQuery.isNotEmpty
@@ -260,12 +260,10 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   }
 
   Widget _buildTabContent(List<ExpenseGroup> trips, String tabType) {
-    final gloc = gen.AppLocalizations.of(context);
-    
     if (_loading) {
       return const Center(child: CircularProgressIndicator.adaptive());
     }
-    
+
     if (trips.isEmpty) {
       return ExpsenseGroupEmptyStates(
         searchQuery: _searchQuery,
@@ -273,9 +271,8 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
         onTripAdded: () async {
           final result = await Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => const ExpensesGroupEditPage(
-                mode: GroupEditMode.create,
-              ),
+              builder: (context) =>
+                  const ExpensesGroupEditPage(mode: GroupEditMode.create),
             ),
           );
           if (result == true) {
@@ -284,7 +281,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
         },
       );
     }
-    
+
     return ListView.builder(
       controller: tabType == 'search' ? _scrollController : null,
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 100),
@@ -309,8 +306,6 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
       width: double.infinity,
       child: TabBar(
         controller: _tabController,
-        isScrollable: true,
-        tabAlignment: TabAlignment.center,
         tabs: [
           Tab(text: gloc.status_active),
           Tab(text: gloc.status_archived),
@@ -318,7 +313,6 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
         labelColor: colorScheme.onSurface,
         unselectedLabelColor: colorScheme.outline,
         indicatorColor: colorScheme.primary,
-        indicatorSize: TabBarIndicatorSize.label,
       ),
     );
   }
@@ -353,17 +347,32 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                   ),
                   tooltip: _showSearchBar ? gloc.hide_search : gloc.show_search,
                   onPressed: () {
+                    final willShow = !_showSearchBar;
                     setState(() {
-                      _showSearchBar = !_showSearchBar;
+                      _showSearchBar = willShow;
                       // Clear search when hiding search bar
-                      if (!_showSearchBar) {
+                      if (!willShow) {
                         _searchController.clear();
                         _searchQuery = '';
-                        _filteredActiveTrips = _applyFilter(_activeTrips, false);
-                        _filteredArchivedTrips = _applyFilter(_archivedTrips, false);
+                        _filteredActiveTrips = _applyFilter(
+                          _activeTrips,
+                          false,
+                        );
+                        _filteredArchivedTrips = _applyFilter(
+                          _archivedTrips,
+                          false,
+                        );
                         _filteredAllTrips = _applyFilter(_allTrips, true);
                       }
                     });
+                    if (willShow) {
+                      // Post frame to ensure widget is built before requesting focus
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (mounted) {
+                          _searchFocusNode.requestFocus();
+                        }
+                      });
+                    }
                   },
                 ),
               ],
