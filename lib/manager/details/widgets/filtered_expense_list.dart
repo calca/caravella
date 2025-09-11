@@ -99,7 +99,12 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
     // Hide header & filter button entirely if no base expenses
     if (widget.expenses.isEmpty && _showFilters) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) setState(() => _showFilters = false);
+        if (!mounted) return;
+        setState(() {
+          _showFilters = false;
+          _clearAllFilters();
+        });
+        widget.onFiltersVisibilityChanged?.call(false);
       });
     }
 
@@ -107,7 +112,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
       children: [
         if (widget.expenses.isNotEmpty) ...[
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
             child: Row(
               children: [
                 Expanded(
@@ -137,8 +142,12 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                     size: 20,
                   ),
                   onPressed: () {
-                    setState(() => _showFilters = !_showFilters);
-                    widget.onFiltersVisibilityChanged?.call(_showFilters);
+                    final next = !_showFilters;
+                    setState(() {
+                      _showFilters = next;
+                      if (!next) _clearAllFilters();
+                    });
+                    widget.onFiltersVisibilityChanged?.call(next);
                   },
                   tooltip: _showFilters ? gloc.hide_filters : gloc.show_filters,
                 ),
@@ -336,7 +345,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                     title: expense.name ?? '',
                     coins: (expense.amount ?? 0).toInt(),
                     checked: true,
-                    paidBy: expense.paidBy.name,
+                    paidBy: expense.paidBy,
                     category: expense.category.name,
                     date: expense.date,
                     currency: widget.currency,

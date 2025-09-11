@@ -8,7 +8,7 @@ import UIKit
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     let controller: FlutterViewController = window?.rootViewController as! FlutterViewController
-    let backupChannel = FlutterMethodChannel(name: "org.app.caravella/backup",
+    let backupChannel = FlutterMethodChannel(name: "io.caravella.egm/backup",
                                             binaryMessenger: controller.binaryMessenger)
     
     backupChannel.setMethodCallHandler({

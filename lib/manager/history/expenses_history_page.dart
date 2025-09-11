@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:async';
 import '../../data/model/expense_group.dart';
-import '../../../data/expense_group_storage.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import '../../../data/expense_group_storage_v2.dart';
+import 'package:provider/provider.dart';
+import '../../state/expense_group_notifier.dart';
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../group/pages/expenses_group_edit_page.dart';
 import '../group/group_edit_mode.dart';
 import '../../widgets/caravella_app_bar.dart';
+import '../group/widgets/section_header.dart';
 import 'widgets/expense_group_empty_states.dart';
 import 'widgets/expense_group_card.dart';
 import '../../widgets/app_toast.dart';
@@ -20,33 +23,25 @@ class ExpesensHistoryPage extends StatefulWidget {
 
 class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     with TickerProviderStateMixin {
-  List<ExpenseGroup> _allTrips = [];
-  List<ExpenseGroup> _filteredTrips = [];
-  String _statusFilter = 'active'; // active, archived
+  List<ExpenseGroup> _activeTrips = [];
+  List<ExpenseGroup> _archivedTrips = [];
+  List<ExpenseGroup> _allTrips = []; // Combined active + archived for search
+  List<ExpenseGroup> _filteredActiveTrips = [];
+  List<ExpenseGroup> _filteredArchivedTrips = [];
+  List<ExpenseGroup> _filteredAllTrips = []; // Combined search results
   String _searchQuery = '';
   bool _loading = true;
+  bool _showSearchBar = false;
   final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocusNode = FocusNode();
   Timer? _searchDebounce;
   // Scroll + FAB state
   late final ScrollController _scrollController;
   bool _fabVisible = true;
   Timer? _fabIdleTimer;
+  late final TabController _tabController;
 
-  List<Map<String, dynamic>> _statusOptions(BuildContext context) {
-    final gloc = gen.AppLocalizations.of(context);
-    return [
-      {
-        'key': 'active',
-        'label': gloc.status_active,
-        'icon': Icons.play_circle_outline,
-      },
-      {
-        'key': 'archived',
-        'label': gloc.status_archived,
-        'icon': Icons.archive_outlined,
-      },
-    ];
-  }
+  // (Removed) _statusOptions helper previously used for SegmentedButton.
 
   @override
   void initState() {
@@ -54,16 +49,47 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     _loadTrips();
     _scrollController = ScrollController();
     _scrollController.addListener(_onScroll);
+
+    // Tabs: Active | Archived
+    _tabController = TabController(length: 2, vsync: this);
   }
+
+  ExpenseGroupNotifier? _groupNotifier;
 
   @override
   void dispose() {
+    _groupNotifier?.removeListener(_onNotifierChanged);
     _searchController.dispose();
+    _searchFocusNode.dispose();
     _searchDebounce?.cancel();
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     _fabIdleTimer?.cancel();
+    _tabController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // Wire notifier listener for external updates/deletes
+    _groupNotifier?.removeListener(_onNotifierChanged);
+    _groupNotifier = context.read<ExpenseGroupNotifier>();
+    _groupNotifier?.addListener(_onNotifierChanged);
+  }
+
+  void _onNotifierChanged() async {
+    final deleted = _groupNotifier?.deletedGroupIds ?? [];
+    final updated = _groupNotifier?.updatedGroupIds ?? [];
+
+    if ((deleted.isNotEmpty || updated.isNotEmpty) && mounted) {
+      // Reload the trips to reflect external changes (deletions/updates)
+      await _loadTrips();
+      // Clear notifier queues after handling
+      _groupNotifier?.clearDeletedGroups();
+      _groupNotifier?.clearUpdatedGroups();
+    }
   }
 
   Future<void> _loadTrips() async {
@@ -71,23 +97,19 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
 
     try {
       await Future.delayed(const Duration(milliseconds: 100));
-      List<ExpenseGroup> trips;
 
-      // Carica i dati in base al filtro di stato
-      switch (_statusFilter) {
-        case 'archived':
-          trips = await ExpenseGroupStorage.getArchivedGroups();
-          break;
-        case 'active':
-        default:
-          trips = await ExpenseGroupStorage.getActiveGroups();
-          break;
-      }
+      // Load both active and archived trips simultaneously
+      final activeTrips = await ExpenseGroupStorageV2.getActiveGroups();
+      final archivedTrips = await ExpenseGroupStorageV2.getArchivedGroups();
 
       if (mounted) {
         setState(() {
-          _allTrips = trips;
-          _filteredTrips = _applyFilter(_allTrips);
+          _activeTrips = activeTrips;
+          _archivedTrips = archivedTrips;
+          _allTrips = [...activeTrips, ...archivedTrips]; // Combine both lists
+          _filteredActiveTrips = _applyFilter(_activeTrips, false);
+          _filteredArchivedTrips = _applyFilter(_archivedTrips, false);
+          _filteredAllTrips = _applyFilter(_allTrips, true);
           _loading = false;
         });
       }
@@ -103,7 +125,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     }
   }
 
-  List<ExpenseGroup> _applyFilter(List<ExpenseGroup> trips) {
+  List<ExpenseGroup> _applyFilter(List<ExpenseGroup> trips, bool isAllTrips) {
     // Applica solo il filtro di ricerca per titolo
     List<ExpenseGroup> filtered = trips;
     if (_searchQuery.isNotEmpty) {
@@ -115,9 +137,17 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
           .toList();
     }
     // Ordina: pinned prima, poi il resto
+    // Per la lista combinata, ordina anche per stato (attivi prima degli archiviati)
     filtered.sort((a, b) {
-      if (a.pinned == b.pinned) return 0;
-      return a.pinned ? -1 : 1;
+      // Prima ordina per pinned
+      if (a.pinned != b.pinned) {
+        return a.pinned ? -1 : 1;
+      }
+      // Per la lista combinata, ordina per stato (attivi prima)
+      if (isAllTrips && a.archived != b.archived) {
+        return a.archived ? 1 : -1;
+      }
+      return 0;
     });
     return filtered;
   }
@@ -179,100 +209,110 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     );
   }
 
-  void _onStatusFilterChanged(String key) {
-    setState(() {
-      _statusFilter = key;
-      _loading = true; // Forza loading state
-    });
-    // Forza un piccolo delay prima di ricaricare
-    Future.delayed(const Duration(milliseconds: 100), () {
-      _loadTrips(); // Ricarica i dati con il nuovo filtro
-    });
-  }
-
   void _onSearchChanged(String query) {
     _searchDebounce?.cancel();
     _searchDebounce = Timer(const Duration(milliseconds: 300), () {
       if (mounted) {
         setState(() {
           _searchQuery = query;
-          _filteredTrips = _applyFilter(_allTrips);
+          _filteredActiveTrips = _applyFilter(_activeTrips, false);
+          _filteredArchivedTrips = _applyFilter(_archivedTrips, false);
+          _filteredAllTrips = _applyFilter(_allTrips, true);
         });
       }
     });
   }
 
-  Future<void> _updateTrip(ExpenseGroup updatedTrip) async {
-    final allTrips = await ExpenseGroupStorage.getAllGroups();
-    final index = allTrips.indexWhere((t) => t.id == updatedTrip.id);
-    if (index != -1) {
-      allTrips[index] = updatedTrip;
-      await ExpenseGroupStorage.writeTrips(allTrips);
-      // Forza un breve delay per assicurare la persistenza
-      await Future.delayed(const Duration(milliseconds: 50));
-      // Ricarica i dati con il filtro corrente
-      await _loadTrips();
-    }
+  // Handler for archive toggle from the card: persist archive state and reload list.
+  Future<void> _onArchiveToggle(String groupId, bool archived) async {
+    // Persist archive state using the storage helper and then reload list.
+    await ExpenseGroupStorageV2.updateGroupArchive(groupId, archived);
+    // Small delay to allow storage to settle, then reload the list
+    await Future.delayed(const Duration(milliseconds: 50));
+    await _loadTrips();
   }
 
   Widget _buildSearchBar(BuildContext context, gen.AppLocalizations gloc) {
     final colorScheme = Theme.of(context).colorScheme;
-    return TextField(
+    return SearchBar(
       controller: _searchController,
-      onChanged: _onSearchChanged,
-      decoration: InputDecoration(
-        labelText: gloc.search_groups,
-        hintText: gloc.search_groups,
-        prefixIcon: Icon(
-          Icons.search_outlined,
-          color: _searchQuery.isNotEmpty
-              ? colorScheme.primary
-              : colorScheme.onSurface.withValues(alpha: 0.6),
-        ),
-        suffixIcon: _searchQuery.isNotEmpty
-            ? IconButton(
-                icon: Icon(
-                  Icons.clear_rounded,
-                  color: colorScheme.onSurface.withValues(alpha: 0.6),
-                ),
+      focusNode: _searchFocusNode,
+      hintText: gloc.search_groups,
+      leading: const Icon(Icons.search_outlined),
+      trailing: _searchQuery.isNotEmpty
+          ? [
+              IconButton(
+                icon: const Icon(Icons.clear_rounded),
                 onPressed: () {
                   _searchController.clear();
                   _onSearchChanged('');
                 },
-              )
-            : null,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        filled: true,
-        fillColor: colorScheme.surfaceContainerHighest,
+              ),
+            ]
+          : [],
+      onChanged: _onSearchChanged,
+      elevation: WidgetStateProperty.all(0),
+      backgroundColor: WidgetStateProperty.all(colorScheme.surfaceContainer),
+      shape: WidgetStateProperty.all(
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
 
-  Widget _buildStatusSegmentedButton(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final options = _statusOptions(context);
-    
-    return SegmentedButton<String>(
-      segments: options.map((option) {
-        return ButtonSegment<String>(
-          value: option['key'],
-          label: Text(option['label']),
-          icon: Icon(option['icon']),
+  Widget _buildTabContent(List<ExpenseGroup> trips, String tabType) {
+    if (_loading) {
+      return const Center(child: CircularProgressIndicator.adaptive());
+    }
+
+    if (trips.isEmpty) {
+      return ExpsenseGroupEmptyStates(
+        searchQuery: _searchQuery,
+        periodFilter: tabType == 'search' ? 'all' : tabType,
+        onTripAdded: () async {
+          final result = await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) =>
+                  const ExpensesGroupEditPage(mode: GroupEditMode.create),
+            ),
+          );
+          if (result == true) {
+            await _loadTrips();
+          }
+        },
+      );
+    }
+
+    return ListView.builder(
+      controller: tabType == 'search' ? _scrollController : null,
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 100),
+      itemCount: trips.length,
+      itemBuilder: (context, index) {
+        final trip = trips[index];
+        return ExpenseGroupCard(
+          trip: trip,
+          onArchiveToggle: _onArchiveToggle,
+          searchQuery: _searchQuery,
         );
-      }).toList(),
-      selected: {_statusFilter},
-      onSelectionChanged: (selected) {
-        if (selected.isNotEmpty) {
-          _onStatusFilterChanged(selected.first);
-        }
       },
-      style: SegmentedButton.styleFrom(
-        backgroundColor: colorScheme.surfaceContainer,
-        foregroundColor: colorScheme.onSurface,
-        selectedBackgroundColor: colorScheme.primaryContainer,
-        selectedForegroundColor: colorScheme.onPrimaryContainer,
+    );
+  }
+
+  Widget _buildStatusSegmentedButton(BuildContext context) {
+    // Replaced with a TabBar containing two tabs: Active | Archived
+    final gloc = gen.AppLocalizations.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return SizedBox(
+      width: double.infinity,
+      child: TabBar(
+        controller: _tabController,
+        tabs: [
+          Tab(text: gloc.status_active),
+          Tab(text: gloc.status_archived),
+        ],
+        labelColor: colorScheme.onSurface,
+        unselectedLabelColor: colorScheme.outline,
+        indicatorColor: colorScheme.primary,
       ),
     );
   }
@@ -287,49 +327,90 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
       floatingActionButton: _buildAnimatedFab(colorScheme, gloc),
       body: Column(
         children: [
-          // HEADER SECTION - SEARCH BAR AT TOP
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-            child: _buildSearchBar(context, gloc),
-          ),
-          // STATUS FILTER SEGMENTED BUTTONS
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-            child: _buildStatusSegmentedButton(context),
-          ),
-          // MAIN CONTENT
-          Expanded(
-            child: _loading
-                ? const Center(child: CircularProgressIndicator.adaptive())
-                : _filteredTrips.isEmpty
-                ? ExpsenseGroupEmptyStates(
-                    searchQuery: _searchQuery,
-                    periodFilter: _statusFilter,
-                    onTripAdded: () async {
-                      final result = await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const ExpensesGroupEditPage(
-                            mode: GroupEditMode.create,
-                          ),
-                        ),
-                      );
-                      if (result == true) {
-                        await _loadTrips();
+            padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
+            child: Row(
+              children: [
+                Expanded(
+                  child: SectionHeader(
+                    title: gloc.expense_groups_title,
+                    description: gloc.expense_groups_desc,
+                    padding: EdgeInsets.zero,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                IconButton(
+                  icon: Icon(
+                    _showSearchBar
+                        ? Icons.search_off_rounded
+                        : Icons.search_rounded,
+                  ),
+                  tooltip: _showSearchBar ? gloc.hide_search : gloc.show_search,
+                  onPressed: () {
+                    final willShow = !_showSearchBar;
+                    setState(() {
+                      _showSearchBar = willShow;
+                      // Clear search when hiding search bar
+                      if (!willShow) {
+                        _searchController.clear();
+                        _searchQuery = '';
+                        _filteredActiveTrips = _applyFilter(
+                          _activeTrips,
+                          false,
+                        );
+                        _filteredArchivedTrips = _applyFilter(
+                          _archivedTrips,
+                          false,
+                        );
+                        _filteredAllTrips = _applyFilter(_allTrips, true);
                       }
-                    },
-                  )
-                : ListView.builder(
-                    controller: _scrollController,
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
-                    itemCount: _filteredTrips.length,
-                    itemBuilder: (context, index) {
-                      final trip = _filteredTrips[index];
-                      return ExpenseGroupCard(
-                        trip: trip,
-                        onTripUpdated: _updateTrip,
-                        searchQuery: _searchQuery,
-                      );
-                    },
+                    });
+                    if (willShow) {
+                      // Post frame to ensure widget is built before requesting focus
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (mounted) {
+                          _searchFocusNode.requestFocus();
+                        }
+                      });
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+          // HEADER SECTION - SEARCH BAR AT TOP
+          AnimatedSize(
+            duration: const Duration(milliseconds: 320),
+            curve: Curves.easeInOut,
+            alignment: Alignment.topCenter,
+            child: AnimatedOpacity(
+              duration: const Duration(milliseconds: 220),
+              curve: Curves.easeInOut,
+              opacity: _showSearchBar ? 1 : 0,
+              child: _showSearchBar
+                  ? Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                      child: _buildSearchBar(context, gloc),
+                    )
+                  : const SizedBox.shrink(),
+            ),
+          ),
+          // STATUS FILTER SEGMENTED BUTTONS - Hide when search is active
+          if (!_showSearchBar)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+              child: _buildStatusSegmentedButton(context),
+            ),
+          // MAIN CONTENT - Show search results when searching, tabs when not
+          Expanded(
+            child: _showSearchBar
+                ? _buildTabContent(_filteredAllTrips, 'search')
+                : TabBarView(
+                    controller: _tabController,
+                    children: [
+                      _buildTabContent(_filteredActiveTrips, 'active'),
+                      _buildTabContent(_filteredArchivedTrips, 'archived'),
+                    ],
                   ),
           ),
         ],

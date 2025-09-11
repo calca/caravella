@@ -252,9 +252,22 @@ class FileBasedExpenseGroupRepository
       final result = await _loadGroups();
       if (result.isFailure) return result;
 
-      // Use index for faster filtering if available
+      // Use index for faster filtering if available, but validate index result
       if (!_groupIndex.isEmpty) {
-        return StorageResult.success(_groupIndex.getActiveGroups());
+        try {
+          final indexed = _groupIndex.getActiveGroups();
+          // If index returns a plausible set with same count as a full scan,
+          // trust it. Otherwise fall back to scanning the loaded data to avoid
+          // returning an incomplete subset due to index inconsistencies.
+          final scannedCount = result.data!
+              .where((group) => !group.archived)
+              .length;
+          if (indexed.length == scannedCount) {
+            return StorageResult.success(indexed);
+          }
+        } catch (_) {
+          // ignore index errors and fallback to full scan
+        }
       }
 
       final activeGroups = result.data!
@@ -375,6 +388,24 @@ class FileBasedExpenseGroupRepository
     final groups = List<ExpenseGroup>.from(result.data!);
     final index = groups.indexWhere((g) => g.id == group.id);
 
+    if (index != -1) {
+      groups[index] = group;
+    } else {
+      groups.add(group);
+    }
+
+    return await _saveGroups(groups);
+  }
+
+  @override
+  Future<StorageResult<void>> addExpenseGroup(ExpenseGroup group) async {
+    // Load latest groups from disk to avoid cache-related overwrites and
+    // then append or replace atomically.
+    final loadResult = await _loadGroups(forceReload: true);
+    if (loadResult.isFailure) return StorageResult.failure(loadResult.error!);
+
+    final groups = List<ExpenseGroup>.from(loadResult.data!);
+    final index = groups.indexWhere((g) => g.id == group.id);
     if (index != -1) {
       groups[index] = group;
     } else {

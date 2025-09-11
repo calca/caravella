@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../data/model/expense_group.dart';
-import '../../../data/expense_group_storage.dart';
+import '../../../data/expense_group_storage_v2.dart';
 import 'group_card.dart';
 import 'new_group_card.dart';
 
@@ -56,7 +56,7 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList> {
   }
 
   Future<void> _updateGroupLocally(String groupId) async {
-    final groups = await ExpenseGroupStorage.getAllGroups();
+    final groups = await ExpenseGroupStorageV2.getAllGroups();
     final found = groups.where((g) => g.id == groupId);
     if (found.isNotEmpty) {
       final updatedGroup = found.first;

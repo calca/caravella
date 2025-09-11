@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import '../data/group_form_state.dart';
 import '../group_form_controller.dart';
 import '../pages/image_crop_page.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../widgets/bottom_sheet_scaffold.dart';
 
 class BackgroundPicker extends StatelessWidget {
@@ -230,10 +230,17 @@ class _BackgroundSheet extends StatelessWidget {
           contentPadding: EdgeInsets.zero,
           leading: const Icon(Icons.clear),
           title: Text(loc.background_remove),
-          onTap: () {
-            state.setImage(null);
-            state.setColor(null);
-            Navigator.pop(context);
+          onTap: () async {
+            // Capture the sheet navigator before the async gap to avoid
+            // using BuildContext across await (use_build_context_synchronously).
+            final sheetNav = Navigator.of(context);
+            // Use controller to remove background (image file and/or color)
+            try {
+              await controller.removeImage();
+            } catch (_) {
+              // ignore errors here; controller handles logging
+            }
+            if (sheetNav.mounted) sheetNav.pop();
           },
         ),
     ];

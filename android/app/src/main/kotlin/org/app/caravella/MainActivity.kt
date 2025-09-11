@@ -1,4 +1,4 @@
-package org.app.caravella
+package io.caravella.egm
 
 import android.app.backup.BackupManager
 import android.os.Build
@@ -9,7 +9,7 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
-    private val CHANNEL = "org.app.caravella/backup"
+    private val CHANNEL = "io.caravella.egm/backup"
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

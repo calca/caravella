@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
-import 'package:org_app_caravella/manager/details/widgets/filtered_expense_list.dart';
-import 'package:org_app_caravella/data/model/expense_details.dart';
-import 'package:org_app_caravella/data/model/expense_category.dart';
-import 'package:org_app_caravella/data/model/expense_participant.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart';
+import 'package:io_caravella_egm/manager/details/widgets/filtered_expense_list.dart';
+import 'package:io_caravella_egm/data/model/expense_details.dart';
+import 'package:io_caravella_egm/data/model/expense_category.dart';
+import 'package:io_caravella_egm/data/model/expense_participant.dart';
+import 'package:io_caravella_egm/l10n/app_localizations.dart';
 
 void main() {
   group('FilteredExpenseList Tests', () {

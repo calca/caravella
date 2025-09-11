@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:org_app_caravella/widgets/material3_dialog.dart';
-import 'package:org_app_caravella/themes/caravella_themes.dart';
+import 'package:io_caravella_egm/widgets/material3_dialog.dart';
+import 'package:io_caravella_egm/themes/caravella_themes.dart';
 
 void main() {
   group('Material3Dialog', () {
@@ -38,7 +38,9 @@ void main() {
       expect(find.byType(AlertDialog), findsOneWidget);
     });
 
-    testWidgets('Material3DialogActions creates proper buttons', (WidgetTester tester) async {
+    testWidgets('Material3DialogActions creates proper buttons', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           theme: CaravellaThemes.light,
@@ -64,7 +66,7 @@ void main() {
       expect(find.text('OK'), findsOneWidget);
       expect(find.text('Delete'), findsOneWidget);
       expect(find.text('Maybe'), findsOneWidget);
-      
+
       // Verify button types
       expect(find.byType(TextButton), findsNWidgets(2)); // Cancel and Delete
       expect(find.byType(FilledButton), findsOneWidget); // Primary OK
@@ -73,7 +75,9 @@ void main() {
   });
 
   group('Material3Dialogs helper functions', () {
-    testWidgets('showConfirmation creates proper dialog', (WidgetTester tester) async {
+    testWidgets('showConfirmation creates proper dialog', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           theme: CaravellaThemes.light,
