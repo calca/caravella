@@ -761,6 +761,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_select_theme => 'Select theme';
 
   @override
+  String get settings_dynamic_color => 'Dynamic colors';
+
+  @override
+  String get settings_dynamic_color_desc => 'Use system colors';
+
+  @override
   String get settings_privacy_desc => 'Security and privacy options';
 
   @override
