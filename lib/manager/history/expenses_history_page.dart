@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:async';
+import 'dart:math' as math;
 import '../../data/model/expense_group.dart';
 import '../../../data/expense_group_storage_v2.dart';
 import 'package:provider/provider.dart';
@@ -23,12 +24,8 @@ class ExpesensHistoryPage extends StatefulWidget {
 
 class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     with TickerProviderStateMixin {
-  List<ExpenseGroup> _activeTrips = [];
-  List<ExpenseGroup> _archivedTrips = [];
-  List<ExpenseGroup> _allTrips = []; // Combined active + archived for search
-  List<ExpenseGroup> _filteredActiveTrips = [];
-  List<ExpenseGroup> _filteredArchivedTrips = [];
-  List<ExpenseGroup> _filteredAllTrips = []; // Combined search results
+  List<ExpenseGroup> _allTrips = [];
+  List<ExpenseGroup> _filteredTrips = [];
   String _searchQuery = '';
   bool _loading = true;
   bool _showSearchBar = false;
@@ -50,8 +47,13 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     _scrollController = ScrollController();
     _scrollController.addListener(_onScroll);
 
-    // Tabs: Active | Archived
+    // Tabs for Active | Archived when search bar is closed
     _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      if (!_tabController.indexIsChanging && !_showSearchBar) {
+        setState(() {}); // Rebuild list on tab change
+      }
+    });
   }
 
   ExpenseGroupNotifier? _groupNotifier;
@@ -97,10 +99,12 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
 
     try {
       await Future.delayed(const Duration(milliseconds: 100));
-
-      // Load both active and archived trips simultaneously
-      final activeTrips = await ExpenseGroupStorageV2.getActiveGroups();
-      final archivedTrips = await ExpenseGroupStorageV2.getArchivedGroups();
+      // Carica sia attivi che archiviati e combina
+      final results = await Future.wait<List<ExpenseGroup>>([
+        ExpenseGroupStorageV2.getActiveGroups(),
+        ExpenseGroupStorageV2.getArchivedGroups(),
+      ]);
+      final trips = <ExpenseGroup>[...results[0], ...results[1]];
 
       if (mounted) {
         setState(() {
@@ -209,6 +213,26 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     );
   }
 
+  // Tabs builder (visible only when search bar is closed)
+  Widget _buildStatusTabBar(BuildContext context) {
+    final gloc = gen.AppLocalizations.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
+    return SizedBox(
+      width: double.infinity,
+      child: TabBar(
+        controller: _tabController,
+        tabs: [
+          Tab(text: gloc.status_active),
+          Tab(text: gloc.status_archived),
+        ],
+        labelColor: colorScheme.onSurface,
+        unselectedLabelColor: colorScheme.outline,
+        indicatorColor: colorScheme.primary,
+        indicatorSize: TabBarIndicatorSize.tab,
+      ),
+    );
+  }
+
   void _onSearchChanged(String query) {
     _searchDebounce?.cancel();
     _searchDebounce = Timer(const Duration(milliseconds: 300), () {
@@ -297,25 +321,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     );
   }
 
-  Widget _buildStatusSegmentedButton(BuildContext context) {
-    // Replaced with a TabBar containing two tabs: Active | Archived
-    final gloc = gen.AppLocalizations.of(context);
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return SizedBox(
-      width: double.infinity,
-      child: TabBar(
-        controller: _tabController,
-        tabs: [
-          Tab(text: gloc.status_active),
-          Tab(text: gloc.status_archived),
-        ],
-        labelColor: colorScheme.onSurface,
-        unselectedLabelColor: colorScheme.outline,
-        indicatorColor: colorScheme.primary,
-      ),
-    );
-  }
+  // (Removed) segmented button / tabs
 
   @override
   Widget build(BuildContext context) {
@@ -395,23 +401,124 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                   : const SizedBox.shrink(),
             ),
           ),
-          // STATUS FILTER SEGMENTED BUTTONS - Hide when search is active
+          // Tab visibili solo quando la searchbar è chiusa
           if (!_showSearchBar)
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-              child: _buildStatusSegmentedButton(context),
+              child: _buildStatusTabBar(context),
             ),
-          // MAIN CONTENT - Show search results when searching, tabs when not
+          // MAIN CONTENT
           Expanded(
-            child: _showSearchBar
-                ? _buildTabContent(_filteredAllTrips, 'search')
-                : TabBarView(
-                    controller: _tabController,
-                    children: [
-                      _buildTabContent(_filteredActiveTrips, 'active'),
-                      _buildTabContent(_filteredArchivedTrips, 'archived'),
-                    ],
-                  ),
+            child: Builder(
+              builder: (context) {
+                Widget child;
+                String contentKey;
+
+                if (_loading) {
+                  child = const Center(
+                    child: CircularProgressIndicator.adaptive(),
+                  );
+                  contentKey = 'loading';
+                } else {
+                  // Decide quale lista mostrare
+                  List<ExpenseGroup> visible;
+                  String periodFilter;
+                  if (_showSearchBar) {
+                    // Search ON: query vuota -> tutti, query piena -> filtrati
+                    visible = _filteredTrips; // _applyFilter gestisce query
+                    periodFilter = 'all';
+                    contentKey = 'search:${_searchQuery}:${visible.length}';
+                  } else {
+                    // Search OFF: mostra tab attivi o archiviati, senza filtro di testo
+                    final showArchived = _tabController.index == 1;
+                    visible = _allTrips
+                        .where((t) => t.archived == showArchived)
+                        .toList();
+                    // Ordina pinned prima
+                    visible.sort((a, b) {
+                      if (a.pinned == b.pinned) return 0;
+                      return a.pinned ? -1 : 1;
+                    });
+                    periodFilter = showArchived ? 'archived' : 'active';
+                    contentKey =
+                        'tab:${_tabController.index}:${visible.length}';
+                  }
+
+                  if (visible.isEmpty) {
+                    child = ExpsenseGroupEmptyStates(
+                      searchQuery: _searchQuery,
+                      periodFilter: periodFilter,
+                      onTripAdded: () async {
+                        final result = await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const ExpensesGroupEditPage(
+                              mode: GroupEditMode.create,
+                            ),
+                          ),
+                        );
+                        if (result == true) {
+                          await _loadTrips();
+                        }
+                      },
+                    );
+                  } else {
+                    child = ListView.builder(
+                      controller: _scrollController,
+                      padding: const EdgeInsets.fromLTRB(24, 0, 24, 100),
+                      itemCount: visible.length,
+                      itemBuilder: (context, index) {
+                        final trip = visible[index];
+                        // Staggered fade+slide for items
+                        final delayMs = 50 + (math.min(index, 8) * 30);
+                        return TweenAnimationBuilder<double>(
+                          key: ValueKey(
+                            'item-${trip.id}-${_showSearchBar}-${_tabController.index}-${_searchQuery}',
+                          ),
+                          tween: Tween(begin: 0, end: 1),
+                          duration: Duration(milliseconds: 220 + delayMs),
+                          curve: Curves.easeOut,
+                          builder: (context, t, child) => Opacity(
+                            opacity: t,
+                            child: Transform.translate(
+                              offset: Offset(0, (1 - t) * 8),
+                              child: child,
+                            ),
+                          ),
+                          child: ExpenseGroupCard(
+                            trip: trip,
+                            onArchiveToggle: _onArchiveToggle,
+                            searchQuery: _searchQuery,
+                          ),
+                        );
+                      },
+                    );
+                  }
+                }
+
+                return AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 260),
+                  switchInCurve: Curves.easeOut,
+                  switchOutCurve: Curves.easeInOut,
+                  transitionBuilder: (child, anim) {
+                    final offsetAnim =
+                        Tween<Offset>(
+                          begin: const Offset(0, 0.04),
+                          end: Offset.zero,
+                        ).animate(
+                          CurvedAnimation(parent: anim, curve: Curves.easeOut),
+                        );
+                    return FadeTransition(
+                      opacity: anim,
+                      child: SlideTransition(
+                        position: offsetAnim,
+                        child: child,
+                      ),
+                    );
+                  },
+                  child: KeyedSubtree(key: ValueKey(contentKey), child: child),
+                );
+              },
+            ),
           ),
         ],
       ),
