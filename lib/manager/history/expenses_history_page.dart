@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:async';
-import 'dart:math' as math;
+// (Animations handled with AnimatedSwitcher and AnimatedList)
 import '../../data/model/expense_group.dart';
 import '../../../data/expense_group_storage_v2.dart';
 import 'package:provider/provider.dart';
@@ -37,6 +37,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   bool _fabVisible = true;
   Timer? _fabIdleTimer;
   late final TabController _tabController;
+  // (no AnimatedList key; we use simple item animations)
 
   // (Removed) _statusOptions helper previously used for SegmentedButton.
 
@@ -129,9 +130,8 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     }
   }
 
-  List<ExpenseGroup> _applyFilter(List<ExpenseGroup> trips, bool isAllTrips) {
-    // Applica solo il filtro di ricerca per titolo
-    List<ExpenseGroup> filtered = trips;
+  List<ExpenseGroup> _applyFilter(List<ExpenseGroup> trips) {
+    var filtered = List<ExpenseGroup>.from(trips);
     if (_searchQuery.isNotEmpty) {
       filtered = filtered
           .where(
@@ -140,8 +140,6 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
           )
           .toList();
     }
-    // Ordina: pinned prima, poi il resto
-    // Per la lista combinata, ordina anche per stato (attivi prima degli archiviati)
     filtered.sort((a, b) {
       // Prima ordina per pinned
       if (a.pinned != b.pinned) {
@@ -468,14 +466,12 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                       itemCount: visible.length,
                       itemBuilder: (context, index) {
                         final trip = visible[index];
-                        // Staggered fade+slide for items
-                        final delayMs = 50 + (math.min(index, 8) * 30);
                         return TweenAnimationBuilder<double>(
                           key: ValueKey(
                             'item-${trip.id}-${_showSearchBar}-${_tabController.index}-${_searchQuery}',
                           ),
                           tween: Tween(begin: 0, end: 1),
-                          duration: Duration(milliseconds: 220 + delayMs),
+                          duration: const Duration(milliseconds: 260),
                           curve: Curves.easeOut,
                           builder: (context, t, child) => Opacity(
                             opacity: t,
