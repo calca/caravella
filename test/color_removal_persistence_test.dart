@@ -156,12 +156,11 @@ void main() {
           );
         });
 
-        // Set color
-        state.setColor(0xFF42A5F5);
-        expect(
-          stateChanges.last,
-          contains('color: 1109735157'),
-        ); // 0xFF42A5F5 as int
+        // Set color and verify via dynamic int value to avoid brittle hardcoding
+        const setColor = 0xFF42A5F5;
+        state.setColor(setColor);
+        expect(state.color, setColor);
+        expect(stateChanges.last, contains('color: ${setColor}'));
 
         // Remove background
         await controller.removeImage();

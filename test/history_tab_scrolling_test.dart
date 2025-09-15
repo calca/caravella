@@ -7,27 +7,26 @@ import 'package:io_caravella_egm/state/expense_group_notifier.dart';
 
 void main() {
   Widget createTestApp({required Widget home}) => MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: MultiProvider(
-          providers: [
-            ChangeNotifierProvider(create: (_) => ExpenseGroupNotifier()),
-          ],
-          child: home,
-        ),
-      );
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
+    home: MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ExpenseGroupNotifier()),
+      ],
+      child: home,
+    ),
+  );
 
   group('History Page Tab Scrolling and Swipe Tests', () {
     testWidgets('TabBar has scrollable properties configured correctly', (
       WidgetTester tester,
     ) async {
       // Pump the history page
-      await tester.pumpWidget(
-        createTestApp(home: const ExpesensHistoryPage()),
-      );
-      
+      await tester.pumpWidget(createTestApp(home: const ExpesensHistoryPage()));
+
       // Wait for the page to settle
-      await tester.pumpAndSettle();
+      // Allow initial frames and microtasks without waiting indefinitely on animations
+      await tester.pump(const Duration(milliseconds: 300));
 
       // Find the TabBar widget
       final tabBarFinder = find.byType(TabBar);
@@ -35,7 +34,7 @@ void main() {
 
       // Get the TabBar widget and verify scrollable properties
       final TabBar tabBar = tester.widget(tabBarFinder);
-      
+
       // Verify that isScrollable is set to true
       expect(
         tabBar.isScrollable,
@@ -47,142 +46,137 @@ void main() {
       expect(
         tabBar.tabAlignment,
         TabAlignment.center,
-        reason: 'TabBar alignment should be center for consistency with overview page',
+        reason:
+            'TabBar alignment should be center for consistency with overview page',
       );
 
       // Verify that indicatorSize is set to label for better scrolling behavior
       expect(
         tabBar.indicatorSize,
         TabBarIndicatorSize.label,
-        reason: 'Indicator size should be label for better visual feedback when scrolling',
+        reason:
+            'Indicator size should be label for better visual feedback when scrolling',
       );
     });
 
     testWidgets('TabBarView is present and enables swipe gestures', (
       WidgetTester tester,
     ) async {
-      await tester.pumpWidget(
-        createTestApp(home: const ExpesensHistoryPage()),
-      );
-      
-      await tester.pumpAndSettle();
+      await tester.pumpWidget(createTestApp(home: const ExpesensHistoryPage()));
+
+      await tester.pump(const Duration(milliseconds: 400));
 
       // Find the TabBarView widget
       final tabBarViewFinder = find.byType(TabBarView);
       expect(
-        tabBarViewFinder, 
+        tabBarViewFinder,
         findsOneWidget,
-        reason: 'TabBarView should be present to enable swipe gestures between tabs'
+        reason:
+            'TabBarView should be present to enable swipe gestures between tabs',
       );
 
       // Get the TabBarView widget and verify it has correct controller
       final TabBarView tabBarView = tester.widget(tabBarViewFinder);
       expect(
-        tabBarView.controller, 
+        tabBarView.controller,
         isNotNull,
-        reason: 'TabBarView should have a controller'
+        reason: 'TabBarView should have a controller',
       );
-      
+
       // Verify that the controller has 2 tabs (Active and Archived)
       expect(
-        tabBarView.controller!.length, 
+        tabBarView.controller!.length,
         2,
-        reason: 'TabBarView should have 2 tabs for Active and Archived'
+        reason: 'TabBarView should have 2 tabs for Active and Archived',
       );
     });
 
     testWidgets('Tabs are hidden when search is active', (
       WidgetTester tester,
     ) async {
-      await tester.pumpWidget(
-        createTestApp(home: const ExpesensHistoryPage()),
-      );
-      
-      await tester.pumpAndSettle();
+      await tester.pumpWidget(createTestApp(home: const ExpesensHistoryPage()));
+
+      await tester.pump(const Duration(milliseconds: 400));
 
       // Initially tabs should be visible
       expect(
-        find.byType(TabBar), 
+        find.byType(TabBar),
         findsOneWidget,
-        reason: 'TabBar should be visible initially'
+        reason: 'TabBar should be visible initially',
       );
 
       // Find and tap the search icon
       final searchIconFinder = find.byIcon(Icons.search_rounded);
       expect(searchIconFinder, findsOneWidget);
       await tester.tap(searchIconFinder);
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 400));
 
       // After opening search, tabs should be hidden
       expect(
-        find.byType(TabBar), 
+        find.byType(TabBar),
         findsNothing,
-        reason: 'TabBar should be hidden when search is active'
+        reason: 'TabBar should be hidden when search is active',
       );
 
       // Search bar should be visible
       expect(
-        find.byType(SearchBar), 
+        find.byType(SearchBar),
         findsOneWidget,
-        reason: 'SearchBar should be visible when search is active'
+        reason: 'SearchBar should be visible when search is active',
       );
 
       // Turn off search
       final searchOffIconFinder = find.byIcon(Icons.search_off_rounded);
       expect(searchOffIconFinder, findsOneWidget);
       await tester.tap(searchOffIconFinder);
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 400));
 
       // Tabs should be visible again
       expect(
-        find.byType(TabBar), 
+        find.byType(TabBar),
         findsOneWidget,
-        reason: 'TabBar should be visible again when search is disabled'
+        reason: 'TabBar should be visible again when search is disabled',
       );
     });
 
     testWidgets('Search works across all groups when active', (
       WidgetTester tester,
     ) async {
-      await tester.pumpWidget(
-        createTestApp(home: const ExpesensHistoryPage()),
-      );
-      
-      await tester.pumpAndSettle();
+      await tester.pumpWidget(createTestApp(home: const ExpesensHistoryPage()));
+
+      await tester.pump(const Duration(milliseconds: 400));
 
       // Open search
       final searchIconFinder = find.byIcon(Icons.search_rounded);
       await tester.tap(searchIconFinder);
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 400));
 
       // When search is active, TabBarView should not be present
       expect(
-        find.byType(TabBarView), 
+        find.byType(TabBarView),
         findsNothing,
-        reason: 'TabBarView should not be present when search is active'
+        reason: 'TabBarView should not be present when search is active',
       );
 
       // Search content should be visible (even if empty)
       expect(
-        find.byType(ListView), 
+        find.byType(ListView),
         findsOneWidget,
-        reason: 'Search results should be displayed as a ListView'
+        reason: 'Search results should be displayed as a ListView',
       );
     });
 
     testWidgets('User can swipe between Active and Archived tabs', (
       WidgetTester tester,
     ) async {
-      await tester.pumpWidget(
-        createTestApp(home: const ExpesensHistoryPage()),
-      );
-      
-      await tester.pumpAndSettle();
+      await tester.pumpWidget(createTestApp(home: const ExpesensHistoryPage()));
+      // Allow initial frames without risking indefinite waits
+      await tester.pump(const Duration(milliseconds: 500));
 
       // Find TabBar and TabBarView
       final tabBarFinder = find.byType(TabBar);
       final tabBarViewFinder = find.byType(TabBarView);
-      
+
       expect(tabBarFinder, findsOneWidget);
       expect(tabBarViewFinder, findsOneWidget);
 
@@ -191,39 +185,38 @@ void main() {
       final initialIndex = tabBar.controller?.index ?? 0;
       expect(initialIndex, 0, reason: 'Should start on Active tab (index 0)');
 
-      // Perform swipe gesture from right to left (to go to next tab)
-      await tester.drag(tabBarViewFinder, const Offset(-300, 0));
-      await tester.pumpAndSettle();
+      // Perform a fling gesture from right to left (to go to next tab)
+      await tester.fling(tabBarViewFinder, const Offset(-800, 0), 1200);
+      await tester.pump(const Duration(milliseconds: 1000));
 
       // Verify that we've moved to the second tab (Archived)
-      final newIndex = tabBar.controller?.index ?? 0;
+      final newIndex =
+          (tester.widget<TabBar>(tabBarFinder).controller?.index) ?? 0;
       expect(
-        newIndex, 
-        1, 
-        reason: 'After swiping left, should be on Archived tab (index 1)'
+        newIndex,
+        1,
+        reason: 'After swiping left, should be on Archived tab (index 1)',
       );
 
-      // Perform swipe gesture from left to right (to go back to first tab)
-      await tester.drag(tabBarViewFinder, const Offset(300, 0));
-      await tester.pumpAndSettle();
+      // Perform a fling gesture from left to right (to go back to first tab)
+      await tester.fling(tabBarViewFinder, const Offset(800, 0), 1200);
+      await tester.pump(const Duration(milliseconds: 1000));
 
       // Verify that we've moved back to the first tab (Active)
-      final finalIndex = tabBar.controller?.index ?? 1;
+      final finalIndex =
+          (tester.widget<TabBar>(tabBarFinder).controller?.index) ?? 1;
       expect(
-        finalIndex, 
-        0, 
-        reason: 'After swiping right, should be back on Active tab (index 0)'
+        finalIndex,
+        0,
+        reason: 'After swiping right, should be back on Active tab (index 0)',
       );
     });
 
     testWidgets('Tab taps work correctly with TabBarView', (
       WidgetTester tester,
     ) async {
-      await tester.pumpWidget(
-        createTestApp(home: const ExpesensHistoryPage()),
-      );
-      
-      await tester.pumpAndSettle();
+      await tester.pumpWidget(createTestApp(home: const ExpesensHistoryPage()));
+      await tester.pump(const Duration(milliseconds: 500));
 
       // Find all tabs
       final tabFinder = find.byType(Tab);
@@ -234,35 +227,32 @@ void main() {
 
       // Tap on the second tab (Archived)
       await tester.tap(tabFinder.at(1));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 600));
 
       // Verify we've switched to the second tab
       expect(
-        tabBar.controller?.index, 
-        1, 
-        reason: 'Should be on second tab after tapping it'
+        tabBar.controller?.index,
+        1,
+        reason: 'Should be on second tab after tapping it',
       );
 
       // Tap on the first tab (Active)
       await tester.tap(tabFinder.at(0));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 600));
 
       // Verify we've switched back to the first tab
       expect(
-        tabBar.controller?.index, 
-        0, 
-        reason: 'Should be back on first tab after tapping it'
+        tabBar.controller?.index,
+        0,
+        reason: 'Should be back on first tab after tapping it',
       );
     });
 
     testWidgets('TabBar has correct number of tabs', (
       WidgetTester tester,
     ) async {
-      await tester.pumpWidget(
-        createTestApp(home: const ExpesensHistoryPage()),
-      );
-      
-      await tester.pumpAndSettle();
+      await tester.pumpWidget(createTestApp(home: const ExpesensHistoryPage()));
+      await tester.pump(const Duration(milliseconds: 500));
 
       // Find all tabs
       final tabFinder = find.byType(Tab);
@@ -271,7 +261,7 @@ void main() {
       // Verify tab texts (these should be localized)
       final tabs = tester.widgetList<Tab>(tabFinder).toList();
       expect(tabs.length, 2);
-      
+
       // The actual text will depend on locale, but there should be 2 tabs
       expect(tabs[0].text, isNotNull);
       expect(tabs[1].text, isNotNull);
@@ -280,11 +270,8 @@ void main() {
     testWidgets('TabController is properly configured for 2 tabs', (
       WidgetTester tester,
     ) async {
-      await tester.pumpWidget(
-        createTestApp(home: const ExpesensHistoryPage()),
-      );
-      
-      await tester.pumpAndSettle();
+      await tester.pumpWidget(createTestApp(home: const ExpesensHistoryPage()));
+      await tester.pump(const Duration(milliseconds: 500));
 
       // Find the TabBar and verify it has a controller
       final TabBar tabBar = tester.widget(find.byType(TabBar));

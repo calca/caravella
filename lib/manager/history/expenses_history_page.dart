@@ -260,6 +260,24 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   }
 
   Widget _buildTabContent(List<ExpenseGroup> trips, String tabType) {
+    // In search mode, always render a ListView (even if empty), regardless of
+    // loading state, so tests and UI can rely on consistent structure.
+    if (tabType == 'search') {
+      return ListView.builder(
+        controller: _scrollController,
+        padding: const EdgeInsets.fromLTRB(24, 0, 24, 100),
+        itemCount: trips.length,
+        itemBuilder: (context, index) {
+          final trip = trips[index];
+          return ExpenseGroupCard(
+            trip: trip,
+            onArchiveToggle: _onArchiveToggle,
+            searchQuery: _searchQuery,
+          );
+        },
+      );
+    }
+
     if (_loading) {
       return const Center(child: CircularProgressIndicator.adaptive());
     }
@@ -283,7 +301,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     }
 
     return ListView.builder(
-      controller: tabType == 'search' ? _scrollController : null,
+      controller: null,
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 100),
       itemCount: trips.length,
       itemBuilder: (context, index) {
@@ -407,6 +425,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                 ? _buildTabContent(_filteredAllTrips, 'search')
                 : TabBarView(
                     controller: _tabController,
+                    physics: const PageScrollPhysics(),
                     children: [
                       _buildTabContent(_filteredActiveTrips, 'active'),
                       _buildTabContent(_filteredArchivedTrips, 'archived'),
