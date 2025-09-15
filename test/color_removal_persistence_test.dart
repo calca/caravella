@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:io_caravella_egm/manager/group/group_form_controller.dart';
@@ -22,75 +23,78 @@ void main() {
   PathProviderPlatform.instance = _FakePathProvider();
 
   group('Color removal persistence issue reproduction', () {
-    test(
-      'CRITICAL: Verify color removal is included in save data',
-      () async {
-        final state = GroupFormState();
-        final controller = GroupFormController(state, GroupEditMode.edit);
+    test('CRITICAL: Verify color removal is included in save data', () async {
+      final state = GroupFormState();
+      final controller = GroupFormController(state, GroupEditMode.edit);
 
-        // Create original group with a red background color
-        const originalColor = 0xFFE57373;
-        final originalGroup = ExpenseGroup(
-          id: 'persistence-test-id',
-          title: 'Test Trip',
-          participants: [ExpenseParticipant(name: 'Alice')],
-          categories: [ExpenseCategory(name: 'Food')],
-          expenses: [],
-          currency: 'EUR',
-          color: originalColor,
-          file: null,
-        );
+      // Create original group with a red background color
+      const originalColor = 0xFFE57373;
+      final originalGroup = ExpenseGroup(
+        id: 'persistence-test-id',
+        title: 'Test Trip',
+        participants: [ExpenseParticipant(name: 'Alice')],
+        categories: [ExpenseCategory(name: 'Food')],
+        expenses: [],
+        currency: 'EUR',
+        color: originalColor,
+        file: null,
+      );
 
-        // Load the group (simulates opening edit form)
-        controller.load(originalGroup);
-        
-        // Verify initial state
-        expect(state.color, equals(originalColor));
-        expect(state.originalGroup?.color, equals(originalColor));
-        expect(controller.hasChanges, isFalse);
+      // Load the group (simulates opening edit form)
+      controller.load(originalGroup);
 
-        // User removes the background color
-        await controller.removeImage();
+      // Verify initial state
+      expect(state.color, equals(originalColor));
+      expect(state.originalGroup?.color, equals(originalColor));
+      expect(controller.hasChanges, isFalse);
 
-        // Verify the color is removed from state
-        expect(state.color, isNull, reason: 'Color should be null after removal');
-        expect(controller.hasChanges, isTrue, reason: 'Should detect color removal as change');
+      // User removes the background color
+      await controller.removeImage();
 
-        // Simulate what happens during save - create the updated group
-        final now = DateTime.now();
-        final updatedGroup = (state.originalGroup ?? ExpenseGroup.empty()).copyWith(
-          id: state.id,
-          title: state.title.trim(),
-          participants: state.participants.map((e) => e.copyWith()).toList(),
-          categories: state.categories.map((e) => e.copyWith()).toList(),
-          startDate: state.startDate,
-          endDate: state.endDate,
-          currency: state.currency['symbol'] ?? state.currency['code'] ?? 'EUR',
-          file: state.imagePath,
-          color: state.color, // This is the critical line - should be null
-          timestamp: state.originalGroup?.timestamp ?? now,
-        );
+      // Verify the color is removed from state
+      expect(state.color, isNull, reason: 'Color should be null after removal');
+      expect(
+        controller.hasChanges,
+        isTrue,
+        reason: 'Should detect color removal as change',
+      );
 
-        // Verify the group to be saved has null color
-        expect(
-          updatedGroup.color, 
-          isNull, 
-          reason: 'Updated group should have null color to persist the removal'
-        );
+      // Simulate what happens during save - create the updated group
+      final now = DateTime.now();
+      final updatedGroup = (state.originalGroup ?? ExpenseGroup.empty())
+          .copyWith(
+            id: state.id,
+            title: state.title.trim(),
+            participants: state.participants.map((e) => e.copyWith()).toList(),
+            categories: state.categories.map((e) => e.copyWith()).toList(),
+            startDate: state.startDate,
+            endDate: state.endDate,
+            currency:
+                state.currency['symbol'] ?? state.currency['code'] ?? 'EUR',
+            file: state.imagePath,
+            color: state.color, // This is the critical line - should be null
+            timestamp: state.originalGroup?.timestamp ?? now,
+          );
 
-        // Verify this is different from the original
-        expect(
-          updatedGroup.color != originalGroup.color,
-          isTrue,
-          reason: 'Updated group should be different from original'
-        );
+      // Verify the group to be saved has null color
+      expect(
+        updatedGroup.color,
+        isNull,
+        reason: 'Updated group should have null color to persist the removal',
+      );
 
-        print('Original group color: ${originalGroup.color}');
-        print('Updated group color: ${updatedGroup.color}');
-        print('State color after removal: ${state.color}');
-        print('Has changes: ${controller.hasChanges}');
-      },
-    );
+      // Verify this is different from the original
+      expect(
+        updatedGroup.color != originalGroup.color,
+        isTrue,
+        reason: 'Updated group should be different from original',
+      );
+
+      debugPrint('Original group color: ${originalGroup.color}');
+      debugPrint('Updated group color: ${updatedGroup.color}');
+      debugPrint('State color after removal: ${state.color}');
+      debugPrint('Has changes: ${controller.hasChanges}');
+    });
 
     test(
       'EDGE CASE: Verify color removal persists after multiple operations',
@@ -147,12 +151,17 @@ void main() {
         // Track state changes
         final List<String> stateChanges = [];
         state.addListener(() {
-          stateChanges.add('color: ${state.color}, imagePath: ${state.imagePath}');
+          stateChanges.add(
+            'color: ${state.color}, imagePath: ${state.imagePath}',
+          );
         });
 
         // Set color
         state.setColor(0xFF42A5F5);
-        expect(stateChanges.last, contains('color: 1109735157')); // 0xFF42A5F5 as int
+        expect(
+          stateChanges.last,
+          contains('color: 1109735157'),
+        ); // 0xFF42A5F5 as int
 
         // Remove background
         await controller.removeImage();
@@ -162,7 +171,7 @@ void main() {
         expect(state.color, isNull);
         expect(state.imagePath, isNull);
 
-        print('State change history: ${stateChanges.join(' -> ')}');
+        debugPrint('State change history: ${stateChanges.join(' -> ')}');
       },
     );
 
@@ -194,7 +203,11 @@ void main() {
 
         // Simulate any potential state refresh or reload
         state.refresh();
-        expect(state.color, isNull, reason: 'Color should remain null after refresh');
+        expect(
+          state.color,
+          isNull,
+          reason: 'Color should remain null after refresh',
+        );
 
         // Verify originalGroup is not modified
         expect(state.originalGroup?.color, equals(originalColor));
