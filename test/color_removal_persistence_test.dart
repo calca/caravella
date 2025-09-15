@@ -160,7 +160,7 @@ void main() {
         const setColor = 0xFF42A5F5;
         state.setColor(setColor);
         expect(state.color, setColor);
-        expect(stateChanges.last, contains('color: ${setColor}'));
+        expect(stateChanges.last, contains('color: $setColor'));
 
         // Remove background
         await controller.removeImage();
