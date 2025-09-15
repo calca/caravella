@@ -788,10 +788,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_info_card_desc => 'Developer, Source code and License';
 
   @override
-  String get terms_github_title => 'GitHub: calca';
+  String get terms_github_title => 'Website: calca';
 
   @override
-  String get terms_github_desc => 'Developer profile on GitHub.';
+  String get terms_github_desc => 'Developer\'s personal website.';
 
   @override
   String get terms_repo_title => 'GitHub Repository';

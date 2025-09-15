@@ -793,10 +793,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'Desarrollador, Código fuente y Licencia';
 
   @override
-  String get terms_github_title => 'GitHub: calca';
+  String get terms_github_title => 'Sitio web: calca';
 
   @override
-  String get terms_github_desc => 'Perfil del desarrollador en GitHub.';
+  String get terms_github_desc => 'Sitio web personal del desarrollador.';
 
   @override
   String get terms_repo_title => 'Repositorio GitHub';
