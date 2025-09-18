@@ -68,7 +68,16 @@ jobs:
         run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
       - name: Rename AAB
         run: |
-          mv build/app/outputs/bundle/prodRelease/app-prod-release.aab io_caravella_egm-$VERSION-$DATE.aab
+          mv build/app/outputs/bundle/prodRelease/app-prod-release.aab io_caravella_egm-${{ env.VERSION }}-${{ env.DATE }}.aab
+      - name: Verify AAB exists
+        run: |
+          ls -l io_caravella_egm-*.aab || true
+          if [ ! -f "io_caravella_egm-${{ env.VERSION }}-${{ env.DATE }}.aab" ]; then
+            echo "Expected AAB not found: io_caravella_egm-${{ env.VERSION }}-${{ env.DATE }}.aab" >&2
+            echo "Contents of bundle output directory:" >&2
+            ls -R build/app/outputs/bundle || true
+            exit 1
+          fi
       - name: Debug list bundle files
         run: |
           echo "Listing current directory:" && ls -al
@@ -79,7 +88,7 @@ jobs:
           serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
           packageName: io.caravella.egm
           releaseFiles: |
-            io_caravella_egm-$VERSION-$DATE.aab
+            io_caravella_egm-${{ env.VERSION }}-${{ env.DATE }}.aab
           track: ${{ env.TRACK }}
           status: completed
           inAppUpdatePriority: 3
