@@ -1,19 +1,16 @@
 name: Android CI - Store
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-  release:
-    types: [published]
-  # Manual dispatch to build a production AAB for an arbitrary branch
   workflow_dispatch:
     inputs:
       target_branch:
-        description: 'Branch to build (staging APK)'
+        description: 'Branch to build (prod AAB upload to Play)'
         required: true
         default: 'main'
+      track:
+        description: 'Play track (internal|alpha|beta|production)'
+        required: true
+        default: 'internal'
 
 jobs:
   release:
@@ -22,13 +19,19 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
         with:
-          # If manually dispatched, use the selected branch; otherwise use the event ref (push/PR)
-          ref: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.target_branch || github.ref }}
+          ref: ${{ github.event.inputs.target_branch }}
       - name: Show build branch
         run: |
-          echo "Building branch: $BRANCH"
-        env:
-          BRANCH: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.target_branch || github.ref_name }}
+          echo "Building branch: ${{ github.event.inputs.target_branch }}"
+          echo "Requested track: ${{ github.event.inputs.track }}"
+      - name: Validate track
+        run: |
+          ALLOWED="internal alpha beta production"
+          if ! echo "$ALLOWED" | grep -qw "${{ github.event.inputs.track }}"; then
+            echo "Invalid track '${{ github.event.inputs.track }}'. Allowed: $ALLOWED" >&2
+            exit 1
+          fi
+          echo "TRACK=${{ github.event.inputs.track }}" >> $GITHUB_ENV
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
@@ -66,6 +69,17 @@ jobs:
       - name: Rename AAB
         run: |
           mv build/app/outputs/bundle/prodRelease/app-prod-release.aab io_caravella_egm-$VERSION-$DATE.aab
+      - name: Upload to Google Play
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: io.caravella.egm
+          releaseFile: io_caravella_egm-$VERSION-$DATE.aab
+          track: ${{ env.TRACK }}
+          status: completed
+          inAppUpdatePriority: 3
+        env:
+          JAVA_DISTRIBUTION: 'temurin'
       - name: Upload AAB artifact
         uses: actions/upload-artifact@v4
         with:
