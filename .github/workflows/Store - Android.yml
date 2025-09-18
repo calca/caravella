@@ -69,12 +69,17 @@ jobs:
       - name: Rename AAB
         run: |
           mv build/app/outputs/bundle/prodRelease/app-prod-release.aab io_caravella_egm-$VERSION-$DATE.aab
+      - name: Debug list bundle files
+        run: |
+          echo "Listing current directory:" && ls -al
+          echo "Listing AAB files:" && ls -1 *.aab || true
       - name: Upload to Google Play
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
           packageName: io.caravella.egm
-          releaseFile: io_caravella_egm-$VERSION-$DATE.aab
+          releaseFiles: |
+            io_caravella_egm-$VERSION-$DATE.aab
           track: ${{ env.TRACK }}
           status: completed
           inAppUpdatePriority: 3
