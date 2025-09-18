@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../config/app_icons.dart';
 import '../../../widgets/selection_bottom_sheet.dart';
+import '../../../data/participant_service.dart';
+import '../../../data/model/expense_participant.dart';
 import 'inline_select_field.dart';
 import '../../../themes/form_theme.dart';
 
@@ -11,6 +13,8 @@ class ParticipantSelectorWidget extends StatelessWidget {
   final void Function(String) onParticipantSelected;
   final TextStyle? textStyle;
   final bool fullEdit; // when true mimic inline row style
+  final ParticipantService? participantService; // Optional service for global search
+  
   const ParticipantSelectorWidget({
     super.key,
     required this.participants,
@@ -18,6 +22,7 @@ class ParticipantSelectorWidget extends StatelessWidget {
     required this.onParticipantSelected,
     this.textStyle,
     this.fullEdit = false,
+    this.participantService, // Add this for global participant search
   });
 
   @override
@@ -28,17 +33,41 @@ class ParticipantSelectorWidget extends StatelessWidget {
     final gloc = gen.AppLocalizations.of(context);
 
     Future<void> openPicker() async {
-      if (participants.isEmpty) return;
-      final picked = await showSelectionBottomSheet<String>(
-        context: context,
-        items: participants,
-        selected: selected,
-        gloc: gloc,
-        sheetTitle: gloc.participants_label,
-        itemLabel: (p) => p,
-      );
-      if (picked != null && picked != selectedParticipant) {
-        onParticipantSelected(picked);
+      if (participants.isEmpty && participantService == null) return;
+      
+      // Use global participant search if participantService is provided
+      if (participantService != null) {
+        // Find the currently selected participant object for proper comparison
+        ExpenseParticipant? currentSelection;
+        if (selectedParticipant != null) {
+          currentSelection = await participantService!.findParticipantByName(selectedParticipant!);
+        }
+        
+        final picked = await showSelectionBottomSheet<ExpenseParticipant>(
+          context: context,
+          items: [], // Items will be populated by search function
+          selected: currentSelection,
+          gloc: gloc,
+          sheetTitle: gloc.participants_label,
+          itemLabel: (participant) => participant.name,
+          searchFunction: (query) => participantService!.getParticipantSuggestions(query),
+        );
+        if (picked != null && picked.name != selectedParticipant) {
+          onParticipantSelected(picked.name);
+        }
+      } else {
+        // Use local participants (backward compatibility)
+        final picked = await showSelectionBottomSheet<String>(
+          context: context,
+          items: participants,
+          selected: selectedParticipant,
+          gloc: gloc,
+          sheetTitle: gloc.participants_label,
+          itemLabel: (p) => p,
+        );
+        if (picked != null && picked != selectedParticipant) {
+          onParticipantSelected(picked);
+        }
       }
     }
 
@@ -47,7 +76,7 @@ class ParticipantSelectorWidget extends StatelessWidget {
         icon: AppIcons.participant,
         label: selected ?? gloc.participants_label,
         onTap: openPicker,
-        enabled: participants.isNotEmpty,
+        enabled: participants.isNotEmpty || participantService != null,
         semanticsLabel: gloc.paid_by,
         textStyle: textStyle,
       );
@@ -60,7 +89,7 @@ class ParticipantSelectorWidget extends StatelessWidget {
         side: BorderSide(color: borderColor.withValues(alpha: 0.8), width: 1),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
-      onPressed: participants.isEmpty ? null : openPicker,
+      onPressed: (participants.isEmpty && participantService == null) ? null : openPicker,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
