@@ -1,4 +1,4 @@
-name: Development - Android CI
+name: Android CI - Development
 
 on:
   push:
