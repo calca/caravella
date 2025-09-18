@@ -78,10 +78,24 @@ jobs:
             ls -R build/app/outputs/bundle || true
             exit 1
           fi
+      - name: Generate SHA256 checksum
+        run: |
+          sha256sum io_caravella_egm-${{ env.VERSION }}-${{ env.DATE }}.aab | tee io_caravella_egm-${{ env.VERSION }}-${{ env.DATE }}.aab.sha256
+      - name: Verify checksum file
+        run: |
+          sha256sum -c io_caravella_egm-${{ env.VERSION }}-${{ env.DATE }}.aab.sha256
       - name: Debug list bundle files
         run: |
           echo "Listing current directory:" && ls -al
-          echo "Listing AAB files:" && ls -1 *.aab || true
+          echo "Listing AAB & checksum files:" && ls -1 io_caravella_egm-*.* || true
+          echo "Checksum file contents:" && cat io_caravella_egm-${{ env.VERSION }}-${{ env.DATE }}.aab.sha256 || true
+      - name: Upload AAB artifact (pre-Play)
+        uses: actions/upload-artifact@v4
+        with:
+          name: io_caravella_egm-prod-aab
+          path: |
+            io_caravella_egm-${{ env.VERSION }}-${{ env.DATE }}.aab
+            io_caravella_egm-${{ env.VERSION }}-${{ env.DATE }}.aab.sha256
       - name: Upload to Google Play
         uses: r0adkll/upload-google-play@v1
         with:
@@ -94,8 +108,3 @@ jobs:
           inAppUpdatePriority: 3
         env:
           JAVA_DISTRIBUTION: 'temurin'
-      - name: Upload AAB artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: io_caravella_egm-prod-aab
-          path: io_caravella_egm-*.aab
