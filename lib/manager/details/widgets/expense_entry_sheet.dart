@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../data/model/expense_details.dart';
-import '../../../data/model/expense_group.dart';
+import 'package:caravella_core/caravella_core.dart';
 import '../../expense/expense_form_component.dart';
 import '../../../../widgets/bottom_sheet_scaffold.dart';
 

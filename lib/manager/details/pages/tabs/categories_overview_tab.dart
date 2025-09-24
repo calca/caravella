@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../data/model/expense_group.dart';
 import '../../../../data/model/expense_category.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../widgets/stat_card.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:intl/intl.dart';
 
 /// Categories analysis tab: daily average by category + distribution pie chart.

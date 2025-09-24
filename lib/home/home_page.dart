@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../data/model/expense_group.dart';
-import '../data/expense_group_storage_v2.dart';
-import '../state/expense_group_notifier.dart';
-import '../../main.dart';
+import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
+import '../main.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'welcome/home_welcome_section.dart';
 import 'cards/home_cards_section.dart';
-import '../widgets/app_toast.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

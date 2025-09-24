@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../../data/model/expense_group.dart';
+import 'package:caravella_core/caravella_core.dart';
 import '../../../../widgets/bottom_sheet_scaffold.dart';
 
 class OptionsSheet extends StatelessWidget {

@@ -35,6 +35,14 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  
+  # Local packages
+  caravella_core:
+    path: packages/caravella_core
+  caravella_core_ui:
+    path: packages/caravella_core_ui
+  
+  # External dependencies
   provider: ^6.1.5+1
   file_picker: ^10.2.0
   image_picker: ^1.0.4

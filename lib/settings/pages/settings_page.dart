@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../widgets/caravella_app_bar.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart'
     as gen; // generated strongly-typed
-import '../../state/locale_notifier.dart';
-import '../../state/theme_mode_notifier.dart';
 import '../flag_secure_notifier.dart';
 import '../user_name_notifier.dart';
 
@@ -13,7 +12,6 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'developer_page.dart';
 import 'data_backup_page.dart';
 import 'whats_new_page.dart';
-import '../../widgets/bottom_sheet_scaffold.dart';
 import '../../settings/widgets/settings_card.dart';
 import '../../settings/widgets/settings_section.dart';
 

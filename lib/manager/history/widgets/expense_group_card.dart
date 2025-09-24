@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/manager/details/widgets/group_header.dart';
-import '../../../data/model/expense_group.dart';
-import '../../../widgets/currency_display.dart';
-import '../../../widgets/base_card.dart';
+import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import '../../details/pages/expense_group_detail_page.dart';
 
 class ExpenseGroupCard extends StatelessWidget {

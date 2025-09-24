@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import '../data/currencies.dart';
+import 'package:caravella_core/caravella_core.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../widgets/bottom_sheet_scaffold.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 class CurrencySelectorSheet extends StatefulWidget {
   const CurrencySelectorSheet({super.key});

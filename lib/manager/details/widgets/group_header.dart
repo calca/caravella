@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
-import '../../../data/model/expense_group.dart';
-import '../../../data/model/expense_participant.dart';
+import 'package:caravella_core/caravella_core.dart';
 
 class ParticipantAvatar extends StatelessWidget {
   final ExpenseParticipant participant;

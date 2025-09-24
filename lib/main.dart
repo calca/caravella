@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'themes/caravella_themes.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'state/locale_notifier.dart';
-import 'state/theme_mode_notifier.dart';
-import 'state/expense_group_notifier.dart';
 import 'home/home_page.dart';
-import 'config/app_config.dart';
 import 'settings/flag_secure_android.dart';
 import 'settings/user_name_notifier.dart';
 

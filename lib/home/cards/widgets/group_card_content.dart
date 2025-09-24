@@ -1,15 +1,9 @@
-import '../../../widgets/charts/weekly_expense_chart.dart';
-import '../../../widgets/charts/monthly_expense_chart.dart';
-import '../../../widgets/charts/date_range_expense_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../../state/expense_group_notifier.dart';
-import '../../../data/model/expense_group.dart';
+import 'package:caravella_core/caravella_core.dart';
 import '../../../manager/details/widgets/expense_entry_sheet.dart';
-import '../../../data/expense_group_storage_v2.dart';
-import '../../../widgets/app_toast.dart';
-import '../../../widgets/currency_display.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import '../../../manager/details/pages/tabs/usecase/daily_totals_utils.dart';
 
 class GroupCardContent extends StatelessWidget {

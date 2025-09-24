@@ -1,4 +1,4 @@
-import '../../../data/model/expense_group.dart';
+import 'package:caravella_core/caravella_core.dart';
 
 /// Utility per generare il contenuto OFX di un [ExpenseGroup].
 class OfxExporter {
