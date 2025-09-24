@@ -261,13 +261,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get license_hint => 'Este aplicativo é distribuído sob a licença MIT.';
 
   @override
-  String get license_link => 'View MIT License on GitHub';
+  String get license_link => 'Ver Licença MIT no GitHub';
 
   @override
   String get license_section => 'Licença';
 
   @override
-  String get add_trip => 'Add group';
+  String get add_trip => 'Adicionar grupo';
 
   @override
   String get new_group => 'Novo grupo';
