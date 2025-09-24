@@ -1,6 +1,5 @@
 name: io_caravella_egm
 description: "Caravella - Gestione viaggi e spese"
-version: 1.0.40+42
 homepage: https://github.com/calca/caravella
 repository: https://github.com/calca/caravella
 # The following line prevents the package from being accidentally published to
