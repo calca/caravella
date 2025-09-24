@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../data/model/expense_group.dart';
-import '../../../../data/model/expense_category.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:intl/intl.dart';
