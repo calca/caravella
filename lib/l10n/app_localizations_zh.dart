@@ -758,6 +758,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_select_theme => '选择主题';
 
   @override
+  String get settings_dynamic_color => '动态颜色';
+
+  @override
+  String get settings_dynamic_color_desc => '使用系统颜色';
+
+  @override
   String get settings_privacy_desc => '安全和隐私选项';
 
   @override
