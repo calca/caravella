@@ -13,6 +13,8 @@ import 'package:file_picker/file_picker.dart';
 
 import '../../../data/model/expense_details.dart';
 import '../../../data/model/expense_group.dart';
+import '../../../data/model/expense_participant.dart';
+import '../../../data/model/expense_category.dart';
 import '../../../state/expense_group_notifier.dart';
 import '../../../data/expense_group_storage_v2.dart';
 import '../../../widgets/material3_dialog.dart';
@@ -401,6 +403,42 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             nav.pop(); // close sheet
             rootNav.pop(true); // go back to list
           }
+        },
+        onCopyAsNew: () async {
+          if (_trip == null) return;
+          final gloc = gen.AppLocalizations.of(context);
+          final nav = Navigator.of(sheetCtx);
+          nav.pop();
+
+          // Create new group with localized prefix and empty expenses
+          final newTrip = ExpenseGroup(
+            title: "(${gloc.new_prefix}) ${_trip!.title}",
+            expenses: [], // Empty - ready for new expenses
+            participants: _trip!.participants
+                .map((p) => ExpenseParticipant(name: p.name))
+                .toList(),
+            startDate: _trip!.startDate,
+            endDate: _trip!.endDate,
+            currency: _trip!.currency,
+            categories: _trip!.categories
+                .map((c) => ExpenseCategory(name: c.name))
+                .toList(),
+          );
+
+          // Save the new group
+          await ExpenseGroupStorageV2.addExpenseGroup(newTrip);
+
+          // Navigate to edit page for immediate customization
+          await Future.delayed(const Duration(milliseconds: 200));
+          if (!mounted) return;
+          await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ExpensesGroupEditPage(
+                trip: newTrip,
+                mode: GroupEditMode.copy,
+              ),
+            ),
+          );
         },
       ),
     );

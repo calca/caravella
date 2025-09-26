@@ -10,6 +10,7 @@ class OptionsSheet extends StatelessWidget {
   final VoidCallback onDelete;
   final VoidCallback onEdit;
   final VoidCallback onExportShare;
+  final VoidCallback onCopyAsNew;
 
   const OptionsSheet({
     super.key,
@@ -19,6 +20,7 @@ class OptionsSheet extends StatelessWidget {
     required this.onDelete,
     required this.onEdit,
     required this.onExportShare,
+    required this.onCopyAsNew,
   });
 
   @override
@@ -73,6 +75,14 @@ class OptionsSheet extends StatelessWidget {
             ),
             title: Text(gloc.edit_group),
             onTap: onEdit,
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.add_outlined,
+              color: Theme.of(context).colorScheme.onPrimaryFixed,
+            ),
+            title: Text(gloc.copy_as_new_group),
+            onTap: onCopyAsNew,
           ),
           ListTile(
             leading: Icon(
