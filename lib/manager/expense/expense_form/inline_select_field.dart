@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'icon_leading_field.dart';
-import '../../../themes/form_theme.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 /// Generic inline (row style) selectable field used in fullEdit mode for
 /// participant, category, date-like pickers. Provides consistent layout

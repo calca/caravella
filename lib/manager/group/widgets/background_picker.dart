@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import '../data/group_form_state.dart';
+import 'package:caravella_core/caravella_core.dart';
 import '../group_form_controller.dart';
 import '../pages/image_crop_page.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../../widgets/bottom_sheet_scaffold.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 class BackgroundPicker extends StatelessWidget {
   const BackgroundPicker({super.key});

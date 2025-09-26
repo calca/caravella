@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'participants_section.dart';
-import '../data/group_form_state.dart';
-import '../../../data/model/expense_participant.dart';
+import 'package:caravella_core/caravella_core.dart';
 import '../group_form_controller.dart';
-import '../../../widgets/app_toast.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 class ParticipantsEditor extends StatelessWidget {
   const ParticipantsEditor({super.key});

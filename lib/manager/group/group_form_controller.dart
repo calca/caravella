@@ -1,14 +1,10 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
-import '../../data/model/expense_group.dart';
-import '../../data/model/expense_participant.dart';
-import '../../data/model/expense_category.dart';
-import '../../data/expense_group_storage_v2.dart';
+import 'package:caravella_core/caravella_core.dart';
 // ...existing code...
 import 'data/group_form_state.dart';
 import 'group_edit_mode.dart';
-import '../../state/expense_group_notifier.dart';
 
 /// Controller encapsulates business logic for the group form.
 class GroupFormController {

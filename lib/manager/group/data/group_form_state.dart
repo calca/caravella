@@ -1,6 +1,4 @@
-import '../../../data/model/expense_participant.dart';
-import '../../../data/model/expense_category.dart';
-import '../../../data/model/expense_group.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'package:flutter/foundation.dart';
 
 class GroupFormState extends ChangeNotifier {

@@ -3,7 +3,7 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:io_caravella_egm/settings/widgets/settings_card.dart';
 import '../../settings/widgets/settings_section.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../widgets/app_toast.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 class DeveloperPage extends StatelessWidget {
   const DeveloperPage({super.key});
