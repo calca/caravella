@@ -357,7 +357,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get note => '备注';
 
   @override
-  String get note_hint => 'Note';
+  String get note_hint => '备注';
 
   @override
   String get select_both_dates =>
@@ -368,16 +368,16 @@ class AppLocalizationsZh extends AppLocalizations {
       'Select both dates or leave both empty';
 
   @override
-  String get end_date_after_start => 'End date must be after start date';
+  String get end_date_after_start => '结束日期必须在开始日期之后';
 
   @override
-  String get start_date_optional => 'From';
+  String get start_date_optional => '开始日期';
 
   @override
-  String get end_date_optional => 'To';
+  String get end_date_optional => '结束日期';
 
   @override
-  String get dates => 'Period';
+  String get dates => '时间段';
 
   @override
   String get expenses_by_participant => '按参与者分组';
@@ -386,10 +386,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get expenses_by_category => '按类别分组';
 
   @override
-  String get uncategorized => 'Uncategorized';
+  String get uncategorized => '未分类';
 
   @override
-  String get backup => 'Backup';
+  String get backup => '备份';
 
   @override
   String get no_trips_to_backup => '没有可备份的行程';
@@ -398,10 +398,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get backup_error => '备份失败';
 
   @override
-  String get backup_share_message => 'Here is your Caravella backup';
+  String get backup_share_message => '这是您的Caravella备份';
 
   @override
-  String get import => 'Import';
+  String get import => '导入';
 
   @override
   String get import_confirm_title => '导入数据';
@@ -467,22 +467,22 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get currency => 'Currency';
+  String get currency => '货币';
 
   @override
   String get settings_tab => '设置';
 
   @override
-  String get basic_info => 'Basic Information';
+  String get basic_info => '基本信息';
 
   @override
   String get settings => '设置';
 
   @override
-  String get history => 'History';
+  String get history => '历史';
 
   @override
-  String get all => 'ALL';
+  String get all => '全部';
 
   @override
   String get search_groups => '搜索群组...';
@@ -491,13 +491,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get no_search_results => '未找到群组';
 
   @override
-  String get try_different_search => 'Try searching with different words';
+  String get try_different_search => '尝试使用不同的关键词搜索';
 
   @override
-  String get active => 'Active';
+  String get active => '活跃';
 
   @override
-  String get archived => 'Archived';
+  String get archived => '已归档';
 
   @override
   String get archive => 'Archive';
@@ -604,13 +604,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get owes_to => ' owes ';
 
   @override
-  String get export_csv => 'Export CSV';
+  String get export_csv => '导出CSV';
 
   @override
   String get no_expenses_to_export => '没有可导出的支出';
 
   @override
-  String get export_csv_share_text => 'Expenses exported from ';
+  String get export_csv_share_text => '支出导出自 ';
 
   @override
   String get export_csv_error => '导出支出时出错';
@@ -628,10 +628,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get expense_updated_success => '支出已更新';
 
   @override
-  String get data_refreshing => 'Refreshing…';
+  String get data_refreshing => '刷新中…';
 
   @override
-  String get data_refreshed => 'Updated';
+  String get data_refreshed => '已更新';
 
   @override
   String get refresh => '刷新';
@@ -812,13 +812,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get support_developer_desc => 'Support the development of this app.';
 
   @override
-  String get data_title => 'Backup & Restore';
+  String get data_title => '备份和恢复';
 
   @override
-  String get data_backup_title => 'Backup';
+  String get data_backup_title => '备份';
 
   @override
-  String get data_backup_desc => 'Create a backup file of your expenses.';
+  String get data_backup_desc => '创建您支出的备份文件。';
 
   @override
   String get data_restore_title => 'Restore';
@@ -892,17 +892,17 @@ class AppLocalizationsZh extends AppLocalizations {
   String get average_expense => '平均支出';
 
   @override
-  String get welcome_v3_cta => 'Get started!';
+  String get welcome_v3_cta => '开始使用！';
 
   @override
-  String get discard_changes_title => 'Discard changes?';
+  String get discard_changes_title => '舍弃更改？';
 
   @override
   String get discard_changes_message =>
-      'Are you sure you want to discard unsaved changes?';
+      '您确定要舍弃未保存的更改吗？';
 
   @override
-  String get discard => 'Discard';
+  String get discard => '舍弃';
 
   @override
   String get category_placeholder => 'Category';
@@ -922,16 +922,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get error_saving_image => '保存图片出错';
 
   @override
-  String get already_exists => 'already exists';
+  String get already_exists => '已存在';
 
   @override
-  String get status_all => 'All';
+  String get status_all => '全部';
 
   @override
-  String get status_active => 'Active';
+  String get status_active => '活跃';
 
   @override
-  String get status_archived => 'Archived';
+  String get status_archived => '已归档';
 
   @override
   String get no_archived_groups => 'No archived groups';
@@ -945,7 +945,7 @@ class AppLocalizationsZh extends AppLocalizations {
       'All your groups are archived. You can restore them from the Archive section or create new ones.';
 
   @override
-  String get filter_status_tooltip => 'Filter groups';
+  String get filter_status_tooltip => '筛选群组';
 
   @override
   String get welcome_logo_semantic => 'Caravella应用标志';
@@ -1512,13 +1512,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get search_expenses_hint => 'Search by name or note...';
 
   @override
-  String get clear_filters => 'Clear';
+  String get clear_filters => '清除';
 
   @override
-  String get show_filters => 'Show filters';
+  String get show_filters => '显示筛选器';
 
   @override
-  String get hide_filters => 'Hide filters';
+  String get hide_filters => '隐藏筛选器';
 
   @override
   String get all_categories => 'All';
