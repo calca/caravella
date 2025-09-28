@@ -126,31 +126,31 @@ class AppLocalizationsZh extends AppLocalizations {
   String get create_first_group => '创建您的第一个群组';
 
   @override
-  String get new_expense_group => 'New Expense Group';
+  String get new_expense_group => '新支出群组';
 
   @override
-  String get tap_to_create => 'Tap to create';
+  String get tap_to_create => '点击创建';
 
   @override
-  String get no_expense_label => 'No expenses found';
+  String get no_expense_label => '未找到支出';
 
   @override
-  String get image => 'Image';
+  String get image => '图片';
 
   @override
-  String get select_image => 'Select Image';
+  String get select_image => '选择图片';
 
   @override
-  String get change_image => 'Change Image';
+  String get change_image => '更换图片';
 
   @override
-  String get from_gallery => 'From Gallery';
+  String get from_gallery => '从图库选择';
 
   @override
-  String get from_camera => 'From Camera';
+  String get from_camera => '拍照';
 
   @override
-  String get remove_image => 'Remove Image';
+  String get remove_image => '删除图片';
 
   @override
   String get cannot_delete_assigned_participant =>
@@ -161,70 +161,70 @@ class AppLocalizationsZh extends AppLocalizations {
       'Cannot delete category: it\'s assigned to one or more expenses';
 
   @override
-  String get color => 'Color';
+  String get color => '颜色';
 
   @override
-  String get remove_color => 'Remove Color';
+  String get remove_color => '删除颜色';
 
   @override
-  String get color_alternative => 'Alternative to image';
+  String get color_alternative => '图片的替代颜色';
 
   @override
-  String get background => 'Background';
+  String get background => '背景';
 
   @override
-  String get select_background => 'Select Background';
+  String get select_background => '选择背景';
 
   @override
-  String get background_options => 'Background Options';
+  String get background_options => '背景选项';
 
   @override
-  String get choose_image_or_color => 'Choose image or color';
+  String get choose_image_or_color => '选择图片或颜色';
 
   @override
-  String get participants_description => 'People sharing costs';
+  String get participants_description => '分摊费用的成员';
 
   @override
-  String get categories_description => 'Group expenses by type';
+  String get categories_description => '按类型分组支出';
 
   @override
-  String get dates_description => 'Optional start and end';
+  String get dates_description => '可选的开始和结束日期';
 
   @override
-  String get currency_description => 'Base currency for group';
+  String get currency_description => '群组基础货币';
 
   @override
-  String get background_color_selected => 'Color selected';
+  String get background_color_selected => '颜色已选择';
 
   @override
-  String get background_tap_to_replace => 'Tap to replace';
+  String get background_tap_to_replace => '点击替换';
 
   @override
-  String get background_tap_to_change => 'Tap to change';
+  String get background_tap_to_change => '点击更换';
 
   @override
-  String get background_select_image_or_color => 'Select image or color';
+  String get background_select_image_or_color => '选择图片或颜色';
 
   @override
-  String get background_random_color => 'Random color';
+  String get background_random_color => '随机颜色';
 
   @override
-  String get background_remove => 'Remove background';
+  String get background_remove => '删除背景';
 
   @override
-  String get crop_image_title => 'Crop image';
+  String get crop_image_title => '裁剪图片';
 
   @override
-  String get crop_confirm => 'Confirm';
+  String get crop_confirm => '确认';
 
   @override
-  String get saving => 'Saving...';
+  String get saving => '保存中...';
 
   @override
-  String get processing_image => 'Processing image...';
+  String get processing_image => '处理图片中...';
 
   @override
-  String get no_trips_found => 'Where do you want to go?';
+  String get no_trips_found => '您想去哪里？';
 
   @override
   String get expenses => '支出';
@@ -243,61 +243,61 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get participants_label => 'Participants';
+  String get participants_label => '参与者';
 
   @override
-  String get last_7_days => '7 days';
+  String get last_7_days => '过去7天';
 
   @override
-  String get recent_activity => 'Recent activity';
+  String get recent_activity => '最近活动';
 
   @override
-  String get about => 'About';
+  String get about => '关于';
 
   @override
-  String get license_hint => 'This app is released under the MIT license.';
+  String get license_hint => '此应用在MIT许可证下发布。';
 
   @override
   String get license_link => '在 GitHub 上查看 MIT 许可证';
 
   @override
-  String get license_section => 'License';
+  String get license_section => '许可证';
 
   @override
   String get add_trip => '添加组';
 
   @override
-  String get new_group => 'New Group';
+  String get new_group => '新群组';
 
   @override
   String get group_name => '群组名称';
 
   @override
-  String get enter_title => 'Enter a name';
+  String get enter_title => '输入名称';
 
   @override
-  String get enter_participant => 'Enter at least one participant';
+  String get enter_participant => '输入至少一个参与者';
 
   @override
-  String get select_start => 'Select start';
+  String get select_start => '选择开始日期';
 
   @override
-  String get select_end => 'Select end';
+  String get select_end => '选择结束日期';
 
   @override
-  String get start_date_not_selected => 'Select start';
+  String get start_date_not_selected => '选择开始日期';
 
   @override
-  String get end_date_not_selected => 'Select end';
+  String get end_date_not_selected => '选择结束日期';
 
   @override
-  String get select_from_date => 'Select from';
+  String get select_from_date => '选择开始日期';
 
   @override
-  String get select_to_date => 'Select to';
+  String get select_to_date => '选择结束日期';
 
   @override
-  String get date_range_not_selected => 'Select period';
+  String get date_range_not_selected => '选择时间段';
 
   @override
   String get date_range_partial => 'Select both dates';
