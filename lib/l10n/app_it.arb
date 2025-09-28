@@ -581,4 +581,46 @@
   ,"@less": {"description": "Etichetta inline per comprimere e mostrare meno elementi"}
   ,"debt_prefix_to": "a "
   ,"@debt_prefix_to": {"description": "Prefisso breve mostrato prima del destinatario nella riga di debito/pareggio (es. 'a Alice 10€')"}
+  ,"wizard_group_creation_title": "Nuovo Gruppo"
+  ,"@wizard_group_creation_title": {"description": "Titolo del wizard di creazione gruppo"}
+  ,"wizard_step_name": "Nome"
+  ,"@wizard_step_name": {"description": "Titolo step 1 del wizard: nome gruppo"}
+  ,"wizard_step_participants": "Partecipanti"
+  ,"@wizard_step_participants": {"description": "Titolo step 2 del wizard: partecipanti"}
+  ,"wizard_step_categories": "Categorie"
+  ,"@wizard_step_categories": {"description": "Titolo step 3 del wizard: categorie"}
+  ,"wizard_step_period": "Periodo"
+  ,"@wizard_step_period": {"description": "Titolo step 4 del wizard: periodo"}
+  ,"wizard_step_background": "Sfondo"
+  ,"@wizard_step_background": {"description": "Titolo step 5 del wizard: colore sfondo"}
+  ,"wizard_step_congratulations": "Complimenti!"
+  ,"@wizard_step_congratulations": {"description": "Titolo step finale del wizard: congratulazioni"}
+  ,"wizard_step_of": "di"
+  ,"@wizard_step_of": {"description": "Separatore per indicatore di progresso (es. 'Passo 1 di 6')"}
+  ,"wizard_next": "Avanti"
+  ,"@wizard_next": {"description": "Testo del pulsante per andare al prossimo step"}
+  ,"wizard_previous": "Indietro"
+  ,"@wizard_previous": {"description": "Testo del pulsante per tornare allo step precedente"}
+  ,"wizard_skip": "Salta"
+  ,"@wizard_skip": {"description": "Testo del pulsante per saltare uno step opzionale"}
+  ,"wizard_finish": "Crea Gruppo"
+  ,"@wizard_finish": {"description": "Testo del pulsante finale per creare il gruppo"}
+  ,"wizard_name_description": "Inserisci un nome per il tuo gruppo di spese"
+  ,"@wizard_name_description": {"description": "Descrizione dello step nome nel wizard"}
+  ,"wizard_participants_description": "Aggiungi le persone che parteciperanno alle spese"
+  ,"@wizard_participants_description": {"description": "Descrizione dello step partecipanti nel wizard"}
+  ,"wizard_categories_description": "Crea categorie per organizzare le spese"
+  ,"@wizard_categories_description": {"description": "Descrizione dello step categorie nel wizard"}
+  ,"wizard_period_description": "Imposta date di inizio e fine (opzionale)"
+  ,"@wizard_period_description": {"description": "Descrizione dello step periodo nel wizard"}
+  ,"wizard_background_description": "Scegli un colore di sfondo per il gruppo"
+  ,"@wizard_background_description": {"description": "Descrizione dello step sfondo nel wizard"}
+  ,"wizard_congratulations_message": "Il tuo gruppo '{groupName}' è stato creato con successo!"
+  ,"@wizard_congratulations_message": {"description": "Messaggio di congratulazioni con nome gruppo", "placeholders": {"groupName": {"type": "String"}}}
+  ,"wizard_group_summary": "Riepilogo gruppo:"
+  ,"@wizard_group_summary": {"description": "Titolo del riepilogo nella schermata finale"}
+  ,"wizard_created_participants": "{count, plural, =1{1 partecipante} other{{count} partecipanti}}"
+  ,"@wizard_created_participants": {"description": "Numero partecipanti nel riepilogo", "placeholders": {"count": {"type": "int"}}}
+  ,"wizard_created_categories": "{count, plural, =1{1 categoria} other{{count} categorie}}"
+  ,"@wizard_created_categories": {"description": "Numero categorie nel riepilogo", "placeholders": {"count": {"type": "int"}}}
 }

@@ -594,4 +594,46 @@
   ,"@less": {"description": "Inline toggle label to collapse and show fewer items"}
   ,"debt_prefix_to": "to "
   ,"@debt_prefix_to": {"description": "Short prefix shown before the recipient in a debt/settlement line (e.g., 'to Alice 10€')"}
+  ,"wizard_group_creation_title": "New Group"
+  ,"@wizard_group_creation_title": {"description": "Title of the group creation wizard"}
+  ,"wizard_step_name": "Name"
+  ,"@wizard_step_name": {"description": "Title of wizard step 1: group name"}
+  ,"wizard_step_participants": "Participants"
+  ,"@wizard_step_participants": {"description": "Title of wizard step 2: participants"}
+  ,"wizard_step_categories": "Categories"
+  ,"@wizard_step_categories": {"description": "Title of wizard step 3: categories"}
+  ,"wizard_step_period": "Period"
+  ,"@wizard_step_period": {"description": "Title of wizard step 4: period"}
+  ,"wizard_step_background": "Background"
+  ,"@wizard_step_background": {"description": "Title of wizard step 5: background color"}
+  ,"wizard_step_congratulations": "Congratulations!"
+  ,"@wizard_step_congratulations": {"description": "Title of final wizard step: congratulations"}
+  ,"wizard_step_of": "of"
+  ,"@wizard_step_of": {"description": "Separator for progress indicator (e.g. 'Step 1 of 6')"}
+  ,"wizard_next": "Next"
+  ,"@wizard_next": {"description": "Text for button to go to next step"}
+  ,"wizard_previous": "Previous"
+  ,"@wizard_previous": {"description": "Text for button to go to previous step"}
+  ,"wizard_skip": "Skip"
+  ,"@wizard_skip": {"description": "Text for button to skip an optional step"}
+  ,"wizard_finish": "Create Group"
+  ,"@wizard_finish": {"description": "Text for final button to create the group"}
+  ,"wizard_name_description": "Enter a name for your expense group"
+  ,"@wizard_name_description": {"description": "Description of the name step in the wizard"}
+  ,"wizard_participants_description": "Add people who will share expenses"
+  ,"@wizard_participants_description": {"description": "Description of the participants step in the wizard"}
+  ,"wizard_categories_description": "Create categories to organize expenses"
+  ,"@wizard_categories_description": {"description": "Description of the categories step in the wizard"}
+  ,"wizard_period_description": "Set start and end dates (optional)"
+  ,"@wizard_period_description": {"description": "Description of the period step in the wizard"}
+  ,"wizard_background_description": "Choose a background color for the group"
+  ,"@wizard_background_description": {"description": "Description of the background step in the wizard"}
+  ,"wizard_congratulations_message": "Your group '{groupName}' has been created successfully!"
+  ,"@wizard_congratulations_message": {"description": "Congratulations message with group name", "placeholders": {"groupName": {"type": "String"}}}
+  ,"wizard_group_summary": "Group summary:"
+  ,"@wizard_group_summary": {"description": "Title of the summary in the final screen"}
+  ,"wizard_created_participants": "{count, plural, =1{1 participant} other{{count} participants}}"
+  ,"@wizard_created_participants": {"description": "Number of participants in the summary", "placeholders": {"count": {"type": "int"}}}
+  ,"wizard_created_categories": "{count, plural, =1{1 category} other{{count} categories}}"
+  ,"@wizard_created_categories": {"description": "Number of categories in the summary", "placeholders": {"count": {"type": "int"}}}
 }
