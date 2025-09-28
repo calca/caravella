@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../data/group_form_state.dart';
-import '../../widgets/period_section_editor.dart';
+import '../period_section_editor.dart';
 
 class WizardPeriodStep extends StatelessWidget {
   const WizardPeriodStep({super.key});

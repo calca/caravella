@@ -111,7 +111,7 @@ class WizardCongratulationsStep extends StatelessWidget {
                   Navigator.of(context).pop(true);
                 },
                 icon: const Icon(Icons.check),
-                label: Text(gloc.done),
+                label: Text(gloc.ok),
                 style: FilledButton.styleFrom(
                   minimumSize: const Size.fromHeight(48),
                 ),

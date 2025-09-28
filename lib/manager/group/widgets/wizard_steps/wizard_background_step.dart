@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../widgets/background_picker.dart';
+import '../background_picker.dart';
 
 class WizardBackgroundStep extends StatelessWidget {
   const WizardBackgroundStep({super.key});

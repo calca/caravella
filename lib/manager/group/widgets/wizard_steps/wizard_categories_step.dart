@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../data/group_form_state.dart';
-import '../../widgets/categories_editor.dart';
+import '../categories_editor.dart';
 
 class WizardCategoriesStep extends StatelessWidget {
   const WizardCategoriesStep({super.key});

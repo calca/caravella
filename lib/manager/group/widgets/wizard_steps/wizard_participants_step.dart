@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../data/group_form_state.dart';
-import '../../widgets/participants_editor.dart';
+import '../participants_editor.dart';
 
 class WizardParticipantsStep extends StatelessWidget {
   const WizardParticipantsStep({super.key});
