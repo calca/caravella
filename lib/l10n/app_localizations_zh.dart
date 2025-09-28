@@ -512,19 +512,19 @@ class AppLocalizationsZh extends AppLocalizations {
   String get unarchive_confirm => 'Do you want to unarchive';
 
   @override
-  String get overview => 'Overview';
+  String get overview => '概览';
 
   @override
-  String get statistics => 'Statistics';
+  String get statistics => '统计';
 
   @override
   String get options => 'Options';
 
   @override
-  String get show_overview => 'Show overview';
+  String get show_overview => '显示概览';
 
   @override
-  String get show_statistics => 'Show statistics';
+  String get show_statistics => '显示统计';
 
   @override
   String get no_expenses_to_display => 'No expenses to display';
@@ -582,10 +582,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get daily_expenses_chart => '每日支出';
 
   @override
-  String get weekly_expenses_chart => 'Weekly expenses';
+  String get weekly_expenses_chart => '每周支出';
 
   @override
-  String get daily_average_by_category => 'Daily average by category';
+  String get daily_average_by_category => '按类别的每日平均值';
 
   @override
   String get per_day => '/day';
@@ -607,25 +607,25 @@ class AppLocalizationsZh extends AppLocalizations {
   String get export_csv => 'Export CSV';
 
   @override
-  String get no_expenses_to_export => 'No expenses to export';
+  String get no_expenses_to_export => '没有可导出的支出';
 
   @override
   String get export_csv_share_text => 'Expenses exported from ';
 
   @override
-  String get export_csv_error => 'Error exporting expenses';
+  String get export_csv_error => '导出支出时出错';
 
   @override
-  String get expense_name => 'Description';
+  String get expense_name => '描述';
 
   @override
   String get paid_by => '付款人';
 
   @override
-  String get expense_added_success => 'Expense added';
+  String get expense_added_success => '支出已添加';
 
   @override
-  String get expense_updated_success => 'Expense updated';
+  String get expense_updated_success => '支出已更新';
 
   @override
   String get data_refreshing => 'Refreshing…';
@@ -710,7 +710,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get getting_location => 'Getting location...';
 
   @override
-  String get location_error => 'Error getting location';
+  String get location_error => '获取位置时出错';
 
   @override
   String get resolving_address => 'Resolving address…';
@@ -785,28 +785,28 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_info_card_desc => '查看应用信息和版本';
 
   @override
-  String get terms_github_title => 'Website: calca';
+  String get terms_github_title => '网站：calca';
 
   @override
-  String get terms_github_desc => 'Developer\'s personal website.';
+  String get terms_github_desc => '开发者的个人网站。';
 
   @override
-  String get terms_repo_title => 'GitHub Repository';
+  String get terms_repo_title => 'GitHub仓库';
 
   @override
-  String get terms_repo_desc => 'Application source code.';
+  String get terms_repo_desc => '应用程序源代码。';
 
   @override
-  String get terms_issue_title => 'Report a problem';
+  String get terms_issue_title => '报告问题';
 
   @override
-  String get terms_issue_desc => 'Go to the GitHub issues page.';
+  String get terms_issue_desc => '转到GitHub问题页面。';
 
   @override
-  String get terms_license_desc => 'View the open source license.';
+  String get terms_license_desc => '查看开源许可证。';
 
   @override
-  String get support_developer_title => 'Buy me a coffee';
+  String get support_developer_title => '请开发者喝咖啡';
 
   @override
   String get support_developer_desc => 'Support the development of this app.';
@@ -871,13 +871,13 @@ class AppLocalizationsZh extends AppLocalizations {
       'Try adjusting the filter or search.';
 
   @override
-  String get general_statistics => 'General statistics';
+  String get general_statistics => '总体统计';
 
   @override
   String get add_first_expense => '添加您的第一笔支出';
 
   @override
-  String get overview_and_statistics => 'Overview and statistics';
+  String get overview_and_statistics => '概览和统计';
 
   @override
   String get daily_average => '每日';
@@ -889,7 +889,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get monthly_average => '每月';
 
   @override
-  String get average_expense => 'Average expense';
+  String get average_expense => '平均支出';
 
   @override
   String get welcome_v3_cta => 'Get started!';
@@ -916,10 +916,10 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get error_selecting_image => 'Error selecting image';
+  String get error_selecting_image => '选择图片出错';
 
   @override
-  String get error_saving_image => 'Error saving image';
+  String get error_saving_image => '保存图片出错';
 
   @override
   String get already_exists => 'already exists';
@@ -948,31 +948,31 @@ class AppLocalizationsZh extends AppLocalizations {
   String get filter_status_tooltip => 'Filter groups';
 
   @override
-  String get welcome_logo_semantic => 'Caravella app logo';
+  String get welcome_logo_semantic => 'Caravella应用标志';
 
   @override
   String get create_new_group => 'Create new group';
 
   @override
-  String get accessibility_add_new_item => 'Add new item';
+  String get accessibility_add_new_item => '添加新项目';
 
   @override
-  String get accessibility_navigation_bar => 'Navigation bar';
+  String get accessibility_navigation_bar => '导航栏';
 
   @override
   String get accessibility_back_button => '返回';
 
   @override
-  String get accessibility_loading_groups => 'Loading groups';
+  String get accessibility_loading_groups => '正在加载群组';
 
   @override
-  String get accessibility_loading_your_groups => 'Loading your groups';
+  String get accessibility_loading_your_groups => '正在加载您的群组';
 
   @override
-  String get accessibility_groups_list => 'Groups list';
+  String get accessibility_groups_list => '群组列表';
 
   @override
-  String get accessibility_welcome_screen => 'Welcome screen';
+  String get accessibility_welcome_screen => '欢迎屏幕';
 
   @override
   String accessibility_total_expenses(Object amount) {
@@ -980,7 +980,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get accessibility_add_expense => 'Add expense';
+  String get accessibility_add_expense => '添加支出';
 
   @override
   String accessibility_security_switch(Object state) {
@@ -1010,13 +1010,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get accessibility_double_tap_enable => '双击以启用';
 
   @override
-  String get accessibility_toast_success => 'Success';
+  String get accessibility_toast_success => '成功';
 
   @override
-  String get accessibility_toast_error => 'Error';
+  String get accessibility_toast_error => '错误';
 
   @override
-  String get accessibility_toast_info => 'Information';
+  String get accessibility_toast_info => '信息';
 
   @override
   String get color_suggested_title => 'Suggested colors';
