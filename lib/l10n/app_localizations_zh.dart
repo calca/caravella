@@ -258,13 +258,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get license_hint => 'This app is released under the MIT license.';
 
   @override
-  String get license_link => '在 GitHub 上查看 MIT 许可证';
+  String get license_link => 'View MIT License on GitHub';
 
   @override
   String get license_section => 'License';
 
   @override
-  String get add_trip => '添加组';
+  String get add_trip => 'Add group';
 
   @override
   String get new_group => 'New Group';
