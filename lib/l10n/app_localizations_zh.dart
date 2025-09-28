@@ -182,16 +182,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get choose_image_or_color => '选择图片或颜色';
 
   @override
-  String get participants_description => '分摊费用的成员';
+  String get participants_description => 'People sharing costs';
 
   @override
-  String get categories_description => '按类型分组支出';
+  String get categories_description => 'Group expenses by type';
 
   @override
-  String get dates_description => '可选的开始和结束日期';
+  String get dates_description => 'Optional start and end';
 
   @override
-  String get currency_description => '群组基础货币';
+  String get currency_description => 'Base currency for group';
 
   @override
   String get background_color_selected => '颜色已选择';
@@ -300,23 +300,23 @@ class AppLocalizationsZh extends AppLocalizations {
   String get date_range_not_selected => '选择时间段';
 
   @override
-  String get date_range_partial => '请选择两个日期';
+  String get date_range_partial => 'Select both dates';
 
   @override
   String get save => '保存';
 
   @override
-  String get delete_trip => '删除行程';
+  String get delete_trip => 'Delete trip';
 
   @override
   String get delete_trip_confirm =>
-      '您确定要删除此行程吗？';
+      'Are you sure you want to delete this trip?';
 
   @override
   String get cancel => '取消';
 
   @override
-  String get ok => '确定';
+  String get ok => 'OK';
 
   @override
   String from_to(Object end, Object start) {
@@ -327,13 +327,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get add_expense => '添加支出';
 
   @override
-  String get edit_expense => '编辑支出';
+  String get edit_expense => 'Edit expense';
 
   @override
-  String get expand_form => '展开表单';
+  String get expand_form => 'Expand form';
 
   @override
-  String get expand_form_tooltip => '添加日期、地点和备注';
+  String get expand_form_tooltip => 'Add date, location and notes';
 
   @override
   String get category => '类别';
@@ -342,7 +342,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get amount => '金额';
 
   @override
-  String get invalid_amount => '无效金额';
+  String get invalid_amount => 'Invalid amount';
 
   @override
   String get no_categories => '无类别';
@@ -351,13 +351,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get add_category => '添加类别';
 
   @override
-  String get category_name => '类别名称';
+  String get category_name => 'Category name';
 
   @override
-  String get note => '备注';
+  String get note => 'Note';
 
   @override
-  String get note_hint => '备注';
+  String get note_hint => 'Note';
 
   @override
   String get select_both_dates =>
@@ -368,22 +368,22 @@ class AppLocalizationsZh extends AppLocalizations {
       'Select both dates or leave both empty';
 
   @override
-  String get end_date_after_start => '结束日期必须在开始日期之后';
+  String get end_date_after_start => 'End date must be after start date';
 
   @override
-  String get start_date_optional => '开始日期';
+  String get start_date_optional => 'From';
 
   @override
-  String get end_date_optional => '结束日期';
+  String get end_date_optional => 'To';
 
   @override
-  String get dates => '时间段';
+  String get dates => 'Period';
 
   @override
-  String get expenses_by_participant => '按参与者分组';
+  String get expenses_by_participant => 'By participant';
 
   @override
-  String get expenses_by_category => '按类别分组';
+  String get expenses_by_category => '按类别分类的支出';
 
   @override
   String get uncategorized => '未分类';
@@ -467,76 +467,76 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get currency => '货币';
+  String get currency => 'Currency';
 
   @override
-  String get settings_tab => '设置';
+  String get settings_tab => 'Settings';
 
   @override
-  String get basic_info => '基本信息';
+  String get basic_info => 'Basic Information';
 
   @override
   String get settings => '设置';
 
   @override
-  String get history => '历史';
+  String get history => 'History';
 
   @override
-  String get all => '全部';
+  String get all => 'ALL';
 
   @override
-  String get search_groups => '搜索群组...';
+  String get search_groups => 'Search groups...';
 
   @override
-  String get no_search_results => '未找到群组';
+  String get no_search_results => 'No groups found for';
 
   @override
-  String get try_different_search => '尝试使用不同的关键词搜索';
+  String get try_different_search => 'Try searching with different words';
 
   @override
-  String get active => '活跃';
+  String get active => 'Active';
 
   @override
-  String get archived => '已归档';
+  String get archived => 'Archived';
 
   @override
-  String get archive => '归档';
+  String get archive => 'Archive';
 
   @override
-  String get unarchive => '取消归档';
+  String get unarchive => 'Unarchive';
 
   @override
-  String get archive_confirm => '您确定要归档';
+  String get archive_confirm => 'Do you want to archive';
 
   @override
-  String get unarchive_confirm => '您确定要取消归档';
+  String get unarchive_confirm => 'Do you want to unarchive';
 
   @override
-  String get overview => '概览';
+  String get overview => 'Overview';
 
   @override
-  String get statistics => '统计';
+  String get statistics => 'Statistics';
 
   @override
-  String get options => '选项';
+  String get options => 'Options';
 
   @override
-  String get show_overview => '显示概览';
+  String get show_overview => 'Show overview';
 
   @override
-  String get show_statistics => '显示统计';
+  String get show_statistics => 'Show statistics';
 
   @override
-  String get no_expenses_to_display => '没有可显示的支出';
+  String get no_expenses_to_display => 'No expenses to display';
 
   @override
-  String get no_expenses_to_analyze => '没有可分析的支出';
+  String get no_expenses_to_analyze => 'No expenses to analyze';
 
   @override
-  String get select_expense_date => '选择支出日期';
+  String get select_expense_date => 'Select expense date';
 
   @override
-  String get select_expense_date_short => '选择日期';
+  String get select_expense_date_short => 'Select date';
 
   @override
   String get date => '日期';
@@ -548,8 +548,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get delete_group => '删除群组';
 
   @override
-  String get delete_group_confirm =>
-      '您确定要删除此支出群组吗？此操作无法撤销。';
+  String get delete_group_confirm => '您确定要删除此支出群组吗？此操作无法撤销。';
 
   @override
   String get add_expense_fab => '添加支出';
@@ -585,53 +584,53 @@ class AppLocalizationsZh extends AppLocalizations {
   String get weekly_expenses_chart => '每周支出';
 
   @override
-  String get daily_average_by_category => '按类别的每日平均值';
+  String get daily_average_by_category => 'Daily average by category';
 
   @override
-  String get per_day => '/天';
+  String get per_day => '/day';
 
   @override
   String get no_expenses_for_statistics =>
       'No expenses available for statistics';
 
   @override
-  String get settlement => '结算';
+  String get settlement => 'Settlement';
 
   @override
-  String get all_balanced => '所有账户都已结算！';
+  String get all_balanced => 'All accounts are balanced!';
 
   @override
-  String get owes_to => ' 欠 ';
+  String get owes_to => ' owes ';
 
   @override
-  String get export_csv => '导出CSV';
+  String get export_csv => 'Export CSV';
 
   @override
-  String get no_expenses_to_export => '没有可导出的支出';
+  String get no_expenses_to_export => 'No expenses to export';
 
   @override
-  String get export_csv_share_text => '支出导出自 ';
+  String get export_csv_share_text => 'Expenses exported from ';
 
   @override
-  String get export_csv_error => '导出支出时出错';
+  String get export_csv_error => 'Error exporting expenses';
 
   @override
-  String get expense_name => '描述';
+  String get expense_name => 'Description';
 
   @override
   String get paid_by => '付款人';
 
   @override
-  String get expense_added_success => '支出已添加';
+  String get expense_added_success => 'Expense added';
 
   @override
-  String get expense_updated_success => '支出已更新';
+  String get expense_updated_success => 'Expense updated';
 
   @override
-  String get data_refreshing => '刷新中…';
+  String get data_refreshing => 'Refreshing…';
 
   @override
-  String get data_refreshed => '已更新';
+  String get data_refreshed => 'Updated';
 
   @override
   String get refresh => '刷新';
@@ -683,40 +682,40 @@ class AppLocalizationsZh extends AppLocalizations {
   String get csv_date => '日期';
 
   @override
-  String get csv_note => '备注';
+  String get csv_note => 'Note';
 
   @override
-  String get csv_location => '位置';
+  String get csv_location => 'Location';
 
   @override
-  String get location => '位置';
+  String get location => 'Location';
 
   @override
-  String get location_hint => '位置';
+  String get location_hint => 'Location';
 
   @override
-  String get get_current_location => '使用当前位置';
+  String get get_current_location => 'Use current location';
 
   @override
-  String get enter_location_manually => '手动输入';
+  String get enter_location_manually => 'Enter manually';
 
   @override
-  String get location_permission_denied => '位置权限被拒绝';
+  String get location_permission_denied => 'Location permission denied';
 
   @override
-  String get location_service_disabled => '位置服务已禁用';
+  String get location_service_disabled => 'Location service disabled';
 
   @override
-  String get getting_location => '正在获取位置...';
+  String get getting_location => 'Getting location...';
 
   @override
-  String get location_error => '获取位置时出错';
+  String get location_error => 'Error getting location';
 
   @override
-  String get resolving_address => '正在解析地址…';
+  String get resolving_address => 'Resolving address…';
 
   @override
-  String get address_resolved => '地址已解析';
+  String get address_resolved => 'Address resolved';
 
   @override
   String get settings_general => '一般';
@@ -740,7 +739,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_language_es => '西班牙语';
 
   @override
-  String get settings_language_pt => '葡萄牙语';
+  String get settings_language_pt => 'Portuguese';
 
   @override
   String get settings_language_zh => '中文（简体）';
@@ -785,40 +784,40 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_info_card_desc => '查看应用信息和版本';
 
   @override
-  String get terms_github_title => '网站：calca';
+  String get terms_github_title => 'Website: calca';
 
   @override
-  String get terms_github_desc => '开发者的个人网站。';
+  String get terms_github_desc => 'Developer\'s personal website.';
 
   @override
-  String get terms_repo_title => 'GitHub仓库';
+  String get terms_repo_title => 'GitHub Repository';
 
   @override
-  String get terms_repo_desc => '应用程序源代码。';
+  String get terms_repo_desc => 'Application source code.';
 
   @override
-  String get terms_issue_title => '报告问题';
+  String get terms_issue_title => 'Report a problem';
 
   @override
-  String get terms_issue_desc => '转到GitHub问题页面。';
+  String get terms_issue_desc => 'Go to the GitHub issues page.';
 
   @override
-  String get terms_license_desc => '查看开源许可证。';
+  String get terms_license_desc => 'View the open source license.';
 
   @override
-  String get support_developer_title => '请开发者喝咖啡';
+  String get support_developer_title => 'Buy me a coffee';
 
   @override
-  String get support_developer_desc => '支持此应用的开发。';
+  String get support_developer_desc => 'Support the development of this app.';
 
   @override
-  String get data_title => '备份和恢复';
+  String get data_title => 'Backup & Restore';
 
   @override
-  String get data_backup_title => '备份';
+  String get data_backup_title => 'Backup';
 
   @override
-  String get data_backup_desc => '创建您支出的备份文件。';
+  String get data_backup_desc => 'Create a backup file of your expenses.';
 
   @override
   String get data_restore_title => 'Restore';
@@ -833,16 +832,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get auto_backup_desc => 'Enable operating system automatic backup';
 
   @override
-  String get settings_user_name_title => '您的姓名';
+  String get settings_user_name_title => 'Your name';
 
   @override
-  String get settings_user_name_desc => '在应用中使用的姓名或昵称';
+  String get settings_user_name_desc => 'Name or nickname to use in the app';
 
   @override
-  String get settings_user_name_hint => '输入您的姓名';
+  String get settings_user_name_hint => 'Enter your name';
 
   @override
-  String get info_tab => '信息';
+  String get info_tab => 'Info';
 
   @override
   String get select_paid_by => 'Select payer';
@@ -883,7 +882,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get daily_average => '每日';
 
   @override
-  String get spent_today => 'Today';
+  String get spent_today => '今日支出';
 
   @override
   String get monthly_average => '每月';
@@ -898,17 +897,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get discard_changes_title => '舍弃更改？';
 
   @override
-  String get discard_changes_message =>
-      '您确定要舍弃未保存的更改吗？';
+  String get discard_changes_message => '您确定要舍弃未保存的更改吗？';
 
   @override
   String get discard => '舍弃';
 
   @override
-  String get category_placeholder => 'Category';
+  String get category_placeholder => '类别';
 
   @override
-  String get image_requirements => 'PNG, JPG, GIF (max 10MB)';
+  String get image_requirements => 'PNG、JPG、GIF（最大10MB）';
 
   @override
   String error_saving_group(Object error) {
@@ -934,15 +932,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get status_archived => '已归档';
 
   @override
-  String get no_archived_groups => 'No archived groups';
+  String get no_archived_groups => '没有已归档的群组';
 
   @override
-  String get no_archived_groups_subtitle =>
-      'You have not archived any groups yet';
+  String get no_archived_groups_subtitle => '您还没有归档任何群组';
 
   @override
-  String get all_groups_archived_info =>
-      'All your groups are archived. You can restore them from the Archive section or create new ones.';
+  String get all_groups_archived_info => '您的所有群组都已归档。您可以从归档部分恢复它们或创建新的群组。';
 
   @override
   String get filter_status_tooltip => '筛选群组';
@@ -951,7 +947,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get welcome_logo_semantic => 'Caravella应用标志';
 
   @override
-  String get create_new_group => 'Create new group';
+  String get create_new_group => '创建新群组';
 
   @override
   String get accessibility_add_new_item => '添加新项目';
@@ -1479,7 +1475,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get currency_VUV => '瓦努阿图瓦图';
 
   @override
-  String get currency_WST => 'Samoan Tala';
+  String get currency_WST => '萨摩亚塔拉';
 
   @override
   String get currency_XAF => '中非法郎';
@@ -1503,13 +1499,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get currency_ZWL => '津巴布韦元';
 
   @override
-  String get search_currency => 'Search currency...';
+  String get search_currency => '搜索货币...';
 
   @override
-  String get activity => 'Activity';
+  String get activity => '活动';
 
   @override
-  String get search_expenses_hint => 'Search by name or note...';
+  String get search_expenses_hint => '按名称或备注搜索...';
 
   @override
   String get clear_filters => '清除';
@@ -1521,17 +1517,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get hide_filters => '隐藏筛选器';
 
   @override
-  String get all_categories => 'All';
+  String get all_categories => '全部';
 
   @override
-  String get all_participants => '所有参与者';
+  String get all_participants => '全部';
 
   @override
-  String get no_expenses_with_filters =>
-      'No expenses match the selected filters';
+  String get no_expenses_with_filters => '没有符合所选筛选条件的支出';
 
   @override
-  String get no_expenses_yet => 'No expenses added yet';
+  String get no_expenses_yet => '尚未添加支出';
 
   @override
   String get empty_expenses_title => 'Ready to start tracking?';
