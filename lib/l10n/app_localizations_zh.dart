@@ -500,16 +500,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get archived => '已归档';
 
   @override
-  String get archive => 'Archive';
+  String get archive => '归档';
 
   @override
-  String get unarchive => 'Unarchive';
+  String get unarchive => '取消归档';
 
   @override
-  String get archive_confirm => 'Do you want to archive';
+  String get archive_confirm => '您确定要归档';
 
   @override
-  String get unarchive_confirm => 'Do you want to unarchive';
+  String get unarchive_confirm => '您确定要取消归档';
 
   @override
   String get overview => '概览';
@@ -518,7 +518,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get statistics => '统计';
 
   @override
-  String get options => 'Options';
+  String get options => '选项';
 
   @override
   String get show_overview => '显示概览';
@@ -527,10 +527,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get show_statistics => '显示统计';
 
   @override
-  String get no_expenses_to_display => 'No expenses to display';
+  String get no_expenses_to_display => '没有可显示的支出';
 
   @override
-  String get no_expenses_to_analyze => 'No expenses to analyze';
+  String get no_expenses_to_analyze => '没有可分析的支出';
 
   @override
   String get select_expense_date => '选择支出日期';
@@ -588,20 +588,20 @@ class AppLocalizationsZh extends AppLocalizations {
   String get daily_average_by_category => '按类别的每日平均值';
 
   @override
-  String get per_day => '/day';
+  String get per_day => '/天';
 
   @override
   String get no_expenses_for_statistics =>
       'No expenses available for statistics';
 
   @override
-  String get settlement => 'Settlement';
+  String get settlement => '结算';
 
   @override
-  String get all_balanced => 'All accounts are balanced!';
+  String get all_balanced => '所有账户都已结算！';
 
   @override
-  String get owes_to => ' owes ';
+  String get owes_to => ' 欠 ';
 
   @override
   String get export_csv => '导出CSV';
@@ -683,40 +683,40 @@ class AppLocalizationsZh extends AppLocalizations {
   String get csv_date => '日期';
 
   @override
-  String get csv_note => 'Note';
+  String get csv_note => '备注';
 
   @override
-  String get csv_location => 'Location';
+  String get csv_location => '位置';
 
   @override
-  String get location => 'Location';
+  String get location => '位置';
 
   @override
-  String get location_hint => 'Location';
+  String get location_hint => '位置';
 
   @override
-  String get get_current_location => 'Use current location';
+  String get get_current_location => '使用当前位置';
 
   @override
-  String get enter_location_manually => 'Enter manually';
+  String get enter_location_manually => '手动输入';
 
   @override
-  String get location_permission_denied => 'Location permission denied';
+  String get location_permission_denied => '位置权限被拒绝';
 
   @override
-  String get location_service_disabled => 'Location service disabled';
+  String get location_service_disabled => '位置服务已禁用';
 
   @override
-  String get getting_location => 'Getting location...';
+  String get getting_location => '正在获取位置...';
 
   @override
   String get location_error => '获取位置时出错';
 
   @override
-  String get resolving_address => 'Resolving address…';
+  String get resolving_address => '正在解析地址…';
 
   @override
-  String get address_resolved => 'Address resolved';
+  String get address_resolved => '地址已解析';
 
   @override
   String get settings_general => '一般';
@@ -809,7 +809,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get support_developer_title => '请开发者喝咖啡';
 
   @override
-  String get support_developer_desc => 'Support the development of this app.';
+  String get support_developer_desc => '支持此应用的开发。';
 
   @override
   String get data_title => '备份和恢复';
