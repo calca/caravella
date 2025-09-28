@@ -1,13 +1,13 @@
 library;
 
 import 'package:flutter/material.dart';
-import '../../data/model/expense_category.dart';
-import '../../data/model/expense_details.dart';
+import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../data/model/expense_participant.dart';
-import '../../data/model/expense_location.dart';
-import '../../state/locale_notifier.dart';
-import '../../widgets/material3_dialog.dart';
+import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'expense_form/amount_input_widget.dart';
 import 'expense_form/participant_selector_widget.dart';
 import 'expense_form/category_selector_widget.dart';
@@ -16,7 +16,7 @@ import 'expense_form/note_input_widget.dart';
 import 'expense_form/location_input_widget.dart';
 import 'expense_form/expense_form_actions_widget.dart';
 import 'expense_form/category_dialog.dart';
-import '../../themes/form_theme.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 class ExpenseFormComponent extends StatefulWidget {
   // When true shows date, location and note fields (full edit mode). In edit mode (initialExpense != null) these are always shown.

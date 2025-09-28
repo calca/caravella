@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../../config/app_icons.dart';
-import '../../../widgets/selection_bottom_sheet.dart';
+import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'inline_select_field.dart';
-import '../../../themes/form_theme.dart';
 
 class ParticipantSelectorWidget extends StatelessWidget {
   final List<String> participants;
