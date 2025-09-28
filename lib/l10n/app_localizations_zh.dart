@@ -300,23 +300,23 @@ class AppLocalizationsZh extends AppLocalizations {
   String get date_range_not_selected => '选择时间段';
 
   @override
-  String get date_range_partial => 'Select both dates';
+  String get date_range_partial => '请选择两个日期';
 
   @override
   String get save => '保存';
 
   @override
-  String get delete_trip => 'Delete trip';
+  String get delete_trip => '删除行程';
 
   @override
   String get delete_trip_confirm =>
-      'Are you sure you want to delete this trip?';
+      '您确定要删除此行程吗？';
 
   @override
   String get cancel => '取消';
 
   @override
-  String get ok => 'OK';
+  String get ok => '确定';
 
   @override
   String from_to(Object end, Object start) {
@@ -327,13 +327,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get add_expense => '添加支出';
 
   @override
-  String get edit_expense => 'Edit expense';
+  String get edit_expense => '编辑支出';
 
   @override
-  String get expand_form => 'Expand form';
+  String get expand_form => '展开表单';
 
   @override
-  String get expand_form_tooltip => 'Add date, location and notes';
+  String get expand_form_tooltip => '添加日期、地点和备注';
 
   @override
   String get category => '类别';
@@ -342,7 +342,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get amount => '金额';
 
   @override
-  String get invalid_amount => 'Invalid amount';
+  String get invalid_amount => '无效金额';
 
   @override
   String get no_categories => '无类别';
@@ -351,10 +351,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get add_category => '添加类别';
 
   @override
-  String get category_name => 'Category name';
+  String get category_name => '类别名称';
 
   @override
-  String get note => 'Note';
+  String get note => '备注';
 
   @override
   String get note_hint => 'Note';
@@ -380,10 +380,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get dates => 'Period';
 
   @override
-  String get expenses_by_participant => 'By participant';
+  String get expenses_by_participant => '按参与者分组';
 
   @override
-  String get expenses_by_category => 'By category';
+  String get expenses_by_category => '按类别分组';
 
   @override
   String get uncategorized => 'Uncategorized';
@@ -392,7 +392,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get backup => 'Backup';
 
   @override
-  String get no_trips_to_backup => 'No trips to backup';
+  String get no_trips_to_backup => '没有可备份的行程';
 
   @override
   String get backup_error => '备份失败';
@@ -470,7 +470,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get currency => 'Currency';
 
   @override
-  String get settings_tab => 'Settings';
+  String get settings_tab => '设置';
 
   @override
   String get basic_info => 'Basic Information';
@@ -485,10 +485,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get all => 'ALL';
 
   @override
-  String get search_groups => 'Search groups...';
+  String get search_groups => '搜索群组...';
 
   @override
-  String get no_search_results => 'No groups found for';
+  String get no_search_results => '未找到群组';
 
   @override
   String get try_different_search => 'Try searching with different words';
@@ -533,35 +533,35 @@ class AppLocalizationsZh extends AppLocalizations {
   String get no_expenses_to_analyze => 'No expenses to analyze';
 
   @override
-  String get select_expense_date => 'Select expense date';
+  String get select_expense_date => '选择支出日期';
 
   @override
-  String get select_expense_date_short => 'Select date';
+  String get select_expense_date_short => '选择日期';
 
   @override
   String get date => '日期';
 
   @override
-  String get edit_group => 'Edit Group';
+  String get edit_group => '编辑群组';
 
   @override
-  String get delete_group => 'Delete group';
+  String get delete_group => '删除群组';
 
   @override
   String get delete_group_confirm =>
-      'Are you sure you want to delete this expense group? This action cannot be undone.';
+      '您确定要删除此支出群组吗？此操作无法撤销。';
 
   @override
-  String get add_expense_fab => 'Add Expense';
+  String get add_expense_fab => '添加支出';
 
   @override
-  String get pin_group => 'Pin group';
+  String get pin_group => '固定群组';
 
   @override
-  String get unpin_group => 'Unpin group';
+  String get unpin_group => '取消固定群组';
 
   @override
-  String get pin => 'Pin';
+  String get pin => '固定';
 
   @override
   String get theme_automatic => '自动';
@@ -573,13 +573,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get theme_dark => '深色';
 
   @override
-  String get developed_by => 'Developed by calca';
+  String get developed_by => '开发者：calca';
 
   @override
-  String get links => 'Links';
+  String get links => '链接';
 
   @override
-  String get daily_expenses_chart => 'Daily expenses';
+  String get daily_expenses_chart => '每日支出';
 
   @override
   String get weekly_expenses_chart => 'Weekly expenses';
@@ -740,7 +740,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_language_es => '西班牙语';
 
   @override
-  String get settings_language_pt => 'Portuguese';
+  String get settings_language_pt => '葡萄牙语';
 
   @override
   String get settings_language_zh => '中文（简体）';
@@ -833,16 +833,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get auto_backup_desc => 'Enable operating system automatic backup';
 
   @override
-  String get settings_user_name_title => 'Your name';
+  String get settings_user_name_title => '您的姓名';
 
   @override
-  String get settings_user_name_desc => 'Name or nickname to use in the app';
+  String get settings_user_name_desc => '在应用中使用的姓名或昵称';
 
   @override
-  String get settings_user_name_hint => 'Enter your name';
+  String get settings_user_name_hint => '输入您的姓名';
 
   @override
-  String get info_tab => 'Info';
+  String get info_tab => '信息';
 
   @override
   String get select_paid_by => 'Select payer';
@@ -960,7 +960,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get accessibility_navigation_bar => 'Navigation bar';
 
   @override
-  String get accessibility_back_button => 'Back';
+  String get accessibility_back_button => '返回';
 
   @override
   String get accessibility_loading_groups => 'Loading groups';
