@@ -58,7 +58,7 @@ class WizardNameStep extends StatelessWidget {
             child: Icon(
               Icons.title_outlined,
               size: 120,
-              color: theme.colorScheme.primary.withOpacity(0.3),
+              color: theme.colorScheme.primary.withAlpha(77),
             ),
           ),
           

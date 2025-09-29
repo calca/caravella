@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../data/model/expense_group.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../widgets/caravella_app_bar.dart';
 import '../../../state/expense_group_notifier.dart';
@@ -55,10 +54,12 @@ class WizardState extends ChangeNotifier {
   void nextStep() {
     if (_currentStep < totalSteps - 1) {
       _currentStep++;
-      _pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
+      if (_pageController.hasClients) {
+        _pageController.nextPage(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
       notifyListeners();
     }
   }
@@ -66,22 +67,35 @@ class WizardState extends ChangeNotifier {
   void previousStep() {
     if (_currentStep > 0) {
       _currentStep--;
-      _pageController.previousPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
+      if (_pageController.hasClients) {
+        _pageController.previousPage(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
       notifyListeners();
     }
   }
 
   void goToStep(int step) {
     if (step >= 0 && step < totalSteps) {
+      if (step != _currentStep) {
+        _currentStep = step;
+        if (_pageController.hasClients) {
+          _pageController.animateToPage(
+            step,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        }
+        notifyListeners();
+      }
+    }
+  }
+
+  void syncWithPage(int step) {
+    if (step >= 0 && step < totalSteps && step != _currentStep) {
       _currentStep = step;
-      _pageController.animateToPage(
-        step,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
       notifyListeners();
     }
   }
@@ -120,14 +134,12 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
   }
 
   bool _canPop() {
-    final formState = context.read<GroupFormState>();
     final controller = context.read<GroupFormController>();
     return !controller.hasChanges;
   }
 
   Future<bool> _onWillPop() async {
     final gloc = gen.AppLocalizations.of(context);
-    final formState = context.read<GroupFormState>();
     final controller = context.read<GroupFormController>();
     
     if (!controller.hasChanges) return true;
@@ -161,7 +173,7 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
 
     return PopScope(
       canPop: _canPop(),
-      onPopInvoked: (didPop) async {
+      onPopInvokedWithResult: (didPop, _) async {
         if (!didPop) {
           final shouldPop = await _onWillPop();
           if (shouldPop && context.mounted) {
@@ -185,11 +197,7 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
                   return PageView(
                     controller: wizardState.pageController,
                     onPageChanged: (index) {
-                      // Update the current step when page changes
-                      if (wizardState._currentStep != index) {
-                        wizardState._currentStep = index;
-                        wizardState.notifyListeners();
-                      }
+                      wizardState.syncWithPage(index);
                     },
                     children: const [
                       WizardNameStep(),

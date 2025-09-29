@@ -4,10 +4,10 @@ import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import '../lib/manager/group/pages/group_creation_wizard_page.dart';
-import '../lib/manager/group/data/group_form_state.dart';
-import '../lib/state/expense_group_notifier.dart';
-import '../lib/settings/user_name_notifier.dart';
+import 'package:io_caravella_egm/manager/group/pages/group_creation_wizard_page.dart';
+import 'package:io_caravella_egm/manager/group/data/group_form_state.dart';
+import 'package:io_caravella_egm/state/expense_group_notifier.dart';
+import 'package:io_caravella_egm/settings/user_name_notifier.dart';
 
 void main() {
   group('Group Creation Wizard Tests', () {
@@ -31,15 +31,20 @@ void main() {
         ),
       );
 
+      await tester.pumpAndSettle();
+      final pageContext = tester.element(find.byType(GroupCreationWizardPage));
+      final gloc = gen.AppLocalizations.of(pageContext);
+      final currentStepLabel = '1 ${gloc.wizard_step_of} ${WizardState.totalSteps}';
+
       // Should start on step 1 (Name)
-      expect(find.text('Nome'), findsOneWidget);
-      expect(find.text('1 di 6'), findsOneWidget);
+      expect(find.text(gloc.wizard_step_name), findsOneWidget);
+      expect(find.text(currentStepLabel), findsOneWidget);
       
       // Should show name input field
-      expect(find.byType(TextFormField), findsOneWidget);
+      expect(find.byType(TextField), findsOneWidget);
       
       // Next button should be disabled initially
-      expect(find.text('Avanti'), findsOneWidget);
+      expect(find.text(gloc.wizard_next), findsOneWidget);
       final nextButton = tester.widget<FilledButton>(find.byType(FilledButton));
       expect(nextButton.onPressed, isNull);
     });
@@ -64,11 +69,16 @@ void main() {
         ),
       );
 
+  await tester.pumpAndSettle();
+  final pageContext = tester.element(find.byType(GroupCreationWizardPage));
+  final gloc = gen.AppLocalizations.of(pageContext);
+
       // Enter group name
-      await tester.enterText(find.byType(TextFormField), 'Test Group');
+  await tester.enterText(find.byType(TextField), 'Test Group');
       await tester.pump();
 
       // Next button should be enabled
+  expect(find.text(gloc.wizard_next), findsOneWidget);
       final nextButton = tester.widget<FilledButton>(find.byType(FilledButton));
       expect(nextButton.onPressed, isNotNull);
     });
@@ -93,16 +103,21 @@ void main() {
         ),
       );
 
+  await tester.pumpAndSettle();
+  final pageContext = tester.element(find.byType(GroupCreationWizardPage));
+  final gloc = gen.AppLocalizations.of(pageContext);
+  final stepTwoLabel = '2 ${gloc.wizard_step_of} ${WizardState.totalSteps}';
+
       // Step 1: Name
-      expect(find.text('Nome'), findsOneWidget);
-      await tester.enterText(find.byType(TextFormField), 'Test Group');
+  expect(find.text(gloc.wizard_step_name), findsOneWidget);
+  await tester.enterText(find.byType(TextField), 'Test Group');
       await tester.pump();
-      await tester.tap(find.text('Avanti'));
+  await tester.tap(find.text(gloc.wizard_next));
       await tester.pumpAndSettle();
 
       // Step 2: Participants
-      expect(find.text('Partecipanti'), findsOneWidget);
-      expect(find.text('2 di 6'), findsOneWidget);
+  expect(find.text(gloc.wizard_step_participants), findsOneWidget);
+  expect(find.text(stepTwoLabel), findsOneWidget);
       
       // Step 3: Categories (skip participants validation for this test)
       // Step 4: Period

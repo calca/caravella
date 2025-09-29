@@ -1584,4 +1584,90 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get debt_prefix_to => 'a ';
+
+  @override
+  String get wizard_group_creation_title => 'Nuovo Gruppo';
+
+  @override
+  String get wizard_step_name => 'Nome';
+
+  @override
+  String get wizard_step_participants => 'Partecipanti';
+
+  @override
+  String get wizard_step_categories => 'Categorie';
+
+  @override
+  String get wizard_step_period => 'Periodo';
+
+  @override
+  String get wizard_step_background => 'Sfondo';
+
+  @override
+  String get wizard_step_congratulations => 'Complimenti!';
+
+  @override
+  String get wizard_step_of => 'di';
+
+  @override
+  String get wizard_next => 'Avanti';
+
+  @override
+  String get wizard_previous => 'Indietro';
+
+  @override
+  String get wizard_skip => 'Salta';
+
+  @override
+  String get wizard_finish => 'Crea Gruppo';
+
+  @override
+  String get wizard_name_description =>
+      'Inserisci un nome per il tuo gruppo di spese';
+
+  @override
+  String get wizard_participants_description =>
+      'Aggiungi le persone che parteciperanno alle spese';
+
+  @override
+  String get wizard_categories_description =>
+      'Crea categorie per organizzare le spese';
+
+  @override
+  String get wizard_period_description =>
+      'Imposta date di inizio e fine (opzionale)';
+
+  @override
+  String get wizard_background_description =>
+      'Scegli un colore di sfondo per il gruppo';
+
+  @override
+  String wizard_congratulations_message(String groupName) {
+    return 'Il tuo gruppo \'$groupName\' è stato creato con successo!';
+  }
+
+  @override
+  String get wizard_group_summary => 'Riepilogo gruppo:';
+
+  @override
+  String wizard_created_participants(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count partecipanti',
+      one: '1 partecipante',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String wizard_created_categories(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count categorie',
+      one: '1 categoria',
+    );
+    return '$_temp0';
+  }
 }

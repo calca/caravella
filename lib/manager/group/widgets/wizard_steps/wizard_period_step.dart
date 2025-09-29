@@ -41,7 +41,7 @@ class WizardPeriodStep extends StatelessWidget {
             child: Icon(
               Icons.date_range_outlined,
               size: 120,
-              color: theme.colorScheme.primary.withOpacity(0.3),
+              color: theme.colorScheme.primary.withAlpha(77),
             ),
           ),
           

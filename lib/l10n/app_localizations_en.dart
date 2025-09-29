@@ -1577,4 +1577,88 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get debt_prefix_to => 'to ';
+
+  @override
+  String get wizard_group_creation_title => 'New Group';
+
+  @override
+  String get wizard_step_name => 'Name';
+
+  @override
+  String get wizard_step_participants => 'Participants';
+
+  @override
+  String get wizard_step_categories => 'Categories';
+
+  @override
+  String get wizard_step_period => 'Period';
+
+  @override
+  String get wizard_step_background => 'Background';
+
+  @override
+  String get wizard_step_congratulations => 'Congratulations!';
+
+  @override
+  String get wizard_step_of => 'of';
+
+  @override
+  String get wizard_next => 'Next';
+
+  @override
+  String get wizard_previous => 'Previous';
+
+  @override
+  String get wizard_skip => 'Skip';
+
+  @override
+  String get wizard_finish => 'Create Group';
+
+  @override
+  String get wizard_name_description => 'Enter a name for your expense group';
+
+  @override
+  String get wizard_participants_description =>
+      'Add people who will share expenses';
+
+  @override
+  String get wizard_categories_description =>
+      'Create categories to organize expenses';
+
+  @override
+  String get wizard_period_description => 'Set start and end dates (optional)';
+
+  @override
+  String get wizard_background_description =>
+      'Choose a background color for the group';
+
+  @override
+  String wizard_congratulations_message(String groupName) {
+    return 'Your group \'$groupName\' has been created successfully!';
+  }
+
+  @override
+  String get wizard_group_summary => 'Group summary:';
+
+  @override
+  String wizard_created_participants(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count participants',
+      one: '1 participant',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String wizard_created_categories(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count categories',
+      one: '1 category',
+    );
+    return '$_temp0';
+  }
 }

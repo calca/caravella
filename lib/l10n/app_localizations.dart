@@ -3151,6 +3151,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'to '**
   String get debt_prefix_to;
+
+  /// Title of the group creation wizard
+  ///
+  /// In en, this message translates to:
+  /// **'New Group'**
+  String get wizard_group_creation_title;
+
+  /// Title of wizard step 1: group name
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get wizard_step_name;
+
+  /// Title of wizard step 2: participants
+  ///
+  /// In en, this message translates to:
+  /// **'Participants'**
+  String get wizard_step_participants;
+
+  /// Title of wizard step 3: categories
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get wizard_step_categories;
+
+  /// Title of wizard step 4: period
+  ///
+  /// In en, this message translates to:
+  /// **'Period'**
+  String get wizard_step_period;
+
+  /// Title of wizard step 5: background color
+  ///
+  /// In en, this message translates to:
+  /// **'Background'**
+  String get wizard_step_background;
+
+  /// Title of final wizard step: congratulations
+  ///
+  /// In en, this message translates to:
+  /// **'Congratulations!'**
+  String get wizard_step_congratulations;
+
+  /// Separator for progress indicator (e.g. 'Step 1 of 6')
+  ///
+  /// In en, this message translates to:
+  /// **'of'**
+  String get wizard_step_of;
+
+  /// Text for button to go to next step
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get wizard_next;
+
+  /// Text for button to go to previous step
+  ///
+  /// In en, this message translates to:
+  /// **'Previous'**
+  String get wizard_previous;
+
+  /// Text for button to skip an optional step
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get wizard_skip;
+
+  /// Text for final button to create the group
+  ///
+  /// In en, this message translates to:
+  /// **'Create Group'**
+  String get wizard_finish;
+
+  /// Description of the name step in the wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a name for your expense group'**
+  String get wizard_name_description;
+
+  /// Description of the participants step in the wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Add people who will share expenses'**
+  String get wizard_participants_description;
+
+  /// Description of the categories step in the wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Create categories to organize expenses'**
+  String get wizard_categories_description;
+
+  /// Description of the period step in the wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Set start and end dates (optional)'**
+  String get wizard_period_description;
+
+  /// Description of the background step in the wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a background color for the group'**
+  String get wizard_background_description;
+
+  /// Congratulations message with group name
+  ///
+  /// In en, this message translates to:
+  /// **'Your group \'{groupName}\' has been created successfully!'**
+  String wizard_congratulations_message(String groupName);
+
+  /// Title of the summary in the final screen
+  ///
+  /// In en, this message translates to:
+  /// **'Group summary:'**
+  String get wizard_group_summary;
+
+  /// Number of participants in the summary
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 participant} other{{count} participants}}'**
+  String wizard_created_participants(int count);
+
+  /// Number of categories in the summary
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 category} other{{count} categories}}'**
+  String wizard_created_categories(int count);
 }
 
 class _AppLocalizationsDelegate

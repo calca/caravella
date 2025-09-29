@@ -19,7 +19,7 @@ class WizardNavigationBar extends StatelessWidget {
         color: theme.colorScheme.surface,
         border: Border(
           top: BorderSide(
-            color: theme.colorScheme.outline.withOpacity(0.2),
+            color: theme.colorScheme.outline.withAlpha(51),
             width: 1,
           ),
         ),
