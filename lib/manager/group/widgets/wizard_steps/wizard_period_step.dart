@@ -18,7 +18,7 @@ class WizardPeriodStep extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 24),
-          
+
           // Step description
           Text(
             gloc.wizard_period_description,
@@ -26,16 +26,16 @@ class WizardPeriodStep extends StatelessWidget {
               color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
-          
+
           const SizedBox(height: 32),
-          
+
           // Period editor
           PeriodSectionEditor(
             onPickDate: (isStart) async => _pickDate(context, isStart),
           ),
-          
+
           const Spacer(),
-          
+
           // Visual hint
           Center(
             child: Icon(
@@ -44,9 +44,9 @@ class WizardPeriodStep extends StatelessWidget {
               color: theme.colorScheme.primary.withAlpha(77),
             ),
           ),
-          
+
           const Spacer(),
-          
+
           // Optional note
           Center(
             child: Text(
@@ -65,10 +65,10 @@ class WizardPeriodStep extends StatelessWidget {
 
   Future<DateTime?> _pickDate(BuildContext context, bool isStart) async {
     final formState = context.read<GroupFormState>();
-    final initialDate = isStart 
+    final initialDate = isStart
         ? formState.startDate ?? DateTime.now()
         : formState.endDate ?? DateTime.now();
-    
+
     final pickedDate = await showDatePicker(
       context: context,
       initialDate: initialDate,

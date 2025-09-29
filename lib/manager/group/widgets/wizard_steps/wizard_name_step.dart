@@ -18,7 +18,7 @@ class WizardNameStep extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 24),
-          
+
           // Step description
           Text(
             gloc.wizard_name_description,
@@ -26,14 +26,14 @@ class WizardNameStep extends StatelessWidget {
               color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
-          
+
           const SizedBox(height: 32),
-          
+
           // Group name input
           const GroupTitleField(),
-          
+
           const SizedBox(height: 16),
-          
+
           // Error message
           Consumer<GroupFormState>(
             builder: (context, state, child) {
@@ -50,9 +50,9 @@ class WizardNameStep extends StatelessWidget {
                   : const SizedBox.shrink();
             },
           ),
-          
+
           const Spacer(),
-          
+
           // Visual hint
           Center(
             child: Icon(
@@ -61,7 +61,7 @@ class WizardNameStep extends StatelessWidget {
               color: theme.colorScheme.primary.withAlpha(77),
             ),
           ),
-          
+
           const Spacer(),
         ],
       ),

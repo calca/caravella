@@ -29,21 +29,22 @@ class CaravellaAppBar extends StatelessWidget implements PreferredSizeWidget {
         backgroundColor:
             backgroundColor ?? Theme.of(context).scaffoldBackgroundColor,
         elevation: elevation,
-        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onSurface),
+        iconTheme: IconThemeData(
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
         foregroundColor: Theme.of(context).colorScheme.onSurface,
         centerTitle: centerTitle,
         title: title,
-        leading: leading != null 
+        leading: leading != null
             ? Semantics(
                 button: true,
                 label: localizations.accessibility_back_button,
                 child: leading,
               )
             : null,
-        actions: actions?.map((action) => Semantics(
-          button: true,
-          child: action,
-        )).toList(),
+        actions: actions
+            ?.map((action) => Semantics(button: true, child: action))
+            .toList(),
       ),
     );
   }

@@ -18,7 +18,7 @@ class WizardCongratulationsStep extends StatelessWidget {
           return Column(
             children: [
               const SizedBox(height: 40),
-              
+
               // Success icon
               Container(
                 width: 120,
@@ -33,9 +33,9 @@ class WizardCongratulationsStep extends StatelessWidget {
                   color: theme.colorScheme.primary,
                 ),
               ),
-              
+
               const SizedBox(height: 32),
-              
+
               // Congratulations message
               Text(
                 gloc.wizard_congratulations_message(formState.title),
@@ -44,9 +44,9 @@ class WizardCongratulationsStep extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              
+
               const SizedBox(height: 32),
-              
+
               // Group summary
               Container(
                 padding: const EdgeInsets.all(16),
@@ -64,34 +64,39 @@ class WizardCongratulationsStep extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    
+
                     // Group name
                     _buildSummaryRow(
                       context,
                       Icons.title_outlined,
                       formState.title,
                     ),
-                    
+
                     const SizedBox(height: 8),
-                    
+
                     // Participants count
                     _buildSummaryRow(
                       context,
                       Icons.group_outlined,
-                      gloc.wizard_created_participants(formState.participants.length),
+                      gloc.wizard_created_participants(
+                        formState.participants.length,
+                      ),
                     ),
-                    
+
                     const SizedBox(height: 8),
-                    
+
                     // Categories count
                     _buildSummaryRow(
                       context,
                       Icons.category_outlined,
-                      gloc.wizard_created_categories(formState.categories.length),
+                      gloc.wizard_created_categories(
+                        formState.categories.length,
+                      ),
                     ),
-                    
+
                     // Period if set
-                    if (formState.startDate != null || formState.endDate != null) ...[
+                    if (formState.startDate != null ||
+                        formState.endDate != null) ...[
                       const SizedBox(height: 8),
                       _buildSummaryRow(
                         context,
@@ -102,9 +107,9 @@ class WizardCongratulationsStep extends StatelessWidget {
                   ],
                 ),
               ),
-              
+
               const Spacer(),
-              
+
               // Done button
               FilledButton.icon(
                 onPressed: () {
@@ -116,7 +121,7 @@ class WizardCongratulationsStep extends StatelessWidget {
                   minimumSize: const Size.fromHeight(48),
                 ),
               ),
-              
+
               const SizedBox(height: 16),
             ],
           );
@@ -127,28 +132,19 @@ class WizardCongratulationsStep extends StatelessWidget {
 
   Widget _buildSummaryRow(BuildContext context, IconData icon, String text) {
     final theme = Theme.of(context);
-    
+
     return Row(
       children: [
-        Icon(
-          icon,
-          size: 20,
-          color: theme.colorScheme.primary,
-        ),
+        Icon(icon, size: 20, color: theme.colorScheme.primary),
         const SizedBox(width: 12),
-        Expanded(
-          child: Text(
-            text,
-            style: theme.textTheme.bodyMedium,
-          ),
-        ),
+        Expanded(child: Text(text, style: theme.textTheme.bodyMedium)),
       ],
     );
   }
 
   String _formatPeriod(GroupFormState formState, BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
-    
+
     if (formState.startDate != null && formState.endDate != null) {
       return '${gloc.start_date_optional}: ${_formatDate(formState.startDate!)} - ${gloc.end_date_optional}: ${_formatDate(formState.endDate!)}';
     } else if (formState.startDate != null) {

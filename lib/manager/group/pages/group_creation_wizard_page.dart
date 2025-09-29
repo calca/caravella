@@ -47,7 +47,7 @@ class WizardState extends ChangeNotifier {
 
   int get currentStep => _currentStep;
   PageController get pageController => _pageController;
-  
+
   // Total number of wizard steps
   static const int totalSteps = 6;
 
@@ -124,10 +124,12 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
         final userNameNotifier = context.read<UserNameNotifier>();
         final state = context.read<GroupFormState>();
         if (userNameNotifier.hasName) {
-          state.addParticipant(ExpenseParticipant(
-            id: DateTime.now().millisecondsSinceEpoch.toString(),
-            name: userNameNotifier.name,
-          ));
+          state.addParticipant(
+            ExpenseParticipant(
+              id: DateTime.now().millisecondsSinceEpoch.toString(),
+              name: userNameNotifier.name,
+            ),
+          );
         }
       }
     });
@@ -141,7 +143,7 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
   Future<bool> _onWillPop() async {
     final gloc = gen.AppLocalizations.of(context);
     final controller = context.read<GroupFormController>();
-    
+
     if (!controller.hasChanges) return true;
 
     final confirm = await showDialog<bool>(
@@ -182,14 +184,12 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
         }
       },
       child: Scaffold(
-        appBar: CaravellaAppBar(
-          title: Text(gloc.wizard_group_creation_title),
-        ),
+        appBar: CaravellaAppBar(title: Text(gloc.wizard_group_creation_title)),
         body: Column(
           children: [
             // Step indicator
             const WizardStepIndicator(),
-            
+
             // Wizard content
             Expanded(
               child: Consumer<WizardState>(
@@ -211,7 +211,7 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
                 },
               ),
             ),
-            
+
             // Navigation bar
             const WizardNavigationBar(),
           ],

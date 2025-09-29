@@ -38,9 +38,9 @@ class WizardNavigationBar extends StatelessWidget {
                   ),
                   const SizedBox(width: 16),
                 ],
-                
+
                 const Spacer(),
-                
+
                 // Skip button for optional steps (period, background)
                 if (_isOptionalStep(wizardState.currentStep)) ...[
                   TextButton(
@@ -49,25 +49,33 @@ class WizardNavigationBar extends StatelessWidget {
                   ),
                   const SizedBox(width: 16),
                 ],
-                
+
                 // Next/Finish button
                 Consumer2<GroupFormState, GroupFormController>(
                   builder: (context, formState, controller, child) {
-                    final isLastStep = wizardState.currentStep == WizardState.totalSteps - 1;
-                    final canProceed = _canProceedFromStep(wizardState.currentStep, formState);
-                    
+                    final isLastStep =
+                        wizardState.currentStep == WizardState.totalSteps - 1;
+                    final canProceed = _canProceedFromStep(
+                      wizardState.currentStep,
+                      formState,
+                    );
+
                     if (isLastStep) {
                       // Final congratulations step - no action needed
                       return const SizedBox.shrink();
                     }
-                    
+
                     return FilledButton(
                       onPressed: canProceed
                           ? () async {
-                              if (wizardState.currentStep == WizardState.totalSteps - 2) {
+                              if (wizardState.currentStep ==
+                                  WizardState.totalSteps - 2) {
                                 // This is the background step, next is congratulations
                                 // Save the group and move to congratulations
-                                final success = await _saveGroup(context, controller);
+                                final success = await _saveGroup(
+                                  context,
+                                  controller,
+                                );
                                 if (success) {
                                   wizardState.nextStep();
                                 }
@@ -101,7 +109,7 @@ class WizardNavigationBar extends StatelessWidget {
     switch (step) {
       case 0: // Name step
         return formState.title.trim().isNotEmpty;
-      case 1: // Participants step  
+      case 1: // Participants step
         return formState.participants.isNotEmpty;
       case 2: // Categories step
         return formState.categories.isNotEmpty;
@@ -113,7 +121,10 @@ class WizardNavigationBar extends StatelessWidget {
     }
   }
 
-  Future<bool> _saveGroup(BuildContext context, GroupFormController controller) async {
+  Future<bool> _saveGroup(
+    BuildContext context,
+    GroupFormController controller,
+  ) async {
     try {
       await controller.save();
       return true;

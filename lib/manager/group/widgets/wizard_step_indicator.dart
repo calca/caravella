@@ -31,7 +31,9 @@ class WizardStepIndicator extends StatelessWidget {
                 children: [
                   Expanded(
                     child: LinearProgressIndicator(
-                      value: (wizardState.currentStep + 1) / WizardState.totalSteps,
+                      value:
+                          (wizardState.currentStep + 1) /
+                          WizardState.totalSteps,
                       backgroundColor: theme.colorScheme.outline.withAlpha(51),
                       valueColor: AlwaysStoppedAnimation<Color>(
                         theme.colorScheme.primary,
@@ -41,7 +43,7 @@ class WizardStepIndicator extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 12),
-              
+
               // Step info
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
