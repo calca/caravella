@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'date_card.dart';
 import 'section_header.dart';
 import 'period_selection_bottom_sheet.dart';
 
@@ -10,9 +9,10 @@ class SectionPeriod extends StatelessWidget {
   final void Function(bool) onPickDate;
   final void Function() onClearDates;
   final String? description;
-  
+
   // New callback for setting both dates at once (optional for backwards compatibility)
-  final void Function(DateTime? startDate, DateTime? endDate)? onDateRangeChanged;
+  final void Function(DateTime? startDate, DateTime? endDate)?
+  onDateRangeChanged;
 
   const SectionPeriod({
     super.key,
@@ -22,15 +22,6 @@ class SectionPeriod extends StatelessWidget {
     required this.onClearDates,
     this.description,
     this.onDateRangeChanged,
-  });
-
-  const SectionPeriod({
-    super.key,
-    required this.startDate,
-    required this.endDate,
-    required this.onPickDate,
-    required this.onClearDates,
-    this.description,
   });
 
   @override
@@ -78,10 +69,7 @@ class SectionPeriod extends StatelessWidget {
                 }
               });
             },
-            child: _PeriodDisplayCard(
-              startDate: startDate,
-              endDate: endDate,
-            ),
+            child: _PeriodDisplayCard(startDate: startDate, endDate: endDate),
           ),
         ),
       ],
@@ -122,41 +110,38 @@ class _PeriodDisplayCard extends StatelessWidget {
   final DateTime? startDate;
   final DateTime? endDate;
 
-  const _PeriodDisplayCard({
-    required this.startDate,
-    required this.endDate,
-  });
+  const _PeriodDisplayCard({required this.startDate, required this.endDate});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final gloc = gen.AppLocalizations.of(context);
-    
+
     // Determine display text based on selected dates
     String displayText;
     String? secondaryText;
     IconData iconData;
-    
+
     if (startDate == null && endDate == null) {
-      displayText = 'Seleziona periodo'; // TODO: Use gloc.select_period once regenerated
+      displayText = gloc.select_period_hint;
       iconData = Icons.calendar_month_outlined;
     } else if (startDate != null && endDate != null) {
       displayText = '${_formatDate(startDate!)} - ${_formatDate(endDate!)}';
       final duration = endDate!.difference(startDate!).inDays + 1;
-      secondaryText = '$duration giorni'; // TODO: Use gloc.duration_days once regenerated
+      secondaryText = '$duration days';
       iconData = Icons.calendar_month;
     } else if (startDate != null) {
-      displayText = 'Dal ${_formatDate(startDate!)}';
-      secondaryText = 'Seleziona data fine'; // TODO: Use proper localization
+      displayText = '${gloc.select_start}: ${_formatDate(startDate!)}';
+      secondaryText = gloc.select_end;
       iconData = Icons.calendar_month_outlined;
     } else {
-      displayText = 'Al ${_formatDate(endDate!)}';
-      secondaryText = 'Seleziona data inizio'; // TODO: Use proper localization
+      displayText = '${gloc.select_end}: ${_formatDate(endDate!)}';
+      secondaryText = gloc.select_start;
       iconData = Icons.calendar_month_outlined;
     }
-    
+
     final hasSelection = startDate != null || endDate != null;
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 2.0),
       child: SizedBox(
@@ -168,18 +153,18 @@ class _PeriodDisplayCard extends StatelessWidget {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: hasSelection 
-                  ? theme.colorScheme.primaryContainer.withValues(alpha: 0.2)
-                  : Colors.transparent,
+                color: hasSelection
+                    ? theme.colorScheme.primaryContainer.withValues(alpha: 0.2)
+                    : Colors.transparent,
                 borderRadius: BorderRadius.circular(8),
               ),
               alignment: Alignment.center,
               child: Icon(
-                iconData, 
+                iconData,
                 size: 28,
-                color: hasSelection 
-                  ? theme.colorScheme.primary
-                  : theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                color: hasSelection
+                    ? theme.colorScheme.primary
+                    : theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),
             ),
             const SizedBox(width: 12),
@@ -190,10 +175,14 @@ class _PeriodDisplayCard extends StatelessWidget {
                       child: Text(
                         displayText,
                         style: theme.textTheme.bodyLarge?.copyWith(
-                          color: hasSelection 
-                            ? theme.colorScheme.onSurface
-                            : theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                          fontWeight: hasSelection ? FontWeight.w500 : FontWeight.w500,
+                          color: hasSelection
+                              ? theme.colorScheme.onSurface
+                              : theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.7,
+                                ),
+                          fontWeight: hasSelection
+                              ? FontWeight.w500
+                              : FontWeight.w500,
                         ),
                       ),
                     )
@@ -212,7 +201,9 @@ class _PeriodDisplayCard extends StatelessWidget {
                         Text(
                           secondaryText,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.7,
+                            ),
                           ),
                         ),
                       ],
@@ -221,7 +212,7 @@ class _PeriodDisplayCard extends StatelessWidget {
             const SizedBox(width: 8),
             Icon(
               Icons.chevron_right,
-              size: 24, 
+              size: 24,
               color: theme.colorScheme.outline,
             ),
           ],
