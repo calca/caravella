@@ -479,4 +479,14 @@
   ,"welcome_v3_tagline": "完美适用于群组旅行、室友或任何共享支出的情况。"
   ,"currency_WST": "萨摩亚塔拉"
   ,"search_currency": "搜索货币..."
+  ,"view_on_map": "在地图上查看"
+  ,"@view_on_map": {"description": "Tooltip for the map button to view expenses on a map"}
+  ,"expenses_map": "支出地图"
+  ,"@expenses_map": {"description": "Title of the page showing expenses on a map"}
+  ,"no_locations_available": "没有可用的位置"
+  ,"@no_locations_available": {"description": "Message shown when no expenses have location data"}
+  ,"no_locations_subtitle": "在支出中添加位置数据以在地图上查看它们"
+  ,"@no_locations_subtitle": {"description": "Subtitle explaining how to add locations"}
+  ,"expense_count": "{count, plural, =1{1 笔支出} other{{count} 笔支出}}"
+  ,"@expense_count": {"description": "Label showing number of expenses at a location", "placeholders": {"count": {"type": "int"}}}
 }
