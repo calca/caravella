@@ -15,9 +15,25 @@ class ParticipantAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final initials = participant.name.length >= 2
-        ? participant.name.substring(0, 2).toUpperCase()
-        : participant.name.toUpperCase();
+    // Build initials from first and last word when possible (e.g., "John Doe" -> "JD").
+    // Fallback to first two characters for single-word names.
+    final parts = participant.name
+        .trim()
+        .split(RegExp(r"\s+"))
+        .where((p) => p.isNotEmpty)
+        .toList();
+    String initials;
+    if (parts.length >= 2) {
+      final first = parts.first;
+      final last = parts.last;
+      initials =
+          (first.isNotEmpty ? first[0] : '') + (last.isNotEmpty ? last[0] : '');
+    } else if (participant.name.length >= 2) {
+      initials = participant.name.substring(0, 2);
+    } else {
+      initials = participant.name;
+    }
+    initials = initials.toUpperCase();
 
     return CircleAvatar(
       radius: size / 2,

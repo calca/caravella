@@ -1607,13 +1607,13 @@ abstract class AppLocalizations {
   /// No description provided for @terms_github_title.
   ///
   /// In en, this message translates to:
-  /// **'GitHub: calca'**
+  /// **'Website: calca'**
   String get terms_github_title;
 
   /// No description provided for @terms_github_desc.
   ///
   /// In en, this message translates to:
-  /// **'Developer profile on GitHub.'**
+  /// **'Developer\'s personal website.'**
   String get terms_github_desc;
 
   /// No description provided for @terms_repo_title.

@@ -112,7 +112,8 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.text('Total spent'), findsOneWidget);
-    expect(find.text('Info'), findsOneWidget);
+    // In the current UI the section is labeled "Details" instead of "Info".
+    expect(find.text('Details'), findsOneWidget);
     expect(find.text('Daily'), findsOneWidget);
     expect(find.text('Monthly'), findsOneWidget);
   });
