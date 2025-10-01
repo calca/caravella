@@ -246,6 +246,8 @@
   "address_resolved": "Indirizzo trovato",
   "settings_general": "Generali",
   "settings_general_desc": "Impostazioni lingua e aspetto",
+  "settings_auto_location_title": "Rileva posizione automaticamente",
+  "settings_auto_location_desc": "Recupera automaticamente la posizione quando aggiungi una spesa",
   "settings_language": "Lingua",
   "settings_language_desc": "Scegli la lingua preferita",
   "settings_language_it": "Italiano",

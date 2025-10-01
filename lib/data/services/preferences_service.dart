@@ -91,6 +91,21 @@ class PreferencesService {
     await prefs.setBool(_autoBackupEnabledKey, enabled);
   }
   
+  // Auto location preferences
+  static const String _autoLocationKey = 'auto_location_enabled';
+  
+  /// Get auto location enabled status (default: false)
+  static Future<bool> getAutoLocationEnabled() async {
+    final prefs = await _prefs;
+    return prefs.getBool(_autoLocationKey) ?? false;
+  }
+  
+  /// Set auto location enabled status
+  static Future<void> setAutoLocationEnabled(bool enabled) async {
+    final prefs = await _prefs;
+    await prefs.setBool(_autoLocationKey, enabled);
+  }
+  
   /// Get last auto backup timestamp
   static Future<DateTime?> getLastAutoBackup() async {
     final prefs = await _prefs;
