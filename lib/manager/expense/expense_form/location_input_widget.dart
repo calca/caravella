@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'icon_leading_field.dart';
+import '../../../widgets/app_toast.dart';
 import '../../../data/model/expense_location.dart';
+import '../../../themes/form_theme.dart';
 
 class LocationInputWidget extends StatefulWidget {
   final ExpenseLocation? initialLocation;
@@ -53,17 +55,17 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
     setState(() {
       _isGettingLocation = true;
     });
+    // Capture messenger before any async gaps to avoid using BuildContext after awaits
+    final messenger = ScaffoldMessenger.of(context);
 
     try {
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                gen.AppLocalizations.of(context).location_service_disabled,
-              ),
-            ),
+          AppToast.showFromMessenger(
+            messenger,
+            gen.AppLocalizations.of(context).location_service_disabled,
+            type: ToastType.info,
           );
         }
         return;
@@ -74,12 +76,10 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  gen.AppLocalizations.of(context).location_permission_denied,
-                ),
-              ),
+            AppToast.showFromMessenger(
+              messenger,
+              gen.AppLocalizations.of(context).location_permission_denied,
+              type: ToastType.info,
             );
           }
           return;
@@ -88,12 +88,10 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
 
       if (permission == LocationPermission.deniedForever) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                gen.AppLocalizations.of(context).location_permission_denied,
-              ),
-            ),
+          AppToast.showFromMessenger(
+            messenger,
+            gen.AppLocalizations.of(context).location_permission_denied,
+            type: ToastType.info,
           );
         }
         return;
@@ -146,21 +144,20 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
       // Optional lightweight feedback when an address gets resolved
       if (address != null && mounted) {
         final gloc = gen.AppLocalizations.of(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            duration: const Duration(seconds: 2),
-            content: Text(gloc.address_resolved),
-          ),
+        AppToast.showFromMessenger(
+          messenger,
+          gloc.address_resolved,
+          duration: const Duration(seconds: 2),
         );
       }
 
       widget.onLocationChanged(location);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(gen.AppLocalizations.of(context).location_error),
-          ),
+        AppToast.showFromMessenger(
+          messenger,
+          gen.AppLocalizations.of(context).location_error,
+          type: ToastType.error,
         );
       }
     } finally {
@@ -209,7 +206,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
     final field = TextFormField(
       controller: _controller,
       focusNode: _fieldFocusNode,
-      style: widget.textStyle ?? Theme.of(context).textTheme.bodySmall,
+      style: widget.textStyle ?? FormTheme.getFieldTextStyle(context),
       onChanged: _onTextChanged,
       decoration: InputDecoration(
         hintText: _isGettingLocation
@@ -220,7 +217,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
         // rely on theme hintStyle
         border: InputBorder.none,
         isDense: true,
-        contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
+        contentPadding: FormTheme.standardContentPadding,
         suffixIconConstraints: const BoxConstraints(
           minHeight: 32,
           minWidth: 32,
@@ -234,7 +231,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
       semanticsLabel: gloc.location,
       tooltip: gloc.location,
       alignTop: false,
-      iconPadding: const EdgeInsets.only(top: 8, bottom: 8, right: 6),
+      iconPadding: FormTheme.standardIconPadding,
       child: field,
     );
   }

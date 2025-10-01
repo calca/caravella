@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'form_theme.dart';
 
 // https://rydmike.com/flexcolorscheme/themesplayground-latest/?config=H4sIAKZob2gA_3WRPWvDMBRF9_wKoTkY2cGk8VZKhw6BgEuHLkaNXlOBvpCe0piQ_15JtRNoqMZzLvcK3nlB0qNO8fHgbTRiEBw57Qh9_QINgeyuhmRD4OSsRxCkZhVbVw1rWsI2Xd12LaPLu7Yj-CCtyYUPVVNdI2Gf61-MgFNy65lKHRVH6x-dm1391z1Z7awBg-HfyJuE73drda5mbLKYF7dWQKLnggoW3OOAo8uYgol6KMFB5-TyljtyFUsmjAFB02Iuc7d1cl--82xEL8vG5s71mLYm20w2BthyBC-5WiX8yVWAm-rjx-8dZrW4_AALBabTsgEAAA==
 
@@ -86,18 +87,18 @@ const ColorScheme darkColorScheme = ColorScheme(
   onError: Color(0xFF000000),
   errorContainer: Color(0xFFB1384E),
   onErrorContainer: Color(0xFFFFFFFF),
-  surface: Color(0xFF121212),
+  surface: Color(0xFF1E1E1E),
   onSurface: Color(0xFFFFFFFF),
-  surfaceDim: Color(0xFF060606),
-  surfaceBright: Color(0xFF2C2C2C),
-  surfaceContainerLowest: Color(0xFF010101),
-  surfaceContainerLow: Color(0xFF0E0E0E),
-  surfaceContainer: Color(0xFF151515),
-  surfaceContainerHigh: Color(0xFF1D1D1D),
-  surfaceContainerHighest: Color(0xFF282828),
-  onSurfaceVariant: Color(0xFFFFFFFF),
-  outline: Color(0xFF777777),
-  outlineVariant: Color(0xFF414141),
+  surfaceDim: Color(0xFF161616),
+  surfaceBright: Color(0xFF3A3A3A),
+  surfaceContainerLowest: Color(0xFF0F0F0F),
+  surfaceContainerLow: Color(0xFF1A1A1A),
+  surfaceContainer: Color(0xFF232323),
+  surfaceContainerHigh: Color(0xFF2D2D2D),
+  surfaceContainerHighest: Color(0xFF363636),
+  onSurfaceVariant: Color(0xFFE0E0E0),
+  outline: Color(0xFF8A8A8A),
+  outlineVariant: Color(0xFF5A5A5A),
   shadow: Color(0xFF000000),
   scrim: Color(0xFF000000),
   inverseSurface: Color(0xFFFFFFFF),
@@ -233,7 +234,7 @@ class CaravellaThemes {
         color: lightColorScheme.outline,
         fontWeight: FontWeight.w400,
       ),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+      contentPadding: FormTheme.standardContentPadding,
     ),
   );
 
@@ -289,7 +290,7 @@ class CaravellaThemes {
         color: darkColorScheme.outline,
         fontWeight: FontWeight.w400,
       ),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+      contentPadding: FormTheme.standardContentPadding,
     ),
   );
 }

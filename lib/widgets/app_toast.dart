@@ -26,22 +26,77 @@ class AppToast {
       return;
     }
 
-    final theme = contextMounted
-        ? Theme.of(context)
-        : (rootScaffoldMessenger?.context != null
-              ? Theme.of(rootScaffoldMessenger!.context)
-              : ThemeData());
+    // Delegate to the centralized helper using an appropriate context for
+    // localization/theme. If the provided context is no longer mounted we
+    // fall back to the root scaffold messenger's context (if any).
+    final BuildContext referenceContext = contextMounted
+        ? context
+        : (rootScaffoldMessenger?.context ?? context);
+    _showUsingMessenger(
+      scaffoldMessenger,
+      referenceContext,
+      message,
+      duration: duration,
+      type: type,
+      icon: icon,
+    );
+  }
+
+  static String _getTypeDescription(BuildContext context, ToastType type) {
+    final localizations = AppLocalizations.of(context);
+    switch (type) {
+      case ToastType.success:
+        return localizations.accessibility_toast_success;
+      case ToastType.error:
+        return localizations.accessibility_toast_error;
+      case ToastType.info:
+        return localizations.accessibility_toast_info;
+    }
+  }
+
+  /// Variant that accepts an already-obtained [ScaffoldMessengerState].
+  ///
+  /// Useful when the call site needs to capture the messenger before an
+  /// async gap to avoid using a `BuildContext` after awaiting.
+  static void showFromMessenger(
+    ScaffoldMessengerState messenger,
+    String message, {
+    Duration duration = const Duration(milliseconds: 2400),
+    ToastType type = ToastType.info,
+    IconData? icon,
+  }) {
+    _showUsingMessenger(
+      messenger,
+      messenger.context,
+      message,
+      duration: duration,
+      type: type,
+      icon: icon,
+    );
+  }
+
+  /// Centralized helper that builds and shows the SnackBar using the given
+  /// [ScaffoldMessengerState] and a [BuildContext] suitable for localization
+  /// and theme resolution.
+  static void _showUsingMessenger(
+    ScaffoldMessengerState messenger,
+    BuildContext referenceContext,
+    String message, {
+    Duration duration = const Duration(milliseconds: 2400),
+    ToastType type = ToastType.info,
+    IconData? icon,
+  }) {
+    final theme = Theme.of(referenceContext);
     final colorScheme = theme.colorScheme;
 
-    // Determine colors and icon based on type
     Color backgroundColor;
     Color textColor;
     IconData effectiveIcon;
 
     switch (type) {
       case ToastType.success:
-        backgroundColor = colorScheme.surfaceContainerHigh;
-        textColor = colorScheme.onSurfaceVariant;
+        backgroundColor = colorScheme.primaryFixedDim;
+        textColor = colorScheme.onPrimaryFixed;
         effectiveIcon = icon ?? Icons.check_circle_outline_rounded;
         break;
       case ToastType.error:
@@ -50,19 +105,18 @@ class AppToast {
         effectiveIcon = icon ?? Icons.error_outline;
         break;
       case ToastType.info:
-        backgroundColor = colorScheme.surfaceContainerHigh;
-        textColor = colorScheme.onSurfaceVariant;
+        backgroundColor = colorScheme.primaryFixed;
+        textColor = colorScheme.onPrimaryFixed;
         effectiveIcon = icon ?? Icons.info_outline;
         break;
     }
 
-    scaffoldMessenger.clearSnackBars();
-    scaffoldMessenger.showSnackBar(
+    messenger.clearSnackBars();
+    messenger.showSnackBar(
       SnackBar(
         content: Semantics(
           liveRegion: true,
-          label:
-              '${_getTypeDescription(contextMounted ? context : scaffoldMessenger.context, type)}: $message',
+          label: '${_getTypeDescription(referenceContext, type)}: $message',
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -70,10 +124,7 @@ class AppToast {
                 effectiveIcon,
                 color: textColor,
                 size: 20,
-                semanticLabel: _getTypeDescription(
-                  contextMounted ? context : scaffoldMessenger.context,
-                  type,
-                ),
+                semanticLabel: _getTypeDescription(referenceContext, type),
               ),
               const SizedBox(width: 10),
               Flexible(
@@ -101,18 +152,6 @@ class AppToast {
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       ),
     );
-  }
-
-  static String _getTypeDescription(BuildContext context, ToastType type) {
-    final localizations = AppLocalizations.of(context);
-    switch (type) {
-      case ToastType.success:
-        return localizations.accessibility_toast_success;
-      case ToastType.error:
-        return localizations.accessibility_toast_error;
-      case ToastType.info:
-        return localizations.accessibility_toast_info;
-    }
   }
 }
 

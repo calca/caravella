@@ -1,0 +1,110 @@
+name: Android CI - Store
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_branch:
+        description: 'Branch to build (prod AAB upload to Play)'
+        required: true
+        default: 'main'
+      track:
+        description: 'Play track (internal|alpha|beta|production)'
+        required: true
+        default: 'internal'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.target_branch }}
+      - name: Show build branch
+        run: |
+          echo "Building branch: ${{ github.event.inputs.target_branch }}"
+          echo "Requested track: ${{ github.event.inputs.track }}"
+      - name: Validate track
+        run: |
+          ALLOWED="internal alpha beta production"
+          if ! echo "$ALLOWED" | grep -qw "${{ github.event.inputs.track }}"; then
+            echo "Invalid track '${{ github.event.inputs.track }}'. Allowed: $ALLOWED" >&2
+            exit 1
+          fi
+          echo "TRACK=${{ github.event.inputs.track }}" >> $GITHUB_ENV
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+      - name: Decode keystore from secret
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 -d > android/app/upload-keystore.jks
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+      - name: Configure signing properties
+        run: |
+          echo "storeFile=upload-keystore.jks" > android/key.properties
+          echo "storePassword=$KEYSTORE_PASSWORD" >> android/key.properties
+          echo "keyAlias=$KEY_ALIAS" >> android/key.properties
+          echo "keyPassword=$KEY_PASSWORD" >> android/key.properties
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Analyze
+        run: flutter analyze
+      - name: Run tests
+        run: flutter test
+      - name: Build prod App Bundle (signed)
+        run: flutter build appbundle --flavor prod --release --dart-define=FLAVOR=prod
+      - name: Get app version
+        id: get_version
+        run: |
+          VERSION=$(grep '^version:' pubspec.yaml | sed 's/version: //;s/\+.*//')
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+      - name: Get current date
+        id: get_date
+        run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+      - name: Rename AAB
+        run: |
+          mv build/app/outputs/bundle/prodRelease/app-prod-release.aab io_caravella_egm-${{ env.VERSION }}-${{ env.DATE }}.aab
+      - name: Verify AAB exists
+        run: |
+          ls -l io_caravella_egm-*.aab || true
+          if [ ! -f "io_caravella_egm-${{ env.VERSION }}-${{ env.DATE }}.aab" ]; then
+            echo "Expected AAB not found: io_caravella_egm-${{ env.VERSION }}-${{ env.DATE }}.aab" >&2
+            echo "Contents of bundle output directory:" >&2
+            ls -R build/app/outputs/bundle || true
+            exit 1
+          fi
+      - name: Generate SHA256 checksum
+        run: |
+          sha256sum io_caravella_egm-${{ env.VERSION }}-${{ env.DATE }}.aab | tee io_caravella_egm-${{ env.VERSION }}-${{ env.DATE }}.aab.sha256
+      - name: Verify checksum file
+        run: |
+          sha256sum -c io_caravella_egm-${{ env.VERSION }}-${{ env.DATE }}.aab.sha256
+      - name: Debug list bundle files
+        run: |
+          echo "Listing current directory:" && ls -al
+          echo "Listing AAB & checksum files:" && ls -1 io_caravella_egm-*.* || true
+          echo "Checksum file contents:" && cat io_caravella_egm-${{ env.VERSION }}-${{ env.DATE }}.aab.sha256 || true
+      - name: Upload AAB artifact (pre-Play)
+        uses: actions/upload-artifact@v4
+        with:
+          name: io_caravella_egm-prod-aab
+          path: |
+            io_caravella_egm-${{ env.VERSION }}-${{ env.DATE }}.aab
+            io_caravella_egm-${{ env.VERSION }}-${{ env.DATE }}.aab.sha256
+      - name: Upload to Google Play
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: io.caravella.egm
+          releaseFiles: |
+            io_caravella_egm-${{ env.VERSION }}-${{ env.DATE }}.aab
+          track: ${{ env.TRACK }}
+          status: completed
+          inAppUpdatePriority: 3
+        env:
+          JAVA_DISTRIBUTION: 'temurin'

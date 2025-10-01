@@ -1,9 +1,9 @@
-// Widget simile a quello incollato per la selezione valuta
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../data/model/expense_group.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../widgets/caravella_app_bar.dart';
+import '../../../state/expense_group_notifier.dart';
 import '../../../widgets/material3_dialog.dart';
 import '../../expense/expense_form/icon_leading_field.dart';
 import '../../../themes/app_text_styles.dart';
@@ -20,6 +20,8 @@ import '../widgets/background_picker.dart';
 import '../widgets/currency_selector_sheet.dart';
 import '../widgets/save_button_bar.dart';
 import '../group_edit_mode.dart';
+import '../../../settings/user_name_notifier.dart';
+import '../../../data/model/expense_participant.dart';
 
 class ExpensesGroupEditPage extends StatelessWidget {
   final ExpenseGroup? trip;
@@ -41,9 +43,13 @@ class ExpensesGroupEditPage extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => GroupFormState()),
-        ProxyProvider<GroupFormState, GroupFormController>(
-          update: (context, state, previous) =>
-              GroupFormController(state, mode),
+        ProxyProvider2<
+          GroupFormState,
+          ExpenseGroupNotifier,
+          GroupFormController
+        >(
+          update: (context, state, notifier, previous) =>
+              GroupFormController(state, mode, notifier),
         ),
       ],
       child: _GroupFormScaffold(
@@ -82,6 +88,19 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted && _state.title.isEmpty) {
           _controller.load(widget.trip!);
+        }
+      });
+    } else if (widget.mode == GroupEditMode.create) {
+      // For new groups, add user as first participant if name is available
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          final userNameNotifier = context.read<UserNameNotifier>();
+          if (userNameNotifier.hasName) {
+            _state.addParticipant(ExpenseParticipant(
+              id: DateTime.now().millisecondsSinceEpoch.toString(),
+              name: userNameNotifier.name,
+            ));
+          }
         }
       });
     }
@@ -196,47 +215,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
           }
         },
         child: Scaffold(
-          appBar: CaravellaAppBar(
-            actions: [
-              if (widget.trip != null && widget.mode == GroupEditMode.edit)
-                IconButton(
-                  icon: const Icon(Icons.delete_outline),
-                  tooltip: gloc.delete,
-                  onPressed: () async {
-                    final nav = Navigator.of(context);
-                    final confirm = await showDialog<bool>(
-                      context: context,
-                      builder: (d) => Material3Dialog(
-                        icon: Icon(
-                          Icons.delete_outline,
-                          color: Theme.of(context).colorScheme.error,
-                          size: 24,
-                        ),
-                        title: Text(gloc.delete_trip),
-                        content: Text(gloc.delete_trip_confirm),
-                        actions: [
-                          Material3DialogActions.cancel(d, gloc.cancel),
-                          Material3DialogActions.destructive(
-                            d,
-                            gloc.delete,
-                            onPressed: () => Navigator.of(d).pop(true),
-                          ),
-                        ],
-                      ),
-                    );
-                    if (confirm == true) {
-                      await _controller.deleteGroup();
-                      if (mounted && nav.canPop()) {
-                        nav.pop(true);
-                      }
-                      if (widget.onTripDeleted != null) {
-                        Future.microtask(() => widget.onTripDeleted!.call());
-                      }
-                    }
-                  },
-                ),
-            ],
-          ),
+          appBar: CaravellaAppBar(actions: []),
           body: Stack(
             children: [
               Padding(

@@ -9,6 +9,26 @@ class AppLocalizationsIt extends AppLocalizations {
   AppLocalizationsIt([String locale = 'it']) : super(locale);
 
   @override
+  String get developer_section_title => 'Sviluppatore & Supporto';
+
+  @override
+  String get developer_section_desc =>
+      'Supporta lo sviluppatore o visualizza il profilo';
+
+  @override
+  String get repo_section_title => 'Codice & Segnalazioni';
+
+  @override
+  String get repo_section_desc =>
+      'Visualizza il codice sorgente o segnala un problema';
+
+  @override
+  String get license_section_title => 'Licenza';
+
+  @override
+  String get license_section_desc => 'Visualizza la licenza open source';
+
+  @override
   String get weeklyChartBadge => 'S';
 
   @override
@@ -49,6 +69,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get group_total => 'Totale';
 
   @override
+  String get total_spent => 'Totale speso';
+
+  @override
   String get download_all_csv => 'Scarica tutto (CSV)';
 
   @override
@@ -61,7 +84,23 @@ class AppLocalizationsIt extends AppLocalizations {
   String get share_all_ofx => 'Condividi tutto (OFX)';
 
   @override
+  String get share_label => 'Condividi';
+
+  @override
+  String get share_text_label => 'Condividi testo';
+
+  @override
+  String get share_image_label => 'Condividi immagine';
+
+  @override
   String get export_share => 'Esporta e Condividi';
+
+  @override
+  String get contribution_percentages => 'Percentuali';
+
+  @override
+  String get contribution_percentages_desc =>
+      'Quota del totale pagata da ciascun partecipante';
 
   @override
   String get export_options => 'Opzioni di Esportazione';
@@ -85,11 +124,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get no_active_groups => 'Nessun gruppo attivo';
 
   @override
-  String get no_active_groups_subtitle =>
-      'Crea il primo gruppo di spese per iniziare';
+  String get no_active_groups_subtitle => 'Crea un gruppo di spese';
 
   @override
-  String get create_first_group => 'Crea primo gruppo';
+  String get create_first_group => 'Crea un gruppo';
 
   @override
   String get new_expense_group => 'Nuovo Gruppo di Spese';
@@ -117,6 +155,14 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get remove_image => 'Rimuovi Immagine';
+
+  @override
+  String get cannot_delete_assigned_participant =>
+      'Impossibile eliminare il partecipante: è assegnato a una o più spese';
+
+  @override
+  String get cannot_delete_assigned_category =>
+      'Impossibile eliminare la categoria: è assegnata a una o più spese';
 
   @override
   String get color => 'Colore';
@@ -189,6 +235,17 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get participants => 'Partecipanti';
+
+  @override
+  String participant_count(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count partecipanti',
+      one: '$count partecipante',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get participants_label => 'Partecipanti';
@@ -689,6 +746,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settings_language_es => 'Spagnolo';
 
   @override
+  String get settings_language_pt => 'Portoghese';
+
+  @override
+  String get settings_language_zh => 'Cinese (Semplificato)';
+
+  @override
   String get settings_select_language => 'Seleziona lingua';
 
   @override
@@ -728,10 +791,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settings_info_card_desc => 'Sviluppatore, Source code e Licenza';
 
   @override
-  String get terms_github_title => 'GitHub: calca';
+  String get terms_github_title => 'Sito web: calca';
 
   @override
-  String get terms_github_desc => 'Profilo dello sviluppatore su GitHub.';
+  String get terms_github_desc => 'Sito web personale dello sviluppatore.';
 
   @override
   String get terms_repo_title => 'Repository GitHub';
@@ -747,6 +810,12 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get terms_license_desc => 'Visualizza la licenza open source.';
+
+  @override
+  String get support_developer_title => 'Offrimi un caffè';
+
+  @override
+  String get support_developer_desc => 'Sostieni lo sviluppo di questa app.';
 
   @override
   String get data_title => 'Backup & Ripristino';
@@ -769,6 +838,15 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get auto_backup_desc =>
       'Abilita il backup automatico del sistema operativo';
+
+  @override
+  String get settings_user_name_title => 'Il tuo nome';
+
+  @override
+  String get settings_user_name_desc => 'Nome o nickname da usare nell\'app';
+
+  @override
+  String get settings_user_name_hint => 'Inserisci il tuo nome';
 
   @override
   String get info_tab => 'Info';
@@ -813,6 +891,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get spent_today => 'Oggi';
+
+  @override
+  String get monthly_average => 'Mensile';
 
   @override
   String get average_expense => 'Spesa media';
@@ -860,6 +941,17 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get status_archived => 'Archiviati';
+
+  @override
+  String get no_archived_groups => 'Nessun gruppo archiviato';
+
+  @override
+  String get no_archived_groups_subtitle =>
+      'Non hai ancora archiviato nessun gruppo';
+
+  @override
+  String get all_groups_archived_info =>
+      'Tutti i tuoi gruppi sono archiviati. Puoi recuperarli dalla sezione Archivio o crearne di nuovi.';
 
   @override
   String get filter_status_tooltip => 'Filtra gruppi';
@@ -1452,4 +1544,44 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get no_expenses_yet => 'Nessuna spesa ancora aggiunta';
+
+  @override
+  String get empty_expenses_title => 'Pronti per iniziare?';
+
+  @override
+  String get empty_expenses_subtitle =>
+      'Aggiungi la prima spesa per iniziare con questo gruppo!';
+
+  @override
+  String get add_first_expense_button => 'Aggiungi Prima Spesa';
+
+  @override
+  String get show_search => 'Mostra barra di ricerca';
+
+  @override
+  String get hide_search => 'Nascondi barra di ricerca';
+
+  @override
+  String get expense_groups_title => 'Gruppi di spese';
+
+  @override
+  String get expense_groups_desc => 'Gestisci i tuoi gruppi di spese';
+
+  @override
+  String get whats_new_title => 'Novità';
+
+  @override
+  String get whats_new_desc => 'Scopri le ultime novità e aggiornamenti';
+
+  @override
+  String get average_per_person => 'Speso medio per persona';
+
+  @override
+  String get more => 'altro';
+
+  @override
+  String get less => 'meno';
+
+  @override
+  String get debt_prefix_to => 'a ';
 }

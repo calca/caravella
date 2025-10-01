@@ -1,0 +1,7 @@
+<svg width="200" height="59" viewBox="0 0 200 59" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="59" rx="12" fill="#000"/>
+  <circle cx="40" cy="29.5" r="12" fill="none" stroke="#0066CC" stroke-width="2"/>
+  <path d="M35 29.5l3 3 7-7" stroke="#0066CC" stroke-width="2" fill="none"/>
+  <text x="70" y="30" fill="white" font-family="Arial, sans-serif" font-size="12">Download on the</text>
+  <text x="70" y="44" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">App Store</text>
+</svg>

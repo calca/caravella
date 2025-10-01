@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart';
-import 'package:org_app_caravella/manager/group/data/group_form_state.dart';
-import 'package:org_app_caravella/data/model/expense_participant.dart';
+import 'package:io_caravella_egm/l10n/app_localizations.dart';
+import 'package:io_caravella_egm/manager/group/data/group_form_state.dart';
+import 'package:io_caravella_egm/data/model/expense_participant.dart';
 
 void main() {
   group('GroupFormState basic logic', () {
