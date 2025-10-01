@@ -2,8 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../widgets/settings_card.dart';
-import '../updates/app_update_notifier.dart';
+import '../settings/widgets/settings_card.dart';
+import 'app_update_notifier.dart';
 
 /// Widget for displaying update check functionality in settings.
 /// 

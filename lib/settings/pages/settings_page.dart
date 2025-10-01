@@ -16,7 +16,7 @@ import 'whats_new_page.dart';
 import '../../widgets/bottom_sheet_scaffold.dart';
 import '../../settings/widgets/settings_card.dart';
 import '../../settings/widgets/settings_section.dart';
-import '../widgets/update_check_widget.dart';
+import '../../updates/update_check_widget.dart';
 
 class SettingsPage extends StatelessWidget {
   final void Function(String)? onLocaleChanged;
