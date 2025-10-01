@@ -214,7 +214,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
                         _loadActiveGroups();
                       },
                     )
-                  : HorizontalGroupsList(
+                  : VerticalGroupsList(
                       groups: _activeGroups,
                       localizations: loc,
                       theme: theme,

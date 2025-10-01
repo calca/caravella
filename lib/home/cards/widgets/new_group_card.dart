@@ -4,7 +4,7 @@ import '../../../manager/group/pages/expenses_group_edit_page.dart';
 import '../../../manager/group/group_edit_mode.dart';
 import '../../../widgets/base_card.dart';
 
-class NewGroupCard extends StatelessWidget {
+class NewGroupCard extends StatefulWidget {
   final gen.AppLocalizations localizations;
   final ThemeData theme;
   final VoidCallback onGroupAdded;
@@ -20,42 +20,91 @@ class NewGroupCard extends StatelessWidget {
     this.selectionProgress = 0.0,
   });
 
+  @override
+  State<NewGroupCard> createState() => _NewGroupCardState();
+}
+
+class _NewGroupCardState extends State<NewGroupCard>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _scaleController;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _scaleController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 150),
+      lowerBound: 0.95,
+      upperBound: 1.0,
+    );
+    _scaleAnimation = CurvedAnimation(
+      parent: _scaleController,
+      curve: Curves.easeInOut,
+    );
+    _scaleController.value = 1.0;
+  }
+
+  @override
+  void dispose() {
+    _scaleController.dispose();
+    super.dispose();
+  }
+
+  void _onTapDown(TapDownDetails details) {
+    _scaleController.reverse();
+  }
+
+  void _onTapUp(TapUpDetails details) {
+    _scaleController.forward();
+  }
+
+  void _onTapCancel() {
+    _scaleController.forward();
+  }
+
   Color _getSelectedColor(bool isDarkMode) {
-    return theme.colorScheme.surfaceDim;
+    return widget.theme.colorScheme.surfaceDim;
   }
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = theme.brightness == Brightness.dark;
+    final isDarkMode = widget.theme.brightness == Brightness.dark;
     final selectedColor = _getSelectedColor(isDarkMode);
-    final defaultBackgroundColor = theme.colorScheme.surface;
+    final defaultBackgroundColor = widget.theme.colorScheme.surface;
 
     // Interpola tra il colore di default e quello selezionato
     final backgroundColor = Color.lerp(
       defaultBackgroundColor,
       selectedColor,
-      selectionProgress * 0.3, // 30% di intensità massima
+      widget.selectionProgress * 0.3, // 30% di intensità massima
     );
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-      height: double.infinity, // Assicura che usi tutto lo spazio verticale
-      child: BaseCard(
-        margin: const EdgeInsets.only(bottom: 16),
-        backgroundColor: backgroundColor,
-        onTap: () async {
-          final result = await Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) =>
-                  const ExpensesGroupEditPage(mode: GroupEditMode.create),
-            ),
-          );
-          if (result == true) {
-            onGroupAdded();
-          }
-        },
-        child: _buildNewGroupCardContent(),
+    return ScaleTransition(
+      scale: _scaleAnimation,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        height: double.infinity, // Assicura che usi tutto lo spazio verticale
+        child: BaseCard(
+          margin: const EdgeInsets.only(bottom: 16),
+          backgroundColor: backgroundColor,
+          onTap: () async {
+            final result = await Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) =>
+                    const ExpensesGroupEditPage(mode: GroupEditMode.create),
+              ),
+            );
+            if (result == true) {
+              widget.onGroupAdded();
+            }
+          },
+          onTapDown: _onTapDown,
+          onTapUp: _onTapUp,
+          onTapCancel: _onTapCancel,
+          child: _buildNewGroupCardContent(),
+        ),
       ),
     );
   }
@@ -68,23 +117,23 @@ class NewGroupCard extends StatelessWidget {
         Icon(
           Icons.add_circle_outline,
           size: 64,
-          color: theme.colorScheme.onSurface,
+          color: widget.theme.colorScheme.onSurface,
         ),
         const SizedBox(height: 24),
         Text(
-          localizations.new_expense_group,
-          style: theme.textTheme.headlineSmall?.copyWith(
+          widget.localizations.new_expense_group,
+          style: widget.theme.textTheme.headlineSmall?.copyWith(
             fontWeight: FontWeight.w400,
             fontSize: 22,
-            color: theme.colorScheme.onSurface,
+            color: widget.theme.colorScheme.onSurface,
           ),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 16),
         Text(
-          localizations.tap_to_create,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
+          widget.localizations.tap_to_create,
+          style: widget.theme.textTheme.bodyMedium?.copyWith(
+            color: widget.theme.colorScheme.onSurfaceVariant,
           ),
           textAlign: TextAlign.center,
         ),

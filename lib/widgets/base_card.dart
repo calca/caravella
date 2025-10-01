@@ -6,6 +6,9 @@ class BaseCard extends StatelessWidget {
   final EdgeInsetsGeometry? margin;
   final EdgeInsetsGeometry? padding;
   final VoidCallback? onTap;
+  final GestureTapDownCallback? onTapDown;
+  final GestureTapUpCallback? onTapUp;
+  final VoidCallback? onTapCancel;
   final bool isFlat;
   final double? elevation;
   final Color? backgroundColor;
@@ -19,6 +22,9 @@ class BaseCard extends StatelessWidget {
     this.margin,
     this.padding,
     this.onTap,
+    this.onTapDown,
+    this.onTapUp,
+    this.onTapCancel,
     this.isFlat = true,
     this.elevation,
     this.backgroundColor,
@@ -96,10 +102,12 @@ class BaseCard extends StatelessWidget {
       child: child,
     );
 
-    if (onTap != null) {
-      return InkWell(
-        borderRadius: effectiveBorderRadius,
+    if (onTap != null || onTapDown != null || onTapUp != null || onTapCancel != null) {
+      return GestureDetector(
         onTap: onTap,
+        onTapDown: onTapDown,
+        onTapUp: onTapUp,
+        onTapCancel: onTapCancel,
         child: cardContent,
       );
     }
