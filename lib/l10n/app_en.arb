@@ -620,4 +620,12 @@
   ,"@update_installing": {"description": "Message while installing update"}
   ,"update_feature_android_only": "Feature only available on Android with Google Play Store"
   ,"@update_feature_android_only": {"description": "Message explaining the feature is Android-only"}
+  ,"update_recommendation_title": "Update recommended"
+  ,"@update_recommendation_title": {"description": "Title of bottom sheet to recommend update"}
+  ,"update_recommendation_desc": "A new version of Caravella is available. Update the app to always have the latest features and improvements!"
+  ,"@update_recommendation_desc": {"description": "Description in bottom sheet recommending to update"}
+  ,"update_install": "Install update"
+  ,"@update_install": {"description": "Button to install update from bottom sheet"}
+  ,"update_remind_later": "Remind me later"
+  ,"@update_remind_later": {"description": "Button to postpone update from bottom sheet"}
 }

@@ -505,4 +505,12 @@
   ,"@update_installing": {"description": "安装更新时的消息"}
   ,"update_feature_android_only": "此功能仅适用于带有Google Play商店的Android设备"
   ,"@update_feature_android_only": {"description": "说明该功能仅适用于Android的消息"}
+  ,"update_recommendation_title": "推荐更新"
+  ,"@update_recommendation_title": {"description": "推荐更新的底部表单标题"}
+  ,"update_recommendation_desc": "Caravella有新版本可用。更新应用以始终获得最新功能和改进！"
+  ,"@update_recommendation_desc": {"description": "底部表单中建议更新的描述"}
+  ,"update_install": "安装更新"
+  ,"@update_install": {"description": "从底部表单安装更新的按钮"}
+  ,"update_remind_later": "稍后提醒我"
+  ,"@update_remind_later": {"description": "从底部表单推迟更新的按钮"}
 }

@@ -607,4 +607,12 @@
   ,"@update_installing": {"description": "Messaggio durante installazione aggiornamento"}
   ,"update_feature_android_only": "Funzione disponibile solo su Android con Google Play Store"
   ,"@update_feature_android_only": {"description": "Messaggio che spiega che la funzione è solo per Android"}
+  ,"update_recommendation_title": "Aggiornamento consigliato"
+  ,"@update_recommendation_title": {"description": "Titolo del bottom sheet per raccomandare l'aggiornamento"}
+  ,"update_recommendation_desc": "È disponibile una nuova versione di Caravella. Aggiorna l'app per avere sempre le ultime funzionalità e miglioramenti!"
+  ,"@update_recommendation_desc": {"description": "Descrizione nel bottom sheet che consiglia di aggiornare"}
+  ,"update_install": "Installa aggiornamento"
+  ,"@update_install": {"description": "Pulsante per installare l'aggiornamento dal bottom sheet"}
+  ,"update_remind_later": "Ricordamelo dopo"
+  ,"@update_remind_later": {"description": "Pulsante per rimandare l'aggiornamento dal bottom sheet"}
 }
