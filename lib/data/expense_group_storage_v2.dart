@@ -1,4 +1,5 @@
 // Updated wrapper for ExpenseGroupStorage - removes print statements
+import 'dart:io';
 import 'model/expense_group.dart';
 import 'model/expense_details.dart';
 import 'model/expense_participant.dart';
@@ -6,6 +7,7 @@ import 'model/expense_category.dart';
 import 'expense_group_repository.dart';
 import 'file_based_expense_group_repository.dart';
 import 'services/logger_service.dart';
+import '../services/app_shortcuts_service.dart';
 
 /// Backward-compatible wrapper for ExpenseGroupStorage
 /// Maintains the same API while using the improved repository internally
@@ -58,6 +60,8 @@ class ExpenseGroupStorageV2 {
         );
       }
     }
+    // Update shortcuts after pin state changes
+    _updateShortcuts();
   }
 
   /// Updates the archived state of a group. If [archived] is true, archives
@@ -80,6 +84,8 @@ class ExpenseGroupStorageV2 {
         );
       }
     }
+    // Update shortcuts after archive state changes
+    _updateShortcuts();
   }
 
   /// Returns all archived groups sorted by timestamp (newest first)
@@ -471,6 +477,13 @@ class ExpenseGroupStorageV2 {
       LoggerService.warning(
         'Warning: Failed to delete group $groupId: ${result.error}',
       );
+    }
+  }
+
+  /// Update Android shortcuts (private helper)
+  static void _updateShortcuts() {
+    if (Platform.isAndroid) {
+      AppShortcutsService.updateShortcuts();
     }
   }
 }
