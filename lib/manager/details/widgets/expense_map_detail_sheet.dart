@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../data/model/expense_details.dart';
 import '../../../widgets/bottom_sheet_scaffold.dart';
+import 'expense_amount_card.dart';
 
 /// Bottom sheet that displays expense details when clicking on a map marker
 class ExpenseMapDetailSheet extends StatelessWidget {
@@ -58,105 +58,14 @@ class ExpenseMapDetailSheet extends StatelessWidget {
             ),
           // List of expenses at this location
           ...expenses.map((expense) {
-            final dateFormat = DateFormat.yMMMd();
-            return Card(
-              margin: const EdgeInsets.only(bottom: 12),
-              elevation: 0,
-              color: colorScheme.surfaceContainerHighest,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        // Category icon
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: colorScheme.primaryContainer,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Icon(
-                            Icons.receipt_long_outlined,
-                            size: 20,
-                            color: colorScheme.onPrimaryContainer,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        // Expense name and amount
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                expense.name ?? expense.category.name,
-                                style: textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              const SizedBox(height: 2),
-                              Text(
-                                '${expense.amount?.toStringAsFixed(2) ?? '0.00'} $currency',
-                                style: textTheme.bodyMedium?.copyWith(
-                                  color: colorScheme.primary,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    // Date and payer
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.calendar_today_outlined,
-                          size: 14,
-                          color: colorScheme.onSurface.withValues(alpha: 0.6),
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          dateFormat.format(expense.date),
-                          style: textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onSurface.withValues(alpha: 0.6),
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Icon(
-                          Icons.person_outline,
-                          size: 14,
-                          color: colorScheme.onSurface.withValues(alpha: 0.6),
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          expense.paidBy.name,
-                          style: textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onSurface.withValues(alpha: 0.6),
-                          ),
-                        ),
-                      ],
-                    ),
-                    // Note if present
-                    if (expense.note != null && expense.note!.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 12),
-                        child: Text(
-                          expense.note!,
-                          style: textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onSurface.withValues(alpha: 0.8),
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
+            return ExpenseAmountCard(
+              title: expense.name ?? expense.category.name,
+              coins: (expense.amount ?? 0).toInt(),
+              checked: false,
+              paidBy: expense.paidBy,
+              category: expense.category.name,
+              date: expense.date,
+              currency: currency,
             );
           }),
         ],

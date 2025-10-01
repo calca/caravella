@@ -42,9 +42,11 @@ class GroupActions extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           Tooltip(
-            message: gen.AppLocalizations.of(context).view_on_map,
+            message: hasExpenses
+                ? gen.AppLocalizations.of(context).view_on_map
+                : gen.AppLocalizations.of(context).no_expenses_to_display,
             child: IconButton.filledTonal(
-              onPressed: onMap,
+              onPressed: hasExpenses ? onMap : null,
               icon: const Icon(Icons.map_outlined),
               iconSize: 24,
               tooltip: gen.AppLocalizations.of(context).view_on_map,
