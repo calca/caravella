@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../data/model/expense_group.dart';
@@ -8,6 +9,7 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'welcome/home_welcome_section.dart';
 import 'cards/home_cards_section.dart';
 import '../widgets/app_toast.dart';
+import '../services/app_shortcuts_service.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -114,6 +116,11 @@ class _HomePageState extends State<HomePage> with RouteAware {
       _loading = false;
       _refreshing = false;
     });
+    
+    // Update shortcuts after data is loaded
+    if (Platform.isAndroid) {
+      AppShortcutsService.updateShortcuts();
+    }
   }
 
   void _refresh() => _loadLocaleAndTrip();

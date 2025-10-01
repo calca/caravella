@@ -15,8 +15,12 @@ import 'home/home_page.dart';
 import 'config/app_config.dart';
 import 'settings/flag_secure_android.dart';
 import 'settings/user_name_notifier.dart';
+import 'services/app_shortcuts_service.dart';
+import 'data/expense_group_storage_v2.dart';
+import 'manager/details/pages/expense_group_detail_page.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,7 +59,70 @@ void main() {
 
   _initFlagSecure().then((_) {
     runApp(const CaravellaApp());
+  }).then((_) {
+    // Initialize shortcuts service after app starts
+    if (Platform.isAndroid) {
+      _initShortcuts();
+    }
   });
+}
+
+Future<void> _initShortcuts() async {
+  AppShortcutsService.initialize((groupId, groupTitle) {
+    // Handle shortcut tap - navigate to expense creation for the specified group
+    final context = navigatorKey.currentContext;
+    if (context != null) {
+      _handleShortcutTap(context, groupId, groupTitle);
+    }
+  });
+  
+  // Update shortcuts with current data
+  await AppShortcutsService.updateShortcuts();
+}
+
+void _handleShortcutTap(
+  BuildContext context,
+  String groupId,
+  String groupTitle,
+) async {
+  final navigator = navigatorKey.currentState;
+  if (navigator == null) return;
+
+  try {
+    // Load the group from storage
+    final group = await ExpenseGroupStorageV2.getTripById(groupId);
+    if (group == null) {
+      // Group not found, show error
+      final messenger = ScaffoldMessenger.maybeOf(context);
+      if (messenger != null) {
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text('Group not found: $groupTitle'),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+      return;
+    }
+
+    // Navigate to ExpenseGroupDetailPage
+    await navigator.push(
+      MaterialPageRoute(
+        builder: (ctx) => ExpenseGroupDetailPage(trip: group),
+      ),
+    );
+  } catch (e) {
+    // Silently fail or show generic error
+    final messenger = ScaffoldMessenger.maybeOf(context);
+    if (messenger != null) {
+      messenger.showSnackBar(
+        const SnackBar(
+          content: Text('Unable to open group'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
 }
 
 // Test entrypoint (avoids async flag secure wait & system chrome constraints in tests)
@@ -158,6 +225,7 @@ class _CaravellaAppState extends State<CaravellaApp> {
             darkTheme: CaravellaThemes.dark,
             themeMode: _themeMode,
             scaffoldMessengerKey: _scaffoldMessengerKey,
+            navigatorKey: navigatorKey,
             locale: Locale(_locale),
             // Use generated locales & delegates to avoid divergence and ensure pt is enabled
             supportedLocales: gen.AppLocalizations.supportedLocales,

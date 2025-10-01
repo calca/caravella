@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import '../data/model/expense_group.dart';
 import '../data/model/expense_category.dart';
 import '../data/expense_group_storage_v2.dart';
+import '../services/app_shortcuts_service.dart';
 
 class ExpenseGroupNotifier extends ChangeNotifier {
   ExpenseGroup? _currentGroup;
@@ -55,6 +57,8 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     // Persisti le modifiche preservando le spese
     try {
       await ExpenseGroupStorageV2.updateGroupMetadata(updatedGroup);
+      // Update shortcuts when group metadata changes
+      _updateShortcuts();
     } catch (e) {
       debugPrint('Error updating group metadata: $e');
     }
@@ -133,5 +137,14 @@ class ExpenseGroupNotifier extends ChangeNotifier {
       _deletedGroupIds.add(groupId);
     }
     notifyListeners();
+    // Update shortcuts when group is deleted
+    _updateShortcuts();
+  }
+
+  /// Update Android shortcuts (Quick Actions)
+  void _updateShortcuts() {
+    if (Platform.isAndroid) {
+      AppShortcutsService.updateShortcuts();
+    }
   }
 }
