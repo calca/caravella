@@ -43,10 +43,21 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
     flutter run
     ```
 
-    ## Package & CI notes
+## 📦 Distribution
 
-    - The project's Dart package name has been updated to `io_caravella_egm` (see `pubspec.yaml`).
-    - CI artifact names were updated to use the `io_caravella_egm` prefix.
+### F-Droid
+Caravella is available on F-Droid, the free and open-source Android app store. F-Droid builds are reproducible, signed by F-Droid, and guaranteed to be 100% FOSS.
+
+For detailed information about F-Droid distribution, submission process, and maintenance, see:
+- [F-Droid Submission Guide](docs/FDROID_SUBMISSION.md)
+
+### Direct Download
+You can also download APK files directly from [GitHub Releases](https://github.com/calca/caravella/releases).
+
+## Package & CI notes
+
+- The project's Dart package name has been updated to `io_caravella_egm` (see `pubspec.yaml`).
+- CI artifact names were updated to use the `io_caravella_egm` prefix.
 
 ## 📄 License
 

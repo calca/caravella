@@ -1,0 +1,90 @@
+# F-Droid metadata file for Caravella
+# For more information see: https://f-droid.org/docs/All_About_Descriptions_Graphics_and_Screenshots/
+
+Categories:
+  - Money
+  - Office
+
+License: MIT
+
+AuthorName: Gianluigi Calcaterra
+AuthorEmail: calca@users.noreply.github.com
+AuthorWebSite: https://github.com/calca
+
+WebSite: https://calca.github.io/caravella
+SourceCode: https://github.com/calca/caravella
+IssueTracker: https://github.com/calca/caravella/issues
+Changelog: https://github.com/calca/caravella/releases
+
+# The app name as it should appear in F-Droid
+Name: Caravella
+
+# Package name (must match applicationId in build.gradle)
+PackageName: io.caravella.egm
+
+# Summary (80 chars max)
+Summary: Modern group expense management app
+
+# Full description
+Description: |-
+  Caravella is a modern, multi-platform Flutter application designed to simplify 
+  expense management for groups, trips, and events. Built with Material 3, it offers 
+  an intuitive and clean user experience for tracking shared costs, managing 
+  participants, and settling debts.
+
+  Whether you're on a group trip, sharing an apartment with roommates, or organizing 
+  an event, Caravella helps you keep everything organized and transparent. All data 
+  is stored locally on your device, ensuring privacy and offline availability.
+
+  <b>Key Features:</b>
+  * Group Management - Create and manage distinct groups for trips, events, or shared living
+  * Expense Tracking - Add expenses with categories and participant assignments
+  * Material 3 UI - Beautiful modern interface with light/dark mode support
+  * Dashboard - Quick overview of current group, total expenses, and quick actions
+  * Detailed Summaries - Clear breakdown of who owes what to whom
+  * Data Persistence - Local storage ensures offline availability and privacy
+  * Backup & Restore - Export and import all app data for backups or device migration
+  * CSV Export - Export expense lists for external analysis
+  * Multi-Language Support - Available in English, Italian, and Spanish
+  * Cross-Platform - Designed for Android, iOS, Web, and Desktop
+
+  <b>Privacy & Security:</b>
+  * All data stored locally on your device
+  * No user accounts or online services required
+  * Optional permissions for enhanced features (camera, location)
+  * Full data export and deletion control
+  * GDPR and privacy compliant
+
+  The app requires no internet connection for core functionality and gives you 
+  complete control over your financial data.
+
+# Anti-features (none for this app)
+AntiFeatures: []
+
+# Build configuration
+Builds:
+  - versionName: '1.0.44'
+    versionCode: 44
+    commit: main
+    output: build/app/outputs/flutter-apk/app-prod-release.apk
+    srclibs:
+      - flutter@stable
+    rm:
+      - ios
+      - macos
+      - windows
+      - linux
+      - web
+    prebuild:
+      - echo "sdk.dir=$ANDROID_HOME" > local.properties
+      - echo "flutter.sdk=$$flutter$$" > local.properties
+    build:
+      - $$flutter$$/bin/flutter config --no-analytics
+      - $$flutter$$/bin/flutter pub get
+      - $$flutter$$/bin/flutter build apk --flavor prod --release --dart-define=FLAVOR=prod
+
+# Auto-update configuration
+AutoUpdateMode: Version
+UpdateCheckMode: Tags
+CurrentVersion: 1.0.44
+CurrentVersionCode: 44
