@@ -85,7 +85,9 @@ class _NewGroupCardState extends State<NewGroupCard>
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
-        height: double.infinity, // Assicura che usi tutto lo spazio verticale
+        constraints: const BoxConstraints(
+          minHeight: 200, // Minimum height for the card
+        ),
         child: BaseCard(
           margin: const EdgeInsets.only(bottom: 16),
           backgroundColor: backgroundColor,
