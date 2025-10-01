@@ -7,7 +7,7 @@ import '../../../widgets/base_card.dart';
 class NewGroupCard extends StatelessWidget {
   final gen.AppLocalizations localizations;
   final ThemeData theme;
-  final VoidCallback onGroupAdded;
+  final void Function([String? groupId]) onGroupAdded;
   final bool isSelected;
   final double selectionProgress;
 

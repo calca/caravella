@@ -174,6 +174,32 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
     }
   }
 
+  /// Soft reload that updates groups without showing loading state
+  /// Used when adding a new group to avoid jarring transitions
+  Future<void> _softLoadActiveGroups() async {
+    try {
+      final groups = await ExpenseGroupStorageV2.getActiveGroups();
+      if (mounted) {
+        setState(() {
+          // Se c'è un gruppo pinnato, mettiamolo sempre al primo posto
+          if (widget.pinnedTrip != null) {
+            // Rimuovi il gruppo pinnato dalla lista se è già presente
+            final filteredGroups = groups.where(
+              (g) => g.id != widget.pinnedTrip!.id,
+            );
+            // Metti il gruppo pinnato come primo elemento
+            _activeGroups = [widget.pinnedTrip!, ...filteredGroups];
+          } else {
+            _activeGroups = groups;
+          }
+        });
+      }
+    } catch (e) {
+      // Fallback to full reload on error
+      _loadActiveGroups();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
@@ -211,7 +237,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
                       allArchived: widget.allArchived,
                       onGroupAdded: () {
                         widget.onTripAdded();
-                        _loadActiveGroups();
+                        _softLoadActiveGroups();
                       },
                     )
                   : HorizontalGroupsList(
@@ -220,10 +246,10 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
                       theme: theme,
                       onGroupUpdated: () {
                         widget.onTripAdded();
-                        _loadActiveGroups();
+                        _softLoadActiveGroups();
                       },
                       onCategoryAdded: () {
-                        _loadActiveGroups();
+                        _softLoadActiveGroups();
                       },
                     ),
             ),
