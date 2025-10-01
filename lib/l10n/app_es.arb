@@ -592,4 +592,30 @@
   ,"@less": {"description": "Etiqueta inline para contraer y mostrar menos elementos"}
   ,"debt_prefix_to": "a "
   ,"@debt_prefix_to": {"description": "Prefijo corto mostrado antes del destinatario en una línea de deuda/liquidación (p. ej., 'a Alicia 10€')"}
+  ,"check_for_updates": "Buscar actualizaciones"
+  ,"@check_for_updates": {"description": "Etiqueta para buscar actualizaciones de Google Play Store"}
+  ,"check_for_updates_desc": "Verificar disponibilidad de nueva versión"
+  ,"@check_for_updates_desc": {"description": "Descripción para verificación de actualizaciones"}
+  ,"update_available": "Actualización disponible"
+  ,"@update_available": {"description": "Título cuando hay una actualización disponible"}
+  ,"update_available_desc": "Una nueva versión de la app está disponible"
+  ,"@update_available_desc": {"description": "Descripción cuando hay una actualización disponible"}
+  ,"no_update_available": "App actualizada"
+  ,"@no_update_available": {"description": "Mensaje cuando no hay actualizaciones"}
+  ,"no_update_available_desc": "Estás usando la última versión"
+  ,"@no_update_available_desc": {"description": "Descripción cuando no hay actualizaciones"}
+  ,"update_now": "Actualizar ahora"
+  ,"@update_now": {"description": "Botón para iniciar la actualización"}
+  ,"update_later": "Más tarde"
+  ,"@update_later": {"description": "Botón para posponer la actualización"}
+  ,"checking_for_updates": "Verificando actualizaciones..."
+  ,"@checking_for_updates": {"description": "Mensaje durante verificación de actualizaciones"}
+  ,"update_error": "Error al verificar actualizaciones"
+  ,"@update_error": {"description": "Mensaje de error durante verificación de actualizaciones"}
+  ,"update_downloading": "Descargando..."
+  ,"@update_downloading": {"description": "Mensaje durante descarga de actualización"}
+  ,"update_installing": "Instalando..."
+  ,"@update_installing": {"description": "Mensaje durante instalación de actualización"}
+  ,"update_feature_android_only": "Función disponible solo en Android con Google Play Store"
+  ,"@update_feature_android_only": {"description": "Mensaje que explica que la función es solo para Android"}
 }

@@ -494,4 +494,30 @@
   ,"@less": {"description": "Rótulo inline para recolher e mostrar menos itens"}
   ,"debt_prefix_to": "a "
   ,"@debt_prefix_to": {"description": "Prefixo curto mostrado antes do destinatário em uma linha de dívida/liquidação (ex.: 'a Alice 10€')"}
+  ,"check_for_updates": "Verificar atualizações"
+  ,"@check_for_updates": {"description": "Rótulo para verificar atualizações da Google Play Store"}
+  ,"check_for_updates_desc": "Verificar disponibilidade de nova versão"
+  ,"@check_for_updates_desc": {"description": "Descrição para verificação de atualizações"}
+  ,"update_available": "Atualização disponível"
+  ,"@update_available": {"description": "Título quando há uma atualização disponível"}
+  ,"update_available_desc": "Uma nova versão do aplicativo está disponível"
+  ,"@update_available_desc": {"description": "Descrição quando há uma atualização disponível"}
+  ,"no_update_available": "App atualizado"
+  ,"@no_update_available": {"description": "Mensagem quando não há atualizações"}
+  ,"no_update_available_desc": "Você está usando a versão mais recente"
+  ,"@no_update_available_desc": {"description": "Descrição quando não há atualizações"}
+  ,"update_now": "Atualizar agora"
+  ,"@update_now": {"description": "Botão para iniciar a atualização"}
+  ,"update_later": "Mais tarde"
+  ,"@update_later": {"description": "Botão para adiar a atualização"}
+  ,"checking_for_updates": "Verificando atualizações..."
+  ,"@checking_for_updates": {"description": "Mensagem durante verificação de atualizações"}
+  ,"update_error": "Erro ao verificar atualizações"
+  ,"@update_error": {"description": "Mensagem de erro durante verificação de atualizações"}
+  ,"update_downloading": "Baixando..."
+  ,"@update_downloading": {"description": "Mensagem durante download da atualização"}
+  ,"update_installing": "Instalando..."
+  ,"@update_installing": {"description": "Mensagem durante instalação da atualização"}
+  ,"update_feature_android_only": "Recurso disponível apenas no Android com Google Play Store"
+  ,"@update_feature_android_only": {"description": "Mensagem explicando que o recurso é apenas para Android"}
 }

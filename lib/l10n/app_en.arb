@@ -594,4 +594,30 @@
   ,"@less": {"description": "Inline toggle label to collapse and show fewer items"}
   ,"debt_prefix_to": "to "
   ,"@debt_prefix_to": {"description": "Short prefix shown before the recipient in a debt/settlement line (e.g., 'to Alice 10€')"}
+  ,"check_for_updates": "Check for updates"
+  ,"@check_for_updates": {"description": "Label to check for updates from Google Play Store"}
+  ,"check_for_updates_desc": "Check for new version availability"
+  ,"@check_for_updates_desc": {"description": "Description for update check"}
+  ,"update_available": "Update available"
+  ,"@update_available": {"description": "Title when an update is available"}
+  ,"update_available_desc": "A new version of the app is available"
+  ,"@update_available_desc": {"description": "Description when an update is available"}
+  ,"no_update_available": "App up to date"
+  ,"@no_update_available": {"description": "Message when there are no updates"}
+  ,"no_update_available_desc": "You're using the latest version"
+  ,"@no_update_available_desc": {"description": "Description when there are no updates"}
+  ,"update_now": "Update now"
+  ,"@update_now": {"description": "Button to start the update"}
+  ,"update_later": "Later"
+  ,"@update_later": {"description": "Button to postpone the update"}
+  ,"checking_for_updates": "Checking for updates..."
+  ,"@checking_for_updates": {"description": "Message while checking for updates"}
+  ,"update_error": "Update check error"
+  ,"@update_error": {"description": "Error message during update check"}
+  ,"update_downloading": "Downloading..."
+  ,"@update_downloading": {"description": "Message while downloading update"}
+  ,"update_installing": "Installing..."
+  ,"@update_installing": {"description": "Message while installing update"}
+  ,"update_feature_android_only": "Feature only available on Android with Google Play Store"
+  ,"@update_feature_android_only": {"description": "Message explaining the feature is Android-only"}
 }
