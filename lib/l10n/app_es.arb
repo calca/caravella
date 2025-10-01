@@ -258,6 +258,8 @@
   "address_resolved": "Dirección resuelta",
   "settings_general": "General",
   "settings_general_desc": "Configuración idioma y apariencia",
+  "settings_auto_location_title": "Detectar ubicación automáticamente",
+  "settings_auto_location_desc": "Recuperar automáticamente la ubicación al agregar un gasto",
   "settings_language": "Idioma",
   "settings_language_desc": "Elige tu idioma preferido",
   "settings_language_it": "Italiano",
