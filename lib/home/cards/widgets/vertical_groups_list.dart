@@ -141,7 +141,12 @@ class _VerticalGroupsListState extends State<VerticalGroupsList>
             delegate: SliverChildBuilderDelegate(
               (context, index) {
                 // Build pinned card first if it exists
-                final pinnedGroup = _localGroups.where((g) => g.pinned).firstOrNull;
+                ExpenseGroup? pinnedGroup;
+                try {
+                  pinnedGroup = _localGroups.firstWhere((g) => g.pinned);
+                } catch (_) {
+                  pinnedGroup = null;
+                }
                 final regularGroups = _localGroups.where((g) => !g.pinned).toList();
                 final totalItems = (pinnedGroup != null ? 1 : 0) + regularGroups.length + 1;
 
@@ -160,7 +165,7 @@ class _VerticalGroupsListState extends State<VerticalGroupsList>
                       group: pinnedGroup,
                       localizations: widget.localizations,
                       theme: widget.theme,
-                      onGroupUpdated: () => _handleGroupUpdated(pinnedGroup.id),
+                      onGroupUpdated: () => _handleGroupUpdated(pinnedGroup!.id),
                       onCategoryAdded: _handleCategoryAdded,
                     ),
                   );
