@@ -573,6 +573,10 @@
   ,"@whats_new_title": {"description": "Titolo della pagina che mostra il changelog"}
   ,"whats_new_desc": "Scopri le ultime novità e aggiornamenti"
   ,"@whats_new_desc": {"description": "Sottotitolo della pagina novità"}
+  ,"whats_new_subtitle": "Ultimi Aggiornamenti"
+  ,"@whats_new_subtitle": {"description": "Sottotitolo nella card header della pagina novità"}
+  ,"whats_new_latest": "Scopri cosa è cambiato nell'ultima versione"
+  ,"@whats_new_latest": {"description": "Testo descrittivo nella card header della pagina novità"}
   ,"average_per_person": "Speso medio per persona"
   ,"@average_per_person": {"description": "Etichetta mostrata prima della media spesa per persona nella tab Partecipanti"}
   ,"more": "altro"

@@ -356,6 +356,10 @@
   ,"@whats_new_title": {"description": "显示更新日志页面的标题"}
   ,"whats_new_desc": "了解最新功能和更新"
   ,"@whats_new_desc": {"description": "新功能页面的副标题"}
+  ,"whats_new_subtitle": "最新更新"
+  ,"@whats_new_subtitle": {"description": "新功能页面标题卡中的副标题"}
+  ,"whats_new_latest": "查看最新版本的变化"
+  ,"@whats_new_latest": {"description": "新功能页面标题卡中的描述文字"}
   ,"average_per_person": "人均支出"
   ,"@average_per_person": {"description": "参与者标签页中显示的人均支出标签"}
   ,"more": "更多"

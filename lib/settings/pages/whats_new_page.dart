@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import '../../manager/group/widgets/section_header.dart';
+import '../../widgets/caravella_app_bar.dart';
 
 class WhatsNewPage extends StatefulWidget {
   const WhatsNewPage({super.key});
@@ -67,12 +69,7 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
     final loc = gen.AppLocalizations.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(loc.whats_new_title),
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        foregroundColor: Theme.of(context).colorScheme.onSurface,
-        elevation: 0,
-      ),
+      appBar: const CaravellaAppBar(),
       body: _buildBody(loc),
     );
   }
@@ -109,6 +106,96 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
     }
 
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
+    return ListView(
+      padding: EdgeInsets.fromLTRB(
+        0,
+        0,
+        0,
+        MediaQuery.of(context).padding.bottom + 24,
+      ),
+      children: [
+        // Header section with icon and description
+        SectionHeader(
+          title: loc.whats_new_title,
+          description: loc.whats_new_desc,
+          padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+        ),
+        
+        // Decorative card with icon
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          child: Card(
+            elevation: 0,
+            color: colorScheme.primaryContainer.withOpacity(0.3),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: colorScheme.primaryContainer,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      Icons.new_releases_outlined,
+                      size: 32,
+                      color: colorScheme.onPrimaryContainer,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          loc.whats_new_subtitle,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: colorScheme.onSurface,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          loc.whats_new_latest,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSurface.withOpacity(0.7),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        
+        // Changelog content in a card
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Card(
+            elevation: 0,
+            color: colorScheme.surface,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: _buildMarkdownContent(theme),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+  
+  Widget _buildMarkdownContent(ThemeData theme) {
     final mdTheme = GptMarkdownThemeData(
       brightness: theme.brightness,
       h1: theme.textTheme.headlineMedium?.copyWith(
@@ -116,28 +203,25 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
         fontWeight: FontWeight.bold,
       ),
       h2: theme.textTheme.titleLarge?.copyWith(
-        color: theme.colorScheme.onSurface,
+        color: theme.colorScheme.primary,
         fontWeight: FontWeight.w600,
       ),
       h3: theme.textTheme.titleMedium?.copyWith(
         color: theme.colorScheme.onSurface,
         fontWeight: FontWeight.w500,
       ),
-      linkColor: theme.colorScheme.onSurface,
+      linkColor: theme.colorScheme.primary,
       hrLineColor: theme.colorScheme.outlineVariant,
       hrLineThickness: 1.0,
     );
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
-      child: GptMarkdownTheme(
-        gptThemeData: mdTheme,
-        child: GptMarkdown(
-          _markdownContent,
-          style: theme.textTheme.bodyMedium,
-          textAlign: TextAlign.start,
-          textDirection: Directionality.of(context),
-        ),
+    return GptMarkdownTheme(
+      gptThemeData: mdTheme,
+      child: GptMarkdown(
+        _markdownContent,
+        style: theme.textTheme.bodyMedium,
+        textAlign: TextAlign.start,
+        textDirection: Directionality.of(context),
       ),
     );
   }
