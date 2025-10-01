@@ -15,7 +15,7 @@ import 'home/home_page.dart';
 import 'config/app_config.dart';
 import 'settings/flag_secure_android.dart';
 import 'settings/user_name_notifier.dart';
-import 'services/app_shortcuts_service.dart';
+import 'services/platform_shortcuts_manager.dart';
 import 'data/expense_group_storage_v2.dart';
 import 'manager/details/pages/expense_group_detail_page.dart';
 
@@ -61,14 +61,12 @@ void main() {
     runApp(const CaravellaApp());
   }).then((_) {
     // Initialize shortcuts service after app starts
-    if (Platform.isAndroid) {
-      _initShortcuts();
-    }
+    _initShortcuts();
   });
 }
 
 Future<void> _initShortcuts() async {
-  AppShortcutsService.initialize((groupId, groupTitle) {
+  PlatformShortcutsManager.initialize((groupId, groupTitle) {
     // Handle shortcut tap - navigate to expense creation for the specified group
     final context = navigatorKey.currentContext;
     if (context != null) {
@@ -77,7 +75,7 @@ Future<void> _initShortcuts() async {
   });
   
   // Update shortcuts with current data
-  await AppShortcutsService.updateShortcuts();
+  await PlatformShortcutsManager.updateShortcuts();
 }
 
 void _handleShortcutTap(

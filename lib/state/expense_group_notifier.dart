@@ -1,9 +1,8 @@
-import 'dart:io';
 import 'package:flutter/foundation.dart';
 import '../data/model/expense_group.dart';
 import '../data/model/expense_category.dart';
 import '../data/expense_group_storage_v2.dart';
-import '../services/app_shortcuts_service.dart';
+import '../services/platform_shortcuts_manager.dart';
 
 class ExpenseGroupNotifier extends ChangeNotifier {
   ExpenseGroup? _currentGroup;
@@ -143,8 +142,6 @@ class ExpenseGroupNotifier extends ChangeNotifier {
 
   /// Update Android shortcuts (Quick Actions)
   void _updateShortcuts() {
-    if (Platform.isAndroid) {
-      AppShortcutsService.updateShortcuts();
-    }
+    PlatformShortcutsManager.updateShortcuts();
   }
 }

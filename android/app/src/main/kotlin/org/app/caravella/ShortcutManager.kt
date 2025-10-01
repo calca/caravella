@@ -9,7 +9,6 @@ import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 
 object ShortcutManager {
-    private const val MAX_SHORTCUTS = 4
     private const val ACTION_ADD_EXPENSE = "io.caravella.egm.ADD_EXPENSE"
 
     @RequiresApi(Build.VERSION_CODES.N_MR1)
@@ -18,24 +17,10 @@ object ShortcutManager {
             return
         }
 
-        val shortcuts = mutableListOf<ShortcutInfoCompat>()
-        var shortcutCount = 0
-
-        // Add pinned group first if available
-        val pinnedGroup = groups.firstOrNull { it.isPinned }
-        if (pinnedGroup != null && shortcutCount < MAX_SHORTCUTS) {
-            shortcuts.add(createShortcut(context, pinnedGroup, shortcutCount++))
-        }
-
-        // Add up to 3 recently updated groups (excluding pinned)
-        val recentGroups = groups
-            .filter { !it.isPinned }
-            .sortedByDescending { it.lastUpdated }
-            .take(3)
-        
-        for (group in recentGroups) {
-            if (shortcutCount >= MAX_SHORTCUTS) break
-            shortcuts.add(createShortcut(context, group, shortcutCount++))
+        // Groups are already filtered and sorted by Dart layer
+        // Just create shortcuts for all provided groups
+        val shortcuts = groups.mapIndexed { index, group ->
+            createShortcut(context, group, index)
         }
 
         // Update shortcuts

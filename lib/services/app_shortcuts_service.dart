@@ -1,10 +1,10 @@
-import 'dart:io';
 import 'package:flutter/services.dart';
 import '../data/model/expense_group.dart';
 import '../data/expense_group_storage_v2.dart';
 
 /// Service to manage Android app shortcuts (Quick Actions)
 /// Updates shortcuts when groups are created, modified, or deleted
+/// Note: Platform checks are handled by PlatformShortcutsManager
 class AppShortcutsService {
   static const MethodChannel _channel =
       MethodChannel('io.caravella.egm/shortcuts');
@@ -16,8 +16,6 @@ class AppShortcutsService {
 
   /// Initialize the shortcuts service and set up the callback handler
   static void initialize(ShortcutTapCallback callback) {
-    if (!Platform.isAndroid) return;
-    
     _onShortcutTapped = callback;
     _channel.setMethodCallHandler(_handleMethodCall);
   }
@@ -38,14 +36,15 @@ class AppShortcutsService {
   /// Update shortcuts based on current groups
   /// Shows pinned group + 2-3 most recently updated groups
   static Future<void> updateShortcuts() async {
-    if (!Platform.isAndroid) return;
-
     try {
       // Get active groups from storage
       final groups = await ExpenseGroupStorageV2.getActiveGroups();
       
+      // Filter and sort groups in Dart - pass only 4 shortcuts to native
+      final shortcutsToShow = _selectShortcutsToShow(groups);
+      
       // Convert to format expected by Android
-      final shortcutData = groups.map((group) {
+      final shortcutData = shortcutsToShow.map((group) {
         return {
           'id': group.id,
           'title': group.title,
@@ -62,10 +61,31 @@ class AppShortcutsService {
     }
   }
 
+  /// Select up to 4 shortcuts: pinned group first, then 3 most recent
+  static List<ExpenseGroup> _selectShortcutsToShow(List<ExpenseGroup> groups) {
+    const maxShortcuts = 4;
+    final result = <ExpenseGroup>[];
+    
+    // Add pinned group first if available
+    final pinnedGroup = groups.where((g) => g.pinned).firstOrNull;
+    if (pinnedGroup != null) {
+      result.add(pinnedGroup);
+    }
+    
+    // Add up to 3 most recently updated non-pinned groups
+    final recentGroups = groups
+        .where((g) => !g.pinned)
+        .toList()
+      ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    
+    final remaining = maxShortcuts - result.length;
+    result.addAll(recentGroups.take(remaining));
+    
+    return result;
+  }
+
   /// Clear all shortcuts
   static Future<void> clearShortcuts() async {
-    if (!Platform.isAndroid) return;
-
     try {
       await _channel.invokeMethod('clearShortcuts');
     } catch (e) {

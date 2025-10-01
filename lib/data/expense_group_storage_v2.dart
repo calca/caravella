@@ -1,5 +1,4 @@
 // Updated wrapper for ExpenseGroupStorage - removes print statements
-import 'dart:io';
 import 'model/expense_group.dart';
 import 'model/expense_details.dart';
 import 'model/expense_participant.dart';
@@ -7,7 +6,7 @@ import 'model/expense_category.dart';
 import 'expense_group_repository.dart';
 import 'file_based_expense_group_repository.dart';
 import 'services/logger_service.dart';
-import '../services/app_shortcuts_service.dart';
+import '../services/platform_shortcuts_manager.dart';
 
 /// Backward-compatible wrapper for ExpenseGroupStorage
 /// Maintains the same API while using the improved repository internally
@@ -482,8 +481,6 @@ class ExpenseGroupStorageV2 {
 
   /// Update Android shortcuts (private helper)
   static void _updateShortcuts() {
-    if (Platform.isAndroid) {
-      AppShortcutsService.updateShortcuts();
-    }
+    PlatformShortcutsManager.updateShortcuts();
   }
 }
