@@ -138,6 +138,11 @@ class GroupFormController {
         file: state.imagePath,
         color: state.color,
         timestamp: state.originalGroup?.timestamp ?? now,
+        expenses: (mode == GroupEditMode.copy)
+            ? const []
+            : (state.originalGroup != null
+                  ? List<ExpenseDetails>.from(state.originalGroup!.expenses)
+                  : const []),
       );
 
       if (mode == GroupEditMode.edit) {
@@ -193,6 +198,9 @@ class GroupFormController {
             );
           }
         }
+
+      } else if (mode == GroupEditMode.copy) {
+        await ExpenseGroupStorageV2.addExpenseGroup(group);
       } else {
         await ExpenseGroupStorageV2.addExpenseGroup(group);
       }

@@ -83,10 +83,18 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
   @override
   void initState() {
     super.initState();
-    if (widget.trip != null && widget.mode == GroupEditMode.edit) {
+    if (widget.trip != null && (widget.mode == GroupEditMode.edit || widget.mode == GroupEditMode.copy)) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted && _state.title.isEmpty) {
-          _controller.load(widget.trip!);
+          // For copy mode, load the group and ensure the title has the copy prefix
+          if (widget.mode == GroupEditMode.copy) {
+            _controller.load(widget.trip!);
+            // Set the copy prefix in the title - get localization from context
+            final gloc = gen.AppLocalizations.of(context);
+            _state.setTitle("(${gloc.new_prefix}) ${widget.trip!.title}");
+          } else {
+            _controller.load(widget.trip!);
+          }
         }
       });
     } else if (widget.mode == GroupEditMode.create) {
@@ -242,7 +250,9 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                         Text(
                           widget.mode == GroupEditMode.edit
                               ? gloc.edit_group
-                              : gloc.new_group,
+                              : widget.mode == GroupEditMode.copy
+                                  ? gloc.copy_group
+                                  : gloc.new_group,
                           style: Theme.of(context).textTheme.headlineMedium
                               ?.copyWith(fontWeight: FontWeight.w600),
                         ),

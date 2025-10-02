@@ -4,6 +4,7 @@ import '../../../state/expense_group_notifier.dart';
 import '../../../data/expense_group_storage_v2.dart';
 import '../data/group_form_state.dart';
 import '../group_form_controller.dart';
+import '../group_edit_mode.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 class SaveButtonBar extends StatelessWidget {
@@ -41,7 +42,15 @@ class SaveButtonBar extends StatelessWidget {
 
               Future.microtask(() {
                 if (navigator.context.mounted) {
-                  navigator.pop(true);
+                  // For copy mode, navigate back to home (pop all until we reach the main screen)
+                  if (controller.mode == GroupEditMode.copy) {
+                    // Navigate back to home by popping until we reach the main screen
+                    // This typically means popping twice: once for edit page, once for detail page
+                    navigator.pop(true); // Pop edit page
+                    navigator.pop(true); // Pop detail page to go back to home
+                  } else {
+                    navigator.pop(true);
+                  }
                 }
               });
             }

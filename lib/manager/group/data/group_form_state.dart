@@ -4,6 +4,7 @@ import '../../../data/model/expense_group.dart';
 import 'package:flutter/foundation.dart';
 
 class GroupFormState extends ChangeNotifier {
+  String id = '';
   String title = '';
   String? id;
   ExpenseGroup? originalGroup;
