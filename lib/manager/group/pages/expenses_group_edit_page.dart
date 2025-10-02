@@ -6,7 +6,6 @@ import '../../../widgets/caravella_app_bar.dart';
 import '../../../state/expense_group_notifier.dart';
 import '../../../widgets/material3_dialog.dart';
 import '../../expense/expense_form/icon_leading_field.dart';
-import '../../../themes/app_text_styles.dart';
 import '../widgets/section_flat.dart';
 import '../widgets/section_header.dart';
 import '../widgets/selection_tile.dart';
@@ -251,28 +250,27 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                         SectionFlat(
                           title: '',
                           children: [
-                            IconLeadingField(
-                              icon: const Icon(Icons.title_outlined),
-                              semanticsLabel: gloc.group_name,
-                              tooltip: gloc.group_name,
-                              child: const GroupTitleField(),
-                            ),
-                            Selector<GroupFormState, String>(
-                              selector: (context, s) => s.title,
-                              builder: (context, title, child) => title.isEmpty
-                                  ? Padding(
-                                      padding: const EdgeInsets.only(top: 4.0),
-                                      child: Text(
-                                        '* ${gloc.enter_title}',
-                                        style: AppTextStyles.listItem(context)
-                                            ?.copyWith(
-                                              color: Theme.of(
-                                                context,
-                                              ).colorScheme.error,
-                                            ),
-                                      ),
-                                    )
-                                  : const SizedBox.shrink(),
+                            Selector<GroupFormState, bool>(
+                              selector: (context, s) => s.title.trim().isEmpty,
+                              builder: (context, isEmpty, child) => Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SectionHeader(
+                                    title: gloc.group_name,
+                                    requiredMark: true,
+                                    showRequiredHint: isEmpty,
+                                    padding: EdgeInsets.zero,
+                                    spacing: 4,
+                                  ),
+                                  const SizedBox(height: 12),
+                                  IconLeadingField(
+                                    icon: const Icon(Icons.title_outlined),
+                                    semanticsLabel: gloc.group_name,
+                                    tooltip: gloc.group_name,
+                                    child: const GroupTitleField(),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
