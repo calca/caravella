@@ -638,7 +638,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get refresh => 'Atualizar';
 
   @override
-  String get group_added_success => 'Group added';
+  String get group_added_success => 'Grupo adicionado';
+
+  @override
+  String get group_deleted_success => 'Grupo excluído';
 
   @override
   String get csv_select_directory_title =>

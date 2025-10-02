@@ -645,6 +645,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get group_added_success => 'Grupo agregado';
 
   @override
+  String get group_deleted_success => 'Grupo eliminado';
+
+  @override
   String get csv_select_directory_title =>
       'Seleccionar carpeta para guardar CSV';
 
