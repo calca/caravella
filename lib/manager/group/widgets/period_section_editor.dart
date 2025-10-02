@@ -22,7 +22,9 @@ class PeriodSectionEditor extends StatelessWidget {
     return SectionPeriod(
       startDate: state.startDate,
       endDate: state.endDate,
-      onPickDate: (isStart) => onPickDate(isStart),
+      onPickDate: (isStart) {
+        onPickDate(isStart);
+      },
       onClearDates: onClearDates,
       description: gen.AppLocalizations.of(context).dates_description,
       errorText: errorText,
