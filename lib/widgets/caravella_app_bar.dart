@@ -4,6 +4,7 @@ import '../l10n/app_localizations.dart';
 class CaravellaAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
   final Widget? leading;
+  final Widget? title;
   final bool centerTitle;
   final double elevation;
   final Color? backgroundColor;
@@ -12,6 +13,7 @@ class CaravellaAppBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     this.actions,
     this.leading,
+    this.title,
     this.centerTitle = false,
     this.elevation = 0,
     this.backgroundColor,
@@ -27,21 +29,22 @@ class CaravellaAppBar extends StatelessWidget implements PreferredSizeWidget {
         backgroundColor:
             backgroundColor ?? Theme.of(context).scaffoldBackgroundColor,
         elevation: elevation,
-        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onSurface),
+        iconTheme: IconThemeData(
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
         foregroundColor: Theme.of(context).colorScheme.onSurface,
         centerTitle: centerTitle,
-        title: null,
-        leading: leading != null 
+        title: title,
+        leading: leading != null
             ? Semantics(
                 button: true,
                 label: localizations.accessibility_back_button,
                 child: leading,
               )
             : null,
-        actions: actions?.map((action) => Semantics(
-          button: true,
-          child: action,
-        )).toList(),
+        actions: actions
+            ?.map((action) => Semantics(button: true, child: action))
+            .toList(),
       ),
     );
   }
