@@ -1,0 +1,45 @@
+Caravella is a modern, multi-platform Flutter application designed to simplify expense management for groups, trips, and events. Built with Material 3, it offers an intuitive and clean user experience for tracking shared costs, managing participants, and settling debts.
+
+Whether you're on a group trip, sharing an apartment with roommates, or organizing an event, Caravella helps you keep everything organized and transparent. All data is stored locally on your device, ensuring privacy and offline availability.
+
+<b>Key Features:</b>
+
+• <b>Group Management</b>: Create and manage distinct groups for trips, events, or shared living arrangements. Add members and track expenses collectively.
+
+• <b>Expense Tracking</b>: Easily add new expenses, assign categories, specify who paid, and select which members participated in the cost.
+
+• <b>Material 3 UI</b>: A beautiful and modern user interface with support for dynamic colors and a native-feeling light/dark mode.
+
+• <b>Dashboard</b>: A central home page that provides a quick overview of the current pinned group, total expenses, and quick access to details.
+
+• <b>Detailed Summaries</b>: Get a clear breakdown of who owes what to whom, ensuring transparent and fair settlements.
+
+• <b>Data Persistence</b>: All your data is saved locally on your device using file-based storage, so it's always available, even offline.
+
+• <b>Backup & Restore</b>: Securely export all your app data to a single file and import it later, perfect for backups or migrating to a new device.
+
+• <b>CSV Export</b>: Export the expense list for any group into a CSV file, which can be easily shared or used in other applications.
+
+• <b>Multi-Language Support</b>: The app is localized for English, Italian, and Spanish.
+
+• <b>Cross-Platform</b>: Built with Flutter, Caravella is designed to run smoothly on Android, iOS, Web, and Desktop from a single codebase.
+
+<b>Privacy & Security:</b>
+
+• All data stored locally on your device
+• No user accounts or online services required
+• Optional permissions for enhanced features (camera for photos, location for expense context)
+• Full data export and deletion control
+• GDPR and privacy compliant
+
+The app requires no internet connection for core functionality and gives you complete control over your financial data.
+
+<b>Perfect For:</b>
+• Group trips and vacations
+• Shared household expenses
+• Event planning and cost sharing
+• Business trip expense tracking
+• Roommate expense management
+
+<b>Open Source:</b>
+Caravella is released under the MIT License. The source code is available on GitHub, and contributions are welcome!

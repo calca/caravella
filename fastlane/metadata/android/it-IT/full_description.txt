@@ -1,0 +1,45 @@
+Caravella è un'applicazione Flutter moderna e multipiattaforma progettata per semplificare la gestione delle spese per gruppi, viaggi ed eventi. Costruita con Material 3, offre un'esperienza utente intuitiva e pulita per tracciare i costi condivisi, gestire i partecipanti e regolare i debiti.
+
+Che tu sia in un viaggio di gruppo, condivida un appartamento con coinquilini o organizzi un evento, Caravella ti aiuta a mantenere tutto organizzato e trasparente. Tutti i dati sono memorizzati localmente sul tuo dispositivo, garantendo privacy e disponibilità offline.
+
+<b>Caratteristiche principali:</b>
+
+• <b>Gestione Gruppi</b>: Crea e gestisci gruppi distinti per viaggi, eventi o convivenze. Aggiungi membri e traccia le spese collettivamente.
+
+• <b>Tracciamento Spese</b>: Aggiungi facilmente nuove spese, assegna categorie, specifica chi ha pagato e seleziona quali membri hanno partecipato al costo.
+
+• <b>UI Material 3</b>: Un'interfaccia utente bella e moderna con supporto per colori dinamici e modalità chiara/scura nativa.
+
+• <b>Dashboard</b>: Una pagina principale centrale che fornisce una rapida panoramica del gruppo corrente, delle spese totali e accesso rapido ai dettagli.
+
+• <b>Riepiloghi Dettagliati</b>: Ottieni una chiara ripartizione di chi deve cosa a chi, garantendo regolamenti trasparenti ed equi.
+
+• <b>Persistenza Dati</b>: Tutti i tuoi dati sono salvati localmente sul tuo dispositivo utilizzando l'archiviazione basata su file, quindi sono sempre disponibili, anche offline.
+
+• <b>Backup e Ripristino</b>: Esporta in modo sicuro tutti i dati dell'app in un singolo file e importali in seguito, perfetto per backup o migrazione su un nuovo dispositivo.
+
+• <b>Esportazione CSV</b>: Esporta l'elenco delle spese per qualsiasi gruppo in un file CSV, che può essere facilmente condiviso o utilizzato in altre applicazioni.
+
+• <b>Supporto Multilingua</b>: L'app è localizzata in inglese, italiano e spagnolo.
+
+• <b>Multipiattaforma</b>: Costruita con Flutter, Caravella è progettata per funzionare senza problemi su Android, iOS, Web e Desktop da un unico codebase.
+
+<b>Privacy e Sicurezza:</b>
+
+• Tutti i dati memorizzati localmente sul tuo dispositivo
+• Non sono richiesti account utente o servizi online
+• Permessi opzionali per funzionalità avanzate (fotocamera per foto, posizione per contesto spese)
+• Pieno controllo sull'esportazione ed eliminazione dei dati
+• Conforme a GDPR e privacy
+
+L'app non richiede connessione internet per le funzionalità principali e ti dà il completo controllo sui tuoi dati finanziari.
+
+<b>Perfetta per:</b>
+• Viaggi e vacanze di gruppo
+• Spese condivise della famiglia
+• Pianificazione eventi e condivisione costi
+• Tracciamento spese viaggi di lavoro
+• Gestione spese coinquilini
+
+<b>Open Source:</b>
+Caravella è rilasciata sotto licenza MIT. Il codice sorgente è disponibile su GitHub e i contributi sono benvenuti!
