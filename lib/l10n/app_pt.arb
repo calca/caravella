@@ -489,9 +489,9 @@
   ,"@whats_new_title": {"description": "Título da página que mostra o changelog"}
   ,"whats_new_desc": "Descubra os recursos e atualizações mais recentes"
   ,"@whats_new_desc": {"description": "Subtítulo da página novidades"}
-  ,"whats_new_subtitle": "Últimas Atualizações"
+  ,"whats_new_subtitle": "Destaques recentes"
   ,"@whats_new_subtitle": {"description": "Subtítulo no cartão de cabeçalho da página de novidades"}
-  ,"whats_new_latest": "Veja o que mudou na versão mais recente"
+  ,"whats_new_latest": "Fique por dentro das melhorias mais recentes"
   ,"@whats_new_latest": {"description": "Texto descritivo no cartão de cabeçalho da página de novidades"}
   ,"average_per_person": "Média por pessoa"
   ,"@average_per_person": {"description": "Rótulo mostrado antes da média gasta por pessoa na aba Participantes"}

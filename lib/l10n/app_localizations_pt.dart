@@ -1573,6 +1573,12 @@ class AppLocalizationsPt extends AppLocalizations {
       'Descubra os recursos e atualizações mais recentes';
 
   @override
+  String get whats_new_subtitle => 'Destaques recentes';
+
+  @override
+  String get whats_new_latest => 'Fique por dentro das melhorias mais recentes';
+
+  @override
   String get average_per_person => 'Média por pessoa';
 
   @override

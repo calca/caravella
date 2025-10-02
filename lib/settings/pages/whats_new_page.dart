@@ -128,7 +128,7 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           child: Card(
             elevation: 0,
-            color: colorScheme.primaryContainer.withOpacity(0.3),
+            color: colorScheme.primaryContainer.withValues(alpha: 0.3),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
@@ -164,7 +164,7 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
                         Text(
                           loc.whats_new_latest,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onSurface.withOpacity(0.7),
+                            color: colorScheme.onSurface.withValues(alpha: 0.7),
                           ),
                         ),
                       ],

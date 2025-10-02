@@ -1577,6 +1577,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get whats_new_desc => 'Scopri le ultime novità e aggiornamenti';
 
   @override
+  String get whats_new_subtitle => 'Ultimi Aggiornamenti';
+
+  @override
+  String get whats_new_latest =>
+      'Resta aggiornato con i miglioramenti più recenti';
+
+  @override
   String get average_per_person => 'Speso medio per persona';
 
   @override
