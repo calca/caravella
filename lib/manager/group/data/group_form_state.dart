@@ -23,7 +23,10 @@ class GroupFormState extends ChangeNotifier {
 
   bool get isBusy => loadingImage || isSaving;
 
-  bool get isValid => title.trim().isNotEmpty && participants.isNotEmpty;
+  bool get isValid =>
+      title.trim().isNotEmpty &&
+      participants.isNotEmpty &&
+      categories.isNotEmpty;
 
   void setTitle(String v) {
     if (title == v) return;
