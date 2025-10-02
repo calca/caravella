@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.caravella.egm">
 
-    <!-- Camera permission for taking photos of group backgrounds and expense attachments (optional feature) -->
+    <!-- Camera permission for taking photos of group backgrounds, receipt scanning with OCR, and expense attachments (optional feature) -->
     <uses-permission android:name="android.permission.CAMERA" />
     
     <!-- Media permissions for selecting existing photos (optional feature) -->

@@ -7,6 +7,7 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
 ## ✨ Key Features
 
 - **Group Management**: Create and manage distinct groups for trips, events, or shared living arrangements. Add members and track expenses collectively.
+- **Receipt Scanning with OCR**: Scan receipts using your camera or gallery, and automatically extract expense amounts and descriptions using on-device OCR (no internet required).
 - **Expense Tracking**: Easily add new expenses, assign categories, specify who paid, and select which members participated in the cost.
 - **Material 3 UI**: A beautiful and modern user interface with support for dynamic colors and a native-feeling light/dark mode.
 - **Dashboard**: A central home page that provides a quick overview of the current pinned group, total expenses, and quick access to details.
@@ -21,6 +22,7 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
 
 - **Framework**: Flutter
 - **UI**: Material 3
+- **OCR**: Google ML Kit Text Recognition (on-device)
 - **State Management**: `provider` for centralized and reactive state management.
 - **Storage**: Local file storage using `path_provider` for private, on-device data persistence.
 - **Architecture**: The app follows a clean architecture with a separation of concerns between UI, state management, and data services.
