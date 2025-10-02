@@ -15,6 +15,7 @@ import '../../../data/model/expense_details.dart';
 import '../../../data/model/expense_group.dart';
 import '../../../state/expense_group_notifier.dart';
 import '../../../data/expense_group_storage_v2.dart';
+import '../../../data/services/rating_service.dart';
 import '../../../widgets/material3_dialog.dart';
 // Removed legacy localization bridge imports (migration in progress)
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
@@ -455,6 +456,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             // Refresh local state and notifier
             await _refreshGroup();
             _groupNotifier?.notifyGroupUpdated(widget.trip.id);
+
+            // Check if we should prompt for rating
+            // This is done after successful expense save
+            RatingService.checkAndPromptForRating();
 
             if (!sheetCtx.mounted) return;
             AppToast.show(
