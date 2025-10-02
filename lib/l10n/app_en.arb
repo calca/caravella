@@ -600,4 +600,20 @@
   ,"@less": {"description": "Inline toggle label to collapse and show fewer items"}
   ,"debt_prefix_to": "to "
   ,"@debt_prefix_to": {"description": "Short prefix shown before the recipient in a debt/settlement line (e.g., 'to Alice 10€')"}
+  ,"voice_input_button": "Add by voice"
+  ,"@voice_input_button": {"description": "Label for the button to activate voice input"}
+  ,"voice_input_listening": "Listening..."
+  ,"@voice_input_listening": {"description": "Message shown during voice recording"}
+  ,"voice_input_tap_to_speak": "Tap to speak"
+  ,"@voice_input_tap_to_speak": {"description": "Hint to start speaking"}
+  ,"voice_input_processing": "Processing..."
+  ,"@voice_input_processing": {"description": "Message shown during voice text processing"}
+  ,"voice_input_error": "Voice recognition error"
+  ,"@voice_input_error": {"description": "Error message for voice recognition issues"}
+  ,"voice_input_permission_denied": "Microphone permission denied"
+  ,"@voice_input_permission_denied": {"description": "Message when user denies microphone permission"}
+  ,"voice_input_not_available": "Voice recognition not available"
+  ,"@voice_input_not_available": {"description": "Message when voice recognition is not available on the device"}
+  ,"voice_input_hint": "Try saying: '50 dollars for dinner at restaurant'"
+  ,"@voice_input_hint": {"description": "Example hint for using voice input"}
 }

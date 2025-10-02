@@ -16,6 +16,7 @@ import 'expense_form/note_input_widget.dart';
 import 'expense_form/location_input_widget.dart';
 import 'expense_form/expense_form_actions_widget.dart';
 import 'expense_form/category_dialog.dart';
+import 'expense_form/voice_input_button.dart';
 import '../../themes/form_theme.dart';
 
 class ExpenseFormComponent extends StatefulWidget {
@@ -423,6 +424,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildGroupHeader(),
+            _buildVoiceInputSection(),
             _buildAmountField(gloc, smallStyle),
             _spacer(),
             _buildNameField(gloc, smallStyle),
@@ -487,6 +489,98 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildVoiceInputSection() {
+    // Don't show voice input in edit mode
+    if (widget.initialExpense != null) {
+      return const SizedBox.shrink();
+    }
+
+    final locale = LocaleNotifier.of(context)?.locale ?? 'it';
+    final localeId = locale == 'it' ? 'it_IT' : 'en_US';
+    final gloc = gen.AppLocalizations.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12.0),
+      child: Row(
+        children: [
+          VoiceInputButton(
+            onVoiceResult: _handleVoiceInput,
+            localeId: localeId,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              gloc.voice_input_hint,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _handleVoiceInput(Map<String, dynamic> parsedData) {
+    setState(() {
+      _isDirty = true;
+
+      // Set amount if parsed
+      if (parsedData.containsKey('amount')) {
+        final amount = parsedData['amount'] as double?;
+        if (amount != null && amount > 0) {
+          _amount = amount;
+          _amountController.text = amount.toString();
+          _amountTouched = true;
+        }
+      }
+
+      // Set name/description if parsed
+      if (parsedData.containsKey('name')) {
+        final name = parsedData['name'] as String?;
+        if (name != null && name.isNotEmpty) {
+          _nameController.text = name;
+        }
+      }
+
+      // Try to match category if parsed
+      if (parsedData.containsKey('category')) {
+        final categoryHint = parsedData['category'] as String?;
+        if (categoryHint != null && _categories.isNotEmpty) {
+          // Try to find a matching category by name (case insensitive)
+          final matchingCategory = _categories.where((cat) {
+            return cat.name.toLowerCase().contains(categoryHint.toLowerCase()) ||
+                categoryHint.toLowerCase().contains(cat.name.toLowerCase());
+          }).firstOrNull;
+
+          if (matchingCategory != null) {
+            _category = matchingCategory;
+            _categoryTouched = true;
+          }
+        }
+      }
+
+      // Focus on the first empty required field or the amount field
+      if (_amount == null || _amount == 0) {
+        _amountFocus.requestFocus();
+      } else if (_nameController.text.isEmpty) {
+        _nameFocus.requestFocus();
+      }
+    });
+
+    // Show a subtle feedback
+    final gloc = gen.AppLocalizations.of(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(gloc.expense_added_success),
+        duration: const Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
       ),
     );
   }
