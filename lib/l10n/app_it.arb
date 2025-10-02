@@ -219,6 +219,8 @@
   "data_refreshed": "Aggiornato",
   "refresh": "Aggiorna",
   "group_added_success": "Gruppo aggiunto",
+  "group_deleted_success": "Gruppo eliminato",
+  "@group_deleted_success": {"description": "Messaggio di conferma dopo l'eliminazione di un gruppo di spese"},
   "csv_select_directory_title": "Seleziona cartella per salvare CSV",
   "csv_saved_in": "CSV salvato in: {path}",
   "csv_save_cancelled": "Esportazione annullata",

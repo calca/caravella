@@ -1322,6 +1322,12 @@ abstract class AppLocalizations {
   /// **'Group added'**
   String get group_added_success;
 
+  /// Toast shown after deleting an expense group
+  ///
+  /// In en, this message translates to:
+  /// **'Group deleted'**
+  String get group_deleted_success;
+
   /// No description provided for @csv_select_directory_title.
   ///
   /// In en, this message translates to:
