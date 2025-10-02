@@ -501,4 +501,14 @@
   ,"@less": {"description": "Rótulo inline para recolher e mostrar menos itens"}
   ,"debt_prefix_to": "a "
   ,"@debt_prefix_to": {"description": "Prefixo curto mostrado antes do destinatário em uma linha de dívida/liquidação (ex.: 'a Alice 10€')"}
+  ,"scan_receipt": "Escanear recibo"
+  ,"@scan_receipt": {"description": "Botão para escanear um recibo com OCR"}
+  ,"scanning_receipt": "Escaneando recibo..."
+  ,"@scanning_receipt": {"description": "Mensagem durante o escaneamento OCR do recibo"}
+  ,"receipt_scan_error": "Erro ao escanear recibo"
+  ,"@receipt_scan_error": {"description": "Mensagem de erro quando o escaneamento OCR falha"}
+  ,"no_text_found": "Nenhum texto encontrado na imagem"
+  ,"@no_text_found": {"description": "Mensagem quando o OCR não encontra texto na imagem"}
+  ,"receipt_scanned": "Recibo escaneado"
+  ,"@receipt_scanned": {"description": "Mensagem de sucesso após o escaneamento OCR"}
 }

@@ -1,6 +1,8 @@
 library;
 
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../data/model/expense_category.dart';
 import '../../data/model/expense_details.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
@@ -8,6 +10,7 @@ import '../../data/model/expense_participant.dart';
 import '../../data/model/expense_location.dart';
 import '../../state/locale_notifier.dart';
 import '../../widgets/material3_dialog.dart';
+import '../../data/services/receipt_scanner_service.dart';
 import 'expense_form/amount_input_widget.dart';
 import 'expense_form/participant_selector_widget.dart';
 import 'expense_form/category_selector_widget.dart';
@@ -92,6 +95,10 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
 
   // Stato per espansione del form (solo quando fullEdit è false inizialmente)
   bool _isExpanded = false;
+
+  // Receipt scanner instance
+  final _receiptScanner = ReceiptScannerService();
+  final _imagePicker = ImagePicker();
 
   // Getters per stato dei campi
   bool get _isAmountValid => _amount != null && _amount! > 0;
@@ -371,6 +378,103 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
       ),
       child: field,
     );
+  }
+
+  Future<void> _scanReceipt() async {
+    final gloc = gen.AppLocalizations.of(context);
+    
+    // Show bottom sheet to choose camera or gallery
+    final source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.camera_alt),
+              title: Text(gloc.from_camera),
+              onTap: () => Navigator.pop(context, ImageSource.camera),
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library),
+              title: Text(gloc.from_gallery),
+              onTap: () => Navigator.pop(context, ImageSource.gallery),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (source == null || !mounted) return;
+
+    try {
+      // Pick image
+      final pickedFile = await _imagePicker.pickImage(source: source);
+      if (pickedFile == null || !mounted) return;
+
+      // Show loading indicator
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(gloc.scanning_receipt),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+
+      // Scan receipt
+      final imageFile = File(pickedFile.path);
+      final result = await _receiptScanner.scanReceipt(imageFile);
+
+      if (!mounted) return;
+
+      // Extract amount and description
+      final amount = result['amount'] as double?;
+      final description = result['description'] as String?;
+
+      if (amount == null && description == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(gloc.no_text_found),
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        }
+        return;
+      }
+
+      // Prefill form fields
+      setState(() {
+        if (amount != null) {
+          _amount = amount;
+          _amountController.text = amount.toString();
+          _amountTouched = true;
+        }
+        if (description != null && description.isNotEmpty) {
+          _nameController.text = description;
+        }
+        _isDirty = true;
+      });
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(gloc.receipt_scanned),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(gloc.receipt_scan_error),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    }
   }
 
   void _saveExpense() {
@@ -827,6 +931,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
             _isDirty = true;
           });
         },
+        onScanReceipt: widget.initialExpense == null ? _scanReceipt : null,
       );
 
   @override

@@ -587,4 +587,14 @@
   ,"@less": {"description": "Etichetta inline per comprimere e mostrare meno elementi"}
   ,"debt_prefix_to": "a "
   ,"@debt_prefix_to": {"description": "Prefisso breve mostrato prima del destinatario nella riga di debito/pareggio (es. 'a Alice 10€')"}
+  ,"scan_receipt": "Scansiona scontrino"
+  ,"@scan_receipt": {"description": "Pulsante per scansionare uno scontrino con OCR"}
+  ,"scanning_receipt": "Scansione scontrino..."
+  ,"@scanning_receipt": {"description": "Messaggio durante la scansione OCR dello scontrino"}
+  ,"receipt_scan_error": "Errore nella scansione dello scontrino"
+  ,"@receipt_scan_error": {"description": "Messaggio di errore quando la scansione OCR fallisce"}
+  ,"no_text_found": "Nessun testo trovato nell'immagine"
+  ,"@no_text_found": {"description": "Messaggio quando l'OCR non trova testo nell'immagine"}
+  ,"receipt_scanned": "Scontrino scansionato"
+  ,"@receipt_scanned": {"description": "Messaggio di successo dopo la scansione OCR"}
 }

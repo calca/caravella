@@ -485,4 +485,14 @@
   ,"welcome_v3_tagline": "完美适用于群组旅行、室友或任何共享支出的情况。"
   ,"currency_WST": "萨摩亚塔拉"
   ,"search_currency": "搜索货币..."
+  ,"scan_receipt": "扫描收据"
+  ,"@scan_receipt": {"description": "使用OCR扫描收据的按钮"}
+  ,"scanning_receipt": "正在扫描收据..."
+  ,"@scanning_receipt": {"description": "OCR扫描收据期间的消息"}
+  ,"receipt_scan_error": "扫描收据时出错"
+  ,"@receipt_scan_error": {"description": "OCR扫描失败时的错误消息"}
+  ,"no_text_found": "图像中未找到文本"
+  ,"@no_text_found": {"description": "OCR在图像中未找到文本时的消息"}
+  ,"receipt_scanned": "收据已扫描"
+  ,"@receipt_scanned": {"description": "OCR扫描后的成功消息"}
 }
