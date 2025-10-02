@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/themes/app_text_styles.dart';
 import 'date_card.dart';
 import 'section_header.dart';
-import '../../../themes/app_text_styles.dart';
 
 class SectionPeriod extends StatelessWidget {
   final DateTime? startDate;
@@ -26,58 +26,57 @@ class SectionPeriod extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void handleTap(bool isStart) {
-      final currentFocus = FocusScope.of(context);
-      if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
-        currentFocus.unfocus();
-      }
-      onPickDate(isStart);
-      final focusAfter = FocusScope.of(context);
-      Future.delayed(const Duration(milliseconds: 10), () {
-        if (!focusAfter.hasPrimaryFocus && focusAfter.focusedChild != null) {
-          focusAfter.unfocus();
-        }
-      });
-    }
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionHeader(
           title: gen.AppLocalizations.of(context).dates,
           description: description,
+          trailing: (startDate != null || endDate != null)
+              ? IconButton.filledTonal(
+                  onPressed: onClearDates,
+                  icon: const Icon(Icons.delete_outline, size: 22),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: Theme.of(
+                      context,
+                    ).colorScheme.surfaceContainer,
+                    foregroundColor: Theme.of(context).colorScheme.error,
+                    minimumSize: const Size(44, 44),
+                    padding: EdgeInsets.zero,
+                  ),
+                )
+              : null,
           padding: EdgeInsets.zero,
-          spacing: 4,
         ),
         const SizedBox(height: 12),
         // Start date row
-        Row(
-          children: [
-            Expanded(
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(12),
-                  onTap: () => handleTap(true),
-                  child: DateCard(
-                    day: startDate?.day,
-                    label: gen.AppLocalizations.of(context).from,
-                    date: startDate,
-                    isActive: startDate != null,
-                    icon: startDate == null ? Icons.event_outlined : null,
-                  ),
-                ),
-              ),
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(12),
+            onTap: () {
+              final currentFocus = FocusScope.of(context);
+              if (!currentFocus.hasPrimaryFocus &&
+                  currentFocus.focusedChild != null) {
+                currentFocus.unfocus();
+              }
+              onPickDate(true);
+              final focusAfter = FocusScope.of(context);
+              Future.delayed(const Duration(milliseconds: 10), () {
+                if (!focusAfter.hasPrimaryFocus &&
+                    focusAfter.focusedChild != null) {
+                  focusAfter.unfocus();
+                }
+              });
+            },
+            child: DateCard(
+              day: startDate?.day,
+              label: gen.AppLocalizations.of(context).from,
+              date: startDate,
+              isActive: startDate != null,
+              icon: startDate == null ? Icons.event_outlined : null,
             ),
-            if (startDate != null || endDate != null) ...[
-              const SizedBox(width: 8),
-              IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: onClearDates,
-                tooltip: gen.AppLocalizations.of(context).delete,
-              ),
-            ],
-          ],
+          ),
         ),
         const SizedBox(height: 8),
         // End date row
