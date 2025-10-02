@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'package:io_caravella_egm/themes/app_text_styles.dart';
 import 'date_card.dart';
 import 'section_header.dart';
 import '../../../themes/app_text_styles.dart';
@@ -41,7 +40,6 @@ class SectionPeriod extends StatelessWidget {
       });
     }
 
-    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -76,7 +74,7 @@ class SectionPeriod extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.close),
                 onPressed: onClearDates,
-                tooltip: gen.AppLocalizations.of(context).clear,
+                tooltip: gen.AppLocalizations.of(context).delete,
               ),
             ],
           ],

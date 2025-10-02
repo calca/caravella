@@ -181,13 +181,6 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
     }
   }
 
-  void _clearDates() {
-    setState(() {
-      _dateError = null;
-    });
-    _state.clearDates();
-  }
-
   void _unfocusAll() {
     final currentFocus = FocusScope.of(context);
     if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
