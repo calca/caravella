@@ -122,4 +122,46 @@ class PreferencesService {
     final prefs = await _prefs;
     return prefs.containsKey(key);
   }
+  
+  // Store rating preferences
+  static const String _totalExpenseCountKey = 'total_expense_count';
+  static const String _lastRatingPromptKey = 'last_rating_prompt';
+  static const String _hasShownInitialRatingKey = 'has_shown_initial_rating';
+  
+  /// Get total expense count across all groups
+  static Future<int> getTotalExpenseCount() async {
+    final prefs = await _prefs;
+    return prefs.getInt(_totalExpenseCountKey) ?? 0;
+  }
+  
+  /// Set total expense count
+  static Future<void> setTotalExpenseCount(int count) async {
+    final prefs = await _prefs;
+    await prefs.setInt(_totalExpenseCountKey, count);
+  }
+  
+  /// Get last rating prompt timestamp
+  static Future<DateTime?> getLastRatingPrompt() async {
+    final prefs = await _prefs;
+    final timestamp = prefs.getInt(_lastRatingPromptKey);
+    return timestamp != null ? DateTime.fromMillisecondsSinceEpoch(timestamp) : null;
+  }
+  
+  /// Set last rating prompt timestamp
+  static Future<void> setLastRatingPrompt(DateTime timestamp) async {
+    final prefs = await _prefs;
+    await prefs.setInt(_lastRatingPromptKey, timestamp.millisecondsSinceEpoch);
+  }
+  
+  /// Get whether initial rating prompt has been shown
+  static Future<bool> getHasShownInitialRating() async {
+    final prefs = await _prefs;
+    return prefs.getBool(_hasShownInitialRatingKey) ?? false;
+  }
+  
+  /// Set whether initial rating prompt has been shown
+  static Future<void> setHasShownInitialRating(bool shown) async {
+    final prefs = await _prefs;
+    await prefs.setBool(_hasShownInitialRatingKey, shown);
+  }
 }
