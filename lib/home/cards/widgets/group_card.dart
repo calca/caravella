@@ -96,7 +96,8 @@ class _GroupCardState extends State<GroupCard>
       backgroundColor = Color.lerp(
         groupColor,
         selectedColor,
-        widget.selectionProgress * 0.3, // 30% di intensità massima per la selezione
+        widget.selectionProgress *
+            0.3, // 30% di intensità massima per la selezione
       );
     } else {
       // No image and no color, use selection color
@@ -109,36 +110,29 @@ class _GroupCardState extends State<GroupCard>
 
     return ScaleTransition(
       scale: _scaleAnimation,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-        constraints: const BoxConstraints(
-          minHeight: 400, // Minimum height for group cards
-        ),
-        child: BaseCard(
-          margin: const EdgeInsets.only(bottom: 16),
-          backgroundColor: backgroundColor,
-          backgroundImage: widget.group.file,
-          onTap: () async {
-            final result = await Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => ExpenseGroupDetailPage(trip: widget.group),
-              ),
-            );
-            if (result == true) {
-              widget.onGroupUpdated();
-            }
-          },
-          onTapDown: _onTapDown,
-          onTapUp: _onTapUp,
-          onTapCancel: _onTapCancel,
-          child: GroupCardContent(
-            group: widget.group,
-            localizations: widget.localizations,
-            theme: widget.theme,
-            onExpenseAdded: widget.onGroupUpdated,
-            onCategoryAdded: widget.onCategoryAdded,
-          ),
+      child: BaseCard(
+        margin: const EdgeInsets.only(bottom: 16),
+        backgroundColor: backgroundColor,
+        backgroundImage: widget.group.file,
+        onTap: () async {
+          final result = await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ExpenseGroupDetailPage(trip: widget.group),
+            ),
+          );
+          if (result == true) {
+            widget.onGroupUpdated();
+          }
+        },
+        onTapDown: _onTapDown,
+        onTapUp: _onTapUp,
+        onTapCancel: _onTapCancel,
+        child: GroupCardContent(
+          group: widget.group,
+          localizations: widget.localizations,
+          theme: widget.theme,
+          onExpenseAdded: widget.onGroupUpdated,
+          onCategoryAdded: widget.onCategoryAdded,
         ),
       ),
     );

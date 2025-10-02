@@ -36,7 +36,7 @@ class _VerticalGroupsListState extends State<VerticalGroupsList>
   void initState() {
     super.initState();
     _localGroups = List.from(widget.groups);
-    
+
     // Main animation controller for the list entrance
     _animationController = AnimationController(
       vsync: this,
@@ -132,82 +132,73 @@ class _VerticalGroupsListState extends State<VerticalGroupsList>
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
+    ExpenseGroup? pinnedGroup;
+    try {
+      pinnedGroup = _localGroups.firstWhere((g) => g.pinned);
+    } catch (_) {
+      pinnedGroup = null;
+    }
+    final regularGroups = _localGroups
+        .where((g) => !g.pinned)
+        .toList(growable: false);
+    final totalItems =
+        (pinnedGroup != null ? 1 : 0) + regularGroups.length + 1; // +1 new card
+
+    return ListView.builder(
       physics: const BouncingScrollPhysics(),
-      slivers: [
-        SliverPadding(
-          padding: const EdgeInsets.only(top: 8, bottom: 24),
-          sliver: SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                // Build pinned card first if it exists
-                ExpenseGroup? pinnedGroup;
-                try {
-                  pinnedGroup = _localGroups.firstWhere((g) => g.pinned);
-                } catch (_) {
-                  pinnedGroup = null;
-                }
-                final regularGroups = _localGroups.where((g) => !g.pinned).toList();
-                final totalItems = (pinnedGroup != null ? 1 : 0) + regularGroups.length + 1;
+      padding: const EdgeInsets.only(top: 8, bottom: 24),
+      itemCount: totalItems,
+      itemBuilder: (context, index) {
+        final Animation<double> animation;
+        if (_cardAnimations.isEmpty) {
+          animation = const AlwaysStoppedAnimation<double>(1.0);
+        } else {
+          final cappedIndex = index >= _cardAnimations.length
+              ? _cardAnimations.length - 1
+              : index;
+          animation = _cardAnimations[cappedIndex];
+        }
 
-                if (index >= totalItems) return null;
-
-                // Get animation for this card
-                final animation = index < _cardAnimations.length
-                    ? _cardAnimations[index]
-                    : _cardAnimations.last;
-
-                // First show pinned card if exists
-                if (pinnedGroup != null && index == 0) {
-                  return _buildAnimatedCard(
-                    animation: animation,
-                    child: _PinnedGroupCard(
-                      group: pinnedGroup,
-                      localizations: widget.localizations,
-                      theme: widget.theme,
-                      onGroupUpdated: () => _handleGroupUpdated(pinnedGroup!.id),
-                      onCategoryAdded: _handleCategoryAdded,
-                    ),
-                  );
-                }
-
-                // Calculate actual index in regular groups
-                final regularIndex = pinnedGroup != null ? index - 1 : index;
-
-                // Show new group card as last item
-                if (regularIndex == regularGroups.length) {
-                  return _buildAnimatedCard(
-                    animation: animation,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: NewGroupCard(
-                        localizations: widget.localizations,
-                        theme: widget.theme,
-                        onGroupAdded: _handleGroupUpdated,
-                        isSelected: true,
-                        selectionProgress: 1.0,
-                      ),
-                    ),
-                  );
-                }
-
-                // Show regular group cards
-                final group = regularGroups[regularIndex];
-                return _buildAnimatedCard(
-                  animation: animation,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: _buildGroupCard(group),
-                  ),
-                );
-              },
-              childCount: (_localGroups.where((g) => g.pinned).isNotEmpty ? 1 : 0) +
-                  _localGroups.where((g) => !g.pinned).length +
-                  1,
+        if (pinnedGroup != null && index == 0) {
+          return _buildAnimatedCard(
+            animation: animation,
+            child: _PinnedGroupCard(
+              group: pinnedGroup,
+              localizations: widget.localizations,
+              theme: widget.theme,
+              onGroupUpdated: () => _handleGroupUpdated(pinnedGroup!.id),
+              onCategoryAdded: _handleCategoryAdded,
             ),
+          );
+        }
+
+        final regularIndex = pinnedGroup != null ? index - 1 : index;
+
+        if (regularIndex == regularGroups.length) {
+          return _buildAnimatedCard(
+            animation: animation,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: NewGroupCard(
+                localizations: widget.localizations,
+                theme: widget.theme,
+                onGroupAdded: _handleGroupUpdated,
+                isSelected: true,
+                selectionProgress: 1.0,
+              ),
+            ),
+          );
+        }
+
+        final group = regularGroups[regularIndex];
+        return _buildAnimatedCard(
+          animation: animation,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: _buildGroupCard(group),
           ),
-        ),
-      ],
+        );
+      },
     );
   }
 
@@ -285,19 +276,13 @@ class _PinnedGroupCardState extends State<_PinnedGroupCard>
       duration: const Duration(milliseconds: 2000),
     );
 
-    _pulseAnimation = TweenSequence<double>([
-      TweenSequenceItem(
-        tween: Tween(begin: 1.0, end: 1.02),
-        weight: 50,
-      ),
-      TweenSequenceItem(
-        tween: Tween(begin: 1.02, end: 1.0),
-        weight: 50,
-      ),
-    ]).animate(CurvedAnimation(
-      parent: _pulseController,
-      curve: Curves.easeInOut,
-    ));
+    _pulseAnimation =
+        TweenSequence<double>([
+          TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.02), weight: 50),
+          TweenSequenceItem(tween: Tween(begin: 1.02, end: 1.0), weight: 50),
+        ]).animate(
+          CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+        );
 
     _pulseController.repeat();
   }
@@ -322,7 +307,9 @@ class _PinnedGroupCardState extends State<_PinnedGroupCard>
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: widget.theme.colorScheme.primary.withValues(alpha: 0.3),
+                    color: widget.theme.colorScheme.primary.withValues(
+                      alpha: 0.3,
+                    ),
                     blurRadius: 12,
                     spreadRadius: 2,
                   ),
