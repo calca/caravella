@@ -96,10 +96,12 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
         if (mounted) {
           final userNameNotifier = context.read<UserNameNotifier>();
           if (userNameNotifier.hasName) {
-            _state.addParticipant(ExpenseParticipant(
-              id: DateTime.now().millisecondsSinceEpoch.toString(),
-              name: userNameNotifier.name,
-            ));
+            _state.addParticipant(
+              ExpenseParticipant(
+                id: DateTime.now().millisecondsSinceEpoch.toString(),
+                name: userNameNotifier.name,
+              ),
+            );
           }
         }
       });
@@ -115,8 +117,12 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
         ? (_state.startDate ?? now)
         : (_state.endDate ?? now);
     bool isSelectable(DateTime d) {
-      if (isStart && _state.endDate != null) return !d.isAfter(_state.endDate!);
-      if (!isStart && _state.startDate != null) return !d.isBefore(_state.startDate!);
+      if (isStart && _state.endDate != null) {
+        return !d.isAfter(_state.endDate!);
+      }
+      if (!isStart && _state.startDate != null) {
+        return !d.isBefore(_state.startDate!);
+      }
       return true;
     }
 
@@ -153,6 +159,11 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
       _validateDates();
     }
     return picked;
+  }
+
+  void _clearDates() {
+    _state.clearDates();
+    _validateDates();
   }
 
   void _validateDates() {
@@ -211,7 +222,9 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
             );
             if (confirm == true && context.mounted) {
               final navigator = Navigator.of(context);
-              if (navigator.canPop()) navigator.pop(false);
+              if (navigator.canPop()) {
+                navigator.pop(false);
+              }
             }
           }
         },
@@ -261,19 +274,6 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                                     )
                                   : const SizedBox.shrink(),
                             ),
-                            if (_dateError != null)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
-                                child: Text(
-                                  _dateError!,
-                                  style: AppTextStyles.listItem(context)
-                                      ?.copyWith(
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.error,
-                                      ),
-                                ),
-                              ),
                           ],
                         ),
                         const SizedBox(height: 24),
@@ -284,6 +284,8 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                         PeriodSectionEditor(
                           onPickDate: (isStart) async =>
                               _pickDate(context, isStart),
+                          onClearDates: _clearDates,
+                          errorText: _dateError,
                         ),
                         const SizedBox(height: 24),
                         SectionFlat(
