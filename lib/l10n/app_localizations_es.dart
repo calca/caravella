@@ -1579,6 +1579,13 @@ class AppLocalizationsEs extends AppLocalizations {
       'Descubre las últimas características y actualizaciones';
 
   @override
+  String get whats_new_subtitle => 'Lo más destacado reciente';
+
+  @override
+  String get whats_new_latest =>
+      'Mantente al día con las mejoras más recientes';
+
+  @override
   String get average_per_person => 'Promedio por persona';
 
   @override
