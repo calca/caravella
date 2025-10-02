@@ -4,6 +4,7 @@ import '../../../data/model/expense_group.dart';
 import '../../../data/expense_group_storage_v2.dart';
 import 'group_card.dart';
 import 'new_group_card.dart';
+import 'page_indicator.dart';
 
 class HorizontalGroupsList extends StatefulWidget {
   final List<ExpenseGroup> groups;
@@ -100,56 +101,71 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList> {
     // Total items include all groups plus the new group card
     final totalItems = _localGroups.length + 1;
 
-    return PageView.builder(
-      itemCount: totalItems,
-      padEnds: false,
-      controller: _pageController,
-      itemBuilder: (context, index) {
-        // Calcola quanto questa card è vicina al centro
-        final double distanceFromCenter = (index - _currentPage).abs();
-        final bool isSelected = distanceFromCenter < 0.5;
+    return Column(
+      children: [
+        // Main PageView slider
+        Expanded(
+          child: PageView.builder(
+            itemCount: totalItems,
+            padEnds: false,
+            controller: _pageController,
+            itemBuilder: (context, index) {
+              // Calcola quanto questa card è vicina al centro
+              final double distanceFromCenter = (index - _currentPage).abs();
+              final bool isSelected = distanceFromCenter < 0.5;
 
-        // If this is the last index, show the new group card
-        if (index == _localGroups.length) {
-          return AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-            margin: EdgeInsets.only(
-              right: 16,
-              top: isSelected ? 0 : 8,
-              bottom: isSelected ? 0 : 8,
-            ),
-            child: NewGroupCard(
-              localizations: widget.localizations,
-              theme: widget.theme,
-              onGroupAdded: _handleGroupUpdated,
-              isSelected: isSelected,
-              selectionProgress: 1.0 - distanceFromCenter.clamp(0.0, 1.0),
-            ),
-          );
-        }
+              // If this is the last index, show the new group card
+              if (index == _localGroups.length) {
+                return AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                  margin: EdgeInsets.only(
+                    right: 16,
+                    top: isSelected ? 0 : 8,
+                    bottom: isSelected ? 0 : 8,
+                  ),
+                  child: NewGroupCard(
+                    localizations: widget.localizations,
+                    theme: widget.theme,
+                    onGroupAdded: _handleGroupUpdated,
+                    isSelected: isSelected,
+                    selectionProgress: 1.0 - distanceFromCenter.clamp(0.0, 1.0),
+                  ),
+                );
+              }
 
-        // Otherwise show a regular group card
-        final group = _localGroups[index];
-        return AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-          margin: EdgeInsets.only(
-            right: 16,
-            top: isSelected ? 0 : 8,
-            bottom: isSelected ? 0 : 8,
+              // Otherwise show a regular group card
+              final group = _localGroups[index];
+              return AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                margin: EdgeInsets.only(
+                  right: 16,
+                  top: isSelected ? 0 : 8,
+                  bottom: isSelected ? 0 : 8,
+                ),
+                child: GroupCard(
+                  group: group,
+                  localizations: widget.localizations,
+                  theme: widget.theme,
+                  onGroupUpdated: () => _handleGroupUpdated(group.id),
+                  onCategoryAdded: _handleCategoryAdded,
+                  isSelected: isSelected,
+                  selectionProgress: 1.0 - distanceFromCenter.clamp(0.0, 1.0),
+                ),
+              );
+            },
           ),
-          child: GroupCard(
-            group: group,
-            localizations: widget.localizations,
-            theme: widget.theme,
-            onGroupUpdated: () => _handleGroupUpdated(group.id),
-            onCategoryAdded: _handleCategoryAdded,
-            isSelected: isSelected,
-            selectionProgress: 1.0 - distanceFromCenter.clamp(0.0, 1.0),
+        ),
+        // Page indicator
+        Padding(
+          padding: const EdgeInsets.only(top: 12, bottom: 8),
+          child: PageIndicator(
+            itemCount: totalItems,
+            currentPage: _currentPage,
           ),
-        );
-      },
+        ),
+      ],
     );
   }
 }
