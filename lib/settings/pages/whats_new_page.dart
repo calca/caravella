@@ -68,10 +68,7 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
 
-    return Scaffold(
-      appBar: const CaravellaAppBar(),
-      body: _buildBody(loc),
-    );
+    return Scaffold(appBar: const CaravellaAppBar(), body: _buildBody(loc));
   }
 
   Widget _buildBody(gen.AppLocalizations loc) {
@@ -107,7 +104,7 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
 
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     return ListView(
       padding: EdgeInsets.fromLTRB(
         0,
@@ -122,7 +119,7 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
           description: loc.whats_new_desc,
           padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
         ),
-        
+
         // Decorative card with icon
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -175,7 +172,7 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
             ),
           ),
         ),
-        
+
         // Changelog content in a card
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -194,7 +191,7 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
       ],
     );
   }
-  
+
   Widget _buildMarkdownContent(ThemeData theme) {
     final mdTheme = GptMarkdownThemeData(
       brightness: theme.brightness,
