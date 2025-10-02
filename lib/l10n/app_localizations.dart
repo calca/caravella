@@ -1322,6 +1322,12 @@ abstract class AppLocalizations {
   /// **'Group added'**
   String get group_added_success;
 
+  /// Toast shown after deleting an expense group
+  ///
+  /// In en, this message translates to:
+  /// **'Group deleted'**
+  String get group_deleted_success;
+
   /// No description provided for @csv_select_directory_title.
   ///
   /// In en, this message translates to:
@@ -3127,6 +3133,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Discover the latest features and updates'**
   String get whats_new_desc;
+
+  /// Card headline describing the what's new section
+  ///
+  /// In en, this message translates to:
+  /// **'Latest highlights'**
+  String get whats_new_subtitle;
+
+  /// Support text explaining that the content lists the most recent updates
+  ///
+  /// In en, this message translates to:
+  /// **'Stay up to date with recent improvements'**
+  String get whats_new_latest;
 
   /// Label shown before the computed average spent per person in the Participants tab
   ///

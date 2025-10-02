@@ -231,6 +231,9 @@
   "expense_added_success": "Despesa adicionada",
   "data_refreshing": "Atualizando…",
   "refresh": "Atualizar",
+  "group_added_success": "Grupo adicionado",
+  "group_deleted_success": "Grupo excluído",
+  "@group_deleted_success": {"description": "Mensagem exibida após excluir um grupo de despesas"},
   "csv_select_directory_title": "Selecione a pasta para salvar o CSV",
   "csv_save_cancelled": "Exportação cancelada",
   "ofx_select_directory_title": "Selecione a pasta para salvar o OFX",
@@ -486,6 +489,10 @@
   ,"@whats_new_title": {"description": "Título da página que mostra o changelog"}
   ,"whats_new_desc": "Descubra os recursos e atualizações mais recentes"
   ,"@whats_new_desc": {"description": "Subtítulo da página novidades"}
+  ,"whats_new_subtitle": "Destaques recentes"
+  ,"@whats_new_subtitle": {"description": "Subtítulo no cartão de cabeçalho da página de novidades"}
+  ,"whats_new_latest": "Fique por dentro das melhorias mais recentes"
+  ,"@whats_new_latest": {"description": "Texto descritivo no cartão de cabeçalho da página de novidades"}
   ,"average_per_person": "Média por pessoa"
   ,"@average_per_person": {"description": "Rótulo mostrado antes da média gasta por pessoa na aba Participantes"}
   ,"more": "mais"

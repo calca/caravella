@@ -168,6 +168,8 @@
   "most_expensive": "最贵支出",
   "refresh": "刷新",
   "group_added_success": "群组已添加",
+  "group_deleted_success": "群组已删除",
+  "@group_deleted_success": {"description": "删除费用群组后的提示信息"},
   "csv_select_directory_title": "选择保存 CSV 的文件夹",
   "csv_saved_in": "CSV 已保存在：{path}",
   "csv_save_cancelled": "导出已取消",
@@ -356,6 +358,10 @@
   ,"@whats_new_title": {"description": "显示更新日志页面的标题"}
   ,"whats_new_desc": "了解最新功能和更新"
   ,"@whats_new_desc": {"description": "新功能页面的副标题"}
+  ,"whats_new_subtitle": "最新亮点"
+  ,"@whats_new_subtitle": {"description": "新功能页面标题卡中的副标题"}
+  ,"whats_new_latest": "随时掌握最新改进"
+  ,"@whats_new_latest": {"description": "新功能页面标题卡中的描述文字"}
   ,"average_per_person": "人均支出"
   ,"@average_per_person": {"description": "参与者标签页中显示的人均支出标签"}
   ,"more": "更多"

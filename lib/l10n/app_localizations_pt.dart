@@ -638,7 +638,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get refresh => 'Atualizar';
 
   @override
-  String get group_added_success => 'Group added';
+  String get group_added_success => 'Grupo adicionado';
+
+  @override
+  String get group_deleted_success => 'Grupo excluído';
 
   @override
   String get csv_select_directory_title =>
@@ -1568,6 +1571,12 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get whats_new_desc =>
       'Descubra os recursos e atualizações mais recentes';
+
+  @override
+  String get whats_new_subtitle => 'Destaques recentes';
+
+  @override
+  String get whats_new_latest => 'Fique por dentro das melhorias mais recentes';
 
   @override
   String get average_per_person => 'Média por pessoa';
