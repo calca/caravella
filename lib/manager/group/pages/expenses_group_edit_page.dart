@@ -116,6 +116,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
         : (_state.endDate ?? now);
     bool isSelectable(DateTime d) {
       if (isStart && _state.endDate != null) return !d.isAfter(_state.endDate!);
+      if (!isStart && _state.startDate != null) return !d.isBefore(_state.startDate!);
       return true;
     }
 
