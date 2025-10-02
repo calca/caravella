@@ -168,6 +168,8 @@
   "most_expensive": "最贵支出",
   "refresh": "刷新",
   "group_added_success": "群组已添加",
+  "group_deleted_success": "群组已删除",
+  "@group_deleted_success": {"description": "删除费用群组后的提示信息"},
   "csv_select_directory_title": "选择保存 CSV 的文件夹",
   "csv_saved_in": "CSV 已保存在：{path}",
   "csv_save_cancelled": "导出已取消",

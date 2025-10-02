@@ -10,6 +10,7 @@ class HorizontalGroupsList extends StatefulWidget {
   final gen.AppLocalizations localizations;
   final ThemeData theme;
   final VoidCallback onGroupUpdated;
+  final VoidCallback onGroupAdded;
   final VoidCallback? onCategoryAdded;
 
   const HorizontalGroupsList({
@@ -18,6 +19,7 @@ class HorizontalGroupsList extends StatefulWidget {
     required this.localizations,
     required this.theme,
     required this.onGroupUpdated,
+    required this.onGroupAdded,
     this.onCategoryAdded,
   });
 
@@ -78,7 +80,7 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList> {
     if (groupId != null) {
       _updateGroupLocally(groupId);
     } else {
-      widget.onGroupUpdated();
+      widget.onGroupAdded();
     }
   }
 

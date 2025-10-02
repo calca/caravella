@@ -73,7 +73,6 @@
     "paid_by",
     "expense_updated_success",
     "data_refreshed",
-    "group_added_success",
     "csv_saved_in",
     "csv_save_error",
     "ofx_saved_in",

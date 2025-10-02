@@ -225,6 +225,8 @@
   "data_refreshed": "Updated",
   "refresh": "Refresh",
   "group_added_success": "Group added",
+  "group_deleted_success": "Group deleted",
+  "@group_deleted_success": {"description": "Toast shown after deleting an expense group"},
   "csv_select_directory_title": "Select folder to save CSV",
   "csv_saved_in": "CSV saved in: {path}",
   "csv_save_cancelled": "Export cancelled",

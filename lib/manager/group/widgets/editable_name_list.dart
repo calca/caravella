@@ -24,6 +24,7 @@ class EditableNameList extends StatefulWidget {
   final IconData itemIcon;
   final Color? borderColor;
   final String? description;
+  final bool showEmptyHint;
 
   const EditableNameList({
     super.key,
@@ -44,6 +45,7 @@ class EditableNameList extends StatefulWidget {
     this.itemIcon = Icons.label_outline,
     this.borderColor,
     this.description,
+    this.showEmptyHint = false,
   });
 
   @override
@@ -270,6 +272,7 @@ class _EditableNameListState extends State<EditableNameList> {
           title: widget.title,
           description: widget.description,
           requiredMark: widget.requiredMark,
+          showRequiredHint: widget.showEmptyHint && widget.items.isEmpty,
           padding: EdgeInsets.zero,
           spacing: 4,
         ),

@@ -639,6 +639,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get group_added_success => '群组已添加';
 
   @override
+  String get group_deleted_success => '群组已删除';
+
+  @override
   String get csv_select_directory_title => '选择保存 CSV 的文件夹';
 
   @override
