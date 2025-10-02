@@ -116,7 +116,16 @@ class _HomePageState extends State<HomePage> with RouteAware {
     });
   }
 
-  void _refresh() => _loadLocaleAndTrip();
+  /// Soft refresh that only updates the pinned trip without showing loading state
+  Future<void> _softRefresh() async {
+    final pinnedTrip = await ExpenseGroupStorageV2.getPinnedTrip();
+    if (!mounted) return;
+    setState(() {
+      _pinnedTrip = pinnedTrip;
+    });
+  }
+
+  void _refresh() => _softRefresh();
 
   Future<void> _handleUserRefresh() async {
     if (_refreshing) return;
