@@ -6,6 +6,7 @@ class DateCard extends StatelessWidget {
   final DateTime? date;
   final bool isActive;
   final IconData? icon;
+  final bool isEnabled;
 
   const DateCard({
     super.key,
@@ -14,80 +15,87 @@ class DateCard extends StatelessWidget {
     required this.date,
     required this.isActive,
     this.icon,
+    this.isEnabled = true,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 2.0),
-      child: SizedBox(
-        height: 64,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              alignment: Alignment.center,
-              child: icon != null
-                  ? Icon(icon, size: 32)
-                  : Text(
-                      day != null ? day.toString() : '--',
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: date == null
-                  ? Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        label,
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          color: theme.colorScheme.onSurface
-                              .withValues(alpha: 0.7),
-                          fontWeight: FontWeight.w500,
+    final foregroundColor = theme.colorScheme.onSurface;
+    final secondaryColor = foregroundColor.withValues(alpha: 0.7);
+    return Opacity(
+      opacity: isEnabled ? 1 : 0.5,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 2.0),
+        child: SizedBox(
+          height: 64,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                alignment: Alignment.center,
+                child: icon != null
+                    ? Icon(icon, size: 32)
+                    : Text(
+                        day != null ? day.toString() : '--',
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    )
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: date == null
+                    ? Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
                           label,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface
-                                .withValues(alpha: 0.7),
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            color: secondaryColor,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        SizedBox(
-                          height: 24,
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              _formatDate(date!),
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                color: theme.colorScheme.onSurface,
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            label,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: secondaryColor,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 24,
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                _formatDate(date!),
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  color: foregroundColor,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-            ),
-            const SizedBox(width: 8),
-            Icon(Icons.chevron_right,
-                size: 24, color: theme.colorScheme.outline),
-          ],
+                        ],
+                      ),
+              ),
+              const SizedBox(width: 8),
+              Icon(
+                Icons.chevron_right,
+                size: 24,
+                color: theme.colorScheme.outline,
+              ),
+            ],
+          ),
         ),
       ),
     );
