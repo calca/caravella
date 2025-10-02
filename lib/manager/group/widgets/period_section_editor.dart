@@ -25,6 +25,10 @@ class PeriodSectionEditor extends StatelessWidget {
       },
       onClearDates: () => state.clearDates(),
       description: gen.AppLocalizations.of(context).dates_description,
+      // New callback for date range changes
+      onDateRangeChanged: (startDate, endDate) {
+        state.setDates(start: startDate, end: endDate);
+      },
     );
   }
 }
