@@ -9,6 +9,7 @@ class ExpenseFormActionsWidget extends StatelessWidget {
   final bool
   showExpandButton; // When true shows an expand button (only in add/compact mode)
   final VoidCallback? onExpand;
+  final VoidCallback? onScanReceipt; // New: scan receipt with OCR
 
   const ExpenseFormActionsWidget({
     super.key,
@@ -18,6 +19,7 @@ class ExpenseFormActionsWidget extends StatelessWidget {
     this.textStyle,
     this.showExpandButton = false,
     this.onExpand,
+    this.onScanReceipt,
   });
 
   @override
@@ -26,6 +28,23 @@ class ExpenseFormActionsWidget extends StatelessWidget {
     final saveLabel = gloc.save_change_expense;
     final colorScheme = Theme.of(context).colorScheme;
     final leftButtons = <Widget>[];
+    
+    // Add scan receipt button (only in add mode, not edit mode)
+    if (!isEdit && onScanReceipt != null) {
+      leftButtons.add(
+        IconButton(
+          tooltip: gloc.scan_receipt,
+          onPressed: onScanReceipt,
+          icon: const Icon(Icons.document_scanner_outlined, size: 24),
+          style: IconButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            minimumSize: const Size(48, 48),
+            padding: EdgeInsets.zero,
+          ),
+        ),
+      );
+    }
+    
     if (showExpandButton && onExpand != null) {
       leftButtons.add(
         IconButton(
