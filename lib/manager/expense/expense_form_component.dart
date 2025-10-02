@@ -17,6 +17,7 @@ import 'expense_form/location_input_widget.dart';
 import 'expense_form/expense_form_actions_widget.dart';
 import 'expense_form/category_dialog.dart';
 import '../../themes/form_theme.dart';
+import '../../data/services/preferences_service.dart';
 
 class ExpenseFormComponent extends StatefulWidget {
   // When true shows date, location and note fields (full edit mode). In edit mode (initialExpense != null) these are always shown.
@@ -92,6 +93,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
 
   // Stato per espansione del form (solo quando fullEdit è false inizialmente)
   bool _isExpanded = false;
+
+  // Auto location preference
+  bool _autoLocationEnabled = false;
 
   // Getters per stato dei campi
   bool get _isAmountValid => _amount != null && _amount! > 0;
@@ -209,6 +213,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _categories = List.from(widget.categories); // Copia della lista originale
+    _loadAutoLocationPreference();
     if (widget.initialExpense != null) {
       _category = widget.categories.firstWhere(
         (c) => c.id == widget.initialExpense!.category.id,
@@ -306,6 +311,15 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializing = false;
     });
+  }
+
+  Future<void> _loadAutoLocationPreference() async {
+    final enabled = await PreferencesService.getAutoLocationEnabled();
+    if (mounted) {
+      setState(() {
+        _autoLocationEnabled = enabled;
+      });
+    }
   }
 
   double? _parseLocalizedAmount(String input) {
@@ -753,6 +767,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
               }
             }),
             externalFocusNode: _locationFocus,
+            autoRetrieve: widget.initialExpense == null && _autoLocationEnabled,
           ),
         ),
         _spacer(),
