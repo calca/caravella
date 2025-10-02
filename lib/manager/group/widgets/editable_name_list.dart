@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../themes/app_text_styles.dart';
+import '../../../widgets/app_toast.dart';
 import 'section_header.dart';
 
 /// Generic inline editable list for simple name-based items (participants, categories, etc.).
@@ -23,6 +24,7 @@ class EditableNameList extends StatefulWidget {
   final IconData itemIcon;
   final Color? borderColor;
   final String? description;
+  final bool showEmptyHint;
 
   const EditableNameList({
     super.key,
@@ -43,6 +45,7 @@ class EditableNameList extends StatefulWidget {
     this.itemIcon = Icons.label_outline,
     this.borderColor,
     this.description,
+    this.showEmptyHint = false,
   });
 
   @override
@@ -79,6 +82,7 @@ class _EditableNameListState extends State<EditableNameList> {
 
   void _cancelEdit() {
     setState(() => _editingIndex = null);
+    FocusScope.of(context).unfocus();
   }
 
   void _saveEdit() {
@@ -88,13 +92,12 @@ class _EditableNameListState extends State<EditableNameList> {
     final lower = val.toLowerCase();
     final unchanged = val == widget.items[_editingIndex!];
     if (!unchanged && widget.items.any((e) => e.toLowerCase() == lower)) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(widget.duplicateError)));
+      AppToast.show(context, widget.duplicateError, type: ToastType.info);
       return;
     }
     widget.onEdit(_editingIndex!, val);
     setState(() => _editingIndex = null);
+    FocusScope.of(context).unfocus();
   }
 
   void _startAdd() {
@@ -110,6 +113,7 @@ class _EditableNameListState extends State<EditableNameList> {
 
   void _cancelAdd() {
     setState(() => _adding = false);
+    FocusScope.of(context).unfocus();
   }
 
   void _commitAdd() {
@@ -117,9 +121,7 @@ class _EditableNameListState extends State<EditableNameList> {
     if (val.isEmpty) return;
     final lower = val.toLowerCase();
     if (widget.items.any((e) => e.toLowerCase() == lower)) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(widget.duplicateError)));
+      AppToast.show(context, widget.duplicateError, type: ToastType.info);
       return;
     }
     widget.onAdd(val);
@@ -127,6 +129,7 @@ class _EditableNameListState extends State<EditableNameList> {
       _adding = false;
       _addController.clear();
     });
+    FocusScope.of(context).unfocus();
   }
 
   Widget _buildStaticRow(int index, String name) {
@@ -269,6 +272,7 @@ class _EditableNameListState extends State<EditableNameList> {
           title: widget.title,
           description: widget.description,
           requiredMark: widget.requiredMark,
+          showRequiredHint: widget.showEmptyHint && widget.items.isEmpty,
           padding: EdgeInsets.zero,
           spacing: 4,
         ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
-import '../../data/expense_group_storage.dart';
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import '../../data/expense_group_storage_v2.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:archive/archive_io.dart';
@@ -200,7 +200,7 @@ class DataBackupPage extends StatelessWidget {
   ) async {
     try {
       final dir = await getApplicationDocumentsDirectory();
-      final tripsFile = File('${dir.path}/${ExpenseGroupStorage.fileName}');
+      final tripsFile = File('${dir.path}/${ExpenseGroupStorageV2.fileName}');
 
       if (!await tripsFile.exists()) {
         if (!context.mounted) return;
@@ -225,7 +225,7 @@ class DataBackupPage extends StatelessWidget {
       final archive = Archive();
       final fileBytes = await tripsFile.readAsBytes();
       final archiveFile = ArchiveFile(
-        ExpenseGroupStorage.fileName,
+        ExpenseGroupStorageV2.fileName,
         fileBytes.length,
         fileBytes,
       );
@@ -288,13 +288,15 @@ class DataBackupPage extends StatelessWidget {
       if (confirm == true) {
         try {
           final dir = await getApplicationDocumentsDirectory();
-          final destFile = File('${dir.path}/${ExpenseGroupStorage.fileName}');
+          final destFile = File(
+            '${dir.path}/${ExpenseGroupStorageV2.fileName}',
+          );
           if (filePath.endsWith('.zip')) {
             final bytes = await File(filePath).readAsBytes();
             final archive = ZipDecoder().decodeBytes(bytes);
             bool fileFound = false;
             for (final file in archive) {
-              if (file.name == ExpenseGroupStorage.fileName) {
+              if (file.name == ExpenseGroupStorageV2.fileName) {
                 await destFile.writeAsBytes(file.content as List<int>);
                 fileFound = true;
                 break;

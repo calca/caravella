@@ -8,7 +8,7 @@ import UIKit
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     let controller: FlutterViewController = window?.rootViewController as! FlutterViewController
-    let backupChannel = FlutterMethodChannel(name: "org.app.caravella/backup",
+    let backupChannel = FlutterMethodChannel(name: "io.caravella.egm/backup",
                                             binaryMessenger: controller.binaryMessenger)
     
     backupChannel.setMethodCallHandler({
@@ -37,7 +37,7 @@ import UIKit
   private func setBackupExcluded(excluded: Bool, result: @escaping FlutterResult) {
       do {
           let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
-          let documentsURL = URL(fileURLWithPath: documentsPath)
+          var documentsURL = URL(fileURLWithPath: documentsPath)
           
           var resourceValues = URLResourceValues()
           resourceValues.isExcludedFromBackup = excluded

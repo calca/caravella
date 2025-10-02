@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import '../../widgets/caravella_app_bar.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart'
+import 'package:io_caravella_egm/l10n/app_localizations.dart'
     as gen; // generated strongly-typed
 import '../../state/locale_notifier.dart';
 import '../../state/theme_mode_notifier.dart';
 import '../flag_secure_notifier.dart';
+import '../user_name_notifier.dart';
 
 import '../flag_secure_android.dart';
 import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'developer_page.dart';
 import 'data_backup_page.dart';
+import 'whats_new_page.dart';
 import '../../widgets/bottom_sheet_scaffold.dart';
-import '../../manager/group/widgets/section_header.dart';
+import '../../settings/widgets/settings_card.dart';
+import '../../settings/widgets/settings_section.dart';
 
 class SettingsPage extends StatelessWidget {
   final void Function(String)? onLocaleChanged;
@@ -22,12 +25,8 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<FlagSecureNotifier>(
-          create: (_) => FlagSecureNotifier(),
-        ),
-      ],
+    return ChangeNotifierProvider<FlagSecureNotifier>(
+      create: (_) => FlagSecureNotifier(),
       child: Scaffold(
         appBar: const CaravellaAppBar(),
         body: ListView(
@@ -54,88 +53,78 @@ class SettingsPage extends StatelessWidget {
     gen.AppLocalizations loc,
     String locale,
   ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    return SettingsSection(
+      title: loc.settings_general,
+      description: loc.settings_general_desc,
       children: [
-        SectionHeader(
-          title: loc.settings_general,
-          description: loc.settings_general_desc,
-          padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Column(
-            children: [
-              _buildLanguageRow(context, loc, locale),
-              const SizedBox(height: 8),
-              _buildThemeRow(context, loc),
-            ],
-          ),
-        ),
+        _buildUserNameRow(context, loc),
+        const SizedBox(height: 8),
+        _buildLanguageRow(context, loc, locale),
+        const SizedBox(height: 8),
+        _buildThemeRow(context, loc),
       ],
     );
   }
 
   Widget _buildPrivacySection(BuildContext context, gen.AppLocalizations loc) {
     final isAndroid = Theme.of(context).platform == TargetPlatform.android;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        SectionHeader(
-          title: loc.settings_privacy,
-          description: loc.settings_privacy_desc,
-          padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-        ),
-        if (isAndroid)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Column(children: [_buildFlagSecureRow(context, loc)]),
-          ),
-      ],
+    return SettingsSection(
+      title: loc.settings_privacy,
+      description: loc.settings_privacy_desc,
+      children: [if (isAndroid) _buildFlagSecureRow(context, loc)],
     );
   }
 
   Widget _buildDataSection(BuildContext context, gen.AppLocalizations loc) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        SectionHeader(
-          title: loc.settings_data,
-          description: loc.settings_data_desc,
-          padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Column(children: [_buildDataManageRow(context, loc)]),
-        ),
-      ],
+    return SettingsSection(
+      title: loc.settings_data,
+      description: loc.settings_data_desc,
+      children: [_buildDataManageRow(context, loc)],
     );
   }
 
   Widget _buildInfoSection(BuildContext context, gen.AppLocalizations loc) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    return SettingsSection(
+      title: loc.settings_info,
+      description: loc.settings_info_desc,
       children: [
-        SectionHeader(
-          title: loc.settings_info,
-          description: loc.settings_info_desc,
-          padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Column(
-            children: [
-              _buildInfoCardRow(context, loc),
-              const SizedBox(height: 8),
-              _buildAppVersionRow(context, loc),
-            ],
-          ),
-        ),
+        _buildInfoCardRow(context, loc),
+        const SizedBox(height: 8),
+        _buildAppVersionRow(context, loc),
       ],
     );
   }
 
   // ROW BUILDERS -----------------------------------------------------------
+  Widget _buildUserNameRow(BuildContext context, gen.AppLocalizations loc) {
+    return Consumer<UserNameNotifier>(
+      builder: (context, userNameNotifier, child) {
+        final textTheme = Theme.of(context).textTheme;
+        final colorScheme = Theme.of(context).colorScheme;
+        
+        return SettingsCard(
+          context: context,
+          semanticsButton: true,
+          semanticsLabel: loc.settings_user_name_title,
+          semanticsHint: 'Double tap to enter your name',
+          color: colorScheme.surface,
+          child: ListTile(
+            leading: const Icon(Icons.person_outline),
+            title: Text(loc.settings_user_name_title, style: textTheme.titleMedium),
+            subtitle: Text(
+              userNameNotifier.hasName 
+                ? userNameNotifier.name 
+                : loc.settings_user_name_desc,
+              style: textTheme.bodySmall
+            ),
+            trailing: const Icon(Icons.edit),
+            onTap: () => _showNameDialog(context, loc, userNameNotifier),
+          ),
+        );
+      },
+    );
+  }
+
   Widget _buildLanguageRow(
     BuildContext context,
     gen.AppLocalizations loc,
@@ -144,11 +133,12 @@ class SettingsPage extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
     final label = _getLanguageLabel(locale, loc);
-    return _buildSettingCard(
+    return SettingsCard(
       context: context,
       semanticsButton: true,
       semanticsLabel: '${loc.settings_language} - Current: $label',
       semanticsHint: 'Double tap to change language',
+      color: colorScheme.surface,
       child: ListTile(
         leading: const Icon(Icons.language),
         title: Text(loc.settings_language, style: textTheme.titleMedium),
@@ -156,7 +146,6 @@ class SettingsPage extends StatelessWidget {
         trailing: const Icon(Icons.arrow_drop_down),
         onTap: () => _showLanguagePicker(context, locale, loc),
       ),
-      color: colorScheme.surface,
     );
   }
 
@@ -170,11 +159,12 @@ class SettingsPage extends StatelessWidget {
       ThemeMode.dark => loc.theme_dark,
       ThemeMode.system => loc.theme_automatic,
     };
-    return _buildSettingCard(
+    return SettingsCard(
       context: context,
       semanticsButton: true,
       semanticsLabel: '${loc.settings_theme} - Current: $label',
       semanticsHint: 'Double tap to change theme',
+      color: colorScheme.surface,
       child: ListTile(
         leading: const Icon(Icons.brightness_6),
         title: Text(loc.settings_theme, style: textTheme.titleMedium),
@@ -182,15 +172,15 @@ class SettingsPage extends StatelessWidget {
         trailing: const Icon(Icons.arrow_drop_down),
         onTap: () => _showThemePicker(context, loc),
       ),
-      color: colorScheme.surface,
     );
   }
 
   Widget _buildFlagSecureRow(BuildContext context, gen.AppLocalizations loc) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
-    return _buildSettingCard(
+    return SettingsCard(
       context: context,
+      color: colorScheme.surface,
       child: Consumer<FlagSecureNotifier>(
         builder: (context, notifier, _) => Semantics(
           toggled: notifier.enabled,
@@ -226,15 +216,15 @@ class SettingsPage extends StatelessWidget {
           ),
         ),
       ),
-      color: colorScheme.surface,
     );
   }
 
   Widget _buildDataManageRow(BuildContext context, gen.AppLocalizations loc) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
-    return _buildSettingCard(
+    return SettingsCard(
       context: context,
+      color: colorScheme.surface,
       child: ListTile(
         leading: const Icon(Icons.storage_outlined),
         title: Text(loc.settings_data_manage, style: textTheme.titleMedium),
@@ -244,15 +234,15 @@ class SettingsPage extends StatelessWidget {
           context,
         ).push(MaterialPageRoute(builder: (ctx) => const DataBackupPage())),
       ),
-      color: colorScheme.surface,
     );
   }
 
   Widget _buildAppVersionRow(BuildContext context, gen.AppLocalizations loc) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
-    return _buildSettingCard(
+    return SettingsCard(
       context: context,
+      color: colorScheme.surface,
       child: ListTile(
         leading: const Icon(Icons.info_outline),
         title: Text(loc.settings_app_version, style: textTheme.titleMedium),
@@ -260,16 +250,20 @@ class SettingsPage extends StatelessWidget {
           future: _getAppVersion(),
           builder: (context, snapshot) => Text(snapshot.data ?? '-'),
         ),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+        onTap: () => Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (ctx) => const WhatsNewPage())),
       ),
-      color: colorScheme.surface,
     );
   }
 
   Widget _buildInfoCardRow(BuildContext context, gen.AppLocalizations loc) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
-    return _buildSettingCard(
+    return SettingsCard(
       context: context,
+      color: colorScheme.surface,
       child: ListTile(
         leading: const Icon(Icons.info_outline),
         title: Text(loc.settings_info_card, style: textTheme.titleMedium),
@@ -279,38 +273,11 @@ class SettingsPage extends StatelessWidget {
           context,
         ).push(MaterialPageRoute(builder: (ctx) => const DeveloperPage())),
       ),
-      color: colorScheme.surface,
     );
   }
 
   // GENERIC CARD WRAPPER ---------------------------------------------------
-  Widget _buildSettingCard({
-    required BuildContext context,
-    required Widget child,
-    bool? semanticsButton,
-    String? semanticsLabel,
-    String? semanticsHint,
-    bool? semanticsToggled,
-    Color? color,
-  }) {
-    final shape = RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(16),
-    );
-    final card = Card(elevation: 0, color: color, shape: shape, child: child);
-    if (semanticsButton == true ||
-        semanticsLabel != null ||
-        semanticsHint != null ||
-        semanticsToggled != null) {
-      return Semantics(
-        button: semanticsButton,
-        label: semanticsLabel,
-        hint: semanticsHint,
-        toggled: semanticsToggled,
-        child: card,
-      );
-    }
-    return card;
-  }
+  // ...existing code...
 
   Future<String> _getAppVersion() async {
     try {
@@ -325,8 +292,12 @@ class SettingsPage extends StatelessWidget {
     switch (locale) {
       case 'it':
         return genLoc.settings_language_it;
+      case 'pt':
+        return genLoc.settings_language_pt;
       case 'es':
         return genLoc.settings_language_es;
+      case 'zh':
+        return genLoc.settings_language_zh;
       case 'en':
       default:
         return genLoc.settings_language_en;
@@ -349,6 +320,8 @@ void _showLanguagePicker(
         ('it', loc.settings_language_it),
         ('en', loc.settings_language_en),
         ('es', loc.settings_language_es),
+        ('pt', loc.settings_language_pt),
+        ('zh', loc.settings_language_zh),
       ];
       return GroupBottomSheetScaffold(
         title: loc.settings_select_language,
@@ -440,6 +413,41 @@ void _showThemePicker(BuildContext context, gen.AppLocalizations loc) {
             }),
           ],
         ),
+      );
+    },
+  );
+}
+void _showNameDialog(BuildContext context, gen.AppLocalizations loc, UserNameNotifier userNameNotifier) {
+  final controller = TextEditingController(text: userNameNotifier.name);
+  
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text(loc.settings_user_name_title),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          decoration: InputDecoration(
+            hintText: loc.settings_user_name_hint,
+            border: const OutlineInputBorder(),
+          ),
+          textCapitalization: TextCapitalization.words,
+          maxLength: 50,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(loc.cancel),
+          ),
+          TextButton(
+            onPressed: () {
+              userNameNotifier.setName(controller.text);
+              Navigator.of(context).pop();
+            },
+            child: Text(loc.save),
+          ),
+        ],
       );
     },
   );

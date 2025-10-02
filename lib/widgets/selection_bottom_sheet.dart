@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'bottom_sheet_scaffold.dart';
+import 'app_toast.dart';
 
 /// Generic modal bottom sheet for selecting an item from a list.
 /// Supports inline add-item action shown within the sheet.
@@ -12,6 +13,7 @@ Future<T?> showSelectionBottomSheet<T>({
   gen.AppLocalizations? gloc,
   Future<void> Function(String)? onAddItemInline,
   String? addItemHint,
+  String? sheetTitle,
 }) async {
   final resolved = gloc ?? gen.AppLocalizations.of(context);
   return showModalBottomSheet<T>(
@@ -28,6 +30,7 @@ Future<T?> showSelectionBottomSheet<T>({
       onAddItemInline: onAddItemInline,
       addItemHint: addItemHint,
       gloc: resolved,
+      sheetTitle: sheetTitle,
     ),
   );
 }
@@ -39,6 +42,7 @@ class _SelectionSheet<T> extends StatefulWidget {
   final Future<void> Function(String)? onAddItemInline;
   final String? addItemHint;
   final gen.AppLocalizations gloc;
+  final String? sheetTitle;
   const _SelectionSheet({
     required this.items,
     required this.selected,
@@ -46,6 +50,7 @@ class _SelectionSheet<T> extends StatefulWidget {
     required this.gloc,
     this.onAddItemInline,
     this.addItemHint,
+    this.sheetTitle,
   });
 
   @override
@@ -124,6 +129,9 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
     final val = _inlineController.text.trim();
     if (val.isEmpty || widget.onAddItemInline == null) return;
 
+    // Capture messenger before any async gaps
+    final messenger = ScaffoldMessenger.of(context);
+
     // Check for duplicates (case-insensitive)
     final lower = val.toLowerCase();
     final isDuplicate = widget.items.any(
@@ -131,12 +139,10 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
     );
 
     if (isDuplicate) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            '${widget.gloc.category_name} ${widget.gloc.already_exists}',
-          ),
-        ),
+      AppToast.showFromMessenger(
+        messenger,
+        '${widget.gloc.category_name} ${widget.gloc.already_exists}',
+        type: ToastType.info,
       );
       return;
     }
@@ -150,9 +156,11 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error adding item: $e')));
+        AppToast.showFromMessenger(
+          messenger,
+          'Error adding item: $e',
+          type: ToastType.error,
+        );
       }
     }
   }
@@ -294,7 +302,9 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
         minHeight: screenHeight * 0.3, // Minimum 30% height
       ),
       child: GroupBottomSheetScaffold(
-        title: widget.onAddItemInline != null ? widget.gloc.add : null,
+        title:
+            widget.sheetTitle ??
+            (widget.onAddItemInline != null ? widget.gloc.add : null),
         showHandle: true,
         scrollable: false,
         child: Padding(

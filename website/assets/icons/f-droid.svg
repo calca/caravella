@@ -1,0 +1,9 @@
+<svg width="200" height="59" viewBox="0 0 200 59" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="59" rx="12" fill="#1976D2"/>
+  <circle cx="30" cy="29.5" r="6" fill="white"/>
+  <circle cx="45" cy="29.5" r="6" fill="white"/>
+  <circle cx="30" cy="29.5" r="3" fill="#1976D2"/>
+  <circle cx="45" cy="29.5" r="3" fill="#1976D2"/>
+  <text x="70" y="30" fill="white" font-family="Arial, sans-serif" font-size="12">GET IT FROM</text>
+  <text x="70" y="44" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">F-Droid</text>
+</svg>

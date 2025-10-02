@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:org_app_caravella/themes/form_theme.dart';
-import 'package:org_app_caravella/themes/caravella_themes.dart';
+import 'package:io_caravella_egm/themes/form_theme.dart';
+import 'package:io_caravella_egm/themes/caravella_themes.dart';
 
 void main() {
   group('FormTheme', () {
@@ -12,13 +12,19 @@ void main() {
       expect(FormTheme.iconSpacing, 6.0);
       expect(FormTheme.fieldSpacing, 16.0);
       expect(FormTheme.sectionSpacing, 24.0);
-      
-      expect(FormTheme.standardContentPadding, 
-        const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0));
-      expect(FormTheme.standardIconPadding, 
-        const EdgeInsets.only(top: 8.0, bottom: 8.0, right: 6.0));
-      expect(FormTheme.topAlignedIconPadding, 
-        const EdgeInsets.only(top: 8.0, bottom: 0.0, right: 6.0));
+
+      expect(
+        FormTheme.standardContentPadding,
+        const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
+      );
+      expect(
+        FormTheme.standardIconPadding,
+        const EdgeInsets.only(top: 8.0, bottom: 8.0, right: 6.0),
+      );
+      expect(
+        FormTheme.topAlignedIconPadding,
+        const EdgeInsets.only(top: 8.0, bottom: 0.0, right: 6.0),
+      );
     });
 
     testWidgets('FormTheme text styles work correctly', (tester) async {
@@ -33,12 +39,12 @@ void main() {
                 final amountStyle = FormTheme.getAmountTextStyle(context);
                 final selectStyle = FormTheme.getSelectTextStyle(context);
                 final multilineStyle = FormTheme.getMultilineTextStyle(context);
-                
+
                 expect(fieldStyle, isNotNull);
                 expect(amountStyle, isNotNull);
                 expect(selectStyle, isNotNull);
                 expect(multilineStyle, isNotNull);
-                
+
                 return const Text('Test');
               },
             ),
@@ -75,7 +81,7 @@ void main() {
           ),
         ),
       );
-      
+
       // Verify the widgets render without error
       await tester.pumpAndSettle();
       expect(find.byType(TextField), findsNWidgets(3));

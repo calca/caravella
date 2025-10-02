@@ -1,8 +1,8 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:org_app_caravella/settings/auto_backup_notifier.dart';
-import 'package:org_app_caravella/settings/backup_service.dart';
+import 'package:io_caravella_egm/settings/auto_backup_notifier.dart';
+import 'package:io_caravella_egm/settings/backup_service.dart';
 
 void main() {
   group('AutoBackupNotifier', () {
@@ -16,7 +16,7 @@ void main() {
       // Mock the backup platform channel
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(
-            const MethodChannel('org.app.caravella/backup'),
+            const MethodChannel('io.caravella.egm/backup'),
             (MethodCall methodCall) async {
               switch (methodCall.method) {
                 case 'isBackupEnabled':
@@ -37,7 +37,7 @@ void main() {
     tearDown(() {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(
-            const MethodChannel('org.app.caravella/backup'),
+            const MethodChannel('io.caravella.egm/backup'),
             null,
           );
     });
@@ -64,7 +64,7 @@ void main() {
 
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(
-            const MethodChannel('org.app.caravella/backup'),
+            const MethodChannel('io.caravella.egm/backup'),
             (MethodCall methodCall) async {
               methodCalls.add(methodCall);
               switch (methodCall.method) {
@@ -113,7 +113,7 @@ void main() {
       // Mock platform method failure
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(
-            const MethodChannel('org.app.caravella/backup'),
+            const MethodChannel('io.caravella.egm/backup'),
             (MethodCall methodCall) async {
               throw PlatformException(code: 'ERROR', message: 'Platform error');
             },
