@@ -164,4 +164,10 @@ class PreferencesService {
     final prefs = await _prefs;
     await prefs.setBool(_hasShownInitialRatingKey, shown);
   }
+  
+  /// Clear last rating prompt timestamp (useful for testing)
+  static Future<void> clearLastRatingPrompt() async {
+    final prefs = await _prefs;
+    await prefs.remove(_lastRatingPromptKey);
+  }
 }

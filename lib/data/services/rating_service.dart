@@ -128,8 +128,6 @@ class RatingService {
   static Future<void> resetRatingState() async {
     await PreferencesService.setTotalExpenseCount(0);
     await PreferencesService.setHasShownInitialRating(false);
-    await PreferencesService.remove(
-      'last_rating_prompt', // Use the key directly
-    );
+    await PreferencesService.clearLastRatingPrompt();
   }
 }
