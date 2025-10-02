@@ -26,18 +26,17 @@ class PageIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     // Use theme colors if not specified
-    final activeIndicatorColor = activeColor ?? colorScheme.primary;
-    final inactiveIndicatorColor = 
-        inactiveColor ?? colorScheme.onSurface.withOpacity(0.2);
+    final activeIndicatorColor = activeColor ?? colorScheme.onSurface;
+    final inactiveIndicatorColor = inactiveColor ?? colorScheme.onSurface;
 
     // Calculate which page is currently active (rounded to nearest integer)
     final activePage = currentPage.round();
 
     // Build semantic label for accessibility
-    final String accessibilityLabel = semanticLabel ?? 
-        'Page ${activePage + 1} of $itemCount';
+    final String accessibilityLabel =
+        semanticLabel ?? 'Page ${activePage + 1} of $itemCount';
 
     return Semantics(
       label: accessibilityLabel,
@@ -52,10 +51,12 @@ class PageIndicator extends StatelessWidget {
               // Calculate distance from current page for smooth animation
               final distance = (index - currentPage).abs();
               final isActive = distance < 0.5;
-              
+
               // Animate size and opacity based on distance
               final scale = isActive ? 1.0 : 0.7;
-              final opacity = isActive ? 1.0 : (1.0 - (distance * 0.5)).clamp(0.3, 1.0);
+              final opacity = isActive
+                  ? 0.4
+                  : (0.4 - (distance * 0.4)).clamp(0.1, 0.4).toDouble();
 
               return AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
@@ -66,8 +67,8 @@ class PageIndicator extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: isActive
-                      ? activeIndicatorColor.withOpacity(opacity)
-                      : inactiveIndicatorColor.withOpacity(opacity),
+                      ? activeIndicatorColor.withValues(alpha: opacity)
+                      : inactiveIndicatorColor.withValues(alpha: opacity),
                 ),
               );
             }),
