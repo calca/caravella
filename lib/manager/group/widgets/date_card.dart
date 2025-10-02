@@ -21,12 +21,11 @@ class DateCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final foregroundColor = theme.colorScheme.onSurface;
-    final secondaryColor = foregroundColor.withValues(alpha: 0.7);
-    return Opacity(
-      opacity: isEnabled ? 1 : 0.5,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 2.0),
+    final baseOpacity = isEnabled ? 1.0 : 0.5;
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      child: Opacity(
+        opacity: baseOpacity,
         child: SizedBox(
           height: 64,
           child: Row(
@@ -57,7 +56,9 @@ class DateCard extends StatelessWidget {
                         child: Text(
                           label,
                           style: theme.textTheme.bodyLarge?.copyWith(
-                            color: secondaryColor,
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.7,
+                            ),
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -69,7 +70,9 @@ class DateCard extends StatelessWidget {
                           Text(
                             label,
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: secondaryColor,
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.7,
+                              ),
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -80,7 +83,7 @@ class DateCard extends StatelessWidget {
                               child: Text(
                                 _formatDate(date!),
                                 style: theme.textTheme.titleMedium?.copyWith(
-                                  color: foregroundColor,
+                                  color: theme.colorScheme.onSurface,
                                 ),
                               ),
                             ),

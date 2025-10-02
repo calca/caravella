@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/themes/app_text_styles.dart';
 import 'date_card.dart';
 import 'section_header.dart';
 import '../../../themes/app_text_styles.dart';
@@ -7,9 +8,9 @@ import '../../../themes/app_text_styles.dart';
 class SectionPeriod extends StatelessWidget {
   final DateTime? startDate;
   final DateTime? endDate;
-  final void Function(bool isStart) onPickDate;
-  final VoidCallback onClearDates;
-  final String description;
+  final void Function(bool) onPickDate;
+  final void Function() onClearDates;
+  final String? description;
   final String? errorText;
   final bool isEndDateEnabled;
 
@@ -19,7 +20,7 @@ class SectionPeriod extends StatelessWidget {
     required this.endDate,
     required this.onPickDate,
     required this.onClearDates,
-    required this.description,
+    this.description,
     this.errorText,
     this.isEndDateEnabled = true,
   });
@@ -86,7 +87,23 @@ class SectionPeriod extends StatelessWidget {
           color: Colors.transparent,
           child: InkWell(
             borderRadius: BorderRadius.circular(12),
-            onTap: isEndDateEnabled ? () => handleTap(false) : null,
+            onTap: isEndDateEnabled
+                ? () {
+                    final currentFocus = FocusScope.of(context);
+                    if (!currentFocus.hasPrimaryFocus &&
+                        currentFocus.focusedChild != null) {
+                      currentFocus.unfocus();
+                    }
+                    onPickDate(false);
+                    final focusAfter = FocusScope.of(context);
+                    Future.delayed(const Duration(milliseconds: 10), () {
+                      if (!focusAfter.hasPrimaryFocus &&
+                          focusAfter.focusedChild != null) {
+                        focusAfter.unfocus();
+                      }
+                    });
+                  }
+                : null,
             child: DateCard(
               day: endDate?.day,
               label: gen.AppLocalizations.of(context).to,

@@ -116,7 +116,12 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
         ? (_state.startDate ?? now)
         : (_state.endDate ?? now);
     bool isSelectable(DateTime d) {
-      if (isStart && _state.endDate != null) return !d.isAfter(_state.endDate!);
+      if (isStart && _state.endDate != null) {
+        return !d.isAfter(_state.endDate!);
+      }
+      if (!isStart && _state.startDate != null) {
+        return !d.isBefore(_state.startDate!);
+      }
       return true;
     }
 
@@ -153,6 +158,11 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
       _validateDates();
     }
     return picked;
+  }
+
+  void _clearDates() {
+    _state.clearDates();
+    _validateDates();
   }
 
   void _validateDates() {
@@ -218,7 +228,9 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
             );
             if (confirm == true && context.mounted) {
               final navigator = Navigator.of(context);
-              if (navigator.canPop()) navigator.pop(false);
+              if (navigator.canPop()) {
+                navigator.pop(false);
+              }
             }
           }
         },

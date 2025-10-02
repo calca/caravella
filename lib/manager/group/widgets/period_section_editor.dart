@@ -8,7 +8,6 @@ class PeriodSectionEditor extends StatelessWidget {
   final Future<DateTime?> Function(bool isStart) onPickDate;
   final VoidCallback onClearDates;
   final String? errorText;
-
   const PeriodSectionEditor({
     super.key,
     required this.onPickDate,
