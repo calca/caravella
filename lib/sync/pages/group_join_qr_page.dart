@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../data/services/logger_service.dart';
+import '../../data/expense_group_storage_v2.dart';
 import '../widgets/qr_scanner_widget.dart';
 import '../services/group_sync_coordinator.dart';
+import '../services/revenue_cat_service.dart';
 import '../utils/auth_guard.dart';
-import '../../data/expense_group_storage_v2.dart';
+import '../models/subscription_tier.dart';
 import '../../manager/details/pages/expense_group_detail_page.dart';
+import '../../widgets/toast.dart';
 
 /// Page for joining a group by scanning a QR code
 /// Requires authentication before showing the scanner
@@ -18,8 +21,10 @@ class GroupJoinQrPage extends StatefulWidget {
 
 class _GroupJoinQrPageState extends State<GroupJoinQrPage> {
   final _syncCoordinator = GroupSyncCoordinator();
+  final _revenueCat = RevenueCatService();
   bool _isCheckingAuth = true;
   bool _isAuthenticated = false;
+  SubscriptionStatus? _subscriptionStatus;
 
   @override
   void initState() {
@@ -29,9 +34,21 @@ class _GroupJoinQrPageState extends State<GroupJoinQrPage> {
 
   Future<void> _checkAuthentication() async {
     final authenticated = await AuthGuard.requireAuth(context);
+    
+    // Also check subscription if RevenueCat is configured
+    SubscriptionStatus? status;
+    if (_revenueCat.isConfigured) {
+      try {
+        status = await _revenueCat.getSubscriptionStatus();
+      } catch (e) {
+        LoggerService.error('Failed to check subscription: $e');
+      }
+    }
+    
     if (mounted) {
       setState(() {
         _isAuthenticated = authenticated;
+        _subscriptionStatus = status;
         _isCheckingAuth = false;
       });
       
@@ -44,7 +61,59 @@ class _GroupJoinQrPageState extends State<GroupJoinQrPage> {
 
   Future<void> _onGroupJoined(String groupId) async {
     try {
-      LoggerService.info('Group joined: $groupId, initializing sync...');
+      LoggerService.info('Group joined: $groupId, checking limits...');
+
+      // Check subscription limits if RevenueCat is configured
+      if (_revenueCat.isConfigured && _subscriptionStatus != null) {
+        // Check if subscription is active
+        if (!_subscriptionStatus!.isActive) {
+          if (mounted) {
+            AppToast.show(
+              context,
+              'You need an active subscription to join shared groups.',
+              type: ToastType.error,
+            );
+            Navigator.of(context).pop();
+            return;
+          }
+        }
+
+        // Get all synced groups count
+        final allGroups = await ExpenseGroupStorageV2.getAllGroups();
+        final syncedGroups = allGroups.where((g) => g.syncEnabled).length;
+
+        // Check group limit
+        if (!_subscriptionStatus!.canShareGroup(syncedGroups)) {
+          if (mounted) {
+            final limits = _subscriptionStatus!.limits;
+            AppToast.show(
+              context,
+              'You have reached the maximum of ${limits.maxSharedGroups} shared groups for your ${_subscriptionStatus!.tier.name.toUpperCase()} plan. Upgrade to PREMIUM for unlimited groups.',
+              type: ToastType.error,
+            );
+            Navigator.of(context).pop();
+            return;
+          }
+        }
+
+        // Load the group to check participant count
+        final group = await ExpenseGroupStorageV2.getTripById(groupId);
+        if (group != null) {
+          final participantCount = group.participants.length;
+          if (!_subscriptionStatus!.canAddParticipant(participantCount)) {
+            if (mounted) {
+              final limits = _subscriptionStatus!.limits;
+              AppToast.show(
+                context,
+                'This group has ${participantCount} participants. Your ${_subscriptionStatus!.tier.name.toUpperCase()} plan allows maximum ${limits.maxParticipantsPerGroup} participants per group. Upgrade to PREMIUM for unlimited participants.',
+                type: ToastType.error,
+              );
+              Navigator.of(context).pop();
+              return;
+            }
+          }
+        }
+      }
 
       // Initialize sync for the joined group
       await _syncCoordinator.initializeGroupSync(groupId);
@@ -66,6 +135,11 @@ class _GroupJoinQrPageState extends State<GroupJoinQrPage> {
     } catch (e) {
       LoggerService.error('Failed to complete group join: $e');
       if (mounted) {
+        AppToast.show(
+          context,
+          'Failed to join group. Please try again.',
+          type: ToastType.error,
+        );
         Navigator.of(context).pop();
       }
     }

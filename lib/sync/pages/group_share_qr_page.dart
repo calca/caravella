@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../data/model/expense_group.dart';
 import '../../data/services/logger_service.dart';
+import '../../data/expense_group_storage_v2.dart';
 import '../services/qr_generation_service.dart';
 import '../services/group_sync_coordinator.dart';
+import '../services/revenue_cat_service.dart';
+import '../models/subscription_tier.dart';
 import '../widgets/qr_display_widget.dart';
 import '../../widgets/toast.dart';
+import 'subscription_page.dart';
 
 /// Page for sharing a group via QR code
 class GroupShareQrPage extends StatefulWidget {
@@ -23,13 +27,112 @@ class GroupShareQrPage extends StatefulWidget {
 class _GroupShareQrPageState extends State<GroupShareQrPage> {
   final _qrService = QrGenerationService();
   final _syncCoordinator = GroupSyncCoordinator();
+  final _revenueCat = RevenueCatService();
   bool _isGenerating = false;
   bool _isInitializingSync = false;
+  bool _isCheckingSubscription = true;
+  SubscriptionStatus? _subscriptionStatus;
 
   @override
   void initState() {
     super.initState();
-    _initializeGroupSharingIfNeeded();
+    _checkSubscriptionAndInitialize();
+  }
+
+  Future<void> _checkSubscriptionAndInitialize() async {
+    // Check subscription status
+    if (_revenueCat.isConfigured) {
+      try {
+        final status = await _revenueCat.getSubscriptionStatus();
+        if (mounted) {
+          setState(() {
+            _subscriptionStatus = status;
+            _isCheckingSubscription = false;
+          });
+        }
+
+        // If no active subscription, show subscription page
+        if (!status.isActive) {
+          if (mounted) {
+            final result = await Navigator.of(context).push<bool>(
+              MaterialPageRoute(
+                builder: (ctx) => const SubscriptionPage(isFromShareFlow: true),
+              ),
+            );
+
+            // If user didn't subscribe, go back
+            if (result != true && mounted) {
+              Navigator.of(context).pop();
+              return;
+            }
+
+            // Reload subscription status after purchase
+            if (mounted) {
+              final newStatus = await _revenueCat.getSubscriptionStatus();
+              setState(() => _subscriptionStatus = newStatus);
+            }
+          }
+        }
+
+        // Check group and participant limits
+        if (mounted && _subscriptionStatus != null) {
+          await _checkLimits();
+        }
+      } catch (e) {
+        LoggerService.error('Failed to check subscription: $e');
+        if (mounted) {
+          setState(() => _isCheckingSubscription = false);
+        }
+      }
+    } else {
+      // No RevenueCat configured, allow access
+      setState(() => _isCheckingSubscription = false);
+    }
+
+    await _initializeGroupSharingIfNeeded();
+  }
+
+  Future<void> _checkLimits() async {
+    if (_subscriptionStatus == null || !_subscriptionStatus!.isActive) {
+      return;
+    }
+
+    try {
+      // Get all synced groups count
+      final allGroups = await ExpenseGroupStorageV2.getAllGroups();
+      final syncedGroups = allGroups.where((g) => g.syncEnabled).length;
+
+      // Check group limit
+      if (!_subscriptionStatus!.canShareGroup(syncedGroups)) {
+        if (mounted) {
+          final limits = _subscriptionStatus!.limits;
+          AppToast.show(
+            context,
+            'You have reached the maximum of ${limits.maxSharedGroups} shared groups for your ${_subscriptionStatus!.tier.name.toUpperCase()} plan.',
+            type: ToastType.error,
+          );
+          Navigator.of(context).pop();
+          return;
+        }
+      }
+
+      // Check participant limit
+      final participantCount = widget.group.participants.length;
+      if (!_subscriptionStatus!.canAddParticipant(participantCount)) {
+        if (mounted) {
+          final limits = _subscriptionStatus!.limits;
+          AppToast.show(
+            context,
+            'This group has ${participantCount} participants. Your ${_subscriptionStatus!.tier.name.toUpperCase()} plan allows maximum ${limits.maxParticipantsPerGroup} participants per group.',
+            type: ToastType.error,
+          );
+          Navigator.of(context).pop();
+          return;
+        }
+      }
+    } catch (e) {
+      LoggerService.error('Failed to check limits: $e');
+    }
   }
 
   Future<void> _initializeGroupSharingIfNeeded() async {
@@ -136,9 +239,34 @@ class _GroupShareQrPageState extends State<GroupShareQrPage> {
     final gloc = gen.AppLocalizations.of(context);
     final theme = Theme.of(context);
 
+    // Show loading while checking subscription
+    if (_isCheckingSubscription) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Share Group'),
+        ),
+        body: const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Share Group'),
+        actions: [
+          if (_subscriptionStatus != null && _subscriptionStatus!.isActive)
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: Chip(
+                label: Text(
+                  _subscriptionStatus!.tier.name.toUpperCase(),
+                  style: theme.textTheme.labelSmall,
+                ),
+                backgroundColor: theme.colorScheme.primaryContainer,
+              ),
+            ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
