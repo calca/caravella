@@ -211,6 +211,54 @@ class GroupSyncCoordinator {
     return _realtimeSync.getSyncState(groupId);
   }
 
+  /// Force a full sync of a group
+  Future<bool> forceSyncGroup(String groupId, ExpenseGroup group) async {
+    try {
+      final deviceId = await _keyStorage.getDeviceId();
+      if (deviceId == null) {
+        LoggerService.error('No device ID available');
+        return false;
+      }
+
+      final groupKey = await _keyStorage.getGroupKey(groupId);
+      if (groupKey == null) {
+        LoggerService.error('No group key available');
+        return false;
+      }
+
+      // Prepare full group data payload
+      final payload = {
+        'action': 'full_sync',
+        'group': group.toJson(),
+      };
+
+      // Encrypt payload
+      final encrypted = await _encryption.encryptJson(payload, groupKey);
+      final encryptedPayload = jsonEncode(encrypted);
+
+      // Create sync event
+      final event = SyncEvent(
+        type: SyncEventType.fullSync,
+        groupId: groupId,
+        deviceId: deviceId,
+        encryptedPayload: encryptedPayload,
+        sequenceNumber: _realtimeSync.getNextSequenceNumber(groupId),
+      );
+
+      // Broadcast event
+      final success = await _realtimeSync.broadcastSyncEvent(event);
+      
+      if (success) {
+        LoggerService.info('Force sync completed for group: $groupId');
+      }
+      
+      return success;
+    } catch (e) {
+      LoggerService.error('Failed to force sync group: $e');
+      return false;
+    }
+  }
+
   /// Listen to sync events
   Stream<SyncEvent> get syncEvents => _realtimeSync.syncEvents;
 }

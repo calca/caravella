@@ -35,6 +35,7 @@ import '../export/csv_exporter.dart';
 import '../../../sync/pages/group_share_qr_page.dart';
 import '../../../sync/pages/device_management_page.dart';
 import '../../../sync/utils/auth_guard.dart';
+import '../../../sync/services/group_sync_coordinator.dart';
 
 class ExpenseGroupDetailPage extends StatefulWidget {
   final ExpenseGroup trip;
@@ -176,6 +177,50 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         builder: (ctx) => DeviceManagementPage(group: _trip!),
       ),
     );
+  }
+
+  Future<void> _forceSync() async {
+    if (_trip == null || !_trip!.syncEnabled) return;
+    
+    final gloc = gen.AppLocalizations.of(context);
+    final syncCoordinator = GroupSyncCoordinator();
+    
+    // Show loading indicator
+    if (!mounted) return;
+    AppToast.show(
+      context,
+      'Syncing...',
+      type: ToastType.info,
+    );
+    
+    try {
+      final success = await syncCoordinator.forceSyncGroup(_trip!.id, _trip!);
+      
+      if (!mounted) return;
+      
+      if (success) {
+        AppToast.show(
+          context,
+          'Sync completed successfully',
+          type: ToastType.success,
+        );
+        // Refresh the group to show updated sync status
+        await _refreshGroup();
+      } else {
+        AppToast.show(
+          context,
+          'Sync failed. Please try again.',
+          type: ToastType.error,
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      AppToast.show(
+        context,
+        'Sync error: ${e.toString()}',
+        type: ToastType.error,
+      );
+    }
   }
 
   void _showExportOptionsSheet() {
@@ -407,6 +452,13 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           if (!mounted) return;
           _showDeviceManagement();
         },
+        onForceSync: _trip!.syncEnabled ? () async {
+          final nav = Navigator.of(sheetCtx);
+          nav.pop();
+          await Future.delayed(const Duration(milliseconds: 200));
+          if (!mounted) return;
+          await _forceSync();
+        } : null,
         onDelete: () async {
           final nav = Navigator.of(sheetCtx);
           final rootNav = Navigator.of(context);
