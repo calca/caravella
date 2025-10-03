@@ -21,6 +21,9 @@ class QrKeyExchangePayload {
   /// Encrypted group key (base64 encoded)
   final String encryptedGroupKey;
 
+  /// MAC (Message Authentication Code) for verification (base64 encoded)
+  final String mac;
+
   /// Timestamp when QR was generated (for expiration)
   final DateTime timestamp;
 
@@ -34,6 +37,7 @@ class QrKeyExchangePayload {
     required this.ephemeralPublicKey,
     required this.nonce,
     required this.encryptedGroupKey,
+    required this.mac,
     DateTime? timestamp,
     this.expirationSeconds = 300,
   }) : timestamp = timestamp ?? DateTime.now();
@@ -53,6 +57,7 @@ class QrKeyExchangePayload {
         'ephemeralPublicKey': ephemeralPublicKey,
         'nonce': nonce,
         'encryptedGroupKey': encryptedGroupKey,
+        'mac': mac,
         'timestamp': timestamp.toIso8601String(),
         'expirationSeconds': expirationSeconds,
       };
@@ -66,6 +71,7 @@ class QrKeyExchangePayload {
       ephemeralPublicKey: json['ephemeralPublicKey'] as String,
       nonce: json['nonce'] as String,
       encryptedGroupKey: json['encryptedGroupKey'] as String,
+      mac: json['mac'] as String,
       timestamp: DateTime.parse(json['timestamp'] as String),
       expirationSeconds: json['expirationSeconds'] as int? ?? 300,
     );

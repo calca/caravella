@@ -14,6 +14,7 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
 - **Data Persistence**: All your data is saved locally on your device using file-based storage, so it's always available, even offline.
 - **Backup & Restore**: Securely export all your app data to a single file and import it later, perfect for backups or migrating to a new device.
 - **CSV Export**: Export the expense list for any group into a CSV file, which can be easily shared or used in other applications.
+- **Multi-Device Sync** 🆕: Share expense groups across your devices using secure QR code-based key exchange with end-to-end encryption and realtime sync powered by Supabase.
 - **Multi-Language Support**: The app is localized for English, Italian, and Spanish.
 - **Cross-Platform**: Built with Flutter, Caravella is designed to run smoothly on Android, iOS, Web, and Desktop from a single codebase.
 
@@ -23,6 +24,8 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
 - **UI**: Material 3
 - **State Management**: `provider` for centralized and reactive state management.
 - **Storage**: Local file storage using `path_provider` for private, on-device data persistence.
+- **Sync**: Optional multi-device sync with Supabase Realtime and end-to-end encryption (AES-256-GCM).
+- **Security**: ECDH X25519 key exchange, platform secure storage (Keychain/KeyStore), QR code-based key sharing.
 - **Architecture**: The app follows a clean architecture with a separation of concerns between UI, state management, and data services.
 - **Flavors**: Configured for different build environments (dev, staging, prod).
 
@@ -43,7 +46,30 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
     flutter run
     ```
 
-    ## Package & CI notes
+## 🔄 Multi-Device Sync (Optional)
+
+Caravella supports secure multi-device synchronization for expense groups:
+
+1.  **Setup Supabase** (one-time):
+    - Create a free account at [https://supabase.com](https://supabase.com)
+    - Create a new project and note your project URL and anon key
+    - See [Multi-Device Sync Guide](docs/MULTI_DEVICE_SYNC_GUIDE.md) for detailed setup
+
+2.  **Configure Credentials**:
+    ```sh
+    flutter run \
+      --dart-define=SUPABASE_URL=your_url \
+      --dart-define=SUPABASE_ANON_KEY=your_key
+    ```
+
+3.  **Share Groups via QR Code**:
+    - Open a group → Options → Share via QR
+    - Scan the QR code on your other device
+    - Both devices will sync automatically
+
+**Security**: All data is end-to-end encrypted using AES-256-GCM. The server never sees unencrypted data or encryption keys. See [Sync Module README](lib/sync/README.md) for security details.
+
+## Package & CI notes
 
     - The project's Dart package name has been updated to `io_caravella_egm` (see `pubspec.yaml`).
     - CI artifact names were updated to use the `io_caravella_egm` prefix.

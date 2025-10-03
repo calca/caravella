@@ -45,6 +45,7 @@ class QrGenerationService {
         ephemeralPublicKey: encryptedData['ephemeralPublicKey']!,
         nonce: encryptedData['nonce']!,
         encryptedGroupKey: encryptedData['ciphertext']!,
+        mac: encryptedData['mac']!,
         expirationSeconds: expirationSeconds,
       );
 
@@ -88,7 +89,7 @@ class QrGenerationService {
         {
           'nonce': payload.nonce,
           'ciphertext': payload.encryptedGroupKey,
-          'mac': '', // TODO: Add MAC to payload
+          'mac': payload.mac,
         },
         deviceKeyPair,
         payload.ephemeralPublicKey,
