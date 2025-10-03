@@ -8,6 +8,7 @@ class SectionHeader extends StatelessWidget {
   final EdgeInsetsGeometry padding;
   final double spacing;
   final bool requiredMark;
+  final bool showRequiredHint;
 
   const SectionHeader({
     super.key,
@@ -17,6 +18,7 @@ class SectionHeader extends StatelessWidget {
     this.padding = EdgeInsets.zero,
     this.spacing = 4,
     this.requiredMark = false,
+    this.showRequiredHint = false,
   });
 
   @override
@@ -24,19 +26,33 @@ class SectionHeader extends StatelessWidget {
     final titleStyle = Theme.of(
       context,
     ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600);
-    final titleWidget = requiredMark
-        ? RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(text: title, style: titleStyle),
-                const TextSpan(
-                  text: ' *',
-                  style: TextStyle(fontWeight: FontWeight.w600),
-                ),
-              ],
-            ),
-          )
-        : Text(title, style: titleStyle);
+    final theme = Theme.of(context);
+    final starColor = showRequiredHint
+        ? theme.colorScheme.error
+        : titleStyle?.color;
+    final spans = <InlineSpan>[TextSpan(text: title, style: titleStyle)];
+    if (requiredMark) {
+      spans.add(
+        TextSpan(
+          text: ' *',
+          style: titleStyle?.copyWith(
+            fontWeight: FontWeight.w600,
+            color: starColor,
+          ),
+        ),
+      );
+    } else if (showRequiredHint) {
+      spans.add(
+        TextSpan(
+          text: ' *',
+          style: titleStyle?.copyWith(
+            fontWeight: FontWeight.w600,
+            color: theme.colorScheme.error,
+          ),
+        ),
+      );
+    }
+    final titleWidget = RichText(text: TextSpan(children: spans));
     final hasDescription = description != null && description!.isNotEmpty;
     final descWidget = hasDescription
         ? Padding(

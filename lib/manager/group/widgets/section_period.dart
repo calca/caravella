@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/themes/app_text_styles.dart';
 import 'section_header.dart';
 import 'period_selection_bottom_sheet.dart';
 
@@ -9,10 +10,12 @@ class SectionPeriod extends StatelessWidget {
   final void Function(bool) onPickDate;
   final void Function() onClearDates;
   final String? description;
+  final String? errorText;
+  final bool isEndDateEnabled;
 
   // New callback for setting both dates at once (optional for backwards compatibility)
   final void Function(DateTime? startDate, DateTime? endDate)?
-  onDateRangeChanged;
+      onDateRangeChanged;
 
   const SectionPeriod({
     super.key,
@@ -21,6 +24,8 @@ class SectionPeriod extends StatelessWidget {
     required this.onPickDate,
     required this.onClearDates,
     this.description,
+    this.errorText,
+    this.isEndDateEnabled = true,
     this.onDateRangeChanged,
   });
 
@@ -72,6 +77,16 @@ class SectionPeriod extends StatelessWidget {
             child: _PeriodDisplayCard(startDate: startDate, endDate: endDate),
           ),
         ),
+        if (errorText != null) ...[
+          const SizedBox(height: 12),
+          Text(
+            errorText!,
+            style:
+                (AppTextStyles.listItem(context) ??
+                        Theme.of(context).textTheme.bodyMedium)
+                    ?.copyWith(color: Theme.of(context).colorScheme.error),
+          ),
+        ],
       ],
     );
   }

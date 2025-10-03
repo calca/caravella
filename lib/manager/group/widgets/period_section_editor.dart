@@ -6,7 +6,14 @@ import '../data/group_form_state.dart';
 
 class PeriodSectionEditor extends StatelessWidget {
   final Future<DateTime?> Function(bool isStart) onPickDate;
-  const PeriodSectionEditor({super.key, required this.onPickDate});
+  final VoidCallback onClearDates;
+  final String? errorText;
+  const PeriodSectionEditor({
+    super.key,
+    required this.onPickDate,
+    required this.onClearDates,
+    this.errorText,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,17 +21,13 @@ class PeriodSectionEditor extends StatelessWidget {
     return SectionPeriod(
       startDate: state.startDate,
       endDate: state.endDate,
-      onPickDate: (isStart) async {
-        final d = await onPickDate(isStart);
-        if (d != null) {
-          state.setDates(
-            start: isStart ? d : state.startDate,
-            end: isStart ? state.endDate : d,
-          );
-        }
+      onPickDate: (isStart) {
+        onPickDate(isStart);
       },
-      onClearDates: () => state.clearDates(),
+      onClearDates: onClearDates,
       description: gen.AppLocalizations.of(context).dates_description,
+      errorText: errorText,
+      isEndDateEnabled: state.startDate != null,
       // New callback for date range changes
       onDateRangeChanged: (startDate, endDate) {
         state.setDates(start: startDate, end: endDate);

@@ -645,6 +645,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get group_added_success => 'Grupo agregado';
 
   @override
+  String get group_deleted_success => 'Grupo eliminado';
+
+  @override
   String get csv_select_directory_title =>
       'Seleccionar carpeta para guardar CSV';
 
@@ -1574,6 +1577,13 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get whats_new_desc =>
       'Descubre las últimas características y actualizaciones';
+
+  @override
+  String get whats_new_subtitle => 'Lo más destacado reciente';
+
+  @override
+  String get whats_new_latest =>
+      'Mantente al día con las mejoras más recientes';
 
   @override
   String get average_per_person => 'Promedio por persona';
