@@ -17,6 +17,8 @@ class ExpenseGroup {
   final bool archived; // Nuovo campo per archiviare il gruppo
   final String? file; // Nuovo campo opzionale per il path del file
   final int? color; // Nuovo campo opzionale per il colore (Color.value)
+  final bool syncEnabled; // Enable multi-device sync for this group
+  final DateTime? lastSyncTimestamp; // Last successful sync timestamp
 
   ExpenseGroup({
     required this.title,
@@ -32,6 +34,8 @@ class ExpenseGroup {
     this.archived = false, // Default a false
     this.file, // Opzionale, path del file
     this.color, // Opzionale, colore del gruppo
+    this.syncEnabled = false, // Default sync disabled
+    this.lastSyncTimestamp, // Opzionale, timestamp ultimo sync
   }) : timestamp = timestamp ?? DateTime.now(),
        id = id ?? const Uuid().v4();
 
@@ -68,6 +72,10 @@ class ExpenseGroup {
       archived: json['archived'] ?? false, // Legge il valore archiviato
       file: json['file'], // Legge il valore del file
       color: json['color'], // Legge il valore del colore
+      syncEnabled: json['syncEnabled'] ?? false, // Legge sync enabled
+      lastSyncTimestamp: json['lastSyncTimestamp'] != null
+          ? DateTime.parse(json['lastSyncTimestamp'])
+          : null,
     );
   }
 
@@ -85,6 +93,8 @@ class ExpenseGroup {
     'archived': archived, // Salva il valore archiviato
     'file': file, // Salva il valore del file
     'color': color, // Salva il valore del colore
+    'syncEnabled': syncEnabled, // Salva sync enabled
+    'lastSyncTimestamp': lastSyncTimestamp?.toIso8601String(),
   };
 
   ExpenseGroup copyWith({
@@ -99,6 +109,8 @@ class ExpenseGroup {
     DateTime? timestamp,
     bool? pinned,
     bool? archived,
+    bool? syncEnabled,
+    DateTime? lastSyncTimestamp,
     // Special handling for nullable fields that need to support explicit null
     Object? file = _notProvided,
     Object? color = _notProvided,
@@ -115,6 +127,8 @@ class ExpenseGroup {
       timestamp: timestamp ?? this.timestamp,
       pinned: pinned ?? this.pinned,
       archived: archived ?? this.archived,
+      syncEnabled: syncEnabled ?? this.syncEnabled,
+      lastSyncTimestamp: lastSyncTimestamp ?? this.lastSyncTimestamp,
       // Fix: Handle explicit null values correctly for nullable fields
       file: file == _notProvided ? this.file : file as String?,
       color: color == _notProvided ? this.color : color as int?,
@@ -139,6 +153,8 @@ class ExpenseGroup {
       archived: false,
       file: null, // Path del file inizialmente vuoto
       color: null, // Colore inizialmente vuoto
+      syncEnabled: false, // Sync initially disabled
+      lastSyncTimestamp: null,
     );
   }
 }

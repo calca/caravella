@@ -32,6 +32,7 @@ import '../widgets/delete_expense_dialog.dart';
 import '../../../widgets/add_fab.dart';
 import '../export/ofx_exporter.dart';
 import '../export/csv_exporter.dart';
+import '../../../sync/pages/group_share_qr_page.dart';
 
 class ExpenseGroupDetailPage extends StatefulWidget {
   final ExpenseGroup trip;
@@ -144,6 +145,15 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     if (_trip == null) return;
     Navigator.of(context).push(
       MaterialPageRoute(builder: (ctx) => UnifiedOverviewPage(trip: _trip!)),
+    );
+  }
+
+  void _showShareQrPage() {
+    if (_trip == null) return;
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (ctx) => GroupShareQrPage(group: _trip!),
+      ),
     );
   }
 
@@ -361,6 +371,13 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           await Future.delayed(const Duration(milliseconds: 200));
           if (!mounted) return;
           _showExportOptionsSheet();
+        },
+        onShareQr: () async {
+          final nav = Navigator.of(sheetCtx);
+          nav.pop();
+          await Future.delayed(const Duration(milliseconds: 200));
+          if (!mounted) return;
+          _showShareQrPage();
         },
         onDelete: () async {
           final nav = Navigator.of(sheetCtx);

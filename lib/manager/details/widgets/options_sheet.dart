@@ -10,6 +10,7 @@ class OptionsSheet extends StatelessWidget {
   final VoidCallback onDelete;
   final VoidCallback onEdit;
   final VoidCallback onExportShare;
+  final VoidCallback? onShareQr;
 
   const OptionsSheet({
     super.key,
@@ -19,6 +20,7 @@ class OptionsSheet extends StatelessWidget {
     required this.onDelete,
     required this.onEdit,
     required this.onExportShare,
+    this.onShareQr,
   });
 
   @override
@@ -74,6 +76,16 @@ class OptionsSheet extends StatelessWidget {
             title: Text(gloc.edit_group),
             onTap: onEdit,
           ),
+          if (onShareQr != null)
+            ListTile(
+              leading: Icon(
+                Icons.qr_code_2,
+                color: Theme.of(context).colorScheme.onPrimaryFixed,
+              ),
+              title: const Text('Share via QR'),
+              subtitle: const Text('Multi-device sync'),
+              onTap: onShareQr,
+            ),
           ListTile(
             leading: Icon(
               Icons.ios_share_outlined,
