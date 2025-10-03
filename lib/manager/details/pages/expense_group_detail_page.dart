@@ -34,6 +34,7 @@ import '../export/ofx_exporter.dart';
 import '../export/csv_exporter.dart';
 import '../../../sync/pages/group_share_qr_page.dart';
 import '../../../sync/pages/device_management_page.dart';
+import '../../../sync/utils/auth_guard.dart';
 
 class ExpenseGroupDetailPage extends StatefulWidget {
   final ExpenseGroup trip;
@@ -149,8 +150,13 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     );
   }
 
-  void _showShareQrPage() {
+  void _showShareQrPage() async {
     if (_trip == null) return;
+    
+    // Require authentication before showing QR share page
+    final authenticated = await AuthGuard.requireAuth(context);
+    if (!authenticated || !mounted) return;
+    
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (ctx) => GroupShareQrPage(group: _trip!),
@@ -158,8 +164,13 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     );
   }
 
-  void _showDeviceManagement() {
+  void _showDeviceManagement() async {
     if (_trip == null) return;
+    
+    // Require authentication before showing device management
+    final authenticated = await AuthGuard.requireAuth(context);
+    if (!authenticated || !mounted) return;
+    
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (ctx) => DeviceManagementPage(group: _trip!),

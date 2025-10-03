@@ -3,10 +3,12 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../data/services/logger_service.dart';
 import '../widgets/qr_scanner_widget.dart';
 import '../services/group_sync_coordinator.dart';
+import '../utils/auth_guard.dart';
 import '../../data/expense_group_storage_v2.dart';
 import '../../manager/details/pages/expense_group_detail_page.dart';
 
 /// Page for joining a group by scanning a QR code
+/// Requires authentication before showing the scanner
 class GroupJoinQrPage extends StatefulWidget {
   const GroupJoinQrPage({super.key});
 
@@ -16,6 +18,29 @@ class GroupJoinQrPage extends StatefulWidget {
 
 class _GroupJoinQrPageState extends State<GroupJoinQrPage> {
   final _syncCoordinator = GroupSyncCoordinator();
+  bool _isCheckingAuth = true;
+  bool _isAuthenticated = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkAuthentication();
+  }
+
+  Future<void> _checkAuthentication() async {
+    final authenticated = await AuthGuard.requireAuth(context);
+    if (mounted) {
+      setState(() {
+        _isAuthenticated = authenticated;
+        _isCheckingAuth = false;
+      });
+      
+      // If not authenticated, go back
+      if (!authenticated) {
+        Navigator.of(context).pop();
+      }
+    }
+  }
 
   Future<void> _onGroupJoined(String groupId) async {
     try {
@@ -51,6 +76,31 @@ class _GroupJoinQrPageState extends State<GroupJoinQrPage> {
     final gloc = gen.AppLocalizations.of(context);
     final theme = Theme.of(context);
 
+    // Show loading while checking authentication
+    if (_isCheckingAuth) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Join Group'),
+        ),
+        body: const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    // If not authenticated, show empty scaffold (will navigate back)
+    if (!_isAuthenticated) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Join Group'),
+        ),
+        body: const Center(
+          child: Text('Authentication required'),
+        ),
+      );
+    }
+
+    // Authenticated - show scanner
     return Scaffold(
       body: Stack(
         children: [
