@@ -229,7 +229,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
             SizedBox(
               height: contentHeight,
               child: _loading
-                  ? const Center(child: CircularProgressIndicator())
+                  ? CarouselSkeletonLoader(theme: theme)
                   : _activeGroups.isEmpty
                   ? EmptyGroupsState(
                       localizations: loc,
