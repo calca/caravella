@@ -33,6 +33,7 @@ import '../../../widgets/add_fab.dart';
 import '../export/ofx_exporter.dart';
 import '../export/csv_exporter.dart';
 import '../../../sync/pages/group_share_qr_page.dart';
+import '../../../sync/pages/device_management_page.dart';
 
 class ExpenseGroupDetailPage extends StatefulWidget {
   final ExpenseGroup trip;
@@ -153,6 +154,15 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (ctx) => GroupShareQrPage(group: _trip!),
+      ),
+    );
+  }
+
+  void _showDeviceManagement() {
+    if (_trip == null) return;
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (ctx) => DeviceManagementPage(group: _trip!),
       ),
     );
   }
@@ -378,6 +388,13 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           await Future.delayed(const Duration(milliseconds: 200));
           if (!mounted) return;
           _showShareQrPage();
+        },
+        onManageDevices: () async {
+          final nav = Navigator.of(sheetCtx);
+          nav.pop();
+          await Future.delayed(const Duration(milliseconds: 200));
+          if (!mounted) return;
+          _showDeviceManagement();
         },
         onDelete: () async {
           final nav = Navigator.of(sheetCtx);

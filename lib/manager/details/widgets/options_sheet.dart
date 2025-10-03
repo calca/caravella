@@ -11,6 +11,7 @@ class OptionsSheet extends StatelessWidget {
   final VoidCallback onEdit;
   final VoidCallback onExportShare;
   final VoidCallback? onShareQr;
+  final VoidCallback? onManageDevices;
 
   const OptionsSheet({
     super.key,
@@ -21,6 +22,7 @@ class OptionsSheet extends StatelessWidget {
     required this.onEdit,
     required this.onExportShare,
     this.onShareQr,
+    this.onManageDevices,
   });
 
   @override
@@ -85,6 +87,16 @@ class OptionsSheet extends StatelessWidget {
               title: const Text('Share via QR'),
               subtitle: const Text('Multi-device sync'),
               onTap: onShareQr,
+            ),
+          if (onManageDevices != null)
+            ListTile(
+              leading: Icon(
+                Icons.devices,
+                color: Theme.of(context).colorScheme.onPrimaryFixed,
+              ),
+              title: const Text('Manage Devices'),
+              subtitle: const Text('View and revoke access'),
+              onTap: onManageDevices,
             ),
           ListTile(
             leading: Icon(
