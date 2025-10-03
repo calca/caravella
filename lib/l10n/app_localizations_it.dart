@@ -843,6 +843,18 @@ class AppLocalizationsIt extends AppLocalizations {
       'Abilita il backup automatico del sistema operativo';
 
   @override
+  String get last_backup_never => 'Mai';
+
+  @override
+  String get last_backup_label => 'Ultimo backup:';
+
+  @override
+  String get last_auto_backup_label => 'Ultimo backup automatico:';
+
+  @override
+  String get last_manual_backup_label => 'Ultimo backup manuale:';
+
+  @override
   String get settings_user_name_title => 'Il tuo nome';
 
   @override

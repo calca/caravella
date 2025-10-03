@@ -285,10 +285,14 @@
   "data_restore_desc": "Importa un backup per ripristinare i dati.",
   "auto_backup_title": "Backup automatico",
   "auto_backup_desc": "Abilita il backup automatico del sistema operativo",
+  "last_backup_never": "Mai",
+  "last_backup_label": "Ultimo backup:",
+  "last_auto_backup_label": "Ultimo backup automatico:",
+  "last_manual_backup_label": "Ultimo backup manuale:",
   "settings_user_name_title": "Il tuo nome",
   "settings_user_name_desc": "Nome o nickname da usare nell'app",
-  "settings_user_name_hint": "Inserisci il tuo nome"
-  ,"category_placeholder": "Categoria"
+  "settings_user_name_hint": "Inserisci il tuo nome",
+  "category_placeholder": "Categoria"
   ,"discard_changes_title": "Scartare le modifiche?"
   ,"discard_changes_message": "Sei sicuro di voler scartare le modifiche non salvate?"
   ,"discard": "Scarta"

@@ -839,6 +839,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get auto_backup_desc => 'Enable operating system automatic backup';
 
   @override
+  String get last_backup_never => 'Never';
+
+  @override
+  String get last_backup_label => 'Last backup:';
+
+  @override
+  String get last_auto_backup_label => 'Last automatic backup:';
+
+  @override
+  String get last_manual_backup_label => 'Last manual backup:';
+
+  @override
   String get settings_user_name_title => 'Your name';
 
   @override
