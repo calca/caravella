@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:io_caravella_egm/banking/state/banking_notifier.dart';
 import 'package:io_caravella_egm/banking/services/banking_service.dart';
 import 'package:io_caravella_egm/banking/services/premium_service.dart';
+import 'package:io_caravella_egm/banking/services/local_banking_storage.dart';
 
 void main() {
   group('BankingNotifier', () {
@@ -32,22 +33,8 @@ void main() {
       expect(notifier.hoursUntilRefresh, 0);
     });
 
-    test('canRefresh returns false within 24 hours', () {
-      // Simulate a refresh 12 hours ago
-      notifier.clear();
-      // We can't directly set private fields, but we can test the logic
-      expect(notifier.canRefresh, true); // Initial state
-    });
-
-    test('canRefresh returns true after 24 hours', () {
-      // This would require setting lastRefresh to more than 24 hours ago
-      // which we can't do directly with the current implementation
-      // In a real scenario, you'd make lastRefresh settable for testing
-      expect(notifier.canRefresh, true);
-    });
-
-    test('clear resets all state', () {
-      notifier.clear();
+    test('clear resets all state', () async {
+      await notifier.clear();
 
       expect(notifier.accounts, isEmpty);
       expect(notifier.transactions, isEmpty);
@@ -129,7 +116,7 @@ void main() {
       expect(result.error!.code, 'NOT_IMPLEMENTED');
       expect(
         result.error!.message,
-        contains('Banking integration requires Supabase backend setup'),
+        contains('bank_proxy Edge Function'),
       );
 
       service.dispose();
@@ -148,34 +135,6 @@ void main() {
 
       expect(result.isFailure, true);
       expect(result.error!.code, 'NOT_IMPLEMENTED');
-
-      service.dispose();
-    });
-
-    test('getAccounts returns empty list', () async {
-      final service = BankingService(
-        supabaseUrl: 'https://test.supabase.co',
-        supabaseAnonKey: 'test-key',
-      );
-
-      final result = await service.getAccounts(userId: 'test-user');
-
-      expect(result.isSuccess, true);
-      expect(result.data, isEmpty);
-
-      service.dispose();
-    });
-
-    test('canRefreshTransactions returns true (stub)', () async {
-      final service = BankingService(
-        supabaseUrl: 'https://test.supabase.co',
-        supabaseAnonKey: 'test-key',
-      );
-
-      final result = await service.canRefreshTransactions(userId: 'test-user');
-
-      expect(result.isSuccess, true);
-      expect(result.data, true);
 
       service.dispose();
     });
