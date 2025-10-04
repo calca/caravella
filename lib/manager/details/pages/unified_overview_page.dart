@@ -183,12 +183,15 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: RepaintBoundary(
                   key: _captureKey,
-                  child: TabBarView(
-                    children: [
-                      GeneralOverviewTab(trip: widget.trip),
-                      ParticipantsOverviewTab(trip: widget.trip),
-                      CategoriesOverviewTab(trip: widget.trip),
-                    ],
+                  child: Container(
+                    color: Theme.of(context).colorScheme.surface,
+                    child: TabBarView(
+                      children: [
+                        GeneralOverviewTab(trip: widget.trip),
+                        ParticipantsOverviewTab(trip: widget.trip),
+                        CategoriesOverviewTab(trip: widget.trip),
+                      ],
+                    ),
                   ),
                 ),
               ),
