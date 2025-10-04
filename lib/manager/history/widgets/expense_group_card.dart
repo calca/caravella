@@ -104,6 +104,9 @@ class ExpenseGroupCard extends StatelessWidget {
                     trip.timestamp.toIso8601String()),
           ),
           direction: DismissDirection.endToStart,
+          // Material 3 expressive motion durations
+          movementDuration: const Duration(milliseconds: 350),
+          resizeDuration: const Duration(milliseconds: 300),
           background: _buildDismissBackground(context),
           secondaryBackground: _buildDismissBackground(context),
           confirmDismiss: (_) => _confirmArchive(context),
