@@ -144,7 +144,7 @@ class AppToast {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
           side: BorderSide(
-            color: colorScheme.outlineVariant.withValues(alpha: 0.25),
+            color: colorScheme.outlineVariant.withOpacity(0.25),
             width: 1,
           ),
         ),

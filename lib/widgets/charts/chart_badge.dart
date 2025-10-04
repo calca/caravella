@@ -28,7 +28,7 @@ class ChartBadge extends StatelessWidget {
         width: 28,
         height: 28,
         decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.05),
+          color: color.withOpacity(0.05),
           shape: BoxShape.circle,
         ),
         child: Center(

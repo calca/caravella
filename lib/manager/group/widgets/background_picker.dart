@@ -337,14 +337,14 @@ class _ColorPaletteRow extends StatelessWidget {
               shape: BoxShape.circle,
               border: Border.all(
                 color: selected
-                    ? scheme.onPrimary.withValues(alpha: 0.9)
-                    : scheme.surfaceContainerHighest.withValues(alpha: 0.4),
+                    ? scheme.onPrimary.withOpacity(0.9)
+                    : scheme.surfaceContainerHighest.withOpacity(0.4),
                 width: selected ? 3 : 1.2,
               ),
               boxShadow: selected
                   ? [
                       BoxShadow(
-                        color: c.withValues(alpha: 0.35),
+                        color: c.withOpacity(0.35),
                         blurRadius: 8,
                         spreadRadius: 1,
                       ),
@@ -386,7 +386,7 @@ class _ColorSheet extends StatelessWidget {
                 scheme.primary,
                 scheme.tertiary,
                 scheme.secondary,
-                scheme.errorContainer.withValues(alpha: 0.85),
+                scheme.errorContainer.withOpacity(0.85),
                 scheme.primaryContainer,
                 scheme.secondaryContainer,
                 scheme.primaryFixedDim,

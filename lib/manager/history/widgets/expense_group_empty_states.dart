@@ -81,11 +81,11 @@ class ExpsenseGroupEmptyStates extends StatelessWidget {
       context,
       icon: Icons.search_off_outlined,
       title: '${gloc.no_search_results} "$searchQuery"',
-      iconColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+      iconColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
       subtitleWidget: Text(
         gloc.try_different_search,
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
         ),
         textAlign: TextAlign.center,
       ),

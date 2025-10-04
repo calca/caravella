@@ -419,7 +419,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                           child: Container(
                             color: Theme.of(
                               ctx,
-                            ).colorScheme.surface.withValues(alpha: 0.72),
+                            ).colorScheme.surface.withOpacity(0.72),
                             child: Center(
                               child: AnimatedSwitcher(
                                 duration: const Duration(milliseconds: 260),

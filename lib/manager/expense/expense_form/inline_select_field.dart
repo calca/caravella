@@ -30,7 +30,7 @@ class InlineSelectField extends StatelessWidget {
         ?.copyWith(
           color: enabled
               ? theme.colorScheme.onSurface
-              : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+              : theme.colorScheme.onSurfaceVariant.withOpacity(0.6),
           fontWeight: FontWeight.w400,
         );
 

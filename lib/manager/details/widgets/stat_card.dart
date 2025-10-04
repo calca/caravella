@@ -64,7 +64,7 @@ class StatCard extends StatelessWidget {
             color: surface,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: theme.colorScheme.outline.withValues(alpha: 0.2),
+              color: theme.colorScheme.outline.withOpacity(0.2),
             ),
           ),
           padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
@@ -217,8 +217,8 @@ class InfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final surface = theme.colorScheme.surfaceContainerHighest.withValues(
-      alpha: 0.3,
+    final surface = theme.colorScheme.surfaceContainerHighest.withOpacity(
+      0.3,
     );
     final semanticLabel = '$title: ${subtitle.replaceAll('\n', ', ')}';
 
@@ -231,7 +231,7 @@ class InfoCard extends StatelessWidget {
             color: surface,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: theme.colorScheme.outline.withValues(alpha: 0.2),
+              color: theme.colorScheme.outline.withOpacity(0.2),
             ),
           ),
           padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),

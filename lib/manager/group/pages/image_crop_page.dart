@@ -339,7 +339,7 @@ class _CropOverlayPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = Colors.black.withValues(alpha: 0.5);
+    final paint = Paint()..color = Colors.black.withOpacity(0.5);
     // Usa saveLayer per abilitare BlendMode.clear su tutte le piattaforme
     canvas.saveLayer(Offset.zero & size, Paint());
     // Area piena scura

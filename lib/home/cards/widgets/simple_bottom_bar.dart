@@ -30,8 +30,8 @@ class SimpleBottomBar extends StatelessWidget {
               ),
             ),
             style: TextButton.styleFrom(
-              foregroundColor: theme.colorScheme.onSurface.withValues(
-                alpha: 0.8,
+              foregroundColor: theme.colorScheme.onSurface.withOpacity(
+                0.8,
               ),
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             ),
@@ -52,8 +52,8 @@ class SimpleBottomBar extends StatelessWidget {
               MaterialPageRoute(builder: (context) => const SettingsPage()),
             ),
             style: TextButton.styleFrom(
-              foregroundColor: theme.colorScheme.onSurface.withValues(
-                alpha: 0.8,
+              foregroundColor: theme.colorScheme.onSurface.withOpacity(
+                0.8,
               ),
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             ),

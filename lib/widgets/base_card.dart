@@ -48,13 +48,13 @@ class BaseCard extends StatelessWidget {
           image: FileImage(File(backgroundImage!)),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(
-            theme.colorScheme.surface.withValues(alpha: 0.9),
+            theme.colorScheme.surface.withOpacity(0.9),
             BlendMode.srcOver,
           ),
         ),
         border: (isFlat && !noBorder)
             ? Border.all(
-                color: theme.colorScheme.outline.withValues(alpha: 0.12),
+                color: theme.colorScheme.outline.withOpacity(0.12),
                 width: 1,
               )
             : null,
@@ -62,7 +62,7 @@ class BaseCard extends StatelessWidget {
             ? null
             : [
                 BoxShadow(
-                  color: theme.colorScheme.shadow.withValues(alpha: 0.1),
+                  color: theme.colorScheme.shadow.withOpacity(0.1),
                   blurRadius: elevation ?? 2,
                   offset: const Offset(0, 1),
                 ),
@@ -74,7 +74,7 @@ class BaseCard extends StatelessWidget {
         borderRadius: effectiveBorderRadius,
         border: (isFlat && !noBorder)
             ? Border.all(
-                color: theme.colorScheme.outline.withValues(alpha: 0.12),
+                color: theme.colorScheme.outline.withOpacity(0.12),
                 width: 1,
               )
             : null,
@@ -82,7 +82,7 @@ class BaseCard extends StatelessWidget {
             ? null
             : [
                 BoxShadow(
-                  color: theme.colorScheme.shadow.withValues(alpha: 0.1),
+                  color: theme.colorScheme.shadow.withOpacity(0.1),
                   blurRadius: elevation ?? 2,
                   offset: const Offset(0, 1),
                 ),
