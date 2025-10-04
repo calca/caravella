@@ -208,8 +208,8 @@ class GroupCardContent extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.onSurfaceVariant.withOpacity(
-                    0.05,
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: 0.05,
                   ),
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -302,7 +302,7 @@ class GroupCardContent extends StatelessWidget {
   Widget _buildExtraInfo(ExpenseGroup group) {
     final dailyAverage = _calculateDailyAverage(group);
     final todaySpending = _calculateTodaySpending(group);
-    final textColor = theme.colorScheme.onSurfaceVariant.withOpacity(0.7);
+    final textColor = theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7);
 
     return Column(
       children: [
@@ -419,8 +419,8 @@ class GroupCardContent extends StatelessWidget {
           onPressed: () => _showAddExpenseSheet(context, currentGroup),
           style: TextButton.styleFrom(
             foregroundColor: theme.colorScheme.onSurface,
-            backgroundColor: theme.colorScheme.onSurface.withOpacity(
-              0.05,
+            backgroundColor: theme.colorScheme.onSurface.withValues(
+              alpha: 0.05,
             ),
             padding: const EdgeInsets.symmetric(
               vertical: _buttonVerticalPadding,

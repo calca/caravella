@@ -57,7 +57,7 @@ class ParticipantSelectorWidget extends StatelessWidget {
       style: OutlinedButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         foregroundColor: theme.colorScheme.onSurface,
-        side: BorderSide(color: borderColor.withOpacity(0.8), width: 1),
+        side: BorderSide(color: borderColor.withValues(alpha: 0.8), width: 1),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       onPressed: participants.isEmpty ? null : openPicker,

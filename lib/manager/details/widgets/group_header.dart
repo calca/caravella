@@ -140,7 +140,7 @@ class GroupHeader extends StatelessWidget {
                           ? Icons.push_pin_outlined
                           : Icons.archive_outlined,
                       size: circleSize * 0.15,
-                      color: colorScheme.onSurface.withOpacity(0.6),
+                      color: colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
                 ),

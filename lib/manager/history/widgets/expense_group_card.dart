@@ -243,7 +243,7 @@ class ExpenseGroupCard extends StatelessWidget {
         Icon(
           Icons.group_outlined,
           size: 16,
-          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
         ),
         const SizedBox(width: 6),
         Expanded(
@@ -254,7 +254,7 @@ class ExpenseGroupCard extends StatelessWidget {
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: Theme.of(
                 context,
-              ).colorScheme.onSurface.withOpacity(0.7),
+              ).colorScheme.onSurface.withValues(alpha: 0.7),
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

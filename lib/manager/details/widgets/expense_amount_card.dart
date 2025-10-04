@@ -116,13 +116,13 @@ class ExpenseAmountCard extends StatelessWidget {
                         Icon(
                           Icons.schedule_outlined,
                           size: 13,
-                          color: colorScheme.onSurface.withOpacity(0.7),
+                          color: colorScheme.onSurface.withValues(alpha: 0.7),
                         ),
                         const SizedBox(width: 3),
                         Text(
                           _formatDateTime(context, date!),
                           style: textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onSurface.withOpacity(0.7),
+                            color: colorScheme.onSurface.withValues(alpha: 0.7),
                             fontSize: 11,
                           ),
                         ),

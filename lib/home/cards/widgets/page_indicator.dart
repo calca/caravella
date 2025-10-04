@@ -67,8 +67,8 @@ class PageIndicator extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: isActive
-                      ? activeIndicatorColor.withOpacity(opacity)
-                      : inactiveIndicatorColor.withOpacity(opacity),
+                      ? activeIndicatorColor.withValues(alpha: opacity)
+                      : inactiveIndicatorColor.withValues(alpha: opacity),
                 ),
               );
             }),

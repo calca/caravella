@@ -56,8 +56,8 @@ class DateCard extends StatelessWidget {
                         child: Text(
                           label,
                           style: theme.textTheme.bodyLarge?.copyWith(
-                            color: theme.colorScheme.onSurface.withOpacity(
-                              0.7,
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.7,
                             ),
                             fontWeight: FontWeight.w500,
                           ),
@@ -70,8 +70,8 @@ class DateCard extends StatelessWidget {
                           Text(
                             label,
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurface.withOpacity(
-                                0.7,
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.7,
                               ),
                               fontWeight: FontWeight.w500,
                             ),

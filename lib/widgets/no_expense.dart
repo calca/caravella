@@ -14,7 +14,7 @@ class NoExpense extends StatelessWidget {
           Icon(
             Icons.receipt_long_outlined,
             size: 120,
-            color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
             semanticLabel: semanticLabel,
           ),
           const SizedBox(height: 16),
@@ -23,7 +23,7 @@ class NoExpense extends StatelessWidget {
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               color: Theme.of(
                 context,
-              ).colorScheme.outline.withOpacity(0.6),
+              ).colorScheme.outline.withValues(alpha: 0.6),
             ),
           ),
           const SizedBox(height: 8),
@@ -32,7 +32,7 @@ class NoExpense extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: Theme.of(
                 context,
-              ).colorScheme.outline.withOpacity(0.5),
+              ).colorScheme.outline.withValues(alpha: 0.5),
             ),
           ),
         ],

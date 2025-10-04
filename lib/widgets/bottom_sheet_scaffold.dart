@@ -36,7 +36,7 @@ class GroupBottomSheetScaffold extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Theme.of(
                   context,
-                ).colorScheme.outlineVariant.withOpacity(0.7),
+                ).colorScheme.outlineVariant.withValues(alpha: 0.7),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),

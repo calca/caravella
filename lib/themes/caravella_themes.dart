@@ -220,7 +220,7 @@ class CaravellaThemes {
       ),
       disabledBorder: UnderlineInputBorder(
         borderSide: BorderSide(
-          color: lightColorScheme.outline.withOpacity(0.3),
+          color: lightColorScheme.outline.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -276,7 +276,7 @@ class CaravellaThemes {
       ),
       disabledBorder: UnderlineInputBorder(
         borderSide: BorderSide(
-          color: darkColorScheme.outline.withOpacity(0.3),
+          color: darkColorScheme.outline.withValues(alpha: 0.3),
           width: 1,
         ),
       ),

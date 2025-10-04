@@ -28,13 +28,13 @@ class DateRangeExpenseChart extends StatelessWidget {
             LineChartBarData(
               spots: spots,
               isCurved: true,
-              color: theme.colorScheme.onSurfaceVariant.withOpacity(0.25),
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.25),
               barWidth: 2,
               dotData: const FlDotData(show: false),
               belowBarData: BarAreaData(
                 show: true,
-                color: theme.colorScheme.onSurfaceVariant.withOpacity(
-                  0.12,
+                color: theme.colorScheme.onSurfaceVariant.withValues(
+                  alpha: 0.12,
                 ),
               ),
             ),

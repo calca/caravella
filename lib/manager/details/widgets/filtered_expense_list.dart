@@ -160,7 +160,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
+              color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(12),
             ),
             margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -315,7 +315,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                         ? Icons.search_off_outlined
                         : Icons.receipt_long_outlined,
                     size: 48,
-                    color: colorScheme.onSurface.withOpacity(0.4),
+                    color: colorScheme.onSurface.withValues(alpha: 0.4),
                   ),
                   const SizedBox(height: 16),
                   Text(
@@ -323,7 +323,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                         ? gloc.no_expenses_with_filters
                         : gloc.no_expenses_yet,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: colorScheme.onSurface.withOpacity(0.6),
+                      color: colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -387,7 +387,7 @@ class _CategoryParticipantChip extends StatelessWidget {
       side: BorderSide(
         color: selected
             ? scheme.primaryFixedDim
-            : scheme.outlineVariant.withOpacity(0.4),
+            : scheme.outlineVariant.withValues(alpha: 0.4),
       ),
       backgroundColor: scheme.surfaceContainerHigh,
       selectedColor: scheme.primaryFixedDim,

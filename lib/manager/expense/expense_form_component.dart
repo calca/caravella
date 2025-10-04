@@ -366,7 +366,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         color: isTouched && !isValid
             ? Theme.of(
                 context,
-              ).colorScheme.errorContainer.withOpacity(0.08)
+              ).colorScheme.errorContainer.withValues(alpha: 0.08)
             : null,
       ),
       child: field,
@@ -809,7 +809,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
       thickness: 1,
       color: Theme.of(
         context,
-      ).colorScheme.outlineVariant.withOpacity(0.4),
+      ).colorScheme.outlineVariant.withValues(alpha: 0.4),
     );
   }
 

@@ -43,7 +43,7 @@ class OptionsSheet extends StatelessWidget {
               color: trip.archived
                   ? Theme.of(
                       context,
-                    ).colorScheme.onSurface.withOpacity(0.38)
+                    ).colorScheme.onSurface.withValues(alpha: 0.38)
                   : Theme.of(context).colorScheme.onPrimaryFixed,
             ),
             title: Text(
@@ -52,7 +52,7 @@ class OptionsSheet extends StatelessWidget {
                   ? TextStyle(
                       color: Theme.of(
                         context,
-                      ).colorScheme.onSurface.withOpacity(0.38),
+                      ).colorScheme.onSurface.withValues(alpha: 0.38),
                     )
                   : null,
             ),
@@ -80,7 +80,7 @@ class OptionsSheet extends StatelessWidget {
               color: trip.expenses.isEmpty
                   ? Theme.of(
                       context,
-                    ).colorScheme.onSurface.withOpacity(0.38)
+                    ).colorScheme.onSurface.withValues(alpha: 0.38)
                   : Theme.of(context).colorScheme.onPrimaryFixed,
             ),
             title: Text(
@@ -89,7 +89,7 @@ class OptionsSheet extends StatelessWidget {
                   ? TextStyle(
                       color: Theme.of(
                         context,
-                      ).colorScheme.onSurface.withOpacity(0.38),
+                      ).colorScheme.onSurface.withValues(alpha: 0.38),
                     )
                   : null,
             ),

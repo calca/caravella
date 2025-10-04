@@ -273,7 +273,7 @@ class _DetailsCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: colorScheme.outline.withOpacity(0.2)),
+        border: Border.all(color: colorScheme.outline.withValues(alpha: 0.2)),
       ),
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 6),
       child: Column(
@@ -334,7 +334,7 @@ class _DetailRow extends StatelessWidget {
           width: 36,
           height: 36,
           decoration: BoxDecoration(
-            color: colorScheme.surfaceContainerHighest.withOpacity(0.4),
+            color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
             shape: BoxShape.circle,
           ),
           alignment: Alignment.center,

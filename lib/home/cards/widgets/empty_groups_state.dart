@@ -70,7 +70,7 @@ class EmptyGroupsState extends StatelessWidget {
           Text(
             localizations.no_active_groups_subtitle,
             style: theme.textTheme.bodyLarge?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.7),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
             ),
             textAlign: TextAlign.center,
           ),
@@ -79,7 +79,7 @@ class EmptyGroupsState extends StatelessWidget {
             Text(
               localizations.all_groups_archived_info,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.65),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
               ),
               textAlign: TextAlign.center,
             ),
