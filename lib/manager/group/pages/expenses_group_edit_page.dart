@@ -194,40 +194,57 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
     return GestureDetector(
       onTap: _unfocusAll,
       behavior: HitTestBehavior.translucent,
-      child: PopScope(
-        canPop: !_controller.hasChanges,
-        onPopInvokedWithResult: (didPop, result) async {
-          if (didPop) return;
-          if (_controller.hasChanges) {
-            final confirm = await showDialog<bool>(
-              context: context,
-              builder: (ctx) => Material3Dialog(
-                icon: Icon(
-                  Icons.warning_amber_outlined,
-                  color: Theme.of(context).colorScheme.error,
-                  size: 24,
-                ),
-                title: Text(gloc.discard_changes_title),
-                content: Text(gloc.discard_changes_message),
-                actions: [
-                  Material3DialogActions.cancel(ctx, gloc.cancel),
-                  Material3DialogActions.destructive(
-                    ctx,
-                    gloc.discard,
-                    onPressed: () => Navigator.of(ctx).pop(true),
-                  ),
-                ],
-              ),
-            );
-            if (confirm == true && context.mounted) {
-              final navigator = Navigator.of(context);
-              if (navigator.canPop()) {
-                navigator.pop(false);
-              }
-            }
-          }
+      child: Selector<GroupFormState, int>(
+        selector: (_, state) {
+          // Create a hash of all fields that affect hasChanges
+          // This forces rebuild when any relevant field changes
+          return Object.hash(
+            state.title,
+            state.participants.length,
+            state.categories.length,
+            state.startDate,
+            state.endDate,
+            state.imagePath,
+            state.color,
+            state.currency['code'],
+          );
         },
-        child: Scaffold(
+        builder: (context, _, __) {
+          final controller = context.read<GroupFormController>();
+          return PopScope(
+            canPop: !controller.hasChanges,
+            onPopInvokedWithResult: (didPop, result) async {
+              if (didPop) return;
+              if (controller.hasChanges) {
+                final confirm = await showDialog<bool>(
+                  context: context,
+                  builder: (ctx) => Material3Dialog(
+                    icon: Icon(
+                      Icons.warning_amber_outlined,
+                      color: Theme.of(context).colorScheme.error,
+                      size: 24,
+                    ),
+                    title: Text(gloc.discard_changes_title),
+                    content: Text(gloc.discard_changes_message),
+                    actions: [
+                      Material3DialogActions.cancel(ctx, gloc.cancel),
+                      Material3DialogActions.destructive(
+                        ctx,
+                        gloc.discard,
+                        onPressed: () => Navigator.of(ctx).pop(true),
+                      ),
+                    ],
+                  ),
+                );
+                if (confirm == true && context.mounted) {
+                  final navigator = Navigator.of(context);
+                  if (navigator.canPop()) {
+                    navigator.pop(false);
+                  }
+                }
+              }
+            },
+            child: Scaffold(
           appBar: CaravellaAppBar(actions: []),
           body: Stack(
             children: [
@@ -434,6 +451,8 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
             ],
           ),
         ),
+        );
+      },
       ),
     );
   }
