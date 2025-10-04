@@ -58,6 +58,17 @@ dependencies:
   timeago: ^3.7.0
   gpt_markdown: ^1.1.4
   image_picker_platform_interface: ^2.11.0
+  
+  # Multi-device sync and security
+  supabase_flutter: ^2.10.0
+  qr_flutter: ^4.1.0
+  mobile_scanner: ^7.0.0
+  pointycastle: ^3.9.1
+  flutter_secure_storage: ^9.2.2
+  cryptography: ^2.8.0
+  
+  # In-app subscriptions
+  purchases_flutter: ^8.2.2
 
 dev_dependencies:
   flutter_test:

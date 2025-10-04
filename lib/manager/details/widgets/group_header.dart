@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import '../../../data/model/expense_group.dart';
 import '../../../data/model/expense_participant.dart';
+import '../../../sync/services/group_sync_coordinator.dart';
+import '../../../sync/widgets/sync_status_indicator.dart';
 
 class ParticipantAvatar extends StatelessWidget {
   final ExpenseParticipant participant;
@@ -110,22 +112,35 @@ class ExpenseGroupAvatar extends StatelessWidget {
   }
 }
 
-class GroupHeader extends StatelessWidget {
+class GroupHeader extends StatefulWidget {
   final ExpenseGroup trip;
   const GroupHeader({super.key, required this.trip});
+
+  @override
+  State<GroupHeader> createState() => _GroupHeaderState();
+}
+
+class _GroupHeaderState extends State<GroupHeader> {
+  final _syncCoordinator = GroupSyncCoordinator();
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final double circleSize = MediaQuery.of(context).size.width * 0.3;
+    
+    // Get sync state if sync is enabled
+    final syncState = widget.trip.syncEnabled
+        ? _syncCoordinator.getGroupSyncState(widget.trip.id)
+        : null;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Center(
           child: Stack(
             children: [
-              ExpenseGroupAvatar(trip: trip, size: circleSize),
-              if (trip.pinned || trip.archived)
+              ExpenseGroupAvatar(trip: widget.trip, size: circleSize),
+              if (widget.trip.pinned || widget.trip.archived)
                 Positioned(
                   bottom: 0,
                   right: 0,
@@ -136,7 +151,7 @@ class GroupHeader extends StatelessWidget {
                     ),
                     padding: const EdgeInsets.all(12),
                     child: Icon(
-                      trip.pinned
+                      widget.trip.pinned
                           ? Icons.push_pin_outlined
                           : Icons.archive_outlined,
                       size: circleSize * 0.15,
@@ -149,7 +164,7 @@ class GroupHeader extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          trip.title,
+          widget.trip.title,
           textAlign: TextAlign.center,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
@@ -159,6 +174,14 @@ class GroupHeader extends StatelessWidget {
             fontSize: 28,
           ),
         ),
+        // Show sync status indicator if sync is enabled
+        if (widget.trip.syncEnabled && syncState != null) ...[
+          const SizedBox(height: 8),
+          SyncStatusIndicator(
+            syncState: syncState,
+            compact: false,
+          ),
+        ],
       ],
     );
   }

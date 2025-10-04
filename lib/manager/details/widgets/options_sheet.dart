@@ -10,6 +10,9 @@ class OptionsSheet extends StatelessWidget {
   final VoidCallback onDelete;
   final VoidCallback onEdit;
   final VoidCallback onExportShare;
+  final VoidCallback? onShareQr;
+  final VoidCallback? onManageDevices;
+  final VoidCallback? onForceSync;
 
   const OptionsSheet({
     super.key,
@@ -19,6 +22,9 @@ class OptionsSheet extends StatelessWidget {
     required this.onDelete,
     required this.onEdit,
     required this.onExportShare,
+    this.onShareQr,
+    this.onManageDevices,
+    this.onForceSync,
   });
 
   @override
@@ -74,6 +80,36 @@ class OptionsSheet extends StatelessWidget {
             title: Text(gloc.edit_group),
             onTap: onEdit,
           ),
+          if (onShareQr != null)
+            ListTile(
+              leading: Icon(
+                Icons.qr_code_2,
+                color: Theme.of(context).colorScheme.onPrimaryFixed,
+              ),
+              title: const Text('Share via QR'),
+              subtitle: const Text('Multi-device sync'),
+              onTap: onShareQr,
+            ),
+          if (onManageDevices != null)
+            ListTile(
+              leading: Icon(
+                Icons.devices,
+                color: Theme.of(context).colorScheme.onPrimaryFixed,
+              ),
+              title: const Text('Manage Devices'),
+              subtitle: const Text('View and revoke access'),
+              onTap: onManageDevices,
+            ),
+          if (onForceSync != null && trip.syncEnabled)
+            ListTile(
+              leading: Icon(
+                Icons.sync,
+                color: Theme.of(context).colorScheme.onPrimaryFixed,
+              ),
+              title: const Text('Force Sync'),
+              subtitle: const Text('Synchronize now'),
+              onTap: onForceSync,
+            ),
           ListTile(
             leading: Icon(
               Icons.ios_share_outlined,
