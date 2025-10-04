@@ -55,9 +55,9 @@ class IconLeadingField extends StatelessWidget {
             child: Padding(
               padding:
                   iconPadding ??
-                  (alignTop 
-                    ? FormTheme.topAlignedIconPadding 
-                    : FormTheme.standardIconPadding),
+                  (alignTop
+                      ? FormTheme.topAlignedIconPadding
+                      : FormTheme.standardIconPadding),
               child: iconWidget,
             ),
           ),
