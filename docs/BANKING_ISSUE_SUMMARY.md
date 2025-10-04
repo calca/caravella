@@ -44,11 +44,10 @@ This is a **foundation** that requires significant additional work to be functio
 
 ### Required External Services (Not Implemented)
 
-1. **Supabase Backend** (~2 weeks)
-   - PostgreSQL database setup
-   - Edge Functions deployment (create-link, fetch-transactions)
-   - Row Level Security policies
-   - Authentication integration
+1. **Supabase Edge Function** (~1 week)
+   - Stateless proxy deployment (bank_proxy)
+   - Edge Function configuration
+   - GoCardless API credentials in environment
 
 2. **GoCardless Configuration** (~1 week)
    - Account verification and KYC
@@ -68,11 +67,11 @@ This is a **foundation** that requires significant additional work to be functio
    - Replace stub implementations with real services
    - End-to-end testing
 
-**Total Additional Effort**: ~5-6 weeks for experienced developer
+**Total Additional Effort**: ~4 weeks for experienced developer
 
 ### Monthly Operational Costs
 
-- Supabase: $0-$25/month
+- Supabase: $0/month (free tier, no database)
 - GoCardless: Pay-per-use (varies by country)
 - RevenueCat: Free up to $10k MRR, then 1% of revenue
 - Maintenance: 2-4 hours/month
@@ -91,10 +90,10 @@ This is a **foundation** that requires significant additional work to be functio
 ### What Doesn't Work ❌
 
 - ❌ Bank account connections (returns "NOT_IMPLEMENTED")
-- ❌ Transaction syncing (no backend)
+- ❌ Transaction syncing (no Edge Function deployed)
 - ❌ Premium checks (no RevenueCat)
-- ❌ OAuth flow (no Supabase)
-- ❌ Data persistence (no database)
+- ❌ OAuth flow (no Edge Function deployed)
+- ❌ Data persistence (local storage ready, needs Edge Function)
 
 ## 🚀 How to Proceed
 
@@ -149,11 +148,11 @@ This is a **foundation** that requires significant additional work to be functio
 | Service layer | ✅ Complete | Stub implementations with clear errors |
 | State management | ✅ Complete | Full Provider pattern |
 | UI pages | ✅ Complete | Material 3 design |
-| Supabase Edge Functions | ⚠️ Code provided | Needs deployment |
-| Database schema | ⚠️ SQL provided | Needs execution |
+| Edge Function | ⚠️ Code provided | Needs deployment (stateless proxy) |
+| Local encryption | ✅ Complete | flutter_secure_storage implementation |
 | GoCardless integration | ⚠️ Architecture ready | Needs credentials |
 | RevenueCat integration | ⚠️ Architecture ready | Needs setup |
-| 24-hour rate limit | ✅ Complete | Built into BankingNotifier |
+| 24-hour rate limit | ✅ Complete | Built into LocalBankingStorage |
 | Premium checks | ✅ Complete | Needs RevenueCat backend |
 
 ## 🎓 Recommendation
