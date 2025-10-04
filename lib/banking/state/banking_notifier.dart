@@ -3,15 +3,21 @@ import '../models/bank_account.dart';
 import '../models/bank_transaction.dart';
 import '../services/banking_service.dart';
 import '../services/premium_service.dart';
+import '../services/local_banking_storage.dart';
 
-/// State notifier for banking features
+/// State notifier for banking features (Local-First)
 /// 
-/// Manages the state of connected bank accounts and transactions.
-/// Integrates with BankingService for API calls and PremiumService for
-/// subscription validation.
+/// Manages the state of connected bank accounts and transactions with
+/// LOCAL ENCRYPTED STORAGE. All data is stored on device only.
+/// 
+/// Integrates with:
+/// - BankingService for API calls (stateless proxy to GoCardless)
+/// - PremiumService for subscription validation
+/// - LocalBankingStorage for encrypted local data persistence
 class BankingNotifier extends ChangeNotifier {
   final BankingService? _bankingService;
   final PremiumService _premiumService;
+  final LocalBankingStorage _localStorage;
 
   List<BankAccount> _accounts = [];
   List<BankTransaction> _transactions = [];
@@ -23,8 +29,10 @@ class BankingNotifier extends ChangeNotifier {
   BankingNotifier({
     BankingService? bankingService,
     PremiumService? premiumService,
+    LocalBankingStorage? localStorage,
   })  : _bankingService = bankingService,
-        _premiumService = premiumService ?? PremiumService();
+        _premiumService = premiumService ?? PremiumService(),
+        _localStorage = localStorage ?? LocalBankingStorage();
 
   // Getters
   List<BankAccount> get accounts => List.unmodifiable(_accounts);
@@ -51,16 +59,16 @@ class BankingNotifier extends ChangeNotifier {
     return remaining > 0 ? remaining : 0;
   }
 
-  /// Initialize banking features - check premium status
+  /// Initialize banking features - check premium status and load local data
   Future<void> initialize() async {
     _setLoading(true);
     try {
       final premiumResult = await _premiumService.checkPremiumStatus();
       _isPremium = premiumResult.isActive;
 
-      if (_isPremium && _bankingService != null) {
-        // Load accounts if premium
-        await _loadAccounts();
+      if (_isPremium) {
+        // Load data from local encrypted storage
+        await _loadLocalData();
       }
 
       _clearError();
@@ -68,6 +76,18 @@ class BankingNotifier extends ChangeNotifier {
       _setError('Failed to initialize banking: $e');
     } finally {
       _setLoading(false);
+    }
+  }
+
+  /// Load accounts and transactions from local storage
+  Future<void> _loadLocalData() async {
+    try {
+      _accounts = await _localStorage.getAccounts();
+      _transactions = await _localStorage.getTransactions();
+      _lastRefresh = await _localStorage.getLastRefreshDate();
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Failed to load local banking data: $e');
     }
   }
 
@@ -105,7 +125,13 @@ class BankingNotifier extends ChangeNotifier {
     }
   }
 
-  /// Fetch transactions from bank
+  /// Fetch transactions from bank and store locally (encrypted)
+  /// 
+  /// This method:
+  /// 1. Checks 24-hour rate limit from local storage
+  /// 2. Calls Edge Function proxy to fetch from GoCardless
+  /// 3. Encrypts and saves data LOCALLY (never on backend)
+  /// 4. Updates last refresh timestamp
   Future<bool> fetchTransactions({
     required String userId,
     required String requisitionId,
@@ -115,23 +141,35 @@ class BankingNotifier extends ChangeNotifier {
       return false;
     }
 
-    if (!canRefresh) {
+    // Check rate limit from local storage
+    final canRefreshNow = await _localStorage.canRefresh();
+    if (!canRefreshNow) {
+      final hoursLeft = await _localStorage.hoursUntilRefresh();
       _setError(
-        'Please wait $hoursUntilRefresh hours before refreshing again',
+        'Please wait $hoursLeft hours before refreshing again',
       );
       return false;
     }
 
     _setLoading(true);
     try {
+      // Fetch from Edge Function proxy (stateless, no backend storage)
       final result = await _bankingService!.fetchTransactions(
         userId: userId,
         requisitionId: requisitionId,
       );
 
       if (result.isSuccess) {
-        _transactions = result.data ?? [];
-        _lastRefresh = DateTime.now();
+        final newTransactions = result.data ?? [];
+        
+        // Save encrypted locally (never on backend!)
+        await _localStorage.appendTransactions(newTransactions);
+        await _localStorage.setLastRefreshDate();
+        
+        // Update in-memory state
+        _transactions = await _localStorage.getTransactions();
+        _lastRefresh = await _localStorage.getLastRefreshDate();
+        
         _clearError();
         notifyListeners();
         return true;
@@ -147,21 +185,6 @@ class BankingNotifier extends ChangeNotifier {
     }
   }
 
-  /// Load connected accounts
-  Future<void> _loadAccounts() async {
-    if (_bankingService == null) return;
-
-    try {
-      final result = await _bankingService!.getAccounts(userId: 'current');
-      if (result.isSuccess) {
-        _accounts = result.data ?? [];
-        notifyListeners();
-      }
-    } catch (e) {
-      debugPrint('Failed to load accounts: $e');
-    }
-  }
-
   /// Show premium paywall
   Future<bool> showPaywall() async {
     return await _premiumService.presentPaywall();
@@ -174,7 +197,7 @@ class BankingNotifier extends ChangeNotifier {
       final result = await _premiumService.restorePurchases();
       _isPremium = result.isActive;
       if (_isPremium) {
-        await _loadAccounts();
+        await _loadLocalData();
       }
       _clearError();
     } catch (e) {
@@ -200,12 +223,20 @@ class BankingNotifier extends ChangeNotifier {
   }
 
   /// Clear all banking data (e.g., on logout)
-  void clear() {
+  /// This clears local encrypted storage completely
+  Future<void> clear() async {
+    await _localStorage.clearAll();
     _accounts = [];
     _transactions = [];
     _isPremium = false;
     _lastRefresh = null;
     _clearError();
     notifyListeners();
+  }
+
+  /// Complete data wipe including encryption key
+  Future<void> deleteAllData() async {
+    await _localStorage.deleteEncryptionKey();
+    await clear();
   }
 }

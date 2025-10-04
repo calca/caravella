@@ -1,46 +1,70 @@
-# PSD2 Banking Integration Setup Guide
+# PSD2 Banking Integration Setup Guide (Local-First)
 
 ## Overview
 
-This document provides complete instructions for implementing the GoCardless PSD2 banking integration in Caravella. This feature allows Premium users to connect their bank accounts and automatically sync transactions.
+This document provides complete instructions for implementing the GoCardless PSD2 banking integration in Caravella with a **LOCAL-FIRST architecture**. This feature allows Premium users to connect their bank accounts and sync transactions, with all data **encrypted and stored locally on device only**.
 
-## ⚠️ Important Prerequisites
+## ⚠️ Important: Privacy-First Architecture
+
+**NO BANKING DATA IS EVER STORED ON BACKEND SERVERS**
+
+- ✅ All transactions stored encrypted locally on device
+- ✅ Edge Function acts only as stateless proxy to GoCardless
+- ✅ Encryption keys stored in device secure storage
+- ✅ Backend never persists any banking data
+- ✅ Full GDPR compliance through local-only storage
+
+## Prerequisites
 
 Before implementing this feature, ensure you have:
 
-1. **Supabase Account** - Cloud backend platform
+1. **Supabase Account** - For Edge Function proxy (NO database needed)
 2. **GoCardless Bank Data API Account** - PSD2 banking API access
 3. **RevenueCat Account** - Premium subscription management
-4. **Understanding of**: PSD2 regulations, OAuth flows, and cloud security
+4. **Understanding of**: PSD2 regulations, OAuth flows, local encryption
 
 ## Architecture Overview
 
 ```
-┌─────────────────┐
-│  Flutter App    │
-│  (Caravella)    │
-└────────┬────────┘
-         │
-         │ 1. Check Premium (RevenueCat)
-         │ 2. Request Bank Link
-         │ 3. Fetch Transactions
-         │
-┌────────▼────────┐
-│ Supabase        │
-│ Edge Functions  │
-│  - create-link  │
-│  - fetch-trans  │
-└────────┬────────┘
-         │
-         │ API Calls
-         │
-┌────────▼────────┐
-│  GoCardless     │
-│  Bank Data API  │
-└─────────────────┘
+┌─────────────────────────────────────────┐
+│  Flutter App (Device)                   │
+│                                         │
+│  ┌─────────────┐    ┌───────────────┐  │
+│  │ Encrypted   │    │ RevenueCat    │  │
+│  │ Local DB    │    │ Premium Check │  │
+│  │ (Drift/Hive)│    └───────────────┘  │
+│  └─────────────┘                        │
+│        ▲                                │
+│        │ (encrypted storage)            │
+│        │                                │
+│  ┌─────▼──────────────────────────┐    │
+│  │  BankingNotifier (State)       │    │
+│  └────────────┬───────────────────┘    │
+└───────────────┼────────────────────────┘
+                │
+                │ HTTPS (transient)
+                ▼
+┌───────────────────────────────────────┐
+│  Supabase Edge Function               │
+│  "bank_proxy"                         │
+│  (STATELESS - no storage)             │
+└───────────────┬───────────────────────┘
+                │
+                │ API Call
+                ▼
+┌───────────────────────────────────────┐
+│  GoCardless Bank Data API             │
+│  (PSD2 Provider)                      │
+└───────────────────────────────────────┘
 ```
 
-## Part 1: Supabase Setup
+**Key Points:**
+- Edge Function = Stateless proxy only
+- All data storage = Device only (encrypted)
+- No database on Supabase backend
+- Full privacy and GDPR compliance
+
+## Part 1: Supabase Setup (Edge Function Only)
 
 ### 1.1 Create Supabase Project
 
@@ -49,55 +73,138 @@ Before implementing this feature, ensure you have:
 3. Note your:
    - Project URL: `https://xxxxx.supabase.co`
    - Anon/Public Key: `eyJhbGc...`
-   - Service Role Key: `eyJhbGc...` (keep secret!)
 
-### 1.2 Database Schema
+**Note**: You do NOT need to set up database tables. The Edge Function is stateless.
 
-Run these SQL commands in the Supabase SQL Editor:
+### 1.2 Edge Function — bank_proxy
 
-```sql
--- Profiles table (extends auth.users)
-CREATE TABLE profiles (
-  id UUID PRIMARY KEY REFERENCES auth.users ON DELETE CASCADE,
-  premium BOOLEAN DEFAULT FALSE,
-  last_refresh TIMESTAMP WITH TIME ZONE,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
+Create a STATELESS proxy that calls GoCardless and returns data to client without storing anything.
 
--- Bank accounts table
-CREATE TABLE bank_accounts (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
-  account_id TEXT NOT NULL,
-  iban TEXT,
-  account_name TEXT,
-  currency TEXT DEFAULT 'EUR',
-  institution_id TEXT,
-  last_sync TIMESTAMP WITH TIME ZONE,
-  is_active BOOLEAN DEFAULT TRUE,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  UNIQUE(user_id, account_id)
-);
+File: `supabase/functions/bank_proxy/index.ts`
 
--- Bank transactions table
-CREATE TABLE bank_transactions (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
-  account_id UUID REFERENCES bank_accounts(id) ON DELETE CASCADE NOT NULL,
-  amount NUMERIC NOT NULL,
-  currency TEXT DEFAULT 'EUR',
-  date DATE NOT NULL,
-  description TEXT,
-  creditor_name TEXT,
-  debtor_name TEXT,
-  transaction_id TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  UNIQUE(account_id, transaction_id)
-);
+```typescript
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
--- Bank requisitions table (OAuth flow tracking)
-CREATE TABLE bank_requisitions (
+const BASE = "https://bankaccountdata.gocardless.com/api/v2";
+
+serve(async (req) => {
+  try {
+    const { action, bankId, requisitionId } = await req.json();
+
+    // Get GoCardless token (server-side only)
+    const tokenRes = await fetch(`${BASE}/token/new/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        secret_id: Deno.env.get("GC_SECRET_ID"),
+        secret_key: Deno.env.get("GC_SECRET_KEY"),
+      }),
+    });
+    const { access } = await tokenRes.json();
+    const auth = { Authorization: `Bearer ${access}` };
+
+    // Action: Create bank connection link
+    if (action === "createLink") {
+      const res = await fetch(`${BASE}/requisitions/`, {
+        method: "POST",
+        headers: { ...auth, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          redirect: "https://app.local/callback",
+          institution_id: bankId,
+          reference: crypto.randomUUID(),
+          user_language: "IT",
+        }),
+      });
+      const data = await res.json();
+      
+      // Return link to client (no storage on backend)
+      return new Response(JSON.stringify({
+        link: data.link,
+        requisition_id: data.id,
+      }), {
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    // Action: Fetch transactions
+    if (action === "fetchTransactions") {
+      // Get requisition details
+      const reqData = await fetch(
+        `${BASE}/requisitions/${requisitionId}/`,
+        { headers: auth }
+      ).then((r) => r.json());
+
+      const accounts = reqData.accounts || [];
+      const allTransactions: any[] = [];
+
+      // Fetch transactions for each account
+      for (const accountId of accounts) {
+        const txRes = await fetch(
+          `${BASE}/accounts/${accountId}/transactions/`,
+          { headers: auth }
+        );
+        const txData = await txRes.json();
+        
+        // Transform to our format
+        const booked = txData.transactions?.booked || [];
+        for (const tx of booked) {
+          allTransactions.push({
+            id: tx.transactionId || tx.internalTransactionId || crypto.randomUUID(),
+            account_id: accountId,
+            amount: parseFloat(tx.transactionAmount?.amount || "0"),
+            currency: tx.transactionAmount?.currency || "EUR",
+            date: tx.bookingDate || tx.valueDate,
+            description: tx.remittanceInformationUnstructured,
+            creditor_name: tx.creditorName,
+            debtor_name: tx.debtorName,
+            transaction_id: tx.transactionId,
+            created_at: new Date().toISOString(),
+          });
+        }
+      }
+
+      // Return transactions to client (NO backend storage!)
+      return new Response(JSON.stringify({
+        transactions: allTransactions,
+      }), {
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    return new Response(
+      JSON.stringify({ error: "Invalid action" }),
+      { status: 400, headers: { "Content-Type": "application/json" } }
+    );
+  } catch (error) {
+    return new Response(
+      JSON.stringify({ error: error.message }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
+  }
+});
+```
+
+### 1.3 Deploy Edge Function
+
+```bash
+# Install Supabase CLI
+npm install -g supabase
+
+# Login to Supabase
+supabase login
+
+# Link to your project
+supabase link --project-ref your-project-ref
+
+# Deploy function
+supabase functions deploy bank_proxy
+
+# Set environment variables (GoCardless credentials)
+supabase secrets set GC_SECRET_ID=your_secret_id
+supabase secrets set GC_SECRET_KEY=your_secret_key
+```
+
+**Important**: This function is STATELESS. It never stores data on backend.
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
   institution_id TEXT,

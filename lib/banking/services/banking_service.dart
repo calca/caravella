@@ -4,15 +4,18 @@ import '../models/bank_account.dart';
 import '../models/bank_transaction.dart';
 import '../models/bank_requisition.dart';
 
-/// Service for managing GoCardless PSD2 banking integration
+/// Service for managing GoCardless PSD2 banking integration (Local-First)
 /// 
-/// This service acts as a bridge between the Flutter app and Supabase Edge Functions
-/// which handle the actual GoCardless API communication.
+/// This service acts as a bridge between the Flutter app and Supabase Edge Function
+/// which acts as a STATELESS PROXY to GoCardless API.
 /// 
 /// IMPORTANT: This is a stub implementation. The actual implementation requires:
-/// - Supabase project setup with Edge Functions
-/// - GoCardless API credentials configured in Supabase environment
-/// - Database tables for users, accounts, and transactions
+/// - Supabase Edge Function (bank_proxy) as stateless proxy
+/// - GoCardless API credentials configured in Edge Function environment
+/// - Local encrypted storage (Drift/Hive/Sembast) with flutter_secure_storage
+/// 
+/// PRIVACY: No banking data is ever stored on backend servers. All data is
+/// encrypted and stored locally on device only.
 class BankingService {
   final String supabaseUrl;
   final String supabaseAnonKey;
@@ -26,33 +29,38 @@ class BankingService {
 
   /// Create a bank link requisition
   /// 
-  /// Calls the Supabase Edge Function /create-link to generate a GoCardless
+  /// Calls the Supabase Edge Function /bank_proxy to generate a GoCardless
   /// requisition and returns the authorization URL for the user to connect their bank.
+  /// 
+  /// The Edge Function acts as a stateless proxy - no data is stored on backend.
   Future<BankingResult<String>> createBankLink({
     required String userId,
     required String institutionId,
     required String redirectUrl,
   }) async {
     try {
-      // STUB: In production, this would call Supabase Edge Function
+      // STUB: In production, this would call Supabase Edge Function proxy
       // final response = await _client.post(
-      //   Uri.parse('$supabaseUrl/functions/v1/create-link'),
+      //   Uri.parse('$supabaseUrl/functions/v1/bank_proxy'),
       //   headers: {
       //     'Authorization': 'Bearer $supabaseAnonKey',
       //     'Content-Type': 'application/json',
-      //     'x-user-id': userId,
       //   },
       //   body: json.encode({
-      //     'institution_id': institutionId,
+      //     'action': 'createLink',
+      //     'bankId': institutionId,
       //     'redirect': redirectUrl,
       //   }),
       // );
+      // 
+      // final data = json.decode(response.body);
+      // return BankingResult.success(data['link'] as String);
 
       return BankingResult.failure(
         BankingError(
           code: 'NOT_IMPLEMENTED',
-          message: 'Banking integration requires Supabase backend setup. '
-              'Please configure Supabase Edge Functions and GoCardless credentials.',
+          message: 'Banking integration requires Supabase Edge Function setup. '
+              'Configure bank_proxy Edge Function with GoCardless credentials.',
         ),
       );
     } catch (e) {
@@ -67,18 +75,39 @@ class BankingService {
 
   /// Fetch transactions from connected bank accounts
   /// 
-  /// Calls the Supabase Edge Function /fetch-transactions to sync bank
-  /// transactions. Respects 24-hour rate limit.
+  /// Calls the Supabase Edge Function /bank_proxy to fetch transactions from
+  /// GoCardless. The Edge Function acts as a stateless proxy - returns JSON
+  /// data without storing anything on backend.
+  /// 
+  /// The returned transactions should be encrypted and stored locally by the caller.
   Future<BankingResult<List<BankTransaction>>> fetchTransactions({
     required String userId,
     required String requisitionId,
   }) async {
     try {
-      // STUB: In production, this would call Supabase Edge Function
+      // STUB: In production, this would call Supabase Edge Function proxy
+      // final response = await _client.post(
+      //   Uri.parse('$supabaseUrl/functions/v1/bank_proxy'),
+      //   headers: {
+      //     'Authorization': 'Bearer $supabaseAnonKey',
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: json.encode({
+      //     'action': 'fetchTransactions',
+      //     'requisitionId': requisitionId,
+      //   }),
+      // );
+      // 
+      // final data = json.decode(response.body);
+      // final txList = data['transactions'] as List;
+      // return BankingResult.success(
+      //   txList.map((tx) => BankTransaction.fromJson(tx)).toList(),
+      // );
+
       return BankingResult.failure(
         BankingError(
           code: 'NOT_IMPLEMENTED',
-          message: 'Transaction sync requires Supabase backend setup.',
+          message: 'Transaction sync requires bank_proxy Edge Function setup.',
         ),
       );
     } catch (e) {
@@ -91,59 +120,18 @@ class BankingService {
     }
   }
 
-  /// Get list of connected bank accounts
-  Future<BankingResult<List<BankAccount>>> getAccounts({
-    required String userId,
-  }) async {
-    try {
-      // STUB: Would query Supabase database
-      return BankingResult.success([]);
-    } catch (e) {
-      return BankingResult.failure(
-        BankingError(
-          code: 'DATABASE_ERROR',
-          message: e.toString(),
-        ),
-      );
-    }
-  }
-
-  /// Get transactions for a specific account
-  Future<BankingResult<List<BankTransaction>>> getAccountTransactions({
-    required String userId,
-    required String accountId,
-    DateTime? fromDate,
-    DateTime? toDate,
-  }) async {
-    try {
-      // STUB: Would query Supabase database with filters
-      return BankingResult.success([]);
-    } catch (e) {
-      return BankingResult.failure(
-        BankingError(
-          code: 'DATABASE_ERROR',
-          message: e.toString(),
-        ),
-      );
-    }
-  }
-
-  /// Check if user can refresh transactions (24-hour limit)
-  Future<BankingResult<bool>> canRefreshTransactions({
-    required String userId,
-  }) async {
-    try {
-      // STUB: Would check last_refresh timestamp from database
-      return BankingResult.success(true);
-    } catch (e) {
-      return BankingResult.failure(
-        BankingError(
-          code: 'DATABASE_ERROR',
-          message: e.toString(),
-        ),
-      );
-    }
-  }
+  // NOTE: In local-first architecture, these methods are not needed
+  // as all data is stored and retrieved from local encrypted storage.
+  // 
+  // The following methods would be implemented by a LocalStorageService
+  // using Drift/Hive/Sembast with encryption via flutter_secure_storage:
+  // 
+  // - getAccounts() - Query local DB
+  // - getAccountTransactions() - Query local DB with filters
+  // - canRefreshTransactions() - Check local last_refresh timestamp
+  // - saveTransactions() - Encrypt and save to local DB
+  // - getLastRefreshDate() - Get from local DB
+  // - setLastRefreshDate() - Update in local DB
 
   void dispose() {
     _client.close();
