@@ -50,8 +50,12 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     _scrollController = ScrollController();
     _scrollController.addListener(_onScroll);
 
-    // Tabs: Active | Archived
-    _tabController = TabController(length: 2, vsync: this);
+    // Tabs: Active | Archived (Material 3 expressive duration)
+    _tabController = TabController(
+      length: 2,
+      vsync: this,
+      animationDuration: const Duration(milliseconds: 350),
+    );
   }
 
   ExpenseGroupNotifier? _groupNotifier;
@@ -425,7 +429,9 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                 ? _buildTabContent(_filteredAllTrips, 'search')
                 : TabBarView(
                     controller: _tabController,
-                    physics: const PageScrollPhysics(),
+                    physics: const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics(),
+                    ),
                     children: [
                       _buildTabContent(_filteredActiveTrips, 'active'),
                       _buildTabContent(_filteredArchivedTrips, 'archived'),
