@@ -4,12 +4,7 @@ class ExpenseLocation {
   final String? address;
   final String? name;
 
-  ExpenseLocation({
-    this.latitude,
-    this.longitude,
-    this.address,
-    this.name,
-  });
+  ExpenseLocation({this.latitude, this.longitude, this.address, this.name});
 
   factory ExpenseLocation.fromJson(Map<String, dynamic> json) {
     return ExpenseLocation(
@@ -21,18 +16,19 @@ class ExpenseLocation {
   }
 
   Map<String, dynamic> toJson() => {
-        if (latitude != null) 'latitude': latitude,
-        if (longitude != null) 'longitude': longitude,
-        if (address != null) 'address': address,
-        if (name != null) 'name': name,
-      };
+    if (latitude != null) 'latitude': latitude,
+    if (longitude != null) 'longitude': longitude,
+    if (address != null) 'address': address,
+    if (name != null) 'name': name,
+  };
 
   bool get hasLocation => latitude != null && longitude != null;
 
   String get displayText {
     if (name != null && name!.isNotEmpty) return name!;
     if (address != null && address!.isNotEmpty) return address!;
-    if (hasLocation) return '${latitude!.toStringAsFixed(6)}, ${longitude!.toStringAsFixed(6)}';
+    if (hasLocation)
+      return '${latitude!.toStringAsFixed(6)}, ${longitude!.toStringAsFixed(6)}';
     return '';
   }
 
@@ -62,8 +58,5 @@ class ExpenseLocation {
 
   @override
   int get hashCode =>
-      latitude.hashCode ^
-      longitude.hashCode ^
-      address.hashCode ^
-      name.hashCode;
+      latitude.hashCode ^ longitude.hashCode ^ address.hashCode ^ name.hashCode;
 }

@@ -245,214 +245,224 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
               }
             },
             child: Scaffold(
-          appBar: CaravellaAppBar(actions: []),
-          body: Stack(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Form(
-                  key: _formKey,
-                  child: DefaultTextStyle.merge(
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    child: ListView(
-                      children: [
-                        Text(
-                          widget.mode == GroupEditMode.edit
-                              ? gloc.edit_group
-                              : gloc.new_group,
-                          style: Theme.of(context).textTheme.headlineMedium
-                              ?.copyWith(fontWeight: FontWeight.w600),
-                        ),
-                        const SizedBox(height: 24),
-                        SectionFlat(
-                          title: '',
+              appBar: CaravellaAppBar(actions: []),
+              body: Stack(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Form(
+                      key: _formKey,
+                      child: DefaultTextStyle.merge(
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        child: ListView(
                           children: [
-                            Selector<GroupFormState, bool>(
-                              selector: (context, s) => s.title.trim().isEmpty,
-                              builder: (context, isEmpty, child) => Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SectionHeader(
-                                    title: gloc.group_name,
-                                    requiredMark: true,
-                                    showRequiredHint: isEmpty,
-                                    padding: EdgeInsets.zero,
-                                    spacing: 4,
-                                  ),
-                                  const SizedBox(height: 12),
-                                  IconLeadingField(
-                                    icon: const Icon(Icons.title_outlined),
-                                    semanticsLabel: gloc.group_name,
-                                    tooltip: gloc.group_name,
-                                    child: const GroupTitleField(),
-                                  ),
-                                ],
-                              ),
+                            Text(
+                              widget.mode == GroupEditMode.edit
+                                  ? gloc.edit_group
+                                  : gloc.new_group,
+                              style: Theme.of(context).textTheme.headlineMedium
+                                  ?.copyWith(fontWeight: FontWeight.w600),
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 24),
-                        const ParticipantsEditor(),
-                        const SizedBox(height: 24),
-                        const CategoriesEditor(),
-                        const SizedBox(height: 24),
-                        PeriodSectionEditor(
-                          onPickDate: (isStart) async =>
-                              _pickDate(context, isStart),
-                          onClearDates: _clearDates,
-                          errorText: _dateError,
-                        ),
-                        const SizedBox(height: 24),
-                        SectionFlat(
-                          title: '',
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            const SizedBox(height: 24),
+                            SectionFlat(
+                              title: '',
                               children: [
-                                SectionHeader(
-                                  title: gloc.currency,
-                                  description: gloc.currency_description,
-                                  padding: EdgeInsets.zero,
-                                  spacing: 4,
-                                ),
-                                const SizedBox(height: 8),
-                                Selector<GroupFormState, Map<String, String>>(
-                                  selector: (context, s) => s.currency,
-                                  builder: (context, cur, child) => SelectionTile(
-                                    leading: Text(
-                                      cur['symbol'] ?? '',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge
-                                          ?.copyWith(fontSize: 28),
-                                      semanticsLabel:
-                                          '${cur['symbol']} ${cur['code']}',
-                                    ),
-                                    title: cur['name']!,
-                                    subtitle: '${cur['code']}',
-                                    trailing: Icon(
-                                      Icons.chevron_right,
-                                      size: 24,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.outline,
-                                    ),
-                                    onTap: () async {
-                                      final selected =
-                                          await showModalBottomSheet<
-                                            Map<String, String>
-                                          >(
-                                            context: context,
-                                            shape: const RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.vertical(
-                                                    top: Radius.circular(20),
-                                                  ),
-                                            ),
-                                            builder: (_) =>
-                                                const CurrencySelectorSheet(),
-                                          );
-                                      if (selected != null && context.mounted) {
-                                        context
-                                            .read<GroupFormState>()
-                                            .setCurrency(selected);
-                                      }
-                                    },
-                                    borderRadius: 8,
-                                    padding: const EdgeInsets.only(
-                                      left: 8,
-                                      top: 8,
-                                      bottom: 8,
-                                    ),
+                                Selector<GroupFormState, bool>(
+                                  selector: (context, s) =>
+                                      s.title.trim().isEmpty,
+                                  builder: (context, isEmpty, child) => Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SectionHeader(
+                                        title: gloc.group_name,
+                                        requiredMark: true,
+                                        showRequiredHint: isEmpty,
+                                        padding: EdgeInsets.zero,
+                                        spacing: 4,
+                                      ),
+                                      const SizedBox(height: 12),
+                                      IconLeadingField(
+                                        icon: const Icon(Icons.title_outlined),
+                                        semanticsLabel: gloc.group_name,
+                                        tooltip: gloc.group_name,
+                                        child: const GroupTitleField(),
+                                      ),
+                                    ],
                                   ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 24),
+                            const ParticipantsEditor(),
+                            const SizedBox(height: 24),
+                            const CategoriesEditor(),
+                            const SizedBox(height: 24),
+                            PeriodSectionEditor(
+                              onPickDate: (isStart) async =>
+                                  _pickDate(context, isStart),
+                              onClearDates: _clearDates,
+                              errorText: _dateError,
+                            ),
+                            const SizedBox(height: 24),
+                            SectionFlat(
+                              title: '',
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SectionHeader(
+                                      title: gloc.currency,
+                                      description: gloc.currency_description,
+                                      padding: EdgeInsets.zero,
+                                      spacing: 4,
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Selector<
+                                      GroupFormState,
+                                      Map<String, String>
+                                    >(
+                                      selector: (context, s) => s.currency,
+                                      builder: (context, cur, child) => SelectionTile(
+                                        leading: Text(
+                                          cur['symbol'] ?? '',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleLarge
+                                              ?.copyWith(fontSize: 28),
+                                          semanticsLabel:
+                                              '${cur['symbol']} ${cur['code']}',
+                                        ),
+                                        title: cur['name']!,
+                                        subtitle: '${cur['code']}',
+                                        trailing: Icon(
+                                          Icons.chevron_right,
+                                          size: 24,
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.outline,
+                                        ),
+                                        onTap: () async {
+                                          final selected =
+                                              await showModalBottomSheet<
+                                                Map<String, String>
+                                              >(
+                                                context: context,
+                                                shape:
+                                                    const RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.vertical(
+                                                            top:
+                                                                Radius.circular(
+                                                                  20,
+                                                                ),
+                                                          ),
+                                                    ),
+                                                builder: (_) =>
+                                                    const CurrencySelectorSheet(),
+                                              );
+                                          if (selected != null &&
+                                              context.mounted) {
+                                            context
+                                                .read<GroupFormState>()
+                                                .setCurrency(selected);
+                                          }
+                                        },
+                                        borderRadius: 8,
+                                        padding: const EdgeInsets.only(
+                                          left: 8,
+                                          top: 8,
+                                          bottom: 8,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 32),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SectionHeader(
+                                      title: gloc.background,
+                                      description: gloc.choose_image_or_color,
+                                      padding: EdgeInsets.zero,
+                                      spacing: 4,
+                                    ),
+                                    const SizedBox(height: 12),
+                                    const BackgroundPicker(),
+                                  ],
                                 ),
                               ],
                             ),
                             const SizedBox(height: 32),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SectionHeader(
-                                  title: gloc.background,
-                                  description: gloc.choose_image_or_color,
-                                  padding: EdgeInsets.zero,
-                                  spacing: 4,
-                                ),
-                                const SizedBox(height: 12),
-                                const BackgroundPicker(),
-                              ],
-                            ),
+                            const SaveButtonBar(),
+                            const SizedBox(height: 80),
                           ],
-                        ),
-                        const SizedBox(height: 32),
-                        const SaveButtonBar(),
-                        const SizedBox(height: 80),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Selector<GroupFormState, bool>(
-                selector: (_, s) => s.isBusy,
-                builder: (ctx, busy, _) {
-                  final loc = gen.AppLocalizations.of(ctx);
-                  final state = ctx.read<GroupFormState>();
-                  final message = state.isSaving
-                      ? loc.saving
-                      : loc.processing_image;
-                  return IgnorePointer(
-                    ignoring: !busy,
-                    child: AnimatedOpacity(
-                      opacity: busy ? 1 : 0,
-                      duration: const Duration(milliseconds: 220),
-                      curve: Curves.easeOutQuad,
-                      child: Container(
-                        color: Theme.of(
-                          ctx,
-                        ).colorScheme.surface.withValues(alpha: 0.72),
-                        child: Center(
-                          child: AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 260),
-                            switchInCurve: Curves.easeOutBack,
-                            switchOutCurve: Curves.easeIn,
-                            child: !busy
-                                ? const SizedBox.shrink()
-                                : Column(
-                                    key: const ValueKey('busy_overlay'),
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const SizedBox(
-                                        width: 46,
-                                        height: 46,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 3.2,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 18),
-                                      Text(
-                                        message,
-                                        textAlign: TextAlign.center,
-                                        style: Theme.of(ctx)
-                                            .textTheme
-                                            .bodyMedium
-                                            ?.copyWith(
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                      ),
-                                    ],
-                                  ),
-                          ),
                         ),
                       ),
                     ),
-                  );
-                },
+                  ),
+                  Selector<GroupFormState, bool>(
+                    selector: (_, s) => s.isBusy,
+                    builder: (ctx, busy, _) {
+                      final loc = gen.AppLocalizations.of(ctx);
+                      final state = ctx.read<GroupFormState>();
+                      final message = state.isSaving
+                          ? loc.saving
+                          : loc.processing_image;
+                      return IgnorePointer(
+                        ignoring: !busy,
+                        child: AnimatedOpacity(
+                          opacity: busy ? 1 : 0,
+                          duration: const Duration(milliseconds: 220),
+                          curve: Curves.easeOutQuad,
+                          child: Container(
+                            color: Theme.of(
+                              ctx,
+                            ).colorScheme.surface.withValues(alpha: 0.72),
+                            child: Center(
+                              child: AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 260),
+                                switchInCurve: Curves.easeOutBack,
+                                switchOutCurve: Curves.easeIn,
+                                child: !busy
+                                    ? const SizedBox.shrink()
+                                    : Column(
+                                        key: const ValueKey('busy_overlay'),
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const SizedBox(
+                                            width: 46,
+                                            height: 46,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 3.2,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 18),
+                                          Text(
+                                            message,
+                                            textAlign: TextAlign.center,
+                                            style: Theme.of(ctx)
+                                                .textTheme
+                                                .bodyMedium
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                          ),
+                                        ],
+                                      ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
-        );
-      },
+            ),
+          );
+        },
       ),
     );
   }

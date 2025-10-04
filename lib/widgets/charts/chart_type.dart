@@ -1,7 +1,7 @@
 enum ChartType {
   weekly,
   monthly;
-  
+
   String getBadgeKey() {
     switch (this) {
       case ChartType.weekly:
@@ -10,7 +10,7 @@ enum ChartType {
         return 'monthlyChartBadge';
     }
   }
-  
+
   String getSemanticLabelKey() {
     switch (this) {
       case ChartType.weekly:

@@ -24,8 +24,9 @@ class CurrencyDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String formattedValue =
-        showDecimals ? value.toStringAsFixed(2) : value.truncate().toString();
+    final String formattedValue = showDecimals
+        ? value.toStringAsFixed(2)
+        : value.truncate().toString();
 
     return Row(
       mainAxisAlignment: alignment,
@@ -38,10 +39,10 @@ class CurrencyDisplay extends StatelessWidget {
               : Text(
                   formattedValue,
                   style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                        color: color ?? Theme.of(context).colorScheme.onSurface,
-                        fontSize: valueFontSize,
-                        fontWeight: fontWeight,
-                      ),
+                    color: color ?? Theme.of(context).colorScheme.onSurface,
+                    fontSize: valueFontSize,
+                    fontWeight: fontWeight,
+                  ),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                 ),
@@ -50,16 +51,18 @@ class CurrencyDisplay extends StatelessWidget {
         Text(
           currency,
           style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                color: color ?? Theme.of(context).colorScheme.onSurface,
-                fontSize: currencyFontSize,
-              ),
+            color: color ?? Theme.of(context).colorScheme.onSurface,
+            fontSize: currencyFontSize,
+          ),
         ),
       ],
     );
   }
 
   Widget _buildValueWithSeparateDecimals(
-      BuildContext context, String formattedValue) {
+    BuildContext context,
+    String formattedValue,
+  ) {
     final parts = formattedValue.split('.');
     final integerPart = parts[0];
     final decimalPart = parts.length > 1 ? '.${parts[1]}' : '';
@@ -72,18 +75,18 @@ class CurrencyDisplay extends StatelessWidget {
           TextSpan(
             text: integerPart,
             style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                  color: color ?? Theme.of(context).colorScheme.onSurface,
-                  fontSize: valueFontSize,
-                  fontWeight: fontWeight,
-                ),
+              color: color ?? Theme.of(context).colorScheme.onSurface,
+              fontSize: valueFontSize,
+              fontWeight: fontWeight,
+            ),
           ),
           if (decimalPart.isNotEmpty)
             TextSpan(
               text: decimalPart,
               style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                    color: color ?? Theme.of(context).colorScheme.onSurface,
-                    fontSize: currencyFontSize,
-                  ),
+                color: color ?? Theme.of(context).colorScheme.onSurface,
+                fontSize: currencyFontSize,
+              ),
             ),
         ],
       ),
