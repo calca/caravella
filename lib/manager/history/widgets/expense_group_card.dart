@@ -6,36 +6,57 @@ import '../../../widgets/base_card.dart';
 import '../../details/pages/expense_group_detail_page.dart';
 
 class ExpenseGroupCard extends StatelessWidget {
-  // Dismiss background for swipe actions
+  // Dismiss background for swipe actions - Gmail-style Material 3
   Widget _buildDismissBackground(BuildContext context) {
     final isArchived = trip.archived;
-    final backgroundColor = Theme.of(
-      context,
-    ).colorScheme.surfaceContainerHighest;
+    final colorScheme = Theme.of(context).colorScheme;
+    
+    // Gmail-style colors: subtle background with prominent icon container
+    final backgroundColor = colorScheme.surfaceContainerHighest;
+    final iconContainerColor = isArchived 
+        ? colorScheme.primaryContainer 
+        : colorScheme.secondaryContainer;
+    final iconColor = isArchived 
+        ? colorScheme.onPrimaryContainer 
+        : colorScheme.onSecondaryContainer;
+    
     final iconData = isArchived
-        ? Icons.unarchive_outlined
-        : Icons.archive_outlined;
+        ? Icons.unarchive_rounded
+        : Icons.archive_rounded;
     final actionText = isArchived ? 'Unarchive' : 'Archive';
+    
     return Container(
       alignment: Alignment.centerRight,
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      color: backgroundColor,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            iconData,
-            color: Theme.of(context).colorScheme.onSurface,
-            size: 28,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            actionText,
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface,
+      padding: const EdgeInsets.only(right: 16),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Container(
+        width: 80,
+        height: 80,
+        decoration: BoxDecoration(
+          color: iconContainerColor,
+          shape: BoxShape.circle,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              iconData,
+              color: iconColor,
+              size: 24,
             ),
-          ),
-        ],
+            const SizedBox(height: 4),
+            Text(
+              actionText,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: iconColor,
+                fontSize: 11,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -107,6 +128,8 @@ class ExpenseGroupCard extends StatelessWidget {
           // Material 3 expressive motion durations
           movementDuration: const Duration(milliseconds: 350),
           resizeDuration: const Duration(milliseconds: 300),
+          // Gmail-style dismiss with slight vertical offset for depth
+          crossAxisEndOffset: 0.15,
           background: _buildDismissBackground(context),
           secondaryBackground: _buildDismissBackground(context),
           confirmDismiss: (_) => _confirmArchive(context),
