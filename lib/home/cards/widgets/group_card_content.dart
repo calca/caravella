@@ -184,7 +184,7 @@ class GroupCardContent extends StatelessWidget {
                 currentGroup.endDate != null) ...[
               Icon(
                 Icons.event_outlined,
-                size: 8,
+                size: 14,
                 color: theme.colorScheme.onSurfaceVariant,
               ),
               const SizedBox(width: 4),

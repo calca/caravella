@@ -42,8 +42,7 @@ class AmountInputWidget extends StatelessWidget {
       final textField = TextFormField(
         controller: controller,
         focusNode: focusNode,
-        style:
-            textStyle ?? FormTheme.getFieldTextStyle(context),
+        style: textStyle ?? FormTheme.getFieldTextStyle(context),
         decoration: InputDecoration(
           hintText: label != null ? '${label!} *' : null,
           // rely on theme hintStyle
@@ -102,8 +101,7 @@ class AmountInputWidget extends StatelessWidget {
     final amountField = TextFormField(
       controller: controller,
       focusNode: focusNode,
-      style:
-          textStyle ?? FormTheme.getAmountTextStyle(context),
+      style: textStyle ?? FormTheme.getAmountTextStyle(context),
       decoration: InputDecoration(
         hintText: label != null ? '${label!} *' : null,
         // rely on theme hintStyle
@@ -148,7 +146,7 @@ class _SimpleDecimalFormatter extends TextInputFormatter {
   ) {
     // Basic filtering - remove invalid characters
     String sanitized = newValue.text.replaceAll(RegExp(r'[^0-9.,]'), '');
-    
+
     // Handle empty input
     if (sanitized.isEmpty) {
       return const TextEditingValue(
@@ -156,10 +154,10 @@ class _SimpleDecimalFormatter extends TextInputFormatter {
         selection: TextSelection.collapsed(offset: 0),
       );
     }
-    
+
     // Convert commas to dots for consistent decimal handling
     sanitized = sanitized.replaceAll(',', '.');
-    
+
     // Only allow one decimal point
     final parts = sanitized.split('.');
     if (parts.length > 2) {
@@ -174,12 +172,12 @@ class _SimpleDecimalFormatter extends TextInputFormatter {
       // Limit decimal places to 2
       sanitized = '${parts[0]}.${parts[1].substring(0, 2)}';
     }
-    
+
     // Don't allow leading decimal point without a number
     if (sanitized.startsWith('.')) {
       sanitized = '0$sanitized';
     }
-    
+
     // Preserve cursor position at end if user was typing at end
     int cursorPosition = sanitized.length;
     if (oldValue.selection.baseOffset == oldValue.text.length &&
@@ -187,9 +185,12 @@ class _SimpleDecimalFormatter extends TextInputFormatter {
       cursorPosition = sanitized.length;
     } else {
       // Try to maintain relative cursor position
-      cursorPosition = (newValue.selection.baseOffset).clamp(0, sanitized.length);
+      cursorPosition = (newValue.selection.baseOffset).clamp(
+        0,
+        sanitized.length,
+      );
     }
-    
+
     return TextEditingValue(
       text: sanitized,
       selection: TextSelection.collapsed(offset: cursorPosition),

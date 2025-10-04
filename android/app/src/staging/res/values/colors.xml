@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Staging flavor splash screen colors - match staging icon background #FF9800 -->
+    <color name="splash_background_light">#FF9800</color>
+    <color name="splash_background_dark">#FF9800</color>
+	<color name="ic_launcher_background">#FF9800</color>
+</resources>

@@ -37,6 +37,7 @@ class CategoriesSection extends StatelessWidget {
       onEdit: onEditCategory,
       onDelete: onRemoveCategory,
       itemIcon: AppIcons.category,
+      showEmptyHint: categories.isEmpty,
     );
   }
 }

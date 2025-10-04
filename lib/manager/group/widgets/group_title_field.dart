@@ -63,9 +63,7 @@ class _GroupTitleFieldState extends State<GroupTitleField> {
       controller: _controller,
       style: FormTheme.getFieldTextStyle(context),
       textInputAction: TextInputAction.next,
-      decoration: FormTheme.getBorderlessDecoration(
-        hintText: 'Nome gruppo',
-      ),
+      decoration: FormTheme.getBorderlessDecoration(hintText: 'Nome gruppo'),
     );
   }
 }

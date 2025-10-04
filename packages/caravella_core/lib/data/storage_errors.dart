@@ -29,12 +29,19 @@ class SerializationError extends StorageError {
 class ValidationError extends StorageError {
   final Map<String, String>? fieldErrors;
 
-  const ValidationError(super.message, {this.fieldErrors, super.details, super.cause});
+  const ValidationError(
+    super.message, {
+    this.fieldErrors,
+    super.details,
+    super.cause,
+  });
 
   @override
   String toString() {
     if (fieldErrors != null && fieldErrors!.isNotEmpty) {
-      final errors = fieldErrors!.entries.map((e) => '${e.key}: ${e.value}').join(', ');
+      final errors = fieldErrors!.entries
+          .map((e) => '${e.key}: ${e.value}')
+          .join(', ');
       return '$runtimeType: $message - Field errors: $errors';
     }
     return super.toString();
@@ -46,7 +53,7 @@ class EntityNotFoundError extends StorageError {
   final String entityType;
   final String entityId;
 
-  const EntityNotFoundError(this.entityType, this.entityId) 
+  const EntityNotFoundError(this.entityType, this.entityId)
     : super('$entityType with id "$entityId" not found');
 }
 
@@ -57,5 +64,9 @@ class DataIntegrityError extends StorageError {
 
 /// Thrown when concurrent modification occurs
 class ConcurrentModificationError extends StorageError {
-  const ConcurrentModificationError(super.message, {super.details, super.cause});
+  const ConcurrentModificationError(
+    super.message, {
+    super.details,
+    super.cause,
+  });
 }

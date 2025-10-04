@@ -13,8 +13,9 @@ class SaveButtonBar extends StatelessWidget {
     final controller = context.read<GroupFormController>();
     final loc = gen.AppLocalizations.of(context);
     final saving = state.isSaving;
+    final hasChanges = controller.hasChanges;
     return FilledButton(
-      onPressed: state.isValid && !saving
+      onPressed: state.isValid && !saving && hasChanges
           ? () async {
               // Capture context-dependent values before any awaits
               final navigator = Navigator.of(context);

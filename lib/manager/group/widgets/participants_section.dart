@@ -37,6 +37,7 @@ class ParticipantsSection extends StatelessWidget {
       onEdit: onEditParticipant,
       onDelete: onRemoveParticipant,
       itemIcon: AppIcons.participant,
+      showEmptyHint: participants.isEmpty,
     );
   }
 }
