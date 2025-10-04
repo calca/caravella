@@ -36,43 +36,19 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
 
 ## 📱 Screenshots
 
-### Welcome Screen
 <p align="center">
-  <img src="store/screenshot/01 - Welcome - EN.png" alt="Welcome Screen" width="250"/>
+  <img src="store/screenshot/01 - Welcome - EN.png" alt="Welcome Screen" width="200"/>
+  <img src="store/screenshot/02 - HomePage.png" alt="Home Page" width="200"/>
+  <img src="store/screenshot/03 - HomePage - Add.png" alt="Add Group" width="200"/>
+  <img src="store/screenshot/04 - Group - Expenses - Home.png" alt="Group Expenses Home" width="200"/>
 </p>
 
-The app features a beautiful onboarding experience available in multiple languages.
-
-### Home Dashboard
 <p align="center">
-  <img src="store/screenshot/02 - HomePage.png" alt="Home Page" width="250"/>
-  <img src="store/screenshot/03 - HomePage - Add.png" alt="Add Group" width="250"/>
+  <img src="store/screenshot/05 - Group - Expenses.png" alt="Group Expenses" width="200"/>
+  <img src="store/screenshot/06 - Group - Stats.png" alt="Group Statistics" width="200"/>
+  <img src="store/screenshot/07 - Group - Partecipants.png" alt="Participants" width="200"/>
+  <img src="store/screenshot/08 - Grops History .png" alt="Groups History" width="200"/>
 </p>
-
-Quick overview of your expense groups and easy access to create new ones.
-
-### Group Management
-<p align="center">
-  <img src="store/screenshot/04 - Group - Expenses - Home.png" alt="Group Expenses Home" width="250"/>
-  <img src="store/screenshot/05 - Group - Expenses.png" alt="Group Expenses" width="250"/>
-</p>
-
-Track all expenses within a group with detailed information.
-
-### Statistics & Participants
-<p align="center">
-  <img src="store/screenshot/06 - Group - Stats.png" alt="Group Statistics" width="250"/>
-  <img src="store/screenshot/07 - Group - Partecipants.png" alt="Participants" width="250"/>
-</p>
-
-View expense statistics and manage group participants easily.
-
-### History
-<p align="center">
-  <img src="store/screenshot/08 - Grops History .png" alt="Groups History" width="250"/>
-</p>
-
-Keep track of all your past and current expense groups.
 
 ## 🛠️ Tech Stack & Architecture
 
@@ -122,16 +98,7 @@ For complete details, see our [Privacy Policy](store/PRIVACY_POLICY.md) and [Per
 ### iOS
 - **App Store**: Coming soon
 
-### Other Platforms
-- **Web**: Can be built and deployed
-- **Linux/Windows/macOS**: Can be built for desktop platforms
-
 Visit our [website](https://calca.github.io/caravella) for more information.
-
-    ## Package & CI notes
-
-    - The project's Dart package name has been updated to `io_caravella_egm` (see `pubspec.yaml`).
-    - CI artifact names were updated to use the `io_caravella_egm` prefix.
 
 ## 🤝 Contributing
 
