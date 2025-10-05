@@ -59,23 +59,6 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
 - **Architecture**: The app follows a clean architecture with a separation of concerns between UI, state management, and data services.
 - **Flavors**: Configured for different build environments (dev, staging, prod).
 
-## 🚀 Getting Started
-
-1.  **Install Dependencies**
-    ```sh
-    flutter pub get
-    ```
-
-2.  **Generate App Icons**
-    ```sh
-    flutter pub run flutter_launcher_icons:main
-    ```
-
-3.  **Run the App**
-    ```sh
-    flutter run
-    ```
-
 ## 🔒 Privacy & Security
 
 Caravella is designed with privacy as a core principle:
