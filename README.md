@@ -47,7 +47,7 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
   <img src="store/screenshot/05 - Group - Expenses.png" alt="Group Expenses" width="200"/>
   <img src="store/screenshot/06 - Group - Stats.png" alt="Group Statistics" width="200"/>
   <img src="store/screenshot/07 - Group - Partecipants.png" alt="Participants" width="200"/>
-  <img src="store/screenshot/08 - Grops History .png" alt="Groups History" width="200"/>
+  <img src="store/screenshot/08 - Grops History.png" alt="Groups History" width="200"/>
 </p>
 
 ## 🛠️ Tech Stack & Architecture
