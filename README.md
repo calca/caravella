@@ -1,4 +1,4 @@
-# Caravella - Group Expense & Travel Manager
+# Caravella: an Expense Tracker
 
 <p align="center">
   <img src="store/assets/caravella-icon-store.png" alt="Caravella Icon" width="150"/>
