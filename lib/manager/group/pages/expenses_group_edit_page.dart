@@ -209,7 +209,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
             state.currency['code'],
           );
         },
-        builder: (context, _, __) {
+        builder: (context, _, _) {
           final controller = context.read<GroupFormController>();
           return PopScope(
             canPop: !controller.hasChanges,

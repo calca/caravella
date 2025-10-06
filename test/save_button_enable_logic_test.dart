@@ -18,6 +18,7 @@ void main() {
         final originalGroup = ExpenseGroup(
           id: 'test-group',
           title: 'Original Title',
+          expenses: const [],
           participants: [
             ExpenseParticipant(name: 'John', id: 'p1'),
           ],
@@ -54,6 +55,7 @@ void main() {
         final originalGroup = ExpenseGroup(
           id: 'test-group',
           title: 'Original Title',
+          expenses: const [],
           participants: [
             ExpenseParticipant(name: 'John', id: 'p1'),
           ],
@@ -92,6 +94,7 @@ void main() {
         final originalGroup = ExpenseGroup(
           id: 'test-group',
           title: 'Test Group',
+          expenses: const [],
           participants: [
             ExpenseParticipant(name: 'John', id: 'p1'),
           ],
@@ -130,6 +133,7 @@ void main() {
         final originalGroup = ExpenseGroup(
           id: 'test-group',
           title: 'Test Group',
+          expenses: const [],
           participants: [
             ExpenseParticipant(name: 'John', id: 'p1'),
           ],
@@ -168,6 +172,7 @@ void main() {
         final originalGroup = ExpenseGroup(
           id: 'test-group',
           title: 'Test Group',
+          expenses: const [],
           participants: [
             ExpenseParticipant(name: 'John', id: 'p1'),
           ],
@@ -209,6 +214,7 @@ void main() {
         final originalGroup = ExpenseGroup(
           id: 'test-group',
           title: 'Test Group',
+          expenses: const [],
           participants: [
             ExpenseParticipant(name: 'John', id: 'p1'),
           ],
@@ -284,6 +290,7 @@ void main() {
         final originalGroup = ExpenseGroup(
           id: 'test-group',
           title: 'Test Group',
+          expenses: const [],
           participants: [
             ExpenseParticipant(name: 'John', id: 'p1'),
           ],
@@ -324,6 +331,7 @@ void main() {
         final originalGroup = ExpenseGroup(
           id: 'test-group',
           title: 'Test Group',
+          expenses: const [],
           participants: [
             ExpenseParticipant(name: 'John', id: 'p1'),
           ],
