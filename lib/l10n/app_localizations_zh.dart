@@ -1576,4 +1576,17 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get debt_prefix_to => '给 ';
+
+  @override
+  String get send_reminder => '发送提醒';
+
+  @override
+  String reminder_message_single(
+          Object participantName, Object amount, Object creditorName, Object groupName) =>
+      '嗨 $participantName！👋\n\n友情提醒，您需要向 $creditorName 支付 $amount，用于群组 \"$groupName\"。\n\n谢谢！😊';
+
+  @override
+  String reminder_message_multiple(
+          Object participantName, Object groupName, Object debtsList) =>
+      '嗨 $participantName！👋\n\n友情提醒您对群组 \"$groupName\" 的付款：\n\n$debtsList\n\n谢谢！😊';
 }
