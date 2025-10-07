@@ -25,6 +25,7 @@ import '../widgets/group_total.dart';
 import '../widgets/filtered_expense_list.dart';
 // Replaced bottom sheet overview with full page navigation
 import 'unified_overview_page.dart';
+import 'expense_locations_map_page.dart';
 import '../widgets/options_sheet.dart';
 import '../widgets/export_options_sheet.dart';
 import '../widgets/expense_entry_sheet.dart';
@@ -144,6 +145,15 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     if (_trip == null) return;
     Navigator.of(context).push(
       MaterialPageRoute(builder: (ctx) => UnifiedOverviewPage(trip: _trip!)),
+    );
+  }
+
+  void _openExpenseLocationsMap() {
+    if (_trip == null) return;
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (ctx) => ExpenseLocationsMapPage(group: _trip!),
+      ),
     );
   }
 
@@ -686,6 +696,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                                     onOverview: trip.expenses.isNotEmpty
                                         ? _openUnifiedOverviewPage
                                         : null,
+                                    onMap: _openExpenseLocationsMap,
                                     onOptions: _showOptionsSheet,
                                   ),
                                 ],
