@@ -195,11 +195,8 @@ class _ParticipantStatCardState extends State<_ParticipantStatCard> {
       final debt = owes.first;
       final creditorName = widget.idToName[debt.toId] ?? debt.toId;
       final amount = _fmtCurrency(context, debt.amount);
-      return loc.reminder_message_single
-          .replaceAll('{participantName}', participantName)
-          .replaceAll('{amount}', amount)
-          .replaceAll('{creditorName}', creditorName)
-          .replaceAll('{groupName}', groupName);
+      return loc.reminder_message_single(
+          participantName, amount, creditorName, groupName);
     } else {
       // Multiple debts
       final debtsList = owes.map((debt) {
@@ -208,10 +205,8 @@ class _ParticipantStatCardState extends State<_ParticipantStatCard> {
         return '• $amount ${loc.debt_prefix_to}$creditorName';
       }).join('\n');
 
-      return loc.reminder_message_multiple
-          .replaceAll('{participantName}', participantName)
-          .replaceAll('{groupName}', groupName)
-          .replaceAll('{debtsList}', debtsList);
+      return loc.reminder_message_multiple(
+          participantName, groupName, debtsList);
     }
   }
 
