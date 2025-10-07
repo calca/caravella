@@ -587,4 +587,20 @@
   ,"@less": {"description": "Etichetta inline per comprimere e mostrare meno elementi"}
   ,"debt_prefix_to": "a "
   ,"@debt_prefix_to": {"description": "Prefisso breve mostrato prima del destinatario nella riga di debito/pareggio (es. 'a Alice 10€')"}
+  ,"voice_input_button": "Inserisci con la voce"
+  ,"@voice_input_button": {"description": "Etichetta del pulsante per attivare l'input vocale"}
+  ,"voice_input_listening": "In ascolto..."
+  ,"@voice_input_listening": {"description": "Messaggio mostrato durante la registrazione vocale"}
+  ,"voice_input_tap_to_speak": "Tocca per parlare"
+  ,"@voice_input_tap_to_speak": {"description": "Suggerimento per iniziare a parlare"}
+  ,"voice_input_processing": "Elaborazione..."
+  ,"@voice_input_processing": {"description": "Messaggio mostrato durante l'elaborazione del testo vocale"}
+  ,"voice_input_error": "Errore nel riconoscimento vocale"
+  ,"@voice_input_error": {"description": "Messaggio di errore per problemi con il riconoscimento vocale"}
+  ,"voice_input_permission_denied": "Permesso microfono negato"
+  ,"@voice_input_permission_denied": {"description": "Messaggio quando l'utente nega il permesso del microfono"}
+  ,"voice_input_not_available": "Riconoscimento vocale non disponibile"
+  ,"@voice_input_not_available": {"description": "Messaggio quando il riconoscimento vocale non è disponibile sul dispositivo"}
+  ,"voice_input_hint": "Prova a dire: '50 euro per cena al ristorante'"
+  ,"@voice_input_hint": {"description": "Suggerimento di esempio per l'uso dell'input vocale"}
 }
