@@ -485,4 +485,10 @@
   ,"welcome_v3_tagline": "完美适用于群组旅行、室友或任何共享支出的情况。"
   ,"currency_WST": "萨摩亚塔拉"
   ,"search_currency": "搜索货币..."
+  ,"send_reminder": "发送提醒"
+  ,"@send_reminder": {"description": "向参与者发送付款提醒的按钮标签"}
+  ,"reminder_message_single": "嗨 {participantName}！👋\n\n友情提醒，您需要向 {creditorName} 支付 {amount}，用于群组 \"{groupName}\"。\n\n谢谢！😊"
+  ,"@reminder_message_single": {"description": "参与者欠一个人钱时的提醒消息", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
+  ,"reminder_message_multiple": "嗨 {participantName}！👋\n\n友情提醒您对群组 \"{groupName}\" 的付款：\n\n{debtsList}\n\n谢谢！😊"
+  ,"@reminder_message_multiple": {"description": "参与者欠多个人钱时的提醒消息", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
 }
