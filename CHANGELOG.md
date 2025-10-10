@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Soft Dark theme with improved readability and WCAG AA compliant colors
 - Android app now restricted to smartphone devices only (tablets excluded) for optimal user experience
 
 ## [1.0.44] - 2025-01-09
