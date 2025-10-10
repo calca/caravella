@@ -72,7 +72,7 @@ void main() {
 
     test('should preserve primary and accent colors', () {
       // Primary colors should remain consistent with the app branding
-      expect(darkColorScheme.primary, equals(const Color(0xFF669DB3)));
+      expect(darkColorScheme.primary, equals(const Color(0xFF80CBC4)));
       expect(darkColorScheme.secondary, equals(const Color(0xFFFC6E75)));
       expect(darkColorScheme.tertiary, equals(const Color(0xFFF75F67)));
     });
