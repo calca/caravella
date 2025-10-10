@@ -60,7 +60,7 @@ layout: default
       <div class="feature__card">
         <div class="feature__icon"><span class="material-icons-outlined">devices</span></div>
         <h3 class="feature__title">Multi-platform</h3>
-        <p class="feature__description">Available on Android, iOS, Web and Desktop. Material 3 interface with dark/light theme support.</p>
+        <p class="feature__description">Available on Android smartphones, iOS, Web and Desktop. Material 3 interface with dark/light theme support.</p>
       </div>
     </div>
   </div>
