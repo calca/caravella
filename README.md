@@ -25,7 +25,7 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
 - **Privacy First**: All data stored locally on your device - no cloud sync required
 - **Multi-language**: Available in English, Italian, Spanish, Portuguese, and Chinese
 - **Material Design**: Modern Material 3 interface with dark/light theme support
-- **Cross-Platform**: Built with Flutter, designed to run smoothly on Android, iOS, Web, and Desktop
+- **Cross-Platform**: Built with Flutter, designed to run smoothly on Android smartphones, iOS, Web, and Desktop
 
 ### Perfect For:
 - Group trips and vacations
@@ -77,6 +77,7 @@ For complete details, see our [Privacy Policy](store/PRIVACY_POLICY.md) and [Per
 - **GitHub Releases**: [Download APK](https://github.com/calca/caravella/releases)
 - **Google Play Store**: Coming soon
 - **F-Droid**: Coming soon
+- **Device Support**: Optimized for smartphones only (tablets not supported)
 
 ### iOS
 - **App Store**: Coming soon

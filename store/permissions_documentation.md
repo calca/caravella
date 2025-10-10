@@ -143,3 +143,23 @@ if (permission == LocationPermission.denied) {
 - Only collect data necessary for app functionality
 - No analytics or tracking beyond basic app functionality
 - No third-party data sharing
+
+## Device Compatibility
+
+### Smartphone-Only Installation
+The Caravella app is optimized for smartphone form factors and is restricted to smartphone devices only.
+
+**Supported Devices**:
+- Small screen devices (320dp minimum width)
+- Normal screen devices (typical smartphones)
+
+**Excluded Devices**:
+- Large screen devices (7-inch tablets)
+- Extra-large screen devices (10-inch tablets and larger)
+
+**Rationale**:
+- The app UI is designed and optimized specifically for smartphone screens
+- User experience is best on handheld devices
+- This ensures consistent quality across all installations
+
+**Implementation**: The AndroidManifest.xml uses `<supports-screens>` to exclude large and xlarge screens from installation eligibility on the Google Play Store.
