@@ -1,3 +1,7 @@
+## No publicado
+
+- **Cambios**: Tema Soft Dark con mejor legibilidad y colores conformes WCAG AA
+
 ## 1.0.44 (09.01.2025)
 
 - **Cambios**: La aplicación de Android ahora está restringida solo a dispositivos smartphone (tabletas excluidas) para una experiencia de usuario óptima

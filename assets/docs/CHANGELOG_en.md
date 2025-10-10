@@ -1,3 +1,7 @@
+## Unreleased
+
+- **Changed**: Soft Dark theme with improved readability and WCAG AA compliant colors
+
 ## 1.0.44 (09.01.2025)
 
 - **Changed**: Android app now restricted to smartphone devices only (tablets excluded) for optimal user experience
