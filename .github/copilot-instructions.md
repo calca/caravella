@@ -318,6 +318,20 @@ flutter clean && flutter pub get && flutter pub run flutter_launcher_icons:main
 5. La sicurezza è garantita (input, error handling, credenziali)?
 6. Il widget è pronto per la preview in Visual Studio Code?
 7. La soluzione proposta è scalabile e manutenibile nel lungo periodo?
+8. **È stato aggiornato il CHANGELOG.md con le modifiche apportate?**
+
+## Documentazione e Changelog
+- **SEMPRE aggiornare il CHANGELOG.md** quando si effettuano modifiche al codice.
+- Aggiungere le modifiche nella sezione `[Unreleased]` usando il formato [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+- Categorie da usare nel changelog:
+  - `Added` - per nuove funzionalità
+  - `Changed` - per modifiche a funzionalità esistenti
+  - `Deprecated` - per funzionalità che saranno rimosse
+  - `Removed` - per funzionalità rimosse
+  - `Fixed` - per bug fix
+  - `Security` - per correzioni di sicurezza
+- Descrivere le modifiche in modo chiaro e conciso dal punto di vista dell'utente finale.
+- Non includere dettagli tecnici interni a meno che non siano rilevanti per l'utente.
 
 ## Nota finale
 Se Copilot deve scegliere tra più soluzioni possibili:
