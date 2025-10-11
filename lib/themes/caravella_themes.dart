@@ -7,14 +7,14 @@ import 'form_theme.dart';
 /// Requires Flutter 3.22.0 or later.
 const ColorScheme lightColorScheme = ColorScheme(
   brightness: Brightness.light,
-  primary: Color(0xFF4C9BBA),
+  primary: Color(0xFF009688),
   onPrimary: Color(0xFFFFFFFF),
-  primaryContainer: Color(0xFF9CEBEB),
+  primaryContainer: Color(0xFFB2DFDB),
   onPrimaryContainer: Color(0xFF000000),
-  primaryFixed: Color(0xFFD8E9EF),
-  primaryFixedDim: Color(0xFFB1D2DF),
-  onPrimaryFixed: Color(0xFF204553),
-  onPrimaryFixedVariant: Color(0xFF255061),
+  primaryFixed: Color(0xFFE0F2F1),
+  primaryFixedDim: Color(0xFFB2DFDB),
+  onPrimaryFixed: Color(0xFF004D40),
+  onPrimaryFixedVariant: Color(0xFF00695C),
   secondary: Color(0xFFFF4F58),
   onSecondary: Color(0xFFFFFFFF),
   secondaryContainer: Color(0xFFFFDAD7),
@@ -51,8 +51,8 @@ const ColorScheme lightColorScheme = ColorScheme(
   scrim: Color(0xFF000000),
   inverseSurface: Color(0xFF121212),
   onInverseSurface: Color(0xFFFFFFFF),
-  inversePrimary: Color(0xFFE5FFFF),
-  surfaceTint: Color(0xFF4C9BBA),
+  inversePrimary: Color(0xFFB2DFDB),
+  surfaceTint: Color(0xFF009688),
 );
 
 /// Soft Dark [ColorScheme] - A softer, more readable dark theme.
@@ -60,14 +60,14 @@ const ColorScheme lightColorScheme = ColorScheme(
 /// Follows WCAG AA contrast requirements for text and interactive elements.
 const ColorScheme darkColorScheme = ColorScheme(
   brightness: Brightness.dark,
-  primary: Color(0xFF669DB3),
-  onPrimary: Color(0xFFFFFFFF),
-  primaryContainer: Color(0xFF078282),
+  primary: Color(0xFF80CBC4),
+  onPrimary: Color(0xFF003D36),
+  primaryContainer: Color(0xFF00695C),
   onPrimaryContainer: Color(0xFFFFFFFF),
-  primaryFixed: Color(0xFFD8E9EF),
-  primaryFixedDim: Color(0xFFB1D2DF),
-  onPrimaryFixed: Color(0xFF204553),
-  onPrimaryFixedVariant: Color(0xFF255061),
+  primaryFixed: Color(0xFFE0F2F1),
+  primaryFixedDim: Color(0xFFB2DFDB),
+  onPrimaryFixed: Color(0xFF004D40),
+  onPrimaryFixedVariant: Color(0xFF00695C),
   secondary: Color(0xFFFC6E75),
   onSecondary: Color(0xFFFFFFFF),
   secondaryContainer: Color(0xFF92001A),
@@ -105,8 +105,8 @@ const ColorScheme darkColorScheme = ColorScheme(
   scrim: Color(0xFF000000),
   inverseSurface: Color(0xFFFFFFFF),
   onInverseSurface: Color(0xFF121212),
-  inversePrimary: Color(0xFF394F58),
-  surfaceTint: Color(0xFF669DB3),
+  inversePrimary: Color(0xFF009688),
+  surfaceTint: Color(0xFF80CBC4),
 );
 
 class CaravellaThemes {

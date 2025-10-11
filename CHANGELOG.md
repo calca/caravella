@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Primary accent color updated to Material Design Teal (#009688) for better brand consistency
 - Soft Dark theme with improved readability and WCAG AA compliant colors
 - Android app now restricted to smartphone devices only (tablets excluded) for optimal user experience
 
