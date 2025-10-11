@@ -142,6 +142,7 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -175,6 +176,9 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
                   Tab(text: gloc.participants),
                   Tab(text: gloc.categories),
                 ],
+                labelColor: colorScheme.onSurface,
+                unselectedLabelColor: colorScheme.outline,
+                indicatorColor: colorScheme.primary,
               ),
             ),
             const SizedBox(height: 12),
