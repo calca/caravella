@@ -12,6 +12,7 @@ import 'tabs/categories_overview_tab.dart';
 import 'tabs/usecase/settlements_logic.dart';
 import '../../group/widgets/section_header.dart';
 import '../../../widgets/bottom_sheet_scaffold.dart';
+import '../../../widgets/currency_display.dart';
 
 /// Overview & statistics page with share (text/image) capability.
 class UnifiedOverviewPage extends StatefulWidget {
@@ -74,7 +75,7 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
       final total = trip.expenses
           .where((e) => e.paidBy.id == p.id)
           .fold<double>(0, (s, e) => s + (e.amount ?? 0));
-      buffer.writeln('- ${p.name}: ${total.toStringAsFixed(2)} $currency');
+      buffer.writeln('- ${p.name}: ${CurrencyDisplay.formatCurrencyText(total, currency)}');
     }
     buffer.writeln('');
     // Settlements (shared compute)
@@ -87,7 +88,7 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
         final fromName = idToName[s.fromId] ?? s.fromId;
         final toName = idToName[s.toId] ?? s.toId;
         buffer.writeln(
-          '$fromName -> $toName: ${s.amount.toStringAsFixed(2)} $currency',
+          '$fromName -> $toName: ${CurrencyDisplay.formatCurrencyText(s.amount, currency)}',
         );
       }
     }
