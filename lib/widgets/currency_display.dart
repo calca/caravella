@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class CurrencyDisplay extends StatelessWidget {
   final double value;
@@ -24,8 +25,21 @@ class CurrencyDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get the locale and decimal separator
+    final locale = Localizations.maybeLocaleOf(context);
+    String decimalSeparator = '.';
+    try {
+      if (locale != null) {
+        final numberFormat = NumberFormat.decimalPattern(locale.toString());
+        decimalSeparator = numberFormat.symbols.DECIMAL_SEP;
+      }
+    } catch (_) {
+      // Fallback to dot if locale detection fails
+      decimalSeparator = '.';
+    }
+
     final String formattedValue = showDecimals
-        ? value.toStringAsFixed(2)
+        ? value.toStringAsFixed(2).replaceAll('.', decimalSeparator)
         : value.truncate().toString();
 
     return Row(
@@ -35,7 +49,8 @@ class CurrencyDisplay extends StatelessWidget {
       children: [
         Flexible(
           child: showDecimals
-              ? _buildValueWithSeparateDecimals(context, formattedValue)
+              ? _buildValueWithSeparateDecimals(
+                  context, formattedValue, decimalSeparator)
               : Text(
                   formattedValue,
                   style: Theme.of(context).textTheme.displayLarge?.copyWith(
@@ -62,10 +77,12 @@ class CurrencyDisplay extends StatelessWidget {
   Widget _buildValueWithSeparateDecimals(
     BuildContext context,
     String formattedValue,
+    String decimalSeparator,
   ) {
-    final parts = formattedValue.split('.');
+    final parts = formattedValue.split(decimalSeparator);
     final integerPart = parts[0];
-    final decimalPart = parts.length > 1 ? '.${parts[1]}' : '';
+    final decimalPart =
+        parts.length > 1 ? '$decimalSeparator${parts[1]}' : '';
 
     return RichText(
       overflow: TextOverflow.ellipsis,
