@@ -23,6 +23,21 @@ class CurrencyDisplay extends StatelessWidget {
     this.fontWeight,
   });
 
+  /// Formats a currency value as plain text for use in semantic labels,
+  /// exports, or other text-only contexts.
+  /// 
+  /// Example: `CurrencyDisplay.formatCurrencyText(123.45, 'EUR')` returns "123.45 EUR"
+  static String formatCurrencyText(
+    double value,
+    String currency, {
+    bool showDecimals = true,
+  }) {
+    final formattedValue = showDecimals
+        ? value.toStringAsFixed(2)
+        : value.truncate().toString();
+    return '$formattedValue $currency';
+  }
+
   @override
   Widget build(BuildContext context) {
     // Get the locale and decimal separator
