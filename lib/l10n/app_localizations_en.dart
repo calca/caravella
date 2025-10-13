@@ -1586,4 +1586,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get debt_prefix_to => 'to ';
+
+  @override
+  String get send_reminder => 'Send reminder';
+
+  @override
+  String reminder_message_single(
+          Object participantName, Object amount, Object creditorName, Object groupName) =>
+      'Hi $participantName! 👋\n\nJust a friendly reminder that you owe $amount to $creditorName for the group \"$groupName\".\n\nThank you! 😊';
+
+  @override
+  String reminder_message_multiple(
+          Object participantName, Object groupName, Object debtsList) =>
+      'Hi $participantName! 👋\n\nJust a friendly reminder of your payments for the group \"$groupName\":\n\n$debtsList\n\nThank you! 😊';
 }
