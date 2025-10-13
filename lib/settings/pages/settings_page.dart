@@ -16,6 +16,7 @@ import 'whats_new_page.dart';
 import '../../widgets/bottom_sheet_scaffold.dart';
 import '../../settings/widgets/settings_card.dart';
 import '../../settings/widgets/settings_section.dart';
+import '../../updates/update_check_widget.dart';
 
 class SettingsPage extends StatelessWidget {
   final void Function(String)? onLocaleChanged;
@@ -91,6 +92,8 @@ class SettingsPage extends StatelessWidget {
         _buildInfoCardRow(context, loc),
         const SizedBox(height: 8),
         _buildAppVersionRow(context, loc),
+        const SizedBox(height: 8),
+        const UpdateCheckWidget(),
       ],
     );
   }
