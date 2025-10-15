@@ -108,6 +108,8 @@
   "accessibility_switch_on": "开关开启",
   "settings_theme": "主题",
   "settings_theme_desc": "选择应用主题",
+  "settings_dynamic_color": "动态颜色",
+  "settings_dynamic_color_desc": "使用系统颜色",
   "theme_light": "浅色",
   "theme_dark": "深色",
   "theme_automatic": "自动",
