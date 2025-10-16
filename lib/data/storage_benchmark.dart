@@ -163,7 +163,10 @@ class StorageBenchmark {
 
     // Generate test data
     final testGroups = _generateTestGroups(config);
-    LoggerService.info('Generated ${testGroups.length} test groups', name: 'storage.benchmark');
+    LoggerService.info(
+      'Generated ${testGroups.length} test groups',
+      name: 'storage.benchmark',
+    );
 
     // Benchmark: Save groups
     results.add(await _benchmarkSaveGroups(testGroups, config));
@@ -442,31 +445,67 @@ class StorageBenchmark {
 
   /// Prints benchmark results
   static void printResults(List<BenchmarkResult> results) {
-    LoggerService.info('\n=== Storage Benchmark Results ===', name: 'storage.benchmark');
+    LoggerService.info(
+      '\n=== Storage Benchmark Results ===',
+      name: 'storage.benchmark',
+    );
 
     for (final result in results) {
       LoggerService.info('', name: 'storage.benchmark');
       LoggerService.info('${result.operation}:', name: 'storage.benchmark');
-      LoggerService.info('  Iterations: ${result.durations.length}', name: 'storage.benchmark');
-      LoggerService.info('  Average: ${result.averageDuration.inMilliseconds}ms', name: 'storage.benchmark');
-      LoggerService.info('  Min: ${result.minDuration.inMilliseconds}ms', name: 'storage.benchmark');
-      LoggerService.info('  Max: ${result.maxDuration.inMilliseconds}ms', name: 'storage.benchmark');
-      LoggerService.info('  P50: ${result.p50Duration.inMilliseconds}ms', name: 'storage.benchmark');
-      LoggerService.info('  P95: ${result.p95Duration.inMilliseconds}ms', name: 'storage.benchmark');
-      LoggerService.info('  P99: ${result.p99Duration.inMilliseconds}ms', name: 'storage.benchmark');
-      LoggerService.info('  Std Dev: ${result.standardDeviation.toStringAsFixed(1)}μs', name: 'storage.benchmark');
+      LoggerService.info(
+        '  Iterations: ${result.durations.length}',
+        name: 'storage.benchmark',
+      );
+      LoggerService.info(
+        '  Average: ${result.averageDuration.inMilliseconds}ms',
+        name: 'storage.benchmark',
+      );
+      LoggerService.info(
+        '  Min: ${result.minDuration.inMilliseconds}ms',
+        name: 'storage.benchmark',
+      );
+      LoggerService.info(
+        '  Max: ${result.maxDuration.inMilliseconds}ms',
+        name: 'storage.benchmark',
+      );
+      LoggerService.info(
+        '  P50: ${result.p50Duration.inMilliseconds}ms',
+        name: 'storage.benchmark',
+      );
+      LoggerService.info(
+        '  P95: ${result.p95Duration.inMilliseconds}ms',
+        name: 'storage.benchmark',
+      );
+      LoggerService.info(
+        '  P99: ${result.p99Duration.inMilliseconds}ms',
+        name: 'storage.benchmark',
+      );
+      LoggerService.info(
+        '  Std Dev: ${result.standardDeviation.toStringAsFixed(1)}μs',
+        name: 'storage.benchmark',
+      );
 
       if (result.metadata.isNotEmpty) {
-        LoggerService.info('  Metadata: ${result.metadata}', name: 'storage.benchmark');
+        LoggerService.info(
+          '  Metadata: ${result.metadata}',
+          name: 'storage.benchmark',
+        );
       }
     }
 
     LoggerService.info('\n=== Summary ===', name: 'storage.benchmark');
     final totalOperations = results.length;
-    LoggerService.info('Total operations: $totalOperations', name: 'storage.benchmark');
+    LoggerService.info(
+      'Total operations: $totalOperations',
+      name: 'storage.benchmark',
+    );
 
     if (results.isEmpty) {
-      LoggerService.info('No benchmark results to summarize.', name: 'storage.benchmark');
+      LoggerService.info(
+        'No benchmark results to summarize.',
+        name: 'storage.benchmark',
+      );
       return;
     }
 

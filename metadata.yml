@@ -63,8 +63,8 @@ AntiFeatures: []
 
 # Build configuration
 Builds:
-  - versionName: '1.0.44'
-    versionCode: 44
+  - versionName: '1.0.46'
+    versionCode: 46
     commit: main
     output: build/app/outputs/flutter-apk/app-prod-release.apk
     srclibs:
@@ -86,5 +86,5 @@ Builds:
 # Auto-update configuration
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
-CurrentVersion: 1.0.44
-CurrentVersionCode: 44
+CurrentVersion: 1.0.46
+CurrentVersionCode: 46

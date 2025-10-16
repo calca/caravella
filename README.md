@@ -1,4 +1,12 @@
-# Caravella - Group Expense & Travel Manager
+# Caravella: an Expense Tracker
+
+<p align="center">
+  <img src="store/assets/caravella-icon-store.png" alt="Caravella Icon" width="150"/>
+</p>
+
+<p align="center">
+  <strong>Modern group expense management for trips, shared costs, and participants</strong>
+</p>
 
 **Caravella** is a modern, multi-platform Flutter application designed to simplify expense management for groups, trips, and events. Built with Material 3, it offers an intuitive and clean user experience for tracking shared costs, managing participants, and settling debts.
 
@@ -6,16 +14,41 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
 
 ## ✨ Key Features
 
-- **Group Management**: Create and manage distinct groups for trips, events, or shared living arrangements. Add members and track expenses collectively.
-- **Expense Tracking**: Easily add new expenses, assign categories, specify who paid, and select which members participated in the cost.
-- **Material 3 UI**: A beautiful and modern user interface with support for dynamic colors and a native-feeling light/dark mode.
-- **Dashboard**: A central home page that provides a quick overview of the current pinned group, total expenses, and quick access to details.
-- **Detailed Summaries**: Get a clear breakdown of who owes what to whom, ensuring transparent and fair settlements.
-- **Data Persistence**: All your data is saved locally on your device using file-based storage, so it's always available, even offline.
-- **Backup & Restore**: Securely export all your app data to a single file and import it later, perfect for backups or migrating to a new device.
-- **CSV Export**: Export the expense list for any group into a CSV file, which can be easily shared or used in other applications.
-- **Multi-Language Support**: The app is localized for English, Italian, and Spanish.
-- **Cross-Platform**: Built with Flutter, Caravella is designed to run smoothly on Android, iOS, Web, and Desktop from a single codebase.
+- **Group Management**: Create and manage multiple expense groups for different trips or shared living situations
+- **Expense Tracking**: Add, edit, and categorize expenses with detailed participant assignments
+- **Smart Calculations**: Automatic calculation of who owes what to whom
+- **Participant Management**: Easy addition and management of group members
+- **Location Context**: Optional location tagging for expenses to remember where they occurred
+- **Photo Attachments**: Add photos to group backgrounds and expense records
+- **Data Export**: Export your data to CSV or JSON formats for external analysis
+- **Backup & Restore**: Complete data backup and restore functionality
+- **Privacy First**: All data stored locally on your device - no cloud sync required
+- **Multi-language**: Available in English, Italian, Spanish, Portuguese, and Chinese
+- **Material Design**: Modern Material 3 interface with dark/light theme support
+- **Cross-Platform**: Built with Flutter, designed to run smoothly on Android smartphones, iOS, Web, and Desktop
+
+### Perfect For:
+- Group trips and vacations
+- Shared household expenses
+- Event planning and cost sharing
+- Business trip expense tracking
+- Roommate expense management
+
+## 📱 Screenshots
+
+<p align="center">
+  <img src="store/screenshot/01 - Welcome - EN.png" alt="Welcome Screen" width="200"/>
+  <img src="store/screenshot/02 - HomePage.png" alt="Home Page" width="200"/>
+  <img src="store/screenshot/03 - HomePage - Add.png" alt="Add Group" width="200"/>
+  <img src="store/screenshot/04 - Group - Expenses - Home.png" alt="Group Expenses Home" width="200"/>
+</p>
+
+<p align="center">
+  <img src="store/screenshot/05 - Group - Expenses.png" alt="Group Expenses" width="200"/>
+  <img src="store/screenshot/06 - Group - Stats.png" alt="Group Statistics" width="200"/>
+  <img src="store/screenshot/07 - Group - Partecipants.png" alt="Participants" width="200"/>
+  <img src="store/screenshot/08 - Grops History.png" alt="Groups History" width="200"/>
+</p>
 
 ## 🛠️ Tech Stack & Architecture
 
@@ -26,38 +59,41 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
 - **Architecture**: The app follows a clean architecture with a separation of concerns between UI, state management, and data services.
 - **Flavors**: Configured for different build environments (dev, staging, prod).
 
-## 🚀 Getting Started
+## 🔒 Privacy & Security
 
-1.  **Install Dependencies**
-    ```sh
-    flutter pub get
-    ```
+Caravella is designed with privacy as a core principle:
 
-2.  **Generate App Icons**
-    ```sh
-    flutter pub run flutter_launcher_icons:main
-    ```
+- **Local Storage**: All data is stored locally on your device - no cloud sync required
+- **No User Accounts**: No online services or user accounts needed
+- **Full Data Control**: You have complete control over your data with export and deletion capabilities
+- **Optional Permissions**: Camera and location permissions are only requested when you explicitly use those features
+- **GDPR Compliant**: Full compliance with privacy regulations
 
-3.  **Run the App**
-    ```sh
-    flutter run
-    ```
+For complete details, see our [Privacy Policy](store/PRIVACY_POLICY.md) and [Permissions Documentation](store/permissions_documentation.md).
 
-## 📦 Distribution
+## 📦 Download & Installation
 
-### F-Droid
-Caravella is available on F-Droid, the free and open-source Android app store. F-Droid builds are reproducible, signed by F-Droid, and guaranteed to be 100% FOSS.
+### Android
+- **GitHub Releases**: [Download APK](https://github.com/calca/caravella/releases)
+- **Google Play Store**: Coming soon
+- **F-Droid**: Coming soon (see [F-Droid Submission Guide](docs/FDROID_SUBMISSION.md) for details)
+- **Device Support**: Optimized for smartphones only (tablets not supported)
 
-For detailed information about F-Droid distribution, submission process, and maintenance, see:
-- [F-Droid Submission Guide](docs/FDROID_SUBMISSION.md)
+### iOS
+- **App Store**: Coming soon
 
-### Direct Download
-You can also download APK files directly from [GitHub Releases](https://github.com/calca/caravella/releases).
+Visit our [website](https://calca.github.io/caravella) for more information.
 
-## Package & CI notes
+## 🤝 Contributing
 
-- The project's Dart package name has been updated to `io_caravella_egm` (see `pubspec.yaml`).
-- CI artifact names were updated to use the `io_caravella_egm` prefix.
+Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+
+## 📞 Contact & Support
+
+- **Project Repository**: https://github.com/calca/caravella
+- **Issues**: https://github.com/calca/caravella/issues
+- **Website**: https://calca.github.io/caravella
+- **Privacy Inquiries**: privacy@caravella.app
 
 ## 📄 License
 

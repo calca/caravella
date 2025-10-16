@@ -3,7 +3,6 @@ import '../../../../data/model/expense_group.dart';
 import 'usecase/settlements_logic.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../widgets/group_header.dart'; // ParticipantAvatar
-import 'package:intl/intl.dart';
 import '../../widgets/stat_card.dart';
 import '../../../../widgets/currency_display.dart';
 import '../../../../data/model/expense_participant.dart';
@@ -162,18 +161,7 @@ class _ParticipantStatCard extends StatefulWidget {
 class _ParticipantStatCardState extends State<_ParticipantStatCard> {
   bool _expanded = false;
 
-  String _fmtCurrency(BuildContext context, double amount) {
-    final locale = Localizations.maybeLocaleOf(context)?.toString();
-    try {
-      if (locale != null) {
-        return NumberFormat.currency(
-          locale: locale,
-          symbol: widget.currency,
-        ).format(amount);
-      }
-    } catch (_) {}
-    return '${amount.toStringAsFixed(2)}${widget.currency}';
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -195,7 +183,6 @@ class _ParticipantStatCardState extends State<_ParticipantStatCard> {
       for (int i = 0; i < visibleCount; i++) {
         final s = owes[i];
         final toName = widget.idToName[s.toId] ?? s.toId;
-        final amount = _fmtCurrency(context, s.amount);
         spans.add(
           TextSpan(
             text: loc.debt_prefix_to,
@@ -208,10 +195,24 @@ class _ParticipantStatCardState extends State<_ParticipantStatCard> {
         );
         spans.add(
           TextSpan(
-            text: '$toName $amount',
+            text: '$toName ',
             style: theme.textTheme.bodySmall?.copyWith(
               fontWeight: FontWeight.w400,
               fontStyle: FontStyle.italic,
+            ),
+          ),
+        );
+        spans.add(
+          WidgetSpan(
+            alignment: PlaceholderAlignment.baseline,
+            baseline: TextBaseline.alphabetic,
+            child: CurrencyDisplay(
+              value: s.amount,
+              currency: widget.currency,
+              showDecimals: true,
+              valueFontSize: 12,
+              currencyFontSize: 10,
+              alignment: MainAxisAlignment.start,
             ),
           ),
         );

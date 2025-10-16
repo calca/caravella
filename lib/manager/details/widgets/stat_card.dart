@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../../../widgets/currency_display.dart';
 
 /// Small KPI card consistent with app dark surfaces.
@@ -34,21 +33,13 @@ class StatCard extends StatelessWidget {
     final theme = Theme.of(context);
     // Use latest Material 3 surface token
     final surface = theme.colorScheme.surface;
-    final locale = Localizations.maybeLocaleOf(context)?.toString();
 
-    String formattedValue;
-    try {
-      if (locale != null) {
-        formattedValue = NumberFormat.currency(
-          locale: locale,
-          symbol: currency,
-        ).format(value);
-      } else {
-        formattedValue = '$value$currency';
-      }
-    } catch (_) {
-      formattedValue = '$value$currency';
-    }
+    // Use CurrencyDisplay for consistent formatting in semantic labels
+    final formattedValue = CurrencyDisplay.formatCurrencyText(
+      value,
+      currency,
+      showDecimals: true,
+    );
 
     final semanticLabel =
         (subtitle ?? _inlineSpansToPlain(subtitleSpans)) != null

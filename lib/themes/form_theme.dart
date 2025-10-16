@@ -34,30 +34,30 @@ class FormTheme {
 
   /// Returns the standard text style for form field inputs
   static TextStyle? getFieldTextStyle(BuildContext context) {
-    return Theme.of(context).textTheme.bodyMedium?.copyWith(
-      fontWeight: FontWeight.w400,
-    );
+    return Theme.of(
+      context,
+    ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w400);
   }
 
   /// Returns the text style for amount/numeric input fields
   static TextStyle? getAmountTextStyle(BuildContext context) {
-    return Theme.of(context).textTheme.titleMedium?.copyWith(
-      fontWeight: FontWeight.w600,
-    );
+    return Theme.of(
+      context,
+    ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600);
   }
 
   /// Returns the text style for inline select fields
   static TextStyle? getSelectTextStyle(BuildContext context) {
-    return Theme.of(context).textTheme.bodyMedium?.copyWith(
-      fontWeight: FontWeight.w400,
-    );
+    return Theme.of(
+      context,
+    ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w400);
   }
 
   /// Returns the text style for multiline text fields (notes, descriptions)
   static TextStyle? getMultilineTextStyle(BuildContext context) {
-    return Theme.of(context).textTheme.bodyMedium?.copyWith(
-      fontWeight: FontWeight.w400,
-    );
+    return Theme.of(
+      context,
+    ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w400);
   }
 
   /// Returns standard decoration for form fields that should use theme defaults

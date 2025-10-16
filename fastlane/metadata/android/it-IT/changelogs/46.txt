@@ -1,0 +1,4 @@
+• Supporto metadata e distribuzione F-Droid
+• Aggiornamenti completi traduzioni per tutte le lingue
+• Screenshot aggiornati con l'ultimo design
+• Metadata app migliorati per piattaforme di distribuzione

@@ -1,11 +1,11 @@
 # Changelog
 
-All notable changes to Caravella will be documented in this file.
+All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.44] - 2025-01-XX
+## [Unreleased]
 
 ### Added
 - F-Droid metadata and distribution support
@@ -14,32 +14,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Improved app metadata for distribution platforms
 
-## [1.0.0] - 2025-01
+## [1.0.45] - 2025-10-16
+
+### Fixed
+- Completed translations for all supported languages (Spanish, Portuguese, Chinese)
+- Added 3 missing translation keys in Spanish
+- Added 81 missing translation keys in Portuguese
+- Added 135 missing translation keys in Chinese
+- Removed 60 obsolete translation keys from Chinese
+- All languages now have complete parity with English (511 keys each)
+
+## [1.0.44] - 2025-01-09
+
+### Changed
+- Refactored save button enable logic tests for improved readability and consistency
+
+## [1.0.38] - 2025-01-07
 
 ### Added
-- Initial release
-- Group management for tracking shared expenses
-- Expense tracking with categories and participant assignments
-- Material 3 UI with light/dark theme support
-- Dashboard with quick overview and actions
-- Detailed summaries showing who owes what to whom
-- Local data persistence for privacy and offline use
-- Backup & Restore functionality for data portability
-- CSV export for external analysis
-- Multi-language support (English, Italian, Spanish)
+- "What's New" page accessible from version number in settings
+- Localized changelog support (English, Italian, Spanish, Portuguese, Chinese)
+
+### Changed
+- Optimized user interface for Material 3
+
+### Fixed
+- Minor fixes for app stability
+
+## [1.0.0] - Initial Release
+
+### Added
+- Group expense management for trips and shared costs
+- Participant management with detailed tracking
+- Expense tracking with categories and assignments
+- Smart calculations for debt settlement
+- Location context for expenses
+- Photo attachments for groups and expenses
+- Data export to CSV and JSON formats
+- Complete backup and restore functionality
+- Privacy-first local storage (no cloud sync)
+- Multi-language support (English, Italian, Spanish, Portuguese, Chinese)
+- Material 3 design with dark/light theme support
 - Cross-platform support (Android, iOS, Web, Desktop)
-- Photo attachments for group backgrounds and expenses
-- Location tagging for expense context
-- Privacy-focused design with local-only data storage
 
-### Features
-- No internet connection required for core functionality
-- No user accounts or cloud services required
-- GDPR compliant privacy controls
-- Optional permissions for camera and location features
-- Material 3 dynamic color support
-- Edge-to-edge Android UI
-- Responsive design for all screen sizes
-
-[1.0.44]: https://github.com/calca/caravella/releases/tag/v1.0.44
+[Unreleased]: https://github.com/calca/caravella/compare/v1.0.45...HEAD
+[1.0.45]: https://github.com/calca/caravella/compare/v1.0.44...v1.0.45
+[1.0.44]: https://github.com/calca/caravella/compare/v1.0.38...v1.0.44
+[1.0.38]: https://github.com/calca/caravella/compare/v1.0.0...v1.0.38
 [1.0.0]: https://github.com/calca/caravella/releases/tag/v1.0.0
