@@ -1,6 +1,8 @@
-## Non rilasciato
+## 1.0.45 (16.10.2025)
 
-- **Modifiche**: Tema Soft Dark con migliore leggibilità e colori conformi WCAG AA
+- **Bug fix**: Completate le traduzioni per tutte le lingue supportate
+- **Bug fix**: Aggiunte chiavi di traduzione mancanti in spagnolo (3), portoghese (81) e cinese (135)
+- **Miglioramenti**: Tutte le lingue ora hanno parità completa con 511 chiavi di traduzione ciascuna
 
 ## 1.0.44 (09.01.2025)
 

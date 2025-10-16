@@ -1,6 +1,8 @@
-## Unreleased
+## 1.0.45 (16.10.2025)
 
-- **Changed**: Soft Dark theme with improved readability and WCAG AA compliant colors
+- **Fixed**: Completed translations for all supported languages
+- **Fixed**: Added missing translation keys in Spanish (3), Portuguese (81), and Chinese (135)
+- **Improvements**: All languages now have complete parity with 511 translation keys each
 
 ## 1.0.44 (09.01.2025)
 
