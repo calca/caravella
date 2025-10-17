@@ -7,7 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.0.46] - 2025-10-16
+### Added
+- F-Droid metadata and distribution support
+- Comprehensive F-Droid submission documentation
+
+### Changed
+- Improved app metadata for distribution platforms
+
+## [1.0.45] - 2025-10-16
 
 ### Fixed
 - Completed translations for all supported languages (Spanish, Portuguese, Chinese)

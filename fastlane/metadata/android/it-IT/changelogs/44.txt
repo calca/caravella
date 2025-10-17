@@ -1,0 +1,3 @@
+• Supporto metadata e distribuzione F-Droid
+• Metadata app migliorati per piattaforme di distribuzione
+• Documentazione privacy e sicurezza migliorata
