@@ -24,6 +24,7 @@
 - Strings come from the generated `io_caravella_egm` package (`gen.AppLocalizations`); never hardcode literals—inject locale via `LocaleNotifier`.
 - Themes originate from `lib/themes/caravella_themes.dart` and respect Material 3 color roles; update both light/dark variants together.
 - Android-only secure flag toggles through `settings/flag_secure_android.dart` and SharedPreferences (`flag_secure_enabled`); reuse `_initFlagSecure` logic when adding new secure surfaces.
+- Android 15+ compatibility: system bar colors managed via `SystemChrome.setSystemUIOverlayStyle` in `main.dart`; avoid setting colors in theme XML to prevent deprecated API warnings (see `docs/ANDROID_15_FIX.md`).
 
 ## Workflows & Quality Gates
 - Standard loop: `flutter pub get`, `flutter analyze`, `flutter test` (2–3 min; do not abort). CI will fail without all three.
