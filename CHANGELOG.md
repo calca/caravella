@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.0.45] - 2025-10-16
+## [1.0.46] - 2025-10-16
 
 ### Fixed
 - Completed translations for all supported languages (Spanish, Portuguese, Chinese)
