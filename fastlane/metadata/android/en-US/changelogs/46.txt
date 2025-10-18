@@ -1,3 +1,4 @@
+• Android 15 compatibility: fixed deprecated API warnings
 • F-Droid metadata and distribution support
 • Complete translation updates for all languages
 • Updated screenshots to reflect latest design
