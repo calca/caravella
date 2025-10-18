@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../data/model/expense_details.dart';
 import '../../../data/model/expense_group.dart';
+import '../../../data/category_service.dart';
+import '../../../data/participant_service.dart';
 import '../../expense/expense_form_component.dart';
 import '../../../../widgets/bottom_sheet_scaffold.dart';
 
@@ -45,6 +48,9 @@ class _ExpenseEntrySheetState extends State<ExpenseEntrySheet> {
 
   @override
   Widget build(BuildContext context) {
+    final categoryService = Provider.of<CategoryService>(context, listen: false);
+    final participantService = Provider.of<ParticipantService>(context, listen: false);
+    
     final bottomInset = MediaQuery.of(context).padding.bottom;
     final keyboard = MediaQuery.of(context).viewInsets.bottom;
     // Avoid double bottom padding: we override scaffold padding bottom to 0 and manage internally.
@@ -70,6 +76,8 @@ class _ExpenseEntrySheetState extends State<ExpenseEntrySheet> {
           onCategoryAdded: widget.onCategoryAdded,
           onDelete: widget.onDelete,
           scrollController: _scrollController,
+          categoryService: categoryService, // Pass the category service
+          participantService: participantService, // Pass the participant service
         ),
       ),
     );
