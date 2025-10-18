@@ -2,6 +2,7 @@
 export 'home_cards_header.dart';
 export 'empty_groups_state.dart';
 export 'horizontal_groups_list.dart';
+export 'vertical_groups_list.dart';
 export 'group_card.dart';
 export 'group_card_content.dart';
 export 'simple_bottom_bar.dart';
