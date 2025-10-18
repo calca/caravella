@@ -41,11 +41,29 @@ abstract class IExpenseGroupRepository {
   /// Gets all groups (active and archived), sorted by timestamp (newest first)
   Future<StorageResult<List<ExpenseGroup>>> getAllGroups();
 
+  /// Gets all groups with pagination support
+  Future<StorageResult<List<ExpenseGroup>>> getAllGroupsPaginated({
+    int? limit,
+    int? offset,
+  });
+
   /// Gets all active (non-archived) groups, sorted by timestamp (newest first)
   Future<StorageResult<List<ExpenseGroup>>> getActiveGroups();
 
+  /// Gets active groups with pagination support
+  Future<StorageResult<List<ExpenseGroup>>> getActiveGroupsPaginated({
+    int? limit,
+    int? offset,
+  });
+
   /// Gets all archived groups, sorted by timestamp (newest first)
   Future<StorageResult<List<ExpenseGroup>>> getArchivedGroups();
+
+  /// Gets archived groups with pagination support
+  Future<StorageResult<List<ExpenseGroup>>> getArchivedGroupsPaginated({
+    int? limit,
+    int? offset,
+  });
 
   /// Gets a specific group by ID
   Future<StorageResult<ExpenseGroup?>> getGroupById(String id);
