@@ -1,4 +1,6 @@
 import 'model/expense_group.dart';
+import 'model/expense_category.dart';
+import 'model/expense_participant.dart';
 
 /// Index for fast group lookups
 class GroupIndex {
@@ -6,6 +8,12 @@ class GroupIndex {
   final Set<String> _pinnedGroups = {};
   final Set<String> _archivedGroups = {};
   final Set<String> _activeGroups = {};
+  
+  /// Cached aggregated categories from all groups
+  List<ExpenseCategory>? _allCategories;
+
+  /// Cached aggregated participants from all groups
+  List<ExpenseParticipant>? _allParticipants;
 
   /// Tracks if the index is up-to-date
   bool _isDirty = true;
@@ -24,6 +32,8 @@ class GroupIndex {
     _pinnedGroups.clear();
     _archivedGroups.clear();
     _activeGroups.clear();
+    _allCategories = null; // Clear cached categories
+    _allParticipants = null; // Clear cached participants
 
     for (final group in groups) {
       _byId[group.id] = group;
@@ -49,6 +59,11 @@ class GroupIndex {
   void updateGroup(ExpenseGroup group) {
     final oldGroup = _byId[group.id];
     _byId[group.id] = group;
+
+    // Invalidate category cache if categories changed
+    if (oldGroup?.categories != group.categories) {
+      _allCategories = null;
+    }
 
     // Update pin status
     if (oldGroup?.pinned == true && oldGroup?.archived == false) {
@@ -84,6 +99,8 @@ class GroupIndex {
       _pinnedGroups.remove(groupId);
       _archivedGroups.remove(groupId);
       _activeGroups.remove(groupId);
+      _allCategories = null; // Invalidate category cache
+      _allParticipants = null; // Invalidate participant cache
       _lastUpdate = DateTime.now();
     }
   }
@@ -259,6 +276,139 @@ class GroupIndex {
     }
 
     return issues;
+  }
+
+  /// Gets all unique categories from all groups (cached)
+  List<ExpenseCategory> getAllCategories() {
+    if (_allCategories != null) {
+      return _allCategories!;
+    }
+
+    final categoryMap = <String, ExpenseCategory>{};
+    
+    for (final group in _byId.values) {
+      for (final category in group.categories) {
+        // Use category name as key to deduplicate by name
+        // Keep the most recent category with the same name
+        final existing = categoryMap[category.name.toLowerCase()];
+        if (existing == null || category.createdAt.isAfter(existing.createdAt)) {
+          categoryMap[category.name.toLowerCase()] = category;
+        }
+      }
+    }
+
+    // Sort by name for consistent ordering
+    _allCategories = categoryMap.values.toList()
+      ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    
+    return _allCategories!;
+  }
+
+  /// Searches categories by name (case-insensitive) across all groups
+  List<ExpenseCategory> searchCategories(String query) {
+    if (query.trim().isEmpty) {
+      return getAllCategories();
+    }
+    
+    final lowerQuery = query.toLowerCase();
+    return getAllCategories()
+        .where((category) => category.name.toLowerCase().contains(lowerQuery))
+        .toList();
+  }
+
+  /// Gets the most frequently used categories across all groups
+  List<ExpenseCategory> getMostUsedCategories({int limit = 10}) {
+    final categoryUsage = <String, int>{};
+    final categoryMap = <String, ExpenseCategory>{};
+    
+    // Count usage across all groups and expenses
+    for (final group in _byId.values) {
+      for (final expense in group.expenses) {
+        if (expense.category != null) {
+          final categoryName = expense.category!.toLowerCase();
+          categoryUsage[categoryName] = (categoryUsage[categoryName] ?? 0) + 1;
+          
+          // Find the category definition
+          final categoryDef = group.categories.firstWhere(
+            (c) => c.name.toLowerCase() == categoryName,
+            orElse: () => ExpenseCategory(name: expense.category!),
+          );
+          categoryMap[categoryName] = categoryDef;
+        }
+      }
+    }
+    
+    // Sort by usage count and take the top categories
+    final sortedEntries = categoryUsage.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+    
+    return sortedEntries
+        .take(limit)
+        .map((entry) => categoryMap[entry.key]!)
+        .toList();
+  }
+
+  /// Gets all unique participants from all groups (cached)
+  List<ExpenseParticipant> getAllParticipants() {
+    if (_allParticipants != null) {
+      return _allParticipants!;
+    }
+
+    final participantMap = <String, ExpenseParticipant>{};
+    
+    for (final group in _byId.values) {
+      for (final participant in group.participants) {
+        // Use participant name as key to deduplicate by name
+        // Keep the most recent participant with the same name
+        final existing = participantMap[participant.name.toLowerCase()];
+        if (existing == null || participant.createdAt.isAfter(existing.createdAt)) {
+          participantMap[participant.name.toLowerCase()] = participant;
+        }
+      }
+    }
+
+    // Sort by name for consistent ordering
+    _allParticipants = participantMap.values.toList()
+      ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    
+    return _allParticipants!;
+  }
+
+  /// Searches participants by name (case-insensitive) across all groups
+  List<ExpenseParticipant> searchParticipants(String query) {
+    if (query.trim().isEmpty) {
+      return getAllParticipants();
+    }
+    
+    final lowerQuery = query.toLowerCase();
+    return getAllParticipants()
+        .where((participant) => participant.name.toLowerCase().contains(lowerQuery))
+        .toList();
+  }
+
+  /// Gets the most frequently used participants across all groups
+  List<ExpenseParticipant> getMostUsedParticipants({int limit = 10}) {
+    final participantUsage = <String, int>{};
+    final participantMap = <String, ExpenseParticipant>{};
+    
+    // Count usage across all groups and expenses
+    for (final group in _byId.values) {
+      for (final expense in group.expenses) {
+        final paidBy = expense.paidBy;
+        final key = paidBy.name.toLowerCase();
+        participantUsage[key] = (participantUsage[key] ?? 0) + 1;
+        participantMap[key] = paidBy;
+      }
+    }
+    
+    // Sort by usage count and take the top participants
+    final sortedEntries = participantUsage.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+    
+    return sortedEntries
+        .take(limit)
+        .map((entry) => participantMap[entry.key]!)
+        .toList();
   }
 }
 

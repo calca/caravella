@@ -17,6 +17,8 @@ import 'expense_form/location_input_widget.dart';
 import 'expense_form/expense_form_actions_widget.dart';
 import 'expense_form/category_dialog.dart';
 import '../../themes/form_theme.dart';
+import '../../data/category_service.dart';
+import '../../data/participant_service.dart';
 
 class ExpenseFormComponent extends StatefulWidget {
   // When true shows date, location and note fields (full edit mode). In edit mode (initialExpense != null) these are always shown.
@@ -35,6 +37,8 @@ class ExpenseFormComponent extends StatefulWidget {
   final String? currency; // Currency del gruppo
   final ScrollController?
   scrollController; // Controller for scrolling to focused fields
+  final CategoryService? categoryService; // Service for global category search
+  final ParticipantService? participantService; // Service for global participant search
 
   const ExpenseFormComponent({
     super.key,
@@ -52,6 +56,8 @@ class ExpenseFormComponent extends StatefulWidget {
     this.currency,
     this.fullEdit = false,
     this.scrollController,
+    this.categoryService, // New optional parameter
+    this.participantService, // New optional parameter for global participant search
   });
 
   @override
@@ -401,6 +407,11 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
       location: _location,
     );
     widget.onExpenseAdded(expense);
+    
+    // Invalidate caches so new participants/categories appear in future searches
+    widget.participantService?.invalidateCache();
+    widget.categoryService?.invalidateCache();
+    
     _isDirty = false;
     if (widget.shouldAutoClose && Navigator.of(context).canPop()) {
       Navigator.of(context).pop();
@@ -562,6 +573,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
               onParticipantSelected: _onParticipantSelected,
               textStyle: style,
               fullEdit: true,
+              participantService: widget.participantService, // Add this
             ),
             _isPaidByValid,
             _paidByTouched,
@@ -576,6 +588,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
               onAddCategoryInline: _onAddCategoryInline,
               textStyle: style,
               fullEdit: true,
+              categoryService: widget.categoryService, // Pass category service
             ),
             _isCategoryValid,
             _categoryTouched,
@@ -596,6 +609,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
               onParticipantSelected: _onParticipantSelected,
               textStyle: style,
               fullEdit: false,
+              participantService: widget.participantService, // Add this
             ),
             _isPaidByValid,
             _paidByTouched,
@@ -609,6 +623,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
               onAddCategoryInline: _onAddCategoryInline,
               textStyle: style,
               fullEdit: false,
+              categoryService: widget.categoryService, // Pass category service
             ),
             _isCategoryValid,
             _categoryTouched,
@@ -620,13 +635,32 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
 
   // (Expand button moved into ExpenseFormActionsWidget)
 
-  void _onParticipantSelected(String selectedName) {
+  void _onParticipantSelected(String selectedName) async {
+    // If participant service is available, use it to create or reuse participant
+    if (widget.participantService != null) {
+      try {
+        final participant = await widget.participantService!.createOrReuseParticipant(selectedName);
+        setState(() {
+          _paidBy = participant;
+          _paidByTouched = true;
+          if (!_initializing) {
+            _isDirty = true;
+          }
+        });
+        return;
+      } catch (e) {
+        debugPrint('Error creating/reusing participant: $e');
+        // Fall back to local participant search
+      }
+    }
+    
+    // Fallback to local participant search (backward compatibility)
     setState(() {
       _paidBy = widget.participants.firstWhere(
         (p) => p.name == selectedName,
         orElse: () => widget.participants.isNotEmpty
             ? widget.participants.first
-            : ExpenseParticipant(name: ''),
+            : ExpenseParticipant(name: selectedName), // Use the selected name if not found
       );
       _paidByTouched = true;
       if (!_initializing) {

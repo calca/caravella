@@ -10,7 +10,7 @@ import 'themes/caravella_themes.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'state/locale_notifier.dart';
 import 'state/theme_mode_notifier.dart';
-import 'state/expense_group_notifier.dart';
+import 'providers/app_providers.dart';
 import 'home/home_page.dart';
 import 'config/app_config.dart';
 import 'settings/flag_secure_android.dart';
@@ -151,11 +151,7 @@ class _CaravellaAppState extends State<CaravellaApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => ExpenseGroupNotifier()),
-        ChangeNotifierProvider(create: (_) => UserNameNotifier()),
-      ],
+    return AppProviders.create(
       child: LocaleNotifier(
         locale: _locale,
         changeLocale: _changeLocale,
