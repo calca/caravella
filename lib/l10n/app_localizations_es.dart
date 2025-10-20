@@ -847,13 +847,13 @@ class AppLocalizationsEs extends AppLocalizations {
       'Habilitar el respaldo automático del sistema operativo';
 
   @override
-  String get settings_user_name_title => 'Your name';
+  String get settings_user_name_title => 'Tu nombre';
 
   @override
-  String get settings_user_name_desc => 'Name or nickname to use in the app';
+  String get settings_user_name_desc => 'Nombre o apodo para usar en la app';
 
   @override
-  String get settings_user_name_hint => 'Enter your name';
+  String get settings_user_name_hint => 'Ingresa tu nombre';
 
   @override
   String get info_tab => 'Info';
@@ -1609,4 +1609,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String reminder_message_multiple(
           Object participantName, Object groupName, Object debtsList) =>
       '¡Hola $participantName! 👋\n\nQuisiera recordarte tus pagos para el grupo \"$groupName\":\n\n$debtsList\n\n¡Gracias! 😊';
+
+  @override
+  String get settings_user_name_title => 'Tu nombre';
+
+  @override
+  String get settings_user_name_desc => 'Nombre o apodo para usar en la app';
+
+  @override
+  String get settings_user_name_hint => 'Ingresa tu nombre';
 }

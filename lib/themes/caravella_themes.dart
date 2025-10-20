@@ -7,14 +7,14 @@ import 'form_theme.dart';
 /// Requires Flutter 3.22.0 or later.
 const ColorScheme lightColorScheme = ColorScheme(
   brightness: Brightness.light,
-  primary: Color(0xFF4C9BBA),
+  primary: Color(0xFF009688),
   onPrimary: Color(0xFFFFFFFF),
-  primaryContainer: Color(0xFF9CEBEB),
+  primaryContainer: Color(0xFFB2DFDB),
   onPrimaryContainer: Color(0xFF000000),
-  primaryFixed: Color(0xFFD8E9EF),
-  primaryFixedDim: Color(0xFFB1D2DF),
-  onPrimaryFixed: Color(0xFF204553),
-  onPrimaryFixedVariant: Color(0xFF255061),
+  primaryFixed: Color(0xFFE0F2F1),
+  primaryFixedDim: Color(0xFFB2DFDB),
+  onPrimaryFixed: Color(0xFF004D40),
+  onPrimaryFixedVariant: Color(0xFF00695C),
   secondary: Color(0xFFFF4F58),
   onSecondary: Color(0xFFFFFFFF),
   secondaryContainer: Color(0xFFFFDAD7),
@@ -51,22 +51,23 @@ const ColorScheme lightColorScheme = ColorScheme(
   scrim: Color(0xFF000000),
   inverseSurface: Color(0xFF121212),
   onInverseSurface: Color(0xFFFFFFFF),
-  inversePrimary: Color(0xFFE5FFFF),
-  surfaceTint: Color(0xFF4C9BBA),
+  inversePrimary: Color(0xFFB2DFDB),
+  surfaceTint: Color(0xFF009688),
 );
 
-/// Dark [ColorScheme] made with FlexColorScheme v8.2.0.
+/// Soft Dark [ColorScheme] - A softer, more readable dark theme.
 /// Requires Flutter 3.22.0 or later.
+/// Follows WCAG AA contrast requirements for text and interactive elements.
 const ColorScheme darkColorScheme = ColorScheme(
   brightness: Brightness.dark,
-  primary: Color(0xFF669DB3),
-  onPrimary: Color(0xFFFFFFFF),
-  primaryContainer: Color(0xFF078282),
+  primary: Color(0xFF80CBC4),
+  onPrimary: Color(0xFF003D36),
+  primaryContainer: Color(0xFF00695C),
   onPrimaryContainer: Color(0xFFFFFFFF),
-  primaryFixed: Color(0xFFD8E9EF),
-  primaryFixedDim: Color(0xFFB1D2DF),
-  onPrimaryFixed: Color(0xFF204553),
-  onPrimaryFixedVariant: Color(0xFF255061),
+  primaryFixed: Color(0xFFE0F2F1),
+  primaryFixedDim: Color(0xFFB2DFDB),
+  onPrimaryFixed: Color(0xFF004D40),
+  onPrimaryFixedVariant: Color(0xFF00695C),
   secondary: Color(0xFFFC6E75),
   onSecondary: Color(0xFFFFFFFF),
   secondaryContainer: Color(0xFF92001A),
@@ -87,24 +88,25 @@ const ColorScheme darkColorScheme = ColorScheme(
   onError: Color(0xFF000000),
   errorContainer: Color(0xFFB1384E),
   onErrorContainer: Color(0xFFFFFFFF),
-  surface: Color(0xFF1E1E1E),
-  onSurface: Color(0xFFFFFFFF),
-  surfaceDim: Color(0xFF161616),
-  surfaceBright: Color(0xFF3A3A3A),
-  surfaceContainerLowest: Color(0xFF0F0F0F),
-  surfaceContainerLow: Color(0xFF1A1A1A),
-  surfaceContainer: Color(0xFF232323),
-  surfaceContainerHigh: Color(0xFF2D2D2D),
-  surfaceContainerHighest: Color(0xFF363636),
-  onSurfaceVariant: Color(0xFFE0E0E0),
-  outline: Color(0xFF8A8A8A),
-  outlineVariant: Color(0xFF5A5A5A),
+  // Soft dark base colors for improved readability
+  surface: Color(0xFF181A1B), // Soft dark background
+  onSurface: Color(0xFFEAEAEA), // Primary text - WCAG AA compliant
+  surfaceDim: Color(0xFF131415), // Slightly darker than surface
+  surfaceBright: Color(0xFF2F3132), // Brighter surface for elevated elements
+  surfaceContainerLowest: Color(0xFF0E0F10), // Darkest container
+  surfaceContainerLow: Color(0xFF1D1F20), // Low elevation container
+  surfaceContainer: Color(0xFF242627), // Card/container background
+  surfaceContainerHigh: Color(0xFF2A2C2D), // High elevation container
+  surfaceContainerHighest: Color(0xFF313334), // Highest elevation container
+  onSurfaceVariant: Color(0xFFA0A0A0), // Secondary text - WCAG AA compliant
+  outline: Color(0xFF8A8A8A), // Visible outline color
+  outlineVariant: Color(0xFF5A5A5A), // Subtle outline variant
   shadow: Color(0xFF000000),
   scrim: Color(0xFF000000),
   inverseSurface: Color(0xFFFFFFFF),
   onInverseSurface: Color(0xFF121212),
-  inversePrimary: Color(0xFF394F58),
-  surfaceTint: Color(0xFF669DB3),
+  inversePrimary: Color(0xFF009688),
+  surfaceTint: Color(0xFF80CBC4),
 );
 
 class CaravellaThemes {

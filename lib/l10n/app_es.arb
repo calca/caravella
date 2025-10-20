@@ -604,4 +604,10 @@
   ,"@reminder_message_single": {"description": "Mensaje de recordatorio cuando un participante debe dinero a una sola persona", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
   ,"reminder_message_multiple": "¡Hola {participantName}! 👋\n\nQuisiera recordarte tus pagos para el grupo \"{groupName}\":\n\n{debtsList}\n\n¡Gracias! 😊"
   ,"@reminder_message_multiple": {"description": "Mensaje de recordatorio cuando un participante debe dinero a varias personas", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
+  ,"settings_user_name_title": "Tu nombre"
+  ,"@settings_user_name_title": {"description": "Título de la configuración del nombre de usuario"}
+  ,"settings_user_name_desc": "Nombre o apodo para usar en la app"
+  ,"@settings_user_name_desc": {"description": "Descripción de la configuración del nombre de usuario"}
+  ,"settings_user_name_hint": "Ingresa tu nombre"
+  ,"@settings_user_name_hint": {"description": "Placeholder del campo de nombre de usuario"}
 }
