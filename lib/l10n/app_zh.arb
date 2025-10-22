@@ -571,149 +571,65 @@
     "description": "Main section header for the list of expense groups/trips on the history page"
   },
   "expense_groups_desc": "管理您的支出群组",
-<<<<<<< HEAD
-  "@expense_groups_desc": {"description": "Short subtitle describing the purpose of the expense groups section (e.g. add, edit, view trips)"}
-  ,"participant_count": "{count, plural, other {{count} 名参与者}}"
-  ,"@participant_count": {"description": "参与者计数（中文无需复数, 使用other形式）", "placeholders": {"count": {}}}
-  ,"whats_new_title": "新功能"
-  ,"@whats_new_title": {"description": "显示更新日志页面的标题"}
-  ,"whats_new_desc": "了解最新功能和更新"
-  ,"@whats_new_desc": {"description": "新功能页面的副标题"}
-  ,"whats_new_subtitle": "最新亮点"
-  ,"@whats_new_subtitle": {"description": "新功能页面标题卡中的副标题"}
-  ,"whats_new_latest": "随时掌握最新改进"
-  ,"@whats_new_latest": {"description": "新功能页面标题卡中的描述文字"}
-  ,"average_per_person": "人均支出"
-  ,"@average_per_person": {"description": "参与者标签页中显示的人均支出标签"}
-  ,"more": "更多"
-  ,"@more": {"description": "展开并显示所有项目的内联按钮标签"}
-  ,"less": "更少"
-  ,"@less": {"description": "收起并显示更少项目的内联按钮标签"}
-  ,"debt_prefix_to": "给 "
-  ,"@debt_prefix_to": {"description": "在债务/结算行中显示在收款人之前的简短前缀（例如：'给 Alice 10€'）"}
-  ,"new_expense_group": "新支出群组"
-  ,"tap_to_create": "点击创建"
-  ,"no_expense_label": "未找到支出"
-  ,"image": "图片"
-  ,"select_image": "选择图片"
-  ,"change_image": "更换图片"
-  ,"from_gallery": "从图库选择"
-  ,"from_camera": "拍照"
-  ,"remove_image": "删除图片"
-  ,"color": "颜色"
-  ,"remove_color": "删除颜色"
-  ,"color_alternative": "图片的替代颜色"
-  ,"background": "背景"
-  ,"select_background": "选择背景"
-  ,"background_options": "背景选项"
-  ,"choose_image_or_color": "选择图片或颜色"
-  ,"background_color_selected": "颜色已选择"
-  ,"background_tap_to_replace": "点击替换"
-  ,"background_tap_to_change": "点击更换"
-  ,"background_select_image_or_color": "选择图片或颜色"
-  ,"background_random_color": "随机颜色"
-  ,"background_remove": "删除背景"
-  ,"crop_image_title": "裁剪图片"
-  ,"crop_confirm": "确认"
-  ,"saving": "保存中..."
-  ,"processing_image": "处理图片中..."
-  ,"no_trips_found": "您想去哪里？"
-  ,"participants_label": "参与者"
-  ,"last_7_days": "过去7天"
-  ,"recent_activity": "最近活动"
-  ,"about": "关于"
-  ,"license_hint": "此应用在MIT许可证下发布。"
-  ,"license_section": "许可证"
-  ,"new_group": "新群组"
-  ,"enter_title": "输入名称"
-  ,"enter_participant": "输入至少一个参与者"
-  ,"select_start": "选择开始日期"
-  ,"select_end": "选择结束日期"
-  ,"start_date_not_selected": "选择开始日期"
-  ,"end_date_not_selected": "选择结束日期"
-  ,"select_from_date": "选择开始日期"
-  ,"select_to_date": "选择结束日期"
-  ,"date_range_not_selected": "选择时间段"
-  ,"add_participants_button": "添加参与者"
-  ,"enter_group_name": "输入群组名称"
-  ,"edit_group": "编辑群组"
-  ,"delete_group": "删除群组"
-  ,"delete_group_confirm": "您确定要删除此支出群组吗？此操作无法撤销。"
-  ,"add_expense_fab": "添加支出"
-  ,"pin_group": "固定群组"
-  ,"unpin_group": "取消固定群组"
-  ,"pin": "固定"
-  ,"developed_by": "开发者：calca"
-  ,"links": "链接"
-  ,"daily_expenses_chart": "每日支出"
-  ,"weekly_expenses_chart": "每周支出"
-  ,"general_statistics": "总体统计"
-  ,"overview_and_statistics": "概览和统计"
-  ,"spent_today": "今日支出"
-  ,"average_expense": "平均支出"
-  ,"welcome_v3_cta": "开始使用！"
-  ,"discard_changes_title": "舍弃更改？"
-  ,"discard_changes_message": "您确定要舍弃未保存的更改吗？"
-  ,"discard": "舍弃"
-  ,"category_placeholder": "类别"
-  ,"image_requirements": "PNG、JPG、GIF（最大10MB）"
-  ,"error_selecting_image": "选择图片出错"
-  ,"error_saving_image": "保存图片出错"
-  ,"already_exists": "已存在"
-  ,"status_all": "全部"
-  ,"status_active": "活跃"
-  ,"status_archived": "已归档"
-  ,"no_archived_groups": "没有已归档的群组"
-  ,"no_archived_groups_subtitle": "您还没有归档任何群组"
-  ,"all_groups_archived_info": "您的所有群组都已归档。您可以从归档部分恢复它们或创建新的群组。"
-  ,"filter_status_tooltip": "筛选群组"
-  ,"welcome_logo_semantic": "Caravella应用标志"
-  ,"create_new_group": "创建新群组"
-  ,"accessibility_add_new_item": "添加新项目"
-  ,"accessibility_navigation_bar": "导航栏"
-  ,"accessibility_back_button": "返回"
-  ,"accessibility_loading_groups": "正在加载群组"
-  ,"accessibility_loading_your_groups": "正在加载您的群组"
-  ,"accessibility_groups_list": "群组列表"
-  ,"accessibility_welcome_screen": "欢迎屏幕"
-  ,"accessibility_add_expense": "添加支出"
-  ,"accessibility_toast_success": "成功"
-  ,"accessibility_toast_error": "错误"
-  ,"accessibility_toast_info": "信息"
-  ,"activity": "活动"
-  ,"search_expenses_hint": "按名称或备注搜索..."
-  ,"clear_filters": "清除"
-  ,"show_filters": "显示筛选器"
-  ,"hide_filters": "隐藏筛选器"
-  ,"all_categories": "全部"
-  ,"all_participants": "全部"
-  ,"no_expenses_with_filters": "没有符合所选筛选条件的支出"
-  ,"no_expenses_yet": "尚未添加支出"
-  ,"expenses_by_category": "按类别分类的支出"
-  ,"uncategorized": "未分类"
-  ,"backup": "备份"
-  ,"no_trips_to_backup": "没有可备份的行程"
-  ,"backup_error": "备份失败"
-  ,"backup_share_message": "这是您的Caravella备份"
-  ,"import": "导入"
-  ,"import_success_message": "导入成功！已重新加载数据。"
-  ,"no_backup_file_selected": "未选择备份文件"
-  ,"manage_data": "管理数据"
-  ,"manage_data_desc": "导出、导入和备份您的数据"
-  ,"language_system": "系统"
-  ,"language_pt": "葡萄牙语"
-  ,"welcome_v3_desc": "轻松管理群组支出、分摊费用和跟踪结算。"
-  ,"welcome_v3_tagline": "完美适用于群组旅行、室友或任何共享支出的情况。"
-  ,"currency_WST": "萨摩亚塔拉"
-  ,"search_currency": "搜索货币..."
-  ,"send_reminder": "发送提醒"
-  ,"@send_reminder": {"description": "向参与者发送付款提醒的按钮标签"}
-  ,"reminder_message_single": "嗨 {participantName}！👋\n\n友情提醒，您需要向 {creditorName} 支付 {amount}，用于群组 \"{groupName}\"。\n\n谢谢！😊"
-  ,"@reminder_message_single": {"description": "参与者欠一个人钱时的提醒消息", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
-  ,"reminder_message_multiple": "嗨 {participantName}！👋\n\n友情提醒您对群组 \"{groupName}\" 的付款：\n\n{debtsList}\n\n谢谢！😊"
-  ,"@reminder_message_multiple": {"description": "参与者欠多个人钱时的提醒消息", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
-  ,"@expense_groups_desc": {
+  "@expense_groups_desc": {
     "description": "Short subtitle describing the purpose of the expense groups section (e.g. add, edit, view trips)"
+  },
+  "whats_new_title": "新功能",
+  "@whats_new_title": {
+    "description": "显示更新日志页面的标题"
+  },
+  "whats_new_desc": "了解最新功能和更新",
+  "@whats_new_desc": {
+    "description": "新功能页面的副标题"
+  },
+  "whats_new_subtitle": "最新亮点",
+  "@whats_new_subtitle": {
+    "description": "新功能页面标题卡中的副标题"
+  },
+  "whats_new_latest": "随时掌握最新改进",
+  "@whats_new_latest": {
+    "description": "新功能页面标题卡中的描述文字"
+  },
+  "average_per_person": "人均支出",
+  "@average_per_person": {
+    "description": "参与者标签页中显示的人均支出标签"
+  },
+  "more": "更多",
+  "@more": {
+    "description": "展开并显示所有项目的内联按钮标签"
+  },
+  "less": "更少",
+  "@less": {
+    "description": "收起并显示更少项目的内联按钮标签"
+  },
+  "debt_prefix_to": "给 ",
+  "@debt_prefix_to": {
+    "description": "在债务/结算行中显示在收款人之前的简短前缀（例如：'给 Alice 10€'）"
+  },
+  "send_reminder": "发送提醒",
+  "@send_reminder": {
+    "description": "向参与者发送付款提醒的按钮标签"
+  },
+  "reminder_message_single": "嗨 {participantName}！👋\n\n友情提醒，您需要向 {creditorName} 支付 {amount}，用于群组 \"{groupName}\"。\n\n谢谢！😊",
+  "@reminder_message_single": {
+    "description": "参与者欠一个人钱时的提醒消息",
+    "placeholders": {
+      "participantName": {},
+      "amount": {},
+      "creditorName": {},
+      "groupName": {}
+    }
+  },
+  "reminder_message_multiple": "嗨 {participantName}！👋\n\n友情提醒您对群组 \"{groupName}\" 的付款：\n\n{debtsList}\n\n谢谢！😊",
+  "@reminder_message_multiple": {
+    "description": "参与者欠多个人钱时的提醒消息",
+    "placeholders": {
+      "participantName": {},
+      "groupName": {},
+      "debtsList": {}
+    }
+  }
+}
   },
   "whats_new_title": "新功能",
   "@whats_new_title": {

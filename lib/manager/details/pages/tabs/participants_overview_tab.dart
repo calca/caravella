@@ -165,7 +165,18 @@ class _ParticipantStatCard extends StatefulWidget {
 class _ParticipantStatCardState extends State<_ParticipantStatCard> {
   bool _expanded = false;
 
-
+  String _fmtCurrency(BuildContext context, double amount) {
+    final locale = Localizations.maybeLocaleOf(context)?.toString();
+    try {
+      if (locale != null) {
+        return NumberFormat.currency(
+          locale: locale,
+          symbol: widget.currency,
+        ).format(amount);
+      }
+    } catch (_) {}
+    return '${amount.toStringAsFixed(2)}${widget.currency}';
+  }
 
   String _buildReminderMessage(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
