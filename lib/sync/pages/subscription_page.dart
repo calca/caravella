@@ -145,15 +145,52 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  // FREE tier info
+                  Card(
+                    color: theme.colorScheme.surfaceVariant.withOpacity(0.5),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.check_circle_outline,
+                                color: theme.colorScheme.primary,
+                              ),
+                              const SizedBox(width: 12),
+                              Text(
+                                'FREE Tier (Always Available)',
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            '• Share 1 group\n'
+                            '• Max 2 participants per group\n'
+                            '• Real-time sync across devices\n'
+                            '• End-to-end encryption',
+                            style: theme.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
                   if (widget.isFromShareFlow) ...[
                     Icon(
-                      Icons.lock_outline,
+                      Icons.upgrade,
                       size: 80,
                       color: theme.colorScheme.primary,
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'Subscription Required',
+                      'Upgrade for More',
                       style: theme.textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -161,7 +198,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'To share groups and sync across devices, please choose a subscription plan.',
+                      'You\'ve reached the FREE tier limit. Upgrade to share more groups and add more participants.',
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
@@ -170,7 +207,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                     const SizedBox(height: 32),
                   ] else ...[
                     Text(
-                      'Unlock Premium Features',
+                      'Upgrade Your Plan',
                       style: theme.textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),

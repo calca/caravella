@@ -1,8 +1,9 @@
 /// Subscription tier model for RevenueCat
 enum SubscriptionTier {
   none,
-  basic,
-  premium,
+  free,    // Free tier: 1 group, max 2 participants
+  basic,   // Basic tier: 5 groups, max 5 participants per group
+  premium, // Premium tier: unlimited
 }
 
 /// Subscription limits configuration
@@ -26,6 +27,13 @@ class SubscriptionLimits {
         return const SubscriptionLimits(
           maxParticipantsPerGroup: 0,
           maxSharedGroups: 0,
+          unlimitedGroups: false,
+          unlimitedParticipants: false,
+        );
+      case SubscriptionTier.free:
+        return const SubscriptionLimits(
+          maxParticipantsPerGroup: 2,
+          maxSharedGroups: 1,
           unlimitedGroups: false,
           unlimitedParticipants: false,
         );

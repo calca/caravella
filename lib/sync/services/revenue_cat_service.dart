@@ -49,9 +49,9 @@ class RevenueCatService {
   Future<SubscriptionStatus> getSubscriptionStatus() async {
     if (!_isInitialized) {
       if (!isConfigured) {
-        // If not configured, return premium by default (backwards compatibility)
+        // If not configured, return free tier (1 group, 2 participants)
         return const SubscriptionStatus(
-          tier: SubscriptionTier.premium,
+          tier: SubscriptionTier.free,
           isActive: true,
         );
       }
@@ -86,10 +86,10 @@ class RevenueCatService {
         );
       }
 
-      // No active subscription
+      // No active paid subscription - return FREE tier
       return const SubscriptionStatus(
-        tier: SubscriptionTier.none,
-        isActive: false,
+        tier: SubscriptionTier.free,
+        isActive: true,
       );
     } catch (e) {
       LoggerService.error('Failed to get subscription status: $e');
