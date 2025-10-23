@@ -165,8 +165,6 @@ class _ParticipantStatCard extends StatefulWidget {
 class _ParticipantStatCardState extends State<_ParticipantStatCard> {
   bool _expanded = false;
 
-
-
   String _buildReminderMessage(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
     final participantName = widget.participant.name;
@@ -182,19 +180,36 @@ class _ParticipantStatCardState extends State<_ParticipantStatCard> {
       // Single debt
       final debt = owes.first;
       final creditorName = widget.idToName[debt.toId] ?? debt.toId;
-      final amount = _fmtCurrency(context, debt.amount);
+      final amount = CurrencyDisplay.formatCurrencyText(
+        debt.amount,
+        widget.trip.currency,
+        showDecimals: true,
+      );
       return loc.reminder_message_single(
-          participantName, amount, creditorName, groupName);
+        participantName,
+        amount,
+        creditorName,
+        groupName,
+      );
     } else {
       // Multiple debts
-      final debtsList = owes.map((debt) {
-        final creditorName = widget.idToName[debt.toId] ?? debt.toId;
-        final amount = _fmtCurrency(context, debt.amount);
-        return '• $amount ${loc.debt_prefix_to}$creditorName';
-      }).join('\n');
+      final debtsList = owes
+          .map((debt) {
+            final creditorName = widget.idToName[debt.toId] ?? debt.toId;
+            final amount = CurrencyDisplay.formatCurrencyText(
+              debt.amount,
+              widget.trip.currency,
+              showDecimals: true,
+            );
+            return '• $amount ${loc.debt_prefix_to}$creditorName';
+          })
+          .join('\n');
 
       return loc.reminder_message_multiple(
-          participantName, groupName, debtsList);
+        participantName,
+        groupName,
+        debtsList,
+      );
     }
   }
 
@@ -203,7 +218,7 @@ class _ParticipantStatCardState extends State<_ParticipantStatCard> {
     if (message.isEmpty) return;
 
     try {
-      await Share.share(message);
+      await SharePlus.instance.share(ShareParams(text: message));
     } catch (e) {
       // Silently handle errors
       debugPrint('Error sharing reminder: $e');

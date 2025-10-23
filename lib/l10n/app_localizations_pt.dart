@@ -1597,20 +1597,20 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String reminder_message_single(
-          Object participantName, Object amount, Object creditorName, Object groupName) =>
-      'Oi $participantName! 👋\n\nGostaria de lembrar que você deve $amount a $creditorName para o grupo \"$groupName\".\n\nObrigado! 😊';
+    Object participantName,
+    Object amount,
+    Object creditorName,
+    Object groupName,
+  ) {
+    return 'Oi $participantName! 👋\n\nGostaria de lembrar que você deve $amount a $creditorName para o grupo \"$groupName\".\n\nObrigado! 😊';
+  }
 
   @override
   String reminder_message_multiple(
-          Object participantName, Object groupName, Object debtsList) =>
-      'Oi $participantName! 👋\n\nGostaria de lembrar seus pagamentos para o grupo \"$groupName\":\n\n$debtsList\n\nObrigado! 😊';
-
-  @override
-  String get settings_user_name_title => 'Seu nome';
-
-  @override
-  String get settings_user_name_desc => 'Nome ou apelido para usar no aplicativo';
-
-  @override
-  String get settings_user_name_hint => 'Insira seu nome';
+    Object participantName,
+    Object groupName,
+    Object debtsList,
+  ) {
+    return 'Oi $participantName! 👋\n\nGostaria de lembrar seus pagamentos para o grupo \"$groupName\":\n\n$debtsList\n\nObrigado! 😊';
+  }
 }

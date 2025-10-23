@@ -1571,20 +1571,20 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String reminder_message_single(
-          Object participantName, Object amount, Object creditorName, Object groupName) =>
-      '嗨 $participantName！👋\n\n友情提醒，您需要向 $creditorName 支付 $amount，用于群组 \"$groupName\"。\n\n谢谢！😊';
+    Object participantName,
+    Object amount,
+    Object creditorName,
+    Object groupName,
+  ) {
+    return '嗨 $participantName！👋\n\n友情提醒，您需要向 $creditorName 支付 $amount，用于群组 \"$groupName\"。\n\n谢谢！😊';
+  }
 
   @override
   String reminder_message_multiple(
-          Object participantName, Object groupName, Object debtsList) =>
-      '嗨 $participantName！👋\n\n友情提醒您对群组 \"$groupName\" 的付款：\n\n$debtsList\n\n谢谢！😊';
-
-  @override
-  String get settings_user_name_title => '您的名称';
-
-  @override
-  String get settings_user_name_desc => '在应用中使用的名称或昵称';
-
-  @override
-  String get settings_user_name_hint => '输入您的名称';
+    Object participantName,
+    Object groupName,
+    Object debtsList,
+  ) {
+    return '嗨 $participantName！👋\n\n友情提醒您对群组 \"$groupName\" 的付款：\n\n$debtsList\n\n谢谢！😊';
+  }
 }
