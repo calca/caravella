@@ -10,9 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - F-Droid metadata and distribution support
 - Comprehensive F-Droid submission documentation
+- Context menu (long-press) for expense groups in history page with pin/unpin, archive/unarchive, and delete actions
 
 ### Changed
 - Improved app metadata for distribution platforms
+
+### Fixed
 
 ## [1.0.45] - 2025-10-16
 
