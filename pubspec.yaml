@@ -58,6 +58,7 @@ dependencies:
   timeago: ^3.7.0
   gpt_markdown: ^1.1.4
   image_picker_platform_interface: ^2.11.0
+  in_app_review: ^2.0.10
 
 dev_dependencies:
   flutter_test:

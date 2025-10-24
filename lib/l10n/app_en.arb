@@ -194,6 +194,24 @@
   "archived": "Archived",
   "archive": "Archive",
   "unarchive": "Unarchive",
+  "pin": "Pin",
+  "@pin": {"description": "Action to pin a group to the top"},
+  "unpin": "Unpin",
+  "@unpin": {"description": "Action to unpin a group"},
+  "delete": "Delete",
+  "@delete": {"description": "Action to delete a group"},
+  "undo": "UNDO",
+  "@undo": {"description": "Undo action label for SnackBar"},
+  "archived_with_undo": "Archived",
+  "@archived_with_undo": {"description": "Snackbar message when group is archived"},
+  "unarchived_with_undo": "Unarchived",
+  "@unarchived_with_undo": {"description": "Snackbar message when group is unarchived"},
+  "pinned_with_undo": "Pinned",
+  "@pinned_with_undo": {"description": "Snackbar message when group is pinned"},
+  "unpinned_with_undo": "Unpinned",
+  "@unpinned_with_undo": {"description": "Snackbar message when group is unpinned"},
+  "deleted_with_undo": "Deleted",
+  "@deleted_with_undo": {"description": "Snackbar message when group is deleted"},
   "archive_confirm": "Do you want to archive",
   "unarchive_confirm": "Do you want to unarchive",
   "overview": "Overview",
@@ -613,4 +631,10 @@
   ,"@less": {"description": "Inline toggle label to collapse and show fewer items"}
   ,"debt_prefix_to": "to "
   ,"@debt_prefix_to": {"description": "Short prefix shown before the recipient in a debt/settlement line (e.g., 'to Alice 10€')"}
+  ,"send_reminder": "Send reminder"
+  ,"@send_reminder": {"description": "Button label to send a payment reminder to a participant"}
+  ,"reminder_message_single": "Hi {participantName}! 👋\n\nJust a friendly reminder that you owe {amount} to {creditorName} for the group \"{groupName}\".\n\nThank you! 😊"
+  ,"@reminder_message_single": {"description": "Reminder message when a participant owes money to a single person", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
+  ,"reminder_message_multiple": "Hi {participantName}! 👋\n\nJust a friendly reminder of your payments for the group \"{groupName}\":\n\n{debtsList}\n\nThank you! 😊"
+  ,"@reminder_message_multiple": {"description": "Reminder message when a participant owes money to multiple people", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
 }

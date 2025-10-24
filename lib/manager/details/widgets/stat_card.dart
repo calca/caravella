@@ -10,6 +10,7 @@ class StatCard extends StatelessWidget {
   final List<InlineSpan>? subtitleSpans;
   final IconData? icon;
   final Widget? leading;
+  final Widget? trailing; // optional action button or icon on the right
   final double? percent; // 0-100
   final bool inlineHeader; // when true, show title and value on same row
   final int? subtitleMaxLines; // allow override of max lines for subtitle
@@ -23,6 +24,7 @@ class StatCard extends StatelessWidget {
     this.subtitleSpans,
     this.icon,
     this.leading,
+    this.trailing,
     this.percent,
     this.inlineHeader = false,
     this.subtitleMaxLines,
@@ -88,7 +90,7 @@ class StatCard extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            const SizedBox(width: 12),
+                            const SizedBox(width: 8),
                             CurrencyDisplay(
                               value: value,
                               currency: currency,
@@ -170,6 +172,10 @@ class StatCard extends StatelessWidget {
                     ],
                   ),
                 ),
+                if (trailing != null) ...[
+                  const SizedBox(width: 8),
+                  trailing!,
+                ],
               ],
             ),
           ),

@@ -6,6 +6,7 @@ import '../../widgets/group_header.dart'; // ParticipantAvatar
 import '../../widgets/stat_card.dart';
 import '../../../../widgets/currency_display.dart';
 import '../../../../data/model/expense_participant.dart';
+import 'package:share_plus/share_plus.dart';
 
 /// Participants tab: per participant totals, contribution percentages and settlements.
 class ParticipantsOverviewTab extends StatelessWidget {
@@ -77,6 +78,7 @@ class ParticipantsOverviewTab extends StatelessWidget {
                 currency: trip.currency,
                 owes: owes,
                 idToName: idToName,
+                trip: trip,
               ),
             );
           }),
@@ -144,6 +146,7 @@ class _ParticipantStatCard extends StatefulWidget {
   final String currency;
   final List<Settlement> owes;
   final Map<String, String> idToName;
+  final ExpenseGroup trip;
 
   const _ParticipantStatCard({
     required this.participant,
@@ -152,6 +155,7 @@ class _ParticipantStatCard extends StatefulWidget {
     required this.currency,
     required this.owes,
     required this.idToName,
+    required this.trip,
   });
 
   @override
@@ -161,17 +165,75 @@ class _ParticipantStatCard extends StatefulWidget {
 class _ParticipantStatCardState extends State<_ParticipantStatCard> {
   bool _expanded = false;
 
+  String _buildReminderMessage(BuildContext context) {
+    final loc = gen.AppLocalizations.of(context);
+    final participantName = widget.participant.name;
+    final groupName = widget.trip.title;
+    final owes = widget.owes;
 
+    if (owes.isEmpty) {
+      // No debts, return empty (button should be hidden)
+      return '';
+    }
+
+    if (owes.length == 1) {
+      // Single debt
+      final debt = owes.first;
+      final creditorName = widget.idToName[debt.toId] ?? debt.toId;
+      final amount = CurrencyDisplay.formatCurrencyText(
+        debt.amount,
+        widget.trip.currency,
+        showDecimals: true,
+      );
+      return loc.reminder_message_single(
+        participantName,
+        amount,
+        creditorName,
+        groupName,
+      );
+    } else {
+      // Multiple debts
+      final debtsList = owes
+          .map((debt) {
+            final creditorName = widget.idToName[debt.toId] ?? debt.toId;
+            final amount = CurrencyDisplay.formatCurrencyText(
+              debt.amount,
+              widget.trip.currency,
+              showDecimals: true,
+            );
+            return '• $amount ${loc.debt_prefix_to}$creditorName';
+          })
+          .join('\n');
+
+      return loc.reminder_message_multiple(
+        participantName,
+        groupName,
+        debtsList,
+      );
+    }
+  }
+
+  Future<void> _shareReminder() async {
+    final message = _buildReminderMessage(context);
+    if (message.isEmpty) return;
+
+    try {
+      await SharePlus.instance.share(ShareParams(text: message));
+    } catch (e) {
+      // Silently handle errors
+      debugPrint('Error sharing reminder: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final loc = gen.AppLocalizations.of(context);
 
     // Build per-line debts starting with "a " and bold content
     final owes = widget.owes;
     final totalItems = owes.length;
     final showToggle = totalItems > 3;
-    final loc = gen.AppLocalizations.of(context);
 
     List<InlineSpan> buildLines({required bool expanded}) {
       final spans = <InlineSpan>[];
@@ -273,6 +335,9 @@ class _ParticipantStatCardState extends State<_ParticipantStatCard> {
 
     final subtitleSpans = buildLines(expanded: _expanded);
 
+    // Only show share button if participant has debts
+    final hasDebts = owes.isNotEmpty;
+
     return StatCard(
       title: widget.participant.name,
       value: widget.total,
@@ -282,6 +347,18 @@ class _ParticipantStatCardState extends State<_ParticipantStatCard> {
       leading: ParticipantAvatar(participant: widget.participant, size: 48),
       percent: widget.percent,
       inlineHeader: true,
+      trailing: hasDebts
+          ? IconButton(
+              icon: Icon(
+                Icons.send_outlined,
+                size: 20,
+                color: theme.colorScheme.primary,
+              ),
+              tooltip: loc.send_reminder,
+              onPressed: _shareReminder,
+              visualDensity: VisualDensity.compact,
+            )
+          : null,
     );
   }
 }

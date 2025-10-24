@@ -10,9 +10,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - F-Droid metadata and distribution support
 - Comprehensive F-Droid submission documentation
+- Context menu (long-press) for expense groups in history page with pin/unpin, archive/unarchive, and delete actions
+- Smooth skeleton loader animation for carousel during cold start with shimmer effect
+- Fade-in animation for carousel cards when data loads
+- In-app store rating feature with smart triggers (after 10 expenses, then monthly)
 
 ### Changed
 - Improved app metadata for distribution platforms
+- Replaced CircularProgressIndicator with CarouselSkeletonLoader in home cards section for better UX
+- Refactored PreferencesService architecture with singleton pattern and separated preference categories
+- Improved PreferencesService API with synchronous read operations where possible
+- Organized preference keys and defaults into centralized abstract classes
+
+### Fixed
 
 ## [1.0.45] - 2025-10-16
 

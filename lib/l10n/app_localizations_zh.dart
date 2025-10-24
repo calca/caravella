@@ -501,6 +501,33 @@ class AppLocalizationsZh extends AppLocalizations {
   String get unarchive => '取消归档';
 
   @override
+  String get pin => '固定';
+
+  @override
+  String get unpin => '取消置顶';
+
+  @override
+  String get delete => '删除';
+
+  @override
+  String get undo => '撤销';
+
+  @override
+  String get archived_with_undo => '已归档';
+
+  @override
+  String get unarchived_with_undo => '已取消归档';
+
+  @override
+  String get pinned_with_undo => '已置顶';
+
+  @override
+  String get unpinned_with_undo => '已取消置顶';
+
+  @override
+  String get deleted_with_undo => '已删除';
+
+  @override
   String get archive_confirm => '您想要归档吗';
 
   @override
@@ -553,9 +580,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get unpin_group => '取消固定群组';
-
-  @override
-  String get pin => '固定';
 
   @override
   String get theme_automatic => '自动';
@@ -854,9 +878,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get delete_expense_confirm => '您确定要删除此支出吗?';
-
-  @override
-  String get delete => '删除';
 
   @override
   String get no_results_found => '未找到结果。';
@@ -1565,4 +1586,26 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get debt_prefix_to => '给 ';
+
+  @override
+  String get send_reminder => '发送提醒';
+
+  @override
+  String reminder_message_single(
+    Object participantName,
+    Object amount,
+    Object creditorName,
+    Object groupName,
+  ) {
+    return '嗨 $participantName！👋\n\n友情提醒，您需要向 $creditorName 支付 $amount，用于群组 \"$groupName\"。\n\n谢谢！😊';
+  }
+
+  @override
+  String reminder_message_multiple(
+    Object participantName,
+    Object groupName,
+    Object debtsList,
+  ) {
+    return '嗨 $participantName！👋\n\n友情提醒您对群组 \"$groupName\" 的付款：\n\n$debtsList\n\n谢谢！😊';
+  }
 }
