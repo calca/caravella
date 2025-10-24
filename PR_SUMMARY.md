@@ -145,7 +145,7 @@ Please review:
 Note: Screenshots will be added after PR is merged and app is built, as Flutter is not available in the current development environment.
 
 Expected UI:
-- Group edit page shows type selector between categories and period sections
+- Group edit page shows type selector right after the group name field
 - Each type displayed with its icon and localized name
 - Selected type shows checkmark indicator
 - Material 3 design consistent with rest of app

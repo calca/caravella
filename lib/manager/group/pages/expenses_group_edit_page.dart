@@ -296,11 +296,11 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                               ],
                             ),
                             const SizedBox(height: 24),
+                            const GroupTypeSelector(),
+                            const SizedBox(height: 24),
                             const ParticipantsEditor(),
                             const SizedBox(height: 24),
                             const CategoriesEditor(),
-                            const SizedBox(height: 24),
-                            const GroupTypeSelector(),
                             const SizedBox(height: 24),
                             PeriodSectionEditor(
                               onPickDate: (isStart) async =>
