@@ -7,6 +7,7 @@ import '../../../data/expense_group_storage_v2.dart';
 import '../../../widgets/currency_display.dart';
 import '../../../widgets/base_card.dart';
 import '../../../widgets/material3_dialog.dart';
+import '../../../widgets/app_toast.dart';
 import '../../details/pages/expense_group_detail_page.dart';
 import 'history_options_sheet.dart';
 
@@ -60,18 +61,14 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
     await ExpenseGroupStorageV2.updateGroupPin(trip.id, !isPinned);
 
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('$actionText • ${trip.title}'),
-        action: SnackBarAction(
-          label: gloc.undo,
-          onPressed: () async {
-            await ExpenseGroupStorageV2.updateGroupPin(trip.id, isPinned);
-          },
-        ),
-        duration: const Duration(seconds: 4),
-        behavior: SnackBarBehavior.floating,
-      ),
+    AppToast.show(
+      context,
+      '$actionText • ${trip.title}',
+      type: ToastType.info,
+      duration: const Duration(seconds: 4),
+      onUndo: () async {
+        await ExpenseGroupStorageV2.updateGroupPin(trip.id, isPinned);
+      },
     );
   }
 
@@ -85,20 +82,16 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
     // Execute action
     await onArchiveToggle(trip.id, !isArchived);
 
-    // Show SnackBar with undo
+    // Show AppToast with undo
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('$actionText • ${trip.title}'),
-        action: SnackBarAction(
-          label: gloc.undo,
-          onPressed: () async {
-            await onArchiveToggle(trip.id, isArchived);
-          },
-        ),
-        duration: const Duration(seconds: 4),
-        behavior: SnackBarBehavior.floating,
-      ),
+    AppToast.show(
+      context,
+      '$actionText • ${trip.title}',
+      type: ToastType.info,
+      duration: const Duration(seconds: 4),
+      onUndo: () async {
+        await onArchiveToggle(trip.id, isArchived);
+      },
     );
   }
 
@@ -134,12 +127,11 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
     await ExpenseGroupStorageV2.deleteGroup(trip.id);
 
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('${gloc.deleted_with_undo} • ${trip.title}'),
-        duration: const Duration(seconds: 3),
-        behavior: SnackBarBehavior.floating,
-      ),
+    AppToast.show(
+      context,
+      '${gloc.deleted_with_undo} • ${trip.title}',
+      type: ToastType.success,
+      duration: const Duration(seconds: 3),
     );
   }
 
@@ -169,9 +161,9 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(16),
       child: BaseCard(
         backgroundColor: Theme.of(context).colorScheme.surface,
-        noBorder: false,
+        noBorder: true,
         margin: EdgeInsets.zero,
-        padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+        padding: const EdgeInsets.all(16),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
