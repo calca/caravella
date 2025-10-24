@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../state/expense_group_notifier.dart';
 import '../../../data/expense_group_storage_v2.dart';
+import '../../../data/services/notification_service.dart';
 import '../data/group_form_state.dart';
 import '../group_form_controller.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
@@ -32,6 +33,18 @@ class SaveButtonBar extends StatelessWidget {
 
               // Force repository reload so subsequent reads fetch latest data
               ExpenseGroupStorageV2.forceReload();
+
+              // Handle notification based on the saved group settings
+              final notificationService = NotificationService();
+              if (saved.notificationEnabled) {
+                // Request permissions if needed
+                await notificationService.requestPermissions();
+                // Show or update notification
+                await notificationService.showGroupNotification(saved, loc);
+              } else {
+                // Cancel notification if disabled
+                await notificationService.cancelGroupNotification();
+              }
 
               // Notify global notifier about the updated/added group so UI can react
               try {
