@@ -624,4 +624,16 @@
   ,"@reminder_message_single": {"description": "Reminder message when a participant owes money to a single person", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
   ,"reminder_message_multiple": "Hi {participantName}! 👋\n\nJust a friendly reminder of your payments for the group \"{groupName}\":\n\n{debtsList}\n\nThank you! 😊"
   ,"@reminder_message_multiple": {"description": "Reminder message when a participant owes money to multiple people", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
+  ,"group_type": "Type"
+  ,"@group_type": {"description": "Label for expense group type"}
+  ,"group_type_description": "Choose the group type"
+  ,"@group_type_description": {"description": "Description for group type selection"}
+  ,"group_type_travel": "Travel / Vacation"
+  ,"@group_type_travel": {"description": "Group type: travel or vacation"}
+  ,"group_type_personal": "Personal"
+  ,"@group_type_personal": {"description": "Group type: personal"}
+  ,"group_type_family": "Family"
+  ,"@group_type_family": {"description": "Group type: family"}
+  ,"group_type_other": "Other"
+  ,"@group_type_other": {"description": "Group type: other"}
 }

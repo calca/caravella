@@ -1,6 +1,7 @@
 import '../../../data/model/expense_participant.dart';
 import '../../../data/model/expense_category.dart';
 import '../../../data/model/expense_group.dart';
+import '../../../data/model/expense_group_type.dart';
 import 'package:flutter/foundation.dart';
 
 class GroupFormState extends ChangeNotifier {
@@ -18,6 +19,7 @@ class GroupFormState extends ChangeNotifier {
     'code': 'EUR',
     'name': 'Euro',
   };
+  ExpenseGroupType? groupType;
   bool loadingImage = false;
   bool isSaving = false;
 
@@ -89,6 +91,11 @@ class GroupFormState extends ChangeNotifier {
 
   void setCurrency(Map<String, String> c) {
     currency = c;
+    notifyListeners();
+  }
+
+  void setGroupType(ExpenseGroupType? type) {
+    groupType = type;
     notifyListeners();
   }
 

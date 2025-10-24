@@ -14,6 +14,7 @@ import '../group_form_controller.dart';
 import '../widgets/group_title_field.dart';
 import '../widgets/participants_editor.dart';
 import '../widgets/categories_editor.dart';
+import '../widgets/group_type_selector.dart';
 import '../widgets/period_section_editor.dart';
 import '../widgets/background_picker.dart';
 import '../widgets/currency_selector_sheet.dart';
@@ -207,6 +208,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
             state.imagePath,
             state.color,
             state.currency['code'],
+            state.groupType,
           );
         },
         builder: (context, _, _) {
@@ -297,6 +299,8 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                             const ParticipantsEditor(),
                             const SizedBox(height: 24),
                             const CategoriesEditor(),
+                            const SizedBox(height: 24),
+                            const GroupTypeSelector(),
                             const SizedBox(height: 24),
                             PeriodSectionEditor(
                               onPickDate: (isStart) async =>

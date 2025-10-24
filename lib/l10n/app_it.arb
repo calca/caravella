@@ -602,4 +602,16 @@
   ,"@reminder_message_single": {"description": "Messaggio di promemoria quando un partecipante deve denaro a una sola persona", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
   ,"reminder_message_multiple": "Ciao {participantName}! 👋\n\nVorrei ricordarti i tuoi pagamenti per il gruppo \"{groupName}\":\n\n{debtsList}\n\nGrazie! 😊"
   ,"@reminder_message_multiple": {"description": "Messaggio di promemoria quando un partecipante deve denaro a più persone", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
+  ,"group_type": "Tipologia"
+  ,"@group_type": {"description": "Etichetta per la tipologia del gruppo di spese"}
+  ,"group_type_description": "Scegli il tipo di gruppo"
+  ,"@group_type_description": {"description": "Descrizione per la selezione della tipologia del gruppo"}
+  ,"group_type_travel": "Viaggio / Vacanza"
+  ,"@group_type_travel": {"description": "Tipologia gruppo: viaggio o vacanza"}
+  ,"group_type_personal": "Personale"
+  ,"@group_type_personal": {"description": "Tipologia gruppo: personale"}
+  ,"group_type_family": "Famiglia"
+  ,"@group_type_family": {"description": "Tipologia gruppo: famiglia"}
+  ,"group_type_other": "Altro"
+  ,"@group_type_other": {"description": "Tipologia gruppo: altro"}
 }

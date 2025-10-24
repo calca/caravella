@@ -461,61 +461,397 @@
   ,"currency_ZWL": "Zimbabwean Dollar"
   ,"search_currency": "Search currency..."
   ,"activity": "Activity"
-  ,"@activity": {"description": "Section title for expense list recent activity"}
+  ,"@activity": {"description": "Section title for expense list recent activity"  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem / Férias"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem ou férias"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+}
   ,"search_expenses_hint": "Search by name or note..."
-  ,"@search_expenses_hint": {"description": "Placeholder for searching expenses by name or note"}
+  ,"@search_expenses_hint": {"description": "Placeholder for searching expenses by name or note"  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem / Férias"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem ou férias"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+}
   ,"clear_filters": "Clear"
-  ,"@clear_filters": {"description": "Button to clear expense filters"}
+  ,"@clear_filters": {"description": "Button to clear expense filters"  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem / Férias"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem ou férias"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+}
   ,"show_filters": "Show filters"
-  ,"@show_filters": {"description": "Label to show filters"}
+  ,"@show_filters": {"description": "Label to show filters"  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem / Férias"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem ou férias"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+}
   ,"hide_filters": "Hide filters"
-  ,"@hide_filters": {"description": "Label to hide filters"}
+  ,"@hide_filters": {"description": "Label to hide filters"  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem / Férias"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem ou férias"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+}
   ,"all_categories": "All"
-  ,"@all_categories": {"description": "Chip label for all categories"}
+  ,"@all_categories": {"description": "Chip label for all categories"  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem / Férias"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem ou férias"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+}
   ,"all_participants": "All"
-  ,"@all_participants": {"description": "Chip label for all participants"}
+  ,"@all_participants": {"description": "Chip label for all participants"  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem / Férias"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem ou férias"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+}
   ,"no_expenses_with_filters": "No expenses match the selected filters"
-  ,"@no_expenses_with_filters": {"description": "Empty state when active filters return no expenses"}
+  ,"@no_expenses_with_filters": {"description": "Empty state when active filters return no expenses"  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem / Férias"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem ou férias"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+}
   ,"no_expenses_yet": "No expenses added yet"
-  ,"@no_expenses_yet": {"description": "Empty state when there are no expenses yet"}
+  ,"@no_expenses_yet": {"description": "Empty state when there are no expenses yet"  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem / Férias"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem ou férias"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+}
   ,"empty_expenses_title": "Ready to start tracking?"
-  ,"@empty_expenses_title": {"description": "Title for empty expenses state"}
+  ,"@empty_expenses_title": {"description": "Title for empty expenses state"  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem / Férias"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem ou férias"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+}
   ,"empty_expenses_subtitle": "Add your first expense to get started with this group!"
-  ,"@empty_expenses_subtitle": {"description": "Subtitle for empty expenses state"}
+  ,"@empty_expenses_subtitle": {"description": "Subtitle for empty expenses state"  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem / Férias"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem ou férias"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+}
   ,"add_first_expense_button": "Add First Expense"
-  ,"@add_first_expense_button": {"description": "Button text for adding the first expense in empty state"}
+  ,"@add_first_expense_button": {"description": "Button text for adding the first expense in empty state"  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem / Férias"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem ou férias"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+}
   ,"show_search": "Show search bar"
-  ,"@show_search": {"description": "Tooltip to show the group search bar"}
+  ,"@show_search": {"description": "Tooltip to show the group search bar"  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem / Férias"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem ou férias"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+}
   ,"hide_search": "Hide search bar"
-  ,"@hide_search": {"description": "Tooltip to hide the group search bar"}
+  ,"@hide_search": {"description": "Tooltip to hide the group search bar"  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem / Férias"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem ou férias"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+}
   ,"expense_groups_title": "Expense Groups"
-  ,"@expense_groups_title": {"description": "Main section header for the list of expense groups/trips on the history page"}
+  ,"@expense_groups_title": {"description": "Main section header for the list of expense groups/trips on the history page"  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem / Férias"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem ou férias"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+}
   ,"expense_groups_desc": "Manage your expense groups"
-  ,"@expense_groups_desc": {"description": "Short subtitle describing the purpose of the expense groups section (e.g. add, edit, view trips)"}
+  ,"@expense_groups_desc": {"description": "Short subtitle describing the purpose of the expense groups section (e.g. add, edit, view trips)"  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem / Férias"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem ou férias"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+}
   ,"participant_count": "{count, plural, one {{count} participante} other {{count} participantes}}"
-  ,"@participant_count": {"description": "Contagem de participantes com plural", "placeholders": {"count": {}}}
+  ,"@participant_count": {"description": "Contagem de participantes com plural", "placeholders": {"count": {}}  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem / Férias"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem ou férias"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+}
   ,"whats_new_title": "Novidades"
-  ,"@whats_new_title": {"description": "Título da página que mostra o changelog"}
+  ,"@whats_new_title": {"description": "Título da página que mostra o changelog"  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem / Férias"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem ou férias"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+}
   ,"whats_new_desc": "Descubra os recursos e atualizações mais recentes"
-  ,"@whats_new_desc": {"description": "Subtítulo da página novidades"}
+  ,"@whats_new_desc": {"description": "Subtítulo da página novidades"  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem / Férias"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem ou férias"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+}
   ,"whats_new_subtitle": "Destaques recentes"
-  ,"@whats_new_subtitle": {"description": "Subtítulo no cartão de cabeçalho da página de novidades"}
+  ,"@whats_new_subtitle": {"description": "Subtítulo no cartão de cabeçalho da página de novidades"  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem / Férias"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem ou férias"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+}
   ,"whats_new_latest": "Fique por dentro das melhorias mais recentes"
-  ,"@whats_new_latest": {"description": "Texto descritivo no cartão de cabeçalho da página de novidades"}
+  ,"@whats_new_latest": {"description": "Texto descritivo no cartão de cabeçalho da página de novidades"  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem / Férias"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem ou férias"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+}
   ,"average_per_person": "Média por pessoa"
-  ,"@average_per_person": {"description": "Rótulo mostrado antes da média gasta por pessoa na aba Participantes"}
+  ,"@average_per_person": {"description": "Rótulo mostrado antes da média gasta por pessoa na aba Participantes"  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem / Férias"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem ou férias"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+}
   ,"more": "mais"
-  ,"@more": {"description": "Rótulo inline para expandir e mostrar todos os itens"}
+  ,"@more": {"description": "Rótulo inline para expandir e mostrar todos os itens"  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem / Férias"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem ou férias"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+}
   ,"less": "menos"
-  ,"@less": {"description": "Rótulo inline para recolher e mostrar menos itens"}
+  ,"@less": {"description": "Rótulo inline para recolher e mostrar menos itens"  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem / Férias"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem ou férias"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+}
   ,"debt_prefix_to": "a "
-  ,"@debt_prefix_to": {"description": "Prefixo curto mostrado antes do destinatário em uma linha de dívida/liquidação (ex.: 'a Alice 10€')"}
+  ,"@debt_prefix_to": {"description": "Prefixo curto mostrado antes do destinatário em uma linha de dívida/liquidação (ex.: 'a Alice 10€')"  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem / Férias"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem ou férias"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+}
   ,"send_reminder": "Enviar lembrete"
-  ,"@send_reminder": {"description": "Rótulo do botão para enviar um lembrete de pagamento a um participante"}
+  ,"@send_reminder": {"description": "Rótulo do botão para enviar um lembrete de pagamento a um participante"  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem / Férias"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem ou férias"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+}
   ,"reminder_message_single": "Oi {participantName}! 👋\n\nGostaria de lembrar que você deve {amount} a {creditorName} para o grupo \"{groupName}\".\n\nObrigado! 😊"
-  ,"@reminder_message_single": {"description": "Mensagem de lembrete quando um participante deve dinheiro a uma única pessoa", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
+  ,"@reminder_message_single": {"description": "Mensagem de lembrete quando um participante deve dinheiro a uma única pessoa", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem / Férias"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem ou férias"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+}
   ,"reminder_message_multiple": "Oi {participantName}! 👋\n\nGostaria de lembrar seus pagamentos para o grupo \"{groupName}\":\n\n{debtsList}\n\nObrigado! 😊"
-  ,"@reminder_message_multiple": {"description": "Mensagem de lembrete quando um participante deve dinheiro a várias pessoas", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
+  ,"@reminder_message_multiple": {"description": "Mensagem de lembrete quando um participante deve dinheiro a várias pessoas", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem / Férias"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem ou férias"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+}
   ,"about": "Sobre"
   ,"add": "Adicionar"
   ,"add_expense_fab": "Adicionar Despesa"
@@ -593,4 +929,16 @@
   ,"unarchive_confirm": "Deseja desarquivar"
   ,"unpin_group": "Desafixar grupo"
   ,"weekly_expenses_chart": "Despesas semanais"
+  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem / Férias"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem ou férias"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
 }

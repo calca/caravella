@@ -111,8 +111,32 @@
   "@participant_count": {
     "description": "参与者计数（中文无需复数, 使用other形式）",
     "placeholders": {
-      "count": {}
-    }
+      "count": {  ,"group_type": "类型"
+  ,"@group_type": {"description": "费用组类型标签"}
+  ,"group_type_description": "选择组类型"
+  ,"@group_type_description": {"description": "组类型选择的描述"}
+  ,"group_type_travel": "旅行 / 度假"
+  ,"@group_type_travel": {"description": "组类型：旅行或度假"}
+  ,"group_type_personal": "个人"
+  ,"@group_type_personal": {"description": "组类型：个人"}
+  ,"group_type_family": "家庭"
+  ,"@group_type_family": {"description": "组类型：家庭"}
+  ,"group_type_other": "其他"
+  ,"@group_type_other": {"description": "组类型：其他"}
+}
+      ,"group_type": "类型"
+  ,"@group_type": {"description": "费用组类型标签"}
+  ,"group_type_description": "选择组类型"
+  ,"@group_type_description": {"description": "组类型选择的描述"}
+  ,"group_type_travel": "旅行 / 度假"
+  ,"@group_type_travel": {"description": "组类型：旅行或度假"}
+  ,"group_type_personal": "个人"
+  ,"@group_type_personal": {"description": "组类型：个人"}
+  ,"group_type_family": "家庭"
+  ,"@group_type_family": {"description": "组类型：家庭"}
+  ,"group_type_other": "其他"
+  ,"@group_type_other": {"description": "组类型：其他"}
+}
   },
   "participants_label": "参与者",
   "last_7_days": "过去7天",
@@ -351,8 +375,32 @@
   "error_saving_image": "保存图片出错",
   "@error_saving_group": {
     "placeholders": {
-      "error": {}
-    }
+      "error": {  ,"group_type": "类型"
+  ,"@group_type": {"description": "费用组类型标签"}
+  ,"group_type_description": "选择组类型"
+  ,"@group_type_description": {"description": "组类型选择的描述"}
+  ,"group_type_travel": "旅行 / 度假"
+  ,"@group_type_travel": {"description": "组类型：旅行或度假"}
+  ,"group_type_personal": "个人"
+  ,"@group_type_personal": {"description": "组类型：个人"}
+  ,"group_type_family": "家庭"
+  ,"@group_type_family": {"description": "组类型：家庭"}
+  ,"group_type_other": "其他"
+  ,"@group_type_other": {"description": "组类型：其他"}
+}
+      ,"group_type": "类型"
+  ,"@group_type": {"description": "费用组类型标签"}
+  ,"group_type_description": "选择组类型"
+  ,"@group_type_description": {"description": "组类型选择的描述"}
+  ,"group_type_travel": "旅行 / 度假"
+  ,"@group_type_travel": {"description": "组类型：旅行或度假"}
+  ,"group_type_personal": "个人"
+  ,"@group_type_personal": {"description": "组类型：个人"}
+  ,"group_type_family": "家庭"
+  ,"@group_type_family": {"description": "组类型：家庭"}
+  ,"group_type_other": "其他"
+  ,"@group_type_other": {"description": "组类型：其他"}
+}
   },
   "already_exists": "已存在",
   "status_all": "全部",
@@ -375,8 +423,32 @@
   "@accessibility_total_expenses": {
     "description": "总支出无障碍标签",
     "placeholders": {
-      "amount": {}
-    }
+      "amount": {  ,"group_type": "类型"
+  ,"@group_type": {"description": "费用组类型标签"}
+  ,"group_type_description": "选择组类型"
+  ,"@group_type_description": {"description": "组类型选择的描述"}
+  ,"group_type_travel": "旅行 / 度假"
+  ,"@group_type_travel": {"description": "组类型：旅行或度假"}
+  ,"group_type_personal": "个人"
+  ,"@group_type_personal": {"description": "组类型：个人"}
+  ,"group_type_family": "家庭"
+  ,"@group_type_family": {"description": "组类型：家庭"}
+  ,"group_type_other": "其他"
+  ,"@group_type_other": {"description": "组类型：其他"}
+}
+      ,"group_type": "类型"
+  ,"@group_type": {"description": "费用组类型标签"}
+  ,"group_type_description": "选择组类型"
+  ,"@group_type_description": {"description": "组类型选择的描述"}
+  ,"group_type_travel": "旅行 / 度假"
+  ,"@group_type_travel": {"description": "组类型：旅行或度假"}
+  ,"group_type_personal": "个人"
+  ,"@group_type_personal": {"description": "组类型：个人"}
+  ,"group_type_family": "家庭"
+  ,"@group_type_family": {"description": "组类型：家庭"}
+  ,"group_type_other": "其他"
+  ,"@group_type_other": {"description": "组类型：其他"}
+}
   },
   "accessibility_add_expense": "添加支出",
   "accessibility_security_switch": "安全开关",
@@ -626,8 +698,32 @@
       "participantName": {},
       "amount": {},
       "creditorName": {},
-      "groupName": {}
-    }
+      "groupName": {  ,"group_type": "类型"
+  ,"@group_type": {"description": "费用组类型标签"}
+  ,"group_type_description": "选择组类型"
+  ,"@group_type_description": {"description": "组类型选择的描述"}
+  ,"group_type_travel": "旅行 / 度假"
+  ,"@group_type_travel": {"description": "组类型：旅行或度假"}
+  ,"group_type_personal": "个人"
+  ,"@group_type_personal": {"description": "组类型：个人"}
+  ,"group_type_family": "家庭"
+  ,"@group_type_family": {"description": "组类型：家庭"}
+  ,"group_type_other": "其他"
+  ,"@group_type_other": {"description": "组类型：其他"}
+}
+      ,"group_type": "类型"
+  ,"@group_type": {"description": "费用组类型标签"}
+  ,"group_type_description": "选择组类型"
+  ,"@group_type_description": {"description": "组类型选择的描述"}
+  ,"group_type_travel": "旅行 / 度假"
+  ,"@group_type_travel": {"description": "组类型：旅行或度假"}
+  ,"group_type_personal": "个人"
+  ,"@group_type_personal": {"description": "组类型：个人"}
+  ,"group_type_family": "家庭"
+  ,"@group_type_family": {"description": "组类型：家庭"}
+  ,"group_type_other": "其他"
+  ,"@group_type_other": {"description": "组类型：其他"}
+}
   },
   "reminder_message_multiple": "嗨 {participantName}！👋\n\n友情提醒您对群组 \"{groupName}\" 的付款：\n\n{debtsList}\n\n谢谢！😊",
   "@reminder_message_multiple": {
@@ -635,8 +731,32 @@
     "placeholders": {
       "participantName": {},
       "groupName": {},
-      "debtsList": {}
-    }
+      "debtsList": {  ,"group_type": "类型"
+  ,"@group_type": {"description": "费用组类型标签"}
+  ,"group_type_description": "选择组类型"
+  ,"@group_type_description": {"description": "组类型选择的描述"}
+  ,"group_type_travel": "旅行 / 度假"
+  ,"@group_type_travel": {"description": "组类型：旅行或度假"}
+  ,"group_type_personal": "个人"
+  ,"@group_type_personal": {"description": "组类型：个人"}
+  ,"group_type_family": "家庭"
+  ,"@group_type_family": {"description": "组类型：家庭"}
+  ,"group_type_other": "其他"
+  ,"@group_type_other": {"description": "组类型：其他"}
+}
+      ,"group_type": "类型"
+  ,"@group_type": {"description": "费用组类型标签"}
+  ,"group_type_description": "选择组类型"
+  ,"@group_type_description": {"description": "组类型选择的描述"}
+  ,"group_type_travel": "旅行 / 度假"
+  ,"@group_type_travel": {"description": "组类型：旅行或度假"}
+  ,"group_type_personal": "个人"
+  ,"@group_type_personal": {"description": "组类型：个人"}
+  ,"group_type_family": "家庭"
+  ,"@group_type_family": {"description": "组类型：家庭"}
+  ,"group_type_other": "其他"
+  ,"@group_type_other": {"description": "组类型：其他"}
+}
   },
   "whats_new_title": "新功能",
   "@whats_new_title": {
@@ -669,5 +789,29 @@
   "debt_prefix_to": "给 ",
   "@debt_prefix_to": {
     "description": "在债务/结算行中显示在收款人之前的简短前缀（例如：'给 Alice 10€'）"
-  }
+    ,"group_type": "类型"
+  ,"@group_type": {"description": "费用组类型标签"}
+  ,"group_type_description": "选择组类型"
+  ,"@group_type_description": {"description": "组类型选择的描述"}
+  ,"group_type_travel": "旅行 / 度假"
+  ,"@group_type_travel": {"description": "组类型：旅行或度假"}
+  ,"group_type_personal": "个人"
+  ,"@group_type_personal": {"description": "组类型：个人"}
+  ,"group_type_family": "家庭"
+  ,"@group_type_family": {"description": "组类型：家庭"}
+  ,"group_type_other": "其他"
+  ,"@group_type_other": {"description": "组类型：其他"}
+}
+  ,"group_type": "类型"
+  ,"@group_type": {"description": "费用组类型标签"}
+  ,"group_type_description": "选择组类型"
+  ,"@group_type_description": {"description": "组类型选择的描述"}
+  ,"group_type_travel": "旅行 / 度假"
+  ,"@group_type_travel": {"description": "组类型：旅行或度假"}
+  ,"group_type_personal": "个人"
+  ,"@group_type_personal": {"description": "组类型：个人"}
+  ,"group_type_family": "家庭"
+  ,"@group_type_family": {"description": "组类型：家庭"}
+  ,"group_type_other": "其他"
+  ,"@group_type_other": {"description": "组类型：其他"}
 }
