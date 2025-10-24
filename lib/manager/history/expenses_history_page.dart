@@ -276,6 +276,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
           return SwipeableExpenseGroupCard(
             trip: trip,
             onArchiveToggle: _onArchiveToggle,
+            onDelete: () => _loadTrips(),
             searchQuery: _searchQuery,
           );
         },
@@ -313,6 +314,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
         return SwipeableExpenseGroupCard(
           trip: trip,
           onArchiveToggle: _onArchiveToggle,
+          onDelete: () => _loadTrips(),
           searchQuery: _searchQuery,
         );
       },

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/manager/details/widgets/group_header.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../data/model/expense_group.dart';
 import '../../../data/expense_group_storage_v2.dart';
+import '../../../state/expense_group_notifier.dart';
 import '../../../widgets/currency_display.dart';
 import '../../../widgets/base_card.dart';
 import '../../../widgets/material3_dialog.dart';
@@ -15,12 +17,14 @@ import 'history_options_sheet.dart';
 class SwipeableExpenseGroupCard extends StatelessWidget {
   final ExpenseGroup trip;
   final Future<void> Function(String groupId, bool archived) onArchiveToggle;
+  final VoidCallback? onDelete;
   final String? searchQuery;
 
   const SwipeableExpenseGroupCard({
     super.key,
     required this.trip,
     required this.onArchiveToggle,
+    this.onDelete,
     this.searchQuery,
   });
 
@@ -139,6 +143,15 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
 
     // Execute deletion
     await ExpenseGroupStorageV2.deleteGroup(trip.id);
+
+    // Notify the ExpenseGroupNotifier about the deletion
+    if (context.mounted) {
+      final notifier = context.read<ExpenseGroupNotifier>();
+      notifier.notifyGroupDeleted(trip.id);
+    }
+
+    // Trigger reload callback if provided
+    onDelete?.call();
 
     if (!context.mounted) return;
     AppToast.showFromMessenger(
