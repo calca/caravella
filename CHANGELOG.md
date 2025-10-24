@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - F-Droid metadata and distribution support
 - Comprehensive F-Droid submission documentation
+- Persistent notification feature for expense groups showing daily and total spending
+- Notification settings toggle in group edit page
+- Action buttons in notification (Add expense, Close)
 
 ### Changed
 - Improved app metadata for distribution platforms
