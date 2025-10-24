@@ -93,6 +93,29 @@ class NotificationService {
     );
     final content = '$dailyText\n$totalText';
 
+    // Calculate progress for groups with start and end dates
+    int? progress;
+    int? maxProgress;
+    bool showProgress = false;
+    
+    if (group.startDate != null && group.endDate != null) {
+      final now = DateTime.now();
+      final start = group.startDate!;
+      final end = group.endDate!;
+      
+      // Total days in the trip (inclusive)
+      final totalDays = end.difference(start).inDays + 1;
+      
+      // Days elapsed from start to now (clamped between 0 and totalDays)
+      final elapsedDays = now.difference(start).inDays + 1;
+      
+      if (totalDays > 0) {
+        maxProgress = totalDays;
+        progress = elapsedDays.clamp(0, totalDays);
+        showProgress = true;
+      }
+    }
+
     final androidDetails = AndroidNotificationDetails(
       _channelId,
       _channelName,
@@ -102,6 +125,14 @@ class NotificationService {
       ongoing: true,
       autoCancel: false,
       showWhen: false,
+      // Make notification non-dismissible by setting onlyAlertOnce to true
+      // and not allowing user to dismiss via swipe
+      onlyAlertOnce: true,
+      // Progress indicator for date-based tracking
+      showProgress: showProgress,
+      maxProgress: maxProgress ?? 0,
+      progress: progress ?? 0,
+      indeterminate: false,
       actions: [
         AndroidNotificationAction(
           'add_expense',
