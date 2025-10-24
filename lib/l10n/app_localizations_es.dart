@@ -511,6 +511,33 @@ class AppLocalizationsEs extends AppLocalizations {
   String get unarchive => 'Desarchivar';
 
   @override
+  String get pin => 'Pin';
+
+  @override
+  String get unpin => 'Desfijar';
+
+  @override
+  String get delete => 'Eliminar';
+
+  @override
+  String get undo => 'DESHACER';
+
+  @override
+  String get archived_with_undo => 'Archivado';
+
+  @override
+  String get unarchived_with_undo => 'Desarchivado';
+
+  @override
+  String get pinned_with_undo => 'Fijado';
+
+  @override
+  String get unpinned_with_undo => 'Desfijado';
+
+  @override
+  String get deleted_with_undo => 'Eliminado';
+
+  @override
   String get archive_confirm => '¿Quieres archivar';
 
   @override
@@ -564,9 +591,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get unpin_group => 'Desfijar grupo';
-
-  @override
-  String get pin => 'Pin';
 
   @override
   String get theme_automatic => 'Automático';
@@ -847,13 +871,13 @@ class AppLocalizationsEs extends AppLocalizations {
       'Habilitar el respaldo automático del sistema operativo';
 
   @override
-  String get settings_user_name_title => 'Your name';
+  String get settings_user_name_title => 'Tu nombre';
 
   @override
-  String get settings_user_name_desc => 'Name or nickname to use in the app';
+  String get settings_user_name_desc => 'Nombre o apodo para usar en la app';
 
   @override
-  String get settings_user_name_hint => 'Enter your name';
+  String get settings_user_name_hint => 'Ingresa tu nombre';
 
   @override
   String get info_tab => 'Info';
@@ -873,9 +897,6 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get delete_expense_confirm =>
       '¿Estás seguro de que quieres eliminar este gasto?';
-
-  @override
-  String get delete => 'Eliminar';
 
   @override
   String get no_results_found => 'No se encontraron resultados.';
@@ -1596,4 +1617,26 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get debt_prefix_to => 'a ';
+
+  @override
+  String get send_reminder => 'Enviar recordatorio';
+
+  @override
+  String reminder_message_single(
+    Object participantName,
+    Object amount,
+    Object creditorName,
+    Object groupName,
+  ) {
+    return '¡Hola $participantName! 👋\n\nQuisiera recordarte que debes $amount a $creditorName para el grupo \"$groupName\".\n\n¡Gracias! 😊';
+  }
+
+  @override
+  String reminder_message_multiple(
+    Object participantName,
+    Object groupName,
+    Object debtsList,
+  ) {
+    return '¡Hola $participantName! 👋\n\nQuisiera recordarte tus pagos para el grupo \"$groupName\":\n\n$debtsList\n\n¡Gracias! 😊';
+  }
 }

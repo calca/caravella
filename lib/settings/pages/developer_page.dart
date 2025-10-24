@@ -22,8 +22,7 @@ class DeveloperPage extends StatelessWidget {
         title: Text(loc.support_developer_title, style: textTheme.titleMedium),
         subtitle: Text(loc.support_developer_desc, style: textTheme.bodySmall),
         trailing: const Icon(Icons.launch, size: 16),
-        onTap: () =>
-            _launchUrl(context, 'https://buymeacoffee.com/gianluigick'),
+        onTap: () => _launchUrl(context, 'https://ko-fi.com/calca'),
       ),
     );
   }

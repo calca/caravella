@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class CurrencyDisplay extends StatelessWidget {
   final double value;
@@ -22,10 +23,39 @@ class CurrencyDisplay extends StatelessWidget {
     this.fontWeight,
   });
 
+  /// Formats a currency value as plain text for use in semantic labels,
+  /// exports, or other text-only contexts.
+  /// 
+  /// Example: `CurrencyDisplay.formatCurrencyText(123.45, 'EUR')` returns "123.45 EUR"
+  static String formatCurrencyText(
+    double value,
+    String currency, {
+    bool showDecimals = true,
+  }) {
+    final formattedValue = showDecimals
+        ? value.toStringAsFixed(2)
+        : value.truncate().toString();
+    return '$formattedValue $currency';
+  }
+
   @override
   Widget build(BuildContext context) {
-    final String formattedValue =
-        showDecimals ? value.toStringAsFixed(2) : value.truncate().toString();
+    // Get the locale and decimal separator
+    final locale = Localizations.maybeLocaleOf(context);
+    String decimalSeparator = '.';
+    try {
+      if (locale != null) {
+        final numberFormat = NumberFormat.decimalPattern(locale.toString());
+        decimalSeparator = numberFormat.symbols.DECIMAL_SEP;
+      }
+    } catch (_) {
+      // Fallback to dot if locale detection fails
+      decimalSeparator = '.';
+    }
+
+    final String formattedValue = showDecimals
+        ? value.toStringAsFixed(2).replaceAll('.', decimalSeparator)
+        : value.truncate().toString();
 
     return Row(
       mainAxisAlignment: alignment,
@@ -34,14 +64,15 @@ class CurrencyDisplay extends StatelessWidget {
       children: [
         Flexible(
           child: showDecimals
-              ? _buildValueWithSeparateDecimals(context, formattedValue)
+              ? _buildValueWithSeparateDecimals(
+                  context, formattedValue, decimalSeparator)
               : Text(
                   formattedValue,
                   style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                        color: color ?? Theme.of(context).colorScheme.onSurface,
-                        fontSize: valueFontSize,
-                        fontWeight: fontWeight,
-                      ),
+                    color: color ?? Theme.of(context).colorScheme.onSurface,
+                    fontSize: valueFontSize,
+                    fontWeight: fontWeight,
+                  ),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                 ),
@@ -50,19 +81,23 @@ class CurrencyDisplay extends StatelessWidget {
         Text(
           currency,
           style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                color: color ?? Theme.of(context).colorScheme.onSurface,
-                fontSize: currencyFontSize,
-              ),
+            color: color ?? Theme.of(context).colorScheme.onSurface,
+            fontSize: currencyFontSize,
+          ),
         ),
       ],
     );
   }
 
   Widget _buildValueWithSeparateDecimals(
-      BuildContext context, String formattedValue) {
-    final parts = formattedValue.split('.');
+    BuildContext context,
+    String formattedValue,
+    String decimalSeparator,
+  ) {
+    final parts = formattedValue.split(decimalSeparator);
     final integerPart = parts[0];
-    final decimalPart = parts.length > 1 ? '.${parts[1]}' : '';
+    final decimalPart =
+        parts.length > 1 ? '$decimalSeparator${parts[1]}' : '';
 
     return RichText(
       overflow: TextOverflow.ellipsis,
@@ -72,18 +107,18 @@ class CurrencyDisplay extends StatelessWidget {
           TextSpan(
             text: integerPart,
             style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                  color: color ?? Theme.of(context).colorScheme.onSurface,
-                  fontSize: valueFontSize,
-                  fontWeight: fontWeight,
-                ),
+              color: color ?? Theme.of(context).colorScheme.onSurface,
+              fontSize: valueFontSize,
+              fontWeight: fontWeight,
+            ),
           ),
           if (decimalPart.isNotEmpty)
             TextSpan(
               text: decimalPart,
               style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                    color: color ?? Theme.of(context).colorScheme.onSurface,
-                    fontSize: currencyFontSize,
-                  ),
+                color: color ?? Theme.of(context).colorScheme.onSurface,
+                fontSize: currencyFontSize,
+              ),
             ),
         ],
       ),

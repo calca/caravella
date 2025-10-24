@@ -183,6 +183,15 @@
   "archived": "Archiviato",
   "archive": "Archivia",
   "unarchive": "Disarchivia",
+  "pin": "Fissa",
+  "unpin": "Rimuovi fissaggio",
+  "delete": "Elimina",
+  "undo": "ANNULLA",
+  "archived_with_undo": "Archiviato",
+  "unarchived_with_undo": "Disarchiviato",
+  "pinned_with_undo": "Fissato",
+  "unpinned_with_undo": "Fissaggio rimosso",
+  "deleted_with_undo": "Eliminato",
   "archive_confirm": "Vuoi archiviare",
   "unarchive_confirm": "Vuoi disarchiviare",
   "overview": "Panoramica",
@@ -603,4 +612,10 @@
   ,"@voice_input_not_available": {"description": "Messaggio quando il riconoscimento vocale non è disponibile sul dispositivo"}
   ,"voice_input_hint": "Prova a dire: '50 euro per cena al ristorante'"
   ,"@voice_input_hint": {"description": "Suggerimento di esempio per l'uso dell'input vocale"}
+  ,"send_reminder": "Invia promemoria"
+  ,"@send_reminder": {"description": "Etichetta del pulsante per inviare un promemoria di pagamento a un partecipante"}
+  ,"reminder_message_single": "Ciao {participantName}! 👋\n\nVorrei ricordarti che devi {amount} a {creditorName} per il gruppo \"{groupName}\".\n\nGrazie! 😊"
+  ,"@reminder_message_single": {"description": "Messaggio di promemoria quando un partecipante deve denaro a una sola persona", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
+  ,"reminder_message_multiple": "Ciao {participantName}! 👋\n\nVorrei ricordarti i tuoi pagamenti per il gruppo \"{groupName}\":\n\n{debtsList}\n\nGrazie! 😊"
+  ,"@reminder_message_multiple": {"description": "Messaggio di promemoria quando un partecipante deve denaro a più persone", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
 }

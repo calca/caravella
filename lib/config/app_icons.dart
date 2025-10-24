@@ -8,6 +8,6 @@ class AppIcons {
   /// Icon used for participants throughout the app
   static const IconData participant = Icons.person_outline;
 
-  /// Icon used for categories throughout the app  
+  /// Icon used for categories throughout the app
   static const IconData category = Icons.category_outlined;
 }

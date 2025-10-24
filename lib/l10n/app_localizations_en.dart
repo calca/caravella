@@ -509,6 +509,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unarchive => 'Unarchive';
 
   @override
+  String get pin => 'Pin';
+
+  @override
+  String get unpin => 'Unpin';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get undo => 'UNDO';
+
+  @override
+  String get archived_with_undo => 'Archived';
+
+  @override
+  String get unarchived_with_undo => 'Unarchived';
+
+  @override
+  String get pinned_with_undo => 'Pinned';
+
+  @override
+  String get unpinned_with_undo => 'Unpinned';
+
+  @override
+  String get deleted_with_undo => 'Deleted';
+
+  @override
   String get archive_confirm => 'Do you want to archive';
 
   @override
@@ -562,9 +589,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get unpin_group => 'Unpin group';
-
-  @override
-  String get pin => 'Pin';
 
   @override
   String get theme_automatic => 'Automatic';
@@ -865,9 +889,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get delete_expense_confirm =>
       'Are you sure you want to delete this expense?';
-
-  @override
-  String get delete => 'Delete';
 
   @override
   String get no_results_found => 'No results found.';
@@ -1586,4 +1607,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get debt_prefix_to => 'to ';
+
+  @override
+  String get send_reminder => 'Send reminder';
+
+  @override
+  String reminder_message_single(
+    Object participantName,
+    Object amount,
+    Object creditorName,
+    Object groupName,
+  ) {
+    return 'Hi $participantName! 👋\n\nJust a friendly reminder that you owe $amount to $creditorName for the group \"$groupName\".\n\nThank you! 😊';
+  }
+
+  @override
+  String reminder_message_multiple(
+    Object participantName,
+    Object groupName,
+    Object debtsList,
+  ) {
+    return 'Hi $participantName! 👋\n\nJust a friendly reminder of your payments for the group \"$groupName\":\n\n$debtsList\n\nThank you! 😊';
+  }
 }
