@@ -11,9 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - F-Droid metadata and distribution support
 - Comprehensive F-Droid submission documentation
 - Context menu (long-press) for expense groups in history page with pin/unpin, archive/unarchive, and delete actions
+- Smooth skeleton loader animation for carousel during cold start with shimmer effect
+- Fade-in animation for carousel cards when data loads
 
 ### Changed
 - Improved app metadata for distribution platforms
+- Replaced CircularProgressIndicator with CarouselSkeletonLoader in home cards section for better UX
 
 ### Fixed
 
