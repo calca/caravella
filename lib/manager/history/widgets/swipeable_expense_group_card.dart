@@ -27,6 +27,9 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
   void _showContextMenu(BuildContext context) {
     HapticFeedback.mediumImpact();
 
+    // Capture the scaffold messenger before showing the sheet
+    final messenger = ScaffoldMessenger.of(context);
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -35,23 +38,26 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
         onPinToggle: () async {
           final nav = Navigator.of(sheetCtx);
           nav.pop();
-          await _executePinAction(context);
+          await _executePinAction(context, messenger);
         },
         onArchiveToggle: () async {
           final nav = Navigator.of(sheetCtx);
           nav.pop();
-          await _executeArchiveAction(context);
+          await _executeArchiveAction(context, messenger);
         },
         onDelete: () async {
           final nav = Navigator.of(sheetCtx);
           nav.pop();
-          await _executeDeleteAction(context);
+          await _executeDeleteAction(context, messenger);
         },
       ),
     );
   }
 
-  Future<void> _executePinAction(BuildContext context) async {
+  Future<void> _executePinAction(
+    BuildContext context,
+    ScaffoldMessengerState messenger,
+  ) async {
     final isPinned = trip.pinned;
     final gloc = gen.AppLocalizations.of(context);
     final actionText = isPinned
@@ -61,8 +67,8 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
     await ExpenseGroupStorageV2.updateGroupPin(trip.id, !isPinned);
 
     if (!context.mounted) return;
-    AppToast.show(
-      context,
+    AppToast.showFromMessenger(
+      messenger,
       '$actionText • ${trip.title}',
       type: ToastType.info,
       duration: const Duration(seconds: 4),
@@ -72,7 +78,10 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
     );
   }
 
-  Future<void> _executeArchiveAction(BuildContext context) async {
+  Future<void> _executeArchiveAction(
+    BuildContext context,
+    ScaffoldMessengerState messenger,
+  ) async {
     final isArchived = trip.archived;
     final gloc = gen.AppLocalizations.of(context);
     final actionText = isArchived
@@ -82,10 +91,12 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
     // Execute action
     await onArchiveToggle(trip.id, !isArchived);
 
+    // Small delay to ensure UI has updated
+    await Future.delayed(const Duration(milliseconds: 100));
+
     // Show AppToast with undo
-    if (!context.mounted) return;
-    AppToast.show(
-      context,
+    AppToast.showFromMessenger(
+      messenger,
       '$actionText • ${trip.title}',
       type: ToastType.info,
       duration: const Duration(seconds: 4),
@@ -95,7 +106,10 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
     );
   }
 
-  Future<void> _executeDeleteAction(BuildContext context) async {
+  Future<void> _executeDeleteAction(
+    BuildContext context,
+    ScaffoldMessengerState messenger,
+  ) async {
     final gloc = gen.AppLocalizations.of(context);
 
     // Show confirmation dialog
@@ -127,8 +141,8 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
     await ExpenseGroupStorageV2.deleteGroup(trip.id);
 
     if (!context.mounted) return;
-    AppToast.show(
-      context,
+    AppToast.showFromMessenger(
+      messenger,
       '${gloc.deleted_with_undo} • ${trip.title}',
       type: ToastType.success,
       duration: const Duration(seconds: 3),
