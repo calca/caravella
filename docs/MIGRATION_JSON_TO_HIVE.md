@@ -4,13 +4,40 @@
 
 This guide explains how to migrate your Caravella data from JSON file storage to Hive storage.
 
-## Important Notes
+## ✨ Automatic Migration (Recommended)
 
-⚠️ **Data is not automatically migrated between storage backends.** You must manually export and re-import your data when switching backends.
+**As of the latest version, migration from JSON to Hive is automatic!**
 
-## Migration Steps
+When you build and run the app with `STORAGE_BACKEND=hive`:
 
-### Option 1: Using Export/Import Feature (Recommended)
+1. **On first launch**, the app automatically detects if a JSON file exists
+2. **Migrates all data** from JSON to Hive seamlessly
+3. **Deletes the old JSON file** after successful migration
+4. **Creates a marker file** to prevent duplicate migrations
+
+### What Happens During Automatic Migration:
+
+✅ All expense groups are migrated  
+✅ All participants, categories, and expenses are preserved  
+✅ Pinned and archived states are maintained  
+✅ Original JSON file is deleted only after successful migration  
+✅ Migration happens once per installation  
+✅ Safe: keeps JSON file as backup if any errors occur
+
+### Building with Automatic Migration:
+
+```bash
+# Build with Hive backend - migration happens automatically on first launch
+flutter build apk --flavor prod --release --dart-define=FLAVOR=prod --dart-define=STORAGE_BACKEND=hive
+```
+
+That's it! No manual steps needed.
+
+## Manual Migration (Legacy Options)
+
+For advanced users or special cases, manual migration is still possible:
+
+### Option 1: Using Export/Import Feature
 
 If the app has an export/import feature:
 
@@ -26,9 +53,9 @@ If the app has an export/import feature:
    - Open the app with the new backend
    - Use the import feature to restore your data
 
-### Option 2: Manual File Copy (For Developers)
+### Option 2: Manual File Copy (For Developers/Advanced Users)
 
-If you need to preserve the exact data structure:
+If you need to preserve the exact data structure or want manual control:
 
 1. **Locate JSON File:**
    - Android: `data/data/io.caravella.egm/app_flutter/expense_group_storage.json`
@@ -83,7 +110,19 @@ If you need to preserve the exact data structure:
 
 ## Testing the Migration
 
-After migration:
+### Automatic Migration
+
+After building with `STORAGE_BACKEND=hive`:
+
+1. **First launch**: Check logs to see migration progress
+2. **Verify data**: All your trips/groups should be present
+3. **Check integrity**: All expenses, participants, and categories are intact
+4. **Test operations**: Create/update/delete work as expected
+5. **Confirm cleanup**: Old JSON file should be gone
+
+### Manual Migration
+
+After manual migration:
 
 1. Open the app with the new backend
 2. Verify all your trips/groups are present
@@ -93,7 +132,20 @@ After migration:
 
 ## Rollback
 
-If you need to rollback to JSON storage:
+### From Automatic Migration
+
+If you need to rollback after automatic migration:
+
+⚠️ **Important**: The JSON file is deleted after successful automatic migration. You'll need to:
+
+1. Export your data using the app's export feature (if available)
+2. Rebuild with `STORAGE_BACKEND=file` (or omit the parameter)
+3. Reinstall the app
+4. Import your data back
+
+### From Manual Migration
+
+If you kept a backup of the JSON file:
 
 1. Rebuild the app with `STORAGE_BACKEND=file` (or omit the parameter)
 2. Reinstall the app
@@ -115,9 +167,43 @@ The improvement is more noticeable with:
 
 ## Troubleshooting
 
-### Data Missing After Migration
+### Automatic Migration Issues
 
-**Issue:** The app shows no data after switching to Hive.
+#### Migration Didn't Run
+
+**Issue:** App still shows no data after building with Hive.
+
+**Solution:**
+1. Check build command includes `--dart-define=STORAGE_BACKEND=hive`
+2. Verify JSON file exists before first launch with Hive
+3. Check app logs for migration messages
+4. Ensure Hive initialization completed successfully
+
+#### Migration Failed with Errors
+
+**Issue:** Migration started but encountered errors.
+
+**Solution:**
+1. Check logs for specific error messages
+2. JSON file is kept as backup when errors occur
+3. Fix the underlying issue (permissions, corrupted data, etc.)
+4. Reset migration: delete `.hive_migration_done` marker file
+5. Restart app to retry migration
+
+#### Data Missing After Migration
+
+**Issue:** The app shows no data after migration.
+
+**Solution:**
+1. With automatic migration, this shouldn't happen
+2. Check migration logs for errors
+3. Verify `.hive_migration_done` marker exists
+4. Check that Hive database was created successfully
+5. If JSON file is still present, migration had errors - check logs
+
+### Manual Migration Issues
+
+#### Data Missing After Manual Migration
 
 **Solution:**
 1. The backends don't share data. This is expected.

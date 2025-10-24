@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Build-time variable `STORAGE_BACKEND` to select between 'file' (JSON) and 'hive' storage backends
 - Comprehensive Hive type adapters for all data models
 - Documentation for storage backend configuration and migration
+- **Automatic migration from JSON to Hive on first launch when using Hive backend**
+- Storage migration service that safely migrates data and cleans up old JSON file
 
 ### Changed
 - Improved app metadata for distribution platforms
@@ -26,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved PreferencesService API with synchronous read operations where possible
 - Organized preference keys and defaults into centralized abstract classes
 - **ExpenseGroupStorageV2 now supports runtime selection of storage backend based on build configuration**
+- **App initialization now automatically migrates data from JSON to Hive when Hive backend is selected**
 
 ### Fixed
 

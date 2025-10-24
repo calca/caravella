@@ -52,7 +52,28 @@ Provides:
 - Cleanup methods for testing
 - Initialization status tracking
 
-### 5. Backend Selection
+### 5. Automatic Migration Service
+**File:** `lib/data/services/storage_migration_service.dart`
+
+Provides automatic migration from JSON to Hive:
+- Detects existing JSON file on first launch with Hive backend
+- Safely migrates all expense groups to Hive
+- Deletes JSON file only after successful migration
+- Creates marker file to prevent duplicate migrations
+- Keeps JSON file as backup if any errors occur
+- Comprehensive logging of migration process
+
+**Key Features:**
+- Automatic and transparent to users
+- Safe migration with error handling
+- One-time operation per installation
+- Preserves all data including expenses, participants, categories
+- Maintains pinned and archived states
+- Safe to call multiple times (idempotent)
+- Cleanup methods for testing
+- Initialization status tracking
+
+### 6. Backend Selection
 **File:** `lib/data/expense_group_storage_v2.dart`
 
 Updated to:
@@ -67,23 +88,20 @@ Added:
 - Conditional Hive initialization based on `STORAGE_BACKEND`
 - Integration into app startup sequence
 
-### 6. Tests
+### 7. Tests
 **File:** `test/hive_repository_test.dart`
+- 20+ test cases for Hive repository operations
+- Covers CRUD, listing, pin/archive management, validation
 
-Comprehensive test suite covering:
-- Basic CRUD operations
-- Group listing (all, active, archived)
-- Pin management
-- Archive management
-- Expense operations
-- Validation
-- Data integrity checks
-- Metadata updates
-- Cache operations
+**File:** `test/storage_migration_test.dart`
+- Comprehensive migration service tests
+- Tests automatic migration scenarios
+- Tests error handling and recovery
+- Tests marker file management
 
-Total: 20+ test cases covering all major functionality
+Total: 27+ test cases covering all major functionality
 
-### 7. Documentation
+### 8. Documentation
 **File:** `docs/STORAGE_BACKEND.md`
 - Configuration guide for both backends
 - Usage examples with build commands
@@ -93,6 +111,13 @@ Total: 20+ test cases covering all major functionality
 - Troubleshooting guide
 
 **File:** `docs/MIGRATION_JSON_TO_HIVE.md`
+- Automatic migration explanation
+- Step-by-step migration guide for manual scenarios
+- Multiple migration options
+- Programmatic migration example
+- Testing checklist
+- Rollback procedures
+- Troubleshooting common issues
 - Step-by-step migration guide
 - Multiple migration options
 - Programmatic migration example
@@ -110,10 +135,12 @@ Total: 20+ test cases covering all major functionality
 flutter run --flavor dev --dart-define=FLAVOR=dev
 ```
 
-### With Hive Storage
+### With Hive Storage (Automatic Migration)
 ```bash
 flutter run --flavor dev --dart-define=FLAVOR=dev --dart-define=STORAGE_BACKEND=hive
 ```
+
+**On first launch:** The app will automatically detect and migrate any existing JSON data to Hive, then delete the old JSON file.
 
 ### Build APK with Hive
 ```bash
@@ -187,12 +214,14 @@ Both repositories integrate with `PerformanceMonitoring` mixin:
 - Mock-free (uses real Hive with temp directories)
 - Comprehensive coverage of all operations
 - Edge case testing
+- **Migration service tests** with various scenarios
 
 ### Integration Testing
 Tests should be added to verify:
 - App startup with each backend
 - Data persistence across app restarts
-- Migration scenarios
+- **Automatic migration on first launch with Hive**
+- Migration error handling and recovery
 - Real-world usage patterns
 
 ## Security

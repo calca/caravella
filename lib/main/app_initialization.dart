@@ -8,6 +8,7 @@ import 'package:image_picker_platform_interface/image_picker_platform_interface.
 import '../config/app_config.dart';
 import '../data/services/preferences_service.dart';
 import '../data/services/hive_initialization_service.dart';
+import '../data/services/storage_migration_service.dart';
 import '../settings/flag_secure_android.dart';
 
 /// Initializes the app: platform-specific setup, orientation, system UI, and image cache.
@@ -37,10 +38,15 @@ class AppInitialization {
   }
   
   /// Initializes Hive storage system if STORAGE_BACKEND is set to 'hive'
+  /// Also handles automatic migration from JSON to Hive if needed
   static Future<void> initializeStorage() async {
     const backend = String.fromEnvironment('STORAGE_BACKEND', defaultValue: 'file');
     if (backend.toLowerCase() == 'hive') {
+      // Initialize Hive first
       await HiveInitializationService.initialize();
+      
+      // Then check and perform migration from JSON if needed
+      await StorageMigrationService.migrateJsonToHiveIfNeeded();
     }
   }
 
