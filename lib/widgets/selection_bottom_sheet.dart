@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'bottom_sheet_scaffold.dart';
+import 'app_toast.dart';
 
 /// Generic modal bottom sheet for selecting an item from a list.
 /// Supports inline add-item action shown within the sheet.
@@ -12,6 +13,7 @@ Future<T?> showSelectionBottomSheet<T>({
   gen.AppLocalizations? gloc,
   Future<void> Function(String)? onAddItemInline,
   String? addItemHint,
+  String? sheetTitle,
 }) async {
   final resolved = gloc ?? gen.AppLocalizations.of(context);
   return showModalBottomSheet<T>(
@@ -28,6 +30,7 @@ Future<T?> showSelectionBottomSheet<T>({
       onAddItemInline: onAddItemInline,
       addItemHint: addItemHint,
       gloc: resolved,
+      sheetTitle: sheetTitle,
     ),
   );
 }
@@ -39,6 +42,7 @@ class _SelectionSheet<T> extends StatefulWidget {
   final Future<void> Function(String)? onAddItemInline;
   final String? addItemHint;
   final gen.AppLocalizations gloc;
+  final String? sheetTitle;
   const _SelectionSheet({
     required this.items,
     required this.selected,
@@ -46,6 +50,7 @@ class _SelectionSheet<T> extends StatefulWidget {
     required this.gloc,
     this.onAddItemInline,
     this.addItemHint,
+    this.sheetTitle,
   });
 
   @override
@@ -83,10 +88,10 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
   /// Scrolls to make the input field visible when keyboard opens
   void _scrollToInputField() {
     if (!_scrollController.hasClients || !mounted) return;
-    
+
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
     if (keyboardHeight == 0) return;
-    
+
     try {
       // Scroll to bottom to ensure input field is visible above keyboard
       final maxScrollExtent = _scrollController.position.maxScrollExtent;
@@ -124,14 +129,20 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
     final val = _inlineController.text.trim();
     if (val.isEmpty || widget.onAddItemInline == null) return;
 
+    // Capture messenger before any async gaps
+    final messenger = ScaffoldMessenger.of(context);
+
     // Check for duplicates (case-insensitive)
     final lower = val.toLowerCase();
-    final isDuplicate = widget.items.any((item) => 
-      widget.itemLabel(item).toLowerCase() == lower);
-    
+    final isDuplicate = widget.items.any(
+      (item) => widget.itemLabel(item).toLowerCase() == lower,
+    );
+
     if (isDuplicate) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${widget.gloc.category_name} ${widget.gloc.already_exists}')),
+      AppToast.showFromMessenger(
+        messenger,
+        '${widget.gloc.category_name} ${widget.gloc.already_exists}',
+        type: ToastType.info,
       );
       return;
     }
@@ -145,57 +156,50 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error adding item: $e')),
+        AppToast.showFromMessenger(
+          messenger,
+          'Error adding item: $e',
+          type: ToastType.error,
         );
       }
     }
   }
 
   Widget _buildInlineAddRow() {
-    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: theme.colorScheme.outline.withValues(alpha: 0.3),
-          ),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12.0,
-                  vertical: 4.0,
+      child: Row(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 12.0,
+                vertical: 4.0,
+              ),
+              child: TextField(
+                controller: _inlineController,
+                focusNode: _inlineFocus,
+                autofocus: true,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: widget.addItemHint ?? widget.gloc.category_name,
                 ),
-                child: TextField(
-                  controller: _inlineController,
-                  focusNode: _inlineFocus,
-                  autofocus: true,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: widget.addItemHint ?? widget.gloc.category_name,
-                  ),
-                  textInputAction: TextInputAction.done,
-                  onSubmitted: (_) => _commitInlineAdd(),
-                ),
+                textInputAction: TextInputAction.done,
+                onSubmitted: (_) => _commitInlineAdd(),
               ),
             ),
-            IconButton(
-              tooltip: widget.gloc.add,
-              icon: const Icon(Icons.check_rounded),
-              onPressed: _commitInlineAdd,
-            ),
-            IconButton(
-              tooltip: widget.gloc.cancel,
-              icon: const Icon(Icons.close_outlined),
-              onPressed: _cancelInlineAdd,
-            ),
-          ],
-        ),
+          ),
+          IconButton(
+            tooltip: widget.gloc.add,
+            icon: const Icon(Icons.check_rounded),
+            onPressed: _commitInlineAdd,
+          ),
+          IconButton(
+            tooltip: widget.gloc.cancel,
+            icon: const Icon(Icons.close_outlined),
+            onPressed: _cancelInlineAdd,
+          ),
+        ],
       ),
     );
   }
@@ -208,30 +212,15 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
         borderRadius: BorderRadius.circular(12),
         onTap: _startInlineAdd,
         child: Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 12.0,
-            vertical: 14.0,
-          ),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: theme.colorScheme.outline.withValues(alpha: 0.2),
-            ),
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 14.0),
           child: Row(
             children: [
-              Icon(
-                Icons.add,
-                size: 24,
-                color: theme.colorScheme.primary,
-              ),
+              Icon(Icons.add, size: 24),
               const SizedBox(width: 16),
               Expanded(
                 child: Text(
                   widget.gloc.add_category,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.primary,
-                  ),
+                  style: theme.textTheme.bodyMedium,
                 ),
               ),
             ],
@@ -240,54 +229,82 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
     final theme = Theme.of(context);
-    
-    // Use widget.items directly 
+
+    // Use widget.items directly
     final itemsToShow = widget.items;
-    
+
     // Calculate dynamic height: 80% initially, but expand when keyboard is open or inline adding
     final baseMaxHeight = screenHeight * 0.8;
     final expandedMaxHeight = screenHeight * 0.95;
-    final currentMaxHeight = keyboardHeight > 0 || _inlineAdding ? expandedMaxHeight : baseMaxHeight;
-    
-    final listMaxHeight = currentMaxHeight - 200; // Account for title, padding, and add button space
-    
-    final list = itemsToShow.isEmpty 
-      ? const SizedBox.shrink()
-      : ConstrainedBox(
-          constraints: BoxConstraints(
-            maxHeight: listMaxHeight,
-            minHeight: 0,
-          ),
-          child: ListView.builder(
-            controller: _scrollController,
-            shrinkWrap: true,
-            itemCount: itemsToShow.length,
-            itemBuilder: (ctx, i) {
-              final item = itemsToShow[i];
-              final isSel = widget.selected == item;
-              return ListTile(
-                title: Text(widget.itemLabel(item)),
-                trailing: isSel
-                    ? Icon(Icons.check, color: theme.colorScheme.primary)
-                    : null,
-                onTap: () => Navigator.of(context).pop(item),
-              );
-            },
-          ),
-        );
-    
+    final currentMaxHeight = keyboardHeight > 0 || _inlineAdding
+        ? expandedMaxHeight
+        : baseMaxHeight;
+
+    final listMaxHeight =
+        currentMaxHeight -
+        200; // Account for title, padding, and add button space
+
+    final list = itemsToShow.isEmpty
+        ? const SizedBox.shrink()
+        : ConstrainedBox(
+            constraints: BoxConstraints(maxHeight: listMaxHeight, minHeight: 0),
+            child: ListView.builder(
+              controller: _scrollController,
+              shrinkWrap: true,
+              itemCount: itemsToShow.length,
+              itemBuilder: (ctx, i) {
+                final item = itemsToShow[i];
+                final isSel = widget.selected == item;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 2,
+                  ),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: () => Navigator.of(context).pop(item),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: isSel
+                            ? theme.colorScheme.surfaceContainerHigh
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      child: Text(
+                        widget.itemLabel(item),
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: isSel
+                              ? theme.colorScheme.onPrimaryContainer
+                              : theme.textTheme.bodyMedium?.color,
+                          fontWeight: isSel ? FontWeight.w600 : null,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
+
     return ConstrainedBox(
       constraints: BoxConstraints(
         maxHeight: currentMaxHeight,
         minHeight: screenHeight * 0.3, // Minimum 30% height
       ),
       child: GroupBottomSheetScaffold(
-        title: widget.onAddItemInline != null ? widget.gloc.add : null,
+        title:
+            widget.sheetTitle ??
+            (widget.onAddItemInline != null ? widget.gloc.add : null),
         showHandle: true,
         scrollable: false,
         child: Padding(

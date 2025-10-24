@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../../state/expense_group_notifier.dart';
+import '../../../data/expense_group_storage_v2.dart';
 import '../data/group_form_state.dart';
 import '../group_form_controller.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 class SaveButtonBar extends StatelessWidget {
   const SaveButtonBar({super.key});
@@ -13,14 +15,34 @@ class SaveButtonBar extends StatelessWidget {
     final controller = context.read<GroupFormController>();
     final loc = gen.AppLocalizations.of(context);
     final saving = state.isSaving;
+    final hasChanges = controller.hasChanges;
     return FilledButton(
-      onPressed: state.isValid && !saving
+      onPressed: state.isValid && !saving && hasChanges
           ? () async {
-              final navContext = context; // capture before await
-              await controller.save();
+              // Capture context-dependent values before any awaits
+              final navigator = Navigator.of(context);
+              ExpenseGroupNotifier? notifier;
+              try {
+                notifier = context.read<ExpenseGroupNotifier>();
+              } catch (_) {
+                notifier = null;
+              }
+
+              final saved = await controller.save();
+
+              // Force repository reload so subsequent reads fetch latest data
+              ExpenseGroupStorageV2.forceReload();
+
+              // Notify global notifier about the updated/added group so UI can react
+              try {
+                notifier?.notifyGroupUpdated(saved.id);
+              } catch (_) {
+                // ignore if notifier not available
+              }
+
               Future.microtask(() {
-                if (navContext.mounted) {
-                  Navigator.of(navContext).pop(true);
+                if (navigator.context.mounted) {
+                  navigator.pop(true);
                 }
               });
             }

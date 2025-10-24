@@ -13,6 +13,11 @@ class GroupIndex {
   /// Last update timestamp
   DateTime? _lastUpdate;
 
+  // Testing hook: when true, skip adding one active group to active set to simulate inconsistency
+  bool _testSkipActiveTracking = false;
+  void enableTestSkipActiveTracking() => _testSkipActiveTracking = true;
+  void disableTestSkipActiveTracking() => _testSkipActiveTracking = false;
+
   /// Rebuilds the index from a list of groups
   void rebuild(List<ExpenseGroup> groups) {
     _byId.clear();
@@ -30,7 +35,9 @@ class GroupIndex {
       if (group.archived) {
         _archivedGroups.add(group.id);
       } else {
-        _activeGroups.add(group.id);
+        if (!_testSkipActiveTracking || _activeGroups.isNotEmpty) {
+          _activeGroups.add(group.id);
+        }
       }
     }
 

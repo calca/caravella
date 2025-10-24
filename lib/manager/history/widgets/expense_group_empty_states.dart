@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
-import '../../group/pages/expenses_group_edit_page.dart';
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 class ExpsenseGroupEmptyStates extends StatelessWidget {
   final String searchQuery;
@@ -16,99 +15,92 @@ class ExpsenseGroupEmptyStates extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Search has priority
     if (searchQuery.isNotEmpty) {
       return _buildSearchEmptyState(context);
-    } else if (periodFilter != 'all') {
-      return _buildNoResultsState(context);
-    } else {
-      return _buildNoTripsState(context);
     }
+
+    // Specific archived empty state
+    if (periodFilter == 'archived') return _buildArchivedEmptyState(context);
+
+    return _buildAllEmptyState(context);
   }
 
-  Widget _buildNoResultsState(BuildContext context) {
+  Widget _buildSimpleEmptyState(
+    BuildContext context, {
+    required IconData icon,
+    double size = 64,
+    Color? iconColor,
+    required String title,
+    String? subtitle,
+    Widget? subtitleWidget,
+    Widget? action,
+    TextStyle? titleStyle,
+    TextStyle? subtitleStyle,
+  }) {
+    final ThemeData theme = Theme.of(context);
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Icon(
-          Icons.search_off_outlined,
-          size: 64,
-          color: Theme.of(context).colorScheme.outline,
-        ),
+        Padding(padding: const EdgeInsets.only(bottom: 52)),
+        Icon(icon, size: size, color: iconColor ?? theme.colorScheme.outline),
         const SizedBox(height: 16),
         Text(
-          gen.AppLocalizations.of(context).no_results_found,
-          style: Theme.of(context).textTheme.titleMedium,
+          title,
+          style: titleStyle ?? theme.textTheme.titleMedium,
           textAlign: TextAlign.center,
         ),
-        const SizedBox(height: 8),
-        Text(
-          gen.AppLocalizations.of(context).try_adjust_filter_or_search,
-          style: Theme.of(context).textTheme.bodyMedium,
-          textAlign: TextAlign.center,
-        ),
+        if (subtitle != null || subtitleWidget != null) ...[
+          const SizedBox(height: 8),
+          subtitleWidget ??
+              Text(
+                subtitle!,
+                style: subtitleStyle ?? theme.textTheme.bodyMedium,
+                textAlign: TextAlign.center,
+              ),
+        ],
+        if (action != null) ...[const SizedBox(height: 16), action],
       ],
+    );
+  }
+
+  Widget _buildArchivedEmptyState(BuildContext context) {
+    final gloc = gen.AppLocalizations.of(context);
+    return _buildSimpleEmptyState(
+      context,
+      icon: Icons.archive_outlined,
+      title: gloc.no_archived_groups,
+      subtitle: gloc.no_archived_groups_subtitle,
+      iconColor: Theme.of(context).colorScheme.outline,
     );
   }
 
   Widget _buildSearchEmptyState(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.search_off_outlined,
-          size: 64,
-          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+    final gloc = gen.AppLocalizations.of(context);
+    return _buildSimpleEmptyState(
+      context,
+      icon: Icons.search_off_outlined,
+      title: '${gloc.no_search_results} "$searchQuery"',
+      iconColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+      subtitleWidget: Text(
+        gloc.try_different_search,
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
         ),
-        const SizedBox(height: 16),
-        Text(
-          '${gen.AppLocalizations.of(context).no_search_results} "$searchQuery"',
-          style: Theme.of(context).textTheme.titleMedium,
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 8),
-        Text(
-          gen.AppLocalizations.of(context).try_different_search,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: Theme.of(
-              context,
-            ).colorScheme.onSurface.withValues(alpha: 0.6),
-          ),
-          textAlign: TextAlign.center,
-        ),
-      ],
+        textAlign: TextAlign.center,
+      ),
     );
   }
 
-  Widget _buildNoTripsState(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.luggage,
-          size: 100,
-          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-        ),
-        const SizedBox(height: 16),
-        Text(
-          gen.AppLocalizations.of(context).no_trips_found,
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        const SizedBox(height: 16),
-        ElevatedButton.icon(
-          icon: const Icon(Icons.add),
-          label: Text(gen.AppLocalizations.of(context).add_trip),
-          onPressed: () async {
-            final result = await Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const ExpensesGroupEditPage(),
-              ),
-            );
-            if (result == true) {
-              onTripAdded();
-            }
-          },
-        ),
-      ],
+  Widget _buildAllEmptyState(BuildContext context) {
+    // Use a layout similar to archived but for the 'all' state
+    final gloc = gen.AppLocalizations.of(context);
+    return _buildSimpleEmptyState(
+      context,
+      icon: Icons.play_circle_outline_outlined,
+      title: gloc.no_active_groups,
+      subtitle: gloc.create_first_group,
+      iconColor: Theme.of(context).colorScheme.outline,
     );
   }
 }

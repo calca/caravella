@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart'
+import 'package:io_caravella_egm/l10n/app_localizations.dart'
     as gen; // generated
 import '../../data/model/expense_group.dart';
-import '../../data/expense_group_storage.dart';
+import '../../data/expense_group_storage_v2.dart';
 import '../../state/expense_group_notifier.dart';
 // Removed locale_notifier import after migration
 // locale_notifier no longer needed after migration
@@ -12,11 +12,19 @@ import 'widgets/widgets.dart';
 class HomeCardsSection extends StatefulWidget {
   final VoidCallback onTripAdded;
   final ExpenseGroup? pinnedTrip;
+  final List<ExpenseGroup>? initialGroups;
+  final bool allArchived;
+  final VoidCallback? onTripDeleted;
+  final VoidCallback? onTripUpdated;
 
   const HomeCardsSection({
     super.key,
     required this.onTripAdded,
     this.pinnedTrip,
+    this.initialGroups,
+    this.allArchived = false,
+    this.onTripDeleted,
+    this.onTripUpdated,
   });
 
   @override
@@ -31,7 +39,12 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
   @override
   void initState() {
     super.initState();
-    _loadActiveGroups();
+    if (widget.initialGroups != null) {
+      _activeGroups = widget.initialGroups!;
+      _loading = false;
+    } else {
+      _loadActiveGroups();
+    }
   }
 
   @override
@@ -57,15 +70,79 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
     if (oldWidget.pinnedTrip?.id != widget.pinnedTrip?.id) {
       _loadActiveGroups();
     }
+
+    // If parent provided new initialGroups (e.g., FutureBuilder resolved again), update local state
+    if (widget.initialGroups != null &&
+        oldWidget.initialGroups != widget.initialGroups) {
+      setState(() {
+        _activeGroups = widget.pinnedTrip != null
+            ? [
+                widget.pinnedTrip!,
+                ...widget.initialGroups!.where(
+                  (g) => g.id != widget.pinnedTrip!.id,
+                ),
+              ]
+            : widget.initialGroups!;
+        _loading = false;
+      });
+    }
   }
 
   void _onGroupsUpdated() {
     final updatedGroupIds = _groupNotifier?.updatedGroupIds ?? [];
+    final deletedGroupIds = _groupNotifier?.deletedGroupIds ?? [];
+
+    if (deletedGroupIds.isNotEmpty && mounted) {
+      // Remove deleted groups from local list
+      setState(() {
+        _activeGroups.removeWhere((g) => deletedGroupIds.contains(g.id));
+      });
+
+      // If any deleted group was not present locally, ensure a full reload to be safe
+      final missingDeleted = deletedGroupIds.where(
+        (id) => !_activeGroups.any((g) => g.id == id),
+      );
+      if (missingDeleted.isNotEmpty) {
+        _loadActiveGroups();
+      }
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        widget.onTripDeleted?.call();
+      });
+
+      _groupNotifier?.clearDeletedGroups();
+      return;
+    }
 
     if (updatedGroupIds.isNotEmpty && mounted) {
-      // Update only affected groups instead of reloading everything
+      // If any updated group id is not present in the current list, perform full reload
+      final missing = updatedGroupIds.where(
+        (id) => !_activeGroups.any((g) => g.id == id),
+      );
+      if (missing.isNotEmpty) {
+        _loadActiveGroups();
+        return;
+      }
+
+      // Otherwise update only affected groups instead of reloading everything
       _updateAffectedGroupsLocally(updatedGroupIds);
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        widget.onTripUpdated?.call();
+      });
     }
+  }
+
+  void _handleGroupAdded() {
+    widget.onTripAdded();
+    _loadActiveGroups();
+  }
+
+  void _handleGroupUpdated() {
+    widget.onTripUpdated?.call();
+    _loadActiveGroups();
   }
 
   Future<void> _updateAffectedGroupsLocally(
@@ -78,7 +155,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
       for (final groupId in updatedGroupIds) {
         final groupIndex = newGroups.indexWhere((g) => g.id == groupId);
         if (groupIndex != -1) {
-          final updatedGroup = await ExpenseGroupStorage.getTripById(groupId);
+          final updatedGroup = await ExpenseGroupStorageV2.getTripById(groupId);
           if (updatedGroup != null) {
             newGroups[groupIndex] = updatedGroup;
             needsUpdate = true;
@@ -99,15 +176,15 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
 
   Future<void> _loadActiveGroups() async {
     try {
-      final groups = await ExpenseGroupStorage.getActiveGroups();
+      final groups = await ExpenseGroupStorageV2.getActiveGroups();
       if (mounted) {
         setState(() {
           // Se c'è un gruppo pinnato, mettiamolo sempre al primo posto
           if (widget.pinnedTrip != null) {
             // Rimuovi il gruppo pinnato dalla lista se è già presente
-            final filteredGroups = groups
-                .where((g) => g.id != widget.pinnedTrip!.id)
-                .toList();
+            final filteredGroups = groups.where(
+              (g) => g.id != widget.pinnedTrip!.id,
+            );
             // Metti il gruppo pinnato come primo elemento
             _activeGroups = [widget.pinnedTrip!, ...filteredGroups];
           } else {
@@ -152,24 +229,20 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
             SizedBox(
               height: contentHeight,
               child: _loading
-                  ? const Center(child: CircularProgressIndicator())
+                  ? CarouselSkeletonLoader(theme: theme)
                   : _activeGroups.isEmpty
                   ? EmptyGroupsState(
                       localizations: loc,
                       theme: theme,
-                      onGroupAdded: () {
-                        widget.onTripAdded();
-                        _loadActiveGroups();
-                      },
+                      allArchived: widget.allArchived,
+                      onGroupAdded: _handleGroupAdded,
                     )
                   : HorizontalGroupsList(
                       groups: _activeGroups,
                       localizations: loc,
                       theme: theme,
-                      onGroupUpdated: () {
-                        widget.onTripAdded();
-                        _loadActiveGroups();
-                      },
+                      onGroupUpdated: _handleGroupUpdated,
+                      onGroupAdded: _handleGroupAdded,
                       onCategoryAdded: () {
                         _loadActiveGroups();
                       },

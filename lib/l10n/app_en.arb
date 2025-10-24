@@ -1,5 +1,17 @@
 {
   "@@locale": "en",
+  "developer_section_title": "Developer & Support",
+  "@developer_section_title": {"description": "Section title for developer and support links in DeveloperPage"},
+  "developer_section_desc": "Support the developer or view profile",
+  "@developer_section_desc": {"description": "Section description for developer and support links in DeveloperPage"},
+  "repo_section_title": "Source & Issues",
+  "@repo_section_title": {"description": "Section title for repository and issues links in DeveloperPage"},
+  "repo_section_desc": "View source code or report a problem",
+  "@repo_section_desc": {"description": "Section description for repository and issues links in DeveloperPage"},
+  "license_section_title": "License",
+  "@license_section_title": {"description": "Section title for license link in DeveloperPage"},
+  "license_section_desc": "View the open source license",
+  "@license_section_desc": {"description": "Section description for license link in DeveloperPage"},
   "weeklyChartBadge": "W",
   "@weeklyChartBadge": {
     "description": "Letter indicator for weekly chart badge"
@@ -25,16 +37,27 @@
   "in_group_prefix": "in",
   "save_change_expense": "Save changes",
   "group_total": "Total",
+  "total_spent": "Total spent",
+  "@total_spent": {"description": "Label shown before the total amount spent in the group"},
   "download_all_csv": "Download all (CSV)",
   "share_all_csv": "Share all (CSV)",
+  "download_all_ofx": "Download all (OFX)",
+  "share_all_ofx": "Share all (OFX)",
+  "share_label": "Share",
+  "share_text_label": "Share text",
+  "share_image_label": "Share image",
+  "export_share": "Export & Share",
+  "contribution_percentages": "Percentages",
+  "contribution_percentages_desc": "Share of total paid by each participant",
+  "export_options": "Export Options",
   "welcome_v3_title": "Organize.\nShare.\nSettle.\n ",
   "good_morning": "Good morning",
   "good_afternoon": "Good afternoon",
   "good_evening": "Good evening",
   "your_groups": "Your groups",
   "no_active_groups": "No active groups",
-  "no_active_groups_subtitle": "Create your first expense group to get started",
-  "create_first_group": "Create first group",
+  "no_active_groups_subtitle": "Create an expense group",
+  "create_first_group": "Create a group",
   "new_expense_group": "New Expense Group",
   "tap_to_create": "Tap to create",
   "no_expense_label": "No expenses found",
@@ -44,6 +67,10 @@
   "from_gallery": "From Gallery",
   "from_camera": "From Camera",
   "remove_image": "Remove Image",
+  "cannot_delete_assigned_participant": "Cannot delete participant: it's assigned to one or more expenses",
+  "@cannot_delete_assigned_participant": {"description": "Shown when attempting to delete a participant that is used by existing expenses"},
+  "cannot_delete_assigned_category": "Cannot delete category: it's assigned to one or more expenses",
+  "@cannot_delete_assigned_category": {"description": "Shown when attempting to delete a category that is used by existing expenses"},
   "color": "Color",
   "remove_color": "Remove Color",
   "color_alternative": "Alternative to image",
@@ -68,6 +95,8 @@
   "no_trips_found": "Where do you want to go?",
   "expenses": "Expenses",
   "participants": "Participants",
+  "participant_count": "{count, plural, one {{count} participant} other {{count} participants}}",
+  "@participant_count": {"description": "Pluralized participant count", "placeholders": {"count": {}}},
   "participants_label": "Participants",
   "last_7_days": "7 days",
   "recent_activity": "Recent activity",
@@ -96,6 +125,8 @@
   "from_to": "{start} - {end}",
   "add_expense": "New expense",
   "edit_expense": "Edit expense",
+  "expand_form": "Expand form",
+  "expand_form_tooltip": "Add date, location and notes",
   "category": "Category",
   "amount": "Amount",
   "invalid_amount": "Invalid amount",
@@ -150,6 +181,24 @@
   "archived": "Archived",
   "archive": "Archive",
   "unarchive": "Unarchive",
+  "pin": "Pin",
+  "@pin": {"description": "Action to pin a group to the top"},
+  "unpin": "Unpin",
+  "@unpin": {"description": "Action to unpin a group"},
+  "delete": "Delete",
+  "@delete": {"description": "Action to delete a group"},
+  "undo": "UNDO",
+  "@undo": {"description": "Undo action label for SnackBar"},
+  "archived_with_undo": "Archived",
+  "@archived_with_undo": {"description": "Snackbar message when group is archived"},
+  "unarchived_with_undo": "Unarchived",
+  "@unarchived_with_undo": {"description": "Snackbar message when group is unarchived"},
+  "pinned_with_undo": "Pinned",
+  "@pinned_with_undo": {"description": "Snackbar message when group is pinned"},
+  "unpinned_with_undo": "Unpinned",
+  "@unpinned_with_undo": {"description": "Snackbar message when group is unpinned"},
+  "deleted_with_undo": "Deleted",
+  "@deleted_with_undo": {"description": "Snackbar message when group is deleted"},
   "archive_confirm": "Do you want to archive",
   "unarchive_confirm": "Do you want to unarchive",
   "overview": "Overview",
@@ -194,10 +243,16 @@
   "data_refreshed": "Updated",
   "refresh": "Refresh",
   "group_added_success": "Group added",
+  "group_deleted_success": "Group deleted",
+  "@group_deleted_success": {"description": "Toast shown after deleting an expense group"},
   "csv_select_directory_title": "Select folder to save CSV",
   "csv_saved_in": "CSV saved in: {path}",
   "csv_save_cancelled": "Export cancelled",
   "csv_save_error": "Error saving CSV file",
+  "ofx_select_directory_title": "Select folder to save OFX",
+  "ofx_saved_in": "OFX saved in: {path}",
+  "ofx_save_cancelled": "OFX export cancelled",
+  "ofx_save_error": "Error saving OFX file",
   "csv_expense_name": "Description",
   "csv_amount": "Amount",
   "csv_paid_by": "Paid by",
@@ -222,6 +277,8 @@
   "settings_language_it": "Italian",
   "settings_language_en": "English",
   "settings_language_es": "Spanish",
+  "settings_language_pt": "Portuguese",
+  "settings_language_zh": "Chinese (Simplified)",
   "settings_select_language": "Select language",
   "settings_theme": "Theme",
   "settings_theme_desc": "Light, dark or system",
@@ -236,18 +293,25 @@
   "settings_app_version": "App version",
   "settings_info_card": "Information",
   "settings_info_card_desc": "Developer, Source code and License",
-  "terms_github_title": "GitHub: calca",
-  "terms_github_desc": "Developer profile on GitHub.",
+  "terms_github_title": "Website: calca",
+  "terms_github_desc": "Developer's personal website.",
   "terms_repo_title": "GitHub Repository",
   "terms_repo_desc": "Application source code.",
   "terms_issue_title": "Report a problem",
   "terms_issue_desc": "Go to the GitHub issues page.",
   "terms_license_desc": "View the open source license.",
+  "support_developer_title": "Buy me a coffee",
+  "support_developer_desc": "Support the development of this app.",
   "data_title": "Backup & Restore",
   "data_backup_title": "Backup",
   "data_backup_desc": "Create a backup file of your expenses.",
   "data_restore_title": "Restore",
   "data_restore_desc": "Import a backup to restore your data.",
+  "auto_backup_title": "Automatic backup",
+  "auto_backup_desc": "Enable operating system automatic backup",
+  "settings_user_name_title": "Your name",
+  "settings_user_name_desc": "Name or nickname to use in the app",
+  "settings_user_name_hint": "Enter your name",
   "google_drive_backup": "Google Drive Backup",
   "google_drive_backup_desc": "Save backup to Google Drive",
   "google_drive_restore": "Google Drive Restore",
@@ -287,6 +351,8 @@
   ,"daily_average": "Daily"
   ,"spent_today": "Today"
   ,"@daily_average": {"description": "Label shown before the computed overall daily average spending value"}
+    ,"monthly_average": "Monthly"
+    ,"@monthly_average": {"description": "Label shown before the computed overall monthly average spending value"}
   ,"@spent_today": {"description": "Label shown before the amount spent today"}
   ,"@overview_and_statistics": {"description": "Tooltip text when overview/statistics button is enabled"}
   ,"average_expense": "Average expense"
@@ -307,6 +373,11 @@
   ,"status_active": "Active"
   ,"@status_active": {"description": "Filter label: active groups"}
   ,"status_archived": "Archived"
+  ,"no_archived_groups": "No archived groups"
+  ,"@no_archived_groups": {"description": "Empty state title for archived groups"}
+  ,"no_archived_groups_subtitle": "You have not archived any groups yet"
+  ,"all_groups_archived_info": "All your groups are archived. You can restore them from the Archive section or create new ones."
+  ,"@no_archived_groups_subtitle": {"description": "Empty state subtitle for archived groups"}
   ,"@status_archived": {"description": "Filter label: archived groups"}
   ,"filter_status_tooltip": "Filter groups"
   ,"@filter_status_tooltip": {"description": "Tooltip for status filter buttons row"}
@@ -519,4 +590,58 @@
   ,"currency_ZMW": "Zambian Kwacha"
   ,"currency_ZWL": "Zimbabwean Dollar"
   ,"search_currency": "Search currency..."
+  ,"activity": "Activity"
+  ,"@activity": {"description": "Section title for expense list recent activity"}
+  ,"search_expenses_hint": "Search by name or note..."
+  ,"@search_expenses_hint": {"description": "Placeholder for searching expenses by name or note"}
+  ,"clear_filters": "Clear"
+  ,"@clear_filters": {"description": "Button to clear expense filters"}
+  ,"show_filters": "Show filters"
+  ,"@show_filters": {"description": "Label to show filters"}
+  ,"hide_filters": "Hide filters"
+  ,"@hide_filters": {"description": "Label to hide filters"}
+  ,"all_categories": "All"
+  ,"@all_categories": {"description": "Chip label for all categories"}
+  ,"all_participants": "All"
+  ,"@all_participants": {"description": "Chip label for all participants"}
+  ,"no_expenses_with_filters": "No expenses match the selected filters"
+  ,"@no_expenses_with_filters": {"description": "Empty state when active filters return no expenses"}
+  ,"no_expenses_yet": "No expenses added yet"
+  ,"@no_expenses_yet": {"description": "Empty state when there are no expenses yet"}
+  ,"empty_expenses_title": "Ready to start tracking?"
+  ,"@empty_expenses_title": {"description": "Title for empty expenses state"}
+  ,"empty_expenses_subtitle": "Add your first expense to get started with this group!"
+  ,"@empty_expenses_subtitle": {"description": "Subtitle for empty expenses state"}
+  ,"add_first_expense_button": "Add First Expense"
+  ,"@add_first_expense_button": {"description": "Button text for adding the first expense in empty state"}
+  ,"show_search": "Show search bar"
+  ,"@show_search": {"description": "Tooltip to show the group search bar"}
+  ,"hide_search": "Hide search bar"
+  ,"@hide_search": {"description": "Tooltip to hide the group search bar"}
+  ,"expense_groups_title": "Expense Groups"
+  ,"@expense_groups_title": {"description": "Main section header for the list of expense groups/trips on the history page"}
+  ,"expense_groups_desc": "Manage your expense groups"
+  ,"@expense_groups_desc": {"description": "Short subtitle describing the purpose of the expense groups section (e.g. add, edit, view trips)"}
+  ,"whats_new_title": "What's New"
+  ,"@whats_new_title": {"description": "Title of the page showing the changelog"}
+  ,"whats_new_desc": "Discover the latest features and updates"
+  ,"@whats_new_desc": {"description": "Subtitle of the what's new page"}
+  ,"whats_new_subtitle": "Latest highlights"
+  ,"@whats_new_subtitle": {"description": "Card headline describing the what's new section"}
+  ,"whats_new_latest": "Stay up to date with recent improvements"
+  ,"@whats_new_latest": {"description": "Support text explaining that the content lists the most recent updates"}
+  ,"average_per_person": "Average per person"
+  ,"@average_per_person": {"description": "Label shown before the computed average spent per person in the Participants tab"}
+  ,"more": "more"
+  ,"@more": {"description": "Inline toggle label to expand and show all items"}
+  ,"less": "less"
+  ,"@less": {"description": "Inline toggle label to collapse and show fewer items"}
+  ,"debt_prefix_to": "to "
+  ,"@debt_prefix_to": {"description": "Short prefix shown before the recipient in a debt/settlement line (e.g., 'to Alice 10€')"}
+  ,"send_reminder": "Send reminder"
+  ,"@send_reminder": {"description": "Button label to send a payment reminder to a participant"}
+  ,"reminder_message_single": "Hi {participantName}! 👋\n\nJust a friendly reminder that you owe {amount} to {creditorName} for the group \"{groupName}\".\n\nThank you! 😊"
+  ,"@reminder_message_single": {"description": "Reminder message when a participant owes money to a single person", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
+  ,"reminder_message_multiple": "Hi {participantName}! 👋\n\nJust a friendly reminder of your payments for the group \"{groupName}\":\n\n{debtsList}\n\nThank you! 😊"
+  ,"@reminder_message_multiple": {"description": "Reminder message when a participant owes money to multiple people", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
 }

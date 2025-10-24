@@ -8,6 +8,8 @@ import 'package:intl/intl.dart' as intl;
 import 'app_localizations_en.dart';
 import 'app_localizations_es.dart';
 import 'app_localizations_it.dart';
+import 'app_localizations_pt.dart';
+import 'app_localizations_zh.dart';
 
 // ignore_for_file: type=lint
 
@@ -98,7 +100,45 @@ abstract class AppLocalizations {
     Locale('en'),
     Locale('es'),
     Locale('it'),
+    Locale('pt'),
+    Locale('zh'),
   ];
+
+  /// Section title for developer and support links in DeveloperPage
+  ///
+  /// In en, this message translates to:
+  /// **'Developer & Support'**
+  String get developer_section_title;
+
+  /// Section description for developer and support links in DeveloperPage
+  ///
+  /// In en, this message translates to:
+  /// **'Support the developer or view profile'**
+  String get developer_section_desc;
+
+  /// Section title for repository and issues links in DeveloperPage
+  ///
+  /// In en, this message translates to:
+  /// **'Source & Issues'**
+  String get repo_section_title;
+
+  /// Section description for repository and issues links in DeveloperPage
+  ///
+  /// In en, this message translates to:
+  /// **'View source code or report a problem'**
+  String get repo_section_desc;
+
+  /// Section title for license link in DeveloperPage
+  ///
+  /// In en, this message translates to:
+  /// **'License'**
+  String get license_section_title;
+
+  /// Section description for license link in DeveloperPage
+  ///
+  /// In en, this message translates to:
+  /// **'View the open source license'**
+  String get license_section_desc;
 
   /// Letter indicator for weekly chart badge
   ///
@@ -178,6 +218,12 @@ abstract class AppLocalizations {
   /// **'Total'**
   String get group_total;
 
+  /// Label shown before the total amount spent in the group
+  ///
+  /// In en, this message translates to:
+  /// **'Total spent'**
+  String get total_spent;
+
   /// No description provided for @download_all_csv.
   ///
   /// In en, this message translates to:
@@ -189,6 +235,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Share all (CSV)'**
   String get share_all_csv;
+
+  /// No description provided for @download_all_ofx.
+  ///
+  /// In en, this message translates to:
+  /// **'Download all (OFX)'**
+  String get download_all_ofx;
+
+  /// No description provided for @share_all_ofx.
+  ///
+  /// In en, this message translates to:
+  /// **'Share all (OFX)'**
+  String get share_all_ofx;
+
+  /// No description provided for @share_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get share_label;
+
+  /// No description provided for @share_text_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Share text'**
+  String get share_text_label;
+
+  /// No description provided for @share_image_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Share image'**
+  String get share_image_label;
+
+  /// No description provided for @export_share.
+  ///
+  /// In en, this message translates to:
+  /// **'Export & Share'**
+  String get export_share;
+
+  /// No description provided for @contribution_percentages.
+  ///
+  /// In en, this message translates to:
+  /// **'Percentages'**
+  String get contribution_percentages;
+
+  /// No description provided for @contribution_percentages_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Share of total paid by each participant'**
+  String get contribution_percentages_desc;
+
+  /// No description provided for @export_options.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Options'**
+  String get export_options;
 
   /// No description provided for @welcome_v3_title.
   ///
@@ -229,13 +329,13 @@ abstract class AppLocalizations {
   /// No description provided for @no_active_groups_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'Create your first expense group to get started'**
+  /// **'Create an expense group'**
   String get no_active_groups_subtitle;
 
   /// No description provided for @create_first_group.
   ///
   /// In en, this message translates to:
-  /// **'Create first group'**
+  /// **'Create a group'**
   String get create_first_group;
 
   /// No description provided for @new_expense_group.
@@ -291,6 +391,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Remove Image'**
   String get remove_image;
+
+  /// Shown when attempting to delete a participant that is used by existing expenses
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot delete participant: it\'s assigned to one or more expenses'**
+  String get cannot_delete_assigned_participant;
+
+  /// Shown when attempting to delete a category that is used by existing expenses
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot delete category: it\'s assigned to one or more expenses'**
+  String get cannot_delete_assigned_category;
 
   /// No description provided for @color.
   ///
@@ -435,6 +547,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Participants'**
   String get participants;
+
+  /// Pluralized participant count
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one {{count} participant} other {{count} participants}}'**
+  String participant_count(num count);
 
   /// No description provided for @participants_label.
   ///
@@ -603,6 +721,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Edit expense'**
   String get edit_expense;
+
+  /// No description provided for @expand_form.
+  ///
+  /// In en, this message translates to:
+  /// **'Expand form'**
+  String get expand_form;
+
+  /// No description provided for @expand_form_tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Add date, location and notes'**
+  String get expand_form_tooltip;
 
   /// No description provided for @category.
   ///
@@ -928,6 +1058,60 @@ abstract class AppLocalizations {
   /// **'Unarchive'**
   String get unarchive;
 
+  /// Action to pin a group to the top
+  ///
+  /// In en, this message translates to:
+  /// **'Pin'**
+  String get pin;
+
+  /// Action to unpin a group
+  ///
+  /// In en, this message translates to:
+  /// **'Unpin'**
+  String get unpin;
+
+  /// Action to delete a group
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// Undo action label for SnackBar
+  ///
+  /// In en, this message translates to:
+  /// **'UNDO'**
+  String get undo;
+
+  /// Snackbar message when group is archived
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get archived_with_undo;
+
+  /// Snackbar message when group is unarchived
+  ///
+  /// In en, this message translates to:
+  /// **'Unarchived'**
+  String get unarchived_with_undo;
+
+  /// Snackbar message when group is pinned
+  ///
+  /// In en, this message translates to:
+  /// **'Pinned'**
+  String get pinned_with_undo;
+
+  /// Snackbar message when group is unpinned
+  ///
+  /// In en, this message translates to:
+  /// **'Unpinned'**
+  String get unpinned_with_undo;
+
+  /// Snackbar message when group is deleted
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted'**
+  String get deleted_with_undo;
+
   /// No description provided for @archive_confirm.
   ///
   /// In en, this message translates to:
@@ -1035,12 +1219,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unpin group'**
   String get unpin_group;
-
-  /// No description provided for @pin.
-  ///
-  /// In en, this message translates to:
-  /// **'Pin'**
-  String get pin;
 
   /// No description provided for @theme_automatic.
   ///
@@ -1192,6 +1370,12 @@ abstract class AppLocalizations {
   /// **'Group added'**
   String get group_added_success;
 
+  /// Toast shown after deleting an expense group
+  ///
+  /// In en, this message translates to:
+  /// **'Group deleted'**
+  String get group_deleted_success;
+
   /// No description provided for @csv_select_directory_title.
   ///
   /// In en, this message translates to:
@@ -1215,6 +1399,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error saving CSV file'**
   String get csv_save_error;
+
+  /// No description provided for @ofx_select_directory_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Select folder to save OFX'**
+  String get ofx_select_directory_title;
+
+  /// No description provided for @ofx_saved_in.
+  ///
+  /// In en, this message translates to:
+  /// **'OFX saved in: {path}'**
+  String ofx_saved_in(Object path);
+
+  /// No description provided for @ofx_save_cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'OFX export cancelled'**
+  String get ofx_save_cancelled;
+
+  /// No description provided for @ofx_save_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving OFX file'**
+  String get ofx_save_error;
 
   /// No description provided for @csv_expense_name.
   ///
@@ -1360,6 +1568,18 @@ abstract class AppLocalizations {
   /// **'Spanish'**
   String get settings_language_es;
 
+  /// No description provided for @settings_language_pt.
+  ///
+  /// In en, this message translates to:
+  /// **'Portuguese'**
+  String get settings_language_pt;
+
+  /// No description provided for @settings_language_zh.
+  ///
+  /// In en, this message translates to:
+  /// **'Chinese (Simplified)'**
+  String get settings_language_zh;
+
   /// No description provided for @settings_select_language.
   ///
   /// In en, this message translates to:
@@ -1441,13 +1661,13 @@ abstract class AppLocalizations {
   /// No description provided for @terms_github_title.
   ///
   /// In en, this message translates to:
-  /// **'GitHub: calca'**
+  /// **'Website: calca'**
   String get terms_github_title;
 
   /// No description provided for @terms_github_desc.
   ///
   /// In en, this message translates to:
-  /// **'Developer profile on GitHub.'**
+  /// **'Developer\'s personal website.'**
   String get terms_github_desc;
 
   /// No description provided for @terms_repo_title.
@@ -1480,6 +1700,18 @@ abstract class AppLocalizations {
   /// **'View the open source license.'**
   String get terms_license_desc;
 
+  /// No description provided for @support_developer_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy me a coffee'**
+  String get support_developer_title;
+
+  /// No description provided for @support_developer_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Support the development of this app.'**
+  String get support_developer_desc;
+
   /// No description provided for @data_title.
   ///
   /// In en, this message translates to:
@@ -1509,6 +1741,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Import a backup to restore your data.'**
   String get data_restore_desc;
+
+  /// No description provided for @auto_backup_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic backup'**
+  String get auto_backup_title;
+
+  /// No description provided for @auto_backup_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable operating system automatic backup'**
+  String get auto_backup_desc;
+
+  /// No description provided for @settings_user_name_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Your name'**
+  String get settings_user_name_title;
+
+  /// No description provided for @settings_user_name_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Name or nickname to use in the app'**
+  String get settings_user_name_desc;
+
+  /// No description provided for @settings_user_name_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your name'**
+  String get settings_user_name_hint;
 
   /// No description provided for @info_tab.
   ///
@@ -1545,12 +1807,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure you want to delete this expense?'**
   String get delete_expense_confirm;
-
-  /// No description provided for @delete.
-  ///
-  /// In en, this message translates to:
-  /// **'Delete'**
-  String get delete;
 
   /// Shown when a filter (not search) returns no groups
   ///
@@ -1593,6 +1849,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Today'**
   String get spent_today;
+
+  /// Label shown before the computed overall monthly average spending value
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get monthly_average;
 
   /// No description provided for @average_expense.
   ///
@@ -1677,6 +1939,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Archived'**
   String get status_archived;
+
+  /// Empty state title for archived groups
+  ///
+  /// In en, this message translates to:
+  /// **'No archived groups'**
+  String get no_archived_groups;
+
+  /// Empty state subtitle for archived groups
+  ///
+  /// In en, this message translates to:
+  /// **'You have not archived any groups yet'**
+  String get no_archived_groups_subtitle;
+
+  /// No description provided for @all_groups_archived_info.
+  ///
+  /// In en, this message translates to:
+  /// **'All your groups are archived. You can restore them from the Archive section or create new ones.'**
+  String get all_groups_archived_info;
 
   /// Tooltip for status filter buttons row
   ///
@@ -2787,6 +3067,177 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Search currency...'**
   String get search_currency;
+
+  /// Section title for expense list recent activity
+  ///
+  /// In en, this message translates to:
+  /// **'Activity'**
+  String get activity;
+
+  /// Placeholder for searching expenses by name or note
+  ///
+  /// In en, this message translates to:
+  /// **'Search by name or note...'**
+  String get search_expenses_hint;
+
+  /// Button to clear expense filters
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clear_filters;
+
+  /// Label to show filters
+  ///
+  /// In en, this message translates to:
+  /// **'Show filters'**
+  String get show_filters;
+
+  /// Label to hide filters
+  ///
+  /// In en, this message translates to:
+  /// **'Hide filters'**
+  String get hide_filters;
+
+  /// Chip label for all categories
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all_categories;
+
+  /// Chip label for all participants
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all_participants;
+
+  /// Empty state when active filters return no expenses
+  ///
+  /// In en, this message translates to:
+  /// **'No expenses match the selected filters'**
+  String get no_expenses_with_filters;
+
+  /// Empty state when there are no expenses yet
+  ///
+  /// In en, this message translates to:
+  /// **'No expenses added yet'**
+  String get no_expenses_yet;
+
+  /// Title for empty expenses state
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to start tracking?'**
+  String get empty_expenses_title;
+
+  /// Subtitle for empty expenses state
+  ///
+  /// In en, this message translates to:
+  /// **'Add your first expense to get started with this group!'**
+  String get empty_expenses_subtitle;
+
+  /// Button text for adding the first expense in empty state
+  ///
+  /// In en, this message translates to:
+  /// **'Add First Expense'**
+  String get add_first_expense_button;
+
+  /// Tooltip to show the group search bar
+  ///
+  /// In en, this message translates to:
+  /// **'Show search bar'**
+  String get show_search;
+
+  /// Tooltip to hide the group search bar
+  ///
+  /// In en, this message translates to:
+  /// **'Hide search bar'**
+  String get hide_search;
+
+  /// Main section header for the list of expense groups/trips on the history page
+  ///
+  /// In en, this message translates to:
+  /// **'Expense Groups'**
+  String get expense_groups_title;
+
+  /// Short subtitle describing the purpose of the expense groups section (e.g. add, edit, view trips)
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your expense groups'**
+  String get expense_groups_desc;
+
+  /// Title of the page showing the changelog
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s New'**
+  String get whats_new_title;
+
+  /// Subtitle of the what's new page
+  ///
+  /// In en, this message translates to:
+  /// **'Discover the latest features and updates'**
+  String get whats_new_desc;
+
+  /// Card headline describing the what's new section
+  ///
+  /// In en, this message translates to:
+  /// **'Latest highlights'**
+  String get whats_new_subtitle;
+
+  /// Support text explaining that the content lists the most recent updates
+  ///
+  /// In en, this message translates to:
+  /// **'Stay up to date with recent improvements'**
+  String get whats_new_latest;
+
+  /// Label shown before the computed average spent per person in the Participants tab
+  ///
+  /// In en, this message translates to:
+  /// **'Average per person'**
+  String get average_per_person;
+
+  /// Inline toggle label to expand and show all items
+  ///
+  /// In en, this message translates to:
+  /// **'more'**
+  String get more;
+
+  /// Inline toggle label to collapse and show fewer items
+  ///
+  /// In en, this message translates to:
+  /// **'less'**
+  String get less;
+
+  /// Short prefix shown before the recipient in a debt/settlement line (e.g., 'to Alice 10€')
+  ///
+  /// In en, this message translates to:
+  /// **'to '**
+  String get debt_prefix_to;
+
+  /// Button label to send a payment reminder to a participant
+  ///
+  /// In en, this message translates to:
+  /// **'Send reminder'**
+  String get send_reminder;
+
+  /// Reminder message when a participant owes money to a single person
+  ///
+  /// In en, this message translates to:
+  /// **'Hi {participantName}! 👋\n\nJust a friendly reminder that you owe {amount} to {creditorName} for the group \"{groupName}\".\n\nThank you! 😊'**
+  String reminder_message_single(
+    Object participantName,
+    Object amount,
+    Object creditorName,
+    Object groupName,
+  );
+
+  /// Reminder message when a participant owes money to multiple people
+  ///
+  /// In en, this message translates to:
+  /// **'Hi {participantName}! 👋\n\nJust a friendly reminder of your payments for the group \"{groupName}\":\n\n{debtsList}\n\nThank you! 😊'**
+  String reminder_message_multiple(
+    Object participantName,
+    Object groupName,
+    Object debtsList,
+  );
 }
 
 class _AppLocalizationsDelegate
@@ -2800,7 +3251,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en', 'es', 'it'].contains(locale.languageCode);
+      <String>['en', 'es', 'it', 'pt', 'zh'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -2815,6 +3266,10 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsEs();
     case 'it':
       return AppLocalizationsIt();
+    case 'pt':
+      return AppLocalizationsPt();
+    case 'zh':
+      return AppLocalizationsZh();
   }
 
   throw FlutterError(

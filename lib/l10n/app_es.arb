@@ -1,5 +1,17 @@
 {
   "@@locale": "es",
+  "developer_section_title": "Desarrollador y Soporte",
+  "@developer_section_title": {"description": "Título de la sección para enlaces de desarrollador y soporte en DeveloperPage"},
+  "developer_section_desc": "Apoya al desarrollador o ver perfil",
+  "@developer_section_desc": {"description": "Descripción de la sección para enlaces de desarrollador y soporte en DeveloperPage"},
+  "repo_section_title": "Código fuente y problemas",
+  "@repo_section_title": {"description": "Título de la sección para enlaces de repositorio y problemas en DeveloperPage"},
+  "repo_section_desc": "Ver código fuente o reportar un problema",
+  "@repo_section_desc": {"description": "Descripción de la sección para enlaces de repositorio y problemas en DeveloperPage"},
+  "license_section_title": "Licencia",
+  "@license_section_title": {"description": "Título de la sección para enlace de licencia en DeveloperPage"},
+  "license_section_desc": "Ver la licencia de código abierto",
+  "@license_section_desc": {"description": "Descripción de la sección para enlace de licencia en DeveloperPage"},
   "weeklyChartBadge": "S",
   "@weeklyChartBadge": {
     "description": "Letter indicator for weekly chart badge"
@@ -25,16 +37,27 @@
   "in_group_prefix": "en",
   "save_change_expense": "Guardar cambios",
   "group_total": "Total",
+  "total_spent": "Total gastado",
+  "@total_spent": {"description": "Etiqueta mostrada antes del total gastado en el grupo"},
   "download_all_csv": "Descargar todo (CSV)",
   "share_all_csv": "Compartir todo (CSV)",
+  "download_all_ofx": "Descargar todo (OFX)",
+  "share_all_ofx": "Compartir todo (OFX)",
+  "share_label": "Compartir",
+  "share_text_label": "Compartir texto",
+  "share_image_label": "Compartir imagen",
+  "export_share": "Exportar y Compartir",
+  "contribution_percentages": "Porcentajes",
+  "contribution_percentages_desc": "Parte del total pagada por cada participante",
+  "export_options": "Opciones de Exportación",
   "welcome_v3_title": "Organiza.\nComparte.\nLiquida.\n ",
   "good_morning": "Buenos días",
   "good_afternoon": "Buenas tardes",
   "good_evening": "Buenas noches",
   "your_groups": "Tus grupos",
   "no_active_groups": "No hay grupos activos",
-  "no_active_groups_subtitle": "Crea tu primer grupo de gastos para empezar",
-  "create_first_group": "Crear primer grupo",
+  "no_active_groups_subtitle": "Crea un grupo de gastos",
+  "create_first_group": "Crear un grupo",
   "new_expense_group": "Nuevo Grupo de Gastos",
   "tap_to_create": "Tocar para crear",
   "no_expense_label": "No se encontraron gastos",
@@ -44,6 +67,10 @@
   "from_gallery": "Desde Galería",
   "from_camera": "Desde Cámara",
   "remove_image": "Eliminar Imagen",
+  "cannot_delete_assigned_participant": "No se puede eliminar el participante: está asignado a uno o más gastos",
+  "@cannot_delete_assigned_participant": {"description": "Se muestra al intentar eliminar un participante que está en uso por gastos existentes"},
+  "cannot_delete_assigned_category": "No se puede eliminar la categoría: está asignada a uno o más gastos",
+  "@cannot_delete_assigned_category": {"description": "Se muestra al intentar eliminar una categoría que está en uso por gastos existentes"},
   "color": "Color",
   "remove_color": "Eliminar Color",
   "color_alternative": "Alternativa a imagen",
@@ -96,6 +123,8 @@
   "from_to": "{start} - {end}",
   "add_expense": "Nuevo gasto",
   "edit_expense": "Editar gasto",
+  "expand_form": "Expandir formulario",
+  "expand_form_tooltip": "Agregar fecha, ubicación y notas",
   "category": "Categoría",
   "amount": "Cantidad",
   "invalid_amount": "Cantidad inválida",
@@ -146,10 +175,27 @@
   "search_groups": "Buscar grupos...",
   "no_search_results": "No se encontraron grupos para",
   "try_different_search": "Intenta buscar con palabras diferentes",
+  "show_search": "Mostrar barra de búsqueda",
+  "@show_search": {"description": "Tooltip para mostrar la barra de búsqueda de grupos"},
+  "hide_search": "Ocultar barra de búsqueda",
+  "@hide_search": {"description": "Tooltip para ocultar la barra de búsqueda de grupos"},
+  "expense_groups_title": "Grupos de gastos",
+  "@expense_groups_title": {"description": "Encabezado principal para la lista de grupos de gastos en la página de historial"},
+  "expense_groups_desc": "Gestiona tus grupos de gastos",
+  "@expense_groups_desc": {"description": "Subtítulo que describe la sección de grupos de gastos"},
   "active": "Activo",
   "archived": "Archivado",
   "archive": "Archivar",
   "unarchive": "Desarchivar",
+  "pin": "Fijar",
+  "unpin": "Desfijar",
+  "delete": "Eliminar",
+  "undo": "DESHACER",
+  "archived_with_undo": "Archivado",
+  "unarchived_with_undo": "Desarchivado",
+  "pinned_with_undo": "Fijado",
+  "unpinned_with_undo": "Desfijado",
+  "deleted_with_undo": "Eliminado",
   "archive_confirm": "¿Quieres archivar",
   "unarchive_confirm": "¿Quieres desarchivar",
   "overview": "Resumen",
@@ -194,10 +240,16 @@
   "data_refreshed": "Actualizado",
   "refresh": "Actualizar",
   "group_added_success": "Grupo agregado",
+  "group_deleted_success": "Grupo eliminado",
+  "@group_deleted_success": {"description": "Mensaje mostrado después de eliminar un grupo de gastos"},
   "csv_select_directory_title": "Seleccionar carpeta para guardar CSV",
   "csv_saved_in": "CSV guardado en: {path}",
   "csv_save_cancelled": "Exportación cancelada",
   "csv_save_error": "Error guardando archivo CSV",
+  "ofx_select_directory_title": "Seleccionar carpeta para guardar OFX",
+  "ofx_saved_in": "OFX guardado en: {path}",
+  "ofx_save_cancelled": "Exportación OFX cancelada",
+  "ofx_save_error": "Error guardando archivo OFX",
   "csv_expense_name": "Descripción",
   "csv_amount": "Cantidad",
   "csv_paid_by": "Pagado por",
@@ -222,6 +274,8 @@
   "settings_language_it": "Italiano",
   "settings_language_en": "Inglés",
   "settings_language_es": "Español",
+  "settings_language_pt": "Portugués",
+  "settings_language_zh": "Chino (Simplificado)",
   "settings_select_language": "Seleccionar idioma",
   "settings_theme": "Tema",
   "settings_theme_desc": "Claro, oscuro o sistema",
@@ -236,18 +290,22 @@
   "settings_app_version": "Versión de la aplicación",
   "settings_info_card": "Información",
   "settings_info_card_desc": "Desarrollador, Código fuente y Licencia",
-  "terms_github_title": "GitHub: calca",
-  "terms_github_desc": "Perfil del desarrollador en GitHub.",
+  "terms_github_title": "Sitio web: calca",
+  "terms_github_desc": "Sitio web personal del desarrollador.",
   "terms_repo_title": "Repositorio GitHub",
   "terms_repo_desc": "Código fuente de la aplicación.",
   "terms_issue_title": "Reportar un problema",
   "terms_issue_desc": "Ir a la página de issues en GitHub.",
   "terms_license_desc": "Ver la licencia de código abierto.",
+  "support_developer_title": "Cómprame un café",
+  "support_developer_desc": "Apoya el desarrollo de esta aplicación.",
   "data_title": "Respaldo y Restauración",
   "data_backup_title": "Respaldo",
   "data_backup_desc": "Crear un archivo de respaldo de tus gastos.",
   "data_restore_title": "Restauración",
   "data_restore_desc": "Importar un respaldo para restaurar tus datos.",
+  "auto_backup_title": "Respaldo automático",
+  "auto_backup_desc": "Habilitar el respaldo automático del sistema operativo",
   "info_tab": "Info",
   "select_paid_by": "Seleccionar pagador",
   "select_category": "Seleccionar una categoría",
@@ -266,6 +324,8 @@
   "overview_and_statistics": "Resumen y estadísticas",
   "daily_average": "Diario",
   "spent_today": "Hoy",
+  "monthly_average": "Mensual",
+  "@monthly_average": {"description": "Etiqueta mostrada antes del valor promedio mensual"},
   "@daily_average": {"description": "Etiqueta mostrada antes del valor promedio de gasto diario calculado"},
   "@spent_today": {"description": "Etiqueta mostrada antes del monto gastado hoy"},
   "@overview_and_statistics": {"description": "Texto de tooltip cuando el botón resumen/estadísticas está habilitado"},
@@ -287,6 +347,12 @@
   "status_active": "Activos",
   "@status_active": {"description": "Etiqueta de filtro: grupos activos"},
   "status_archived": "Archivados",
+  "no_archived_groups": "No hay grupos archivados",
+  "@no_archived_groups": {"description": "Título estado vacío para grupos archivados"},
+  "no_archived_groups_subtitle": "Aún no has archivado ningún grupo",
+  "@no_archived_groups_subtitle": {"description": "Subtítulo estado vacío para grupos archivados"},
+  "all_groups_archived_info": "Todos tus grupos están archivados. Puedes restaurarlos desde la sección Archivo o crear otros nuevos.",
+  "@all_groups_archived_info": {"description": "Mensaje mostrado cuando todos los grupos del usuario están archivados"},
   "@status_archived": {"description": "Etiqueta de filtro: grupos archivados"},
   "filter_status_tooltip": "Filtrar grupos",
   "@filter_status_tooltip": {"description": "Tooltip para la fila de botones de filtro de estado"},
@@ -499,4 +565,58 @@
   ,"currency_ZMW": "Kwacha zambiano"
   ,"currency_ZWL": "Dólar zimbabuense"
   ,"search_currency": "Buscar moneda..."
+  ,"activity": "Actividad"
+  ,"@activity": {"description": "Título de sección actividad reciente lista de gastos"}
+  ,"search_expenses_hint": "Buscar por nombre o nota..."
+  ,"@search_expenses_hint": {"description": "Placeholder para buscar gastos por nombre o nota"}
+  ,"clear_filters": "Limpiar"
+  ,"@clear_filters": {"description": "Botón para limpiar filtros de gastos"}
+  ,"show_filters": "Mostrar filtros"
+  ,"@show_filters": {"description": "Etiqueta para mostrar filtros"}
+  ,"hide_filters": "Ocultar filtros"
+  ,"@hide_filters": {"description": "Etiqueta para ocultar filtros"}
+  ,"all_categories": "Todas"
+  ,"@all_categories": {"description": "Chip para todas las categorías"}
+  ,"all_participants": "Todos"
+  ,"@all_participants": {"description": "Chip para todos los participantes"}
+  ,"no_expenses_with_filters": "Ningún gasto coincide con los filtros seleccionados"
+  ,"@no_expenses_with_filters": {"description": "Estado vacío cuando filtros activos no devuelven gastos"}
+  ,"no_expenses_yet": "Aún no hay gastos"
+  ,"@no_expenses_yet": {"description": "Estado vacío cuando aún no hay gastos"}
+  ,"empty_expenses_title": "¿Listo para empezar?"
+  ,"@empty_expenses_title": {"description": "Título para estado vacío de gastos"}
+  ,"empty_expenses_subtitle": "¡Agrega tu primer gasto para comenzar con este grupo!"
+  ,"@empty_expenses_subtitle": {"description": "Subtítulo para estado vacío de gastos"}
+  ,"add_first_expense_button": "Agregar Primer Gasto"
+  ,"@add_first_expense_button": {"description": "Texto del botón para agregar primer gasto"}
+  ,"participant_count": "{count, plural, one {{count} participante} other {{count} participantes}}"
+  ,"@participant_count": {"description": "Recuento de participantes con plural", "placeholders": {"count": {}}}
+  ,"whats_new_title": "Novedades"
+  ,"@whats_new_title": {"description": "Título de la página que muestra el changelog"}
+  ,"whats_new_desc": "Descubre las últimas características y actualizaciones"
+  ,"@whats_new_desc": {"description": "Subtítulo de la página novedades"}
+  ,"whats_new_subtitle": "Lo más destacado reciente"
+  ,"@whats_new_subtitle": {"description": "Subtítulo en la tarjeta de encabezado de la página de novedades"}
+  ,"whats_new_latest": "Mantente al día con las mejoras más recientes"
+  ,"@whats_new_latest": {"description": "Texto descriptivo en la tarjeta de encabezado de la página de novedades"}
+  ,"average_per_person": "Promedio por persona"
+  ,"@average_per_person": {"description": "Etiqueta mostrada antes del promedio gastado por persona en la pestaña Participantes"}
+  ,"more": "más"
+  ,"@more": {"description": "Etiqueta inline para expandir y mostrar todos los elementos"}
+  ,"less": "menos"
+  ,"@less": {"description": "Etiqueta inline para contraer y mostrar menos elementos"}
+  ,"debt_prefix_to": "a "
+  ,"@debt_prefix_to": {"description": "Prefijo corto mostrado antes del destinatario en una línea de deuda/liquidación (p. ej., 'a Alicia 10€')"}
+  ,"send_reminder": "Enviar recordatorio"
+  ,"@send_reminder": {"description": "Etiqueta del botón para enviar un recordatorio de pago a un participante"}
+  ,"reminder_message_single": "¡Hola {participantName}! 👋\n\nQuisiera recordarte que debes {amount} a {creditorName} para el grupo \"{groupName}\".\n\n¡Gracias! 😊"
+  ,"@reminder_message_single": {"description": "Mensaje de recordatorio cuando un participante debe dinero a una sola persona", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
+  ,"reminder_message_multiple": "¡Hola {participantName}! 👋\n\nQuisiera recordarte tus pagos para el grupo \"{groupName}\":\n\n{debtsList}\n\n¡Gracias! 😊"
+  ,"@reminder_message_multiple": {"description": "Mensaje de recordatorio cuando un participante debe dinero a varias personas", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
+  ,"settings_user_name_title": "Tu nombre"
+  ,"@settings_user_name_title": {"description": "Título de la configuración del nombre de usuario"}
+  ,"settings_user_name_desc": "Nombre o apodo para usar en la app"
+  ,"@settings_user_name_desc": {"description": "Descripción de la configuración del nombre de usuario"}
+  ,"settings_user_name_hint": "Ingresa tu nombre"
+  ,"@settings_user_name_hint": {"description": "Placeholder del campo de nombre de usuario"}
 }

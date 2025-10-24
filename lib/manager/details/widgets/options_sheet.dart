@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../data/model/expense_group.dart';
 import '../../../../widgets/bottom_sheet_scaffold.dart';
 
@@ -9,8 +9,7 @@ class OptionsSheet extends StatelessWidget {
   final VoidCallback onArchiveToggle;
   final VoidCallback onDelete;
   final VoidCallback onEdit;
-  final VoidCallback onDownloadCsv;
-  final VoidCallback onShareCsv;
+  final VoidCallback onExportShare;
 
   const OptionsSheet({
     super.key,
@@ -19,8 +18,7 @@ class OptionsSheet extends StatelessWidget {
     required this.onArchiveToggle,
     required this.onDelete,
     required this.onEdit,
-    required this.onDownloadCsv,
-    required this.onShareCsv,
+    required this.onExportShare,
   });
 
   @override
@@ -41,11 +39,24 @@ class OptionsSheet extends StatelessWidget {
         children: [
           ListTile(
             leading: Icon(
-              trip.pinned ? Icons.push_pin_outlined : Icons.push_pin_outlined,
-              color: Theme.of(context).colorScheme.onPrimaryFixed,
+              trip.pinned ? Icons.push_pin : Icons.push_pin_outlined,
+              color: trip.archived
+                  ? Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.38)
+                  : Theme.of(context).colorScheme.onPrimaryFixed,
             ),
-            title: Text(trip.pinned ? gloc.unpin_group : gloc.pin_group),
-            onTap: onPinToggle,
+            title: Text(
+              trip.pinned ? gloc.unpin_group : gloc.pin_group,
+              style: trip.archived
+                  ? TextStyle(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withValues(alpha: 0.38),
+                    )
+                  : null,
+            ),
+            onTap: trip.archived ? null : onPinToggle,
           ),
           ListTile(
             leading: Icon(
@@ -65,19 +76,24 @@ class OptionsSheet extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(
-              Icons.file_download_outlined,
-              color: Theme.of(context).colorScheme.onPrimaryFixed,
+              Icons.ios_share_outlined,
+              color: trip.expenses.isEmpty
+                  ? Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.38)
+                  : Theme.of(context).colorScheme.onPrimaryFixed,
             ),
-            title: Text(gloc.download_all_csv),
-            onTap: onDownloadCsv,
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.share_outlined,
-              color: Theme.of(context).colorScheme.onPrimaryFixed,
+            title: Text(
+              gloc.export_share,
+              style: trip.expenses.isEmpty
+                  ? TextStyle(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withValues(alpha: 0.38),
+                    )
+                  : null,
             ),
-            title: Text(gloc.share_all_csv),
-            onTap: onShareCsv,
+            onTap: trip.expenses.isEmpty ? null : onExportShare,
           ),
           ListTile(
             leading: Icon(

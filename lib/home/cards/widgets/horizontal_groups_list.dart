@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../data/model/expense_group.dart';
-import '../../../data/expense_group_storage.dart';
+import '../../../data/expense_group_storage_v2.dart';
 import 'group_card.dart';
 import 'new_group_card.dart';
+import 'page_indicator.dart';
 
 class HorizontalGroupsList extends StatefulWidget {
   final List<ExpenseGroup> groups;
   final gen.AppLocalizations localizations;
   final ThemeData theme;
   final VoidCallback onGroupUpdated;
+  final VoidCallback onGroupAdded;
   final VoidCallback? onCategoryAdded;
 
   const HorizontalGroupsList({
@@ -18,6 +20,7 @@ class HorizontalGroupsList extends StatefulWidget {
     required this.localizations,
     required this.theme,
     required this.onGroupUpdated,
+    required this.onGroupAdded,
     this.onCategoryAdded,
   });
 
@@ -25,10 +28,13 @@ class HorizontalGroupsList extends StatefulWidget {
   State<HorizontalGroupsList> createState() => _HorizontalGroupsListState();
 }
 
-class _HorizontalGroupsListState extends State<HorizontalGroupsList> {
+class _HorizontalGroupsListState extends State<HorizontalGroupsList>
+    with SingleTickerProviderStateMixin {
   late PageController _pageController;
   double _currentPage = 0.0;
   late List<ExpenseGroup> _localGroups;
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
 
   void _onPageChanged() {
     if (mounted) {
@@ -44,6 +50,17 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList> {
     _localGroups = List.from(widget.groups);
     _pageController = PageController(viewportFraction: 0.85);
     _pageController.addListener(_onPageChanged);
+
+    // Setup fade-in animation for smooth loading
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeIn,
+    );
+    _fadeController.forward();
   }
 
   @override
@@ -56,7 +73,7 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList> {
   }
 
   Future<void> _updateGroupLocally(String groupId) async {
-    final groups = await ExpenseGroupStorage.getAllGroups();
+    final groups = await ExpenseGroupStorageV2.getAllGroups();
     final found = groups.where((g) => g.id == groupId);
     if (found.isNotEmpty) {
       final updatedGroup = found.first;
@@ -78,7 +95,7 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList> {
     if (groupId != null) {
       _updateGroupLocally(groupId);
     } else {
-      widget.onGroupUpdated();
+      widget.onGroupAdded();
     }
   }
 
@@ -90,6 +107,7 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList> {
   void dispose() {
     _pageController.removeListener(_onPageChanged);
     _pageController.dispose();
+    _fadeController.dispose();
     super.dispose();
   }
 
@@ -98,56 +116,74 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList> {
     // Total items include all groups plus the new group card
     final totalItems = _localGroups.length + 1;
 
-    return PageView.builder(
-      itemCount: totalItems,
-      padEnds: false,
-      controller: _pageController,
-      itemBuilder: (context, index) {
-        // Calcola quanto questa card è vicina al centro
-        final double distanceFromCenter = (index - _currentPage).abs();
-        final bool isSelected = distanceFromCenter < 0.5;
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: Column(
+        children: [
+          // Main PageView slider
+          Expanded(
+            child: PageView.builder(
+            itemCount: totalItems,
+            padEnds: false,
+            controller: _pageController,
+            itemBuilder: (context, index) {
+              // Calcola quanto questa card è vicina al centro
+              final double distanceFromCenter = (index - _currentPage).abs();
+              final bool isSelected = distanceFromCenter < 0.5;
 
-        // If this is the last index, show the new group card
-        if (index == _localGroups.length) {
-          return AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-            margin: EdgeInsets.only(
-              right: 16,
-              top: isSelected ? 0 : 8,
-              bottom: isSelected ? 0 : 8,
-            ),
-            child: NewGroupCard(
-              localizations: widget.localizations,
-              theme: widget.theme,
-              onGroupAdded: _handleGroupUpdated,
-              isSelected: isSelected,
-              selectionProgress: 1.0 - distanceFromCenter.clamp(0.0, 1.0),
-            ),
-          );
-        }
+              // If this is the last index, show the new group card
+              if (index == _localGroups.length) {
+                return AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                  margin: EdgeInsets.only(
+                    right: 16,
+                    top: isSelected ? 0 : 8,
+                    bottom: isSelected ? 0 : 8,
+                  ),
+                  child: NewGroupCard(
+                    localizations: widget.localizations,
+                    theme: widget.theme,
+                    onGroupAdded: _handleGroupUpdated,
+                    isSelected: isSelected,
+                    selectionProgress: 1.0 - distanceFromCenter.clamp(0.0, 1.0),
+                  ),
+                );
+              }
 
-        // Otherwise show a regular group card
-        final group = _localGroups[index];
-        return AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-          margin: EdgeInsets.only(
-            right: 16,
-            top: isSelected ? 0 : 8,
-            bottom: isSelected ? 0 : 8,
+              // Otherwise show a regular group card
+              final group = _localGroups[index];
+              return AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                margin: EdgeInsets.only(
+                  right: 16,
+                  top: isSelected ? 0 : 8,
+                  bottom: isSelected ? 0 : 8,
+                ),
+                child: GroupCard(
+                  group: group,
+                  localizations: widget.localizations,
+                  theme: widget.theme,
+                  onGroupUpdated: () => _handleGroupUpdated(group.id),
+                  onCategoryAdded: _handleCategoryAdded,
+                  isSelected: isSelected,
+                  selectionProgress: 1.0 - distanceFromCenter.clamp(0.0, 1.0),
+                ),
+              );
+            },
           ),
-          child: GroupCard(
-            group: group,
-            localizations: widget.localizations,
-            theme: widget.theme,
-            onGroupUpdated: () => _handleGroupUpdated(group.id),
-            onCategoryAdded: _handleCategoryAdded,
-            isSelected: isSelected,
-            selectionProgress: 1.0 - distanceFromCenter.clamp(0.0, 1.0),
+        ),
+        // Page indicator
+        Padding(
+          padding: const EdgeInsets.only(top: 12, bottom: 8),
+          child: PageIndicator(
+            itemCount: totalItems,
+            currentPage: _currentPage,
           ),
-        );
-      },
+        ),
+      ],
+    ),
     );
   }
 }

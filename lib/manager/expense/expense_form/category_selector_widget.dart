@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import '../../../config/app_icons.dart';
 import '../../../data/model/expense_category.dart';
 import '../../../widgets/selection_bottom_sheet.dart';
 import 'inline_select_field.dart';
+import '../../../themes/form_theme.dart';
 
 class CategorySelectorWidget extends StatelessWidget {
   final List<ExpenseCategory> categories;
@@ -35,6 +37,7 @@ class CategorySelectorWidget extends StatelessWidget {
         items: categories,
         selected: selectedCategory,
         gloc: gloc,
+        sheetTitle: gloc.category,
         itemLabel: (c) => c.name,
         onAddItemInline: onAddCategoryInline,
         addItemHint: gloc.category_name,
@@ -46,7 +49,7 @@ class CategorySelectorWidget extends StatelessWidget {
 
     if (fullEdit) {
       return InlineSelectField(
-        icon: Icons.category_outlined,
+        icon: AppIcons.category,
         label: selectedCategory?.name ?? gloc.category_placeholder,
         onTap: openPicker,
         enabled: true,
@@ -66,20 +69,17 @@ class CategorySelectorWidget extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.category_outlined,
-            size: 20,
-            color: theme.colorScheme.onSurface,
-          ),
+          Icon(AppIcons.category, size: 20, color: theme.colorScheme.onSurface),
           const SizedBox(width: 8),
           Flexible(
             child: Text(
               selectedCategory?.name ?? gloc.category_placeholder,
               overflow: TextOverflow.ellipsis,
-              style: (textStyle ?? theme.textTheme.bodyMedium)?.copyWith(
-                color: theme.colorScheme.onSurface,
-                fontWeight: FontWeight.w400,
-              ),
+              style: (textStyle ?? FormTheme.getSelectTextStyle(context))
+                  ?.copyWith(
+                    color: theme.colorScheme.onSurface,
+                    fontWeight: FontWeight.w400,
+                  ),
             ),
           ),
         ],

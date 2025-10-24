@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../themes/form_theme.dart';
 
 /// Standard width reserved for leading icons (or currency symbol) in form rows.
 const double kLeadingIconWidth = 32.0;
@@ -54,11 +55,9 @@ class IconLeadingField extends StatelessWidget {
             child: Padding(
               padding:
                   iconPadding ??
-                  EdgeInsets.only(
-                    top: alignTop ? 8 : 8,
-                    bottom: alignTop ? 0 : 8,
-                    right: 6,
-                  ),
+                  (alignTop
+                      ? FormTheme.topAlignedIconPadding
+                      : FormTheme.standardIconPadding),
               child: iconWidget,
             ),
           ),

@@ -1,11 +1,24 @@
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:org_app_caravella/data/file_based_expense_group_repository.dart';
-import 'package:org_app_caravella/data/storage_benchmark.dart';
-import 'package:org_app_caravella/data/storage_performance.dart';
+import 'package:io_caravella_egm/data/file_based_expense_group_repository.dart';
+import 'package:io_caravella_egm/data/storage_benchmark.dart';
+import 'package:io_caravella_egm/data/storage_performance.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
+
+/// Fake path provider to avoid platform channel dependency in benchmarks
+class _FakePathProvider extends PathProviderPlatform {
+  late final String _tempDir = Directory.systemTemp
+      .createTempSync('bench_test')
+      .path;
+  @override
+  Future<String?> getApplicationDocumentsPath() async => _tempDir;
+}
 
 void main() {
+  // Ensure bindings for path provider & file IO
+  TestWidgetsFlutterBinding.ensureInitialized();
+  PathProviderPlatform.instance = _FakePathProvider();
   group('StorageBenchmark', () {
     late FileBasedExpenseGroupRepository repository;
     late StorageBenchmark benchmark;
@@ -13,7 +26,7 @@ void main() {
     setUp(() async {
       repository = FileBasedExpenseGroupRepository();
       benchmark = StorageBenchmark(repository);
-      
+
       // Clean up any existing test data
       try {
         final dir = await getApplicationDocumentsDirectory();
@@ -40,10 +53,10 @@ void main() {
       );
 
       final results = await benchmark.runBenchmarkSuite(config: config);
-      
+
       expect(results, isNotEmpty);
       expect(results.length, greaterThan(5)); // Should have multiple operations
-      
+
       // Verify all results have reasonable durations
       for (final result in results) {
         expect(result.durations.length, equals(config.iterations));
@@ -62,7 +75,7 @@ void main() {
 
       final results = await benchmark.runBenchmarkSuite(config: config);
       final saveResult = results.firstWhere((r) => r.operation == 'saveGroups');
-      
+
       expect(saveResult.operation, equals('saveGroups'));
       expect(saveResult.durations.length, equals(config.iterations));
       expect(saveResult.metadata['groupsSaved'], equals(config.groupCount));
@@ -77,8 +90,10 @@ void main() {
       );
 
       final results = await benchmark.runBenchmarkSuite(config: config);
-      final loadResult = results.firstWhere((r) => r.operation == 'loadAllGroups');
-      
+      final loadResult = results.firstWhere(
+        (r) => r.operation == 'loadAllGroups',
+      );
+
       expect(loadResult.operation, equals('loadAllGroups'));
       expect(loadResult.durations.length, equals(config.iterations));
     });
@@ -99,14 +114,18 @@ void main() {
       );
 
       // Run without caching
-      final resultsWithoutCache = await benchmark.runBenchmarkSuite(config: configWithoutCache);
+      final resultsWithoutCache = await benchmark.runBenchmarkSuite(
+        config: configWithoutCache,
+      );
       final loadWithoutCache = resultsWithoutCache
           .firstWhere((r) => r.operation == 'loadAllGroups')
           .averageDuration;
 
       // Clear and run with caching
       repository.clearCache();
-      final resultsWithCache = await benchmark.runBenchmarkSuite(config: configWithCache);
+      final resultsWithCache = await benchmark.runBenchmarkSuite(
+        config: configWithCache,
+      );
       final loadWithCache = resultsWithCache
           .firstWhere((r) => r.operation == 'loadAllGroups')
           .averageDuration;
@@ -126,17 +145,17 @@ void main() {
 
       final results = await benchmark.runBenchmarkSuite(config: config);
       final result = results.first;
-      
+
       // Test percentiles
       expect(result.p50Duration.inMicroseconds, greaterThan(0));
       expect(result.p95Duration.inMicroseconds, greaterThan(0));
       expect(result.p99Duration.inMicroseconds, greaterThan(0));
-      
+
       // Test min/max bounds
       expect(result.minDuration, lessThanOrEqualTo(result.averageDuration));
       expect(result.maxDuration, greaterThanOrEqualTo(result.averageDuration));
       expect(result.minDuration, lessThanOrEqualTo(result.maxDuration));
-      
+
       // Test standard deviation
       expect(result.standardDeviation, greaterThanOrEqualTo(0));
     });
@@ -150,12 +169,15 @@ void main() {
 
       final results = await benchmark.runBenchmarkSuite(config: config);
       final result = results.first;
-      
+
       final json = result.toJson();
-      
+
       expect(json['operation'], equals(result.operation));
       expect(json['iterations'], equals(result.durations.length));
-      expect(json['averageDuration'], equals(result.averageDuration.inMicroseconds));
+      expect(
+        json['averageDuration'],
+        equals(result.averageDuration.inMicroseconds),
+      );
       expect(json['config']['groupCount'], equals(config.groupCount));
     });
 
@@ -167,15 +189,15 @@ void main() {
       );
 
       StoragePerformanceMonitor.clear();
-      
+
       final results = await benchmark.runBenchmarkSuite(config: config);
-      
+
       expect(results, isNotEmpty);
-      
+
       // Check that performance metrics were recorded
       final metrics = StoragePerformanceMonitor.metrics;
       expect(metrics, isNotEmpty);
-      
+
       // Should have metrics for various operations
       final operations = metrics.map((m) => m.operation).toSet();
       expect(operations, contains('saveGroups'));
@@ -189,7 +211,7 @@ void main() {
       );
 
       final results = await benchmark.runBenchmarkSuite(config: config);
-      
+
       // This should not throw
       expect(() => StorageBenchmark.printResults(results), returnsNormally);
     });
@@ -206,12 +228,16 @@ void main() {
       );
 
       final results = await benchmark.runBenchmarkSuite(config: config);
-      final transactionResult = results
-          .firstWhere((r) => r.operation == 'transactionOperations');
-      
+      final transactionResult = results.firstWhere(
+        (r) => r.operation == 'transactionOperations',
+      );
+
       expect(transactionResult.operation, equals('transactionOperations'));
       expect(transactionResult.durations.length, equals(config.iterations));
-      expect(transactionResult.metadata['operationsPerTransaction'], greaterThan(0));
+      expect(
+        transactionResult.metadata['operationsPerTransaction'],
+        greaterThan(0),
+      );
     });
   });
 
@@ -253,7 +279,7 @@ void main() {
   group('BenchmarkConfig', () {
     test('should create with defaults', () {
       const config = BenchmarkConfig();
-      
+
       expect(config.groupCount, equals(10));
       expect(config.participantsPerGroup, equals(3));
       expect(config.categoriesPerGroup, equals(5));
@@ -265,14 +291,14 @@ void main() {
 
     test('should copy with changes', () {
       const original = BenchmarkConfig();
-      final modified = original.copyWith(
-        groupCount: 20,
-        iterations: 10,
-      );
-      
+      final modified = original.copyWith(groupCount: 20, iterations: 10);
+
       expect(modified.groupCount, equals(20));
       expect(modified.iterations, equals(10));
-      expect(modified.participantsPerGroup, equals(original.participantsPerGroup));
+      expect(
+        modified.participantsPerGroup,
+        equals(original.participantsPerGroup),
+      );
       expect(modified.enableCaching, equals(original.enableCaching));
     });
   });

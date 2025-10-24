@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'icon_leading_field.dart';
+import '../../../themes/form_theme.dart';
 
 /// Generic inline (row style) selectable field used in fullEdit mode for
 /// participant, category, date-like pickers. Provides consistent layout
@@ -25,15 +26,16 @@ class InlineSelectField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final effectiveStyle = (textStyle ?? theme.textTheme.bodySmall)?.copyWith(
-      color: enabled
-          ? theme.colorScheme.onSurface
-          : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
-      fontWeight: FontWeight.w400,
-    );
+    final effectiveStyle = (textStyle ?? FormTheme.getSelectTextStyle(context))
+        ?.copyWith(
+          color: enabled
+              ? theme.colorScheme.onSurface
+              : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+          fontWeight: FontWeight.w400,
+        );
 
     final child = Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.symmetric(vertical: FormTheme.fieldVerticalPadding),
       child: Text(
         label,
         overflow: TextOverflow.ellipsis,

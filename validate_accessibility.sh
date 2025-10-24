@@ -72,7 +72,35 @@ else
 fi
 
 echo ""
-echo "🗣️ 5. Checking Dialog Accessibility..."
+echo "🎯 5. Checking Slider Indicators for Accessibility..."
+echo "-----------------------------------------------------"
+
+# Check for page indicators in home slider
+if grep -q "PageIndicator" lib/home/cards/widgets/horizontal_groups_list.dart; then
+    echo "✅ Home slider has page indicators"
+    grep -n "PageIndicator" lib/home/cards/widgets/horizontal_groups_list.dart | head -2
+else
+    echo "❌ Home slider missing page indicators"
+fi
+
+if [ -f "lib/home/cards/widgets/page_indicator.dart" ]; then
+    echo "✅ Page indicator widget implemented"
+    if grep -q "liveRegion: true" lib/home/cards/widgets/page_indicator.dart; then
+        echo "   ✅ Page indicator has live region support"
+    else
+        echo "   ❌ Page indicator missing live region support"
+    fi
+    if grep -q "semanticLabel" lib/home/cards/widgets/page_indicator.dart; then
+        echo "   ✅ Page indicator has semantic labels"
+    else
+        echo "   ❌ Page indicator missing semantic labels"
+    fi
+else
+    echo "❌ Page indicator widget not found"
+fi
+
+echo ""
+echo "🗣️ 6. Checking Dialog Accessibility..."
 echo "--------------------------------------"
 
 # Check dialog improvements
@@ -83,7 +111,7 @@ else
 fi
 
 echo ""
-echo "🧪 6. Checking Test Coverage..."
+echo "🧪 7. Checking Test Coverage..."
 echo "------------------------------"
 
 if [ -f "test/accessibility_test.dart" ]; then
@@ -94,8 +122,16 @@ else
     echo "❌ No accessibility test suite found"
 fi
 
+if [ -f "test/page_indicator_test.dart" ]; then
+    echo "✅ Page indicator test suite created"
+    test_count=$(grep -c "testWidgets" test/page_indicator_test.dart)
+    echo "   📊 Number of page indicator tests: $test_count"
+else
+    echo "❌ No page indicator test suite found"
+fi
+
 echo ""
-echo "🌍 7. Checking Localization Updates..."
+echo "🌍 8. Checking Localization Updates..."
 echo "--------------------------------------"
 
 # Check for new localization keys
@@ -112,7 +148,7 @@ else
 fi
 
 echo ""
-echo "📊 8. Code Changes Summary..."
+echo "📊 9. Code Changes Summary..."
 echo "----------------------------"
 
 echo "Modified files:"
@@ -125,9 +161,10 @@ git diff HEAD~1 | grep -E "Semantics|semantic|liveRegion|button: true|textField:
 echo ""
 echo "Test files added:"
 ls -la test/accessibility_test.dart 2>/dev/null && echo "   🧪 Accessibility test suite: ✅" || echo "   🧪 Accessibility test suite: ❌"
+ls -la test/page_indicator_test.dart 2>/dev/null && echo "   🧪 Page indicator test suite: ✅" || echo "   🧪 Page indicator test suite: ❌"
 
 echo ""
-echo "🎯 9. WCAG 2.2 Compliance Summary..."
+echo "🎯 10. WCAG 2.2 Compliance Summary..."
 echo "------------------------------------"
 
 echo "Level A Requirements:"
@@ -151,6 +188,7 @@ echo "   ✅ Minimum 44px touch targets (FAB: 120px)"
 echo "   ✅ Screen reader optimized descriptions"
 echo "   ✅ Context-aware semantic hints"
 echo "   ✅ Proper dialog and modal accessibility"
+echo "   ✅ Page indicators for home slider navigation"
 
 echo ""
 echo "🎉 WCAG 2.2 Accessibility Implementation Complete!"

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'form_theme.dart';
 
 // https://rydmike.com/flexcolorscheme/themesplayground-latest/?config=H4sIAKZob2gA_3WRPWvDMBRF9_wKoTkY2cGk8VZKhw6BgEuHLkaNXlOBvpCe0piQ_15JtRNoqMZzLvcK3nlB0qNO8fHgbTRiEBw57Qh9_QINgeyuhmRD4OSsRxCkZhVbVw1rWsI2Xd12LaPLu7Yj-CCtyYUPVVNdI2Gf61-MgFNy65lKHRVH6x-dm1391z1Z7awBg-HfyJuE73drda5mbLKYF7dWQKLnggoW3OOAo8uYgol6KMFB5-TyljtyFUsmjAFB02Iuc7d1cl--82xEL8vG5s71mLYm20w2BthyBC-5WiX8yVWAm-rjx-8dZrW4_AALBabTsgEAAA==
 
@@ -6,14 +7,14 @@ import 'package:flutter/material.dart';
 /// Requires Flutter 3.22.0 or later.
 const ColorScheme lightColorScheme = ColorScheme(
   brightness: Brightness.light,
-  primary: Color(0xFF4C9BBA),
+  primary: Color(0xFF009688),
   onPrimary: Color(0xFFFFFFFF),
-  primaryContainer: Color(0xFF9CEBEB),
+  primaryContainer: Color(0xFFB2DFDB),
   onPrimaryContainer: Color(0xFF000000),
-  primaryFixed: Color(0xFFD8E9EF),
-  primaryFixedDim: Color(0xFFB1D2DF),
-  onPrimaryFixed: Color(0xFF204553),
-  onPrimaryFixedVariant: Color(0xFF255061),
+  primaryFixed: Color(0xFFE0F2F1),
+  primaryFixedDim: Color(0xFFB2DFDB),
+  onPrimaryFixed: Color(0xFF004D40),
+  onPrimaryFixedVariant: Color(0xFF00695C),
   secondary: Color(0xFFFF4F58),
   onSecondary: Color(0xFFFFFFFF),
   secondaryContainer: Color(0xFFFFDAD7),
@@ -50,22 +51,23 @@ const ColorScheme lightColorScheme = ColorScheme(
   scrim: Color(0xFF000000),
   inverseSurface: Color(0xFF121212),
   onInverseSurface: Color(0xFFFFFFFF),
-  inversePrimary: Color(0xFFE5FFFF),
-  surfaceTint: Color(0xFF4C9BBA),
+  inversePrimary: Color(0xFFB2DFDB),
+  surfaceTint: Color(0xFF009688),
 );
 
-/// Dark [ColorScheme] made with FlexColorScheme v8.2.0.
+/// Soft Dark [ColorScheme] - A softer, more readable dark theme.
 /// Requires Flutter 3.22.0 or later.
+/// Follows WCAG AA contrast requirements for text and interactive elements.
 const ColorScheme darkColorScheme = ColorScheme(
   brightness: Brightness.dark,
-  primary: Color(0xFF669DB3),
-  onPrimary: Color(0xFFFFFFFF),
-  primaryContainer: Color(0xFF078282),
+  primary: Color(0xFF80CBC4),
+  onPrimary: Color(0xFF003D36),
+  primaryContainer: Color(0xFF00695C),
   onPrimaryContainer: Color(0xFFFFFFFF),
-  primaryFixed: Color(0xFFD8E9EF),
-  primaryFixedDim: Color(0xFFB1D2DF),
-  onPrimaryFixed: Color(0xFF204553),
-  onPrimaryFixedVariant: Color(0xFF255061),
+  primaryFixed: Color(0xFFE0F2F1),
+  primaryFixedDim: Color(0xFFB2DFDB),
+  onPrimaryFixed: Color(0xFF004D40),
+  onPrimaryFixedVariant: Color(0xFF00695C),
   secondary: Color(0xFFFC6E75),
   onSecondary: Color(0xFFFFFFFF),
   secondaryContainer: Color(0xFF92001A),
@@ -86,24 +88,25 @@ const ColorScheme darkColorScheme = ColorScheme(
   onError: Color(0xFF000000),
   errorContainer: Color(0xFFB1384E),
   onErrorContainer: Color(0xFFFFFFFF),
-  surface: Color(0xFF121212),
-  onSurface: Color(0xFFFFFFFF),
-  surfaceDim: Color(0xFF060606),
-  surfaceBright: Color(0xFF2C2C2C),
-  surfaceContainerLowest: Color(0xFF010101),
-  surfaceContainerLow: Color(0xFF0E0E0E),
-  surfaceContainer: Color(0xFF151515),
-  surfaceContainerHigh: Color(0xFF1D1D1D),
-  surfaceContainerHighest: Color(0xFF282828),
-  onSurfaceVariant: Color(0xFFFFFFFF),
-  outline: Color(0xFF777777),
-  outlineVariant: Color(0xFF414141),
+  // Soft dark base colors for improved readability
+  surface: Color(0xFF181A1B), // Soft dark background
+  onSurface: Color(0xFFEAEAEA), // Primary text - WCAG AA compliant
+  surfaceDim: Color(0xFF131415), // Slightly darker than surface
+  surfaceBright: Color(0xFF2F3132), // Brighter surface for elevated elements
+  surfaceContainerLowest: Color(0xFF0E0F10), // Darkest container
+  surfaceContainerLow: Color(0xFF1D1F20), // Low elevation container
+  surfaceContainer: Color(0xFF242627), // Card/container background
+  surfaceContainerHigh: Color(0xFF2A2C2D), // High elevation container
+  surfaceContainerHighest: Color(0xFF313334), // Highest elevation container
+  onSurfaceVariant: Color(0xFFA0A0A0), // Secondary text - WCAG AA compliant
+  outline: Color(0xFF8A8A8A), // Visible outline color
+  outlineVariant: Color(0xFF5A5A5A), // Subtle outline variant
   shadow: Color(0xFF000000),
   scrim: Color(0xFF000000),
   inverseSurface: Color(0xFFFFFFFF),
   onInverseSurface: Color(0xFF121212),
-  inversePrimary: Color(0xFF394F58),
-  surfaceTint: Color(0xFF669DB3),
+  inversePrimary: Color(0xFF009688),
+  surfaceTint: Color(0xFF80CBC4),
 );
 
 class CaravellaThemes {
@@ -186,6 +189,18 @@ class CaravellaThemes {
     textTheme: _createTextTheme(lightColorScheme),
     useMaterial3: true,
     scaffoldBackgroundColor: lightColorScheme.surface,
+    dialogTheme: DialogThemeData(
+      backgroundColor: lightColorScheme.surfaceContainerHigh,
+      surfaceTintColor: lightColorScheme.surfaceTint,
+      elevation: 6,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+      titleTextStyle: _createTextTheme(
+        lightColorScheme,
+      ).titleLarge?.copyWith(color: lightColorScheme.onSurface),
+      contentTextStyle: _createTextTheme(
+        lightColorScheme,
+      ).bodyMedium?.copyWith(color: lightColorScheme.onSurfaceVariant),
+    ),
     inputDecorationTheme: InputDecorationTheme(
       isDense: true,
       filled: false,
@@ -221,7 +236,7 @@ class CaravellaThemes {
         color: lightColorScheme.outline,
         fontWeight: FontWeight.w400,
       ),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+      contentPadding: FormTheme.standardContentPadding,
     ),
   );
 
@@ -231,6 +246,18 @@ class CaravellaThemes {
     textTheme: _createTextTheme(darkColorScheme),
     useMaterial3: true,
     scaffoldBackgroundColor: darkColorScheme.surface,
+    dialogTheme: DialogThemeData(
+      backgroundColor: darkColorScheme.surfaceContainerHigh,
+      surfaceTintColor: darkColorScheme.surfaceTint,
+      elevation: 6,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+      titleTextStyle: _createTextTheme(
+        darkColorScheme,
+      ).titleLarge?.copyWith(color: darkColorScheme.onSurface),
+      contentTextStyle: _createTextTheme(
+        darkColorScheme,
+      ).bodyMedium?.copyWith(color: darkColorScheme.onSurfaceVariant),
+    ),
     inputDecorationTheme: InputDecorationTheme(
       isDense: true,
       filled: false,
@@ -265,7 +292,7 @@ class CaravellaThemes {
         color: darkColorScheme.outline,
         fontWeight: FontWeight.w400,
       ),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+      contentPadding: FormTheme.standardContentPadding,
     ),
   );
 }

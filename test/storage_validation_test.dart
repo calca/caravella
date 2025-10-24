@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:org_app_caravella/data/expense_group_repository.dart';
-import 'package:org_app_caravella/data/storage_errors.dart';
-import 'package:org_app_caravella/data/model/expense_group.dart';
-import 'package:org_app_caravella/data/model/expense_participant.dart';
-import 'package:org_app_caravella/data/model/expense_category.dart';
-import 'package:org_app_caravella/data/model/expense_details.dart';
+import 'package:io_caravella_egm/data/expense_group_repository.dart';
+import 'package:io_caravella_egm/data/storage_errors.dart';
+import 'package:io_caravella_egm/data/model/expense_group.dart';
+import 'package:io_caravella_egm/data/model/expense_participant.dart';
+import 'package:io_caravella_egm/data/model/expense_category.dart';
+import 'package:io_caravella_egm/data/model/expense_details.dart';
 
 void main() {
   group('Storage Errors', () {
@@ -313,9 +313,10 @@ void main() {
         group2,
       ]);
 
-      expect(result.isSuccess, isTrue);
-      final issues = result.unwrap();
-      expect(issues, contains('Duplicate group IDs found'));
+      expect(result.isFailure, isTrue);
+      expect(result.error, isA<DataIntegrityError>());
+      final error = result.error as DataIntegrityError;
+      expect(error.details, contains('Duplicate group IDs found'));
     });
 
     test('should detect multiple pinned groups', () {
@@ -348,12 +349,10 @@ void main() {
         group2,
       ]);
 
-      expect(result.isSuccess, isTrue);
-      final issues = result.unwrap();
-      expect(
-        issues.any((issue) => issue.contains('Multiple groups are pinned')),
-        isTrue,
-      );
+      expect(result.isFailure, isTrue);
+      expect(result.error, isA<DataIntegrityError>());
+      final error = result.error as DataIntegrityError;
+      expect(error.details, contains('Multiple groups are pinned'));
     });
 
     test('should allow multiple pinned groups if they are archived', () {
@@ -386,9 +385,9 @@ void main() {
         group2,
       ]);
 
+      // Still valid: only one active pinned group
       expect(result.isSuccess, isTrue);
       final issues = result.unwrap();
-      // Should not complain about multiple pinned groups since one is archived
       expect(
         issues.any((issue) => issue.contains('Multiple groups are pinned')),
         isFalse,
@@ -410,14 +409,11 @@ void main() {
         invalidGroup,
       ]);
 
-      expect(result.isSuccess, isTrue);
-      final issues = result.unwrap();
-      expect(
-        issues.any(
-          (issue) => issue.contains('Group "') && issue.contains('invalid'),
-        ),
-        isTrue,
-      );
+      expect(result.isFailure, isTrue);
+      expect(result.error, isA<DataIntegrityError>());
+      final error = result.error as DataIntegrityError;
+      expect(error.details, contains('Group "'));
+      expect(error.details, contains('invalid'));
     });
 
     test('should pass for valid data', () {

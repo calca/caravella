@@ -1,10 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:org_app_caravella/data/model/expense_group.dart';
-import 'package:org_app_caravella/data/model/expense_details.dart';
-import 'package:org_app_caravella/data/model/expense_participant.dart';
-import 'package:org_app_caravella/data/model/expense_category.dart';
-import 'package:org_app_caravella/manager/group/group_form_controller.dart';
-import 'package:org_app_caravella/manager/group/data/group_form_state.dart';
+import 'package:io_caravella_egm/data/model/expense_group.dart';
+import 'package:io_caravella_egm/data/model/expense_details.dart';
+import 'package:io_caravella_egm/data/model/expense_participant.dart';
+import 'package:io_caravella_egm/data/model/expense_category.dart';
+import 'package:io_caravella_egm/manager/group/group_form_controller.dart';
+import 'package:io_caravella_egm/manager/group/data/group_form_state.dart';
+import 'package:io_caravella_egm/manager/group/group_edit_mode.dart';
 
 void main() {
   group('ExpenseGroup Save Preservation Tests', () {
@@ -55,7 +56,7 @@ void main() {
 
       // Create controller and load the group
       final state = GroupFormState();
-      final controller = GroupFormController(state);
+      final controller = GroupFormController(state, GroupEditMode.edit);
       controller.load(originalGroup);
 
       // Act: Modify the group title (simulating a user edit)
@@ -108,7 +109,7 @@ void main() {
 
         // Create controller and load the group
         final state = GroupFormState();
-        final controller = GroupFormController(state);
+        final controller = GroupFormController(state, GroupEditMode.edit);
         controller.load(originalGroup);
 
         // Act: Add a new participant and category
@@ -156,7 +157,7 @@ void main() {
 
       // Create controller and load the group
       final state = GroupFormState();
-      final controller = GroupFormController(state);
+      final controller = GroupFormController(state, GroupEditMode.edit);
       controller.load(originalGroup);
 
       // Act: Modify the group

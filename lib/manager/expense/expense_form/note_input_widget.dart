@@ -1,28 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'icon_leading_field.dart';
+import '../../../themes/form_theme.dart';
 
 class NoteInputWidget extends StatelessWidget {
   final TextEditingController controller;
   final TextStyle? textStyle;
+  final FocusNode? focusNode;
 
-  const NoteInputWidget({super.key, required this.controller, this.textStyle});
+  const NoteInputWidget({
+    super.key,
+    required this.controller,
+    this.textStyle,
+    this.focusNode,
+  });
 
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
     final field = TextFormField(
       controller: controller,
+      focusNode: focusNode,
       maxLines: null, // auto-grow illimitato
       minLines: 4, // minimo 4 righe visibili
-      style: textStyle ?? Theme.of(context).textTheme.bodySmall,
-      decoration: InputDecoration(
-        hintText: gloc.note_hint,
-        // rely on theme hintStyle
-        border: const OutlineInputBorder(),
-        isDense: true,
-        contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
-      ),
+      style: textStyle ?? FormTheme.getMultilineTextStyle(context),
+      decoration: FormTheme.getMultilineDecoration(hintText: gloc.note_hint),
     );
 
     return IconLeadingField(

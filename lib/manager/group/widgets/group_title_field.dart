@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../data/group_form_state.dart';
+import '../../../themes/form_theme.dart';
 
 class GroupTitleField extends StatefulWidget {
   const GroupTitleField({super.key});
@@ -60,12 +61,9 @@ class _GroupTitleFieldState extends State<GroupTitleField> {
     }
     return TextField(
       controller: _controller,
+      style: FormTheme.getFieldTextStyle(context),
       textInputAction: TextInputAction.next,
-      decoration: const InputDecoration(
-        hintText: 'Nome gruppo',
-        border: InputBorder.none,
-        isDense: true,
-      ),
+      decoration: FormTheme.getBorderlessDecoration(hintText: 'Nome gruppo'),
     );
   }
 }

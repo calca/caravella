@@ -3,10 +3,11 @@ library;
 import 'package:flutter/material.dart';
 import '../../data/model/expense_category.dart';
 import '../../data/model/expense_details.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../data/model/expense_participant.dart';
 import '../../data/model/expense_location.dart';
 import '../../state/locale_notifier.dart';
+import '../../widgets/material3_dialog.dart';
 import 'expense_form/amount_input_widget.dart';
 import 'expense_form/participant_selector_widget.dart';
 import 'expense_form/category_selector_widget.dart';
@@ -15,6 +16,7 @@ import 'expense_form/note_input_widget.dart';
 import 'expense_form/location_input_widget.dart';
 import 'expense_form/expense_form_actions_widget.dart';
 import 'expense_form/category_dialog.dart';
+import '../../themes/form_theme.dart';
 
 class ExpenseFormComponent extends StatefulWidget {
   // When true shows date, location and note fields (full edit mode). In edit mode (initialExpense != null) these are always shown.
@@ -58,7 +60,7 @@ class ExpenseFormComponent extends StatefulWidget {
 
 class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     with WidgetsBindingObserver {
-  static const double _rowSpacing = 16.0;
+  // static const double _rowSpacing = 16.0; // Replaced by FormTheme.fieldSpacing
   final _formKey = GlobalKey<FormState>();
   ExpenseCategory? _category;
   double? _amount;
@@ -75,60 +77,106 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
   bool _initializing = true; // traccia se siamo in fase di inizializzazione
   double _lastKeyboardHeight = 0; // Track keyboard height changes
 
+  // Keys for scrolling calculations
+  final GlobalKey _amountFieldKey = GlobalKey();
+  final GlobalKey _nameFieldKey = GlobalKey();
+  final GlobalKey _locationFieldKey = GlobalKey();
+  final GlobalKey _noteFieldKey = GlobalKey();
+  final FocusNode _locationFocus = FocusNode();
+  final FocusNode _noteFocus = FocusNode();
+
   // Stato per validazione in tempo reale
   bool _amountTouched = false;
   bool _paidByTouched = false;
   bool _categoryTouched = false;
+
+  // Stato per espansione del form (solo quando fullEdit è false inizialmente)
+  bool _isExpanded = false;
 
   // Getters per stato dei campi
   bool get _isAmountValid => _amount != null && _amount! > 0;
   bool get _isPaidByValid => _paidBy != null;
   bool get _isCategoryValid => _categories.isEmpty || _category != null;
 
+  // Getter per determinare se mostrare i campi estesi
+  bool get _shouldShowExtendedFields =>
+      widget.fullEdit || widget.initialExpense != null || _isExpanded;
+
   // Scroll controller callback per CategorySelectorWidget
   // Removed _scrollToCategoryEnd: no longer needed with new category selector bottom sheet.
 
   /// Scrolls to make the focused field visible when keyboard opens
   void _scrollToFocusedField() {
-    if (widget.scrollController == null || !widget.scrollController!.hasClients)
+    if (widget.scrollController == null ||
+        !widget.scrollController!.hasClients) {
       return;
+    }
 
-    // Use a short delay to ensure the keyboard animation has started
-    Future.delayed(const Duration(milliseconds: 100), () {
+    // Delay to allow layout & keyboard metrics update
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted ||
           widget.scrollController == null ||
-          !widget.scrollController!.hasClients)
+          !widget.scrollController!.hasClients) {
         return;
+      }
 
       final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-      if (keyboardHeight == 0) return;
+      final scrollController = widget.scrollController!;
+      final focusedKey = _amountFocus.hasFocus
+          ? _amountFieldKey
+          : _nameFocus.hasFocus
+          ? _nameFieldKey
+          : _locationFocus.hasFocus
+          ? _locationFieldKey
+          : _noteFocus.hasFocus
+          ? _noteFieldKey
+          : _focusedExtendedFieldKey();
+      if (focusedKey == null) {
+        return;
+      }
+      final ctx = focusedKey.currentContext;
+      if (ctx == null) {
+        return;
+      }
 
       try {
-        // Scroll to ensure focused field is visible above keyboard
-        final currentScrollOffset = widget.scrollController!.offset;
-        final maxScrollExtent =
-            widget.scrollController!.position.maxScrollExtent;
+        final renderBox = ctx.findRenderObject() as RenderBox?;
+        if (renderBox == null) {
+          return;
+        }
+        final fieldTop = renderBox.localToGlobal(Offset.zero).dy;
+        final fieldHeight = renderBox.size.height;
+        final fieldBottom = fieldTop + fieldHeight;
+        final screenHeight = MediaQuery.of(context).size.height;
+        final availableBottom = screenHeight - keyboardHeight - 12; // padding
+        double scrollDelta = 0;
 
-        // Calculate required scroll to bring focused field into view
-        // We want to position focused field in the upper part of visible area
-        const fieldBuffer =
-            120.0; // Extra space above focused field for better visibility
-        final targetScrollOffset = (currentScrollOffset + fieldBuffer).clamp(
-          0.0,
-          maxScrollExtent,
-        );
+        // If bottom obscured by keyboard -> scroll down just enough
+        if (keyboardHeight > 0 && fieldBottom > availableBottom) {
+          scrollDelta = fieldBottom - availableBottom + 8; // extra offset
+        }
+        // If top too high (negative) -> scroll up
+        const topMargin = 24.0; // desired margin from top when focusing
+        if (fieldTop < topMargin) {
+          scrollDelta = fieldTop - topMargin; // negative value scrolls up
+        }
 
-        // Only scroll if there's a meaningful change
-        if ((targetScrollOffset - currentScrollOffset).abs() > 10.0) {
-          widget.scrollController!.animateTo(
-            targetScrollOffset,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
+        if (scrollDelta.abs() > 4) {
+          // threshold
+          final target = (scrollController.offset + scrollDelta).clamp(
+            0.0,
+            scrollController.position.maxScrollExtent,
           );
+          if ((target - scrollController.offset).abs() > 2) {
+            scrollController.animateTo(
+              target,
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeInOut,
+            );
+          }
         }
       } catch (e) {
-        // Gracefully handle any scrolling errors
-        debugPrint('Error during scroll-to-focus: $e');
+        debugPrint('Scroll adjust error: $e');
       }
     });
   }
@@ -146,7 +194,10 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
 
         // If keyboard is opening and a field has focus, trigger scroll
         if (currentKeyboardHeight > 0 &&
-            (_amountFocus.hasFocus || _nameFocus.hasFocus)) {
+            (_amountFocus.hasFocus ||
+                _nameFocus.hasFocus ||
+                _locationFocus.hasFocus ||
+                _noteFocus.hasFocus)) {
           _scrollToFocusedField();
         }
       }
@@ -214,6 +265,20 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         });
       }
     });
+    _locationFocus.addListener(() {
+      if (_locationFocus.hasFocus) {
+        Future.delayed(const Duration(milliseconds: 200), () {
+          _scrollToFocusedField();
+        });
+      }
+    });
+    _noteFocus.addListener(() {
+      if (_noteFocus.hasFocus) {
+        Future.delayed(const Duration(milliseconds: 200), () {
+          _scrollToFocusedField();
+        });
+      }
+    });
     // Listener per aggiornare _amount in tempo reale (mantiene valore anche quando perde focus)
     _amountController.addListener(() {
       final parsed = _parseLocalizedAmount(_amountController.text);
@@ -245,25 +310,29 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
 
   double? _parseLocalizedAmount(String input) {
     if (input.isEmpty) return null;
-    final cleaned = input.replaceAll('.', '').replaceAll(',', '.');
-    return double.tryParse(cleaned);
+    // Since the new formatter normalizes to dot as decimal separator,
+    // we can directly parse the input
+    return double.tryParse(input);
   }
 
   Future<bool> _confirmDiscardChanges() async {
     final gloc = gen.AppLocalizations.of(context);
     return await showDialog<bool>(
           context: context,
-          builder: (ctx) => AlertDialog(
+          builder: (ctx) => Material3Dialog(
+            icon: Icon(
+              Icons.warning_amber_outlined,
+              color: Theme.of(context).colorScheme.error,
+              size: 24,
+            ),
             title: Text(gloc.discard_changes_title),
             content: Text(gloc.discard_changes_message),
             actions: [
-              TextButton(
-                onPressed: () => Navigator.of(ctx).pop(false),
-                child: Text(gloc.cancel),
-              ),
-              TextButton(
+              Material3DialogActions.cancel(ctx, gloc.cancel),
+              Material3DialogActions.destructive(
+                ctx,
+                gloc.discard,
                 onPressed: () => Navigator.of(ctx).pop(true),
-                child: Text(gloc.discard),
               ),
             ],
           ),
@@ -368,21 +437,56 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     );
   }
 
-  /// Intestazione con il titolo del gruppo (solo in fullEdit, se presente)
+  /// Intestazione con il titolo del gruppo (solo quando mostriamo i campi estesi, se presente)
   Widget _buildGroupHeader() {
-    if (!(widget.fullEdit && widget.groupTitle != null)) {
+    if (!(_shouldShowExtendedFields && widget.groupTitle != null)) {
       return const SizedBox.shrink();
     }
     final gloc = gen.AppLocalizations.of(context);
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12.0),
-      child: Text(
-        '${gloc.in_group_prefix} ${widget.groupTitle}',
-        style: Theme.of(
-          context,
-        ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
-        overflow: TextOverflow.ellipsis,
-        maxLines: 1,
+    final title = widget.groupTitle!.trim();
+    if (title.isEmpty) return const SizedBox.shrink();
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final prefixStyle = theme.textTheme.bodyMedium?.copyWith(
+      color: colorScheme.onSurfaceVariant,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0.15,
+    );
+    final titleStyle = theme.textTheme.titleLarge?.copyWith(
+      fontWeight: FontWeight.w700,
+      color: colorScheme.onSurface,
+      overflow: TextOverflow.ellipsis,
+    );
+    return Semantics(
+      container: true,
+      header: true,
+      label: '${gloc.in_group_prefix} $title',
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 16.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Tooltip(
+                message: title,
+                waitDuration: const Duration(milliseconds: 400),
+                child: RichText(
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: '${gloc.in_group_prefix} ',
+                        style: prefixStyle,
+                      ),
+                      TextSpan(text: title, style: titleStyle),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -396,53 +500,59 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     }
   }
 
-  Widget _spacer() => const SizedBox(height: _rowSpacing);
+  Widget _spacer() => const SizedBox(height: FormTheme.fieldSpacing);
 
   Widget _buildAmountField(gen.AppLocalizations gloc, TextStyle? style) =>
-      _buildFieldWithStatus(
-        AmountInputWidget(
-          controller: _amountController,
-          focusNode: _amountFocus,
-          categories: _categories,
-          label: gloc.amount,
-          currency: widget.currency,
-          validator: (v) {
-            final parsed = _parseLocalizedAmount(v ?? '');
-            if (parsed == null || parsed <= 0) return gloc.invalid_amount;
-            return null;
-          },
-          onSaved: (v) {},
-          onSubmitted: _saveExpense,
-          textStyle: style,
+      KeyedSubtree(
+        key: _amountFieldKey,
+        child: _buildFieldWithStatus(
+          AmountInputWidget(
+            controller: _amountController,
+            focusNode: _amountFocus,
+            categories: _categories,
+            label: gloc.amount,
+            currency: widget.currency,
+            validator: (v) {
+              final parsed = _parseLocalizedAmount(v ?? '');
+              if (parsed == null || parsed <= 0) return gloc.invalid_amount;
+              return null;
+            },
+            onSaved: (v) {},
+            onSubmitted: _saveExpense,
+            textStyle: style,
+          ),
+          _isAmountValid,
+          _amountTouched,
         ),
-        _isAmountValid,
-        _amountTouched,
       );
 
   Widget _buildNameField(gen.AppLocalizations gloc, TextStyle? style) =>
-      _buildFieldWithStatus(
-        AmountInputWidget(
-          controller: _nameController,
-          focusNode: _nameFocus,
-          label: gloc.expense_name,
-          leading: Icon(
-            Icons.description_outlined,
-            size: 22,
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
+      KeyedSubtree(
+        key: _nameFieldKey,
+        child: _buildFieldWithStatus(
+          AmountInputWidget(
+            controller: _nameController,
+            focusNode: _nameFocus,
+            label: gloc.expense_name,
+            leading: Icon(
+              Icons.description_outlined,
+              size: 22,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+            validator: (v) =>
+                v == null || v.trim().isEmpty ? gloc.enter_title : null,
+            onSaved: (v) {},
+            onSubmitted: () {},
+            isText: true,
+            textStyle: style,
           ),
-          validator: (v) =>
-              v == null || v.trim().isEmpty ? gloc.enter_title : null,
-          onSaved: (v) {},
-          onSubmitted: () {},
-          isText: true,
-          textStyle: style,
+          _nameController.text.trim().isNotEmpty,
+          _amountTouched,
         ),
-        _nameController.text.trim().isNotEmpty,
-        _amountTouched,
       );
 
   Widget _buildParticipantCategorySection(TextStyle? style) {
-    if (widget.fullEdit) {
+    if (_shouldShowExtendedFields) {
       return Column(
         children: [
           _buildFieldWithStatus(
@@ -507,6 +617,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
       ),
     );
   }
+
+  // (Expand button moved into ExpenseFormActionsWidget)
 
   void _onParticipantSelected(String selectedName) {
     setState(() {
@@ -610,11 +722,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
   }
 
   Widget _buildExtendedFields(String locale, TextStyle? style) {
-    final shouldShow =
-        widget.fullEdit ||
-        widget.initialExpense != null ||
-        (ModalRoute.of(context)?.settings.name != null);
-    if (!shouldShow) return const SizedBox.shrink();
+    if (!_shouldShowExtendedFields) return const SizedBox.shrink();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -633,29 +741,71 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
           textStyle: style,
         ),
         _spacer(),
-        LocationInputWidget(
-          initialLocation: _location,
-          textStyle: style,
-          onLocationChanged: (location) => setState(() {
-            _location = location;
-            if (!_initializing) {
-              _isDirty = true;
-            }
-          }),
+        KeyedSubtree(
+          key: _locationFieldKey,
+          child: LocationInputWidget(
+            initialLocation: _location,
+            textStyle: style,
+            onLocationChanged: (location) => setState(() {
+              _location = location;
+              if (!_initializing) {
+                _isDirty = true;
+              }
+            }),
+            externalFocusNode: _locationFocus,
+          ),
         ),
         _spacer(),
-        NoteInputWidget(controller: _noteController, textStyle: style),
+        KeyedSubtree(
+          key: _noteFieldKey,
+          child: NoteInputWidget(
+            controller: _noteController,
+            textStyle: style,
+            focusNode: _noteFocus,
+          ),
+        ),
       ],
     );
   }
 
+  GlobalKey? _focusedExtendedFieldKey() {
+    // Try to detect focus indirectly for location / note using primary focus
+    final currentFocus = FocusManager.instance.primaryFocus;
+    if (currentFocus == null) return null;
+    // Heuristic: match by widget type in context chain
+    if (_locationFieldKey.currentContext != null &&
+        _locationFieldKey.currentContext!.findRenderObject() != null &&
+        _contextContainsFocus(
+          _locationFieldKey.currentContext!,
+          currentFocus,
+        )) {
+      return _locationFieldKey;
+    }
+    if (_noteFieldKey.currentContext != null &&
+        _noteFieldKey.currentContext!.findRenderObject() != null &&
+        _contextContainsFocus(_noteFieldKey.currentContext!, currentFocus)) {
+      return _noteFieldKey;
+    }
+    return null;
+  }
+
+  bool _contextContainsFocus(BuildContext ctx, FocusNode focus) {
+    // Walk up the focus ancestors
+    FocusNode? node = focus;
+    while (node != null) {
+      if (node.context == ctx) return true;
+      node = node.parent;
+    }
+    return false;
+  }
+
   Widget _buildDivider(BuildContext context) {
-    if (widget.fullEdit) {
+    if (_shouldShowExtendedFields) {
       // In full edit mode: reserve vertical space but no visual divider
-      return const SizedBox(height: 24);
+      return const SizedBox(height: FormTheme.sectionSpacing);
     }
     return Divider(
-      height: 24,
+      height: FormTheme.sectionSpacing,
       thickness: 1,
       color: Theme.of(
         context,
@@ -663,29 +813,21 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     );
   }
 
-  Widget _buildActionsRow(gen.AppLocalizations gloc, TextStyle? style) => Row(
-    crossAxisAlignment: CrossAxisAlignment.center,
-    children: [
-      if (widget.groupTitle != null && !widget.fullEdit)
-        Expanded(
-          child: Text(
-            widget.groupTitle!,
-            overflow: TextOverflow.ellipsis,
-            style: Theme.of(
-              context,
-            ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
-          ),
-        )
-      else
-        const Spacer(),
+  Widget _buildActionsRow(gen.AppLocalizations gloc, TextStyle? style) =>
       ExpenseFormActionsWidget(
         onSave: _isFormValid() ? _saveExpense : null,
         isEdit: widget.initialExpense != null,
         onDelete: widget.initialExpense != null ? widget.onDelete : null,
         textStyle: style,
-      ),
-    ],
-  );
+        showExpandButton:
+            !(widget.fullEdit || widget.initialExpense != null || _isExpanded),
+        onExpand: () {
+          setState(() {
+            _isExpanded = true;
+            _isDirty = true;
+          });
+        },
+      );
 
   @override
   void dispose() {
@@ -695,6 +837,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     _nameController.dispose();
     _nameFocus.dispose();
     _noteController.dispose();
+    _locationFocus.dispose();
+    _noteFocus.dispose();
     super.dispose();
   }
 }

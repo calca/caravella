@@ -1,14 +1,17 @@
-import 'weekly_expense_chart.dart';
-import 'monthly_expense_chart.dart';
-import 'date_range_expense_chart.dart';
+import '../../../widgets/charts/weekly_expense_chart.dart';
+import '../../../widgets/charts/monthly_expense_chart.dart';
+import '../../../widgets/charts/date_range_expense_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:org_app_caravella/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../state/expense_group_notifier.dart';
 import '../../../data/model/expense_group.dart';
 import '../../../manager/details/widgets/expense_entry_sheet.dart';
+import '../../../data/expense_group_storage_v2.dart';
+import '../../../data/services/rating_service.dart';
+import '../../../widgets/app_toast.dart';
 import '../../../widgets/currency_display.dart';
-import '../../../manager/details/tabs/overview_stats_logic.dart';
+import '../../../manager/details/pages/tabs/usecase/daily_totals_utils.dart';
 
 class GroupCardContent extends StatelessWidget {
   // Design constants
@@ -73,15 +76,34 @@ class GroupCardContent extends StatelessWidget {
           return ExpenseEntrySheet(
             group: currentGroup,
             onExpenseSaved: (expense) async {
-              final sheetCtx = context; // Save bottom sheet context
+              final sheetCtx = context;
               final nav = Navigator.of(sheetCtx);
+              final gloc = gen.AppLocalizations.of(sheetCtx);
+
               final expenseWithId = expense.copyWith(
                 id: DateTime.now().millisecondsSinceEpoch.toString(),
               );
-              await groupNotifier.addExpense(expenseWithId);
-              onExpenseAdded();
+
+              // Persist using the new storage API
+              await ExpenseGroupStorageV2.addExpenseToGroup(
+                currentGroup.id,
+                expenseWithId,
+              );
+
+              // Refresh notifier state and notify UI
+              await groupNotifier.refreshGroup();
+              groupNotifier.notifyGroupUpdated(currentGroup.id);
+
+              // Check if we should prompt for rating
+              RatingService.checkAndPromptForRating();
+
               if (!sheetCtx.mounted) return;
-              nav.pop(); // Close the modal sheet
+              AppToast.show(
+                sheetCtx,
+                gloc.expense_added_success,
+                type: ToastType.success,
+              );
+              nav.pop();
             },
             onCategoryAdded: (newCategory) async {
               await groupNotifier.addCategory(newCategory);
@@ -172,7 +194,7 @@ class GroupCardContent extends StatelessWidget {
                 currentGroup.endDate != null) ...[
               Icon(
                 Icons.event_outlined,
-                size: 8,
+                size: 14,
                 color: theme.colorScheme.onSurfaceVariant,
               ),
               const SizedBox(width: 4),
@@ -190,13 +212,15 @@ class GroupCardContent extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.primaryContainer,
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: 0.05,
+                  ),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   localizations.pin,
                   style: theme.textTheme.labelSmall?.copyWith(
-                    color: theme.colorScheme.onPrimaryContainer,
+                    color: theme.colorScheme.onSurfaceVariant,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -220,7 +244,7 @@ class GroupCardContent extends StatelessWidget {
       children: [
         Semantics(
           label: localizations.accessibility_total_expenses(
-            totalExpenses.toStringAsFixed(2),
+            CurrencyDisplay.formatCurrencyText(totalExpenses, '€'),
           ),
           child: CurrencyDisplay(
             value: totalExpenses,
@@ -354,7 +378,7 @@ class GroupCardContent extends StatelessWidget {
     final duration = endDate.difference(startDate).inDays + 1; // inclusive
 
     // Usa il metodo ottimizzato per calcolare i totali giornalieri
-    final dailyTotals = _calculateOptimizedDailyTotals(
+    final dailyTotals = calculateDailyTotalsOptimized(
       currentGroup,
       startDate,
       duration,
@@ -370,24 +394,9 @@ class GroupCardContent extends StatelessWidget {
   }
 
   Widget _buildDefaultStatistics(ExpenseGroup currentGroup) {
-    final now = DateTime.now();
-    // Calcola il lunedì della settimana corrente
-    final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
-    // Usa calcoli ottimizzati per le statistiche settimanali
-    final dailyTotals = _calculateOptimizedDailyTotals(
-      currentGroup,
-      startOfWeek,
-      7,
-    );
-
-    // Spesa per ogni giorno del mese corrente
-    final daysInMonth = DateTime(now.year, now.month + 1, 0).day;
-    final startOfMonth = DateTime(now.year, now.month, 1);
-    final dailyMonthTotals = _calculateOptimizedDailyTotals(
-      currentGroup,
-      startOfMonth,
-      daysInMonth,
-    );
+    // Serie settimanale e mensile tramite helper condivisi
+    final dailyTotals = buildWeeklySeries(currentGroup);
+    final dailyMonthTotals = buildMonthlySeries(currentGroup);
 
     // Statistiche base
     return Column(
@@ -402,31 +411,7 @@ class GroupCardContent extends StatelessWidget {
     );
   }
 
-  // Metodo ottimizzato per calcolare i totali giornalieri
-  List<double> _calculateOptimizedDailyTotals(
-    ExpenseGroup group,
-    DateTime startDate,
-    int days,
-  ) {
-    final dailyTotals = List<double>.filled(days, 0.0);
-
-    for (final expense in group.expenses) {
-      final expenseDate = expense.date;
-      final dayDiff = expenseDate.difference(startDate).inDays;
-
-      if (dayDiff >= 0 && dayDiff < days) {
-        // Verifica che sia lo stesso giorno (non solo differenza in giorni)
-        final targetDay = startDate.add(Duration(days: dayDiff));
-        if (expenseDate.year == targetDay.year &&
-            expenseDate.month == targetDay.month &&
-            expenseDate.day == targetDay.day) {
-          dailyTotals[dayDiff] += expense.amount ?? 0;
-        }
-      }
-    }
-
-    return dailyTotals;
-  }
+  // (Funzione ottimizzata spostata in overview_stats_logic.dart per riuso)
 
   Widget _buildAddButton(BuildContext context, ExpenseGroup currentGroup) {
     final localizations = gen.AppLocalizations.of(context);

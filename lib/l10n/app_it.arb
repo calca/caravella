@@ -1,5 +1,17 @@
 {
   "@@locale": "it",
+  "developer_section_title": "Sviluppatore & Supporto",
+  "@developer_section_title": {"description": "Titolo sezione per link sviluppatore e supporto in DeveloperPage"},
+  "developer_section_desc": "Supporta lo sviluppatore o visualizza il profilo",
+  "@developer_section_desc": {"description": "Descrizione sezione per link sviluppatore e supporto in DeveloperPage"},
+  "repo_section_title": "Codice & Segnalazioni",
+  "@repo_section_title": {"description": "Titolo sezione per link repository e segnalazioni in DeveloperPage"},
+  "repo_section_desc": "Visualizza il codice sorgente o segnala un problema",
+  "@repo_section_desc": {"description": "Descrizione sezione per link repository e segnalazioni in DeveloperPage"},
+  "license_section_title": "Licenza",
+  "@license_section_title": {"description": "Titolo sezione per link licenza in DeveloperPage"},
+  "license_section_desc": "Visualizza la licenza open source",
+  "@license_section_desc": {"description": "Descrizione sezione per link licenza in DeveloperPage"},
   "weeklyChartBadge": "S",
   "monthlyChartBadge": "M",
   "weeklyExpensesChart": "Spese settimanali",
@@ -13,15 +25,26 @@
   "in_group_prefix": "in",
   "save_change_expense": "Salva modifiche",
   "group_total": "Totale",
+  "total_spent": "Totale speso",
+  "@total_spent": {"description": "Etichetta mostrata prima del totale speso nel gruppo"},
   "download_all_csv": "Scarica tutto (CSV)",
   "share_all_csv": "Condividi tutto (CSV)",
+  "download_all_ofx": "Scarica tutto (OFX)",
+  "share_all_ofx": "Condividi tutto (OFX)",
+  "share_label": "Condividi",
+  "share_text_label": "Condividi testo",
+  "share_image_label": "Condividi immagine",
+  "export_share": "Esporta e Condividi",
+  "contribution_percentages": "Percentuali",
+  "contribution_percentages_desc": "Quota del totale pagata da ciascun partecipante",
+  "export_options": "Opzioni di Esportazione",
   "good_morning": "Buongiorno",
   "good_afternoon": "Buon pomeriggio",
   "good_evening": "Buonasera",
   "your_groups": "I tuoi gruppi",
   "no_active_groups": "Nessun gruppo attivo",
-  "no_active_groups_subtitle": "Crea il primo gruppo di spese per iniziare",
-  "create_first_group": "Crea primo gruppo",
+  "no_active_groups_subtitle": "Crea un gruppo di spese",
+  "create_first_group": "Crea un gruppo",
   "new_expense_group": "Nuovo Gruppo di Spese",
   "tap_to_create": "Tocca per creare",
   "no_expense_label": "Nessuna spesa trovata",
@@ -56,6 +79,8 @@
   "expenses": "Spese",
   "participants_label": "Partecipanti",
   "participants": "Partecipanti",
+  "participant_count": "{count, plural, one {{count} partecipante} other {{count} partecipanti}}",
+  "@participant_count": {"description": "Conteggio partecipanti con plurale", "placeholders": {"count": {}}},
   "last_7_days": "7 giorni",
   "recent_activity": "Attività recente",
   "about": "Informazioni",
@@ -83,6 +108,8 @@
   "from_to": "{start} - {end}",
   "add_expense": "Nuova spesa",
   "edit_expense": "Modifica spesa",
+  "expand_form": "Espandi modulo",
+  "expand_form_tooltip": "Aggiungi data, luogo e note",
   "category": "Categoria",
   "amount": "Importo",
   "invalid_amount": "Importo non valido",
@@ -156,6 +183,15 @@
   "archived": "Archiviato",
   "archive": "Archivia",
   "unarchive": "Disarchivia",
+  "pin": "Fissa",
+  "unpin": "Rimuovi fissaggio",
+  "delete": "Elimina",
+  "undo": "ANNULLA",
+  "archived_with_undo": "Archiviato",
+  "unarchived_with_undo": "Disarchiviato",
+  "pinned_with_undo": "Fissato",
+  "unpinned_with_undo": "Fissaggio rimosso",
+  "deleted_with_undo": "Eliminato",
   "archive_confirm": "Vuoi archiviare",
   "unarchive_confirm": "Vuoi disarchiviare",
   "overview": "Panoramica",
@@ -192,10 +228,16 @@
   "data_refreshed": "Aggiornato",
   "refresh": "Aggiorna",
   "group_added_success": "Gruppo aggiunto",
+  "group_deleted_success": "Gruppo eliminato",
+  "@group_deleted_success": {"description": "Messaggio di conferma dopo l'eliminazione di un gruppo di spese"},
   "csv_select_directory_title": "Seleziona cartella per salvare CSV",
   "csv_saved_in": "CSV salvato in: {path}",
   "csv_save_cancelled": "Esportazione annullata",
   "csv_save_error": "Errore nel salvataggio del file CSV",
+  "ofx_select_directory_title": "Seleziona cartella per salvare OFX",
+  "ofx_saved_in": "OFX salvato in: {path}",
+  "ofx_save_cancelled": "Esportazione OFX annullata",
+  "ofx_save_error": "Errore nel salvataggio del file OFX",
   "csv_expense_name": "Descrizione",
   "csv_amount": "Importo",
   "csv_paid_by": "Pagato da",
@@ -220,6 +262,8 @@
   "settings_language_it": "Italiano",
   "settings_language_en": "Inglese",
   "settings_language_es": "Spagnolo",
+  "settings_language_pt": "Portoghese",
+  "settings_language_zh": "Cinese (Semplificato)",
   "settings_select_language": "Seleziona lingua",
   "settings_theme": "Tema",
   "settings_theme_desc": "Chiaro, scuro o sistema",
@@ -234,18 +278,25 @@
   "settings_app_version": "Versione dell'app",
   "settings_info_card": "Informazioni",
   "settings_info_card_desc": "Sviluppatore, Source code e Licenza",
-  "terms_github_title": "GitHub: calca",
-  "terms_github_desc": "Profilo dello sviluppatore su GitHub.",
+  "terms_github_title": "Sito web: calca",
+  "terms_github_desc": "Sito web personale dello sviluppatore.",
   "terms_repo_title": "Repository GitHub",
   "terms_repo_desc": "Codice sorgente dell’applicazione.",
   "terms_issue_title": "Segnala un problema",
   "terms_issue_desc": "Vai alla pagina delle issue su GitHub.",
   "terms_license_desc": "Visualizza la licenza open source.",
+  "support_developer_title": "Offrimi un caffè",
+  "support_developer_desc": "Sostieni lo sviluppo di questa app.",
   "data_title": "Backup & Ripristino",
   "data_backup_title": "Backup",
   "data_backup_desc": "Crea un file di backup delle tue spese.",
   "data_restore_title": "Ripristino",
   "data_restore_desc": "Importa un backup per ripristinare i dati.",
+  "auto_backup_title": "Backup automatico",
+  "auto_backup_desc": "Abilita il backup automatico del sistema operativo",
+  "settings_user_name_title": "Il tuo nome",
+  "settings_user_name_desc": "Nome o nickname da usare nell'app",
+  "settings_user_name_hint": "Inserisci il tuo nome",
   "google_drive_backup": "Backup Google Drive",
   "google_drive_backup_desc": "Salva il backup su Google Drive",
   "google_drive_restore": "Ripristino Google Drive", 
@@ -281,6 +332,8 @@
   ,"daily_average": "Media"
   ,"spent_today": "Oggi"
   ,"@daily_average": {"description": "Etichetta mostrata prima del valore di spesa media giornaliera"}
+  ,"monthly_average": "Mensile"
+  ,"@monthly_average": {"description": "Etichetta mostrata prima del valore della media mensile"}
   ,"@spent_today": {"description": "Etichetta mostrata prima dell'importo speso oggi"}
   ,"@overview_and_statistics": {"description": "Tooltip per bottone panoramica/statistiche"}
   ,"error_saving_group": "Errore durante il salvataggio: {error}"
@@ -289,11 +342,20 @@
   ,"@error_saving_group": {"placeholders": {"error": {}}}
   ,"already_exists": "esiste già"
   ,"@already_exists": {"description": "Mostrato dopo il nome di un'entità quando si tenta di inserire un duplicato"}
+  ,"cannot_delete_assigned_participant": "Impossibile eliminare il partecipante: è assegnato a una o più spese"
+  ,"@cannot_delete_assigned_participant": {"description": "Errore mostrato quando si prova a eliminare un partecipante che ha spese assegnate"}
+  ,"cannot_delete_assigned_category": "Impossibile eliminare la categoria: è assegnata a una o più spese"
+  ,"@cannot_delete_assigned_category": {"description": "Errore mostrato quando si prova a eliminare una categoria che è assegnata a spese"}
   ,"status_all": "Tutti"
   ,"@status_all": {"description": "Etichetta filtro: tutti i gruppi"}
   ,"status_active": "Attivi"
   ,"@status_active": {"description": "Etichetta filtro: gruppi attivi"}
   ,"status_archived": "Archiviati"
+  ,"no_archived_groups": "Nessun gruppo archiviato"
+  ,"@no_archived_groups": {"description": "Titolo stato vuoto per i gruppi archiviati"}
+  ,"no_archived_groups_subtitle": "Non hai ancora archiviato nessun gruppo"
+  ,"all_groups_archived_info": "Tutti i tuoi gruppi sono archiviati. Puoi recuperarli dalla sezione Archivio o crearne di nuovi."
+  ,"@no_archived_groups_subtitle": {"description": "Sottotitolo stato vuoto per i gruppi archiviati"}
   ,"@status_archived": {"description": "Etichetta filtro: gruppi archiviati"}
   ,"filter_status_tooltip": "Filtra gruppi"
   ,"@filter_status_tooltip": {"description": "Tooltip per la riga dei pulsanti filtro stato"}
@@ -506,4 +568,58 @@
   ,"currency_ZMW": "Kwacha dello Zambia"
   ,"currency_ZWL": "Dollaro zimbabwiano"
   ,"search_currency": "Cerca valuta..."
+  ,"activity": "Attività"
+  ,"@activity": {"description": "Titolo sezione attività elenco spese"}
+  ,"search_expenses_hint": "Cerca per nome o nota..."
+  ,"@search_expenses_hint": {"description": "Placeholder ricerca spese per nome o nota"}
+  ,"clear_filters": "Pulisci"
+  ,"@clear_filters": {"description": "Pulsante per pulire i filtri delle spese"}
+  ,"show_filters": "Mostra filtri"
+  ,"@show_filters": {"description": "Tooltip/etichetta per mostrare i filtri"}
+  ,"hide_filters": "Nascondi filtri"
+  ,"@hide_filters": {"description": "Tooltip/etichetta per nascondere i filtri"}
+  ,"all_categories": "Tutte"
+  ,"@all_categories": {"description": "Chip per tutte le categorie"}
+  ,"all_participants": "Tutti"
+  ,"@all_participants": {"description": "Chip per tutti i partecipanti"}
+  ,"no_expenses_with_filters": "Nessuna spesa trovata con i filtri selezionati"
+  ,"@no_expenses_with_filters": {"description": "Stato vuoto quando filtri attivi nessun risultato"}
+  ,"no_expenses_yet": "Nessuna spesa ancora aggiunta"
+  ,"@no_expenses_yet": {"description": "Stato vuoto iniziale senza spese"}
+  ,"empty_expenses_title": "Pronti per iniziare?"
+  ,"@empty_expenses_title": {"description": "Titolo per stato vuoto spese"}
+  ,"empty_expenses_subtitle": "Aggiungi la prima spesa per iniziare con questo gruppo!"
+  ,"@empty_expenses_subtitle": {"description": "Sottotitolo per stato vuoto spese"}
+  ,"add_first_expense_button": "Aggiungi Prima Spesa"
+  ,"@add_first_expense_button": {"description": "Testo pulsante per aggiungere prima spesa"}
+  ,"show_search": "Mostra barra di ricerca"
+  ,"@show_search": {"description": "Tooltip per mostrare la barra di ricerca gruppi"}
+  ,"hide_search": "Nascondi barra di ricerca"
+  ,"@hide_search": {"description": "Tooltip per nascondere la barra di ricerca gruppi"}
+  ,"expense_groups_title": "Gruppi di spese"
+  ,"@expense_groups_title": {"description": "Titolo principale della sezione elenco gruppi di spese/viaggi nella cronologia"}
+  ,"expense_groups_desc": "Gestisci i tuoi gruppi di spese"
+  ,"@expense_groups_desc": {"description": "Sottotitolo breve che descrive lo scopo della sezione gruppi di spese (es. aggiungi, modifica, visualizza viaggi)"}
+  ,"whats_new_title": "Novità"
+  ,"@whats_new_title": {"description": "Titolo della pagina che mostra il changelog"}
+  ,"whats_new_desc": "Scopri le ultime novità e aggiornamenti"
+  ,"@whats_new_desc": {"description": "Sottotitolo della pagina novità"}
+  ,"whats_new_subtitle": "Ultimi Aggiornamenti"
+  ,"@whats_new_subtitle": {"description": "Sottotitolo nella card header della pagina novità"}
+  ,"whats_new_latest": "Resta aggiornato con i miglioramenti più recenti"
+  ,"@whats_new_latest": {"description": "Testo di supporto che spiega che la lista contiene gli ultimi aggiornamenti"}
+  ,"average_per_person": "Speso medio per persona"
+  ,"@average_per_person": {"description": "Etichetta mostrata prima della media spesa per persona nella tab Partecipanti"}
+  ,"more": "altro"
+  ,"@more": {"description": "Etichetta inline per espandere e mostrare tutti gli elementi"}
+  ,"less": "meno"
+  ,"@less": {"description": "Etichetta inline per comprimere e mostrare meno elementi"}
+  ,"debt_prefix_to": "a "
+  ,"@debt_prefix_to": {"description": "Prefisso breve mostrato prima del destinatario nella riga di debito/pareggio (es. 'a Alice 10€')"}
+  ,"send_reminder": "Invia promemoria"
+  ,"@send_reminder": {"description": "Etichetta del pulsante per inviare un promemoria di pagamento a un partecipante"}
+  ,"reminder_message_single": "Ciao {participantName}! 👋\n\nVorrei ricordarti che devi {amount} a {creditorName} per il gruppo \"{groupName}\".\n\nGrazie! 😊"
+  ,"@reminder_message_single": {"description": "Messaggio di promemoria quando un partecipante deve denaro a una sola persona", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
+  ,"reminder_message_multiple": "Ciao {participantName}! 👋\n\nVorrei ricordarti i tuoi pagamenti per il gruppo \"{groupName}\":\n\n{debtsList}\n\nGrazie! 😊"
+  ,"@reminder_message_multiple": {"description": "Messaggio di promemoria quando un partecipante deve denaro a più persone", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
 }
