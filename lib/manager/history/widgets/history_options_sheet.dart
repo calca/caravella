@@ -35,7 +35,7 @@ class HistoryOptionsSheet extends StatelessWidget {
         children: [
           ListTile(
             leading: Icon(
-              trip.pinned ? Icons.push_pin : Icons.push_pin_outlined,
+              trip.pinned ? Icons.push_pin_outlined : Icons.push_pin_outlined,
               color: Theme.of(context).colorScheme.onTertiaryContainer,
             ),
             title: Text(trip.pinned ? gloc.unpin : gloc.pin),
@@ -43,7 +43,7 @@ class HistoryOptionsSheet extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(
-              trip.archived ? Icons.unarchive_rounded : Icons.archive_rounded,
+              trip.archived ? Icons.unarchive_outlined : Icons.archive_outlined,
               color: trip.archived
                   ? Theme.of(context).colorScheme.onPrimaryContainer
                   : Theme.of(context).colorScheme.onSecondaryContainer,
@@ -53,7 +53,7 @@ class HistoryOptionsSheet extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(
-              Icons.delete_rounded,
+              Icons.delete_outline,
               color: Theme.of(context).colorScheme.error,
             ),
             title: Text(
