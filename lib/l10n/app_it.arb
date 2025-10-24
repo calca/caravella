@@ -593,4 +593,16 @@
   ,"@reminder_message_single": {"description": "Messaggio di promemoria quando un partecipante deve denaro a una sola persona", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
   ,"reminder_message_multiple": "Ciao {participantName}! 👋\n\nVorrei ricordarti i tuoi pagamenti per il gruppo \"{groupName}\":\n\n{debtsList}\n\nGrazie! 😊"
   ,"@reminder_message_multiple": {"description": "Messaggio di promemoria quando un partecipante deve denaro a più persone", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
+  ,"notification_enabled": "Notifica persistente"
+  ,"@notification_enabled": {"description": "Etichetta per l'impostazione della notifica persistente nel gruppo"}
+  ,"notification_enabled_desc": "Mostra una notifica persistente con spese giornaliere e totale"
+  ,"@notification_enabled_desc": {"description": "Descrizione dell'impostazione della notifica persistente"}
+  ,"notification_daily_spent": "Speso giornaliero: {amount} {currency}"
+  ,"@notification_daily_spent": {"description": "Testo nella notifica che mostra la spesa giornaliera media", "placeholders": {"amount": {}, "currency": {}}}
+  ,"notification_total_spent": "Totale: {amount} {currency}"
+  ,"@notification_total_spent": {"description": "Testo nella notifica che mostra la spesa totale", "placeholders": {"amount": {}, "currency": {}}}
+  ,"notification_add_expense": "Aggiungi spesa"
+  ,"@notification_add_expense": {"description": "Etichetta del pulsante nella notifica per aggiungere una nuova spesa"}
+  ,"notification_close": "Chiudi"
+  ,"@notification_close": {"description": "Etichetta del pulsante nella notifica per chiudere la notifica"}
 }

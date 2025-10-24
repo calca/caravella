@@ -606,4 +606,16 @@
   ,"@reminder_message_single": {"description": "Reminder message when a participant owes money to a single person", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
   ,"reminder_message_multiple": "Hi {participantName}! 👋\n\nJust a friendly reminder of your payments for the group \"{groupName}\":\n\n{debtsList}\n\nThank you! 😊"
   ,"@reminder_message_multiple": {"description": "Reminder message when a participant owes money to multiple people", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
+  ,"notification_enabled": "Persistent notification"
+  ,"@notification_enabled": {"description": "Label for the persistent notification setting in the group"}
+  ,"notification_enabled_desc": "Show a persistent notification with daily and total expenses"
+  ,"@notification_enabled_desc": {"description": "Description of the persistent notification setting"}
+  ,"notification_daily_spent": "Daily spent: {amount} {currency}"
+  ,"@notification_daily_spent": {"description": "Text in the notification showing the daily average expense", "placeholders": {"amount": {}, "currency": {}}}
+  ,"notification_total_spent": "Total: {amount} {currency}"
+  ,"@notification_total_spent": {"description": "Text in the notification showing the total expense", "placeholders": {"amount": {}, "currency": {}}}
+  ,"notification_add_expense": "Add expense"
+  ,"@notification_add_expense": {"description": "Button label in the notification to add a new expense"}
+  ,"notification_close": "Close"
+  ,"@notification_close": {"description": "Button label in the notification to close the notification"}
 }

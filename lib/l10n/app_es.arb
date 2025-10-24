@@ -610,4 +610,16 @@
   ,"@settings_user_name_desc": {"description": "Descripción de la configuración del nombre de usuario"}
   ,"settings_user_name_hint": "Ingresa tu nombre"
   ,"@settings_user_name_hint": {"description": "Placeholder del campo de nombre de usuario"}
+  ,"notification_enabled": "Notificación persistente"
+  ,"@notification_enabled": {"description": "Etiqueta para la configuración de notificación persistente en el grupo"}
+  ,"notification_enabled_desc": "Mostrar una notificación persistente con gastos diarios y totales"
+  ,"@notification_enabled_desc": {"description": "Descripción de la configuración de notificación persistente"}
+  ,"notification_daily_spent": "Gasto diario: {amount} {currency}"
+  ,"@notification_daily_spent": {"description": "Texto en la notificación que muestra el gasto diario promedio", "placeholders": {"amount": {}, "currency": {}}}
+  ,"notification_total_spent": "Total: {amount} {currency}"
+  ,"@notification_total_spent": {"description": "Texto en la notificación que muestra el gasto total", "placeholders": {"amount": {}, "currency": {}}}
+  ,"notification_add_expense": "Agregar gasto"
+  ,"@notification_add_expense": {"description": "Etiqueta del botón en la notificación para agregar un nuevo gasto"}
+  ,"notification_close": "Cerrar"
+  ,"@notification_close": {"description": "Etiqueta del botón en la notificación para cerrar la notificación"}
 }
