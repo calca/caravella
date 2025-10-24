@@ -28,10 +28,13 @@ class HorizontalGroupsList extends StatefulWidget {
   State<HorizontalGroupsList> createState() => _HorizontalGroupsListState();
 }
 
-class _HorizontalGroupsListState extends State<HorizontalGroupsList> {
+class _HorizontalGroupsListState extends State<HorizontalGroupsList>
+    with SingleTickerProviderStateMixin {
   late PageController _pageController;
   double _currentPage = 0.0;
   late List<ExpenseGroup> _localGroups;
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
 
   void _onPageChanged() {
     if (mounted) {
@@ -47,6 +50,17 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList> {
     _localGroups = List.from(widget.groups);
     _pageController = PageController(viewportFraction: 0.85);
     _pageController.addListener(_onPageChanged);
+
+    // Setup fade-in animation for smooth loading
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeIn,
+    );
+    _fadeController.forward();
   }
 
   @override
@@ -93,6 +107,7 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList> {
   void dispose() {
     _pageController.removeListener(_onPageChanged);
     _pageController.dispose();
+    _fadeController.dispose();
     super.dispose();
   }
 
@@ -101,11 +116,13 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList> {
     // Total items include all groups plus the new group card
     final totalItems = _localGroups.length + 1;
 
-    return Column(
-      children: [
-        // Main PageView slider
-        Expanded(
-          child: PageView.builder(
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: Column(
+        children: [
+          // Main PageView slider
+          Expanded(
+            child: PageView.builder(
             itemCount: totalItems,
             padEnds: false,
             controller: _pageController,
@@ -166,6 +183,7 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList> {
           ),
         ),
       ],
+    ),
     );
   }
 }
