@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Smooth skeleton loader animation for carousel during cold start with shimmer effect
 - Fade-in animation for carousel cards when data loads
 - In-app store rating feature with smart triggers (after 10 expenses, then monthly)
+- **Hive local database backend as an alternative to JSON file storage for improved performance**
+- Build-time variable `STORAGE_BACKEND` to select between 'file' (JSON) and 'hive' storage backends
+- Comprehensive Hive type adapters for all data models
+- Documentation for storage backend configuration and migration
 
 ### Changed
 - Improved app metadata for distribution platforms
@@ -21,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored PreferencesService architecture with singleton pattern and separated preference categories
 - Improved PreferencesService API with synchronous read operations where possible
 - Organized preference keys and defaults into centralized abstract classes
+- **ExpenseGroupStorageV2 now supports runtime selection of storage backend based on build configuration**
 
 ### Fixed
 
