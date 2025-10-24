@@ -15,6 +15,7 @@ import '../../../data/model/expense_details.dart';
 import '../../../data/model/expense_group.dart';
 import '../../../state/expense_group_notifier.dart';
 import '../../../data/expense_group_storage_v2.dart';
+import '../../../data/services/notification_service.dart';
 import '../../../widgets/material3_dialog.dart';
 // Removed legacy localization bridge imports (migration in progress)
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
@@ -361,6 +362,31 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           await Future.delayed(const Duration(milliseconds: 200));
           if (!mounted) return;
           _showExportOptionsSheet();
+        },
+        onNotificationToggle: () async {
+          if (_trip == null) return;
+          final loc = gen.AppLocalizations.of(context);
+          final notificationService = NotificationService();
+          
+          // Toggle the notification setting
+          final newValue = !_trip!.notificationEnabled;
+          final updatedGroup = _trip!.copyWith(notificationEnabled: newValue);
+          
+          // Update in storage
+          await ExpenseGroupStorageV2.updateGroupMetadata(updatedGroup);
+          
+          // Handle notification based on new value
+          if (newValue) {
+            // Request permissions and show notification
+            await notificationService.requestPermissions();
+            await notificationService.showGroupNotification(updatedGroup, loc);
+          } else {
+            // Cancel notification
+            await notificationService.cancelGroupNotification();
+          }
+          
+          // Refresh the group
+          await _refreshGroup();
         },
         onDelete: () async {
           final nav = Navigator.of(sheetCtx);
