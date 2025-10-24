@@ -394,6 +394,43 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                                 ),
                               ],
                             ),
+                            const SizedBox(height: 24),
+                            SectionFlat(
+                              title: '',
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SectionHeader(
+                                      title: gloc.notification_enabled,
+                                      description: gloc.notification_enabled_desc,
+                                      padding: EdgeInsets.zero,
+                                      spacing: 4,
+                                    ),
+                                    const SizedBox(height: 12),
+                                    Selector<GroupFormState, bool>(
+                                      selector: (context, s) =>
+                                          s.notificationEnabled,
+                                      builder: (context, enabled, child) =>
+                                        SwitchListTile(
+                                          value: enabled,
+                                          onChanged: (val) {
+                                            context
+                                                .read<GroupFormState>()
+                                                .setNotificationEnabled(val);
+                                          },
+                                          title: Text(
+                                            enabled
+                                              ? gloc.accessibility_currently_enabled
+                                              : gloc.accessibility_currently_disabled,
+                                          ),
+                                          contentPadding: EdgeInsets.zero,
+                                        ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                             const SizedBox(height: 32),
                             const SaveButtonBar(),
                             const SizedBox(height: 80),
