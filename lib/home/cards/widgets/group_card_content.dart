@@ -8,6 +8,7 @@ import '../../../state/expense_group_notifier.dart';
 import '../../../data/model/expense_group.dart';
 import '../../../manager/details/widgets/expense_entry_sheet.dart';
 import '../../../data/expense_group_storage_v2.dart';
+import '../../../data/services/rating_service.dart';
 import '../../../widgets/app_toast.dart';
 import '../../../widgets/currency_display.dart';
 import '../../../manager/details/pages/tabs/usecase/daily_totals_utils.dart';
@@ -92,6 +93,9 @@ class GroupCardContent extends StatelessWidget {
               // Refresh notifier state and notify UI
               await groupNotifier.refreshGroup();
               groupNotifier.notifyGroupUpdated(currentGroup.id);
+
+              // Check if we should prompt for rating
+              RatingService.checkAndPromptForRating();
 
               if (!sheetCtx.mounted) return;
               AppToast.show(
@@ -247,7 +251,7 @@ class GroupCardContent extends StatelessWidget {
       children: [
         Semantics(
           label: localizations.accessibility_total_expenses(
-            totalExpenses.toStringAsFixed(2),
+            CurrencyDisplay.formatCurrencyText(totalExpenses, '€'),
           ),
           child: CurrencyDisplay(
             value: totalExpenses,

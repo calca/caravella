@@ -40,7 +40,8 @@ class BaseCard extends StatelessWidget {
     final effectiveBorderRadius = borderRadius ?? defaultBorderRadius;
 
     // Check if there's a background image
-    final hasBackgroundImage = backgroundImage != null &&
+    final hasBackgroundImage =
+        backgroundImage != null &&
         backgroundImage!.isNotEmpty &&
         File(backgroundImage!).existsSync();
 

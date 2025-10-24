@@ -15,7 +15,7 @@ class AutoBackupNotifier extends ChangeNotifier {
   Future<void> _load() async {
     final prefs = await SharedPreferences.getInstance();
     _enabled = prefs.getBool(_key) ?? false;
-    
+
     // Sync with platform-specific backup state
     try {
       final platformEnabled = await BackupService.isBackupEnabled();
@@ -27,7 +27,7 @@ class AutoBackupNotifier extends ChangeNotifier {
     } catch (e) {
       // If platform check fails, keep local preference
     }
-    
+
     notifyListeners();
   }
 
@@ -35,12 +35,12 @@ class AutoBackupNotifier extends ChangeNotifier {
     try {
       // First try to set the platform backup state
       final success = await BackupService.setBackupEnabled(value);
-      
+
       if (success) {
         _enabled = value;
         final prefs = await SharedPreferences.getInstance();
         await prefs.setBool(_key, value);
-        
+
         // Request immediate backup if enabling on Android
         if (value) {
           await BackupService.requestBackup();
@@ -49,7 +49,7 @@ class AutoBackupNotifier extends ChangeNotifier {
     } catch (e) {
       // If platform setting fails, don't update local state
     }
-    
+
     notifyListeners();
   }
 }

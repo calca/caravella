@@ -101,7 +101,7 @@ class SettingsPage extends StatelessWidget {
       builder: (context, userNameNotifier, child) {
         final textTheme = Theme.of(context).textTheme;
         final colorScheme = Theme.of(context).colorScheme;
-        
+
         return SettingsCard(
           context: context,
           semanticsButton: true,
@@ -110,12 +110,15 @@ class SettingsPage extends StatelessWidget {
           color: colorScheme.surface,
           child: ListTile(
             leading: const Icon(Icons.person_outline),
-            title: Text(loc.settings_user_name_title, style: textTheme.titleMedium),
+            title: Text(
+              loc.settings_user_name_title,
+              style: textTheme.titleMedium,
+            ),
             subtitle: Text(
-              userNameNotifier.hasName 
-                ? userNameNotifier.name 
-                : loc.settings_user_name_desc,
-              style: textTheme.bodySmall
+              userNameNotifier.hasName
+                  ? userNameNotifier.name
+                  : loc.settings_user_name_desc,
+              style: textTheme.bodySmall,
             ),
             trailing: const Icon(Icons.edit),
             onTap: () => _showNameDialog(context, loc, userNameNotifier),
@@ -417,9 +420,14 @@ void _showThemePicker(BuildContext context, gen.AppLocalizations loc) {
     },
   );
 }
-void _showNameDialog(BuildContext context, gen.AppLocalizations loc, UserNameNotifier userNameNotifier) {
+
+void _showNameDialog(
+  BuildContext context,
+  gen.AppLocalizations loc,
+  UserNameNotifier userNameNotifier,
+) {
   final controller = TextEditingController(text: userNameNotifier.name);
-  
+
   showDialog(
     context: context,
     builder: (context) {

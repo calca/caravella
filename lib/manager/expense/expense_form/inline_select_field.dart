@@ -26,12 +26,13 @@ class InlineSelectField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final effectiveStyle = (textStyle ?? FormTheme.getSelectTextStyle(context))?.copyWith(
-      color: enabled
-          ? theme.colorScheme.onSurface
-          : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
-      fontWeight: FontWeight.w400,
-    );
+    final effectiveStyle = (textStyle ?? FormTheme.getSelectTextStyle(context))
+        ?.copyWith(
+          color: enabled
+              ? theme.colorScheme.onSurface
+              : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+          fontWeight: FontWeight.w400,
+        );
 
     final child = Padding(
       padding: EdgeInsets.symmetric(vertical: FormTheme.fieldVerticalPadding),
