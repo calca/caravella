@@ -37,7 +37,7 @@ import UIKit
   private func setBackupExcluded(excluded: Bool, result: @escaping FlutterResult) {
       do {
           let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
-          let documentsURL = URL(fileURLWithPath: documentsPath)
+          var documentsURL = URL(fileURLWithPath: documentsPath)
           
           var resourceValues = URLResourceValues()
           resourceValues.isExcludedFromBackup = excluded

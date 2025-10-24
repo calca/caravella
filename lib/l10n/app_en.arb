@@ -181,6 +181,24 @@
   "archived": "Archived",
   "archive": "Archive",
   "unarchive": "Unarchive",
+  "pin": "Pin",
+  "@pin": {"description": "Action to pin a group to the top"},
+  "unpin": "Unpin",
+  "@unpin": {"description": "Action to unpin a group"},
+  "delete": "Delete",
+  "@delete": {"description": "Action to delete a group"},
+  "undo": "UNDO",
+  "@undo": {"description": "Undo action label for SnackBar"},
+  "archived_with_undo": "Archived",
+  "@archived_with_undo": {"description": "Snackbar message when group is archived"},
+  "unarchived_with_undo": "Unarchived",
+  "@unarchived_with_undo": {"description": "Snackbar message when group is unarchived"},
+  "pinned_with_undo": "Pinned",
+  "@pinned_with_undo": {"description": "Snackbar message when group is pinned"},
+  "unpinned_with_undo": "Unpinned",
+  "@unpinned_with_undo": {"description": "Snackbar message when group is unpinned"},
+  "deleted_with_undo": "Deleted",
+  "@deleted_with_undo": {"description": "Snackbar message when group is deleted"},
   "archive_confirm": "Do you want to archive",
   "unarchive_confirm": "Do you want to unarchive",
   "overview": "Overview",
@@ -225,6 +243,8 @@
   "data_refreshed": "Updated",
   "refresh": "Refresh",
   "group_added_success": "Group added",
+  "group_deleted_success": "Group deleted",
+  "@group_deleted_success": {"description": "Toast shown after deleting an expense group"},
   "csv_select_directory_title": "Select folder to save CSV",
   "csv_saved_in": "CSV saved in: {path}",
   "csv_save_cancelled": "Export cancelled",
@@ -275,8 +295,8 @@
   "settings_app_version": "App version",
   "settings_info_card": "Information",
   "settings_info_card_desc": "Developer, Source code and License",
-  "terms_github_title": "GitHub: calca",
-  "terms_github_desc": "Developer profile on GitHub.",
+  "terms_github_title": "Website: calca",
+  "terms_github_desc": "Developer's personal website.",
   "terms_repo_title": "GitHub Repository",
   "terms_repo_desc": "Application source code.",
   "terms_issue_title": "Report a problem",
@@ -290,7 +310,10 @@
   "data_restore_title": "Restore",
   "data_restore_desc": "Import a backup to restore your data.",
   "auto_backup_title": "Automatic backup",
-  "auto_backup_desc": "Enable operating system automatic backup"
+  "auto_backup_desc": "Enable operating system automatic backup",
+  "settings_user_name_title": "Your name",
+  "settings_user_name_desc": "Name or nickname to use in the app",
+  "settings_user_name_hint": "Enter your name"
   ,"info_tab": "Info"
   ,"select_paid_by": "Select payer"
   ,"select_category": "Select a category"
@@ -585,4 +608,22 @@
   ,"@whats_new_title": {"description": "Title of the page showing the changelog"}
   ,"whats_new_desc": "Discover the latest features and updates"
   ,"@whats_new_desc": {"description": "Subtitle of the what's new page"}
+  ,"whats_new_subtitle": "Latest highlights"
+  ,"@whats_new_subtitle": {"description": "Card headline describing the what's new section"}
+  ,"whats_new_latest": "Stay up to date with recent improvements"
+  ,"@whats_new_latest": {"description": "Support text explaining that the content lists the most recent updates"}
+  ,"average_per_person": "Average per person"
+  ,"@average_per_person": {"description": "Label shown before the computed average spent per person in the Participants tab"}
+  ,"more": "more"
+  ,"@more": {"description": "Inline toggle label to expand and show all items"}
+  ,"less": "less"
+  ,"@less": {"description": "Inline toggle label to collapse and show fewer items"}
+  ,"debt_prefix_to": "to "
+  ,"@debt_prefix_to": {"description": "Short prefix shown before the recipient in a debt/settlement line (e.g., 'to Alice 10€')"}
+  ,"send_reminder": "Send reminder"
+  ,"@send_reminder": {"description": "Button label to send a payment reminder to a participant"}
+  ,"reminder_message_single": "Hi {participantName}! 👋\n\nJust a friendly reminder that you owe {amount} to {creditorName} for the group \"{groupName}\".\n\nThank you! 😊"
+  ,"@reminder_message_single": {"description": "Reminder message when a participant owes money to a single person", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
+  ,"reminder_message_multiple": "Hi {participantName}! 👋\n\nJust a friendly reminder of your payments for the group \"{groupName}\":\n\n{debtsList}\n\nThank you! 😊"
+  ,"@reminder_message_multiple": {"description": "Reminder message when a participant owes money to multiple people", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
 }

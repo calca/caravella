@@ -6,6 +6,7 @@ import '../../state/locale_notifier.dart';
 import '../../state/theme_mode_notifier.dart';
 import '../../state/dynamic_color_notifier.dart';
 import '../flag_secure_notifier.dart';
+import '../user_name_notifier.dart';
 
 import '../flag_secure_android.dart';
 import 'package:provider/provider.dart';
@@ -25,12 +26,8 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<FlagSecureNotifier>(
-          create: (_) => FlagSecureNotifier(),
-        ),
-      ],
+    return ChangeNotifierProvider<FlagSecureNotifier>(
+      create: (_) => FlagSecureNotifier(),
       child: Scaffold(
         appBar: const CaravellaAppBar(),
         body: ListView(
@@ -61,6 +58,8 @@ class SettingsPage extends StatelessWidget {
       title: loc.settings_general,
       description: loc.settings_general_desc,
       children: [
+        _buildUserNameRow(context, loc),
+        const SizedBox(height: 8),
         _buildLanguageRow(context, loc, locale),
         const SizedBox(height: 8),
         _buildThemeRow(context, loc),
@@ -100,6 +99,38 @@ class SettingsPage extends StatelessWidget {
   }
 
   // ROW BUILDERS -----------------------------------------------------------
+  Widget _buildUserNameRow(BuildContext context, gen.AppLocalizations loc) {
+    return Consumer<UserNameNotifier>(
+      builder: (context, userNameNotifier, child) {
+        final textTheme = Theme.of(context).textTheme;
+        final colorScheme = Theme.of(context).colorScheme;
+
+        return SettingsCard(
+          context: context,
+          semanticsButton: true,
+          semanticsLabel: loc.settings_user_name_title,
+          semanticsHint: 'Double tap to enter your name',
+          color: colorScheme.surface,
+          child: ListTile(
+            leading: const Icon(Icons.person_outline),
+            title: Text(
+              loc.settings_user_name_title,
+              style: textTheme.titleMedium,
+            ),
+            subtitle: Text(
+              userNameNotifier.hasName
+                  ? userNameNotifier.name
+                  : loc.settings_user_name_desc,
+              style: textTheme.bodySmall,
+            ),
+            trailing: const Icon(Icons.edit),
+            onTap: () => _showNameDialog(context, loc, userNameNotifier),
+          ),
+        );
+      },
+    );
+  }
+
   Widget _buildLanguageRow(
     BuildContext context,
     gen.AppLocalizations loc,
@@ -431,6 +462,46 @@ void _showThemePicker(BuildContext context, gen.AppLocalizations loc) {
             }),
           ],
         ),
+      );
+    },
+  );
+}
+
+void _showNameDialog(
+  BuildContext context,
+  gen.AppLocalizations loc,
+  UserNameNotifier userNameNotifier,
+) {
+  final controller = TextEditingController(text: userNameNotifier.name);
+
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text(loc.settings_user_name_title),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          decoration: InputDecoration(
+            hintText: loc.settings_user_name_hint,
+            border: const OutlineInputBorder(),
+          ),
+          textCapitalization: TextCapitalization.words,
+          maxLength: 50,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(loc.cancel),
+          ),
+          TextButton(
+            onPressed: () {
+              userNameNotifier.setName(controller.text);
+              Navigator.of(context).pop();
+            },
+            child: Text(loc.save),
+          ),
+        ],
       );
     },
   );

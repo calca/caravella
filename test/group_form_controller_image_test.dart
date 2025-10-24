@@ -91,20 +91,22 @@ void main() {
 
       // Create and set an image (this should clear the color)
       final tempDir = Directory.systemTemp.createTempSync('caravella_test');
-      final saved = File('${tempDir.path}/saved.jpg');
-      await saved.writeAsString('fake-image-bytes');
-      
-      await controller.persistPickedImage(saved);
+      final source = File('${tempDir.path}/saved.jpg');
+      await source.writeAsString('fake-image-bytes');
+
+      final copiedPath = await controller.persistPickedImage(source);
       expect(state.imagePath, isNotNull);
       expect(state.color, isNull, reason: 'Setting image should clear color');
 
       // Now remove everything
       await controller.removeImage();
 
-      // Both should be cleared
+      // Both should be cleared and the copied file should be deleted
       expect(state.imagePath, isNull);
       expect(state.color, isNull);
-      expect(await saved.exists(), isFalse);
+      if (copiedPath != null) {
+        expect(await File(copiedPath).exists(), isFalse);
+      }
 
       tempDir.deleteSync(recursive: true);
     });

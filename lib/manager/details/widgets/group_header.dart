@@ -15,9 +15,25 @@ class ParticipantAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final initials = participant.name.length >= 2
-        ? participant.name.substring(0, 2).toUpperCase()
-        : participant.name.toUpperCase();
+    // Build initials from first and last word when possible (e.g., "John Doe" -> "JD").
+    // Fallback to first two characters for single-word names.
+    final parts = participant.name
+        .trim()
+        .split(RegExp(r"\s+"))
+        .where((p) => p.isNotEmpty)
+        .toList();
+    String initials;
+    if (parts.length >= 2) {
+      final first = parts.first;
+      final last = parts.last;
+      initials =
+          (first.isNotEmpty ? first[0] : '') + (last.isNotEmpty ? last[0] : '');
+    } else if (participant.name.length >= 2) {
+      initials = participant.name.substring(0, 2);
+    } else {
+      initials = participant.name;
+    }
+    initials = initials.toUpperCase();
 
     return CircleAvatar(
       radius: size / 2,
@@ -38,21 +54,25 @@ class ParticipantAvatar extends StatelessWidget {
 class ExpenseGroupAvatar extends StatelessWidget {
   final ExpenseGroup trip;
   final double size;
-  const ExpenseGroupAvatar({super.key, required this.trip, required this.size});
+  final Color? backgroundColor;
+  const ExpenseGroupAvatar({
+    super.key,
+    required this.trip,
+    required this.size,
+    this.backgroundColor,
+  });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final Color bgColor = trip.color != null
+        ? Color(trip.color!)
+        : (backgroundColor ?? colorScheme.surfaceContainerLowest);
     return Container(
       margin: const EdgeInsets.only(top: 8, bottom: 8),
       width: size,
       height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: trip.color != null
-            ? Color(trip.color!)
-            : colorScheme.surfaceContainerLowest,
-      ),
+      decoration: BoxDecoration(shape: BoxShape.circle, color: bgColor),
       child: trip.file != null && trip.file!.isNotEmpty
           ? ClipOval(
               child: Image.file(

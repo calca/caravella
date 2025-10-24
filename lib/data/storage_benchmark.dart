@@ -1,4 +1,3 @@
-// ignore_for_file: avoid_print
 import 'dart:math';
 import 'model/expense_group.dart';
 import 'model/expense_participant.dart';
@@ -8,6 +7,7 @@ import 'expense_group_repository.dart';
 import 'storage_performance.dart';
 import 'file_based_expense_group_repository.dart';
 import 'storage_transaction.dart';
+import 'services/logger_service.dart';
 
 /// Benchmark configuration
 class BenchmarkConfig {
@@ -154,15 +154,19 @@ class StorageBenchmark {
       StoragePerformanceMonitor.disable();
     }
 
-    print(
+    LoggerService.info(
       'Running storage benchmarks with config: ${config.groupCount} groups, '
       '${config.participantsPerGroup} participants, ${config.categoriesPerGroup} categories, '
       '${config.expensesPerGroup} expenses per group',
+      name: 'storage.benchmark',
     );
 
     // Generate test data
     final testGroups = _generateTestGroups(config);
-    print('Generated ${testGroups.length} test groups');
+    LoggerService.info(
+      'Generated ${testGroups.length} test groups',
+      name: 'storage.benchmark',
+    );
 
     // Benchmark: Save groups
     results.add(await _benchmarkSaveGroups(testGroups, config));
@@ -441,31 +445,67 @@ class StorageBenchmark {
 
   /// Prints benchmark results
   static void printResults(List<BenchmarkResult> results) {
-    print('\n=== Storage Benchmark Results ===');
+    LoggerService.info(
+      '\n=== Storage Benchmark Results ===',
+      name: 'storage.benchmark',
+    );
 
     for (final result in results) {
-      print('');
-      print('${result.operation}:');
-      print('  Iterations: ${result.durations.length}');
-      print('  Average: ${result.averageDuration.inMilliseconds}ms');
-      print('  Min: ${result.minDuration.inMilliseconds}ms');
-      print('  Max: ${result.maxDuration.inMilliseconds}ms');
-      print('  P50: ${result.p50Duration.inMilliseconds}ms');
-      print('  P95: ${result.p95Duration.inMilliseconds}ms');
-      print('  P99: ${result.p99Duration.inMilliseconds}ms');
-      print('  Std Dev: ${result.standardDeviation.toStringAsFixed(1)}μs');
+      LoggerService.info('', name: 'storage.benchmark');
+      LoggerService.info('${result.operation}:', name: 'storage.benchmark');
+      LoggerService.info(
+        '  Iterations: ${result.durations.length}',
+        name: 'storage.benchmark',
+      );
+      LoggerService.info(
+        '  Average: ${result.averageDuration.inMilliseconds}ms',
+        name: 'storage.benchmark',
+      );
+      LoggerService.info(
+        '  Min: ${result.minDuration.inMilliseconds}ms',
+        name: 'storage.benchmark',
+      );
+      LoggerService.info(
+        '  Max: ${result.maxDuration.inMilliseconds}ms',
+        name: 'storage.benchmark',
+      );
+      LoggerService.info(
+        '  P50: ${result.p50Duration.inMilliseconds}ms',
+        name: 'storage.benchmark',
+      );
+      LoggerService.info(
+        '  P95: ${result.p95Duration.inMilliseconds}ms',
+        name: 'storage.benchmark',
+      );
+      LoggerService.info(
+        '  P99: ${result.p99Duration.inMilliseconds}ms',
+        name: 'storage.benchmark',
+      );
+      LoggerService.info(
+        '  Std Dev: ${result.standardDeviation.toStringAsFixed(1)}μs',
+        name: 'storage.benchmark',
+      );
 
       if (result.metadata.isNotEmpty) {
-        print('  Metadata: ${result.metadata}');
+        LoggerService.info(
+          '  Metadata: ${result.metadata}',
+          name: 'storage.benchmark',
+        );
       }
     }
 
-    print('\n=== Summary ===');
+    LoggerService.info('\n=== Summary ===', name: 'storage.benchmark');
     final totalOperations = results.length;
-    print('Total operations: $totalOperations');
+    LoggerService.info(
+      'Total operations: $totalOperations',
+      name: 'storage.benchmark',
+    );
 
     if (results.isEmpty) {
-      print('No benchmark results to summarize.');
+      LoggerService.info(
+        'No benchmark results to summarize.',
+        name: 'storage.benchmark',
+      );
       return;
     }
 
@@ -475,24 +515,27 @@ class StorageBenchmark {
             .reduce((a, b) => a + b) /
         totalOperations;
 
-    print(
+    LoggerService.info(
       'Average duration across all operations: ${avgDuration.toStringAsFixed(1)}ms',
+      name: 'storage.benchmark',
     );
 
     // Find slowest operation
     final slowest = results.reduce(
       (a, b) => a.averageDuration > b.averageDuration ? a : b,
     );
-    print(
+    LoggerService.info(
       'Slowest operation: ${slowest.operation} (${slowest.averageDuration.inMilliseconds}ms)',
+      name: 'storage.benchmark',
     );
 
     // Find fastest operation
     final fastest = results.reduce(
       (a, b) => a.averageDuration < b.averageDuration ? a : b,
     );
-    print(
+    LoggerService.info(
       'Fastest operation: ${fastest.operation} (${fastest.averageDuration.inMilliseconds}ms)',
+      name: 'storage.benchmark',
     );
   }
 }

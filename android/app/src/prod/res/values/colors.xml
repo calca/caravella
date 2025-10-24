@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Production flavor splash screen colors - match prod icon background #009688 -->
+    <color name="splash_background_light">#009688</color>
+    <color name="splash_background_dark">#009688</color>
+	<color name="ic_launcher_background">#009688</color>
+</resources>

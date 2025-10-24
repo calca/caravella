@@ -57,10 +57,9 @@ class GroupBottomSheetScaffold extends StatelessWidget {
     final padded = Padding(padding: padding, child: content);
     return SafeArea(
       top: false,
-      child: scrollable ? SingleChildScrollView(
-        controller: scrollController,
-        child: padded,
-      ) : padded,
+      child: scrollable
+          ? SingleChildScrollView(controller: scrollController, child: padded)
+          : padded,
     );
   }
 }

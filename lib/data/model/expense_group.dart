@@ -99,8 +99,9 @@ class ExpenseGroup {
     DateTime? timestamp,
     bool? pinned,
     bool? archived,
-    String? file,
-    int? color,
+    // Special handling for nullable fields that need to support explicit null
+    Object? file = _notProvided,
+    Object? color = _notProvided,
   }) {
     return ExpenseGroup(
       id: id ?? this.id,
@@ -114,10 +115,14 @@ class ExpenseGroup {
       timestamp: timestamp ?? this.timestamp,
       pinned: pinned ?? this.pinned,
       archived: archived ?? this.archived,
-      file: file ?? this.file,
-      color: color ?? this.color,
+      // Fix: Handle explicit null values correctly for nullable fields
+      file: file == _notProvided ? this.file : file as String?,
+      color: color == _notProvided ? this.color : color as int?,
     );
   }
+
+  // Sentinel value to distinguish between null and not provided
+  static const Object _notProvided = Object();
 
   static ExpenseGroup empty() {
     return ExpenseGroup(

@@ -512,6 +512,33 @@ class AppLocalizationsIt extends AppLocalizations {
   String get unarchive => 'Disarchivia';
 
   @override
+  String get pin => 'Pin';
+
+  @override
+  String get unpin => 'Rimuovi fissaggio';
+
+  @override
+  String get delete => 'Elimina';
+
+  @override
+  String get undo => 'ANNULLA';
+
+  @override
+  String get archived_with_undo => 'Archiviato';
+
+  @override
+  String get unarchived_with_undo => 'Disarchiviato';
+
+  @override
+  String get pinned_with_undo => 'Fissato';
+
+  @override
+  String get unpinned_with_undo => 'Fissaggio rimosso';
+
+  @override
+  String get deleted_with_undo => 'Eliminato';
+
+  @override
   String get archive_confirm => 'Vuoi archiviare';
 
   @override
@@ -565,9 +592,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get unpin_group => 'Rimuovi pin';
-
-  @override
-  String get pin => 'Pin';
 
   @override
   String get theme_automatic => 'Automatico';
@@ -644,6 +668,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get group_added_success => 'Gruppo aggiunto';
+
+  @override
+  String get group_deleted_success => 'Gruppo eliminato';
 
   @override
   String get csv_select_directory_title => 'Seleziona cartella per salvare CSV';
@@ -797,10 +824,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settings_info_card_desc => 'Sviluppatore, Source code e Licenza';
 
   @override
-  String get terms_github_title => 'GitHub: calca';
+  String get terms_github_title => 'Sito web: calca';
 
   @override
-  String get terms_github_desc => 'Profilo dello sviluppatore su GitHub.';
+  String get terms_github_desc => 'Sito web personale dello sviluppatore.';
 
   @override
   String get terms_repo_title => 'Repository GitHub';
@@ -846,6 +873,15 @@ class AppLocalizationsIt extends AppLocalizations {
       'Abilita il backup automatico del sistema operativo';
 
   @override
+  String get settings_user_name_title => 'Il tuo nome';
+
+  @override
+  String get settings_user_name_desc => 'Nome o nickname da usare nell\'app';
+
+  @override
+  String get settings_user_name_hint => 'Inserisci il tuo nome';
+
+  @override
   String get info_tab => 'Info';
 
   @override
@@ -863,9 +899,6 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get delete_expense_confirm =>
       'Sei sicuro di voler eliminare questa spesa?';
-
-  @override
-  String get delete => 'Elimina';
 
   @override
   String get no_results_found => 'Nessun risultato trovato.';
@@ -1569,4 +1602,45 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get whats_new_desc => 'Scopri le ultime novità e aggiornamenti';
+
+  @override
+  String get whats_new_subtitle => 'Ultimi Aggiornamenti';
+
+  @override
+  String get whats_new_latest =>
+      'Resta aggiornato con i miglioramenti più recenti';
+
+  @override
+  String get average_per_person => 'Speso medio per persona';
+
+  @override
+  String get more => 'altro';
+
+  @override
+  String get less => 'meno';
+
+  @override
+  String get debt_prefix_to => 'a ';
+
+  @override
+  String get send_reminder => 'Invia promemoria';
+
+  @override
+  String reminder_message_single(
+    Object participantName,
+    Object amount,
+    Object creditorName,
+    Object groupName,
+  ) {
+    return 'Ciao $participantName! 👋\n\nVorrei ricordarti che devi $amount a $creditorName per il gruppo \"$groupName\".\n\nGrazie! 😊';
+  }
+
+  @override
+  String reminder_message_multiple(
+    Object participantName,
+    Object groupName,
+    Object debtsList,
+  ) {
+    return 'Ciao $participantName! 👋\n\nVorrei ricordarti i tuoi pagamenti per il gruppo \"$groupName\":\n\n$debtsList\n\nGrazie! 😊';
+  }
 }
