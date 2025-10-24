@@ -6,9 +6,9 @@ import '../../../data/model/expense_group.dart';
 import '../../../data/expense_group_storage_v2.dart';
 import '../../../widgets/currency_display.dart';
 import '../../../widgets/base_card.dart';
-import '../../../widgets/bottom_sheet_scaffold.dart';
 import '../../../widgets/material3_dialog.dart';
 import '../../details/pages/expense_group_detail_page.dart';
+import 'history_options_sheet.dart';
 
 /// Expense group card with long-press contextual menu
 class SwipeableExpenseGroupCard extends StatelessWidget {
@@ -26,61 +26,26 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
   void _showContextMenu(BuildContext context) {
     HapticFeedback.mediumImpact();
 
-    final gloc = gen.AppLocalizations.of(context);
-    final isArchived = trip.archived;
-    final isPinned = trip.pinned;
-    final colorScheme = Theme.of(context).colorScheme;
-
     showModalBottomSheet(
       context: context,
-      builder: (context) => GroupBottomSheetScaffold(
-        title: trip.title,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Pin/Unpin action
-            _MenuActionTile(
-              icon: isPinned ? Icons.push_pin : Icons.push_pin_outlined,
-              label: isPinned ? gloc.unpin : gloc.pin,
-              color: colorScheme.tertiaryContainer,
-              iconColor: colorScheme.onTertiaryContainer,
-              onTap: () async {
-                Navigator.pop(context);
-                await _executePinAction(context);
-              },
-            ),
-            const SizedBox(height: 12),
-            // Archive/Unarchive action
-            _MenuActionTile(
-              icon: isArchived
-                  ? Icons.unarchive_rounded
-                  : Icons.archive_rounded,
-              label: isArchived ? gloc.unarchive : gloc.archive,
-              color: isArchived
-                  ? colorScheme.primaryContainer
-                  : colorScheme.secondaryContainer,
-              iconColor: isArchived
-                  ? colorScheme.onPrimaryContainer
-                  : colorScheme.onSecondaryContainer,
-              onTap: () async {
-                Navigator.pop(context);
-                await _executeArchiveAction(context);
-              },
-            ),
-            const SizedBox(height: 12),
-            // Delete action
-            _MenuActionTile(
-              icon: Icons.delete_rounded,
-              label: gloc.delete,
-              color: colorScheme.errorContainer,
-              iconColor: colorScheme.onErrorContainer,
-              onTap: () async {
-                Navigator.pop(context);
-                await _executeDeleteAction(context);
-              },
-            ),
-          ],
-        ),
+      isScrollControlled: true,
+      builder: (sheetCtx) => HistoryOptionsSheet(
+        trip: trip,
+        onPinToggle: () async {
+          final nav = Navigator.of(sheetCtx);
+          nav.pop();
+          await _executePinAction(context);
+        },
+        onArchiveToggle: () async {
+          final nav = Navigator.of(sheetCtx);
+          nav.pop();
+          await _executeArchiveAction(context);
+        },
+        onDelete: () async {
+          final nav = Navigator.of(sheetCtx);
+          nav.pop();
+          await _executeDeleteAction(context);
+        },
       ),
     );
   }
@@ -338,62 +303,6 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-/// Menu action tile for bottom sheet
-class _MenuActionTile extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final Color color;
-  final Color iconColor;
-  final VoidCallback onTap;
-
-  const _MenuActionTile({
-    required this.icon,
-    required this.label,
-    required this.color,
-    required this.iconColor,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: iconColor.withValues(alpha: 0.2),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(icon, color: iconColor, size: 24),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Text(
-                label,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: iconColor,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            Icon(Icons.chevron_right_rounded, color: iconColor),
-          ],
-        ),
-      ),
     );
   }
 }
