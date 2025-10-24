@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker_android/image_picker_android.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../config/app_config.dart';
+import '../data/services/preferences_service.dart';
 import '../settings/flag_secure_android.dart';
 
 /// Initializes the app: platform-specific setup, orientation, system UI, and image cache.
@@ -67,8 +67,8 @@ class AppInitialization {
 
   /// Initializes FLAG_SECURE on Android based on user preference.
   static Future<void> initFlagSecure() async {
-    final prefs = await SharedPreferences.getInstance();
-    final enabled = prefs.getBool('flag_secure_enabled') ?? true;
+    await PreferencesService.initialize();
+    final enabled = PreferencesService.instance.security.getFlagSecureEnabled();
     await FlagSecureAndroid.setFlagSecure(enabled);
   }
 
