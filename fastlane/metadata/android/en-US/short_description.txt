@@ -1,0 +1,1 @@
+Modern group expense management app for trips, shared costs, and participants

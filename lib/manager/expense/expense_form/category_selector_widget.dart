@@ -69,11 +69,7 @@ class CategorySelectorWidget extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            AppIcons.category,
-            size: 20,
-            color: theme.colorScheme.onSurface,
-          ),
+          Icon(AppIcons.category, size: 20, color: theme.colorScheme.onSurface),
           const SizedBox(width: 8),
           Flexible(
             child: Text(
