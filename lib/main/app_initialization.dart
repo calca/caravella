@@ -7,6 +7,7 @@ import 'package:image_picker_platform_interface/image_picker_platform_interface.
 
 import '../config/app_config.dart';
 import '../data/services/preferences_service.dart';
+import '../data/services/hive_initialization_service.dart';
 import '../settings/flag_secure_android.dart';
 
 /// Initializes the app: platform-specific setup, orientation, system UI, and image cache.
@@ -32,6 +33,14 @@ class AppInitialization {
         break;
       default:
         AppConfig.setEnvironment(Environment.prod);
+    }
+  }
+  
+  /// Initializes Hive storage system if STORAGE_BACKEND is set to 'hive'
+  static Future<void> initializeStorage() async {
+    const backend = String.fromEnvironment('STORAGE_BACKEND', defaultValue: 'file');
+    if (backend.toLowerCase() == 'hive') {
+      await HiveInitializationService.initialize();
     }
   }
 
@@ -77,6 +86,7 @@ class AppInitialization {
     WidgetsFlutterBinding.ensureInitialized();
     configureImagePicker();
     configureEnvironment();
+    await initializeStorage(); // Initialize storage (Hive if needed)
     lockOrientation();
     configureSystemUI();
     configureImageCache();

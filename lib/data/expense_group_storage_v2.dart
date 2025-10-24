@@ -5,6 +5,7 @@ import 'model/expense_participant.dart';
 import 'model/expense_category.dart';
 import 'expense_group_repository.dart';
 import 'file_based_expense_group_repository.dart';
+import 'hive_expense_group_repository.dart';
 import 'services/logger_service.dart';
 
 /// Backward-compatible wrapper for ExpenseGroupStorage
@@ -12,9 +13,21 @@ import 'services/logger_service.dart';
 class ExpenseGroupStorageV2 {
   static const String fileName = 'expense_group_storage.json';
 
-  // Singleton repository instance
-  static final IExpenseGroupRepository _repository =
-      FileBasedExpenseGroupRepository();
+  // Singleton repository instance - selected based on STORAGE_BACKEND build define
+  static final IExpenseGroupRepository _repository = _createRepository();
+  
+  /// Creates the appropriate repository based on STORAGE_BACKEND build define
+  /// Defaults to file-based (JSON) storage for backward compatibility
+  static IExpenseGroupRepository _createRepository() {
+    const backend = String.fromEnvironment('STORAGE_BACKEND', defaultValue: 'file');
+    switch (backend.toLowerCase()) {
+      case 'hive':
+        return HiveExpenseGroupRepository();
+      case 'file':
+      default:
+        return FileBasedExpenseGroupRepository();
+    }
+  }
 
   /// Gets a trip by ID
   static Future<ExpenseGroup?> getTripById(String id) async {
@@ -129,6 +142,8 @@ class ExpenseGroupStorageV2 {
   static void clearCache() {
     if (_repository is FileBasedExpenseGroupRepository) {
       (_repository as FileBasedExpenseGroupRepository).clearCache();
+    } else if (_repository is HiveExpenseGroupRepository) {
+      (_repository as HiveExpenseGroupRepository).clearCache();
     }
   }
 
@@ -136,6 +151,8 @@ class ExpenseGroupStorageV2 {
   static void forceReload() {
     if (_repository is FileBasedExpenseGroupRepository) {
       (_repository as FileBasedExpenseGroupRepository).forceReload();
+    } else if (_repository is HiveExpenseGroupRepository) {
+      (_repository as HiveExpenseGroupRepository).forceReload();
     }
   }
 
