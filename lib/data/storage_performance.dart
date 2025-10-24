@@ -125,32 +125,62 @@ class StoragePerformanceMonitor {
   static void printSummary() {
     final summary = getSummary();
     if (summary.isEmpty) {
-      LoggerService.info('No performance metrics recorded', name: 'storage.performance');
+      LoggerService.info(
+        'No performance metrics recorded',
+        name: 'storage.performance',
+      );
       return;
     }
 
-    LoggerService.info('=== Storage Performance Summary ===', name: 'storage.performance');
+    LoggerService.info(
+      '=== Storage Performance Summary ===',
+      name: 'storage.performance',
+    );
     for (final entry in summary.entries) {
       final operation = entry.key;
       final stats = entry.value as Map<String, dynamic>;
 
       LoggerService.info('$operation:', name: 'storage.performance');
-      LoggerService.info('  Count: ${stats['count']}', name: 'storage.performance');
-      LoggerService.info('  Avg Duration: ${stats['avgDuration']}ms', name: 'storage.performance');
-      LoggerService.info('  Min Duration: ${stats['minDuration']}ms', name: 'storage.performance');
-      LoggerService.info('  Max Duration: ${stats['maxDuration']}ms', name: 'storage.performance');
-      LoggerService.info('  P50 Duration: ${stats['p50Duration']}ms', name: 'storage.performance');
-      LoggerService.info('  P95 Duration: ${stats['p95Duration']}ms', name: 'storage.performance');
+      LoggerService.info(
+        '  Count: ${stats['count']}',
+        name: 'storage.performance',
+      );
+      LoggerService.info(
+        '  Avg Duration: ${stats['avgDuration']}ms',
+        name: 'storage.performance',
+      );
+      LoggerService.info(
+        '  Min Duration: ${stats['minDuration']}ms',
+        name: 'storage.performance',
+      );
+      LoggerService.info(
+        '  Max Duration: ${stats['maxDuration']}ms',
+        name: 'storage.performance',
+      );
+      LoggerService.info(
+        '  P50 Duration: ${stats['p50Duration']}ms',
+        name: 'storage.performance',
+      );
+      LoggerService.info(
+        '  P95 Duration: ${stats['p95Duration']}ms',
+        name: 'storage.performance',
+      );
 
       if (stats['cacheHitRate'] != null) {
         final hitRate = ((stats['cacheHitRate'] as double) * 100)
             .toStringAsFixed(1);
-        LoggerService.info('  Cache Hit Rate: $hitRate%', name: 'storage.performance');
+        LoggerService.info(
+          '  Cache Hit Rate: $hitRate%',
+          name: 'storage.performance',
+        );
       }
 
       if (stats['totalDataBytes'] > 0) {
         final totalKB = (stats['totalDataBytes'] / 1024).toStringAsFixed(1);
-        LoggerService.info('  Total Data: ${totalKB}KB', name: 'storage.performance');
+        LoggerService.info(
+          '  Total Data: ${totalKB}KB',
+          name: 'storage.performance',
+        );
       }
 
       LoggerService.info('', name: 'storage.performance');
