@@ -511,6 +511,33 @@ class AppLocalizationsEs extends AppLocalizations {
   String get unarchive => 'Desarchivar';
 
   @override
+  String get pin => 'Pin';
+
+  @override
+  String get unpin => 'Desfijar';
+
+  @override
+  String get delete => 'Eliminar';
+
+  @override
+  String get undo => 'DESHACER';
+
+  @override
+  String get archived_with_undo => 'Archivado';
+
+  @override
+  String get unarchived_with_undo => 'Desarchivado';
+
+  @override
+  String get pinned_with_undo => 'Fijado';
+
+  @override
+  String get unpinned_with_undo => 'Desfijado';
+
+  @override
+  String get deleted_with_undo => 'Eliminado';
+
+  @override
   String get archive_confirm => '¿Quieres archivar';
 
   @override
@@ -564,9 +591,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get unpin_group => 'Desfijar grupo';
-
-  @override
-  String get pin => 'Pin';
 
   @override
   String get theme_automatic => 'Automático';
@@ -873,9 +897,6 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get delete_expense_confirm =>
       '¿Estás seguro de que quieres eliminar este gasto?';
-
-  @override
-  String get delete => 'Eliminar';
 
   @override
   String get no_results_found => 'No se encontraron resultados.';
