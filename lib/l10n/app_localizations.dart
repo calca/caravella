@@ -1058,6 +1058,60 @@ abstract class AppLocalizations {
   /// **'Unarchive'**
   String get unarchive;
 
+  /// Action to pin a group to the top
+  ///
+  /// In en, this message translates to:
+  /// **'Pin'**
+  String get pin;
+
+  /// Action to unpin a group
+  ///
+  /// In en, this message translates to:
+  /// **'Unpin'**
+  String get unpin;
+
+  /// Action to delete a group
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// Undo action label for SnackBar
+  ///
+  /// In en, this message translates to:
+  /// **'UNDO'**
+  String get undo;
+
+  /// Snackbar message when group is archived
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get archived_with_undo;
+
+  /// Snackbar message when group is unarchived
+  ///
+  /// In en, this message translates to:
+  /// **'Unarchived'**
+  String get unarchived_with_undo;
+
+  /// Snackbar message when group is pinned
+  ///
+  /// In en, this message translates to:
+  /// **'Pinned'**
+  String get pinned_with_undo;
+
+  /// Snackbar message when group is unpinned
+  ///
+  /// In en, this message translates to:
+  /// **'Unpinned'**
+  String get unpinned_with_undo;
+
+  /// Snackbar message when group is deleted
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted'**
+  String get deleted_with_undo;
+
   /// No description provided for @archive_confirm.
   ///
   /// In en, this message translates to:
@@ -1165,12 +1219,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unpin group'**
   String get unpin_group;
-
-  /// No description provided for @pin.
-  ///
-  /// In en, this message translates to:
-  /// **'Pin'**
-  String get pin;
 
   /// No description provided for @theme_automatic.
   ///
@@ -1321,6 +1369,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Group added'**
   String get group_added_success;
+
+  /// Toast shown after deleting an expense group
+  ///
+  /// In en, this message translates to:
+  /// **'Group deleted'**
+  String get group_deleted_success;
 
   /// No description provided for @csv_select_directory_title.
   ///
@@ -1753,12 +1807,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure you want to delete this expense?'**
   String get delete_expense_confirm;
-
-  /// No description provided for @delete.
-  ///
-  /// In en, this message translates to:
-  /// **'Delete'**
-  String get delete;
 
   /// Shown when a filter (not search) returns no groups
   ///
@@ -3128,6 +3176,18 @@ abstract class AppLocalizations {
   /// **'Discover the latest features and updates'**
   String get whats_new_desc;
 
+  /// Card headline describing the what's new section
+  ///
+  /// In en, this message translates to:
+  /// **'Latest highlights'**
+  String get whats_new_subtitle;
+
+  /// Support text explaining that the content lists the most recent updates
+  ///
+  /// In en, this message translates to:
+  /// **'Stay up to date with recent improvements'**
+  String get whats_new_latest;
+
   /// Label shown before the computed average spent per person in the Participants tab
   ///
   /// In en, this message translates to:
@@ -3151,6 +3211,33 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'to '**
   String get debt_prefix_to;
+
+  /// Button label to send a payment reminder to a participant
+  ///
+  /// In en, this message translates to:
+  /// **'Send reminder'**
+  String get send_reminder;
+
+  /// Reminder message when a participant owes money to a single person
+  ///
+  /// In en, this message translates to:
+  /// **'Hi {participantName}! 👋\n\nJust a friendly reminder that you owe {amount} to {creditorName} for the group \"{groupName}\".\n\nThank you! 😊'**
+  String reminder_message_single(
+    Object participantName,
+    Object amount,
+    Object creditorName,
+    Object groupName,
+  );
+
+  /// Reminder message when a participant owes money to multiple people
+  ///
+  /// In en, this message translates to:
+  /// **'Hi {participantName}! 👋\n\nJust a friendly reminder of your payments for the group \"{groupName}\":\n\n{debtsList}\n\nThank you! 😊'**
+  String reminder_message_multiple(
+    Object participantName,
+    Object groupName,
+    Object debtsList,
+  );
 }
 
 class _AppLocalizationsDelegate

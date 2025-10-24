@@ -6,31 +6,38 @@ Modern group expense management app for trips, shared costs, and participants.
 
 ## Full Description
 
-### Key Features:
-• **Group Management**: Create and manage multiple expense groups for different trips or shared living situations
-• **Expense Tracking**: Add, edit, and categorize expenses with detailed participant assignments
-• **Smart Calculations**: Automatic calculation of who owes what to whom
-• **Participant Management**: Easy addition and management of group members
-• **Location Context**: Optional location tagging for expenses to remember where they occurred
-• **Photo Attachments**: Add photos to group backgrounds and expense records
-• **Data Export**: Export your data to CSV or JSON formats for external analysis
-• **Backup & Restore**: Complete data backup and restore functionality
-• **Privacy First**: All data stored locally on your device - no cloud sync required
-• **Multi-language**: Available in English and Italian
-• **Material Design**: Modern Material 3 interface with dark/light theme support
+Caravella makes group expense tracking simple for trips, roommates, and events. Create groups, add expenses, and let the app calculate who owes what — fast and accurate.
 
-### Perfect For:
+Key features:
+- Multiple groups for trips, households, and activities
+- Add, edit, and categorize expenses
+- Assign payers and participants with flexible splits
+- Automatic settle-up calculations
+- Participant management with balances per person
+- Optional location tagging for expenses
+- Photos on expenses and group backgrounds
+- Custom categories, notes, and descriptions
+- Export to CSV and JSON
+- Full backup and restore
+- Works offline, no account required
+- English and Italian language support
+- Modern Material 3 design with light/dark theme
+
+Perfect for:
 - Group trips and vacations
-- Shared household expenses
-- Event planning and cost sharing
-- Business trip expense tracking
-- Roommate expense management
+- Shared household expenses and roommates
+- Events, dinners, and activities
+- Business travel and team expenses
 
-### Privacy & Security:
-- All data stored locally on your device
-- No user accounts or online services required
-- Optional permissions for enhanced features
-- Full data export and deletion control
-- GDPR and privacy compliant
+Privacy & security:
+- Data stored locally on your device
+- No cloud sync or tracking
+- Optional permissions only for extra features
+- Easy data export and deletion
+- GDPR-friendly
 
-The app requires no internet connection for core functionality and gives you complete control over your financial data.
+Offline first:
+Core features work without internet so you stay in control of your data at all times.
+
+Open source:
+Transparent and community-driven development.

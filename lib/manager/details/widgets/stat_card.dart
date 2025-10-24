@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../../../widgets/currency_display.dart';
 
 /// Small KPI card consistent with app dark surfaces.
@@ -11,6 +10,7 @@ class StatCard extends StatelessWidget {
   final List<InlineSpan>? subtitleSpans;
   final IconData? icon;
   final Widget? leading;
+  final Widget? trailing; // optional action button or icon on the right
   final double? percent; // 0-100
   final bool inlineHeader; // when true, show title and value on same row
   final int? subtitleMaxLines; // allow override of max lines for subtitle
@@ -24,6 +24,7 @@ class StatCard extends StatelessWidget {
     this.subtitleSpans,
     this.icon,
     this.leading,
+    this.trailing,
     this.percent,
     this.inlineHeader = false,
     this.subtitleMaxLines,
@@ -34,21 +35,13 @@ class StatCard extends StatelessWidget {
     final theme = Theme.of(context);
     // Use latest Material 3 surface token
     final surface = theme.colorScheme.surface;
-    final locale = Localizations.maybeLocaleOf(context)?.toString();
 
-    String formattedValue;
-    try {
-      if (locale != null) {
-        formattedValue = NumberFormat.currency(
-          locale: locale,
-          symbol: currency,
-        ).format(value);
-      } else {
-        formattedValue = '$value$currency';
-      }
-    } catch (_) {
-      formattedValue = '$value$currency';
-    }
+    // Use CurrencyDisplay for consistent formatting in semantic labels
+    final formattedValue = CurrencyDisplay.formatCurrencyText(
+      value,
+      currency,
+      showDecimals: true,
+    );
 
     final semanticLabel =
         (subtitle ?? _inlineSpansToPlain(subtitleSpans)) != null
@@ -97,7 +90,7 @@ class StatCard extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            const SizedBox(width: 12),
+                            const SizedBox(width: 8),
                             CurrencyDisplay(
                               value: value,
                               currency: currency,
@@ -179,6 +172,10 @@ class StatCard extends StatelessWidget {
                     ],
                   ),
                 ),
+                if (trailing != null) ...[
+                  const SizedBox(width: 8),
+                  trailing!,
+                ],
               ],
             ),
           ),

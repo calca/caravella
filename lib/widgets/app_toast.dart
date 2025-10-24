@@ -13,6 +13,8 @@ class AppToast {
     Duration duration = const Duration(milliseconds: 2400),
     ToastType type = ToastType.info,
     IconData? icon,
+    VoidCallback? onUndo,
+    String? undoLabel,
   }) {
     // If the context is no longer mounted we use the root scaffold messenger.
     // This avoids "Looking up a deactivated widget's ancestor" errors when an
@@ -39,6 +41,8 @@ class AppToast {
       duration: duration,
       type: type,
       icon: icon,
+      onUndo: onUndo,
+      undoLabel: undoLabel,
     );
   }
 
@@ -64,6 +68,8 @@ class AppToast {
     Duration duration = const Duration(milliseconds: 2400),
     ToastType type = ToastType.info,
     IconData? icon,
+    VoidCallback? onUndo,
+    String? undoLabel,
   }) {
     _showUsingMessenger(
       messenger,
@@ -72,6 +78,8 @@ class AppToast {
       duration: duration,
       type: type,
       icon: icon,
+      onUndo: onUndo,
+      undoLabel: undoLabel,
     );
   }
 
@@ -85,6 +93,8 @@ class AppToast {
     Duration duration = const Duration(milliseconds: 2400),
     ToastType type = ToastType.info,
     IconData? icon,
+    VoidCallback? onUndo,
+    String? undoLabel,
   }) {
     final theme = Theme.of(referenceContext);
     final colorScheme = theme.colorScheme;
@@ -138,6 +148,13 @@ class AppToast {
             ],
           ),
         ),
+        action: onUndo != null
+            ? SnackBarAction(
+                label: undoLabel ?? AppLocalizations.of(referenceContext).undo,
+                textColor: textColor,
+                onPressed: onUndo,
+              )
+            : null,
         backgroundColor: backgroundColor,
         duration: duration,
         behavior: SnackBarBehavior.floating,
