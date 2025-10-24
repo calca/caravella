@@ -277,6 +277,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
             trip: trip,
             onArchiveToggle: _onArchiveToggle,
             onDelete: () => _loadTrips(),
+            onPin: () => _loadTrips(),
             searchQuery: _searchQuery,
           );
         },
@@ -315,6 +316,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
           trip: trip,
           onArchiveToggle: _onArchiveToggle,
           onDelete: () => _loadTrips(),
+          onPin: () => _loadTrips(),
           searchQuery: _searchQuery,
         );
       },

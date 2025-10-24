@@ -18,6 +18,7 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
   final ExpenseGroup trip;
   final Future<void> Function(String groupId, bool archived) onArchiveToggle;
   final VoidCallback? onDelete;
+  final VoidCallback? onPin;
   final String? searchQuery;
 
   const SwipeableExpenseGroupCard({
@@ -25,6 +26,7 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
     required this.trip,
     required this.onArchiveToggle,
     this.onDelete,
+    this.onPin,
     this.searchQuery,
   });
 
@@ -70,6 +72,9 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
 
     await ExpenseGroupStorageV2.updateGroupPin(trip.id, !isPinned);
 
+    // Trigger reload callback if provided
+    onPin?.call();
+
     if (!context.mounted) return;
     AppToast.showFromMessenger(
       messenger,
@@ -78,6 +83,8 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
       duration: const Duration(seconds: 4),
       onUndo: () async {
         await ExpenseGroupStorageV2.updateGroupPin(trip.id, isPinned);
+        // Reload again after undo
+        onPin?.call();
       },
     );
   }
