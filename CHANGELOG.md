@@ -10,9 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - F-Droid metadata and distribution support
 - Comprehensive F-Droid submission documentation
+- Material 3 swipe-reveal interaction for history page cards with archive/unarchive actions
+- SnackBar with undo functionality (4 seconds) after archiving/unarchiving groups
+- Localized strings for undo action across all supported languages
 
 ### Changed
 - Improved app metadata for distribution platforms
+- Replaced Dismissible with custom swipeable card interaction in history page
+- Enhanced UX with smooth animations and visual feedback for swipe actions
 
 ## [1.0.45] - 2025-10-16
 

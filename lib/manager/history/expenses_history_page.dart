@@ -11,7 +11,7 @@ import '../group/group_edit_mode.dart';
 import '../../widgets/caravella_app_bar.dart';
 import '../group/widgets/section_header.dart';
 import 'widgets/expense_group_empty_states.dart';
-import 'widgets/expense_group_card.dart';
+import 'widgets/swipeable_expense_group_card.dart';
 import '../../widgets/app_toast.dart';
 
 class ExpesensHistoryPage extends StatefulWidget {
@@ -273,7 +273,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
         itemCount: trips.length,
         itemBuilder: (context, index) {
           final trip = trips[index];
-          return ExpenseGroupCard(
+          return SwipeableExpenseGroupCard(
             trip: trip,
             onArchiveToggle: _onArchiveToggle,
             searchQuery: _searchQuery,
@@ -310,7 +310,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
       itemCount: trips.length,
       itemBuilder: (context, index) {
         final trip = trips[index];
-        return ExpenseGroupCard(
+        return SwipeableExpenseGroupCard(
           trip: trip,
           onArchiveToggle: _onArchiveToggle,
           searchQuery: _searchQuery,
