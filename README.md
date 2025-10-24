@@ -1,4 +1,4 @@
-# Caravella - Group Expense & Travel Manager
+# Caravella: an Expense Tracker
 
 <p align="center">
   <img src="store/assets/caravella-icon-store.png" alt="Caravella Icon" width="150"/>
@@ -25,7 +25,7 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
 - **Privacy First**: All data stored locally on your device - no cloud sync required
 - **Multi-language**: Available in English, Italian, Spanish, Portuguese, and Chinese
 - **Material Design**: Modern Material 3 interface with dark/light theme support
-- **Cross-Platform**: Built with Flutter, designed to run smoothly on Android, iOS, Web, and Desktop
+- **Cross-Platform**: Built with Flutter, designed to run smoothly on Android smartphones, iOS, Web, and Desktop
 
 ### Perfect For:
 - Group trips and vacations
@@ -47,7 +47,7 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
   <img src="store/screenshot/05 - Group - Expenses.png" alt="Group Expenses" width="200"/>
   <img src="store/screenshot/06 - Group - Stats.png" alt="Group Statistics" width="200"/>
   <img src="store/screenshot/07 - Group - Partecipants.png" alt="Participants" width="200"/>
-  <img src="store/screenshot/08 - Grops History .png" alt="Groups History" width="200"/>
+  <img src="store/screenshot/08 - Grops History.png" alt="Groups History" width="200"/>
 </p>
 
 ## 🛠️ Tech Stack & Architecture
@@ -58,23 +58,6 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
 - **Storage**: Local file storage using `path_provider` for private, on-device data persistence.
 - **Architecture**: The app follows a clean architecture with a separation of concerns between UI, state management, and data services.
 - **Flavors**: Configured for different build environments (dev, staging, prod).
-
-## 🚀 Getting Started
-
-1.  **Install Dependencies**
-    ```sh
-    flutter pub get
-    ```
-
-2.  **Generate App Icons**
-    ```sh
-    flutter pub run flutter_launcher_icons:main
-    ```
-
-3.  **Run the App**
-    ```sh
-    flutter run
-    ```
 
 ## 🔒 Privacy & Security
 
@@ -93,7 +76,8 @@ For complete details, see our [Privacy Policy](store/PRIVACY_POLICY.md) and [Per
 ### Android
 - **GitHub Releases**: [Download APK](https://github.com/calca/caravella/releases)
 - **Google Play Store**: Coming soon
-- **F-Droid**: Coming soon
+- **F-Droid**: Coming soon (see [F-Droid Submission Guide](docs/FDROID_SUBMISSION.md) for details)
+- **Device Support**: Optimized for smartphones only (tablets not supported)
 
 ### iOS
 - **App Store**: Coming soon
