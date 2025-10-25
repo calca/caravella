@@ -16,7 +16,7 @@ class SectionPeriod extends StatelessWidget {
 
   // New callback for setting both dates at once (optional for backwards compatibility)
   final void Function(DateTime? startDate, DateTime? endDate)?
-      onDateRangeChanged;
+  onDateRangeChanged;
 
   const SectionPeriod({
     super.key,
@@ -168,19 +168,11 @@ class _PeriodDisplayCard extends StatelessWidget {
             Container(
               width: 48,
               height: 48,
-              decoration: BoxDecoration(
-                color: hasSelection
-                    ? theme.colorScheme.primaryContainer.withValues(alpha: 0.2)
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(8),
-              ),
               alignment: Alignment.center,
               child: Icon(
                 iconData,
                 size: 28,
-                color: hasSelection
-                    ? theme.colorScheme.primary
-                    : theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),
             ),
             const SizedBox(width: 12),
