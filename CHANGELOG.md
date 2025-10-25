@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - F-Droid metadata and distribution support
 - Comprehensive F-Droid submission documentation
+- Long-press on participant card now opens a bottom sheet with message preview before sending
 
 ### Changed
 - Improved app metadata for distribution platforms
