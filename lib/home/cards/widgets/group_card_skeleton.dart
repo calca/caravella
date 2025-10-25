@@ -29,13 +29,9 @@ class _GroupCardSkeletonState extends State<GroupCardSkeleton>
       duration: const Duration(milliseconds: 1500),
     )..repeat();
 
-    _shimmerAnimation = Tween<double>(
-      begin: -1.0,
-      end: 2.0,
-    ).animate(CurvedAnimation(
-      parent: _shimmerController,
-      curve: Curves.easeInOut,
-    ));
+    _shimmerAnimation = Tween<double>(begin: -1.0, end: 2.0).animate(
+      CurvedAnimation(parent: _shimmerController, curve: Curves.easeInOut),
+    );
   }
 
   @override
@@ -48,7 +44,7 @@ class _GroupCardSkeletonState extends State<GroupCardSkeleton>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
-    
+
     // Base colors for skeleton
     final baseColor = isDarkMode
         ? theme.colorScheme.surfaceContainerHighest
@@ -65,9 +61,7 @@ class _GroupCardSkeletonState extends State<GroupCardSkeleton>
         margin: const EdgeInsets.only(bottom: 16),
         elevation: widget.isSelected ? 8 : 2,
         shadowColor: theme.colorScheme.shadow.withValues(alpha: 0.3),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: AnimatedBuilder(
           animation: _shimmerAnimation,
           builder: (context, child) {
@@ -82,11 +76,7 @@ class _GroupCardSkeletonState extends State<GroupCardSkeleton>
                     _shimmerAnimation.value,
                     _shimmerAnimation.value + 0.3,
                   ].map((e) => e.clamp(0.0, 1.0)).toList(),
-                  colors: [
-                    baseColor,
-                    highlightColor,
-                    baseColor,
-                  ],
+                  colors: [baseColor, highlightColor, baseColor],
                 ),
               ),
               child: Padding(
