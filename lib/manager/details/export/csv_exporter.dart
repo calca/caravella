@@ -1,5 +1,6 @@
 import '../../../data/model/expense_group.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import '../../../widgets/currency_display.dart';
 
 /// Utility per generare CSV per un gruppo di spese.
 class CsvExporter {
@@ -27,7 +28,7 @@ class CsvExporter {
       buffer.writeln(
         [
           _escape(e.name ?? ''),
-          e.amount?.toStringAsFixed(2) ?? '',
+          CurrencyDisplay.formatCurrencyText(e.amount ?? 0, '').trim(),
           _escape(e.paidBy.name),
           _escape(e.category.name),
           e.date.toIso8601String().split('T').first,

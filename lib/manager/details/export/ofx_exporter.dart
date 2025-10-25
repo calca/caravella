@@ -1,4 +1,5 @@
 import '../../../data/model/expense_group.dart';
+import '../../../widgets/currency_display.dart';
 
 /// Utility per generare il contenuto OFX di un [ExpenseGroup].
 class OfxExporter {
@@ -56,7 +57,7 @@ class OfxExporter {
         '            <DTPOSTED>${_formatOfxDate(expense.date)}</DTPOSTED>',
       );
       buffer.writeln(
-        '            <TRNAMT>-${expense.amount?.toStringAsFixed(2) ?? '0.00'}</TRNAMT>',
+        '            <TRNAMT>-${CurrencyDisplay.formatCurrencyText(expense.amount ?? 0, '').trim()}</TRNAMT>',
       );
       buffer.writeln('            <FITID>${expense.id}</FITID>');
       final description = _sanitizeXmlValue(
@@ -85,7 +86,7 @@ class OfxExporter {
       (sum, expense) => sum + (expense.amount ?? 0.0),
     );
     buffer.writeln(
-      '          <BALAMT>-${totalAmount.toStringAsFixed(2)}</BALAMT>',
+      '          <BALAMT>-${CurrencyDisplay.formatCurrencyText(totalAmount, '').trim()}</BALAMT>',
     );
     buffer.writeln('          <DTASOF>${_formatOfxDateTime(now)}</DTASOF>');
     buffer.writeln('        </LEDGERBAL>');

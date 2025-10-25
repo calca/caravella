@@ -33,7 +33,29 @@
   "settings_privacy": "Privacidade",
   "select_currency": "Selecionar moeda",
   "select_period_hint_short": "Definir datas",
-  "select_period_hint": "Selecione um intervalo de datas",
+  "select_period_hint": "Selecionar datas",
+  "suggested_duration": "Duração sugerida",
+  "days_count": "{count} dias",
+  "@days_count": {"description": "Número de dias", "placeholders": {"count": {"type": "int"}}},
+  "weekday_mon": "S",
+  "weekday_tue": "T",
+  "weekday_wed": "Q",
+  "weekday_thu": "Q",
+  "weekday_fri": "S",
+  "weekday_sat": "S",
+  "weekday_sun": "D",
+  "month_january": "Janeiro",
+  "month_february": "Fevereiro",
+  "month_march": "Março",
+  "month_april": "Abril",
+  "month_may": "Maio",
+  "month_june": "Junho",
+  "month_july": "Julho",
+  "month_august": "Agosto",
+  "month_september": "Setembro",
+  "month_october": "Outubro",
+  "month_november": "Novembro",
+  "month_december": "Dezembro",
   "in_group_prefix": "em",
   "save_change_expense": "Salvar alterações",
   "group_total": "Total",
@@ -133,6 +155,15 @@
   "no_search_results": "Nenhum grupo encontrado para",
   "active": "Ativo",
   "archive": "Arquivar",
+  "pin": "Fixar",
+  "unpin": "Desfixar",
+  "delete": "Excluir",
+  "undo": "DESFAZER",
+  "archived_with_undo": "Arquivado",
+  "unarchived_with_undo": "Desarquivado",
+  "pinned_with_undo": "Fixado",
+  "unpinned_with_undo": "Desfixado",
+  "deleted_with_undo": "Excluído",
   "archive_confirm": "Deseja arquivar",
   "overview": "Visão geral",
   "options": "Opções",
@@ -231,6 +262,9 @@
   "expense_added_success": "Despesa adicionada",
   "data_refreshing": "Atualizando…",
   "refresh": "Atualizar",
+  "group_added_success": "Grupo adicionado",
+  "group_deleted_success": "Grupo excluído",
+  "@group_deleted_success": {"description": "Mensagem exibida após excluir um grupo de despesas"},
   "csv_select_directory_title": "Selecione a pasta para salvar o CSV",
   "csv_save_cancelled": "Exportação cancelada",
   "ofx_select_directory_title": "Selecione a pasta para salvar o OFX",
@@ -486,6 +520,10 @@
   ,"@whats_new_title": {"description": "Título da página que mostra o changelog"}
   ,"whats_new_desc": "Descubra os recursos e atualizações mais recentes"
   ,"@whats_new_desc": {"description": "Subtítulo da página novidades"}
+  ,"whats_new_subtitle": "Destaques recentes"
+  ,"@whats_new_subtitle": {"description": "Subtítulo no cartão de cabeçalho da página de novidades"}
+  ,"whats_new_latest": "Fique por dentro das melhorias mais recentes"
+  ,"@whats_new_latest": {"description": "Texto descritivo no cartão de cabeçalho da página de novidades"}
   ,"average_per_person": "Média por pessoa"
   ,"@average_per_person": {"description": "Rótulo mostrado antes da média gasta por pessoa na aba Participantes"}
   ,"more": "mais"
@@ -528,4 +566,87 @@
   ,"@update_install": {"description": "Botão para instalar atualização do bottom sheet"}
   ,"update_remind_later": "Lembrar mais tarde"
   ,"@update_remind_later": {"description": "Botão para adiar atualização do bottom sheet"}
+  ,"send_reminder": "Enviar lembrete"
+  ,"@send_reminder": {"description": "Rótulo do botão para enviar um lembrete de pagamento a um participante"}
+  ,"reminder_message_single": "Oi {participantName}! 👋\n\nGostaria de lembrar que você deve {amount} a {creditorName} para o grupo \"{groupName}\".\n\nObrigado! 😊"
+  ,"@reminder_message_single": {"description": "Mensagem de lembrete quando um participante deve dinheiro a uma única pessoa", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
+  ,"reminder_message_multiple": "Oi {participantName}! 👋\n\nGostaria de lembrar seus pagamentos para o grupo \"{groupName}\":\n\n{debtsList}\n\nObrigado! 😊"
+  ,"@reminder_message_multiple": {"description": "Mensagem de lembrete quando um participante deve dinheiro a várias pessoas", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
+  ,"about": "Sobre"
+  ,"add": "Adicionar"
+  ,"add_expense_fab": "Adicionar Despesa"
+  ,"add_trip": "Adicionar grupo"
+  ,"amount": "Valor"
+  ,"archived": "Arquivado"
+  ,"backup": "Backup"
+  ,"backup_error": "Falha no backup"
+  ,"basic_info": "Informações Básicas"
+  ,"cancel": "Cancelar"
+  ,"category_name": "Nome da categoria"
+  ,"crop_image_title": "Cortar imagem"
+  ,"csv_amount": "Valor"
+  ,"csv_category": "Categoria"
+  ,"csv_save_error": "Erro ao salvar arquivo CSV"
+  ,"csv_saved_in": "CSV salvo em: {path}"
+  ,"currency": "Moeda"
+  ,"data_refreshed": "Atualizado"
+  ,"date": "Data"
+  ,"date_range_partial": "Selecione ambas as datas"
+  ,"dates": "Período"
+  ,"delete_group": "Excluir grupo"
+  ,"delete_participant": "Excluir participante"
+  ,"delete_trip": "Excluir viagem"
+  ,"edit_category": "Editar categoria"
+  ,"edit_expense": "Editar despesa"
+  ,"end_date_not_selected": "Selecionar fim"
+  ,"enter_participant": "Insira pelo menos um participante"
+  ,"expand_form_tooltip": "Adicionar data, localização e notas"
+  ,"expense_updated_success": "Despesa atualizada"
+  ,"expenses_by_category": "Por categoria"
+  ,"export_csv_error": "Erro ao exportar despesas"
+  ,"from": "De"
+  ,"from_to": "{start} - {end}"
+  ,"group_name": "Nome"
+  ,"history": "Histórico"
+  ,"import": "Importar"
+  ,"import_confirm_message": "Tem certeza de que deseja substituir todas as viagens pelo arquivo \"{file}\"? Esta ação não pode ser desfeita."
+  ,"import_error": "Falha na importação. Verifique o formato do arquivo."
+  ,"last_7_days": "7 dias"
+  ,"license_link": "Ver Licença MIT no GitHub"
+  ,"links": "Links"
+  ,"no_categories": "Sem categorias"
+  ,"no_expenses_to_display": "Nenhuma despesa para exibir"
+  ,"no_expenses_to_export": "Nenhuma despesa para exportar"
+  ,"no_participants": "Sem participantes"
+  ,"no_trips_found": "Para onde você quer ir?"
+  ,"note_hint": "Nota"
+  ,"ofx_save_error": "Erro ao salvar arquivo OFX"
+  ,"ofx_saved_in": "OFX salvo em: {path}"
+  ,"owes_to": " deve "
+  ,"paid_by": "Pago por"
+  ,"participant_name_hint": "Insira o nome do participante"
+  ,"participant_name_semantics": "Participante: {name}"
+  ,"participants": "Participantes"
+  ,"per_day": "/dia"
+  ,"saving": "Salvando..."
+  ,"search_groups": "Pesquisar grupos..."
+  ,"select_both_dates_or_none": "Selecione ambas as datas ou deixe ambas vazias"
+  ,"select_end": "Selecionar fim"
+  ,"select_expense_date": "Selecionar data da despesa"
+  ,"select_to_date": "Selecionar até"
+  ,"settings_language_es": "Espanhol"
+  ,"settings_user_name_title": "Seu nome"
+  ,"settings_user_name_desc": "Nome ou apelido para usar no aplicativo"
+  ,"settings_user_name_hint": "Insira seu nome"
+  ,"settlement": "Acerto"
+  ,"show_overview": "Mostrar visão geral"
+  ,"start_date_optional": "De"
+  ,"statistics": "Estatísticas"
+  ,"theme_automatic": "Automático"
+  ,"theme_dark": "Escuro"
+  ,"try_different_search": "Tente pesquisar com palavras diferentes"
+  ,"unarchive": "Desarquivar"
+  ,"unarchive_confirm": "Deseja desarquivar"
+  ,"unpin_group": "Desafixar grupo"
+  ,"weekly_expenses_chart": "Despesas semanais"
 }

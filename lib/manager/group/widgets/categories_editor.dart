@@ -14,22 +14,29 @@ class CategoriesEditor extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = context.watch<GroupFormState>();
     final controller = context.read<GroupFormController>();
-    return CategoriesSection(
-      categories: state.categories,
-      onAddCategory: (name) => state.addCategory(ExpenseCategory(name: name)),
-      onEditCategory: (i, name) => state.editCategory(i, name),
-      onRemoveCategory: (i) async {
-        final loc = gen.AppLocalizations.of(context);
-        final messenger = ScaffoldMessenger.of(context);
-        final removed = await controller.removeCategoryIfUnused(i);
-        if (!removed) {
-          AppToast.showFromMessenger(
-            messenger,
-            loc.cannot_delete_assigned_category,
-            type: ToastType.info,
-          );
-        }
-      },
+    final loc = gen.AppLocalizations.of(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CategoriesSection(
+          categories: state.categories,
+          onAddCategory: (name) =>
+              state.addCategory(ExpenseCategory(name: name)),
+          onEditCategory: (i, name) => state.editCategory(i, name),
+          onRemoveCategory: (i) async {
+            final messenger = ScaffoldMessenger.of(context);
+            final removed = await controller.removeCategoryIfUnused(i);
+            if (!removed) {
+              AppToast.showFromMessenger(
+                messenger,
+                loc.cannot_delete_assigned_category,
+                type: ToastType.info,
+              );
+            }
+          },
+        ),
+      ],
     );
   }
 }

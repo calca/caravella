@@ -21,7 +21,29 @@
   "settings_privacy": "Privacy",
   "select_currency": "Seleziona valuta",
   "select_period_hint_short": "Imposta date",
-  "select_period_hint": "Seleziona un intervallo di date",
+  "select_period_hint": "Seleziona le date",
+  "suggested_duration": "Durata suggerita",
+  "days_count": "{count} giorni",
+  "@days_count": {"description": "Numero di giorni", "placeholders": {"count": {"type": "int"}}},
+  "weekday_mon": "L",
+  "weekday_tue": "M",
+  "weekday_wed": "M",
+  "weekday_thu": "G",
+  "weekday_fri": "V",
+  "weekday_sat": "S",
+  "weekday_sun": "D",
+  "month_january": "Gennaio",
+  "month_february": "Febbraio",
+  "month_march": "Marzo",
+  "month_april": "Aprile",
+  "month_may": "Maggio",
+  "month_june": "Giugno",
+  "month_july": "Luglio",
+  "month_august": "Agosto",
+  "month_september": "Settembre",
+  "month_october": "Ottobre",
+  "month_november": "Novembre",
+  "month_december": "Dicembre",
   "in_group_prefix": "in",
   "save_change_expense": "Salva modifiche",
   "group_total": "Totale",
@@ -64,6 +86,19 @@
   "participants_description": "Persone che condividono spese",
   "categories_description": "Organizza spese per tipo",
   "dates_description": "Date inizio/fine opzionali",
+  "select_period": "Seleziona periodo",
+  "select_period_dates": "Seleziona le date del periodo",
+  "suggested_duration": "Durata suggerita",
+  "duration_days": "{days} giorni",
+  "@duration_days": {"description": "Etichetta per durata in giorni", "placeholders": {"days": {"type": "int"}}},
+  "period_from_to": "Dal {start} al {end} ({days} giorni)",
+  "@period_from_to": {"description": "Periodo formattato", "placeholders": {"start": {"type": "String"}, "end": {"type": "String"}, "days": {"type": "int"}}},
+  "period_from_select_end": "Dal {start} - Seleziona fine",
+  "@period_from_select_end": {"description": "Periodo con solo data inizio", "placeholders": {"start": {"type": "String"}}},
+  "period_to_select_start": "Al {end} - Seleziona inizio",
+  "@period_to_select_start": {"description": "Periodo con solo data fine", "placeholders": {"end": {"type": "String"}}},
+  "confirm": "Conferma",
+  "clear": "Cancella",
   "currency_description": "Valuta base del gruppo",
   "background_color_selected": "Colore selezionato",
   "background_tap_to_replace": "Tocca per sostituire",
@@ -183,6 +218,15 @@
   "archived": "Archiviato",
   "archive": "Archivia",
   "unarchive": "Disarchivia",
+  "pin": "Fissa",
+  "unpin": "Rimuovi fissaggio",
+  "delete": "Elimina",
+  "undo": "ANNULLA",
+  "archived_with_undo": "Archiviato",
+  "unarchived_with_undo": "Disarchiviato",
+  "pinned_with_undo": "Fissato",
+  "unpinned_with_undo": "Fissaggio rimosso",
+  "deleted_with_undo": "Eliminato",
   "archive_confirm": "Vuoi archiviare",
   "unarchive_confirm": "Vuoi disarchiviare",
   "overview": "Panoramica",
@@ -219,6 +263,8 @@
   "data_refreshed": "Aggiornato",
   "refresh": "Aggiorna",
   "group_added_success": "Gruppo aggiunto",
+  "group_deleted_success": "Gruppo eliminato",
+  "@group_deleted_success": {"description": "Messaggio di conferma dopo l'eliminazione di un gruppo di spese"},
   "csv_select_directory_title": "Seleziona cartella per salvare CSV",
   "csv_saved_in": "CSV salvato in: {path}",
   "csv_save_cancelled": "Esportazione annullata",
@@ -573,6 +619,10 @@
   ,"@whats_new_title": {"description": "Titolo della pagina che mostra il changelog"}
   ,"whats_new_desc": "Scopri le ultime novità e aggiornamenti"
   ,"@whats_new_desc": {"description": "Sottotitolo della pagina novità"}
+  ,"whats_new_subtitle": "Ultimi Aggiornamenti"
+  ,"@whats_new_subtitle": {"description": "Sottotitolo nella card header della pagina novità"}
+  ,"whats_new_latest": "Resta aggiornato con i miglioramenti più recenti"
+  ,"@whats_new_latest": {"description": "Testo di supporto che spiega che la lista contiene gli ultimi aggiornamenti"}
   ,"average_per_person": "Speso medio per persona"
   ,"@average_per_person": {"description": "Etichetta mostrata prima della media spesa per persona nella tab Partecipanti"}
   ,"more": "altro"
@@ -615,4 +665,10 @@
   ,"@update_install": {"description": "Pulsante per installare l'aggiornamento dal bottom sheet"}
   ,"update_remind_later": "Ricordamelo dopo"
   ,"@update_remind_later": {"description": "Pulsante per rimandare l'aggiornamento dal bottom sheet"}
+  ,"send_reminder": "Invia promemoria"
+  ,"@send_reminder": {"description": "Etichetta del pulsante per inviare un promemoria di pagamento a un partecipante"}
+  ,"reminder_message_single": "Ciao {participantName}! 👋\n\nVorrei ricordarti che devi {amount} a {creditorName} per il gruppo \"{groupName}\".\n\nGrazie! 😊"
+  ,"@reminder_message_single": {"description": "Messaggio di promemoria quando un partecipante deve denaro a una sola persona", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
+  ,"reminder_message_multiple": "Ciao {participantName}! 👋\n\nVorrei ricordarti i tuoi pagamenti per il gruppo \"{groupName}\":\n\n{debtsList}\n\nGrazie! 😊"
+  ,"@reminder_message_multiple": {"description": "Messaggio di promemoria quando un partecipante deve denaro a più persone", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
 }
