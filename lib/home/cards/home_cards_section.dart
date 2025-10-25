@@ -14,6 +14,8 @@ class HomeCardsSection extends StatefulWidget {
   final ExpenseGroup? pinnedTrip;
   final List<ExpenseGroup>? initialGroups;
   final bool allArchived;
+  final VoidCallback? onTripDeleted;
+  final VoidCallback? onTripUpdated;
 
   const HomeCardsSection({
     super.key,
@@ -21,6 +23,8 @@ class HomeCardsSection extends StatefulWidget {
     this.pinnedTrip,
     this.initialGroups,
     this.allArchived = false,
+    this.onTripDeleted,
+    this.onTripUpdated,
   });
 
   @override
@@ -100,8 +104,15 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
       );
       if (missingDeleted.isNotEmpty) {
         _loadActiveGroups();
-        return;
       }
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        widget.onTripDeleted?.call();
+      });
+
+      _groupNotifier?.clearDeletedGroups();
+      return;
     }
 
     if (updatedGroupIds.isNotEmpty && mounted) {
@@ -116,7 +127,22 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
 
       // Otherwise update only affected groups instead of reloading everything
       _updateAffectedGroupsLocally(updatedGroupIds);
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        widget.onTripUpdated?.call();
+      });
     }
+  }
+
+  void _handleGroupAdded() {
+    widget.onTripAdded();
+    _loadActiveGroups();
+  }
+
+  void _handleGroupUpdated() {
+    widget.onTripUpdated?.call();
+    _loadActiveGroups();
   }
 
   Future<void> _updateAffectedGroupsLocally(
@@ -229,25 +255,20 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
             SizedBox(
               height: contentHeight,
               child: _loading
-                  ? const Center(child: CircularProgressIndicator())
+                  ? CarouselSkeletonLoader(theme: theme)
                   : _activeGroups.isEmpty
                   ? EmptyGroupsState(
                       localizations: loc,
                       theme: theme,
                       allArchived: widget.allArchived,
-                      onGroupAdded: () {
-                        widget.onTripAdded();
-                        _softLoadActiveGroups();
-                      },
+                      onGroupAdded: _handleGroupAdded,
                     )
                   : HorizontalGroupsList(
                       groups: _activeGroups,
                       localizations: loc,
                       theme: theme,
-                      onGroupUpdated: () {
-                        widget.onTripAdded();
-                        _softLoadActiveGroups();
-                      },
+                      onGroupUpdated: _handleGroupUpdated,
+                      onGroupAdded: _handleGroupAdded,
                       onCategoryAdded: () {
                         _softLoadActiveGroups();
                       },

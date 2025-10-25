@@ -140,6 +140,32 @@ class _HomePageState extends State<HomePage> with RouteAware {
     }
   }
 
+  void _handleTripAdded() {
+    final gloc = gen.AppLocalizations.of(context);
+    _refresh();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      AppToast.show(context, gloc.group_added_success, type: ToastType.success);
+    });
+  }
+
+  void _handleTripDeleted() {
+    final gloc = gen.AppLocalizations.of(context);
+    _refresh();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      AppToast.show(
+        context,
+        gloc.group_deleted_success,
+        type: ToastType.success,
+      );
+    });
+  }
+
+  void _handleTripUpdated() {
+    _refresh();
+  }
+
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
@@ -181,16 +207,9 @@ class _HomePageState extends State<HomePage> with RouteAware {
                         label: gloc.accessibility_groups_list,
                         child: HomeCardsSection(
                           initialGroups: active,
-                          onTripAdded: () {
-                            _refresh();
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              AppToast.show(
-                                context,
-                                gloc.group_added_success,
-                                type: ToastType.success,
-                              );
-                            });
-                          },
+                          onTripAdded: _handleTripAdded,
+                          onTripDeleted: _handleTripDeleted,
+                          onTripUpdated: _handleTripUpdated,
                           pinnedTrip: _pinnedTrip,
                           allArchived: false,
                         ),
@@ -205,16 +224,9 @@ class _HomePageState extends State<HomePage> with RouteAware {
                         label: gloc.accessibility_groups_list,
                         child: HomeCardsSection(
                           initialGroups: <ExpenseGroup>[],
-                          onTripAdded: () {
-                            _refresh();
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              AppToast.show(
-                                context,
-                                gloc.group_added_success,
-                                type: ToastType.success,
-                              );
-                            });
-                          },
+                          onTripAdded: _handleTripAdded,
+                          onTripDeleted: _handleTripDeleted,
+                          onTripUpdated: _handleTripUpdated,
                           pinnedTrip: _pinnedTrip,
                           allArchived: true,
                         ),
@@ -225,14 +237,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
                       label: gloc.accessibility_welcome_screen,
                       child: HomeWelcomeSection(
                         onTripAdded: () {
-                          _refresh();
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            AppToast.show(
-                              context,
-                              gloc.group_added_success,
-                              type: ToastType.success,
-                            );
-                          });
+                          _handleTripAdded();
                         },
                       ),
                     );

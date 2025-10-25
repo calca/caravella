@@ -11,7 +11,7 @@ import '../group/group_edit_mode.dart';
 import '../../widgets/caravella_app_bar.dart';
 import '../group/widgets/section_header.dart';
 import 'widgets/expense_group_empty_states.dart';
-import 'widgets/expense_group_card.dart';
+import 'widgets/swipeable_expense_group_card.dart';
 import '../../widgets/app_toast.dart';
 
 class ExpesensHistoryPage extends StatefulWidget {
@@ -50,8 +50,12 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     _scrollController = ScrollController();
     _scrollController.addListener(_onScroll);
 
-    // Tabs: Active | Archived
-    _tabController = TabController(length: 2, vsync: this);
+    // Tabs: Active | Archived (Material 3 expressive duration)
+    _tabController = TabController(
+      length: 2,
+      vsync: this,
+      animationDuration: const Duration(milliseconds: 350),
+    );
   }
 
   ExpenseGroupNotifier? _groupNotifier;
@@ -269,9 +273,11 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
         itemCount: trips.length,
         itemBuilder: (context, index) {
           final trip = trips[index];
-          return ExpenseGroupCard(
+          return SwipeableExpenseGroupCard(
             trip: trip,
             onArchiveToggle: _onArchiveToggle,
+            onDelete: () => _loadTrips(),
+            onPin: () => _loadTrips(),
             searchQuery: _searchQuery,
           );
         },
@@ -306,9 +312,11 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
       itemCount: trips.length,
       itemBuilder: (context, index) {
         final trip = trips[index];
-        return ExpenseGroupCard(
+        return SwipeableExpenseGroupCard(
           trip: trip,
           onArchiveToggle: _onArchiveToggle,
+          onDelete: () => _loadTrips(),
+          onPin: () => _loadTrips(),
           searchQuery: _searchQuery,
         );
       },
@@ -425,7 +433,9 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                 ? _buildTabContent(_filteredAllTrips, 'search')
                 : TabBarView(
                     controller: _tabController,
-                    physics: const PageScrollPhysics(),
+                    physics: const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics(),
+                    ),
                     children: [
                       _buildTabContent(_filteredActiveTrips, 'active'),
                       _buildTabContent(_filteredArchivedTrips, 'archived'),

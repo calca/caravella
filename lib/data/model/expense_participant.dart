@@ -9,8 +9,8 @@ class ExpenseParticipant {
     required this.name,
     String? id, // opzionale, generato se mancante
     DateTime? createdAt, // opzionale, default a now
-  })  : id = id ?? const Uuid().v4(),
-        createdAt = createdAt ?? DateTime.now();
+  }) : id = id ?? const Uuid().v4(),
+       createdAt = createdAt ?? DateTime.now();
 
   factory ExpenseParticipant.fromJson(Map<String, dynamic> json) {
     return ExpenseParticipant(
@@ -23,16 +23,12 @@ class ExpenseParticipant {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'createdAt': createdAt.toIso8601String(),
-      };
+    'id': id,
+    'name': name,
+    'createdAt': createdAt.toIso8601String(),
+  };
 
-  ExpenseParticipant copyWith({
-    String? id,
-    String? name,
-    DateTime? createdAt,
-  }) {
+  ExpenseParticipant copyWith({String? id, String? name, DateTime? createdAt}) {
     return ExpenseParticipant(
       id: id ?? this.id,
       name: name ?? this.name,
