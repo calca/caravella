@@ -237,7 +237,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
                       allArchived: widget.allArchived,
                       onGroupAdded: _handleGroupAdded,
                     )
-                  : HorizontalGroupsList(
+                  : VerticalGroupsList(
                       groups: _activeGroups,
                       localizations: loc,
                       theme: theme,
