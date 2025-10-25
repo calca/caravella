@@ -141,18 +141,25 @@ class GroupCardContent extends StatelessWidget {
             ? groupNotifier.currentGroup!
             : group;
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeader(currentGroup),
-            _buildDateRange(currentGroup),
-            _buildTotalAmount(context, currentGroup),
-            const SizedBox(height: _largSpacing),
-            const Spacer(),
-            _buildStatistics(currentGroup),
-            const SizedBox(height: 24),
-            _buildAddButton(context, currentGroup),
-          ],
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            return SizedBox(
+              width: constraints.maxWidth,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildHeader(currentGroup),
+                  _buildDateRange(currentGroup),
+                  _buildTotalAmount(context, currentGroup),
+                  const SizedBox(height: _largSpacing),
+                  const Spacer(),
+                  _buildStatistics(currentGroup),
+                  const SizedBox(height: 24),
+                  _buildAddButton(context, currentGroup),
+                ],
+              ),
+            );
+          },
         );
       },
     );
