@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../data/expense_group_storage_v2.dart';
+import '../../data/model/expense_group.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:archive/archive_io.dart';
 import 'package:archive/archive.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
+import 'dart:convert';
 import '../../widgets/app_toast.dart';
 import '../../widgets/material3_dialog.dart';
 import '../auto_backup_notifier.dart';
@@ -162,17 +164,10 @@ class DataBackupPage extends StatelessWidget {
     gen.AppLocalizations loc,
   ) async {
     try {
-      final dir = await getApplicationDocumentsDirectory();
-      final tripsFile = File('${dir.path}/${ExpenseGroupStorageV2.fileName}');
-
-      if (!await tripsFile.exists()) {
-        if (!context.mounted) return;
-        AppToast.show(context, loc.no_trips_to_backup, type: ToastType.info);
-        return;
-      }
-
-      final fileSize = await tripsFile.length();
-      if (fileSize == 0) {
+      // Get all groups from the repository (works with both JSON and Hive backends)
+      final allGroups = await ExpenseGroupStorageV2.getAllGroups();
+      
+      if (allGroups.isEmpty) {
         if (!context.mounted) return;
         AppToast.show(context, loc.no_trips_to_backup, type: ToastType.info);
         return;
@@ -184,13 +179,17 @@ class DataBackupPage extends StatelessWidget {
           "${now.year.toString().padLeft(4, '0')}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}_${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}${now.second.toString().padLeft(2, '0')}";
       final zipPath = '${tempDir.path}/caravella_backup_$dateStr.zip';
 
-      // Create archive manually to ensure file content is properly added
+      // Convert all groups to JSON and create a backup file
+      final jsonData = allGroups.map((g) => g.toJson()).toList();
+      final jsonString = const JsonEncoder.withIndent('  ').convert(jsonData);
+      final jsonBytes = utf8.encode(jsonString);
+
+      // Create archive with the JSON data
       final archive = Archive();
-      final fileBytes = await tripsFile.readAsBytes();
       final archiveFile = ArchiveFile(
         ExpenseGroupStorageV2.fileName,
-        fileBytes.length,
-        fileBytes,
+        jsonBytes.length,
+        jsonBytes,
       );
       archive.addFile(archiveFile);
       final zipData = ZipEncoder().encode(archive);
@@ -247,17 +246,17 @@ class DataBackupPage extends StatelessWidget {
       );
       if (confirm == true) {
         try {
-          final dir = await getApplicationDocumentsDirectory();
-          final destFile = File(
-            '${dir.path}/${ExpenseGroupStorageV2.fileName}',
-          );
+          // Parse the backup file to get the groups
+          List<dynamic> jsonData;
+          
           if (filePath.endsWith('.zip')) {
             final bytes = await File(filePath).readAsBytes();
             final archive = ZipDecoder().decodeBytes(bytes);
             bool fileFound = false;
             for (final file in archive) {
               if (file.name == ExpenseGroupStorageV2.fileName) {
-                await destFile.writeAsBytes(file.content as List<int>);
+                final content = utf8.decode(file.content as List<int>);
+                jsonData = json.decode(content) as List<dynamic>;
                 fileFound = true;
                 break;
               }
@@ -266,10 +265,22 @@ class DataBackupPage extends StatelessWidget {
               throw Exception('File di backup non trovato nell\'archivio');
             }
           } else if (filePath.endsWith('.json')) {
-            await File(filePath).copy(destFile.path);
+            final content = await File(filePath).readAsString();
+            jsonData = json.decode(content) as List<dynamic>;
           } else {
             throw Exception('Formato file non supportato');
           }
+          
+          // Import groups into the current backend (JSON or Hive)
+          final groups = jsonData
+              .map((j) => ExpenseGroup.fromJson(j as Map<String, dynamic>))
+              .toList();
+          
+          // Add each group to storage using the repository
+          for (final group in groups) {
+            await ExpenseGroupStorageV2.addExpenseGroup(group);
+          }
+          
           if (!context.mounted) return;
           AppToast.show(context, loc.import_success, type: ToastType.success);
           Navigator.of(context).popUntil((route) => route.isFirst);

@@ -29,6 +29,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Organized preference keys and defaults into centralized abstract classes
 - **ExpenseGroupStorageV2 now supports runtime selection of storage backend based on build configuration**
 - **App initialization now automatically migrates data from JSON to Hive when Hive backend is selected**
+- **Backup and import functionality now works with both JSON and Hive backends seamlessly**
+- Backup exports data from repository (not file) making it backend-agnostic
+- Import adds data to repository (not file) supporting cross-backend restore
 
 ### Fixed
 

@@ -128,10 +128,35 @@ Add to `.vscode/launch.json`:
 
 ## Migration
 
-Data is **not** automatically migrated between storage backends. If you switch backends:
-- Existing data in the old backend remains but is not accessible
-- You start with an empty database in the new backend
-- To migrate, export your data before switching, then re-import
+~~Data is **not** automatically migrated between storage backends. If you switch backends:~~
+**UPDATE**: As of the latest version, migration from JSON to Hive is automatic! See `docs/MIGRATION_JSON_TO_HIVE.md` for details.
+
+## Backup and Import
+
+The backup and import functionality in Settings → Data Backup works seamlessly with **both** storage backends:
+
+### How Backup Works
+- **Exports data from the active repository** (regardless of backend)
+- Creates a JSON file containing all expense groups
+- Packages it into a ZIP file
+- Works identically whether using JSON or Hive backend
+
+### How Import Works
+- **Imports data into the active repository** (regardless of backend)
+- Reads ZIP or JSON files
+- Parses expense groups from the backup
+- Adds them to the current storage backend
+- Works identically whether using JSON or Hive backend
+
+### Compatibility
+✅ Backups created with **JSON backend** can be imported into **Hive backend**  
+✅ Backups created with **Hive backend** can be imported into **JSON backend**  
+✅ The backup format is **backend-agnostic** (always JSON in a ZIP)
+
+This means you can:
+1. Create a backup on JSON backend
+2. Switch to Hive backend
+3. Import the backup - all data restored!
 
 ## Technical Details
 
