@@ -28,7 +28,7 @@ class _PeriodSelectionBottomSheetState
   DateTime _displayedMonth = DateTime.now();
 
   // Duration presets in days
-  static const List<int> _durationPresets = [3, 7, 15, 20];
+  static const List<int> _durationPresets = [3, 7, 15, 30];
 
   @override
   void initState() {
@@ -64,13 +64,6 @@ class _PeriodSelectionBottomSheetState
       _endDate = now.add(
         Duration(days: days - 1),
       ); // -1 because we include start day
-    });
-  }
-
-  void _onClearSelection() {
-    setState(() {
-      _startDate = null;
-      _endDate = null;
     });
   }
 
@@ -137,6 +130,7 @@ class _PeriodSelectionBottomSheetState
 
   Widget _buildCalendarGrid() {
     final theme = Theme.of(context);
+    final gloc = gen.AppLocalizations.of(context);
     final daysInMonth = DateTime(
       _displayedMonth.year,
       _displayedMonth.month + 1,
@@ -158,21 +152,30 @@ class _PeriodSelectionBottomSheetState
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
-            children: ['L', 'M', 'M', 'G', 'V', 'S', 'D']
-                .map(
-                  (day) => Expanded(
-                    child: Center(
-                      child: Text(
-                        day,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.outline,
-                          fontWeight: FontWeight.w500,
+            children:
+                [
+                      gloc.weekday_mon,
+                      gloc.weekday_tue,
+                      gloc.weekday_wed,
+                      gloc.weekday_thu,
+                      gloc.weekday_fri,
+                      gloc.weekday_sat,
+                      gloc.weekday_sun,
+                    ]
+                    .map(
+                      (day) => Expanded(
+                        child: Center(
+                          child: Text(
+                            day,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.outline,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                )
-                .toList(),
+                    )
+                    .toList(),
           ),
         ),
         const SizedBox(height: 8),
@@ -252,6 +255,7 @@ class _PeriodSelectionBottomSheetState
 
   Widget _buildDurationPresets() {
     final theme = Theme.of(context);
+    final gloc = gen.AppLocalizations.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -259,78 +263,35 @@ class _PeriodSelectionBottomSheetState
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Text(
-            'Suggested duration',
+            gloc.suggested_duration,
             style: theme.textTheme.titleSmall?.copyWith(
               fontWeight: FontWeight.w600,
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Wrap(
-            spacing: 8,
-            children: _durationPresets.map((days) {
-              return FilterChip(
-                label: Text('$days days'),
-                onSelected: (selected) => _onDurationPresetTapped(days),
-                selected: false,
-                showCheckmark: false,
+        SizedBox(
+          height: 40,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            itemCount: _durationPresets.length,
+            itemBuilder: (context, index) {
+              final days = _durationPresets[index];
+              return Padding(
+                padding: EdgeInsets.only(
+                  right: index < _durationPresets.length - 1 ? 8 : 0,
+                ),
+                child: FilterChip(
+                  label: Text(gloc.days_count(days)),
+                  onSelected: (selected) => _onDurationPresetTapped(days),
+                  selected: false,
+                  showCheckmark: false,
+                ),
               );
-            }).toList(),
+            },
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildSelectionSummary() {
-    final theme = Theme.of(context);
-    final gloc = gen.AppLocalizations.of(context);
-
-    if (_startDate == null && _endDate == null) {
-      return Padding(
-        padding: const EdgeInsets.all(16),
-        child: Text(
-          gloc.select_period_hint,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.outline,
-          ),
-        ),
-      );
-    }
-
-    String text;
-    if (_startDate != null && _endDate != null) {
-      final duration = _endDate!.difference(_startDate!).inDays + 1;
-      text =
-          '${_formatDate(_startDate!)} - ${_formatDate(_endDate!)} ($duration days)';
-    } else if (_startDate != null) {
-      text =
-          '${gloc.select_start}: ${_formatDate(_startDate!)} - ${gloc.select_end}';
-    } else {
-      text =
-          '${gloc.select_end}: ${_formatDate(_endDate!)} - ${gloc.select_start}';
-    }
-
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              text,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-          if (_startDate != null || _endDate != null)
-            TextButton(
-              onPressed: _onClearSelection,
-              child: Text(gloc.clear_filters),
-            ),
-        ],
-      ),
     );
   }
 
@@ -340,46 +301,33 @@ class _PeriodSelectionBottomSheetState
 
     return Padding(
       padding: const EdgeInsets.all(16),
-      child: Row(
-        children: [
-          Expanded(
-            child: OutlinedButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(gloc.cancel),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: FilledButton(
-              onPressed: canConfirm ? _onConfirm : null,
-              child: Text(gloc.ok),
-            ),
-          ),
-        ],
+      child: SizedBox(
+        width: double.infinity,
+        child: FilledButton(
+          onPressed: canConfirm ? _onConfirm : null,
+          child: Text(gloc.ok),
+        ),
       ),
     );
   }
 
   String _getMonthName(int month) {
-    const months = [
-      'Gennaio',
-      'Febbraio',
-      'Marzo',
-      'Aprile',
-      'Maggio',
-      'Giugno',
-      'Luglio',
-      'Agosto',
-      'Settembre',
-      'Ottobre',
-      'Novembre',
-      'Dicembre',
+    final gloc = gen.AppLocalizations.of(context);
+    final months = [
+      gloc.month_january,
+      gloc.month_february,
+      gloc.month_march,
+      gloc.month_april,
+      gloc.month_may,
+      gloc.month_june,
+      gloc.month_july,
+      gloc.month_august,
+      gloc.month_september,
+      gloc.month_october,
+      gloc.month_november,
+      gloc.month_december,
     ];
     return months[month - 1];
-  }
-
-  String _formatDate(DateTime date) {
-    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
   }
 
   bool _isToday(DateTime date) {
@@ -391,16 +339,11 @@ class _PeriodSelectionBottomSheetState
 
   @override
   Widget build(BuildContext context) {
-    final gloc = gen.AppLocalizations.of(context);
-
     return GroupBottomSheetScaffold(
-      title: gloc.select_period_hint,
       scrollable: false,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildSelectionSummary(),
-          const Divider(height: 1),
           _buildCalendarHeader(),
           _buildCalendarGrid(),
           const SizedBox(height: 16),
