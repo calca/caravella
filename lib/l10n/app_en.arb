@@ -346,7 +346,27 @@
   "auto_backup_desc": "Enable operating system automatic backup",
   "settings_user_name_title": "Your name",
   "settings_user_name_desc": "Name or nickname to use in the app",
-  "settings_user_name_hint": "Enter your name"
+  "settings_user_name_hint": "Enter your name",
+  "google_drive_backup": "Google Drive Backup",
+  "google_drive_backup_desc": "Save backup to Google Drive",
+  "google_drive_restore": "Google Drive Restore",
+  "google_drive_restore_desc": "Restore from Google Drive", 
+  "google_drive_sign_in": "Sign in to Google",
+  "google_drive_sign_out": "Sign out from Google",
+  "google_drive_backup_success": "Backup saved to Google Drive",
+  "google_drive_backup_error": "Error backing up to Google Drive",
+  "google_drive_restore_success": "Data restored from Google Drive",
+  "google_drive_restore_error": "Error restoring from Google Drive",
+  "google_drive_auth_error": "Google authentication error",
+  "google_drive_no_backup_found": "No backup found on Google Drive",
+  "google_drive_uploading": "Uploading to Google Drive...",
+  "google_drive_downloading": "Downloading from Google Drive...",
+  "google_drive_signed_in_as": "Signed in as: {email}",
+  "@google_drive_signed_in_as": {
+    "placeholders": {
+      "email": {}
+    }
+  }
   ,"info_tab": "Info"
   ,"select_paid_by": "Select payer"
   ,"select_category": "Select a category"
