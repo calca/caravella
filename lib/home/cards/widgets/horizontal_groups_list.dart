@@ -35,7 +35,6 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList>
   double _currentPage = 0.0;
   late List<ExpenseGroup> _localGroups;
   bool _isLoadingNewGroup = false;
-  String? _pendingGroupId;
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
 
@@ -128,17 +127,17 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList>
       setState(() {
         _isLoadingNewGroup = true;
       });
-      
+
       // Small delay to show the skeleton animation
       await Future.delayed(const Duration(milliseconds: 300));
-      
+
       await _updateGroupLocally(groupId);
-      
+
       if (mounted) {
         setState(() {
           _isLoadingNewGroup = false;
         });
-        
+
         // Animate to the new group (first position) if it was newly added
         final groupIndex = _localGroups.indexWhere((g) => g.id == groupId);
         if (groupIndex == 0) {
@@ -154,7 +153,7 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList>
       setState(() {
         _isLoadingNewGroup = true;
       });
-      
+
       // Call parent callback which will refresh the list
       widget.onGroupAdded();
     }
@@ -205,7 +204,8 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList>
                     ),
                     child: GroupCardSkeleton(
                       isSelected: isSelected,
-                      selectionProgress: 1.0 - distanceFromCenter.clamp(0.0, 1.0),
+                      selectionProgress:
+                          1.0 - distanceFromCenter.clamp(0.0, 1.0),
                     ),
                   );
                 }
@@ -228,7 +228,8 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList>
                       theme: widget.theme,
                       onGroupAdded: _handleGroupUpdated,
                       isSelected: isSelected,
-                      selectionProgress: 1.0 - distanceFromCenter.clamp(0.0, 1.0),
+                      selectionProgress:
+                          1.0 - distanceFromCenter.clamp(0.0, 1.0),
                     ),
                   );
                 }

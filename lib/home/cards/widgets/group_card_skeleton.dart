@@ -64,7 +64,7 @@ class _GroupCardSkeletonState extends State<GroupCardSkeleton>
       child: Card(
         margin: const EdgeInsets.only(bottom: 16),
         elevation: widget.isSelected ? 8 : 2,
-        shadowColor: theme.colorScheme.shadow.withOpacity(0.3),
+        shadowColor: theme.colorScheme.shadow.withValues(alpha: 0.3),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
@@ -99,7 +99,7 @@ class _GroupCardSkeletonState extends State<GroupCardSkeleton>
                       width: 180,
                       height: 28,
                       decoration: BoxDecoration(
-                        color: baseColor.withOpacity(0.5),
+                        color: baseColor.withValues(alpha: 0.5),
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
@@ -109,7 +109,7 @@ class _GroupCardSkeletonState extends State<GroupCardSkeleton>
                       width: 120,
                       height: 16,
                       decoration: BoxDecoration(
-                        color: baseColor.withOpacity(0.5),
+                        color: baseColor.withValues(alpha: 0.5),
                         borderRadius: BorderRadius.circular(6),
                       ),
                     ),
@@ -122,7 +122,7 @@ class _GroupCardSkeletonState extends State<GroupCardSkeleton>
                           width: 80,
                           height: 20,
                           decoration: BoxDecoration(
-                            color: baseColor.withOpacity(0.5),
+                            color: baseColor.withValues(alpha: 0.5),
                             borderRadius: BorderRadius.circular(6),
                           ),
                         ),
@@ -130,7 +130,7 @@ class _GroupCardSkeletonState extends State<GroupCardSkeleton>
                           width: 60,
                           height: 20,
                           decoration: BoxDecoration(
-                            color: baseColor.withOpacity(0.5),
+                            color: baseColor.withValues(alpha: 0.5),
                             borderRadius: BorderRadius.circular(6),
                           ),
                         ),
