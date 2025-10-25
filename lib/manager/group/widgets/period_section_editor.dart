@@ -28,6 +28,10 @@ class PeriodSectionEditor extends StatelessWidget {
       description: gen.AppLocalizations.of(context).dates_description,
       errorText: errorText,
       isEndDateEnabled: state.startDate != null,
+      // New callback for date range changes
+      onDateRangeChanged: (startDate, endDate) {
+        state.setDates(start: startDate, end: endDate);
+      },
     );
   }
 }

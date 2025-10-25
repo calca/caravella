@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Smooth skeleton loader animation for carousel during cold start with shimmer effect
 - Fade-in animation for carousel cards when data loads
 - In-app store rating feature with smart triggers (after 10 expenses, then monthly)
+- Period selector with interactive calendar and duration presets (3, 7, 15, 30 days)
 
 ### Changed
 - Improved app metadata for distribution platforms

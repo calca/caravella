@@ -197,8 +197,134 @@ abstract class AppLocalizations {
   /// No description provided for @select_period_hint.
   ///
   /// In en, this message translates to:
-  /// **'Select a date range'**
+  /// **'Select dates'**
   String get select_period_hint;
+
+  /// No description provided for @suggested_duration.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested duration'**
+  String get suggested_duration;
+
+  /// Number of days
+  ///
+  /// In en, this message translates to:
+  /// **'{count} days'**
+  String days_count(int count);
+
+  /// No description provided for @weekday_mon.
+  ///
+  /// In en, this message translates to:
+  /// **'M'**
+  String get weekday_mon;
+
+  /// No description provided for @weekday_tue.
+  ///
+  /// In en, this message translates to:
+  /// **'T'**
+  String get weekday_tue;
+
+  /// No description provided for @weekday_wed.
+  ///
+  /// In en, this message translates to:
+  /// **'W'**
+  String get weekday_wed;
+
+  /// No description provided for @weekday_thu.
+  ///
+  /// In en, this message translates to:
+  /// **'T'**
+  String get weekday_thu;
+
+  /// No description provided for @weekday_fri.
+  ///
+  /// In en, this message translates to:
+  /// **'F'**
+  String get weekday_fri;
+
+  /// No description provided for @weekday_sat.
+  ///
+  /// In en, this message translates to:
+  /// **'S'**
+  String get weekday_sat;
+
+  /// No description provided for @weekday_sun.
+  ///
+  /// In en, this message translates to:
+  /// **'S'**
+  String get weekday_sun;
+
+  /// No description provided for @month_january.
+  ///
+  /// In en, this message translates to:
+  /// **'January'**
+  String get month_january;
+
+  /// No description provided for @month_february.
+  ///
+  /// In en, this message translates to:
+  /// **'February'**
+  String get month_february;
+
+  /// No description provided for @month_march.
+  ///
+  /// In en, this message translates to:
+  /// **'March'**
+  String get month_march;
+
+  /// No description provided for @month_april.
+  ///
+  /// In en, this message translates to:
+  /// **'April'**
+  String get month_april;
+
+  /// No description provided for @month_may.
+  ///
+  /// In en, this message translates to:
+  /// **'May'**
+  String get month_may;
+
+  /// No description provided for @month_june.
+  ///
+  /// In en, this message translates to:
+  /// **'June'**
+  String get month_june;
+
+  /// No description provided for @month_july.
+  ///
+  /// In en, this message translates to:
+  /// **'July'**
+  String get month_july;
+
+  /// No description provided for @month_august.
+  ///
+  /// In en, this message translates to:
+  /// **'August'**
+  String get month_august;
+
+  /// No description provided for @month_september.
+  ///
+  /// In en, this message translates to:
+  /// **'September'**
+  String get month_september;
+
+  /// No description provided for @month_october.
+  ///
+  /// In en, this message translates to:
+  /// **'October'**
+  String get month_october;
+
+  /// No description provided for @month_november.
+  ///
+  /// In en, this message translates to:
+  /// **'November'**
+  String get month_november;
+
+  /// No description provided for @month_december.
+  ///
+  /// In en, this message translates to:
+  /// **'December'**
+  String get month_december;
 
   /// No description provided for @in_group_prefix.
   ///
@@ -463,6 +589,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Optional start and end'**
   String get dates_description;
+
+  /// No description provided for @select_period.
+  ///
+  /// In en, this message translates to:
+  /// **'Select period'**
+  String get select_period;
+
+  /// No description provided for @select_period_dates.
+  ///
+  /// In en, this message translates to:
+  /// **'Select the period dates'**
+  String get select_period_dates;
+
+  /// Label for duration in days
+  ///
+  /// In en, this message translates to:
+  /// **'{days} days'**
+  String duration_days(int days);
+
+  /// Formatted period
+  ///
+  /// In en, this message translates to:
+  /// **'From {start} to {end} ({days} days)'**
+  String period_from_to(String start, String end, int days);
+
+  /// Period with only start date
+  ///
+  /// In en, this message translates to:
+  /// **'From {start} - Select end'**
+  String period_from_select_end(String start);
+
+  /// Period with only end date
+  ///
+  /// In en, this message translates to:
+  /// **'To {end} - Select start'**
+  String period_to_select_start(String end);
+
+  /// No description provided for @confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirm;
+
+  /// No description provided for @clear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clear;
 
   /// No description provided for @currency_description.
   ///

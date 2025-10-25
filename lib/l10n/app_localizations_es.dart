@@ -55,7 +55,72 @@ class AppLocalizationsEs extends AppLocalizations {
   String get select_period_hint_short => 'Establecer fechas';
 
   @override
-  String get select_period_hint => 'Seleccionar un rango de fechas';
+  String get select_period_hint => 'Seleccionar fechas';
+
+  @override
+  String get suggested_duration => 'Duración sugerida';
+
+  @override
+  String days_count(int count) {
+    return '$count días';
+  }
+
+  @override
+  String get weekday_mon => 'L';
+
+  @override
+  String get weekday_tue => 'M';
+
+  @override
+  String get weekday_wed => 'M';
+
+  @override
+  String get weekday_thu => 'J';
+
+  @override
+  String get weekday_fri => 'V';
+
+  @override
+  String get weekday_sat => 'S';
+
+  @override
+  String get weekday_sun => 'D';
+
+  @override
+  String get month_january => 'Enero';
+
+  @override
+  String get month_february => 'Febrero';
+
+  @override
+  String get month_march => 'Marzo';
+
+  @override
+  String get month_april => 'Abril';
+
+  @override
+  String get month_may => 'Mayo';
+
+  @override
+  String get month_june => 'Junio';
+
+  @override
+  String get month_july => 'Julio';
+
+  @override
+  String get month_august => 'Agosto';
+
+  @override
+  String get month_september => 'Septiembre';
+
+  @override
+  String get month_october => 'Octubre';
+
+  @override
+  String get month_november => 'Noviembre';
+
+  @override
+  String get month_december => 'Diciembre';
 
   @override
   String get in_group_prefix => 'en';
@@ -191,6 +256,38 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get dates_description => 'Inicio y fin opcionales';
+
+  @override
+  String get select_period => 'Select period';
+
+  @override
+  String get select_period_dates => 'Select the period dates';
+
+  @override
+  String duration_days(int days) {
+    return '$days days';
+  }
+
+  @override
+  String period_from_to(String start, String end, int days) {
+    return 'From $start to $end ($days days)';
+  }
+
+  @override
+  String period_from_select_end(String start) {
+    return 'From $start - Select end';
+  }
+
+  @override
+  String period_to_select_start(String end) {
+    return 'To $end - Select start';
+  }
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
+  String get clear => 'Clear';
 
   @override
   String get currency_description => 'Moneda base para el grupo';

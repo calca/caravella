@@ -1,1 +1,34 @@
-{}
+{
+  "es": [
+    "select_period",
+    "select_period_dates",
+    "duration_days",
+    "period_from_to",
+    "period_from_select_end",
+    "period_to_select_start",
+    "confirm",
+    "clear"
+  ],
+
+  "pt": [
+    "select_period",
+    "select_period_dates",
+    "duration_days",
+    "period_from_to",
+    "period_from_select_end",
+    "period_to_select_start",
+    "confirm",
+    "clear"
+  ],
+
+  "zh": [
+    "select_period",
+    "select_period_dates",
+    "duration_days",
+    "period_from_to",
+    "period_from_select_end",
+    "period_to_select_start",
+    "confirm",
+    "clear"
+  ]
+}

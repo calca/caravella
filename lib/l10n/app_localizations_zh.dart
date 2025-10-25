@@ -54,7 +54,72 @@ class AppLocalizationsZh extends AppLocalizations {
   String get select_period_hint_short => '设置日期';
 
   @override
-  String get select_period_hint => '选择日期范围';
+  String get select_period_hint => '选择日期';
+
+  @override
+  String get suggested_duration => '建议时长';
+
+  @override
+  String days_count(int count) {
+    return '$count天';
+  }
+
+  @override
+  String get weekday_mon => '一';
+
+  @override
+  String get weekday_tue => '二';
+
+  @override
+  String get weekday_wed => '三';
+
+  @override
+  String get weekday_thu => '四';
+
+  @override
+  String get weekday_fri => '五';
+
+  @override
+  String get weekday_sat => '六';
+
+  @override
+  String get weekday_sun => '日';
+
+  @override
+  String get month_january => '一月';
+
+  @override
+  String get month_february => '二月';
+
+  @override
+  String get month_march => '三月';
+
+  @override
+  String get month_april => '四月';
+
+  @override
+  String get month_may => '五月';
+
+  @override
+  String get month_june => '六月';
+
+  @override
+  String get month_july => '七月';
+
+  @override
+  String get month_august => '八月';
+
+  @override
+  String get month_september => '九月';
+
+  @override
+  String get month_october => '十月';
+
+  @override
+  String get month_november => '十一月';
+
+  @override
+  String get month_december => '十二月';
 
   @override
   String get in_group_prefix => '在';
@@ -187,6 +252,38 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get dates_description => '可选的开始和结束';
+
+  @override
+  String get select_period => 'Select period';
+
+  @override
+  String get select_period_dates => 'Select the period dates';
+
+  @override
+  String duration_days(int days) {
+    return '$days days';
+  }
+
+  @override
+  String period_from_to(String start, String end, int days) {
+    return 'From $start to $end ($days days)';
+  }
+
+  @override
+  String period_from_select_end(String start) {
+    return 'From $start - Select end';
+  }
+
+  @override
+  String period_to_select_start(String end) {
+    return 'To $end - Select start';
+  }
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
+  String get clear => 'Clear';
 
   @override
   String get currency_description => '群组的基础货币';
