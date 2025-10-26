@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../data/model/expense_group.dart';
 import '../../../data/expense_group_storage_v2.dart';
+import 'carousel_skeleton_loader.dart';
 import 'group_card.dart';
-import 'group_card_skeleton.dart';
 import 'new_group_card.dart';
 import 'page_indicator.dart';
 
@@ -30,13 +30,14 @@ class HorizontalGroupsList extends StatefulWidget {
 }
 
 class _HorizontalGroupsListState extends State<HorizontalGroupsList>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late PageController _pageController;
   double _currentPage = 0.0;
   late List<ExpenseGroup> _localGroups;
   bool _isLoadingNewGroup = false;
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
+  late AnimationController _shimmerController;
 
   void _onPageChanged() {
     if (mounted) {
@@ -63,6 +64,12 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList>
       curve: Curves.easeIn,
     );
     _fadeController.forward();
+
+    // Setup shimmer animation for skeleton cards
+    _shimmerController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    )..repeat();
   }
 
   @override
@@ -179,6 +186,7 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList>
     _pageController.removeListener(_onPageChanged);
     _pageController.dispose();
     _fadeController.dispose();
+    _shimmerController.dispose();
     super.dispose();
   }
 
@@ -213,10 +221,12 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList>
                       top: isSelected ? 0 : 8,
                       bottom: isSelected ? 0 : 8,
                     ),
-                    child: GroupCardSkeleton(
+                    child: SkeletonCard(
+                      shimmerValue: _shimmerController.value,
+                      colorScheme: widget.theme.colorScheme,
                       isSelected: isSelected,
-                      selectionProgress:
-                          1.0 - distanceFromCenter.clamp(0.0, 1.0),
+                      selectionProgress: 1.0 - distanceFromCenter.clamp(0.0, 1.0),
+                      enableEntranceAnimation: true,
                     ),
                   );
                 }
