@@ -34,7 +34,10 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList>
   late PageController _pageController;
   double _currentPage = 0.0;
   late List<ExpenseGroup> _localGroups;
+<<<<<<< HEAD
   bool _isLoadingNewGroup = false;
+=======
+>>>>>>> main
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
 
@@ -160,12 +163,15 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList>
         }
       }
     } else {
+<<<<<<< HEAD
       // No group ID provided - show skeleton and call parent's onGroupAdded
       setState(() {
         _isLoadingNewGroup = true;
       });
 
       // Call parent callback which will refresh the list
+=======
+>>>>>>> main
       widget.onGroupAdded();
     }
   }
@@ -195,6 +201,7 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList>
           // Main PageView slider
           Expanded(
             child: PageView.builder(
+<<<<<<< HEAD
               itemCount: totalItems,
               padEnds: false,
               controller: _pageController,
@@ -247,6 +254,18 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList>
 
                 // Otherwise show a regular group card
                 final group = _localGroups[adjustedIndex];
+=======
+            itemCount: totalItems,
+            padEnds: false,
+            controller: _pageController,
+            itemBuilder: (context, index) {
+              // Calcola quanto questa card è vicina al centro
+              final double distanceFromCenter = (index - _currentPage).abs();
+              final bool isSelected = distanceFromCenter < 0.5;
+
+              // If this is the last index, show the new group card
+              if (index == _localGroups.length) {
+>>>>>>> main
                 return AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
                   curve: Curves.easeInOut,
@@ -255,16 +274,24 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList>
                     top: isSelected ? 0 : 8,
                     bottom: isSelected ? 0 : 8,
                   ),
+<<<<<<< HEAD
                   child: GroupCard(
                     group: group,
                     localizations: widget.localizations,
                     theme: widget.theme,
                     onGroupUpdated: () => _handleGroupUpdated(group.id),
                     onCategoryAdded: _handleCategoryAdded,
+=======
+                  child: NewGroupCard(
+                    localizations: widget.localizations,
+                    theme: widget.theme,
+                    onGroupAdded: _handleGroupUpdated,
+>>>>>>> main
                     isSelected: isSelected,
                     selectionProgress: 1.0 - distanceFromCenter.clamp(0.0, 1.0),
                   ),
                 );
+<<<<<<< HEAD
               },
             ),
           ),
@@ -278,6 +305,43 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList>
           ),
         ],
       ),
+=======
+              }
+
+              // Otherwise show a regular group card
+              final group = _localGroups[index];
+              return AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                margin: EdgeInsets.only(
+                  right: 16,
+                  top: isSelected ? 0 : 8,
+                  bottom: isSelected ? 0 : 8,
+                ),
+                child: GroupCard(
+                  group: group,
+                  localizations: widget.localizations,
+                  theme: widget.theme,
+                  onGroupUpdated: () => _handleGroupUpdated(group.id),
+                  onCategoryAdded: _handleCategoryAdded,
+                  isSelected: isSelected,
+                  selectionProgress: 1.0 - distanceFromCenter.clamp(0.0, 1.0),
+                ),
+              );
+            },
+          ),
+        ),
+        // Page indicator
+        Padding(
+          padding: const EdgeInsets.only(top: 12, bottom: 8),
+          child: PageIndicator(
+            itemCount: totalItems,
+            currentPage: _currentPage,
+          ),
+        ),
+      ],
+    ),
+>>>>>>> main
     );
   }
 }
