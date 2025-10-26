@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:io_caravella_egm/themes/app_text_styles.dart';
-import 'date_card.dart';
 import 'section_header.dart';
 import 'period_selection_bottom_sheet.dart';
 
