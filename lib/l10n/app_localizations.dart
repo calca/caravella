@@ -3386,6 +3386,108 @@ abstract class AppLocalizations {
   /// **'to '**
   String get debt_prefix_to;
 
+  /// Label to check for updates from Google Play Store
+  ///
+  /// In en, this message translates to:
+  /// **'Check for updates'**
+  String get check_for_updates;
+
+  /// Description for update check
+  ///
+  /// In en, this message translates to:
+  /// **'Check for new version availability'**
+  String get check_for_updates_desc;
+
+  /// Title when an update is available
+  ///
+  /// In en, this message translates to:
+  /// **'Update available'**
+  String get update_available;
+
+  /// Description when an update is available
+  ///
+  /// In en, this message translates to:
+  /// **'A new version of the app is available'**
+  String get update_available_desc;
+
+  /// Message when there are no updates
+  ///
+  /// In en, this message translates to:
+  /// **'App up to date'**
+  String get no_update_available;
+
+  /// Description when there are no updates
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re using the latest version'**
+  String get no_update_available_desc;
+
+  /// Button to start the update
+  ///
+  /// In en, this message translates to:
+  /// **'Update now'**
+  String get update_now;
+
+  /// Button to postpone the update
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get update_later;
+
+  /// Message while checking for updates
+  ///
+  /// In en, this message translates to:
+  /// **'Checking for updates...'**
+  String get checking_for_updates;
+
+  /// Error message during update check
+  ///
+  /// In en, this message translates to:
+  /// **'Update check error'**
+  String get update_error;
+
+  /// Message while downloading update
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading...'**
+  String get update_downloading;
+
+  /// Message while installing update
+  ///
+  /// In en, this message translates to:
+  /// **'Installing...'**
+  String get update_installing;
+
+  /// Message explaining the feature is Android-only
+  ///
+  /// In en, this message translates to:
+  /// **'Feature only available on Android with Google Play Store'**
+  String get update_feature_android_only;
+
+  /// Title of bottom sheet to recommend update
+  ///
+  /// In en, this message translates to:
+  /// **'Update recommended'**
+  String get update_recommendation_title;
+
+  /// Description in bottom sheet recommending to update
+  ///
+  /// In en, this message translates to:
+  /// **'A new version of Caravella is available. Update the app to always have the latest features and improvements!'**
+  String get update_recommendation_desc;
+
+  /// Button to install update from bottom sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Install update'**
+  String get update_install;
+
+  /// Button to postpone update from bottom sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Remind me later'**
+  String get update_remind_later;
+
   /// Button label to send a payment reminder to a participant
   ///
   /// In en, this message translates to:

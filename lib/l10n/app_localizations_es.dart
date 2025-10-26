@@ -1716,6 +1716,61 @@ class AppLocalizationsEs extends AppLocalizations {
   String get debt_prefix_to => 'a ';
 
   @override
+  String get check_for_updates => 'Buscar actualizaciones';
+
+  @override
+  String get check_for_updates_desc =>
+      'Verificar disponibilidad de nueva versión';
+
+  @override
+  String get update_available => 'Actualización disponible';
+
+  @override
+  String get update_available_desc =>
+      'Una nueva versión de la app está disponible';
+
+  @override
+  String get no_update_available => 'App actualizada';
+
+  @override
+  String get no_update_available_desc => 'Estás usando la última versión';
+
+  @override
+  String get update_now => 'Actualizar ahora';
+
+  @override
+  String get update_later => 'Más tarde';
+
+  @override
+  String get checking_for_updates => 'Verificando actualizaciones...';
+
+  @override
+  String get update_error => 'Error al verificar actualizaciones';
+
+  @override
+  String get update_downloading => 'Descargando...';
+
+  @override
+  String get update_installing => 'Instalando...';
+
+  @override
+  String get update_feature_android_only =>
+      'Función disponible solo en Android con Google Play Store';
+
+  @override
+  String get update_recommendation_title => 'Actualización recomendada';
+
+  @override
+  String get update_recommendation_desc =>
+      'Una nueva versión de Caravella está disponible. ¡Actualiza la app para tener siempre las últimas funciones y mejoras!';
+
+  @override
+  String get update_install => 'Instalar actualización';
+
+  @override
+  String get update_remind_later => 'Recuérdamelo después';
+
+  @override
   String get send_reminder => 'Enviar recordatorio';
 
   @override

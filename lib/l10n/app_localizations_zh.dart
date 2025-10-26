@@ -1685,6 +1685,57 @@ class AppLocalizationsZh extends AppLocalizations {
   String get debt_prefix_to => '给 ';
 
   @override
+  String get check_for_updates => '检查更新';
+
+  @override
+  String get check_for_updates_desc => '检查新版本可用性';
+
+  @override
+  String get update_available => '有可用更新';
+
+  @override
+  String get update_available_desc => '应用的新版本已可用';
+
+  @override
+  String get no_update_available => '应用已是最新';
+
+  @override
+  String get no_update_available_desc => '您正在使用最新版本';
+
+  @override
+  String get update_now => '立即更新';
+
+  @override
+  String get update_later => '稍后';
+
+  @override
+  String get checking_for_updates => '正在检查更新...';
+
+  @override
+  String get update_error => '更新检查错误';
+
+  @override
+  String get update_downloading => '正在下载...';
+
+  @override
+  String get update_installing => '正在安装...';
+
+  @override
+  String get update_feature_android_only => '此功能仅适用于带有Google Play商店的Android设备';
+
+  @override
+  String get update_recommendation_title => '推荐更新';
+
+  @override
+  String get update_recommendation_desc => 'Caravella有新版本可用。更新应用以始终获得最新功能和改进！';
+
+  @override
+  String get update_install => '安装更新';
+
+  @override
+  String get update_remind_later => '稍后提醒我';
+
+  @override
   String get send_reminder => '发送提醒';
 
   @override
