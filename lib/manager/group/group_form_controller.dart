@@ -4,6 +4,7 @@ import 'package:path_provider/path_provider.dart';
 import '../../data/model/expense_group.dart';
 import '../../data/model/expense_participant.dart';
 import '../../data/model/expense_category.dart';
+import '../../data/model/expense_group_type.dart';
 import '../../data/expense_group_storage_v2.dart';
 // ...existing code...
 import 'data/group_form_state.dart';
@@ -35,6 +36,7 @@ class GroupFormController {
     state.currency = _currencyFromGroup(group.currency);
     state.imagePath = group.file;
     state.color = group.color;
+    state.groupType = group.groupType;
     // Keep a snapshot in the state to avoid extra repository fetches
     state.setOriginalGroup(group.copyWith());
     state.refresh();
@@ -93,6 +95,7 @@ class GroupFormController {
     }
     if (g.file != state.imagePath) return true;
     if (g.color != state.color) return true;
+    if (g.groupType != state.groupType) return true;
     return false;
   }
 
@@ -137,6 +140,7 @@ class GroupFormController {
         currency: state.currency['symbol'] ?? state.currency['code'] ?? 'EUR',
         file: state.imagePath,
         color: state.color,
+        groupType: state.groupType,
         timestamp: state.originalGroup?.timestamp ?? now,
       );
 
@@ -297,5 +301,19 @@ class GroupFormController {
     state.imagePath = null;
     state.color = null;
     state.refresh();
+  }
+
+  /// Sets the group type and optionally auto-populates default categories
+  /// if the categories list is currently empty.
+  void setGroupType(ExpenseGroupType? type, {bool autoPopulateCategories = true}) {
+    state.setGroupType(type);
+    
+    // Auto-populate categories only if the list is empty and a type is selected
+    if (autoPopulateCategories && type != null && state.categories.isEmpty) {
+      final defaultCategories = type.defaultCategories;
+      for (final categoryName in defaultCategories) {
+        state.addCategory(ExpenseCategory(name: categoryName));
+      }
+    }
   }
 }
