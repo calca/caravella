@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Long-press on participant card now opens a bottom sheet with message preview before sending
 
 ### Changed
+- Enhanced skeleton loader with smooth scale and fade-in animations for more polished loading experience
+- Improved new group creation flow with immediate skeleton display and automatic navigation to newly created group
 - Improved app metadata for distribution platforms
 - Replaced CircularProgressIndicator with CarouselSkeletonLoader in home cards section for better UX
 - Refactored PreferencesService architecture with singleton pattern and separated preference categories
