@@ -225,7 +225,8 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList>
                       shimmerValue: _shimmerController.value,
                       colorScheme: widget.theme.colorScheme,
                       isSelected: isSelected,
-                      selectionProgress: 1.0 - distanceFromCenter.clamp(0.0, 1.0),
+                      selectionProgress:
+                          1.0 - distanceFromCenter.clamp(0.0, 1.0),
                       enableEntranceAnimation: true,
                     ),
                   );

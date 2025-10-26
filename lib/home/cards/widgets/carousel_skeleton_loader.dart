@@ -5,10 +5,7 @@ import 'package:flutter/material.dart';
 class CarouselSkeletonLoader extends StatefulWidget {
   final ThemeData theme;
 
-  const CarouselSkeletonLoader({
-    super.key,
-    required this.theme,
-  });
+  const CarouselSkeletonLoader({super.key, required this.theme});
 
   @override
   State<CarouselSkeletonLoader> createState() => _CarouselSkeletonLoaderState();
@@ -50,9 +47,8 @@ class _CarouselSkeletonLoaderState extends State<CarouselSkeletonLoader>
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   // Add slight delay to each card animation for wave effect
-                  final shimmerValue = (_shimmerController.value +
-                          (index * 0.1)) %
-                      1.0;
+                  final shimmerValue =
+                      (_shimmerController.value + (index * 0.1)) % 1.0;
 
                   return AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
@@ -93,7 +89,7 @@ class _CarouselSkeletonLoaderState extends State<CarouselSkeletonLoader>
 }
 
 /// Unified skeleton card with optional entrance animations.
-/// Can be used for both initial loading (multiple static cards) 
+/// Can be used for both initial loading (multiple static cards)
 /// and dynamic insertion (single animated card).
 class SkeletonCard extends StatefulWidget {
   final double shimmerValue;
@@ -124,7 +120,7 @@ class _SkeletonCardState extends State<SkeletonCard>
   @override
   void initState() {
     super.initState();
-    
+
     // Only create entrance animations if enabled
     if (widget.enableEntranceAnimation) {
       _entranceController = AnimationController(
@@ -140,10 +136,7 @@ class _SkeletonCardState extends State<SkeletonCard>
       );
 
       _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(
-          parent: _entranceController!,
-          curve: Curves.easeIn,
-        ),
+        CurvedAnimation(parent: _entranceController!, curve: Curves.easeIn),
       );
 
       _entranceController!.forward();
@@ -267,15 +260,12 @@ class _SkeletonCardState extends State<SkeletonCard>
     );
 
     // Wrap with entrance animations if enabled
-    if (widget.enableEntranceAnimation && 
-        _scaleAnimation != null && 
+    if (widget.enableEntranceAnimation &&
+        _scaleAnimation != null &&
         _fadeAnimation != null) {
       return ScaleTransition(
         scale: _scaleAnimation!,
-        child: FadeTransition(
-          opacity: _fadeAnimation!,
-          child: cardContent,
-        ),
+        child: FadeTransition(opacity: _fadeAnimation!, child: cardContent),
       );
     }
 
