@@ -51,8 +51,9 @@ class NewGroupCard extends StatelessWidget {
                   const ExpensesGroupEditPage(mode: GroupEditMode.create),
             ),
           );
-          if (result == true) {
-            onGroupAdded();
+          if (result != null && result is String) {
+            // Pass the group ID to the callback
+            onGroupAdded(result);
           }
         },
         child: _buildNewGroupCardContent(),

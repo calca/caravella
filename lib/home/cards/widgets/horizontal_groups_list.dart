@@ -122,15 +122,12 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList>
 
   void _handleGroupUpdated([String? groupId]) async {
     if (groupId != null) {
-      // Specific group ID provided - update it locally
-      // Show skeleton while loading
+      // Specific group ID provided - show skeleton immediately for smooth UX
       setState(() {
         _isLoadingNewGroup = true;
       });
 
-      // Small delay to show the skeleton animation
-      await Future.delayed(const Duration(milliseconds: 300));
-
+      // Update the group locally
       await _updateGroupLocally(groupId);
 
       if (mounted) {
@@ -138,14 +135,28 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList>
           _isLoadingNewGroup = false;
         });
 
-        // Animate to the new group (first position) if it was newly added
+        // Animate to the new group (first position) with smooth transition
         final groupIndex = _localGroups.indexWhere((g) => g.id == groupId);
-        if (groupIndex == 0) {
-          _pageController.animateToPage(
-            0,
-            duration: const Duration(milliseconds: 400),
-            curve: Curves.easeOutCubic,
-          );
+        if (groupIndex == 0 && _pageController.hasClients) {
+          // New group added at top - animate smoothly
+          await Future.delayed(const Duration(milliseconds: 150));
+          if (mounted && _pageController.hasClients) {
+            await _pageController.animateToPage(
+              0,
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeOutCubic,
+            );
+          }
+        } else if (groupIndex > 0 && _pageController.hasClients) {
+          // Updated existing group - animate to its position
+          await Future.delayed(const Duration(milliseconds: 150));
+          if (mounted && _pageController.hasClients) {
+            await _pageController.animateToPage(
+              groupIndex,
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeOutCubic,
+            );
+          }
         }
       }
     } else {

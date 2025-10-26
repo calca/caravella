@@ -17,9 +17,12 @@ class GroupCardSkeleton extends StatefulWidget {
 }
 
 class _GroupCardSkeletonState extends State<GroupCardSkeleton>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late AnimationController _shimmerController;
   late Animation<double> _shimmerAnimation;
+  late AnimationController _scaleController;
+  late Animation<double> _scaleAnimation;
+  late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
@@ -32,105 +35,168 @@ class _GroupCardSkeletonState extends State<GroupCardSkeleton>
     _shimmerAnimation = Tween<double>(begin: -1.0, end: 2.0).animate(
       CurvedAnimation(parent: _shimmerController, curve: Curves.easeInOut),
     );
+
+    // Add scale-in animation for smooth appearance
+    _scaleController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+
+    _scaleAnimation = Tween<double>(begin: 0.92, end: 1.0).animate(
+      CurvedAnimation(parent: _scaleController, curve: Curves.easeOutCubic),
+    );
+
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _scaleController, curve: Curves.easeIn));
+
+    _scaleController.forward();
   }
 
   @override
   void dispose() {
     _shimmerController.dispose();
+    _scaleController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDarkMode = theme.brightness == Brightness.dark;
+    final colorScheme = theme.colorScheme;
 
-    // Base colors for skeleton
-    final baseColor = isDarkMode
-        ? theme.colorScheme.surfaceContainerHighest
-        : theme.colorScheme.surfaceContainerHigh;
-    final highlightColor = isDarkMode
-        ? theme.colorScheme.surfaceContainerHigh
-        : theme.colorScheme.surface;
+    // Create shimmer gradient matching CarouselSkeletonLoader style
+    final shimmerGradient = LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [
+        colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+        colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
+        colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      ],
+      stops: [
+        (_shimmerAnimation.value - 0.3).clamp(0.0, 1.0),
+        _shimmerAnimation.value,
+        (_shimmerAnimation.value + 0.3).clamp(0.0, 1.0),
+      ],
+    );
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-      height: double.infinity,
-      child: Card(
-        margin: const EdgeInsets.only(bottom: 16),
-        elevation: widget.isSelected ? 8 : 2,
-        shadowColor: theme.colorScheme.shadow.withValues(alpha: 0.3),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        child: AnimatedBuilder(
-          animation: _shimmerAnimation,
-          builder: (context, child) {
-            return Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  stops: [
-                    _shimmerAnimation.value - 0.3,
-                    _shimmerAnimation.value,
-                    _shimmerAnimation.value + 0.3,
-                  ].map((e) => e.clamp(0.0, 1.0)).toList(),
-                  colors: [baseColor, highlightColor, baseColor],
-                ),
+    return ScaleTransition(
+      scale: _scaleAnimation,
+      child: FadeTransition(
+        opacity: _fadeAnimation,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          height: double.infinity,
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 16),
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerHigh,
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(
+                color: colorScheme.outline.withValues(alpha: 0.2),
+                width: 1,
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Skeleton for group name
-                    Container(
-                      width: 180,
-                      height: 28,
-                      decoration: BoxDecoration(
-                        color: baseColor.withValues(alpha: 0.5),
-                        borderRadius: BorderRadius.circular(8),
+              boxShadow: widget.isSelected
+                  ? [
+                      BoxShadow(
+                        color: colorScheme.shadow.withValues(alpha: 0.15),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
                       ),
-                    ),
-                    const SizedBox(height: 12),
-                    // Skeleton for subtitle/description
-                    Container(
-                      width: 120,
-                      height: 16,
+                    ]
+                  : null,
+            ),
+            child: Stack(
+              children: [
+                // Shimmer effect overlay
+                AnimatedBuilder(
+                  animation: _shimmerAnimation,
+                  builder: (context, child) {
+                    return Container(
                       decoration: BoxDecoration(
-                        color: baseColor.withValues(alpha: 0.5),
-                        borderRadius: BorderRadius.circular(6),
+                        borderRadius: BorderRadius.circular(24),
+                        gradient: shimmerGradient,
                       ),
-                    ),
-                    const Spacer(),
-                    // Skeleton for stats/info at bottom
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          width: 80,
-                          height: 20,
-                          decoration: BoxDecoration(
-                            color: baseColor.withValues(alpha: 0.5),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                        ),
-                        Container(
-                          width: 60,
-                          height: 20,
-                          decoration: BoxDecoration(
-                            color: baseColor.withValues(alpha: 0.5),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                    );
+                  },
                 ),
-              ),
-            );
-          },
+                // Card content skeleton
+                Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Title skeleton
+                      Container(
+                        width: 160,
+                        height: 24,
+                        decoration: BoxDecoration(
+                          color: colorScheme.onSurface.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      // Subtitle skeleton
+                      Container(
+                        width: 120,
+                        height: 16,
+                        decoration: BoxDecoration(
+                          color: colorScheme.onSurface.withValues(alpha: 0.08),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      const Spacer(),
+                      // Stats skeleton at bottom
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 80,
+                                height: 14,
+                                decoration: BoxDecoration(
+                                  color: colorScheme.onSurface.withValues(
+                                    alpha: 0.08,
+                                  ),
+                                  borderRadius: BorderRadius.circular(7),
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Container(
+                                width: 100,
+                                height: 20,
+                                decoration: BoxDecoration(
+                                  color: colorScheme.onSurface.withValues(
+                                    alpha: 0.1,
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            width: 56,
+                            height: 56,
+                            decoration: BoxDecoration(
+                              color: colorScheme.onSurface.withValues(
+                                alpha: 0.08,
+                              ),
+                              borderRadius: BorderRadius.circular(28),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
