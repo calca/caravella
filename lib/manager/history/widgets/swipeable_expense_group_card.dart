@@ -70,7 +70,9 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
         ? gloc.unpinned_with_undo
         : gloc.pinned_with_undo;
 
-    await ExpenseGroupStorageV2.updateGroupPin(trip.id, !isPinned);
+    // Use notifier to update pin state (handles storage + shortcuts)
+    final notifier = Provider.of<ExpenseGroupNotifier>(context, listen: false);
+    await notifier.updateGroupPin(trip.id, !isPinned);
 
     // Trigger reload callback if provided
     onPin?.call();
@@ -82,7 +84,7 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
       type: ToastType.info,
       duration: const Duration(seconds: 4),
       onUndo: () async {
-        await ExpenseGroupStorageV2.updateGroupPin(trip.id, isPinned);
+        await notifier.updateGroupPin(trip.id, isPinned);
         // Reload again after undo
         onPin?.call();
       },
