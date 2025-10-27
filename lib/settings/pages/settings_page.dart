@@ -62,9 +62,9 @@ class SettingsPage extends StatelessWidget {
         const SizedBox(height: 8),
         _buildLanguageRow(context, loc, locale),
         const SizedBox(height: 8),
-        _buildThemeRow(context, loc),
-        const SizedBox(height: 8),
         _buildDynamicColorRow(context, loc),
+        const SizedBox(height: 8),
+        _buildThemeRow(context, loc),
       ],
     );
   }
@@ -186,22 +186,20 @@ class SettingsPage extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final dynamicColorNotifier = DynamicColorNotifier.of(context);
     final enabled = dynamicColorNotifier?.dynamicColorEnabled ?? false;
-    
+
     return SettingsCard(
       context: context,
       color: colorScheme.surface,
       child: Semantics(
         toggled: enabled,
-        label: '${loc.settings_dynamic_color} - ${enabled ? loc.accessibility_currently_enabled : loc.accessibility_currently_disabled}',
+        label:
+            '${loc.settings_dynamic_color} - ${enabled ? loc.accessibility_currently_enabled : loc.accessibility_currently_disabled}',
         hint: enabled
             ? loc.accessibility_double_tap_disable
             : loc.accessibility_double_tap_enable,
         child: ListTile(
           leading: const Icon(Icons.palette_outlined),
-          title: Text(
-            loc.settings_dynamic_color,
-            style: textTheme.titleMedium,
-          ),
+          title: Text(loc.settings_dynamic_color, style: textTheme.titleMedium),
           subtitle: Text(
             loc.settings_dynamic_color_desc,
             style: textTheme.bodySmall,
