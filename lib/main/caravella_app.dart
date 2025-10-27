@@ -4,6 +4,7 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 import '../config/app_config.dart';
 import '../themes/caravella_themes.dart';
+import '../services/shortcuts_initialization.dart';
 import 'route_observer.dart';
 import 'provider_setup.dart';
 import 'caravella_home_page.dart';
@@ -91,6 +92,7 @@ class _CaravellaAppState extends State<CaravellaApp> {
           darkTheme: CaravellaThemes.dark,
           themeMode: _themeMode,
           scaffoldMessengerKey: _scaffoldMessengerKey,
+          navigatorKey: navigatorKey,
           locale: Locale(_locale),
           // Use generated locales & delegates to avoid divergence and ensure pt is enabled
           supportedLocales: gen.AppLocalizations.supportedLocales,

@@ -229,8 +229,11 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
 
   // Handler for archive toggle from the card: persist archive state and reload list.
   Future<void> _onArchiveToggle(String groupId, bool archived) async {
-    // Persist archive state using the storage helper and then reload list.
-    await ExpenseGroupStorageV2.updateGroupArchive(groupId, archived);
+    // Persist archive state using the notifier (handles storage + shortcuts)
+    await Provider.of<ExpenseGroupNotifier>(
+      context,
+      listen: false,
+    ).updateGroupArchive(groupId, archived);
     // Small delay to allow storage to settle, then reload the list
     await Future.delayed(const Duration(milliseconds: 50));
     await _loadTrips();

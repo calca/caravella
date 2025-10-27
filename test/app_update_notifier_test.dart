@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:io_caravella_egm/updates/app_update_notifier.dart';
+import 'package:play_store_updates/play_store_updates.dart';
 
 void main() {
   group('AppUpdateNotifier', () {
@@ -24,7 +24,7 @@ void main() {
     test('reset should clear all state', () {
       // Manually set some values (normally done by methods)
       notifier.reset();
-      
+
       expect(notifier.isChecking, false);
       expect(notifier.updateAvailable, false);
       expect(notifier.availableVersion, null);

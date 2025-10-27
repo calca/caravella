@@ -324,8 +324,11 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         onPinToggle: () async {
           if (_trip == null) return;
           final nav = Navigator.of(sheetCtx);
-          // Use the storage-level helper to toggle the pin atomically
-          await ExpenseGroupStorageV2.updateGroupPin(_trip!.id, !_trip!.pinned);
+          // Use the notifier to update pin state (handles storage + shortcuts)
+          await Provider.of<ExpenseGroupNotifier>(
+            context,
+            listen: false,
+          ).updateGroupPin(_trip!.id, !_trip!.pinned);
           await _refreshGroup();
           if (!mounted) return;
           nav.pop();
@@ -333,11 +336,11 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         onArchiveToggle: () async {
           if (_trip == null) return;
           final nav = Navigator.of(sheetCtx);
-          // Use storage-level helper to archive/unarchive atomically
-          await ExpenseGroupStorageV2.updateGroupArchive(
-            _trip!.id,
-            !_trip!.archived,
-          );
+          // Use notifier to archive/unarchive (handles storage + shortcuts)
+          await Provider.of<ExpenseGroupNotifier>(
+            context,
+            listen: false,
+          ).updateGroupArchive(_trip!.id, !_trip!.archived);
           await _refreshGroup();
           if (!mounted) return;
           nav.pop();
