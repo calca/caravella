@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'app_update_service.dart';
 
 /// State notifier for managing app update state.
-/// 
+///
 /// Provides reactive state management for:
 /// - Update availability
 /// - Update download progress
@@ -36,7 +36,7 @@ class AppUpdateNotifier extends ChangeNotifier {
 
     try {
       final status = await AppUpdateService.getUpdateStatus();
-      
+
       _updateAvailable = status['available'] as bool;
       _availableVersion = status['version'] as String?;
       _updatePriority = status['priority'] as int?;

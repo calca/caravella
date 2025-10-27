@@ -4,12 +4,12 @@ import '../widgets/bottom_sheet_scaffold.dart';
 import 'update_service_factory.dart';
 
 /// Shows a bottom sheet recommending the user to update the app.
-/// 
+///
 /// This is typically shown when an automatic weekly check detects
 /// an available update.
 Future<bool?> showUpdateRecommendationSheet(BuildContext context) async {
   final loc = gen.AppLocalizations.of(context);
-  
+
   return showModalBottomSheet<bool>(
     context: context,
     isScrollControlled: true,
@@ -45,7 +45,7 @@ Future<bool?> showUpdateRecommendationSheet(BuildContext context) async {
 }
 
 /// Performs an automatic update check and shows recommendation sheet if needed.
-/// 
+///
 /// This should be called when the app starts. It will:
 /// 1. Check if enough time has passed since last check (7 days)
 /// 2. If yes, check for updates
@@ -54,38 +54,38 @@ Future<bool?> showUpdateRecommendationSheet(BuildContext context) async {
 /// 5. Record the check timestamp
 Future<void> checkAndShowUpdateIfNeeded(BuildContext context) async {
   final updateService = UpdateServiceFactory.createUpdateService();
-  
+
   // Check if we should perform an update check
   final shouldCheck = await updateService.shouldCheckForUpdate();
   if (!shouldCheck) {
     return;
   }
-  
+
   // Check for update
   final updateInfo = await updateService.checkForUpdate();
-  
+
   // Record that we checked (even if no update available)
   await updateService.recordUpdateCheck();
-  
+
   // If no update, return
   if (updateInfo == null) {
     return;
   }
-  
+
   // Wait a bit to let the app settle before showing the sheet
   await Future.delayed(const Duration(milliseconds: 500));
-  
+
   // Show recommendation sheet
   if (!context.mounted) return;
-  
+
   final shouldUpdate = await showUpdateRecommendationSheet(context);
-  
+
   // If user wants to update, start flexible update
   if (shouldUpdate == true) {
     await updateService.startFlexibleUpdate();
-    
+
     if (!context.mounted) return;
-    
+
     // Show snackbar to inform user
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

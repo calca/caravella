@@ -7,7 +7,7 @@ import 'update_service_factory.dart';
 import 'update_service_interface.dart';
 
 /// Widget for displaying update check functionality in settings.
-/// 
+///
 /// This widget handles all the update-related UI logic including:
 /// - Checking for updates
 /// - Displaying update status
@@ -21,7 +21,7 @@ class UpdateCheckWidget extends StatelessWidget {
     final loc = gen.AppLocalizations.of(context);
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     // Only show on Android
     if (!Platform.isAndroid) {
       return SettingsCard(
@@ -30,7 +30,10 @@ class UpdateCheckWidget extends StatelessWidget {
         child: ListTile(
           leading: const Icon(Icons.system_update_outlined),
           title: Text(loc.check_for_updates, style: textTheme.titleMedium),
-          subtitle: Text(loc.update_feature_android_only, style: textTheme.bodySmall),
+          subtitle: Text(
+            loc.update_feature_android_only,
+            style: textTheme.bodySmall,
+          ),
           enabled: false,
         ),
       );
@@ -48,7 +51,10 @@ class UpdateCheckWidget extends StatelessWidget {
               title: Text(loc.check_for_updates, style: textTheme.titleMedium),
               subtitle: _buildUpdateSubtitle(context, loc, notifier),
               trailing: _buildUpdateTrailing(context, loc, notifier),
-              onTap: notifier.isChecking || notifier.isDownloading || notifier.isInstalling
+              onTap:
+                  notifier.isChecking ||
+                      notifier.isDownloading ||
+                      notifier.isInstalling
                   ? null
                   : () => _handleUpdateCheck(context, loc, notifier),
             ),
@@ -64,31 +70,37 @@ class UpdateCheckWidget extends StatelessWidget {
     UpdateNotifier notifier,
   ) {
     final textTheme = Theme.of(context).textTheme;
-    
+
     if (notifier.isChecking) {
       return Text(loc.checking_for_updates, style: textTheme.bodySmall);
     }
-    
+
     if (notifier.isDownloading) {
       return Text(loc.update_downloading, style: textTheme.bodySmall);
     }
-    
+
     if (notifier.isInstalling) {
       return Text(loc.update_installing, style: textTheme.bodySmall);
     }
-    
+
     if (notifier.error != null) {
-      return Text(loc.update_error, style: textTheme.bodySmall?.copyWith(
-        color: Theme.of(context).colorScheme.error,
-      ));
+      return Text(
+        loc.update_error,
+        style: textTheme.bodySmall?.copyWith(
+          color: Theme.of(context).colorScheme.error,
+        ),
+      );
     }
-    
+
     if (notifier.updateAvailable) {
-      return Text(loc.update_available_desc, style: textTheme.bodySmall?.copyWith(
-        color: Theme.of(context).colorScheme.primary,
-      ));
+      return Text(
+        loc.update_available_desc,
+        style: textTheme.bodySmall?.copyWith(
+          color: Theme.of(context).colorScheme.primary,
+        ),
+      );
     }
-    
+
     return Text(loc.check_for_updates_desc, style: textTheme.bodySmall);
   }
 
@@ -97,21 +109,23 @@ class UpdateCheckWidget extends StatelessWidget {
     gen.AppLocalizations loc,
     UpdateNotifier notifier,
   ) {
-    if (notifier.isChecking || notifier.isDownloading || notifier.isInstalling) {
+    if (notifier.isChecking ||
+        notifier.isDownloading ||
+        notifier.isInstalling) {
       return const SizedBox(
         width: 24,
         height: 24,
         child: CircularProgressIndicator(strokeWidth: 2),
       );
     }
-    
+
     if (notifier.updateAvailable) {
       return FilledButton(
         onPressed: () => _handleStartUpdate(context, loc, notifier),
         child: Text(loc.update_now),
       );
     }
-    
+
     return const Icon(Icons.arrow_forward_ios, size: 16);
   }
 
@@ -121,17 +135,17 @@ class UpdateCheckWidget extends StatelessWidget {
     UpdateNotifier notifier,
   ) async {
     await notifier.checkForUpdate();
-    
+
     if (!context.mounted) return;
-    
+
     if (notifier.error != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(loc.update_error)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(loc.update_error)));
     } else if (!notifier.updateAvailable) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(loc.no_update_available)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(loc.no_update_available)));
     }
   }
 
@@ -158,22 +172,22 @@ class UpdateCheckWidget extends StatelessWidget {
         ],
       ),
     );
-    
+
     if (result != true || !context.mounted) return;
-    
+
     // Start flexible update (allows background download)
     final success = await notifier.startFlexibleUpdate();
-    
+
     if (!context.mounted) return;
-    
+
     if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(loc.update_downloading)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(loc.update_downloading)));
     } else if (notifier.error != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(loc.update_error)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(loc.update_error)));
     }
   }
 }
