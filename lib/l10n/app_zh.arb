@@ -315,6 +315,8 @@
   "settings_theme": "主题",
   "settings_theme_desc": "选择应用主题",
   "settings_select_theme": "选择主题",
+  "settings_dynamic_color": "动态颜色",
+  "settings_dynamic_color_desc": "使用壁纸颜色",
   "settings_privacy_desc": "安全和隐私选项",
   "settings_data": "数据",
   "settings_data_desc": "管理和备份数据",
