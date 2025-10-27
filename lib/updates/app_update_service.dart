@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../data/services/logger_service.dart';
 
 /// Service for managing Google Play Store in-app updates.
 ///
@@ -11,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// - Automatic weekly update checks
 ///
 /// Note: This only works on Android with Google Play Services.
+/// The app must be downloaded from Google Play Store for this to work.
 class AppUpdateService {
   static const String _lastCheckKey = 'last_update_check_timestamp';
   static const Duration _checkInterval = Duration(days: 7);
@@ -72,8 +75,19 @@ class AppUpdateService {
       }
 
       return updateInfo;
+    } on PlatformException catch (e) {
+      // Handle specific platform exceptions
+      if (e.code == 'TASK_FAILURE') {
+        // This happens when the app is not installed from Google Play Store
+        // (e.g., debug builds, sideloaded APKs, F-Droid builds)
+        LoggerService.info('Update check skipped: App not from Play Store');
+        return null;
+      }
+      LoggerService.warning('Update check failed: ${e.code} - ${e.message}');
+      return null;
     } catch (e) {
-      // Handle errors silently (e.g., no Google Play Services)
+      // Handle any other errors silently
+      LoggerService.warning('Update check error: $e');
       return null;
     }
   }
@@ -92,7 +106,15 @@ class AppUpdateService {
     try {
       await InAppUpdate.startFlexibleUpdate();
       return true;
+    } on PlatformException catch (e) {
+      if (e.code == 'TASK_FAILURE') {
+        LoggerService.info('Flexible update skipped: App not from Play Store');
+        return false;
+      }
+      LoggerService.warning('Flexible update failed: ${e.code} - ${e.message}');
+      return false;
     } catch (e) {
+      LoggerService.warning('Flexible update error: $e');
       return false;
     }
   }
@@ -111,7 +133,15 @@ class AppUpdateService {
     try {
       await InAppUpdate.completeFlexibleUpdate();
       return true;
+    } on PlatformException catch (e) {
+      if (e.code == 'TASK_FAILURE') {
+        LoggerService.info('Complete update skipped: App not from Play Store');
+        return false;
+      }
+      LoggerService.warning('Complete update failed: ${e.code} - ${e.message}');
+      return false;
     } catch (e) {
+      LoggerService.warning('Complete update error: $e');
       return false;
     }
   }
@@ -130,7 +160,17 @@ class AppUpdateService {
     try {
       await InAppUpdate.performImmediateUpdate();
       return true;
+    } on PlatformException catch (e) {
+      if (e.code == 'TASK_FAILURE') {
+        LoggerService.info('Immediate update skipped: App not from Play Store');
+        return false;
+      }
+      LoggerService.warning(
+        'Immediate update failed: ${e.code} - ${e.message}',
+      );
+      return false;
     } catch (e) {
+      LoggerService.warning('Immediate update error: $e');
       return false;
     }
   }
