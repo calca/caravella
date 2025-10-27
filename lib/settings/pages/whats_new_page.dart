@@ -4,6 +4,7 @@ import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../manager/group/widgets/section_header.dart';
 import '../../widgets/caravella_app_bar.dart';
+import '../../updates/update_check_widget.dart';
 
 class WhatsNewPage extends StatefulWidget {
   const WhatsNewPage({super.key});
@@ -120,7 +121,11 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
           padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
         ),
 
-        // Decorative card with icon
+        // Update check widget
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: UpdateCheckWidget(),
+        ),
 
         // Changelog content in a card
         Padding(
