@@ -1699,6 +1699,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get whats_new_latest => 'Fique por dentro das melhorias mais recentes';
 
   @override
+  String get changelog_title => 'Histórico de versões';
+
+  @override
+  String get changelog_desc => 'Histórico de versões e melhorias';
+
+  @override
   String get average_per_person => 'Média por pessoa';
 
   @override

@@ -6,7 +6,7 @@
 /// When building without Play Store support (F-Droid):
 ///   flutter build apk
 
-library updates;
+library;
 
 export 'update_service_interface.dart';
 export 'update_service_noop.dart';

@@ -623,6 +623,10 @@
   ,"@whats_new_subtitle": {"description": "Sottotitolo nella card header della pagina novità"}
   ,"whats_new_latest": "Resta aggiornato con i miglioramenti più recenti"
   ,"@whats_new_latest": {"description": "Testo di supporto che spiega che la lista contiene gli ultimi aggiornamenti"}
+  ,"changelog_title": "Cronologia versioni"
+  ,"@changelog_title": {"description": "Titolo della sezione changelog"}
+  ,"changelog_desc": "Storico delle versioni e miglioramenti"
+  ,"@changelog_desc": {"description": "Descrizione della sezione changelog"}
   ,"average_per_person": "Speso medio per persona"
   ,"@average_per_person": {"description": "Etichetta mostrata prima della media spesa per persona nella tab Partecipanti"}
   ,"more": "altro"

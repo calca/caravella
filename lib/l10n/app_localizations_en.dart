@@ -1694,6 +1694,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get whats_new_latest => 'Stay up to date with recent improvements';
 
   @override
+  String get changelog_title => 'Changelog';
+
+  @override
+  String get changelog_desc => 'Version history and improvements';
+
+  @override
   String get average_per_person => 'Average per person';
 
   @override

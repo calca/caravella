@@ -1673,6 +1673,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get whats_new_latest => '随时掌握最新改进';
 
   @override
+  String get changelog_title => '更新日志';
+
+  @override
+  String get changelog_desc => '版本历史和改进';
+
+  @override
   String get average_per_person => '人均支出';
 
   @override

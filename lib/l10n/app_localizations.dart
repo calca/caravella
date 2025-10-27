@@ -3362,6 +3362,18 @@ abstract class AppLocalizations {
   /// **'Stay up to date with recent improvements'**
   String get whats_new_latest;
 
+  /// Title for the changelog section
+  ///
+  /// In en, this message translates to:
+  /// **'Changelog'**
+  String get changelog_title;
+
+  /// Description for the changelog section
+  ///
+  /// In en, this message translates to:
+  /// **'Version history and improvements'**
+  String get changelog_desc;
+
   /// Label shown before the computed average spent per person in the Participants tab
   ///
   /// In en, this message translates to:

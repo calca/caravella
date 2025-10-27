@@ -645,6 +645,10 @@
   ,"@whats_new_subtitle": {"description": "Card headline describing the what's new section"}
   ,"whats_new_latest": "Stay up to date with recent improvements"
   ,"@whats_new_latest": {"description": "Support text explaining that the content lists the most recent updates"}
+  ,"changelog_title": "Changelog"
+  ,"@changelog_title": {"description": "Title for the changelog section"}
+  ,"changelog_desc": "Version history and improvements"
+  ,"@changelog_desc": {"description": "Description for the changelog section"}
   ,"average_per_person": "Average per person"
   ,"@average_per_person": {"description": "Label shown before the computed average spent per person in the Participants tab"}
   ,"more": "more"

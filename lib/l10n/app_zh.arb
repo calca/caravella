@@ -785,6 +785,14 @@
   "@whats_new_latest": {
     "description": "新功能页面标题卡中的描述文字"
   },
+  "changelog_title": "更新日志",
+  "@changelog_title": {
+    "description": "更新日志部分的标题"
+  },
+  "changelog_desc": "版本历史和改进",
+  "@changelog_desc": {
+    "description": "更新日志部分的描述"
+  },
   "average_per_person": "人均支出",
   "@average_per_person": {
     "description": "参与者标签页中显示的人均支出标签"

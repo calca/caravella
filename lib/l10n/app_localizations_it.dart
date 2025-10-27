@@ -1702,6 +1702,12 @@ class AppLocalizationsIt extends AppLocalizations {
       'Resta aggiornato con i miglioramenti più recenti';
 
   @override
+  String get changelog_title => 'Cronologia versioni';
+
+  @override
+  String get changelog_desc => 'Storico delle versioni e miglioramenti';
+
+  @override
   String get average_per_person => 'Speso medio per persona';
 
   @override

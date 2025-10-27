@@ -524,6 +524,10 @@
   ,"@whats_new_subtitle": {"description": "Subtítulo no cartão de cabeçalho da página de novidades"}
   ,"whats_new_latest": "Fique por dentro das melhorias mais recentes"
   ,"@whats_new_latest": {"description": "Texto descritivo no cartão de cabeçalho da página de novidades"}
+  ,"changelog_title": "Histórico de versões"
+  ,"@changelog_title": {"description": "Título da seção de changelog"}
+  ,"changelog_desc": "Histórico de versões e melhorias"
+  ,"@changelog_desc": {"description": "Descrição da seção de changelog"}
   ,"average_per_person": "Média por pessoa"
   ,"@average_per_person": {"description": "Rótulo mostrado antes da média gasta por pessoa na aba Participantes"}
   ,"more": "mais"
