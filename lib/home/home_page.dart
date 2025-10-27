@@ -120,7 +120,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
       _loading = false;
       _refreshing = false;
     });
-    
+
     // Update shortcuts after data is loaded
     PlatformShortcutsManager.updateShortcuts();
   }
@@ -129,12 +129,12 @@ class _HomePageState extends State<HomePage> with RouteAware {
     // Only check once per app session
     if (_updateCheckPerformed) return;
     _updateCheckPerformed = true;
-    
+
     // Wait for the page to be fully rendered
     await Future.delayed(const Duration(milliseconds: 1000));
-    
+
     if (!mounted) return;
-    
+
     // Perform the automatic update check
     await checkAndShowUpdateIfNeeded(context);
   }

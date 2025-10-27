@@ -11,10 +11,10 @@ export 'main/caravella_app.dart' show rootScaffoldMessenger;
 
 void main() async {
   await AppInitialization.initialize();
-  
+
   // Initialize shortcuts after app initialization
   ShortcutsInitialization.initialize();
-  
+
   runApp(const CaravellaApp());
 }
 
@@ -25,4 +25,3 @@ Widget createAppForTest() {
   AppConfig.setEnvironment(Environment.prod);
   return const CaravellaApp();
 }
-
