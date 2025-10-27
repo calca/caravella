@@ -27,8 +27,9 @@ class ExpenseLocation {
   String get displayText {
     if (name != null && name!.isNotEmpty) return name!;
     if (address != null && address!.isNotEmpty) return address!;
-    if (hasLocation)
+    if (hasLocation) {
       return '${latitude!.toStringAsFixed(6)}, ${longitude!.toStringAsFixed(6)}';
+    }
     return '';
   }
 

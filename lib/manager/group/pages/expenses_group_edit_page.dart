@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'package:caravella_core_ui/caravella_core_ui.dart';
 import '../../expense/expense_form/icon_leading_field.dart';
-import '../widgets/section_flat.dart';
-import '../widgets/section_header.dart';
-import '../widgets/selection_tile.dart';
-import '../data/group_form_state.dart';
 import '../group_form_controller.dart';
 import '../group_edit_mode.dart';
 import '../../../settings/user_name_notifier.dart';
@@ -199,7 +193,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
             state.currency['code'],
           );
         },
-        builder: (context, _, __) {
+        builder: (context, _, _) {
           final controller = context.read<GroupFormController>();
           return PopScope(
             canPop: !controller.hasChanges,

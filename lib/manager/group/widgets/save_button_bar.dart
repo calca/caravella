@@ -40,7 +40,7 @@ class SaveButtonBar extends StatelessWidget {
 
               Future.microtask(() {
                 if (navigator.context.mounted) {
-                  navigator.pop(true);
+                  navigator.pop(saved.id);
                 }
               });
             }

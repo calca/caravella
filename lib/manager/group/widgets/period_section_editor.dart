@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'section_period.dart';
-import 'package:caravella_core/caravella_core.dart';
 
 class PeriodSectionEditor extends StatelessWidget {
   final Future<DateTime?> Function(bool isStart) onPickDate;
@@ -28,6 +27,10 @@ class PeriodSectionEditor extends StatelessWidget {
       description: gen.AppLocalizations.of(context).dates_description,
       errorText: errorText,
       isEndDateEnabled: state.startDate != null,
+      // New callback for date range changes
+      onDateRangeChanged: (startDate, endDate) {
+        state.setDates(start: startDate, end: endDate);
+      },
     );
   }
 }

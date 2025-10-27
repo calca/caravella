@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'package:caravella_core/caravella_core.dart';
 import '../../../manager/details/widgets/expense_entry_sheet.dart';
-import 'package:caravella_core_ui/caravella_core_ui.dart';
 import '../../../manager/details/pages/tabs/usecase/daily_totals_utils.dart';
 
 class GroupCardContent extends StatelessWidget {
@@ -86,6 +84,9 @@ class GroupCardContent extends StatelessWidget {
               // Refresh notifier state and notify UI
               await groupNotifier.refreshGroup();
               groupNotifier.notifyGroupUpdated(currentGroup.id);
+
+              // Check if we should prompt for rating
+              RatingService.checkAndPromptForRating();
 
               if (!sheetCtx.mounted) return;
               AppToast.show(
@@ -234,7 +235,7 @@ class GroupCardContent extends StatelessWidget {
       children: [
         Semantics(
           label: localizations.accessibility_total_expenses(
-            totalExpenses.toStringAsFixed(2),
+            CurrencyDisplay.formatCurrencyText(totalExpenses, '€'),
           ),
           child: CurrencyDisplay(
             value: totalExpenses,

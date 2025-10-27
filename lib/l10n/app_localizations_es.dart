@@ -55,7 +55,72 @@ class AppLocalizationsEs extends AppLocalizations {
   String get select_period_hint_short => 'Establecer fechas';
 
   @override
-  String get select_period_hint => 'Seleccionar un rango de fechas';
+  String get select_period_hint => 'Seleccionar fechas';
+
+  @override
+  String get suggested_duration => 'Duración sugerida';
+
+  @override
+  String days_count(int count) {
+    return '$count días';
+  }
+
+  @override
+  String get weekday_mon => 'L';
+
+  @override
+  String get weekday_tue => 'M';
+
+  @override
+  String get weekday_wed => 'M';
+
+  @override
+  String get weekday_thu => 'J';
+
+  @override
+  String get weekday_fri => 'V';
+
+  @override
+  String get weekday_sat => 'S';
+
+  @override
+  String get weekday_sun => 'D';
+
+  @override
+  String get month_january => 'Enero';
+
+  @override
+  String get month_february => 'Febrero';
+
+  @override
+  String get month_march => 'Marzo';
+
+  @override
+  String get month_april => 'Abril';
+
+  @override
+  String get month_may => 'Mayo';
+
+  @override
+  String get month_june => 'Junio';
+
+  @override
+  String get month_july => 'Julio';
+
+  @override
+  String get month_august => 'Agosto';
+
+  @override
+  String get month_september => 'Septiembre';
+
+  @override
+  String get month_october => 'Octubre';
+
+  @override
+  String get month_november => 'Noviembre';
+
+  @override
+  String get month_december => 'Diciembre';
 
   @override
   String get in_group_prefix => 'en';
@@ -191,6 +256,38 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get dates_description => 'Inicio y fin opcionales';
+
+  @override
+  String get select_period => 'Select period';
+
+  @override
+  String get select_period_dates => 'Select the period dates';
+
+  @override
+  String duration_days(int days) {
+    return '$days days';
+  }
+
+  @override
+  String period_from_to(String start, String end, int days) {
+    return 'From $start to $end ($days days)';
+  }
+
+  @override
+  String period_from_select_end(String start) {
+    return 'From $start - Select end';
+  }
+
+  @override
+  String period_to_select_start(String end) {
+    return 'To $end - Select start';
+  }
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
+  String get clear => 'Clear';
 
   @override
   String get currency_description => 'Moneda base para el grupo';
@@ -511,6 +608,33 @@ class AppLocalizationsEs extends AppLocalizations {
   String get unarchive => 'Desarchivar';
 
   @override
+  String get pin => 'Pin';
+
+  @override
+  String get unpin => 'Desfijar';
+
+  @override
+  String get delete => 'Eliminar';
+
+  @override
+  String get undo => 'DESHACER';
+
+  @override
+  String get archived_with_undo => 'Archivado';
+
+  @override
+  String get unarchived_with_undo => 'Desarchivado';
+
+  @override
+  String get pinned_with_undo => 'Fijado';
+
+  @override
+  String get unpinned_with_undo => 'Desfijado';
+
+  @override
+  String get deleted_with_undo => 'Eliminado';
+
+  @override
   String get archive_confirm => '¿Quieres archivar';
 
   @override
@@ -564,9 +688,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get unpin_group => 'Desfijar grupo';
-
-  @override
-  String get pin => 'Pin';
 
   @override
   String get theme_automatic => 'Automático';
@@ -768,6 +889,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settings_select_theme => 'Seleccionar tema';
 
   @override
+  String get settings_dynamic_color => 'Color dinámico';
+
+  @override
+  String get settings_dynamic_color_desc =>
+      'Usar colores del fondo de pantalla';
+
+  @override
   String get settings_privacy_desc => 'Opciones seguridad y privacidad';
 
   @override
@@ -847,13 +975,13 @@ class AppLocalizationsEs extends AppLocalizations {
       'Habilitar el respaldo automático del sistema operativo';
 
   @override
-  String get settings_user_name_title => 'Your name';
+  String get settings_user_name_title => 'Tu nombre';
 
   @override
-  String get settings_user_name_desc => 'Name or nickname to use in the app';
+  String get settings_user_name_desc => 'Nombre o apodo para usar en la app';
 
   @override
-  String get settings_user_name_hint => 'Enter your name';
+  String get settings_user_name_hint => 'Ingresa tu nombre';
 
   @override
   String get info_tab => 'Info';
@@ -873,9 +1001,6 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get delete_expense_confirm =>
       '¿Estás seguro de que quieres eliminar este gasto?';
-
-  @override
-  String get delete => 'Eliminar';
 
   @override
   String get no_results_found => 'No se encontraron resultados.';
@@ -1586,6 +1711,12 @@ class AppLocalizationsEs extends AppLocalizations {
       'Mantente al día con las mejoras más recientes';
 
   @override
+  String get changelog_title => 'Registro de cambios';
+
+  @override
+  String get changelog_desc => 'Historial de versiones y mejoras';
+
+  @override
   String get average_per_person => 'Promedio por persona';
 
   @override
@@ -1596,4 +1727,81 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get debt_prefix_to => 'a ';
+
+  @override
+  String get check_for_updates => 'Buscar actualizaciones';
+
+  @override
+  String get check_for_updates_desc =>
+      'Verificar disponibilidad de nueva versión';
+
+  @override
+  String get update_available => 'Actualización disponible';
+
+  @override
+  String get update_available_desc =>
+      'Una nueva versión de la app está disponible';
+
+  @override
+  String get no_update_available => 'App actualizada';
+
+  @override
+  String get no_update_available_desc => 'Estás usando la última versión';
+
+  @override
+  String get update_now => 'Actualizar ahora';
+
+  @override
+  String get update_later => 'Más tarde';
+
+  @override
+  String get checking_for_updates => 'Verificando actualizaciones...';
+
+  @override
+  String get update_error => 'Error al verificar actualizaciones';
+
+  @override
+  String get update_downloading => 'Descargando...';
+
+  @override
+  String get update_installing => 'Instalando...';
+
+  @override
+  String get update_feature_android_only =>
+      'Función disponible solo en Android con Google Play Store';
+
+  @override
+  String get update_recommendation_title => 'Actualización recomendada';
+
+  @override
+  String get update_recommendation_desc =>
+      'Una nueva versión de Caravella está disponible. ¡Actualiza la app para tener siempre las últimas funciones y mejoras!';
+
+  @override
+  String get update_install => 'Instalar actualización';
+
+  @override
+  String get update_remind_later => 'Recuérdamelo después';
+
+  @override
+  String get send_reminder => 'Enviar recordatorio';
+
+  @override
+  String reminder_message_single(
+    Object participantName,
+    Object amount,
+    Object creditorName,
+    Object groupName,
+  ) {
+    return '¡Hola $participantName! 👋\n\nQuisiera recordarte que debes $amount a $creditorName para el grupo \"$groupName\".\n\n¡Gracias! 😊';
+  }
+
+  @override
+  String reminder_message_multiple(
+    Object participantName,
+    Object groupName,
+    Object debtsList,
+  ) {
+    return '¡Hola $participantName! 👋\n\nQuisiera recordarte tus pagos para el grupo \"$groupName\":\n\n$debtsList\n\n¡Gracias! 😊';
+  }
 }

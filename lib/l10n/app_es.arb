@@ -33,7 +33,29 @@
   "settings_privacy": "Privacidad",
   "select_currency": "Seleccionar moneda",
   "select_period_hint_short": "Establecer fechas",
-  "select_period_hint": "Seleccionar un rango de fechas",
+  "select_period_hint": "Seleccionar fechas",
+  "suggested_duration": "Duración sugerida",
+  "days_count": "{count} días",
+  "@days_count": {"description": "Número de días", "placeholders": {"count": {"type": "int"}}},
+  "weekday_mon": "L",
+  "weekday_tue": "M",
+  "weekday_wed": "M",
+  "weekday_thu": "J",
+  "weekday_fri": "V",
+  "weekday_sat": "S",
+  "weekday_sun": "D",
+  "month_january": "Enero",
+  "month_february": "Febrero",
+  "month_march": "Marzo",
+  "month_april": "Abril",
+  "month_may": "Mayo",
+  "month_june": "Junio",
+  "month_july": "Julio",
+  "month_august": "Agosto",
+  "month_september": "Septiembre",
+  "month_october": "Octubre",
+  "month_november": "Noviembre",
+  "month_december": "Diciembre",
   "in_group_prefix": "en",
   "save_change_expense": "Guardar cambios",
   "group_total": "Total",
@@ -187,6 +209,15 @@
   "archived": "Archivado",
   "archive": "Archivar",
   "unarchive": "Desarchivar",
+  "pin": "Fijar",
+  "unpin": "Desfijar",
+  "delete": "Eliminar",
+  "undo": "DESHACER",
+  "archived_with_undo": "Archivado",
+  "unarchived_with_undo": "Desarchivado",
+  "pinned_with_undo": "Fijado",
+  "unpinned_with_undo": "Desfijado",
+  "deleted_with_undo": "Eliminado",
   "archive_confirm": "¿Quieres archivar",
   "unarchive_confirm": "¿Quieres desarchivar",
   "overview": "Resumen",
@@ -271,6 +302,8 @@
   "settings_theme": "Tema",
   "settings_theme_desc": "Claro, oscuro o sistema",
   "settings_select_theme": "Seleccionar tema",
+  "settings_dynamic_color": "Color dinámico",
+  "settings_dynamic_color_desc": "Usar colores del fondo de pantalla",
   "settings_privacy": "Privacidad",
   "settings_privacy_desc": "Opciones seguridad y privacidad",
   "settings_data": "Datos",
@@ -590,6 +623,10 @@
   ,"@whats_new_subtitle": {"description": "Subtítulo en la tarjeta de encabezado de la página de novedades"}
   ,"whats_new_latest": "Mantente al día con las mejoras más recientes"
   ,"@whats_new_latest": {"description": "Texto descriptivo en la tarjeta de encabezado de la página de novedades"}
+  ,"changelog_title": "Registro de cambios"
+  ,"@changelog_title": {"description": "Título de la sección de changelog"}
+  ,"changelog_desc": "Historial de versiones y mejoras"
+  ,"@changelog_desc": {"description": "Descripción de la sección de changelog"}
   ,"average_per_person": "Promedio por persona"
   ,"@average_per_person": {"description": "Etiqueta mostrada antes del promedio gastado por persona en la pestaña Participantes"}
   ,"more": "más"
@@ -598,4 +635,50 @@
   ,"@less": {"description": "Etiqueta inline para contraer y mostrar menos elementos"}
   ,"debt_prefix_to": "a "
   ,"@debt_prefix_to": {"description": "Prefijo corto mostrado antes del destinatario en una línea de deuda/liquidación (p. ej., 'a Alicia 10€')"}
+  ,"check_for_updates": "Buscar actualizaciones"
+  ,"@check_for_updates": {"description": "Etiqueta para buscar actualizaciones de Google Play Store"}
+  ,"check_for_updates_desc": "Verificar disponibilidad de nueva versión"
+  ,"@check_for_updates_desc": {"description": "Descripción para verificación de actualizaciones"}
+  ,"update_available": "Actualización disponible"
+  ,"@update_available": {"description": "Título cuando hay una actualización disponible"}
+  ,"update_available_desc": "Una nueva versión de la app está disponible"
+  ,"@update_available_desc": {"description": "Descripción cuando hay una actualización disponible"}
+  ,"no_update_available": "App actualizada"
+  ,"@no_update_available": {"description": "Mensaje cuando no hay actualizaciones"}
+  ,"no_update_available_desc": "Estás usando la última versión"
+  ,"@no_update_available_desc": {"description": "Descripción cuando no hay actualizaciones"}
+  ,"update_now": "Actualizar ahora"
+  ,"@update_now": {"description": "Botón para iniciar la actualización"}
+  ,"update_later": "Más tarde"
+  ,"@update_later": {"description": "Botón para posponer la actualización"}
+  ,"checking_for_updates": "Verificando actualizaciones..."
+  ,"@checking_for_updates": {"description": "Mensaje durante verificación de actualizaciones"}
+  ,"update_error": "Error al verificar actualizaciones"
+  ,"@update_error": {"description": "Mensaje de error durante verificación de actualizaciones"}
+  ,"update_downloading": "Descargando..."
+  ,"@update_downloading": {"description": "Mensaje durante descarga de actualización"}
+  ,"update_installing": "Instalando..."
+  ,"@update_installing": {"description": "Mensaje durante instalación de actualización"}
+  ,"update_feature_android_only": "Función disponible solo en Android con Google Play Store"
+  ,"@update_feature_android_only": {"description": "Mensaje que explica que la función es solo para Android"}
+  ,"update_recommendation_title": "Actualización recomendada"
+  ,"@update_recommendation_title": {"description": "Título del bottom sheet para recomendar actualización"}
+  ,"update_recommendation_desc": "Una nueva versión de Caravella está disponible. ¡Actualiza la app para tener siempre las últimas funciones y mejoras!"
+  ,"@update_recommendation_desc": {"description": "Descripción en bottom sheet recomendando actualizar"}
+  ,"update_install": "Instalar actualización"
+  ,"@update_install": {"description": "Botón para instalar actualización desde bottom sheet"}
+  ,"update_remind_later": "Recuérdamelo después"
+  ,"@update_remind_later": {"description": "Botón para posponer actualización desde bottom sheet"}
+  ,"send_reminder": "Enviar recordatorio"
+  ,"@send_reminder": {"description": "Etiqueta del botón para enviar un recordatorio de pago a un participante"}
+  ,"reminder_message_single": "¡Hola {participantName}! 👋\n\nQuisiera recordarte que debes {amount} a {creditorName} para el grupo \"{groupName}\".\n\n¡Gracias! 😊"
+  ,"@reminder_message_single": {"description": "Mensaje de recordatorio cuando un participante debe dinero a una sola persona", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
+  ,"reminder_message_multiple": "¡Hola {participantName}! 👋\n\nQuisiera recordarte tus pagos para el grupo \"{groupName}\":\n\n{debtsList}\n\n¡Gracias! 😊"
+  ,"@reminder_message_multiple": {"description": "Mensaje de recordatorio cuando un participante debe dinero a varias personas", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
+  ,"settings_user_name_title": "Tu nombre"
+  ,"@settings_user_name_title": {"description": "Título de la configuración del nombre de usuario"}
+  ,"settings_user_name_desc": "Nombre o apodo para usar en la app"
+  ,"@settings_user_name_desc": {"description": "Descripción de la configuración del nombre de usuario"}
+  ,"settings_user_name_hint": "Ingresa tu nombre"
+  ,"@settings_user_name_hint": {"description": "Placeholder del campo de nombre de usuario"}
 }

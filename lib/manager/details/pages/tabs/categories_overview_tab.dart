@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'package:caravella_core_ui/caravella_core_ui.dart';
-import 'package:intl/intl.dart';
 
 /// Categories analysis tab: daily average by category + distribution pie chart.
 class CategoriesOverviewTab extends StatelessWidget {
@@ -23,19 +20,6 @@ class CategoriesOverviewTab extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
       );
-    }
-    // Helpers
-    String fmtCurrency(BuildContext ctx, double amount) {
-      final locale = Localizations.maybeLocaleOf(ctx)?.toString();
-      try {
-        if (locale != null) {
-          return NumberFormat.currency(
-            locale: locale,
-            symbol: trip.currency,
-          ).format(amount);
-        }
-      } catch (_) {}
-      return '${amount.toStringAsFixed(2)}${trip.currency}';
     }
 
     ({DateTime start, DateTime end}) calculateDateRangeLocal() {
@@ -118,14 +102,28 @@ class CategoriesOverviewTab extends StatelessWidget {
             final total = entry.value;
             final perDay = total / totalDays;
             final pct = totalAll == 0 ? 0.0 : (total / totalAll) * 100.0;
-            final subtitle = '${fmtCurrency(context, perDay)} ${gloc.per_day}';
+            final subtitleSpans = <InlineSpan>[
+              WidgetSpan(
+                alignment: PlaceholderAlignment.baseline,
+                baseline: TextBaseline.alphabetic,
+                child: CurrencyDisplay(
+                  value: perDay,
+                  currency: trip.currency,
+                  showDecimals: true,
+                  valueFontSize: 12,
+                  currencyFontSize: 10,
+                  alignment: MainAxisAlignment.start,
+                ),
+              ),
+              TextSpan(text: ' ${gloc.per_day}'),
+            ];
             return Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: StatCard(
                 title: displayName,
                 value: total,
                 currency: trip.currency,
-                subtitle: subtitle,
+                subtitleSpans: subtitleSpans,
                 percent: pct,
                 inlineHeader: true,
               ),

@@ -7,14 +7,14 @@ import 'form_theme.dart';
 /// Requires Flutter 3.22.0 or later.
 const ColorScheme lightColorScheme = ColorScheme(
   brightness: Brightness.light,
-  primary: Color(0xFF4C9BBA),
+  primary: Color(0xFF009688),
   onPrimary: Color(0xFFFFFFFF),
-  primaryContainer: Color(0xFF9CEBEB),
+  primaryContainer: Color(0xFFB2DFDB),
   onPrimaryContainer: Color(0xFF000000),
-  primaryFixed: Color(0xFFD8E9EF),
-  primaryFixedDim: Color(0xFFB1D2DF),
-  onPrimaryFixed: Color(0xFF204553),
-  onPrimaryFixedVariant: Color(0xFF255061),
+  primaryFixed: Color(0xFFE0F2F1),
+  primaryFixedDim: Color(0xFFB2DFDB),
+  onPrimaryFixed: Color(0xFF004D40),
+  onPrimaryFixedVariant: Color(0xFF00695C),
   secondary: Color(0xFFFF4F58),
   onSecondary: Color(0xFFFFFFFF),
   secondaryContainer: Color(0xFFFFDAD7),
@@ -51,22 +51,23 @@ const ColorScheme lightColorScheme = ColorScheme(
   scrim: Color(0xFF000000),
   inverseSurface: Color(0xFF121212),
   onInverseSurface: Color(0xFFFFFFFF),
-  inversePrimary: Color(0xFFE5FFFF),
-  surfaceTint: Color(0xFF4C9BBA),
+  inversePrimary: Color(0xFFB2DFDB),
+  surfaceTint: Color(0xFF009688),
 );
 
-/// Dark [ColorScheme] made with FlexColorScheme v8.2.0.
+/// Soft Dark [ColorScheme] - A softer, more readable dark theme.
 /// Requires Flutter 3.22.0 or later.
+/// Follows WCAG AA contrast requirements for text and interactive elements.
 const ColorScheme darkColorScheme = ColorScheme(
   brightness: Brightness.dark,
-  primary: Color(0xFF669DB3),
-  onPrimary: Color(0xFFFFFFFF),
-  primaryContainer: Color(0xFF078282),
+  primary: Color(0xFF80CBC4),
+  onPrimary: Color(0xFF003D36),
+  primaryContainer: Color(0xFF00695C),
   onPrimaryContainer: Color(0xFFFFFFFF),
-  primaryFixed: Color(0xFFD8E9EF),
-  primaryFixedDim: Color(0xFFB1D2DF),
-  onPrimaryFixed: Color(0xFF204553),
-  onPrimaryFixedVariant: Color(0xFF255061),
+  primaryFixed: Color(0xFFE0F2F1),
+  primaryFixedDim: Color(0xFFB2DFDB),
+  onPrimaryFixed: Color(0xFF004D40),
+  onPrimaryFixedVariant: Color(0xFF00695C),
   secondary: Color(0xFFFC6E75),
   onSecondary: Color(0xFFFFFFFF),
   secondaryContainer: Color(0xFF92001A),
@@ -87,24 +88,25 @@ const ColorScheme darkColorScheme = ColorScheme(
   onError: Color(0xFF000000),
   errorContainer: Color(0xFFB1384E),
   onErrorContainer: Color(0xFFFFFFFF),
-  surface: Color(0xFF1E1E1E),
-  onSurface: Color(0xFFFFFFFF),
-  surfaceDim: Color(0xFF161616),
-  surfaceBright: Color(0xFF3A3A3A),
-  surfaceContainerLowest: Color(0xFF0F0F0F),
-  surfaceContainerLow: Color(0xFF1A1A1A),
-  surfaceContainer: Color(0xFF232323),
-  surfaceContainerHigh: Color(0xFF2D2D2D),
-  surfaceContainerHighest: Color(0xFF363636),
-  onSurfaceVariant: Color(0xFFE0E0E0),
-  outline: Color(0xFF8A8A8A),
-  outlineVariant: Color(0xFF5A5A5A),
+  // Soft dark base colors for improved readability
+  surface: Color(0xFF181A1B), // Soft dark background
+  onSurface: Color(0xFFEAEAEA), // Primary text - WCAG AA compliant
+  surfaceDim: Color(0xFF131415), // Slightly darker than surface
+  surfaceBright: Color(0xFF2F3132), // Brighter surface for elevated elements
+  surfaceContainerLowest: Color(0xFF0E0F10), // Darkest container
+  surfaceContainerLow: Color(0xFF1D1F20), // Low elevation container
+  surfaceContainer: Color(0xFF242627), // Card/container background
+  surfaceContainerHigh: Color(0xFF2A2C2D), // High elevation container
+  surfaceContainerHighest: Color(0xFF313334), // Highest elevation container
+  onSurfaceVariant: Color(0xFFA0A0A0), // Secondary text - WCAG AA compliant
+  outline: Color(0xFF8A8A8A), // Visible outline color
+  outlineVariant: Color(0xFF5A5A5A), // Subtle outline variant
   shadow: Color(0xFF000000),
   scrim: Color(0xFF000000),
   inverseSurface: Color(0xFFFFFFFF),
   onInverseSurface: Color(0xFF121212),
-  inversePrimary: Color(0xFF394F58),
-  surfaceTint: Color(0xFF669DB3),
+  inversePrimary: Color(0xFF009688),
+  surfaceTint: Color(0xFF80CBC4),
 );
 
 class CaravellaThemes {
@@ -181,116 +183,84 @@ class CaravellaThemes {
     ).apply(fontFamily: 'Montserrat');
   }
 
-  static final ThemeData light = ThemeData(
-    colorScheme: lightColorScheme,
-    fontFamily: 'Montserrat',
-    textTheme: _createTextTheme(lightColorScheme),
-    useMaterial3: true,
-    scaffoldBackgroundColor: lightColorScheme.surface,
-    dialogTheme: DialogThemeData(
-      backgroundColor: lightColorScheme.surfaceContainerHigh,
-      surfaceTintColor: lightColorScheme.surfaceTint,
-      elevation: 6,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
-      titleTextStyle: _createTextTheme(
-        lightColorScheme,
-      ).titleLarge?.copyWith(color: lightColorScheme.onSurface),
-      contentTextStyle: _createTextTheme(
-        lightColorScheme,
-      ).bodyMedium?.copyWith(color: lightColorScheme.onSurfaceVariant),
-    ),
-    inputDecorationTheme: InputDecorationTheme(
-      isDense: true,
-      filled: false,
-      // Always show a bottom border (underline style)
-      border: UnderlineInputBorder(
-        borderSide: BorderSide(
-          color: lightColorScheme.outlineVariant,
-          width: 0.5,
+  // Helper method to create theme with dynamic or fallback color scheme
+  static ThemeData _createThemeData({
+    required ColorScheme colorScheme,
+    required ColorScheme fallbackColorScheme,
+  }) {
+    final scheme = colorScheme;
+    return ThemeData(
+      colorScheme: scheme,
+      fontFamily: 'Montserrat',
+      textTheme: _createTextTheme(scheme),
+      useMaterial3: true,
+      scaffoldBackgroundColor: scheme.surface,
+      dialogTheme: DialogThemeData(
+        backgroundColor: scheme.surfaceContainerHigh,
+        surfaceTintColor: scheme.surfaceTint,
+        elevation: 6,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+        titleTextStyle: _createTextTheme(scheme).titleLarge?.copyWith(color: scheme.onSurface),
+        contentTextStyle: _createTextTheme(scheme).bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        isDense: true,
+        filled: false,
+        border: UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: scheme.outlineVariant,
+            width: 0.5,
+          ),
         ),
-      ),
-      enabledBorder: UnderlineInputBorder(
-        borderSide: BorderSide(
-          color: lightColorScheme.outlineVariant,
-          width: 0.5,
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: scheme.outlineVariant,
+            width: 0.5,
+          ),
         ),
-      ),
-      focusedBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: lightColorScheme.primary, width: 1),
-      ),
-      disabledBorder: UnderlineInputBorder(
-        borderSide: BorderSide(
-          color: lightColorScheme.outline.withValues(alpha: 0.3),
-          width: 1,
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: scheme.primary, width: 1),
         ),
+        disabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: scheme.outline.withValues(alpha: 0.3),
+            width: 1,
+          ),
+        ),
+        errorBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: scheme.error, width: 0.5),
+        ),
+        focusedErrorBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: scheme.error, width: 1),
+        ),
+        hintStyle: TextStyle(
+          color: scheme.outline,
+          fontWeight: FontWeight.w400,
+        ),
+        contentPadding: FormTheme.standardContentPadding,
       ),
-      errorBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: lightColorScheme.error, width: 0.5),
-      ),
-      focusedErrorBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: lightColorScheme.error, width: 1),
-      ),
-      hintStyle: TextStyle(
-        color: lightColorScheme.outline,
-        fontWeight: FontWeight.w400,
-      ),
-      contentPadding: FormTheme.standardContentPadding,
-    ),
-  );
+    );
+  }
 
-  static final ThemeData dark = ThemeData(
-    colorScheme: darkColorScheme,
-    fontFamily: 'Montserrat',
-    textTheme: _createTextTheme(darkColorScheme),
-    useMaterial3: true,
-    scaffoldBackgroundColor: darkColorScheme.surface,
-    dialogTheme: DialogThemeData(
-      backgroundColor: darkColorScheme.surfaceContainerHigh,
-      surfaceTintColor: darkColorScheme.surfaceTint,
-      elevation: 6,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
-      titleTextStyle: _createTextTheme(
-        darkColorScheme,
-      ).titleLarge?.copyWith(color: darkColorScheme.onSurface),
-      contentTextStyle: _createTextTheme(
-        darkColorScheme,
-      ).bodyMedium?.copyWith(color: darkColorScheme.onSurfaceVariant),
-    ),
-    inputDecorationTheme: InputDecorationTheme(
-      isDense: true,
-      filled: false,
-      border: UnderlineInputBorder(
-        borderSide: BorderSide(
-          color: darkColorScheme.outlineVariant,
-          width: 0.5,
-        ),
-      ),
-      enabledBorder: UnderlineInputBorder(
-        borderSide: BorderSide(
-          color: darkColorScheme.outlineVariant,
-          width: 0.5,
-        ),
-      ),
-      focusedBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: darkColorScheme.primary, width: 1),
-      ),
-      disabledBorder: UnderlineInputBorder(
-        borderSide: BorderSide(
-          color: darkColorScheme.outline.withValues(alpha: 0.3),
-          width: 1,
-        ),
-      ),
-      errorBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: darkColorScheme.error, width: 0.5),
-      ),
-      focusedErrorBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: darkColorScheme.error, width: 1),
-      ),
-      hintStyle: TextStyle(
-        color: darkColorScheme.outline,
-        fontWeight: FontWeight.w400,
-      ),
-      contentPadding: FormTheme.standardContentPadding,
-    ),
-  );
+  // Create light theme with optional dynamic colors
+  static ThemeData createLightTheme({ColorScheme? dynamicColorScheme}) {
+    final colorScheme = dynamicColorScheme ?? lightColorScheme;
+    return _createThemeData(
+      colorScheme: colorScheme,
+      fallbackColorScheme: lightColorScheme,
+    );
+  }
+
+  // Create dark theme with optional dynamic colors
+  static ThemeData createDarkTheme({ColorScheme? dynamicColorScheme}) {
+    final colorScheme = dynamicColorScheme ?? darkColorScheme;
+    return _createThemeData(
+      colorScheme: colorScheme,
+      fallbackColorScheme: darkColorScheme,
+    );
+  }
+
+  static final ThemeData light = createLightTheme();
+
+  static final ThemeData dark = createDarkTheme();
 }

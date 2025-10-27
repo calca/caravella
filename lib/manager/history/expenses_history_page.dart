@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:async';
-import 'package:caravella_core/caravella_core.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../group/pages/expenses_group_edit_page.dart';
 import '../group/group_edit_mode.dart';
-import 'package:caravella_core_ui/caravella_core_ui.dart';
 import '../group/widgets/section_header.dart';
 import 'widgets/expense_group_empty_states.dart';
-import 'widgets/expense_group_card.dart';
+import 'widgets/swipeable_expense_group_card.dart';
 
 class ExpesensHistoryPage extends StatefulWidget {
   const ExpesensHistoryPage({super.key});
@@ -47,8 +45,12 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     _scrollController = ScrollController();
     _scrollController.addListener(_onScroll);
 
-    // Tabs: Active | Archived
-    _tabController = TabController(length: 2, vsync: this);
+    // Tabs: Active | Archived (Material 3 expressive duration)
+    _tabController = TabController(
+      length: 2,
+      vsync: this,
+      animationDuration: const Duration(milliseconds: 350),
+    );
   }
 
   ExpenseGroupNotifier? _groupNotifier;
@@ -222,8 +224,11 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
 
   // Handler for archive toggle from the card: persist archive state and reload list.
   Future<void> _onArchiveToggle(String groupId, bool archived) async {
-    // Persist archive state using the storage helper and then reload list.
-    await ExpenseGroupStorageV2.updateGroupArchive(groupId, archived);
+    // Persist archive state using the notifier (handles storage + shortcuts)
+    await Provider.of<ExpenseGroupNotifier>(
+      context,
+      listen: false,
+    ).updateGroupArchive(groupId, archived);
     // Small delay to allow storage to settle, then reload the list
     await Future.delayed(const Duration(milliseconds: 50));
     await _loadTrips();
@@ -266,9 +271,11 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
         itemCount: trips.length,
         itemBuilder: (context, index) {
           final trip = trips[index];
-          return ExpenseGroupCard(
+          return SwipeableExpenseGroupCard(
             trip: trip,
             onArchiveToggle: _onArchiveToggle,
+            onDelete: () => _loadTrips(),
+            onPin: () => _loadTrips(),
             searchQuery: _searchQuery,
           );
         },
@@ -303,9 +310,11 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
       itemCount: trips.length,
       itemBuilder: (context, index) {
         final trip = trips[index];
-        return ExpenseGroupCard(
+        return SwipeableExpenseGroupCard(
           trip: trip,
           onArchiveToggle: _onArchiveToggle,
+          onDelete: () => _loadTrips(),
+          onPin: () => _loadTrips(),
           searchQuery: _searchQuery,
         );
       },
@@ -422,7 +431,9 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
                 ? _buildTabContent(_filteredAllTrips, 'search')
                 : TabBarView(
                     controller: _tabController,
-                    physics: const PageScrollPhysics(),
+                    physics: const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics(),
+                    ),
                     children: [
                       _buildTabContent(_filteredActiveTrips, 'active'),
                       _buildTabContent(_filteredArchivedTrips, 'archived'),

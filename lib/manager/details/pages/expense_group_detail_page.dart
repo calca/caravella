@@ -11,8 +11,6 @@ import 'package:path_provider/path_provider.dart'; // still used for share temp 
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 
-import 'package:caravella_core/caravella_core.dart';
-import 'package:caravella_core_ui/caravella_core_ui.dart';
 // Removed legacy localization bridge imports (migration in progress)
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 // Replaced bottom sheet overview with full page navigation
@@ -310,8 +308,11 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         onPinToggle: () async {
           if (_trip == null) return;
           final nav = Navigator.of(sheetCtx);
-          // Use the storage-level helper to toggle the pin atomically
-          await ExpenseGroupStorageV2.updateGroupPin(_trip!.id, !_trip!.pinned);
+          // Use the notifier to update pin state (handles storage + shortcuts)
+          await Provider.of<ExpenseGroupNotifier>(
+            context,
+            listen: false,
+          ).updateGroupPin(_trip!.id, !_trip!.pinned);
           await _refreshGroup();
           if (!mounted) return;
           nav.pop();
@@ -319,11 +320,11 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         onArchiveToggle: () async {
           if (_trip == null) return;
           final nav = Navigator.of(sheetCtx);
-          // Use storage-level helper to archive/unarchive atomically
-          await ExpenseGroupStorageV2.updateGroupArchive(
-            _trip!.id,
-            !_trip!.archived,
-          );
+          // Use notifier to archive/unarchive (handles storage + shortcuts)
+          await Provider.of<ExpenseGroupNotifier>(
+            context,
+            listen: false,
+          ).updateGroupArchive(_trip!.id, !_trip!.archived);
           await _refreshGroup();
           if (!mounted) return;
           nav.pop();
@@ -442,6 +443,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             // Refresh local state and notifier
             await _refreshGroup();
             _groupNotifier?.notifyGroupUpdated(widget.trip.id);
+
+            // Check if we should prompt for rating
+            // This is done after successful expense save
+            RatingService.checkAndPromptForRating();
 
             if (!sheetCtx.mounted) return;
             AppToast.show(

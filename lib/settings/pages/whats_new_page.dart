@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:io';
 import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../manager/group/widgets/section_header.dart';
-import '../../widgets/caravella_app_bar.dart';
+import '../../updates/update_check_widget.dart';
 
 class WhatsNewPage extends StatefulWidget {
   const WhatsNewPage({super.key});
@@ -103,7 +104,6 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
     }
 
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
 
     return ListView(
       padding: EdgeInsets.fromLTRB(
@@ -120,21 +120,26 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
           padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
         ),
 
-        // Decorative card with icon
+        // Update check widget (only on Android)
+        if (Platform.isAndroid)
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: UpdateCheckWidget(),
+          ),
+
+        // Changelog section header
+        SectionHeader(
+          title: loc.changelog_title,
+          description: loc.changelog_desc,
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
+        ),
 
         // Changelog content in a card
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Card(
-            elevation: 0,
-            color: colorScheme.surface,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: _buildMarkdownContent(theme),
-            ),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: _buildMarkdownContent(theme),
           ),
         ),
       ],
@@ -149,14 +154,14 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
         fontWeight: FontWeight.bold,
       ),
       h2: theme.textTheme.titleLarge?.copyWith(
-        color: theme.colorScheme.primary,
+        color: theme.colorScheme.onSurface,
         fontWeight: FontWeight.w600,
       ),
       h3: theme.textTheme.titleMedium?.copyWith(
         color: theme.colorScheme.onSurface,
         fontWeight: FontWeight.w500,
       ),
-      linkColor: theme.colorScheme.primary,
+      linkColor: theme.colorScheme.onSurface,
       hrLineColor: theme.colorScheme.outlineVariant,
       hrLineThickness: 1.0,
     );

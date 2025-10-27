@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import '../data/model/expense_group.dart';
 import '../data/model/expense_category.dart';
 import '../data/expense_group_storage_v2.dart';
+import '../services/platform_shortcuts_manager.dart';
 
 class ExpenseGroupNotifier extends ChangeNotifier {
   ExpenseGroup? _currentGroup;
@@ -55,6 +56,8 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     // Persisti le modifiche preservando le spese
     try {
       await ExpenseGroupStorageV2.updateGroupMetadata(updatedGroup);
+      // Update shortcuts when group metadata changes
+      _updateShortcuts();
     } catch (e) {
       debugPrint('Error updating group metadata: $e');
     }
@@ -133,5 +136,54 @@ class ExpenseGroupNotifier extends ChangeNotifier {
       _deletedGroupIds.add(groupId);
     }
     notifyListeners();
+    // Update shortcuts when group is deleted
+    _updateShortcuts();
+  }
+
+  /// Update pin state of a group
+  Future<void> updateGroupPin(String groupId, bool pinned) async {
+    await ExpenseGroupStorageV2.updateGroupPin(groupId, pinned);
+
+    // Update current group if it's the one being modified
+    if (_currentGroup?.id == groupId) {
+      final updatedGroup = await ExpenseGroupStorageV2.getTripById(groupId);
+      if (updatedGroup != null) {
+        _currentGroup = updatedGroup;
+      }
+    }
+
+    // Notify that this group was updated
+    if (!_updatedGroupIds.contains(groupId)) {
+      _updatedGroupIds.add(groupId);
+    }
+
+    notifyListeners();
+    _updateShortcuts();
+  }
+
+  /// Update archive state of a group
+  Future<void> updateGroupArchive(String groupId, bool archived) async {
+    await ExpenseGroupStorageV2.updateGroupArchive(groupId, archived);
+
+    // Update current group if it's the one being modified
+    if (_currentGroup?.id == groupId) {
+      final updatedGroup = await ExpenseGroupStorageV2.getTripById(groupId);
+      if (updatedGroup != null) {
+        _currentGroup = updatedGroup;
+      }
+    }
+
+    // Notify that this group was updated
+    if (!_updatedGroupIds.contains(groupId)) {
+      _updatedGroupIds.add(groupId);
+    }
+
+    notifyListeners();
+    _updateShortcuts();
+  }
+
+  /// Update Android shortcuts (Quick Actions)
+  void _updateShortcuts() {
+    PlatformShortcutsManager.updateShortcuts();
   }
 }

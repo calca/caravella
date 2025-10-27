@@ -27,7 +27,7 @@ class CsvExporter {
       buffer.writeln(
         [
           _escape(e.name ?? ''),
-          e.amount?.toStringAsFixed(2) ?? '',
+          CurrencyDisplay.formatCurrencyText(e.amount ?? 0, '').trim(),
           _escape(e.paidBy.name),
           _escape(e.category.name),
           e.date.toIso8601String().split('T').first,
