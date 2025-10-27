@@ -3,12 +3,13 @@ import 'package:provider/provider.dart';
 import '../data/model/expense_group.dart';
 import '../data/expense_group_storage_v2.dart';
 import '../state/expense_group_notifier.dart';
-import '../../main.dart';
+import '../main/route_observer.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'welcome/home_welcome_section.dart';
 import 'cards/home_cards_section.dart';
 import '../widgets/app_toast.dart';
 import '../services/platform_shortcuts_manager.dart';
+import '../updates/update_check_helper.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -22,11 +23,15 @@ class _HomePageState extends State<HomePage> with RouteAware {
   bool _loading = true;
   ExpenseGroupNotifier? _groupNotifier;
   bool _refreshing = false;
+  bool _updateCheckPerformed = false;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _loadLocaleAndTrip());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadLocaleAndTrip();
+      _performUpdateCheckIfNeeded();
+    });
   }
 
   @override
@@ -120,7 +125,30 @@ class _HomePageState extends State<HomePage> with RouteAware {
     PlatformShortcutsManager.updateShortcuts();
   }
 
-  void _refresh() => _loadLocaleAndTrip();
+  Future<void> _performUpdateCheckIfNeeded() async {
+    // Only check once per app session
+    if (_updateCheckPerformed) return;
+    _updateCheckPerformed = true;
+    
+    // Wait for the page to be fully rendered
+    await Future.delayed(const Duration(milliseconds: 1000));
+    
+    if (!mounted) return;
+    
+    // Perform the automatic update check
+    await checkAndShowUpdateIfNeeded(context);
+  }
+
+  /// Soft refresh that only updates the pinned trip without showing loading state
+  Future<void> _softRefresh() async {
+    final pinnedTrip = await ExpenseGroupStorageV2.getPinnedTrip();
+    if (!mounted) return;
+    setState(() {
+      _pinnedTrip = pinnedTrip;
+    });
+  }
+
+  void _refresh() => _softRefresh();
 
   Future<void> _handleUserRefresh() async {
     if (_refreshing) return;
@@ -133,6 +161,32 @@ class _HomePageState extends State<HomePage> with RouteAware {
         type: ToastType.info,
       );
     }
+  }
+
+  void _handleTripAdded() {
+    final gloc = gen.AppLocalizations.of(context);
+    _refresh();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      AppToast.show(context, gloc.group_added_success, type: ToastType.success);
+    });
+  }
+
+  void _handleTripDeleted() {
+    final gloc = gen.AppLocalizations.of(context);
+    _refresh();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      AppToast.show(
+        context,
+        gloc.group_deleted_success,
+        type: ToastType.success,
+      );
+    });
+  }
+
+  void _handleTripUpdated() {
+    _refresh();
   }
 
   @override
@@ -176,16 +230,9 @@ class _HomePageState extends State<HomePage> with RouteAware {
                         label: gloc.accessibility_groups_list,
                         child: HomeCardsSection(
                           initialGroups: active,
-                          onTripAdded: () {
-                            _refresh();
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              AppToast.show(
-                                context,
-                                gloc.group_added_success,
-                                type: ToastType.success,
-                              );
-                            });
-                          },
+                          onTripAdded: _handleTripAdded,
+                          onTripDeleted: _handleTripDeleted,
+                          onTripUpdated: _handleTripUpdated,
                           pinnedTrip: _pinnedTrip,
                           allArchived: false,
                         ),
@@ -200,16 +247,9 @@ class _HomePageState extends State<HomePage> with RouteAware {
                         label: gloc.accessibility_groups_list,
                         child: HomeCardsSection(
                           initialGroups: <ExpenseGroup>[],
-                          onTripAdded: () {
-                            _refresh();
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              AppToast.show(
-                                context,
-                                gloc.group_added_success,
-                                type: ToastType.success,
-                              );
-                            });
-                          },
+                          onTripAdded: _handleTripAdded,
+                          onTripDeleted: _handleTripDeleted,
+                          onTripUpdated: _handleTripUpdated,
                           pinnedTrip: _pinnedTrip,
                           allArchived: true,
                         ),
@@ -220,14 +260,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
                       label: gloc.accessibility_welcome_screen,
                       child: HomeWelcomeSection(
                         onTripAdded: () {
-                          _refresh();
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            AppToast.show(
-                              context,
-                              gloc.group_added_success,
-                              type: ToastType.success,
-                            );
-                          });
+                          _handleTripAdded();
                         },
                       ),
                     );

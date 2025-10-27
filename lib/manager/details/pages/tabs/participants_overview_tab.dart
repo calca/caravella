@@ -3,10 +3,11 @@ import '../../../../data/model/expense_group.dart';
 import 'usecase/settlements_logic.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../widgets/group_header.dart'; // ParticipantAvatar
-import 'package:intl/intl.dart';
 import '../../widgets/stat_card.dart';
 import '../../../../widgets/currency_display.dart';
 import '../../../../data/model/expense_participant.dart';
+import 'package:share_plus/share_plus.dart';
+import '../../../../widgets/bottom_sheet_scaffold.dart';
 
 /// Participants tab: per participant totals, contribution percentages and settlements.
 class ParticipantsOverviewTab extends StatelessWidget {
@@ -78,6 +79,7 @@ class ParticipantsOverviewTab extends StatelessWidget {
                 currency: trip.currency,
                 owes: owes,
                 idToName: idToName,
+                trip: trip,
               ),
             );
           }),
@@ -145,6 +147,7 @@ class _ParticipantStatCard extends StatefulWidget {
   final String currency;
   final List<Settlement> owes;
   final Map<String, String> idToName;
+  final ExpenseGroup trip;
 
   const _ParticipantStatCard({
     required this.participant,
@@ -153,6 +156,7 @@ class _ParticipantStatCard extends StatefulWidget {
     required this.currency,
     required this.owes,
     required this.idToName,
+    required this.trip,
   });
 
   @override
@@ -162,28 +166,129 @@ class _ParticipantStatCard extends StatefulWidget {
 class _ParticipantStatCardState extends State<_ParticipantStatCard> {
   bool _expanded = false;
 
-  String _fmtCurrency(BuildContext context, double amount) {
-    final locale = Localizations.maybeLocaleOf(context)?.toString();
+  String _buildReminderMessage(BuildContext context) {
+    final loc = gen.AppLocalizations.of(context);
+    final participantName = widget.participant.name;
+    final groupName = widget.trip.title;
+    final owes = widget.owes;
+
+    if (owes.isEmpty) {
+      // No debts, return empty (button should be hidden)
+      return '';
+    }
+
+    if (owes.length == 1) {
+      // Single debt
+      final debt = owes.first;
+      final creditorName = widget.idToName[debt.toId] ?? debt.toId;
+      final amount = CurrencyDisplay.formatCurrencyText(
+        debt.amount,
+        widget.trip.currency,
+        showDecimals: true,
+      );
+      return loc.reminder_message_single(
+        participantName,
+        amount,
+        creditorName,
+        groupName,
+      );
+    } else {
+      // Multiple debts
+      final debtsList = owes
+          .map((debt) {
+            final creditorName = widget.idToName[debt.toId] ?? debt.toId;
+            final amount = CurrencyDisplay.formatCurrencyText(
+              debt.amount,
+              widget.trip.currency,
+              showDecimals: true,
+            );
+            return '• $amount ${loc.debt_prefix_to}$creditorName';
+          })
+          .join('\n');
+
+      return loc.reminder_message_multiple(
+        participantName,
+        groupName,
+        debtsList,
+      );
+    }
+  }
+
+  Future<void> _shareReminder() async {
+    final message = _buildReminderMessage(context);
+    if (message.isEmpty) return;
+
     try {
-      if (locale != null) {
-        return NumberFormat.currency(
-          locale: locale,
-          symbol: widget.currency,
-        ).format(amount);
-      }
-    } catch (_) {}
-    return '${amount.toStringAsFixed(2)}${widget.currency}';
+      await SharePlus.instance.share(ShareParams(text: message));
+    } catch (e) {
+      // Silently handle errors
+      debugPrint('Error sharing reminder: $e');
+    }
+  }
+
+  void _showReminderBottomSheet() {
+    final message = _buildReminderMessage(context);
+    if (message.isEmpty) return;
+
+    final loc = gen.AppLocalizations.of(context);
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => GroupBottomSheetScaffold(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Message preview
+            Container(
+              padding: const EdgeInsets.all(16),
+              margin: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.outline.withValues(alpha: 0.2),
+                ),
+              ),
+              child: Text(
+                message,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ),
+            // Send button
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: FilledButton.icon(
+                onPressed: () {
+                  Navigator.pop(context);
+                  _shareReminder();
+                },
+                icon: const Icon(Icons.send),
+                label: Text(loc.send_reminder),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final loc = gen.AppLocalizations.of(context);
 
     // Build per-line debts starting with "a " and bold content
     final owes = widget.owes;
     final totalItems = owes.length;
     final showToggle = totalItems > 3;
-    final loc = gen.AppLocalizations.of(context);
 
     List<InlineSpan> buildLines({required bool expanded}) {
       final spans = <InlineSpan>[];
@@ -195,7 +300,6 @@ class _ParticipantStatCardState extends State<_ParticipantStatCard> {
       for (int i = 0; i < visibleCount; i++) {
         final s = owes[i];
         final toName = widget.idToName[s.toId] ?? s.toId;
-        final amount = _fmtCurrency(context, s.amount);
         spans.add(
           TextSpan(
             text: loc.debt_prefix_to,
@@ -208,10 +312,24 @@ class _ParticipantStatCardState extends State<_ParticipantStatCard> {
         );
         spans.add(
           TextSpan(
-            text: '$toName $amount',
+            text: '$toName ',
             style: theme.textTheme.bodySmall?.copyWith(
               fontWeight: FontWeight.w400,
               fontStyle: FontStyle.italic,
+            ),
+          ),
+        );
+        spans.add(
+          WidgetSpan(
+            alignment: PlaceholderAlignment.baseline,
+            baseline: TextBaseline.alphabetic,
+            child: CurrencyDisplay(
+              value: s.amount,
+              currency: widget.currency,
+              showDecimals: true,
+              valueFontSize: 12,
+              currencyFontSize: 10,
+              alignment: MainAxisAlignment.start,
             ),
           ),
         );
@@ -272,15 +390,21 @@ class _ParticipantStatCardState extends State<_ParticipantStatCard> {
 
     final subtitleSpans = buildLines(expanded: _expanded);
 
-    return StatCard(
-      title: widget.participant.name,
-      value: widget.total,
-      currency: widget.currency,
-      subtitleSpans: subtitleSpans,
-      subtitleMaxLines: _expanded ? 100 : 3,
-      leading: ParticipantAvatar(participant: widget.participant, size: 48),
-      percent: widget.percent,
-      inlineHeader: true,
+    // Only show long-press gesture if participant has debts
+    final hasDebts = owes.isNotEmpty;
+
+    return GestureDetector(
+      onLongPress: hasDebts ? _showReminderBottomSheet : null,
+      child: StatCard(
+        title: widget.participant.name,
+        value: widget.total,
+        currency: widget.currency,
+        subtitleSpans: subtitleSpans,
+        subtitleMaxLines: _expanded ? 100 : 3,
+        leading: ParticipantAvatar(participant: widget.participant, size: 48),
+        percent: widget.percent,
+        inlineHeader: true,
+      ),
     );
   }
 }

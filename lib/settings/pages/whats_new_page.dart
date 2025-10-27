@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:io';
 import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import '../../manager/group/widgets/section_header.dart';
+import '../../widgets/caravella_app_bar.dart';
+import '../../updates/update_check_widget.dart';
 
 class WhatsNewPage extends StatefulWidget {
   const WhatsNewPage({super.key});
@@ -66,15 +70,7 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(loc.whats_new_title),
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        foregroundColor: Theme.of(context).colorScheme.onSurface,
-        elevation: 0,
-      ),
-      body: _buildBody(loc),
-    );
+    return Scaffold(appBar: const CaravellaAppBar(), body: _buildBody(loc));
   }
 
   Widget _buildBody(gen.AppLocalizations loc) {
@@ -109,6 +105,49 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
     }
 
     final theme = Theme.of(context);
+
+    return ListView(
+      padding: EdgeInsets.fromLTRB(
+        0,
+        0,
+        0,
+        MediaQuery.of(context).padding.bottom + 24,
+      ),
+      children: [
+        // Header section with icon and description
+        SectionHeader(
+          title: loc.whats_new_title,
+          description: loc.whats_new_desc,
+          padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+        ),
+
+        // Update check widget (only on Android)
+        if (Platform.isAndroid)
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: UpdateCheckWidget(),
+          ),
+
+        // Changelog section header
+        SectionHeader(
+          title: loc.changelog_title,
+          description: loc.changelog_desc,
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
+        ),
+
+        // Changelog content in a card
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: _buildMarkdownContent(theme),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMarkdownContent(ThemeData theme) {
     final mdTheme = GptMarkdownThemeData(
       brightness: theme.brightness,
       h1: theme.textTheme.headlineMedium?.copyWith(
@@ -128,16 +167,13 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
       hrLineThickness: 1.0,
     );
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
-      child: GptMarkdownTheme(
-        gptThemeData: mdTheme,
-        child: GptMarkdown(
-          _markdownContent,
-          style: theme.textTheme.bodyMedium,
-          textAlign: TextAlign.start,
-          textDirection: Directionality.of(context),
-        ),
+    return GptMarkdownTheme(
+      gptThemeData: mdTheme,
+      child: GptMarkdown(
+        _markdownContent,
+        style: theme.textTheme.bodyMedium,
+        textAlign: TextAlign.start,
+        textDirection: Directionality.of(context),
       ),
     );
   }
