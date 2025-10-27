@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../settings/widgets/settings_card.dart';
-import 'app_update_notifier.dart';
+import 'update_service_factory.dart';
+import 'update_service_interface.dart';
 
 /// Widget for displaying update check functionality in settings.
 /// 
@@ -35,9 +36,9 @@ class UpdateCheckWidget extends StatelessWidget {
       );
     }
 
-    return ChangeNotifierProvider<AppUpdateNotifier>(
-      create: (_) => AppUpdateNotifier(),
-      child: Consumer<AppUpdateNotifier>(
+    return ChangeNotifierProvider<UpdateNotifier>(
+      create: (_) => UpdateServiceFactory.createUpdateNotifier(),
+      child: Consumer<UpdateNotifier>(
         builder: (context, notifier, _) {
           return SettingsCard(
             context: context,
@@ -60,7 +61,7 @@ class UpdateCheckWidget extends StatelessWidget {
   Widget _buildUpdateSubtitle(
     BuildContext context,
     gen.AppLocalizations loc,
-    AppUpdateNotifier notifier,
+    UpdateNotifier notifier,
   ) {
     final textTheme = Theme.of(context).textTheme;
     
@@ -94,7 +95,7 @@ class UpdateCheckWidget extends StatelessWidget {
   Widget? _buildUpdateTrailing(
     BuildContext context,
     gen.AppLocalizations loc,
-    AppUpdateNotifier notifier,
+    UpdateNotifier notifier,
   ) {
     if (notifier.isChecking || notifier.isDownloading || notifier.isInstalling) {
       return const SizedBox(
@@ -117,7 +118,7 @@ class UpdateCheckWidget extends StatelessWidget {
   Future<void> _handleUpdateCheck(
     BuildContext context,
     gen.AppLocalizations loc,
-    AppUpdateNotifier notifier,
+    UpdateNotifier notifier,
   ) async {
     await notifier.checkForUpdate();
     
@@ -137,7 +138,7 @@ class UpdateCheckWidget extends StatelessWidget {
   Future<void> _handleStartUpdate(
     BuildContext context,
     gen.AppLocalizations loc,
-    AppUpdateNotifier notifier,
+    UpdateNotifier notifier,
   ) async {
     // Show dialog to choose update type
     final result = await showDialog<bool>(

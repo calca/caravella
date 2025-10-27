@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../widgets/bottom_sheet_scaffold.dart';
-import 'app_update_service.dart';
+import 'update_service_factory.dart';
 
 /// Shows a bottom sheet recommending the user to update the app.
 /// 
@@ -53,17 +53,19 @@ Future<bool?> showUpdateRecommendationSheet(BuildContext context) async {
 /// 4. If user accepts, start flexible update
 /// 5. Record the check timestamp
 Future<void> checkAndShowUpdateIfNeeded(BuildContext context) async {
+  final updateService = UpdateServiceFactory.createUpdateService();
+  
   // Check if we should perform an update check
-  final shouldCheck = await AppUpdateService.shouldCheckForUpdate();
+  final shouldCheck = await updateService.shouldCheckForUpdate();
   if (!shouldCheck) {
     return;
   }
   
   // Check for update
-  final updateInfo = await AppUpdateService.checkForUpdate();
+  final updateInfo = await updateService.checkForUpdate();
   
   // Record that we checked (even if no update available)
-  await AppUpdateService.recordUpdateCheck();
+  await updateService.recordUpdateCheck();
   
   // If no update, return
   if (updateInfo == null) {
@@ -80,7 +82,7 @@ Future<void> checkAndShowUpdateIfNeeded(BuildContext context) async {
   
   // If user wants to update, start flexible update
   if (shouldUpdate == true) {
-    await AppUpdateService.startFlexibleUpdate();
+    await updateService.startFlexibleUpdate();
     
     if (!context.mounted) return;
     
