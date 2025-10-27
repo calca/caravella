@@ -1702,6 +1702,12 @@ class AppLocalizationsIt extends AppLocalizations {
       'Resta aggiornato con i miglioramenti più recenti';
 
   @override
+  String get changelog_title => 'Cronologia versioni';
+
+  @override
+  String get changelog_desc => 'Storico delle versioni e miglioramenti';
+
+  @override
   String get average_per_person => 'Speso medio per persona';
 
   @override
@@ -1712,6 +1718,60 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get debt_prefix_to => 'a ';
+
+  @override
+  String get check_for_updates => 'Controlla aggiornamenti';
+
+  @override
+  String get check_for_updates_desc => 'Verifica disponibilità nuova versione';
+
+  @override
+  String get update_available => 'Aggiornamento disponibile';
+
+  @override
+  String get update_available_desc =>
+      'È disponibile una nuova versione dell\'app';
+
+  @override
+  String get no_update_available => 'App aggiornata';
+
+  @override
+  String get no_update_available_desc => 'Stai usando l\'ultima versione';
+
+  @override
+  String get update_now => 'Aggiorna ora';
+
+  @override
+  String get update_later => 'Più tardi';
+
+  @override
+  String get checking_for_updates => 'Verifica aggiornamenti...';
+
+  @override
+  String get update_error => 'Errore verifica aggiornamenti';
+
+  @override
+  String get update_downloading => 'Download in corso...';
+
+  @override
+  String get update_installing => 'Installazione in corso...';
+
+  @override
+  String get update_feature_android_only =>
+      'Funzione disponibile solo su Android con Google Play Store';
+
+  @override
+  String get update_recommendation_title => 'Aggiornamento consigliato';
+
+  @override
+  String get update_recommendation_desc =>
+      'È disponibile una nuova versione di Caravella. Aggiorna l\'app per avere sempre le ultime funzionalità e miglioramenti!';
+
+  @override
+  String get update_install => 'Installa aggiornamento';
+
+  @override
+  String get update_remind_later => 'Ricordamelo dopo';
 
   @override
   String get send_reminder => 'Invia promemoria';

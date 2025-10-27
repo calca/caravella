@@ -645,6 +645,10 @@
   ,"@whats_new_subtitle": {"description": "Card headline describing the what's new section"}
   ,"whats_new_latest": "Stay up to date with recent improvements"
   ,"@whats_new_latest": {"description": "Support text explaining that the content lists the most recent updates"}
+  ,"changelog_title": "Changelog"
+  ,"@changelog_title": {"description": "Title for the changelog section"}
+  ,"changelog_desc": "Version history and improvements"
+  ,"@changelog_desc": {"description": "Description for the changelog section"}
   ,"average_per_person": "Average per person"
   ,"@average_per_person": {"description": "Label shown before the computed average spent per person in the Participants tab"}
   ,"more": "more"
@@ -653,6 +657,40 @@
   ,"@less": {"description": "Inline toggle label to collapse and show fewer items"}
   ,"debt_prefix_to": "to "
   ,"@debt_prefix_to": {"description": "Short prefix shown before the recipient in a debt/settlement line (e.g., 'to Alice 10€')"}
+  ,"check_for_updates": "Check for updates"
+  ,"@check_for_updates": {"description": "Label to check for updates from Google Play Store"}
+  ,"check_for_updates_desc": "Check for new version availability"
+  ,"@check_for_updates_desc": {"description": "Description for update check"}
+  ,"update_available": "Update available"
+  ,"@update_available": {"description": "Title when an update is available"}
+  ,"update_available_desc": "A new version of the app is available"
+  ,"@update_available_desc": {"description": "Description when an update is available"}
+  ,"no_update_available": "App up to date"
+  ,"@no_update_available": {"description": "Message when there are no updates"}
+  ,"no_update_available_desc": "You're using the latest version"
+  ,"@no_update_available_desc": {"description": "Description when there are no updates"}
+  ,"update_now": "Update now"
+  ,"@update_now": {"description": "Button to start the update"}
+  ,"update_later": "Later"
+  ,"@update_later": {"description": "Button to postpone the update"}
+  ,"checking_for_updates": "Checking for updates..."
+  ,"@checking_for_updates": {"description": "Message while checking for updates"}
+  ,"update_error": "Update check error"
+  ,"@update_error": {"description": "Error message during update check"}
+  ,"update_downloading": "Downloading..."
+  ,"@update_downloading": {"description": "Message while downloading update"}
+  ,"update_installing": "Installing..."
+  ,"@update_installing": {"description": "Message while installing update"}
+  ,"update_feature_android_only": "Feature only available on Android with Google Play Store"
+  ,"@update_feature_android_only": {"description": "Message explaining the feature is Android-only"}
+  ,"update_recommendation_title": "Update recommended"
+  ,"@update_recommendation_title": {"description": "Title of bottom sheet to recommend update"}
+  ,"update_recommendation_desc": "A new version of Caravella is available. Update the app to always have the latest features and improvements!"
+  ,"@update_recommendation_desc": {"description": "Description in bottom sheet recommending to update"}
+  ,"update_install": "Install update"
+  ,"@update_install": {"description": "Button to install update from bottom sheet"}
+  ,"update_remind_later": "Remind me later"
+  ,"@update_remind_later": {"description": "Button to postpone update from bottom sheet"}
   ,"send_reminder": "Send reminder"
   ,"@send_reminder": {"description": "Button label to send a payment reminder to a participant"}
   ,"reminder_message_single": "Hi {participantName}! 👋\n\nJust a friendly reminder that you owe {amount} to {creditorName} for the group \"{groupName}\".\n\nThank you! 😊"

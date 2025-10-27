@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - In-app store rating feature with smart triggers (after 10 expenses, then monthly)
 - Period selector with interactive calendar and duration presets (3, 7, 15, 30 days)
 - Long-press on participant card now opens a bottom sheet with message preview before sending
+- Google Play Store automatic update checks with flexible update support (Android only)
+- Weekly automatic update check that shows recommendation sheet when new version is available
+- Manual update check button in "What's New" page with immediate update capability
+- Build variant support for Play Store and F-Droid distributions using factory pattern
 
 ### Changed
 - Enhanced skeleton loader with smooth scale and fade-in animations for more polished loading experience

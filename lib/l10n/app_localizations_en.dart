@@ -1694,6 +1694,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get whats_new_latest => 'Stay up to date with recent improvements';
 
   @override
+  String get changelog_title => 'Changelog';
+
+  @override
+  String get changelog_desc => 'Version history and improvements';
+
+  @override
   String get average_per_person => 'Average per person';
 
   @override
@@ -1704,6 +1710,59 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get debt_prefix_to => 'to ';
+
+  @override
+  String get check_for_updates => 'Check for updates';
+
+  @override
+  String get check_for_updates_desc => 'Check for new version availability';
+
+  @override
+  String get update_available => 'Update available';
+
+  @override
+  String get update_available_desc => 'A new version of the app is available';
+
+  @override
+  String get no_update_available => 'App up to date';
+
+  @override
+  String get no_update_available_desc => 'You\'re using the latest version';
+
+  @override
+  String get update_now => 'Update now';
+
+  @override
+  String get update_later => 'Later';
+
+  @override
+  String get checking_for_updates => 'Checking for updates...';
+
+  @override
+  String get update_error => 'Update check error';
+
+  @override
+  String get update_downloading => 'Downloading...';
+
+  @override
+  String get update_installing => 'Installing...';
+
+  @override
+  String get update_feature_android_only =>
+      'Feature only available on Android with Google Play Store';
+
+  @override
+  String get update_recommendation_title => 'Update recommended';
+
+  @override
+  String get update_recommendation_desc =>
+      'A new version of Caravella is available. Update the app to always have the latest features and improvements!';
+
+  @override
+  String get update_install => 'Install update';
+
+  @override
+  String get update_remind_later => 'Remind me later';
 
   @override
   String get send_reminder => 'Send reminder';

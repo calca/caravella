@@ -1699,6 +1699,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get whats_new_latest => 'Fique por dentro das melhorias mais recentes';
 
   @override
+  String get changelog_title => 'Histórico de versões';
+
+  @override
+  String get changelog_desc => 'Histórico de versões e melhorias';
+
+  @override
   String get average_per_person => 'Média por pessoa';
 
   @override
@@ -1709,6 +1715,62 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get debt_prefix_to => 'a ';
+
+  @override
+  String get check_for_updates => 'Verificar atualizações';
+
+  @override
+  String get check_for_updates_desc =>
+      'Verificar disponibilidade de nova versão';
+
+  @override
+  String get update_available => 'Atualização disponível';
+
+  @override
+  String get update_available_desc =>
+      'Uma nova versão do aplicativo está disponível';
+
+  @override
+  String get no_update_available => 'App atualizado';
+
+  @override
+  String get no_update_available_desc =>
+      'Você está usando a versão mais recente';
+
+  @override
+  String get update_now => 'Atualizar agora';
+
+  @override
+  String get update_later => 'Mais tarde';
+
+  @override
+  String get checking_for_updates => 'Verificando atualizações...';
+
+  @override
+  String get update_error => 'Erro ao verificar atualizações';
+
+  @override
+  String get update_downloading => 'Baixando...';
+
+  @override
+  String get update_installing => 'Instalando...';
+
+  @override
+  String get update_feature_android_only =>
+      'Recurso disponível apenas no Android com Google Play Store';
+
+  @override
+  String get update_recommendation_title => 'Atualização recomendada';
+
+  @override
+  String get update_recommendation_desc =>
+      'Uma nova versão do Caravella está disponível. Atualize o aplicativo para ter sempre os recursos e melhorias mais recentes!';
+
+  @override
+  String get update_install => 'Instalar atualização';
+
+  @override
+  String get update_remind_later => 'Lembrar mais tarde';
 
   @override
   String get send_reminder => 'Enviar lembrete';

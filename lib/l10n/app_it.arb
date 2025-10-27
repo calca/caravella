@@ -623,6 +623,10 @@
   ,"@whats_new_subtitle": {"description": "Sottotitolo nella card header della pagina novità"}
   ,"whats_new_latest": "Resta aggiornato con i miglioramenti più recenti"
   ,"@whats_new_latest": {"description": "Testo di supporto che spiega che la lista contiene gli ultimi aggiornamenti"}
+  ,"changelog_title": "Cronologia versioni"
+  ,"@changelog_title": {"description": "Titolo della sezione changelog"}
+  ,"changelog_desc": "Storico delle versioni e miglioramenti"
+  ,"@changelog_desc": {"description": "Descrizione della sezione changelog"}
   ,"average_per_person": "Speso medio per persona"
   ,"@average_per_person": {"description": "Etichetta mostrata prima della media spesa per persona nella tab Partecipanti"}
   ,"more": "altro"
@@ -631,6 +635,40 @@
   ,"@less": {"description": "Etichetta inline per comprimere e mostrare meno elementi"}
   ,"debt_prefix_to": "a "
   ,"@debt_prefix_to": {"description": "Prefisso breve mostrato prima del destinatario nella riga di debito/pareggio (es. 'a Alice 10€')"}
+  ,"check_for_updates": "Controlla aggiornamenti"
+  ,"@check_for_updates": {"description": "Etichetta per controllare aggiornamenti da Google Play Store"}
+  ,"check_for_updates_desc": "Verifica disponibilità nuova versione"
+  ,"@check_for_updates_desc": {"description": "Descrizione per controllo aggiornamenti"}
+  ,"update_available": "Aggiornamento disponibile"
+  ,"@update_available": {"description": "Titolo quando è disponibile un aggiornamento"}
+  ,"update_available_desc": "È disponibile una nuova versione dell'app"
+  ,"@update_available_desc": {"description": "Descrizione quando è disponibile un aggiornamento"}
+  ,"no_update_available": "App aggiornata"
+  ,"@no_update_available": {"description": "Messaggio quando non ci sono aggiornamenti"}
+  ,"no_update_available_desc": "Stai usando l'ultima versione"
+  ,"@no_update_available_desc": {"description": "Descrizione quando non ci sono aggiornamenti"}
+  ,"update_now": "Aggiorna ora"
+  ,"@update_now": {"description": "Pulsante per avviare l'aggiornamento"}
+  ,"update_later": "Più tardi"
+  ,"@update_later": {"description": "Pulsante per rimandare l'aggiornamento"}
+  ,"checking_for_updates": "Verifica aggiornamenti..."
+  ,"@checking_for_updates": {"description": "Messaggio durante verifica aggiornamenti"}
+  ,"update_error": "Errore verifica aggiornamenti"
+  ,"@update_error": {"description": "Messaggio di errore durante verifica aggiornamenti"}
+  ,"update_downloading": "Download in corso..."
+  ,"@update_downloading": {"description": "Messaggio durante download aggiornamento"}
+  ,"update_installing": "Installazione in corso..."
+  ,"@update_installing": {"description": "Messaggio durante installazione aggiornamento"}
+  ,"update_feature_android_only": "Funzione disponibile solo su Android con Google Play Store"
+  ,"@update_feature_android_only": {"description": "Messaggio che spiega che la funzione è solo per Android"}
+  ,"update_recommendation_title": "Aggiornamento consigliato"
+  ,"@update_recommendation_title": {"description": "Titolo del bottom sheet per raccomandare l'aggiornamento"}
+  ,"update_recommendation_desc": "È disponibile una nuova versione di Caravella. Aggiorna l'app per avere sempre le ultime funzionalità e miglioramenti!"
+  ,"@update_recommendation_desc": {"description": "Descrizione nel bottom sheet che consiglia di aggiornare"}
+  ,"update_install": "Installa aggiornamento"
+  ,"@update_install": {"description": "Pulsante per installare l'aggiornamento dal bottom sheet"}
+  ,"update_remind_later": "Ricordamelo dopo"
+  ,"@update_remind_later": {"description": "Pulsante per rimandare l'aggiornamento dal bottom sheet"}
   ,"send_reminder": "Invia promemoria"
   ,"@send_reminder": {"description": "Etichetta del pulsante per inviare un promemoria di pagamento a un partecipante"}
   ,"reminder_message_single": "Ciao {participantName}! 👋\n\nVorrei ricordarti che devi {amount} a {creditorName} per il gruppo \"{groupName}\".\n\nGrazie! 😊"
