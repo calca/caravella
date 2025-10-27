@@ -76,14 +76,8 @@ class UpdateCheckWidget extends StatelessWidget {
   ) {
     return Card(
       elevation: 0,
-      color: colorScheme.primaryContainer,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide(
-          color: colorScheme.primary.withValues(alpha: 0.3),
-          width: 1,
-        ),
-      ),
+      color: colorScheme.surfaceContainerHighest,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -92,18 +86,14 @@ class UpdateCheckWidget extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: colorScheme.primary,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
                   child: Icon(
                     Icons.system_update,
-                    color: colorScheme.onPrimary,
+                    color: colorScheme.onPrimaryContainer,
                     size: 24,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 8),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -140,13 +130,13 @@ class UpdateCheckWidget extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(
-                  onPressed: notifier.isDownloading || notifier.isInstalling
-                      ? null
-                      : () => _handleUpdateCheck(context, loc, notifier),
-                  child: Text(loc.update_later),
-                ),
-                const SizedBox(width: 8),
+                if (!notifier.isDownloading && !notifier.isInstalling)
+                  TextButton(
+                    onPressed: () => _handleUpdateCheck(context, loc, notifier),
+                    child: Text(loc.update_later),
+                  ),
+                if (!notifier.isDownloading && !notifier.isInstalling)
+                  const SizedBox(width: 8),
                 FilledButton.icon(
                   onPressed: notifier.isDownloading || notifier.isInstalling
                       ? null
@@ -260,27 +250,6 @@ class UpdateCheckWidget extends StatelessWidget {
     gen.AppLocalizations loc,
     UpdateNotifier notifier,
   ) async {
-    // Show dialog to choose update type
-    final result = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(loc.update_available),
-        content: Text(loc.update_available_desc),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text(loc.update_later),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text(loc.update_now),
-          ),
-        ],
-      ),
-    );
-
-    if (result != true || !context.mounted) return;
-
     // Start flexible update (allows background download)
     final success = await notifier.startFlexibleUpdate();
 
