@@ -2,15 +2,15 @@ import 'package:flutter/services.dart';
 import '../data/model/expense_group.dart';
 import '../data/expense_group_storage_v2.dart';
 
+/// Callback function type for handling shortcut taps
+typedef ShortcutTapCallback = void Function(String groupId, String groupTitle);
+
 /// Service to manage Android app shortcuts (Quick Actions)
 /// Updates shortcuts when groups are created, modified, or deleted
 /// Note: Platform checks are handled by PlatformShortcutsManager
 class AppShortcutsService {
   static const MethodChannel _channel =
       MethodChannel('io.caravella.egm/shortcuts');
-
-  /// Callback function type for handling shortcut taps
-  typedef ShortcutTapCallback = void Function(String groupId, String groupTitle);
 
   static ShortcutTapCallback? _onShortcutTapped;
 

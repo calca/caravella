@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'platform_shortcuts_manager.dart';
 import '../data/expense_group_storage_v2.dart';
 import '../manager/details/pages/expense_group_detail_page.dart';
-import '../main/caravella_app.dart';
+import '../widgets/app_toast.dart';
 
 /// Global navigator key for deep linking from shortcuts
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -36,15 +36,11 @@ class ShortcutsInitialization {
       final group = await ExpenseGroupStorageV2.getTripById(groupId);
       if (group == null) {
         // Group not found, show error
-        final messenger = ScaffoldMessenger.maybeOf(context);
-        if (messenger != null) {
-          messenger.showSnackBar(
-            SnackBar(
-              content: Text('Group not found: $groupTitle'),
-              duration: const Duration(seconds: 2),
-            ),
-          );
-        }
+        AppToast.show(
+          context,
+          'Group not found: $groupTitle',
+          type: ToastType.error,
+        );
         return;
       }
 
@@ -55,16 +51,12 @@ class ShortcutsInitialization {
         ),
       );
     } catch (e) {
-      // Silently fail or show generic error
-      final messenger = ScaffoldMessenger.maybeOf(context);
-      if (messenger != null) {
-        messenger.showSnackBar(
-          const SnackBar(
-            content: Text('Unable to open group'),
-            duration: Duration(seconds: 2),
-          ),
-        );
-      }
+      // Show generic error
+      AppToast.show(
+        context,
+        'Unable to open group',
+        type: ToastType.error,
+      );
     }
   }
 }
