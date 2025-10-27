@@ -8,14 +8,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Android Quick Actions (App Shortcuts) for quick access to expense groups from launcher (Android only)
 - F-Droid metadata and distribution support
 - Comprehensive F-Droid submission documentation
 - Context menu (long-press) for expense groups in history page with pin/unpin, archive/unarchive, and delete actions
 - Smooth skeleton loader animation for carousel during cold start with shimmer effect
 - Fade-in animation for carousel cards when data loads
 - In-app store rating feature with smart triggers (after 10 expenses, then monthly)
+- Period selector with interactive calendar and duration presets (3, 7, 15, 30 days)
+- Long-press on participant card now opens a bottom sheet with message preview before sending
+- Google Play Store automatic update checks with flexible update support (Android only)
+- Weekly automatic update check that shows recommendation sheet when new version is available
+- Manual update check button in "What's New" page with immediate update capability
+- Build variant support for Play Store and F-Droid distributions using factory pattern
 
 ### Changed
+- Enhanced skeleton loader with smooth scale and fade-in animations for more polished loading experience
+- Improved new group creation flow with immediate skeleton display and automatic navigation to newly created group
 - Improved app metadata for distribution platforms
 - Replaced CircularProgressIndicator with CarouselSkeletonLoader in home cards section for better UX
 - Refactored PreferencesService architecture with singleton pattern and separated preference categories

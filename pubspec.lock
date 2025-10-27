@@ -105,14 +105,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.11"
-  dynamic_color:
-    dependency: "direct main"
-    description:
-      name: dynamic_color
-      sha256: "43a5a6679649a7731ab860334a5812f2067c2d9ce6452cf069c5e0c25336c17c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.8.1"
   equatable:
     dependency: transitive
     description:
@@ -485,6 +477,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.5"
+  in_app_update:
+    dependency: transitive
+    description:
+      name: in_app_update
+      sha256: "9924a3efe592e1c0ec89dda3683b3cfec3d4cd02d908e6de00c24b759038ddb1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.5"
   intl:
     dependency: "direct main"
     description:
@@ -669,6 +669,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.6"
+  play_store_updates:
+    dependency: "direct main"
+    description:
+      path: "packages/play_store_updates"
+      relative: true
+    source: path
+    version: "1.0.0"
   plugin_platform_interface:
     dependency: transitive
     description:

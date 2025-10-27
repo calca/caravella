@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:dynamic_color/dynamic_color.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 import '../config/app_config.dart';
 import '../themes/caravella_themes.dart';
+import '../services/shortcuts_initialization.dart';
 import 'route_observer.dart';
 import 'provider_setup.dart';
 import 'caravella_home_page.dart';
@@ -20,7 +20,6 @@ class CaravellaApp extends StatefulWidget {
 class _CaravellaAppState extends State<CaravellaApp> {
   String _locale = 'it';
   ThemeMode _themeMode = ThemeMode.system;
-  bool _dynamicColorEnabled = false;
 
   // Global scaffold messenger key to allow showing SnackBars/toasts safely
   // even when the local BuildContext that requested it is already disposed.
@@ -32,7 +31,6 @@ class _CaravellaAppState extends State<CaravellaApp> {
     super.initState();
     _loadLocale();
     _loadThemeMode();
-    _loadDynamicColorSetting();
   }
 
   Future<void> _loadLocale() async {
@@ -79,22 +77,6 @@ class _CaravellaAppState extends State<CaravellaApp> {
     });
   }
 
-  Future<void> _loadDynamicColorSetting() async {
-    final prefs = await SharedPreferences.getInstance();
-    final enabled = prefs.getBool('dynamic_color_enabled') ?? false;
-    setState(() {
-      _dynamicColorEnabled = enabled;
-    });
-  }
-
-  void _changeDynamicColor(bool enabled) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('dynamic_color_enabled', enabled);
-    setState(() {
-      _dynamicColorEnabled = enabled;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return ProviderSetup.createProviders(
@@ -103,34 +85,20 @@ class _CaravellaAppState extends State<CaravellaApp> {
         onLocaleChange: _changeLocale,
         themeMode: _themeMode,
         onThemeChange: _changeTheme,
-        dynamicColorEnabled: _dynamicColorEnabled,
-        onDynamicColorChange: _changeDynamicColor,
-        child: DynamicColorBuilder(
-          builder: (lightDynamic, darkDynamic) {
-            // Use dynamic colors only if enabled in settings
-            final lightTheme = _dynamicColorEnabled && lightDynamic != null
-                ? CaravellaThemes.createLightTheme(dynamicColorScheme: lightDynamic)
-                : CaravellaThemes.light;
-            
-            final darkTheme = _dynamicColorEnabled && darkDynamic != null
-                ? CaravellaThemes.createDarkTheme(dynamicColorScheme: darkDynamic)
-                : CaravellaThemes.dark;
-
-            return MaterialApp(
-              title: AppConfig.appName,
-              debugShowCheckedModeBanner: AppConfig.showDebugBanner,
-              theme: lightTheme,
-              darkTheme: darkTheme,
-              themeMode: _themeMode,
-              scaffoldMessengerKey: _scaffoldMessengerKey,
-              locale: Locale(_locale),
-              // Use generated locales & delegates to avoid divergence and ensure pt is enabled
-              supportedLocales: gen.AppLocalizations.supportedLocales,
-              localizationsDelegates: gen.AppLocalizations.localizationsDelegates,
-              home: const CaravellaHomePage(title: 'Caravella'),
-              navigatorObservers: [routeObserver],
-            );
-          },
+        child: MaterialApp(
+          title: AppConfig.appName,
+          debugShowCheckedModeBanner: AppConfig.showDebugBanner,
+          theme: CaravellaThemes.light,
+          darkTheme: CaravellaThemes.dark,
+          themeMode: _themeMode,
+          scaffoldMessengerKey: _scaffoldMessengerKey,
+          navigatorKey: navigatorKey,
+          locale: Locale(_locale),
+          // Use generated locales & delegates to avoid divergence and ensure pt is enabled
+          supportedLocales: gen.AppLocalizations.supportedLocales,
+          localizationsDelegates: gen.AppLocalizations.localizationsDelegates,
+          home: const CaravellaHomePage(title: 'Caravella'),
+          navigatorObservers: [routeObserver],
         ),
       ),
     );

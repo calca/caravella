@@ -55,7 +55,72 @@ class AppLocalizationsPt extends AppLocalizations {
   String get select_period_hint_short => 'Definir datas';
 
   @override
-  String get select_period_hint => 'Selecione um intervalo de datas';
+  String get select_period_hint => 'Selecionar datas';
+
+  @override
+  String get suggested_duration => 'Duração sugerida';
+
+  @override
+  String days_count(int count) {
+    return '$count dias';
+  }
+
+  @override
+  String get weekday_mon => 'S';
+
+  @override
+  String get weekday_tue => 'T';
+
+  @override
+  String get weekday_wed => 'Q';
+
+  @override
+  String get weekday_thu => 'Q';
+
+  @override
+  String get weekday_fri => 'S';
+
+  @override
+  String get weekday_sat => 'S';
+
+  @override
+  String get weekday_sun => 'D';
+
+  @override
+  String get month_january => 'Janeiro';
+
+  @override
+  String get month_february => 'Fevereiro';
+
+  @override
+  String get month_march => 'Março';
+
+  @override
+  String get month_april => 'Abril';
+
+  @override
+  String get month_may => 'Maio';
+
+  @override
+  String get month_june => 'Junho';
+
+  @override
+  String get month_july => 'Julho';
+
+  @override
+  String get month_august => 'Agosto';
+
+  @override
+  String get month_september => 'Setembro';
+
+  @override
+  String get month_october => 'Outubro';
+
+  @override
+  String get month_november => 'Novembro';
+
+  @override
+  String get month_december => 'Dezembro';
 
   @override
   String get in_group_prefix => 'em';
@@ -191,6 +256,38 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get dates_description => 'Início e fim opcionais';
+
+  @override
+  String get select_period => 'Select period';
+
+  @override
+  String get select_period_dates => 'Select the period dates';
+
+  @override
+  String duration_days(int days) {
+    return '$days days';
+  }
+
+  @override
+  String period_from_to(String start, String end, int days) {
+    return 'From $start to $end ($days days)';
+  }
+
+  @override
+  String period_from_select_end(String start) {
+    return 'From $start - Select end';
+  }
+
+  @override
+  String period_to_select_start(String end) {
+    return 'To $end - Select start';
+  }
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
+  String get clear => 'Clear';
 
   @override
   String get currency_description => 'Moeda base do grupo';
@@ -787,12 +884,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get settings_select_theme => 'Selecionar tema';
-
-  @override
-  String get settings_dynamic_color => 'Cores dinâmicas';
-
-  @override
-  String get settings_dynamic_color_desc => 'Usar cores do sistema';
 
   @override
   String get settings_privacy_desc => 'Opções de segurança e privacidade';
@@ -1608,6 +1699,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get whats_new_latest => 'Fique por dentro das melhorias mais recentes';
 
   @override
+  String get changelog_title => 'Histórico de versões';
+
+  @override
+  String get changelog_desc => 'Histórico de versões e melhorias';
+
+  @override
   String get average_per_person => 'Média por pessoa';
 
   @override
@@ -1618,6 +1715,62 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get debt_prefix_to => 'a ';
+
+  @override
+  String get check_for_updates => 'Verificar atualizações';
+
+  @override
+  String get check_for_updates_desc =>
+      'Verificar disponibilidade de nova versão';
+
+  @override
+  String get update_available => 'Atualização disponível';
+
+  @override
+  String get update_available_desc =>
+      'Uma nova versão do aplicativo está disponível';
+
+  @override
+  String get no_update_available => 'App atualizado';
+
+  @override
+  String get no_update_available_desc =>
+      'Você está usando a versão mais recente';
+
+  @override
+  String get update_now => 'Atualizar agora';
+
+  @override
+  String get update_later => 'Mais tarde';
+
+  @override
+  String get checking_for_updates => 'Verificando atualizações...';
+
+  @override
+  String get update_error => 'Erro ao verificar atualizações';
+
+  @override
+  String get update_downloading => 'Baixando...';
+
+  @override
+  String get update_installing => 'Instalando...';
+
+  @override
+  String get update_feature_android_only =>
+      'Recurso disponível apenas no Android com Google Play Store';
+
+  @override
+  String get update_recommendation_title => 'Atualização recomendada';
+
+  @override
+  String get update_recommendation_desc =>
+      'Uma nova versão do Caravella está disponível. Atualize o aplicativo para ter sempre os recursos e melhorias mais recentes!';
+
+  @override
+  String get update_install => 'Instalar atualização';
+
+  @override
+  String get update_remind_later => 'Lembrar mais tarde';
 
   @override
   String get send_reminder => 'Enviar lembrete';

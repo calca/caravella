@@ -55,7 +55,72 @@ class AppLocalizationsEn extends AppLocalizations {
   String get select_period_hint_short => 'Set dates';
 
   @override
-  String get select_period_hint => 'Select a date range';
+  String get select_period_hint => 'Select dates';
+
+  @override
+  String get suggested_duration => 'Suggested duration';
+
+  @override
+  String days_count(int count) {
+    return '$count days';
+  }
+
+  @override
+  String get weekday_mon => 'M';
+
+  @override
+  String get weekday_tue => 'T';
+
+  @override
+  String get weekday_wed => 'W';
+
+  @override
+  String get weekday_thu => 'T';
+
+  @override
+  String get weekday_fri => 'F';
+
+  @override
+  String get weekday_sat => 'S';
+
+  @override
+  String get weekday_sun => 'S';
+
+  @override
+  String get month_january => 'January';
+
+  @override
+  String get month_february => 'February';
+
+  @override
+  String get month_march => 'March';
+
+  @override
+  String get month_april => 'April';
+
+  @override
+  String get month_may => 'May';
+
+  @override
+  String get month_june => 'June';
+
+  @override
+  String get month_july => 'July';
+
+  @override
+  String get month_august => 'August';
+
+  @override
+  String get month_september => 'September';
+
+  @override
+  String get month_october => 'October';
+
+  @override
+  String get month_november => 'November';
+
+  @override
+  String get month_december => 'December';
 
   @override
   String get in_group_prefix => 'in';
@@ -191,6 +256,38 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dates_description => 'Optional start and end';
+
+  @override
+  String get select_period => 'Select period';
+
+  @override
+  String get select_period_dates => 'Select the period dates';
+
+  @override
+  String duration_days(int days) {
+    return '$days days';
+  }
+
+  @override
+  String period_from_to(String start, String end, int days) {
+    return 'From $start to $end ($days days)';
+  }
+
+  @override
+  String period_from_select_end(String start) {
+    return 'From $start - Select end';
+  }
+
+  @override
+  String period_to_select_start(String end) {
+    return 'To $end - Select start';
+  }
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
+  String get clear => 'Clear';
 
   @override
   String get currency_description => 'Base currency for group';
@@ -786,12 +883,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settings_select_theme => 'Select theme';
-
-  @override
-  String get settings_dynamic_color => 'Dynamic colors';
-
-  @override
-  String get settings_dynamic_color_desc => 'Use system colors';
 
   @override
   String get settings_privacy_desc => 'Security and privacy options';
@@ -1603,6 +1694,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get whats_new_latest => 'Stay up to date with recent improvements';
 
   @override
+  String get changelog_title => 'Changelog';
+
+  @override
+  String get changelog_desc => 'Version history and improvements';
+
+  @override
   String get average_per_person => 'Average per person';
 
   @override
@@ -1613,6 +1710,59 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get debt_prefix_to => 'to ';
+
+  @override
+  String get check_for_updates => 'Check for updates';
+
+  @override
+  String get check_for_updates_desc => 'Check for new version availability';
+
+  @override
+  String get update_available => 'Update available';
+
+  @override
+  String get update_available_desc => 'A new version of the app is available';
+
+  @override
+  String get no_update_available => 'App up to date';
+
+  @override
+  String get no_update_available_desc => 'You\'re using the latest version';
+
+  @override
+  String get update_now => 'Update now';
+
+  @override
+  String get update_later => 'Later';
+
+  @override
+  String get checking_for_updates => 'Checking for updates...';
+
+  @override
+  String get update_error => 'Update check error';
+
+  @override
+  String get update_downloading => 'Downloading...';
+
+  @override
+  String get update_installing => 'Installing...';
+
+  @override
+  String get update_feature_android_only =>
+      'Feature only available on Android with Google Play Store';
+
+  @override
+  String get update_recommendation_title => 'Update recommended';
+
+  @override
+  String get update_recommendation_desc =>
+      'A new version of Caravella is available. Update the app to always have the latest features and improvements!';
+
+  @override
+  String get update_install => 'Install update';
+
+  @override
+  String get update_remind_later => 'Remind me later';
 
   @override
   String get send_reminder => 'Send reminder';

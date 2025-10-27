@@ -33,7 +33,29 @@
   "settings_privacy": "Privacidade",
   "select_currency": "Selecionar moeda",
   "select_period_hint_short": "Definir datas",
-  "select_period_hint": "Selecione um intervalo de datas",
+  "select_period_hint": "Selecionar datas",
+  "suggested_duration": "Duração sugerida",
+  "days_count": "{count} dias",
+  "@days_count": {"description": "Número de dias", "placeholders": {"count": {"type": "int"}}},
+  "weekday_mon": "S",
+  "weekday_tue": "T",
+  "weekday_wed": "Q",
+  "weekday_thu": "Q",
+  "weekday_fri": "S",
+  "weekday_sat": "S",
+  "weekday_sun": "D",
+  "month_january": "Janeiro",
+  "month_february": "Fevereiro",
+  "month_march": "Março",
+  "month_april": "Abril",
+  "month_may": "Maio",
+  "month_june": "Junho",
+  "month_july": "Julho",
+  "month_august": "Agosto",
+  "month_september": "Setembro",
+  "month_october": "Outubro",
+  "month_november": "Novembro",
+  "month_december": "Dezembro",
   "in_group_prefix": "em",
   "save_change_expense": "Salvar alterações",
   "group_total": "Total",
@@ -274,8 +296,6 @@
   "settings_theme": "Tema",
   "settings_theme_desc": "Claro, escuro ou sistema",
   "settings_select_theme": "Selecionar tema",
-  "settings_dynamic_color": "Cores dinâmicas",
-  "settings_dynamic_color_desc": "Usar cores do sistema",
   "settings_privacy": "Privacidade",
   "settings_privacy_desc": "Opções de segurança e privacidade",
   "settings_data": "Dados",
@@ -504,6 +524,10 @@
   ,"@whats_new_subtitle": {"description": "Subtítulo no cartão de cabeçalho da página de novidades"}
   ,"whats_new_latest": "Fique por dentro das melhorias mais recentes"
   ,"@whats_new_latest": {"description": "Texto descritivo no cartão de cabeçalho da página de novidades"}
+  ,"changelog_title": "Histórico de versões"
+  ,"@changelog_title": {"description": "Título da seção de changelog"}
+  ,"changelog_desc": "Histórico de versões e melhorias"
+  ,"@changelog_desc": {"description": "Descrição da seção de changelog"}
   ,"average_per_person": "Média por pessoa"
   ,"@average_per_person": {"description": "Rótulo mostrado antes da média gasta por pessoa na aba Participantes"}
   ,"more": "mais"
@@ -512,6 +536,40 @@
   ,"@less": {"description": "Rótulo inline para recolher e mostrar menos itens"}
   ,"debt_prefix_to": "a "
   ,"@debt_prefix_to": {"description": "Prefixo curto mostrado antes do destinatário em uma linha de dívida/liquidação (ex.: 'a Alice 10€')"}
+  ,"check_for_updates": "Verificar atualizações"
+  ,"@check_for_updates": {"description": "Rótulo para verificar atualizações da Google Play Store"}
+  ,"check_for_updates_desc": "Verificar disponibilidade de nova versão"
+  ,"@check_for_updates_desc": {"description": "Descrição para verificação de atualizações"}
+  ,"update_available": "Atualização disponível"
+  ,"@update_available": {"description": "Título quando há uma atualização disponível"}
+  ,"update_available_desc": "Uma nova versão do aplicativo está disponível"
+  ,"@update_available_desc": {"description": "Descrição quando há uma atualização disponível"}
+  ,"no_update_available": "App atualizado"
+  ,"@no_update_available": {"description": "Mensagem quando não há atualizações"}
+  ,"no_update_available_desc": "Você está usando a versão mais recente"
+  ,"@no_update_available_desc": {"description": "Descrição quando não há atualizações"}
+  ,"update_now": "Atualizar agora"
+  ,"@update_now": {"description": "Botão para iniciar a atualização"}
+  ,"update_later": "Mais tarde"
+  ,"@update_later": {"description": "Botão para adiar a atualização"}
+  ,"checking_for_updates": "Verificando atualizações..."
+  ,"@checking_for_updates": {"description": "Mensagem durante verificação de atualizações"}
+  ,"update_error": "Erro ao verificar atualizações"
+  ,"@update_error": {"description": "Mensagem de erro durante verificação de atualizações"}
+  ,"update_downloading": "Baixando..."
+  ,"@update_downloading": {"description": "Mensagem durante download da atualização"}
+  ,"update_installing": "Instalando..."
+  ,"@update_installing": {"description": "Mensagem durante instalação da atualização"}
+  ,"update_feature_android_only": "Recurso disponível apenas no Android com Google Play Store"
+  ,"@update_feature_android_only": {"description": "Mensagem explicando que o recurso é apenas para Android"}
+  ,"update_recommendation_title": "Atualização recomendada"
+  ,"@update_recommendation_title": {"description": "Título do bottom sheet para recomendar atualização"}
+  ,"update_recommendation_desc": "Uma nova versão do Caravella está disponível. Atualize o aplicativo para ter sempre os recursos e melhorias mais recentes!"
+  ,"@update_recommendation_desc": {"description": "Descrição no bottom sheet recomendando atualizar"}
+  ,"update_install": "Instalar atualização"
+  ,"@update_install": {"description": "Botão para instalar atualização do bottom sheet"}
+  ,"update_remind_later": "Lembrar mais tarde"
+  ,"@update_remind_later": {"description": "Botão para adiar atualização do bottom sheet"}
   ,"send_reminder": "Enviar lembrete"
   ,"@send_reminder": {"description": "Rótulo do botão para enviar um lembrete de pagamento a um participante"}
   ,"reminder_message_single": "Oi {participantName}! 👋\n\nGostaria de lembrar que você deve {amount} a {creditorName} para o grupo \"{groupName}\".\n\nObrigado! 😊"
