@@ -9,8 +9,9 @@ typedef ShortcutTapCallback = void Function(String groupId, String groupTitle);
 /// Updates shortcuts when groups are created, modified, or deleted
 /// Note: Platform checks are handled by PlatformShortcutsManager
 class AppShortcutsService {
-  static const MethodChannel _channel =
-      MethodChannel('io.caravella.egm/shortcuts');
+  static const MethodChannel _channel = MethodChannel(
+    'io.caravella.egm/shortcuts',
+  );
 
   static ShortcutTapCallback? _onShortcutTapped;
 
@@ -26,7 +27,7 @@ class AppShortcutsService {
       final args = call.arguments as Map<dynamic, dynamic>;
       final groupId = args['groupId'] as String?;
       final groupTitle = args['groupTitle'] as String?;
-      
+
       if (groupId != null && groupTitle != null && _onShortcutTapped != null) {
         _onShortcutTapped!(groupId, groupTitle);
       }
@@ -39,10 +40,10 @@ class AppShortcutsService {
     try {
       // Get active groups from storage
       final groups = await ExpenseGroupStorageV2.getActiveGroups();
-      
+
       // Filter and sort groups in Dart - pass only 4 shortcuts to native
       final shortcutsToShow = _selectShortcutsToShow(groups);
-      
+
       // Convert to format expected by Android
       final shortcutData = shortcutsToShow.map((group) {
         return {
@@ -65,22 +66,20 @@ class AppShortcutsService {
   static List<ExpenseGroup> _selectShortcutsToShow(List<ExpenseGroup> groups) {
     const maxShortcuts = 4;
     final result = <ExpenseGroup>[];
-    
+
     // Add pinned group first if available
     final pinnedGroup = groups.where((g) => g.pinned).firstOrNull;
     if (pinnedGroup != null) {
       result.add(pinnedGroup);
     }
-    
+
     // Add up to 3 most recently updated non-pinned groups
-    final recentGroups = groups
-        .where((g) => !g.pinned)
-        .toList()
+    final recentGroups = groups.where((g) => !g.pinned).toList()
       ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
-    
+
     final remaining = maxShortcuts - result.length;
     result.addAll(recentGroups.take(remaining));
-    
+
     return result;
   }
 

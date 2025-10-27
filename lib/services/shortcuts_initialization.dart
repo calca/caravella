@@ -18,7 +18,7 @@ class ShortcutsInitialization {
         _handleShortcutTap(context, groupId, groupTitle);
       }
     });
-    
+
     // Update shortcuts with current data
     PlatformShortcutsManager.updateShortcuts();
   }
@@ -34,6 +34,10 @@ class ShortcutsInitialization {
     try {
       // Load the group from storage
       final group = await ExpenseGroupStorageV2.getTripById(groupId);
+
+      // Check if context is still mounted after async operation
+      if (!context.mounted) return;
+
       if (group == null) {
         // Group not found, show error
         AppToast.show(
@@ -51,12 +55,11 @@ class ShortcutsInitialization {
         ),
       );
     } catch (e) {
+      // Check if context is still mounted before showing error
+      if (!context.mounted) return;
+
       // Show generic error
-      AppToast.show(
-        context,
-        'Unable to open group',
-        type: ToastType.error,
-      );
+      AppToast.show(context, 'Unable to open group', type: ToastType.error);
     }
   }
 }
