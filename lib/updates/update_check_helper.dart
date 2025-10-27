@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../widgets/bottom_sheet_scaffold.dart';
+import '../widgets/app_toast.dart';
 import 'update_service_factory.dart';
 
 /// Shows a bottom sheet recommending the user to update the app.
@@ -86,11 +87,12 @@ Future<void> checkAndShowUpdateIfNeeded(BuildContext context) async {
 
     if (!context.mounted) return;
 
-    // Show snackbar to inform user
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(gen.AppLocalizations.of(context).update_downloading),
-      ),
+    // Show toast to inform user
+    AppToast.show(
+      context,
+      gen.AppLocalizations.of(context).update_downloading,
+      type: ToastType.info,
+      icon: Icons.download,
     );
   }
 }

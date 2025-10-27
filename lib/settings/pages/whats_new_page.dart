@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:io';
 import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../manager/group/widgets/section_header.dart';
@@ -121,11 +122,12 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
           padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
         ),
 
-        // Update check widget
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: UpdateCheckWidget(),
-        ),
+        // Update check widget (only on Android)
+        if (Platform.isAndroid)
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: UpdateCheckWidget(),
+          ),
 
         // Changelog content in a card
         Padding(
