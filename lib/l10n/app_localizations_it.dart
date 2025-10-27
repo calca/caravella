@@ -888,6 +888,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settings_select_theme => 'Seleziona tema';
 
   @override
+  String get settings_dynamic_color => 'Colore dinamico';
+
+  @override
+  String get settings_dynamic_color_desc => 'Usa i colori dello sfondo';
+
+  @override
   String get settings_privacy_desc => 'Opzioni sicurezza e privacy';
 
   @override

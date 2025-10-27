@@ -296,6 +296,8 @@
   "settings_theme": "Tema",
   "settings_theme_desc": "Claro, escuro ou sistema",
   "settings_select_theme": "Selecionar tema",
+  "settings_dynamic_color": "Cor dinâmica",
+  "settings_dynamic_color_desc": "Usar cores do papel de parede",
   "settings_privacy": "Privacidade",
   "settings_privacy_desc": "Opções de segurança e privacidade",
   "settings_data": "Dados",

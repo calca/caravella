@@ -5,6 +5,7 @@ import '../state/expense_group_notifier.dart';
 import '../settings/user_name_notifier.dart';
 import '../state/locale_notifier.dart';
 import '../state/theme_mode_notifier.dart';
+import '../state/dynamic_color_notifier.dart';
 
 /// Sets up all global providers for the app.
 class ProviderSetup {
@@ -19,13 +20,15 @@ class ProviderSetup {
     );
   }
 
-  /// Wraps the child with LocaleNotifier and ThemeModeNotifier.
+  /// Wraps the child with LocaleNotifier, ThemeModeNotifier and DynamicColorNotifier.
   static Widget wrapWithNotifiers({
     required Widget child,
     required String locale,
     required Function(String) onLocaleChange,
     required ThemeMode themeMode,
     required Function(ThemeMode) onThemeChange,
+    required bool dynamicColorEnabled,
+    required Function(bool) onDynamicColorChange,
   }) {
     return LocaleNotifier(
       locale: locale,
@@ -33,7 +36,11 @@ class ProviderSetup {
       child: ThemeModeNotifier(
         themeMode: themeMode,
         changeTheme: onThemeChange,
-        child: child,
+        child: DynamicColorNotifier(
+          dynamicColorEnabled: dynamicColorEnabled,
+          changeDynamicColor: onDynamicColorChange,
+          child: child,
+        ),
       ),
     );
   }

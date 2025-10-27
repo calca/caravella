@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 import '../config/app_config.dart';
@@ -20,6 +21,7 @@ class CaravellaApp extends StatefulWidget {
 class _CaravellaAppState extends State<CaravellaApp> {
   String _locale = 'it';
   ThemeMode _themeMode = ThemeMode.system;
+  bool _dynamicColorEnabled = false;
 
   // Global scaffold messenger key to allow showing SnackBars/toasts safely
   // even when the local BuildContext that requested it is already disposed.
@@ -31,6 +33,7 @@ class _CaravellaAppState extends State<CaravellaApp> {
     super.initState();
     _loadLocale();
     _loadThemeMode();
+    _loadDynamicColorPreference();
   }
 
   Future<void> _loadLocale() async {
@@ -77,29 +80,59 @@ class _CaravellaAppState extends State<CaravellaApp> {
     });
   }
 
+  Future<void> _loadDynamicColorPreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _dynamicColorEnabled = prefs.getBool('dynamic_color_enabled') ?? false;
+    });
+  }
+
+  void _changeDynamicColor(bool enabled) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('dynamic_color_enabled', enabled);
+    setState(() {
+      _dynamicColorEnabled = enabled;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ProviderSetup.createProviders(
-      child: ProviderSetup.wrapWithNotifiers(
-        locale: _locale,
-        onLocaleChange: _changeLocale,
-        themeMode: _themeMode,
-        onThemeChange: _changeTheme,
-        child: MaterialApp(
-          title: AppConfig.appName,
-          debugShowCheckedModeBanner: AppConfig.showDebugBanner,
-          theme: CaravellaThemes.light,
-          darkTheme: CaravellaThemes.dark,
-          themeMode: _themeMode,
-          scaffoldMessengerKey: _scaffoldMessengerKey,
-          navigatorKey: navigatorKey,
-          locale: Locale(_locale),
-          // Use generated locales & delegates to avoid divergence and ensure pt is enabled
-          supportedLocales: gen.AppLocalizations.supportedLocales,
-          localizationsDelegates: gen.AppLocalizations.localizationsDelegates,
-          home: const CaravellaHomePage(title: 'Caravella'),
-          navigatorObservers: [routeObserver],
-        ),
+      child: DynamicColorBuilder(
+        builder: (lightDynamic, darkDynamic) {
+          return ProviderSetup.wrapWithNotifiers(
+            locale: _locale,
+            onLocaleChange: _changeLocale,
+            themeMode: _themeMode,
+            onThemeChange: _changeTheme,
+            dynamicColorEnabled: _dynamicColorEnabled,
+            onDynamicColorChange: _changeDynamicColor,
+            child: MaterialApp(
+              title: AppConfig.appName,
+              debugShowCheckedModeBanner: AppConfig.showDebugBanner,
+              theme: _dynamicColorEnabled && lightDynamic != null
+                  ? CaravellaThemes.createLightTheme(
+                      dynamicColorScheme: lightDynamic,
+                    )
+                  : CaravellaThemes.light,
+              darkTheme: _dynamicColorEnabled && darkDynamic != null
+                  ? CaravellaThemes.createDarkTheme(
+                      dynamicColorScheme: darkDynamic,
+                    )
+                  : CaravellaThemes.dark,
+              themeMode: _themeMode,
+              scaffoldMessengerKey: _scaffoldMessengerKey,
+              navigatorKey: navigatorKey,
+              locale: Locale(_locale),
+              // Use generated locales & delegates to avoid divergence and ensure pt is enabled
+              supportedLocales: gen.AppLocalizations.supportedLocales,
+              localizationsDelegates:
+                  gen.AppLocalizations.localizationsDelegates,
+              home: const CaravellaHomePage(title: 'Caravella'),
+              navigatorObservers: [routeObserver],
+            ),
+          );
+        },
       ),
     );
   }

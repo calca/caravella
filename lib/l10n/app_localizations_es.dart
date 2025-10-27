@@ -889,6 +889,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settings_select_theme => 'Seleccionar tema';
 
   @override
+  String get settings_dynamic_color => 'Color dinámico';
+
+  @override
+  String get settings_dynamic_color_desc =>
+      'Usar colores del fondo de pantalla';
+
+  @override
   String get settings_privacy_desc => 'Opciones seguridad y privacidad';
 
   @override

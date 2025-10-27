@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Dynamic color support with Material 3 integration for personalized app theming (Android 12+, limited iOS support)
+- Settings toggle to enable colors derived from device wallpaper with graceful fallback to default themes
 - Android Quick Actions (App Shortcuts) for quick access to expense groups from launcher (Android only)
 - F-Droid metadata and distribution support
 - Comprehensive F-Droid submission documentation

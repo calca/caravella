@@ -59,6 +59,7 @@ dependencies:
   gpt_markdown: ^1.1.4
   image_picker_platform_interface: ^2.11.0
   in_app_review: ^2.0.10
+  dynamic_color: ^1.8.0
   # Conditional dependency: only included when ENABLE_PLAY_UPDATES=true
   play_store_updates:
     path: packages/play_store_updates

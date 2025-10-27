@@ -318,6 +318,8 @@
   "settings_theme": "Theme",
   "settings_theme_desc": "Light, dark or system",
   "settings_select_theme": "Select theme",
+  "settings_dynamic_color": "Dynamic color",
+  "settings_dynamic_color_desc": "Use colors from your wallpaper",
   "settings_privacy": "Privacy",
   "settings_privacy_desc": "Security and privacy options",
   "settings_data": "Data",
