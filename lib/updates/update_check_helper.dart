@@ -15,13 +15,13 @@ Future<bool?> showUpdateRecommendationSheet(BuildContext context) async {
     context: context,
     isScrollControlled: true,
     builder: (context) => GroupBottomSheetScaffold(
-      title: loc.update_recommendation_title,
+      title: loc.update_available,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            loc.update_recommendation_desc,
+            loc.update_available_desc,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 24),
@@ -30,12 +30,13 @@ Future<bool?> showUpdateRecommendationSheet(BuildContext context) async {
             children: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: Text(loc.update_remind_later),
+                child: Text(loc.update_later),
               ),
               const SizedBox(width: 8),
-              FilledButton(
+              FilledButton.icon(
                 onPressed: () => Navigator.of(context).pop(true),
-                child: Text(loc.update_install),
+                icon: const Icon(Icons.download),
+                label: Text(loc.update_now),
               ),
             ],
           ),
