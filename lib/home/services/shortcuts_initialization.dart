@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 
-import '../manager/details/pages/expense_group_detail_page.dart';
+import '../../manager/details/pages/expense_group_detail_page.dart';
 
 /// Service for initializing and managing platform shortcuts
 /// This provides the UI-specific implementation for the core shortcuts navigation service
