@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:io_caravella_egm/widgets/add_fab.dart';
-import 'package:io_caravella_egm/widgets/app_toast.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart';
 import 'package:io_caravella_egm/home/welcome/home_welcome_section.dart';
 

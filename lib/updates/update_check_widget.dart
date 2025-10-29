@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../settings/widgets/settings_card.dart';

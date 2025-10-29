@@ -1,3 +1,4 @@
+import 'package:caravella_core_ui/widgets/bottom_sheet_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../l10n/app_localizations.dart';
-import '../main.dart' show rootScaffoldMessenger; // for fallback usage
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/main.dart'
+    show rootScaffoldMessenger; // for fallback usage
 
 /// Lightweight toast / inline feedback using Flutter's native SnackBar
 /// with Material 3 theming and automatic queue management.
@@ -47,7 +48,7 @@ class AppToast {
   }
 
   static String _getTypeDescription(BuildContext context, ToastType type) {
-    final localizations = AppLocalizations.of(context);
+    final localizations = gen.AppLocalizations.of(context);
     switch (type) {
       case ToastType.success:
         return localizations.accessibility_toast_success;
@@ -150,7 +151,8 @@ class AppToast {
         ),
         action: onUndo != null
             ? SnackBarAction(
-                label: undoLabel ?? AppLocalizations.of(referenceContext).undo,
+                label:
+                    undoLabel ?? gen.AppLocalizations.of(referenceContext).undo,
                 textColor: textColor,
                 onPressed: onUndo,
               )

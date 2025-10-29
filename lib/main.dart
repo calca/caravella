@@ -1,8 +1,8 @@
+import 'package:caravella_core/caravella_core.dart';
 import 'package:flutter/material.dart';
 
 import 'main/app_initialization.dart';
 import 'main/caravella_app.dart';
-import 'config/app_config.dart';
 import 'services/shortcuts_initialization.dart';
 
 // Re-export routeObserver for backward compatibility

@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:caravella_core/caravella_core.dart';
 
 /// Callback function type for handling shortcut taps
 typedef ShortcutTapCallback = void Function(String groupId, String groupTitle);

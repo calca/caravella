@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'dart:ui' as ui;
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
@@ -72,7 +74,9 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
       final total = trip.expenses
           .where((e) => e.paidBy.id == p.id)
           .fold<double>(0, (s, e) => s + (e.amount ?? 0));
-      buffer.writeln('- ${p.name}: ${CurrencyDisplay.formatCurrencyText(total, currency)}');
+      buffer.writeln(
+        '- ${p.name}: ${CurrencyDisplay.formatCurrencyText(total, currency)}',
+      );
     }
     buffer.writeln('');
     // Settlements (shared compute)

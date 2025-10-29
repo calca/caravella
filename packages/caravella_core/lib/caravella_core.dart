@@ -3,8 +3,9 @@
 
 // Configuration
 export 'config/app_config.dart';
+export 'config/app_icons.dart';
 
-// Data Models  
+// Data Models
 export 'data/model/expense_category.dart';
 export 'data/model/expense_details.dart';
 export 'data/model/expense_group.dart';

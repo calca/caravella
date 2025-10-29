@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'platform_shortcuts_manager.dart';
 import '../manager/details/pages/expense_group_detail_page.dart';
 

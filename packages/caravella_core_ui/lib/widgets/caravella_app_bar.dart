@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../l10n/app_localizations.dart';
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 class CaravellaAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
@@ -19,7 +19,7 @@ class CaravellaAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context);
+    final localizations = gen.AppLocalizations.of(context);
     return Semantics(
       header: true,
       label: localizations.accessibility_navigation_bar,

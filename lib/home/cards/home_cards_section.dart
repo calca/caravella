@@ -3,8 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart'
     as gen; // generated
 import 'package:caravella_core/caravella_core.dart';
-import 'package:caravella_core/caravella_core.dart';
-import 'package:caravella_core/caravella_core.dart';
 // Removed locale_notifier import after migration
 // locale_notifier no longer needed after migration
 import 'widgets/widgets.dart';

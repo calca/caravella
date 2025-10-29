@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'package:play_store_updates/play_store_updates.dart' as psu;
 import 'update_service_interface.dart';
 

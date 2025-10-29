@@ -9,6 +9,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  io_caravella_egm:
+    path: ../..
   caravella_core:
     path: ../caravella_core
   fl_chart: 1.1.0

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:caravella_core/caravella_core.dart';
+import 'package:io_caravella_egm/manager/group/data/currencies.dart';
 import '../../../l10n/app_localizations.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 

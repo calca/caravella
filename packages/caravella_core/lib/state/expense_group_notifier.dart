@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import '../data/model/expense_group.dart';
 import '../data/model/expense_category.dart';
 import '../data/expense_group_storage_v2.dart';
-import '../services/platform_shortcuts_manager.dart';
 
 class ExpenseGroupNotifier extends ChangeNotifier {
   ExpenseGroup? _currentGroup;
@@ -10,6 +9,9 @@ class ExpenseGroupNotifier extends ChangeNotifier {
   String? _lastAddedCategory;
   String? _lastEvent; // es: 'expense_added', 'category_added'
   final List<String> _deletedGroupIds = [];
+
+  // Optional callback for platform-specific shortcuts (e.g., Android Quick Actions)
+  VoidCallback? _onShortcutsUpdate;
 
   ExpenseGroup? get currentGroup => _currentGroup;
 
@@ -184,6 +186,11 @@ class ExpenseGroupNotifier extends ChangeNotifier {
 
   /// Update Android shortcuts (Quick Actions)
   void _updateShortcuts() {
-    PlatformShortcutsManager.updateShortcuts();
+    _onShortcutsUpdate?.call();
+  }
+
+  /// Set callback for shortcuts update (platform-specific)
+  void setShortcutsUpdateCallback(VoidCallback? callback) {
+    _onShortcutsUpdate = callback;
   }
 }
