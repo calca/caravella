@@ -1,11 +1,11 @@
 // Updated wrapper for ExpenseGroupStorage - removes print statements
+import '../services/logging/logger_service.dart';
 import 'model/expense_group.dart';
 import 'model/expense_details.dart';
 import 'model/expense_participant.dart';
 import 'model/expense_category.dart';
 import 'expense_group_repository.dart';
 import 'file_based_expense_group_repository.dart';
-import '../services/logger_service.dart';
 
 /// Backward-compatible wrapper for ExpenseGroupStorage
 /// Maintains the same API while using the improved repository internally
