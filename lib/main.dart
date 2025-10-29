@@ -13,7 +13,7 @@ void main() async {
   await AppInitialization.initialize();
 
   // Initialize shortcuts after app initialization
-  ShortcutsInitialization.initialize();
+  await ShortcutsInitialization.initialize();
 
   runApp(const CaravellaApp());
 }

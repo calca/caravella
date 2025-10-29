@@ -5,7 +5,6 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 
-import '../services/shortcuts_initialization.dart';
 import 'route_observer.dart';
 import 'provider_setup.dart';
 import 'caravella_home_page.dart';

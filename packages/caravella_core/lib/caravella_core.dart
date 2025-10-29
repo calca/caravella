@@ -28,6 +28,7 @@ export 'services/preferences_service.dart';
 export 'services/rating_service.dart';
 export 'services/app_shortcuts_service.dart';
 export 'services/platform_shortcuts_manager.dart';
+export 'services/shortcuts_navigation_service.dart';
 
 // State Management
 export 'state/dynamic_color_notifier.dart';

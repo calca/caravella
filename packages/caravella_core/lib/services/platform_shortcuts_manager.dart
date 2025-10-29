@@ -17,9 +17,7 @@ class PlatformShortcutsManager {
   }
 
   /// Initialize shortcuts service if platform supports them
-  static void initialize(
-    void Function(String groupId, String groupTitle) callback,
-  ) {
+  static Future<void> initialize(ShortcutTapCallback callback) async {
     if (!Platform.isAndroid) return;
     AppShortcutsService.initialize(callback);
   }
