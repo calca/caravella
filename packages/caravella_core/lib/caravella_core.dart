@@ -23,9 +23,9 @@ export 'data/storage_performance.dart';
 export 'data/storage_transaction.dart';
 
 // Services
-export 'data/services/logger_service.dart';
-export 'data/services/preferences_service.dart';
-export 'data/services/rating_service.dart';
+export 'services/logger_service.dart';
+export 'services/preferences_service.dart';
+export 'services/rating_service.dart';
 
 // State Management
 export 'state/dynamic_color_notifier.dart';

@@ -1,7 +1,7 @@
 import 'package:in_app_review/in_app_review.dart';
 import 'preferences_service.dart';
 import 'logger_service.dart';
-import '../expense_group_storage_v2.dart';
+import '../data/expense_group_storage_v2.dart';
 
 /// Service to manage in-app store rating requests
 ///

@@ -7,7 +7,7 @@ import 'expense_group_repository.dart';
 import 'storage_performance.dart';
 import 'file_based_expense_group_repository.dart';
 import 'storage_transaction.dart';
-import 'services/logger_service.dart';
+import '../services/logger_service.dart';
 
 /// Benchmark configuration
 class BenchmarkConfig {

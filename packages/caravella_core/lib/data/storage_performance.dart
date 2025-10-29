@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'services/logger_service.dart';
+import '../services/logger_service.dart';
 
 /// Performance metrics for storage operations
 class StorageMetrics {
