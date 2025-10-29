@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
-import 'package:play_store_updates/play_store_updates.dart' as psu;
+import 'app_update_service.dart' as psu;
+import 'app_update_notifier.dart' as psu_notifier;
+import 'logger_adapter.dart';
 import 'update_service_interface.dart';
 
 /// Play Store implementation of UpdateService.
@@ -49,7 +51,8 @@ class PlayStoreUpdateService implements UpdateService {
 
 /// Play Store implementation of UpdateNotifier.
 class PlayStoreUpdateNotifier extends ChangeNotifier implements UpdateNotifier {
-  final psu.AppUpdateNotifier _notifier = psu.AppUpdateNotifier();
+  final psu_notifier.AppUpdateNotifier _notifier =
+      psu_notifier.AppUpdateNotifier();
 
   PlayStoreUpdateNotifier() {
     _notifier.addListener(notifyListeners);
@@ -110,7 +113,7 @@ class PlayStoreUpdateNotifier extends ChangeNotifier implements UpdateNotifier {
 
 /// Initialize the logger adapter for the play_store_updates package.
 void initializePlayStoreUpdatesLogger() {
-  psu.LoggerAdapter.configure(
+  LoggerAdapter.configure(
     onInfo: LoggerService.info,
     onWarning: LoggerService.warning,
   );

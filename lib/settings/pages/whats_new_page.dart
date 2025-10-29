@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 import 'dart:io';
 import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import 'package:play_store_updates/play_store_updates.dart';
 import '../../manager/group/widgets/section_header.dart';
-import '../../updates/update_check_widget.dart';
 
 class WhatsNewPage extends StatefulWidget {
   const WhatsNewPage({super.key});

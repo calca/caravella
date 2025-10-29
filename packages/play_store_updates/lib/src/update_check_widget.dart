@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../settings/widgets/settings_card.dart';
+import 'package:io_caravella_egm/settings/widgets/settings_card.dart';
 import 'update_service_factory.dart';
 import 'update_service_interface.dart';
 
@@ -54,8 +54,7 @@ class UpdateCheckWidget extends StatelessWidget {
               title: Text(loc.check_for_updates, style: textTheme.titleMedium),
               subtitle: _buildUpdateSubtitle(context, loc, notifier),
               trailing: _buildUpdateTrailing(context, loc, notifier),
-              onTap:
-                  notifier.isChecking ||
+              onTap: notifier.isChecking ||
                       notifier.isDownloading ||
                       notifier.isInstalling
                   ? null
@@ -152,8 +151,8 @@ class UpdateCheckWidget extends StatelessWidget {
                     notifier.isDownloading
                         ? loc.update_downloading
                         : notifier.isInstalling
-                        ? loc.update_installing
-                        : loc.update_now,
+                            ? loc.update_installing
+                            : loc.update_now,
                   ),
                 ),
               ],
