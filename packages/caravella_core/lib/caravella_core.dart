@@ -22,13 +22,19 @@ export 'data/storage_index.dart';
 export 'data/storage_performance.dart';
 export 'data/storage_transaction.dart';
 
-// Services
-export 'services/logger_service.dart';
-export 'services/preferences_service.dart';
-export 'services/rating_service.dart';
-export 'services/app_shortcuts_service.dart';
-export 'services/platform_shortcuts_manager.dart';
-export 'services/shortcuts_navigation_service.dart';
+// Services - Logging
+export 'services/logging/logger_service.dart';
+
+// Services - Storage
+export 'services/storage/preferences_service.dart';
+
+// Services - User Feedback
+export 'services/user/rating_service.dart';
+
+// Services - Shortcuts
+export 'services/shortcuts/app_shortcuts_service.dart';
+export 'services/shortcuts/platform_shortcuts_manager.dart';
+export 'services/shortcuts/shortcuts_navigation_service.dart';
 
 // State Management
 export 'state/dynamic_color_notifier.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../data/expense_group_storage_v2.dart';
-import '../data/model/expense_group.dart';
+import '../../data/expense_group_storage_v2.dart';
+import '../../data/model/expense_group.dart';
 
 /// Callback type for handling navigation to expense group detail
 typedef NavigateToGroupCallback =
