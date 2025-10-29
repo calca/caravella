@@ -26,6 +26,8 @@ export 'data/storage_transaction.dart';
 export 'services/logger_service.dart';
 export 'services/preferences_service.dart';
 export 'services/rating_service.dart';
+export 'services/app_shortcuts_service.dart';
+export 'services/platform_shortcuts_manager.dart';
 
 // State Management
 export 'state/dynamic_color_notifier.dart';

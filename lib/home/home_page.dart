@@ -6,7 +6,6 @@ import '../main/route_observer.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'welcome/home_welcome_section.dart';
 import 'cards/home_cards_section.dart';
-import '../services/platform_shortcuts_manager.dart';
 import '../updates/update_check_helper.dart';
 
 class HomePage extends StatefulWidget {
