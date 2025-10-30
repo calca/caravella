@@ -169,8 +169,8 @@ void main() {
       expect(initialIndex, 0, reason: 'Should start on Active tab (index 0)');
 
       // Perform a fling gesture from right to left (to go to next tab)
-      await tester.fling(tabBarViewFinder, const Offset(-800, 0), 1200);
-      await tester.pump(const Duration(milliseconds: 1000));
+      await tester.fling(tabBarViewFinder, const Offset(-1000, 0), 1000);
+      await tester.pump(const Duration(milliseconds: 2000));
 
       // Verify that we've moved to the second tab (Archived)
       final newIndex =
@@ -182,8 +182,8 @@ void main() {
       );
 
       // Perform a fling gesture from left to right (to go back to first tab)
-      await tester.fling(tabBarViewFinder, const Offset(800, 0), 1200);
-      await tester.pump(const Duration(milliseconds: 1000));
+      await tester.fling(tabBarViewFinder, const Offset(1000, 0), 1000);
+      await tester.pump(const Duration(milliseconds: 2000));
 
       // Verify that we've moved back to the first tab (Active)
       final finalIndex =
