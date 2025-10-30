@@ -9,9 +9,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: CarouselSkeletonLoader(
-              theme: ThemeData.light(),
-            ),
+            body: CarouselSkeletonLoader(theme: ThemeData.light()),
           ),
         ),
       );
@@ -21,14 +19,14 @@ void main() {
       expect(find.byType(PageView), findsOneWidget);
     });
 
-    testWidgets('shows skeleton cards during animation', (WidgetTester tester) async {
+    testWidgets('shows skeleton cards during animation', (
+      WidgetTester tester,
+    ) async {
       // Build the widget
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: CarouselSkeletonLoader(
-              theme: ThemeData.light(),
-            ),
+            body: CarouselSkeletonLoader(theme: ThemeData.light()),
           ),
         ),
       );
@@ -53,11 +51,7 @@ void main() {
       // Test with light theme
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: CarouselSkeletonLoader(
-              theme: lightTheme,
-            ),
-          ),
+          home: Scaffold(body: CarouselSkeletonLoader(theme: lightTheme)),
         ),
       );
 
@@ -66,11 +60,7 @@ void main() {
       // Test with dark theme
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: CarouselSkeletonLoader(
-              theme: darkTheme,
-            ),
-          ),
+          home: Scaffold(body: CarouselSkeletonLoader(theme: darkTheme)),
         ),
       );
 
@@ -81,29 +71,27 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: CarouselSkeletonLoader(
-              theme: ThemeData.light(),
-            ),
+            body: CarouselSkeletonLoader(theme: ThemeData.light()),
           ),
         ),
       );
 
       // The widget should show indicator dots
       expect(find.byType(Row), findsWidgets);
-      
-  // Verify structure: there will be multiple Expanded widgets because
-  // each skeleton card contains a Spacer (which uses Expanded internally).
-  expect(find.byType(Column), findsWidgets);
-  expect(find.byType(Expanded), findsWidgets);
+
+      // Verify structure: there will be multiple Expanded widgets because
+      // each skeleton card contains a Spacer (which uses Expanded internally).
+      expect(find.byType(Column), findsWidgets);
+      expect(find.byType(Expanded), findsWidgets);
     });
 
-    testWidgets('animation controller is disposed properly', (WidgetTester tester) async {
+    testWidgets('animation controller is disposed properly', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: CarouselSkeletonLoader(
-              theme: ThemeData.light(),
-            ),
+            body: CarouselSkeletonLoader(theme: ThemeData.light()),
           ),
         ),
       );
@@ -112,7 +100,9 @@ void main() {
       expect(find.byType(CarouselSkeletonLoader), findsOneWidget);
 
       // Dispose the widget
-      await tester.pumpWidget(const MaterialApp(home: Scaffold(body: SizedBox())));
+      await tester.pumpWidget(
+        const MaterialApp(home: Scaffold(body: SizedBox())),
+      );
 
       // Should not throw errors - animation controller should be disposed
       await tester.pumpAndSettle();
