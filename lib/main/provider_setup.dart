@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:caravella_core/caravella_core.dart';
 
-import '../state/expense_group_notifier.dart';
 import '../settings/user_name_notifier.dart';
-import '../state/locale_notifier.dart';
-import '../state/theme_mode_notifier.dart';
-import '../state/dynamic_color_notifier.dart';
 
 /// Sets up all global providers for the app.
 class ProviderSetup {

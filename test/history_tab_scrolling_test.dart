@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:io_caravella_egm/manager/history/expenses_history_page.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:io_caravella_egm/state/expense_group_notifier.dart';
+import 'package:caravella_core/caravella_core.dart';
 
 void main() {
   Widget createTestApp({required Widget home}) => MaterialApp(

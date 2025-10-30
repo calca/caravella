@@ -1,5 +1,5 @@
-import '../../../data/model/expense_group.dart';
-import '../../../widgets/currency_display.dart';
+import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 /// Utility per generare il contenuto OFX di un [ExpenseGroup].
 class OfxExporter {

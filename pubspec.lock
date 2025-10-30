@@ -33,6 +33,20 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
+  caravella_core:
+    dependency: "direct main"
+    description:
+      path: "packages/caravella_core"
+      relative: true
+    source: path
+    version: "1.0.0"
+  caravella_core_ui:
+    dependency: "direct main"
+    description:
+      path: "packages/caravella_core_ui"
+      relative: true
+    source: path
+    version: "1.0.0"
   characters:
     dependency: transitive
     description:

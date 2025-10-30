@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker_android/image_picker_android.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
+import 'package:caravella_core/caravella_core.dart';
 
-import '../config/app_config.dart';
-import '../data/services/preferences_service.dart';
 import '../settings/flag_secure_android.dart';
 
 /// Initializes the app: platform-specific setup, orientation, system UI, and image cache.

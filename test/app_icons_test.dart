@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:io_caravella_egm/config/app_icons.dart';
+import 'package:caravella_core/caravella_core.dart';
 
 void main() {
   group('AppIcons', () {
@@ -21,7 +21,10 @@ void main() {
     test('class should not be instantiable', () {
       // This verifies the private constructor works as expected
       // The constructor AppIcons._() should prevent external instantiation
-      expect(() => throw UnsupportedError('Cannot instantiate AppIcons'), throwsUnsupportedError);
+      expect(
+        () => throw UnsupportedError('Cannot instantiate AppIcons'),
+        throwsUnsupportedError,
+      );
     });
   });
 }

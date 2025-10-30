@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
-import '../config/app_config.dart';
-import '../themes/caravella_themes.dart';
-import '../services/shortcuts_initialization.dart';
 import 'route_observer.dart';
 import 'provider_setup.dart';
 import 'caravella_home_page.dart';

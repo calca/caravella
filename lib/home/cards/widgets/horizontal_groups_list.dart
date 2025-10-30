@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../../data/model/expense_group.dart';
-import '../../../data/expense_group_storage_v2.dart';
 import 'carousel_skeleton_loader.dart';
 import 'group_card.dart';
 import 'new_group_card.dart';

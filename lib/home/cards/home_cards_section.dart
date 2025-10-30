@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart'
     as gen; // generated
-import '../../data/model/expense_group.dart';
-import '../../data/expense_group_storage_v2.dart';
-import '../../state/expense_group_notifier.dart';
+import 'package:caravella_core/caravella_core.dart';
 // Removed locale_notifier import after migration
 // locale_notifier no longer needed after migration
 import 'widgets/widgets.dart';

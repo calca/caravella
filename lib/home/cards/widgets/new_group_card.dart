@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../manager/group/pages/expenses_group_edit_page.dart';
 import '../../../manager/group/group_edit_mode.dart';
-import '../../../widgets/base_card.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 class NewGroupCard extends StatelessWidget {
   final gen.AppLocalizations localizations;

@@ -1,6 +1,6 @@
+import 'package:caravella_core_ui/widgets/bottom_sheet_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../../widgets/bottom_sheet_scaffold.dart';
 
 /// A Booking.com-style period selector with calendar and duration presets
 class PeriodSelectionBottomSheet extends StatefulWidget {

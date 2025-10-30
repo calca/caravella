@@ -1,13 +1,11 @@
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:flutter/material.dart';
-import '../../../../data/model/expense_group.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'usecase/settlements_logic.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../widgets/group_header.dart'; // ParticipantAvatar
-import '../../widgets/stat_card.dart';
-import '../../../../widgets/currency_display.dart';
-import '../../../../data/model/expense_participant.dart';
 import 'package:share_plus/share_plus.dart';
-import '../../../../widgets/bottom_sheet_scaffold.dart';
+import '../../widgets/stat_card.dart';
+import '../../widgets/group_header.dart';
 
 /// Participants tab: per participant totals, contribution percentages and settlements.
 class ParticipantsOverviewTab extends StatelessWidget {

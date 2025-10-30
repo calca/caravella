@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../../../data/model/expense_group.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../widgets/stat_card.dart';
-import '../../../../widgets/charts/weekly_expense_chart.dart';
-import '../../../../widgets/charts/monthly_expense_chart.dart';
-import '../../../../widgets/charts/date_range_expense_chart.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'usecase/daily_totals_utils.dart';
 import 'usecase/date_range_formatter.dart';
-import '../../widgets/group_header.dart'; // for ParticipantAvatar
-import '../../../../widgets/currency_display.dart';
-import '../../../../data/model/expense_participant.dart';
+import '../../widgets/stat_card.dart';
+import '../../widgets/group_header.dart';
 
 /// General statistics tab: shows high level KPIs (daily/monthly average)
 /// and spending trend for the last 7 and 30 days.
