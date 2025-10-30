@@ -91,9 +91,10 @@ void main() {
       // The widget should show indicator dots
       expect(find.byType(Row), findsWidgets);
       
-      // Verify structure
-      expect(find.byType(Column), findsWidgets);
-      expect(find.byType(Expanded), findsOneWidget);
+  // Verify structure: there will be multiple Expanded widgets because
+  // each skeleton card contains a Spacer (which uses Expanded internally).
+  expect(find.byType(Column), findsWidgets);
+  expect(find.byType(Expanded), findsWidgets);
     });
 
     testWidgets('animation controller is disposed properly', (WidgetTester tester) async {
