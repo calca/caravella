@@ -168,22 +168,23 @@ void main() {
       final initialIndex = tabBar.controller?.index ?? 0;
       expect(initialIndex, 0, reason: 'Should start on Active tab (index 0)');
 
-  // Perform a drag gesture from right to left (to go to next tab).
-  // Use `dragFrom` from the visible TabBarView center to ensure the
-  // gesture is delivered to the currently visible page (sometimes
-  // dragging the TabBarView finder misses the hit-test in tests).
-  final center = tester.getCenter(tabBarViewFinder);
-  await tester.dragFrom(center, const Offset(-400, 0));
-  // Wait for the page transition to animate; avoid pumpAndSettle which
-  // can time out if other animations are active in the page
-  await tester.pump(const Duration(milliseconds: 300));
-  await tester.pump(const Duration(milliseconds: 300));
+      // Perform a drag gesture from right to left (to go to next tab).
+      // Use `dragFrom` from the visible TabBarView center to ensure the
+      // gesture is delivered to the currently visible page (sometimes
+      // dragging the TabBarView finder misses the hit-test in tests).
+      final center = tester.getCenter(tabBarViewFinder);
+      await tester.dragFrom(center, const Offset(-400, 0));
+      // Wait for the page transition to animate; avoid pumpAndSettle which
+      // can time out if other animations are active in the page
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pump(const Duration(milliseconds: 300));
 
       // Verify that we've moved to the second tab (Archived). Some
       // test environments may not deliver horizontal drags to the
       // TabBarView reliably, so fall back to tapping the tab if the
       // swipe did not change the controller index
-      var newIndex = (tester.widget<TabBar>(tabBarFinder).controller?.index) ?? 0;
+      var newIndex =
+          (tester.widget<TabBar>(tabBarFinder).controller?.index) ?? 0;
       if (newIndex != 1) {
         // Fallback: tap the second tab to assert the tab switch behavior
         final tabFinder = find.byType(Tab);
@@ -195,29 +196,33 @@ void main() {
       expect(
         newIndex,
         1,
-        reason: 'After swiping left (or fallback tap), should be on Archived tab (index 1)',
+        reason:
+            'After swiping left (or fallback tap), should be on Archived tab (index 1)',
       );
 
-  // Perform a drag gesture from left to right (to go back to first tab)
-  final centerBack = tester.getCenter(tabBarViewFinder);
-  await tester.dragFrom(centerBack, const Offset(400, 0));
-  await tester.pump(const Duration(milliseconds: 300));
-  await tester.pump(const Duration(milliseconds: 300));
+      // Perform a drag gesture from left to right (to go back to first tab)
+      final centerBack = tester.getCenter(tabBarViewFinder);
+      await tester.dragFrom(centerBack, const Offset(400, 0));
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pump(const Duration(milliseconds: 300));
 
       // Verify that we've moved back to the first tab (Active). If the
       // drag did not work in this environment, fall back to tapping
-      var finalIndex = (tester.widget<TabBar>(tabBarFinder).controller?.index) ?? 1;
+      var finalIndex =
+          (tester.widget<TabBar>(tabBarFinder).controller?.index) ?? 1;
       if (finalIndex != 0) {
         final tabFinder = find.byType(Tab);
         await tester.tap(tabFinder.at(0));
         await tester.pump(const Duration(milliseconds: 300));
         await tester.pump(const Duration(milliseconds: 300));
-        finalIndex = (tester.widget<TabBar>(tabBarFinder).controller?.index) ?? 1;
+        finalIndex =
+            (tester.widget<TabBar>(tabBarFinder).controller?.index) ?? 1;
       }
       expect(
         finalIndex,
         0,
-        reason: 'After swiping right (or fallback tap), should be back on Active tab (index 0)',
+        reason:
+            'After swiping right (or fallback tap), should be back on Active tab (index 0)',
       );
     });
 
