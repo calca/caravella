@@ -6,11 +6,11 @@ export 'config/app_config.dart';
 export 'config/app_icons.dart';
 
 // Data Models
-export 'data/model/expense_category.dart';
-export 'data/model/expense_details.dart';
-export 'data/model/expense_group.dart';
-export 'data/model/expense_location.dart';
-export 'data/model/expense_participant.dart';
+export 'model/expense_category.dart';
+export 'model/expense_details.dart';
+export 'model/expense_group.dart';
+export 'model/expense_location.dart';
+export 'model/expense_participant.dart';
 
 // Storage and Repository
 export 'data/expense_group_repository.dart';

@@ -1,4 +1,4 @@
-import 'model/expense_group.dart';
+import '../model/expense_group.dart';
 import 'expense_group_repository.dart';
 import 'storage_errors.dart';
 import 'file_based_expense_group_repository.dart';
