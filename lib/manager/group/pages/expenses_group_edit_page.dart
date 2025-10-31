@@ -227,32 +227,52 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
             onPopInvokedWithResult: (didPop, result) async {
               if (didPop) return;
               if (controller.hasChanges) {
-                final confirm = await showDialog<bool>(
-                  context: context,
-                  builder: (ctx) => Material3Dialog(
-                    icon: Icon(
-                      Icons.warning_amber_outlined,
-                      color: Theme.of(context).colorScheme.error,
-                      size: 24,
-                    ),
-                    title: Text(gloc.discard_changes_title),
-                    content: Text(gloc.discard_changes_message),
-                    actions: [
-                      Material3DialogActions.cancel(ctx, gloc.cancel),
-                      Material3DialogActions.destructive(
-                        ctx,
-                        gloc.discard,
-                        onPressed: () => Navigator.of(ctx).pop(true),
-                      ),
-                    ],
-                  ),
-                );
-                if (confirm == true && context.mounted) {
-                  final navigator = Navigator.of(context);
-                  if (navigator.canPop()) {
-                    navigator.pop(false);
+                // Capture context-dependent objects before awaiting
+                final navigator = Navigator.of(context);
+                ExpenseGroupNotifier? notifier;
+                try {
+                  notifier = context.read<ExpenseGroupNotifier>();
+                } catch (_) {
+                  notifier = null;
+                }
+                final scaffoldMessenger = ScaffoldMessenger.maybeOf(context);
+                final gloc = gen.AppLocalizations.of(context);
+
+                try {
+                  final saved = await controller.save();
+
+                  // Ensure repository and global listeners refresh
+                  ExpenseGroupStorageV2.forceReload();
+                  try {
+                    notifier?.notifyGroupUpdated(saved.id);
+                  } catch (_) {}
+
+                  // Pop returning the saved id so caller can react
+                  if (navigator.canPop()) navigator.pop(saved.id);
+                } catch (e) {
+                  // Show error toast using captured messenger if possible (avoids using
+                  // BuildContext after async gap).
+                  if (scaffoldMessenger != null) {
+                    AppToast.showFromMessenger(
+                      scaffoldMessenger,
+                      gloc.backup_error,
+                      type: ToastType.error,
+                    );
+                  } else if (context.mounted) {
+                    AppToast.show(
+                      context,
+                      gloc.backup_error,
+                      type: ToastType.error,
+                    );
                   }
                 }
+                return;
+              }
+
+              // No changes -> just pop normally
+              if (context.mounted) {
+                final navigator = Navigator.of(context);
+                if (navigator.canPop()) navigator.pop();
               }
             },
             child: Scaffold(

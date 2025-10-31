@@ -12,7 +12,6 @@ class GroupFormController {
   final GroupFormState state;
   final GroupEditMode mode;
   final ExpenseGroupNotifier? _notifier;
-  Timer? _autoSaveTimer;
   final VoidCallback? onSaveSuccess;
   final Function(String)? onSaveError;
 
@@ -23,36 +22,10 @@ class GroupFormController {
     this.onSaveSuccess,
     this.onSaveError,
   ]) {
-    // In edit mode, auto-save when state changes
-    if (mode == GroupEditMode.edit) {
-      state.addListener(_autoSave);
-    }
+    // No automatic auto-save: saving is performed explicitly (e.g. on back)
   }
 
-  void _autoSave() {
-    // Only auto-save if we have changes and we're not already saving
-    if (hasChanges && !state.isSaving && state.originalGroup != null) {
-      // Debounce auto-save to avoid too frequent saves
-      _debounceAutoSave();
-    }
-  }
-
-  void _debounceAutoSave() {
-    // Cancel any pending auto-save
-    _autoSaveTimer?.cancel();
-    // Schedule auto-save after a delay
-    _autoSaveTimer = Timer(const Duration(milliseconds: 1000), () async {
-      if (hasChanges && !state.isSaving && state.originalGroup != null) {
-        try {
-          await save();
-          onSaveSuccess?.call();
-        } catch (e, st) {
-          debugPrint('Auto-save failed: $e\n$st');
-          onSaveError?.call(e.toString());
-        }
-      }
-    });
-  }
+  // Auto-save removed: saving performed explicitly (for example on back press)
 
   void load(ExpenseGroup? group) {
     if (mode == GroupEditMode.create) return; // nothing to load in create mode
@@ -338,15 +311,6 @@ class GroupFormController {
   }
 
   void dispose() {
-    _autoSaveTimer?.cancel();
-    // Only remove listener if we're in edit mode and state is still valid
-    if (mode == GroupEditMode.edit) {
-      try {
-        state.removeListener(_autoSave);
-      } catch (e) {
-        // Ignore if state is already disposed or invalid
-        debugPrint('Warning: Could not remove listener from state: $e');
-      }
-    }
+    // Nothing to dispose related to auto-save; keep method for symmetry.
   }
 }
