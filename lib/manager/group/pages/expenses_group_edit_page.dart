@@ -388,6 +388,44 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                                     const BackgroundPicker(),
                                   ],
                                 ),
+                                const SizedBox(height: 32),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SectionHeader(
+                                      title: gloc.settings_auto_location_title,
+                                      description:
+                                          gloc.settings_auto_location_desc,
+                                      padding: EdgeInsets.zero,
+                                      spacing: 4,
+                                    ),
+                                    const SizedBox(height: 12),
+                                    Selector<GroupFormState, bool>(
+                                      selector: (context, s) =>
+                                          s.autoLocationEnabled,
+                                      builder: (context, enabled, child) => Semantics(
+                                        toggled: enabled,
+                                        label:
+                                            '${gloc.settings_auto_location_title} - ${enabled ? gloc.accessibility_currently_enabled : gloc.accessibility_currently_disabled}',
+                                        hint: gloc.settings_auto_location_desc,
+                                        child: SwitchListTile(
+                                          title: Text(
+                                            gloc.settings_auto_location_title,
+                                          ),
+                                          subtitle: Text(
+                                            gloc.settings_auto_location_desc,
+                                          ),
+                                          value: enabled,
+                                          onChanged: (value) {
+                                            context
+                                                .read<GroupFormState>()
+                                                .setAutoLocationEnabled(value);
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
                             const SizedBox(height: 32),

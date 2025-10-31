@@ -22,7 +22,6 @@ abstract class _PreferenceKeys {
   static const String totalExpenseCount = 'total_expense_count';
   static const String lastRatingPrompt = 'last_rating_prompt';
   static const String hasShownInitialRating = 'has_shown_initial_rating';
-  static const String autoLocationEnabled = 'auto_location_enabled';
 }
 
 /// Default values for preferences
@@ -31,8 +30,6 @@ abstract class _PreferenceDefaults {
   static const String themeMode = 'system';
   static const bool flagSecure = true;
   static const bool autoBackupEnabled = false;
-  // Auto location default
-  static const bool autoLocationEnabled = false;
   static const int totalExpenseCount = 0;
   static const bool hasShownInitialRating = false;
 }
@@ -122,13 +119,6 @@ class PreferencesService {
 
   /// Store rating preferences management
   StoreRatingPreferences get storeRating => StoreRatingPreferences._(_prefs);
-
-  // ============================================================================
-  // Auto Location Preferences
-  // ============================================================================
-
-  /// Auto location preferences management
-  AutoLocationPreferences get autoLocation => AutoLocationPreferences._(_prefs);
 
   // ============================================================================
   // Utility Methods
@@ -335,26 +325,5 @@ class StoreRatingPreferences {
   /// Set whether initial rating prompt has been shown
   Future<void> setHasShownInitialPrompt(bool shown) async {
     await _prefs.setBool(_PreferenceKeys.hasShownInitialRating, shown);
-  }
-}
-
-// ==============================================================================
-// Auto Location Preferences
-// ==============================================================================
-
-/// Manages auto location-related preferences
-class AutoLocationPreferences {
-  AutoLocationPreferences._(this._prefs);
-  final SharedPreferences _prefs;
-
-  /// Get auto location enabled status (default: false)
-  bool get() {
-    return _prefs.getBool(_PreferenceKeys.autoLocationEnabled) ??
-        _PreferenceDefaults.autoLocationEnabled;
-  }
-
-  /// Set auto location enabled status
-  Future<void> set(bool enabled) async {
-    await _prefs.setBool(_PreferenceKeys.autoLocationEnabled, enabled);
   }
 }

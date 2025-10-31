@@ -26,9 +26,6 @@ class SettingsPage extends StatelessWidget {
         ChangeNotifierProvider<FlagSecureNotifier>(
           create: (_) => FlagSecureNotifier(),
         ),
-        ChangeNotifierProvider<AutoLocationNotifier>(
-          create: (_) => AutoLocationNotifier(),
-        ),
       ],
       child: Scaffold(
         appBar: const CaravellaAppBar(),
@@ -61,8 +58,6 @@ class SettingsPage extends StatelessWidget {
       description: loc.settings_general_desc,
       children: [
         _buildUserNameRow(context, loc),
-        const SizedBox(height: 8),
-        _buildAutoLocationRow(context, loc),
         const SizedBox(height: 8),
         _buildLanguageRow(context, loc, locale),
         const SizedBox(height: 8),
@@ -181,49 +176,6 @@ class SettingsPage extends StatelessWidget {
         subtitle: Text(label),
         trailing: const Icon(Icons.arrow_drop_down),
         onTap: () => _showThemePicker(context, loc),
-      ),
-    );
-  }
-
-  Widget _buildAutoLocationRow(BuildContext context, gen.AppLocalizations loc) {
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
-    return SettingsCard(
-      context: context,
-      color: colorScheme.surface,
-      child: Consumer<AutoLocationNotifier>(
-        builder: (context, notifier, _) => Semantics(
-          toggled: notifier.enabled,
-          label:
-              '${loc.settings_auto_location_title} - ${notifier.enabled ? loc.accessibility_currently_enabled : loc.accessibility_currently_disabled}',
-          hint: notifier.enabled
-              ? loc.accessibility_double_tap_disable
-              : loc.accessibility_double_tap_enable,
-          child: ListTile(
-            leading: const Icon(Icons.location_on_outlined),
-            title: Text(
-              loc.settings_auto_location_title,
-              style: textTheme.titleMedium,
-            ),
-            subtitle: Text(
-              loc.settings_auto_location_desc,
-              style: textTheme.bodySmall,
-            ),
-            trailing: Semantics(
-              label: loc.accessibility_security_switch(
-                notifier.enabled
-                    ? loc.accessibility_switch_on
-                    : loc.accessibility_switch_off,
-              ),
-              child: Switch(
-                value: notifier.enabled,
-                onChanged: (val) {
-                  notifier.setEnabled(val);
-                },
-              ),
-            ),
-          ),
-        ),
       ),
     );
   }
