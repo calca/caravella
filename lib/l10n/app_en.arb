@@ -33,7 +33,29 @@
   "settings_privacy": "Privacy",
   "select_currency": "Select currency",
   "select_period_hint_short": "Set dates",
-  "select_period_hint": "Select a date range",
+  "select_period_hint": "Select dates",
+  "suggested_duration": "Suggested duration",
+  "days_count": "{count} days",
+  "@days_count": {"description": "Number of days", "placeholders": {"count": {"type": "int"}}},
+  "weekday_mon": "M",
+  "weekday_tue": "T",
+  "weekday_wed": "W",
+  "weekday_thu": "T",
+  "weekday_fri": "F",
+  "weekday_sat": "S",
+  "weekday_sun": "S",
+  "month_january": "January",
+  "month_february": "February",
+  "month_march": "March",
+  "month_april": "April",
+  "month_may": "May",
+  "month_june": "June",
+  "month_july": "July",
+  "month_august": "August",
+  "month_september": "September",
+  "month_october": "October",
+  "month_november": "November",
+  "month_december": "December",
   "in_group_prefix": "in",
   "save_change_expense": "Save changes",
   "group_total": "Total",
@@ -81,6 +103,19 @@
   "participants_description": "People sharing costs",
   "categories_description": "Group expenses by type",
   "dates_description": "Optional start and end",
+  "select_period": "Select period",
+  "select_period_dates": "Select the period dates",
+  "suggested_duration": "Suggested duration",
+  "duration_days": "{days} days",
+  "@duration_days": {"description": "Label for duration in days", "placeholders": {"days": {"type": "int"}}},
+  "period_from_to": "From {start} to {end} ({days} days)",
+  "@period_from_to": {"description": "Formatted period", "placeholders": {"start": {"type": "String"}, "end": {"type": "String"}, "days": {"type": "int"}}},
+  "period_from_select_end": "From {start} - Select end",
+  "@period_from_select_end": {"description": "Period with only start date", "placeholders": {"start": {"type": "String"}}},
+  "period_to_select_start": "To {end} - Select start",
+  "@period_to_select_start": {"description": "Period with only end date", "placeholders": {"end": {"type": "String"}}},
+  "confirm": "Confirm",
+  "clear": "Clear",
   "currency_description": "Base currency for group",
   "background_color_selected": "Color selected",
   "background_tap_to_replace": "Tap to replace",
@@ -181,6 +216,24 @@
   "archived": "Archived",
   "archive": "Archive",
   "unarchive": "Unarchive",
+  "pin": "Pin",
+  "@pin": {"description": "Action to pin a group to the top"},
+  "unpin": "Unpin",
+  "@unpin": {"description": "Action to unpin a group"},
+  "delete": "Delete",
+  "@delete": {"description": "Action to delete a group"},
+  "undo": "UNDO",
+  "@undo": {"description": "Undo action label for SnackBar"},
+  "archived_with_undo": "Archived",
+  "@archived_with_undo": {"description": "Snackbar message when group is archived"},
+  "unarchived_with_undo": "Unarchived",
+  "@unarchived_with_undo": {"description": "Snackbar message when group is unarchived"},
+  "pinned_with_undo": "Pinned",
+  "@pinned_with_undo": {"description": "Snackbar message when group is pinned"},
+  "unpinned_with_undo": "Unpinned",
+  "@unpinned_with_undo": {"description": "Snackbar message when group is unpinned"},
+  "deleted_with_undo": "Deleted",
+  "@deleted_with_undo": {"description": "Snackbar message when group is deleted"},
   "archive_confirm": "Do you want to archive",
   "unarchive_confirm": "Do you want to unarchive",
   "overview": "Overview",
@@ -225,6 +278,8 @@
   "data_refreshed": "Updated",
   "refresh": "Refresh",
   "group_added_success": "Group added",
+  "group_deleted_success": "Group deleted",
+  "@group_deleted_success": {"description": "Toast shown after deleting an expense group"},
   "csv_select_directory_title": "Select folder to save CSV",
   "csv_saved_in": "CSV saved in: {path}",
   "csv_save_cancelled": "Export cancelled",
@@ -265,6 +320,8 @@
   "settings_theme": "Theme",
   "settings_theme_desc": "Light, dark or system",
   "settings_select_theme": "Select theme",
+  "settings_dynamic_color": "Dynamic color",
+  "settings_dynamic_color_desc": "Use colors from your wallpaper",
   "settings_privacy": "Privacy",
   "settings_privacy_desc": "Security and privacy options",
   "settings_data": "Data",
@@ -588,6 +645,14 @@
   ,"@whats_new_title": {"description": "Title of the page showing the changelog"}
   ,"whats_new_desc": "Discover the latest features and updates"
   ,"@whats_new_desc": {"description": "Subtitle of the what's new page"}
+  ,"whats_new_subtitle": "Latest highlights"
+  ,"@whats_new_subtitle": {"description": "Card headline describing the what's new section"}
+  ,"whats_new_latest": "Stay up to date with recent improvements"
+  ,"@whats_new_latest": {"description": "Support text explaining that the content lists the most recent updates"}
+  ,"changelog_title": "Changelog"
+  ,"@changelog_title": {"description": "Title for the changelog section"}
+  ,"changelog_desc": "Version history and improvements"
+  ,"@changelog_desc": {"description": "Description for the changelog section"}
   ,"average_per_person": "Average per person"
   ,"@average_per_person": {"description": "Label shown before the computed average spent per person in the Participants tab"}
   ,"more": "more"
@@ -596,4 +661,44 @@
   ,"@less": {"description": "Inline toggle label to collapse and show fewer items"}
   ,"debt_prefix_to": "to "
   ,"@debt_prefix_to": {"description": "Short prefix shown before the recipient in a debt/settlement line (e.g., 'to Alice 10€')"}
+  ,"check_for_updates": "Check for updates"
+  ,"@check_for_updates": {"description": "Label to check for updates from Google Play Store"}
+  ,"check_for_updates_desc": "Check for new version availability"
+  ,"@check_for_updates_desc": {"description": "Description for update check"}
+  ,"update_available": "Update available"
+  ,"@update_available": {"description": "Title when an update is available"}
+  ,"update_available_desc": "A new version of the app is available"
+  ,"@update_available_desc": {"description": "Description when an update is available"}
+  ,"no_update_available": "App up to date"
+  ,"@no_update_available": {"description": "Message when there are no updates"}
+  ,"no_update_available_desc": "You're using the latest version"
+  ,"@no_update_available_desc": {"description": "Description when there are no updates"}
+  ,"update_now": "Update now"
+  ,"@update_now": {"description": "Button to start the update"}
+  ,"update_later": "Later"
+  ,"@update_later": {"description": "Button to postpone the update"}
+  ,"checking_for_updates": "Checking for updates..."
+  ,"@checking_for_updates": {"description": "Message while checking for updates"}
+  ,"update_error": "Update check error"
+  ,"@update_error": {"description": "Error message during update check"}
+  ,"update_downloading": "Downloading..."
+  ,"@update_downloading": {"description": "Message while downloading update"}
+  ,"update_installing": "Installing..."
+  ,"@update_installing": {"description": "Message while installing update"}
+  ,"update_feature_android_only": "Feature only available on Android with Google Play Store"
+  ,"@update_feature_android_only": {"description": "Message explaining the feature is Android-only"}
+  ,"update_recommendation_title": "Update recommended"
+  ,"@update_recommendation_title": {"description": "Title of bottom sheet to recommend update"}
+  ,"update_recommendation_desc": "A new version of Caravella is available. Update the app to always have the latest features and improvements!"
+  ,"@update_recommendation_desc": {"description": "Description in bottom sheet recommending to update"}
+  ,"update_install": "Install update"
+  ,"@update_install": {"description": "Button to install update from bottom sheet"}
+  ,"update_remind_later": "Remind me later"
+  ,"@update_remind_later": {"description": "Button to postpone update from bottom sheet"}
+  ,"send_reminder": "Send reminder"
+  ,"@send_reminder": {"description": "Button label to send a payment reminder to a participant"}
+  ,"reminder_message_single": "Hi {participantName}! 👋\n\nJust a friendly reminder that you owe {amount} to {creditorName} for the group \"{groupName}\".\n\nThank you! 😊"
+  ,"@reminder_message_single": {"description": "Reminder message when a participant owes money to a single person", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
+  ,"reminder_message_multiple": "Hi {participantName}! 👋\n\nJust a friendly reminder of your payments for the group \"{groupName}\":\n\n{debtsList}\n\nThank you! 😊"
+  ,"@reminder_message_multiple": {"description": "Reminder message when a participant owes money to multiple people", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
 }

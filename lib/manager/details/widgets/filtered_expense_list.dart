@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../l10n/app_localizations.dart' as gen;
-import '../../../data/model/expense_details.dart';
-import '../../../data/model/expense_category.dart';
-import '../../../data/model/expense_participant.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'expense_amount_card.dart';
 import 'empty_expense_state.dart';
 

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../themes/app_text_styles.dart';
-import '../../../widgets/app_toast.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'section_header.dart';
 
 /// Generic inline editable list for simple name-based items (participants, categories, etc.).
@@ -24,6 +23,7 @@ class EditableNameList extends StatefulWidget {
   final IconData itemIcon;
   final Color? borderColor;
   final String? description;
+  final bool showEmptyHint;
 
   const EditableNameList({
     super.key,
@@ -44,6 +44,7 @@ class EditableNameList extends StatefulWidget {
     this.itemIcon = Icons.label_outline,
     this.borderColor,
     this.description,
+    this.showEmptyHint = false,
   });
 
   @override
@@ -270,6 +271,7 @@ class _EditableNameListState extends State<EditableNameList> {
           title: widget.title,
           description: widget.description,
           requiredMark: widget.requiredMark,
+          showRequiredHint: widget.showEmptyHint && widget.items.isEmpty,
           padding: EdgeInsets.zero,
           spacing: 4,
         ),

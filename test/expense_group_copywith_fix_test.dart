@@ -1,14 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:io_caravella_egm/data/model/expense_group.dart';
-import 'package:io_caravella_egm/data/model/expense_participant.dart';
-import 'package:io_caravella_egm/data/model/expense_category.dart';
+import 'package:caravella_core/caravella_core.dart';
 
 void main() {
   group('ExpenseGroup.copyWith Fix Validation', () {
     test('copyWith preserves existing values when parameters not provided', () {
       const originalColor = 0xFFE57373;
       const originalFile = '/path/to/image.jpg';
-      
+
       final originalGroup = ExpenseGroup(
         id: 'test-id',
         title: 'Test Group',
@@ -36,7 +34,7 @@ void main() {
     test('copyWith can explicitly set nullable fields to null', () {
       const originalColor = 0xFFE57373;
       const originalFile = '/path/to/image.jpg';
-      
+
       final originalGroup = ExpenseGroup(
         id: 'test-id',
         title: 'Test Group',
@@ -49,14 +47,14 @@ void main() {
       );
 
       // Test: Explicit null values should be respected
-      final groupWithNulls = originalGroup.copyWith(
-        color: null,
-        file: null,
-      );
-      
+      final groupWithNulls = originalGroup.copyWith(color: null, file: null);
+
       expect(groupWithNulls.color, isNull);
       expect(groupWithNulls.file, isNull);
-      expect(groupWithNulls.title, equals('Test Group')); // Other fields preserved
+      expect(
+        groupWithNulls.title,
+        equals('Test Group'),
+      ); // Other fields preserved
     });
 
     test('copyWith can set nullable fields to new non-null values', () {
@@ -78,7 +76,7 @@ void main() {
         color: newColor,
         file: newFile,
       );
-      
+
       expect(updatedGroup.color, equals(newColor));
       expect(updatedGroup.file, equals(newFile));
     });
@@ -86,7 +84,7 @@ void main() {
     test('copyWith mixed usage works correctly', () {
       const originalColor = 0xFFE57373;
       const originalFile = '/path/to/image.jpg';
-      
+
       final originalGroup = ExpenseGroup(
         id: 'test-id',
         title: 'Test Group',
@@ -104,7 +102,7 @@ void main() {
         file: null, // Remove file
         // color not specified, should be preserved
       );
-      
+
       expect(mixedUpdate.title, equals('Updated Title'));
       expect(mixedUpdate.file, isNull);
       expect(mixedUpdate.color, equals(originalColor)); // Preserved

@@ -1,6 +1,4 @@
-import '../../../data/model/expense_participant.dart';
-import '../../../data/model/expense_category.dart';
-import '../../../data/model/expense_group.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'package:flutter/foundation.dart';
 
 class GroupFormState extends ChangeNotifier {
@@ -23,7 +21,15 @@ class GroupFormState extends ChangeNotifier {
 
   bool get isBusy => loadingImage || isSaving;
 
-  bool get isValid => title.trim().isNotEmpty && participants.isNotEmpty;
+  bool get _hasPartialDates =>
+      (startDate != null && endDate == null) ||
+      (startDate == null && endDate != null);
+
+  bool get isValid =>
+      title.trim().isNotEmpty &&
+      participants.isNotEmpty &&
+      categories.isNotEmpty &&
+      !_hasPartialDates;
 
   void setTitle(String v) {
     if (title == v) return;

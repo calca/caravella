@@ -1,4 +1,4 @@
-import 'package:io_caravella_egm/data/model/expense_group.dart';
+import 'package:caravella_core/caravella_core.dart';
 
 /// Optimized calculation of daily totals for a given range starting at
 /// [startDate] and spanning [days] days. The [startDate] is normalized to

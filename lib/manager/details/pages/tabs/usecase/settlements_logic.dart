@@ -1,4 +1,4 @@
-import 'package:io_caravella_egm/data/model/expense_group.dart';
+import 'package:caravella_core/caravella_core.dart';
 
 /// Strongly-typed settlement item using participant IDs (robust to name changes).
 class Settlement {

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:io_caravella_egm/manager/group/data/group_form_state.dart';
 import 'package:provider/provider.dart';
-import '../../../state/expense_group_notifier.dart';
-import '../../../data/expense_group_storage_v2.dart';
-import '../data/group_form_state.dart';
+import 'package:caravella_core/caravella_core.dart';
 import '../group_form_controller.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
@@ -15,8 +14,9 @@ class SaveButtonBar extends StatelessWidget {
     final controller = context.read<GroupFormController>();
     final loc = gen.AppLocalizations.of(context);
     final saving = state.isSaving;
+    final hasChanges = controller.hasChanges;
     return FilledButton(
-      onPressed: state.isValid && !saving
+      onPressed: state.isValid && !saving && hasChanges
           ? () async {
               // Capture context-dependent values before any awaits
               final navigator = Navigator.of(context);
@@ -41,7 +41,7 @@ class SaveButtonBar extends StatelessWidget {
 
               Future.microtask(() {
                 if (navigator.context.mounted) {
-                  navigator.pop(true);
+                  navigator.pop(saved.id);
                 }
               });
             }
