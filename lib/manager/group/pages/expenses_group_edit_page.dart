@@ -8,7 +8,6 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../expense/expense_form/icon_leading_field.dart';
 import '../group_form_controller.dart';
 import '../group_edit_mode.dart';
-import '../../../settings/user_name_notifier.dart';
 import '../widgets/group_title_field.dart';
 import '../widgets/participants_editor.dart';
 import '../widgets/categories_editor.dart';

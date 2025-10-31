@@ -856,6 +856,14 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settings_general_desc => 'Configuración idioma y apariencia';
 
   @override
+  String get settings_auto_location_title =>
+      'Detectar ubicación automáticamente';
+
+  @override
+  String get settings_auto_location_desc =>
+      'Recuperar automáticamente la ubicación al agregar un gasto';
+
+  @override
   String get settings_language => 'Idioma';
 
   @override

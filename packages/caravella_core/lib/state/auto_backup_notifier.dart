@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'backup_service.dart';
+import 'package:caravella_core/services/backup_service.dart';
 
 class AutoBackupNotifier extends ChangeNotifier {
   static const String _key = 'auto_backup_enabled';

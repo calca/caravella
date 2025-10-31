@@ -3,9 +3,6 @@ import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart'
     as gen; // generated strongly-typed
-import '../flag_secure_notifier.dart';
-import '../user_name_notifier.dart';
-import '../auto_location_notifier.dart';
 
 import '../flag_secure_android.dart';
 import 'package:provider/provider.dart';
@@ -231,7 +228,7 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
- Widget _buildDynamicColorRow(BuildContext context, gen.AppLocalizations loc) {
+  Widget _buildDynamicColorRow(BuildContext context, gen.AppLocalizations loc) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
     final dynamicColorNotifier = DynamicColorNotifier.of(context);
@@ -265,8 +262,6 @@ class SettingsPage extends StatelessWidget {
               onChanged: (val) {
                 dynamicColorNotifier?.changeDynamicColor(val);
               },
-
-
             ),
           ),
         ),

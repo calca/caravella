@@ -37,7 +37,11 @@ export 'services/shortcuts/platform_shortcuts_manager.dart';
 export 'services/shortcuts/shortcuts_navigation_service.dart';
 
 // State Management
+export 'state/auto_backup_notifier.dart';
+export 'state/auto_location_notifier.dart';
 export 'state/dynamic_color_notifier.dart';
 export 'state/expense_group_notifier.dart';
+export 'state/flag_secure_notifier.dart';
 export 'state/locale_notifier.dart';
 export 'state/theme_mode_notifier.dart';
+export 'state/user_name_notifier.dart';

@@ -855,6 +855,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settings_general_desc => 'Impostazioni lingua e aspetto';
 
   @override
+  String get settings_auto_location_title => 'Rileva posizione automaticamente';
+
+  @override
+  String get settings_auto_location_desc =>
+      'Recupera automaticamente la posizione quando aggiungi una spesa';
+
+  @override
   String get settings_language => 'Lingua';
 
   @override

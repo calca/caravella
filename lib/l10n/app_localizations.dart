@@ -1712,6 +1712,18 @@ abstract class AppLocalizations {
   /// **'Language and appearance settings'**
   String get settings_general_desc;
 
+  /// No description provided for @settings_auto_location_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-detect location'**
+  String get settings_auto_location_title;
+
+  /// No description provided for @settings_auto_location_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatically retrieve location when adding an expense'**
+  String get settings_auto_location_desc;
+
   /// No description provided for @settings_language.
   ///
   /// In en, this message translates to:

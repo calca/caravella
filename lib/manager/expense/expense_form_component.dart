@@ -307,8 +307,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     });
   }
 
-  Future<void> _loadAutoLocationPreference() async {
-    final enabled = await PreferencesService.getAutoLocationEnabled();
+  void _loadAutoLocationPreference() {
+    final enabled = PreferencesService.instance.autoLocation.get();
     if (mounted) {
       setState(() {
         _autoLocationEnabled = enabled;
