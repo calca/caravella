@@ -43,8 +43,23 @@ class ExpensesGroupEditPage extends StatelessWidget {
           ExpenseGroupNotifier,
           GroupFormController
         >(
-          update: (context, state, notifier, previous) =>
-              GroupFormController(state, mode, notifier),
+          update: (context, state, notifier, previous) => GroupFormController(
+            state,
+            mode,
+            notifier,
+            () {
+              final gloc = gen.AppLocalizations.of(context);
+              AppToast.show(
+                context,
+                gloc.group_added_success,
+                type: ToastType.success,
+              );
+            },
+            (error) {
+              final gloc = gen.AppLocalizations.of(context);
+              AppToast.show(context, gloc.backup_error, type: ToastType.error);
+            },
+          ),
         ),
       ],
       child: _GroupFormScaffold(

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:caravella_core/caravella_core.dart';
@@ -11,8 +12,47 @@ class GroupFormController {
   final GroupFormState state;
   final GroupEditMode mode;
   final ExpenseGroupNotifier? _notifier;
+  Timer? _autoSaveTimer;
+  final VoidCallback? onSaveSuccess;
+  final Function(String)? onSaveError;
 
-  GroupFormController(this.state, this.mode, [this._notifier]);
+  GroupFormController(
+    this.state,
+    this.mode, [
+    this._notifier,
+    this.onSaveSuccess,
+    this.onSaveError,
+  ]) {
+    // In edit mode, auto-save when state changes
+    if (mode == GroupEditMode.edit) {
+      state.addListener(_autoSave);
+    }
+  }
+
+  void _autoSave() {
+    // Only auto-save if we have changes and we're not already saving
+    if (hasChanges && !state.isSaving && state.originalGroup != null) {
+      // Debounce auto-save to avoid too frequent saves
+      _debounceAutoSave();
+    }
+  }
+
+  void _debounceAutoSave() {
+    // Cancel any pending auto-save
+    _autoSaveTimer?.cancel();
+    // Schedule auto-save after a delay
+    _autoSaveTimer = Timer(const Duration(milliseconds: 1000), () async {
+      if (hasChanges && !state.isSaving && state.originalGroup != null) {
+        try {
+          await save();
+          onSaveSuccess?.call();
+        } catch (e, st) {
+          debugPrint('Auto-save failed: $e\n$st');
+          onSaveError?.call(e.toString());
+        }
+      }
+    });
+  }
 
   void load(ExpenseGroup? group) {
     if (mode == GroupEditMode.create) return; // nothing to load in create mode
@@ -295,5 +335,18 @@ class GroupFormController {
     state.imagePath = null;
     state.color = null;
     state.refresh();
+  }
+
+  void dispose() {
+    _autoSaveTimer?.cancel();
+    // Only remove listener if we're in edit mode and state is still valid
+    if (mode == GroupEditMode.edit) {
+      try {
+        state.removeListener(_autoSave);
+      } catch (e) {
+        // Ignore if state is already disposed or invalid
+        debugPrint('Warning: Could not remove listener from state: $e');
+      }
+    }
   }
 }
