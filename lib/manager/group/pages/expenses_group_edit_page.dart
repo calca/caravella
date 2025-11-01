@@ -285,17 +285,38 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                       key: _formKey,
                       child: DefaultTextStyle.merge(
                         style: Theme.of(context).textTheme.bodyMedium,
-                        child: ListView(
-                          children: [
-                            Text(
-                              widget.mode == GroupEditMode.edit
-                                  ? gloc.edit_group
-                                  : gloc.new_group,
-                              style: Theme.of(context).textTheme.headlineMedium
-                                  ?.copyWith(fontWeight: FontWeight.w600),
-                            ),
-                            const SizedBox(height: 24),
-                            SectionFlat(
+                        child: DefaultTabController(
+                          length: 2,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.mode == GroupEditMode.edit
+                                    ? gloc.edit_group
+                                    : gloc.new_group,
+                                style: Theme.of(context).textTheme.headlineMedium
+                                    ?.copyWith(fontWeight: FontWeight.w600),
+                              ),
+                              const SizedBox(height: 12),
+                              TabBar(
+                                labelColor: Theme.of(context).colorScheme.primary,
+                                unselectedLabelColor: Theme.of(context).colorScheme.onSurfaceVariant,
+                                tabs: [
+                                  Tab(text: gloc.settings_general),
+                                  Tab(text: gloc.settings_tab),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              Expanded(
+                                child: TabBarView(
+                                  children: [
+                                    // Tab 1: nome, partecipanti, categorie, periodo
+                                    SingleChildScrollView(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(height: 8),
+                                          SectionFlat(
                               title: '',
                               children: [
                                 Selector<GroupFormState, bool>(
@@ -324,19 +345,28 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 24),
-                            const ParticipantsEditor(),
-                            const SizedBox(height: 24),
-                            const CategoriesEditor(),
-                            const SizedBox(height: 24),
-                            PeriodSectionEditor(
-                              onPickDate: (isStart) async =>
-                                  _pickDate(context, isStart),
-                              onClearDates: _clearDates,
-                              errorText: _dateError,
-                            ),
-                            const SizedBox(height: 24),
-                            SectionFlat(
+                                          const SizedBox(height: 24),
+                                          const ParticipantsEditor(),
+                                          const SizedBox(height: 24),
+                                          const CategoriesEditor(),
+                                          const SizedBox(height: 24),
+                                          PeriodSectionEditor(
+                                            onPickDate: (isStart) async =>
+                                                _pickDate(context, isStart),
+                                            onClearDates: _clearDates,
+                                            errorText: _dateError,
+                                          ),
+                                          const SizedBox(height: 24),
+                                        ],
+                                      ),
+                                    ),
+                                    // Tab 2: valuta, sfondo, posizione automatica
+                                    SingleChildScrollView(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(height: 8),
+                                          SectionFlat(
                               title: '',
                               children: [
                                 Column(
@@ -463,10 +493,23 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 32),
-                            const SaveButtonBar(),
-                            const SizedBox(height: 80),
-                          ],
+                                          const SizedBox(height: 24),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              if (widget.mode == GroupEditMode.create) ...[
+                                const SaveButtonBar(),
+                                const SizedBox(height: 80),
+                              ] else ...[
+                                const SizedBox(height: 24),
+                              ],
+                              const SizedBox(height: 80),
+                            ],
+                          ),
                         ),
                       ),
                     ),
