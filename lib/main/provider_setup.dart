@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:caravella_core/caravella_core.dart';
 
-import '../settings/user_name_notifier.dart';
-
 /// Sets up all global providers for the app.
 class ProviderSetup {
   /// Creates a MultiProvider with ExpenseGroupNotifier and UserNameNotifier.

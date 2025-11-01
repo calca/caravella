@@ -17,6 +17,8 @@ class ExpenseGroup {
   final bool archived; // Nuovo campo per archiviare il gruppo
   final String? file; // Nuovo campo opzionale per il path del file
   final int? color; // Nuovo campo opzionale per il colore (Color.value)
+  final bool
+  autoLocationEnabled; // Nuovo campo per abilitare auto-location per gruppo
 
   ExpenseGroup({
     required this.title,
@@ -32,6 +34,7 @@ class ExpenseGroup {
     this.archived = false, // Default a false
     this.file, // Opzionale, path del file
     this.color, // Opzionale, colore del gruppo
+    this.autoLocationEnabled = false, // Default a false
   }) : timestamp = timestamp ?? DateTime.now(),
        id = id ?? const Uuid().v4();
 
@@ -68,6 +71,8 @@ class ExpenseGroup {
       archived: json['archived'] ?? false, // Legge il valore archiviato
       file: json['file'], // Legge il valore del file
       color: json['color'], // Legge il valore del colore
+      autoLocationEnabled:
+          json['autoLocationEnabled'] ?? false, // Legge il valore auto-location
     );
   }
 
@@ -85,6 +90,7 @@ class ExpenseGroup {
     'archived': archived, // Salva il valore archiviato
     'file': file, // Salva il valore del file
     'color': color, // Salva il valore del colore
+    'autoLocationEnabled': autoLocationEnabled, // Salva il valore auto-location
   };
 
   ExpenseGroup copyWith({
@@ -102,6 +108,7 @@ class ExpenseGroup {
     // Special handling for nullable fields that need to support explicit null
     Object? file = _notProvided,
     Object? color = _notProvided,
+    bool? autoLocationEnabled,
   }) {
     return ExpenseGroup(
       id: id ?? this.id,
@@ -118,6 +125,7 @@ class ExpenseGroup {
       // Fix: Handle explicit null values correctly for nullable fields
       file: file == _notProvided ? this.file : file as String?,
       color: color == _notProvided ? this.color : color as int?,
+      autoLocationEnabled: autoLocationEnabled ?? this.autoLocationEnabled,
     );
   }
 
@@ -139,6 +147,7 @@ class ExpenseGroup {
       archived: false,
       file: null, // Path del file inizialmente vuoto
       color: null, // Colore inizialmente vuoto
+      autoLocationEnabled: false, // Auto-location disabilitata di default
     );
   }
 }

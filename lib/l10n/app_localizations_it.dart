@@ -855,6 +855,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settings_general_desc => 'Impostazioni lingua e aspetto';
 
   @override
+  String get settings_auto_location_title => 'Posizione automatica';
+
+  @override
+  String get settings_auto_location_desc => 'Rileva GPS quando aggiungi spese';
+
+  @override
   String get settings_language => 'Lingua';
 
   @override

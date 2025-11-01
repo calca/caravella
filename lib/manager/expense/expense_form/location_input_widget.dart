@@ -11,6 +11,7 @@ class LocationInputWidget extends StatefulWidget {
   final TextStyle? textStyle;
   final Function(ExpenseLocation?) onLocationChanged;
   final FocusNode? externalFocusNode;
+  final bool autoRetrieve;
 
   const LocationInputWidget({
     super.key,
@@ -18,6 +19,7 @@ class LocationInputWidget extends StatefulWidget {
     this.textStyle,
     required this.onLocationChanged,
     this.externalFocusNode,
+    this.autoRetrieve = false,
   });
 
   @override
@@ -38,6 +40,11 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
     _currentLocation = widget.initialLocation;
     if (_currentLocation != null) {
       _controller.text = _currentLocation!.displayText;
+    } else if (widget.autoRetrieve) {
+      // Auto-retrieve location if enabled and no initial location
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _getCurrentLocation();
+      });
     }
   }
 
