@@ -836,16 +836,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get address_resolved => '地址已解析';
 
   @override
-  String get settings_general => '一般';
+  String get settings_general => '常规';
 
   @override
-  String get settings_general_desc => '应用程序通用设置';
+  String get settings_general_desc => '语言和外观设置';
 
   @override
-  String get settings_auto_location_title => '自动定位';
+  String get settings_auto_location_title => '检测位置';
 
   @override
-  String get settings_auto_location_desc => '添加费用时检测GPS';
+  String get settings_auto_location_desc => '启用以自动检测GPS';
 
   @override
   String get settings_language => '语言';
