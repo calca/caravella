@@ -853,12 +853,11 @@ class AppLocalizationsPt extends AppLocalizations {
   String get settings_general_desc => 'Idioma e aparência';
 
   @override
-  String get settings_auto_location_title =>
-      'Detectar localização automaticamente';
+  String get settings_auto_location_title => 'Localização automática';
 
   @override
   String get settings_auto_location_desc =>
-      'Recuperar automaticamente a localização ao adicionar uma despesa';
+      'Detectar GPS ao adicionar despesas';
 
   @override
   String get settings_language => 'Idioma';

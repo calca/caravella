@@ -842,11 +842,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_general_desc => '应用程序通用设置';
 
   @override
-  String get settings_auto_location_title => 'Auto-detect location';
+  String get settings_auto_location_title => '自动定位';
 
   @override
-  String get settings_auto_location_desc =>
-      'Automatically retrieve location when adding an expense';
+  String get settings_auto_location_desc => '添加费用时检测GPS';
 
   @override
   String get settings_language => '语言';

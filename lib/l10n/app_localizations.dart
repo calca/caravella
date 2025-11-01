@@ -1715,13 +1715,13 @@ abstract class AppLocalizations {
   /// No description provided for @settings_auto_location_title.
   ///
   /// In en, this message translates to:
-  /// **'Auto-detect location'**
+  /// **'Auto-location'**
   String get settings_auto_location_title;
 
   /// No description provided for @settings_auto_location_desc.
   ///
   /// In en, this message translates to:
-  /// **'Automatically retrieve location when adding an expense'**
+  /// **'Detect GPS when adding expenses'**
   String get settings_auto_location_desc;
 
   /// No description provided for @settings_language.

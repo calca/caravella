@@ -852,11 +852,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_general_desc => 'Language and appearance settings';
 
   @override
-  String get settings_auto_location_title => 'Auto-detect location';
+  String get settings_auto_location_title => 'Auto-location';
 
   @override
-  String get settings_auto_location_desc =>
-      'Automatically retrieve location when adding an expense';
+  String get settings_auto_location_desc => 'Detect GPS when adding expenses';
 
   @override
   String get settings_language => 'Language';

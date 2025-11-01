@@ -29,8 +29,6 @@
     "period_from_select_end",
     "period_to_select_start",
     "confirm",
-    "clear",
-    "settings_auto_location_title",
-    "settings_auto_location_desc"
+    "clear"
   ]
 }
