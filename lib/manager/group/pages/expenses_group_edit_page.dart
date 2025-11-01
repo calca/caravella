@@ -294,13 +294,19 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                                 widget.mode == GroupEditMode.edit
                                     ? gloc.edit_group
                                     : gloc.new_group,
-                                style: Theme.of(context).textTheme.headlineMedium
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headlineMedium
                                     ?.copyWith(fontWeight: FontWeight.w600),
                               ),
                               const SizedBox(height: 12),
                               TabBar(
-                                labelColor: Theme.of(context).colorScheme.primary,
-                                unselectedLabelColor: Theme.of(context).colorScheme.onSurfaceVariant,
+                                labelColor: Theme.of(
+                                  context,
+                                ).colorScheme.primary,
+                                unselectedLabelColor: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
                                 tabs: [
                                   Tab(text: gloc.settings_general),
                                   Tab(text: gloc.settings_tab),
@@ -313,38 +319,56 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                                     // Tab 1: nome, partecipanti, categorie, periodo
                                     SingleChildScrollView(
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           const SizedBox(height: 8),
                                           SectionFlat(
-                              title: '',
-                              children: [
-                                Selector<GroupFormState, bool>(
-                                  selector: (context, s) =>
-                                      s.title.trim().isEmpty,
-                                  builder: (context, isEmpty, child) => Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SectionHeader(
-                                        title: gloc.group_name,
-                                        requiredMark: true,
-                                        showRequiredHint: isEmpty,
-                                        padding: EdgeInsets.zero,
-                                        spacing: 4,
-                                      ),
-                                      const SizedBox(height: 12),
-                                      IconLeadingField(
-                                        icon: const Icon(Icons.title_outlined),
-                                        semanticsLabel: gloc.group_name,
-                                        tooltip: gloc.group_name,
-                                        child: const GroupTitleField(),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
+                                            title: '',
+                                            children: [
+                                              Selector<GroupFormState, bool>(
+                                                selector: (context, s) =>
+                                                    s.title.trim().isEmpty,
+                                                builder:
+                                                    (
+                                                      context,
+                                                      isEmpty,
+                                                      child,
+                                                    ) => Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        SectionHeader(
+                                                          title:
+                                                              gloc.group_name,
+                                                          requiredMark: true,
+                                                          showRequiredHint:
+                                                              isEmpty,
+                                                          padding:
+                                                              EdgeInsets.zero,
+                                                          spacing: 4,
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 12,
+                                                        ),
+                                                        IconLeadingField(
+                                                          icon: const Icon(
+                                                            Icons
+                                                                .title_outlined,
+                                                          ),
+                                                          semanticsLabel:
+                                                              gloc.group_name,
+                                                          tooltip:
+                                                              gloc.group_name,
+                                                          child:
+                                                              const GroupTitleField(),
+                                                        ),
+                                                      ],
+                                                    ),
+                                              ),
+                                            ],
+                                          ),
                                           const SizedBox(height: 24),
                                           const ParticipantsEditor(),
                                           const SizedBox(height: 24),
@@ -363,136 +387,162 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                                     // Tab 2: valuta, sfondo, posizione automatica
                                     SingleChildScrollView(
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           const SizedBox(height: 8),
                                           SectionFlat(
-                              title: '',
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SectionHeader(
-                                      title: gloc.currency,
-                                      description: gloc.currency_description,
-                                      padding: EdgeInsets.zero,
-                                      spacing: 4,
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Selector<
-                                      GroupFormState,
-                                      Map<String, String>
-                                    >(
-                                      selector: (context, s) => s.currency,
-                                      builder: (context, cur, child) => SelectionTile(
-                                        leading: Text(
-                                          cur['symbol'] ?? '',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleLarge
-                                              ?.copyWith(fontSize: 28),
-                                          semanticsLabel:
-                                              '${cur['symbol']} ${cur['code']}',
-                                        ),
-                                        title: cur['name']!,
-                                        subtitle: '${cur['code']}',
-                                        trailing: Icon(
-                                          Icons.chevron_right,
-                                          size: 24,
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.outline,
-                                        ),
-                                        onTap: () async {
-                                          final selected =
-                                              await showModalBottomSheet<
-                                                Map<String, String>
-                                              >(
-                                                context: context,
-                                                shape:
-                                                    const RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.vertical(
-                                                            top:
-                                                                Radius.circular(
-                                                                  20,
-                                                                ),
+                                            title: '',
+                                            children: [
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  SectionHeader(
+                                                    title: gloc.currency,
+                                                    description: gloc
+                                                        .currency_description,
+                                                    padding: EdgeInsets.zero,
+                                                    spacing: 4,
+                                                  ),
+                                                  const SizedBox(height: 8),
+                                                  Selector<
+                                                    GroupFormState,
+                                                    Map<String, String>
+                                                  >(
+                                                    selector: (context, s) =>
+                                                        s.currency,
+                                                    builder: (context, cur, child) => SelectionTile(
+                                                      leading: Text(
+                                                        cur['symbol'] ?? '',
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .titleLarge
+                                                            ?.copyWith(
+                                                              fontSize: 28,
+                                                            ),
+                                                        semanticsLabel:
+                                                            '${cur['symbol']} ${cur['code']}',
+                                                      ),
+                                                      title: cur['name']!,
+                                                      subtitle:
+                                                          '${cur['code']}',
+                                                      trailing: Icon(
+                                                        Icons.chevron_right,
+                                                        size: 24,
+                                                        color: Theme.of(
+                                                          context,
+                                                        ).colorScheme.outline,
+                                                      ),
+                                                      onTap: () async {
+                                                        final selected =
+                                                            await showModalBottomSheet<
+                                                              Map<
+                                                                String,
+                                                                String
+                                                              >
+                                                            >(
+                                                              context: context,
+                                                              shape: const RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius.vertical(
+                                                                      top:
+                                                                          Radius.circular(
+                                                                            20,
+                                                                          ),
+                                                                    ),
+                                                              ),
+                                                              builder: (_) =>
+                                                                  const CurrencySelectorSheet(),
+                                                            );
+                                                        if (selected != null &&
+                                                            context.mounted) {
+                                                          context
+                                                              .read<
+                                                                GroupFormState
+                                                              >()
+                                                              .setCurrency(
+                                                                selected,
+                                                              );
+                                                        }
+                                                      },
+                                                      borderRadius: 8,
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                            left: 8,
+                                                            top: 8,
+                                                            bottom: 8,
                                                           ),
                                                     ),
-                                                builder: (_) =>
-                                                    const CurrencySelectorSheet(),
-                                              );
-                                          if (selected != null &&
-                                              context.mounted) {
-                                            context
-                                                .read<GroupFormState>()
-                                                .setCurrency(selected);
-                                          }
-                                        },
-                                        borderRadius: 8,
-                                        padding: const EdgeInsets.only(
-                                          left: 8,
-                                          top: 8,
-                                          bottom: 8,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 32),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SectionHeader(
-                                      title: gloc.background,
-                                      description: gloc.choose_image_or_color,
-                                      padding: EdgeInsets.zero,
-                                      spacing: 4,
-                                    ),
-                                    const SizedBox(height: 12),
-                                    const BackgroundPicker(),
-                                  ],
-                                ),
-                                const SizedBox(height: 32),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SectionHeader(
-                                      title: gloc.settings_auto_location_title,
-                                      description:
-                                          gloc.settings_auto_location_desc,
-                                      padding: EdgeInsets.zero,
-                                      spacing: 4,
-                                    ),
-                                    const SizedBox(height: 12),
-                                    Selector<GroupFormState, bool>(
-                                      selector: (context, s) =>
-                                          s.autoLocationEnabled,
-                                      builder: (context, enabled, child) => Semantics(
-                                        toggled: enabled,
-                                        label:
-                                            '${gloc.settings_auto_location_title} - ${enabled ? gloc.accessibility_currently_enabled : gloc.accessibility_currently_disabled}',
-                                        hint: gloc.settings_auto_location_desc,
-                                        child: SwitchListTile(
-                                          title: Text(
-                                            gloc.settings_auto_location_title,
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 32),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  SectionHeader(
+                                                    title: gloc.background,
+                                                    description: gloc
+                                                        .choose_image_or_color,
+                                                    padding: EdgeInsets.zero,
+                                                    spacing: 4,
+                                                  ),
+                                                  const SizedBox(height: 12),
+                                                  const BackgroundPicker(),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 32),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  SectionHeader(
+                                                    title: gloc
+                                                        .settings_auto_location_title,
+                                                    description: gloc
+                                                        .settings_auto_location_desc,
+                                                    padding: EdgeInsets.zero,
+                                                    spacing: 4,
+                                                  ),
+                                                  const SizedBox(height: 12),
+                                                  Selector<
+                                                    GroupFormState,
+                                                    bool
+                                                  >(
+                                                    selector: (context, s) =>
+                                                        s.autoLocationEnabled,
+                                                    builder: (context, enabled, child) => Semantics(
+                                                      toggled: enabled,
+                                                      label:
+                                                          '${gloc.settings_auto_location_title} - ${enabled ? gloc.accessibility_currently_enabled : gloc.accessibility_currently_disabled}',
+                                                      hint: gloc
+                                                          .settings_auto_location_desc,
+                                                      child: SwitchListTile(
+                                                        title: Text(
+                                                          gloc.settings_auto_location_title,
+                                                        ),
+                                                        subtitle: Text(
+                                                          gloc.settings_auto_location_desc,
+                                                        ),
+                                                        value: enabled,
+                                                        onChanged: (value) {
+                                                          context
+                                                              .read<
+                                                                GroupFormState
+                                                              >()
+                                                              .setAutoLocationEnabled(
+                                                                value,
+                                                              );
+                                                        },
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
                                           ),
-                                          subtitle: Text(
-                                            gloc.settings_auto_location_desc,
-                                          ),
-                                          value: enabled,
-                                          onChanged: (value) {
-                                            context
-                                                .read<GroupFormState>()
-                                                .setAutoLocationEnabled(value);
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
                                           const SizedBox(height: 24),
                                         ],
                                       ),
