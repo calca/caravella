@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../themes/form_theme.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 /// Standard width reserved for leading icons (or currency symbol) in form rows.
 const double kLeadingIconWidth = 32.0;
@@ -55,9 +55,9 @@ class IconLeadingField extends StatelessWidget {
             child: Padding(
               padding:
                   iconPadding ??
-                  (alignTop 
-                    ? FormTheme.topAlignedIconPadding 
-                    : FormTheme.standardIconPadding),
+                  (alignTop
+                      ? FormTheme.topAlignedIconPadding
+                      : FormTheme.standardIconPadding),
               child: iconWidget,
             ),
           ),

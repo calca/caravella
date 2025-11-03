@@ -4,9 +4,7 @@ import 'package:path_provider_platform_interface/path_provider_platform_interfac
 import 'package:io_caravella_egm/manager/group/group_form_controller.dart';
 import 'package:io_caravella_egm/manager/group/data/group_form_state.dart';
 import 'package:io_caravella_egm/manager/group/group_edit_mode.dart';
-import 'package:io_caravella_egm/data/model/expense_group.dart';
-import 'package:io_caravella_egm/data/model/expense_participant.dart';
-import 'package:io_caravella_egm/data/model/expense_category.dart';
+import 'package:caravella_core/caravella_core.dart';
 
 class _FakePathProvider extends PathProviderPlatform {
   late final String _tempDir = Directory.systemTemp
@@ -46,16 +44,16 @@ void main() {
 
       // Remove the color
       await controller.removeImage();
-      
+
       // Verify color is removed
       expect(state.color, isNull);
       expect(state.imagePath, isNull);
-      
+
       // Verify hasChanges detects this as a change
       expect(
-        controller.hasChanges, 
-        isTrue, 
-        reason: 'Removing color should be detected as a change'
+        controller.hasChanges,
+        isTrue,
+        reason: 'Removing color should be detected as a change',
       );
 
       // Verify the change would be persisted in save
@@ -80,35 +78,38 @@ void main() {
       // Remove color
       await controller.removeImage();
       final notificationsAfterRemove = notificationCount;
-      
+
       // Should have triggered additional notification due to refresh() call
       expect(
-        notificationsAfterRemove, 
+        notificationsAfterRemove,
         greaterThan(notificationsAfterSet),
-        reason: 'removeImage should trigger state notification'
+        reason: 'removeImage should trigger state notification',
       );
 
       expect(state.color, isNull);
     });
 
-    test('Color removal works with simultaneous image and color state', () async {
-      final state = GroupFormState();
-      final controller = GroupFormController(state, GroupEditMode.create);
+    test(
+      'Color removal works with simultaneous image and color state',
+      () async {
+        final state = GroupFormState();
+        final controller = GroupFormController(state, GroupEditMode.create);
 
-      // Edge case: manually set both (shouldn't happen in normal UI)
-      state.color = 0xFF42A5F5;
-      state.imagePath = '/test/path.jpg';
+        // Edge case: manually set both (shouldn't happen in normal UI)
+        state.color = 0xFF42A5F5;
+        state.imagePath = '/test/path.jpg';
 
-      // Both are set
-      expect(state.color, isNotNull);
-      expect(state.imagePath, isNotNull);
+        // Both are set
+        expect(state.color, isNotNull);
+        expect(state.imagePath, isNotNull);
 
-      // Remove background should clear both
-      await controller.removeImage();
+        // Remove background should clear both
+        await controller.removeImage();
 
-      expect(state.color, isNull);
-      expect(state.imagePath, isNull);
-    });
+        expect(state.color, isNull);
+        expect(state.imagePath, isNull);
+      },
+    );
 
     test('Multiple removeImage calls are safe', () async {
       final state = GroupFormState();
@@ -132,14 +133,20 @@ void main() {
     test('Color removal works correctly in create vs edit mode', () async {
       // Test create mode
       final createState = GroupFormState();
-      final createController = GroupFormController(createState, GroupEditMode.create);
+      final createController = GroupFormController(
+        createState,
+        GroupEditMode.create,
+      );
 
       createState.setColor(0xFF42A5F5);
       expect(createController.hasChanges, isTrue);
 
       await createController.removeImage();
       expect(createState.color, isNull);
-      expect(createController.hasChanges, isFalse); // No changes in create mode after removal
+      expect(
+        createController.hasChanges,
+        isFalse,
+      ); // No changes in create mode after removal
 
       // Test edit mode
       final editState = GroupFormState();
@@ -161,7 +168,10 @@ void main() {
 
       await editController.removeImage();
       expect(editState.color, isNull);
-      expect(editController.hasChanges, isTrue); // Should detect change in edit mode
+      expect(
+        editController.hasChanges,
+        isTrue,
+      ); // Should detect change in edit mode
     });
 
     test('UI visibility logic for remove button works correctly', () {

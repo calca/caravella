@@ -1,8 +1,6 @@
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:io_caravella_egm/data/file_based_expense_group_repository.dart';
-import 'package:io_caravella_egm/data/storage_benchmark.dart';
-import 'package:io_caravella_egm/data/storage_performance.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 

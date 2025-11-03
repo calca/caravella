@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'package:io_caravella_egm/themes/app_text_styles.dart';
-import 'date_card.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'section_header.dart';
+import 'period_selection_bottom_sheet.dart';
 
 class SectionPeriod extends StatelessWidget {
   final DateTime? startDate;
@@ -13,6 +13,10 @@ class SectionPeriod extends StatelessWidget {
   final String? errorText;
   final bool isEndDateEnabled;
 
+  // New callback for setting both dates at once (optional for backwards compatibility)
+  final void Function(DateTime? startDate, DateTime? endDate)?
+  onDateRangeChanged;
+
   const SectionPeriod({
     super.key,
     required this.startDate,
@@ -22,6 +26,7 @@ class SectionPeriod extends StatelessWidget {
     this.description,
     this.errorText,
     this.isEndDateEnabled = true,
+    this.onDateRangeChanged,
   });
 
   @override
@@ -49,7 +54,7 @@ class SectionPeriod extends StatelessWidget {
           padding: EdgeInsets.zero,
         ),
         const SizedBox(height: 12),
-        // Start date row
+        // Period selector - single card that opens bottom sheet
         Material(
           color: Colors.transparent,
           child: InkWell(
@@ -60,7 +65,7 @@ class SectionPeriod extends StatelessWidget {
                   currentFocus.focusedChild != null) {
                 currentFocus.unfocus();
               }
-              onPickDate(true);
+              _showPeriodSelector(context);
               final focusAfter = FocusScope.of(context);
               Future.delayed(const Duration(milliseconds: 10), () {
                 if (!focusAfter.hasPrimaryFocus &&
@@ -69,46 +74,7 @@ class SectionPeriod extends StatelessWidget {
                 }
               });
             },
-            child: DateCard(
-              day: startDate?.day,
-              label: gen.AppLocalizations.of(context).from,
-              date: startDate,
-              isActive: startDate != null,
-              icon: startDate == null ? Icons.event_outlined : null,
-            ),
-          ),
-        ),
-        const SizedBox(height: 8),
-        // End date row
-        Material(
-          color: Colors.transparent,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(12),
-            onTap: isEndDateEnabled
-                ? () {
-                    final currentFocus = FocusScope.of(context);
-                    if (!currentFocus.hasPrimaryFocus &&
-                        currentFocus.focusedChild != null) {
-                      currentFocus.unfocus();
-                    }
-                    onPickDate(false);
-                    final focusAfter = FocusScope.of(context);
-                    Future.delayed(const Duration(milliseconds: 10), () {
-                      if (!focusAfter.hasPrimaryFocus &&
-                          focusAfter.focusedChild != null) {
-                        focusAfter.unfocus();
-                      }
-                    });
-                  }
-                : null,
-            child: DateCard(
-              day: endDate?.day,
-              label: gen.AppLocalizations.of(context).to,
-              date: endDate,
-              isActive: endDate != null,
-              icon: endDate == null ? Icons.event_outlined : null,
-              isEnabled: isEndDateEnabled,
-            ),
+            child: _PeriodDisplayCard(startDate: startDate, endDate: endDate),
           ),
         ),
         if (errorText != null) ...[
@@ -123,6 +89,150 @@ class SectionPeriod extends StatelessWidget {
         ],
       ],
     );
+  }
+
+  void _showPeriodSelector(BuildContext context) {
+    showPeriodSelectionBottomSheet(
+      context: context,
+      initialStartDate: startDate,
+      initialEndDate: endDate,
+      onSelectionChanged: (newStartDate, newEndDate) {
+        // Use the new callback if available, otherwise fall back to the old approach
+        if (onDateRangeChanged != null) {
+          onDateRangeChanged!(newStartDate, newEndDate);
+        } else {
+          // Fallback to old approach - this is hacky but maintains compatibility
+          if (newStartDate == null && newEndDate == null) {
+            onClearDates();
+          } else {
+            // We can't directly set both dates with the old API
+            // This is a limitation of the backwards compatibility
+            if (newStartDate != startDate) {
+              onPickDate(true);
+            }
+            if (newEndDate != endDate) {
+              onPickDate(false);
+            }
+          }
+        }
+      },
+    );
+  }
+}
+
+/// A card that displays the selected period range in a unified way
+class _PeriodDisplayCard extends StatelessWidget {
+  final DateTime? startDate;
+  final DateTime? endDate;
+
+  const _PeriodDisplayCard({required this.startDate, required this.endDate});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final gloc = gen.AppLocalizations.of(context);
+
+    // Determine display text based on selected dates
+    String displayText;
+    String? secondaryText;
+    IconData iconData;
+
+    if (startDate == null && endDate == null) {
+      displayText = gloc.select_period_hint;
+      iconData = Icons.calendar_month_outlined;
+    } else if (startDate != null && endDate != null) {
+      displayText = '${_formatDate(startDate!)} - ${_formatDate(endDate!)}';
+      final duration = endDate!.difference(startDate!).inDays + 1;
+      secondaryText = '$duration days';
+      iconData = Icons.calendar_month;
+    } else if (startDate != null) {
+      displayText = '${gloc.select_start}: ${_formatDate(startDate!)}';
+      secondaryText = gloc.select_end;
+      iconData = Icons.calendar_month_outlined;
+    } else {
+      displayText = '${gloc.select_end}: ${_formatDate(endDate!)}';
+      secondaryText = gloc.select_start;
+      iconData = Icons.calendar_month_outlined;
+    }
+
+    final hasSelection = startDate != null || endDate != null;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      child: SizedBox(
+        height: 64,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              width: 48,
+              height: 48,
+              alignment: Alignment.center,
+              child: Icon(
+                iconData,
+                size: 28,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: secondaryText == null
+                  ? Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        displayText,
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          color: hasSelection
+                              ? theme.colorScheme.onSurface
+                              : theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.7,
+                                ),
+                          fontWeight: hasSelection
+                              ? FontWeight.w500
+                              : FontWeight.w500,
+                        ),
+                      ),
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          displayText,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            color: theme.colorScheme.onSurface,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          secondaryText,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.7,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+            ),
+            const SizedBox(width: 8),
+            Icon(
+              Icons.chevron_right,
+              size: 24,
+              color: theme.colorScheme.outline,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _formatDate(DateTime date) {
+    // Formats date as dd/MM/yyyy
+    return '${date.day.toString().padLeft(2, '0')}/'
+        '${date.month.toString().padLeft(2, '0')}/'
+        '${date.year}';
   }
 }
 

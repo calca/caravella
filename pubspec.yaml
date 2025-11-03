@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.44+44
+version: 1.1.0+46
 
 environment:
   sdk: ">=3.9.0 <4.0.0"
@@ -34,6 +34,14 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  
+  # Local packages
+  caravella_core:
+    path: packages/caravella_core
+  caravella_core_ui:
+    path: packages/caravella_core_ui
+  
+  # External dependencies
   provider: ^6.1.5+1
   file_picker: ^10.2.0
   image_picker: ^1.0.4
@@ -58,6 +66,13 @@ dependencies:
   timeago: ^3.7.0
   gpt_markdown: ^1.1.4
   image_picker_platform_interface: ^2.11.0
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.0
+  in_app_review: ^2.0.10
+  dynamic_color: ^1.8.0
+  # Conditional dependency: only included when ENABLE_PLAY_UPDATES=true
+  play_store_updates:
+    path: packages/play_store_updates
 
 dev_dependencies:
   flutter_test:

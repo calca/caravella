@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../../manager/group/pages/group_creation_wizard_page.dart';
-import '../../../widgets/base_card.dart';
+import '../../../manager/group/pages/expenses_group_edit_page.dart';
+import '../../../manager/group/group_edit_mode.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 class NewGroupCard extends StatelessWidget {
   final gen.AppLocalizations localizations;
   final ThemeData theme;
-  final VoidCallback onGroupAdded;
+  final void Function([String? groupId]) onGroupAdded;
   final bool isSelected;
   final double selectionProgress;
 
@@ -46,11 +47,13 @@ class NewGroupCard extends StatelessWidget {
         onTap: () async {
           final result = await Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => const GroupCreationWizardPage(),
+              builder: (context) =>
+                  const ExpensesGroupEditPage(mode: GroupEditMode.create),
             ),
           );
-          if (result == true) {
-            onGroupAdded();
+          if (result != null && result is String) {
+            // Pass the group ID to the callback
+            onGroupAdded(result);
           }
         },
         child: _buildNewGroupCardContent(),

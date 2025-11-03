@@ -8,6 +8,8 @@ void main() {
     // Pump a few frames to allow first build & async microtasks.
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 50));
+    // Let post-frame delayed checks (like the weekly update check) run.
+    await tester.pump(const Duration(seconds: 1));
     expect(find.byType(MaterialApp), findsOneWidget);
   });
 }

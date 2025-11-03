@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:provider/provider.dart';
-import '../../../settings/user_name_notifier.dart';
+import 'package:caravella_core/caravella_core.dart';
 
 class HomeCardsHeader extends StatelessWidget {
   final gen.AppLocalizations localizations;

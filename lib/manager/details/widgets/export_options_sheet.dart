@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../../../widgets/bottom_sheet_scaffold.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 class ExportOptionsSheet extends StatelessWidget {
   final VoidCallback onDownloadCsv;

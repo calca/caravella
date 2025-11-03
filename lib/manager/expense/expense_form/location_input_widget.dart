@@ -3,15 +3,15 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'icon_leading_field.dart';
-import '../../../widgets/app_toast.dart';
-import '../../../data/model/expense_location.dart';
-import '../../../themes/form_theme.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
+import 'package:caravella_core/caravella_core.dart';
 
 class LocationInputWidget extends StatefulWidget {
   final ExpenseLocation? initialLocation;
   final TextStyle? textStyle;
   final Function(ExpenseLocation?) onLocationChanged;
   final FocusNode? externalFocusNode;
+  final bool autoRetrieve;
 
   const LocationInputWidget({
     super.key,
@@ -19,6 +19,7 @@ class LocationInputWidget extends StatefulWidget {
     this.textStyle,
     required this.onLocationChanged,
     this.externalFocusNode,
+    this.autoRetrieve = false,
   });
 
   @override
@@ -39,6 +40,11 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
     _currentLocation = widget.initialLocation;
     if (_currentLocation != null) {
       _controller.text = _currentLocation!.displayText;
+    } else if (widget.autoRetrieve) {
+      // Auto-retrieve location if enabled and no initial location
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _getCurrentLocation();
+      });
     }
   }
 

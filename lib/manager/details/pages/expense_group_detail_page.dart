@@ -1,7 +1,12 @@
+import 'package:io_caravella_egm/manager/details/widgets/export_options_sheet.dart';
+import 'package:io_caravella_egm/manager/details/widgets/options_sheet.dart';
+
 import '../../group/pages/expenses_group_edit_page.dart';
 import '../../group/group_edit_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'dart:async';
 // ...existing code...
 
@@ -11,27 +16,19 @@ import 'package:path_provider/path_provider.dart'; // still used for share temp 
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 
-import '../../../data/model/expense_details.dart';
-import '../../../data/model/expense_group.dart';
-import '../../../state/expense_group_notifier.dart';
-import '../../../data/expense_group_storage_v2.dart';
-import '../../../widgets/material3_dialog.dart';
 // Removed legacy localization bridge imports (migration in progress)
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../../widgets/app_toast.dart';
-import '../widgets/group_header.dart';
-import '../widgets/group_actions.dart';
-import '../widgets/group_total.dart';
-import '../widgets/filtered_expense_list.dart';
 // Replaced bottom sheet overview with full page navigation
-import 'unified_overview_page.dart';
-import '../widgets/options_sheet.dart';
-import '../widgets/export_options_sheet.dart';
-import '../widgets/expense_entry_sheet.dart';
 import '../widgets/delete_expense_dialog.dart';
-import '../../../widgets/add_fab.dart';
+import '../widgets/expense_entry_sheet.dart';
+import '../widgets/group_header.dart';
+import '../widgets/group_total.dart';
+import '../widgets/group_actions.dart';
+import '../widgets/filtered_expense_list.dart';
 import '../export/ofx_exporter.dart';
 import '../export/csv_exporter.dart';
+
+import 'unified_overview_page.dart';
 
 class ExpenseGroupDetailPage extends StatefulWidget {
   final ExpenseGroup trip;
@@ -323,8 +320,11 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         onPinToggle: () async {
           if (_trip == null) return;
           final nav = Navigator.of(sheetCtx);
-          // Use the storage-level helper to toggle the pin atomically
-          await ExpenseGroupStorageV2.updateGroupPin(_trip!.id, !_trip!.pinned);
+          // Use the notifier to update pin state (handles storage + shortcuts)
+          await Provider.of<ExpenseGroupNotifier>(
+            context,
+            listen: false,
+          ).updateGroupPin(_trip!.id, !_trip!.pinned);
           await _refreshGroup();
           if (!mounted) return;
           nav.pop();
@@ -332,11 +332,11 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         onArchiveToggle: () async {
           if (_trip == null) return;
           final nav = Navigator.of(sheetCtx);
-          // Use storage-level helper to archive/unarchive atomically
-          await ExpenseGroupStorageV2.updateGroupArchive(
-            _trip!.id,
-            !_trip!.archived,
-          );
+          // Use notifier to archive/unarchive (handles storage + shortcuts)
+          await Provider.of<ExpenseGroupNotifier>(
+            context,
+            listen: false,
+          ).updateGroupArchive(_trip!.id, !_trip!.archived);
           await _refreshGroup();
           if (!mounted) return;
           nav.pop();
@@ -455,6 +455,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             // Refresh local state and notifier
             await _refreshGroup();
             _groupNotifier?.notifyGroupUpdated(widget.trip.id);
+
+            // Check if we should prompt for rating
+            // This is done after successful expense save
+            RatingService.checkAndPromptForRating();
 
             if (!sheetCtx.mounted) return;
             AppToast.show(

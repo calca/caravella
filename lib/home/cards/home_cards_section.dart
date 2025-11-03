@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart'
     as gen; // generated
-import '../../data/model/expense_group.dart';
-import '../../data/expense_group_storage_v2.dart';
-import '../../state/expense_group_notifier.dart';
+import 'package:caravella_core/caravella_core.dart';
 // Removed locale_notifier import after migration
 // locale_notifier no longer needed after migration
 import 'widgets/widgets.dart';
@@ -200,6 +198,32 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
     }
   }
 
+  /// Soft reload that updates groups without showing loading state
+  /// Used when adding a new group to avoid jarring transitions
+  Future<void> _softLoadActiveGroups() async {
+    try {
+      final groups = await ExpenseGroupStorageV2.getActiveGroups();
+      if (mounted) {
+        setState(() {
+          // Se c'è un gruppo pinnato, mettiamolo sempre al primo posto
+          if (widget.pinnedTrip != null) {
+            // Rimuovi il gruppo pinnato dalla lista se è già presente
+            final filteredGroups = groups.where(
+              (g) => g.id != widget.pinnedTrip!.id,
+            );
+            // Metti il gruppo pinnato come primo elemento
+            _activeGroups = [widget.pinnedTrip!, ...filteredGroups];
+          } else {
+            _activeGroups = groups;
+          }
+        });
+      }
+    } catch (e) {
+      // Fallback to full reload on error
+      _loadActiveGroups();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
@@ -229,7 +253,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
             SizedBox(
               height: contentHeight,
               child: _loading
-                  ? const Center(child: CircularProgressIndicator())
+                  ? CarouselSkeletonLoader(theme: theme)
                   : _activeGroups.isEmpty
                   ? EmptyGroupsState(
                       localizations: loc,
@@ -244,7 +268,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
                       onGroupUpdated: _handleGroupUpdated,
                       onGroupAdded: _handleGroupAdded,
                       onCategoryAdded: () {
-                        _loadActiveGroups();
+                        _softLoadActiveGroups();
                       },
                     ),
             ),
