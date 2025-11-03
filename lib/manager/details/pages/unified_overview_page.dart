@@ -176,7 +176,7 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
                       onPressed: _openExpenseLocationsMap,
                       iconSize: 24,
                       style: IconButton.styleFrom(
-                        backgroundColor: colorScheme.surfaceContainerLowest,
+                        backgroundColor: colorScheme.surfaceContainerHigh,
                         foregroundColor: colorScheme.onSurface,
                         minimumSize: const Size(48, 48),
                       ),
@@ -188,7 +188,7 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
                       onPressed: _showShareOptions,
                       iconSize: 24,
                       style: IconButton.styleFrom(
-                        backgroundColor: colorScheme.surfaceContainerLowest,
+                        backgroundColor: colorScheme.surfaceContainerHigh,
                         foregroundColor: colorScheme.onSurface,
                         minimumSize: const Size(48, 48),
                       ),
