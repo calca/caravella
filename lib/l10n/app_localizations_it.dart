@@ -868,7 +868,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settings_auto_location_title => 'Attiva per rilevare';
 
   @override
-  String get settings_auto_location_desc => 'Attiva per rilevare';
+  String get settings_auto_location_desc =>
+      'Rileva GPS quando aggiungi una spesa';
 
   @override
   String get settings_language => 'Lingua';

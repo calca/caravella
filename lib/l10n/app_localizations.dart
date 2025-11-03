@@ -1739,7 +1739,7 @@ abstract class AppLocalizations {
   /// No description provided for @settings_auto_location_desc.
   ///
   /// In en, this message translates to:
-  /// **'Enable to detect'**
+  /// **'Detect GPS when adding an expense'**
   String get settings_auto_location_desc;
 
   /// No description provided for @settings_language.

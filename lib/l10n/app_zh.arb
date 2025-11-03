@@ -308,7 +308,7 @@
   "settings_auto_location_section": "位置检测",
   "settings_auto_location_section_desc": "配置自动位置检测",
   "settings_auto_location_title": "启用检测",
-  "settings_auto_location_desc": "启用检测",
+  "settings_auto_location_desc": "添加费用时检测GPS",
   "settings_language": "语言",
   "settings_language_desc": "选择您的首选语言",
   "settings_language_it": "意大利语",

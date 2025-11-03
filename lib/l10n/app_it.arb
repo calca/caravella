@@ -296,7 +296,7 @@
   "settings_auto_location_section": "Rilevamento posizione",
   "settings_auto_location_section_desc": "Configura il rilevamento automatico della posizione",
   "settings_auto_location_title": "Attiva per rilevare",
-  "settings_auto_location_desc": "Attiva per rilevare",
+  "settings_auto_location_desc": "Rileva GPS quando aggiungi una spesa",
   "settings_language": "Lingua",
   "settings_language_desc": "Scegli la lingua preferita",
   "settings_language_it": "Italiano",

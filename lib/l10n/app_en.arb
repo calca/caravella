@@ -311,7 +311,7 @@
   "settings_auto_location_section": "Location Detection",
   "settings_auto_location_section_desc": "Configure automatic location detection",
   "settings_auto_location_title": "Enable to detect",
-  "settings_auto_location_desc": "Enable to detect",
+  "settings_auto_location_desc": "Detect GPS when adding an expense",
   "settings_language": "Language",
   "settings_language_desc": "Choose your preferred language",
   "settings_language_it": "Italian",

@@ -869,7 +869,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settings_auto_location_title => 'Activar para detectar';
 
   @override
-  String get settings_auto_location_desc => 'Activar para detectar';
+  String get settings_auto_location_desc => 'Detectar GPS al agregar un gasto';
 
   @override
   String get settings_language => 'Idioma';

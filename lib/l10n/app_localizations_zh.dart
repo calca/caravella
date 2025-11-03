@@ -854,7 +854,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_auto_location_title => '启用检测';
 
   @override
-  String get settings_auto_location_desc => '启用检测';
+  String get settings_auto_location_desc => '添加费用时检测GPS';
 
   @override
   String get settings_language => '语言';

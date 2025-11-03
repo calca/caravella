@@ -290,7 +290,7 @@
   "settings_auto_location_section": "Detecção de localização",
   "settings_auto_location_section_desc": "Configurar a detecção automática de localização",
   "settings_auto_location_title": "Ativar para detectar",
-  "settings_auto_location_desc": "Ativar para detectar",
+  "settings_auto_location_desc": "Detectar GPS ao adicionar uma despesa",
   "settings_language": "Idioma",
   "settings_language_desc": "Escolha o idioma preferido",
   "settings_language_it": "Italiano",
