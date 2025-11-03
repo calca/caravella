@@ -5,7 +5,10 @@ export 'horizontal_groups_list.dart';
 export 'group_card.dart';
 export 'group_card_content.dart';
 export 'simple_bottom_bar.dart';
-export '../../../widgets/charts/chart_type.dart';
-export '../../../widgets/charts/chart_badge.dart';
-export '../../../widgets/charts/weekly_expense_chart.dart';
-export '../../../widgets/charts/monthly_expense_chart.dart';
+export 'page_indicator.dart';
+export 'carousel_skeleton_loader.dart';
+// Chart widgets are now in caravella_core_ui package
+export 'package:caravella_core_ui/widgets/charts/chart_type.dart';
+export 'package:caravella_core_ui/widgets/charts/chart_badge.dart';
+export 'package:caravella_core_ui/widgets/charts/weekly_expense_chart.dart';
+export 'package:caravella_core_ui/widgets/charts/monthly_expense_chart.dart';

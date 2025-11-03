@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart';
 import 'package:io_caravella_egm/manager/group/data/group_form_state.dart';
-import 'package:io_caravella_egm/data/model/expense_participant.dart';
+import 'package:caravella_core/caravella_core.dart';
 
 void main() {
   group('GroupFormState basic logic', () {
@@ -12,6 +12,8 @@ void main() {
       s.setTitle('Trip');
       expect(s.isValid, false); // still needs participant
       s.addParticipant(ExpenseParticipant(name: 'Alice'));
+      expect(s.isValid, false); // categories still required
+      s.addCategory(ExpenseCategory(name: 'Food'));
       expect(s.isValid, true);
     });
   });

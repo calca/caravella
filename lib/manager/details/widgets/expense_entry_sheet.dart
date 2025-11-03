@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../data/model/expense_details.dart';
-import '../../../data/model/expense_group.dart';
+import 'package:caravella_core/caravella_core.dart';
 import '../../expense/expense_form_component.dart';
-import '../../../../widgets/bottom_sheet_scaffold.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 /// Unified sheet for creating or editing an expense.
 /// If [initialExpense] is provided we are editing, otherwise creating a new one.
@@ -66,6 +65,7 @@ class _ExpenseEntrySheetState extends State<ExpenseEntrySheet> {
           fullEdit: widget.fullEdit,
           groupTitle: widget.group.title,
           currency: widget.group.currency,
+          autoLocationEnabled: widget.group.autoLocationEnabled,
           onExpenseAdded: widget.onExpenseSaved,
           onCategoryAdded: widget.onCategoryAdded,
           onDelete: widget.onDelete,

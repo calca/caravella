@@ -1,6 +1,4 @@
-import '../../../data/model/expense_participant.dart';
-import '../../../data/model/expense_category.dart';
-import '../../../data/model/expense_group.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'package:flutter/foundation.dart';
 
 class GroupFormState extends ChangeNotifier {
@@ -18,12 +16,21 @@ class GroupFormState extends ChangeNotifier {
     'code': 'EUR',
     'name': 'Euro',
   };
+  bool autoLocationEnabled = false;
   bool loadingImage = false;
   bool isSaving = false;
 
   bool get isBusy => loadingImage || isSaving;
 
-  bool get isValid => title.trim().isNotEmpty && participants.isNotEmpty;
+  bool get _hasPartialDates =>
+      (startDate != null && endDate == null) ||
+      (startDate == null && endDate != null);
+
+  bool get isValid =>
+      title.trim().isNotEmpty &&
+      participants.isNotEmpty &&
+      categories.isNotEmpty &&
+      !_hasPartialDates;
 
   void setTitle(String v) {
     if (title == v) return;
@@ -87,6 +94,12 @@ class GroupFormState extends ChangeNotifier {
   void setColor(int? c) {
     color = c;
     if (c != null) imagePath = null;
+    notifyListeners();
+  }
+
+  void setAutoLocationEnabled(bool enabled) {
+    if (autoLocationEnabled == enabled) return;
+    autoLocationEnabled = enabled;
     notifyListeners();
   }
 

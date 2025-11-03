@@ -1,13 +1,9 @@
 library;
 
 import 'package:flutter/material.dart';
-import '../../data/model/expense_category.dart';
-import '../../data/model/expense_details.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../data/model/expense_participant.dart';
-import '../../data/model/expense_location.dart';
-import '../../state/locale_notifier.dart';
-import '../../widgets/material3_dialog.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'expense_form/amount_input_widget.dart';
 import 'expense_form/participant_selector_widget.dart';
 import 'expense_form/category_selector_widget.dart';
@@ -16,7 +12,6 @@ import 'expense_form/note_input_widget.dart';
 import 'expense_form/location_input_widget.dart';
 import 'expense_form/expense_form_actions_widget.dart';
 import 'expense_form/category_dialog.dart';
-import '../../themes/form_theme.dart';
 
 class ExpenseFormComponent extends StatefulWidget {
   // When true shows date, location and note fields (full edit mode). In edit mode (initialExpense != null) these are always shown.
@@ -33,6 +28,7 @@ class ExpenseFormComponent extends StatefulWidget {
   final String? newlyAddedCategory; // Nuova proprietà
   final String? groupTitle; // Titolo del gruppo per la riga azioni
   final String? currency; // Currency del gruppo
+  final bool autoLocationEnabled; // Impostazione per auto-recupero posizione
   final ScrollController?
   scrollController; // Controller for scrolling to focused fields
 
@@ -50,6 +46,7 @@ class ExpenseFormComponent extends StatefulWidget {
     this.newlyAddedCategory, // Nuova proprietà
     this.groupTitle,
     this.currency,
+    required this.autoLocationEnabled,
     this.fullEdit = false,
     this.scrollController,
   });
@@ -92,6 +89,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
 
   // Stato per espansione del form (solo quando fullEdit è false inizialmente)
   bool _isExpanded = false;
+
+  // Auto location preference
+  bool _autoLocationEnabled = false;
 
   // Getters per stato dei campi
   bool get _isAmountValid => _amount != null && _amount! > 0;
@@ -209,6 +209,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _categories = List.from(widget.categories); // Copia della lista originale
+    _autoLocationEnabled = widget.autoLocationEnabled;
     if (widget.initialExpense != null) {
       _category = widget.categories.firstWhere(
         (c) => c.id == widget.initialExpense!.category.id,
@@ -753,6 +754,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
               }
             }),
             externalFocusNode: _locationFocus,
+            autoRetrieve: widget.initialExpense == null && _autoLocationEnabled,
           ),
         ),
         _spacer(),

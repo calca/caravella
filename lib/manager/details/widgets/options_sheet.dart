@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../../data/model/expense_group.dart';
-import '../../../../widgets/bottom_sheet_scaffold.dart';
+import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 class OptionsSheet extends StatelessWidget {
   final ExpenseGroup trip;
@@ -39,7 +39,7 @@ class OptionsSheet extends StatelessWidget {
         children: [
           ListTile(
             leading: Icon(
-              trip.pinned ? Icons.push_pin_outlined : Icons.push_pin_outlined,
+              trip.pinned ? Icons.push_pin : Icons.push_pin_outlined,
               color: trip.archived
                   ? Theme.of(
                       context,
