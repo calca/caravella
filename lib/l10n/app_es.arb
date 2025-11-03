@@ -640,6 +640,16 @@
   ,"@less": {"description": "Etiqueta inline para contraer y mostrar menos elementos"}
   ,"debt_prefix_to": "a "
   ,"@debt_prefix_to": {"description": "Prefijo corto mostrado antes del destinatario en una línea de deuda/liquidación (p. ej., 'a Alicia 10€')"}
+  ,"view_on_map": "Ver en el mapa"
+  ,"@view_on_map": {"description": "Tooltip for the map button to view expenses on a map"}
+  ,"expenses_map": "Mapa de Gastos"
+  ,"@expenses_map": {"description": "Title of the page showing expenses on a map"}
+  ,"no_locations_available": "No hay ubicaciones disponibles"
+  ,"@no_locations_available": {"description": "Message shown when no expenses have location data"}
+  ,"no_locations_subtitle": "Agrega datos de ubicación a tus gastos para verlos en el mapa"
+  ,"@no_locations_subtitle": {"description": "Subtitle explaining how to add locations"}
+  ,"expense_count": "{count, plural, =1{1 gasto} other{{count} gastos}}"
+  ,"@expense_count": {"description": "Label showing number of expenses at a location", "placeholders": {"count": {"type": "int"}}}
   ,"check_for_updates": "Buscar actualizaciones"
   ,"@check_for_updates": {"description": "Etiqueta para buscar actualizaciones de Google Play Store"}
   ,"check_for_updates_desc": "Verificar disponibilidad de nueva versión"

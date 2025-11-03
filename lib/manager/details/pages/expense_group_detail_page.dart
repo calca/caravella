@@ -25,9 +25,10 @@ import '../widgets/group_header.dart';
 import '../widgets/group_total.dart';
 import '../widgets/group_actions.dart';
 import '../widgets/filtered_expense_list.dart';
-import 'unified_overview_page.dart';
 import '../export/ofx_exporter.dart';
 import '../export/csv_exporter.dart';
+
+import 'unified_overview_page.dart';
 
 class ExpenseGroupDetailPage extends StatefulWidget {
   final ExpenseGroup trip;

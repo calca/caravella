@@ -664,6 +664,16 @@
   ,"@less": {"description": "Inline toggle label to collapse and show fewer items"}
   ,"debt_prefix_to": "to "
   ,"@debt_prefix_to": {"description": "Short prefix shown before the recipient in a debt/settlement line (e.g., 'to Alice 10€')"}
+  ,"view_on_map": "View on map"
+  ,"@view_on_map": {"description": "Tooltip for the map button to view expenses on a map"}
+  ,"expenses_map": "Expenses Map"
+  ,"@expenses_map": {"description": "Title of the page showing expenses on a map"}
+  ,"no_locations_available": "No locations available"
+  ,"@no_locations_available": {"description": "Message shown when no expenses have location data"}
+  ,"no_locations_subtitle": "Add location data to your expenses to see them on the map"
+  ,"@no_locations_subtitle": {"description": "Subtitle explaining how to add locations"}
+  ,"expense_count": "{count, plural, =1{1 expense} other{{count} expenses}}"
+  ,"@expense_count": {"description": "Label showing number of expenses at a location", "placeholders": {"count": {"type": "int"}}}
   ,"check_for_updates": "Check for updates"
   ,"@check_for_updates": {"description": "Label to check for updates from Google Play Store"}
   ,"check_for_updates_desc": "Check for new version availability"

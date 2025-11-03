@@ -3440,6 +3440,36 @@ abstract class AppLocalizations {
   /// **'to '**
   String get debt_prefix_to;
 
+  /// Tooltip for the map button to view expenses on a map
+  ///
+  /// In en, this message translates to:
+  /// **'View on map'**
+  String get view_on_map;
+
+  /// Title of the page showing expenses on a map
+  ///
+  /// In en, this message translates to:
+  /// **'Expenses Map'**
+  String get expenses_map;
+
+  /// Message shown when no expenses have location data
+  ///
+  /// In en, this message translates to:
+  /// **'No locations available'**
+  String get no_locations_available;
+
+  /// Subtitle explaining how to add locations
+  ///
+  /// In en, this message translates to:
+  /// **'Add location data to your expenses to see them on the map'**
+  String get no_locations_subtitle;
+
+  /// Label showing number of expenses at a location
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 expense} other{{count} expenses}}'**
+  String expense_count(int count);
+
   /// Label to check for updates from Google Play Store
   ///
   /// In en, this message translates to:
