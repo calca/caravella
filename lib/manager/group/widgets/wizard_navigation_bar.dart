@@ -72,7 +72,10 @@ class WizardNavigationBar extends StatelessWidget {
                                 );
                                 if (success && context.mounted) {
                                   // Show success dialog
-                                  await _showSuccessDialog(context, formState.title);
+                                  await _showSuccessDialog(
+                                    context,
+                                    formState.title,
+                                  );
                                   if (context.mounted) {
                                     Navigator.of(context).pop(true);
                                   }
@@ -81,9 +84,6 @@ class WizardNavigationBar extends StatelessWidget {
                             : null,
                         icon: const Icon(Icons.check_circle_outline),
                         label: Text(gloc.wizard_finish),
-                        style: FilledButton.styleFrom(
-                          minimumSize: const Size.fromHeight(48),
-                        ),
                       );
                     }
 
@@ -113,7 +113,8 @@ class WizardNavigationBar extends StatelessWidget {
       case 1: // Group name step (required)
         return formState.title.trim().isNotEmpty;
       case 2: // Participants and categories step (both required)
-        return formState.participants.isNotEmpty && formState.categories.isNotEmpty;
+        return formState.participants.isNotEmpty &&
+            formState.categories.isNotEmpty;
       case 3: // Period step (optional)
         return true;
       case 4: // Color and final step (all set, ready to create)
@@ -144,10 +145,13 @@ class WizardNavigationBar extends StatelessWidget {
     }
   }
 
-  Future<void> _showSuccessDialog(BuildContext context, String groupName) async {
+  Future<void> _showSuccessDialog(
+    BuildContext context,
+    String groupName,
+  ) async {
     final gloc = gen.AppLocalizations.of(context);
     final theme = Theme.of(context);
-    
+
     await showDialog(
       context: context,
       barrierDismissible: false,
