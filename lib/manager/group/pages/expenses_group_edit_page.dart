@@ -276,6 +276,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
             },
             child: Scaffold(
               appBar: CaravellaAppBar(actions: []),
+              extendBody: true,
               floatingActionButton: widget.mode == GroupEditMode.create
                   ? FloatingActionButton.extended(
                       onPressed: () async {
@@ -596,7 +597,6 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                                 ),
                               ),
                               const SizedBox(height: 12),
-                              const SizedBox(height: 80),
                             ],
                           ),
                         ),
