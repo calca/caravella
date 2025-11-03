@@ -24,7 +24,7 @@ class _WizardUserNameStepState extends State<WizardUserNameStep> {
         }
       }
     });
-    
+
     _controller.addListener(() {
       // Save name automatically when user types
       if (_controller.text.trim().isNotEmpty) {
@@ -51,7 +51,7 @@ class _WizardUserNameStepState extends State<WizardUserNameStep> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 24),
-          
+
           // Friendly message
           Text(
             gloc.wizard_user_name_welcome,
@@ -60,9 +60,9 @@ class _WizardUserNameStepState extends State<WizardUserNameStep> {
               color: theme.colorScheme.onSurface,
             ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Step description
           Text(
             gloc.wizard_user_name_description,
@@ -70,9 +70,9 @@ class _WizardUserNameStepState extends State<WizardUserNameStep> {
               color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
-          
+
           const SizedBox(height: 8),
-          
+
           // Local storage note with emoji
           Container(
             padding: const EdgeInsets.all(12),
@@ -86,10 +86,7 @@ class _WizardUserNameStepState extends State<WizardUserNameStep> {
             ),
             child: Row(
               children: [
-                Text(
-                  '😊',
-                  style: const TextStyle(fontSize: 20),
-                ),
+                Text('😊', style: const TextStyle(fontSize: 20)),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
@@ -102,9 +99,9 @@ class _WizardUserNameStepState extends State<WizardUserNameStep> {
               ],
             ),
           ),
-          
+
           const SizedBox(height: 32),
-          
+
           // Name input
           TextField(
             controller: _controller,
@@ -121,9 +118,9 @@ class _WizardUserNameStepState extends State<WizardUserNameStep> {
             ),
             textInputAction: TextInputAction.next,
           ),
-          
+
           const Spacer(),
-          
+
           // Visual hint
           Center(
             child: Icon(
@@ -132,7 +129,7 @@ class _WizardUserNameStepState extends State<WizardUserNameStep> {
               color: theme.colorScheme.primary.withValues(alpha: 0.3),
             ),
           ),
-          
+
           const Spacer(),
         ],
       ),

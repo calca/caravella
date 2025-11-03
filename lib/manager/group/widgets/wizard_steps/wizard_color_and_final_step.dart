@@ -18,7 +18,7 @@ class WizardColorAndFinalStep extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 16),
-          
+
           // Step description
           Text(
             gloc.wizard_color_and_final_description,
@@ -26,9 +26,9 @@ class WizardColorAndFinalStep extends StatelessWidget {
               color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Color picker section
           Expanded(
             child: SingleChildScrollView(
@@ -37,19 +37,22 @@ class WizardColorAndFinalStep extends StatelessWidget {
                 children: [
                   // Color picker
                   const BackgroundPicker(),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // Preview section
                   Consumer<GroupFormState>(
                     builder: (context, formState, child) {
                       return Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                          color: theme.colorScheme.surfaceContainerHighest
+                              .withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: theme.colorScheme.outline.withValues(alpha: 0.2),
+                            color: theme.colorScheme.outline.withValues(
+                              alpha: 0.2,
+                            ),
                             width: 1,
                           ),
                         ),
@@ -73,7 +76,7 @@ class WizardColorAndFinalStep extends StatelessWidget {
                               ],
                             ),
                             const SizedBox(height: 16),
-                            
+
                             // Group name
                             if (formState.title.isNotEmpty) ...[
                               _buildPreviewRow(
@@ -83,28 +86,33 @@ class WizardColorAndFinalStep extends StatelessWidget {
                               ),
                               const SizedBox(height: 8),
                             ],
-                            
+
                             // Participants count
                             if (formState.participants.isNotEmpty) ...[
                               _buildPreviewRow(
                                 context,
                                 Icons.group_outlined,
-                                gloc.wizard_created_participants(formState.participants.length),
+                                gloc.wizard_created_participants(
+                                  formState.participants.length,
+                                ),
                               ),
                               const SizedBox(height: 8),
                             ],
-                            
+
                             // Categories count
                             if (formState.categories.isNotEmpty) ...[
                               _buildPreviewRow(
                                 context,
                                 Icons.category_outlined,
-                                gloc.wizard_created_categories(formState.categories.length),
+                                gloc.wizard_created_categories(
+                                  formState.categories.length,
+                                ),
                               ),
                             ],
-                            
+
                             // Period if set
-                            if (formState.startDate != null || formState.endDate != null) ...[
+                            if (formState.startDate != null ||
+                                formState.endDate != null) ...[
                               const SizedBox(height: 8),
                               _buildPreviewRow(
                                 context,
@@ -128,28 +136,19 @@ class WizardColorAndFinalStep extends StatelessWidget {
 
   Widget _buildPreviewRow(BuildContext context, IconData icon, String text) {
     final theme = Theme.of(context);
-    
+
     return Row(
       children: [
-        Icon(
-          icon,
-          size: 18,
-          color: theme.colorScheme.primary,
-        ),
+        Icon(icon, size: 18, color: theme.colorScheme.primary),
         const SizedBox(width: 12),
-        Expanded(
-          child: Text(
-            text,
-            style: theme.textTheme.bodyMedium,
-          ),
-        ),
+        Expanded(child: Text(text, style: theme.textTheme.bodyMedium)),
       ],
     );
   }
 
   String _formatPeriod(GroupFormState formState, BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
-    
+
     if (formState.startDate != null && formState.endDate != null) {
       return '${gloc.start_date_optional}: ${_formatDate(formState.startDate!)} - ${gloc.end_date_optional}: ${_formatDate(formState.endDate!)}';
     } else if (formState.startDate != null) {
