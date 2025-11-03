@@ -855,11 +855,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_general_desc => 'Language and appearance settings';
 
   @override
-  String get settings_auto_location_title => 'Detect location';
+  String get settings_auto_location_section => 'Location Detection';
 
   @override
-  String get settings_auto_location_desc =>
-      'Enable to automatically detect GPS';
+  String get settings_auto_location_section_desc =>
+      'Configure automatic location detection';
+
+  @override
+  String get settings_auto_location_title => 'Enable to detect';
+
+  @override
+  String get settings_auto_location_desc => 'Enable to detect';
 
   @override
   String get settings_language => 'Language';

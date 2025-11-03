@@ -858,11 +858,17 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settings_general_desc => 'Impostazioni lingua e aspetto';
 
   @override
-  String get settings_auto_location_title => 'Rileva posizione';
+  String get settings_auto_location_section => 'Rilevamento posizione';
 
   @override
-  String get settings_auto_location_desc =>
-      'Attiva per rilevare automaticamente il GPS';
+  String get settings_auto_location_section_desc =>
+      'Configura il rilevamento automatico della posizione';
+
+  @override
+  String get settings_auto_location_title => 'Attiva per rilevare';
+
+  @override
+  String get settings_auto_location_desc => 'Attiva per rilevare';
 
   @override
   String get settings_language => 'Lingua';

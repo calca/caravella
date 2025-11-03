@@ -1718,16 +1718,28 @@ abstract class AppLocalizations {
   /// **'Language and appearance settings'**
   String get settings_general_desc;
 
+  /// No description provided for @settings_auto_location_section.
+  ///
+  /// In en, this message translates to:
+  /// **'Location Detection'**
+  String get settings_auto_location_section;
+
+  /// No description provided for @settings_auto_location_section_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Configure automatic location detection'**
+  String get settings_auto_location_section_desc;
+
   /// No description provided for @settings_auto_location_title.
   ///
   /// In en, this message translates to:
-  /// **'Detect location'**
+  /// **'Enable to detect'**
   String get settings_auto_location_title;
 
   /// No description provided for @settings_auto_location_desc.
   ///
   /// In en, this message translates to:
-  /// **'Enable to automatically detect GPS'**
+  /// **'Enable to detect'**
   String get settings_auto_location_desc;
 
   /// No description provided for @settings_language.

@@ -546,9 +546,9 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                                                 children: [
                                                   SectionHeader(
                                                     title: gloc
-                                                        .settings_auto_location_title,
+                                                        .settings_auto_location_section,
                                                     description: gloc
-                                                        .settings_auto_location_desc,
+                                                        .settings_auto_location_section_desc,
                                                     padding: EdgeInsets.zero,
                                                     spacing: 4,
                                                   ),
