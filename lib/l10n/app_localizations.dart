@@ -782,6 +782,12 @@ abstract class AppLocalizations {
   /// **'New Group'**
   String get new_group;
 
+  /// No description provided for @create.
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get create;
+
   /// No description provided for @group_name.
   ///
   /// In en, this message translates to:
@@ -1711,6 +1717,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Language and appearance settings'**
   String get settings_general_desc;
+
+  /// No description provided for @settings_auto_location_section.
+  ///
+  /// In en, this message translates to:
+  /// **'Location Detection'**
+  String get settings_auto_location_section;
+
+  /// No description provided for @settings_auto_location_section_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Configure automatic location detection'**
+  String get settings_auto_location_section_desc;
+
+  /// No description provided for @settings_auto_location_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable to detect'**
+  String get settings_auto_location_title;
+
+  /// No description provided for @settings_auto_location_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Detect GPS when adding an expense'**
+  String get settings_auto_location_desc;
 
   /// No description provided for @settings_language.
   ///

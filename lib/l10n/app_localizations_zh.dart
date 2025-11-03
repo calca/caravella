@@ -365,6 +365,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get new_group => '新群组';
 
   @override
+  String get create => '创建';
+
+  @override
   String get group_name => '群组名称';
 
   @override
@@ -836,10 +839,22 @@ class AppLocalizationsZh extends AppLocalizations {
   String get address_resolved => '地址已解析';
 
   @override
-  String get settings_general => '一般';
+  String get settings_general => '常规';
 
   @override
-  String get settings_general_desc => '应用程序通用设置';
+  String get settings_general_desc => '语言和外观设置';
+
+  @override
+  String get settings_auto_location_section => '位置检测';
+
+  @override
+  String get settings_auto_location_section_desc => '配置自动位置检测';
+
+  @override
+  String get settings_auto_location_title => '启用检测';
+
+  @override
+  String get settings_auto_location_desc => '添加费用时检测GPS';
 
   @override
   String get settings_language => '语言';

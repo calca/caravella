@@ -3,8 +3,6 @@ import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart'
     as gen; // generated strongly-typed
-import '../flag_secure_notifier.dart';
-import '../user_name_notifier.dart';
 
 import '../flag_secure_android.dart';
 import 'package:provider/provider.dart';
@@ -23,8 +21,12 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    return ChangeNotifierProvider<FlagSecureNotifier>(
-      create: (_) => FlagSecureNotifier(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<FlagSecureNotifier>(
+          create: (_) => FlagSecureNotifier(),
+        ),
+      ],
       child: Scaffold(
         appBar: const CaravellaAppBar(),
         body: ListView(

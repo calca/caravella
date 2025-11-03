@@ -16,6 +16,7 @@ class GroupFormState extends ChangeNotifier {
     'code': 'EUR',
     'name': 'Euro',
   };
+  bool autoLocationEnabled = false;
   bool loadingImage = false;
   bool isSaving = false;
 
@@ -93,6 +94,12 @@ class GroupFormState extends ChangeNotifier {
   void setColor(int? c) {
     color = c;
     if (c != null) imagePath = null;
+    notifyListeners();
+  }
+
+  void setAutoLocationEnabled(bool enabled) {
+    if (autoLocationEnabled == enabled) return;
+    autoLocationEnabled = enabled;
     notifyListeners();
   }
 

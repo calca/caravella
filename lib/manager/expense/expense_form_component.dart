@@ -28,6 +28,7 @@ class ExpenseFormComponent extends StatefulWidget {
   final String? newlyAddedCategory; // Nuova proprietà
   final String? groupTitle; // Titolo del gruppo per la riga azioni
   final String? currency; // Currency del gruppo
+  final bool autoLocationEnabled; // Impostazione per auto-recupero posizione
   final ScrollController?
   scrollController; // Controller for scrolling to focused fields
 
@@ -45,6 +46,7 @@ class ExpenseFormComponent extends StatefulWidget {
     this.newlyAddedCategory, // Nuova proprietà
     this.groupTitle,
     this.currency,
+    required this.autoLocationEnabled,
     this.fullEdit = false,
     this.scrollController,
   });
@@ -87,6 +89,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
 
   // Stato per espansione del form (solo quando fullEdit è false inizialmente)
   bool _isExpanded = false;
+
+  // Auto location preference
+  bool _autoLocationEnabled = false;
 
   // Getters per stato dei campi
   bool get _isAmountValid => _amount != null && _amount! > 0;
@@ -204,6 +209,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _categories = List.from(widget.categories); // Copia della lista originale
+    _autoLocationEnabled = widget.autoLocationEnabled;
     if (widget.initialExpense != null) {
       _category = widget.categories.firstWhere(
         (c) => c.id == widget.initialExpense!.category.id,
@@ -748,6 +754,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
               }
             }),
             externalFocusNode: _locationFocus,
+            autoRetrieve: widget.initialExpense == null && _autoLocationEnabled,
           ),
         ),
         _spacer(),

@@ -370,6 +370,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get new_group => 'Nuevo Grupo';
 
   @override
+  String get create => 'Crear';
+
+  @override
   String get group_name => 'Nombre';
 
   @override
@@ -853,7 +856,20 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settings_general => 'General';
 
   @override
-  String get settings_general_desc => 'Configuración idioma y apariencia';
+  String get settings_general_desc => 'Configuración de idioma y apariencia';
+
+  @override
+  String get settings_auto_location_section => 'Detección de ubicación';
+
+  @override
+  String get settings_auto_location_section_desc =>
+      'Configurar la detección automática de ubicación';
+
+  @override
+  String get settings_auto_location_title => 'Activar para detectar';
+
+  @override
+  String get settings_auto_location_desc => 'Detectar GPS al agregar un gasto';
 
   @override
   String get settings_language => 'Idioma';
