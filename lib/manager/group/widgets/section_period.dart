@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core_ui/caravella_core_ui.dart';
-import 'section_header.dart';
 import 'period_selection_bottom_sheet.dart';
 
 class SectionPeriod extends StatelessWidget {

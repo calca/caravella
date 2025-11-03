@@ -545,6 +545,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get edit_group => '编辑群组';
 
   @override
+  String get edit_group_desc => '修改群组设置、参与者和类别';
+
+  @override
+  String get new_group_desc => '创建具有自定义设置的新支出群组';
+
+  @override
   String get delete_group => '删除群组';
 
   @override

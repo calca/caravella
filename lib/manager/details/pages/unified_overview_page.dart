@@ -11,7 +11,6 @@ import 'tabs/general_overview_tab.dart';
 import 'tabs/participants_overview_tab.dart';
 import 'tabs/categories_overview_tab.dart';
 import 'tabs/usecase/settlements_logic.dart';
-import '../../group/widgets/section_header.dart';
 import 'expense_locations_map_page.dart';
 
 /// Overview & statistics page with share (text/image) capability.
@@ -201,7 +200,7 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
             Padding(
               // Symmetric horizontal padding so left/right match header (24px)
               padding: const EdgeInsets.symmetric(horizontal: 0),
-              child: TabBar(
+              child: CaravellaTabBar(
                 isScrollable: true,
                 // Center the group of tabs within available width
                 tabAlignment: TabAlignment.center,
@@ -210,9 +209,6 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
                   Tab(text: gloc.participants),
                   Tab(text: gloc.categories),
                 ],
-                labelColor: colorScheme.onSurface,
-                unselectedLabelColor: colorScheme.outline,
-                indicatorColor: colorScheme.primary,
               ),
             ),
             const SizedBox(height: 12),

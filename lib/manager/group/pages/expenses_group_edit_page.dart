@@ -13,7 +13,6 @@ import '../widgets/participants_editor.dart';
 import '../widgets/categories_editor.dart';
 import '../widgets/currency_selector_sheet.dart';
 import '../widgets/background_picker.dart';
-import '../widgets/section_header.dart';
 import '../widgets/selection_tile.dart';
 import '../widgets/period_section_editor.dart';
 
@@ -336,23 +335,16 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                widget.mode == GroupEditMode.edit
+                              SectionHeader(
+                                title: widget.mode == GroupEditMode.edit
                                     ? gloc.edit_group
                                     : gloc.new_group,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headlineMedium
-                                    ?.copyWith(fontWeight: FontWeight.w600),
+                                description: widget.mode == GroupEditMode.edit
+                                    ? gloc.edit_group_desc
+                                    : gloc.new_group_desc,
                               ),
                               const SizedBox(height: 12),
-                              TabBar(
-                                labelColor: Theme.of(
-                                  context,
-                                ).colorScheme.primary,
-                                unselectedLabelColor: Theme.of(
-                                  context,
-                                ).colorScheme.onSurfaceVariant,
+                              CaravellaTabBar(
                                 tabs: [
                                   Tab(text: gloc.settings_general),
                                   Tab(text: gloc.settings_tab),

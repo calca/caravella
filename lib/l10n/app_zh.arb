@@ -243,6 +243,8 @@
   "select_expense_date_short": "选择日期",
   "date": "日期",
   "edit_group": "编辑群组",
+  "edit_group_desc": "修改群组设置、参与者和类别",
+  "new_group_desc": "创建具有自定义设置的新支出群组",
   "delete_group": "删除群组",
   "delete_group_confirm": "您确定要删除此支出群组吗？此操作无法撤销。",
   "add_expense_fab": "添加支出",

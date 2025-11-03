@@ -548,6 +548,15 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get delete_group => 'Delete group';
+  String get edit_group_desc =>
+      'Modificar configurações, participantes e categorias do grupo';
+
+  @override
+  String get new_group_desc =>
+      'Criar um novo grupo de despesas com configurações personalizadas';
+
+  @override
+  String get delete_group => 'Excluir grupo';
 
   @override
   String get delete_group_confirm =>

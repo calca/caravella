@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../group/pages/expenses_group_edit_page.dart';
 import '../group/group_edit_mode.dart';
-import '../group/widgets/section_header.dart';
 import 'widgets/expense_group_empty_states.dart';
 import 'widgets/swipeable_expense_group_card.dart';
 
@@ -326,19 +325,15 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   Widget _buildStatusSegmentedButton(BuildContext context) {
     // Replaced with a TabBar containing two tabs: Active | Archived
     final gloc = gen.AppLocalizations.of(context);
-    final colorScheme = Theme.of(context).colorScheme;
 
     return SizedBox(
       width: double.infinity,
-      child: TabBar(
+      child: CaravellaTabBar(
         controller: _tabController,
         tabs: [
           Tab(text: gloc.status_active),
           Tab(text: gloc.status_archived),
         ],
-        labelColor: colorScheme.onSurface,
-        unselectedLabelColor: colorScheme.outline,
-        indicatorColor: colorScheme.primary,
       ),
     );
   }

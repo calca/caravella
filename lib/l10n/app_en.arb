@@ -194,6 +194,8 @@
   "select_expense_date_short": "Select date",
   "date": "Date",
   "edit_group": "Edit Group",
+  "edit_group_desc": "Modify group settings, participants, and categories",
+  "new_group_desc": "Create a new expense group with custom settings",
   "delete_group": "Delete group",
   "delete_group_confirm": "Are you sure you want to delete this expense group? This action cannot be undone.",
   "add_expense_fab": "Add Expense",
