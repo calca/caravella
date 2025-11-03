@@ -625,4 +625,16 @@
   ,"@wizard_created_participants": {"description": "Numero partecipanti nel riepilogo", "placeholders": {"count": {"type": "int"}}}
   ,"wizard_created_categories": "{count, plural, =1{1 categoria} other{{count} categorie}}"
   ,"@wizard_created_categories": {"description": "Numero categorie nel riepilogo", "placeholders": {"count": {"type": "int"}}}
+  ,"wizard_step_user_name": "Il tuo nome"
+  ,"@wizard_step_user_name": {"description": "Titolo step iniziale del wizard: nome utente"}
+  ,"wizard_user_name_welcome": "Ciao! Come ti chiami?"
+  ,"@wizard_user_name_welcome": {"description": "Messaggio di benvenuto nello step nome utente"}
+  ,"wizard_user_name_description": "Inserisci il tuo nome per personalizzare l'esperienza"
+  ,"@wizard_user_name_description": {"description": "Descrizione dello step nome utente"}
+  ,"wizard_user_name_local_storage_note": "Il tuo nome verrà salvato solo sul tuo dispositivo e non sarà condiviso"
+  ,"@wizard_user_name_local_storage_note": {"description": "Nota sulla privacy per il nome utente"}
+  ,"wizard_user_name_label": "Il tuo nome"
+  ,"@wizard_user_name_label": {"description": "Etichetta del campo nome utente"}
+  ,"wizard_user_name_hint": "es. Mario"
+  ,"@wizard_user_name_hint": {"description": "Suggerimento per il campo nome utente"}
 }

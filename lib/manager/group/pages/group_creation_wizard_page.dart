@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../../widgets/caravella_app_bar.dart';
+import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import '../../../state/expense_group_notifier.dart';
-import '../../../widgets/material3_dialog.dart';
 import '../data/group_form_state.dart';
 import '../group_form_controller.dart';
 import '../group_edit_mode.dart';
-import '../../../settings/user_name_notifier.dart';
 import '../../../data/model/expense_participant.dart';
 import '../widgets/wizard_step_indicator.dart';
 import '../widgets/wizard_navigation_bar.dart';
+import '../widgets/wizard_steps/wizard_user_name_step.dart';
 import '../widgets/wizard_steps/wizard_name_step.dart';
 import '../widgets/wizard_steps/wizard_participants_step.dart';
 import '../widgets/wizard_steps/wizard_categories_step.dart';
@@ -49,7 +49,7 @@ class WizardState extends ChangeNotifier {
   PageController get pageController => _pageController;
 
   // Total number of wizard steps
-  static const int totalSteps = 6;
+  static const int totalSteps = 7;
 
   void nextStep() {
     if (_currentStep < totalSteps - 1) {
@@ -200,6 +200,7 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
                       wizardState.syncWithPage(index);
                     },
                     children: const [
+                      WizardUserNameStep(),
                       WizardNameStep(),
                       WizardParticipantsStep(),
                       WizardCategoriesStep(),

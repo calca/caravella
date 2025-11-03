@@ -72,16 +72,18 @@ class WizardStepIndicator extends StatelessWidget {
   String _getStepTitle(int step, gen.AppLocalizations gloc) {
     switch (step) {
       case 0:
-        return gloc.wizard_step_name;
+        return gloc.wizard_step_user_name;
       case 1:
-        return gloc.wizard_step_participants;
+        return gloc.wizard_step_name;
       case 2:
-        return gloc.wizard_step_categories;
+        return gloc.wizard_step_participants;
       case 3:
-        return gloc.wizard_step_period;
+        return gloc.wizard_step_categories;
       case 4:
-        return gloc.wizard_step_background;
+        return gloc.wizard_step_period;
       case 5:
+        return gloc.wizard_step_background;
+      case 6:
         return gloc.wizard_step_congratulations;
       default:
         return '';

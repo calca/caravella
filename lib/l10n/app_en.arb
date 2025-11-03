@@ -638,4 +638,16 @@
   ,"@wizard_created_participants": {"description": "Number of participants in the summary", "placeholders": {"count": {"type": "int"}}}
   ,"wizard_created_categories": "{count, plural, =1{1 category} other{{count} categories}}"
   ,"@wizard_created_categories": {"description": "Number of categories in the summary", "placeholders": {"count": {"type": "int"}}}
+  ,"wizard_step_user_name": "Your Name"
+  ,"@wizard_step_user_name": {"description": "Title of initial wizard step: user name"}
+  ,"wizard_user_name_welcome": "Hi! What's your name?"
+  ,"@wizard_user_name_welcome": {"description": "Welcome message in user name step"}
+  ,"wizard_user_name_description": "Enter your name to personalize the experience"
+  ,"@wizard_user_name_description": {"description": "Description of the user name step"}
+  ,"wizard_user_name_local_storage_note": "Your name will be saved only on your device and will not be shared"
+  ,"@wizard_user_name_local_storage_note": {"description": "Privacy note for user name"}
+  ,"wizard_user_name_label": "Your name"
+  ,"@wizard_user_name_label": {"description": "Label for user name field"}
+  ,"wizard_user_name_hint": "e.g. Mario"
+  ,"@wizard_user_name_hint": {"description": "Hint for user name field"}
 }
