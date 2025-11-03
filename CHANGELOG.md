@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- OpenStreetMap integration for visualizing expense locations on an interactive map
+- Map view button in expense group overview to display all expenses with locations on a map
+- Auto-location toggle setting for automatic GPS retrieval when adding new expenses
+- Setting to enable/disable automatic location capture with manual override option
 - Dynamic color support with Material 3 integration for personalized app theming (Android 12+, limited iOS support)
 - Settings toggle to enable colors derived from device wallpaper with graceful fallback to default themes
 - Android Quick Actions (App Shortcuts) for quick access to expense groups from launcher (Android only)
@@ -25,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Build variant support for Play Store and F-Droid distributions using factory pattern
 
 ### Changed
+- Restructured project into multi-package architecture with core, core-ui, and app separation for improved maintainability
 - Enhanced skeleton loader with smooth scale and fade-in animations for more polished loading experience
 - Improved new group creation flow with immediate skeleton display and automatic navigation to newly created group
 - Improved app metadata for distribution platforms
