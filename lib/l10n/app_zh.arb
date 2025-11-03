@@ -880,5 +880,172 @@
   "debt_prefix_to": "给 ",
   "@debt_prefix_to": {
     "description": "在债务/结算行中显示在收款人之前的简短前缀（例如：'给 Alice 10€'）"
+  },
+  "wizard_group_creation_title": "新建群组",
+  "@wizard_group_creation_title": {
+    "description": "群组创建向导的标题"
+  },
+  "wizard_step_name": "名称",
+  "@wizard_step_name": {
+    "description": "向导第1步的标题：群组名称"
+  },
+  "wizard_step_participants": "参与者",
+  "@wizard_step_participants": {
+    "description": "向导第2步的标题：参与者"
+  },
+  "wizard_step_categories": "类别",
+  "@wizard_step_categories": {
+    "description": "向导第3步的标题：类别"
+  },
+  "wizard_step_period": "时间段",
+  "@wizard_step_period": {
+    "description": "向导第4步的标题：时间段"
+  },
+  "wizard_step_background": "背景",
+  "@wizard_step_background": {
+    "description": "向导第5步的标题：背景颜色"
+  },
+  "wizard_step_congratulations": "恭喜！",
+  "@wizard_step_congratulations": {
+    "description": "向导最后一步的标题：恭喜"
+  },
+  "wizard_step_of": "的",
+  "@wizard_step_of": {
+    "description": "进度指示器的分隔符（例如 '第1步 的 6步'）"
+  },
+  "wizard_next": "下一步",
+  "@wizard_next": {
+    "description": "进入下一步的按钮文本"
+  },
+  "wizard_previous": "上一步",
+  "@wizard_previous": {
+    "description": "返回上一步的按钮文本"
+  },
+  "wizard_skip": "跳过",
+  "@wizard_skip": {
+    "description": "跳过可选步骤的按钮文本"
+  },
+  "wizard_finish": "创建群组",
+  "@wizard_finish": {
+    "description": "最终创建群组的按钮文本"
+  },
+  "wizard_name_description": "为您的费用群组输入名称",
+  "@wizard_name_description": {
+    "description": "向导中名称步骤的描述"
+  },
+  "wizard_participants_description": "添加将共享费用的人员",
+  "@wizard_participants_description": {
+    "description": "向导中参与者步骤的描述"
+  },
+  "wizard_categories_description": "创建类别以组织费用",
+  "@wizard_categories_description": {
+    "description": "向导中类别步骤的描述"
+  },
+  "wizard_period_description": "设置开始和结束日期（可选）",
+  "@wizard_period_description": {
+    "description": "向导中时间段步骤的描述"
+  },
+  "wizard_background_description": "为群组选择背景颜色",
+  "@wizard_background_description": {
+    "description": "向导中背景步骤的描述"
+  },
+  "wizard_congratulations_message": "您的群组'{groupName}'已成功创建！",
+  "@wizard_congratulations_message": {
+    "description": "带有群组名称的恭喜消息",
+    "placeholders": {
+      "groupName": {
+        "type": "String"
+      }
+    }
+  },
+  "wizard_group_summary": "群组摘要：",
+  "@wizard_group_summary": {
+    "description": "最终屏幕中摘要的标题"
+  },
+  "wizard_created_participants": "{count, plural, =1{1位参与者} other{{count}位参与者}}",
+  "@wizard_created_participants": {
+    "description": "摘要中的参与者数量",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "wizard_created_categories": "{count, plural, =1{1个类别} other{{count}个类别}}",
+  "@wizard_created_categories": {
+    "description": "摘要中的类别数量",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "wizard_step_user_name": "您的名字",
+  "@wizard_step_user_name": {
+    "description": "向导初始步骤的标题：用户名"
+  },
+  "wizard_user_name_welcome": "你好！您叫什么名字？",
+  "@wizard_user_name_welcome": {
+    "description": "用户名步骤中的欢迎消息"
+  },
+  "wizard_user_name_description": "这样我们就可以在群组中显示您 😊",
+  "@wizard_user_name_description": {
+    "description": "用户名步骤的描述"
+  },
+  "wizard_user_name_local_storage_note": "您的名字将仅保存在您的设备上，不会被共享",
+  "@wizard_user_name_local_storage_note": {
+    "description": "用户名的隐私说明"
+  },
+  "wizard_user_name_label": "您的名字（可选）",
+  "@wizard_user_name_label": {
+    "description": "用户名字段的标签"
+  },
+  "wizard_user_name_hint": "例如 Mario",
+  "@wizard_user_name_hint": {
+    "description": "用户名字段的提示"
+  },
+  "wizard_step_participants_and_categories": "谁和什么",
+  "@wizard_step_participants_and_categories": {
+    "description": "参与者和类别合并步骤的标题"
+  },
+  "wizard_participants_and_categories_description": "定义谁参与以及将共享哪些费用",
+  "@wizard_participants_and_categories_description": {
+    "description": "参与者和类别合并步骤的描述"
+  },
+  "wizard_participants_section_title": "谁在参与？",
+  "@wizard_participants_section_title": {
+    "description": "合并步骤中参与者部分的标题"
+  },
+  "wizard_participants_section_hint": "添加朋友或室友。您可以稍后修改。",
+  "@wizard_participants_section_hint": {
+    "description": "参与者部分的提示"
+  },
+  "wizard_categories_section_title": "将共享什么？",
+  "@wizard_categories_section_title": {
+    "description": "合并步骤中类别部分的标题"
+  },
+  "wizard_categories_section_hint": "例如 食物、住宿、交通。您可以稍后添加或重命名。",
+  "@wizard_categories_section_hint": {
+    "description": "类别部分的提示"
+  },
+  "wizard_step_color_and_final": "颜色和确认",
+  "@wizard_step_color_and_final": {
+    "description": "最终颜色和确认步骤的标题"
+  },
+  "wizard_color_and_final_description": "为群组选择颜色并查看摘要",
+  "@wizard_color_and_final_description": {
+    "description": "最终步骤的描述"
+  },
+  "wizard_preview_title": "群组预览",
+  "@wizard_preview_title": {
+    "description": "预览部分的标题"
+  },
+  "wizard_success_title": "🎉 恭喜！",
+  "@wizard_success_title": {
+    "description": "成功对话框的标题"
+  },
+  "wizard_go_to_group": "转到群组",
+  "@wizard_go_to_group": {
+    "description": "转到已创建群组的按钮"
   }
 }

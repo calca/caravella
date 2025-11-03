@@ -696,4 +696,80 @@
   ,"@settings_user_name_desc": {"description": "Descripción de la configuración del nombre de usuario"}
   ,"settings_user_name_hint": "Ingresa tu nombre"
   ,"@settings_user_name_hint": {"description": "Placeholder del campo de nombre de usuario"}
+  ,"wizard_group_creation_title": "Nuevo Grupo"
+  ,"@wizard_group_creation_title": {"description": "Título del asistente de creación de grupo"}
+  ,"wizard_step_name": "Nombre"
+  ,"@wizard_step_name": {"description": "Título del paso 1 del asistente: nombre del grupo"}
+  ,"wizard_step_participants": "Participantes"
+  ,"@wizard_step_participants": {"description": "Título del paso 2 del asistente: participantes"}
+  ,"wizard_step_categories": "Categorías"
+  ,"@wizard_step_categories": {"description": "Título del paso 3 del asistente: categorías"}
+  ,"wizard_step_period": "Período"
+  ,"@wizard_step_period": {"description": "Título del paso 4 del asistente: período"}
+  ,"wizard_step_background": "Fondo"
+  ,"@wizard_step_background": {"description": "Título del paso 5 del asistente: color de fondo"}
+  ,"wizard_step_congratulations": "¡Felicitaciones!"
+  ,"@wizard_step_congratulations": {"description": "Título del paso final del asistente: felicitaciones"}
+  ,"wizard_step_of": "de"
+  ,"@wizard_step_of": {"description": "Separador para indicador de progreso (ej. 'Paso 1 de 6')"}
+  ,"wizard_next": "Siguiente"
+  ,"@wizard_next": {"description": "Texto del botón para ir al siguiente paso"}
+  ,"wizard_previous": "Anterior"
+  ,"@wizard_previous": {"description": "Texto del botón para volver al paso anterior"}
+  ,"wizard_skip": "Omitir"
+  ,"@wizard_skip": {"description": "Texto del botón para omitir un paso opcional"}
+  ,"wizard_finish": "Crear Grupo"
+  ,"@wizard_finish": {"description": "Texto del botón final para crear el grupo"}
+  ,"wizard_name_description": "Ingresa un nombre para tu grupo de gastos"
+  ,"@wizard_name_description": {"description": "Descripción del paso nombre en el asistente"}
+  ,"wizard_participants_description": "Agrega personas que compartirán gastos"
+  ,"@wizard_participants_description": {"description": "Descripción del paso participantes en el asistente"}
+  ,"wizard_categories_description": "Crea categorías para organizar gastos"
+  ,"@wizard_categories_description": {"description": "Descripción del paso categorías en el asistente"}
+  ,"wizard_period_description": "Establece fechas de inicio y fin (opcional)"
+  ,"@wizard_period_description": {"description": "Descripción del paso período en el asistente"}
+  ,"wizard_background_description": "Elige un color de fondo para el grupo"
+  ,"@wizard_background_description": {"description": "Descripción del paso fondo en el asistente"}
+  ,"wizard_congratulations_message": "¡Tu grupo '{groupName}' ha sido creado con éxito!"
+  ,"@wizard_congratulations_message": {"description": "Mensaje de felicitaciones con nombre del grupo", "placeholders": {"groupName": {"type": "String"}}}
+  ,"wizard_group_summary": "Resumen del grupo:"
+  ,"@wizard_group_summary": {"description": "Título del resumen en la pantalla final"}
+  ,"wizard_created_participants": "{count, plural, =1{1 participante} other{{count} participantes}}"
+  ,"@wizard_created_participants": {"description": "Número de participantes en el resumen", "placeholders": {"count": {"type": "int"}}}
+  ,"wizard_created_categories": "{count, plural, =1{1 categoría} other{{count} categorías}}"
+  ,"@wizard_created_categories": {"description": "Número de categorías en el resumen", "placeholders": {"count": {"type": "int"}}}
+  ,"wizard_step_user_name": "Tu nombre"
+  ,"@wizard_step_user_name": {"description": "Título del paso inicial del asistente: nombre de usuario"}
+  ,"wizard_user_name_welcome": "¡Hola! ¿Cómo te llamas?"
+  ,"@wizard_user_name_welcome": {"description": "Mensaje de bienvenida en el paso de nombre de usuario"}
+  ,"wizard_user_name_description": "Para que podamos mostrarte en los grupos 😊"
+  ,"@wizard_user_name_description": {"description": "Descripción del paso de nombre de usuario"}
+  ,"wizard_user_name_local_storage_note": "Tu nombre se guardará solo en tu dispositivo y no se compartirá"
+  ,"@wizard_user_name_local_storage_note": {"description": "Nota de privacidad para el nombre de usuario"}
+  ,"wizard_user_name_label": "Tu nombre (opcional)"
+  ,"@wizard_user_name_label": {"description": "Etiqueta del campo de nombre de usuario"}
+  ,"wizard_user_name_hint": "ej. Mario"
+  ,"@wizard_user_name_hint": {"description": "Sugerencia para el campo de nombre de usuario"}
+  ,"wizard_step_participants_and_categories": "Quién y qué"
+  ,"@wizard_step_participants_and_categories": {"description": "Título del paso combinado de participantes y categorías"}
+  ,"wizard_participants_and_categories_description": "Define quién participa y qué gastos se compartirán"
+  ,"@wizard_participants_and_categories_description": {"description": "Descripción del paso combinado de participantes y categorías"}
+  ,"wizard_participants_section_title": "¿Quién participa?"
+  ,"@wizard_participants_section_title": {"description": "Título de la sección de participantes en el paso combinado"}
+  ,"wizard_participants_section_hint": "Agrega amigos o compañeros. Puedes modificarlos después."
+  ,"@wizard_participants_section_hint": {"description": "Sugerencia para la sección de participantes"}
+  ,"wizard_categories_section_title": "¿Qué se compartirá?"
+  ,"@wizard_categories_section_title": {"description": "Título de la sección de categorías en el paso combinado"}
+  ,"wizard_categories_section_hint": "Ej. Comida, Alojamiento, Transporte. Puedes agregar o renombrar después."
+  ,"@wizard_categories_section_hint": {"description": "Sugerencia para la sección de categorías"}
+  ,"wizard_step_color_and_final": "Color y confirmar"
+  ,"@wizard_step_color_and_final": {"description": "Título del paso final de color y confirmación"}
+  ,"wizard_color_and_final_description": "Elige un color para el grupo y revisa el resumen"
+  ,"@wizard_color_and_final_description": {"description": "Descripción del paso final"}
+  ,"wizard_preview_title": "Vista previa del grupo"
+  ,"@wizard_preview_title": {"description": "Título de la sección de vista previa"}
+  ,"wizard_success_title": "🎉 ¡Felicitaciones!"
+  ,"@wizard_success_title": {"description": "Título del diálogo de éxito"}
+  ,"wizard_go_to_group": "Ir al grupo"
+  ,"@wizard_go_to_group": {"description": "Botón para ir al grupo creado"}
 }
