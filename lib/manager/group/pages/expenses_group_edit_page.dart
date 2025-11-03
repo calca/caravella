@@ -13,7 +13,6 @@ import '../widgets/participants_editor.dart';
 import '../widgets/categories_editor.dart';
 import '../widgets/currency_selector_sheet.dart';
 import '../widgets/background_picker.dart';
-import '../widgets/section_header.dart';
 import '../widgets/selection_tile.dart';
 import '../widgets/period_section_editor.dart';
 

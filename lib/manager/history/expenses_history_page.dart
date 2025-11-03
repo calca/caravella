@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../group/pages/expenses_group_edit_page.dart';
 import '../group/group_edit_mode.dart';
-import '../group/widgets/section_header.dart';
 import 'widgets/expense_group_empty_states.dart';
 import 'widgets/swipeable_expense_group_card.dart';
 

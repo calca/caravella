@@ -16,6 +16,7 @@ export 'widgets/caravella_tab_bar.dart';
 export 'widgets/currency_display.dart';
 export 'widgets/material3_dialog.dart';
 export 'widgets/no_expense.dart';
+export 'widgets/section_header.dart';
 export 'widgets/selection_bottom_sheet.dart';
 
 // Chart widgets
