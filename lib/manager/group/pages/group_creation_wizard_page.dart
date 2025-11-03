@@ -3,11 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
-import '../../../state/expense_group_notifier.dart';
 import '../data/group_form_state.dart';
 import '../group_form_controller.dart';
 import '../group_edit_mode.dart';
-import '../../../data/model/expense_participant.dart';
 import '../widgets/wizard_step_indicator.dart';
 import '../widgets/wizard_navigation_bar.dart';
 import '../widgets/wizard_steps/wizard_user_name_step.dart';
@@ -182,7 +180,11 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
         }
       },
       child: Scaffold(
-        appBar: CaravellaAppBar(title: Text(gloc.wizard_group_creation_title)),
+        appBar: AppBar(
+          title: Text(gloc.wizard_group_creation_title),
+          elevation: 0,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        ),
         body: Column(
           children: [
             // Step indicator

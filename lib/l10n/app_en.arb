@@ -674,4 +674,114 @@
   ,"@wizard_success_title": {"description": "Title of success dialog"}
   ,"wizard_go_to_group": "Go to group"
   ,"@wizard_go_to_group": {"description": "Button to go to created group"}
+  ,"create": "Create"
+  ,"@create": {"description": "Create action"}
+  ,"undo": "Undo"
+  ,"@undo": {"description": "Undo action"}
+  ,"weekday_mon": "Mon"
+  ,"@weekday_mon": {"description": "Monday abbreviation"}
+  ,"weekday_tue": "Tue"
+  ,"@weekday_tue": {"description": "Tuesday abbreviation"}
+  ,"weekday_wed": "Wed"
+  ,"@weekday_wed": {"description": "Wednesday abbreviation"}
+  ,"weekday_thu": "Thu"
+  ,"@weekday_thu": {"description": "Thursday abbreviation"}
+  ,"weekday_fri": "Fri"
+  ,"@weekday_fri": {"description": "Friday abbreviation"}
+  ,"weekday_sat": "Sat"
+  ,"@weekday_sat": {"description": "Saturday abbreviation"}
+  ,"weekday_sun": "Sun"
+  ,"@weekday_sun": {"description": "Sunday abbreviation"}
+  ,"month_january": "January"
+  ,"@month_january": {"description": "January month name"}
+  ,"month_february": "February"
+  ,"@month_february": {"description": "February month name"}
+  ,"month_march": "March"
+  ,"@month_march": {"description": "March month name"}
+  ,"month_april": "April"
+  ,"@month_april": {"description": "April month name"}
+  ,"month_may": "May"
+  ,"@month_may": {"description": "May month name"}
+  ,"month_june": "June"
+  ,"@month_june": {"description": "June month name"}
+  ,"month_july": "July"
+  ,"@month_july": {"description": "July month name"}
+  ,"month_august": "August"
+  ,"@month_august": {"description": "August month name"}
+  ,"month_september": "September"
+  ,"@month_september": {"description": "September month name"}
+  ,"month_october": "October"
+  ,"@month_october": {"description": "October month name"}
+  ,"month_november": "November"
+  ,"@month_november": {"description": "November month name"}
+  ,"month_december": "December"
+  ,"@month_december": {"description": "December month name"}
+  ,"expenses_map": "Expenses map"
+  ,"@expenses_map": {"description": "Title for expenses map page"}
+  ,"view_on_map": "View on map"
+  ,"@view_on_map": {"description": "Action to view location on map"}
+  ,"no_locations_available": "No locations available"
+  ,"@no_locations_available": {"description": "Message when no expense has location data"}
+  ,"no_locations_subtitle": "Add locations to expenses to see them on the map"
+  ,"@no_locations_subtitle": {"description": "Subtitle for empty map state"}
+  ,"expense_count": "{count, plural, =1{1 expense} other{{count} expenses}}"
+  ,"@expense_count": {"description": "Pluralized expense count", "placeholders": {"count": {"type": "int"}}}
+  ,"days_count": "{count, plural, =1{1 day} other{{count} days}}"
+  ,"@days_count": {"description": "Pluralized days count", "placeholders": {"count": {"type": "int"}}}
+  ,"suggested_duration": "Suggested duration"
+  ,"@suggested_duration": {"description": "Label for suggested duration presets"}
+  ,"settings_auto_location_section": "Auto-location"
+  ,"@settings_auto_location_section": {"description": "Section title for auto-location settings"}
+  ,"settings_auto_location_section_desc": "Automatically capture location for expenses"
+  ,"@settings_auto_location_section_desc": {"description": "Section description for auto-location settings"}
+  ,"settings_auto_location_title": "Enable auto-location"
+  ,"@settings_auto_location_title": {"description": "Title for auto-location toggle"}
+  ,"settings_auto_location_desc": "Automatically save location when adding expenses"
+  ,"@settings_auto_location_desc": {"description": "Description for auto-location feature"}
+  ,"send_reminder": "Send reminder"
+  ,"@send_reminder": {"description": "Button to send payment reminder"}
+  ,"reminder_message_single": "Hi {participantName}! 👋\n\nI'd like to remind you that you owe {amount} to {creditorName} for the group \"{groupName}\".\n\nThank you! �"
+  ,"@reminder_message_single": {"description": "Reminder message when a participant owes money to a single person", "placeholders": {"participantName": {}, "amount": {"type": "String"}, "creditorName": {}, "groupName": {}}}
+  ,"reminder_message_multiple": "Hi {participantName}! 👋\n\nI'd like to remind you of your payments for the group \"{groupName}\":\n\n{debtsList}\n\nThank you! 😊"
+  ,"@reminder_message_multiple": {"description": "Reminder message when a participant owes money to multiple people", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
+  ,"archived_with_undo": "Archived"
+  ,"@archived_with_undo": {"description": "Message when group is archived"}
+  ,"unarchived_with_undo": "Unarchived"
+  ,"@unarchived_with_undo": {"description": "Message when group is unarchived"}
+  ,"pinned_with_undo": "Pinned"
+  ,"@pinned_with_undo": {"description": "Message when group is pinned"}
+  ,"unpinned_with_undo": "Unpinned"
+  ,"@unpinned_with_undo": {"description": "Message when group is unpinned"}
+  ,"deleted_with_undo": "Deleted"
+  ,"@deleted_with_undo": {"description": "Message when item is deleted"}
+  ,"settings_dynamic_color": "Dynamic color"
+  ,"@settings_dynamic_color": {"description": "Title for dynamic color setting"}
+  ,"settings_dynamic_color_desc": "Use system color scheme (Android 12+)"
+  ,"@settings_dynamic_color_desc": {"description": "Description for dynamic color feature"}
+  ,"check_for_updates": "Check for updates"
+  ,"@check_for_updates": {"description": "Button to check for app updates"}
+  ,"check_for_updates_desc": "Check if a new version is available"
+  ,"@check_for_updates_desc": {"description": "Description for update check feature"}
+  ,"checking_for_updates": "Checking for updates..."
+  ,"@checking_for_updates": {"description": "Message while checking for updates"}
+  ,"no_update_available": "You're up to date!"
+  ,"@no_update_available": {"description": "Message when no update is available"}
+  ,"update_available": "Update available"
+  ,"@update_available": {"description": "Title when update is available"}
+  ,"update_available_desc": "Version {version} is available"
+  ,"@update_available_desc": {"description": "Description of available update", "placeholders": {"version": {"type": "String"}}}
+  ,"update_now": "Update now"
+  ,"@update_now": {"description": "Button to start update"}
+  ,"update_later": "Later"
+  ,"@update_later": {"description": "Button to postpone update"}
+  ,"update_downloading": "Downloading update..."
+  ,"@update_downloading": {"description": "Message while downloading update"}
+  ,"update_installing": "Installing update..."
+  ,"@update_installing": {"description": "Message while installing update"}
+  ,"update_error": "Update failed"
+  ,"@update_error": {"description": "Message when update fails"}
+  ,"changelog_title": "What's new"
+  ,"@changelog_title": {"description": "Title for changelog page"}
+  ,"changelog_desc": "Recent changes and improvements"
+  ,"@changelog_desc": {"description": "Description for changelog page"}
 }

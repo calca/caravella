@@ -32,6 +32,7 @@ class WizardPeriodStep extends StatelessWidget {
           // Period editor
           PeriodSectionEditor(
             onPickDate: (isStart) async => _pickDate(context, isStart),
+            onClearDates: () => _clearDates(context),
           ),
 
           const Spacer(),
@@ -41,7 +42,7 @@ class WizardPeriodStep extends StatelessWidget {
             child: Icon(
               Icons.date_range_outlined,
               size: 120,
-              color: theme.colorScheme.primary.withAlpha(77),
+              color: theme.colorScheme.primary.withValues(alpha: 77 / 255),
             ),
           ),
 
@@ -85,5 +86,11 @@ class WizardPeriodStep extends StatelessWidget {
     }
 
     return pickedDate;
+  }
+
+  void _clearDates(BuildContext context) {
+    final formState = context.read<GroupFormState>();
+    formState.setStartDate(null);
+    formState.setEndDate(null);
   }
 }

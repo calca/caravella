@@ -20,7 +20,7 @@ Future<bool?> showUpdateRecommendationSheet(BuildContext context) async {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            loc.update_available_desc,
+            loc.update_available_desc(''),
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 24),

@@ -120,7 +120,7 @@ class UpdateCheckWidget extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              loc.update_available_desc,
+              loc.update_available_desc(notifier.availableVersion ?? ''),
               style: textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onPrimaryContainer,
               ),
@@ -193,7 +193,7 @@ class UpdateCheckWidget extends StatelessWidget {
 
     if (notifier.updateAvailable) {
       return Text(
-        loc.update_available_desc,
+        loc.update_available_desc(notifier.availableVersion ?? ''),
         style: textTheme.bodySmall?.copyWith(
           color: Theme.of(context).colorScheme.primary,
         ),

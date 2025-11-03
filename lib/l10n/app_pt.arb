@@ -250,6 +250,7 @@
   "edit_group": "Editar grupo",
   "edit_group_desc": "Modificar configurações, participantes e categorias do grupo",
   "new_group_desc": "Criar um novo grupo de despesas com configurações personalizadas",
+  "delete_group": "Excluir grupo",
   "delete_group_confirm": "Tem certeza de que deseja excluir este grupo de despesas? Esta ação não pode ser desfeita.",
   "pin_group": "Fixar grupo",
   "pin": "Fixar",
@@ -582,7 +583,7 @@
   ,"send_reminder": "Enviar lembrete"
   ,"@send_reminder": {"description": "Rótulo do botão para enviar um lembrete de pagamento a um participante"}
   ,"reminder_message_single": "Oi {participantName}! 👋\n\nGostaria de lembrar que você deve {amount} a {creditorName} para o grupo \"{groupName}\".\n\nObrigado! 😊"
-  ,"@reminder_message_single": {"description": "Mensagem de lembrete quando um participante deve dinheiro a uma única pessoa", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
+  ,"@reminder_message_single": {"description": "Mensagem de lembrete quando um participante deve dinheiro a uma única pessoa", "placeholders": {"participantName": {}, "amount": {"type": "String"}, "creditorName": {}, "groupName": {}}}
   ,"reminder_message_multiple": "Oi {participantName}! 👋\n\nGostaria de lembrar seus pagamentos para o grupo \"{groupName}\":\n\n{debtsList}\n\nObrigado! 😊"
   ,"@reminder_message_multiple": {"description": "Mensagem de lembrete quando um participante deve dinheiro a várias pessoas", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
   ,"about": "Sobre"
@@ -606,7 +607,6 @@
   ,"date": "Data"
   ,"date_range_partial": "Selecione ambas as datas"
   ,"dates": "Período"
-  ,"delete_group": "Excluir grupo"
   ,"delete_participant": "Excluir participante"
   ,"delete_trip": "Excluir viagem"
   ,"edit_category": "Editar categoria"
@@ -738,4 +738,57 @@
   ,"@wizard_success_title": {"description": "Título do diálogo de sucesso"}
   ,"wizard_go_to_group": "Ir para o grupo"
   ,"@wizard_go_to_group": {"description": "Botão para ir ao grupo criado"}
+  ,"create": "Criar"
+  ,"undo": "Desfazer"
+  ,"weekday_mon": "Seg"
+  ,"weekday_tue": "Ter"
+  ,"weekday_wed": "Qua"
+  ,"weekday_thu": "Qui"
+  ,"weekday_fri": "Sex"
+  ,"weekday_sat": "Sáb"
+  ,"weekday_sun": "Dom"
+  ,"month_january": "Janeiro"
+  ,"month_february": "Fevereiro"
+  ,"month_march": "Março"
+  ,"month_april": "Abril"
+  ,"month_may": "Maio"
+  ,"month_june": "Junho"
+  ,"month_july": "Julho"
+  ,"month_august": "Agosto"
+  ,"month_september": "Setembro"
+  ,"month_october": "Outubro"
+  ,"month_november": "Novembro"
+  ,"month_december": "Dezembro"
+  ,"expenses_map": "Mapa de despesas"
+  ,"view_on_map": "Ver no mapa"
+  ,"no_locations_available": "Nenhuma localização disponível"
+  ,"no_locations_subtitle": "Adicione localizações às despesas para vê-las no mapa"
+  ,"expense_count": "{count, plural, =1{1 despesa} other{{count} despesas}}"
+  ,"days_count": "{count, plural, =1{1 dia} other{{count} dias}}"
+  ,"suggested_duration": "Duração sugerida"
+  ,"settings_auto_location_section": "Localização automática"
+  ,"settings_auto_location_section_desc": "Capturar automaticamente a localização das despesas"
+  ,"settings_auto_location_title": "Ativar localização automática"
+  ,"settings_auto_location_desc": "Salvar automaticamente a localização ao adicionar despesas"
+  ,"send_reminder": "Enviar lembrete"
+  ,"archived_with_undo": "Arquivado"
+  ,"unarchived_with_undo": "Desarquivado"
+  ,"pinned_with_undo": "Fixado"
+  ,"unpinned_with_undo": "Desfixado"
+  ,"deleted_with_undo": "Eliminado"
+  ,"settings_dynamic_color": "Cor dinâmica"
+  ,"settings_dynamic_color_desc": "Usar esquema de cores do sistema (Android 12+)"
+  ,"check_for_updates": "Verificar atualizações"
+  ,"check_for_updates_desc": "Verificar se há uma nova versão disponível"
+  ,"checking_for_updates": "Verificando atualizações..."
+  ,"no_update_available": "Você está atualizado!"
+  ,"update_available": "Atualização disponível"
+  ,"update_available_desc": "A versão {version} está disponível"
+  ,"update_now": "Atualizar agora"
+  ,"update_later": "Mais tarde"
+  ,"update_downloading": "Baixando atualização..."
+  ,"update_installing": "Instalando atualização..."
+  ,"update_error": "Falha na atualização"
+  ,"changelog_title": "Novidades"
+  ,"changelog_desc": "Alterações e melhorias recentes"
 }

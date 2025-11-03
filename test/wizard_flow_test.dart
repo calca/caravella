@@ -6,8 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:io_caravella_egm/manager/group/pages/group_creation_wizard_page.dart';
 import 'package:io_caravella_egm/manager/group/data/group_form_state.dart';
-import 'package:io_caravella_egm/state/expense_group_notifier.dart';
-import 'package:io_caravella_egm/settings/user_name_notifier.dart';
+import 'package:caravella_core/caravella_core.dart';
 
 void main() {
   group('Group Creation Wizard Tests', () {

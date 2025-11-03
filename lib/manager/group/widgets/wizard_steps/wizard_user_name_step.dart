@@ -12,7 +12,6 @@ class WizardUserNameStep extends StatefulWidget {
 
 class _WizardUserNameStepState extends State<WizardUserNameStep> {
   final TextEditingController _controller = TextEditingController();
-  bool _hasChanges = false;
 
   @override
   void initState() {
@@ -27,9 +26,6 @@ class _WizardUserNameStepState extends State<WizardUserNameStep> {
     });
     
     _controller.addListener(() {
-      setState(() {
-        _hasChanges = _controller.text.trim().isNotEmpty;
-      });
       // Save name automatically when user types
       if (_controller.text.trim().isNotEmpty) {
         final userNameNotifier = context.read<UserNameNotifier>();
@@ -81,10 +77,10 @@ class _WizardUserNameStepState extends State<WizardUserNameStep> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+              color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color: theme.colorScheme.primary.withOpacity(0.3),
+                color: theme.colorScheme.primary.withValues(alpha: 0.3),
                 width: 1,
               ),
             ),
@@ -133,7 +129,7 @@ class _WizardUserNameStepState extends State<WizardUserNameStep> {
             child: Icon(
               Icons.person_add_outlined,
               size: 120,
-              color: theme.colorScheme.primary.withOpacity(0.3),
+              color: theme.colorScheme.primary.withValues(alpha: 0.3),
             ),
           ),
           

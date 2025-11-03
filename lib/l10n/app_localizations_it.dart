@@ -1681,4 +1681,262 @@ class AppLocalizationsIt extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get wizard_step_user_name => 'Il tuo nome';
+
+  @override
+  String get wizard_user_name_welcome => 'Ciao! Come ti chiami?';
+
+  @override
+  String get wizard_user_name_description =>
+      'Così possiamo mostrarti nei gruppi 😊';
+
+  @override
+  String get wizard_user_name_local_storage_note =>
+      'Il tuo nome verrà salvato solo sul tuo dispositivo e non sarà condiviso';
+
+  @override
+  String get wizard_user_name_label => 'Il tuo nome (facoltativo)';
+
+  @override
+  String get wizard_user_name_hint => 'es. Mario';
+
+  @override
+  String get wizard_step_participants_and_categories => 'Chi e cosa';
+
+  @override
+  String get wizard_participants_and_categories_description =>
+      'Definisci chi partecipa e su cosa si divideranno le spese';
+
+  @override
+  String get wizard_participants_section_title => 'Chi partecipa?';
+
+  @override
+  String get wizard_participants_section_hint =>
+      'Aggiungi amici o coinquilini. Puoi modificarli dopo.';
+
+  @override
+  String get wizard_categories_section_title => 'Cosa si divide?';
+
+  @override
+  String get wizard_categories_section_hint =>
+      'Es. Cibo, Alloggio, Trasporti. Puoi aggiungere o rinominare in seguito.';
+
+  @override
+  String get wizard_step_color_and_final => 'Colore e conferma';
+
+  @override
+  String get wizard_color_and_final_description =>
+      'Scegli un colore per il gruppo e controlla il riepilogo';
+
+  @override
+  String get wizard_preview_title => 'Anteprima gruppo';
+
+  @override
+  String get wizard_success_title => '🎉 Congratulazioni!';
+
+  @override
+  String get wizard_go_to_group => 'Vai al gruppo';
+
+  @override
+  String get create => 'Crea';
+
+  @override
+  String get undo => 'Annulla';
+
+  @override
+  String get weekday_mon => 'Lun';
+
+  @override
+  String get weekday_tue => 'Mar';
+
+  @override
+  String get weekday_wed => 'Mer';
+
+  @override
+  String get weekday_thu => 'Gio';
+
+  @override
+  String get weekday_fri => 'Ven';
+
+  @override
+  String get weekday_sat => 'Sab';
+
+  @override
+  String get weekday_sun => 'Dom';
+
+  @override
+  String get month_january => 'Gennaio';
+
+  @override
+  String get month_february => 'Febbraio';
+
+  @override
+  String get month_march => 'Marzo';
+
+  @override
+  String get month_april => 'Aprile';
+
+  @override
+  String get month_may => 'Maggio';
+
+  @override
+  String get month_june => 'Giugno';
+
+  @override
+  String get month_july => 'Luglio';
+
+  @override
+  String get month_august => 'Agosto';
+
+  @override
+  String get month_september => 'Settembre';
+
+  @override
+  String get month_october => 'Ottobre';
+
+  @override
+  String get month_november => 'Novembre';
+
+  @override
+  String get month_december => 'Dicembre';
+
+  @override
+  String get expenses_map => 'Mappa spese';
+
+  @override
+  String get view_on_map => 'Visualizza su mappa';
+
+  @override
+  String get no_locations_available => 'Nessuna posizione disponibile';
+
+  @override
+  String get no_locations_subtitle =>
+      'Aggiungi posizioni alle spese per vederle sulla mappa';
+
+  @override
+  String expense_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count spese',
+      one: '1 spesa',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String days_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count giorni',
+      one: '1 giorno',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get suggested_duration => 'Durata suggerita';
+
+  @override
+  String get settings_auto_location_section => 'Posizione automatica';
+
+  @override
+  String get settings_auto_location_section_desc =>
+      'Acquisizione automatica della posizione per le spese';
+
+  @override
+  String get settings_auto_location_title => 'Abilita posizione automatica';
+
+  @override
+  String get settings_auto_location_desc =>
+      'Salva automaticamente la posizione quando aggiungi spese';
+
+  @override
+  String get send_reminder => 'Invia promemoria';
+
+  @override
+  String reminder_message_single(
+    Object participantName,
+    String amount,
+    Object creditorName,
+    Object groupName,
+  ) {
+    return 'Ciao $participantName! 👋\n\nVorrei ricordarti che devi $amount a $creditorName per il gruppo \"$groupName\".\n\nGrazie! 😊';
+  }
+
+  @override
+  String reminder_message_multiple(
+    Object participantName,
+    Object groupName,
+    Object debtsList,
+  ) {
+    return 'Ciao $participantName! 👋\n\nVorrei ricordarti i tuoi pagamenti per il gruppo \"$groupName\":\n\n$debtsList\n\nGrazie! 😊';
+  }
+
+  @override
+  String get archived_with_undo => 'Archiviato';
+
+  @override
+  String get unarchived_with_undo => 'Ripristinato';
+
+  @override
+  String get pinned_with_undo => 'Fissato';
+
+  @override
+  String get unpinned_with_undo => 'Rimosso dai fissati';
+
+  @override
+  String get deleted_with_undo => 'Eliminato';
+
+  @override
+  String get settings_dynamic_color => 'Colore dinamico';
+
+  @override
+  String get settings_dynamic_color_desc =>
+      'Usa schema colori di sistema (Android 12+)';
+
+  @override
+  String get check_for_updates => 'Controlla aggiornamenti';
+
+  @override
+  String get check_for_updates_desc =>
+      'Verifica se è disponibile una nuova versione';
+
+  @override
+  String get checking_for_updates => 'Controllo aggiornamenti...';
+
+  @override
+  String get no_update_available => 'Sei aggiornato!';
+
+  @override
+  String get update_available => 'Aggiornamento disponibile';
+
+  @override
+  String update_available_desc(String version) {
+    return 'La versione $version è disponibile';
+  }
+
+  @override
+  String get update_now => 'Aggiorna ora';
+
+  @override
+  String get update_later => 'Dopo';
+
+  @override
+  String get update_downloading => 'Download aggiornamento...';
+
+  @override
+  String get update_installing => 'Installazione aggiornamento...';
+
+  @override
+  String get update_error => 'Aggiornamento fallito';
+
+  @override
+  String get changelog_title => 'Novità';
+
+  @override
+  String get changelog_desc => 'Modifiche e miglioramenti recenti';
 }
