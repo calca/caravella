@@ -118,6 +118,7 @@
   "license_hint": "Este aplicativo é distribuído sob a licença MIT.",
   "license_section": "Licença",
   "new_group": "Novo grupo",
+  "create": "Criar",
   "enter_title": "Digite um nome",
   "select_start": "Selecionar início",
   "start_date_not_selected": "Selecione o início",

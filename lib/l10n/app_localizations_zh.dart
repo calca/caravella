@@ -365,6 +365,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get new_group => '新群组';
 
   @override
+  String get create => '创建';
+
+  @override
   String get group_name => '群组名称';
 
   @override

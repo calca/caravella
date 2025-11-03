@@ -141,6 +141,7 @@
   "license_section": "License",
   "add_trip": "Add group",
   "new_group": "New Group",
+  "create": "Create",
   "group_name": "Name",
   "enter_title": "Enter a name",
   "enter_participant": "Enter at least one participant",

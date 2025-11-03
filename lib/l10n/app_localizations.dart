@@ -782,6 +782,12 @@ abstract class AppLocalizations {
   /// **'New Group'**
   String get new_group;
 
+  /// No description provided for @create.
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get create;
+
   /// No description provided for @group_name.
   ///
   /// In en, this message translates to:

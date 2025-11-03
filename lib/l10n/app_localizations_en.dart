@@ -370,6 +370,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get new_group => 'New Group';
 
   @override
+  String get create => 'Create';
+
+  @override
   String get group_name => 'Name';
 
   @override

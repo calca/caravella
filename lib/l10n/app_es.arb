@@ -126,6 +126,7 @@
   "license_section": "Licencia",
   "add_trip": "Agregar grupo",
   "new_group": "Nuevo Grupo",
+  "create": "Crear",
   "group_name": "Nombre",
   "enter_title": "Introducir un nombre",
   "enter_participant": "Introducir al menos un participante",

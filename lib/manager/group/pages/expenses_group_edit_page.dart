@@ -11,7 +11,6 @@ import '../group_edit_mode.dart';
 import '../widgets/group_title_field.dart';
 import '../widgets/participants_editor.dart';
 import '../widgets/categories_editor.dart';
-import '../widgets/save_button_bar.dart';
 import '../widgets/currency_selector_sheet.dart';
 import '../widgets/background_picker.dart';
 import '../widgets/section_header.dart';
@@ -277,6 +276,52 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
             },
             child: Scaffold(
               appBar: CaravellaAppBar(actions: []),
+              floatingActionButton: widget.mode == GroupEditMode.create
+                  ? FloatingActionButton.extended(
+                      onPressed: () async {
+                        if (!_formKey.currentState!.validate()) return;
+                        if (_dateError != null) return;
+
+                        final controller = context.read<GroupFormController>();
+                        final navigator = Navigator.of(context);
+                        ExpenseGroupNotifier? notifier;
+                        try {
+                          notifier = context.read<ExpenseGroupNotifier>();
+                        } catch (_) {
+                          notifier = null;
+                        }
+                        final scaffoldMessenger = ScaffoldMessenger.maybeOf(
+                          context,
+                        );
+                        final gloc = gen.AppLocalizations.of(context);
+
+                        try {
+                          final saved = await controller.save();
+                          ExpenseGroupStorageV2.forceReload();
+                          try {
+                            notifier?.notifyGroupUpdated(saved.id);
+                          } catch (_) {}
+
+                          if (navigator.canPop()) navigator.pop(saved.id);
+                        } catch (e) {
+                          if (scaffoldMessenger != null) {
+                            AppToast.showFromMessenger(
+                              scaffoldMessenger,
+                              gloc.backup_error,
+                              type: ToastType.error,
+                            );
+                          } else if (context.mounted) {
+                            AppToast.show(
+                              context,
+                              gloc.backup_error,
+                              type: ToastType.error,
+                            );
+                          }
+                        }
+                      },
+                      label: Text(gloc.create),
+                    )
+                  : null,
               body: Stack(
                 children: [
                   Padding(
@@ -551,12 +596,6 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                                 ),
                               ),
                               const SizedBox(height: 12),
-                              if (widget.mode == GroupEditMode.create) ...[
-                                const SaveButtonBar(),
-                                const SizedBox(height: 80),
-                              ] else ...[
-                                const SizedBox(height: 24),
-                              ],
                               const SizedBox(height: 80),
                             ],
                           ),
