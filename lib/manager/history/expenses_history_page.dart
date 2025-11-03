@@ -326,19 +326,15 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
   Widget _buildStatusSegmentedButton(BuildContext context) {
     // Replaced with a TabBar containing two tabs: Active | Archived
     final gloc = gen.AppLocalizations.of(context);
-    final colorScheme = Theme.of(context).colorScheme;
 
     return SizedBox(
       width: double.infinity,
-      child: TabBar(
+      child: CaravellaTabBar(
         controller: _tabController,
         tabs: [
           Tab(text: gloc.status_active),
           Tab(text: gloc.status_archived),
         ],
-        labelColor: colorScheme.onSurface,
-        unselectedLabelColor: colorScheme.outline,
-        indicatorColor: colorScheme.primary,
       ),
     );
   }

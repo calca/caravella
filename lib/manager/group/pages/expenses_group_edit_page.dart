@@ -346,13 +346,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                                     ?.copyWith(fontWeight: FontWeight.w600),
                               ),
                               const SizedBox(height: 12),
-                              TabBar(
-                                labelColor: Theme.of(
-                                  context,
-                                ).colorScheme.primary,
-                                unselectedLabelColor: Theme.of(
-                                  context,
-                                ).colorScheme.onSurfaceVariant,
+                              CaravellaTabBar(
                                 tabs: [
                                   Tab(text: gloc.settings_general),
                                   Tab(text: gloc.settings_tab),
