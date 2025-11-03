@@ -12,6 +12,7 @@ import 'tabs/participants_overview_tab.dart';
 import 'tabs/categories_overview_tab.dart';
 import 'tabs/usecase/settlements_logic.dart';
 import '../../group/widgets/section_header.dart';
+import 'expense_locations_map_page.dart';
 
 /// Overview & statistics page with share (text/image) capability.
 class UnifiedOverviewPage extends StatefulWidget {
@@ -25,6 +26,14 @@ class UnifiedOverviewPage extends StatefulWidget {
 class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
   final GlobalKey _captureKey = GlobalKey();
   bool _sharing = false;
+
+  void _openExpenseLocationsMap() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (ctx) => ExpenseLocationsMapPage(group: widget.trip),
+      ),
+    );
+  }
 
   Future<void> _showShareOptions() async {
     final gloc = gen.AppLocalizations.of(context);
@@ -158,10 +167,33 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
                 title: widget.trip.title,
                 description: gloc.overview,
                 padding: EdgeInsets.zero,
-                trailing: IconButton(
-                  icon: const Icon(Icons.ios_share_rounded),
-                  tooltip: gloc.share_label,
-                  onPressed: _showShareOptions,
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton.filledTonal(
+                      icon: const Icon(Icons.map_outlined),
+                      tooltip: gloc.view_on_map,
+                      onPressed: _openExpenseLocationsMap,
+                      iconSize: 24,
+                      style: IconButton.styleFrom(
+                        backgroundColor: colorScheme.surfaceContainerLowest,
+                        foregroundColor: colorScheme.onSurface,
+                        minimumSize: const Size(48, 48),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    IconButton.filledTonal(
+                      icon: const Icon(Icons.ios_share_rounded),
+                      tooltip: gloc.share_label,
+                      onPressed: _showShareOptions,
+                      iconSize: 24,
+                      style: IconButton.styleFrom(
+                        backgroundColor: colorScheme.surfaceContainerLowest,
+                        foregroundColor: colorScheme.onSurface,
+                        minimumSize: const Size(48, 48),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

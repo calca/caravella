@@ -29,7 +29,6 @@ import '../export/ofx_exporter.dart';
 import '../export/csv_exporter.dart';
 
 import 'unified_overview_page.dart';
-import 'expense_locations_map_page.dart';
 
 class ExpenseGroupDetailPage extends StatefulWidget {
   final ExpenseGroup trip;
@@ -142,15 +141,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     if (_trip == null) return;
     Navigator.of(context).push(
       MaterialPageRoute(builder: (ctx) => UnifiedOverviewPage(trip: _trip!)),
-    );
-  }
-
-  void _openExpenseLocationsMap() {
-    if (_trip == null) return;
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (ctx) => ExpenseLocationsMapPage(group: _trip!),
-      ),
     );
   }
 
@@ -700,7 +690,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                                     onOverview: trip.expenses.isNotEmpty
                                         ? _openUnifiedOverviewPage
                                         : null,
-                                    onMap: _openExpenseLocationsMap,
                                     onOptions: _showOptionsSheet,
                                   ),
                                 ],
