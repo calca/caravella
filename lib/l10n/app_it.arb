@@ -629,12 +629,34 @@
   ,"@wizard_step_user_name": {"description": "Titolo step iniziale del wizard: nome utente"}
   ,"wizard_user_name_welcome": "Ciao! Come ti chiami?"
   ,"@wizard_user_name_welcome": {"description": "Messaggio di benvenuto nello step nome utente"}
-  ,"wizard_user_name_description": "Inserisci il tuo nome per personalizzare l'esperienza"
+  ,"wizard_user_name_description": "Così possiamo mostrarti nei gruppi 😊"
   ,"@wizard_user_name_description": {"description": "Descrizione dello step nome utente"}
   ,"wizard_user_name_local_storage_note": "Il tuo nome verrà salvato solo sul tuo dispositivo e non sarà condiviso"
   ,"@wizard_user_name_local_storage_note": {"description": "Nota sulla privacy per il nome utente"}
-  ,"wizard_user_name_label": "Il tuo nome"
+  ,"wizard_user_name_label": "Il tuo nome (facoltativo)"
   ,"@wizard_user_name_label": {"description": "Etichetta del campo nome utente"}
   ,"wizard_user_name_hint": "es. Mario"
   ,"@wizard_user_name_hint": {"description": "Suggerimento per il campo nome utente"}
+  ,"wizard_step_participants_and_categories": "Chi e cosa"
+  ,"@wizard_step_participants_and_categories": {"description": "Titolo step combinato partecipanti e categorie"}
+  ,"wizard_participants_and_categories_description": "Definisci chi partecipa e su cosa si divideranno le spese"
+  ,"@wizard_participants_and_categories_description": {"description": "Descrizione step combinato partecipanti e categorie"}
+  ,"wizard_participants_section_title": "Chi partecipa?"
+  ,"@wizard_participants_section_title": {"description": "Titolo sezione partecipanti nello step combinato"}
+  ,"wizard_participants_section_hint": "Aggiungi amici o coinquilini. Puoi modificarli dopo."
+  ,"@wizard_participants_section_hint": {"description": "Suggerimento sezione partecipanti"}
+  ,"wizard_categories_section_title": "Cosa si divide?"
+  ,"@wizard_categories_section_title": {"description": "Titolo sezione categorie nello step combinato"}
+  ,"wizard_categories_section_hint": "Es. Cibo, Alloggio, Trasporti. Puoi aggiungere o rinominare in seguito."
+  ,"@wizard_categories_section_hint": {"description": "Suggerimento sezione categorie"}
+  ,"wizard_step_color_and_final": "Colore e conferma"
+  ,"@wizard_step_color_and_final": {"description": "Titolo step finale colore e conferma"}
+  ,"wizard_color_and_final_description": "Scegli un colore per il gruppo e controlla il riepilogo"
+  ,"@wizard_color_and_final_description": {"description": "Descrizione step finale"}
+  ,"wizard_preview_title": "Anteprima gruppo"
+  ,"@wizard_preview_title": {"description": "Titolo sezione anteprima"}
+  ,"wizard_success_title": "🎉 Congratulazioni!"
+  ,"@wizard_success_title": {"description": "Titolo dialogo successo"}
+  ,"wizard_go_to_group": "Vai al gruppo"
+  ,"@wizard_go_to_group": {"description": "Pulsante per andare al gruppo creato"}
 }

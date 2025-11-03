@@ -76,15 +76,11 @@ class WizardStepIndicator extends StatelessWidget {
       case 1:
         return gloc.wizard_step_name;
       case 2:
-        return gloc.wizard_step_participants;
+        return gloc.wizard_step_participants_and_categories;
       case 3:
-        return gloc.wizard_step_categories;
-      case 4:
         return gloc.wizard_step_period;
-      case 5:
-        return gloc.wizard_step_background;
-      case 6:
-        return gloc.wizard_step_congratulations;
+      case 4:
+        return gloc.wizard_step_color_and_final;
       default:
         return '';
     }

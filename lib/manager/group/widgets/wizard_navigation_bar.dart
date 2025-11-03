@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import '../pages/group_creation_wizard_page.dart';
 import '../data/group_form_state.dart';
 import '../group_form_controller.dart';
@@ -61,34 +62,34 @@ class WizardNavigationBar extends StatelessWidget {
                     );
 
                     if (isLastStep) {
-                      // Final congratulations step - no action needed
-                      return const SizedBox.shrink();
-                    }
-
-                    return FilledButton(
-                      onPressed: canProceed
-                          ? () async {
-                              if (wizardState.currentStep ==
-                                  WizardState.totalSteps - 2) {
-                                // This is the background step, next is congratulations
-                                // Save the group and move to congratulations
+                      // Final step - show create button that saves and shows success
+                      return FilledButton.icon(
+                        onPressed: canProceed
+                            ? () async {
                                 final success = await _saveGroup(
                                   context,
                                   controller,
                                 );
-                                if (success) {
-                                  wizardState.nextStep();
+                                if (success && context.mounted) {
+                                  // Show success dialog
+                                  await _showSuccessDialog(context, formState.title);
+                                  if (context.mounted) {
+                                    Navigator.of(context).pop(true);
+                                  }
                                 }
-                              } else {
-                                wizardState.nextStep();
                               }
-                            }
-                          : null,
-                      child: Text(
-                        wizardState.currentStep == WizardState.totalSteps - 2
-                            ? gloc.wizard_finish
-                            : gloc.wizard_next,
-                      ),
+                            : null,
+                        icon: const Icon(Icons.check_circle_outline),
+                        label: Text(gloc.wizard_finish),
+                        style: FilledButton.styleFrom(
+                          minimumSize: const Size.fromHeight(48),
+                        ),
+                      );
+                    }
+
+                    return FilledButton(
+                      onPressed: canProceed ? wizardState.nextStep : null,
+                      child: Text(gloc.wizard_next),
                     );
                   },
                 ),
@@ -101,22 +102,21 @@ class WizardNavigationBar extends StatelessWidget {
   }
 
   bool _isOptionalStep(int step) {
-    // Period (step 4) and background (step 5) are optional
-    return step == 4 || step == 5;
+    // Period (step 3) is optional, step 0 (user name) is also optional
+    return step == 0 || step == 3;
   }
 
   bool _canProceedFromStep(int step, GroupFormState formState) {
     switch (step) {
-      case 0: // User name step (optional but recommended)
+      case 0: // User name step (optional)
         return true;
-      case 1: // Group name step
+      case 1: // Group name step (required)
         return formState.title.trim().isNotEmpty;
-      case 2: // Participants step
-        return formState.participants.isNotEmpty;
-      case 3: // Categories step
-        return formState.categories.isNotEmpty;
-      case 4: // Period step (optional)
-      case 5: // Background step (optional)
+      case 2: // Participants and categories step (both required)
+        return formState.participants.isNotEmpty && formState.categories.isNotEmpty;
+      case 3: // Period step (optional)
+        return true;
+      case 4: // Color and final step (all set, ready to create)
         return true;
       default:
         return true;
@@ -142,5 +142,39 @@ class WizardNavigationBar extends StatelessWidget {
       }
       return false;
     }
+  }
+
+  Future<void> _showSuccessDialog(BuildContext context, String groupName) async {
+    final gloc = gen.AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => Material3Dialog(
+        icon: Container(
+          width: 64,
+          height: 64,
+          decoration: BoxDecoration(
+            color: theme.colorScheme.primaryContainer,
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            Icons.celebration_outlined,
+            size: 32,
+            color: theme.colorScheme.primary,
+          ),
+        ),
+        title: Text(gloc.wizard_success_title),
+        content: Text(gloc.wizard_congratulations_message(groupName)),
+        actions: [
+          Material3DialogActions.primary(
+            ctx,
+            gloc.wizard_go_to_group,
+            onPressed: () => Navigator.of(ctx).pop(),
+          ),
+        ],
+      ),
+    );
   }
 }

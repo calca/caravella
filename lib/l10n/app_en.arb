@@ -642,12 +642,34 @@
   ,"@wizard_step_user_name": {"description": "Title of initial wizard step: user name"}
   ,"wizard_user_name_welcome": "Hi! What's your name?"
   ,"@wizard_user_name_welcome": {"description": "Welcome message in user name step"}
-  ,"wizard_user_name_description": "Enter your name to personalize the experience"
+  ,"wizard_user_name_description": "So we can show you in groups 😊"
   ,"@wizard_user_name_description": {"description": "Description of the user name step"}
   ,"wizard_user_name_local_storage_note": "Your name will be saved only on your device and will not be shared"
   ,"@wizard_user_name_local_storage_note": {"description": "Privacy note for user name"}
-  ,"wizard_user_name_label": "Your name"
+  ,"wizard_user_name_label": "Your name (optional)"
   ,"@wizard_user_name_label": {"description": "Label for user name field"}
   ,"wizard_user_name_hint": "e.g. Mario"
   ,"@wizard_user_name_hint": {"description": "Hint for user name field"}
+  ,"wizard_step_participants_and_categories": "Who and what"
+  ,"@wizard_step_participants_and_categories": {"description": "Title of combined participants and categories step"}
+  ,"wizard_participants_and_categories_description": "Define who participates and what expenses will be shared"
+  ,"@wizard_participants_and_categories_description": {"description": "Description of combined participants and categories step"}
+  ,"wizard_participants_section_title": "Who's participating?"
+  ,"@wizard_participants_section_title": {"description": "Title of participants section in combined step"}
+  ,"wizard_participants_section_hint": "Add friends or roommates. You can modify them later."
+  ,"@wizard_participants_section_hint": {"description": "Hint for participants section"}
+  ,"wizard_categories_section_title": "What will be shared?"
+  ,"@wizard_categories_section_title": {"description": "Title of categories section in combined step"}
+  ,"wizard_categories_section_hint": "E.g. Food, Accommodation, Transportation. You can add or rename later."
+  ,"@wizard_categories_section_hint": {"description": "Hint for categories section"}
+  ,"wizard_step_color_and_final": "Color and confirm"
+  ,"@wizard_step_color_and_final": {"description": "Title of final color and confirm step"}
+  ,"wizard_color_and_final_description": "Choose a color for the group and review the summary"
+  ,"@wizard_color_and_final_description": {"description": "Description of final step"}
+  ,"wizard_preview_title": "Group preview"
+  ,"@wizard_preview_title": {"description": "Title of preview section"}
+  ,"wizard_success_title": "🎉 Congratulations!"
+  ,"@wizard_success_title": {"description": "Title of success dialog"}
+  ,"wizard_go_to_group": "Go to group"
+  ,"@wizard_go_to_group": {"description": "Button to go to created group"}
 }

@@ -77,7 +77,7 @@ class _WizardUserNameStepState extends State<WizardUserNameStep> {
           
           const SizedBox(height: 8),
           
-          // Local storage note
+          // Local storage note with emoji
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -90,10 +90,9 @@ class _WizardUserNameStepState extends State<WizardUserNameStep> {
             ),
             child: Row(
               children: [
-                Icon(
-                  Icons.info_outline,
-                  size: 20,
-                  color: theme.colorScheme.primary,
+                Text(
+                  '😊',
+                  style: const TextStyle(fontSize: 20),
                 ),
                 const SizedBox(width: 12),
                 Expanded(

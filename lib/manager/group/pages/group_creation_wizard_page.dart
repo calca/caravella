@@ -12,11 +12,9 @@ import '../widgets/wizard_step_indicator.dart';
 import '../widgets/wizard_navigation_bar.dart';
 import '../widgets/wizard_steps/wizard_user_name_step.dart';
 import '../widgets/wizard_steps/wizard_name_step.dart';
-import '../widgets/wizard_steps/wizard_participants_step.dart';
-import '../widgets/wizard_steps/wizard_categories_step.dart';
+import '../widgets/wizard_steps/wizard_participants_and_categories_step.dart';
 import '../widgets/wizard_steps/wizard_period_step.dart';
-import '../widgets/wizard_steps/wizard_background_step.dart';
-import '../widgets/wizard_steps/wizard_congratulations_step.dart';
+import '../widgets/wizard_steps/wizard_color_and_final_step.dart';
 
 class GroupCreationWizardPage extends StatelessWidget {
   const GroupCreationWizardPage({super.key});
@@ -49,7 +47,7 @@ class WizardState extends ChangeNotifier {
   PageController get pageController => _pageController;
 
   // Total number of wizard steps
-  static const int totalSteps = 7;
+  static const int totalSteps = 5;
 
   void nextStep() {
     if (_currentStep < totalSteps - 1) {
@@ -202,11 +200,9 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
                     children: const [
                       WizardUserNameStep(),
                       WizardNameStep(),
-                      WizardParticipantsStep(),
-                      WizardCategoriesStep(),
+                      WizardParticipantsAndCategoriesStep(),
                       WizardPeriodStep(),
-                      WizardBackgroundStep(),
-                      WizardCongratulationsStep(),
+                      WizardColorAndFinalStep(),
                     ],
                   );
                 },
