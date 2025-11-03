@@ -1,19 +1,16 @@
+import 'package:caravella_core/caravella_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../../data/model/expense_group.dart';
-import '../../../data/model/expense_details.dart';
+
 import '../widgets/expense_map_detail_sheet.dart';
 
 /// Page that displays expenses with location data on an OpenStreetMap
 class ExpenseLocationsMapPage extends StatefulWidget {
   final ExpenseGroup group;
 
-  const ExpenseLocationsMapPage({
-    super.key,
-    required this.group,
-  });
+  const ExpenseLocationsMapPage({super.key, required this.group});
 
   @override
   State<ExpenseLocationsMapPage> createState() =>
@@ -28,12 +25,24 @@ class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
   void initState() {
     super.initState();
     _loadExpensesWithLocation();
+
+    // Fit bounds after the map is initialized
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final bounds = _calculateBounds();
+      if (bounds != null) {
+        _mapController.fitCamera(
+          CameraFit.bounds(bounds: bounds, padding: const EdgeInsets.all(50)),
+        );
+      }
+    });
   }
 
   void _loadExpensesWithLocation() {
     _expensesWithLocation = widget.group.expenses
-        .where((expense) =>
-            expense.location != null && expense.location!.hasLocation)
+        .where(
+          (expense) =>
+              expense.location != null && expense.location!.hasLocation,
+        )
         .toList();
   }
 
@@ -56,10 +65,7 @@ class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
       if (lng > maxLng) maxLng = lng;
     }
 
-    return LatLngBounds(
-      LatLng(minLat, minLng),
-      LatLng(maxLat, maxLng),
-    );
+    return LatLngBounds(LatLng(minLat, minLng), LatLng(maxLat, maxLng));
   }
 
   /// Group expenses by location (for clustering)
@@ -125,10 +131,7 @@ class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
                     decoration: BoxDecoration(
                       color: colorScheme.primaryContainer,
                       shape: BoxShape.circle,
-                      border: Border.all(
-                        color: colorScheme.surface,
-                        width: 2,
-                      ),
+                      border: Border.all(color: colorScheme.surface, width: 2),
                     ),
                     constraints: const BoxConstraints(
                       minWidth: 24,
@@ -179,17 +182,17 @@ class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
                 Text(
                   gloc.no_locations_available,
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: colorScheme.onSurface,
-                      ),
+                    fontWeight: FontWeight.w600,
+                    color: colorScheme.onSurface,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
                 Text(
                   gloc.no_locations_subtitle,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: colorScheme.onSurface.withValues(alpha: 0.7),
-                      ),
+                    color: colorScheme.onSurface.withValues(alpha: 0.7),
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -209,12 +212,15 @@ class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
       body: FlutterMap(
         mapController: _mapController,
         options: MapOptions(
-          initialBounds: bounds,
+          initialCenter: bounds != null
+              ? LatLng(
+                  (bounds.northWest.latitude + bounds.southEast.latitude) / 2,
+                  (bounds.northWest.longitude + bounds.southEast.longitude) / 2,
+                )
+              : const LatLng(0, 0),
+          initialZoom: 2,
           minZoom: 2,
           maxZoom: 18,
-          boundsOptions: const FitBoundsOptions(
-            padding: EdgeInsets.all(50),
-          ),
         ),
         children: [
           TileLayer(
@@ -222,9 +228,7 @@ class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
             userAgentPackageName: 'io.caravella.egm',
             maxZoom: 19,
           ),
-          MarkerLayer(
-            markers: _buildMarkers(),
-          ),
+          MarkerLayer(markers: _buildMarkers()),
         ],
       ),
     );

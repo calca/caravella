@@ -1712,6 +1712,29 @@ class AppLocalizationsZh extends AppLocalizations {
   String get debt_prefix_to => '给 ';
 
   @override
+  String get view_on_map => '在地图上查看';
+
+  @override
+  String get expenses_map => '支出地图';
+
+  @override
+  String get no_locations_available => '没有可用的位置';
+
+  @override
+  String get no_locations_subtitle => '在支出中添加位置数据以在地图上查看它们';
+
+  @override
+  String expense_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 笔支出',
+      one: '1 笔支出',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get check_for_updates => '检查更新';
 
   @override

@@ -1745,6 +1745,30 @@ class AppLocalizationsEs extends AppLocalizations {
   String get debt_prefix_to => 'a ';
 
   @override
+  String get view_on_map => 'Ver en el mapa';
+
+  @override
+  String get expenses_map => 'Mapa de Gastos';
+
+  @override
+  String get no_locations_available => 'No hay ubicaciones disponibles';
+
+  @override
+  String get no_locations_subtitle =>
+      'Agrega datos de ubicación a tus gastos para verlos en el mapa';
+
+  @override
+  String expense_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count gastos',
+      one: '1 gasto',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get check_for_updates => 'Buscar actualizaciones';
 
   @override
