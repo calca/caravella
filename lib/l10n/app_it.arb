@@ -241,6 +241,8 @@
   "select_expense_date_short": "Seleziona data",
   "date": "Data",
   "edit_group": "Modifica gruppo",
+  "edit_group_desc": "Modifica impostazioni, partecipanti e categorie del gruppo",
+  "new_group_desc": "Crea un nuovo gruppo spese con impostazioni personalizzate",
   "delete_group": "Elimina gruppo",
   "delete_group_confirm": "Sei sicuro di voler eliminare questo gruppo di spese? Questa azione non può essere annullata.",
   "add_expense_fab": "Aggiungi Spesa",

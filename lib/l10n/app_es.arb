@@ -232,6 +232,8 @@
   "select_expense_date_short": "Seleccionar fecha",
   "date": "Fecha",
   "edit_group": "Editar Grupo",
+  "edit_group_desc": "Modifica la configuración, participantes y categorías del grupo",
+  "new_group_desc": "Crea un nuevo grupo de gastos con configuración personalizada",
   "delete_group": "Eliminar grupo",
   "delete_group_confirm": "¿Estás seguro de que quieres eliminar este grupo de gastos? Esta acción no se puede deshacer.",
   "add_expense_fab": "Agregar Gasto",

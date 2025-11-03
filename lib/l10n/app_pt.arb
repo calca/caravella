@@ -248,6 +248,8 @@
   "no_expenses_to_analyze": "Nenhuma despesa para analisar",
   "select_expense_date_short": "Selecionar data",
   "edit_group": "Editar grupo",
+  "edit_group_desc": "Modificar configurações, participantes e categorias do grupo",
+  "new_group_desc": "Criar um novo grupo de despesas com configurações personalizadas",
   "delete_group_confirm": "Tem certeza de que deseja excluir este grupo de despesas? Esta ação não pode ser desfeita.",
   "pin_group": "Fixar grupo",
   "pin": "Fixar",

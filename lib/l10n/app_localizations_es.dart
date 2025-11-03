@@ -677,6 +677,14 @@ class AppLocalizationsEs extends AppLocalizations {
   String get edit_group => 'Editar Grupo';
 
   @override
+  String get edit_group_desc =>
+      'Modifica la configuración, participantes y categorías del grupo';
+
+  @override
+  String get new_group_desc =>
+      'Crea un nuevo grupo de gastos con configuración personalizada';
+
+  @override
   String get delete_group => 'Eliminar grupo';
 
   @override

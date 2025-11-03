@@ -335,14 +335,13 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                widget.mode == GroupEditMode.edit
+                              SectionHeader(
+                                title: widget.mode == GroupEditMode.edit
                                     ? gloc.edit_group
                                     : gloc.new_group,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headlineMedium
-                                    ?.copyWith(fontWeight: FontWeight.w600),
+                                description: widget.mode == GroupEditMode.edit
+                                    ? gloc.edit_group_desc
+                                    : gloc.new_group_desc,
                               ),
                               const SizedBox(height: 12),
                               CaravellaTabBar(

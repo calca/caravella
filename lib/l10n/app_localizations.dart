@@ -1370,6 +1370,18 @@ abstract class AppLocalizations {
   /// **'Edit Group'**
   String get edit_group;
 
+  /// No description provided for @edit_group_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Modify group settings, participants, and categories'**
+  String get edit_group_desc;
+
+  /// No description provided for @new_group_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a new expense group with custom settings'**
+  String get new_group_desc;
+
   /// No description provided for @delete_group.
   ///
   /// In en, this message translates to:
