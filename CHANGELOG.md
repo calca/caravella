@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Media attachments support for expenses with image, PDF, and video file types (max 5 per expense)
 - Attachment picker with camera, gallery, and file selection options
 - Full-screen attachment viewer with swipe navigation, delete and share actions
+- PDF preview with full document rendering and scrolling support
+- Video playback with player controls (play, pause, seek, volume)
 - Horizontal thumbnail gallery for viewing and managing expense attachments
 - Image compression for attachments (max 1920px, 85% quality JPEG) to optimize storage
 - Automatic file cleanup when deleting expenses or expense groups
