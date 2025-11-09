@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Media attachments support for expenses with image, PDF, and video file types (max 5 per expense)
+- Attachment picker with camera, gallery, and file selection options
+- Full-screen attachment viewer with swipe navigation, delete and share actions
+- Horizontal thumbnail gallery for viewing and managing expense attachments
 - OpenStreetMap integration for visualizing expense locations on an interactive map
 - Map view button in expense group overview to display all expenses with locations on a map
 - Auto-location toggle setting for automatic GPS retrieval when adding new expenses
