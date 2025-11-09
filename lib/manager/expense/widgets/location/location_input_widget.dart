@@ -125,6 +125,65 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
     widget.onLocationChanged(null);
   }
 
+  Future<void> _showPlaceSearch() async {
+    final gloc = gen.AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+
+    // Show a dialog with the place search field
+    final result = await showDialog<Prediction>(
+      context: context,
+      builder: (ctx) => _PlaceSearchDialog(
+        hintText: gloc.search_place_hint,
+      ),
+    );
+
+    if (result != null && mounted) {
+      setState(() {
+        _isResolvingAddress = true;
+      });
+
+      try {
+        // Get place details by geocoding the description
+        final locations = await geocoding.locationFromAddress(result.description ?? '');
+        
+        if (locations.isNotEmpty && mounted) {
+          final location = ExpenseLocation(
+            latitude: locations.first.latitude,
+            longitude: locations.first.longitude,
+            address: result.description,
+          );
+
+          setState(() {
+            _currentLocation = location;
+            _controller.text = location.displayText;
+            _isResolvingAddress = false;
+          });
+
+          widget.onLocationChanged(location);
+
+          if (mounted) {
+            AppToast.showFromMessenger(
+              messenger,
+              gloc.address_resolved,
+              duration: const Duration(seconds: 2),
+            );
+          }
+        }
+      } catch (e) {
+        if (mounted) {
+          setState(() {
+            _isResolvingAddress = false;
+          });
+          AppToast.showFromMessenger(
+            messenger,
+            gloc.location_error,
+            type: ToastType.error,
+          );
+        }
+      }
+    }
+  }
+
   void _onTextChanged(String value) {
     final trimmed = value.trim();
     if (trimmed.isEmpty) {
@@ -264,5 +323,96 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
     ];
 
     return Row(mainAxisSize: MainAxisSize.min, children: actions);
+  }
+}
+
+/// Dialog for searching places using Google Places autocomplete
+class _PlaceSearchDialog extends StatefulWidget {
+  final String hintText;
+
+  const _PlaceSearchDialog({required this.hintText});
+
+  @override
+  State<_PlaceSearchDialog> createState() => _PlaceSearchDialogState();
+}
+
+class _PlaceSearchDialogState extends State<_PlaceSearchDialog> {
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Dialog(
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        constraints: const BoxConstraints(maxHeight: 500, maxWidth: 500),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    widget.hintText,
+                    style: theme.textTheme.titleLarge,
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: GooglePlaceAutoCompleteTextField(
+                textEditingController: _searchController,
+                googleAPIKey: const String.fromEnvironment(
+                  'GOOGLE_PLACES_API_KEY',
+                  defaultValue: '',
+                ),
+                inputDecoration: InputDecoration(
+                  hintText: widget.hintText,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  prefixIcon: const Icon(Icons.search),
+                ),
+                debounceTime: 600,
+                countries: const [], // Search all countries
+                isLatLngRequired: false,
+                getPlaceDetailWithLatLng: (prediction) {
+                  Navigator.of(context).pop(prediction);
+                },
+                itemClick: (prediction) {
+                  _searchController.text = prediction.description ?? '';
+                  Navigator.of(context).pop(prediction);
+                },
+                itemBuilder: (context, index, prediction) {
+                  return ListTile(
+                    leading: Icon(
+                      Icons.place,
+                      color: colorScheme.primary,
+                    ),
+                    title: Text(prediction.description ?? ''),
+                  );
+                },
+                seperatedBuilder: const Divider(),
+                isCrossBtnShown: true,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

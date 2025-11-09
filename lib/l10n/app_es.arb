@@ -292,6 +292,8 @@
   "location_error": "Error obteniendo ubicación",
   "resolving_address": "Resolviendo dirección…",
   "address_resolved": "Dirección resuelta",
+  "search_place": "Buscar lugar",
+  "search_place_hint": "Buscar un lugar o dirección",
   "settings_general": "General",
   "settings_general_desc": "Configuración de idioma y apariencia",
   "settings_auto_location_section": "Detección de ubicación",
