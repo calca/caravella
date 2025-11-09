@@ -82,8 +82,10 @@ class AttachmentInputWidget extends StatelessWidget {
     final loc = gen.AppLocalizations.of(context);
     
     if (attachments.length >= 5) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(loc.attachment_limit_reached)),
+      AppToast.show(
+        context,
+        loc.attachment_limit_reached,
+        type: ToastType.error,
       );
       return;
     }
@@ -125,10 +127,42 @@ class AttachmentInputWidget extends StatelessWidget {
 
       switch (source) {
         case _AttachmentSource.camera:
-          final picker = ImagePicker();
-          final XFile? photo = await picker.pickImage(source: ImageSource.camera);
-          if (photo != null) {
-            filePath = await _saveAttachment(photo.path);
+          // Show dialog to choose between photo and video
+          final mediaType = await showDialog<_CameraMediaType>(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: Text(gen.AppLocalizations.of(context).attachment_source),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.photo_camera),
+                    title: const Text('Photo'),
+                    onTap: () => Navigator.of(ctx).pop(_CameraMediaType.photo),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.videocam),
+                    title: const Text('Video'),
+                    onTap: () => Navigator.of(ctx).pop(_CameraMediaType.video),
+                  ),
+                ],
+              ),
+            ),
+          );
+          
+          if (mediaType != null && context.mounted) {
+            final picker = ImagePicker();
+            XFile? file;
+            
+            if (mediaType == _CameraMediaType.photo) {
+              file = await picker.pickImage(source: ImageSource.camera);
+            } else {
+              file = await picker.pickVideo(source: ImageSource.camera);
+            }
+            
+            if (file != null) {
+              filePath = await _saveAttachment(file.path);
+            }
           }
           break;
         case _AttachmentSource.gallery:
@@ -154,8 +188,10 @@ class AttachmentInputWidget extends StatelessWidget {
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
+        AppToast.show(
+          context,
+          'Error: $e',
+          type: ToastType.error,
         );
       }
     }
@@ -213,6 +249,11 @@ enum _AttachmentSource {
   camera,
   gallery,
   files,
+}
+
+enum _CameraMediaType {
+  photo,
+  video,
 }
 
 class _AttachmentThumbnail extends StatelessWidget {
