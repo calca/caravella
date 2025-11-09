@@ -64,6 +64,7 @@ class _ExpenseEntrySheetState extends State<ExpenseEntrySheet> {
           shouldAutoClose: false,
           fullEdit: widget.fullEdit,
           groupTitle: widget.group.title,
+          groupId: widget.group.id,
           currency: widget.group.currency,
           autoLocationEnabled: widget.group.autoLocationEnabled,
           onExpenseAdded: widget.onExpenseSaved,

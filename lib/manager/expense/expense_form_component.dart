@@ -1,5 +1,6 @@
 library;
 
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
@@ -29,6 +30,7 @@ class ExpenseFormComponent extends StatefulWidget {
   final DateTime? tripEndDate;
   final String? newlyAddedCategory; // Nuova proprietà
   final String? groupTitle; // Titolo del gruppo per la riga azioni
+  final String groupId; // ID del gruppo per organizzare gli allegati
   final String? currency; // Currency del gruppo
   final bool autoLocationEnabled; // Impostazione per auto-recupero posizione
   final ScrollController?
@@ -47,6 +49,7 @@ class ExpenseFormComponent extends StatefulWidget {
     this.tripEndDate,
     this.newlyAddedCategory, // Nuova proprietà
     this.groupTitle,
+    required this.groupId,
     this.currency,
     required this.autoLocationEnabled,
     this.fullEdit = false,
@@ -775,6 +778,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         ),
         _spacer(),
         AttachmentInputWidget(
+          groupId: widget.groupId,
           attachments: _attachments,
           onAttachmentAdded: (path) {
             setState(() {
@@ -786,6 +790,13 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
           },
           onAttachmentRemoved: (index) {
             setState(() {
+              // Delete the file from storage
+              final filePath = _attachments[index];
+              try {
+                File(filePath).deleteSync();
+              } catch (e) {
+                // File might not exist, ignore error
+              }
               _attachments.removeAt(index);
               if (!_initializing) {
                 _isDirty = true;
@@ -800,6 +811,13 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
                   initialIndex: _attachments.indexOf(path),
                   onDelete: (index) {
                     setState(() {
+                      // Delete the file from storage
+                      final filePath = _attachments[index];
+                      try {
+                        File(filePath).deleteSync();
+                      } catch (e) {
+                        // File might not exist, ignore error
+                      }
                       _attachments.removeAt(index);
                       if (!_initializing) {
                         _isDirty = true;

@@ -6,8 +6,10 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
+import 'package:image/image.dart' as img;
 
 class AttachmentInputWidget extends StatelessWidget {
+  final String groupId;
   final List<String> attachments;
   final Function(String) onAttachmentAdded;
   final Function(int) onAttachmentRemoved;
@@ -15,6 +17,7 @@ class AttachmentInputWidget extends StatelessWidget {
 
   const AttachmentInputWidget({
     super.key,
+    required this.groupId,
     required this.attachments,
     required this.onAttachmentAdded,
     required this.onAttachmentRemoved,
@@ -160,7 +163,7 @@ class AttachmentInputWidget extends StatelessWidget {
 
   Future<String> _saveAttachment(String sourcePath) async {
     final directory = await getApplicationDocumentsDirectory();
-    final attachmentsDir = Directory('${directory.path}/attachments');
+    final attachmentsDir = Directory('${directory.path}/attachments/$groupId');
     
     if (!await attachmentsDir.exists()) {
       await attachmentsDir.create(recursive: true);
@@ -168,13 +171,44 @@ class AttachmentInputWidget extends StatelessWidget {
 
     final fileName = '${DateTime.now().millisecondsSinceEpoch}_${path.basename(sourcePath)}';
     final targetPath = '${attachmentsDir.path}/$fileName';
+    final extension = path.extension(sourcePath).toLowerCase();
     
+    // Compress images to reduce storage
+    if (['.jpg', '.jpeg', '.png'].contains(extension)) {
+      try {
+        final sourceFile = File(sourcePath);
+        final imageBytes = await sourceFile.readAsBytes();
+        final image = img.decodeImage(imageBytes);
+        
+        if (image != null) {
+          // Resize if too large (max 1920px on longest side)
+          final resized = image.width > 1920 || image.height > 1920
+              ? img.copyResize(
+                  image,
+                  width: image.width > image.height ? 1920 : null,
+                  height: image.height > image.width ? 1920 : null,
+                )
+              : image;
+          
+          // Compress as JPEG with 85% quality
+          final compressed = img.encodeJpg(resized, quality: 85);
+          await File(targetPath).writeAsBytes(compressed);
+          
+          return targetPath;
+        }
+      } catch (e) {
+        // If compression fails, fall back to simple copy
+        await File(sourcePath).copy(targetPath);
+        return targetPath;
+      }
+    }
+    
+    // For non-images (PDF, video), just copy
     await File(sourcePath).copy(targetPath);
     
     return targetPath;
   }
 }
-
 enum _AttachmentSource {
   camera,
   gallery,

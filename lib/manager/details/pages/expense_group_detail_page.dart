@@ -412,6 +412,15 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       builder: (context) => DeleteExpenseDialog(
         expense: expense,
         onDelete: () async {
+          // Delete attachment files
+          for (final attachmentPath in expense.attachments) {
+            try {
+              await File(attachmentPath).delete();
+            } catch (e) {
+              // File might not exist, ignore error
+            }
+          }
+          
           // Rimuovi la spesa
           setState(() {
             _trip!.expenses.removeWhere((e) => e.id == expense.id);

@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Attachment picker with camera, gallery, and file selection options
 - Full-screen attachment viewer with swipe navigation, delete and share actions
 - Horizontal thumbnail gallery for viewing and managing expense attachments
+- Image compression for attachments (max 1920px, 85% quality JPEG) to optimize storage
+- Automatic file cleanup when deleting expenses or expense groups
+- Organized attachment storage by expense group ID for better file management
 - OpenStreetMap integration for visualizing expense locations on an interactive map
 - Map view button in expense group overview to display all expenses with locations on a map
 - Auto-location toggle setting for automatic GPS retrieval when adding new expenses
