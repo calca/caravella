@@ -308,6 +308,8 @@
   "location_error": "Error getting location",
   "resolving_address": "Resolving address…",
   "address_resolved": "Address resolved",
+  "search_place": "Search place",
+  "search_place_hint": "Search for a place or address",
   "settings_general": "General",
   "settings_general_desc": "Language and appearance settings",
   "settings_auto_location_section": "Location Detection",

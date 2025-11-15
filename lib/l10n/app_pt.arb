@@ -287,6 +287,8 @@
   "location_error": "Erro ao obter localização",
   "resolving_address": "Resolvendo endereço…",
   "address_resolved": "Endereço resolvido",
+  "search_place": "Procurar lugar",
+  "search_place_hint": "Procurar um lugar ou endereço",
   "settings_general": "Geral",
   "settings_general_desc": "Idioma e aparência",
   "settings_auto_location_section": "Detecção de localização",
