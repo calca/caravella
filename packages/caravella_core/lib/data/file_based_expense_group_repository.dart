@@ -456,6 +456,18 @@ class FileBasedExpenseGroupRepository
       );
     }
 
+    // Delete all attachment files for this group
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final groupAttachmentsDir = Directory('${directory.path}/attachments/$groupId');
+      if (await groupAttachmentsDir.exists()) {
+        await groupAttachmentsDir.delete(recursive: true);
+      }
+    } catch (e) {
+      // Log error but continue with deletion
+      // Attachments cleanup failure shouldn't prevent group deletion
+    }
+
     groups.removeAt(index);
     return await _saveGroups(groups);
   }

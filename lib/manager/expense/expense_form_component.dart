@@ -1,5 +1,6 @@
 library;
 
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
@@ -12,6 +13,8 @@ import 'expense_form/note_input_widget.dart';
 import 'expense_form/location_input_widget.dart';
 import 'expense_form/expense_form_actions_widget.dart';
 import 'expense_form/category_dialog.dart';
+import 'expense_form/attachment_input_widget.dart';
+import 'widgets/attachment_viewer_page.dart';
 
 class ExpenseFormComponent extends StatefulWidget {
   // When true shows date, location and note fields (full edit mode). In edit mode (initialExpense != null) these are always shown.
@@ -27,6 +30,7 @@ class ExpenseFormComponent extends StatefulWidget {
   final DateTime? tripEndDate;
   final String? newlyAddedCategory; // Nuova proprietà
   final String? groupTitle; // Titolo del gruppo per la riga azioni
+  final String groupId; // ID del gruppo per organizzare gli allegati
   final String? currency; // Currency del gruppo
   final bool autoLocationEnabled; // Impostazione per auto-recupero posizione
   final ScrollController?
@@ -45,6 +49,7 @@ class ExpenseFormComponent extends StatefulWidget {
     this.tripEndDate,
     this.newlyAddedCategory, // Nuova proprietà
     this.groupTitle,
+    required this.groupId,
     this.currency,
     required this.autoLocationEnabled,
     this.fullEdit = false,
@@ -73,6 +78,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
   bool _isDirty = false; // traccia modifiche non salvate
   bool _initializing = true; // traccia se siamo in fase di inizializzazione
   double _lastKeyboardHeight = 0; // Track keyboard height changes
+  List<String> _attachments = []; // Lista degli allegati
 
   // Keys for scrolling calculations
   final GlobalKey _amountFieldKey = GlobalKey();
@@ -221,6 +227,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
       _paidBy = widget.initialExpense!.paidBy;
       _date = widget.initialExpense!.date;
       _location = widget.initialExpense!.location;
+      _attachments = List.from(widget.initialExpense!.attachments);
       _nameController.text = widget.initialExpense!.name ?? '';
       // Se amount è null o 0, lascia il campo vuoto
       _amountController.text = (widget.initialExpense!.amount == 0)
@@ -231,6 +238,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
       _date = DateTime.now();
       _nameController.text = '';
       _location = null;
+      _attachments = [];
       // Preseleziona il primo elemento di paidBy e category se disponibili
       _paidBy = widget.participants.isNotEmpty
           ? widget.participants.first
@@ -387,6 +395,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     if (!_isFormValid()) return;
     final nameValue = _nameController.text.trim();
     final expense = ExpenseDetails(
+      id: widget.initialExpense?.id,
       amount: _amount ?? _parseLocalizedAmount(_amountController.text) ?? 0,
       paidBy: _paidBy ?? ExpenseParticipant(name: ''),
       category:
@@ -400,6 +409,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
           : null,
       name: nameValue,
       location: _location,
+      attachments: _attachments,
     );
     widget.onExpenseAdded(expense);
     _isDirty = false;
@@ -765,6 +775,59 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
             textStyle: style,
             focusNode: _noteFocus,
           ),
+        ),
+        _spacer(),
+        AttachmentInputWidget(
+          groupId: widget.groupId,
+          attachments: _attachments,
+          onAttachmentAdded: (path) {
+            setState(() {
+              _attachments.add(path);
+              if (!_initializing) {
+                _isDirty = true;
+              }
+            });
+          },
+          onAttachmentRemoved: (index) {
+            setState(() {
+              // Delete the file from storage
+              final filePath = _attachments[index];
+              try {
+                File(filePath).deleteSync();
+              } catch (e) {
+                // File might not exist, ignore error
+              }
+              _attachments.removeAt(index);
+              if (!_initializing) {
+                _isDirty = true;
+              }
+            });
+          },
+          onAttachmentTapped: (path) {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => AttachmentViewerPage(
+                  attachments: _attachments,
+                  initialIndex: _attachments.indexOf(path),
+                  onDelete: (index) {
+                    setState(() {
+                      // Delete the file from storage
+                      final filePath = _attachments[index];
+                      try {
+                        File(filePath).deleteSync();
+                      } catch (e) {
+                        // File might not exist, ignore error
+                      }
+                      _attachments.removeAt(index);
+                      if (!_initializing) {
+                        _isDirty = true;
+                      }
+                    });
+                  },
+                ),
+              ),
+            );
+          },
         ),
       ],
     );

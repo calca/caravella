@@ -662,4 +662,22 @@
   ,"unarchive_confirm": "Deseja desarquivar"
   ,"unpin_group": "Desafixar grupo"
   ,"weekly_expenses_chart": "Despesas semanais"
+  ,"attachments": "Anexos"
+  ,"@attachments": {"description": "Etiqueta para anexos de despesas"}
+  ,"add_attachment": "Adicionar anexo"
+  ,"@add_attachment": {"description": "Botão para adicionar um anexo"}
+  ,"attachment_limit_reached": "Limite máximo de 5 anexos atingido"
+  ,"@attachment_limit_reached": {"description": "Mensagem de erro ao tentar adicionar mais de 5 anexos"}
+  ,"delete_attachment": "Excluir anexo"
+  ,"@delete_attachment": {"description": "Ação para excluir um anexo"}
+  ,"share_attachment": "Compartilhar anexo"
+  ,"@share_attachment": {"description": "Ação para compartilhar um anexo"}
+  ,"delete_attachment_confirm_title": "Excluir anexo"
+  ,"@delete_attachment_confirm_title": {"description": "Título do diálogo de confirmação de exclusão de anexo"}
+  ,"delete_attachment_confirm_message": "Tem certeza de que deseja excluir este anexo?"
+  ,"@delete_attachment_confirm_message": {"description": "Mensagem do diálogo de confirmação de exclusão de anexo"}
+  ,"attachment_source": "Escolher fonte"
+  ,"@attachment_source": {"description": "Título para escolher a fonte do anexo"}
+  ,"from_files": "Dos arquivos"
+  ,"@from_files": {"description": "Opção para escolher dos arquivos"}
 }
