@@ -47,8 +47,20 @@ class GroupCard extends StatelessWidget {
         selectionProgress * 0.3, // 30% di intensità massima
       );
     } else if (group.color != null) {
-      // No image but color is set, use group color with selection overlay
-      final groupColor = Color(group.color!);
+      // No image but color is set, resolve from palette or use legacy color
+      Color groupColor;
+      if (ExpenseGroupColorPalette.isLegacyColorValue(group.color)) {
+        // Legacy ARGB value - use as-is
+        groupColor = Color(group.color!);
+      } else {
+        // New palette index - resolve to theme-aware color
+        groupColor =
+            ExpenseGroupColorPalette.resolveColor(
+              group.color,
+              theme.colorScheme,
+            ) ??
+            theme.colorScheme.primary;
+      }
       backgroundColor = Color.lerp(
         groupColor,
         selectedColor,

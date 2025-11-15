@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Theme-aware color palette for expense groups that adapts colors based on light/dark mode
 - OpenStreetMap integration for visualizing expense locations on an interactive map
 - Map view button in expense group overview to display all expenses with locations on a map
 - Auto-location toggle setting for automatic GPS retrieval when adding new expenses
@@ -29,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Build variant support for Play Store and F-Droid distributions using factory pattern
 
 ### Changed
+- Expense group colors now use palette indices for consistent appearance across light and dark themes
 - Restructured project into multi-package architecture with core, core-ui, and app separation for improved maintainability
 - Enhanced skeleton loader with smooth scale and fade-in animations for more polished loading experience
 - Improved new group creation flow with immediate skeleton display and automatic navigation to newly created group
