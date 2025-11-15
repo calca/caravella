@@ -21,29 +21,7 @@
   "settings_privacy": "Privacy",
   "select_currency": "Seleziona valuta",
   "select_period_hint_short": "Imposta date",
-  "select_period_hint": "Seleziona le date",
-  "suggested_duration": "Durata suggerita",
-  "days_count": "{count} giorni",
-  "@days_count": {"description": "Numero di giorni", "placeholders": {"count": {"type": "int"}}},
-  "weekday_mon": "L",
-  "weekday_tue": "M",
-  "weekday_wed": "M",
-  "weekday_thu": "G",
-  "weekday_fri": "V",
-  "weekday_sat": "S",
-  "weekday_sun": "D",
-  "month_january": "Gennaio",
-  "month_february": "Febbraio",
-  "month_march": "Marzo",
-  "month_april": "Aprile",
-  "month_may": "Maggio",
-  "month_june": "Giugno",
-  "month_july": "Luglio",
-  "month_august": "Agosto",
-  "month_september": "Settembre",
-  "month_october": "Ottobre",
-  "month_november": "Novembre",
-  "month_december": "Dicembre",
+  "select_period_hint": "Seleziona un intervallo di date",
   "in_group_prefix": "in",
   "save_change_expense": "Salva modifiche",
   "group_total": "Totale",
@@ -86,19 +64,6 @@
   "participants_description": "Persone che condividono spese",
   "categories_description": "Organizza spese per tipo",
   "dates_description": "Date inizio/fine opzionali",
-  "select_period": "Seleziona periodo",
-  "select_period_dates": "Seleziona le date del periodo",
-  "suggested_duration": "Durata suggerita",
-  "duration_days": "{days} giorni",
-  "@duration_days": {"description": "Etichetta per durata in giorni", "placeholders": {"days": {"type": "int"}}},
-  "period_from_to": "Dal {start} al {end} ({days} giorni)",
-  "@period_from_to": {"description": "Periodo formattato", "placeholders": {"start": {"type": "String"}, "end": {"type": "String"}, "days": {"type": "int"}}},
-  "period_from_select_end": "Dal {start} - Seleziona fine",
-  "@period_from_select_end": {"description": "Periodo con solo data inizio", "placeholders": {"start": {"type": "String"}}},
-  "period_to_select_start": "Al {end} - Seleziona inizio",
-  "@period_to_select_start": {"description": "Periodo con solo data fine", "placeholders": {"end": {"type": "String"}}},
-  "confirm": "Conferma",
-  "clear": "Cancella",
   "currency_description": "Valuta base del gruppo",
   "background_color_selected": "Colore selezionato",
   "background_tap_to_replace": "Tocca per sostituire",
@@ -124,7 +89,6 @@
   "license_section": "Licenza",
   "add_trip": "Aggiungi un gruppo",
   "new_group": "Nuovo Gruppo",
-  "create": "Crea",
   "group_name": "Nome",
   "enter_title": "Inserisci un nome",
   "enter_participant": "Inserisci almeno un partecipante",
@@ -219,15 +183,6 @@
   "archived": "Archiviato",
   "archive": "Archivia",
   "unarchive": "Disarchivia",
-  "pin": "Fissa",
-  "unpin": "Rimuovi fissaggio",
-  "delete": "Elimina",
-  "undo": "ANNULLA",
-  "archived_with_undo": "Archiviato",
-  "unarchived_with_undo": "Disarchiviato",
-  "pinned_with_undo": "Fissato",
-  "unpinned_with_undo": "Fissaggio rimosso",
-  "deleted_with_undo": "Eliminato",
   "archive_confirm": "Vuoi archiviare",
   "unarchive_confirm": "Vuoi disarchiviare",
   "overview": "Panoramica",
@@ -295,10 +250,6 @@
   "address_resolved": "Indirizzo trovato",
   "settings_general": "Generali",
   "settings_general_desc": "Impostazioni lingua e aspetto",
-  "settings_auto_location_section": "Rilevamento posizione",
-  "settings_auto_location_section_desc": "Configura il rilevamento automatico della posizione",
-  "settings_auto_location_title": "Attiva per rilevare",
-  "settings_auto_location_desc": "Rileva GPS quando aggiungi una spesa",
   "settings_language": "Lingua",
   "settings_language_desc": "Scegli la lingua preferita",
   "settings_language_it": "Italiano",
@@ -310,8 +261,6 @@
   "settings_theme": "Tema",
   "settings_theme_desc": "Chiaro, scuro o sistema",
   "settings_select_theme": "Seleziona tema",
-  "settings_dynamic_color": "Colore dinamico",
-  "settings_dynamic_color_desc": "Usa i colori dello sfondo",
   "settings_privacy": "Privacy",
   "settings_privacy_desc": "Opzioni sicurezza e privacy",
   "settings_data": "Dati",
@@ -628,14 +577,6 @@
   ,"@whats_new_title": {"description": "Titolo della pagina che mostra il changelog"}
   ,"whats_new_desc": "Scopri le ultime novità e aggiornamenti"
   ,"@whats_new_desc": {"description": "Sottotitolo della pagina novità"}
-  ,"whats_new_subtitle": "Ultimi Aggiornamenti"
-  ,"@whats_new_subtitle": {"description": "Sottotitolo nella card header della pagina novità"}
-  ,"whats_new_latest": "Resta aggiornato con i miglioramenti più recenti"
-  ,"@whats_new_latest": {"description": "Testo di supporto che spiega che la lista contiene gli ultimi aggiornamenti"}
-  ,"changelog_title": "Cronologia versioni"
-  ,"@changelog_title": {"description": "Titolo della sezione changelog"}
-  ,"changelog_desc": "Storico delle versioni e miglioramenti"
-  ,"@changelog_desc": {"description": "Descrizione della sezione changelog"}
   ,"average_per_person": "Speso medio per persona"
   ,"@average_per_person": {"description": "Etichetta mostrata prima della media spesa per persona nella tab Partecipanti"}
   ,"more": "altro"
@@ -644,44 +585,138 @@
   ,"@less": {"description": "Etichetta inline per comprimere e mostrare meno elementi"}
   ,"debt_prefix_to": "a "
   ,"@debt_prefix_to": {"description": "Prefisso breve mostrato prima del destinatario nella riga di debito/pareggio (es. 'a Alice 10€')"}
-  ,"check_for_updates": "Controlla aggiornamenti"
-  ,"@check_for_updates": {"description": "Etichetta per controllare aggiornamenti da Google Play Store"}
-  ,"check_for_updates_desc": "Verifica disponibilità nuova versione"
-  ,"@check_for_updates_desc": {"description": "Descrizione per controllo aggiornamenti"}
-  ,"update_available": "Aggiornamento disponibile"
-  ,"@update_available": {"description": "Titolo quando è disponibile un aggiornamento"}
-  ,"update_available_desc": "È disponibile una nuova versione dell'app"
-  ,"@update_available_desc": {"description": "Descrizione quando è disponibile un aggiornamento"}
-  ,"no_update_available": "App aggiornata"
-  ,"@no_update_available": {"description": "Messaggio quando non ci sono aggiornamenti"}
-  ,"no_update_available_desc": "Stai usando l'ultima versione"
-  ,"@no_update_available_desc": {"description": "Descrizione quando non ci sono aggiornamenti"}
-  ,"update_now": "Aggiorna ora"
-  ,"@update_now": {"description": "Pulsante per avviare l'aggiornamento"}
-  ,"update_later": "Più tardi"
-  ,"@update_later": {"description": "Pulsante per rimandare l'aggiornamento"}
-  ,"checking_for_updates": "Verifica aggiornamenti..."
-  ,"@checking_for_updates": {"description": "Messaggio durante verifica aggiornamenti"}
-  ,"update_error": "Errore verifica aggiornamenti"
-  ,"@update_error": {"description": "Messaggio di errore durante verifica aggiornamenti"}
-  ,"update_downloading": "Download in corso..."
-  ,"@update_downloading": {"description": "Messaggio durante download aggiornamento"}
-  ,"update_installing": "Installazione in corso..."
-  ,"@update_installing": {"description": "Messaggio durante installazione aggiornamento"}
-  ,"update_feature_android_only": "Funzione disponibile solo su Android con Google Play Store"
-  ,"@update_feature_android_only": {"description": "Messaggio che spiega che la funzione è solo per Android"}
-  ,"update_recommendation_title": "Aggiornamento consigliato"
-  ,"@update_recommendation_title": {"description": "Titolo del bottom sheet per raccomandare l'aggiornamento"}
-  ,"update_recommendation_desc": "È disponibile una nuova versione di Caravella. Aggiorna l'app per avere sempre le ultime funzionalità e miglioramenti!"
-  ,"@update_recommendation_desc": {"description": "Descrizione nel bottom sheet che consiglia di aggiornare"}
-  ,"update_install": "Installa aggiornamento"
-  ,"@update_install": {"description": "Pulsante per installare l'aggiornamento dal bottom sheet"}
-  ,"update_remind_later": "Ricordamelo dopo"
-  ,"@update_remind_later": {"description": "Pulsante per rimandare l'aggiornamento dal bottom sheet"}
+  ,"wizard_group_creation_title": "Nuovo Gruppo"
+  ,"@wizard_group_creation_title": {"description": "Titolo del wizard di creazione gruppo"}
+  ,"wizard_step_name": "Nome"
+  ,"@wizard_step_name": {"description": "Titolo step 1 del wizard: nome gruppo"}
+  ,"wizard_step_participants": "Partecipanti"
+  ,"@wizard_step_participants": {"description": "Titolo step 2 del wizard: partecipanti"}
+  ,"wizard_step_categories": "Categorie"
+  ,"@wizard_step_categories": {"description": "Titolo step 3 del wizard: categorie"}
+  ,"wizard_step_period": "Periodo"
+  ,"@wizard_step_period": {"description": "Titolo step 4 del wizard: periodo"}
+  ,"wizard_step_background": "Sfondo"
+  ,"@wizard_step_background": {"description": "Titolo step 5 del wizard: colore sfondo"}
+  ,"wizard_step_congratulations": "Complimenti!"
+  ,"@wizard_step_congratulations": {"description": "Titolo step finale del wizard: congratulazioni"}
+  ,"wizard_step_of": "di"
+  ,"@wizard_step_of": {"description": "Separatore per indicatore di progresso (es. 'Passo 1 di 6')"}
+  ,"wizard_next": "Avanti"
+  ,"@wizard_next": {"description": "Testo del pulsante per andare al prossimo step"}
+  ,"wizard_previous": "Indietro"
+  ,"@wizard_previous": {"description": "Testo del pulsante per tornare allo step precedente"}
+  ,"wizard_skip": "Salta"
+  ,"@wizard_skip": {"description": "Testo del pulsante per saltare uno step opzionale"}
+  ,"wizard_finish": "Crea Gruppo"
+  ,"@wizard_finish": {"description": "Testo del pulsante finale per creare il gruppo"}
+  ,"wizard_name_description": "Inserisci un nome per il tuo gruppo di spese"
+  ,"@wizard_name_description": {"description": "Descrizione dello step nome nel wizard"}
+  ,"wizard_participants_description": "Aggiungi le persone che parteciperanno alle spese"
+  ,"@wizard_participants_description": {"description": "Descrizione dello step partecipanti nel wizard"}
+  ,"wizard_categories_description": "Crea categorie per organizzare le spese"
+  ,"@wizard_categories_description": {"description": "Descrizione dello step categorie nel wizard"}
+  ,"wizard_period_description": "Imposta date di inizio e fine (opzionale)"
+  ,"@wizard_period_description": {"description": "Descrizione dello step periodo nel wizard"}
+  ,"wizard_background_description": "Scegli un colore di sfondo per il gruppo"
+  ,"@wizard_background_description": {"description": "Descrizione dello step sfondo nel wizard"}
+  ,"wizard_congratulations_message": "Il tuo gruppo '{groupName}' è stato creato con successo!"
+  ,"@wizard_congratulations_message": {"description": "Messaggio di congratulazioni con nome gruppo", "placeholders": {"groupName": {"type": "String"}}}
+  ,"wizard_group_summary": "Riepilogo gruppo:"
+  ,"@wizard_group_summary": {"description": "Titolo del riepilogo nella schermata finale"}
+  ,"wizard_created_participants": "{count, plural, =1{1 partecipante} other{{count} partecipanti}}"
+  ,"@wizard_created_participants": {"description": "Numero partecipanti nel riepilogo", "placeholders": {"count": {"type": "int"}}}
+  ,"wizard_created_categories": "{count, plural, =1{1 categoria} other{{count} categorie}}"
+  ,"@wizard_created_categories": {"description": "Numero categorie nel riepilogo", "placeholders": {"count": {"type": "int"}}}
+  ,"wizard_step_user_name": "Il tuo nome"
+  ,"@wizard_step_user_name": {"description": "Titolo step iniziale del wizard: nome utente"}
+  ,"wizard_user_name_welcome": "Ciao! Come ti chiami?"
+  ,"@wizard_user_name_welcome": {"description": "Messaggio di benvenuto nello step nome utente"}
+  ,"wizard_user_name_description": "Così possiamo mostrarti nei gruppi 😊"
+  ,"@wizard_user_name_description": {"description": "Descrizione dello step nome utente"}
+  ,"wizard_user_name_local_storage_note": "Il tuo nome verrà salvato solo sul tuo dispositivo e non sarà condiviso"
+  ,"@wizard_user_name_local_storage_note": {"description": "Nota sulla privacy per il nome utente"}
+  ,"wizard_user_name_label": "Il tuo nome (facoltativo)"
+  ,"@wizard_user_name_label": {"description": "Etichetta del campo nome utente"}
+  ,"wizard_user_name_hint": "es. Mario"
+  ,"@wizard_user_name_hint": {"description": "Suggerimento per il campo nome utente"}
+  ,"wizard_step_participants_and_categories": "Chi e cosa"
+  ,"@wizard_step_participants_and_categories": {"description": "Titolo step combinato partecipanti e categorie"}
+  ,"wizard_participants_and_categories_description": "Definisci chi partecipa e su cosa si divideranno le spese"
+  ,"@wizard_participants_and_categories_description": {"description": "Descrizione step combinato partecipanti e categorie"}
+  ,"wizard_participants_section_title": "Chi partecipa?"
+  ,"@wizard_participants_section_title": {"description": "Titolo sezione partecipanti nello step combinato"}
+  ,"wizard_participants_section_hint": "Aggiungi amici o coinquilini. Puoi modificarli dopo."
+  ,"@wizard_participants_section_hint": {"description": "Suggerimento sezione partecipanti"}
+  ,"wizard_categories_section_title": "Cosa si divide?"
+  ,"@wizard_categories_section_title": {"description": "Titolo sezione categorie nello step combinato"}
+  ,"wizard_categories_section_hint": "Es. Cibo, Alloggio, Trasporti. Puoi aggiungere o rinominare in seguito."
+  ,"@wizard_categories_section_hint": {"description": "Suggerimento sezione categorie"}
+  ,"wizard_step_color_and_final": "Colore e conferma"
+  ,"@wizard_step_color_and_final": {"description": "Titolo step finale colore e conferma"}
+  ,"wizard_color_and_final_description": "Scegli un colore per il gruppo e controlla il riepilogo"
+  ,"@wizard_color_and_final_description": {"description": "Descrizione step finale"}
+  ,"wizard_preview_title": "Anteprima gruppo"
+  ,"@wizard_preview_title": {"description": "Titolo sezione anteprima"}
+  ,"wizard_success_title": "🎉 Congratulazioni!"
+  ,"@wizard_success_title": {"description": "Titolo dialogo successo"}
+  ,"wizard_go_to_group": "Vai al gruppo"
+  ,"@wizard_go_to_group": {"description": "Pulsante per andare al gruppo creato"}
+  ,"create": "Crea"
+  ,"undo": "Annulla"
+  ,"weekday_mon": "Lun"
+  ,"weekday_tue": "Mar"
+  ,"weekday_wed": "Mer"
+  ,"weekday_thu": "Gio"
+  ,"weekday_fri": "Ven"
+  ,"weekday_sat": "Sab"
+  ,"weekday_sun": "Dom"
+  ,"month_january": "Gennaio"
+  ,"month_february": "Febbraio"
+  ,"month_march": "Marzo"
+  ,"month_april": "Aprile"
+  ,"month_may": "Maggio"
+  ,"month_june": "Giugno"
+  ,"month_july": "Luglio"
+  ,"month_august": "Agosto"
+  ,"month_september": "Settembre"
+  ,"month_october": "Ottobre"
+  ,"month_november": "Novembre"
+  ,"month_december": "Dicembre"
+  ,"expenses_map": "Mappa spese"
+  ,"view_on_map": "Visualizza su mappa"
+  ,"no_locations_available": "Nessuna posizione disponibile"
+  ,"no_locations_subtitle": "Aggiungi posizioni alle spese per vederle sulla mappa"
+  ,"expense_count": "{count, plural, =1{1 spesa} other{{count} spese}}"
+  ,"days_count": "{count, plural, =1{1 giorno} other{{count} giorni}}"
+  ,"suggested_duration": "Durata suggerita"
+  ,"settings_auto_location_section": "Posizione automatica"
+  ,"settings_auto_location_section_desc": "Acquisizione automatica della posizione per le spese"
+  ,"settings_auto_location_title": "Abilita posizione automatica"
+  ,"settings_auto_location_desc": "Salva automaticamente la posizione quando aggiungi spese"
   ,"send_reminder": "Invia promemoria"
   ,"@send_reminder": {"description": "Etichetta del pulsante per inviare un promemoria di pagamento a un partecipante"}
   ,"reminder_message_single": "Ciao {participantName}! 👋\n\nVorrei ricordarti che devi {amount} a {creditorName} per il gruppo \"{groupName}\".\n\nGrazie! 😊"
-  ,"@reminder_message_single": {"description": "Messaggio di promemoria quando un partecipante deve denaro a una sola persona", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
+  ,"@reminder_message_single": {"description": "Messaggio di promemoria quando un partecipante deve denaro a una sola persona", "placeholders": {"participantName": {}, "amount": {"type": "String"}, "creditorName": {}, "groupName": {}}}
   ,"reminder_message_multiple": "Ciao {participantName}! 👋\n\nVorrei ricordarti i tuoi pagamenti per il gruppo \"{groupName}\":\n\n{debtsList}\n\nGrazie! 😊"
   ,"@reminder_message_multiple": {"description": "Messaggio di promemoria quando un partecipante deve denaro a più persone", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
+  ,"archived_with_undo": "Archiviato"
+  ,"unarchived_with_undo": "Ripristinato"
+  ,"pinned_with_undo": "Fissato"
+  ,"unpinned_with_undo": "Rimosso dai fissati"
+  ,"deleted_with_undo": "Eliminato"
+  ,"settings_dynamic_color": "Colore dinamico"
+  ,"settings_dynamic_color_desc": "Usa schema colori di sistema (Android 12+)"
+  ,"check_for_updates": "Controlla aggiornamenti"
+  ,"check_for_updates_desc": "Verifica se è disponibile una nuova versione"
+  ,"checking_for_updates": "Controllo aggiornamenti..."
+  ,"no_update_available": "Sei aggiornato!"
+  ,"update_available": "Aggiornamento disponibile"
+  ,"update_available_desc": "La versione {version} è disponibile"
+  ,"update_now": "Aggiorna ora"
+  ,"update_later": "Dopo"
+  ,"update_downloading": "Download aggiornamento..."
+  ,"update_installing": "Installazione aggiornamento..."
+  ,"update_error": "Aggiornamento fallito"
+  ,"changelog_title": "Novità"
+  ,"changelog_desc": "Modifiche e miglioramenti recenti"
 }

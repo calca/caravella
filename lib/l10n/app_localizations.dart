@@ -197,134 +197,8 @@ abstract class AppLocalizations {
   /// No description provided for @select_period_hint.
   ///
   /// In en, this message translates to:
-  /// **'Select dates'**
+  /// **'Select a date range'**
   String get select_period_hint;
-
-  /// No description provided for @suggested_duration.
-  ///
-  /// In en, this message translates to:
-  /// **'Suggested duration'**
-  String get suggested_duration;
-
-  /// Number of days
-  ///
-  /// In en, this message translates to:
-  /// **'{count} days'**
-  String days_count(int count);
-
-  /// No description provided for @weekday_mon.
-  ///
-  /// In en, this message translates to:
-  /// **'M'**
-  String get weekday_mon;
-
-  /// No description provided for @weekday_tue.
-  ///
-  /// In en, this message translates to:
-  /// **'T'**
-  String get weekday_tue;
-
-  /// No description provided for @weekday_wed.
-  ///
-  /// In en, this message translates to:
-  /// **'W'**
-  String get weekday_wed;
-
-  /// No description provided for @weekday_thu.
-  ///
-  /// In en, this message translates to:
-  /// **'T'**
-  String get weekday_thu;
-
-  /// No description provided for @weekday_fri.
-  ///
-  /// In en, this message translates to:
-  /// **'F'**
-  String get weekday_fri;
-
-  /// No description provided for @weekday_sat.
-  ///
-  /// In en, this message translates to:
-  /// **'S'**
-  String get weekday_sat;
-
-  /// No description provided for @weekday_sun.
-  ///
-  /// In en, this message translates to:
-  /// **'S'**
-  String get weekday_sun;
-
-  /// No description provided for @month_january.
-  ///
-  /// In en, this message translates to:
-  /// **'January'**
-  String get month_january;
-
-  /// No description provided for @month_february.
-  ///
-  /// In en, this message translates to:
-  /// **'February'**
-  String get month_february;
-
-  /// No description provided for @month_march.
-  ///
-  /// In en, this message translates to:
-  /// **'March'**
-  String get month_march;
-
-  /// No description provided for @month_april.
-  ///
-  /// In en, this message translates to:
-  /// **'April'**
-  String get month_april;
-
-  /// No description provided for @month_may.
-  ///
-  /// In en, this message translates to:
-  /// **'May'**
-  String get month_may;
-
-  /// No description provided for @month_june.
-  ///
-  /// In en, this message translates to:
-  /// **'June'**
-  String get month_june;
-
-  /// No description provided for @month_july.
-  ///
-  /// In en, this message translates to:
-  /// **'July'**
-  String get month_july;
-
-  /// No description provided for @month_august.
-  ///
-  /// In en, this message translates to:
-  /// **'August'**
-  String get month_august;
-
-  /// No description provided for @month_september.
-  ///
-  /// In en, this message translates to:
-  /// **'September'**
-  String get month_september;
-
-  /// No description provided for @month_october.
-  ///
-  /// In en, this message translates to:
-  /// **'October'**
-  String get month_october;
-
-  /// No description provided for @month_november.
-  ///
-  /// In en, this message translates to:
-  /// **'November'**
-  String get month_november;
-
-  /// No description provided for @month_december.
-  ///
-  /// In en, this message translates to:
-  /// **'December'**
-  String get month_december;
 
   /// No description provided for @in_group_prefix.
   ///
@@ -590,54 +464,6 @@ abstract class AppLocalizations {
   /// **'Optional start and end'**
   String get dates_description;
 
-  /// No description provided for @select_period.
-  ///
-  /// In en, this message translates to:
-  /// **'Select period'**
-  String get select_period;
-
-  /// No description provided for @select_period_dates.
-  ///
-  /// In en, this message translates to:
-  /// **'Select the period dates'**
-  String get select_period_dates;
-
-  /// Label for duration in days
-  ///
-  /// In en, this message translates to:
-  /// **'{days} days'**
-  String duration_days(int days);
-
-  /// Formatted period
-  ///
-  /// In en, this message translates to:
-  /// **'From {start} to {end} ({days} days)'**
-  String period_from_to(String start, String end, int days);
-
-  /// Period with only start date
-  ///
-  /// In en, this message translates to:
-  /// **'From {start} - Select end'**
-  String period_from_select_end(String start);
-
-  /// Period with only end date
-  ///
-  /// In en, this message translates to:
-  /// **'To {end} - Select start'**
-  String period_to_select_start(String end);
-
-  /// No description provided for @confirm.
-  ///
-  /// In en, this message translates to:
-  /// **'Confirm'**
-  String get confirm;
-
-  /// No description provided for @clear.
-  ///
-  /// In en, this message translates to:
-  /// **'Clear'**
-  String get clear;
-
   /// No description provided for @currency_description.
   ///
   /// In en, this message translates to:
@@ -781,12 +607,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'New Group'**
   String get new_group;
-
-  /// No description provided for @create.
-  ///
-  /// In en, this message translates to:
-  /// **'Create'**
-  String get create;
 
   /// No description provided for @group_name.
   ///
@@ -1238,60 +1058,6 @@ abstract class AppLocalizations {
   /// **'Unarchive'**
   String get unarchive;
 
-  /// Action to pin a group to the top
-  ///
-  /// In en, this message translates to:
-  /// **'Pin'**
-  String get pin;
-
-  /// Action to unpin a group
-  ///
-  /// In en, this message translates to:
-  /// **'Unpin'**
-  String get unpin;
-
-  /// Action to delete a group
-  ///
-  /// In en, this message translates to:
-  /// **'Delete'**
-  String get delete;
-
-  /// Undo action label for SnackBar
-  ///
-  /// In en, this message translates to:
-  /// **'UNDO'**
-  String get undo;
-
-  /// Snackbar message when group is archived
-  ///
-  /// In en, this message translates to:
-  /// **'Archived'**
-  String get archived_with_undo;
-
-  /// Snackbar message when group is unarchived
-  ///
-  /// In en, this message translates to:
-  /// **'Unarchived'**
-  String get unarchived_with_undo;
-
-  /// Snackbar message when group is pinned
-  ///
-  /// In en, this message translates to:
-  /// **'Pinned'**
-  String get pinned_with_undo;
-
-  /// Snackbar message when group is unpinned
-  ///
-  /// In en, this message translates to:
-  /// **'Unpinned'**
-  String get unpinned_with_undo;
-
-  /// Snackbar message when group is deleted
-  ///
-  /// In en, this message translates to:
-  /// **'Deleted'**
-  String get deleted_with_undo;
-
   /// No description provided for @archive_confirm.
   ///
   /// In en, this message translates to:
@@ -1411,6 +1177,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unpin group'**
   String get unpin_group;
+
+  /// No description provided for @pin.
+  ///
+  /// In en, this message translates to:
+  /// **'Pin'**
+  String get pin;
 
   /// No description provided for @theme_automatic.
   ///
@@ -1730,30 +1502,6 @@ abstract class AppLocalizations {
   /// **'Language and appearance settings'**
   String get settings_general_desc;
 
-  /// No description provided for @settings_auto_location_section.
-  ///
-  /// In en, this message translates to:
-  /// **'Location Detection'**
-  String get settings_auto_location_section;
-
-  /// No description provided for @settings_auto_location_section_desc.
-  ///
-  /// In en, this message translates to:
-  /// **'Configure automatic location detection'**
-  String get settings_auto_location_section_desc;
-
-  /// No description provided for @settings_auto_location_title.
-  ///
-  /// In en, this message translates to:
-  /// **'Enable to detect'**
-  String get settings_auto_location_title;
-
-  /// No description provided for @settings_auto_location_desc.
-  ///
-  /// In en, this message translates to:
-  /// **'Detect GPS when adding an expense'**
-  String get settings_auto_location_desc;
-
   /// No description provided for @settings_language.
   ///
   /// In en, this message translates to:
@@ -1819,18 +1567,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select theme'**
   String get settings_select_theme;
-
-  /// No description provided for @settings_dynamic_color.
-  ///
-  /// In en, this message translates to:
-  /// **'Dynamic color'**
-  String get settings_dynamic_color;
-
-  /// No description provided for @settings_dynamic_color_desc.
-  ///
-  /// In en, this message translates to:
-  /// **'Use colors from your wallpaper'**
-  String get settings_dynamic_color_desc;
 
   /// No description provided for @settings_privacy_desc.
   ///
@@ -2035,6 +1771,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure you want to delete this expense?'**
   String get delete_expense_confirm;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
 
   /// Shown when a filter (not search) returns no groups
   ///
@@ -3404,30 +3146,6 @@ abstract class AppLocalizations {
   /// **'Discover the latest features and updates'**
   String get whats_new_desc;
 
-  /// Card headline describing the what's new section
-  ///
-  /// In en, this message translates to:
-  /// **'Latest highlights'**
-  String get whats_new_subtitle;
-
-  /// Support text explaining that the content lists the most recent updates
-  ///
-  /// In en, this message translates to:
-  /// **'Stay up to date with recent improvements'**
-  String get whats_new_latest;
-
-  /// Title for the changelog section
-  ///
-  /// In en, this message translates to:
-  /// **'Changelog'**
-  String get changelog_title;
-
-  /// Description for the changelog section
-  ///
-  /// In en, this message translates to:
-  /// **'Version history and improvements'**
-  String get changelog_desc;
-
   /// Label shown before the computed average spent per person in the Participants tab
   ///
   /// In en, this message translates to:
@@ -3452,139 +3170,427 @@ abstract class AppLocalizations {
   /// **'to '**
   String get debt_prefix_to;
 
-  /// Tooltip for the map button to view expenses on a map
+  /// Title of the group creation wizard
+  ///
+  /// In en, this message translates to:
+  /// **'New Group'**
+  String get wizard_group_creation_title;
+
+  /// Title of wizard step 1: group name
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get wizard_step_name;
+
+  /// Title of wizard step 2: participants
+  ///
+  /// In en, this message translates to:
+  /// **'Participants'**
+  String get wizard_step_participants;
+
+  /// Title of wizard step 3: categories
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get wizard_step_categories;
+
+  /// Title of wizard step 4: period
+  ///
+  /// In en, this message translates to:
+  /// **'Period'**
+  String get wizard_step_period;
+
+  /// Title of wizard step 5: background color
+  ///
+  /// In en, this message translates to:
+  /// **'Background'**
+  String get wizard_step_background;
+
+  /// Title of final wizard step: congratulations
+  ///
+  /// In en, this message translates to:
+  /// **'Congratulations!'**
+  String get wizard_step_congratulations;
+
+  /// Separator for progress indicator (e.g. 'Step 1 of 6')
+  ///
+  /// In en, this message translates to:
+  /// **'of'**
+  String get wizard_step_of;
+
+  /// Text for button to go to next step
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get wizard_next;
+
+  /// Text for button to go to previous step
+  ///
+  /// In en, this message translates to:
+  /// **'Previous'**
+  String get wizard_previous;
+
+  /// Text for button to skip an optional step
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get wizard_skip;
+
+  /// Text for final button to create the group
+  ///
+  /// In en, this message translates to:
+  /// **'Create Group'**
+  String get wizard_finish;
+
+  /// Description of the name step in the wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a name for your expense group'**
+  String get wizard_name_description;
+
+  /// Description of the participants step in the wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Add people who will share expenses'**
+  String get wizard_participants_description;
+
+  /// Description of the categories step in the wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Create categories to organize expenses'**
+  String get wizard_categories_description;
+
+  /// Description of the period step in the wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Set start and end dates (optional)'**
+  String get wizard_period_description;
+
+  /// Description of the background step in the wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a background color for the group'**
+  String get wizard_background_description;
+
+  /// Congratulations message with group name
+  ///
+  /// In en, this message translates to:
+  /// **'Your group \'{groupName}\' has been created successfully!'**
+  String wizard_congratulations_message(String groupName);
+
+  /// Title of the summary in the final screen
+  ///
+  /// In en, this message translates to:
+  /// **'Group summary:'**
+  String get wizard_group_summary;
+
+  /// Number of participants in the summary
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 participant} other{{count} participants}}'**
+  String wizard_created_participants(int count);
+
+  /// Number of categories in the summary
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 category} other{{count} categories}}'**
+  String wizard_created_categories(int count);
+
+  /// Title of initial wizard step: user name
+  ///
+  /// In en, this message translates to:
+  /// **'Your Name'**
+  String get wizard_step_user_name;
+
+  /// Welcome message in user name step
+  ///
+  /// In en, this message translates to:
+  /// **'Hi! What\'s your name?'**
+  String get wizard_user_name_welcome;
+
+  /// Description of the user name step
+  ///
+  /// In en, this message translates to:
+  /// **'So we can show you in groups 😊'**
+  String get wizard_user_name_description;
+
+  /// Privacy note for user name
+  ///
+  /// In en, this message translates to:
+  /// **'Your name will be saved only on your device and will not be shared'**
+  String get wizard_user_name_local_storage_note;
+
+  /// Label for user name field
+  ///
+  /// In en, this message translates to:
+  /// **'Your name (optional)'**
+  String get wizard_user_name_label;
+
+  /// Hint for user name field
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Mario'**
+  String get wizard_user_name_hint;
+
+  /// Title of combined participants and categories step
+  ///
+  /// In en, this message translates to:
+  /// **'Who and what'**
+  String get wizard_step_participants_and_categories;
+
+  /// Description of combined participants and categories step
+  ///
+  /// In en, this message translates to:
+  /// **'Define who participates and what expenses will be shared'**
+  String get wizard_participants_and_categories_description;
+
+  /// Title of participants section in combined step
+  ///
+  /// In en, this message translates to:
+  /// **'Who\'s participating?'**
+  String get wizard_participants_section_title;
+
+  /// Hint for participants section
+  ///
+  /// In en, this message translates to:
+  /// **'Add friends or roommates. You can modify them later.'**
+  String get wizard_participants_section_hint;
+
+  /// Title of categories section in combined step
+  ///
+  /// In en, this message translates to:
+  /// **'What will be shared?'**
+  String get wizard_categories_section_title;
+
+  /// Hint for categories section
+  ///
+  /// In en, this message translates to:
+  /// **'E.g. Food, Accommodation, Transportation. You can add or rename later.'**
+  String get wizard_categories_section_hint;
+
+  /// Title of final color and confirm step
+  ///
+  /// In en, this message translates to:
+  /// **'Color and confirm'**
+  String get wizard_step_color_and_final;
+
+  /// Description of final step
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a color for the group and review the summary'**
+  String get wizard_color_and_final_description;
+
+  /// Title of preview section
+  ///
+  /// In en, this message translates to:
+  /// **'Group preview'**
+  String get wizard_preview_title;
+
+  /// Title of success dialog
+  ///
+  /// In en, this message translates to:
+  /// **'🎉 Congratulations!'**
+  String get wizard_success_title;
+
+  /// Button to go to created group
+  ///
+  /// In en, this message translates to:
+  /// **'Go to group'**
+  String get wizard_go_to_group;
+
+  /// Create action
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get create;
+
+  /// Undo action
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get undo;
+
+  /// Monday abbreviation
+  ///
+  /// In en, this message translates to:
+  /// **'Mon'**
+  String get weekday_mon;
+
+  /// Tuesday abbreviation
+  ///
+  /// In en, this message translates to:
+  /// **'Tue'**
+  String get weekday_tue;
+
+  /// Wednesday abbreviation
+  ///
+  /// In en, this message translates to:
+  /// **'Wed'**
+  String get weekday_wed;
+
+  /// Thursday abbreviation
+  ///
+  /// In en, this message translates to:
+  /// **'Thu'**
+  String get weekday_thu;
+
+  /// Friday abbreviation
+  ///
+  /// In en, this message translates to:
+  /// **'Fri'**
+  String get weekday_fri;
+
+  /// Saturday abbreviation
+  ///
+  /// In en, this message translates to:
+  /// **'Sat'**
+  String get weekday_sat;
+
+  /// Sunday abbreviation
+  ///
+  /// In en, this message translates to:
+  /// **'Sun'**
+  String get weekday_sun;
+
+  /// January month name
+  ///
+  /// In en, this message translates to:
+  /// **'January'**
+  String get month_january;
+
+  /// February month name
+  ///
+  /// In en, this message translates to:
+  /// **'February'**
+  String get month_february;
+
+  /// March month name
+  ///
+  /// In en, this message translates to:
+  /// **'March'**
+  String get month_march;
+
+  /// April month name
+  ///
+  /// In en, this message translates to:
+  /// **'April'**
+  String get month_april;
+
+  /// May month name
+  ///
+  /// In en, this message translates to:
+  /// **'May'**
+  String get month_may;
+
+  /// June month name
+  ///
+  /// In en, this message translates to:
+  /// **'June'**
+  String get month_june;
+
+  /// July month name
+  ///
+  /// In en, this message translates to:
+  /// **'July'**
+  String get month_july;
+
+  /// August month name
+  ///
+  /// In en, this message translates to:
+  /// **'August'**
+  String get month_august;
+
+  /// September month name
+  ///
+  /// In en, this message translates to:
+  /// **'September'**
+  String get month_september;
+
+  /// October month name
+  ///
+  /// In en, this message translates to:
+  /// **'October'**
+  String get month_october;
+
+  /// November month name
+  ///
+  /// In en, this message translates to:
+  /// **'November'**
+  String get month_november;
+
+  /// December month name
+  ///
+  /// In en, this message translates to:
+  /// **'December'**
+  String get month_december;
+
+  /// Title for expenses map page
+  ///
+  /// In en, this message translates to:
+  /// **'Expenses map'**
+  String get expenses_map;
+
+  /// Action to view location on map
   ///
   /// In en, this message translates to:
   /// **'View on map'**
   String get view_on_map;
 
-  /// Title of the page showing expenses on a map
-  ///
-  /// In en, this message translates to:
-  /// **'Expenses Map'**
-  String get expenses_map;
-
-  /// Message shown when no expenses have location data
+  /// Message when no expense has location data
   ///
   /// In en, this message translates to:
   /// **'No locations available'**
   String get no_locations_available;
 
-  /// Subtitle explaining how to add locations
+  /// Subtitle for empty map state
   ///
   /// In en, this message translates to:
-  /// **'Add location data to your expenses to see them on the map'**
+  /// **'Add locations to expenses to see them on the map'**
   String get no_locations_subtitle;
 
-  /// Label showing number of expenses at a location
+  /// Pluralized expense count
   ///
   /// In en, this message translates to:
   /// **'{count, plural, =1{1 expense} other{{count} expenses}}'**
   String expense_count(int count);
 
-  /// Label to check for updates from Google Play Store
+  /// Pluralized days count
   ///
   /// In en, this message translates to:
-  /// **'Check for updates'**
-  String get check_for_updates;
+  /// **'{count, plural, =1{1 day} other{{count} days}}'**
+  String days_count(int count);
 
-  /// Description for update check
+  /// Label for suggested duration presets
   ///
   /// In en, this message translates to:
-  /// **'Check for new version availability'**
-  String get check_for_updates_desc;
+  /// **'Suggested duration'**
+  String get suggested_duration;
 
-  /// Title when an update is available
+  /// Section title for auto-location settings
   ///
   /// In en, this message translates to:
-  /// **'Update available'**
-  String get update_available;
+  /// **'Auto-location'**
+  String get settings_auto_location_section;
 
-  /// Description when an update is available
+  /// Section description for auto-location settings
   ///
   /// In en, this message translates to:
-  /// **'A new version of the app is available'**
-  String get update_available_desc;
+  /// **'Automatically capture location for expenses'**
+  String get settings_auto_location_section_desc;
 
-  /// Message when there are no updates
+  /// Title for auto-location toggle
   ///
   /// In en, this message translates to:
-  /// **'App up to date'**
-  String get no_update_available;
+  /// **'Enable auto-location'**
+  String get settings_auto_location_title;
 
-  /// Description when there are no updates
+  /// Description for auto-location feature
   ///
   /// In en, this message translates to:
-  /// **'You\'re using the latest version'**
-  String get no_update_available_desc;
+  /// **'Automatically save location when adding expenses'**
+  String get settings_auto_location_desc;
 
-  /// Button to start the update
-  ///
-  /// In en, this message translates to:
-  /// **'Update now'**
-  String get update_now;
-
-  /// Button to postpone the update
-  ///
-  /// In en, this message translates to:
-  /// **'Later'**
-  String get update_later;
-
-  /// Message while checking for updates
-  ///
-  /// In en, this message translates to:
-  /// **'Checking for updates...'**
-  String get checking_for_updates;
-
-  /// Error message during update check
-  ///
-  /// In en, this message translates to:
-  /// **'Update check error'**
-  String get update_error;
-
-  /// Message while downloading update
-  ///
-  /// In en, this message translates to:
-  /// **'Downloading...'**
-  String get update_downloading;
-
-  /// Message while installing update
-  ///
-  /// In en, this message translates to:
-  /// **'Installing...'**
-  String get update_installing;
-
-  /// Message explaining the feature is Android-only
-  ///
-  /// In en, this message translates to:
-  /// **'Feature only available on Android with Google Play Store'**
-  String get update_feature_android_only;
-
-  /// Title of bottom sheet to recommend update
-  ///
-  /// In en, this message translates to:
-  /// **'Update recommended'**
-  String get update_recommendation_title;
-
-  /// Description in bottom sheet recommending to update
-  ///
-  /// In en, this message translates to:
-  /// **'A new version of Caravella is available. Update the app to always have the latest features and improvements!'**
-  String get update_recommendation_desc;
-
-  /// Button to install update from bottom sheet
-  ///
-  /// In en, this message translates to:
-  /// **'Install update'**
-  String get update_install;
-
-  /// Button to postpone update from bottom sheet
-  ///
-  /// In en, this message translates to:
-  /// **'Remind me later'**
-  String get update_remind_later;
-
-  /// Button label to send a payment reminder to a participant
+  /// Button to send payment reminder
   ///
   /// In en, this message translates to:
   /// **'Send reminder'**
@@ -3593,10 +3599,10 @@ abstract class AppLocalizations {
   /// Reminder message when a participant owes money to a single person
   ///
   /// In en, this message translates to:
-  /// **'Hi {participantName}! 👋\n\nJust a friendly reminder that you owe {amount} to {creditorName} for the group \"{groupName}\".\n\nThank you! 😊'**
+  /// **'Hi {participantName}! 👋\n\nI\'d like to remind you that you owe {amount} to {creditorName} for the group \"{groupName}\".\n\nThank you! �'**
   String reminder_message_single(
     Object participantName,
-    Object amount,
+    String amount,
     Object creditorName,
     Object groupName,
   );
@@ -3604,12 +3610,132 @@ abstract class AppLocalizations {
   /// Reminder message when a participant owes money to multiple people
   ///
   /// In en, this message translates to:
-  /// **'Hi {participantName}! 👋\n\nJust a friendly reminder of your payments for the group \"{groupName}\":\n\n{debtsList}\n\nThank you! 😊'**
+  /// **'Hi {participantName}! 👋\n\nI\'d like to remind you of your payments for the group \"{groupName}\":\n\n{debtsList}\n\nThank you! 😊'**
   String reminder_message_multiple(
     Object participantName,
     Object groupName,
     Object debtsList,
   );
+
+  /// Message when group is archived
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get archived_with_undo;
+
+  /// Message when group is unarchived
+  ///
+  /// In en, this message translates to:
+  /// **'Unarchived'**
+  String get unarchived_with_undo;
+
+  /// Message when group is pinned
+  ///
+  /// In en, this message translates to:
+  /// **'Pinned'**
+  String get pinned_with_undo;
+
+  /// Message when group is unpinned
+  ///
+  /// In en, this message translates to:
+  /// **'Unpinned'**
+  String get unpinned_with_undo;
+
+  /// Message when item is deleted
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted'**
+  String get deleted_with_undo;
+
+  /// Title for dynamic color setting
+  ///
+  /// In en, this message translates to:
+  /// **'Dynamic color'**
+  String get settings_dynamic_color;
+
+  /// Description for dynamic color feature
+  ///
+  /// In en, this message translates to:
+  /// **'Use system color scheme (Android 12+)'**
+  String get settings_dynamic_color_desc;
+
+  /// Button to check for app updates
+  ///
+  /// In en, this message translates to:
+  /// **'Check for updates'**
+  String get check_for_updates;
+
+  /// Description for update check feature
+  ///
+  /// In en, this message translates to:
+  /// **'Check if a new version is available'**
+  String get check_for_updates_desc;
+
+  /// Message while checking for updates
+  ///
+  /// In en, this message translates to:
+  /// **'Checking for updates...'**
+  String get checking_for_updates;
+
+  /// Message when no update is available
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re up to date!'**
+  String get no_update_available;
+
+  /// Title when update is available
+  ///
+  /// In en, this message translates to:
+  /// **'Update available'**
+  String get update_available;
+
+  /// Description of available update
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version} is available'**
+  String update_available_desc(String version);
+
+  /// Button to start update
+  ///
+  /// In en, this message translates to:
+  /// **'Update now'**
+  String get update_now;
+
+  /// Button to postpone update
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get update_later;
+
+  /// Message while downloading update
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading update...'**
+  String get update_downloading;
+
+  /// Message while installing update
+  ///
+  /// In en, this message translates to:
+  /// **'Installing update...'**
+  String get update_installing;
+
+  /// Message when update fails
+  ///
+  /// In en, this message translates to:
+  /// **'Update failed'**
+  String get update_error;
+
+  /// Title for changelog page
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s new'**
+  String get changelog_title;
+
+  /// Description for changelog page
+  ///
+  /// In en, this message translates to:
+  /// **'Recent changes and improvements'**
+  String get changelog_desc;
 }
 
 class _AppLocalizationsDelegate

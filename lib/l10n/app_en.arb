@@ -33,29 +33,7 @@
   "settings_privacy": "Privacy",
   "select_currency": "Select currency",
   "select_period_hint_short": "Set dates",
-  "select_period_hint": "Select dates",
-  "suggested_duration": "Suggested duration",
-  "days_count": "{count} days",
-  "@days_count": {"description": "Number of days", "placeholders": {"count": {"type": "int"}}},
-  "weekday_mon": "M",
-  "weekday_tue": "T",
-  "weekday_wed": "W",
-  "weekday_thu": "T",
-  "weekday_fri": "F",
-  "weekday_sat": "S",
-  "weekday_sun": "S",
-  "month_january": "January",
-  "month_february": "February",
-  "month_march": "March",
-  "month_april": "April",
-  "month_may": "May",
-  "month_june": "June",
-  "month_july": "July",
-  "month_august": "August",
-  "month_september": "September",
-  "month_october": "October",
-  "month_november": "November",
-  "month_december": "December",
+  "select_period_hint": "Select a date range",
   "in_group_prefix": "in",
   "save_change_expense": "Save changes",
   "group_total": "Total",
@@ -103,19 +81,6 @@
   "participants_description": "People sharing costs",
   "categories_description": "Group expenses by type",
   "dates_description": "Optional start and end",
-  "select_period": "Select period",
-  "select_period_dates": "Select the period dates",
-  "suggested_duration": "Suggested duration",
-  "duration_days": "{days} days",
-  "@duration_days": {"description": "Label for duration in days", "placeholders": {"days": {"type": "int"}}},
-  "period_from_to": "From {start} to {end} ({days} days)",
-  "@period_from_to": {"description": "Formatted period", "placeholders": {"start": {"type": "String"}, "end": {"type": "String"}, "days": {"type": "int"}}},
-  "period_from_select_end": "From {start} - Select end",
-  "@period_from_select_end": {"description": "Period with only start date", "placeholders": {"start": {"type": "String"}}},
-  "period_to_select_start": "To {end} - Select start",
-  "@period_to_select_start": {"description": "Period with only end date", "placeholders": {"end": {"type": "String"}}},
-  "confirm": "Confirm",
-  "clear": "Clear",
   "currency_description": "Base currency for group",
   "background_color_selected": "Color selected",
   "background_tap_to_replace": "Tap to replace",
@@ -141,7 +106,6 @@
   "license_section": "License",
   "add_trip": "Add group",
   "new_group": "New Group",
-  "create": "Create",
   "group_name": "Name",
   "enter_title": "Enter a name",
   "enter_participant": "Enter at least one participant",
@@ -217,24 +181,6 @@
   "archived": "Archived",
   "archive": "Archive",
   "unarchive": "Unarchive",
-  "pin": "Pin",
-  "@pin": {"description": "Action to pin a group to the top"},
-  "unpin": "Unpin",
-  "@unpin": {"description": "Action to unpin a group"},
-  "delete": "Delete",
-  "@delete": {"description": "Action to delete a group"},
-  "undo": "UNDO",
-  "@undo": {"description": "Undo action label for SnackBar"},
-  "archived_with_undo": "Archived",
-  "@archived_with_undo": {"description": "Snackbar message when group is archived"},
-  "unarchived_with_undo": "Unarchived",
-  "@unarchived_with_undo": {"description": "Snackbar message when group is unarchived"},
-  "pinned_with_undo": "Pinned",
-  "@pinned_with_undo": {"description": "Snackbar message when group is pinned"},
-  "unpinned_with_undo": "Unpinned",
-  "@unpinned_with_undo": {"description": "Snackbar message when group is unpinned"},
-  "deleted_with_undo": "Deleted",
-  "@deleted_with_undo": {"description": "Snackbar message when group is deleted"},
   "archive_confirm": "Do you want to archive",
   "unarchive_confirm": "Do you want to unarchive",
   "overview": "Overview",
@@ -310,10 +256,6 @@
   "address_resolved": "Address resolved",
   "settings_general": "General",
   "settings_general_desc": "Language and appearance settings",
-  "settings_auto_location_section": "Location Detection",
-  "settings_auto_location_section_desc": "Configure automatic location detection",
-  "settings_auto_location_title": "Enable to detect",
-  "settings_auto_location_desc": "Detect GPS when adding an expense",
   "settings_language": "Language",
   "settings_language_desc": "Choose your preferred language",
   "settings_language_it": "Italian",
@@ -325,8 +267,6 @@
   "settings_theme": "Theme",
   "settings_theme_desc": "Light, dark or system",
   "settings_select_theme": "Select theme",
-  "settings_dynamic_color": "Dynamic color",
-  "settings_dynamic_color_desc": "Use colors from your wallpaper",
   "settings_privacy": "Privacy",
   "settings_privacy_desc": "Security and privacy options",
   "settings_data": "Data",
@@ -650,14 +590,6 @@
   ,"@whats_new_title": {"description": "Title of the page showing the changelog"}
   ,"whats_new_desc": "Discover the latest features and updates"
   ,"@whats_new_desc": {"description": "Subtitle of the what's new page"}
-  ,"whats_new_subtitle": "Latest highlights"
-  ,"@whats_new_subtitle": {"description": "Card headline describing the what's new section"}
-  ,"whats_new_latest": "Stay up to date with recent improvements"
-  ,"@whats_new_latest": {"description": "Support text explaining that the content lists the most recent updates"}
-  ,"changelog_title": "Changelog"
-  ,"@changelog_title": {"description": "Title for the changelog section"}
-  ,"changelog_desc": "Version history and improvements"
-  ,"@changelog_desc": {"description": "Description for the changelog section"}
   ,"average_per_person": "Average per person"
   ,"@average_per_person": {"description": "Label shown before the computed average spent per person in the Participants tab"}
   ,"more": "more"
@@ -666,54 +598,190 @@
   ,"@less": {"description": "Inline toggle label to collapse and show fewer items"}
   ,"debt_prefix_to": "to "
   ,"@debt_prefix_to": {"description": "Short prefix shown before the recipient in a debt/settlement line (e.g., 'to Alice 10€')"}
+  ,"wizard_group_creation_title": "New Group"
+  ,"@wizard_group_creation_title": {"description": "Title of the group creation wizard"}
+  ,"wizard_step_name": "Name"
+  ,"@wizard_step_name": {"description": "Title of wizard step 1: group name"}
+  ,"wizard_step_participants": "Participants"
+  ,"@wizard_step_participants": {"description": "Title of wizard step 2: participants"}
+  ,"wizard_step_categories": "Categories"
+  ,"@wizard_step_categories": {"description": "Title of wizard step 3: categories"}
+  ,"wizard_step_period": "Period"
+  ,"@wizard_step_period": {"description": "Title of wizard step 4: period"}
+  ,"wizard_step_background": "Background"
+  ,"@wizard_step_background": {"description": "Title of wizard step 5: background color"}
+  ,"wizard_step_congratulations": "Congratulations!"
+  ,"@wizard_step_congratulations": {"description": "Title of final wizard step: congratulations"}
+  ,"wizard_step_of": "of"
+  ,"@wizard_step_of": {"description": "Separator for progress indicator (e.g. 'Step 1 of 6')"}
+  ,"wizard_next": "Next"
+  ,"@wizard_next": {"description": "Text for button to go to next step"}
+  ,"wizard_previous": "Previous"
+  ,"@wizard_previous": {"description": "Text for button to go to previous step"}
+  ,"wizard_skip": "Skip"
+  ,"@wizard_skip": {"description": "Text for button to skip an optional step"}
+  ,"wizard_finish": "Create Group"
+  ,"@wizard_finish": {"description": "Text for final button to create the group"}
+  ,"wizard_name_description": "Enter a name for your expense group"
+  ,"@wizard_name_description": {"description": "Description of the name step in the wizard"}
+  ,"wizard_participants_description": "Add people who will share expenses"
+  ,"@wizard_participants_description": {"description": "Description of the participants step in the wizard"}
+  ,"wizard_categories_description": "Create categories to organize expenses"
+  ,"@wizard_categories_description": {"description": "Description of the categories step in the wizard"}
+  ,"wizard_period_description": "Set start and end dates (optional)"
+  ,"@wizard_period_description": {"description": "Description of the period step in the wizard"}
+  ,"wizard_background_description": "Choose a background color for the group"
+  ,"@wizard_background_description": {"description": "Description of the background step in the wizard"}
+  ,"wizard_congratulations_message": "Your group '{groupName}' has been created successfully!"
+  ,"@wizard_congratulations_message": {"description": "Congratulations message with group name", "placeholders": {"groupName": {"type": "String"}}}
+  ,"wizard_group_summary": "Group summary:"
+  ,"@wizard_group_summary": {"description": "Title of the summary in the final screen"}
+  ,"wizard_created_participants": "{count, plural, =1{1 participant} other{{count} participants}}"
+  ,"@wizard_created_participants": {"description": "Number of participants in the summary", "placeholders": {"count": {"type": "int"}}}
+  ,"wizard_created_categories": "{count, plural, =1{1 category} other{{count} categories}}"
+  ,"@wizard_created_categories": {"description": "Number of categories in the summary", "placeholders": {"count": {"type": "int"}}}
+  ,"wizard_step_user_name": "Your Name"
+  ,"@wizard_step_user_name": {"description": "Title of initial wizard step: user name"}
+  ,"wizard_user_name_welcome": "Hi! What's your name?"
+  ,"@wizard_user_name_welcome": {"description": "Welcome message in user name step"}
+  ,"wizard_user_name_description": "So we can show you in groups 😊"
+  ,"@wizard_user_name_description": {"description": "Description of the user name step"}
+  ,"wizard_user_name_local_storage_note": "Your name will be saved only on your device and will not be shared"
+  ,"@wizard_user_name_local_storage_note": {"description": "Privacy note for user name"}
+  ,"wizard_user_name_label": "Your name (optional)"
+  ,"@wizard_user_name_label": {"description": "Label for user name field"}
+  ,"wizard_user_name_hint": "e.g. Mario"
+  ,"@wizard_user_name_hint": {"description": "Hint for user name field"}
+  ,"wizard_step_participants_and_categories": "Who and what"
+  ,"@wizard_step_participants_and_categories": {"description": "Title of combined participants and categories step"}
+  ,"wizard_participants_and_categories_description": "Define who participates and what expenses will be shared"
+  ,"@wizard_participants_and_categories_description": {"description": "Description of combined participants and categories step"}
+  ,"wizard_participants_section_title": "Who's participating?"
+  ,"@wizard_participants_section_title": {"description": "Title of participants section in combined step"}
+  ,"wizard_participants_section_hint": "Add friends or roommates. You can modify them later."
+  ,"@wizard_participants_section_hint": {"description": "Hint for participants section"}
+  ,"wizard_categories_section_title": "What will be shared?"
+  ,"@wizard_categories_section_title": {"description": "Title of categories section in combined step"}
+  ,"wizard_categories_section_hint": "E.g. Food, Accommodation, Transportation. You can add or rename later."
+  ,"@wizard_categories_section_hint": {"description": "Hint for categories section"}
+  ,"wizard_step_color_and_final": "Color and confirm"
+  ,"@wizard_step_color_and_final": {"description": "Title of final color and confirm step"}
+  ,"wizard_color_and_final_description": "Choose a color for the group and review the summary"
+  ,"@wizard_color_and_final_description": {"description": "Description of final step"}
+  ,"wizard_preview_title": "Group preview"
+  ,"@wizard_preview_title": {"description": "Title of preview section"}
+  ,"wizard_success_title": "🎉 Congratulations!"
+  ,"@wizard_success_title": {"description": "Title of success dialog"}
+  ,"wizard_go_to_group": "Go to group"
+  ,"@wizard_go_to_group": {"description": "Button to go to created group"}
+  ,"create": "Create"
+  ,"@create": {"description": "Create action"}
+  ,"undo": "Undo"
+  ,"@undo": {"description": "Undo action"}
+  ,"weekday_mon": "Mon"
+  ,"@weekday_mon": {"description": "Monday abbreviation"}
+  ,"weekday_tue": "Tue"
+  ,"@weekday_tue": {"description": "Tuesday abbreviation"}
+  ,"weekday_wed": "Wed"
+  ,"@weekday_wed": {"description": "Wednesday abbreviation"}
+  ,"weekday_thu": "Thu"
+  ,"@weekday_thu": {"description": "Thursday abbreviation"}
+  ,"weekday_fri": "Fri"
+  ,"@weekday_fri": {"description": "Friday abbreviation"}
+  ,"weekday_sat": "Sat"
+  ,"@weekday_sat": {"description": "Saturday abbreviation"}
+  ,"weekday_sun": "Sun"
+  ,"@weekday_sun": {"description": "Sunday abbreviation"}
+  ,"month_january": "January"
+  ,"@month_january": {"description": "January month name"}
+  ,"month_february": "February"
+  ,"@month_february": {"description": "February month name"}
+  ,"month_march": "March"
+  ,"@month_march": {"description": "March month name"}
+  ,"month_april": "April"
+  ,"@month_april": {"description": "April month name"}
+  ,"month_may": "May"
+  ,"@month_may": {"description": "May month name"}
+  ,"month_june": "June"
+  ,"@month_june": {"description": "June month name"}
+  ,"month_july": "July"
+  ,"@month_july": {"description": "July month name"}
+  ,"month_august": "August"
+  ,"@month_august": {"description": "August month name"}
+  ,"month_september": "September"
+  ,"@month_september": {"description": "September month name"}
+  ,"month_october": "October"
+  ,"@month_october": {"description": "October month name"}
+  ,"month_november": "November"
+  ,"@month_november": {"description": "November month name"}
+  ,"month_december": "December"
+  ,"@month_december": {"description": "December month name"}
+  ,"expenses_map": "Expenses map"
+  ,"@expenses_map": {"description": "Title for expenses map page"}
   ,"view_on_map": "View on map"
-  ,"@view_on_map": {"description": "Tooltip for the map button to view expenses on a map"}
-  ,"expenses_map": "Expenses Map"
-  ,"@expenses_map": {"description": "Title of the page showing expenses on a map"}
+  ,"@view_on_map": {"description": "Action to view location on map"}
   ,"no_locations_available": "No locations available"
-  ,"@no_locations_available": {"description": "Message shown when no expenses have location data"}
-  ,"no_locations_subtitle": "Add location data to your expenses to see them on the map"
-  ,"@no_locations_subtitle": {"description": "Subtitle explaining how to add locations"}
+  ,"@no_locations_available": {"description": "Message when no expense has location data"}
+  ,"no_locations_subtitle": "Add locations to expenses to see them on the map"
+  ,"@no_locations_subtitle": {"description": "Subtitle for empty map state"}
   ,"expense_count": "{count, plural, =1{1 expense} other{{count} expenses}}"
-  ,"@expense_count": {"description": "Label showing number of expenses at a location", "placeholders": {"count": {"type": "int"}}}
+  ,"@expense_count": {"description": "Pluralized expense count", "placeholders": {"count": {"type": "int"}}}
+  ,"days_count": "{count, plural, =1{1 day} other{{count} days}}"
+  ,"@days_count": {"description": "Pluralized days count", "placeholders": {"count": {"type": "int"}}}
+  ,"suggested_duration": "Suggested duration"
+  ,"@suggested_duration": {"description": "Label for suggested duration presets"}
+  ,"settings_auto_location_section": "Auto-location"
+  ,"@settings_auto_location_section": {"description": "Section title for auto-location settings"}
+  ,"settings_auto_location_section_desc": "Automatically capture location for expenses"
+  ,"@settings_auto_location_section_desc": {"description": "Section description for auto-location settings"}
+  ,"settings_auto_location_title": "Enable auto-location"
+  ,"@settings_auto_location_title": {"description": "Title for auto-location toggle"}
+  ,"settings_auto_location_desc": "Automatically save location when adding expenses"
+  ,"@settings_auto_location_desc": {"description": "Description for auto-location feature"}
+  ,"send_reminder": "Send reminder"
+  ,"@send_reminder": {"description": "Button to send payment reminder"}
+  ,"reminder_message_single": "Hi {participantName}! 👋\n\nI'd like to remind you that you owe {amount} to {creditorName} for the group \"{groupName}\".\n\nThank you! �"
+  ,"@reminder_message_single": {"description": "Reminder message when a participant owes money to a single person", "placeholders": {"participantName": {}, "amount": {"type": "String"}, "creditorName": {}, "groupName": {}}}
+  ,"reminder_message_multiple": "Hi {participantName}! 👋\n\nI'd like to remind you of your payments for the group \"{groupName}\":\n\n{debtsList}\n\nThank you! 😊"
+  ,"@reminder_message_multiple": {"description": "Reminder message when a participant owes money to multiple people", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
+  ,"archived_with_undo": "Archived"
+  ,"@archived_with_undo": {"description": "Message when group is archived"}
+  ,"unarchived_with_undo": "Unarchived"
+  ,"@unarchived_with_undo": {"description": "Message when group is unarchived"}
+  ,"pinned_with_undo": "Pinned"
+  ,"@pinned_with_undo": {"description": "Message when group is pinned"}
+  ,"unpinned_with_undo": "Unpinned"
+  ,"@unpinned_with_undo": {"description": "Message when group is unpinned"}
+  ,"deleted_with_undo": "Deleted"
+  ,"@deleted_with_undo": {"description": "Message when item is deleted"}
+  ,"settings_dynamic_color": "Dynamic color"
+  ,"@settings_dynamic_color": {"description": "Title for dynamic color setting"}
+  ,"settings_dynamic_color_desc": "Use system color scheme (Android 12+)"
+  ,"@settings_dynamic_color_desc": {"description": "Description for dynamic color feature"}
   ,"check_for_updates": "Check for updates"
-  ,"@check_for_updates": {"description": "Label to check for updates from Google Play Store"}
-  ,"check_for_updates_desc": "Check for new version availability"
-  ,"@check_for_updates_desc": {"description": "Description for update check"}
-  ,"update_available": "Update available"
-  ,"@update_available": {"description": "Title when an update is available"}
-  ,"update_available_desc": "A new version of the app is available"
-  ,"@update_available_desc": {"description": "Description when an update is available"}
-  ,"no_update_available": "App up to date"
-  ,"@no_update_available": {"description": "Message when there are no updates"}
-  ,"no_update_available_desc": "You're using the latest version"
-  ,"@no_update_available_desc": {"description": "Description when there are no updates"}
-  ,"update_now": "Update now"
-  ,"@update_now": {"description": "Button to start the update"}
-  ,"update_later": "Later"
-  ,"@update_later": {"description": "Button to postpone the update"}
+  ,"@check_for_updates": {"description": "Button to check for app updates"}
+  ,"check_for_updates_desc": "Check if a new version is available"
+  ,"@check_for_updates_desc": {"description": "Description for update check feature"}
   ,"checking_for_updates": "Checking for updates..."
   ,"@checking_for_updates": {"description": "Message while checking for updates"}
-  ,"update_error": "Update check error"
-  ,"@update_error": {"description": "Error message during update check"}
-  ,"update_downloading": "Downloading..."
+  ,"no_update_available": "You're up to date!"
+  ,"@no_update_available": {"description": "Message when no update is available"}
+  ,"update_available": "Update available"
+  ,"@update_available": {"description": "Title when update is available"}
+  ,"update_available_desc": "Version {version} is available"
+  ,"@update_available_desc": {"description": "Description of available update", "placeholders": {"version": {"type": "String"}}}
+  ,"update_now": "Update now"
+  ,"@update_now": {"description": "Button to start update"}
+  ,"update_later": "Later"
+  ,"@update_later": {"description": "Button to postpone update"}
+  ,"update_downloading": "Downloading update..."
   ,"@update_downloading": {"description": "Message while downloading update"}
-  ,"update_installing": "Installing..."
+  ,"update_installing": "Installing update..."
   ,"@update_installing": {"description": "Message while installing update"}
-  ,"update_feature_android_only": "Feature only available on Android with Google Play Store"
-  ,"@update_feature_android_only": {"description": "Message explaining the feature is Android-only"}
-  ,"update_recommendation_title": "Update recommended"
-  ,"@update_recommendation_title": {"description": "Title of bottom sheet to recommend update"}
-  ,"update_recommendation_desc": "A new version of Caravella is available. Update the app to always have the latest features and improvements!"
-  ,"@update_recommendation_desc": {"description": "Description in bottom sheet recommending to update"}
-  ,"update_install": "Install update"
-  ,"@update_install": {"description": "Button to install update from bottom sheet"}
-  ,"update_remind_later": "Remind me later"
-  ,"@update_remind_later": {"description": "Button to postpone update from bottom sheet"}
-  ,"send_reminder": "Send reminder"
-  ,"@send_reminder": {"description": "Button label to send a payment reminder to a participant"}
-  ,"reminder_message_single": "Hi {participantName}! 👋\n\nJust a friendly reminder that you owe {amount} to {creditorName} for the group \"{groupName}\".\n\nThank you! 😊"
-  ,"@reminder_message_single": {"description": "Reminder message when a participant owes money to a single person", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
-  ,"reminder_message_multiple": "Hi {participantName}! 👋\n\nJust a friendly reminder of your payments for the group \"{groupName}\":\n\n{debtsList}\n\nThank you! 😊"
-  ,"@reminder_message_multiple": {"description": "Reminder message when a participant owes money to multiple people", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
+  ,"update_error": "Update failed"
+  ,"@update_error": {"description": "Message when update fails"}
+  ,"changelog_title": "What's new"
+  ,"@changelog_title": {"description": "Title for changelog page"}
+  ,"changelog_desc": "Recent changes and improvements"
+  ,"@changelog_desc": {"description": "Description for changelog page"}
 }
