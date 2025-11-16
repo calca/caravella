@@ -51,6 +51,16 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
   }
 
   @override
+  void didUpdateWidget(LocationInputWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Update internal state if initialLocation changes externally
+    if (widget.initialLocation != oldWidget.initialLocation) {
+      _currentLocation = widget.initialLocation;
+      _controller.text = _currentLocation?.displayText ?? '';
+    }
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     if (widget.externalFocusNode == null) {

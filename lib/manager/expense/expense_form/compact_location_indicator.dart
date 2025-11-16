@@ -46,50 +46,59 @@ class CompactLocationIndicator extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    return OutlinedButton(
-      style: OutlinedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        foregroundColor: theme.colorScheme.onSurface,
-        side: BorderSide(color: borderColor.withValues(alpha: 0.8), width: 1),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      ),
-      onPressed: onCancel,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (isRetrieving)
-            SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: iconColor,
-              ),
-            )
-          else
-            Icon(icon, size: 20, color: iconColor),
-          const SizedBox(width: 8),
-          Flexible(
-            child: Text(
-              label,
-              overflow: TextOverflow.ellipsis,
-              style: (textStyle ?? FormTheme.getSelectTextStyle(context))
-                  ?.copyWith(
-                color: theme.colorScheme.onSurface,
-                fontWeight: FontWeight.w400,
+    return Semantics(
+      button: true,
+      label: isRetrieving 
+        ? gloc.getting_location 
+        : gloc.location,
+      hint: onCancel != null 
+        ? 'Double tap to ${isRetrieving ? "cancel location retrieval" : "clear location"}' 
+        : null,
+      child: OutlinedButton(
+        style: OutlinedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          foregroundColor: theme.colorScheme.onSurface,
+          side: BorderSide(color: borderColor.withValues(alpha: 0.8), width: 1),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+        onPressed: onCancel,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (isRetrieving)
+              SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: iconColor,
+                ),
+              )
+            else
+              Icon(icon, size: 20, color: iconColor),
+            const SizedBox(width: 8),
+            Flexible(
+              child: Text(
+                label,
+                overflow: TextOverflow.ellipsis,
+                style: (textStyle ?? FormTheme.getSelectTextStyle(context))
+                    ?.copyWith(
+                  color: theme.colorScheme.onSurface,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ),
-          ),
-          if (onCancel != null && (isRetrieving || location != null))
-            Padding(
-              padding: const EdgeInsets.only(left: 4),
-              child: Icon(
-                Icons.close,
-                size: 16,
-                color: theme.colorScheme.onSurfaceVariant,
+            if (onCancel != null && (isRetrieving || location != null))
+              Padding(
+                padding: const EdgeInsets.only(left: 4),
+                child: Icon(
+                  Icons.close,
+                  size: 16,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }
