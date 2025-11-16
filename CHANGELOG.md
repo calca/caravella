@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dynamic color support with Material 3 integration for personalized app theming (Android 12+, limited iOS support)
 - Settings toggle to enable colors derived from device wallpaper with graceful fallback to default themes
 - Android Quick Actions (App Shortcuts) for quick access to expense groups from launcher (Android only)
+- **Dynamic icons for Android Quick Launch shortcuts with group initials and background colors or images**
 - F-Droid metadata and distribution support
 - Comprehensive F-Droid submission documentation
 - Context menu (long-press) for expense groups in history page with pin/unpin, archive/unarchive, and delete actions
@@ -39,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored PreferencesService architecture with singleton pattern and separated preference categories
 - Improved PreferencesService API with synchronous read operations where possible
 - Organized preference keys and defaults into centralized abstract classes
+- **Android Quick Launch shortcut icons now dynamically display group initials with theme colors or group images**
 
 ### Fixed
 
