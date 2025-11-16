@@ -86,7 +86,7 @@ object ShortcutManager {
         
         // Try to load image from file if available
         if (group.file != null && File(group.file).exists()) {
-            return createImageIcon(context, group.file, iconSize)
+            return createImageIcon(context, group, group.file, iconSize)
         }
         
         // Create icon with initials and background color
@@ -96,7 +96,7 @@ object ShortcutManager {
     /**
      * Creates a circular icon from an image file.
      */
-    private fun createImageIcon(context: Context, filePath: String, size: Int): IconCompat {
+    private fun createImageIcon(context: Context, group: GroupInfo, filePath: String, size: Int): IconCompat {
         try {
             // Load the image
             val options = BitmapFactory.Options().apply {
@@ -115,18 +115,11 @@ object ShortcutManager {
                 return IconCompat.createWithBitmap(circularBitmap)
             }
         } catch (e: Exception) {
-            // Fall through to default icon
+            // Fall through to initials icon
         }
         
         // Fallback to creating an initials icon if image loading fails
-        return createInitialsIcon(context, GroupInfo(
-            id = "",
-            title = "?",
-            isPinned = false,
-            lastUpdated = 0L,
-            color = null,
-            file = null
-        ), size)
+        return createInitialsIcon(context, group, size)
     }
 
     /**
