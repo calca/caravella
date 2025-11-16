@@ -305,6 +305,8 @@
   "location_error": "获取位置时出错",
   "resolving_address": "解析地址...",
   "address_resolved": "地址已解析",
+  "search_place": "搜索地点",
+  "search_place_hint": "搜索地点或地址",
   "settings_general": "常规",
   "settings_general_desc": "语言和外观设置",
   "settings_auto_location_section": "位置检测",
