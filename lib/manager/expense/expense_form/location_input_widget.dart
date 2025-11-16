@@ -12,6 +12,7 @@ class LocationInputWidget extends StatefulWidget {
   final Function(ExpenseLocation?) onLocationChanged;
   final FocusNode? externalFocusNode;
   final bool autoRetrieve;
+  final Function(bool)? onRetrievalStatusChanged;
 
   const LocationInputWidget({
     super.key,
@@ -20,6 +21,7 @@ class LocationInputWidget extends StatefulWidget {
     required this.onLocationChanged,
     this.externalFocusNode,
     this.autoRetrieve = false,
+    this.onRetrievalStatusChanged,
   });
 
   @override
@@ -49,6 +51,16 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
   }
 
   @override
+  void didUpdateWidget(LocationInputWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Update internal state if initialLocation changes externally
+    if (widget.initialLocation != oldWidget.initialLocation) {
+      _currentLocation = widget.initialLocation;
+      _controller.text = _currentLocation?.displayText ?? '';
+    }
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     if (widget.externalFocusNode == null) {
@@ -61,6 +73,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
     setState(() {
       _isGettingLocation = true;
     });
+    widget.onRetrievalStatusChanged?.call(true);
     // Capture messenger before any async gaps to avoid using BuildContext after awaits
     final messenger = ScaffoldMessenger.of(context);
 
@@ -172,6 +185,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
           _isGettingLocation = false;
           _isResolvingAddress = false;
         });
+        widget.onRetrievalStatusChanged?.call(false);
       }
     }
   }
