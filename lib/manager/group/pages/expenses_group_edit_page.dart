@@ -216,6 +216,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
             state.imagePath,
             state.color,
             state.currency['code'],
+            state.autoLocationEnabled,
           );
         },
         builder: (context, _, _) {
