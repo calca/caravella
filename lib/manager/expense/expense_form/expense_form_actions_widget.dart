@@ -80,7 +80,7 @@ class ExpenseFormActionsWidget extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
           ),
           child: Text(
-            gloc.add.toUpperCase(),
+            isEdit ? gloc.save.toUpperCase() : gloc.add.toUpperCase(),
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
               fontWeight: FontWeight.w600,
               letterSpacing: 1.2,
