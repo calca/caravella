@@ -86,7 +86,7 @@ object ShortcutManager {
         
         // Try to load image from file if available
         if (group.file != null && File(group.file).exists()) {
-            return createImageIcon(group.file, iconSize)
+            return createImageIcon(context, group.file, iconSize)
         }
         
         // Create icon with initials and background color
@@ -96,7 +96,7 @@ object ShortcutManager {
     /**
      * Creates a circular icon from an image file.
      */
-    private fun createImageIcon(filePath: String, size: Int): IconCompat {
+    private fun createImageIcon(context: Context, filePath: String, size: Int): IconCompat {
         try {
             // Load the image
             val options = BitmapFactory.Options().apply {
@@ -118,8 +118,15 @@ object ShortcutManager {
             // Fall through to default icon
         }
         
-        // Fallback to default icon if image loading fails
-        return IconCompat.createWithResource(null, android.R.drawable.ic_menu_add)
+        // Fallback to creating an initials icon if image loading fails
+        return createInitialsIcon(context, GroupInfo(
+            id = "",
+            title = "?",
+            isPinned = false,
+            lastUpdated = 0L,
+            color = null,
+            file = null
+        ), size)
     }
 
     /**
