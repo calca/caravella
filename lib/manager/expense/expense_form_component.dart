@@ -12,6 +12,7 @@ import 'expense_form/note_input_widget.dart';
 import 'expense_form/location_input_widget.dart';
 import 'expense_form/expense_form_actions_widget.dart';
 import 'expense_form/category_dialog.dart';
+import 'expense_form/compact_location_indicator.dart';
 
 class ExpenseFormComponent extends StatefulWidget {
   // When true shows date, location and note fields (full edit mode). In edit mode (initialExpense != null) these are always shown.
@@ -92,6 +93,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
 
   // Auto location preference
   bool _autoLocationEnabled = false;
+  
+  // Location retrieval status for compact indicator
+  bool _isRetrievingLocation = false;
 
   // Getters per stato dei campi
   bool get _isAmountValid => _amount != null && _amount! > 0;
@@ -614,12 +618,30 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
             _isCategoryValid,
             _categoryTouched,
           ),
+          // Show compact location indicator when auto-location is enabled
+          if (widget.initialExpense == null && _autoLocationEnabled)
+            CompactLocationIndicator(
+              isRetrieving: _isRetrievingLocation,
+              location: _location,
+              onCancel: _clearLocation,
+              textStyle: style,
+            ),
         ],
       ),
     );
   }
 
   // (Expand button moved into ExpenseFormActionsWidget)
+  
+  void _clearLocation() {
+    setState(() {
+      _location = null;
+      _isRetrievingLocation = false;
+      if (!_initializing) {
+        _isDirty = true;
+      }
+    });
+  }
 
   void _onParticipantSelected(String selectedName) {
     setState(() {
@@ -755,6 +777,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
             }),
             externalFocusNode: _locationFocus,
             autoRetrieve: widget.initialExpense == null && _autoLocationEnabled,
+            onRetrievalStatusChanged: (isRetrieving) => setState(() {
+              _isRetrievingLocation = isRetrieving;
+            }),
           ),
         ),
         _spacer(),
