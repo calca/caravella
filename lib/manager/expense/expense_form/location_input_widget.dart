@@ -1,8 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
-import 'package:google_places_flutter/google_places_flutter.dart';
-import 'package:google_places_flutter/model/prediction.dart';
+import 'package:http/http.dart' as http;
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'icon_leading_field.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
@@ -190,8 +190,8 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
     final gloc = gen.AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
 
-    // Show a dialog with the place search field
-    final result = await showDialog<Prediction>(
+    // Show dialog with place search
+    final result = await showDialog<NominatimPlace>(
       context: context,
       builder: (ctx) => _PlaceSearchDialog(
         hintText: gloc.search_place_hint,
@@ -204,31 +204,26 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
       });
 
       try {
-        // Get place details by geocoding the description
-        final locations = await geocoding.locationFromAddress(result.description ?? '');
-        
-        if (locations.isNotEmpty && mounted) {
-          final location = ExpenseLocation(
-            latitude: locations.first.latitude,
-            longitude: locations.first.longitude,
-            address: result.description,
+        final location = ExpenseLocation(
+          latitude: result.latitude,
+          longitude: result.longitude,
+          address: result.displayName,
+        );
+
+        setState(() {
+          _currentLocation = location;
+          _controller.text = location.displayText;
+          _isResolvingAddress = false;
+        });
+
+        widget.onLocationChanged(location);
+
+        if (mounted) {
+          AppToast.showFromMessenger(
+            messenger,
+            gloc.address_resolved,
+            duration: const Duration(seconds: 2),
           );
-
-          setState(() {
-            _currentLocation = location;
-            _controller.text = location.displayText;
-            _isResolvingAddress = false;
-          });
-
-          widget.onLocationChanged(location);
-
-          if (mounted) {
-            AppToast.showFromMessenger(
-              messenger,
-              gloc.address_resolved,
-              duration: const Duration(seconds: 2),
-            );
-          }
         }
       } catch (e) {
         if (mounted) {
@@ -394,7 +389,28 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
   }
 }
 
-/// Dialog for searching places using Google Places autocomplete
+/// Represents a place from OpenStreetMap Nominatim
+class NominatimPlace {
+  final double latitude;
+  final double longitude;
+  final String displayName;
+
+  NominatimPlace({
+    required this.latitude,
+    required this.longitude,
+    required this.displayName,
+  });
+
+  factory NominatimPlace.fromJson(Map<String, dynamic> json) {
+    return NominatimPlace(
+      latitude: double.parse(json['lat'] as String),
+      longitude: double.parse(json['lon'] as String),
+      displayName: json['display_name'] as String,
+    );
+  }
+}
+
+/// Dialog for searching places using OpenStreetMap Nominatim
 class _PlaceSearchDialog extends StatefulWidget {
   final String hintText;
 
@@ -406,11 +422,69 @@ class _PlaceSearchDialog extends StatefulWidget {
 
 class _PlaceSearchDialogState extends State<_PlaceSearchDialog> {
   final TextEditingController _searchController = TextEditingController();
+  List<NominatimPlace> _searchResults = [];
+  bool _isSearching = false;
+  String _errorMessage = '';
 
   @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  Future<void> _performSearch(String query) async {
+    if (query.trim().isEmpty) {
+      setState(() {
+        _searchResults = [];
+        _errorMessage = '';
+      });
+      return;
+    }
+
+    setState(() {
+      _isSearching = true;
+      _errorMessage = '';
+    });
+
+    try {
+      // Use Nominatim API from OpenStreetMap
+      // Respecting usage policy: https://operations.osmfoundation.org/policies/nominatim/
+      final url = Uri.parse(
+        'https://nominatim.openstreetmap.org/search?'
+        'q=${Uri.encodeComponent(query)}'
+        '&format=json'
+        '&limit=10'
+        '&addressdetails=1',
+      );
+
+      final response = await http.get(
+        url,
+        headers: {
+          'User-Agent': 'Caravella-ExpenseTracker/1.1.0',
+          'Accept-Language': 'it,en',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonList = json.decode(response.body);
+        setState(() {
+          _searchResults = jsonList
+              .map((json) => NominatimPlace.fromJson(json))
+              .toList();
+          _isSearching = false;
+        });
+      } else {
+        setState(() {
+          _errorMessage = 'Search failed: ${response.statusCode}';
+          _isSearching = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Error: ${e.toString()}';
+        _isSearching = false;
+      });
+    }
   }
 
   @override
@@ -441,43 +515,88 @@ class _PlaceSearchDialogState extends State<_PlaceSearchDialog> {
               ],
             ),
             const SizedBox(height: 16),
-            Expanded(
-              child: GooglePlaceAutoCompleteTextField(
-                textEditingController: _searchController,
-                googleAPIKey: const String.fromEnvironment(
-                  'GOOGLE_PLACES_API_KEY',
-                  defaultValue: '',
+            TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: widget.hintText,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                inputDecoration: InputDecoration(
-                  hintText: widget.hintText,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  prefixIcon: const Icon(Icons.search),
-                ),
-                debounceTime: 600,
-                countries: const [], // Search all countries
-                isLatLngRequired: false,
-                getPlaceDetailWithLatLng: (prediction) {
-                  Navigator.of(context).pop(prediction);
-                },
-                itemClick: (prediction) {
-                  _searchController.text = prediction.description ?? '';
-                  Navigator.of(context).pop(prediction);
-                },
-                itemBuilder: (context, index, prediction) {
-                  return ListTile(
-                    leading: Icon(
-                      Icons.place,
-                      color: colorScheme.primary,
-                    ),
-                    title: Text(prediction.description ?? ''),
-                  );
-                },
-                seperatedBuilder: const Divider(),
-                isCrossBtnShown: true,
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: _searchController.text.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          _searchController.clear();
+                          setState(() {
+                            _searchResults = [];
+                            _errorMessage = '';
+                          });
+                        },
+                      )
+                    : null,
               ),
+              onChanged: (value) {
+                // Debounce search
+                Future.delayed(const Duration(milliseconds: 500), () {
+                  if (_searchController.text == value) {
+                    _performSearch(value);
+                  }
+                });
+              },
+              onSubmitted: _performSearch,
             ),
+            const SizedBox(height: 16),
+            if (_isSearching)
+              const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+            if (_errorMessage.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  _errorMessage,
+                  style: TextStyle(color: colorScheme.error),
+                ),
+              ),
+            if (!_isSearching && _searchResults.isNotEmpty)
+              Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: _searchResults.length,
+                  itemBuilder: (context, index) {
+                    final place = _searchResults[index];
+                    return ListTile(
+                      leading: Icon(
+                        Icons.place,
+                        color: colorScheme.primary,
+                      ),
+                      title: Text(
+                        place.displayName,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      onTap: () => Navigator.of(context).pop(place),
+                    );
+                  },
+                ),
+              ),
+            if (!_isSearching &&
+                _searchResults.isEmpty &&
+                _searchController.text.isNotEmpty &&
+                _errorMessage.isEmpty)
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'No results found',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
           ],
         ),
       ),

@@ -8,11 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Google Places autocomplete integration for location search in expense form
+- OpenStreetMap Nominatim integration for location search in expense form (free, no API key required)
 - Search place button in location input widget for easy place discovery
-- Place picker dialog with autocomplete suggestions
-- Support for Google Places API key configuration via environment variable
-- Documentation for Google Places API setup and configuration (see docs/GOOGLE_PLACES_SETUP.md)
+- Place picker dialog with search suggestions from OpenStreetMap
+- Privacy-friendly and F-Droid compatible location search
 - OpenStreetMap integration for visualizing expense locations on an interactive map
 - Map view button in expense group overview to display all expenses with locations on a map
 - Auto-location toggle setting for automatic GPS retrieval when adding new expenses
