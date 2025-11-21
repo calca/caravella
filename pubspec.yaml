@@ -43,7 +43,7 @@ dependencies:
   
   # External dependencies
   provider: ^6.1.5+1
-  file_picker: ^10.3.6
+  file_picker: ^10.3.7
   image_picker: ^1.2.1
   image_picker_android: ^0.8.13
   image: ^4.5.4
