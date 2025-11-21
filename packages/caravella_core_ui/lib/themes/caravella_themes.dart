@@ -191,19 +191,23 @@ class CaravellaThemes {
     // Ensure surface containers have distinct values
     // If dynamic color doesn't provide them, use fallback values
     final scheme = colorScheme.copyWith(
-      surfaceContainerLowest: colorScheme.surfaceContainerLowest != colorScheme.surface
+      surfaceContainerLowest:
+          colorScheme.surfaceContainerLowest != colorScheme.surface
           ? colorScheme.surfaceContainerLowest
           : fallbackColorScheme.surfaceContainerLowest,
-      surfaceContainerLow: colorScheme.surfaceContainerLow != colorScheme.surface
+      surfaceContainerLow:
+          colorScheme.surfaceContainerLow != colorScheme.surface
           ? colorScheme.surfaceContainerLow
           : fallbackColorScheme.surfaceContainerLow,
       surfaceContainer: colorScheme.surfaceContainer != colorScheme.surface
           ? colorScheme.surfaceContainer
           : fallbackColorScheme.surfaceContainer,
-      surfaceContainerHigh: colorScheme.surfaceContainerHigh != colorScheme.surface
+      surfaceContainerHigh:
+          colorScheme.surfaceContainerHigh != colorScheme.surface
           ? colorScheme.surfaceContainerHigh
           : fallbackColorScheme.surfaceContainerHigh,
-      surfaceContainerHighest: colorScheme.surfaceContainerHighest != colorScheme.surface
+      surfaceContainerHighest:
+          colorScheme.surfaceContainerHighest != colorScheme.surface
           ? colorScheme.surfaceContainerHighest
           : fallbackColorScheme.surfaceContainerHighest,
     );
@@ -218,23 +222,21 @@ class CaravellaThemes {
         surfaceTintColor: scheme.surfaceTint,
         elevation: 6,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
-        titleTextStyle: _createTextTheme(scheme).titleLarge?.copyWith(color: scheme.onSurface),
-        contentTextStyle: _createTextTheme(scheme).bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
+        titleTextStyle: _createTextTheme(
+          scheme,
+        ).titleLarge?.copyWith(color: scheme.onSurface),
+        contentTextStyle: _createTextTheme(
+          scheme,
+        ).bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
       ),
       inputDecorationTheme: InputDecorationTheme(
         isDense: true,
         filled: false,
         border: UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: scheme.outlineVariant,
-            width: 0.5,
-          ),
+          borderSide: BorderSide(color: scheme.outlineVariant, width: 0.5),
         ),
         enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: scheme.outlineVariant,
-            width: 0.5,
-          ),
+          borderSide: BorderSide(color: scheme.outlineVariant, width: 0.5),
         ),
         focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: scheme.primary, width: 1),
