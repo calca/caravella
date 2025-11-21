@@ -188,7 +188,25 @@ class CaravellaThemes {
     required ColorScheme colorScheme,
     required ColorScheme fallbackColorScheme,
   }) {
-    final scheme = colorScheme;
+    // Ensure surface containers have distinct values
+    // If dynamic color doesn't provide them, use fallback values
+    final scheme = colorScheme.copyWith(
+      surfaceContainerLowest: colorScheme.surfaceContainerLowest != colorScheme.surface
+          ? colorScheme.surfaceContainerLowest
+          : fallbackColorScheme.surfaceContainerLowest,
+      surfaceContainerLow: colorScheme.surfaceContainerLow != colorScheme.surface
+          ? colorScheme.surfaceContainerLow
+          : fallbackColorScheme.surfaceContainerLow,
+      surfaceContainer: colorScheme.surfaceContainer != colorScheme.surface
+          ? colorScheme.surfaceContainer
+          : fallbackColorScheme.surfaceContainer,
+      surfaceContainerHigh: colorScheme.surfaceContainerHigh != colorScheme.surface
+          ? colorScheme.surfaceContainerHigh
+          : fallbackColorScheme.surfaceContainerHigh,
+      surfaceContainerHighest: colorScheme.surfaceContainerHighest != colorScheme.surface
+          ? colorScheme.surfaceContainerHighest
+          : fallbackColorScheme.surfaceContainerHighest,
+    );
     return ThemeData(
       colorScheme: scheme,
       fontFamily: 'Montserrat',
