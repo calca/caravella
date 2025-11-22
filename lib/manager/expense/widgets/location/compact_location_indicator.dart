@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core/caravella_core.dart';
+import 'location_widget_constants.dart';
 
 /// Compact indicator showing location retrieval status in the expense form
 /// Used in compact mode to show auto-location activity
@@ -28,14 +29,14 @@ class CompactLocationIndicator extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    IconData icon;
-    Color iconColor;
+    final IconData icon;
+    final Color iconColor;
 
     if (isRetrieving) {
-      icon = Icons.location_searching;
+      icon = LocationWidgetConstants.loadingIcon;
       iconColor = theme.colorScheme.primary;
     } else if (location != null) {
-      icon = Icons.place;
+      icon = LocationWidgetConstants.successIcon;
       iconColor = theme.colorScheme.tertiary;
     } else {
       return const SizedBox.shrink();
@@ -55,14 +56,18 @@ class CompactLocationIndicator extends StatelessWidget {
         onPressed: onCancel,
         icon: isRetrieving
             ? SizedBox(
-                width: 20,
-                height: 20,
+                width: LocationWidgetConstants.loaderSize,
+                height: LocationWidgetConstants.loaderSize,
                 child: CircularProgressIndicator(
-                  strokeWidth: 2,
+                  strokeWidth: LocationWidgetConstants.loaderStrokeWidth,
                   color: iconColor,
                 ),
               )
-            : Icon(icon, size: 20, color: iconColor),
+            : Icon(
+                icon,
+                size: LocationWidgetConstants.iconSize,
+                color: iconColor,
+              ),
         tooltip: isRetrieving ? gloc.getting_location : gloc.location,
       ),
     );

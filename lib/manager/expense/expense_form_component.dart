@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core_ui/caravella_core_ui.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:io_caravella_egm/manager/expense/widgets/location/location_input_widget.dart';
+import 'widgets/location/location_service.dart';
 import 'expense_form/amount_input_widget.dart';
 import 'expense_form/participant_selector_widget.dart';
 import 'expense_form/category_selector_widget.dart';
 import 'expense_form/date_selector_widget.dart';
 import 'expense_form/note_input_widget.dart';
-import 'expense_form/location_input_widget.dart';
 import 'expense_form/expense_form_actions_widget.dart';
 import 'expense_form/category_dialog.dart';
 import 'expense_form/compact_location_indicator.dart';
@@ -326,78 +326,29 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
       _isRetrievingLocation = true;
     });
 
-    final messenger = ScaffoldMessenger.of(context);
-    final gloc = gen.AppLocalizations.of(context);
-
-    try {
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
+    final location = await LocationService.getCurrentLocation(
+      context,
+      resolveAddress: false,
+      onStatusChanged: (status) {
         if (mounted) {
-          AppToast.showFromMessenger(
-            messenger,
-            gloc.location_service_disabled,
-            type: ToastType.info,
-          );
+          setState(() {
+            _isRetrievingLocation = status;
+          });
         }
-        return;
-      }
+      },
+    );
 
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          if (mounted) {
-            AppToast.showFromMessenger(
-              messenger,
-              gloc.location_permission_denied,
-              type: ToastType.info,
-            );
-          }
-          return;
-        }
-      }
+    if (location != null && mounted) {
+      setState(() {
+        _location = location;
+        _isDirty = true;
+      });
+    }
 
-      if (permission == LocationPermission.deniedForever) {
-        if (mounted) {
-          AppToast.showFromMessenger(
-            messenger,
-            gloc.location_permission_denied,
-            type: ToastType.error,
-          );
-        }
-        return;
-      }
-
-      final position = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.high,
-          timeLimit: Duration(seconds: 10),
-        ),
-      );
-
-      if (mounted) {
-        setState(() {
-          _location = ExpenseLocation(
-            latitude: position.latitude,
-            longitude: position.longitude,
-          );
-          _isDirty = true;
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        AppToast.showFromMessenger(
-          messenger,
-          gloc.location_error,
-          type: ToastType.error,
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isRetrievingLocation = false;
-        });
-      }
+    if (mounted) {
+      setState(() {
+        _isRetrievingLocation = false;
+      });
     }
   }
 
