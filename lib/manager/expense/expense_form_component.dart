@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core_ui/caravella_core_ui.dart';
+import 'package:geolocator/geolocator.dart';
 import 'expense_form/amount_input_widget.dart';
 import 'expense_form/participant_selector_widget.dart';
 import 'expense_form/category_selector_widget.dart';
@@ -310,7 +311,94 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     // Mark initialization as complete after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializing = false;
+
+      // Auto-retrieve location if enabled and creating a new expense
+      if (widget.initialExpense == null && _autoLocationEnabled) {
+        _retrieveCurrentLocation();
+      }
     });
+  }
+
+  Future<void> _retrieveCurrentLocation() async {
+    if (!mounted) return;
+
+    setState(() {
+      _isRetrievingLocation = true;
+    });
+
+    final messenger = ScaffoldMessenger.of(context);
+    final gloc = gen.AppLocalizations.of(context);
+
+    try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        if (mounted) {
+          AppToast.showFromMessenger(
+            messenger,
+            gloc.location_service_disabled,
+            type: ToastType.info,
+          );
+        }
+        return;
+      }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          if (mounted) {
+            AppToast.showFromMessenger(
+              messenger,
+              gloc.location_permission_denied,
+              type: ToastType.info,
+            );
+          }
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        if (mounted) {
+          AppToast.showFromMessenger(
+            messenger,
+            gloc.location_permission_denied,
+            type: ToastType.error,
+          );
+        }
+        return;
+      }
+
+      final position = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+          timeLimit: Duration(seconds: 10),
+        ),
+      );
+
+      if (mounted) {
+        setState(() {
+          _location = ExpenseLocation(
+            latitude: position.latitude,
+            longitude: position.longitude,
+          );
+          _isDirty = true;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        AppToast.showFromMessenger(
+          messenger,
+          gloc.location_error,
+          type: ToastType.error,
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isRetrievingLocation = false;
+        });
+      }
+    }
   }
 
   double? _parseLocalizedAmount(String input) {
@@ -620,11 +708,14 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
           ),
           // Show compact location indicator when auto-location is enabled
           if (widget.initialExpense == null && _autoLocationEnabled)
-            CompactLocationIndicator(
-              isRetrieving: _isRetrievingLocation,
-              location: _location,
-              onCancel: _clearLocation,
-              textStyle: style,
+            Align(
+              alignment: Alignment.centerRight,
+              child: CompactLocationIndicator(
+                isRetrieving: _isRetrievingLocation,
+                location: _location,
+                onCancel: _clearLocation,
+                textStyle: style,
+              ),
             ),
         ],
       ),

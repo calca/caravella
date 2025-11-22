@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core/caravella_core.dart';
-import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 /// Compact indicator showing location retrieval status in the expense form
 /// Used in compact mode to show auto-location activity
@@ -23,7 +22,6 @@ class CompactLocationIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final gloc = gen.AppLocalizations.of(context);
-    final borderColor = theme.colorScheme.outlineVariant;
 
     // Don't show anything if not retrieving and no location
     if (!isRetrieving && location == null) {
@@ -31,16 +29,13 @@ class CompactLocationIndicator extends StatelessWidget {
     }
 
     IconData icon;
-    String label;
     Color iconColor;
 
     if (isRetrieving) {
       icon = Icons.location_searching;
-      label = gloc.getting_location;
       iconColor = theme.colorScheme.primary;
     } else if (location != null) {
       icon = Icons.place;
-      label = gloc.location;
       iconColor = theme.colorScheme.tertiary;
     } else {
       return const SizedBox.shrink();
@@ -48,25 +43,18 @@ class CompactLocationIndicator extends StatelessWidget {
 
     return Semantics(
       button: true,
-      label: isRetrieving 
-        ? gloc.getting_location 
-        : gloc.location,
-      hint: onCancel != null 
-        ? 'Double tap to ${isRetrieving ? "cancel location retrieval" : "clear location"}' 
-        : null,
-      child: OutlinedButton(
-        style: OutlinedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          foregroundColor: theme.colorScheme.onSurface,
-          side: BorderSide(color: borderColor.withValues(alpha: 0.8), width: 1),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      label: isRetrieving ? gloc.getting_location : gloc.location,
+      hint: onCancel != null
+          ? 'Double tap to ${isRetrieving ? "cancel location retrieval" : "clear location"}'
+          : null,
+      child: IconButton(
+        style: IconButton.styleFrom(
+          padding: const EdgeInsets.all(8),
+          minimumSize: const Size(40, 40),
         ),
         onPressed: onCancel,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (isRetrieving)
-              SizedBox(
+        icon: isRetrieving
+            ? SizedBox(
                 width: 20,
                 height: 20,
                 child: CircularProgressIndicator(
@@ -74,31 +62,8 @@ class CompactLocationIndicator extends StatelessWidget {
                   color: iconColor,
                 ),
               )
-            else
-              Icon(icon, size: 20, color: iconColor),
-            const SizedBox(width: 8),
-            Flexible(
-              child: Text(
-                label,
-                overflow: TextOverflow.ellipsis,
-                style: (textStyle ?? FormTheme.getSelectTextStyle(context))
-                    ?.copyWith(
-                  color: theme.colorScheme.onSurface,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ),
-            if (onCancel != null && (isRetrieving || location != null))
-              Padding(
-                padding: const EdgeInsets.only(left: 4),
-                child: Icon(
-                  Icons.close,
-                  size: 16,
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-          ],
-        ),
+            : Icon(icon, size: 20, color: iconColor),
+        tooltip: isRetrieving ? gloc.getting_location : gloc.location,
       ),
     );
   }
