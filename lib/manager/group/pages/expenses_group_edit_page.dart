@@ -566,14 +566,52 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                                                           gloc.settings_auto_location_desc,
                                                         ),
                                                         value: enabled,
-                                                        onChanged: (value) {
-                                                          context
+                                                        onChanged: (value) async {
+                                                          // Capture context-dependent objects before async operations
+                                                          final controller = context
                                                               .read<
-                                                                GroupFormState
-                                                              >()
+                                                                GroupFormController
+                                                              >();
+                                                          final notifier = context
+                                                              .read<
+                                                                ExpenseGroupNotifier
+                                                              >();
+
+                                                          // Update state immediately for UI feedback
+                                                          controller.state
                                                               .setAutoLocationEnabled(
                                                                 value,
                                                               );
+
+                                                          // Save the change immediately to persist the setting
+                                                          try {
+                                                            await controller
+                                                                .save();
+
+                                                            // Notify listeners that the group was updated
+                                                            if (controller
+                                                                    .state
+                                                                    .id !=
+                                                                null) {
+                                                              notifier
+                                                                  .notifyGroupUpdated(
+                                                                    controller
+                                                                        .state
+                                                                        .id!,
+                                                                  );
+                                                            }
+                                                          } catch (e) {
+                                                            // Show error if save fails
+                                                            if (context
+                                                                .mounted) {
+                                                              AppToast.show(
+                                                                context,
+                                                                gloc.backup_error,
+                                                                type: ToastType
+                                                                    .error,
+                                                              );
+                                                            }
+                                                          }
                                                         },
                                                       ),
                                                     ),
