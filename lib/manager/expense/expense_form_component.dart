@@ -93,7 +93,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
 
   // Auto location preference
   bool _autoLocationEnabled = false;
-  
+
   // Location retrieval status for compact indicator
   bool _isRetrievingLocation = false;
 
@@ -632,7 +632,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
   }
 
   // (Expand button moved into ExpenseFormActionsWidget)
-  
+
   void _clearLocation() {
     setState(() {
       _location = null;
@@ -843,6 +843,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
   Widget _buildActionsRow(gen.AppLocalizations gloc, TextStyle? style) =>
       ExpenseFormActionsWidget(
         onSave: _isFormValid() ? _saveExpense : null,
+        isFormValid: _isFormValid(),
         isEdit: widget.initialExpense != null,
         onDelete: widget.initialExpense != null ? widget.onDelete : null,
         textStyle: style,

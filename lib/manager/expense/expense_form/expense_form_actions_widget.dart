@@ -3,6 +3,7 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 class ExpenseFormActionsWidget extends StatelessWidget {
   final VoidCallback? onSave;
+  final bool isFormValid;
   final VoidCallback? onDelete; // Shown only in edit mode
   final bool isEdit;
   final TextStyle? textStyle;
@@ -13,6 +14,7 @@ class ExpenseFormActionsWidget extends StatelessWidget {
   const ExpenseFormActionsWidget({
     super.key,
     required this.onSave,
+    this.isFormValid = false,
     this.onDelete,
     this.isEdit = false,
     this.textStyle,
@@ -76,7 +78,6 @@ class ExpenseFormActionsWidget extends StatelessWidget {
         TextButton(
           onPressed: onSave,
           style: TextButton.styleFrom(
-            foregroundColor: colorScheme.onSurface.withValues(alpha: 0.8),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
           ),
           child: Text(
@@ -84,6 +85,9 @@ class ExpenseFormActionsWidget extends StatelessWidget {
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
               fontWeight: FontWeight.w600,
               letterSpacing: 1.2,
+              color: isFormValid
+                  ? colorScheme.primary
+                  : colorScheme.onSurface.withValues(alpha: 0.8),
             ),
             overflow: TextOverflow.ellipsis,
           ),
