@@ -676,49 +676,49 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         ],
       );
     }
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Wrap(
-        spacing: 12,
-        runSpacing: 8,
-        children: [
-          _buildFieldWithStatus(
-            ParticipantSelectorWidget(
-              participants: widget.participants.map((p) => p.name).toList(),
-              selectedParticipant: _paidBy?.name,
-              onParticipantSelected: _onParticipantSelected,
-              textStyle: style,
-              fullEdit: false,
-            ),
-            _isPaidByValid,
-            _paidByTouched,
-          ),
-          _buildFieldWithStatus(
-            CategorySelectorWidget(
-              categories: _categories,
-              selectedCategory: _category,
-              onCategorySelected: _onCategorySelected,
-              onAddCategory: _onAddCategory,
-              onAddCategoryInline: _onAddCategoryInline,
-              textStyle: style,
-              fullEdit: false,
-            ),
-            _isCategoryValid,
-            _categoryTouched,
-          ),
-          // Show compact location indicator when auto-location is enabled
-          if (widget.initialExpense == null && _autoLocationEnabled)
-            Align(
-              alignment: Alignment.centerRight,
-              child: CompactLocationIndicator(
-                isRetrieving: _isRetrievingLocation,
-                location: _location,
-                onCancel: _clearLocation,
+    return Row(
+      children: [
+        Wrap(
+          spacing: 12,
+          runSpacing: 8,
+          children: [
+            _buildFieldWithStatus(
+              ParticipantSelectorWidget(
+                participants: widget.participants.map((p) => p.name).toList(),
+                selectedParticipant: _paidBy?.name,
+                onParticipantSelected: _onParticipantSelected,
                 textStyle: style,
+                fullEdit: false,
               ),
+              _isPaidByValid,
+              _paidByTouched,
             ),
+            _buildFieldWithStatus(
+              CategorySelectorWidget(
+                categories: _categories,
+                selectedCategory: _category,
+                onCategorySelected: _onCategorySelected,
+                onAddCategory: _onAddCategory,
+                onAddCategoryInline: _onAddCategoryInline,
+                textStyle: style,
+                fullEdit: false,
+              ),
+              _isCategoryValid,
+              _categoryTouched,
+            ),
+          ],
+        ),
+        // Show compact location indicator when auto-location is enabled
+        if (widget.initialExpense == null && _autoLocationEnabled) ...[
+          const Spacer(),
+          CompactLocationIndicator(
+            isRetrieving: _isRetrievingLocation,
+            location: _location,
+            onCancel: _clearLocation,
+            textStyle: style,
+          ),
         ],
-      ),
+      ],
     );
   }
 
