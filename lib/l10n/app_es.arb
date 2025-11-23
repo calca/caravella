@@ -598,7 +598,7 @@
   ,"currency_ZMW": "Kwacha zambiano"
   ,"currency_ZWL": "Dólar zimbabuense"
   ,"search_currency": "Buscar moneda..."
-  ,"activity": "Actividad"
+  ,"activity": "Gastos"
   ,"@activity": {"description": "Título de sección actividad reciente lista de gastos"}
   ,"search_expenses_hint": "Buscar por nombre o nota..."
   ,"@search_expenses_hint": {"description": "Placeholder para buscar gastos por nombre o nota"}

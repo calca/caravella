@@ -1662,7 +1662,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get search_currency => 'Search currency...';
 
   @override
-  String get activity => 'Activity';
+  String get activity => 'Expenses';
 
   @override
   String get search_expenses_hint => 'Search by name or note...';

@@ -103,6 +103,7 @@ class GroupFormController {
     }
     if (g.file != state.imagePath) return true;
     if (g.color != state.color) return true;
+    if (g.autoLocationEnabled != state.autoLocationEnabled) return true;
     return false;
   }
 

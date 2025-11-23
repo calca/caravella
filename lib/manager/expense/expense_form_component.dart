@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core_ui/caravella_core_ui.dart';
+import 'widgets/location/location_service.dart';
+import 'widgets/location/location_input_widget.dart';
+import 'widgets/location/compact_location_indicator.dart';
 import 'expense_form/amount_input_widget.dart';
 import 'expense_form/participant_selector_widget.dart';
 import 'expense_form/category_selector_widget.dart';
 import 'expense_form/date_selector_widget.dart';
 import 'expense_form/note_input_widget.dart';
-import 'expense_form/location_input_widget.dart';
 import 'expense_form/expense_form_actions_widget.dart';
 import 'expense_form/category_dialog.dart';
 
@@ -92,6 +94,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
 
   // Auto location preference
   bool _autoLocationEnabled = false;
+
+  // Location retrieval status for compact indicator
+  bool _isRetrievingLocation = false;
 
   // Getters per stato dei campi
   bool get _isAmountValid => _amount != null && _amount! > 0;
@@ -306,7 +311,45 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     // Mark initialization as complete after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializing = false;
+
+      // Auto-retrieve location if enabled and creating a new expense
+      if (widget.initialExpense == null && _autoLocationEnabled) {
+        _retrieveCurrentLocation();
+      }
     });
+  }
+
+  Future<void> _retrieveCurrentLocation() async {
+    if (!mounted) return;
+
+    setState(() {
+      _isRetrievingLocation = true;
+    });
+
+    final location = await LocationService.getCurrentLocation(
+      context,
+      resolveAddress: true,
+      onStatusChanged: (status) {
+        if (mounted) {
+          setState(() {
+            _isRetrievingLocation = status;
+          });
+        }
+      },
+    );
+
+    if (location != null && mounted) {
+      setState(() {
+        _location = location;
+        _isDirty = true;
+      });
+    }
+
+    if (mounted) {
+      setState(() {
+        _isRetrievingLocation = false;
+      });
+    }
   }
 
   double? _parseLocalizedAmount(String input) {
@@ -584,42 +627,63 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         ],
       );
     }
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Wrap(
-        spacing: 12,
-        runSpacing: 8,
-        children: [
-          _buildFieldWithStatus(
-            ParticipantSelectorWidget(
-              participants: widget.participants.map((p) => p.name).toList(),
-              selectedParticipant: _paidBy?.name,
-              onParticipantSelected: _onParticipantSelected,
-              textStyle: style,
-              fullEdit: false,
+    return Row(
+      children: [
+        Wrap(
+          spacing: 12,
+          runSpacing: 8,
+          children: [
+            _buildFieldWithStatus(
+              ParticipantSelectorWidget(
+                participants: widget.participants.map((p) => p.name).toList(),
+                selectedParticipant: _paidBy?.name,
+                onParticipantSelected: _onParticipantSelected,
+                textStyle: style,
+                fullEdit: false,
+              ),
+              _isPaidByValid,
+              _paidByTouched,
             ),
-            _isPaidByValid,
-            _paidByTouched,
-          ),
-          _buildFieldWithStatus(
-            CategorySelectorWidget(
-              categories: _categories,
-              selectedCategory: _category,
-              onCategorySelected: _onCategorySelected,
-              onAddCategory: _onAddCategory,
-              onAddCategoryInline: _onAddCategoryInline,
-              textStyle: style,
-              fullEdit: false,
+            _buildFieldWithStatus(
+              CategorySelectorWidget(
+                categories: _categories,
+                selectedCategory: _category,
+                onCategorySelected: _onCategorySelected,
+                onAddCategory: _onAddCategory,
+                onAddCategoryInline: _onAddCategoryInline,
+                textStyle: style,
+                fullEdit: false,
+              ),
+              _isCategoryValid,
+              _categoryTouched,
             ),
-            _isCategoryValid,
-            _categoryTouched,
+          ],
+        ),
+        // Show compact location indicator when auto-location is enabled
+        if (widget.initialExpense == null && _autoLocationEnabled) ...[
+          const Spacer(),
+          CompactLocationIndicator(
+            isRetrieving: _isRetrievingLocation,
+            location: _location,
+            onCancel: _clearLocation,
+            textStyle: style,
           ),
         ],
-      ),
+      ],
     );
   }
 
   // (Expand button moved into ExpenseFormActionsWidget)
+
+  void _clearLocation() {
+    setState(() {
+      _location = null;
+      _isRetrievingLocation = false;
+      if (!_initializing) {
+        _isDirty = true;
+      }
+    });
+  }
 
   void _onParticipantSelected(String selectedName) {
     setState(() {
@@ -755,6 +819,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
             }),
             externalFocusNode: _locationFocus,
             autoRetrieve: widget.initialExpense == null && _autoLocationEnabled,
+            onRetrievalStatusChanged: (isRetrieving) => setState(() {
+              _isRetrievingLocation = isRetrieving;
+            }),
           ),
         ),
         _spacer(),
@@ -818,6 +885,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
   Widget _buildActionsRow(gen.AppLocalizations gloc, TextStyle? style) =>
       ExpenseFormActionsWidget(
         onSave: _isFormValid() ? _saveExpense : null,
+        isFormValid: _isFormValid(),
         isEdit: widget.initialExpense != null,
         onDelete: widget.initialExpense != null ? widget.onDelete : null,
         textStyle: style,

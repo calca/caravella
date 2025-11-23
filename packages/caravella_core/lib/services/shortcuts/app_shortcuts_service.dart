@@ -50,6 +50,8 @@ class AppShortcutsService {
           'title': group.title,
           'isPinned': group.pinned,
           'lastUpdated': group.timestamp.millisecondsSinceEpoch,
+          'color': group.color, // Color as int (ARGB or palette index)
+          'file': group.file, // Image file path (if available)
         };
       }).toList();
 

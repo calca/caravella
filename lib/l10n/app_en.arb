@@ -616,8 +616,8 @@
   ,"currency_ZMW": "Zambian Kwacha"
   ,"currency_ZWL": "Zimbabwean Dollar"
   ,"search_currency": "Search currency..."
-  ,"activity": "Activity"
-  ,"@activity": {"description": "Section title for expense list recent activity"}
+  ,"activity": "Expenses"
+  ,"@activity": {"description": "Section title for expense list"}
   ,"search_expenses_hint": "Search by name or note..."
   ,"@search_expenses_hint": {"description": "Placeholder for searching expenses by name or note"}
   ,"clear_filters": "Clear"

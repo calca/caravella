@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:http/http.dart' as http;
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'icon_leading_field.dart';
+import '../../expense_form/icon_leading_field.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
+import 'location_service.dart';
+import 'location_widget_constants.dart';
 
 class LocationInputWidget extends StatefulWidget {
   final ExpenseLocation? initialLocation;
@@ -14,6 +14,7 @@ class LocationInputWidget extends StatefulWidget {
   final Function(ExpenseLocation?) onLocationChanged;
   final FocusNode? externalFocusNode;
   final bool autoRetrieve;
+  final Function(bool)? onRetrievalStatusChanged;
 
   const LocationInputWidget({
     super.key,
@@ -22,6 +23,7 @@ class LocationInputWidget extends StatefulWidget {
     required this.onLocationChanged,
     this.externalFocusNode,
     this.autoRetrieve = false,
+    this.onRetrievalStatusChanged,
   });
 
   @override
@@ -51,6 +53,16 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
   }
 
   @override
+  void didUpdateWidget(LocationInputWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Update internal state if initialLocation changes externally
+    if (widget.initialLocation != oldWidget.initialLocation) {
+      _currentLocation = widget.initialLocation;
+      _controller.text = _currentLocation?.displayText ?? '';
+    }
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     if (widget.externalFocusNode == null) {
@@ -63,95 +75,33 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
     setState(() {
       _isGettingLocation = true;
     });
-    // Capture messenger before any async gaps to avoid using BuildContext after awaits
-    final messenger = ScaffoldMessenger.of(context);
+    widget.onRetrievalStatusChanged?.call(true);
 
-    try {
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
+    final location = await LocationService.getCurrentLocation(
+      context,
+      resolveAddress: true,
+      onStatusChanged: (status) {
         if (mounted) {
-          AppToast.showFromMessenger(
-            messenger,
-            gen.AppLocalizations.of(context).location_service_disabled,
-            type: ToastType.info,
-          );
+          setState(() {
+            _isGettingLocation = status;
+          });
+          widget.onRetrievalStatusChanged?.call(status);
         }
-        return;
-      }
+      },
+    );
 
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          if (mounted) {
-            AppToast.showFromMessenger(
-              messenger,
-              gen.AppLocalizations.of(context).location_permission_denied,
-              type: ToastType.info,
-            );
-          }
-          return;
-        }
-      }
-
-      if (permission == LocationPermission.deniedForever) {
-        if (mounted) {
-          AppToast.showFromMessenger(
-            messenger,
-            gen.AppLocalizations.of(context).location_permission_denied,
-            type: ToastType.info,
-          );
-        }
-        return;
-      }
-
-      Position position = await Geolocator.getCurrentPosition();
-
-      if (mounted) {
-        setState(() => _isResolvingAddress = true);
-      }
-
-      // Reverse geocoding to human-readable address
-      String? address;
-      try {
-        final placemarks = await geocoding.placemarkFromCoordinates(
-          position.latitude,
-          position.longitude,
-        );
-        if (placemarks.isNotEmpty) {
-          final p = placemarks.first;
-          final parts = [
-            if ((p.thoroughfare ?? '').isNotEmpty) p.thoroughfare,
-            if ((p.subThoroughfare ?? '').isNotEmpty) p.subThoroughfare,
-            if ((p.locality ?? '').isNotEmpty) p.locality,
-            if ((p.administrativeArea ?? '').isNotEmpty) p.administrativeArea,
-            if ((p.country ?? '').isNotEmpty) p.country,
-          ].whereType<String>().where((e) => e.trim().isNotEmpty).toList();
-          if (parts.isNotEmpty) {
-            address = parts.join(', ');
-          }
-        }
-      } catch (_) {
-        // Ignore reverse geocoding failure; fallback below
-      }
-
-      final location = ExpenseLocation(
-        latitude: position.latitude,
-        longitude: position.longitude,
-        address: address,
-      );
-
+    if (location != null && mounted) {
       setState(() {
         _currentLocation = location;
         _controller.text = location.displayText.isNotEmpty
             ? location.displayText
-            : '${position.latitude.toStringAsFixed(6)}, ${position.longitude.toStringAsFixed(6)}';
-        _isResolvingAddress = false;
+            : '${location.latitude!.toStringAsFixed(6)}, ${location.longitude!.toStringAsFixed(6)}';
       });
 
       // Optional lightweight feedback when an address gets resolved
-      if (address != null && mounted) {
+      if (location.address != null) {
         final gloc = gen.AppLocalizations.of(context);
+        final messenger = ScaffoldMessenger.of(context);
         AppToast.showFromMessenger(
           messenger,
           gloc.address_resolved,
@@ -160,21 +110,13 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
       }
 
       widget.onLocationChanged(location);
-    } catch (e) {
-      if (mounted) {
-        AppToast.showFromMessenger(
-          messenger,
-          gen.AppLocalizations.of(context).location_error,
-          type: ToastType.error,
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isGettingLocation = false;
-          _isResolvingAddress = false;
-        });
-      }
+    }
+
+    if (mounted) {
+      setState(() {
+        _isGettingLocation = false;
+      });
+      widget.onRetrievalStatusChanged?.call(false);
     }
   }
 
@@ -276,7 +218,6 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
             : _isResolvingAddress
             ? gloc.resolving_address
             : gloc.location_hint,
-        // rely on theme hintStyle
         border: InputBorder.none,
         isDense: true,
         contentPadding: FormTheme.standardContentPadding,
@@ -319,7 +260,13 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
             child: SizedBox(
               width: 32,
               height: 32,
-              child: Center(child: Icon(icon, size: 20, color: color)),
+              child: Center(
+                child: Icon(
+                  icon,
+                  size: LocationWidgetConstants.iconSize,
+                  color: color,
+                ),
+              ),
             ),
           ),
         ),
@@ -335,10 +282,10 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: SizedBox(
-            width: 20,
-            height: 20,
+            width: LocationWidgetConstants.loaderSize,
+            height: LocationWidgetConstants.loaderSize,
             child: CircularProgressIndicator(
-              strokeWidth: 2,
+              strokeWidth: LocationWidgetConstants.loaderStrokeWidth,
               color: colorScheme.primary,
               semanticsLabel: _isGettingLocation
                   ? 'Getting your current location'
@@ -357,14 +304,14 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
         color: colorScheme.primary,
       ),
       buildAction(
-        icon: Icons.my_location_outlined,
+        icon: LocationWidgetConstants.loadingIcon,
         tooltip: gloc.get_current_location,
         onTap: _getCurrentLocation,
         color: colorScheme.primary,
       ),
       if (_currentLocation != null)
         buildAction(
-          icon: Icons.clear,
+          icon: LocationWidgetConstants.clearIcon,
           tooltip: gloc.cancel,
           onTap: _clearLocation,
           color: colorScheme.onSurfaceVariant,

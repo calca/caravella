@@ -3296,10 +3296,10 @@ abstract class AppLocalizations {
   /// **'Search currency...'**
   String get search_currency;
 
-  /// Section title for expense list recent activity
+  /// Section title for expense list
   ///
   /// In en, this message translates to:
-  /// **'Activity'**
+  /// **'Expenses'**
   String get activity;
 
   /// Placeholder for searching expenses by name or note
