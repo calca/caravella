@@ -29,46 +29,42 @@ class CompactLocationIndicator extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    final IconData icon;
-    final Color iconColor;
-
-    if (isRetrieving) {
-      icon = LocationWidgetConstants.loadingIcon;
-      iconColor = theme.colorScheme.primary;
-    } else if (location != null) {
-      icon = LocationWidgetConstants.successIcon;
-      iconColor = theme.colorScheme.tertiary;
-    } else {
-      return const SizedBox.shrink();
+    // Show location retrieved - no interaction
+    if (location != null && !isRetrieving) {
+      return Semantics(
+        label: gloc.location,
+        readOnly: true,
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Icon(
+            Icons.place_outlined,
+            size: LocationWidgetConstants.iconSize,
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+      );
     }
 
+    // Show loading state with cancel button
     return Semantics(
       button: true,
-      label: isRetrieving ? gloc.getting_location : gloc.location,
-      hint: onCancel != null
-          ? 'Double tap to ${isRetrieving ? "cancel location retrieval" : "clear location"}'
-          : null,
+      label: gloc.getting_location,
+      hint: onCancel != null ? 'Double tap to cancel location retrieval' : null,
       child: IconButton(
         style: IconButton.styleFrom(
           padding: const EdgeInsets.all(8),
           minimumSize: const Size(40, 40),
         ),
         onPressed: onCancel,
-        icon: isRetrieving
-            ? SizedBox(
-                width: LocationWidgetConstants.loaderSize,
-                height: LocationWidgetConstants.loaderSize,
-                child: CircularProgressIndicator(
-                  strokeWidth: LocationWidgetConstants.loaderStrokeWidth,
-                  color: iconColor,
-                ),
-              )
-            : Icon(
-                icon,
-                size: LocationWidgetConstants.iconSize,
-                color: iconColor,
-              ),
-        tooltip: isRetrieving ? gloc.getting_location : gloc.location,
+        icon: SizedBox(
+          width: LocationWidgetConstants.loaderSize,
+          height: LocationWidgetConstants.loaderSize,
+          child: CircularProgressIndicator(
+            strokeWidth: LocationWidgetConstants.loaderStrokeWidth,
+            color: theme.colorScheme.primary,
+          ),
+        ),
+        tooltip: gloc.getting_location,
       ),
     );
   }
