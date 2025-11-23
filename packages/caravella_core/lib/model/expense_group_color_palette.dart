@@ -46,7 +46,7 @@ class ExpenseGroupColorPalette {
   static int? findColorIndex(int argbValue, ColorScheme colorScheme) {
     final colors = _getPaletteColors(colorScheme);
     for (int i = 0; i < colors.length; i++) {
-      if (colors[i].value == argbValue) {
+      if (colors[i].toARGB32() == argbValue) {
         return i;
       }
     }

@@ -79,7 +79,7 @@ void main() {
       final colors = ExpenseGroupColorPalette.getPaletteColors(lightScheme);
 
       for (int i = 0; i < colors.length; i++) {
-        final argb = colors[i].value;
+        final argb = colors[i].toARGB32();
         final foundIndex = ExpenseGroupColorPalette.findColorIndex(
           argb,
           lightScheme,
@@ -89,7 +89,7 @@ void main() {
         // So we verify that the color at the found index matches the original color
         expect(foundIndex, isNotNull, reason: 'Should find a matching color');
         expect(
-          colors[foundIndex!].value,
+          colors[foundIndex!].toARGB32(),
           equals(argb),
           reason: 'Color at found index should match the searched color',
         );
