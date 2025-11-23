@@ -21,17 +21,17 @@ class ExpenseGroupColorPalette {
   static List<Color> _getPaletteColors(ColorScheme colorScheme) {
     return [
       colorScheme.primary,
-      colorScheme.tertiary,
       colorScheme.secondary,
-      colorScheme.errorContainer.withValues(alpha: 0.85),
+      colorScheme.tertiary,
+      colorScheme.error,
       colorScheme.primaryContainer,
       colorScheme.secondaryContainer,
-      colorScheme.primaryFixedDim,
-      colorScheme.secondaryFixedDim,
-      colorScheme.tertiaryFixed,
-      colorScheme.error,
-      colorScheme.outlineVariant,
+      colorScheme.tertiaryContainer,
+      colorScheme.errorContainer,
       colorScheme.inversePrimary,
+      colorScheme.inverseSurface,
+      colorScheme.outline,
+      colorScheme.surfaceTint,
     ];
   }
 
@@ -46,7 +46,7 @@ class ExpenseGroupColorPalette {
   static int? findColorIndex(int argbValue, ColorScheme colorScheme) {
     final colors = _getPaletteColors(colorScheme);
     for (int i = 0; i < colors.length; i++) {
-      if (colors[i].toARGB32() == argbValue) {
+      if (colors[i].value == argbValue) {
         return i;
       }
     }

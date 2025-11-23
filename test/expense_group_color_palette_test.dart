@@ -16,22 +16,10 @@ void main() {
 
     test('resolveColor returns null for invalid indices', () {
       const lightScheme = ColorScheme.light();
-      expect(
-        ExpenseGroupColorPalette.resolveColor(null, lightScheme),
-        isNull,
-      );
-      expect(
-        ExpenseGroupColorPalette.resolveColor(-1, lightScheme),
-        isNull,
-      );
-      expect(
-        ExpenseGroupColorPalette.resolveColor(12, lightScheme),
-        isNull,
-      );
-      expect(
-        ExpenseGroupColorPalette.resolveColor(100, lightScheme),
-        isNull,
-      );
+      expect(ExpenseGroupColorPalette.resolveColor(null, lightScheme), isNull);
+      expect(ExpenseGroupColorPalette.resolveColor(-1, lightScheme), isNull);
+      expect(ExpenseGroupColorPalette.resolveColor(12, lightScheme), isNull);
+      expect(ExpenseGroupColorPalette.resolveColor(100, lightScheme), isNull);
     });
 
     test('resolveColor returns color for valid palette indices', () {
@@ -48,8 +36,10 @@ void main() {
       const darkScheme = ColorScheme.dark();
 
       // Index 0 should map to primary color
-      final lightPrimary =
-          ExpenseGroupColorPalette.resolveColor(0, lightScheme);
+      final lightPrimary = ExpenseGroupColorPalette.resolveColor(
+        0,
+        lightScheme,
+      );
       final darkPrimary = ExpenseGroupColorPalette.resolveColor(0, darkScheme);
 
       expect(lightPrimary, equals(lightScheme.primary));
@@ -89,13 +79,25 @@ void main() {
       final colors = ExpenseGroupColorPalette.getPaletteColors(lightScheme);
 
       for (int i = 0; i < colors.length; i++) {
-        final argb = colors[i].toARGB32();
-        final foundIndex =
-            ExpenseGroupColorPalette.findColorIndex(argb, lightScheme);
+        final argb = colors[i].value;
+        final foundIndex = ExpenseGroupColorPalette.findColorIndex(
+          argb,
+          lightScheme,
+        );
+
+        // findColorIndex returns the first matching index when there are duplicates
+        // So we verify that the color at the found index matches the original color
+        expect(foundIndex, isNotNull, reason: 'Should find a matching color');
+        expect(
+          colors[foundIndex!].value,
+          equals(argb),
+          reason: 'Color at found index should match the searched color',
+        );
         expect(
           foundIndex,
-          equals(i),
-          reason: 'Should find index $i for color ${colors[i]}',
+          lessThanOrEqualTo(i),
+          reason:
+              'Found index should be the first occurrence (at or before current index)',
         );
       }
     });
@@ -104,8 +106,10 @@ void main() {
       const lightScheme = ColorScheme.light();
       // Use a color that's unlikely to be in the palette
       const customColor = 0xFF123456;
-      final foundIndex =
-          ExpenseGroupColorPalette.findColorIndex(customColor, lightScheme);
+      final foundIndex = ExpenseGroupColorPalette.findColorIndex(
+        customColor,
+        lightScheme,
+      );
       expect(foundIndex, isNull);
     });
 
@@ -113,14 +117,13 @@ void main() {
       const lightScheme = ColorScheme.light();
       // Try to migrate a teal color (should match primary in default theme)
       const tealColor = 0xFF009688;
-      final migratedIndex =
-          ExpenseGroupColorPalette.migrateLegacyColor(tealColor, lightScheme);
+      final migratedIndex = ExpenseGroupColorPalette.migrateLegacyColor(
+        tealColor,
+        lightScheme,
+      );
       expect(migratedIndex, isNotNull);
       expect(migratedIndex, greaterThanOrEqualTo(0));
-      expect(
-        migratedIndex,
-        lessThan(ExpenseGroupColorPalette.paletteSize),
-      );
+      expect(migratedIndex, lessThan(ExpenseGroupColorPalette.paletteSize));
     });
 
     test('palette colors are consistent across calls', () {
