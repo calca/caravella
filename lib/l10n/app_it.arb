@@ -592,8 +592,8 @@
   ,"currency_ZMW": "Kwacha dello Zambia"
   ,"currency_ZWL": "Dollaro zimbabwiano"
   ,"search_currency": "Cerca valuta..."
-  ,"activity": "Attività"
-  ,"@activity": {"description": "Titolo sezione attività elenco spese"}
+  ,"activity": "Spese"
+  ,"@activity": {"description": "Titolo sezione elenco spese"}
   ,"search_expenses_hint": "Cerca per nome o nota..."
   ,"@search_expenses_hint": {"description": "Placeholder ricerca spese per nome o nota"}
   ,"clear_filters": "Pulisci"
