@@ -64,6 +64,16 @@ class LocationService {
       );
 
       String? address;
+      String? street;
+      String? streetNumber;
+      String? locality;
+      String? subLocality;
+      String? administrativeArea;
+      String? subAdministrativeArea;
+      String? postalCode;
+      String? country;
+      String? isoCountryCode;
+
       if (resolveAddress) {
         try {
           final placemarks = await geocoding.placemarkFromCoordinates(
@@ -72,6 +82,19 @@ class LocationService {
           );
           if (placemarks.isNotEmpty) {
             final p = placemarks.first;
+
+            // Extract all fields from placemark
+            street = p.thoroughfare;
+            streetNumber = p.subThoroughfare;
+            locality = p.locality;
+            subLocality = p.subLocality;
+            administrativeArea = p.administrativeArea;
+            subAdministrativeArea = p.subAdministrativeArea;
+            postalCode = p.postalCode;
+            country = p.country;
+            isoCountryCode = p.isoCountryCode;
+
+            // Build formatted address
             final parts = [
               if ((p.thoroughfare ?? '').isNotEmpty) p.thoroughfare,
               if ((p.subThoroughfare ?? '').isNotEmpty) p.subThoroughfare,
@@ -92,6 +115,15 @@ class LocationService {
         latitude: position.latitude,
         longitude: position.longitude,
         address: address,
+        street: street,
+        streetNumber: streetNumber,
+        locality: locality,
+        subLocality: subLocality,
+        administrativeArea: administrativeArea,
+        subAdministrativeArea: subAdministrativeArea,
+        postalCode: postalCode,
+        country: country,
+        isoCountryCode: isoCountryCode,
       );
     } catch (e) {
       if (context.mounted) {
