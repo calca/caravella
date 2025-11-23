@@ -27,16 +27,86 @@ class NominatimSearchService {
       '&addressdetails=1',
     );
 
-    final response = await http.get(
-      url,
-      headers: {'User-Agent': _userAgent, 'Accept-Language': _acceptLanguage},
-    );
+    try {
+      final response = await http
+          .get(
+            url,
+            headers: {
+              'User-Agent': _userAgent,
+              'Accept-Language': _acceptLanguage,
+            },
+          )
+          .timeout(const Duration(seconds: 10));
 
-    if (response.statusCode == 200) {
-      final List<dynamic> jsonList = json.decode(response.body);
-      return jsonList.map((json) => NominatimPlace.fromJson(json)).toList();
-    } else {
-      throw Exception('Search failed with status: ${response.statusCode}');
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonList = json.decode(response.body);
+        return jsonList.map((json) => NominatimPlace.fromJson(json)).toList();
+      } else {
+        throw Exception('Search failed with status: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Return empty list on timeout or error
+      return [];
     }
+  }
+
+  /// Searches for nearby places using reverse geocoding
+  /// Returns a list of places near the given coordinates
+  static Future<List<NominatimPlace>> searchNearbyPlaces(
+    double latitude,
+    double longitude, {
+    int limit = 10,
+    int zoom = 16, // Higher zoom = smaller area
+  }) async {
+    try {
+      final url = Uri.parse(
+        'https://nominatim.openstreetmap.org/reverse?'
+        'lat=$latitude'
+        '&lon=$longitude'
+        '&format=json'
+        '&zoom=$zoom'
+        '&addressdetails=1',
+      );
+
+      final response = await http
+          .get(
+            url,
+            headers: {
+              'User-Agent': _userAgent,
+              'Accept-Language': _acceptLanguage,
+            },
+          )
+          .timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        // Use the address to search for nearby places
+        if (json['address'] != null) {
+          final city =
+              json['address']['city'] ??
+              json['address']['town'] ??
+              json['address']['village'] ??
+              json['address']['municipality'] ??
+              '';
+          final suburb = json['address']['suburb'] ?? '';
+          final road = json['address']['road'] ?? '';
+
+          // Search with the most specific location available
+          final searchQuery = suburb.isNotEmpty
+              ? suburb
+              : (road.isNotEmpty ? road : city);
+
+          if (searchQuery.isNotEmpty) {
+            // Directly call searchPlaces with proper error handling
+            return searchPlaces(searchQuery, limit: limit);
+          }
+        }
+      }
+    } catch (e) {
+      // Return empty list on any error
+      return [];
+    }
+
+    return [];
   }
 }

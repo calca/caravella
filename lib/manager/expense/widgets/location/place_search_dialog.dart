@@ -3,6 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'nominatim_place.dart';
 import 'nominatim_search_service.dart';
+import 'location_service.dart';
 
 export 'nominatim_place.dart';
 
@@ -31,6 +32,27 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
   List<NominatimPlace> _searchResults = [];
   bool _isSearching = false;
   String _errorMessage = '';
+  bool _isLoadingNearby = true;
+  bool _hasLoadedNearby = false;
+  LatLng _mapCenter = const LatLng(41.9028, 12.4964); // Default: Rome, Italy
+  double _mapZoom = 12.0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Load nearby places asynchronously without blocking
+    _loadNearbyPlacesAsync();
+  }
+
+  void _loadNearbyPlacesAsync() {
+    if (_hasLoadedNearby) return;
+    _hasLoadedNearby = true;
+
+    // Run in background without awaiting
+    Future.microtask(() async {
+      await _loadNearbyPlaces();
+    });
+  }
 
   @override
   void dispose() {
@@ -38,17 +60,93 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
     super.dispose();
   }
 
-  Future<void> _performSearch(String query) async {
-    if (query.trim().isEmpty) {
+  Future<void> _loadNearbyPlaces() async {
+    if (!mounted) return;
+
+    if (mounted) {
       setState(() {
-        _searchResults = [];
+        _isLoadingNearby = true;
         _errorMessage = '';
       });
+    }
+
+    try {
+      // Get current GPS location with timeout
+      final location =
+          await LocationService.getCurrentLocation(
+            context,
+            resolveAddress: false,
+          ).timeout(
+            const Duration(seconds: 15),
+            onTimeout: () {
+              return null;
+            },
+          );
+
+      if (location != null && mounted) {
+        final latitude = location.latitude;
+        final longitude = location.longitude;
+
+        if (latitude != null && longitude != null) {
+          // Update map center to user location
+          if (mounted) {
+            setState(() {
+              _mapCenter = LatLng(latitude, longitude);
+              _mapZoom = 13.0;
+            });
+          }
+
+          // Search for nearby places with timeout
+          final results =
+              await NominatimSearchService.searchNearbyPlaces(
+                latitude,
+                longitude,
+                limit: 15,
+              ).timeout(
+                const Duration(seconds: 10),
+                onTimeout: () => <NominatimPlace>[],
+              );
+
+          if (mounted) {
+            setState(() {
+              _searchResults = results;
+              _isLoadingNearby = false;
+            });
+          }
+        } else {
+          if (mounted) {
+            setState(() {
+              _isLoadingNearby = false;
+            });
+          }
+        }
+      } else {
+        if (mounted) {
+          setState(() {
+            _isLoadingNearby = false;
+          });
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _errorMessage = 'Could not load nearby places';
+          _isLoadingNearby = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _performSearch(String query) async {
+    if (query.trim().isEmpty) {
+      // Reload nearby places when search is cleared
+      _loadNearbyPlaces();
       return;
     }
 
     setState(() {
       _isSearching = true;
+      _isLoadingNearby = false;
       _errorMessage = '';
     });
 
@@ -72,6 +170,8 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
       _searchResults = [];
       _errorMessage = '';
     });
+    // Reload nearby places when clearing search
+    _loadNearbyPlaces();
   }
 
   @override
@@ -82,22 +182,22 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
     return Scaffold(
       body: Stack(
         children: [
-          // Full-screen map background
-          if (_searchResults.isNotEmpty)
-            _buildFullScreenMap(colorScheme)
-          else
-            Container(color: colorScheme.surfaceContainerLow),
+          // Full-screen map background (always visible)
+          _buildFullScreenMap(colorScheme),
 
           // Top search bar and results overlay
           SafeArea(
             child: Column(
               children: [
                 _buildSearchBar(theme, colorScheme),
-                if (_isSearching) _buildLoadingIndicator(),
+                if (_isSearching || _isLoadingNearby) _buildLoadingIndicator(),
                 if (_errorMessage.isNotEmpty) _buildErrorMessage(colorScheme),
-                if (!_isSearching && _searchResults.isNotEmpty)
+                if (!_isSearching &&
+                    !_isLoadingNearby &&
+                    _searchResults.isNotEmpty)
                   _buildResultsOverlay(theme, colorScheme),
                 if (!_isSearching &&
+                    !_isLoadingNearby &&
                     _searchResults.isEmpty &&
                     _searchController.text.isNotEmpty &&
                     _errorMessage.isEmpty)
@@ -177,11 +277,8 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
   Widget _buildFullScreenMap(ColorScheme colorScheme) {
     return FlutterMap(
       options: MapOptions(
-        initialCenter: LatLng(
-          _searchResults.first.latitude,
-          _searchResults.first.longitude,
-        ),
-        initialZoom: 12.0,
+        initialCenter: _mapCenter,
+        initialZoom: _mapZoom,
         minZoom: 3.0,
         maxZoom: 18.0,
       ),
@@ -190,23 +287,24 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           userAgentPackageName: 'io.caravella.egm',
         ),
-        MarkerLayer(
-          markers: _searchResults.map((place) {
-            return Marker(
-              point: LatLng(place.latitude, place.longitude),
-              width: 40,
-              height: 40,
-              child: GestureDetector(
-                onTap: () => Navigator.of(context).pop(place),
-                child: Icon(
-                  Icons.location_on,
-                  color: colorScheme.error,
-                  size: 40,
+        if (_searchResults.isNotEmpty)
+          MarkerLayer(
+            markers: _searchResults.map((place) {
+              return Marker(
+                point: LatLng(place.latitude, place.longitude),
+                width: 40,
+                height: 40,
+                child: GestureDetector(
+                  onTap: () => Navigator.of(context).pop(place),
+                  child: Icon(
+                    Icons.location_on,
+                    color: colorScheme.error,
+                    size: 40,
+                  ),
                 ),
-              ),
-            );
-          }).toList(),
-        ),
+              );
+            }).toList(),
+          ),
       ],
     );
   }
