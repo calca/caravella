@@ -35,6 +35,8 @@ void main() {
         timestamp: now.subtract(const Duration(days: 10)),
       );
       
+      // Note: groups variable kept for potential future test expansion
+      // ignore: unused_local_variable
       final groups = [olderGroup, pinnedGroup, recentGroup];
       
       // Call the private method via reflection or just test the expected behavior

@@ -92,9 +92,16 @@ class ExpenseGroupColorPalette {
 
   /// Calculate the Euclidean distance between two colors in RGB space.
   static double _colorDistance(Color c1, Color c2) {
-    final dr = c1.red - c2.red;
-    final dg = c1.green - c2.green;
-    final db = c1.blue - c2.blue;
+    final r1 = (c1.r * 255.0).round() & 0xff;
+    final r2 = (c2.r * 255.0).round() & 0xff;
+    final g1 = (c1.g * 255.0).round() & 0xff;
+    final g2 = (c2.g * 255.0).round() & 0xff;
+    final b1 = (c1.b * 255.0).round() & 0xff;
+    final b2 = (c2.b * 255.0).round() & 0xff;
+    
+    final dr = r1 - r2;
+    final dg = g1 - g2;
+    final db = b1 - b2;
     return (dr * dr + dg * dg + db * db).toDouble();
   }
 }
