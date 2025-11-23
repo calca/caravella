@@ -1718,6 +1718,18 @@ abstract class AppLocalizations {
   /// **'Address resolved'**
   String get address_resolved;
 
+  /// No description provided for @search_place.
+  ///
+  /// In en, this message translates to:
+  /// **'Search place'**
+  String get search_place;
+
+  /// No description provided for @search_place_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for a place or address'**
+  String get search_place_hint;
+
   /// No description provided for @settings_general.
   ///
   /// In en, this message translates to:

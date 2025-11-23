@@ -33,7 +33,7 @@ class LocationInputWidget extends StatefulWidget {
 class _LocationInputWidgetState extends State<LocationInputWidget> {
   final TextEditingController _controller = TextEditingController();
   bool _isGettingLocation = false;
-  // bool _isResolvingAddress = false; // Reserved for future place search feature
+  bool _isResolvingAddress = false;
   ExpenseLocation? _currentLocation;
   late final FocusNode _fieldFocusNode;
 
@@ -128,52 +128,57 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
     widget.onLocationChanged(null);
   }
 
-  // Reserved for future implementation: OpenStreetMap place search
-  // Future<void> _showPlaceSearch() async {
-  //   final gloc = gen.AppLocalizations.of(context);
-  //   final messenger = ScaffoldMessenger.of(context);
-  //
-  //   // Show dialog with place search
-  //   final result = await showDialog<NominatimPlace>(
-  //     context: context,
-  //     builder: (ctx) => _PlaceSearchDialog(
-  //       hintText: gloc.location_hint,
-  //     ),
-  //   );
-  //
-  //   if (result != null && mounted) {
-  //     try {
-  //       final location = ExpenseLocation(
-  //         latitude: result.latitude,
-  //         longitude: result.longitude,
-  //         address: result.displayName,
-  //       );
-  //
-  //       setState(() {
-  //         _currentLocation = location;
-  //         _controller.text = location.displayText;
-  //       });
-  //
-  //       widget.onLocationChanged(location);
-  //
-  //       if (mounted) {
-  //         AppToast.showFromMessenger(
-  //           messenger,
-  //           gloc.address_resolved,
-  //           duration: const Duration(seconds: 2),
-  //         );
-  //       }
-  //     } catch (e) {
-  //       if (mounted) {
-  //         AppToast.showFromMessenger(
-  //           messenger,
-  //           gloc.location_error,
-  //           type: ToastType.error,
-  //         );
-  //       }
-  //     }
-  //   }
-  // }
+  Future<void> _showPlaceSearch() async {
+    final gloc = gen.AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+
+    // Show dialog with place search
+    final result = await showDialog<NominatimPlace>(
+      context: context,
+      builder: (ctx) => _PlaceSearchDialog(hintText: gloc.location_hint),
+    );
+
+    if (result != null && mounted) {
+      setState(() {
+        _isResolvingAddress = true;
+      });
+
+      try {
+        final location = ExpenseLocation(
+          latitude: result.latitude,
+          longitude: result.longitude,
+          address: result.displayName,
+        );
+
+        setState(() {
+          _currentLocation = location;
+          _controller.text = location.displayText;
+          _isResolvingAddress = false;
+        });
+
+        widget.onLocationChanged(location);
+
+        if (mounted) {
+          AppToast.showFromMessenger(
+            messenger,
+            gloc.address_resolved,
+            duration: const Duration(seconds: 2),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          setState(() {
+            _isResolvingAddress = false;
+          });
+          AppToast.showFromMessenger(
+            messenger,
+            gloc.location_error,
+            type: ToastType.error,
+          );
+        }
+      }
+    }
+  }
 
   void _onTextChanged(String value) {
     final trimmed = value.trim();
@@ -264,10 +269,12 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
       );
     }
 
-    if (_isGettingLocation) {
+    if (_isGettingLocation || _isResolvingAddress) {
       return Semantics(
         liveRegion: true,
-        label: gloc.get_current_location,
+        label: _isGettingLocation
+            ? gloc.get_current_location
+            : gloc.address_resolved,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: SizedBox(
@@ -276,7 +283,9 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
             child: CircularProgressIndicator(
               strokeWidth: LocationWidgetConstants.loaderStrokeWidth,
               color: colorScheme.primary,
-              semanticsLabel: 'Getting your current location',
+              semanticsLabel: _isGettingLocation
+                  ? 'Getting your current location'
+                  : 'Resolving address',
             ),
           ),
         ),
@@ -288,6 +297,12 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
         icon: LocationWidgetConstants.loadingIcon,
         tooltip: gloc.get_current_location,
         onTap: _getCurrentLocation,
+        color: colorScheme.primary,
+      ),
+      buildAction(
+        icon: Icons.search,
+        tooltip: gloc.location_hint,
+        onTap: _showPlaceSearch,
         color: colorScheme.primary,
       ),
       if (_currentLocation != null)
