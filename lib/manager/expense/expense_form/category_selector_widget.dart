@@ -58,14 +58,17 @@ class CategorySelectorWidget extends StatelessWidget {
 
     return TextButton(
       style: TextButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 12),
         foregroundColor: theme.colorScheme.onSurface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        minimumSize: Size.zero,
       ),
       onPressed: openPicker,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
+          const SizedBox(width: 5),
           Icon(AppIcons.category, size: 20, color: theme.colorScheme.onSurface),
           const SizedBox(width: 8),
           Flexible(

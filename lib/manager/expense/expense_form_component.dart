@@ -627,11 +627,11 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         ],
       );
     }
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Wrap(
-          spacing: 12,
-          runSpacing: 8,
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildFieldWithStatus(
               ParticipantSelectorWidget(
@@ -644,6 +644,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
               _isPaidByValid,
               _paidByTouched,
             ),
+            const SizedBox(width: 12),
             _buildFieldWithStatus(
               CategorySelectorWidget(
                 categories: _categories,
@@ -657,18 +658,18 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
               _isCategoryValid,
               _categoryTouched,
             ),
+            // Show compact location indicator when auto-location is enabled
+            if (widget.initialExpense == null && _autoLocationEnabled) ...[
+              const Spacer(),
+              CompactLocationIndicator(
+                isRetrieving: _isRetrievingLocation,
+                location: _location,
+                onCancel: _clearLocation,
+                textStyle: style,
+              ),
+            ],
           ],
         ),
-        // Show compact location indicator when auto-location is enabled
-        if (widget.initialExpense == null && _autoLocationEnabled) ...[
-          const Spacer(),
-          CompactLocationIndicator(
-            isRetrieving: _isRetrievingLocation,
-            location: _location,
-            onCancel: _clearLocation,
-            textStyle: style,
-          ),
-        ],
       ],
     );
   }

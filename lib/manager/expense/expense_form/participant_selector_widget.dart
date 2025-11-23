@@ -54,14 +54,17 @@ class ParticipantSelectorWidget extends StatelessWidget {
 
     return TextButton(
       style: TextButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 12),
         foregroundColor: theme.colorScheme.onSurface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        minimumSize: Size.zero,
       ),
       onPressed: participants.isEmpty ? null : openPicker,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
+          const SizedBox(width: 5),
           Icon(
             AppIcons.participant,
             size: 20,
