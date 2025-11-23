@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../expense_form/icon_leading_field.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
@@ -32,6 +33,7 @@ class LocationInputWidget extends StatefulWidget {
 class _LocationInputWidgetState extends State<LocationInputWidget> {
   final TextEditingController _controller = TextEditingController();
   bool _isGettingLocation = false;
+  // bool _isResolvingAddress = false; // Reserved for future place search feature
   ExpenseLocation? _currentLocation;
   late final FocusNode _fieldFocusNode;
 
@@ -126,59 +128,52 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
     widget.onLocationChanged(null);
   }
 
-  Future<void> _showPlaceSearch() async {
-    final gloc = gen.AppLocalizations.of(context);
-    final messenger = ScaffoldMessenger.of(context);
-
-    // Show dialog with place search
-    final result = await showDialog<NominatimPlace>(
-      context: context,
-      builder: (ctx) => _PlaceSearchDialog(
-        hintText: gloc.search_place_hint,
-      ),
-    );
-
-    if (result != null && mounted) {
-      setState(() {
-        _isResolvingAddress = true;
-      });
-
-      try {
-        final location = ExpenseLocation(
-          latitude: result.latitude,
-          longitude: result.longitude,
-          address: result.displayName,
-        );
-
-        setState(() {
-          _currentLocation = location;
-          _controller.text = location.displayText;
-          _isResolvingAddress = false;
-        });
-
-        widget.onLocationChanged(location);
-
-        if (mounted) {
-          AppToast.showFromMessenger(
-            messenger,
-            gloc.address_resolved,
-            duration: const Duration(seconds: 2),
-          );
-        }
-      } catch (e) {
-        if (mounted) {
-          setState(() {
-            _isResolvingAddress = false;
-          });
-          AppToast.showFromMessenger(
-            messenger,
-            gloc.location_error,
-            type: ToastType.error,
-          );
-        }
-      }
-    }
-  }
+  // Reserved for future implementation: OpenStreetMap place search
+  // Future<void> _showPlaceSearch() async {
+  //   final gloc = gen.AppLocalizations.of(context);
+  //   final messenger = ScaffoldMessenger.of(context);
+  //
+  //   // Show dialog with place search
+  //   final result = await showDialog<NominatimPlace>(
+  //     context: context,
+  //     builder: (ctx) => _PlaceSearchDialog(
+  //       hintText: gloc.location_hint,
+  //     ),
+  //   );
+  //
+  //   if (result != null && mounted) {
+  //     try {
+  //       final location = ExpenseLocation(
+  //         latitude: result.latitude,
+  //         longitude: result.longitude,
+  //         address: result.displayName,
+  //       );
+  //
+  //       setState(() {
+  //         _currentLocation = location;
+  //         _controller.text = location.displayText;
+  //       });
+  //
+  //       widget.onLocationChanged(location);
+  //
+  //       if (mounted) {
+  //         AppToast.showFromMessenger(
+  //           messenger,
+  //           gloc.address_resolved,
+  //           duration: const Duration(seconds: 2),
+  //         );
+  //       }
+  //     } catch (e) {
+  //       if (mounted) {
+  //         AppToast.showFromMessenger(
+  //           messenger,
+  //           gloc.location_error,
+  //           type: ToastType.error,
+  //         );
+  //       }
+  //     }
+  //   }
+  // }
 
   void _onTextChanged(String value) {
     final trimmed = value.trim();
@@ -503,10 +498,7 @@ class _PlaceSearchDialogState extends State<_PlaceSearchDialog> {
                   itemBuilder: (context, index) {
                     final place = _searchResults[index];
                     return ListTile(
-                      leading: Icon(
-                        Icons.place,
-                        color: colorScheme.primary,
-                      ),
+                      leading: Icon(Icons.place, color: colorScheme.primary),
                       title: Text(
                         place.displayName,
                         maxLines: 2,
