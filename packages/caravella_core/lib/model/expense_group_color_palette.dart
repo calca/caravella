@@ -11,7 +11,7 @@ class ExpenseGroupColorPalette {
     if (colorIndex == null || colorIndex < 0 || colorIndex >= paletteSize) {
       return null;
     }
-    
+
     final colors = _getPaletteColors(colorScheme);
     return colors[colorIndex];
   }
@@ -75,10 +75,10 @@ class ExpenseGroupColorPalette {
     // If no exact match, find the closest color by comparing RGB distance
     final legacyColor = Color(argbValue);
     final colors = _getPaletteColors(colorScheme);
-    
+
     int closestIndex = 0;
     double minDistance = double.infinity;
-    
+
     for (int i = 0; i < colors.length; i++) {
       final distance = _colorDistance(legacyColor, colors[i]);
       if (distance < minDistance) {
@@ -86,7 +86,7 @@ class ExpenseGroupColorPalette {
         closestIndex = i;
       }
     }
-    
+
     return closestIndex;
   }
 
@@ -98,7 +98,7 @@ class ExpenseGroupColorPalette {
     final g2 = (c2.g * 255.0).round() & 0xff;
     final b1 = (c1.b * 255.0).round() & 0xff;
     final b2 = (c2.b * 255.0).round() & 0xff;
-    
+
     final dr = r1 - r2;
     final dg = g1 - g2;
     final db = b1 - b2;
