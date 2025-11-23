@@ -328,7 +328,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
 
     final location = await LocationService.getCurrentLocation(
       context,
-      resolveAddress: false,
+      resolveAddress: true,
       onStatusChanged: (status) {
         if (mounted) {
           setState(() {
