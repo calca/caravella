@@ -23,7 +23,6 @@ class ParticipantSelectorWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final selected = selectedParticipant;
-    final borderColor = theme.colorScheme.outlineVariant;
     final gloc = gen.AppLocalizations.of(context);
 
     Future<void> openPicker() async {
@@ -49,14 +48,14 @@ class ParticipantSelectorWidget extends StatelessWidget {
         enabled: participants.isNotEmpty,
         semanticsLabel: gloc.paid_by,
         textStyle: textStyle,
+        showArrow: true,
       );
     }
 
-    return OutlinedButton(
-      style: OutlinedButton.styleFrom(
+    return TextButton(
+      style: TextButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         foregroundColor: theme.colorScheme.onSurface,
-        side: BorderSide(color: borderColor.withValues(alpha: 0.8), width: 1),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       onPressed: participants.isEmpty ? null : openPicker,
@@ -79,6 +78,12 @@ class ParticipantSelectorWidget extends StatelessWidget {
                     fontWeight: FontWeight.w400,
                   ),
             ),
+          ),
+          const SizedBox(width: 4),
+          Icon(
+            Icons.arrow_drop_down,
+            size: 20,
+            color: theme.colorScheme.onSurfaceVariant,
           ),
         ],
       ),
