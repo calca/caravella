@@ -1,12 +1,11 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../expense_form/icon_leading_field.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'location_service.dart';
 import 'location_widget_constants.dart';
+import 'place_search_dialog.dart';
 
 class LocationInputWidget extends StatefulWidget {
   final ExpenseLocation? initialLocation;
@@ -133,10 +132,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
     final messenger = ScaffoldMessenger.of(context);
 
     // Show dialog with place search
-    final result = await showDialog<NominatimPlace>(
-      context: context,
-      builder: (ctx) => _PlaceSearchDialog(hintText: gloc.location_hint),
-    );
+    final result = await PlaceSearchDialog.show(context, gloc.location_hint);
 
     if (result != null && mounted) {
       setState(() {
@@ -329,217 +325,5 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
     ];
 
     return Row(mainAxisSize: MainAxisSize.min, children: actions);
-  }
-}
-
-/// Represents a place from OpenStreetMap Nominatim
-class NominatimPlace {
-  final double latitude;
-  final double longitude;
-  final String displayName;
-
-  NominatimPlace({
-    required this.latitude,
-    required this.longitude,
-    required this.displayName,
-  });
-
-  factory NominatimPlace.fromJson(Map<String, dynamic> json) {
-    return NominatimPlace(
-      latitude: double.parse(json['lat'] as String),
-      longitude: double.parse(json['lon'] as String),
-      displayName: json['display_name'] as String,
-    );
-  }
-}
-
-/// Dialog for searching places using OpenStreetMap Nominatim
-class _PlaceSearchDialog extends StatefulWidget {
-  final String hintText;
-
-  const _PlaceSearchDialog({required this.hintText});
-
-  @override
-  State<_PlaceSearchDialog> createState() => _PlaceSearchDialogState();
-}
-
-class _PlaceSearchDialogState extends State<_PlaceSearchDialog> {
-  final TextEditingController _searchController = TextEditingController();
-  List<NominatimPlace> _searchResults = [];
-  bool _isSearching = false;
-  String _errorMessage = '';
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _performSearch(String query) async {
-    if (query.trim().isEmpty) {
-      setState(() {
-        _searchResults = [];
-        _errorMessage = '';
-      });
-      return;
-    }
-
-    setState(() {
-      _isSearching = true;
-      _errorMessage = '';
-    });
-
-    try {
-      // Use Nominatim API from OpenStreetMap
-      // Respecting usage policy: https://operations.osmfoundation.org/policies/nominatim/
-      final url = Uri.parse(
-        'https://nominatim.openstreetmap.org/search?'
-        'q=${Uri.encodeComponent(query)}'
-        '&format=json'
-        '&limit=10'
-        '&addressdetails=1',
-      );
-
-      final response = await http.get(
-        url,
-        headers: {
-          'User-Agent': 'Caravella-ExpenseTracker/1.1.0',
-          'Accept-Language': 'it,en',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        final List<dynamic> jsonList = json.decode(response.body);
-        setState(() {
-          _searchResults = jsonList
-              .map((json) => NominatimPlace.fromJson(json))
-              .toList();
-          _isSearching = false;
-        });
-      } else {
-        setState(() {
-          _errorMessage = 'Search failed: ${response.statusCode}';
-          _isSearching = false;
-        });
-      }
-    } catch (e) {
-      setState(() {
-        _errorMessage = 'Error: ${e.toString()}';
-        _isSearching = false;
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    return Dialog(
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        constraints: const BoxConstraints(maxHeight: 500, maxWidth: 500),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    widget.hintText,
-                    style: theme.textTheme.titleLarge,
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: widget.hintText,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                prefixIcon: const Icon(Icons.search),
-                suffixIcon: _searchController.text.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          _searchController.clear();
-                          setState(() {
-                            _searchResults = [];
-                            _errorMessage = '';
-                          });
-                        },
-                      )
-                    : null,
-              ),
-              onChanged: (value) {
-                // Debounce search
-                Future.delayed(const Duration(milliseconds: 500), () {
-                  if (_searchController.text == value) {
-                    _performSearch(value);
-                  }
-                });
-              },
-              onSubmitted: _performSearch,
-            ),
-            const SizedBox(height: 16),
-            if (_isSearching)
-              const Center(
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: CircularProgressIndicator(),
-                ),
-              ),
-            if (_errorMessage.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  _errorMessage,
-                  style: TextStyle(color: colorScheme.error),
-                ),
-              ),
-            if (!_isSearching && _searchResults.isNotEmpty)
-              Expanded(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: _searchResults.length,
-                  itemBuilder: (context, index) {
-                    final place = _searchResults[index];
-                    return ListTile(
-                      leading: Icon(Icons.place, color: colorScheme.primary),
-                      title: Text(
-                        place.displayName,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      onTap: () => Navigator.of(context).pop(place),
-                    );
-                  },
-                ),
-              ),
-            if (!_isSearching &&
-                _searchResults.isEmpty &&
-                _searchController.text.isNotEmpty &&
-                _errorMessage.isEmpty)
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  'No results found',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
   }
 }
