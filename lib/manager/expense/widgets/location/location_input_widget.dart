@@ -229,7 +229,9 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
               ),
               const SizedBox(width: 12),
               Text(
-                _isGettingLocation ? gloc.getting_location : gloc.address_resolved,
+                _isGettingLocation
+                    ? gloc.getting_location
+                    : gloc.address_resolved,
                 style: widget.textStyle ?? FormTheme.getFieldTextStyle(context),
               ),
             ],
@@ -240,11 +242,12 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
 
     // Show read-only locality with dropdown if location exists
     if (_currentLocation != null) {
-      final displayText = _currentLocation!.locality ?? 
-                         _currentLocation!.address ?? 
-                         _currentLocation!.name ?? 
-                         gloc.location_hint;
-      
+      final displayText =
+          _currentLocation!.locality ??
+          _currentLocation!.address ??
+          _currentLocation!.name ??
+          gloc.location_hint;
+
       return IconLeadingField(
         icon: const Icon(Icons.place_outlined),
         semanticsLabel: gloc.location,
@@ -260,7 +263,9 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
                 Expanded(
                   child: Text(
                     displayText,
-                    style: widget.textStyle ?? FormTheme.getFieldTextStyle(context),
+                    style:
+                        widget.textStyle ??
+                        FormTheme.getFieldTextStyle(context),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -291,8 +296,9 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
               Expanded(
                 child: Text(
                   gloc.location_hint,
-                  style: FormTheme.getFieldTextStyle(context)
-                      ?.copyWith(color: colorScheme.onSurfaceVariant),
+                  style: FormTheme.getFieldTextStyle(
+                    context,
+                  )?.copyWith(color: colorScheme.onSurfaceVariant),
                 ),
               ),
               Icon(
@@ -306,7 +312,6 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
       ),
     );
   }
-
 }
 
 class _LocationDetailsSheet extends StatelessWidget {
@@ -332,15 +337,22 @@ class _LocationDetailsSheet extends StatelessWidget {
 
     // Build full address text
     final addressParts = <String>[
-      if (location.street != null && location.street!.isNotEmpty) location.street!,
-      if (location.streetNumber != null && location.streetNumber!.isNotEmpty) location.streetNumber!,
-      if (location.locality != null && location.locality!.isNotEmpty) location.locality!,
-      if (location.administrativeArea != null && location.administrativeArea!.isNotEmpty) location.administrativeArea!,
-      if (location.postalCode != null && location.postalCode!.isNotEmpty) location.postalCode!,
-      if (location.country != null && location.country!.isNotEmpty) location.country!,
+      if (location.street != null && location.street!.isNotEmpty)
+        location.street!,
+      if (location.streetNumber != null && location.streetNumber!.isNotEmpty)
+        location.streetNumber!,
+      if (location.locality != null && location.locality!.isNotEmpty)
+        location.locality!,
+      if (location.administrativeArea != null &&
+          location.administrativeArea!.isNotEmpty)
+        location.administrativeArea!,
+      if (location.postalCode != null && location.postalCode!.isNotEmpty)
+        location.postalCode!,
+      if (location.country != null && location.country!.isNotEmpty)
+        location.country!,
     ];
-    final fullAddress = addressParts.isNotEmpty 
-        ? addressParts.join(', ') 
+    final fullAddress = addressParts.isNotEmpty
+        ? addressParts.join(', ')
         : location.address ?? location.name ?? gloc.location;
 
     return GroupBottomSheetScaffold(
@@ -357,12 +369,9 @@ class _LocationDetailsSheet extends StatelessWidget {
               color: colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Text(
-              fullAddress,
-              style: theme.textTheme.bodyLarge,
-            ),
+            child: Text(fullAddress, style: theme.textTheme.bodyLarge),
           ),
-          
+
           // Coordinates if available
           if (location.latitude != null && location.longitude != null)
             Padding(
@@ -374,9 +383,9 @@ class _LocationDetailsSheet extends StatelessWidget {
                 ),
               ),
             ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Actions
           Wrap(
             spacing: 8,
@@ -427,7 +436,7 @@ class _ActionChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     return ActionChip(
       avatar: Icon(
         icon,
