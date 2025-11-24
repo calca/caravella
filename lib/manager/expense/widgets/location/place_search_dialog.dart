@@ -236,24 +236,51 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
           // Confirm button for map selection
           if (_selectedMapLocation != null)
             Positioned(
-              bottom: 24,
-              right: 24,
-              child: FloatingActionButton.extended(
-                onPressed: () {
+              bottom: 96,
+              right: 16,
+              child: FloatingActionButton(
+                onPressed: () async {
                   final selected = _selectedMapLocation!;
-                  Navigator.of(context).pop(
-                    NominatimPlace(
-                      latitude: selected.latitude,
-                      longitude: selected.longitude,
-                      displayName:
-                          '${selected.latitude.toStringAsFixed(6)}, ${selected.longitude.toStringAsFixed(6)}',
-                    ),
-                  );
+                  final navigator = Navigator.of(context);
+                  
+                  // Try to reverse geocode the selected location
+                  try {
+                    final results = await NominatimSearchService.searchNearbyPlaces(
+                      selected.latitude,
+                      selected.longitude,
+                      limit: 1,
+                    ).timeout(
+                      const Duration(seconds: 3),
+                      onTimeout: () => <NominatimPlace>[],
+                    );
+                    
+                    // Use geocoded address if available, otherwise use coordinates
+                    final displayName = results.isNotEmpty 
+                        ? results.first.displayName
+                        : '${selected.latitude.toStringAsFixed(6)}, ${selected.longitude.toStringAsFixed(6)}';
+                    
+                    navigator.pop(
+                      NominatimPlace(
+                        latitude: selected.latitude,
+                        longitude: selected.longitude,
+                        displayName: displayName,
+                      ),
+                    );
+                  } catch (_) {
+                    // Fallback to coordinates if geocoding fails
+                    navigator.pop(
+                      NominatimPlace(
+                        latitude: selected.latitude,
+                        longitude: selected.longitude,
+                        displayName:
+                            '${selected.latitude.toStringAsFixed(6)}, ${selected.longitude.toStringAsFixed(6)}',
+                      ),
+                    );
+                  }
                 },
-                icon: const Icon(Icons.check),
-                label: const Text('Confirm'),
                 backgroundColor: colorScheme.primary,
                 foregroundColor: colorScheme.onPrimary,
+                child: const Icon(Icons.check),
               ),
             ),
         ],
