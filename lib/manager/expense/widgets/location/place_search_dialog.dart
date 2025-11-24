@@ -342,7 +342,11 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
                 padding: const EdgeInsets.all(12.0),
                 child: Row(
                   children: [
-                    Icon(Icons.place, color: colorScheme.primary, size: 20),
+                    Icon(
+                      Icons.place,
+                      color: colorScheme.onPrimaryContainer,
+                      size: 20,
+                    ),
                     const SizedBox(width: 8),
                     Text(
                       '${_searchResults.length} result${_searchResults.length != 1 ? 's' : ''}',
@@ -363,7 +367,7 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
                     return ListTile(
                       leading: Icon(
                         Icons.place_outlined,
-                        color: colorScheme.primary,
+                        color: colorScheme.onPrimaryContainer,
                       ),
                       title: Text(
                         place.displayName,
