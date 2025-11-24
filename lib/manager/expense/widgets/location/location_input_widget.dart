@@ -389,30 +389,29 @@ class _LocationDetailsSheet extends StatelessWidget {
           const SizedBox(height: 24),
 
           // Actions
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
+          Row(
             children: [
-              _ActionChip(
-                icon: Icons.my_location,
-                label: gloc.get_current_location,
-                onTap: onGetCurrentLocation,
-              ),
-              _ActionChip(
-                icon: Icons.search,
-                label: gloc.location_hint,
-                onTap: onSearchPlace,
-              ),
-              _ActionChip(
-                icon: Icons.edit,
-                label: gloc.enter_location_manually,
-                onTap: onEditManually,
-              ),
-              _ActionChip(
+              _ActionButton(
                 icon: Icons.delete_outline,
-                label: gloc.cancel,
+                tooltip: gloc.cancel,
                 onTap: onClearLocation,
                 destructive: true,
+              ),
+              const Spacer(),
+              _ActionButton(
+                icon: Icons.edit,
+                tooltip: gloc.enter_location_manually,
+                onTap: onEditManually,
+              ),
+              _ActionButton(
+                icon: Icons.my_location,
+                tooltip: gloc.get_current_location,
+                onTap: onGetCurrentLocation,
+              ),
+              _ActionButton(
+                icon: Icons.search,
+                tooltip: gloc.location_hint,
+                onTap: onSearchPlace,
               ),
             ],
           ),
@@ -422,15 +421,15 @@ class _LocationDetailsSheet extends StatelessWidget {
   }
 }
 
-class _ActionChip extends StatelessWidget {
+class _ActionButton extends StatelessWidget {
   final IconData icon;
-  final String label;
+  final String tooltip;
   final VoidCallback onTap;
   final bool destructive;
 
-  const _ActionChip({
+  const _ActionButton({
     required this.icon,
-    required this.label,
+    required this.tooltip,
     required this.onTap,
     this.destructive = false,
   });
@@ -439,17 +438,12 @@ class _ActionChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return ActionChip(
-      avatar: Icon(
-        icon,
-        size: 18,
-        color: destructive ? colorScheme.error : colorScheme.primary,
-      ),
-      label: Text(label),
+    return IconButton(
+      icon: Icon(icon),
+      iconSize: 28,
+      color: destructive ? colorScheme.error : colorScheme.primary,
+      tooltip: tooltip,
       onPressed: onTap,
-      side: BorderSide(
-        color: destructive ? colorScheme.error : colorScheme.outline,
-      ),
     );
   }
 }
