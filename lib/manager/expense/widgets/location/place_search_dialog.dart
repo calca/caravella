@@ -40,7 +40,7 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
   bool _isLoadingNearby = true;
   bool _hasLoadedNearby = false;
   LatLng _mapCenter = const LatLng(41.9028, 12.4964); // Default: Rome, Italy
-  double _mapZoom = 12.0;
+  double _mapZoom = 15.0; // Higher zoom to see POI details
   LatLng? _selectedMapLocation;
 
   @override
@@ -98,7 +98,7 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
           if (mounted) {
             setState(() {
               _mapCenter = LatLng(latitude, longitude);
-              _mapZoom = 13.0;
+              _mapZoom = 15.0; // Higher zoom to see POI details
             });
             // Move map to user location
             _mapController.move(_mapCenter, _mapZoom);
@@ -348,20 +348,6 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
         TileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           userAgentPackageName: 'io.caravella.egm',
-        ),
-        // POI overlay layer showing points of interest
-        TileLayer(
-          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          userAgentPackageName: 'io.caravella.egm',
-          tileBuilder: (context, tileWidget, tile) {
-            return ColorFiltered(
-              colorFilter: ColorFilter.mode(
-                Colors.white.withValues(alpha: 0.3),
-                BlendMode.lighten,
-              ),
-              child: tileWidget,
-            );
-          },
         ),
         if (_searchResults.isNotEmpty)
           MarkerLayer(
