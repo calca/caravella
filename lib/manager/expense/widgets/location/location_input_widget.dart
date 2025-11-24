@@ -225,9 +225,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
         child: Padding(
           padding: FormTheme.standardContentPadding,
           child: Text(
-            _isGettingLocation
-                ? gloc.getting_location
-                : gloc.address_resolved,
+            _isGettingLocation ? gloc.getting_location : gloc.address_resolved,
             style: widget.textStyle ?? FormTheme.getFieldTextStyle(context),
           ),
         ),
