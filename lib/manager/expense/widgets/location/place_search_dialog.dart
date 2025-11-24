@@ -164,7 +164,7 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
     }
 
     if (!mounted) return;
-    
+
     setState(() {
       _isSearching = true;
       _isLoadingNearby = false;
