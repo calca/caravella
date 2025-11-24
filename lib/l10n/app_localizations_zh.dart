@@ -845,6 +845,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get address_resolved => '地址已解析';
 
   @override
+  String get search_place => '搜索地点';
+
+  @override
+  String get search_place_hint => '搜索地点或地址';
+
+  @override
   String get settings_general => '常规';
 
   @override

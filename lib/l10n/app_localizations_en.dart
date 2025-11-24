@@ -857,6 +857,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get address_resolved => 'Address resolved';
 
   @override
+  String get search_place => 'Search place';
+
+  @override
+  String get search_place_hint => 'Search for a place or address';
+
+  @override
   String get settings_general => 'General';
 
   @override

@@ -5,6 +5,7 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'location_service.dart';
 import 'location_widget_constants.dart';
+import 'place_search_dialog.dart';
 
 class LocationInputWidget extends StatefulWidget {
   final ExpenseLocation? initialLocation;
@@ -31,6 +32,7 @@ class LocationInputWidget extends StatefulWidget {
 class _LocationInputWidgetState extends State<LocationInputWidget> {
   final TextEditingController _controller = TextEditingController();
   bool _isGettingLocation = false;
+  bool _isResolvingAddress = false;
   ExpenseLocation? _currentLocation;
   late final FocusNode _fieldFocusNode;
 
@@ -125,144 +127,329 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
     widget.onLocationChanged(null);
   }
 
-  void _onTextChanged(String value) {
-    final trimmed = value.trim();
-    if (trimmed.isEmpty) {
-      // Preserve nothing if user clears completely
-      _currentLocation = null;
-      widget.onLocationChanged(null);
-      return;
+  Future<void> _showPlaceSearch() async {
+    final gloc = gen.AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+
+    // Show dialog with place search
+    final result = await PlaceSearchDialog.show(context, gloc.location_hint);
+
+    if (result != null && mounted) {
+      setState(() {
+        _isResolvingAddress = true;
+      });
+
+      try {
+        final location = ExpenseLocation(
+          latitude: result.latitude,
+          longitude: result.longitude,
+          address: result.displayName,
+        );
+
+        setState(() {
+          _currentLocation = location;
+          _controller.text = location.displayText;
+          _isResolvingAddress = false;
+        });
+
+        widget.onLocationChanged(location);
+
+        if (mounted) {
+          AppToast.showFromMessenger(
+            messenger,
+            gloc.address_resolved,
+            duration: const Duration(seconds: 2),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          setState(() {
+            _isResolvingAddress = false;
+          });
+          AppToast.showFromMessenger(
+            messenger,
+            gloc.location_error,
+            type: ToastType.error,
+          );
+        }
+      }
     }
-    // If we already have coordinates, keep them and treat user text as refined address
-    if (_currentLocation != null &&
-        _currentLocation!.latitude != null &&
-        _currentLocation!.longitude != null) {
-      final updated = _currentLocation!.copyWith(address: trimmed, name: null);
-      setState(() => _currentLocation = updated);
-      widget.onLocationChanged(updated);
-    } else {
-      final location = ExpenseLocation(name: trimmed);
-      setState(() => _currentLocation = location);
-      widget.onLocationChanged(location);
-    }
+  }
+
+  void _showLocationDetails() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => _LocationDetailsSheet(
+        location: _currentLocation!,
+        onGetCurrentLocation: () {
+          Navigator.pop(context);
+          _getCurrentLocation();
+        },
+        onSearchPlace: () {
+          Navigator.pop(context);
+          _showPlaceSearch();
+        },
+        onClearLocation: () {
+          Navigator.pop(context);
+          _clearLocation();
+        },
+        onEditManually: () {
+          Navigator.pop(context);
+          _fieldFocusNode.requestFocus();
+        },
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
-    final field = TextFormField(
-      controller: _controller,
-      focusNode: _fieldFocusNode,
-      style: widget.textStyle ?? FormTheme.getFieldTextStyle(context),
-      onChanged: _onTextChanged,
-      decoration: InputDecoration(
-        hintText: _isGettingLocation
-            ? gloc.getting_location
-            : gloc.location_hint,
-        border: InputBorder.none,
-        isDense: true,
-        contentPadding: FormTheme.standardContentPadding,
-        suffixIconConstraints: const BoxConstraints(
-          minHeight: 32,
-          minWidth: 32,
-        ),
-        suffixIcon: _buildSuffixIcons(context, gloc),
-      ),
-    );
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
+    // Show loading indicator
+    if (_isGettingLocation || _isResolvingAddress) {
+      return IconLeadingField(
+        icon: SizedBox(
+          width: LocationWidgetConstants.loaderSize,
+          height: LocationWidgetConstants.loaderSize,
+          child: CircularProgressIndicator(
+            strokeWidth: LocationWidgetConstants.loaderStrokeWidth,
+            color: colorScheme.onSurfaceVariant,
+          ),
+        ),
+        semanticsLabel: gloc.location,
+        tooltip: gloc.location,
+        alignTop: false,
+        iconPadding: FormTheme.standardIconPadding,
+        child: Padding(
+          padding: FormTheme.standardContentPadding,
+          child: Text(
+            _isGettingLocation ? gloc.getting_location : gloc.address_resolved,
+            style: widget.textStyle ?? FormTheme.getFieldTextStyle(context),
+          ),
+        ),
+      );
+    }
+
+    // Show read-only locality with dropdown if location exists
+    if (_currentLocation != null) {
+      final displayText =
+          _currentLocation!.locality ??
+          _currentLocation!.address ??
+          _currentLocation!.name ??
+          gloc.location_hint;
+
+      return IconLeadingField(
+        icon: const Icon(Icons.place_outlined),
+        semanticsLabel: gloc.location,
+        tooltip: gloc.location,
+        alignTop: false,
+        iconPadding: FormTheme.standardIconPadding,
+        child: InkWell(
+          onTap: _showLocationDetails,
+          child: Padding(
+            padding: FormTheme.standardContentPadding,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    displayText,
+                    style:
+                        widget.textStyle ??
+                        FormTheme.getFieldTextStyle(context),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Icon(
+                  Icons.arrow_drop_down,
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    // Show empty state with action buttons
     return IconLeadingField(
       icon: const Icon(Icons.place_outlined),
       semanticsLabel: gloc.location,
       tooltip: gloc.location,
       alignTop: false,
       iconPadding: FormTheme.standardIconPadding,
-      child: field,
+      child: InkWell(
+        onTap: _showPlaceSearch,
+        child: Padding(
+          padding: FormTheme.standardContentPadding,
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  gloc.location_hint,
+                  style: FormTheme.getFieldTextStyle(
+                    context,
+                  )?.copyWith(color: colorScheme.onSurfaceVariant),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.my_location),
+                iconSize: LocationWidgetConstants.iconSize,
+                color: colorScheme.onSurfaceVariant,
+                tooltip: gloc.get_current_location,
+                onPressed: _getCurrentLocation,
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+              ),
+              const SizedBox(width: 8),
+              Icon(
+                Icons.search,
+                size: LocationWidgetConstants.iconSize,
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
+}
 
-  Widget _buildSuffixIcons(BuildContext context, gen.AppLocalizations gloc) {
-    final colorScheme = Theme.of(context).colorScheme;
+class _LocationDetailsSheet extends StatelessWidget {
+  final ExpenseLocation location;
+  final VoidCallback onGetCurrentLocation;
+  final VoidCallback onSearchPlace;
+  final VoidCallback onClearLocation;
+  final VoidCallback onEditManually;
 
-    Widget buildAction({
-      required IconData icon,
-      required String tooltip,
-      required VoidCallback onTap,
-      required Color color,
-    }) {
-      return Semantics(
-        button: true,
-        label: tooltip,
-        hint: 'Double tap to $tooltip',
-        child: Tooltip(
-          message: tooltip,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(16),
-            onTap: onTap,
-            child: SizedBox(
-              width: 32,
-              height: 32,
-              child: Center(
-                child: Icon(
-                  icon,
-                  size: LocationWidgetConstants.iconSize,
-                  color: color,
+  const _LocationDetailsSheet({
+    required this.location,
+    required this.onGetCurrentLocation,
+    required this.onSearchPlace,
+    required this.onClearLocation,
+    required this.onEditManually,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final gloc = gen.AppLocalizations.of(context);
+
+    // Build full address text
+    final addressParts = <String>[
+      if (location.street != null && location.street!.isNotEmpty)
+        location.street!,
+      if (location.streetNumber != null && location.streetNumber!.isNotEmpty)
+        location.streetNumber!,
+      if (location.locality != null && location.locality!.isNotEmpty)
+        location.locality!,
+      if (location.administrativeArea != null &&
+          location.administrativeArea!.isNotEmpty)
+        location.administrativeArea!,
+      if (location.postalCode != null && location.postalCode!.isNotEmpty)
+        location.postalCode!,
+      if (location.country != null && location.country!.isNotEmpty)
+        location.country!,
+    ];
+    final fullAddress = addressParts.isNotEmpty
+        ? addressParts.join(', ')
+        : location.address ?? location.name ?? gloc.location;
+
+    return GroupBottomSheetScaffold(
+      title: gloc.location,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Full address
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(fullAddress, style: theme.textTheme.bodyLarge),
+          ),
+
+          // Coordinates if available
+          if (location.latitude != null && location.longitude != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(
+                '${location.latitude!.toStringAsFixed(6)}, ${location.longitude!.toStringAsFixed(6)}',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
                 ),
               ),
             ),
-          ),
-        ),
-      );
-    }
 
-    if (_isGettingLocation) {
-      return Semantics(
-        liveRegion: true,
-        label: gloc.get_current_location,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            width: LocationWidgetConstants.loaderSize,
-            height: LocationWidgetConstants.loaderSize,
-            child: CircularProgressIndicator(
-              strokeWidth: LocationWidgetConstants.loaderStrokeWidth,
-              color: colorScheme.primary,
-              semanticsLabel: 'Getting your current location',
-            ),
-          ),
-        ),
-      );
-    }
+          const SizedBox(height: 24),
 
-    final actions = <Widget>[
-      buildAction(
-        icon: LocationWidgetConstants.loadingIcon,
-        tooltip: gloc.get_current_location,
-        onTap: _getCurrentLocation,
-        color: colorScheme.primary,
+          // Actions
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              _ActionChip(
+                icon: Icons.my_location,
+                label: gloc.get_current_location,
+                onTap: onGetCurrentLocation,
+              ),
+              _ActionChip(
+                icon: Icons.search,
+                label: gloc.location_hint,
+                onTap: onSearchPlace,
+              ),
+              _ActionChip(
+                icon: Icons.edit,
+                label: gloc.enter_location_manually,
+                onTap: onEditManually,
+              ),
+              _ActionChip(
+                icon: Icons.delete_outline,
+                label: gloc.cancel,
+                onTap: onClearLocation,
+                destructive: true,
+              ),
+            ],
+          ),
+        ],
       ),
-      if (_currentLocation != null)
-        buildAction(
-          icon: LocationWidgetConstants.clearIcon,
-          tooltip: gloc.cancel,
-          onTap: _clearLocation,
-          color: colorScheme.onSurfaceVariant,
-        ),
-      if (_currentLocation != null)
-        buildAction(
-          icon: Icons.edit_location_alt_outlined,
-          tooltip: gloc.enter_location_manually,
-          onTap: () {
-            // Allow manual refinement while keeping stored lat/long in _currentLocation
-            _controller.selection = TextSelection(
-              baseOffset: 0,
-              extentOffset: _controller.text.length,
-            );
-            _fieldFocusNode.requestFocus();
-          },
-          color: colorScheme.onSurfaceVariant,
-        ),
-    ];
+    );
+  }
+}
 
-    return Row(mainAxisSize: MainAxisSize.min, children: actions);
+class _ActionChip extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  final bool destructive;
+
+  const _ActionChip({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    this.destructive = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return ActionChip(
+      avatar: Icon(
+        icon,
+        size: 18,
+        color: destructive ? colorScheme.error : colorScheme.primary,
+      ),
+      label: Text(label),
+      onPressed: onTap,
+      side: BorderSide(
+        color: destructive ? colorScheme.error : colorScheme.outline,
+      ),
+    );
   }
 }

@@ -861,6 +861,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get address_resolved => 'Dirección resuelta';
 
   @override
+  String get search_place => 'Buscar lugar';
+
+  @override
+  String get search_place_hint => 'Buscar un lugar o dirección';
+
+  @override
   String get settings_general => 'General';
 
   @override
