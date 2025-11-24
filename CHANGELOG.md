@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Theme-aware color palette for expense groups that adapts colors based on light/dark mode
 - OpenStreetMap integration for visualizing expense locations on an interactive map
 - Map view button in expense group overview to display all expenses with locations on a map
+- OpenStreetMap location search for expense form with autocomplete and nearby places suggestions
+- Location picker with interactive map selection and reverse geocoding to resolve addresses
+- Compact location indicator in expense form showing auto-captured GPS location with visual feedback
 - Auto-location toggle setting for automatic GPS retrieval when adding new expenses
 - Setting to enable/disable automatic location capture with manual override option
 - Dynamic color support with Material 3 integration for personalized app theming (Android 12+, limited iOS support)
@@ -20,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - F-Droid metadata and distribution support
 - Comprehensive F-Droid submission documentation
 - Context menu (long-press) for expense groups in history page with pin/unpin, archive/unarchive, and delete actions
+- Material 3 expressive swipe behavior for history page with Gmail-style dismissible actions
 - Smooth skeleton loader animation for carousel during cold start with shimmer effect
 - Fade-in animation for carousel cards when data loads
 - In-app store rating feature with smart triggers (after 10 expenses, then monthly)
@@ -41,8 +45,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved PreferencesService API with synchronous read operations where possible
 - Organized preference keys and defaults into centralized abstract classes
 - **Android Quick Launch shortcut icons now dynamically display group initials with theme colors or group images**
+- Consolidated currency formatting using CurrencyDisplay widget throughout the app for consistency
+- Currency display now uses locale-aware decimal separators respecting user's regional settings
+- Applied consistent TabBar styling across History, Stats, and Overview pages for unified experience
+- Replaced icon button with text button in expense form for improved accessibility and clarity
 
 ### Fixed
+- Auto-location setting not saving when modified alone in expense group settings
+- Android map rendering issues by adding INTERNET permission and OpenStreetMap domain to security configuration
 
 ## [1.0.45] - 2025-10-16
 
