@@ -41,6 +41,7 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
   bool _hasLoadedNearby = false;
   LatLng _mapCenter = const LatLng(41.9028, 12.4964); // Default: Rome, Italy
   double _mapZoom = 12.0;
+  LatLng? _selectedMapLocation;
 
   @override
   void initState() {
@@ -212,6 +213,30 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
               ],
             ),
           ),
+
+          // Confirm button for map selection
+          if (_selectedMapLocation != null)
+            Positioned(
+              bottom: 24,
+              right: 24,
+              child: FloatingActionButton.extended(
+                onPressed: () {
+                  final selected = _selectedMapLocation!;
+                  Navigator.of(context).pop(
+                    NominatimPlace(
+                      latitude: selected.latitude,
+                      longitude: selected.longitude,
+                      displayName:
+                          '${selected.latitude.toStringAsFixed(6)}, ${selected.longitude.toStringAsFixed(6)}',
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.check),
+                label: const Text('Confirm'),
+                backgroundColor: colorScheme.primary,
+                foregroundColor: colorScheme.onPrimary,
+              ),
+            ),
         ],
       ),
     );
@@ -313,11 +338,30 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
         initialZoom: _mapZoom,
         minZoom: 3.0,
         maxZoom: 18.0,
+        onTap: (tapPosition, point) {
+          setState(() {
+            _selectedMapLocation = point;
+          });
+        },
       ),
       children: [
         TileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           userAgentPackageName: 'io.caravella.egm',
+        ),
+        // POI overlay layer showing points of interest
+        TileLayer(
+          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+          userAgentPackageName: 'io.caravella.egm',
+          tileBuilder: (context, tileWidget, tile) {
+            return ColorFiltered(
+              colorFilter: ColorFilter.mode(
+                Colors.white.withValues(alpha: 0.3),
+                BlendMode.lighten,
+              ),
+              child: tileWidget,
+            );
+          },
         ),
         if (_searchResults.isNotEmpty)
           MarkerLayer(
@@ -336,6 +380,28 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
                 ),
               );
             }).toList(),
+          ),
+        // Selected location marker
+        if (_selectedMapLocation != null)
+          MarkerLayer(
+            markers: [
+              Marker(
+                point: _selectedMapLocation!,
+                width: 50,
+                height: 50,
+                child: Icon(
+                  Icons.place,
+                  color: colorScheme.primary,
+                  size: 50,
+                  shadows: [
+                    Shadow(
+                      color: Colors.black.withValues(alpha: 0.5),
+                      blurRadius: 4,
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
       ],
     );
