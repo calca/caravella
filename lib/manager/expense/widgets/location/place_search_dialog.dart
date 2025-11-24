@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -40,8 +41,9 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
   bool _isLoadingNearby = true;
   bool _hasLoadedNearby = false;
   LatLng _mapCenter = const LatLng(41.9028, 12.4964); // Default: Rome, Italy
-  double _mapZoom = 15.0; // Higher zoom to see POI details
+  double _mapZoom = 18.0; // Maximum zoom to see nearby shops and POIs
   LatLng? _selectedMapLocation;
+  Timer? _debounceTimer;
 
   @override
   void initState() {
@@ -62,6 +64,7 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
 
   @override
   void dispose() {
+    _debounceTimer?.cancel();
     _searchController.dispose();
     super.dispose();
   }
@@ -77,13 +80,13 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
     }
 
     try {
-      // Get current GPS location with timeout
+      // Get current GPS location with reduced timeout
       final location =
           await LocationService.getCurrentLocation(
             context,
             resolveAddress: false,
           ).timeout(
-            const Duration(seconds: 15),
+            const Duration(seconds: 8),
             onTimeout: () {
               return null;
             },
@@ -94,33 +97,37 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
         final longitude = location.longitude;
 
         if (latitude != null && longitude != null) {
-          // Update map center to user location
+          // Update map center to user location immediately
           if (mounted) {
             setState(() {
               _mapCenter = LatLng(latitude, longitude);
-              _mapZoom = 15.0; // Higher zoom to see POI details
+              _mapZoom = 18.0; // Maximum zoom to see nearby shops and POIs
+              _isLoadingNearby = false; // Stop loading indicator
             });
             // Move map to user location
             _mapController.move(_mapCenter, _mapZoom);
           }
 
-          // Search for nearby places with timeout
-          final results =
-              await NominatimSearchService.searchNearbyPlaces(
+          // Search for nearby places in background without blocking UI
+          NominatimSearchService.searchNearbyPlaces(
                 latitude,
                 longitude,
                 limit: 15,
-              ).timeout(
-                const Duration(seconds: 10),
+              )
+              .timeout(
+                const Duration(seconds: 5),
                 onTimeout: () => <NominatimPlace>[],
-              );
-
-          if (mounted) {
-            setState(() {
-              _searchResults = results;
-              _isLoadingNearby = false;
-            });
-          }
+              )
+              .then((results) {
+                if (mounted && results.isNotEmpty) {
+                  setState(() {
+                    _searchResults = results;
+                  });
+                }
+              })
+              .catchError((_) {
+                // Silently ignore errors in background search
+              });
         } else {
           if (mounted) {
             setState(() {
@@ -148,28 +155,40 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
   Future<void> _performSearch(String query) async {
     if (query.trim().isEmpty) {
       // Reload nearby places when search is cleared
+      setState(() {
+        _isSearching = false;
+        _isLoadingNearby = false;
+      });
       _loadNearbyPlaces();
       return;
     }
 
+    if (!mounted) return;
+    
     setState(() {
       _isSearching = true;
       _isLoadingNearby = false;
       _errorMessage = '';
     });
 
-    try {
-      final results = await NominatimSearchService.searchPlaces(query);
-      setState(() {
-        _searchResults = results;
-        _isSearching = false;
-      });
-    } catch (e) {
-      setState(() {
-        _errorMessage = 'Error: ${e.toString()}';
-        _isSearching = false;
-      });
-    }
+    // Run search without blocking UI
+    NominatimSearchService.searchPlaces(query)
+        .then((results) {
+          if (mounted) {
+            setState(() {
+              _searchResults = results;
+              _isSearching = false;
+            });
+          }
+        })
+        .catchError((e) {
+          if (mounted) {
+            setState(() {
+              _errorMessage = 'Search failed';
+              _isSearching = false;
+            });
+          }
+        });
   }
 
   void _clearSearch() {
@@ -271,9 +290,11 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
                 isDense: true,
               ),
               onChanged: (value) {
-                // Debounce search
-                Future.delayed(const Duration(milliseconds: 500), () {
-                  if (_searchController.text == value) {
+                // Cancel previous timer
+                _debounceTimer?.cancel();
+                // Debounce search with shorter delay
+                _debounceTimer = Timer(const Duration(milliseconds: 300), () {
+                  if (mounted && _searchController.text == value) {
                     _performSearch(value);
                   }
                 });

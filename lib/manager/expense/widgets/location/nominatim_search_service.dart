@@ -36,18 +36,26 @@ class NominatimSearchService {
               'Accept-Language': _acceptLanguage,
             },
           )
-          .timeout(const Duration(seconds: 10));
+          .timeout(
+            const Duration(seconds: 5),
+            onTimeout: () {
+              // Return empty response on timeout
+              return http.Response('[]', 408);
+            },
+          );
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonList = json.decode(response.body);
         return jsonList.map((json) => NominatimPlace.fromJson(json)).toList();
-      } else {
-        throw Exception('Search failed with status: ${response.statusCode}');
       }
-    } catch (e) {
-      // Return empty list on timeout or error
-      return [];
+    } on http.ClientException catch (_) {
+      // SSL/TLS or network error - return empty list
+    } on FormatException catch (_) {
+      // JSON parsing error - return empty list
+    } catch (_) {
+      // Any other error - return empty list
     }
+    return [];
   }
 
   /// Searches for nearby places using reverse geocoding
@@ -76,7 +84,12 @@ class NominatimSearchService {
               'Accept-Language': _acceptLanguage,
             },
           )
-          .timeout(const Duration(seconds: 10));
+          .timeout(
+            const Duration(seconds: 5),
+            onTimeout: () {
+              return http.Response('{}', 408);
+            },
+          );
 
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
@@ -102,9 +115,12 @@ class NominatimSearchService {
           }
         }
       }
-    } catch (e) {
-      // Return empty list on any error
-      return [];
+    } on http.ClientException catch (_) {
+      // SSL/TLS or network error - return empty list
+    } on FormatException catch (_) {
+      // JSON parsing error - return empty list
+    } catch (_) {
+      // Any other error - return empty list
     }
 
     return [];
