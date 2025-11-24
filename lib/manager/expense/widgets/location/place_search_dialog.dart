@@ -18,7 +18,11 @@ class PlaceSearchDialog extends StatefulWidget {
   State<PlaceSearchDialog> createState() => _PlaceSearchDialogState();
 
   /// Shows the place search page and returns the selected place
-  static Future<NominatimPlace?> show(BuildContext context, String hintText) {
+  static Future<NominatimPlace?> show(
+    BuildContext context,
+    String hintText, {
+    bool forceRefreshLocation = false,
+  }) {
     return Navigator.of(context).push<NominatimPlace>(
       MaterialPageRoute(
         builder: (ctx) => PlaceSearchDialog(hintText: hintText),
@@ -29,6 +33,7 @@ class PlaceSearchDialog extends StatefulWidget {
 
 class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
   final TextEditingController _searchController = TextEditingController();
+  final MapController _mapController = MapController();
   List<NominatimPlace> _searchResults = [];
   bool _isSearching = false;
   String _errorMessage = '';
@@ -40,18 +45,18 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
   @override
   void initState() {
     super.initState();
-    // Load nearby places asynchronously without blocking
-    _loadNearbyPlacesAsync();
+    // Load nearby places after the first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadNearbyPlacesAsync();
+    });
   }
 
   void _loadNearbyPlacesAsync() {
     if (_hasLoadedNearby) return;
     _hasLoadedNearby = true;
 
-    // Run in background without awaiting
-    Future.microtask(() async {
-      await _loadNearbyPlaces();
-    });
+    // Load immediately with proper context
+    _loadNearbyPlaces();
   }
 
   @override
@@ -94,6 +99,8 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
               _mapCenter = LatLng(latitude, longitude);
               _mapZoom = 13.0;
             });
+            // Move map to user location
+            _mapController.move(_mapCenter, _mapZoom);
           }
 
           // Search for nearby places with timeout
@@ -276,6 +283,7 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
 
   Widget _buildFullScreenMap(ColorScheme colorScheme) {
     return FlutterMap(
+      mapController: _mapController,
       options: MapOptions(
         initialCenter: _mapCenter,
         initialZoom: _mapZoom,
