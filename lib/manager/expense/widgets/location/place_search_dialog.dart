@@ -242,23 +242,24 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
                 onPressed: () async {
                   final selected = _selectedMapLocation!;
                   final navigator = Navigator.of(context);
-                  
+
                   // Try to reverse geocode the selected location
                   try {
-                    final results = await NominatimSearchService.searchNearbyPlaces(
-                      selected.latitude,
-                      selected.longitude,
-                      limit: 1,
-                    ).timeout(
-                      const Duration(seconds: 3),
-                      onTimeout: () => <NominatimPlace>[],
-                    );
-                    
+                    final results =
+                        await NominatimSearchService.searchNearbyPlaces(
+                          selected.latitude,
+                          selected.longitude,
+                          limit: 1,
+                        ).timeout(
+                          const Duration(seconds: 3),
+                          onTimeout: () => <NominatimPlace>[],
+                        );
+
                     // Use geocoded address if available, otherwise use coordinates
-                    final displayName = results.isNotEmpty 
+                    final displayName = results.isNotEmpty
                         ? results.first.displayName
                         : '${selected.latitude.toStringAsFixed(6)}, ${selected.longitude.toStringAsFixed(6)}';
-                    
+
                     navigator.pop(
                       NominatimPlace(
                         latitude: selected.latitude,
