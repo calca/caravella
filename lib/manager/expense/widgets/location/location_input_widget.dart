@@ -210,31 +210,25 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
     // Show loading indicator
     if (_isGettingLocation || _isResolvingAddress) {
       return IconLeadingField(
-        icon: const Icon(Icons.place_outlined),
+        icon: SizedBox(
+          width: LocationWidgetConstants.loaderSize,
+          height: LocationWidgetConstants.loaderSize,
+          child: CircularProgressIndicator(
+            strokeWidth: LocationWidgetConstants.loaderStrokeWidth,
+            color: colorScheme.onSurfaceVariant,
+          ),
+        ),
         semanticsLabel: gloc.location,
         tooltip: gloc.location,
         alignTop: false,
         iconPadding: FormTheme.standardIconPadding,
         child: Padding(
           padding: FormTheme.standardContentPadding,
-          child: Row(
-            children: [
-              SizedBox(
-                width: LocationWidgetConstants.loaderSize,
-                height: LocationWidgetConstants.loaderSize,
-                child: CircularProgressIndicator(
-                  strokeWidth: LocationWidgetConstants.loaderStrokeWidth,
-                  color: colorScheme.primary,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Text(
-                _isGettingLocation
-                    ? gloc.getting_location
-                    : gloc.address_resolved,
-                style: widget.textStyle ?? FormTheme.getFieldTextStyle(context),
-              ),
-            ],
+          child: Text(
+            _isGettingLocation
+                ? gloc.getting_location
+                : gloc.address_resolved,
+            style: widget.textStyle ?? FormTheme.getFieldTextStyle(context),
           ),
         ),
       );
