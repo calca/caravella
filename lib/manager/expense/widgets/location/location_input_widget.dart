@@ -280,7 +280,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
       );
     }
 
-    // Show empty state with action button
+    // Show empty state with action buttons
     return IconLeadingField(
       icon: const Icon(Icons.place_outlined),
       semanticsLabel: gloc.location,
@@ -301,10 +301,20 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
                   )?.copyWith(color: colorScheme.onSurfaceVariant),
                 ),
               ),
+              IconButton(
+                icon: const Icon(Icons.my_location),
+                iconSize: LocationWidgetConstants.iconSize,
+                color: colorScheme.onSurfaceVariant,
+                tooltip: gloc.get_current_location,
+                onPressed: _getCurrentLocation,
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+              ),
+              const SizedBox(width: 8),
               Icon(
                 Icons.search,
                 size: LocationWidgetConstants.iconSize,
-                color: colorScheme.primary,
+                color: colorScheme.onSurfaceVariant,
               ),
             ],
           ),
