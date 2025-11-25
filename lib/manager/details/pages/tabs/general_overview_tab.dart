@@ -103,10 +103,20 @@ class GeneralOverviewTab extends StatelessWidget {
             DateRangeExpenseChart(dailyTotals: dateRange, theme: theme),
           ] else ...[
             // Weekly chart
-            WeeklyExpenseChart(dailyTotals: weekly, theme: theme),
+            WeeklyExpenseChart(
+              dailyTotals: weekly,
+              theme: theme,
+              badgeText: gloc.weeklyChartBadge,
+              semanticLabel: gloc.weeklyExpensesChart,
+            ),
             const SizedBox(height: 32),
             // Monthly chart
-            MonthlyExpenseChart(dailyTotals: monthly, theme: theme),
+            MonthlyExpenseChart(
+              dailyTotals: monthly,
+              theme: theme,
+              badgeText: gloc.monthlyChartBadge,
+              semanticLabel: gloc.monthlyExpensesChart,
+            ),
           ],
           const SizedBox(height: 32),
           GridView(

@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:io_caravella_egm/l10n/app_localizations.dart';
 import 'chart_type.dart';
 
 class ChartBadge extends StatelessWidget {
   final ChartType chartType;
   final ThemeData theme;
+  final String badgeText;
+  final String semanticLabel;
 
-  const ChartBadge({super.key, required this.chartType, required this.theme});
+  const ChartBadge({
+    super.key,
+    required this.chartType,
+    required this.theme,
+    required this.badgeText,
+    required this.semanticLabel,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context);
-    // Direct getters from generated localization based on enum
-    final letter = switch (chartType) {
-      ChartType.weekly => localizations.weeklyChartBadge,
-      ChartType.monthly => localizations.monthlyChartBadge,
-    };
     final color = theme.colorScheme.onSurfaceVariant;
-    final semanticLabel = switch (chartType) {
-      ChartType.weekly => localizations.weeklyExpensesChart,
-      ChartType.monthly => localizations.monthlyExpensesChart,
-    };
 
     return Semantics(
       label: semanticLabel,
@@ -33,7 +30,7 @@ class ChartBadge extends StatelessWidget {
         ),
         child: Center(
           child: Text(
-            letter,
+            badgeText,
             style: theme.textTheme.labelMedium?.copyWith(
               fontWeight: FontWeight.w400,
               color: color,

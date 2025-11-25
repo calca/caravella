@@ -33,11 +33,14 @@ class CategorySelectorWidget extends StatelessWidget {
         context: context,
         items: categories,
         selected: selectedCategory,
-        gloc: gloc,
         sheetTitle: gloc.category,
         itemLabel: (c) => c.name,
         onAddItemInline: onAddCategoryInline,
         addItemHint: gloc.category_name,
+        addLabel: gloc.add,
+        cancelLabel: gloc.cancel,
+        addCategoryLabel: gloc.add_category,
+        alreadyExistsMessage: '${gloc.category_name} ${gloc.already_exists}',
       );
       if (picked != null && picked != selectedCategory) {
         onCategorySelected(picked);

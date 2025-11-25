@@ -1,4 +1,5 @@
 import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -19,69 +20,104 @@ class ExpenseLocationsMapPage extends StatefulWidget {
 
 class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
   final MapController _mapController = MapController();
+  bool _isLoading = true;
+  String? _errorMessage;
   List<ExpenseDetails> _expensesWithLocation = [];
+  LatLngBounds? _bounds;
+  Map<String, List<ExpenseDetails>> _groupedExpenses = {};
 
   @override
   void initState() {
     super.initState();
-    _loadExpensesWithLocation();
-
-    // Fit bounds after the map is initialized
+    // Offload processing to next frame to prevent UI blocking during navigation
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final bounds = _calculateBounds();
-      if (bounds != null) {
-        _mapController.fitCamera(
-          CameraFit.bounds(bounds: bounds, padding: const EdgeInsets.all(50)),
-        );
-      }
+      _processLocationData();
     });
   }
 
-  void _loadExpensesWithLocation() {
-    _expensesWithLocation = widget.group.expenses
-        .where(
-          (expense) =>
-              expense.location != null && expense.location!.hasLocation,
-        )
-        .toList();
-  }
+  Future<void> _processLocationData() async {
+    // Yield execution to allow UI to render loading state
+    await Future.delayed(const Duration(milliseconds: 50));
 
-  /// Calculate bounds to fit all expense locations
-  LatLngBounds? _calculateBounds() {
-    if (_expensesWithLocation.isEmpty) return null;
+    if (!mounted) return;
 
-    double minLat = _expensesWithLocation.first.location!.latitude!;
-    double maxLat = _expensesWithLocation.first.location!.latitude!;
-    double minLng = _expensesWithLocation.first.location!.longitude!;
-    double maxLng = _expensesWithLocation.first.location!.longitude!;
+    final expenses = widget.group.expenses;
 
-    for (final expense in _expensesWithLocation) {
-      final lat = expense.location!.latitude!;
-      final lng = expense.location!.longitude!;
+    try {
+      final expensesWithLocation = expenses.where((expense) {
+        final location = expense.location;
+        return location != null &&
+            location.latitude != null &&
+            location.longitude != null;
+      }).toList();
 
-      if (lat < minLat) minLat = lat;
-      if (lat > maxLat) maxLat = lat;
-      if (lng < minLng) minLng = lng;
-      if (lng > maxLng) maxLng = lng;
-    }
-
-    return LatLngBounds(LatLng(minLat, minLng), LatLng(maxLat, maxLng));
-  }
-
-  /// Group expenses by location (for clustering)
-  Map<String, List<ExpenseDetails>> _groupExpensesByLocation() {
-    final Map<String, List<ExpenseDetails>> grouped = {};
-
-    for (final expense in _expensesWithLocation) {
-      final key =
-          '${expense.location!.latitude!.toStringAsFixed(6)},${expense.location!.longitude!.toStringAsFixed(6)}';
-      if (!grouped.containsKey(key)) {
-        grouped[key] = [];
+      if (expensesWithLocation.isEmpty) {
+        if (mounted) {
+          setState(() {
+            _expensesWithLocation = [];
+            _isLoading = false;
+            _errorMessage = null;
+          });
+        }
+        return;
       }
-      grouped[key]!.add(expense);
-    }
 
-    return grouped;
+      // Calculate bounds using shared utility
+      final points = expensesWithLocation
+          .map((e) => LatLng(e.location!.latitude!, e.location!.longitude!))
+          .toList();
+      final bounds = computeBounds(points);
+
+      // Group expenses
+      final Map<String, List<ExpenseDetails>> grouped = {};
+      for (final expense in expensesWithLocation) {
+        final location = expense.location;
+        if (location == null ||
+            location.latitude == null ||
+            location.longitude == null) {
+          continue;
+        }
+        final key =
+            '${location.latitude!.toStringAsFixed(6)},${location.longitude!.toStringAsFixed(6)}';
+        if (!grouped.containsKey(key)) {
+          grouped[key] = [];
+        }
+        grouped[key]!.add(expense);
+      }
+
+      if (mounted) {
+        setState(() {
+          _expensesWithLocation = expensesWithLocation;
+          _bounds = bounds;
+          _groupedExpenses = grouped;
+          _isLoading = false;
+          _errorMessage = null;
+        });
+
+        // Fit camera after layout
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted && _bounds != null) {
+            try {
+              _mapController.fitCamera(
+                CameraFit.bounds(
+                  bounds: _bounds!,
+                  padding: const EdgeInsets.all(50),
+                ),
+              );
+            } catch (_) {
+              // Ignore map camera errors (e.g., when map is not ready)
+            }
+          }
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _errorMessage = e.toString();
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   void _showExpenseDetails(List<ExpenseDetails> expenses) {
@@ -96,10 +132,11 @@ class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
   }
 
   List<Marker> _buildMarkers() {
-    final grouped = _groupExpensesByLocation();
+    if (_groupedExpenses.isEmpty) return [];
+
     final colorScheme = Theme.of(context).colorScheme;
 
-    return grouped.entries.map((entry) {
+    return _groupedExpenses.entries.map((entry) {
       final expenses = entry.value;
       final firstExpense = expenses.first;
       final location = LatLng(
@@ -161,75 +198,58 @@ class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
     final gloc = gen.AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
 
-    if (_expensesWithLocation.isEmpty) {
+    final appBar = AppBar(
+      title: Text(gloc.expenses_map),
+      backgroundColor: colorScheme.surface,
+    );
+
+    if (_isLoading) {
       return Scaffold(
-        appBar: AppBar(
-          title: Text(gloc.expenses_map),
-          backgroundColor: colorScheme.surface,
-        ),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.map_outlined,
-                  size: 80,
-                  color: colorScheme.primary.withValues(alpha: 0.6),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  gloc.no_locations_available,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: colorScheme.onSurface,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  gloc.no_locations_subtitle,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: colorScheme.onSurface.withValues(alpha: 0.7),
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
+        appBar: appBar,
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (_errorMessage != null) {
+      return Scaffold(
+        appBar: appBar,
+        body: MapErrorState(
+          title: gloc.location_error,
+          message: _errorMessage!,
         ),
       );
     }
 
-    final bounds = _calculateBounds();
+    if (_expensesWithLocation.isEmpty) {
+      return Scaffold(
+        appBar: appBar,
+        body: MapEmptyState(
+          title: gloc.no_locations_available,
+          subtitle: gloc.no_locations_subtitle,
+        ),
+      );
+    }
+
+    final hasBounds = _bounds != null;
+    final center = hasBounds
+        ? LatLng(
+            (_bounds!.northEast.latitude + _bounds!.southWest.latitude) / 2,
+            (_bounds!.northEast.longitude + _bounds!.southWest.longitude) / 2,
+          )
+        : LatLng(
+            _expensesWithLocation.first.location!.latitude!,
+            _expensesWithLocation.first.location!.longitude!,
+          );
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(gloc.expenses_map),
-        backgroundColor: colorScheme.surface,
-      ),
-      body: FlutterMap(
+      appBar: appBar,
+      body: StandardMap(
         mapController: _mapController,
-        options: MapOptions(
-          initialCenter: bounds != null
-              ? LatLng(
-                  (bounds.northWest.latitude + bounds.southEast.latitude) / 2,
-                  (bounds.northWest.longitude + bounds.southEast.longitude) / 2,
-                )
-              : const LatLng(0, 0),
-          initialZoom: 2,
-          minZoom: 2,
-          maxZoom: 18,
-        ),
-        children: [
-          TileLayer(
-            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-            userAgentPackageName: 'io.caravella.egm',
-            maxZoom: 19,
-          ),
-          MarkerLayer(markers: _buildMarkers()),
-        ],
+        initialCenter: center,
+        initialZoom: hasBounds ? 12 : 14,
+        minZoom: 2,
+        maxZoom: 18,
+        layers: [MarkerLayer(markers: _buildMarkers())],
       ),
     );
   }

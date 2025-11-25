@@ -142,7 +142,7 @@ class GroupCardContent extends StatelessWidget {
             _buildTotalAmount(context, currentGroup),
             const SizedBox(height: _largSpacing),
             const Spacer(),
-            _buildStatistics(currentGroup),
+            _buildStatistics(context, currentGroup),
             const SizedBox(height: 24),
             _buildAddButton(context, currentGroup),
           ],
@@ -355,14 +355,14 @@ class GroupCardContent extends StatelessWidget {
     );
   }
 
-  Widget _buildStatistics(ExpenseGroup currentGroup) {
+  Widget _buildStatistics(BuildContext context, ExpenseGroup currentGroup) {
     // Check if we should show date range chart for groups with dates < 1 month
     if (shouldShowDateRangeChart(currentGroup)) {
       return _buildDateRangeStatistics(currentGroup);
     }
 
     // Default behavior: show weekly + monthly charts
-    return _buildDefaultStatistics(currentGroup);
+    return _buildDefaultStatistics(context, currentGroup);
   }
 
   Widget _buildDateRangeStatistics(ExpenseGroup currentGroup) {
@@ -386,20 +386,31 @@ class GroupCardContent extends StatelessWidget {
     );
   }
 
-  Widget _buildDefaultStatistics(ExpenseGroup currentGroup) {
+  Widget _buildDefaultStatistics(BuildContext context, ExpenseGroup currentGroup) {
     // Serie settimanale e mensile tramite helper condivisi
     final dailyTotals = buildWeeklySeries(currentGroup);
     final dailyMonthTotals = buildMonthlySeries(currentGroup);
+    final gloc = gen.AppLocalizations.of(context);
 
     // Statistiche base
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Settimana
-        WeeklyExpenseChart(dailyTotals: dailyTotals, theme: theme),
+        WeeklyExpenseChart(
+          dailyTotals: dailyTotals,
+          theme: theme,
+          badgeText: gloc.weeklyChartBadge,
+          semanticLabel: gloc.weeklyExpensesChart,
+        ),
         const SizedBox(height: 16),
         // Mese
-        MonthlyExpenseChart(dailyTotals: dailyMonthTotals, theme: theme),
+        MonthlyExpenseChart(
+          dailyTotals: dailyMonthTotals,
+          theme: theme,
+          badgeText: gloc.monthlyChartBadge,
+          semanticLabel: gloc.monthlyExpensesChart,
+        ),
       ],
     );
   }

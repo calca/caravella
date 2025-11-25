@@ -31,7 +31,6 @@ class ParticipantSelectorWidget extends StatelessWidget {
         context: context,
         items: participants,
         selected: selected,
-        gloc: gloc,
         sheetTitle: gloc.participants_label,
         itemLabel: (p) => p,
       );

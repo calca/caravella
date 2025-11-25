@@ -1,7 +1,7 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'nominatim_place.dart';
 import 'nominatim_search_service.dart';
@@ -46,11 +46,12 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
   LatLng? _selectedMapLocation;
   String? _selectedLocationAddress;
   bool _isGeocodingLocation = false;
-  Timer? _debounceTimer;
+  late final Debouncer _debouncer;
 
   @override
   void initState() {
     super.initState();
+    _debouncer = Debouncer(duration: const Duration(milliseconds: 300));
     // Load nearby places after the first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadNearbyPlacesAsync();
@@ -67,7 +68,7 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
 
   @override
   void dispose() {
-    _debounceTimer?.cancel();
+    _debouncer.dispose();
     _searchController.dispose();
     super.dispose();
   }
@@ -250,8 +251,14 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
             child: Column(
               children: [
                 _buildSearchBar(theme, colorScheme),
-                if (_isSearching || _isLoadingNearby) _buildLoadingIndicator(),
-                if (_errorMessage.isNotEmpty) _buildErrorMessage(colorScheme),
+                if (_isSearching || _isLoadingNearby)
+                  MapLoadingOverlay(
+                    message: _isLoadingNearby
+                        ? 'Finding nearby places...'
+                        : 'Searching...',
+                  ),
+                if (_errorMessage.isNotEmpty)
+                  MapErrorOverlay(message: _errorMessage),
                 // Hide results list when a map location is selected
                 if (_selectedMapLocation == null) ...[
                   if (!_isSearching &&
@@ -263,7 +270,7 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
                       _searchResults.isEmpty &&
                       _searchController.text.isNotEmpty &&
                       _errorMessage.isEmpty)
-                    _buildNoResultsMessage(theme, colorScheme),
+                    const MapNoResultsMessage(),
                 ] else
                   // Show selected location info when map location is selected
                   _buildSelectedLocationInfo(theme, colorScheme),
@@ -304,10 +311,8 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
                 isDense: true,
               ),
               onChanged: (value) {
-                // Cancel previous timer
-                _debounceTimer?.cancel();
                 // Debounce search with shorter delay
-                _debounceTimer = Timer(const Duration(milliseconds: 300), () {
+                _debouncer.call(() {
                   if (mounted && _searchController.text == value) {
                     _performSearch(value);
                   }
@@ -325,68 +330,22 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
     );
   }
 
-  Widget _buildLoadingIndicator() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Theme.of(
-          context,
-        ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.85),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            width: 20,
-            height: 20,
-            child: CircularProgressIndicator(
-              strokeWidth: 2.5,
-              color: Theme.of(context).colorScheme.onPrimaryContainer,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Text(
-            _isLoadingNearby ? 'Finding nearby places...' : 'Searching...',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildErrorMessage(ColorScheme colorScheme) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Text(_errorMessage, style: TextStyle(color: colorScheme.error)),
-    );
-  }
-
   Widget _buildFullScreenMap(ColorScheme colorScheme) {
-    return FlutterMap(
+    return StandardMap(
       mapController: _mapController,
-      options: MapOptions(
-        initialCenter: _mapCenter,
-        initialZoom: _mapZoom,
-        minZoom: 3.0,
-        maxZoom: 18.0,
-        onTap: (tapPosition, point) {
-          setState(() {
-            _selectedMapLocation = point;
-            _selectedLocationAddress = null;
-            _isGeocodingLocation = true;
-          });
-          _geocodeSelectedLocation(point);
-        },
-      ),
-      children: [
-        TileLayer(
-          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          userAgentPackageName: 'io.caravella.egm',
-        ),
+      initialCenter: _mapCenter,
+      initialZoom: _mapZoom,
+      minZoom: 3.0,
+      maxZoom: 18.0,
+      onTap: (tapPosition, point) {
+        setState(() {
+          _selectedMapLocation = point;
+          _selectedLocationAddress = null;
+          _isGeocodingLocation = true;
+        });
+        _geocodeSelectedLocation(point);
+      },
+      layers: [
         if (_searchResults.isNotEmpty)
           MarkerLayer(
             markers: _searchResults.map((place) {
@@ -405,7 +364,6 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
               );
             }).toList(),
           ),
-        // Selected location marker
         if (_selectedMapLocation != null)
           MarkerLayer(
             markers: [
@@ -496,18 +454,6 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNoResultsMessage(ThemeData theme, ColorScheme colorScheme) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Text(
-        'No results found',
-        style: theme.textTheme.bodyMedium?.copyWith(
-          color: colorScheme.onSurfaceVariant,
         ),
       ),
     );
