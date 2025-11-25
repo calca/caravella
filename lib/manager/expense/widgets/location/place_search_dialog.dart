@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'nominatim_place.dart';
 import 'nominatim_search_service.dart';
 import 'location_service.dart';
@@ -539,6 +540,14 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Title
+              Text(
+                gen.AppLocalizations.of(context).location,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16),
               // Address container (same style as location details)
               if (_isGeocodingLocation)
                 Container(
@@ -596,6 +605,7 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
               // Actions row (same style as location details)
               Row(
                 children: [
+                  const Spacer(),
                   _buildActionButton(
                     icon: Icons.close,
                     tooltip: 'Clear selection',
@@ -608,7 +618,6 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
                     },
                     destructive: true,
                   ),
-                  const Spacer(),
                   _buildActionButton(
                     icon: Icons.check,
                     tooltip: 'Confirm location',
