@@ -4,7 +4,7 @@ class NoExpense extends StatelessWidget {
   final String semanticLabel;
   final String noExpenseLabel;
   final String addFirstExpenseLabel;
-  
+
   const NoExpense({
     super.key,
     required this.semanticLabel,

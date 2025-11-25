@@ -386,7 +386,10 @@ class GroupCardContent extends StatelessWidget {
     );
   }
 
-  Widget _buildDefaultStatistics(BuildContext context, ExpenseGroup currentGroup) {
+  Widget _buildDefaultStatistics(
+    BuildContext context,
+    ExpenseGroup currentGroup,
+  ) {
     // Serie settimanale e mensile tramite helper condivisi
     final dailyTotals = buildWeeklySeries(currentGroup);
     final dailyMonthTotals = buildMonthlySeries(currentGroup);

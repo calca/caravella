@@ -124,11 +124,7 @@ class AppToast {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                effectiveIcon,
-                color: textColor,
-                size: 20,
-              ),
+              Icon(effectiveIcon, color: textColor, size: 20),
               const SizedBox(width: 10),
               Flexible(
                 child: Text(
