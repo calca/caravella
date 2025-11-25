@@ -43,6 +43,8 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
   LatLng _mapCenter = const LatLng(41.9028, 12.4964); // Default: Rome, Italy
   double _mapZoom = 18.0; // Maximum zoom to see nearby shops and POIs
   LatLng? _selectedMapLocation;
+  String? _selectedLocationAddress;
+  bool _isGeocodingLocation = false;
   Timer? _debounceTimer;
 
   @override
@@ -201,6 +203,35 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
     _loadNearbyPlaces();
   }
 
+  Future<void> _geocodeSelectedLocation(LatLng location) async {
+    try {
+      final results = await NominatimSearchService.searchNearbyPlaces(
+        location.latitude,
+        location.longitude,
+        limit: 1,
+      ).timeout(
+        const Duration(seconds: 3),
+        onTimeout: () => <NominatimPlace>[],
+      );
+
+      if (mounted) {
+        setState(() {
+          _selectedLocationAddress = results.isNotEmpty
+              ? results.first.displayName
+              : null;
+          _isGeocodingLocation = false;
+        });
+      }
+    } catch (_) {
+      if (mounted) {
+        setState(() {
+          _selectedLocationAddress = null;
+          _isGeocodingLocation = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -219,71 +250,24 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
                 _buildSearchBar(theme, colorScheme),
                 if (_isSearching || _isLoadingNearby) _buildLoadingIndicator(),
                 if (_errorMessage.isNotEmpty) _buildErrorMessage(colorScheme),
-                if (!_isSearching &&
-                    !_isLoadingNearby &&
-                    _searchResults.isNotEmpty)
-                  _buildResultsOverlay(theme, colorScheme),
-                if (!_isSearching &&
-                    !_isLoadingNearby &&
-                    _searchResults.isEmpty &&
-                    _searchController.text.isNotEmpty &&
-                    _errorMessage.isEmpty)
-                  _buildNoResultsMessage(theme, colorScheme),
+                // Hide results list when a map location is selected
+                if (_selectedMapLocation == null) ...[
+                  if (!_isSearching &&
+                      !_isLoadingNearby &&
+                      _searchResults.isNotEmpty)
+                    _buildResultsOverlay(theme, colorScheme),
+                  if (!_isSearching &&
+                      !_isLoadingNearby &&
+                      _searchResults.isEmpty &&
+                      _searchController.text.isNotEmpty &&
+                      _errorMessage.isEmpty)
+                    _buildNoResultsMessage(theme, colorScheme),
+                ] else
+                  // Show selected location info when map location is selected
+                  _buildSelectedLocationInfo(theme, colorScheme),
               ],
             ),
           ),
-
-          // Confirm button for map selection
-          if (_selectedMapLocation != null)
-            Positioned(
-              bottom: 96,
-              right: 16,
-              child: FloatingActionButton(
-                onPressed: () async {
-                  final selected = _selectedMapLocation!;
-                  final navigator = Navigator.of(context);
-
-                  // Try to reverse geocode the selected location
-                  try {
-                    final results =
-                        await NominatimSearchService.searchNearbyPlaces(
-                          selected.latitude,
-                          selected.longitude,
-                          limit: 1,
-                        ).timeout(
-                          const Duration(seconds: 3),
-                          onTimeout: () => <NominatimPlace>[],
-                        );
-
-                    // Use geocoded address if available, otherwise use coordinates
-                    final displayName = results.isNotEmpty
-                        ? results.first.displayName
-                        : '${selected.latitude.toStringAsFixed(6)}, ${selected.longitude.toStringAsFixed(6)}';
-
-                    navigator.pop(
-                      NominatimPlace(
-                        latitude: selected.latitude,
-                        longitude: selected.longitude,
-                        displayName: displayName,
-                      ),
-                    );
-                  } catch (_) {
-                    // Fallback to coordinates if geocoding fails
-                    navigator.pop(
-                      NominatimPlace(
-                        latitude: selected.latitude,
-                        longitude: selected.longitude,
-                        displayName:
-                            '${selected.latitude.toStringAsFixed(6)}, ${selected.longitude.toStringAsFixed(6)}',
-                      ),
-                    );
-                  }
-                },
-                backgroundColor: colorScheme.primary,
-                foregroundColor: colorScheme.onPrimary,
-                child: const Icon(Icons.check),
-              ),
-            ),
         ],
       ),
     );
@@ -390,7 +374,10 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
         onTap: (tapPosition, point) {
           setState(() {
             _selectedMapLocation = point;
+            _selectedLocationAddress = null;
+            _isGeocodingLocation = true;
           });
+          _geocodeSelectedLocation(point);
         },
       ),
       children: [
@@ -521,6 +508,144 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
           color: colorScheme.onSurfaceVariant,
         ),
       ),
+    );
+  }
+
+  Widget _buildSelectedLocationInfo(ThemeData theme, ColorScheme colorScheme) {
+    final selected = _selectedMapLocation!;
+    final displayText = _selectedLocationAddress ??
+        '${selected.latitude.toStringAsFixed(6)}, ${selected.longitude.toStringAsFixed(6)}';
+
+    return Expanded(
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: Container(
+          margin: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: colorScheme.surface,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.2),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Address container (same style as location details)
+              if (_isGeocodingLocation)
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: colorScheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: colorScheme.primary,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          'Finding address...',
+                          style: theme.textTheme.bodyLarge,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              else
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: colorScheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(displayText, style: theme.textTheme.bodyLarge),
+                ),
+
+              // Coordinates if available
+              if (_selectedLocationAddress != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Text(
+                    '${selected.latitude.toStringAsFixed(6)}, ${selected.longitude.toStringAsFixed(6)}',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+
+              const SizedBox(height: 24),
+
+              // Actions row (same style as location details)
+              Row(
+                children: [
+                  _buildActionButton(
+                    icon: Icons.close,
+                    tooltip: 'Clear selection',
+                    onTap: () {
+                      setState(() {
+                        _selectedMapLocation = null;
+                        _selectedLocationAddress = null;
+                        _isGeocodingLocation = false;
+                      });
+                    },
+                    destructive: true,
+                  ),
+                  const Spacer(),
+                  _buildActionButton(
+                    icon: Icons.check,
+                    tooltip: 'Confirm location',
+                    onTap: () {
+                      final displayName = _selectedLocationAddress ??
+                          '${selected.latitude.toStringAsFixed(6)}, ${selected.longitude.toStringAsFixed(6)}';
+
+                      Navigator.of(context).pop(
+                        NominatimPlace(
+                          latitude: selected.latitude,
+                          longitude: selected.longitude,
+                          displayName: displayName,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionButton({
+    required IconData icon,
+    required String tooltip,
+    required VoidCallback onTap,
+    bool destructive = false,
+  }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return IconButton(
+      icon: Icon(icon),
+      iconSize: 28,
+      color: destructive ? colorScheme.error : colorScheme.primary,
+      tooltip: tooltip,
+      onPressed: onTap,
     );
   }
 }
