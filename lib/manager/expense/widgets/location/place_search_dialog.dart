@@ -39,131 +39,72 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
   List<NominatimPlace> _searchResults = [];
   bool _isSearching = false;
   String _errorMessage = '';
-  bool _isLoadingNearby = true;
-  bool _hasLoadedNearby = false;
+  bool _isLoadingNearby = false;
   LatLng _mapCenter = const LatLng(41.9028, 12.4964); // Default: Rome, Italy
   double _mapZoom = 18.0; // Maximum zoom to see nearby shops and POIs
   LatLng? _selectedMapLocation;
   String? _selectedLocationAddress;
   bool _isGeocodingLocation = false;
   late final Debouncer _debouncer;
+  final FocusNode _searchFocusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
     _debouncer = Debouncer(duration: const Duration(milliseconds: 300));
-    // Load nearby places after the first frame
+    // Load user location and give focus to search box after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadNearbyPlacesAsync();
+      _loadUserLocation();
+      if (mounted) {
+        _searchFocusNode.requestFocus();
+      }
     });
   }
 
-  void _loadNearbyPlacesAsync() {
-    if (_hasLoadedNearby) return;
-    _hasLoadedNearby = true;
-
-    // Load immediately with proper context
-    _loadNearbyPlaces();
-  }
-
-  @override
-  void dispose() {
-    _debouncer.dispose();
-    _searchController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _loadNearbyPlaces() async {
+  Future<void> _loadUserLocation() async {
     if (!mounted) return;
 
-    if (mounted) {
-      setState(() {
-        _isLoadingNearby = true;
-        _errorMessage = '';
-      });
-    }
-
     try {
-      // Get current GPS location with reduced timeout
-      final location =
-          await LocationService.getCurrentLocation(
-            context,
-            resolveAddress: false,
-          ).timeout(
-            const Duration(seconds: 8),
-            onTimeout: () {
-              return null;
-            },
-          );
+      // Get current GPS location
+      final location = await LocationService.getCurrentLocation(
+        context,
+        resolveAddress: false,
+      ).timeout(const Duration(seconds: 8), onTimeout: () => null);
 
       if (location != null && mounted) {
         final latitude = location.latitude;
         final longitude = location.longitude;
 
         if (latitude != null && longitude != null) {
-          // Update map center to user location immediately
-          if (mounted) {
-            setState(() {
-              _mapCenter = LatLng(latitude, longitude);
-              _mapZoom = 18.0; // Maximum zoom to see nearby shops and POIs
-              _isLoadingNearby = false; // Stop loading indicator
-            });
-            // Move map to user location
-            _mapController.move(_mapCenter, _mapZoom);
-          }
-
-          // Search for nearby places in background without blocking UI
-          NominatimSearchService.searchNearbyPlaces(
-                latitude,
-                longitude,
-                limit: 15,
-              )
-              .timeout(
-                const Duration(seconds: 5),
-                onTimeout: () => <NominatimPlace>[],
-              )
-              .then((results) {
-                if (mounted && results.isNotEmpty) {
-                  setState(() {
-                    _searchResults = results;
-                  });
-                }
-              })
-              .catchError((_) {
-                // Silently ignore errors in background search
-              });
-        } else {
-          if (mounted) {
-            setState(() {
-              _isLoadingNearby = false;
-            });
-          }
-        }
-      } else {
-        if (mounted) {
           setState(() {
-            _isLoadingNearby = false;
+            _mapCenter = LatLng(latitude, longitude);
           });
+          // Move map to user location
+          _mapController.move(_mapCenter, _mapZoom);
         }
       }
     } catch (e) {
-      if (mounted) {
-        setState(() {
-          _errorMessage = 'Could not load nearby places';
-          _isLoadingNearby = false;
-        });
-      }
+      // Silently fail and use default location
     }
   }
 
+  @override
+  void dispose() {
+    _debouncer.dispose();
+    _searchController.dispose();
+    _searchFocusNode.dispose();
+    super.dispose();
+  }
+
   Future<void> _performSearch(String query) async {
-    if (query.trim().isEmpty) {
-      // Reload nearby places when search is cleared
+    // Only search with at least 3 characters
+    if (query.trim().length < 3) {
       setState(() {
+        _searchResults = [];
         _isSearching = false;
         _isLoadingNearby = false;
+        _errorMessage = '';
       });
-      _loadNearbyPlaces();
       return;
     }
 
@@ -200,9 +141,9 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
     setState(() {
       _searchResults = [];
       _errorMessage = '';
+      _isSearching = false;
+      _isLoadingNearby = false;
     });
-    // Reload nearby places when clearing search
-    _loadNearbyPlaces();
   }
 
   Future<void> _geocodeSelectedLocation(LatLng location) async {
@@ -305,6 +246,7 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
           Expanded(
             child: TextField(
               controller: _searchController,
+              focusNode: _searchFocusNode,
               decoration: InputDecoration(
                 hintText: widget.hintText,
                 border: InputBorder.none,
