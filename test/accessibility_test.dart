@@ -59,23 +59,25 @@ void main() {
     testWidgets('App toast has live region for screen readers', (
       WidgetTester tester,
     ) async {
-      final scaffoldKey = GlobalKey<ScaffoldState>();
-
       await tester.pumpWidget(
         localizedApp(
           home: Scaffold(
-            key: scaffoldKey,
             body: Builder(
-              builder: (context) => ElevatedButton(
-                onPressed: () {
-                  AppToast.show(
-                    context,
-                    'Test message',
-                    type: ToastType.success,
-                  );
-                },
-                child: const Text('Show Toast'),
-              ),
+              builder: (context) {
+                final gloc = AppLocalizations.of(context);
+                return ElevatedButton(
+                  onPressed: () {
+                    AppToast.show(
+                      context,
+                      'Test message',
+                      type: ToastType.success,
+                      semanticLabel:
+                          '${gloc.accessibility_toast_success}: Test message',
+                    );
+                  },
+                  child: const Text('Show Toast'),
+                );
+              },
             ),
           ),
         ),
