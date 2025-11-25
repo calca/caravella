@@ -205,14 +205,15 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
 
   Future<void> _geocodeSelectedLocation(LatLng location) async {
     try {
-      final results = await NominatimSearchService.searchNearbyPlaces(
-        location.latitude,
-        location.longitude,
-        limit: 1,
-      ).timeout(
-        const Duration(seconds: 3),
-        onTimeout: () => <NominatimPlace>[],
-      );
+      final results =
+          await NominatimSearchService.searchNearbyPlaces(
+            location.latitude,
+            location.longitude,
+            limit: 1,
+          ).timeout(
+            const Duration(seconds: 3),
+            onTimeout: () => <NominatimPlace>[],
+          );
 
       if (mounted) {
         setState(() {
@@ -513,7 +514,8 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
 
   Widget _buildSelectedLocationInfo(ThemeData theme, ColorScheme colorScheme) {
     final selected = _selectedMapLocation!;
-    final displayText = _selectedLocationAddress ??
+    final displayText =
+        _selectedLocationAddress ??
         '${selected.latitude.toStringAsFixed(6)}, ${selected.longitude.toStringAsFixed(6)}';
 
     return Expanded(
@@ -611,7 +613,8 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
                     icon: Icons.check,
                     tooltip: 'Confirm location',
                     onTap: () {
-                      final displayName = _selectedLocationAddress ??
+                      final displayName =
+                          _selectedLocationAddress ??
                           '${selected.latitude.toStringAsFixed(6)}, ${selected.longitude.toStringAsFixed(6)}';
 
                       Navigator.of(context).pop(
