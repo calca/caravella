@@ -148,21 +148,14 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
 
   Future<void> _geocodeSelectedLocation(LatLng location) async {
     try {
-      final results =
-          await NominatimSearchService.searchNearbyPlaces(
-            location.latitude,
-            location.longitude,
-            limit: 1,
-          ).timeout(
-            const Duration(seconds: 3),
-            onTimeout: () => <NominatimPlace>[],
-          );
+      final place = await NominatimSearchService.reverseGeocode(
+        location.latitude,
+        location.longitude,
+      ).timeout(const Duration(seconds: 3), onTimeout: () => null);
 
       if (mounted) {
         setState(() {
-          _selectedLocationAddress = results.isNotEmpty
-              ? results.first.displayName
-              : null;
+          _selectedLocationAddress = place?.displayName;
           _isGeocodingLocation = false;
         });
       }

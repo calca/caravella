@@ -58,6 +58,55 @@ class NominatimSearchService {
     return [];
   }
 
+  /// Reverse geocodes coordinates to get the address at that exact location
+  /// Returns a NominatimPlace representing the address at the given coordinates
+  static Future<NominatimPlace?> reverseGeocode(
+    double latitude,
+    double longitude, {
+    int zoom = 18, // Higher zoom = more specific address
+  }) async {
+    try {
+      final url = Uri.parse(
+        'https://nominatim.openstreetmap.org/reverse?'
+        'lat=$latitude'
+        '&lon=$longitude'
+        '&format=json'
+        '&zoom=$zoom'
+        '&addressdetails=1',
+      );
+
+      final response = await http
+          .get(
+            url,
+            headers: {
+              'User-Agent': _userAgent,
+              'Accept-Language': _acceptLanguage,
+            },
+          )
+          .timeout(
+            const Duration(seconds: 5),
+            onTimeout: () {
+              return http.Response('{}', 408);
+            },
+          );
+
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        if (json['display_name'] != null) {
+          return NominatimPlace.fromJson(json);
+        }
+      }
+    } on http.ClientException catch (_) {
+      // SSL/TLS or network error - return null
+    } on FormatException catch (_) {
+      // JSON parsing error - return null
+    } catch (_) {
+      // Any other error - return null
+    }
+
+    return null;
+  }
+
   /// Searches for nearby places using reverse geocoding
   /// Returns a list of places near the given coordinates
   static Future<List<NominatimPlace>> searchNearbyPlaces(
