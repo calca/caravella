@@ -193,10 +193,6 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
           Navigator.pop(context);
           _clearLocation();
         },
-        onEditManually: () {
-          Navigator.pop(context);
-          _fieldFocusNode.requestFocus();
-        },
       ),
     );
   }
@@ -321,14 +317,12 @@ class _LocationDetailsSheet extends StatelessWidget {
   final VoidCallback onGetCurrentLocation;
   final VoidCallback onSearchPlace;
   final VoidCallback onClearLocation;
-  final VoidCallback onEditManually;
 
   const _LocationDetailsSheet({
     required this.location,
     required this.onGetCurrentLocation,
     required this.onSearchPlace,
     required this.onClearLocation,
-    required this.onEditManually,
   });
 
   @override
@@ -398,11 +392,6 @@ class _LocationDetailsSheet extends StatelessWidget {
                 destructive: true,
               ),
               const Spacer(),
-              _ActionButton(
-                icon: Icons.edit,
-                tooltip: gloc.enter_location_manually,
-                onTap: onEditManually,
-              ),
               _ActionButton(
                 icon: Icons.my_location,
                 tooltip: gloc.get_current_location,
