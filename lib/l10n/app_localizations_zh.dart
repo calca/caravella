@@ -57,71 +57,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get select_period_hint => '选择日期';
 
   @override
-  String get suggested_duration => '建议时长';
-
-  @override
-  String days_count(int count) {
-    return '$count天';
-  }
-
-  @override
-  String get weekday_mon => '一';
-
-  @override
-  String get weekday_tue => '二';
-
-  @override
-  String get weekday_wed => '三';
-
-  @override
-  String get weekday_thu => '四';
-
-  @override
-  String get weekday_fri => '五';
-
-  @override
-  String get weekday_sat => '六';
-
-  @override
-  String get weekday_sun => '日';
-
-  @override
-  String get month_january => '一月';
-
-  @override
-  String get month_february => '二月';
-
-  @override
-  String get month_march => '三月';
-
-  @override
-  String get month_april => '四月';
-
-  @override
-  String get month_may => '五月';
-
-  @override
-  String get month_june => '六月';
-
-  @override
-  String get month_july => '七月';
-
-  @override
-  String get month_august => '八月';
-
-  @override
-  String get month_september => '九月';
-
-  @override
-  String get month_october => '十月';
-
-  @override
-  String get month_november => '十一月';
-
-  @override
-  String get month_december => '十二月';
-
-  @override
   String get in_group_prefix => '在';
 
   @override
@@ -254,38 +189,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get dates_description => '可选的开始和结束';
 
   @override
-  String get select_period => 'Select period';
-
-  @override
-  String get select_period_dates => 'Select the period dates';
-
-  @override
-  String duration_days(int days) {
-    return '$days days';
-  }
-
-  @override
-  String period_from_to(String start, String end, int days) {
-    return 'From $start to $end ($days days)';
-  }
-
-  @override
-  String period_from_select_end(String start) {
-    return 'From $start - Select end';
-  }
-
-  @override
-  String period_to_select_start(String end) {
-    return 'To $end - Select start';
-  }
-
-  @override
-  String get confirm => 'Confirm';
-
-  @override
-  String get clear => 'Clear';
-
-  @override
   String get currency_description => '群组的基础货币';
 
   @override
@@ -363,9 +266,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get new_group => '新群组';
-
-  @override
-  String get create => '创建';
 
   @override
   String get group_name => '群组名称';
@@ -601,33 +501,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get unarchive => '取消归档';
 
   @override
-  String get pin => '固定';
-
-  @override
-  String get unpin => '取消置顶';
-
-  @override
-  String get delete => '删除';
-
-  @override
-  String get undo => '撤销';
-
-  @override
-  String get archived_with_undo => '已归档';
-
-  @override
-  String get unarchived_with_undo => '已取消归档';
-
-  @override
-  String get pinned_with_undo => '已置顶';
-
-  @override
-  String get unpinned_with_undo => '已取消置顶';
-
-  @override
-  String get deleted_with_undo => '已删除';
-
-  @override
   String get archive_confirm => '您想要归档吗';
 
   @override
@@ -686,6 +559,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get unpin_group => '取消固定群组';
+
+  @override
+  String get pin => '固定';
 
   @override
   String get theme_automatic => '自动';
@@ -857,18 +733,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_general_desc => '语言和外观设置';
 
   @override
-  String get settings_auto_location_section => '位置检测';
-
-  @override
-  String get settings_auto_location_section_desc => '配置自动位置检测';
-
-  @override
-  String get settings_auto_location_title => '启用检测';
-
-  @override
-  String get settings_auto_location_desc => '添加费用时检测GPS';
-
-  @override
   String get settings_language => '语言';
 
   @override
@@ -900,12 +764,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get settings_select_theme => '选择主题';
-
-  @override
-  String get settings_dynamic_color => '动态颜色';
-
-  @override
-  String get settings_dynamic_color_desc => '使用壁纸颜色';
 
   @override
   String get settings_privacy_desc => '安全和隐私选项';
@@ -1008,6 +866,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get delete_expense_confirm => '您确定要删除此支出吗?';
+
+  @override
+  String get delete => '删除';
 
   @override
   String get no_results_found => '未找到结果。';
@@ -1700,18 +1561,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get whats_new_desc => '了解最新功能和更新';
 
   @override
-  String get whats_new_subtitle => '最新亮点';
-
-  @override
-  String get whats_new_latest => '随时掌握最新改进';
-
-  @override
-  String get changelog_title => '更新日志';
-
-  @override
-  String get changelog_desc => '版本历史和改进';
-
-  @override
   String get average_per_person => '人均支出';
 
   @override
@@ -1724,78 +1573,246 @@ class AppLocalizationsZh extends AppLocalizations {
   String get debt_prefix_to => '给 ';
 
   @override
-  String get view_on_map => '在地图上查看';
+  String get wizard_group_creation_title => '新建群组';
+
+  @override
+  String get wizard_step_name => '名称';
+
+  @override
+  String get wizard_step_participants => '参与者';
+
+  @override
+  String get wizard_step_categories => '类别';
+
+  @override
+  String get wizard_step_period => '时间段';
+
+  @override
+  String get wizard_step_background => '背景';
+
+  @override
+  String get wizard_step_congratulations => '恭喜！';
+
+  @override
+  String get wizard_step_of => '的';
+
+  @override
+  String get wizard_next => '下一步';
+
+  @override
+  String get wizard_previous => '上一步';
+
+  @override
+  String get wizard_skip => '跳过';
+
+  @override
+  String get wizard_finish => '创建群组';
+
+  @override
+  String get wizard_name_description => '为您的费用群组输入名称';
+
+  @override
+  String get wizard_participants_description => '添加将共享费用的人员';
+
+  @override
+  String get wizard_categories_description => '创建类别以组织费用';
+
+  @override
+  String get wizard_period_description => '设置开始和结束日期（可选）';
+
+  @override
+  String get wizard_background_description => '为群组选择背景颜色';
+
+  @override
+  String wizard_congratulations_message(String groupName) {
+    return '您的群组\'$groupName\'已成功创建！';
+  }
+
+  @override
+  String get wizard_group_summary => '群组摘要：';
+
+  @override
+  String wizard_created_participants(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count位参与者',
+      one: '1位参与者',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String wizard_created_categories(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count个类别',
+      one: '1个类别',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get wizard_step_user_name => '您的名字';
+
+  @override
+  String get wizard_user_name_welcome => '你好！您叫什么名字？';
+
+  @override
+  String get wizard_user_name_description => '这样我们就可以在群组中显示您 😊';
+
+  @override
+  String get wizard_user_name_local_storage_note => '您的名字将仅保存在您的设备上，不会被共享';
+
+  @override
+  String get wizard_user_name_label => '您的名字（可选）';
+
+  @override
+  String get wizard_user_name_hint => '例如 Mario';
+
+  @override
+  String get wizard_step_participants_and_categories => '谁和什么';
+
+  @override
+  String get wizard_participants_and_categories_description => '定义谁参与以及将共享哪些费用';
+
+  @override
+  String get wizard_participants_section_title => '谁在参与？';
+
+  @override
+  String get wizard_participants_section_hint => '添加朋友或室友。您可以稍后修改。';
+
+  @override
+  String get wizard_categories_section_title => '将共享什么？';
+
+  @override
+  String get wizard_categories_section_hint => '例如 食物、住宿、交通。您可以稍后添加或重命名。';
+
+  @override
+  String get wizard_step_color_and_final => '颜色和确认';
+
+  @override
+  String get wizard_color_and_final_description => '为群组选择颜色并查看摘要';
+
+  @override
+  String get wizard_preview_title => '群组预览';
+
+  @override
+  String get wizard_success_title => '🎉 恭喜！';
+
+  @override
+  String get wizard_go_to_group => '转到群组';
+
+  @override
+  String get create => '创建';
+
+  @override
+  String get undo => '撤销';
+
+  @override
+  String get weekday_mon => '周一';
+
+  @override
+  String get weekday_tue => '周二';
+
+  @override
+  String get weekday_wed => '周三';
+
+  @override
+  String get weekday_thu => '周四';
+
+  @override
+  String get weekday_fri => '周五';
+
+  @override
+  String get weekday_sat => '周六';
+
+  @override
+  String get weekday_sun => '周日';
+
+  @override
+  String get month_january => '一月';
+
+  @override
+  String get month_february => '二月';
+
+  @override
+  String get month_march => '三月';
+
+  @override
+  String get month_april => '四月';
+
+  @override
+  String get month_may => '五月';
+
+  @override
+  String get month_june => '六月';
+
+  @override
+  String get month_july => '七月';
+
+  @override
+  String get month_august => '八月';
+
+  @override
+  String get month_september => '九月';
+
+  @override
+  String get month_october => '十月';
+
+  @override
+  String get month_november => '十一月';
+
+  @override
+  String get month_december => '十二月';
 
   @override
   String get expenses_map => '支出地图';
 
   @override
-  String get no_locations_available => '没有可用的位置';
+  String get view_on_map => '在地图上查看';
 
   @override
-  String get no_locations_subtitle => '在支出中添加位置数据以在地图上查看它们';
+  String get no_locations_available => '没有可用位置';
+
+  @override
+  String get no_locations_subtitle => '为支出添加位置以在地图上查看';
 
   @override
   String expense_count(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count 笔支出',
-      one: '1 笔支出',
+      other: '$count笔支出',
     );
     return '$_temp0';
   }
 
   @override
-  String get check_for_updates => '检查更新';
+  String days_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count天',
+    );
+    return '$_temp0';
+  }
 
   @override
-  String get check_for_updates_desc => '检查新版本可用性';
+  String get suggested_duration => '建议时长';
 
   @override
-  String get update_available => '有可用更新';
+  String get settings_auto_location_section => '自动定位';
 
   @override
-  String get update_available_desc => '应用的新版本已可用';
+  String get settings_auto_location_section_desc => '自动捕获支出位置';
 
   @override
-  String get no_update_available => '应用已是最新';
+  String get settings_auto_location_title => '启用自动定位';
 
   @override
-  String get no_update_available_desc => '您正在使用最新版本';
-
-  @override
-  String get update_now => '立即更新';
-
-  @override
-  String get update_later => '稍后';
-
-  @override
-  String get checking_for_updates => '正在检查更新...';
-
-  @override
-  String get update_error => '更新检查错误';
-
-  @override
-  String get update_downloading => '正在下载...';
-
-  @override
-  String get update_installing => '正在安装...';
-
-  @override
-  String get update_feature_android_only => '此功能仅适用于带有Google Play商店的Android设备';
-
-  @override
-  String get update_recommendation_title => '推荐更新';
-
-  @override
-  String get update_recommendation_desc => 'Caravella有新版本可用。更新应用以始终获得最新功能和改进！';
-
-  @override
-  String get update_install => '安装更新';
-
-  @override
-  String get update_remind_later => '稍后提醒我';
+  String get settings_auto_location_desc => '添加支出时自动保存位置';
 
   @override
   String get send_reminder => '发送提醒';
@@ -1803,7 +1820,7 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String reminder_message_single(
     Object participantName,
-    Object amount,
+    String amount,
     Object creditorName,
     Object groupName,
   ) {
@@ -1818,4 +1835,66 @@ class AppLocalizationsZh extends AppLocalizations {
   ) {
     return '嗨 $participantName！👋\n\n友情提醒您对群组 \"$groupName\" 的付款：\n\n$debtsList\n\n谢谢！😊';
   }
+
+  @override
+  String get archived_with_undo => '已存档';
+
+  @override
+  String get unarchived_with_undo => '已取消存档';
+
+  @override
+  String get pinned_with_undo => '已固定';
+
+  @override
+  String get unpinned_with_undo => '已取消固定';
+
+  @override
+  String get deleted_with_undo => '已删除';
+
+  @override
+  String get settings_dynamic_color => '动态颜色';
+
+  @override
+  String get settings_dynamic_color_desc => '使用系统配色方案（Android 12+）';
+
+  @override
+  String get check_for_updates => '检查更新';
+
+  @override
+  String get check_for_updates_desc => '检查是否有新版本可用';
+
+  @override
+  String get checking_for_updates => '正在检查更新...';
+
+  @override
+  String get no_update_available => '您已是最新版本！';
+
+  @override
+  String get update_available => '有可用更新';
+
+  @override
+  String update_available_desc(String version) {
+    return '版本$version可用';
+  }
+
+  @override
+  String get update_now => '立即更新';
+
+  @override
+  String get update_later => '稍后';
+
+  @override
+  String get update_downloading => '正在下载更新...';
+
+  @override
+  String get update_installing => '正在安装更新...';
+
+  @override
+  String get update_error => '更新失败';
+
+  @override
+  String get changelog_title => '更新内容';
+
+  @override
+  String get changelog_desc => '最近的更改和改进';
 }
