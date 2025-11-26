@@ -35,7 +35,7 @@ void main() async {
       // Silently ignore network-related and map-related errors from tile loading
       return;
     }
-    
+
     // Log only unexpected errors
     LoggerService.warning('Uncaught async error: $error');
     LoggerService.warning('Stack trace: $stackTrace');

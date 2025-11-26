@@ -200,9 +200,7 @@ class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
     final gloc = gen.AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
 
-    final appBar = AppBar(
-      backgroundColor: colorScheme.surface,
-    );
+    final appBar = AppBar(backgroundColor: colorScheme.surface);
 
     if (_isLoading) {
       return Scaffold(

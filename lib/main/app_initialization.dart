@@ -51,7 +51,7 @@ class AppInitialization {
         // Silently ignore network-related and map-related errors
         return true; // Mark as handled
       }
-      
+
       // Log unexpected errors
       LoggerService.warning('Platform error: $error');
       return true; // Mark as handled to prevent crash
