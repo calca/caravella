@@ -1760,7 +1760,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get view_on_map => 'View on map';
 
   @override
-  String get expenses_map => 'Expenses Map';
+  String get expenses_map => 'Mappa delle spese';
 
   @override
   String get no_locations_available => 'No locations available';

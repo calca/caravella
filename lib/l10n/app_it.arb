@@ -686,4 +686,6 @@
   ,"@reminder_message_single": {"description": "Messaggio di promemoria quando un partecipante deve denaro a una sola persona", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
   ,"reminder_message_multiple": "Ciao {participantName}! 👋\n\nVorrei ricordarti i tuoi pagamenti per il gruppo \"{groupName}\":\n\n{debtsList}\n\nGrazie! 😊"
   ,"@reminder_message_multiple": {"description": "Messaggio di promemoria quando un partecipante deve denaro a più persone", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
+  ,"expenses_map": "Mappa delle spese"
+  ,"@expenses_map": {"description": "Sottotitolo della pagina che mostra le spese su una mappa"}
 }

@@ -12,7 +12,6 @@
 
   "it": [
     "view_on_map",
-    "expenses_map",
     "no_locations_available",
     "no_locations_subtitle",
     "expense_count"

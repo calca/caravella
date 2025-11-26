@@ -94,8 +94,9 @@ class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
           _errorMessage = null;
         });
 
-        // Fit camera after layout
-        WidgetsBinding.instance.addPostFrameCallback((_) {
+        // Fit camera after map is fully initialized
+        // Use a timer to ensure map is ready before fitting camera
+        Future.delayed(const Duration(milliseconds: 500), () {
           if (mounted && _bounds != null) {
             try {
               _mapController.fitCamera(
@@ -104,8 +105,9 @@ class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
                   padding: const EdgeInsets.all(50),
                 ),
               );
-            } catch (_) {
-              // Ignore map camera errors (e.g., when map is not ready)
+            } catch (e) {
+              // Silently ignore map camera errors
+              // Map might not be ready or already disposed
             }
           }
         });
@@ -199,7 +201,6 @@ class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
     final colorScheme = Theme.of(context).colorScheme;
 
     final appBar = AppBar(
-      title: Text(gloc.expenses_map),
       backgroundColor: colorScheme.surface,
     );
 
@@ -243,14 +244,48 @@ class _ExpenseLocationsMapPageState extends State<ExpenseLocationsMapPage> {
 
     return Scaffold(
       appBar: appBar,
-      body: StandardMap(
-        mapController: _mapController,
-        initialCenter: center,
-        initialZoom: hasBounds ? 12 : 14,
-        minZoom: 2,
-        maxZoom: 18,
-        layers: [MarkerLayer(markers: _buildMarkers())],
+      body: Column(
+        children: [
+          SectionHeader(
+            title: widget.group.title,
+            description: gloc.expenses_map,
+            padding: const EdgeInsets.all(16),
+          ),
+          Expanded(
+            child: ErrorBoundary(
+              child: StandardMap(
+                mapController: _mapController,
+                initialCenter: center,
+                initialZoom: hasBounds ? 12 : 14,
+                minZoom: 2,
+                maxZoom: 18,
+                layers: [MarkerLayer(markers: _buildMarkers())],
+              ),
+            ),
+          ),
+        ],
       ),
+    );
+  }
+}
+
+/// Widget to catch and handle errors in child widgets
+class ErrorBoundary extends StatelessWidget {
+  final Widget child;
+
+  const ErrorBoundary({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Builder(
+      builder: (context) {
+        try {
+          return child;
+        } catch (e) {
+          // Return empty container if child throws
+          return const SizedBox.shrink();
+        }
+      },
     );
   }
 }

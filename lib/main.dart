@@ -19,14 +19,26 @@ void main() async {
 
   // Catch all uncaught async errors (e.g., from tile loading)
   runZonedGuarded(() => runApp(const CaravellaApp()), (error, stackTrace) {
-    // Log non-critical errors without crashing the UI
-    LoggerService.warning('Uncaught async error: $error');
-    // Network errors from tile loading are expected and non-critical
-    if (!error.toString().contains('SocketException') &&
-        !error.toString().contains('NetworkImageLoadException')) {
-      // Only log stack trace for unexpected errors
-      LoggerService.warning('Stack trace: $stackTrace');
+    // Network errors from tile loading are expected and non-critical - silently ignore them
+    final errorString = error.toString();
+    if (errorString.contains('SocketException') ||
+        errorString.contains('NetworkImageLoadException') ||
+        errorString.contains('Failed host lookup') ||
+        errorString.contains('HttpException') ||
+        errorString.contains('Connection') ||
+        errorString.contains('NetworkTileImageProvider') ||
+        errorString.contains('TileLayer') ||
+        errorString.contains('flutter_map') ||
+        errorString.contains('MapController') ||
+        errorString.contains('fitCamera') ||
+        errorString.contains('_loadImage')) {
+      // Silently ignore network-related and map-related errors from tile loading
+      return;
     }
+    
+    // Log only unexpected errors
+    LoggerService.warning('Uncaught async error: $error');
+    LoggerService.warning('Stack trace: $stackTrace');
   });
 }
 

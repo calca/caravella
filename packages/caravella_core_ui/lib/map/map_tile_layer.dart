@@ -31,9 +31,14 @@ class MapTileLayerWidget extends StatelessWidget {
       // Evict error tiles immediately to retry on next pan/zoom
       evictErrorTileStrategy: EvictErrorTileStrategy.notVisibleRespectMargin,
       errorTileCallback: (tile, error, stackTrace) {
-        // Silently handle tile errors - tiles will show as blank
-        // This prevents network errors from blocking the UI
-        debugPrint('Tile load error (non-blocking): $error');
+        // Completely swallow all tile errors - prevent any propagation
+        // Network errors are expected and should not affect the UI
+        try {
+          // Only log in debug builds if absolutely necessary
+          // debugPrint('Tile load error (non-blocking): $error');
+        } catch (_) {
+          // Even the error callback should not throw
+        }
       },
     );
   }

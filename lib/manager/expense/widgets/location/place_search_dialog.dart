@@ -41,7 +41,7 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
   String _errorMessage = '';
   bool _isLoadingNearby = false;
   LatLng _mapCenter = const LatLng(41.9028, 12.4964); // Default: Rome, Italy
-  double _mapZoom = 18.0; // Maximum zoom to see nearby shops and POIs
+  final double _mapZoom = 18.0; // Maximum zoom to see nearby shops and POIs
   LatLng? _selectedMapLocation;
   String? _selectedLocationAddress;
   bool _isGeocodingLocation = false;

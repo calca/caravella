@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,20 +15,46 @@ class AppInitialization {
   static void configureErrorHandling() {
     // Handle Flutter framework errors (e.g., widget build errors)
     FlutterError.onError = (details) {
-      // Log but don't crash for non-critical errors
-      LoggerService.warning('Flutter error: ${details.exception}');
-
-      // Network-related errors from tile loading are expected
+      // Network-related errors from tile loading are expected - silently ignore them
       final errorString = details.exception.toString();
       if (errorString.contains('NetworkImage') ||
           errorString.contains('SocketException') ||
-          errorString.contains('Failed host lookup')) {
-        // Silently handle network errors
+          errorString.contains('Failed host lookup') ||
+          errorString.contains('HttpException') ||
+          errorString.contains('Connection') ||
+          errorString.contains('NetworkTileImageProvider') ||
+          errorString.contains('Image provider')) {
+        // Silently ignore network-related errors from tile loading
         return;
       }
 
-      // For other errors, show in debug mode
+      // For other errors, log and show in debug mode
+      LoggerService.warning('Flutter error: ${details.exception}');
       FlutterError.presentError(details);
+    };
+
+    // Handle errors from the platform dispatcher (isolate errors)
+    PlatformDispatcher.instance.onError = (error, stack) {
+      final errorString = error.toString();
+      if (errorString.contains('NetworkImage') ||
+          errorString.contains('SocketException') ||
+          errorString.contains('Failed host lookup') ||
+          errorString.contains('HttpException') ||
+          errorString.contains('Connection') ||
+          errorString.contains('NetworkTileImageProvider') ||
+          errorString.contains('Image provider') ||
+          errorString.contains('_loadImage') ||
+          errorString.contains('TileLayer') ||
+          errorString.contains('flutter_map') ||
+          errorString.contains('MapController') ||
+          errorString.contains('fitCamera')) {
+        // Silently ignore network-related and map-related errors
+        return true; // Mark as handled
+      }
+      
+      // Log unexpected errors
+      LoggerService.warning('Platform error: $error');
+      return true; // Mark as handled to prevent crash
     };
   }
 
