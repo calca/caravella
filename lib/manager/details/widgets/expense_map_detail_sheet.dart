@@ -17,7 +17,7 @@ class ExpenseMapDetailSheet extends StatelessWidget {
 
   String _formatLocationAddress(ExpenseLocation? location) {
     if (location == null) return '';
-    
+
     // Build full address from structured components (same as location_input_widget)
     final addressParts = <String>[
       if (location.name != null && location.name!.isNotEmpty) location.name!,
@@ -35,7 +35,7 @@ class ExpenseMapDetailSheet extends StatelessWidget {
       if (location.country != null && location.country!.isNotEmpty)
         location.country!,
     ];
-    
+
     return addressParts.isNotEmpty
         ? addressParts.join(', ')
         : location.address ?? '';
