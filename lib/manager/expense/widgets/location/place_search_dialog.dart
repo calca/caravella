@@ -123,6 +123,10 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
             setState(() {
               _searchResults = results;
               _isSearching = false;
+              // Deselect manually selected map point when showing search results
+              _selectedMapLocation = null;
+              _selectedLocationAddress = null;
+              _isGeocodingLocation = false;
             });
           }
         })
@@ -273,6 +277,9 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
       minZoom: 3.0,
       maxZoom: 18.0,
       onTap: (tapPosition, point) {
+        // Remove focus from search field when tapping the map
+        _searchFocusNode.unfocus();
+        
         setState(() {
           _selectedMapLocation = point;
           _selectedLocationAddress = null;
