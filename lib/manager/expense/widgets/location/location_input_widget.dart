@@ -140,10 +140,22 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
       });
 
       try {
+        // Map all address details from Nominatim to ExpenseLocation
+        final locality = result.city ?? result.town ?? result.village ?? result.municipality;
+        
         final location = ExpenseLocation(
           latitude: result.latitude,
           longitude: result.longitude,
           address: result.displayName,
+          name: result.name,
+          street: result.road,
+          streetNumber: result.houseNumber,
+          locality: locality,
+          subLocality: result.suburb,
+          administrativeArea: result.state,
+          postalCode: result.postcode,
+          country: result.country,
+          isoCountryCode: result.countryCode,
         );
 
         setState(() {
