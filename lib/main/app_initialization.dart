@@ -16,7 +16,7 @@ class AppInitialization {
     FlutterError.onError = (details) {
       // Log but don't crash for non-critical errors
       LoggerService.warning('Flutter error: ${details.exception}');
-      
+
       // Network-related errors from tile loading are expected
       final errorString = details.exception.toString();
       if (errorString.contains('NetworkImage') ||
@@ -25,7 +25,7 @@ class AppInitialization {
         // Silently handle network errors
         return;
       }
-      
+
       // For other errors, show in debug mode
       FlutterError.presentError(details);
     };

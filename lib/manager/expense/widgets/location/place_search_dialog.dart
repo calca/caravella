@@ -279,7 +279,7 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
       onTap: (tapPosition, point) {
         // Remove focus from search field when tapping the map
         _searchFocusNode.unfocus();
-        
+
         setState(() {
           _selectedMapLocation = point;
           _selectedLocationAddress = null;
