@@ -141,8 +141,9 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
 
       try {
         // Map all address details from Nominatim to ExpenseLocation
-        final locality = result.city ?? result.town ?? result.village ?? result.municipality;
-        
+        final locality =
+            result.city ?? result.town ?? result.village ?? result.municipality;
+
         final location = ExpenseLocation(
           latitude: result.latitude,
           longitude: result.longitude,

@@ -3,7 +3,7 @@ class NominatimPlace {
   final double latitude;
   final double longitude;
   final String displayName;
-  
+
   // Address details from Nominatim
   final String? name;
   final String? road;
@@ -38,7 +38,7 @@ class NominatimPlace {
 
   factory NominatimPlace.fromJson(Map<String, dynamic> json) {
     final address = json['address'] as Map<String, dynamic>?;
-    
+
     return NominatimPlace(
       latitude: double.parse(json['lat'] as String),
       longitude: double.parse(json['lon'] as String),
