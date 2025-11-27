@@ -30,7 +30,9 @@ class NoteInputWidget extends StatelessWidget {
       style: textStyle ?? FormTheme.getMultilineTextStyle(context),
       decoration: FormTheme.getMultilineDecoration(hintText: gloc.note_hint),
       textInputAction: textInputAction ?? TextInputAction.newline,
-      onFieldSubmitted: onFieldSubmitted != null ? (_) => onFieldSubmitted!() : null,
+      onFieldSubmitted: onFieldSubmitted != null
+          ? (_) => onFieldSubmitted!()
+          : null,
     );
 
     return IconLeadingField(

@@ -70,6 +70,7 @@ class GroupCardContent extends StatelessWidget {
           return ExpenseEntrySheet(
             group: currentGroup,
             fullEdit: false,
+            showGroupHeader: false,
             onExpenseSaved: (expense) async {
               final sheetCtx = context;
               final nav = Navigator.of(sheetCtx);

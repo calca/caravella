@@ -13,6 +13,7 @@ class ExpenseEntrySheet extends StatefulWidget {
   final VoidCallback? onDelete; // only used in edit mode
   final bool fullEdit;
   final VoidCallback? onExpand; // callback to expand to full page
+  final bool showGroupHeader; // whether to show group header in form
 
   const ExpenseEntrySheet({
     super.key,
@@ -23,6 +24,7 @@ class ExpenseEntrySheet extends StatefulWidget {
     this.onDelete,
     this.fullEdit = true,
     this.onExpand,
+    this.showGroupHeader = true,
   });
 
   @override
@@ -65,6 +67,7 @@ class _ExpenseEntrySheetState extends State<ExpenseEntrySheet> {
           tripEndDate: widget.group.endDate,
           shouldAutoClose: false,
           fullEdit: widget.fullEdit,
+          showGroupHeader: widget.showGroupHeader,
           groupTitle: widget.group.title,
           currency: widget.group.currency,
           autoLocationEnabled: widget.group.autoLocationEnabled,
