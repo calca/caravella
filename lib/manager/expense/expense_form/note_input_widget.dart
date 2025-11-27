@@ -26,7 +26,7 @@ class NoteInputWidget extends StatelessWidget {
       controller: controller,
       focusNode: focusNode,
       maxLines: null, // auto-grow illimitato
-      minLines: 4, // minimo 4 righe visibili
+      minLines: 6, // minimo 4 righe visibili
       style: textStyle ?? FormTheme.getMultilineTextStyle(context),
       decoration: FormTheme.getMultilineDecoration(hintText: gloc.note_hint),
       textInputAction: textInputAction ?? TextInputAction.newline,
