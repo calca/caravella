@@ -370,10 +370,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get license_section => 'License';
 
   @override
-  String get add_trip => 'Add group';
+  String get add_trip => 'Add a group';
 
   @override
   String get new_group => 'New Group';
+
+  @override
+  String get group => 'Group';
 
   @override
   String get create => 'Create';

@@ -34,6 +34,7 @@ class ExpenseFormComponent extends StatefulWidget {
   final ScrollController?
   scrollController; // Controller for scrolling to focused fields
   final VoidCallback? onExpand; // Callback per espandere a full page
+  final bool showGroupHeader; // Se mostrare l'intestazione del gruppo
 
   const ExpenseFormComponent({
     super.key,
@@ -53,6 +54,7 @@ class ExpenseFormComponent extends StatefulWidget {
     this.fullEdit = false,
     this.scrollController,
     this.onExpand,
+    this.showGroupHeader = true,
   });
 
   @override
@@ -483,9 +485,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     );
   }
 
-  /// Intestazione con il titolo del gruppo (solo quando mostriamo i campi estesi, se presente)
+  /// Intestazione con il titolo del gruppo (solo se showGroupHeader è true e presente)
   Widget _buildGroupHeader() {
-    if (!(_shouldShowExtendedFields && widget.groupTitle != null)) {
+    if (!(widget.showGroupHeader && widget.groupTitle != null)) {
       return const SizedBox.shrink();
     }
     final gloc = gen.AppLocalizations.of(context);
@@ -894,12 +896,14 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         textStyle: style,
         showExpandButton:
             !(widget.fullEdit || widget.initialExpense != null || _isExpanded),
-        onExpand: widget.onExpand ?? () {
-          setState(() {
-            _isExpanded = true;
-            _isDirty = true;
-          });
-        },
+        onExpand:
+            widget.onExpand ??
+            () {
+              setState(() {
+                _isExpanded = true;
+                _isDirty = true;
+              });
+            },
       );
 
   @override

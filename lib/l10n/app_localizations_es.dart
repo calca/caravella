@@ -376,6 +376,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get new_group => 'Nuevo Grupo';
 
   @override
+  String get group => 'Group';
+
+  @override
   String get create => 'Crear';
 
   @override

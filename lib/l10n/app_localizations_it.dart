@@ -378,6 +378,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get new_group => 'Nuovo Gruppo';
 
   @override
+  String get group => 'Gruppo';
+
+  @override
   String get create => 'Crea';
 
   @override

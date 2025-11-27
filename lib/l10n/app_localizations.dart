@@ -785,7 +785,7 @@ abstract class AppLocalizations {
   /// No description provided for @add_trip.
   ///
   /// In en, this message translates to:
-  /// **'Add group'**
+  /// **'Add a group'**
   String get add_trip;
 
   /// No description provided for @new_group.
@@ -793,6 +793,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'New Group'**
   String get new_group;
+
+  /// No description provided for @group.
+  ///
+  /// In en, this message translates to:
+  /// **'Group'**
+  String get group;
 
   /// No description provided for @create.
   ///

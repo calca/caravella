@@ -122,50 +122,52 @@ class GroupCardContent extends StatelessWidget {
     final notifier = Provider.of<ExpenseGroupNotifier>(context, listen: false);
     notifier.setCurrentGroup(currentGroup);
 
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => Consumer<ExpenseGroupNotifier>(
-          builder: (context, groupNotifier, child) {
-            final currentGroup = groupNotifier.currentGroup ?? group;
-            return ExpenseFormPage(
-              group: currentGroup,
-              onExpenseSaved: (expense) async {
-                final pageCtx = context;
-                final nav = Navigator.of(pageCtx);
-                final gloc = gen.AppLocalizations.of(pageCtx);
+    Navigator.of(context)
+        .push(
+          MaterialPageRoute(
+            builder: (context) => Consumer<ExpenseGroupNotifier>(
+              builder: (context, groupNotifier, child) {
+                final currentGroup = groupNotifier.currentGroup ?? group;
+                return ExpenseFormPage(
+                  group: currentGroup,
+                  onExpenseSaved: (expense) async {
+                    final pageCtx = context;
+                    final nav = Navigator.of(pageCtx);
+                    final gloc = gen.AppLocalizations.of(pageCtx);
 
-                final expenseWithId = expense.copyWith(
-                  id: DateTime.now().millisecondsSinceEpoch.toString(),
+                    final expenseWithId = expense.copyWith(
+                      id: DateTime.now().millisecondsSinceEpoch.toString(),
+                    );
+
+                    await ExpenseGroupStorageV2.addExpenseToGroup(
+                      currentGroup.id,
+                      expenseWithId,
+                    );
+
+                    await groupNotifier.refreshGroup();
+                    groupNotifier.notifyGroupUpdated(currentGroup.id);
+
+                    RatingService.checkAndPromptForRating();
+
+                    if (!pageCtx.mounted) return;
+                    AppToast.show(
+                      pageCtx,
+                      gloc.expense_added_success,
+                      type: ToastType.success,
+                    );
+                    nav.pop();
+                  },
+                  onCategoryAdded: (categoryName) async {
+                    await notifier.addCategory(categoryName);
+                  },
                 );
-
-                await ExpenseGroupStorageV2.addExpenseToGroup(
-                  currentGroup.id,
-                  expenseWithId,
-                );
-
-                await groupNotifier.refreshGroup();
-                groupNotifier.notifyGroupUpdated(currentGroup.id);
-
-                RatingService.checkAndPromptForRating();
-
-                if (!pageCtx.mounted) return;
-                AppToast.show(
-                  pageCtx,
-                  gloc.expense_added_success,
-                  type: ToastType.success,
-                );
-                nav.pop();
               },
-              onCategoryAdded: (categoryName) async {
-                await notifier.addCategory(categoryName);
-              },
-            );
-          },
-        ),
-      ),
-    ).whenComplete(() {
-      notifier.clearCurrentGroup();
-    });
+            ),
+          ),
+        )
+        .whenComplete(() {
+          notifier.clearCurrentGroup();
+        });
   }
 
   // Computed properties memoizzate per performance

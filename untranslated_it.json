@@ -8,7 +8,8 @@
     "period_from_select_end",
     "period_to_select_start",
     "confirm",
-    "clear"
+    "clear",
+    "group"
   ],
 
   "it": [
@@ -28,6 +29,7 @@
     "period_to_select_start",
     "confirm",
     "clear",
+    "group",
     "view_on_map",
     "expenses_map",
     "no_locations_available",
@@ -44,6 +46,7 @@
     "period_from_select_end",
     "period_to_select_start",
     "confirm",
-    "clear"
+    "clear",
+    "group"
   ]
 }
