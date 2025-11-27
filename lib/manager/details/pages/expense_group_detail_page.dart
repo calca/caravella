@@ -437,8 +437,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             builder: (context) => ExpenseFormPage(
               group: _trip!,
               onExpenseSaved: (newExpense) async {
-                final sheetCtx = context; // bottom sheet context
-                final nav = Navigator.of(sheetCtx);
+                final sheetCtx = context; // expense form page context
                 final gloc = gen.AppLocalizations.of(sheetCtx);
                 final expenseWithId = newExpense.copyWith(
                   id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -464,7 +463,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                   gloc.expense_added_success,
                   type: ToastType.success,
                 );
-                nav.pop();
+                // Note: nav.pop() removed - ExpenseFormComponent handles navigation
+                // when shouldAutoClose is true to avoid double pop back to home
               },
               onCategoryAdded: (categoryName) async {
                 await _groupNotifier?.addCategory(categoryName);
@@ -492,7 +492,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               initialExpense: expense,
               onExpenseSaved: (updatedExpense) async {
                 final gloc = gen.AppLocalizations.of(sheetCtx);
-                final nav = Navigator.of(sheetCtx);
                 final expenseWithId = updatedExpense.copyWith(id: expense.id);
 
                 // Persist the updated expense using the new storage API
@@ -511,7 +510,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                   gloc.expense_updated_success,
                   type: ToastType.success,
                 );
-                nav.pop();
+                // Note: nav.pop() removed - ExpenseFormComponent handles navigation
+                // when shouldAutoClose is true to avoid double pop back to home
               },
               onCategoryAdded: (categoryName) async {
                 await _groupNotifier?.addCategory(categoryName);
