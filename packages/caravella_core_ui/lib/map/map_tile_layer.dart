@@ -24,12 +24,12 @@ class MapTileLayerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     // Detect theme brightness
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    
+
     // Use CartoDB Dark Matter for dark theme, standard OSM for light theme
     final urlTemplate = isDarkMode
         ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
         : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
-    
+
     return TileLayer(
       urlTemplate: urlTemplate,
       subdomains: isDarkMode ? const ['a', 'b', 'c', 'd'] : const [],
