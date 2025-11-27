@@ -4,6 +4,7 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../manager/details/widgets/expense_entry_sheet.dart';
+import '../../../manager/expense/expense_form_page.dart';
 import '../../../manager/details/pages/tabs/usecase/daily_totals_utils.dart';
 
 class GroupCardContent extends StatelessWidget {
@@ -68,6 +69,7 @@ class GroupCardContent extends StatelessWidget {
           final currentGroup = groupNotifier.currentGroup ?? group;
           return ExpenseEntrySheet(
             group: currentGroup,
+            fullEdit: false,
             onExpenseSaved: (expense) async {
               final sheetCtx = context;
               final nav = Navigator.of(sheetCtx);
@@ -98,15 +100,70 @@ class GroupCardContent extends StatelessWidget {
               );
               nav.pop();
             },
-            onCategoryAdded: (newCategory) async {
-              await groupNotifier.addCategory(newCategory);
+            onCategoryAdded: (categoryName) async {
+              await notifier.addCategory(categoryName);
             },
-            fullEdit: false,
+            onExpand: () {
+              // Chiudi il bottom sheet
+              Navigator.of(context).pop();
+              // Apri la full page
+              _openFullExpenseForm(context, currentGroup);
+            },
           );
         },
       ),
     ).whenComplete(() {
       // Pulisci il notifier quando il dialog si chiude
+      notifier.clearCurrentGroup();
+    });
+  }
+
+  void _openFullExpenseForm(BuildContext context, ExpenseGroup currentGroup) {
+    final notifier = Provider.of<ExpenseGroupNotifier>(context, listen: false);
+    notifier.setCurrentGroup(currentGroup);
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => Consumer<ExpenseGroupNotifier>(
+          builder: (context, groupNotifier, child) {
+            final currentGroup = groupNotifier.currentGroup ?? group;
+            return ExpenseFormPage(
+              group: currentGroup,
+              onExpenseSaved: (expense) async {
+                final pageCtx = context;
+                final nav = Navigator.of(pageCtx);
+                final gloc = gen.AppLocalizations.of(pageCtx);
+
+                final expenseWithId = expense.copyWith(
+                  id: DateTime.now().millisecondsSinceEpoch.toString(),
+                );
+
+                await ExpenseGroupStorageV2.addExpenseToGroup(
+                  currentGroup.id,
+                  expenseWithId,
+                );
+
+                await groupNotifier.refreshGroup();
+                groupNotifier.notifyGroupUpdated(currentGroup.id);
+
+                RatingService.checkAndPromptForRating();
+
+                if (!pageCtx.mounted) return;
+                AppToast.show(
+                  pageCtx,
+                  gloc.expense_added_success,
+                  type: ToastType.success,
+                );
+                nav.pop();
+              },
+              onCategoryAdded: (categoryName) async {
+                await notifier.addCategory(categoryName);
+              },
+            );
+          },
+        ),
+      ),
+    ).whenComplete(() {
       notifier.clearCurrentGroup();
     });
   }

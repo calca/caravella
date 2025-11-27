@@ -470,6 +470,18 @@ abstract class AppLocalizations {
   /// **'New Expense Group'**
   String get new_expense_group;
 
+  /// No description provided for @new_expense.
+  ///
+  /// In en, this message translates to:
+  /// **'New Expense'**
+  String get new_expense;
+
+  /// No description provided for @edit_expense.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit expense'**
+  String get edit_expense;
+
   /// No description provided for @tap_to_create.
   ///
   /// In en, this message translates to:
@@ -895,12 +907,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'New expense'**
   String get add_expense;
-
-  /// No description provided for @edit_expense.
-  ///
-  /// In en, this message translates to:
-  /// **'Edit expense'**
-  String get edit_expense;
 
   /// No description provided for @expand_form.
   ///

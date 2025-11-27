@@ -194,6 +194,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get new_expense_group => '新支出群组';
 
   @override
+  String get new_expense => 'New Expense';
+
+  @override
+  String get edit_expense => '编辑支出';
+
+  @override
   String get tap_to_create => '点击创建';
 
   @override
@@ -422,9 +428,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get add_expense => '添加支出';
-
-  @override
-  String get edit_expense => '编辑支出';
 
   @override
   String get expand_form => '展开表单';

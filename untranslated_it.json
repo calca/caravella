@@ -1,5 +1,6 @@
 {
   "es": [
+    "new_expense",
     "select_period",
     "select_period_dates",
     "duration_days",
@@ -18,6 +19,7 @@
   ],
 
   "pt": [
+    "new_expense",
     "select_period",
     "select_period_dates",
     "duration_days",
@@ -34,6 +36,7 @@
   ],
 
   "zh": [
+    "new_expense",
     "select_period",
     "select_period_dates",
     "duration_days",

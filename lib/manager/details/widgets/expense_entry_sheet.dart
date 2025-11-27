@@ -12,6 +12,7 @@ class ExpenseEntrySheet extends StatefulWidget {
   final void Function(String) onCategoryAdded;
   final VoidCallback? onDelete; // only used in edit mode
   final bool fullEdit;
+  final VoidCallback? onExpand; // callback to expand to full page
 
   const ExpenseEntrySheet({
     super.key,
@@ -21,6 +22,7 @@ class ExpenseEntrySheet extends StatefulWidget {
     required this.onCategoryAdded,
     this.onDelete,
     this.fullEdit = true,
+    this.onExpand,
   });
 
   @override
@@ -70,6 +72,7 @@ class _ExpenseEntrySheetState extends State<ExpenseEntrySheet> {
           onCategoryAdded: widget.onCategoryAdded,
           onDelete: widget.onDelete,
           scrollController: _scrollController,
+          onExpand: widget.onExpand,
         ),
       ),
     );

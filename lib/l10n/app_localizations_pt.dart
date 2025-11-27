@@ -196,6 +196,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get new_expense_group => 'Novo grupo de despesas';
 
   @override
+  String get new_expense => 'New Expense';
+
+  @override
+  String get edit_expense => 'Editar despesa';
+
+  @override
   String get tap_to_create => 'Toque para criar';
 
   @override
@@ -428,9 +434,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get add_expense => 'Nova despesa';
-
-  @override
-  String get edit_expense => 'Editar despesa';
 
   @override
   String get expand_form => 'Expandir formulário';

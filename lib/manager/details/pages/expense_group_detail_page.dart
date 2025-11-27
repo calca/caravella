@@ -20,7 +20,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 // Replaced bottom sheet overview with full page navigation
 import '../widgets/delete_expense_dialog.dart';
-import '../widgets/expense_entry_sheet.dart';
+import '../../expense/expense_form_page.dart';
 import '../widgets/group_header.dart';
 import '../widgets/group_total.dart';
 import '../widgets/group_actions.dart';
@@ -431,12 +431,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     if (_trip != null) {
       _groupNotifier?.setCurrentGroup(_trip!);
     }
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => FractionallySizedBox(
-        heightFactor: 0.85,
-        child: ExpenseEntrySheet(
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ExpenseFormPage(
           group: _trip!,
           onExpenseSaved: (newExpense) async {
             final sheetCtx = context; // bottom sheet context
@@ -472,7 +469,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             await _groupNotifier?.addCategory(categoryName);
             await _refreshGroup();
           },
-          fullEdit: true,
         ),
       ),
     ).whenComplete(() {
@@ -486,12 +482,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     if (_trip != null) {
       _groupNotifier?.setCurrentGroup(_trip!);
     }
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (sheetCtx) => FractionallySizedBox(
-        heightFactor: 0.85,
-        child: ExpenseEntrySheet(
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (sheetCtx) => ExpenseFormPage(
           group: _trip!,
           initialExpense: expense,
           onExpenseSaved: (updatedExpense) async {

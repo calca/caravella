@@ -33,6 +33,7 @@ class ExpenseFormComponent extends StatefulWidget {
   final bool autoLocationEnabled; // Impostazione per auto-recupero posizione
   final ScrollController?
   scrollController; // Controller for scrolling to focused fields
+  final VoidCallback? onExpand; // Callback per espandere a full page
 
   const ExpenseFormComponent({
     super.key,
@@ -51,6 +52,7 @@ class ExpenseFormComponent extends StatefulWidget {
     required this.autoLocationEnabled,
     this.fullEdit = false,
     this.scrollController,
+    this.onExpand,
   });
 
   @override
@@ -892,7 +894,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         textStyle: style,
         showExpandButton:
             !(widget.fullEdit || widget.initialExpense != null || _isExpanded),
-        onExpand: () {
+        onExpand: widget.onExpand ?? () {
           setState(() {
             _isExpanded = true;
             _isDirty = true;

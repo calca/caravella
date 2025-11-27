@@ -68,6 +68,8 @@
   "no_active_groups_subtitle": "Crea un gruppo di spese",
   "create_first_group": "Crea un gruppo",
   "new_expense_group": "Nuovo Gruppo di Spese",
+  "new_expense": "Nuova spesa",
+  "edit_expense": "Modifica spesa",
   "tap_to_create": "Tocca per creare",
   "no_expense_label": "Nessuna spesa trovata",
   "image": "Immagine",
