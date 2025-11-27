@@ -39,7 +39,9 @@ class ExpenseFormPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SectionHeader(
-                title: initialExpense != null ? gloc.edit_expense : gloc.new_expense,
+                title: initialExpense != null
+                    ? gloc.edit_expense
+                    : gloc.new_expense,
                 description: '${gloc.group} ${group.title}',
               ),
               const SizedBox(height: 24),

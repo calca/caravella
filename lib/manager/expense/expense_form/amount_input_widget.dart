@@ -18,6 +18,7 @@ class AmountInputWidget extends StatelessWidget {
   final Widget? trailing; // optional trailing icon for text mode
   final Widget?
   leading; // optional leading icon for text mode aligned like currency
+  final TextInputAction? textInputAction; // override default textInputAction
 
   const AmountInputWidget({
     super.key,
@@ -33,6 +34,7 @@ class AmountInputWidget extends StatelessWidget {
     this.currency,
     this.trailing,
     this.leading,
+    this.textInputAction,
   });
 
   @override
@@ -62,7 +64,7 @@ class AmountInputWidget extends StatelessWidget {
           semanticCounterText: '',
         ),
         keyboardType: TextInputType.text,
-        textInputAction: TextInputAction.next,
+        textInputAction: textInputAction ?? TextInputAction.next,
         validator: validator,
         onSaved: onSaved,
         onFieldSubmitted: (_) => onSubmitted?.call(),
@@ -111,7 +113,7 @@ class AmountInputWidget extends StatelessWidget {
         semanticCounterText: '',
       ),
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
-      textInputAction: TextInputAction.next,
+      textInputAction: textInputAction ?? TextInputAction.next,
       validator: validator,
       onSaved: onSaved,
       onFieldSubmitted: (_) => onSubmitted?.call(),

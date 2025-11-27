@@ -560,6 +560,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
             categories: _categories,
             label: gloc.amount,
             currency: widget.currency,
+            textInputAction: _isFormValid() ? TextInputAction.done : TextInputAction.next,
             validator: (v) {
               final parsed = _parseLocalizedAmount(v ?? '');
               if (parsed == null || parsed <= 0) return gloc.invalid_amount;
@@ -587,10 +588,11 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
               size: 22,
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
+            textInputAction: _isFormValid() ? TextInputAction.done : TextInputAction.next,
             validator: (v) =>
                 v == null || v.trim().isEmpty ? gloc.enter_title : null,
             onSaved: (v) {},
-            onSubmitted: () {},
+            onSubmitted: _isFormValid() ? _saveExpense : null,
             isText: true,
             textStyle: style,
           ),
@@ -836,6 +838,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
             controller: _noteController,
             textStyle: style,
             focusNode: _noteFocus,
+            textInputAction: _isFormValid() ? TextInputAction.done : TextInputAction.newline,
+            onFieldSubmitted: _isFormValid() ? _saveExpense : null,
           ),
         ),
       ],
