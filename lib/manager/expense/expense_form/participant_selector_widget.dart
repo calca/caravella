@@ -39,15 +39,18 @@ class ParticipantSelectorWidget extends StatelessWidget {
       }
     }
 
+    // Disable selection when there's only one participant or none
+    final canSelect = participants.length > 1;
+
     if (fullEdit) {
       return InlineSelectField(
         icon: AppIcons.participant,
         label: selected ?? gloc.participants_label,
-        onTap: openPicker,
-        enabled: participants.isNotEmpty,
+        onTap: canSelect ? openPicker : null,
+        enabled: canSelect,
         semanticsLabel: gloc.paid_by,
         textStyle: textStyle,
-        showArrow: true,
+        showArrow: canSelect,
       );
     }
 
@@ -59,7 +62,7 @@ class ParticipantSelectorWidget extends StatelessWidget {
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         minimumSize: Size.zero,
       ),
-      onPressed: participants.isEmpty ? null : openPicker,
+      onPressed: canSelect ? openPicker : null,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -82,11 +85,12 @@ class ParticipantSelectorWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 4),
-          Icon(
-            Icons.arrow_drop_down,
-            size: 20,
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
+          if (canSelect)
+            Icon(
+              Icons.arrow_drop_down,
+              size: 20,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
         ],
       ),
     );
