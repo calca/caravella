@@ -22,8 +22,17 @@ class MapTileLayerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Detect theme brightness
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    
+    // Use CartoDB Dark Matter for dark theme, standard OSM for light theme
+    final urlTemplate = isDarkMode
+        ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+        : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+    
     return TileLayer(
-      urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+      urlTemplate: urlTemplate,
+      subdomains: isDarkMode ? const ['a', 'b', 'c', 'd'] : const [],
       userAgentPackageName: userAgentPackageName,
       maxZoom: maxZoom,
       tileProvider: NetworkTileProvider(),
@@ -40,6 +49,13 @@ class MapTileLayerWidget extends StatelessWidget {
           // Even the error callback should not throw
         }
       },
+      // Add attribution for CartoDB when using dark theme
+      additionalOptions: isDarkMode
+          ? const {
+              'attribution':
+                  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            }
+          : const {},
     );
   }
 }
