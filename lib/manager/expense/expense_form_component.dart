@@ -35,6 +35,12 @@ class ExpenseFormComponent extends StatefulWidget {
   scrollController; // Controller for scrolling to focused fields
   final VoidCallback? onExpand; // Callback per espandere a full page
   final bool showGroupHeader; // Se mostrare l'intestazione del gruppo
+  final bool
+  showActionsRow; // Se mostrare la riga azioni (pulsanti aggiungi/salva)
+  final void Function(bool)?
+  onFormValidityChanged; // Notifica il parent quando cambia la validità del form
+  final void Function(VoidCallback?)?
+  onSaveCallbackChanged; // Fornisce al parent il callback per salvare
 
   const ExpenseFormComponent({
     super.key,
@@ -55,6 +61,9 @@ class ExpenseFormComponent extends StatefulWidget {
     this.scrollController,
     this.onExpand,
     this.showGroupHeader = true,
+    this.showActionsRow = true,
+    this.onFormValidityChanged,
+    this.onSaveCallbackChanged,
   });
 
   @override
@@ -300,6 +309,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
             _isDirty = true;
           }
         });
+        _notifyFormValidityChanged();
       }
     });
 
@@ -309,6 +319,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         setState(() {
           _isDirty = true;
         });
+        _notifyFormValidityChanged();
       }
     });
 
@@ -320,6 +331,11 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
       if (widget.initialExpense == null && _autoLocationEnabled) {
         _retrieveCurrentLocation();
       }
+
+      // Notify parent of save callback
+      widget.onSaveCallbackChanged?.call(_saveExpense);
+      // Notify initial form validity
+      widget.onFormValidityChanged?.call(_isFormValid());
     });
   }
 
@@ -404,6 +420,17 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         nameValue.isNotEmpty;
   }
 
+  void _notifyFormValidityChanged() {
+    if (widget.onFormValidityChanged != null) {
+      // Use post frame callback to avoid calling setState during build
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          widget.onFormValidityChanged?.call(_isFormValid());
+        }
+      });
+    }
+  }
+
   // Widget per indicatori di stato - versione minimalista
   Widget _buildFieldWithStatus(Widget field, bool isValid, bool isTouched) {
     return AnimatedContainer(
@@ -477,8 +504,10 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
             _spacer(),
             _buildParticipantCategorySection(smallStyle),
             _buildExtendedFields(locale, smallStyle),
-            _buildDivider(context),
-            _buildActionsRow(gloc, smallStyle),
+            if (widget.showActionsRow) ...[
+              _buildDivider(context),
+              _buildActionsRow(gloc, smallStyle),
+            ],
           ],
         ),
       ),
@@ -709,6 +738,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         _isDirty = true;
       }
     });
+    _notifyFormValidityChanged();
   }
 
   void _onCategorySelected(ExpenseCategory? selected) {
@@ -719,6 +749,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         _isDirty = true;
       }
     });
+    _notifyFormValidityChanged();
   }
 
   Future<void> _onAddCategory() async {
