@@ -426,16 +426,8 @@ class GroupCardContent extends StatelessWidget {
   }
 
   Widget _buildDateRangeStatistics(ExpenseGroup currentGroup) {
-    final startDate = currentGroup.startDate!;
-    final endDate = currentGroup.endDate!;
-    final duration = endDate.difference(startDate).inDays + 1; // inclusive
-
-    // Usa il metodo ottimizzato per calcolare i totali giornalieri
-    final dailyTotals = calculateDailyTotalsOptimized(
-      currentGroup,
-      startDate,
-      duration,
-    );
+    // Usa il metodo adattivo che gestisce sia gruppi con date che senza
+    final dailyTotals = buildAdaptiveDateRangeSeries(currentGroup);
 
     return Column(
       children: [
