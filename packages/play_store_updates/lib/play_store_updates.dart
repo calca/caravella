@@ -9,7 +9,3 @@ export 'src/logger_adapter.dart';
 export 'src/update_service_interface.dart';
 export 'src/update_service_noop.dart';
 export 'src/update_service_factory.dart';
-
-// UI components and helpers
-export 'src/update_check_helper.dart';
-export 'src/update_check_widget.dart';

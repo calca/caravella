@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:caravella_core/caravella_core.dart';
 import '../main/route_observer.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'package:play_store_updates/play_store_updates.dart';
+import '../settings/update/update_check_helper.dart';
 import 'welcome/home_welcome_section.dart';
 import 'cards/home_cards_section.dart';
 
