@@ -25,11 +25,11 @@ class MapTileLayerWidget extends StatelessWidget {
     // Detect theme brightness
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    // Use CartoDB Voyager for dark theme (softer than Dark Matter, better POI visibility)
+    // Use CartoDB Dark Matter with labels for dark theme - optimized for POI visibility
     // Note: Using direct tile URLs without {r} retina placeholder as it caused loading issues
     // Standard OSM for light theme
     final urlTemplate = isDarkMode
-        ? 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png'
+        ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'
         : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 
     return TileLayer(
