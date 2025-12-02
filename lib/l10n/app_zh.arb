@@ -32,6 +32,13 @@
   "@monthlyChartBadge": {
     "description": "Letter indicator for monthly chart badge"
   },
+  "dateRangeChartBadge": "日",
+  "@dateRangeChartBadge": {
+    "description": "Letter indicator for date range chart badge"
+  },
+  "@monthlyChartBadge": {
+    "description": "Letter indicator for monthly chart badge"
+  },
   "weeklyExpensesChart": "每周支出",
   "@weeklyExpensesChart": {
     "description": "Label for weekly expenses chart"
@@ -39,6 +46,10 @@
   "monthlyExpensesChart": "每月支出",
   "@monthlyExpensesChart": {
     "description": "Label for monthly expenses chart"
+  },
+  "dateRangeExpensesChart": "期间支出",
+  "@dateRangeExpensesChart": {
+    "description": "Label for date range expenses chart"
   },
   "settings_flag_secure_desc": "防止截屏和录屏",
   "settings_flag_secure_title": "安全屏幕",

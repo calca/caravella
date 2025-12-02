@@ -20,6 +20,10 @@
   "@monthlyChartBadge": {
     "description": "Letter indicator for monthly chart badge"
   },
+  "dateRangeChartBadge": "D",
+  "@dateRangeChartBadge": {
+    "description": "Letter indicator for date range chart badge"
+  },
   "weeklyExpensesChart": "Gastos semanales",
   "@weeklyExpensesChart": {
     "description": "Label for weekly expenses chart"
@@ -27,6 +31,10 @@
   "monthlyExpensesChart": "Gastos mensuales",
   "@monthlyExpensesChart": {
     "description": "Label for monthly expenses chart"
+  },
+  "dateRangeExpensesChart": "Gastos por período",
+  "@dateRangeExpensesChart": {
+    "description": "Label for date range expenses chart"
   },
   "settings_flag_secure_desc": "Impide capturas de pantalla y grabación de pantalla",
   "settings_flag_secure_title": "Pantalla segura",

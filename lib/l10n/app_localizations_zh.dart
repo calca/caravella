@@ -33,10 +33,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get monthlyChartBadge => '月';
 
   @override
+  String get dateRangeChartBadge => '日';
+
+  @override
   String get weeklyExpensesChart => '每周支出';
 
   @override
   String get monthlyExpensesChart => '每月支出';
+
+  @override
+  String get dateRangeExpensesChart => '期间支出';
 
   @override
   String get settings_flag_secure_desc => '防止截屏和录屏';

@@ -441,7 +441,12 @@ class GroupCardContent extends StatelessWidget {
       children: [
         // Extra info for short duration trips
         _buildExtraInfo(currentGroup),
-        DateRangeExpenseChart(dailyTotals: dailyTotals, theme: theme),
+        DateRangeExpenseChart(
+          dailyTotals: dailyTotals,
+          theme: theme,
+          badgeText: localizations.dateRangeChartBadge,
+          semanticLabel: localizations.dateRangeExpensesChart,
+        ),
       ],
     );
   }

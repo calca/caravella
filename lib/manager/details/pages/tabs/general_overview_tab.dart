@@ -100,7 +100,12 @@ class GeneralOverviewTab extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           if (shouldShowDateRangeChart(trip)) ...[
-            DateRangeExpenseChart(dailyTotals: dateRange, theme: theme),
+            DateRangeExpenseChart(
+              dailyTotals: dateRange,
+              theme: theme,
+              badgeText: gloc.dateRangeChartBadge,
+              semanticLabel: gloc.dateRangeExpensesChart,
+            ),
           ] else ...[
             // Weekly chart
             WeeklyExpenseChart(

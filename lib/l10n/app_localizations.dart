@@ -152,6 +152,12 @@ abstract class AppLocalizations {
   /// **'M'**
   String get monthlyChartBadge;
 
+  /// Letter indicator for date range chart badge
+  ///
+  /// In en, this message translates to:
+  /// **'D'**
+  String get dateRangeChartBadge;
+
   /// Label for weekly expenses chart
   ///
   /// In en, this message translates to:
@@ -163,6 +169,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Monthly expenses'**
   String get monthlyExpensesChart;
+
+  /// Label for date range expenses chart
+  ///
+  /// In en, this message translates to:
+  /// **'Date range expenses'**
+  String get dateRangeExpensesChart;
 
   /// No description provided for @settings_flag_secure_desc.
   ///

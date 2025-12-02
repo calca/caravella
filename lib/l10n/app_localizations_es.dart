@@ -33,10 +33,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get monthlyChartBadge => 'M';
 
   @override
+  String get dateRangeChartBadge => 'D';
+
+  @override
   String get weeklyExpensesChart => 'Gastos semanales';
 
   @override
   String get monthlyExpensesChart => 'Gastos mensuales';
+
+  @override
+  String get dateRangeExpensesChart => 'Gastos por período';
 
   @override
   String get settings_flag_secure_desc =>
