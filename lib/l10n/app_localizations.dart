@@ -1673,13 +1673,13 @@ abstract class AppLocalizations {
   /// No description provided for @location.
   ///
   /// In en, this message translates to:
-  /// **'Location'**
+  /// **'Place'**
   String get location;
 
   /// No description provided for @location_hint.
   ///
   /// In en, this message translates to:
-  /// **'Location'**
+  /// **'Place'**
   String get location_hint;
 
   /// No description provided for @get_current_location.

@@ -833,13 +833,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get csv_note => 'Nota';
 
   @override
-  String get csv_location => 'Posizione';
+  String get csv_location => 'Luogo';
 
   @override
-  String get location => 'Posizione';
+  String get location => 'Luogo';
 
   @override
-  String get location_hint => 'Posizione';
+  String get location_hint => 'Luogo';
 
   @override
   String get get_current_location => 'Usa posizione corrente';

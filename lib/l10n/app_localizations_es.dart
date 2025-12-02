@@ -837,10 +837,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get csv_location => 'Ubicación';
 
   @override
-  String get location => 'Ubicación';
+  String get location => 'Lugar';
 
   @override
-  String get location_hint => 'Ubicación';
+  String get location_hint => 'Lugar';
 
   @override
   String get get_current_location => 'Usar ubicación actual';

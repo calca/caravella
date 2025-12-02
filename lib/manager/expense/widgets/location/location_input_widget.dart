@@ -131,8 +131,31 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
     final gloc = gen.AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
 
+    // Convert current location to NominatimPlace if exists
+    NominatimPlace? initialPlace;
+    if (_currentLocation != null) {
+      final loc = _currentLocation!;
+      initialPlace = NominatimPlace(
+        latitude: loc.latitude!,
+        longitude: loc.longitude!,
+        displayName: loc.address ?? loc.displayText,
+        name: loc.name,
+        road: loc.street,
+        houseNumber: loc.streetNumber,
+        city: loc.locality,
+        state: loc.administrativeArea,
+        postcode: loc.postalCode,
+        country: loc.country,
+        countryCode: loc.isoCountryCode,
+      );
+    }
+
     // Show dialog with place search
-    final result = await PlaceSearchDialog.show(context, gloc.location_hint);
+    final result = await PlaceSearchDialog.show(
+      context,
+      gloc.location_hint,
+      initialPlace: initialPlace,
+    );
 
     if (result != null && mounted) {
       setState(() {
