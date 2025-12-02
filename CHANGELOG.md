@@ -35,6 +35,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Build variant support for Play Store and F-Droid distributions using factory pattern
 
 ### Changed
+- Dark theme map tiles now use CartoDB Dark Matter for improved visibility of points of interest
+- Current location button in map search now shows loading indicator while fetching GPS position
 - Expense group colors now use palette indices for consistent appearance across light and dark themes
 - Restructured project into multi-package architecture with core, core-ui, and app separation for improved maintainability
 - Enhanced skeleton loader with smooth scale and fade-in animations for more polished loading experience
