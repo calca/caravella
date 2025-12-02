@@ -33,10 +33,8 @@ class PlaceSearchDialog extends StatefulWidget {
   }) {
     return Navigator.of(context).push<NominatimPlace>(
       MaterialPageRoute(
-        builder: (ctx) => PlaceSearchDialog(
-          hintText: hintText,
-          initialPlace: initialPlace,
-        ),
+        builder: (ctx) =>
+            PlaceSearchDialog(hintText: hintText, initialPlace: initialPlace),
       ),
     );
   }
@@ -60,14 +58,14 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
   void initState() {
     super.initState();
     _debouncer = Debouncer(duration: const Duration(milliseconds: 300));
-    
+
     // Initialize with initial place if provided
     if (widget.initialPlace != null) {
       final place = widget.initialPlace!;
       _selectedMapLocation = LatLng(place.latitude, place.longitude);
       _selectedLocationAddress = place.displayName;
       _mapCenter = LatLng(place.latitude, place.longitude);
-      
+
       // Show confirmation bottom sheet after first frame
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
@@ -449,22 +447,22 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
   /// Move map center to compensate for bottom sheet height
   void _adjustMapCenterForBottomSheet(double bottomSheetHeight) {
     if (_selectedMapLocation == null) return;
-    
+
     final screenHeight = MediaQuery.of(context).size.height;
-    
+
     // Calculate offset in pixels (move center up by half of bottom sheet height)
     final offsetPixels = bottomSheetHeight / 2;
-    
+
     // Convert pixel offset to latitude degrees (approximate)
     // At zoom 18, 1 degree latitude ≈ 111km, and screen height represents roughly 0.003 degrees
     final latitudeOffset = (offsetPixels / screenHeight) * 0.003;
-    
+
     // Move map center up (decrease latitude)
     final adjustedCenter = LatLng(
       _selectedMapLocation!.latitude - latitudeOffset,
       _selectedMapLocation!.longitude,
     );
-    
+
     _mapController.move(adjustedCenter, _mapZoom);
   }
 
