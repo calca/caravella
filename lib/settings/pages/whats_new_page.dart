@@ -4,7 +4,9 @@ import 'package:flutter/services.dart';
 import 'dart:io';
 import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../update/update_check_widget.dart';
+import 'package:play_store_updates/play_store_updates.dart';
+import '../update/app_update_localizations.dart';
+import '../widgets/settings_card.dart';
 
 class WhatsNewPage extends StatefulWidget {
   const WhatsNewPage({super.key});
@@ -122,9 +124,16 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
 
         // Update check widget (only on Android)
         if (Platform.isAndroid)
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: UpdateCheckWidget(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: UpdateCheckWidget(
+              localizations: AppUpdateLocalizations(loc),
+              cardBuilder: (context, child) => SettingsCard(
+                context: context,
+                color: Theme.of(context).colorScheme.surface,
+                child: child,
+              ),
+            ),
           ),
 
         // Changelog section header
