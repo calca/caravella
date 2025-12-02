@@ -128,6 +128,10 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
               _selectedLocationAddress = null;
               _isGeocodingLocation = false;
             });
+            // Show results in bottom sheet
+            if (results.isNotEmpty) {
+              _showResultsBottomSheet();
+            }
           }
         })
         .catchError((e) {
@@ -162,6 +166,8 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
           _selectedLocationAddress = place?.displayName;
           _isGeocodingLocation = false;
         });
+        // Show location confirmation bottom sheet
+        _showLocationConfirmationBottomSheet();
       }
     } catch (_) {
       if (mounted) {
@@ -169,6 +175,8 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
           _selectedLocationAddress = null;
           _isGeocodingLocation = false;
         });
+        // Show location confirmation bottom sheet even without address
+        _showLocationConfirmationBottomSheet();
       }
     }
   }
@@ -177,41 +185,57 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final gloc = gen.AppLocalizations.of(context);
 
     return Scaffold(
-      body: Stack(
+      appBar: CaravellaAppBar(
+        headerSemanticLabel: gloc.location,
+        backButtonSemanticLabel: gloc.cancel,
+      ),
+      body: Column(
         children: [
-          // Full-screen map background (always visible)
-          _buildFullScreenMap(colorScheme),
-
-          // Top search bar and results overlay
-          SafeArea(
-            child: Column(
+          // Search bar (above map)
+          Container(
+            color: colorScheme.surface,
+            child: _buildSearchBar(theme, colorScheme),
+          ),
+          // Map and results overlay
+          Expanded(
+            child: Stack(
               children: [
-                _buildSearchBar(theme, colorScheme),
+                // Full-screen map background
+                _buildFullScreenMap(colorScheme),
+
+                // Loading/error overlays only
                 if (_isSearching || _isLoadingNearby)
-                  MapLoadingOverlay(
-                    message: _isLoadingNearby
-                        ? 'Finding nearby places...'
-                        : 'Searching...',
+                  Positioned(
+                    top: 16,
+                    left: 16,
+                    right: 16,
+                    child: MapLoadingOverlay(
+                      message: _isLoadingNearby
+                          ? 'Finding nearby places...'
+                          : 'Searching...',
+                    ),
                   ),
                 if (_errorMessage.isNotEmpty)
-                  MapErrorOverlay(message: _errorMessage),
-                // Hide results list when a map location is selected
-                if (_selectedMapLocation == null) ...[
-                  if (!_isSearching &&
-                      !_isLoadingNearby &&
-                      _searchResults.isNotEmpty)
-                    _buildResultsOverlay(theme, colorScheme),
-                  if (!_isSearching &&
-                      !_isLoadingNearby &&
-                      _searchResults.isEmpty &&
-                      _searchController.text.isNotEmpty &&
-                      _errorMessage.isEmpty)
-                    const MapNoResultsMessage(),
-                ] else
-                  // Show selected location info when map location is selected
-                  _buildSelectedLocationInfo(theme, colorScheme),
+                  Positioned(
+                    top: 16,
+                    left: 16,
+                    right: 16,
+                    child: MapErrorOverlay(message: _errorMessage),
+                  ),
+                if (!_isSearching &&
+                    !_isLoadingNearby &&
+                    _searchResults.isEmpty &&
+                    _searchController.text.isNotEmpty &&
+                    _errorMessage.isEmpty)
+                  const Positioned(
+                    top: 16,
+                    left: 16,
+                    right: 16,
+                    child: MapNoResultsMessage(),
+                  ),
               ],
             ),
           ),
@@ -221,50 +245,35 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
   }
 
   Widget _buildSearchBar(ThemeData theme, ColorScheme colorScheme) {
-    return Container(
-      margin: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: colorScheme.surface,
-        borderRadius: BorderRadius.circular(28),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          Expanded(
-            child: TextField(
-              controller: _searchController,
-              focusNode: _searchFocusNode,
-              decoration: InputDecoration(
-                hintText: widget.hintText,
-                border: InputBorder.none,
-                isDense: true,
-              ),
-              onChanged: (value) {
-                // Debounce search with shorter delay
-                _debouncer.call(() {
-                  if (mounted && _searchController.text == value) {
-                    _performSearch(value);
-                  }
-                });
-              },
-              onSubmitted: _performSearch,
-            ),
-          ),
-          if (_searchController.text.isNotEmpty)
-            IconButton(icon: const Icon(Icons.clear), onPressed: _clearSearch)
-          else
-            const SizedBox(width: 48),
-        ],
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+      child: SearchBar(
+        controller: _searchController,
+        focusNode: _searchFocusNode,
+        hintText: widget.hintText,
+        leading: const Icon(Icons.search_outlined),
+        trailing: _searchController.text.isNotEmpty
+            ? [
+                IconButton(
+                  icon: const Icon(Icons.clear_rounded),
+                  onPressed: _clearSearch,
+                ),
+              ]
+            : [],
+        onChanged: (value) {
+          // Debounce search with shorter delay
+          _debouncer.call(() {
+            if (mounted && _searchController.text == value) {
+              _performSearch(value);
+            }
+          });
+        },
+        onSubmitted: _performSearch,
+        elevation: WidgetStateProperty.all(0),
+        backgroundColor: WidgetStateProperty.all(colorScheme.surfaceContainer),
+        shape: WidgetStateProperty.all(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
       ),
     );
   }
@@ -331,112 +340,69 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
     );
   }
 
-  Widget _buildResultsOverlay(ThemeData theme, ColorScheme colorScheme) {
-    return Expanded(
-      child: Align(
-        alignment: Alignment.bottomCenter,
-        child: Container(
-          constraints: const BoxConstraints(maxHeight: 300),
-          margin: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: colorScheme.surface,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.2),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.place,
-                      color: colorScheme.onPrimaryContainer,
-                      size: 20,
+  void _showResultsBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.5,
+        minChildSize: 0.3,
+        maxChildSize: 0.9,
+        expand: false,
+        builder: (context, scrollController) {
+          return GroupBottomSheetScaffold(
+            title: '${_searchResults.length} risultati',
+            scrollable: false,
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.9,
+              child: ListView.builder(
+                controller: scrollController,
+                itemCount: _searchResults.length,
+                itemBuilder: (context, index) {
+                  final place = _searchResults[index];
+                  return ListTile(
+                    leading: const Icon(Icons.place_outlined),
+                    title: Text(
+                      place.displayName,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(width: 8),
-                    Text(
-                      '${_searchResults.length} result${_searchResults.length != 1 ? 's' : ''}',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop(place);
+                    },
+                  );
+                },
               ),
-              const Divider(height: 1),
-              Expanded(
-                child: ListView.builder(
-                  padding: EdgeInsets.zero,
-                  itemCount: _searchResults.length,
-                  itemBuilder: (context, index) {
-                    final place = _searchResults[index];
-                    return ListTile(
-                      leading: Icon(
-                        Icons.place_outlined,
-                        color: colorScheme.onPrimaryContainer,
-                      ),
-                      title: Text(
-                        place.displayName,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodyMedium,
-                      ),
-                      onTap: () => Navigator.of(context).pop(place),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildSelectedLocationInfo(ThemeData theme, ColorScheme colorScheme) {
+  void _showLocationConfirmationBottomSheet() {
     final selected = _selectedMapLocation!;
+    final gloc = gen.AppLocalizations.of(context);
     final displayText =
         _selectedLocationAddress ??
         '${selected.latitude.toStringAsFixed(6)}, ${selected.longitude.toStringAsFixed(6)}';
 
-    return Expanded(
-      child: Align(
-        alignment: Alignment.bottomCenter,
-        child: Container(
-          margin: const EdgeInsets.all(16),
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: colorScheme.surface,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.2),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (sheetContext) {
+        final theme = Theme.of(sheetContext);
+        final colorScheme = theme.colorScheme;
+
+        return GroupBottomSheetScaffold(
+          title: gloc.location,
+          scrollable: false,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Title
-              Text(
-                gen.AppLocalizations.of(context).location,
-                style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 16),
-              // Address container (same style as location details)
+              // Address container
               if (_isGeocodingLocation)
                 Container(
                   width: double.infinity,
@@ -490,62 +456,31 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
 
               const SizedBox(height: 24),
 
-              // Actions row (same style as location details)
-              Row(
-                children: [
-                  const Spacer(),
-                  _buildActionButton(
-                    icon: Icons.close,
-                    tooltip: 'Clear selection',
-                    onTap: () {
-                      setState(() {
-                        _selectedMapLocation = null;
-                        _selectedLocationAddress = null;
-                        _isGeocodingLocation = false;
-                      });
-                    },
-                    destructive: true,
-                  ),
-                  _buildActionButton(
-                    icon: Icons.check,
-                    tooltip: 'Confirm location',
-                    onTap: () {
-                      final displayName =
-                          _selectedLocationAddress ??
-                          '${selected.latitude.toStringAsFixed(6)}, ${selected.longitude.toStringAsFixed(6)}';
+              // Confirm button
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  onPressed: () {
+                    final displayName =
+                        _selectedLocationAddress ??
+                        '${selected.latitude.toStringAsFixed(6)}, ${selected.longitude.toStringAsFixed(6)}';
 
-                      Navigator.of(context).pop(
-                        NominatimPlace(
-                          latitude: selected.latitude,
-                          longitude: selected.longitude,
-                          displayName: displayName,
-                        ),
-                      );
-                    },
-                  ),
-                ],
+                    Navigator.of(sheetContext).pop();
+                    Navigator.of(context).pop(
+                      NominatimPlace(
+                        latitude: selected.latitude,
+                        longitude: selected.longitude,
+                        displayName: displayName,
+                      ),
+                    );
+                  },
+                  child: Text(gloc.crop_confirm),
+                ),
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildActionButton({
-    required IconData icon,
-    required String tooltip,
-    required VoidCallback onTap,
-    bool destructive = false,
-  }) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return IconButton(
-      icon: Icon(icon),
-      iconSize: 28,
-      color: destructive ? colorScheme.error : colorScheme.primary,
-      tooltip: tooltip,
-      onPressed: onTap,
+        );
+      },
     );
   }
 }
