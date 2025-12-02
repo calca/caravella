@@ -12,13 +12,15 @@ export 'main/route_observer.dart';
 export 'main/caravella_app.dart' show rootScaffoldMessenger;
 
 void main() async {
-  await AppInitialization.initialize();
-
-  // Initialize shortcuts after app initialization
-  await ShortcutsInitialization.initialize();
-
   // Catch all uncaught async errors (e.g., from tile loading)
-  runZonedGuarded(() => runApp(const CaravellaApp()), (error, stackTrace) {
+  runZonedGuarded(() async {
+    await AppInitialization.initialize();
+
+    // Initialize shortcuts after app initialization
+    await ShortcutsInitialization.initialize();
+
+    runApp(const CaravellaApp());
+  }, (error, stackTrace) {
     // Network errors from tile loading are expected and non-critical - silently ignore them
     final errorString = error.toString();
     if (errorString.contains('SocketException') ||
