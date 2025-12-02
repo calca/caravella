@@ -51,6 +51,7 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
   LatLng? _selectedMapLocation;
   String? _selectedLocationAddress;
   bool _isGeocodingLocation = false;
+  bool _isCenteringOnLocation = false;
   late final Debouncer _debouncer;
   final FocusNode _searchFocusNode = FocusNode();
 
@@ -113,6 +114,11 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
   Future<void> _centerOnCurrentLocation() async {
     if (!mounted) return;
 
+    setState(() {
+      _isCenteringOnLocation = true;
+      _errorMessage = '';
+    });
+
     try {
       // Get current GPS location
       final location = await LocationService.getCurrentLocation(
@@ -138,6 +144,12 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
       if (mounted) {
         setState(() {
           _errorMessage = 'Unable to get current location';
+        });
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isCenteringOnLocation = false;
         });
       }
     }
@@ -279,9 +291,20 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
                   bottom: 16 + MediaQuery.of(context).padding.bottom,
                   right: 16,
                   child: FloatingActionButton(
-                    onPressed: _centerOnCurrentLocation,
+                    onPressed: _isCenteringOnLocation
+                        ? null
+                        : _centerOnCurrentLocation,
                     tooltip: gloc.location,
-                    child: const Icon(Icons.my_location),
+                    child: _isCenteringOnLocation
+                        ? SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.5,
+                              color: colorScheme.onPrimaryContainer,
+                            ),
+                          )
+                        : const Icon(Icons.my_location),
                   ),
                 ),
               ],
