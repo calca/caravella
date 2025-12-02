@@ -138,10 +138,8 @@ class _HomePageState extends State<HomePage> with RouteAware {
     await checkAndShowUpdateIfNeeded(
       context,
       AppUpdateLocalizations(loc),
-      (context, {required title, required child}) => GroupBottomSheetScaffold(
-        title: title,
-        child: child,
-      ),
+      (context, {required title, required child}) =>
+          GroupBottomSheetScaffold(title: title, child: child),
     );
   }
 
