@@ -273,15 +273,15 @@ class _EmptyAttachmentSlot extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: theme.colorScheme.outlineVariant,
+              color: theme.colorScheme.surfaceContainerHighest,
               style: BorderStyle.solid,
             ),
-            color: theme.colorScheme.surfaceContainerHighest,
+            color: theme.colorScheme.surfaceContainerLow,
           ),
           child: Icon(
             Icons.add,
             size: 32,
-            color: theme.colorScheme.onSurfaceVariant,
+            color: theme.colorScheme.surfaceContainerHighest,
           ),
         ),
       ),
