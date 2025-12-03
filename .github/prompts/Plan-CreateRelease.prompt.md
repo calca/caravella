@@ -70,7 +70,36 @@ Aggiorna i file markdown in `assets/docs/` per mostrare le novità nella pagina 
 - Mantieni coerenza tra tutte le lingue
 - Ordina per rilevanza (features → improvements → fixes)
 
-### 4. Crea Release Notes per Store
+### 4. Crea Changelog Fastlane per F-Droid
+Crea file di changelog per F-Droid in `fastlane/metadata/android/[locale]/changelogs/[versionCode].txt`
+
+**Percorsi**:
+- `fastlane/metadata/android/en-US/changelogs/[BUILD_NUMBER].txt`
+- `fastlane/metadata/android/it-IT/changelogs/[BUILD_NUMBER].txt`
+- `fastlane/metadata/android/es-ES/changelogs/[BUILD_NUMBER].txt`
+- `fastlane/metadata/android/pt-BR/changelogs/[BUILD_NUMBER].txt`
+- `fastlane/metadata/android/zh-CN/changelogs/[BUILD_NUMBER].txt`
+
+**Formato**: Testo semplice, massimo 500 caratteri
+```
+Version X.Y.Z - [Titolo]
+
+• [Cambiamento 1]
+• [Cambiamento 2]
+• [Cambiamento 3]
+
+[Nota finale positiva]
+```
+
+**Linee guida F-Droid**:
+- Massimo 500 caratteri per file
+- Usa bullet points (•) per chiarezza
+- Nome file deve corrispondere al versionCode (build number)
+- Tono user-friendly, evita tecnicismi
+- Focus su 3-4 cambiamenti più rilevanti
+- F-Droid mostrerà questi changelog nella pagina dell'app
+
+### 5. Crea Release Notes per Store
 Crea file: `store/changelog/release-notes-X.Y.Z.xml`
 
 **Template**:
@@ -135,27 +164,27 @@ Versão X.Y.Z - [Título Atraente]
 - Evita gergo tecnico
 - Termina con nota positiva o ringraziamento
 
-### 5. Aggiorna Store Metadata
+### 6. Aggiorna Store Metadata
 
-#### 5.1 Full Description
+#### 6.1 Full Description
 **Percorso**: `store/metadata/[locale]/full_description.txt`
 - [ ] Rivedi lista funzionalità se aggiunte nuove feature importanti
 - [ ] Mantieni descrizione compelling e chiara
 - [ ] Aggiorna per tutti i locale: en-US, es-ES, it-IT, pt-BR, zh-CN
 
-#### 5.2 Short Description (se necessario)
+#### 6.2 Short Description (se necessario)
 **Percorso**: `store/metadata/[locale]/short_description.txt`
 - [ ] Mantieni sotto 80 caratteri
 - [ ] Aggiorna solo se cambio importante nella value proposition
 
-#### 5.3 Title (se necessario)
+#### 6.3 Title (se necessario)
 **Percorso**: `store/metadata/[locale]/title.txt`
 - [ ] Mantieni sotto 30 caratteri
 - [ ] Aggiorna solo per cambi di branding importanti
 
-### 6. Aggiorna Numeri Versione
+### 7. Aggiorna Numeri Versione
 
-#### 6.1 pubspec.yaml principale
+#### 7.1 pubspec.yaml principale
 **Percorso**: `/pubspec.yaml`
 ```yaml
 version: X.Y.Z+BUILD_NUMBER
@@ -163,13 +192,13 @@ version: X.Y.Z+BUILD_NUMBER
 - [ ] Aggiorna versione (X.Y.Z)
 - [ ] Incrementa build number (+BUILD_NUMBER)
 
-#### 6.2 Package versions (se modificati)
+#### 7.2 Package versions (se modificati)
 **Percorsi**:
 - `/packages/caravella_core/pubspec.yaml`
 - `/packages/caravella_core_ui/pubspec.yaml`
 - `/packages/play_store_updates/pubspec.yaml`
 
-### 7. Crea Git Tag
+### 8. Crea Git Tag
 ```bash
 git tag -a vX.Y.Z -m "Release vX.Y.Z - [Descrizione breve]"
 git push origin vX.Y.Z
@@ -226,6 +255,7 @@ git push origin vX.Y.Z
 - [ ] CHANGELOG.md principale formattato correttamente con link
 - [ ] README.md aggiornato con highlights user-friendly
 - [ ] Tutti i CHANGELOG localizzati (assets/docs) aggiornati
+- [ ] Changelog Fastlane per F-Droid creati per tutti i locale (fastlane/metadata/android)
 - [ ] Release notes XML create per tutti i locale store
 - [ ] Store metadata rivisti e aggiornati se necessario
 - [ ] Git tag creato con formato corretto
