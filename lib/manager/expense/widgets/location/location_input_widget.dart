@@ -5,7 +5,7 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'location_service.dart';
 import 'location_widget_constants.dart';
-import 'place_search_dialog.dart';
+import 'place_search_page.dart';
 
 class LocationInputWidget extends StatefulWidget {
   final ExpenseLocation? initialLocation;
@@ -151,7 +151,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
     }
 
     // Show dialog with place search
-    final result = await PlaceSearchDialog.show(
+    final result = await PlaceSearchPage.show(
       context,
       gloc.location_hint,
       initialPlace: initialPlace,

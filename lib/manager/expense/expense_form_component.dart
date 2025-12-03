@@ -84,20 +84,18 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
   late ExpenseFormController _controller;
   late FormScrollCoordinator _scrollCoordinator;
   late List<ExpenseCategory> _categories;
-  
+
   // Auto location preference
   bool _autoLocationEnabled = false;
 
   // Getter per determinare se mostrare i campi estesi
   bool get _shouldShowExtendedFields =>
-      widget.fullEdit || widget.initialExpense != null || _controller.isExpanded;
+      widget.fullEdit ||
+      widget.initialExpense != null ||
+      _controller.isExpanded;
 
   // Scroll controller callback per CategorySelectorWidget
   // Removed _scrollToCategoryEnd: no longer needed with new category selector bottom sheet.
-
-
-
-
 
   @override
   void initState() {
@@ -105,7 +103,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     WidgetsBinding.instance.addObserver(this);
     _categories = List.from(widget.categories);
     _autoLocationEnabled = widget.autoLocationEnabled;
-    
+
     // Initialize controller with initial state
     final initialState = widget.initialExpense != null
         ? ExpenseFormState.fromExpense(
@@ -116,23 +114,23 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
             participants: widget.participants,
             categories: widget.categories,
           );
-    
+
     _controller = ExpenseFormController(
       initialState: initialState,
       categories: widget.categories,
     );
-    
+
     // Initialize scroll coordinator
     _scrollCoordinator = FormScrollCoordinator(
       scrollController: widget.scrollController,
       context: context,
     );
-    
+
     // Listen to controller changes for form validity updates
     _controller.addListener(() {
       _notifyFormValidityChanged();
     });
-    
+
     // Setup focus listeners for scroll coordination
     _controller.amountFocus.addListener(() {
       if (_controller.amountFocus.hasFocus) {
@@ -141,7 +139,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         });
       }
     });
-    
+
     _controller.nameFocus.addListener(() {
       if (_controller.nameFocus.hasFocus) {
         Future.delayed(const Duration(milliseconds: 200), () {
@@ -149,7 +147,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         });
       }
     });
-    
+
     _controller.locationFocus.addListener(() {
       if (_controller.locationFocus.hasFocus) {
         Future.delayed(const Duration(milliseconds: 200), () {
@@ -157,7 +155,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         });
       }
     });
-    
+
     _controller.noteFocus.addListener(() {
       if (_controller.noteFocus.hasFocus) {
         Future.delayed(const Duration(milliseconds: 200), () {
@@ -165,22 +163,22 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         });
       }
     });
-    
+
     // Autofocus after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         _controller.amountFocus.requestFocus();
         _scrollCoordinator.scrollToField(_controller.amountFieldKey);
       }
-      
+
       // Finish initialization
       _controller.finishInitialization();
-      
+
       // Auto-retrieve location if enabled and creating a new expense
       if (widget.initialExpense == null && _autoLocationEnabled) {
         _retrieveCurrentLocation();
       }
-      
+
       // Notify parent
       widget.onSaveCallbackChanged?.call(_saveExpense);
       widget.onFormValidityChanged?.call(_controller.isFormValid);
@@ -211,8 +209,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     }
   }
 
-
-
   Future<bool> _confirmDiscardChanges() async {
     final gloc = gen.AppLocalizations.of(context);
     return await showDialog<bool>(
@@ -237,8 +233,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         ) ??
         false;
   }
-
-
 
   void _notifyFormValidityChanged() {
     if (widget.onFormValidityChanged != null) {
@@ -274,13 +268,14 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
       return;
     }
     if (!_controller.isFormValid) return;
-    
+
     final state = _controller.state;
     final expense = ExpenseDetails(
       id: widget.initialExpense?.id,
       amount: state.amount ?? 0,
       paidBy: state.paidBy ?? ExpenseParticipant(name: ''),
-      category: state.category ??
+      category:
+          state.category ??
           (_categories.isNotEmpty
               ? _categories.first
               : ExpenseCategory(name: '', id: '', createdAt: DateTime.now())),
@@ -679,8 +674,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     );
   }
 
-
-
   Widget _buildDivider(BuildContext context) {
     if (_shouldShowExtendedFields) {
       // In full edit mode: reserve vertical space but no visual divider
@@ -703,9 +696,10 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         onDelete: widget.initialExpense != null ? widget.onDelete : null,
         textStyle: style,
         showExpandButton:
-            !(widget.fullEdit || widget.initialExpense != null || _controller.isExpanded),
-        onExpand:
-            widget.onExpand ?? _controller.expandForm,
+            !(widget.fullEdit ||
+                widget.initialExpense != null ||
+                _controller.isExpanded),
+        onExpand: widget.onExpand ?? _controller.expandForm,
       );
 
   @override
