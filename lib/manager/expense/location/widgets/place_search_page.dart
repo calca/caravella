@@ -3,11 +3,11 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'nominatim_place.dart';
-import 'state/place_search_controller.dart';
-import 'state/place_search_state.dart';
+import '../nominatim_place.dart';
+import '../state/place_search_controller.dart';
+import '../state/place_search_state.dart';
 
-export 'nominatim_place.dart';
+export '../nominatim_place.dart';
 
 /// Full-screen page for searching places using OpenStreetMap Nominatim
 /// Shows search results on an interactive map with an overlay list

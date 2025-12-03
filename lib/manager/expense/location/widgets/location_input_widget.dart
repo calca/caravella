@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../expense_form/icon_leading_field.dart';
+import '../../widgets/icon_leading_field.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
-import 'location_service.dart';
-import 'location_widget_constants.dart';
+import '../location_service.dart';
+import '../location_widget_constants.dart';
 import 'place_search_page.dart';
 
 class LocationInputWidget extends StatefulWidget {

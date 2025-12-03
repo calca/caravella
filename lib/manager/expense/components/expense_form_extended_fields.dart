@@ -3,10 +3,10 @@ library;
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
-import '../expense_form/date_selector_widget.dart';
-import '../expense_form/note_input_widget.dart';
-import '../expense_form/attachment_input_widget.dart';
-import '../widgets/location/location_input_widget.dart';
+import '../widgets/date_selector_widget.dart';
+import '../widgets/note_input_widget.dart';
+import '../widgets/attachment_input_widget.dart';
+import '../location/widgets/location_input_widget.dart';
 import '../widgets/attachment_viewer_page.dart';
 import '../state/expense_form_controller.dart';
 

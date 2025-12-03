@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core/caravella_core.dart';
-import 'location_widget_constants.dart';
+import '../location_widget_constants.dart';
 
 /// Compact indicator showing location retrieval status in the expense form
 /// Used in compact mode to show auto-location activity

@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../expense_form/amount_input_widget.dart';
-import '../expense_form/participant_selector_widget.dart';
-import '../expense_form/category_selector_widget.dart';
+import '../widgets/amount_input_widget.dart';
+import '../widgets/participant_selector_widget.dart';
+import '../widgets/category_selector_widget.dart';
 import '../state/expense_form_controller.dart';
 
 /// Builds the core form fields: amount, name, paid-by, and category
