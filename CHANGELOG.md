@@ -49,6 +49,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `LocationRepository`: Abstract interface for location operations (29 lines)
   - `LocationRepositoryImpl`: Coordinates LocationService and NominatimSearchService (139 lines)
   - `LocationConstants`: Consolidated constants from multiple files (25 lines)
+- **ExpenseFormComponent Refactoring**: Dramatically improved maintainability by consolidating parameters and extracting lifecycle logic:
+  - `ExpenseFormConfig`: Configuration object consolidating 43 constructor parameters into structured config (160 lines)
+  - `ExpenseFormLifecycleManager`: Lifecycle management with auto-location, category handling, and resource cleanup (161 lines)
+  - `ExpenseFormOrchestrator`: Business logic coordination for save/delete flows and form callbacks (132 lines)
+  - Constructor reduced from 43 parameters to 1 config object (98% reduction in parameters)
+  - Factory methods (`.create()` and `.edit()`) for common use cases with backward compatibility
+  - Legacy constructor (`.legacy()`) maintains full backward compatibility with existing code
+  - Improved testability with separated concerns and clear responsibility boundaries
   - `LocationService` simplified from 149 to 68 lines (54% reduction) using repository pattern
   - Linear dependency chain: Widgets → LocationService → LocationRepository → Platform services
   - Error handling migrated to ExpenseErrorHandler for consistency

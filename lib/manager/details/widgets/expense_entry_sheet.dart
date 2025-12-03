@@ -59,7 +59,7 @@ class _ExpenseEntrySheetState extends State<ExpenseEntrySheet> {
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
       child: Padding(
         padding: EdgeInsets.only(bottom: internalBottom),
-        child: ExpenseFormComponent(
+        child: ExpenseFormComponent.legacy(
           initialExpense: widget.initialExpense,
           participants: widget.group.participants,
           categories: widget.group.categories,

@@ -4,130 +4,215 @@ import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core_ui/caravella_core_ui.dart';
-import '../location/location_service.dart';
 import '../widgets/expense_form_actions_widget.dart';
 import '../state/expense_form_controller.dart';
-import '../state/expense_form_state.dart';
-import '../coordination/form_scroll_coordinator.dart';
+import 'expense_form_config.dart';
+import 'expense_form_lifecycle_manager.dart';
+import 'expense_form_orchestrator.dart';
 import 'expense_form_fields.dart';
 import 'expense_form_extended_fields.dart';
 import 'expense_form_compact_header.dart';
 
+/// Main expense form component - refactored to use config object pattern
+///
+/// This component now accepts a single ExpenseFormConfig parameter instead
+/// of 43 individual parameters, improving maintainability and readability.
 class ExpenseFormComponent extends StatefulWidget {
-  // When true shows date, location and note fields (full edit mode). In edit mode (initialExpense != null) these are always shown.
-  final bool fullEdit;
-  final ExpenseDetails? initialExpense;
-  final List<ExpenseParticipant> participants;
-  final List<ExpenseCategory> categories;
-  final Function(ExpenseDetails) onExpenseAdded;
-  final Function(String) onCategoryAdded;
-  final VoidCallback? onDelete; // optional delete action for edit mode
-  final bool shouldAutoClose;
-  final DateTime? tripStartDate;
-  final DateTime? tripEndDate;
-  final String? newlyAddedCategory; // Nuova proprietà
-  final String? groupTitle; // Titolo del gruppo per la riga azioni
-  final String groupId; // ID del gruppo per organizzare gli allegati
-  final String? currency; // Currency del gruppo
-  final bool autoLocationEnabled; // Impostazione per auto-recupero posizione
-  final ScrollController?
-  scrollController; // Controller for scrolling to focused fields
-  final VoidCallback? onExpand; // Callback per espandere a full page
-  final bool showGroupHeader; // Se mostrare l'intestazione del gruppo
-  final bool
-  showActionsRow; // Se mostrare la riga azioni (pulsanti aggiungi/salva)
-  final void Function(bool)?
-  onFormValidityChanged; // Notifica il parent quando cambia la validità del form
-  final void Function(VoidCallback?)?
-  onSaveCallbackChanged; // Fornisce al parent il callback per salvare
+  final ExpenseFormConfig config;
 
-  const ExpenseFormComponent({
+  const ExpenseFormComponent({super.key, required this.config});
+
+  /// Factory constructor for backward compatibility - creating new expense
+  factory ExpenseFormComponent.create({
+    required List<ExpenseParticipant> participants,
+    required List<ExpenseCategory> categories,
+    required String groupId,
+    required Function(ExpenseDetails) onExpenseAdded,
+    required Function(String) onCategoryAdded,
+    required bool autoLocationEnabled,
+    String? groupTitle,
+    String? currency,
+    DateTime? tripStartDate,
+    DateTime? tripEndDate,
+    String? newlyAddedCategory,
+    bool fullEdit = false,
+    ScrollController? scrollController,
+    VoidCallback? onExpand,
+    bool showGroupHeader = true,
+    bool showActionsRow = true,
+    void Function(bool)? onFormValidityChanged,
+    void Function(VoidCallback?)? onSaveCallbackChanged,
+  }) {
+    return ExpenseFormComponent(
+      config: ExpenseFormConfig.create(
+        participants: participants,
+        categories: categories,
+        groupId: groupId,
+        onExpenseAdded: onExpenseAdded,
+        onCategoryAdded: onCategoryAdded,
+        autoLocationEnabled: autoLocationEnabled,
+        groupTitle: groupTitle,
+        currency: currency,
+        tripStartDate: tripStartDate,
+        tripEndDate: tripEndDate,
+        newlyAddedCategory: newlyAddedCategory,
+        fullEdit: fullEdit,
+        scrollController: scrollController,
+        onExpand: onExpand,
+        showGroupHeader: showGroupHeader,
+        showActionsRow: showActionsRow,
+        onFormValidityChanged: onFormValidityChanged,
+        onSaveCallbackChanged: onSaveCallbackChanged,
+      ),
+    );
+  }
+
+  /// Factory constructor for backward compatibility - editing existing expense
+  factory ExpenseFormComponent.edit({
+    required ExpenseDetails initialExpense,
+    required List<ExpenseParticipant> participants,
+    required List<ExpenseCategory> categories,
+    required String groupId,
+    required Function(ExpenseDetails) onExpenseAdded,
+    required Function(String) onCategoryAdded,
+    required bool autoLocationEnabled,
+    VoidCallback? onDelete,
+    String? groupTitle,
+    String? currency,
+    DateTime? tripStartDate,
+    DateTime? tripEndDate,
+    bool shouldAutoClose = true,
+    ScrollController? scrollController,
+  }) {
+    return ExpenseFormComponent(
+      config: ExpenseFormConfig.edit(
+        initialExpense: initialExpense,
+        participants: participants,
+        categories: categories,
+        groupId: groupId,
+        onExpenseAdded: onExpenseAdded,
+        onCategoryAdded: onCategoryAdded,
+        autoLocationEnabled: autoLocationEnabled,
+        onDelete: onDelete,
+        groupTitle: groupTitle,
+        currency: currency,
+        tripStartDate: tripStartDate,
+        tripEndDate: tripEndDate,
+        shouldAutoClose: shouldAutoClose,
+        scrollController: scrollController,
+      ),
+    );
+  }
+
+  // Legacy constructor for backward compatibility
+  ExpenseFormComponent.legacy({
     super.key,
-    this.initialExpense,
-    required this.participants,
-    required this.categories,
-    required this.onExpenseAdded,
-    required this.onCategoryAdded,
-    this.onDelete,
-    this.shouldAutoClose = true,
-    this.tripStartDate,
-    this.tripEndDate,
-    this.newlyAddedCategory, // Nuova proprietà
-    this.groupTitle,
-    required this.groupId,
-    this.currency,
-    required this.autoLocationEnabled,
-    this.fullEdit = false,
-    this.scrollController,
-    this.onExpand,
-    this.showGroupHeader = true,
-    this.showActionsRow = true,
-    this.onFormValidityChanged,
-    this.onSaveCallbackChanged,
-  });
+    ExpenseDetails? initialExpense,
+    required List<ExpenseParticipant> participants,
+    required List<ExpenseCategory> categories,
+    required Function(ExpenseDetails) onExpenseAdded,
+    required Function(String) onCategoryAdded,
+    VoidCallback? onDelete,
+    bool shouldAutoClose = true,
+    DateTime? tripStartDate,
+    DateTime? tripEndDate,
+    String? newlyAddedCategory,
+    String? groupTitle,
+    required String groupId,
+    String? currency,
+    required bool autoLocationEnabled,
+    bool fullEdit = false,
+    ScrollController? scrollController,
+    VoidCallback? onExpand,
+    bool showGroupHeader = true,
+    bool showActionsRow = true,
+    void Function(bool)? onFormValidityChanged,
+    void Function(VoidCallback?)? onSaveCallbackChanged,
+  }) : config = ExpenseFormConfig(
+         initialExpense: initialExpense,
+         participants: participants,
+         categories: categories,
+         groupId: groupId,
+         onExpenseAdded: onExpenseAdded,
+         onCategoryAdded: onCategoryAdded,
+         onDelete: onDelete,
+         shouldAutoClose: shouldAutoClose,
+         tripStartDate: tripStartDate,
+         tripEndDate: tripEndDate,
+         newlyAddedCategory: newlyAddedCategory,
+         groupTitle: groupTitle,
+         currency: currency,
+         autoLocationEnabled: autoLocationEnabled,
+         fullEdit: fullEdit,
+         scrollController: scrollController,
+         onExpand: onExpand,
+         showGroupHeader: showGroupHeader,
+         showActionsRow: showActionsRow,
+         onFormValidityChanged: onFormValidityChanged,
+         onSaveCallbackChanged: onSaveCallbackChanged,
+       );
 
   @override
   State<ExpenseFormComponent> createState() => _ExpenseFormComponentState();
 }
 
-class _ExpenseFormComponentState extends State<ExpenseFormComponent>
-    with WidgetsBindingObserver {
+class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   final _formKey = GlobalKey<FormState>();
+  late ExpenseFormLifecycleManager _lifecycleManager;
+  late ExpenseFormOrchestrator _orchestrator;
   late ExpenseFormController _controller;
-  late FormScrollCoordinator _scrollCoordinator;
-  late List<ExpenseCategory> _categories;
-
-  // Auto location preference
-  bool _autoLocationEnabled = false;
 
   // Getter per determinare se mostrare i campi estesi
   bool get _shouldShowExtendedFields =>
-      widget.fullEdit ||
-      widget.initialExpense != null ||
+      widget.config.fullEdit ||
+      widget.config.initialExpense != null ||
       _controller.isExpanded;
-
-  // Scroll controller callback per CategorySelectorWidget
-  // Removed _scrollToCategoryEnd: no longer needed with new category selector bottom sheet.
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    _categories = List.from(widget.categories);
-    _autoLocationEnabled = widget.autoLocationEnabled;
 
-    // Initialize controller with initial state
-    final initialState = widget.initialExpense != null
-        ? ExpenseFormState.fromExpense(
-            widget.initialExpense!,
-            widget.categories,
-          )
-        : ExpenseFormState.initial(
-            participants: widget.participants,
-            categories: widget.categories,
-          );
+    // Initialize lifecycle manager
+    _lifecycleManager = ExpenseFormLifecycleManager(
+      config: widget.config,
+      onControllerReady: (controller) {
+        _controller = controller;
 
-    _controller = ExpenseFormController(
-      initialState: initialState,
-      categories: widget.categories,
+        // Initialize orchestrator after controller is ready
+        _orchestrator = ExpenseFormOrchestrator(
+          config: widget.config,
+          controller: _controller,
+          formKey: _formKey,
+        );
+        _orchestrator.initialize();
+
+        // Setup focus listeners for scroll coordination
+        _setupFocusListeners();
+
+        // Autofocus after first frame
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            _controller.amountFocus.requestFocus();
+            _lifecycleManager.scrollCoordinator?.scrollToField(
+              _controller.amountFieldKey,
+            );
+          }
+        });
+      },
     );
 
-    // Initialize scroll coordinator
-    _scrollCoordinator = FormScrollCoordinator(
-      scrollController: widget.scrollController,
-      context: context,
-    );
+    // Initialize asynchronously
+    _lifecycleManager.initialize(context);
+  }
 
-    // Listen to controller changes for form validity updates
-    _controller.addListener(() {
-      _notifyFormValidityChanged();
-    });
+  void _setupFocusListeners() {
+    final scrollCoordinator = _lifecycleManager.scrollCoordinator;
+    if (scrollCoordinator == null) return;
 
-    // Setup focus listeners for scroll coordination
     _controller.amountFocus.addListener(() {
       if (_controller.amountFocus.hasFocus) {
         Future.delayed(const Duration(milliseconds: 200), () {
-          _scrollCoordinator.scrollToField(_controller.amountFieldKey);
+          scrollCoordinator.scrollToField(_controller.amountFieldKey);
         });
       }
     });
@@ -135,7 +220,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     _controller.nameFocus.addListener(() {
       if (_controller.nameFocus.hasFocus) {
         Future.delayed(const Duration(milliseconds: 200), () {
-          _scrollCoordinator.scrollToField(_controller.nameFieldKey);
+          scrollCoordinator.scrollToField(_controller.nameFieldKey);
         });
       }
     });
@@ -143,7 +228,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     _controller.locationFocus.addListener(() {
       if (_controller.locationFocus.hasFocus) {
         Future.delayed(const Duration(milliseconds: 200), () {
-          _scrollCoordinator.scrollToField(_controller.locationFieldKey);
+          scrollCoordinator.scrollToField(_controller.locationFieldKey);
         });
       }
     });
@@ -151,54 +236,10 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     _controller.noteFocus.addListener(() {
       if (_controller.noteFocus.hasFocus) {
         Future.delayed(const Duration(milliseconds: 200), () {
-          _scrollCoordinator.scrollToField(_controller.noteFieldKey);
+          scrollCoordinator.scrollToField(_controller.noteFieldKey);
         });
       }
     });
-
-    // Autofocus after first frame
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        _controller.amountFocus.requestFocus();
-        _scrollCoordinator.scrollToField(_controller.amountFieldKey);
-      }
-
-      // Finish initialization
-      _controller.finishInitialization();
-
-      // Auto-retrieve location if enabled and creating a new expense
-      if (widget.initialExpense == null && _autoLocationEnabled) {
-        _retrieveCurrentLocation();
-      }
-
-      // Notify parent
-      widget.onSaveCallbackChanged?.call(_saveExpense);
-      widget.onFormValidityChanged?.call(_controller.isFormValid);
-    });
-  }
-
-  Future<void> _retrieveCurrentLocation() async {
-    if (!mounted) return;
-
-    _controller.setLocationRetrieving(true);
-
-    final location = await LocationService.getCurrentLocation(
-      context,
-      resolveAddress: true,
-      onStatusChanged: (status) {
-        if (mounted) {
-          _controller.setLocationRetrieving(status);
-        }
-      },
-    );
-
-    if (location != null && mounted) {
-      _controller.updateLocation(location);
-    }
-
-    if (mounted) {
-      _controller.setLocationRetrieving(false);
-    }
   }
 
   Future<bool> _confirmDiscardChanges() async {
@@ -226,53 +267,12 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         false;
   }
 
-  void _notifyFormValidityChanged() {
-    if (widget.onFormValidityChanged != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          widget.onFormValidityChanged?.call(_controller.isFormValid);
-        }
-      });
-    }
-  }
-
-  void _saveExpense() {
-    final valid = _formKey.currentState?.validate() ?? false;
-    if (!valid) {
-      // Mark all fields as touched for validation feedback
-      return;
-    }
-    if (!_controller.isFormValid) return;
-
-    final state = _controller.state;
-    final expense = ExpenseDetails(
-      id: widget.initialExpense?.id,
-      amount: state.amount ?? 0,
-      paidBy: state.paidBy ?? ExpenseParticipant(name: ''),
-      category:
-          state.category ??
-          (_categories.isNotEmpty
-              ? _categories.first
-              : ExpenseCategory(name: '', id: '', createdAt: DateTime.now())),
-      date: state.date,
-      note: state.note.trim().isNotEmpty ? state.note.trim() : null,
-      name: state.name,
-      location: state.location,
-      attachments: state.attachments,
-    );
-    widget.onExpenseAdded(expense);
-    if (widget.shouldAutoClose && Navigator.of(context).canPop()) {
-      Navigator.of(context).pop();
-    }
-  }
-
   @override
-  Widget build(BuildContext context) => _buildRoot(context);
-
-  Widget _buildRoot(BuildContext context) {
+  Widget build(BuildContext context) {
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
     final gloc = gen.AppLocalizations.of(context);
     final smallStyle = Theme.of(context).textTheme.bodyMedium;
+
     return PopScope(
       canPop: !_controller.state.isDirty,
       onPopInvokedWithResult: _handlePop,
@@ -282,41 +282,40 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ExpenseFormCompactHeader(
-              groupTitle: widget.groupTitle,
-              showGroupHeader: widget.showGroupHeader,
+              groupTitle: widget.config.groupTitle,
+              showGroupHeader: widget.config.showGroupHeader,
             ),
             ExpenseFormFields(
               controller: _controller,
-              participants: widget.participants,
-              categories: _categories,
+              participants: widget.config.participants,
+              categories: _lifecycleManager.categories,
               onCategoryAdded: _onCategoryAdded,
               onCategoriesUpdated: (newCategories) {
-                setState(() {
-                  _categories = newCategories;
-                });
+                _lifecycleManager.updateCategories(newCategories);
+                setState(() {});
               },
-              fullEdit: widget.fullEdit,
-              autoLocationEnabled: _autoLocationEnabled,
+              fullEdit: widget.config.fullEdit,
+              autoLocationEnabled: widget.config.autoLocationEnabled,
               location: _controller.state.location,
-              isRetrievingLocation: _controller.state.isRetrievingLocation,
+              isRetrievingLocation: _lifecycleManager.isRetrievingLocation,
               onClearLocation: _clearLocation,
-              currency: widget.currency,
-              onSaveExpense: _saveExpense,
-              isInitialExpense: widget.initialExpense != null,
+              currency: widget.config.currency,
+              onSaveExpense: () => _orchestrator.saveExpense(context),
+              isInitialExpense: widget.config.initialExpense != null,
             ),
             if (_shouldShowExtendedFields)
               ExpenseFormExtendedFields(
                 controller: _controller,
-                tripStartDate: widget.tripStartDate,
-                tripEndDate: widget.tripEndDate,
+                tripStartDate: widget.config.tripStartDate,
+                tripEndDate: widget.config.tripEndDate,
                 locale: locale,
-                groupId: widget.groupId,
-                autoLocationEnabled: _autoLocationEnabled,
-                isInitialExpense: widget.initialExpense != null,
+                groupId: widget.config.groupId,
+                autoLocationEnabled: widget.config.autoLocationEnabled,
+                isInitialExpense: widget.config.initialExpense != null,
                 isFormValid: _controller.isFormValid,
-                onSaveExpense: _saveExpense,
+                onSaveExpense: () => _orchestrator.saveExpense(context),
               ),
-            if (widget.showActionsRow) ...[
+            if (widget.config.showActionsRow) ...[
               _buildDivider(context),
               _buildActionsRow(gloc, smallStyle),
             ],
@@ -341,32 +340,35 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
   }
 
   Future<void> _onCategoryAdded(String categoryName) async {
-    widget.onCategoryAdded(categoryName);
+    widget.config.onCategoryAdded(categoryName);
     await Future.delayed(const Duration(milliseconds: 100));
-    final found = widget.categories.firstWhere(
+
+    final categories = widget.config.categories;
+    final found = categories.firstWhere(
       (c) => c.name == categoryName,
-      orElse: () => widget.categories.isNotEmpty
-          ? widget.categories.first
+      orElse: () => categories.isNotEmpty
+          ? categories.first
           : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000)),
     );
-    if (!_categories.contains(found)) {
-      setState(() {
-        _categories = List.from(widget.categories);
-      });
+
+    final currentCategories = _lifecycleManager.categories;
+    if (!currentCategories.contains(found)) {
+      _lifecycleManager.updateCategories(List.from(categories));
       _controller.addCategory(found);
+      setState(() {});
     }
+
     await Future.delayed(const Duration(milliseconds: 100));
-    final foundAfter = widget.categories.firstWhere(
+    final foundAfter = categories.firstWhere(
       (c) => c.name == categoryName,
-      orElse: () => widget.categories.isNotEmpty
-          ? widget.categories.first
+      orElse: () => categories.isNotEmpty
+          ? categories.first
           : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000)),
     );
-    setState(() {
-      _categories = List.from(widget.categories);
-    });
+
+    _lifecycleManager.updateCategories(List.from(categories));
     _controller.updateCategory(foundAfter);
-    _notifyFormValidityChanged();
+    setState(() {});
   }
 
   Widget _buildDivider(BuildContext context) {
@@ -385,22 +387,26 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
 
   Widget _buildActionsRow(gen.AppLocalizations gloc, TextStyle? style) =>
       ExpenseFormActionsWidget(
-        onSave: _controller.isFormValid ? _saveExpense : null,
+        onSave: _controller.isFormValid
+            ? () => _orchestrator.saveExpense(context)
+            : null,
         isFormValid: _controller.isFormValid,
-        isEdit: widget.initialExpense != null,
-        onDelete: widget.initialExpense != null ? widget.onDelete : null,
+        isEdit: widget.config.initialExpense != null,
+        onDelete: widget.config.hasDeleteAction
+            ? () => _orchestrator.deleteExpense(context)
+            : null,
         textStyle: style,
         showExpandButton:
-            !(widget.fullEdit ||
-                widget.initialExpense != null ||
+            !(widget.config.fullEdit ||
+                widget.config.initialExpense != null ||
                 _controller.isExpanded),
-        onExpand: widget.onExpand ?? _controller.expandForm,
+        onExpand: widget.config.onExpand ?? _controller.expandForm,
       );
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    _controller.dispose();
+    _orchestrator.dispose();
+    _lifecycleManager.dispose();
     super.dispose();
   }
 }

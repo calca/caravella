@@ -69,7 +69,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
                       description: '${gloc.group} ${widget.group.title}',
                     ),
                     const SizedBox(height: 24),
-                    ExpenseFormComponent(
+                    ExpenseFormComponent.legacy(
                       initialExpense: widget.initialExpense,
                       participants: widget.group.participants,
                       categories: widget.group.categories,
