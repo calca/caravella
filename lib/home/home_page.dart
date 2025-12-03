@@ -5,6 +5,7 @@ import 'package:caravella_core/caravella_core.dart';
 import '../main/route_observer.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:play_store_updates/play_store_updates.dart';
+import '../settings/update/app_update_localizations.dart';
 import 'welcome/home_welcome_section.dart';
 import 'cards/home_cards_section.dart';
 
@@ -133,7 +134,13 @@ class _HomePageState extends State<HomePage> with RouteAware {
     if (!mounted) return;
 
     // Perform the automatic update check
-    await checkAndShowUpdateIfNeeded(context);
+    final loc = gen.AppLocalizations.of(context);
+    await checkAndShowUpdateIfNeeded(
+      context,
+      AppUpdateLocalizations(loc),
+      (context, {required title, required child}) =>
+          GroupBottomSheetScaffold(title: title, child: child),
+    );
   }
 
   /// Soft refresh that only updates the pinned trip without showing loading state

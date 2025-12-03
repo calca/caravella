@@ -7,12 +7,16 @@ class NoteInputWidget extends StatelessWidget {
   final TextEditingController controller;
   final TextStyle? textStyle;
   final FocusNode? focusNode;
+  final TextInputAction? textInputAction;
+  final VoidCallback? onFieldSubmitted;
 
   const NoteInputWidget({
     super.key,
     required this.controller,
     this.textStyle,
     this.focusNode,
+    this.textInputAction,
+    this.onFieldSubmitted,
   });
 
   @override
@@ -22,9 +26,13 @@ class NoteInputWidget extends StatelessWidget {
       controller: controller,
       focusNode: focusNode,
       maxLines: null, // auto-grow illimitato
-      minLines: 4, // minimo 4 righe visibili
+      minLines: 6, // minimo 4 righe visibili
       style: textStyle ?? FormTheme.getMultilineTextStyle(context),
       decoration: FormTheme.getMultilineDecoration(hintText: gloc.note_hint),
+      textInputAction: textInputAction ?? TextInputAction.newline,
+      onFieldSubmitted: onFieldSubmitted != null
+          ? (_) => onFieldSubmitted!()
+          : null,
     );
 
     return IconLeadingField(

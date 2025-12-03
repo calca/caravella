@@ -82,7 +82,9 @@ class MainActivity : FlutterActivity() {
                                     id = map["id"] as String,
                                     title = map["title"] as String,
                                     isPinned = map["isPinned"] as Boolean,
-                                    lastUpdated = (map["lastUpdated"] as Number).toLong()
+                                    lastUpdated = (map["lastUpdated"] as Number).toLong(),
+                                    color = (map["color"] as? Number)?.toInt(),
+                                    file = map["file"] as? String
                                 )
                             } ?: emptyList()
                             

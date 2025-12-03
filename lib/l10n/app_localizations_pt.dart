@@ -33,10 +33,16 @@ class AppLocalizationsPt extends AppLocalizations {
   String get monthlyChartBadge => 'M';
 
   @override
+  String get dateRangeChartBadge => 'D';
+
+  @override
   String get weeklyExpensesChart => 'Despesas semanais';
 
   @override
   String get monthlyExpensesChart => 'Despesas mensais';
+
+  @override
+  String get dateRangeExpensesChart => 'Despesas por período';
 
   @override
   String get settings_flag_secure_desc =>
@@ -194,6 +200,12 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get new_expense_group => 'Novo grupo de despesas';
+
+  @override
+  String get new_expense => 'New Expense';
+
+  @override
+  String get edit_expense => 'Editar despesa';
 
   @override
   String get tap_to_create => 'Toque para criar';
@@ -370,6 +382,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get new_group => 'Novo grupo';
 
   @override
+  String get group => 'Group';
+
+  @override
   String get create => 'Criar';
 
   @override
@@ -428,9 +443,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get add_expense => 'Nova despesa';
-
-  @override
-  String get edit_expense => 'Editar despesa';
 
   @override
   String get expand_form => 'Expandir formulário';
@@ -856,6 +868,12 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get address_resolved => 'Endereço resolvido';
+
+  @override
+  String get search_place => 'Procurar lugar';
+
+  @override
+  String get search_place_hint => 'Procurar um lugar ou endereço';
 
   @override
   String get settings_general => 'Geral';

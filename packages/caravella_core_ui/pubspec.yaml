@@ -11,12 +11,12 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  io_caravella_egm:
-    path: ../..
   caravella_core:
     path: ../caravella_core
-  fl_chart: 1.1.0
+  fl_chart: ^1.1.0
+  flutter_map: ^8.0.0
   intl: ^0.20.2
+  latlong2: ^0.9.1
   timeago: ^3.7.0
 
 dev_dependencies:

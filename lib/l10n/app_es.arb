@@ -20,6 +20,10 @@
   "@monthlyChartBadge": {
     "description": "Letter indicator for monthly chart badge"
   },
+  "dateRangeChartBadge": "D",
+  "@dateRangeChartBadge": {
+    "description": "Letter indicator for date range chart badge"
+  },
   "weeklyExpensesChart": "Gastos semanales",
   "@weeklyExpensesChart": {
     "description": "Label for weekly expenses chart"
@@ -27,6 +31,10 @@
   "monthlyExpensesChart": "Gastos mensuales",
   "@monthlyExpensesChart": {
     "description": "Label for monthly expenses chart"
+  },
+  "dateRangeExpensesChart": "Gastos por período",
+  "@dateRangeExpensesChart": {
+    "description": "Label for date range expenses chart"
   },
   "settings_flag_secure_desc": "Impide capturas de pantalla y grabación de pantalla",
   "settings_flag_secure_title": "Pantalla segura",
@@ -282,8 +290,8 @@
   "csv_date": "Fecha",
   "csv_note": "Nota",
   "csv_location": "Ubicación",
-  "location": "Ubicación",
-  "location_hint": "Ubicación",
+  "location": "Lugar",
+  "location_hint": "Lugar",
   "get_current_location": "Usar ubicación actual",
   "enter_location_manually": "Ingresar manualmente",
   "location_permission_denied": "Permiso de ubicación denegado",
@@ -292,6 +300,8 @@
   "location_error": "Error obteniendo ubicación",
   "resolving_address": "Resolviendo dirección…",
   "address_resolved": "Dirección resuelta",
+  "search_place": "Buscar lugar",
+  "search_place_hint": "Buscar un lugar o dirección",
   "settings_general": "General",
   "settings_general_desc": "Configuración de idioma y apariencia",
   "settings_auto_location_section": "Detección de ubicación",
@@ -596,7 +606,7 @@
   ,"currency_ZMW": "Kwacha zambiano"
   ,"currency_ZWL": "Dólar zimbabuense"
   ,"search_currency": "Buscar moneda..."
-  ,"activity": "Actividad"
+  ,"activity": "Gastos"
   ,"@activity": {"description": "Título de sección actividad reciente lista de gastos"}
   ,"search_expenses_hint": "Buscar por nombre o nota..."
   ,"@search_expenses_hint": {"description": "Placeholder para buscar gastos por nombre o nota"}

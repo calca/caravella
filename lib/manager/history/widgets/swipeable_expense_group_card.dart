@@ -194,7 +194,7 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.surface,
         noBorder: true,
         margin: EdgeInsets.zero,
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

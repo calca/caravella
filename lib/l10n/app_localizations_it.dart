@@ -35,10 +35,16 @@ class AppLocalizationsIt extends AppLocalizations {
   String get monthlyChartBadge => 'M';
 
   @override
+  String get dateRangeChartBadge => 'G';
+
+  @override
   String get weeklyExpensesChart => 'Spese settimanali';
 
   @override
   String get monthlyExpensesChart => 'Spese mensili';
+
+  @override
+  String get dateRangeExpensesChart => 'Spese per periodo';
 
   @override
   String get settings_flag_secure_desc =>
@@ -196,6 +202,12 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get new_expense_group => 'Nuovo Gruppo di Spese';
+
+  @override
+  String get new_expense => 'Nuova spesa';
+
+  @override
+  String get edit_expense => 'Modifica spesa';
 
   @override
   String get tap_to_create => 'Tocca per creare';
@@ -372,6 +384,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get new_group => 'Nuovo Gruppo';
 
   @override
+  String get group => 'Gruppo';
+
+  @override
   String get create => 'Crea';
 
   @override
@@ -430,9 +445,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get add_expense => 'Nuova spesa';
-
-  @override
-  String get edit_expense => 'Modifica spesa';
 
   @override
   String get expand_form => 'Espandi modulo';
@@ -827,13 +839,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get csv_note => 'Nota';
 
   @override
-  String get csv_location => 'Posizione';
+  String get csv_location => 'Luogo';
 
   @override
-  String get location => 'Posizione';
+  String get location => 'Luogo';
 
   @override
-  String get location_hint => 'Posizione';
+  String get location_hint => 'Luogo';
 
   @override
   String get get_current_location => 'Usa posizione corrente';
@@ -858,6 +870,12 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get address_resolved => 'Indirizzo trovato';
+
+  @override
+  String get search_place => 'Cerca luogo';
+
+  @override
+  String get search_place_hint => 'Cerca un luogo o indirizzo';
 
   @override
   String get settings_general => 'Generali';
@@ -1670,7 +1688,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get search_currency => 'Cerca valuta...';
 
   @override
-  String get activity => 'Attività';
+  String get activity => 'Spese';
 
   @override
   String get search_expenses_hint => 'Cerca per nome o nota...';
@@ -1754,7 +1772,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get view_on_map => 'View on map';
 
   @override
-  String get expenses_map => 'Expenses Map';
+  String get expenses_map => 'Mappa delle spese';
 
   @override
   String get no_locations_available => 'No locations available';

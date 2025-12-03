@@ -1,6 +1,7 @@
 enum ChartType {
   weekly,
-  monthly;
+  monthly,
+  dateRange;
 
   String getBadgeKey() {
     switch (this) {
@@ -8,6 +9,8 @@ enum ChartType {
         return 'weeklyChartBadge';
       case ChartType.monthly:
         return 'monthlyChartBadge';
+      case ChartType.dateRange:
+        return 'dateRangeChartBadge';
     }
   }
 
@@ -17,6 +20,8 @@ enum ChartType {
         return 'weeklyExpensesChart';
       case ChartType.monthly:
         return 'monthlyExpensesChart';
+      case ChartType.dateRange:
+        return 'dateRangeExpensesChart';
     }
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'package:io_caravella_egm/main.dart'
-    show rootScaffoldMessenger; // for fallback usage
+
+/// Global key for root scaffold messenger - should be set by the app.
+GlobalKey<ScaffoldMessengerState>? rootScaffoldMessengerKey;
 
 /// Lightweight toast / inline feedback using Flutter's native SnackBar
 /// with Material 3 theming and automatic queue management.
@@ -16,6 +16,7 @@ class AppToast {
     IconData? icon,
     VoidCallback? onUndo,
     String? undoLabel,
+    String? semanticLabel,
   }) {
     // If the context is no longer mounted we use the root scaffold messenger.
     // This avoids "Looking up a deactivated widget's ancestor" errors when an
@@ -23,7 +24,7 @@ class AppToast {
     final bool contextMounted = context.mounted;
     final scaffoldMessenger = contextMounted
         ? ScaffoldMessenger.maybeOf(context)
-        : rootScaffoldMessenger;
+        : rootScaffoldMessengerKey?.currentState;
     if (scaffoldMessenger == null) {
       // Nowhere safe to show the toast; silently ignore.
       return;
@@ -34,7 +35,7 @@ class AppToast {
     // fall back to the root scaffold messenger's context (if any).
     final BuildContext referenceContext = contextMounted
         ? context
-        : (rootScaffoldMessenger?.context ?? context);
+        : (rootScaffoldMessengerKey?.currentState?.context ?? context);
     _showUsingMessenger(
       scaffoldMessenger,
       referenceContext,
@@ -44,19 +45,8 @@ class AppToast {
       icon: icon,
       onUndo: onUndo,
       undoLabel: undoLabel,
+      semanticLabel: semanticLabel,
     );
-  }
-
-  static String _getTypeDescription(BuildContext context, ToastType type) {
-    final localizations = gen.AppLocalizations.of(context);
-    switch (type) {
-      case ToastType.success:
-        return localizations.accessibility_toast_success;
-      case ToastType.error:
-        return localizations.accessibility_toast_error;
-      case ToastType.info:
-        return localizations.accessibility_toast_info;
-    }
   }
 
   /// Variant that accepts an already-obtained [ScaffoldMessengerState].
@@ -71,6 +61,7 @@ class AppToast {
     IconData? icon,
     VoidCallback? onUndo,
     String? undoLabel,
+    String? semanticLabel,
   }) {
     _showUsingMessenger(
       messenger,
@@ -81,6 +72,7 @@ class AppToast {
       icon: icon,
       onUndo: onUndo,
       undoLabel: undoLabel,
+      semanticLabel: semanticLabel,
     );
   }
 
@@ -96,6 +88,7 @@ class AppToast {
     IconData? icon,
     VoidCallback? onUndo,
     String? undoLabel,
+    String? semanticLabel,
   }) {
     final theme = Theme.of(referenceContext);
     final colorScheme = theme.colorScheme;
@@ -127,16 +120,11 @@ class AppToast {
       SnackBar(
         content: Semantics(
           liveRegion: true,
-          label: '${_getTypeDescription(referenceContext, type)}: $message',
+          label: semanticLabel ?? message,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                effectiveIcon,
-                color: textColor,
-                size: 20,
-                semanticLabel: _getTypeDescription(referenceContext, type),
-              ),
+              Icon(effectiveIcon, color: textColor, size: 20),
               const SizedBox(width: 10),
               Flexible(
                 child: Text(
@@ -149,10 +137,9 @@ class AppToast {
             ],
           ),
         ),
-        action: onUndo != null
+        action: onUndo != null && undoLabel != null
             ? SnackBarAction(
-                label:
-                    undoLabel ?? gen.AppLocalizations.of(referenceContext).undo,
+                label: undoLabel,
                 textColor: textColor,
                 onPressed: onUndo,
               )

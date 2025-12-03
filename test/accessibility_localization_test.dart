@@ -13,7 +13,17 @@ void main() {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           locale: const Locale('en'),
-          home: Scaffold(body: AddFab(onPressed: () {})),
+          home: Builder(
+            builder: (context) {
+              final gloc = AppLocalizations.of(context);
+              return Scaffold(
+                body: AddFab(
+                  onPressed: () {},
+                  semanticLabel: gloc.accessibility_add_new_item,
+                ),
+              );
+            },
+          ),
         ),
       );
 
@@ -36,7 +46,17 @@ void main() {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           locale: const Locale('it'),
-          home: Scaffold(body: AddFab(onPressed: () {})),
+          home: Builder(
+            builder: (context) {
+              final gloc = AppLocalizations.of(context);
+              return Scaffold(
+                body: AddFab(
+                  onPressed: () {},
+                  semanticLabel: gloc.accessibility_add_new_item,
+                ),
+              );
+            },
+          ),
         ),
       );
 
@@ -61,7 +81,17 @@ void main() {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           locale: const Locale('es'),
-          home: Scaffold(body: AddFab(onPressed: () {})),
+          home: Builder(
+            builder: (context) {
+              final gloc = AppLocalizations.of(context);
+              return Scaffold(
+                body: AddFab(
+                  onPressed: () {},
+                  semanticLabel: gloc.accessibility_add_new_item,
+                ),
+              );
+            },
+          ),
         ),
       );
 
@@ -86,7 +116,16 @@ void main() {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           locale: const Locale('en'),
-          home: const Scaffold(appBar: CaravellaAppBar()),
+          home: Builder(
+            builder: (context) {
+              final gloc = AppLocalizations.of(context);
+              return Scaffold(
+                appBar: CaravellaAppBar(
+                  headerSemanticLabel: gloc.accessibility_navigation_bar,
+                ),
+              );
+            },
+          ),
         ),
       );
 
@@ -107,7 +146,16 @@ void main() {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           locale: const Locale('it'),
-          home: const Scaffold(appBar: CaravellaAppBar()),
+          home: Builder(
+            builder: (context) {
+              final gloc = AppLocalizations.of(context);
+              return Scaffold(
+                appBar: CaravellaAppBar(
+                  headerSemanticLabel: gloc.accessibility_navigation_bar,
+                ),
+              );
+            },
+          ),
         ),
       );
 
@@ -132,18 +180,23 @@ void main() {
           supportedLocales: AppLocalizations.supportedLocales,
           locale: const Locale('en'),
           home: Builder(
-            builder: (context) => Scaffold(
-              body: ElevatedButton(
-                onPressed: () {
-                  AppToast.show(
-                    context,
-                    'Test message',
-                    type: ToastType.success,
-                  );
-                },
-                child: const Text('Show Toast'),
-              ),
-            ),
+            builder: (context) {
+              final gloc = AppLocalizations.of(context);
+              return Scaffold(
+                body: ElevatedButton(
+                  onPressed: () {
+                    AppToast.show(
+                      context,
+                      'Test message',
+                      type: ToastType.success,
+                      semanticLabel:
+                          '${gloc.accessibility_toast_success}: Test message',
+                    );
+                  },
+                  child: const Text('Show Toast'),
+                ),
+              );
+            },
           ),
         ),
       );
@@ -171,18 +224,23 @@ void main() {
           supportedLocales: AppLocalizations.supportedLocales,
           locale: const Locale('it'),
           home: Builder(
-            builder: (context) => Scaffold(
-              body: ElevatedButton(
-                onPressed: () {
-                  AppToast.show(
-                    context,
-                    'Messaggio di test',
-                    type: ToastType.success,
-                  );
-                },
-                child: const Text('Mostra Toast'),
-              ),
-            ),
+            builder: (context) {
+              final gloc = AppLocalizations.of(context);
+              return Scaffold(
+                body: ElevatedButton(
+                  onPressed: () {
+                    AppToast.show(
+                      context,
+                      'Messaggio di test',
+                      type: ToastType.success,
+                      semanticLabel:
+                          '${gloc.accessibility_toast_success}: Messaggio di test',
+                    );
+                  },
+                  child: const Text('Mostra Toast'),
+                ),
+              );
+            },
           ),
         ),
       );

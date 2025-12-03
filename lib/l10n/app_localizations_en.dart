@@ -33,10 +33,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get monthlyChartBadge => 'M';
 
   @override
+  String get dateRangeChartBadge => 'D';
+
+  @override
   String get weeklyExpensesChart => 'Weekly expenses';
 
   @override
   String get monthlyExpensesChart => 'Monthly expenses';
+
+  @override
+  String get dateRangeExpensesChart => 'Date range expenses';
 
   @override
   String get settings_flag_secure_desc =>
@@ -194,6 +200,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get new_expense_group => 'New Expense Group';
+
+  @override
+  String get new_expense => 'New Expense';
+
+  @override
+  String get edit_expense => 'Edit expense';
 
   @override
   String get tap_to_create => 'Tap to create';
@@ -364,10 +376,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get license_section => 'License';
 
   @override
-  String get add_trip => 'Add group';
+  String get add_trip => 'Add a group';
 
   @override
   String get new_group => 'New Group';
+
+  @override
+  String get group => 'Group';
 
   @override
   String get create => 'Create';
@@ -428,9 +443,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get add_expense => 'New expense';
-
-  @override
-  String get edit_expense => 'Edit expense';
 
   @override
   String get expand_form => 'Expand form';
@@ -827,10 +839,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get csv_location => 'Location';
 
   @override
-  String get location => 'Location';
+  String get location => 'Place';
 
   @override
-  String get location_hint => 'Location';
+  String get location_hint => 'Place';
 
   @override
   String get get_current_location => 'Use current location';
@@ -855,6 +867,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get address_resolved => 'Address resolved';
+
+  @override
+  String get search_place => 'Search place';
+
+  @override
+  String get search_place_hint => 'Search for a place or address';
 
   @override
   String get settings_general => 'General';
@@ -1662,7 +1680,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get search_currency => 'Search currency...';
 
   @override
-  String get activity => 'Activity';
+  String get activity => 'Expenses';
 
   @override
   String get search_expenses_hint => 'Search by name or note...';

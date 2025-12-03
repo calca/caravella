@@ -1,24 +1,6 @@
 {
   "es": [
-    "select_period",
-    "select_period_dates",
-    "duration_days",
-    "period_from_to",
-    "period_from_select_end",
-    "period_to_select_start",
-    "confirm",
-    "clear"
-  ],
-
-  "it": [
-    "view_on_map",
-    "expenses_map",
-    "no_locations_available",
-    "no_locations_subtitle",
-    "expense_count"
-  ],
-
-  "pt": [
+    "new_expense",
     "select_period",
     "select_period_dates",
     "duration_days",
@@ -27,6 +9,27 @@
     "period_to_select_start",
     "confirm",
     "clear",
+    "group"
+  ],
+
+  "it": [
+    "view_on_map",
+    "no_locations_available",
+    "no_locations_subtitle",
+    "expense_count"
+  ],
+
+  "pt": [
+    "new_expense",
+    "select_period",
+    "select_period_dates",
+    "duration_days",
+    "period_from_to",
+    "period_from_select_end",
+    "period_to_select_start",
+    "confirm",
+    "clear",
+    "group",
     "view_on_map",
     "expenses_map",
     "no_locations_available",
@@ -35,6 +38,7 @@
   ],
 
   "zh": [
+    "new_expense",
     "select_period",
     "select_period_dates",
     "duration_days",
@@ -42,6 +46,7 @@
     "period_from_select_end",
     "period_to_select_start",
     "confirm",
-    "clear"
+    "clear",
+    "group"
   ]
 }

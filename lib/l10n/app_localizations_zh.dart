@@ -33,10 +33,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get monthlyChartBadge => '月';
 
   @override
+  String get dateRangeChartBadge => '日';
+
+  @override
   String get weeklyExpensesChart => '每周支出';
 
   @override
   String get monthlyExpensesChart => '每月支出';
+
+  @override
+  String get dateRangeExpensesChart => '期间支出';
 
   @override
   String get settings_flag_secure_desc => '防止截屏和录屏';
@@ -192,6 +198,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get new_expense_group => '新支出群组';
+
+  @override
+  String get new_expense => 'New Expense';
+
+  @override
+  String get edit_expense => '编辑支出';
 
   @override
   String get tap_to_create => '点击创建';
@@ -365,6 +377,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get new_group => '新群组';
 
   @override
+  String get group => 'Group';
+
+  @override
   String get create => '创建';
 
   @override
@@ -422,9 +437,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get add_expense => '添加支出';
-
-  @override
-  String get edit_expense => '编辑支出';
 
   @override
   String get expand_form => '展开表单';
@@ -843,6 +855,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get address_resolved => '地址已解析';
+
+  @override
+  String get search_place => '搜索地点';
+
+  @override
+  String get search_place_hint => '搜索地点或地址';
 
   @override
   String get settings_general => '常规';

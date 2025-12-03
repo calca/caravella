@@ -1,3 +1,14 @@
+## 1.2.0 (03.12.2025)
+
+- **Nuevo**: Mapas interactivos con OpenStreetMap mostrando ubicaciones de gastos
+- **Nuevo**: Búsqueda de ubicación con autocompletado y captura GPS automática
+- **Nuevo**: Tema dinámico que se adapta al fondo de pantalla del dispositivo (Android 12+)
+- **Nuevo**: Acciones rápidas de Android para iniciar grupos de gastos desde la pantalla de inicio
+- **Nuevo**: Comprobación automática de actualizaciones con notificaciones semanales
+- **Mejoras**: Animaciones de carga skeleton más fluidas
+- **Mejoras**: Visualización de moneda mejorada con formato local
+- **Correcciones**: La configuración de ubicación automática ahora se guarda correctamente
+
 ## 1.0.45 (16.10.2025)
 
 - **Correcciones**: Completadas las traducciones para todos los idiomas compatibles

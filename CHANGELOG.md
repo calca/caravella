@@ -17,16 +17,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Image compression for attachments (max 1920px, 85% quality JPEG) to optimize storage
 - Automatic file cleanup when deleting expenses or expense groups
 - Organized attachment storage by expense group ID for better file management
+
+## [1.2.0] - 2025-12-03
+
+### Added
+- Theme-aware color palette for expense groups that adapts colors based on light/dark mode
 - OpenStreetMap integration for visualizing expense locations on an interactive map
 - Map view button in expense group overview to display all expenses with locations on a map
+- OpenStreetMap location search for expense form with autocomplete and nearby places suggestions
+- Location picker with interactive map selection and reverse geocoding to resolve addresses
+- Compact location indicator in expense form showing auto-captured GPS location with visual feedback
 - Auto-location toggle setting for automatic GPS retrieval when adding new expenses
 - Setting to enable/disable automatic location capture with manual override option
 - Dynamic color support with Material 3 integration for personalized app theming (Android 12+, limited iOS support)
 - Settings toggle to enable colors derived from device wallpaper with graceful fallback to default themes
 - Android Quick Actions (App Shortcuts) for quick access to expense groups from launcher (Android only)
+- Dynamic icons for Android Quick Launch shortcuts with group initials and background colors or images
 - F-Droid metadata and distribution support
 - Comprehensive F-Droid submission documentation
 - Context menu (long-press) for expense groups in history page with pin/unpin, archive/unarchive, and delete actions
+- Material 3 expressive swipe behavior for history page with Gmail-style dismissible actions
 - Smooth skeleton loader animation for carousel during cold start with shimmer effect
 - Fade-in animation for carousel cards when data loads
 - In-app store rating feature with smart triggers (after 10 expenses, then monthly)
@@ -38,6 +48,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Build variant support for Play Store and F-Droid distributions using factory pattern
 
 ### Changed
+- Dark theme map tiles now use CartoDB Dark Matter for improved visibility of points of interest
+- Current location button in map search now shows loading indicator while fetching GPS position
+- Expense group colors now use palette indices for consistent appearance across light and dark themes
 - Restructured project into multi-package architecture with core, core-ui, and app separation for improved maintainability
 - Enhanced skeleton loader with smooth scale and fade-in animations for more polished loading experience
 - Improved new group creation flow with immediate skeleton display and automatic navigation to newly created group
@@ -46,8 +59,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored PreferencesService architecture with singleton pattern and separated preference categories
 - Improved PreferencesService API with synchronous read operations where possible
 - Organized preference keys and defaults into centralized abstract classes
+- Android Quick Launch shortcut icons now dynamically display group initials with theme colors or group images
+- Consolidated currency formatting using CurrencyDisplay widget throughout the app for consistency
+- Currency display now uses locale-aware decimal separators respecting user's regional settings
+- Applied consistent TabBar styling across History, Stats, and Overview pages for unified experience
+- Replaced icon button with text button in expense form for improved accessibility and clarity
 
 ### Fixed
+- Auto-location setting not saving when modified alone in expense group settings
+- Android map rendering issues by adding INTERNET permission and OpenStreetMap domain to security configuration
 
 ## [1.0.45] - 2025-10-16
 
@@ -92,7 +112,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Material 3 design with dark/light theme support
 - Cross-platform support (Android, iOS, Web, Desktop)
 
-[Unreleased]: https://github.com/calca/caravella/compare/v1.0.45...HEAD
+[Unreleased]: https://github.com/calca/caravella/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/calca/caravella/compare/v1.0.45...v1.2.0
 [1.0.45]: https://github.com/calca/caravella/compare/v1.0.44...v1.0.45
 [1.0.44]: https://github.com/calca/caravella/compare/v1.0.38...v1.0.44
 [1.0.38]: https://github.com/calca/caravella/compare/v1.0.0...v1.0.38

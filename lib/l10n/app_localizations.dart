@@ -152,6 +152,12 @@ abstract class AppLocalizations {
   /// **'M'**
   String get monthlyChartBadge;
 
+  /// Letter indicator for date range chart badge
+  ///
+  /// In en, this message translates to:
+  /// **'D'**
+  String get dateRangeChartBadge;
+
   /// Label for weekly expenses chart
   ///
   /// In en, this message translates to:
@@ -163,6 +169,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Monthly expenses'**
   String get monthlyExpensesChart;
+
+  /// Label for date range expenses chart
+  ///
+  /// In en, this message translates to:
+  /// **'Date range expenses'**
+  String get dateRangeExpensesChart;
 
   /// No description provided for @settings_flag_secure_desc.
   ///
@@ -470,6 +482,18 @@ abstract class AppLocalizations {
   /// **'New Expense Group'**
   String get new_expense_group;
 
+  /// No description provided for @new_expense.
+  ///
+  /// In en, this message translates to:
+  /// **'New Expense'**
+  String get new_expense;
+
+  /// No description provided for @edit_expense.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit expense'**
+  String get edit_expense;
+
   /// No description provided for @tap_to_create.
   ///
   /// In en, this message translates to:
@@ -773,7 +797,7 @@ abstract class AppLocalizations {
   /// No description provided for @add_trip.
   ///
   /// In en, this message translates to:
-  /// **'Add group'**
+  /// **'Add a group'**
   String get add_trip;
 
   /// No description provided for @new_group.
@@ -781,6 +805,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'New Group'**
   String get new_group;
+
+  /// No description provided for @group.
+  ///
+  /// In en, this message translates to:
+  /// **'Group'**
+  String get group;
 
   /// No description provided for @create.
   ///
@@ -895,12 +925,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'New expense'**
   String get add_expense;
-
-  /// No description provided for @edit_expense.
-  ///
-  /// In en, this message translates to:
-  /// **'Edit expense'**
-  String get edit_expense;
 
   /// No description provided for @expand_form.
   ///
@@ -1661,13 +1685,13 @@ abstract class AppLocalizations {
   /// No description provided for @location.
   ///
   /// In en, this message translates to:
-  /// **'Location'**
+  /// **'Place'**
   String get location;
 
   /// No description provided for @location_hint.
   ///
   /// In en, this message translates to:
-  /// **'Location'**
+  /// **'Place'**
   String get location_hint;
 
   /// No description provided for @get_current_location.
@@ -1717,6 +1741,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Address resolved'**
   String get address_resolved;
+
+  /// No description provided for @search_place.
+  ///
+  /// In en, this message translates to:
+  /// **'Search place'**
+  String get search_place;
+
+  /// No description provided for @search_place_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for a place or address'**
+  String get search_place_hint;
 
   /// No description provided for @settings_general.
   ///
@@ -3296,10 +3332,10 @@ abstract class AppLocalizations {
   /// **'Search currency...'**
   String get search_currency;
 
-  /// Section title for expense list recent activity
+  /// Section title for expense list
   ///
   /// In en, this message translates to:
-  /// **'Activity'**
+  /// **'Expenses'**
   String get activity;
 
   /// Placeholder for searching expenses by name or note

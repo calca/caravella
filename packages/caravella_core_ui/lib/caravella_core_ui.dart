@@ -26,5 +26,11 @@ export 'widgets/charts/date_range_expense_chart.dart';
 export 'widgets/charts/monthly_expense_chart.dart';
 export 'widgets/charts/weekly_expense_chart.dart';
 
+// Map widgets
+export 'map/map.dart';
+
+// Utilities
+export 'utils/debounce.dart';
+
 // Convenience barrel export
 export 'widgets/widgets.dart';

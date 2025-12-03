@@ -12,6 +12,8 @@ class ExpenseEntrySheet extends StatefulWidget {
   final void Function(String) onCategoryAdded;
   final VoidCallback? onDelete; // only used in edit mode
   final bool fullEdit;
+  final VoidCallback? onExpand; // callback to expand to full page
+  final bool showGroupHeader; // whether to show group header in form
 
   const ExpenseEntrySheet({
     super.key,
@@ -21,6 +23,8 @@ class ExpenseEntrySheet extends StatefulWidget {
     required this.onCategoryAdded,
     this.onDelete,
     this.fullEdit = true,
+    this.onExpand,
+    this.showGroupHeader = true,
   });
 
   @override
@@ -63,6 +67,7 @@ class _ExpenseEntrySheetState extends State<ExpenseEntrySheet> {
           tripEndDate: widget.group.endDate,
           shouldAutoClose: false,
           fullEdit: widget.fullEdit,
+          showGroupHeader: widget.showGroupHeader,
           groupTitle: widget.group.title,
           groupId: widget.group.id,
           currency: widget.group.currency,
@@ -71,6 +76,7 @@ class _ExpenseEntrySheetState extends State<ExpenseEntrySheet> {
           onCategoryAdded: widget.onCategoryAdded,
           onDelete: widget.onDelete,
           scrollController: _scrollController,
+          onExpand: widget.onExpand,
         ),
       ),
     );

@@ -32,6 +32,13 @@
   "@monthlyChartBadge": {
     "description": "Letter indicator for monthly chart badge"
   },
+  "dateRangeChartBadge": "日",
+  "@dateRangeChartBadge": {
+    "description": "Letter indicator for date range chart badge"
+  },
+  "@monthlyChartBadge": {
+    "description": "Letter indicator for monthly chart badge"
+  },
   "weeklyExpensesChart": "每周支出",
   "@weeklyExpensesChart": {
     "description": "Label for weekly expenses chart"
@@ -39,6 +46,10 @@
   "monthlyExpensesChart": "每月支出",
   "@monthlyExpensesChart": {
     "description": "Label for monthly expenses chart"
+  },
+  "dateRangeExpensesChart": "期间支出",
+  "@dateRangeExpensesChart": {
+    "description": "Label for date range expenses chart"
   },
   "settings_flag_secure_desc": "防止截屏和录屏",
   "settings_flag_secure_title": "安全屏幕",
@@ -305,6 +316,8 @@
   "location_error": "获取位置时出错",
   "resolving_address": "解析地址...",
   "address_resolved": "地址已解析",
+  "search_place": "搜索地点",
+  "search_place_hint": "搜索地点或地址",
   "settings_general": "常规",
   "settings_general_desc": "语言和外观设置",
   "settings_auto_location_section": "位置检测",
@@ -583,7 +596,7 @@
   "currency_ZMW": "赞比亚克瓦查",
   "currency_ZWL": "津巴布韦元",
   "search_currency": "搜索货币...",
-  "activity": "活动",
+  "activity": "支出",
   "search_expenses_hint": "按名称或备注搜索...",
   "clear_filters": "清除",
   "show_filters": "显示筛选器",

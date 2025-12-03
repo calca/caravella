@@ -33,10 +33,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get monthlyChartBadge => 'M';
 
   @override
+  String get dateRangeChartBadge => 'D';
+
+  @override
   String get weeklyExpensesChart => 'Gastos semanales';
 
   @override
   String get monthlyExpensesChart => 'Gastos mensuales';
+
+  @override
+  String get dateRangeExpensesChart => 'Gastos por período';
 
   @override
   String get settings_flag_secure_desc =>
@@ -194,6 +200,12 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get new_expense_group => 'Nuevo Grupo de Gastos';
+
+  @override
+  String get new_expense => 'New Expense';
+
+  @override
+  String get edit_expense => 'Editar gasto';
 
   @override
   String get tap_to_create => 'Tocar para crear';
@@ -370,6 +382,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get new_group => 'Nuevo Grupo';
 
   @override
+  String get group => 'Group';
+
+  @override
   String get create => 'Crear';
 
   @override
@@ -428,9 +443,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get add_expense => 'Nuevo gasto';
-
-  @override
-  String get edit_expense => 'Editar gasto';
 
   @override
   String get expand_form => 'Expandir formulario';
@@ -831,10 +843,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get csv_location => 'Ubicación';
 
   @override
-  String get location => 'Ubicación';
+  String get location => 'Lugar';
 
   @override
-  String get location_hint => 'Ubicación';
+  String get location_hint => 'Lugar';
 
   @override
   String get get_current_location => 'Usar ubicación actual';
@@ -859,6 +871,12 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get address_resolved => 'Dirección resuelta';
+
+  @override
+  String get search_place => 'Buscar lugar';
+
+  @override
+  String get search_place_hint => 'Buscar un lugar o dirección';
 
   @override
   String get settings_general => 'General';
@@ -1671,7 +1689,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get search_currency => 'Buscar moneda...';
 
   @override
-  String get activity => 'Actividad';
+  String get activity => 'Gastos';
 
   @override
   String get search_expenses_hint => 'Buscar por nombre o nota...';

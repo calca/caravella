@@ -20,6 +20,10 @@
   "@monthlyChartBadge": {
     "description": "Letter indicator for monthly chart badge"
   },
+  "dateRangeChartBadge": "D",
+  "@dateRangeChartBadge": {
+    "description": "Letter indicator for date range chart badge"
+  },
   "weeklyExpensesChart": "Weekly expenses",
   "@weeklyExpensesChart": {
     "description": "Label for weekly expenses chart"
@@ -27,6 +31,10 @@
   "monthlyExpensesChart": "Monthly expenses",
   "@monthlyExpensesChart": {
     "description": "Label for monthly expenses chart"
+  },
+  "dateRangeExpensesChart": "Date range expenses",
+  "@dateRangeExpensesChart": {
+    "description": "Label for date range expenses chart"
   },
   "settings_flag_secure_desc": "Prevents screenshots and screen recording",
   "settings_flag_secure_title": "Secure screen",
@@ -81,6 +89,8 @@
   "no_active_groups_subtitle": "Create an expense group",
   "create_first_group": "Create a group",
   "new_expense_group": "New Expense Group",
+  "new_expense": "New Expense",
+  "edit_expense": "Edit Expense",
   "tap_to_create": "Tap to create",
   "no_expense_label": "No expenses found",
   "image": "Image",
@@ -139,8 +149,9 @@
   "license_hint": "This app is released under the MIT license.",
   "license_link": "View MIT License on GitHub",
   "license_section": "License",
-  "add_trip": "Add group",
+  "add_trip": "Add a group",
   "new_group": "New Group",
+  "group": "Group",
   "create": "Create",
   "group_name": "Name",
   "enter_title": "Enter a name",
@@ -298,8 +309,8 @@
   "csv_date": "Date",
   "csv_note": "Note",
   "csv_location": "Location",
-  "location": "Location",
-  "location_hint": "Location",
+  "location": "Place",
+  "location_hint": "Place",
   "get_current_location": "Use current location",
   "enter_location_manually": "Enter manually",
   "location_permission_denied": "Location permission denied",
@@ -308,6 +319,8 @@
   "location_error": "Error getting location",
   "resolving_address": "Resolving address…",
   "address_resolved": "Address resolved",
+  "search_place": "Search place",
+  "search_place_hint": "Search for a place or address",
   "settings_general": "General",
   "settings_general_desc": "Language and appearance settings",
   "settings_auto_location_section": "Location Detection",
@@ -614,8 +627,8 @@
   ,"currency_ZMW": "Zambian Kwacha"
   ,"currency_ZWL": "Zimbabwean Dollar"
   ,"search_currency": "Search currency..."
-  ,"activity": "Activity"
-  ,"@activity": {"description": "Section title for expense list recent activity"}
+  ,"activity": "Expenses"
+  ,"@activity": {"description": "Section title for expense list"}
   ,"search_expenses_hint": "Search by name or note..."
   ,"@search_expenses_hint": {"description": "Placeholder for searching expenses by name or note"}
   ,"clear_filters": "Clear"

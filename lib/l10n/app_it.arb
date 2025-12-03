@@ -14,8 +14,10 @@
   "@license_section_desc": {"description": "Descrizione sezione per link licenza in DeveloperPage"},
   "weeklyChartBadge": "S",
   "monthlyChartBadge": "M",
+  "dateRangeChartBadge": "G",
   "weeklyExpensesChart": "Spese settimanali",
   "monthlyExpensesChart": "Spese mensili",
+  "dateRangeExpensesChart": "Spese per periodo",
   "settings_flag_secure_desc": "Impedisce screenshot e registrazione schermo",
   "settings_flag_secure_title": "Proteggi schermata",
   "settings_privacy": "Privacy",
@@ -68,6 +70,8 @@
   "no_active_groups_subtitle": "Crea un gruppo di spese",
   "create_first_group": "Crea un gruppo",
   "new_expense_group": "Nuovo Gruppo di Spese",
+  "new_expense": "Nuova spesa",
+  "edit_expense": "Modifica spesa",
   "tap_to_create": "Tocca per creare",
   "no_expense_label": "Nessuna spesa trovata",
   "image": "Immagine",
@@ -124,6 +128,7 @@
   "license_section": "Licenza",
   "add_trip": "Aggiungi un gruppo",
   "new_group": "Nuovo Gruppo",
+  "group": "Gruppo",
   "create": "Crea",
   "group_name": "Nome",
   "enter_title": "Inserisci un nome",
@@ -282,9 +287,9 @@
   "csv_category": "Categoria",
   "csv_date": "Data",
   "csv_note": "Nota",
-  "csv_location": "Posizione",
-  "location": "Posizione",
-  "location_hint": "Posizione",
+  "csv_location": "Luogo",
+  "location": "Luogo",
+  "location_hint": "Luogo",
   "get_current_location": "Usa posizione corrente",
   "enter_location_manually": "Inserisci manualmente",
   "location_permission_denied": "Permesso posizione negato",
@@ -293,6 +298,8 @@
   "location_error": "Errore nel rilevare la posizione",
   "resolving_address": "Risolvo indirizzo…",
   "address_resolved": "Indirizzo trovato",
+  "search_place": "Cerca luogo",
+  "search_place_hint": "Cerca un luogo o indirizzo",
   "settings_general": "Generali",
   "settings_general_desc": "Impostazioni lingua e aspetto",
   "settings_auto_location_section": "Rilevamento posizione",
@@ -592,8 +599,8 @@
   ,"currency_ZMW": "Kwacha dello Zambia"
   ,"currency_ZWL": "Dollaro zimbabwiano"
   ,"search_currency": "Cerca valuta..."
-  ,"activity": "Attività"
-  ,"@activity": {"description": "Titolo sezione attività elenco spese"}
+  ,"activity": "Spese"
+  ,"@activity": {"description": "Titolo sezione elenco spese"}
   ,"search_expenses_hint": "Cerca per nome o nota..."
   ,"@search_expenses_hint": {"description": "Placeholder ricerca spese per nome o nota"}
   ,"clear_filters": "Pulisci"
@@ -702,4 +709,6 @@
   ,"@attachment_source": {"description": "Titolo per scegliere la sorgente dell'allegato"}
   ,"from_files": "Dai file"
   ,"@from_files": {"description": "Opzione per scegliere un file"}
+  ,"expenses_map": "Mappa delle spese"
+  ,"@expenses_map": {"description": "Sottotitolo della pagina che mostra le spese su una mappa"}
 }

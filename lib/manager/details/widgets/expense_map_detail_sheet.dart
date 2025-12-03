@@ -15,26 +15,78 @@ class ExpenseMapDetailSheet extends StatelessWidget {
     required this.currency,
   });
 
+  String _formatLocationAddress(ExpenseLocation? location) {
+    if (location == null) return '';
+
+    // Build full address from structured components (same as location_input_widget)
+    final addressParts = <String>[
+      if (location.name != null && location.name!.isNotEmpty) location.name!,
+      if (location.street != null && location.street!.isNotEmpty)
+        location.street!,
+      if (location.streetNumber != null && location.streetNumber!.isNotEmpty)
+        location.streetNumber!,
+      if (location.locality != null && location.locality!.isNotEmpty)
+        location.locality!,
+      if (location.administrativeArea != null &&
+          location.administrativeArea!.isNotEmpty)
+        location.administrativeArea!,
+      if (location.postalCode != null && location.postalCode!.isNotEmpty)
+        location.postalCode!,
+      if (location.country != null && location.country!.isNotEmpty)
+        location.country!,
+    ];
+
+    return addressParts.isNotEmpty
+        ? addressParts.join(', ')
+        : location.address ?? '';
+  }
+
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+    final theme = Theme.of(context);
 
     final firstExpense = expenses.first;
-    final locationName =
-        firstExpense.location?.name ??
-        firstExpense.location?.address ??
-        '${firstExpense.location?.latitude?.toStringAsFixed(6)}, ${firstExpense.location?.longitude?.toStringAsFixed(6)}';
+    final locationAddress = _formatLocationAddress(firstExpense.location);
+    final fullAddress = locationAddress.isNotEmpty
+        ? locationAddress
+        : '${firstExpense.location?.latitude?.toStringAsFixed(6)}, ${firstExpense.location?.longitude?.toStringAsFixed(6)}';
 
     return GroupBottomSheetScaffold(
-      title: locationName,
+      title: gloc.location,
       scrollable: true,
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Full address display (like in location_input_widget)
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(fullAddress, style: theme.textTheme.bodyLarge),
+          ),
+
+          // Coordinates if available
+          if (firstExpense.location?.latitude != null &&
+              firstExpense.location?.longitude != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 8, bottom: 16),
+              child: Text(
+                '${firstExpense.location!.latitude!.toStringAsFixed(6)}, ${firstExpense.location!.longitude!.toStringAsFixed(6)}',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ),
+
+          const SizedBox(height: 8),
           // Location count badge
           if (expenses.length > 1)
             Padding(

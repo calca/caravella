@@ -20,7 +20,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 // Replaced bottom sheet overview with full page navigation
 import '../widgets/delete_expense_dialog.dart';
-import '../widgets/expense_entry_sheet.dart';
+import '../../expense/expense_form_page.dart';
 import '../widgets/group_header.dart';
 import '../widgets/group_total.dart';
 import '../widgets/group_actions.dart';
@@ -440,107 +440,104 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     if (_trip != null) {
       _groupNotifier?.setCurrentGroup(_trip!);
     }
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => FractionallySizedBox(
-        heightFactor: 0.85,
-        child: ExpenseEntrySheet(
-          group: _trip!,
-          onExpenseSaved: (newExpense) async {
-            final sheetCtx = context; // bottom sheet context
-            final nav = Navigator.of(sheetCtx);
-            final gloc = gen.AppLocalizations.of(sheetCtx);
-            final expenseWithId = newExpense.copyWith(
-              id: DateTime.now().millisecondsSinceEpoch.toString(),
-            );
+    Navigator.of(context)
+        .push(
+          MaterialPageRoute(
+            builder: (context) => ExpenseFormPage(
+              group: _trip!,
+              onExpenseSaved: (newExpense) async {
+                final sheetCtx = context; // expense form page context
+                final gloc = gen.AppLocalizations.of(sheetCtx);
+                final expenseWithId = newExpense.copyWith(
+                  id: DateTime.now().millisecondsSinceEpoch.toString(),
+                );
 
-            // Persist using the new storage API
-            await ExpenseGroupStorageV2.addExpenseToGroup(
-              widget.trip.id,
-              expenseWithId,
-            );
+                // Persist using the new storage API
+                await ExpenseGroupStorageV2.addExpenseToGroup(
+                  widget.trip.id,
+                  expenseWithId,
+                );
 
-            // Refresh local state and notifier
-            await _refreshGroup();
-            _groupNotifier?.notifyGroupUpdated(widget.trip.id);
+                // Refresh local state and notifier
+                await _refreshGroup();
+                _groupNotifier?.notifyGroupUpdated(widget.trip.id);
 
-            // Check if we should prompt for rating
-            // This is done after successful expense save
-            RatingService.checkAndPromptForRating();
+                // Check if we should prompt for rating
+                // This is done after successful expense save
+                RatingService.checkAndPromptForRating();
 
-            if (!sheetCtx.mounted) return;
-            AppToast.show(
-              sheetCtx,
-              gloc.expense_added_success,
-              type: ToastType.success,
-            );
-            nav.pop();
-          },
-          onCategoryAdded: (categoryName) async {
-            await _groupNotifier?.addCategory(categoryName);
-            await _refreshGroup();
-          },
-          fullEdit: true,
-        ),
-      ),
-    ).whenComplete(() {
-      if (mounted) {
-        _groupNotifier?.clearCurrentGroup();
-      }
-    });
+                if (!sheetCtx.mounted) return;
+                AppToast.show(
+                  sheetCtx,
+                  gloc.expense_added_success,
+                  type: ToastType.success,
+                );
+                // Note: nav.pop() removed - ExpenseFormComponent handles navigation
+                // when shouldAutoClose is true to avoid double pop back to home
+              },
+              onCategoryAdded: (categoryName) async {
+                await _groupNotifier?.addCategory(categoryName);
+                await _refreshGroup();
+              },
+            ),
+          ),
+        )
+        .whenComplete(() {
+          if (mounted) {
+            _groupNotifier?.clearCurrentGroup();
+          }
+        });
   }
 
   Future<void> _openEditExpense(ExpenseDetails expense) async {
     if (_trip != null) {
       _groupNotifier?.setCurrentGroup(_trip!);
     }
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (sheetCtx) => FractionallySizedBox(
-        heightFactor: 0.85,
-        child: ExpenseEntrySheet(
-          group: _trip!,
-          initialExpense: expense,
-          onExpenseSaved: (updatedExpense) async {
-            final gloc = gen.AppLocalizations.of(sheetCtx);
-            final nav = Navigator.of(sheetCtx);
-            final expenseWithId = updatedExpense.copyWith(id: expense.id);
+    Navigator.of(context)
+        .push(
+          MaterialPageRoute(
+            builder: (sheetCtx) => ExpenseFormPage(
+              group: _trip!,
+              initialExpense: expense,
+              onExpenseSaved: (updatedExpense) async {
+                final gloc = gen.AppLocalizations.of(sheetCtx);
+                final expenseWithId = updatedExpense.copyWith(id: expense.id);
 
-            // Persist the updated expense using the new storage API
-            await ExpenseGroupStorageV2.updateExpenseToGroup(
-              _trip!.id,
-              expenseWithId,
-            );
+                // Persist the updated expense using the new storage API
+                await ExpenseGroupStorageV2.updateExpenseToGroup(
+                  _trip!.id,
+                  expenseWithId,
+                );
 
-            // Refresh local state and notifier
-            await _refreshGroup();
-            _groupNotifier?.notifyGroupUpdated(_trip!.id);
+                // Refresh local state and notifier
+                await _refreshGroup();
+                _groupNotifier?.notifyGroupUpdated(_trip!.id);
 
-            if (!sheetCtx.mounted) return;
-            AppToast.show(
-              sheetCtx,
-              gloc.expense_updated_success,
-              type: ToastType.success,
-            );
-            nav.pop();
-          },
-          onCategoryAdded: (categoryName) async {
-            await _groupNotifier?.addCategory(categoryName);
-            await _refreshGroup();
-          },
-          onDelete: () {
-            Navigator.of(context).pop();
-            _showDeleteExpenseDialog(expense);
-          },
-        ),
-      ),
-    ).whenComplete(() {
-      if (mounted) {
-        _groupNotifier?.clearCurrentGroup();
-      }
-    });
+                if (!sheetCtx.mounted) return;
+                AppToast.show(
+                  sheetCtx,
+                  gloc.expense_updated_success,
+                  type: ToastType.success,
+                );
+                // Note: nav.pop() removed - ExpenseFormComponent handles navigation
+                // when shouldAutoClose is true to avoid double pop back to home
+              },
+              onCategoryAdded: (categoryName) async {
+                await _groupNotifier?.addCategory(categoryName);
+                await _refreshGroup();
+              },
+              onDelete: () {
+                Navigator.of(context).pop();
+                _showDeleteExpenseDialog(expense);
+              },
+            ),
+          ),
+        )
+        .whenComplete(() {
+          if (mounted) {
+            _groupNotifier?.clearCurrentGroup();
+          }
+        });
   }
 
   void _onScroll() {

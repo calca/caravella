@@ -64,9 +64,21 @@ class ExpenseGroupAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final Color bgColor = trip.color != null
-        ? Color(trip.color!)
-        : (backgroundColor ?? colorScheme.surfaceContainerLowest);
+    // Resolve color from palette index or use legacy color value
+    Color bgColor;
+    if (trip.color != null) {
+      if (ExpenseGroupColorPalette.isLegacyColorValue(trip.color)) {
+        // Legacy ARGB value - use as-is
+        bgColor = Color(trip.color!);
+      } else {
+        // New palette index - resolve to theme-aware color
+        bgColor =
+            ExpenseGroupColorPalette.resolveColor(trip.color, colorScheme) ??
+            (backgroundColor ?? colorScheme.surfaceContainerLowest);
+      }
+    } else {
+      bgColor = backgroundColor ?? colorScheme.surfaceContainerLowest;
+    }
     return Container(
       margin: const EdgeInsets.only(top: 8, bottom: 8),
       width: size,

@@ -16,8 +16,6 @@ dependencies:
     path: ../caravella_core
   caravella_core_ui:
     path: ../caravella_core_ui
-  io_caravella_egm:
-    path: ../../
 
 dev_dependencies:
   flutter_lints: ^5.0.0

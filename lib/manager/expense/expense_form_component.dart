@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core_ui/caravella_core_ui.dart';
+import 'widgets/location/location_service.dart';
+import 'widgets/location/location_input_widget.dart';
+import 'widgets/location/compact_location_indicator.dart';
 import 'expense_form/amount_input_widget.dart';
 import 'expense_form/participant_selector_widget.dart';
 import 'expense_form/category_selector_widget.dart';
 import 'expense_form/date_selector_widget.dart';
 import 'expense_form/note_input_widget.dart';
-import 'expense_form/location_input_widget.dart';
 import 'expense_form/expense_form_actions_widget.dart';
 import 'expense_form/category_dialog.dart';
 import 'expense_form/attachment_input_widget.dart';
@@ -35,6 +37,14 @@ class ExpenseFormComponent extends StatefulWidget {
   final bool autoLocationEnabled; // Impostazione per auto-recupero posizione
   final ScrollController?
   scrollController; // Controller for scrolling to focused fields
+  final VoidCallback? onExpand; // Callback per espandere a full page
+  final bool showGroupHeader; // Se mostrare l'intestazione del gruppo
+  final bool
+  showActionsRow; // Se mostrare la riga azioni (pulsanti aggiungi/salva)
+  final void Function(bool)?
+  onFormValidityChanged; // Notifica il parent quando cambia la validità del form
+  final void Function(VoidCallback?)?
+  onSaveCallbackChanged; // Fornisce al parent il callback per salvare
 
   const ExpenseFormComponent({
     super.key,
@@ -54,6 +64,11 @@ class ExpenseFormComponent extends StatefulWidget {
     required this.autoLocationEnabled,
     this.fullEdit = false,
     this.scrollController,
+    this.onExpand,
+    this.showGroupHeader = true,
+    this.showActionsRow = true,
+    this.onFormValidityChanged,
+    this.onSaveCallbackChanged,
   });
 
   @override
@@ -98,6 +113,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
 
   // Auto location preference
   bool _autoLocationEnabled = false;
+
+  // Location retrieval status for compact indicator
+  bool _isRetrievingLocation = false;
 
   // Getters per stato dei campi
   bool get _isAmountValid => _amount != null && _amount! > 0;
@@ -299,6 +317,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
             _isDirty = true;
           }
         });
+        _notifyFormValidityChanged();
       }
     });
 
@@ -308,13 +327,57 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         setState(() {
           _isDirty = true;
         });
+        _notifyFormValidityChanged();
       }
     });
 
     // Mark initialization as complete after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializing = false;
+
+      // Auto-retrieve location if enabled and creating a new expense
+      if (widget.initialExpense == null && _autoLocationEnabled) {
+        _retrieveCurrentLocation();
+      }
+
+      // Notify parent of save callback
+      widget.onSaveCallbackChanged?.call(_saveExpense);
+      // Notify initial form validity
+      widget.onFormValidityChanged?.call(_isFormValid());
     });
+  }
+
+  Future<void> _retrieveCurrentLocation() async {
+    if (!mounted) return;
+
+    setState(() {
+      _isRetrievingLocation = true;
+    });
+
+    final location = await LocationService.getCurrentLocation(
+      context,
+      resolveAddress: true,
+      onStatusChanged: (status) {
+        if (mounted) {
+          setState(() {
+            _isRetrievingLocation = status;
+          });
+        }
+      },
+    );
+
+    if (location != null && mounted) {
+      setState(() {
+        _location = location;
+        _isDirty = true;
+      });
+    }
+
+    if (mounted) {
+      setState(() {
+        _isRetrievingLocation = false;
+      });
+    }
   }
 
   double? _parseLocalizedAmount(String input) {
@@ -363,6 +426,17 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         hasPaidBy &&
         hasCategoryIfRequired &&
         nameValue.isNotEmpty;
+  }
+
+  void _notifyFormValidityChanged() {
+    if (widget.onFormValidityChanged != null) {
+      // Use post frame callback to avoid calling setState during build
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          widget.onFormValidityChanged?.call(_isFormValid());
+        }
+      });
+    }
   }
 
   // Widget per indicatori di stato - versione minimalista
@@ -440,17 +514,19 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
             _spacer(),
             _buildParticipantCategorySection(smallStyle),
             _buildExtendedFields(locale, smallStyle),
-            _buildDivider(context),
-            _buildActionsRow(gloc, smallStyle),
+            if (widget.showActionsRow) ...[
+              _buildDivider(context),
+              _buildActionsRow(gloc, smallStyle),
+            ],
           ],
         ),
       ),
     );
   }
 
-  /// Intestazione con il titolo del gruppo (solo quando mostriamo i campi estesi, se presente)
+  /// Intestazione con il titolo del gruppo (solo se showGroupHeader è true e presente)
   Widget _buildGroupHeader() {
-    if (!(_shouldShowExtendedFields && widget.groupTitle != null)) {
+    if (!(widget.showGroupHeader && widget.groupTitle != null)) {
       return const SizedBox.shrink();
     }
     final gloc = gen.AppLocalizations.of(context);
@@ -523,6 +599,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
             categories: _categories,
             label: gloc.amount,
             currency: widget.currency,
+            textInputAction: _isFormValid()
+                ? TextInputAction.done
+                : TextInputAction.next,
             validator: (v) {
               final parsed = _parseLocalizedAmount(v ?? '');
               if (parsed == null || parsed <= 0) return gloc.invalid_amount;
@@ -550,10 +629,13 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
               size: 22,
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
+            textInputAction: _isFormValid()
+                ? TextInputAction.done
+                : TextInputAction.next,
             validator: (v) =>
                 v == null || v.trim().isEmpty ? gloc.enter_title : null,
             onSaved: (v) {},
-            onSubmitted: () {},
+            onSubmitted: _isFormValid() ? _saveExpense : null,
             isText: true,
             textStyle: style,
           ),
@@ -594,42 +676,64 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         ],
       );
     }
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Wrap(
-        spacing: 12,
-        runSpacing: 8,
-        children: [
-          _buildFieldWithStatus(
-            ParticipantSelectorWidget(
-              participants: widget.participants.map((p) => p.name).toList(),
-              selectedParticipant: _paidBy?.name,
-              onParticipantSelected: _onParticipantSelected,
-              textStyle: style,
-              fullEdit: false,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildFieldWithStatus(
+              ParticipantSelectorWidget(
+                participants: widget.participants.map((p) => p.name).toList(),
+                selectedParticipant: _paidBy?.name,
+                onParticipantSelected: _onParticipantSelected,
+                textStyle: style,
+                fullEdit: false,
+              ),
+              _isPaidByValid,
+              _paidByTouched,
             ),
-            _isPaidByValid,
-            _paidByTouched,
-          ),
-          _buildFieldWithStatus(
-            CategorySelectorWidget(
-              categories: _categories,
-              selectedCategory: _category,
-              onCategorySelected: _onCategorySelected,
-              onAddCategory: _onAddCategory,
-              onAddCategoryInline: _onAddCategoryInline,
-              textStyle: style,
-              fullEdit: false,
+            const SizedBox(width: 12),
+            _buildFieldWithStatus(
+              CategorySelectorWidget(
+                categories: _categories,
+                selectedCategory: _category,
+                onCategorySelected: _onCategorySelected,
+                onAddCategory: _onAddCategory,
+                onAddCategoryInline: _onAddCategoryInline,
+                textStyle: style,
+                fullEdit: false,
+              ),
+              _isCategoryValid,
+              _categoryTouched,
             ),
-            _isCategoryValid,
-            _categoryTouched,
-          ),
-        ],
-      ),
+            // Show compact location indicator when auto-location is enabled
+            if (widget.initialExpense == null && _autoLocationEnabled) ...[
+              const Spacer(),
+              CompactLocationIndicator(
+                isRetrieving: _isRetrievingLocation,
+                location: _location,
+                onCancel: _clearLocation,
+                textStyle: style,
+              ),
+            ],
+          ],
+        ),
+      ],
     );
   }
 
   // (Expand button moved into ExpenseFormActionsWidget)
+
+  void _clearLocation() {
+    setState(() {
+      _location = null;
+      _isRetrievingLocation = false;
+      if (!_initializing) {
+        _isDirty = true;
+      }
+    });
+  }
 
   void _onParticipantSelected(String selectedName) {
     setState(() {
@@ -644,6 +748,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         _isDirty = true;
       }
     });
+    _notifyFormValidityChanged();
   }
 
   void _onCategorySelected(ExpenseCategory? selected) {
@@ -654,6 +759,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         _isDirty = true;
       }
     });
+    _notifyFormValidityChanged();
   }
 
   Future<void> _onAddCategory() async {
@@ -765,6 +871,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
             }),
             externalFocusNode: _locationFocus,
             autoRetrieve: widget.initialExpense == null && _autoLocationEnabled,
+            onRetrievalStatusChanged: (isRetrieving) => setState(() {
+              _isRetrievingLocation = isRetrieving;
+            }),
           ),
         ),
         _spacer(),
@@ -774,6 +883,10 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
             controller: _noteController,
             textStyle: style,
             focusNode: _noteFocus,
+            textInputAction: _isFormValid()
+                ? TextInputAction.done
+                : TextInputAction.newline,
+            onFieldSubmitted: _isFormValid() ? _saveExpense : null,
           ),
         ),
         _spacer(),
@@ -881,17 +994,20 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
   Widget _buildActionsRow(gen.AppLocalizations gloc, TextStyle? style) =>
       ExpenseFormActionsWidget(
         onSave: _isFormValid() ? _saveExpense : null,
+        isFormValid: _isFormValid(),
         isEdit: widget.initialExpense != null,
         onDelete: widget.initialExpense != null ? widget.onDelete : null,
         textStyle: style,
         showExpandButton:
             !(widget.fullEdit || widget.initialExpense != null || _isExpanded),
-        onExpand: () {
-          setState(() {
-            _isExpanded = true;
-            _isDirty = true;
-          });
-        },
+        onExpand:
+            widget.onExpand ??
+            () {
+              setState(() {
+                _isExpanded = true;
+                _isDirty = true;
+              });
+            },
       );
 
   @override
