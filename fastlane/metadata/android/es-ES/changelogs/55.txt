@@ -1,0 +1,8 @@
+Versión 1.2.0 - Mapas y Ubicaciones
+
+• Integración OpenStreetMap: visualiza gastos en mapa interactivo con búsqueda lugares
+• Ubicación automática: añade coordenadas GPS a nuevos gastos automáticamente
+• Colores adaptables: los grupos se adaptan a tema claro/oscuro para mejor visibilidad
+• Acciones rápidas Android: abre grupos directamente desde pantalla inicio
+
+¡Mejores mapas, ubicaciones más inteligentes!

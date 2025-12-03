@@ -1,0 +1,8 @@
+Versione 1.2.0 - Mappe e Posizioni
+
+• Integrazione OpenStreetMap: visualizza le spese su mappa interattiva con ricerca luoghi
+• Posizione automatica: aggiungi coordinate GPS alle nuove spese automaticamente
+• Colori adattivi: i gruppi si adattano a tema chiaro/scuro per miglior visibilità
+• Azioni rapide Android: apri i gruppi direttamente dalla schermata home
+
+Mappe migliori, posizioni più intelligenti!
