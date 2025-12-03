@@ -25,7 +25,7 @@ class ExpenseDetails {
     List<String>? attachments,
     String? id, // opzionale, generato se mancante
   }) : id = id ?? const Uuid().v4(),
-       attachments = attachments ?? [];
+       attachments = attachments != null ? List.from(attachments) : [];
 
   factory ExpenseDetails.fromJson(Map<String, dynamic> json) {
     return ExpenseDetails(
@@ -79,7 +79,7 @@ class ExpenseDetails {
       note: note ?? this.note,
       name: name ?? this.name,
       location: location ?? this.location,
-      attachments: attachments ?? this.attachments,
+      attachments: attachments ?? List.from(this.attachments),
     );
   }
 }
