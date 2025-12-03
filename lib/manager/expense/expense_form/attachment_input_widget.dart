@@ -35,61 +35,49 @@ class AttachmentInputWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Icon(
-              Icons.attach_file,
-              size: 20,
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
             Row(
               children: [
-                Text(
-                  '${attachments.length}/5',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
+                Icon(
+                  Icons.attach_file,
+                  size: 20,
+                  color: theme.colorScheme.onSurfaceVariant,
                 ),
                 const SizedBox(width: 8),
-                if (attachments.length < 5)
-                  IconButton(
-                    onPressed: () => _showAttachmentSourcePicker(context),
-                    icon: Icon(
-                      Icons.add,
-                      size: 24,
-                      color: theme.colorScheme.primary,
-                    ),
-                    tooltip: loc.add_attachment,
-                  ),
+                Text(
+                  loc.attachments,
+                  style: theme.textTheme.titleSmall,
+                ),
               ],
+            ),
+            Text(
+              '${attachments.length}/5',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
             ),
           ],
         ),
-        if (attachments.isNotEmpty) ...[
-          const SizedBox(height: 12),
-          SizedBox(
-            height: 100,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: attachments.length,
-              itemBuilder: (context, index) {
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 100,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: 5,
+            itemBuilder: (context, index) {
+              if (index < attachments.length) {
                 return _AttachmentThumbnail(
                   filePath: attachments[index],
                   onTap: () => onAttachmentTapped(attachments[index]),
                   onRemove: () => onAttachmentRemoved(index),
                 );
-              },
-            ),
+              } else {
+                return _EmptyAttachmentSlot(
+                  onTap: () => _showAttachmentSourcePicker(context),
+                );
+              }
+            },
           ),
-        ],
-        if (attachments.isEmpty)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Text(
-              loc.add_attachment,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ),
+        ),
       ],
     );
   }
@@ -268,6 +256,42 @@ enum _AttachmentSource { camera, gallery, files }
 
 enum _CameraMediaType { photo, video }
 
+class _EmptyAttachmentSlot extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const _EmptyAttachmentSlot({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.only(right: 12),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          width: 100,
+          height: 100,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: theme.colorScheme.outlineVariant,
+              style: BorderStyle.solid,
+            ),
+            color: theme.colorScheme.surfaceContainerHighest,
+          ),
+          child: Icon(
+            Icons.add,
+            size: 32,
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _AttachmentThumbnail extends StatelessWidget {
   final String filePath;
   final VoidCallback onTap;
@@ -297,9 +321,7 @@ class _AttachmentThumbnail extends StatelessWidget {
               height: 100,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: theme.colorScheme.outlineVariant,
-                ),
+                border: Border.all(color: theme.colorScheme.outlineVariant),
                 color: theme.colorScheme.surfaceContainerHighest,
               ),
               child: ClipRRect(

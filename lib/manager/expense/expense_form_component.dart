@@ -877,19 +877,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
           ),
         ),
         _spacer(),
-        KeyedSubtree(
-          key: _noteFieldKey,
-          child: NoteInputWidget(
-            controller: _noteController,
-            textStyle: style,
-            focusNode: _noteFocus,
-            textInputAction: _isFormValid()
-                ? TextInputAction.done
-                : TextInputAction.newline,
-            onFieldSubmitted: _isFormValid() ? _saveExpense : null,
-          ),
-        ),
-        _spacer(),
         AttachmentInputWidget(
           groupId: widget.groupId,
           attachments: _attachments,
@@ -941,6 +928,19 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
               ),
             );
           },
+        ),
+        _spacer(),
+        KeyedSubtree(
+          key: _noteFieldKey,
+          child: NoteInputWidget(
+            controller: _noteController,
+            textStyle: style,
+            focusNode: _noteFocus,
+            textInputAction: _isFormValid()
+                ? TextInputAction.done
+                : TextInputAction.newline,
+            onFieldSubmitted: _isFormValid() ? _saveExpense : null,
+          ),
         ),
       ],
     );
