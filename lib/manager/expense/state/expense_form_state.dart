@@ -123,9 +123,7 @@ class ExpenseFormState {
   }
 
   // Convert to ExpenseDetails model
-  ExpenseDetails toExpense({
-    String? id,
-  }) {
+  ExpenseDetails toExpense({String? id}) {
     return ExpenseDetails(
       id: id,
       category: category!,

@@ -31,8 +31,8 @@ class ExpenseFormController extends ChangeNotifier {
   ExpenseFormController({
     required ExpenseFormState initialState,
     required List<ExpenseCategory> categories,
-  })  : _state = initialState,
-        _categories = List.from(categories) {
+  }) : _state = initialState,
+       _categories = List.from(categories) {
     _initializeFromState();
     _setupListeners();
   }
@@ -41,8 +41,7 @@ class ExpenseFormController extends ChangeNotifier {
   ExpenseFormState get state => _state;
   List<ExpenseCategory> get categories => _categories;
   bool get isInitializing => _isInitializing;
-  bool get isFormValid =>
-      ExpenseFormValidator.isFormValid(_state, _categories);
+  bool get isFormValid => ExpenseFormValidator.isFormValid(_state, _categories);
 
   // Field validation getters
   bool get isAmountValid => ExpenseFormValidator.isAmountValid(_state.amount);
@@ -69,10 +68,9 @@ class ExpenseFormController extends ChangeNotifier {
   // Initialize controllers from state
   void _initializeFromState() {
     nameController.text = _state.name;
-    amountController.text =
-        _state.amount != null && _state.amount! > 0
-            ? _state.amount.toString()
-            : '';
+    amountController.text = _state.amount != null && _state.amount! > 0
+        ? _state.amount.toString()
+        : '';
     noteController.text = _state.note;
   }
 
@@ -87,27 +85,18 @@ class ExpenseFormController extends ChangeNotifier {
 
   void _onNameChanged() {
     if (_isInitializing) return;
-    _updateState(_state.copyWith(
-      name: nameController.text,
-      isDirty: true,
-    ));
+    _updateState(_state.copyWith(name: nameController.text, isDirty: true));
   }
 
   void _onAmountChanged() {
     if (_isInitializing) return;
     final amount = ExpenseFormValidator.parseAmount(amountController.text);
-    _updateState(_state.copyWith(
-      amount: amount,
-      isDirty: true,
-    ));
+    _updateState(_state.copyWith(amount: amount, isDirty: true));
   }
 
   void _onNoteChanged() {
     if (_isInitializing) return;
-    _updateState(_state.copyWith(
-      note: noteController.text,
-      isDirty: true,
-    ));
+    _updateState(_state.copyWith(note: noteController.text, isDirty: true));
   }
 
   void _onAmountFocusChanged() {
@@ -123,33 +112,33 @@ class ExpenseFormController extends ChangeNotifier {
   }
 
   void updateCategory(ExpenseCategory? category) {
-    _updateState(_state.copyWith(
-      category: category,
-      categoryTouched: true,
-      isDirty: !_isInitializing,
-    ));
+    _updateState(
+      _state.copyWith(
+        category: category,
+        categoryTouched: true,
+        isDirty: !_isInitializing,
+      ),
+    );
   }
 
   void updatePaidBy(ExpenseParticipant? paidBy) {
-    _updateState(_state.copyWith(
-      paidBy: paidBy,
-      paidByTouched: true,
-      isDirty: !_isInitializing,
-    ));
+    _updateState(
+      _state.copyWith(
+        paidBy: paidBy,
+        paidByTouched: true,
+        isDirty: !_isInitializing,
+      ),
+    );
   }
 
   void updateDate(DateTime date) {
-    _updateState(_state.copyWith(
-      date: date,
-      isDirty: !_isInitializing,
-    ));
+    _updateState(_state.copyWith(date: date, isDirty: !_isInitializing));
   }
 
   void updateLocation(ExpenseLocation? location) {
-    _updateState(_state.copyWith(
-      location: location,
-      isDirty: !_isInitializing,
-    ));
+    _updateState(
+      _state.copyWith(location: location, isDirty: !_isInitializing),
+    );
   }
 
   void setLocationRetrieving(bool isRetrieving) {
@@ -157,35 +146,31 @@ class ExpenseFormController extends ChangeNotifier {
   }
 
   void updateAssignedTo(List<ExpenseParticipant> assignedTo) {
-    _updateState(_state.copyWith(
-      assignedTo: assignedTo,
-      isDirty: !_isInitializing,
-    ));
+    _updateState(
+      _state.copyWith(assignedTo: assignedTo, isDirty: !_isInitializing),
+    );
   }
 
   void addAttachment(String path) {
     final newAttachments = List<String>.from(_state.attachments)..add(path);
-    _updateState(_state.copyWith(
-      attachments: newAttachments,
-      isDirty: !_isInitializing,
-    ));
+    _updateState(
+      _state.copyWith(attachments: newAttachments, isDirty: !_isInitializing),
+    );
   }
 
   void removeAttachment(int index) {
     final newAttachments = List<String>.from(_state.attachments)
       ..removeAt(index);
-    _updateState(_state.copyWith(
-      attachments: newAttachments,
-      isDirty: !_isInitializing,
-    ));
+    _updateState(
+      _state.copyWith(attachments: newAttachments, isDirty: !_isInitializing),
+    );
   }
 
   void addCategory(ExpenseCategory category) {
     _categories.add(category);
-    _updateState(_state.copyWith(
-      category: category,
-      isDirty: !_isInitializing,
-    ));
+    _updateState(
+      _state.copyWith(category: category, isDirty: !_isInitializing),
+    );
   }
 
   void expandForm() {

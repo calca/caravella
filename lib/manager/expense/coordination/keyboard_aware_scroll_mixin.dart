@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 /// Mixin for widgets that need keyboard-aware scroll behavior
 /// Automatically adjusts scroll position when keyboard appears/disappears
-mixin KeyboardAwareScrollMixin<T extends StatefulWidget> on State<T>, WidgetsBindingObserver {
+mixin KeyboardAwareScrollMixin<T extends StatefulWidget>
+    on State<T>, WidgetsBindingObserver {
   double _lastKeyboardHeight = 0;
 
   /// Override this to provide the scroll controller

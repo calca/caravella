@@ -9,8 +9,8 @@ class FormScrollCoordinator {
   FormScrollCoordinator({
     required ScrollController? scrollController,
     required BuildContext context,
-  })  : _scrollController = scrollController,
-        _context = context;
+  }) : _scrollController = scrollController,
+       _context = context;
 
   /// Scrolls to make the specified field key visible
   /// Takes into account keyboard height and desired margins
@@ -37,14 +37,14 @@ class FormScrollCoordinator {
         final fieldBottom = fieldTop + fieldHeight;
         final screenHeight = MediaQuery.of(_context).size.height;
         final availableBottom = screenHeight - keyboardHeight - 12;
-        
+
         double scrollDelta = 0;
 
         // If bottom obscured by keyboard -> scroll down
         if (keyboardHeight > 0 && fieldBottom > availableBottom) {
           scrollDelta = fieldBottom - availableBottom + 8;
         }
-        
+
         // If top too high -> scroll up
         const topMargin = 24.0;
         if (fieldTop < topMargin) {
@@ -56,7 +56,7 @@ class FormScrollCoordinator {
             0.0,
             controller.position.maxScrollExtent,
           );
-          
+
           if ((target - controller.offset).abs() > 2) {
             controller.animateTo(
               target,
@@ -74,7 +74,7 @@ class FormScrollCoordinator {
   /// Determines which field currently has focus and scrolls to it
   void scrollToFocusedField(Map<FocusNode, GlobalKey> focusKeyMap) {
     GlobalKey? focusedKey;
-    
+
     for (final entry in focusKeyMap.entries) {
       if (entry.key.hasFocus) {
         focusedKey = entry.value;
@@ -97,6 +97,7 @@ class FormScrollCoordinator {
         }
         element.visitChildren(visitor);
       }
+
       context.visitChildElements(visitor);
       return false;
     } catch (e) {

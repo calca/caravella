@@ -23,7 +23,7 @@ class ExpenseFormFields extends StatelessWidget {
   final VoidCallback onClearLocation;
   final String? currency;
   final VoidCallback onSaveExpense;
-  
+
   const ExpenseFormFields({
     super.key,
     required this.controller,
@@ -43,7 +43,7 @@ class ExpenseFormFields extends StatelessWidget {
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
     final style = Theme.of(context).textTheme.bodyMedium;
-    
+
     return ListenableBuilder(
       listenable: controller,
       builder: (context, _) {
@@ -140,13 +140,14 @@ class ExpenseFormFields extends StatelessWidget {
             ParticipantSelectorWidget(
               participants: participants.map((p) => p.name).toList(),
               selectedParticipant: controller.state.paidBy?.name,
-              onParticipantSelected: (name) =>
-                  controller.updatePaidBy(participants.firstWhere(
-                (p) => p.name == name,
-                orElse: () => participants.isNotEmpty
-                    ? participants.first
-                    : ExpenseParticipant(name: ''),
-              )),
+              onParticipantSelected: (name) => controller.updatePaidBy(
+                participants.firstWhere(
+                  (p) => p.name == name,
+                  orElse: () => participants.isNotEmpty
+                      ? participants.first
+                      : ExpenseParticipant(name: ''),
+                ),
+              ),
               textStyle: style,
               fullEdit: true,
             ),
@@ -161,7 +162,8 @@ class ExpenseFormFields extends StatelessWidget {
               selectedCategory: controller.state.category,
               onCategorySelected: controller.updateCategory,
               onAddCategory: () => _onAddCategory(context),
-              onAddCategoryInline: (name) => _onAddCategoryInline(context, name),
+              onAddCategoryInline: (name) =>
+                  _onAddCategoryInline(context, name),
               textStyle: style,
               fullEdit: true,
             ),
@@ -171,7 +173,7 @@ class ExpenseFormFields extends StatelessWidget {
         ],
       );
     }
-    
+
     return _buildCompactParticipantCategory(context, style);
   }
 
@@ -187,13 +189,14 @@ class ExpenseFormFields extends StatelessWidget {
           ParticipantSelectorWidget(
             participants: participants.map((p) => p.name).toList(),
             selectedParticipant: controller.state.paidBy?.name,
-            onParticipantSelected: (name) =>
-                controller.updatePaidBy(participants.firstWhere(
-              (p) => p.name == name,
-              orElse: () => participants.isNotEmpty
-                  ? participants.first
-                  : ExpenseParticipant(name: ''),
-            )),
+            onParticipantSelected: (name) => controller.updatePaidBy(
+              participants.firstWhere(
+                (p) => p.name == name,
+                orElse: () => participants.isNotEmpty
+                    ? participants.first
+                    : ExpenseParticipant(name: ''),
+              ),
+            ),
             textStyle: style,
             fullEdit: false,
           ),
@@ -230,10 +233,9 @@ class ExpenseFormFields extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         color: isTouched && !isValid
-            ? Theme.of(context)
-                .colorScheme
-                .errorContainer
-                .withValues(alpha: 0.08)
+            ? Theme.of(
+                context,
+              ).colorScheme.errorContainer.withValues(alpha: 0.08)
             : null,
       ),
       child: field,
