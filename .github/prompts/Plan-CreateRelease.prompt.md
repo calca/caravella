@@ -71,7 +71,7 @@ Aggiorna i file markdown in `assets/docs/` per mostrare le novità nella pagina 
 - Ordina per rilevanza (features → improvements → fixes)
 
 ### 4. Crea Release Notes per Store
-Crea file: `store/changelog/release-notes-X.Y.Z.xml`
+Crea file: `store/changelog/release-notes-X.Y.Z.xml` con descrizione massima di 400 caratteri per locale.
 
 **Template**:
 ```xml
