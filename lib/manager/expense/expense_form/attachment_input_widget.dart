@@ -43,10 +43,7 @@ class AttachmentInputWidget extends StatelessWidget {
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
                 const SizedBox(width: 8),
-                Text(
-                  loc.attachments,
-                  style: theme.textTheme.titleSmall,
-                ),
+                Text(loc.attachments, style: theme.textTheme.titleSmall),
               ],
             ),
             Text(
