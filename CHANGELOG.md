@@ -18,6 +18,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automatic file cleanup when deleting expenses or expense groups
 - Organized attachment storage by expense group ID for better file management
 
+### Technical
+- **Platform Abstraction Services**: Added service abstractions in `caravella_core` for better testability:
+  - `FilePickerService`: Abstraction for `image_picker` and `file_picker` dependencies
+  - `ImageCompressionService`: Abstraction for image compression logic
+  - `LocationServiceAbstraction`: Abstraction for `geolocator` and `geocoding` dependencies
+- Implementations moved to `lib/manager/expense/services/` with platform-specific code isolated
+- `LocationService` refactored to use `LocationServiceAbstraction` for improved testability
+- Added comprehensive unit tests for all service abstractions (29 tests, 100% pass rate)
+- **AttachmentInputWidget Refactoring**: Reduced complexity from 406 to 215 lines by extracting components:
+  - `AttachmentSlot`: Reusable slot widget for empty/filled states (182 lines)
+  - `AttachmentStateManager`: Business logic and state management (147 lines)
+  - Improved testability with ChangeNotifier pattern and service injection
+  - Added 8 unit tests for state manager with 100% pass rate
+- **AttachmentViewerPage Refactoring**: Simplified from 378 to 178 lines (53% reduction) by extracting specialized viewers:
+  - `PdfViewerPage`: Standalone PDF document viewer with loading and error states (95 lines)
+  - `VideoPlayerPage`: Video player with controls using Chewie (107 lines)
+  - `ImageViewerPage`: Image viewer with pinch-to-zoom support (46 lines)
+  - `AttachmentViewerController`: State management for viewer navigation and deletion (44 lines)
+  - Main page now acts as coordinator/orchestrator delegating to specialized viewers
+  - Improved code reusability and maintainability with separated concerns
+- **Validation and Error Handling Consolidation**: Centralized validation and error handling for consistency:
+  - `ExpenseValidationService`: Pure validation functions for amounts, names, participants, categories (113 lines)
+  - `ExpenseErrorHandler`: Centralized error messaging using AppToast for all expense operations (169 lines)
+  - Validation logic extracted from controllers and made independently testable
+  - Consistent error messaging across attachment, location, and form validation flows
+  - ExpenseFormController migrated to use ExpenseValidationService
+  - AttachmentInputWidget migrated to use ExpenseErrorHandler
+- **Location Subsystem Reorganization**: Eliminated circular dependencies and improved architecture:
+  - `LocationRepository`: Abstract interface for location operations (29 lines)
+  - `LocationRepositoryImpl`: Coordinates LocationService and NominatimSearchService (139 lines)
+  - `LocationConstants`: Consolidated constants from multiple files (25 lines)
+  - `LocationService` simplified from 149 to 68 lines (54% reduction) using repository pattern
+  - Linear dependency chain: Widgets → LocationService → LocationRepository → Platform services
+  - Error handling migrated to ExpenseErrorHandler for consistency
+  - Removed circular dependencies between widgets and services
+
 ## [1.2.0] - 2025-12-03
 
 ### Added

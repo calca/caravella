@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'expense_form_state.dart';
-import 'expense_form_validator.dart';
+import '../validation/expense_validation_service.dart';
 
 /// Controller for expense form that manages all TextEditingControllers,
 /// FocusNodes, and state updates
@@ -41,13 +41,16 @@ class ExpenseFormController extends ChangeNotifier {
   ExpenseFormState get state => _state;
   List<ExpenseCategory> get categories => _categories;
   bool get isInitializing => _isInitializing;
-  bool get isFormValid => ExpenseFormValidator.isFormValid(_state, _categories);
+  bool get isFormValid =>
+      ExpenseValidationService.isFormValid(_state, _categories);
 
   // Field validation getters
-  bool get isAmountValid => ExpenseFormValidator.isAmountValid(_state.amount);
-  bool get isPaidByValid => ExpenseFormValidator.isPaidByValid(_state.paidBy);
+  bool get isAmountValid =>
+      ExpenseValidationService.isAmountValid(state.amount);
+  bool get isPaidByValid =>
+      ExpenseValidationService.isPaidByValid(state.paidBy);
   bool isCategoryValid(bool noCategoriesExist) =>
-      ExpenseFormValidator.isCategoryValid(
+      ExpenseValidationService.isCategoryValid(
         _state.category,
         noCategoriesExist ? [] : _categories,
       );
@@ -63,7 +66,7 @@ class ExpenseFormController extends ChangeNotifier {
 
   // Parse amount helper
   double? parseLocalizedAmount(String input) =>
-      ExpenseFormValidator.parseAmount(input);
+      ExpenseValidationService.parseAmount(input);
 
   // Initialize controllers from state
   void _initializeFromState() {
@@ -90,7 +93,7 @@ class ExpenseFormController extends ChangeNotifier {
 
   void _onAmountChanged() {
     if (_isInitializing) return;
-    final amount = ExpenseFormValidator.parseAmount(amountController.text);
+    final amount = ExpenseValidationService.parseAmount(amountController.text);
     _updateState(_state.copyWith(amount: amount, isDirty: true));
   }
 

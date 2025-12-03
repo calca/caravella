@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core/caravella_core.dart';
-import '../location_widget_constants.dart';
+import '../constants.dart';
 
 /// Compact indicator showing location retrieval status in the expense form
 /// Used in compact mode to show auto-location activity
@@ -38,7 +38,7 @@ class CompactLocationIndicator extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           child: Icon(
             Icons.place_outlined,
-            size: LocationWidgetConstants.iconSize,
+            size: LocationConstants.iconSize,
             color: theme.colorScheme.onSurfaceVariant,
           ),
         ),
@@ -57,10 +57,10 @@ class CompactLocationIndicator extends StatelessWidget {
         ),
         onPressed: onCancel,
         icon: SizedBox(
-          width: LocationWidgetConstants.loaderSize,
-          height: LocationWidgetConstants.loaderSize,
+          width: LocationConstants.loaderSize,
+          height: LocationConstants.loaderSize,
           child: CircularProgressIndicator(
-            strokeWidth: LocationWidgetConstants.loaderStrokeWidth,
+            strokeWidth: LocationConstants.loaderStrokeWidth,
             color: theme.colorScheme.primary,
           ),
         ),

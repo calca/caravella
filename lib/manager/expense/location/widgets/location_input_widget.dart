@@ -4,7 +4,7 @@ import '../../widgets/icon_leading_field.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
 import '../location_service.dart';
-import '../location_widget_constants.dart';
+import '../constants.dart';
 import '../../pages/place_search_page.dart';
 
 class LocationInputWidget extends StatefulWidget {
@@ -243,10 +243,10 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
     if (_isGettingLocation || _isResolvingAddress) {
       return IconLeadingField(
         icon: SizedBox(
-          width: LocationWidgetConstants.loaderSize,
-          height: LocationWidgetConstants.loaderSize,
+          width: LocationConstants.loaderSize,
+          height: LocationConstants.loaderSize,
           child: CircularProgressIndicator(
-            strokeWidth: LocationWidgetConstants.loaderStrokeWidth,
+            strokeWidth: LocationConstants.loaderStrokeWidth,
             color: colorScheme.onSurfaceVariant,
           ),
         ),
@@ -327,7 +327,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
               ),
               IconButton(
                 icon: const Icon(Icons.my_location),
-                iconSize: LocationWidgetConstants.iconSize,
+                iconSize: LocationConstants.iconSize,
                 color: colorScheme.onSurfaceVariant,
                 tooltip: gloc.get_current_location,
                 onPressed: _getCurrentLocation,
@@ -337,7 +337,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
               const SizedBox(width: 8),
               Icon(
                 Icons.search,
-                size: LocationWidgetConstants.iconSize,
+                size: LocationConstants.iconSize,
                 color: colorScheme.onSurfaceVariant,
               ),
             ],

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart' as geocoding;
-import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
+import 'repository/location_repository.dart';
+import 'repository/location_repository_impl.dart';
+import '../errors/expense_error_handler.dart';
 
 /// Service class to handle location retrieval and geocoding
+/// Now uses LocationRepository for better testability and separation of concerns
 class LocationService {
+  static final LocationRepository _repository = LocationRepositoryImpl();
+
   /// Retrieves the current location with optional reverse geocoding
   static Future<ExpenseLocation?> getCurrentLocation(
     BuildContext context, {
@@ -14,124 +16,49 @@ class LocationService {
     Function(bool)? onStatusChanged,
   }) async {
     onStatusChanged?.call(true);
-    final messenger = ScaffoldMessenger.of(context);
-    final gloc = gen.AppLocalizations.of(context);
 
     try {
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      // Check if location services are enabled
+      bool serviceEnabled = await _repository.isLocationServiceEnabled();
       if (!serviceEnabled) {
         if (context.mounted) {
-          AppToast.showFromMessenger(
-            messenger,
-            gloc.location_service_disabled,
-            type: ToastType.info,
-          );
+          ExpenseErrorHandler.showLocationServiceDisabled(context);
         }
         return null;
       }
 
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
+      // Check and request permission
+      LocationPermissionStatus permission = await _repository.checkPermission();
+      if (permission == LocationPermissionStatus.denied) {
+        permission = await _repository.requestPermission();
+        if (permission == LocationPermissionStatus.denied) {
           if (context.mounted) {
-            AppToast.showFromMessenger(
-              messenger,
-              gloc.location_permission_denied,
-              type: ToastType.info,
-            );
+            ExpenseErrorHandler.showLocationPermissionDenied(context);
           }
           return null;
         }
       }
 
-      if (permission == LocationPermission.deniedForever) {
+      if (permission == LocationPermissionStatus.deniedForever) {
         if (context.mounted) {
-          AppToast.showFromMessenger(
-            messenger,
-            gloc.location_permission_denied,
-            type: ToastType.error,
-          );
+          ExpenseErrorHandler.showLocationPermissionDeniedForever(context);
         }
         return null;
       }
 
-      final position = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.high,
-          timeLimit: Duration(seconds: 10),
-        ),
+      // Get current location through repository
+      final location = await _repository.getCurrentLocation(
+        resolveAddress: resolveAddress,
       );
 
-      String? address;
-      String? street;
-      String? streetNumber;
-      String? locality;
-      String? subLocality;
-      String? administrativeArea;
-      String? subAdministrativeArea;
-      String? postalCode;
-      String? country;
-      String? isoCountryCode;
-
-      if (resolveAddress) {
-        try {
-          final placemarks = await geocoding.placemarkFromCoordinates(
-            position.latitude,
-            position.longitude,
-          );
-          if (placemarks.isNotEmpty) {
-            final p = placemarks.first;
-
-            // Extract all fields from placemark
-            street = p.thoroughfare;
-            streetNumber = p.subThoroughfare;
-            locality = p.locality;
-            subLocality = p.subLocality;
-            administrativeArea = p.administrativeArea;
-            subAdministrativeArea = p.subAdministrativeArea;
-            postalCode = p.postalCode;
-            country = p.country;
-            isoCountryCode = p.isoCountryCode;
-
-            // Build formatted address
-            final parts = [
-              if ((p.thoroughfare ?? '').isNotEmpty) p.thoroughfare,
-              if ((p.subThoroughfare ?? '').isNotEmpty) p.subThoroughfare,
-              if ((p.locality ?? '').isNotEmpty) p.locality,
-              if ((p.administrativeArea ?? '').isNotEmpty) p.administrativeArea,
-              if ((p.country ?? '').isNotEmpty) p.country,
-            ].whereType<String>().where((e) => e.trim().isNotEmpty).toList();
-            if (parts.isNotEmpty) {
-              address = parts.join(', ');
-            }
-          }
-        } catch (_) {
-          // Ignore reverse geocoding failure
-        }
+      if (location == null && context.mounted) {
+        ExpenseErrorHandler.showLocationTimeoutError(context);
       }
 
-      return ExpenseLocation(
-        latitude: position.latitude,
-        longitude: position.longitude,
-        address: address,
-        street: street,
-        streetNumber: streetNumber,
-        locality: locality,
-        subLocality: subLocality,
-        administrativeArea: administrativeArea,
-        subAdministrativeArea: subAdministrativeArea,
-        postalCode: postalCode,
-        country: country,
-        isoCountryCode: isoCountryCode,
-      );
+      return location;
     } catch (e) {
       if (context.mounted) {
-        AppToast.showFromMessenger(
-          messenger,
-          gloc.location_error,
-          type: ToastType.error,
-        );
+        ExpenseErrorHandler.showLocationRetrievalError(context, e.toString());
       }
       return null;
     } finally {
