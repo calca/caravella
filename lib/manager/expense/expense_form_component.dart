@@ -1,25 +1,17 @@
 library;
 
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'location/location_service.dart';
-import 'location/widgets/location_input_widget.dart';
-import 'location/widgets/compact_location_indicator.dart';
-import 'widgets/amount_input_widget.dart';
-import 'widgets/participant_selector_widget.dart';
-import 'widgets/category_selector_widget.dart';
-import 'widgets/date_selector_widget.dart';
-import 'widgets/note_input_widget.dart';
 import 'widgets/expense_form_actions_widget.dart';
-import 'widgets/category_dialog.dart';
-import 'widgets/attachment_input_widget.dart';
-import 'widgets/attachment_viewer_page.dart';
 import 'state/expense_form_controller.dart';
 import 'state/expense_form_state.dart';
 import 'coordination/form_scroll_coordinator.dart';
+import 'components/expense_form_fields.dart';
+import 'components/expense_form_extended_fields.dart';
+import 'components/expense_form_compact_header.dart';
 
 class ExpenseFormComponent extends StatefulWidget {
   // When true shows date, location and note fields (full edit mode). In edit mode (initialExpense != null) these are always shown.
@@ -244,23 +236,6 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     }
   }
 
-  // Widget per indicatori di stato - versione minimalista
-  Widget _buildFieldWithStatus(Widget field, bool isValid, bool isTouched) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        // Solo sfondo colorato se c'è un errore
-        color: isTouched && !isValid
-            ? Theme.of(
-                context,
-              ).colorScheme.errorContainer.withValues(alpha: 0.08)
-            : null,
-      ),
-      child: field,
-    );
-  }
-
   void _saveExpense() {
     final valid = _formKey.currentState?.validate() ?? false;
     if (!valid) {
@@ -306,71 +281,45 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildGroupHeader(),
-            _buildAmountField(gloc, smallStyle),
-            _spacer(),
-            _buildNameField(gloc, smallStyle),
-            _spacer(),
-            _buildParticipantCategorySection(smallStyle),
-            _buildExtendedFields(locale, smallStyle),
+            ExpenseFormCompactHeader(
+              groupTitle: widget.groupTitle,
+              showGroupHeader: widget.showGroupHeader,
+            ),
+            ExpenseFormFields(
+              controller: _controller,
+              participants: widget.participants,
+              categories: _categories,
+              onCategoryAdded: _onCategoryAdded,
+              onCategoriesUpdated: (newCategories) {
+                setState(() {
+                  _categories = newCategories;
+                });
+              },
+              fullEdit: widget.fullEdit,
+              autoLocationEnabled: _autoLocationEnabled,
+              location: _controller.state.location,
+              isRetrievingLocation: _controller.state.isRetrievingLocation,
+              onClearLocation: _clearLocation,
+              currency: widget.currency,
+              onSaveExpense: _saveExpense,
+              isInitialExpense: widget.initialExpense != null,
+            ),
+            if (_shouldShowExtendedFields)
+              ExpenseFormExtendedFields(
+                controller: _controller,
+                tripStartDate: widget.tripStartDate,
+                tripEndDate: widget.tripEndDate,
+                locale: locale,
+                groupId: widget.groupId,
+                autoLocationEnabled: _autoLocationEnabled,
+                isInitialExpense: widget.initialExpense != null,
+                isFormValid: _controller.isFormValid,
+                onSaveExpense: _saveExpense,
+              ),
             if (widget.showActionsRow) ...[
               _buildDivider(context),
               _buildActionsRow(gloc, smallStyle),
             ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// Intestazione con il titolo del gruppo (solo se showGroupHeader è true e presente)
-  Widget _buildGroupHeader() {
-    if (!(widget.showGroupHeader && widget.groupTitle != null)) {
-      return const SizedBox.shrink();
-    }
-    final gloc = gen.AppLocalizations.of(context);
-    final title = widget.groupTitle!.trim();
-    if (title.isEmpty) return const SizedBox.shrink();
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final prefixStyle = theme.textTheme.bodyMedium?.copyWith(
-      color: colorScheme.onSurfaceVariant,
-      fontWeight: FontWeight.w500,
-      letterSpacing: 0.15,
-    );
-    final titleStyle = theme.textTheme.titleLarge?.copyWith(
-      fontWeight: FontWeight.w700,
-      color: colorScheme.onSurface,
-      overflow: TextOverflow.ellipsis,
-    );
-    return Semantics(
-      container: true,
-      header: true,
-      label: '${gloc.in_group_prefix} $title',
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 16.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Tooltip(
-                message: title,
-                waitDuration: const Duration(milliseconds: 400),
-                child: RichText(
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: '${gloc.in_group_prefix} ',
-                        style: prefixStyle,
-                      ),
-                      TextSpan(text: title, style: titleStyle),
-                    ],
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
       ),
@@ -386,192 +335,12 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     }
   }
 
-  Widget _spacer() => const SizedBox(height: FormTheme.fieldSpacing);
-
-  Widget _buildAmountField(gen.AppLocalizations gloc, TextStyle? style) =>
-      KeyedSubtree(
-        key: _controller.amountFieldKey,
-        child: _buildFieldWithStatus(
-          AmountInputWidget(
-            controller: _controller.amountController,
-            focusNode: _controller.amountFocus,
-            categories: _categories,
-            label: gloc.amount,
-            currency: widget.currency,
-            textInputAction: _controller.isFormValid
-                ? TextInputAction.done
-                : TextInputAction.next,
-            validator: (v) {
-              final parsed = _controller.parseLocalizedAmount(v ?? '');
-              if (parsed == null || parsed <= 0) return gloc.invalid_amount;
-              return null;
-            },
-            onSaved: (v) {},
-            onSubmitted: _saveExpense,
-            textStyle: style,
-          ),
-          _controller.isAmountValid,
-          _controller.amountTouched,
-        ),
-      );
-
-  Widget _buildNameField(gen.AppLocalizations gloc, TextStyle? style) =>
-      KeyedSubtree(
-        key: _controller.nameFieldKey,
-        child: _buildFieldWithStatus(
-          AmountInputWidget(
-            controller: _controller.nameController,
-            focusNode: _controller.nameFocus,
-            label: gloc.expense_name,
-            leading: Icon(
-              Icons.description_outlined,
-              size: 22,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-            textInputAction: _controller.isFormValid
-                ? TextInputAction.done
-                : TextInputAction.next,
-            validator: (v) =>
-                v == null || v.trim().isEmpty ? gloc.enter_title : null,
-            onSaved: (v) {},
-            onSubmitted: _controller.isFormValid ? _saveExpense : null,
-            isText: true,
-            textStyle: style,
-          ),
-          _controller.isNameValid,
-          _controller.amountTouched,
-        ),
-      );
-
-  Widget _buildParticipantCategorySection(TextStyle? style) {
-    if (_shouldShowExtendedFields) {
-      return Column(
-        children: [
-          _buildFieldWithStatus(
-            ParticipantSelectorWidget(
-              participants: widget.participants.map((p) => p.name).toList(),
-              selectedParticipant: _controller.state.paidBy?.name,
-              onParticipantSelected: _onParticipantSelected,
-              textStyle: style,
-              fullEdit: true,
-            ),
-            _controller.isPaidByValid,
-            _controller.paidByTouched,
-          ),
-          _spacer(),
-          _buildFieldWithStatus(
-            CategorySelectorWidget(
-              categories: _categories,
-              selectedCategory: _controller.state.category,
-              onCategorySelected: _onCategorySelected,
-              onAddCategory: _onAddCategory,
-              onAddCategoryInline: _onAddCategoryInline,
-              textStyle: style,
-              fullEdit: true,
-            ),
-            _controller.isCategoryValid(_categories.isEmpty),
-            _controller.categoryTouched,
-          ),
-        ],
-      );
-    }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildFieldWithStatus(
-              ParticipantSelectorWidget(
-                participants: widget.participants.map((p) => p.name).toList(),
-                selectedParticipant: _controller.state.paidBy?.name,
-                onParticipantSelected: _onParticipantSelected,
-                textStyle: style,
-                fullEdit: false,
-              ),
-              _controller.isPaidByValid,
-              _controller.paidByTouched,
-            ),
-            const SizedBox(width: 12),
-            _buildFieldWithStatus(
-              CategorySelectorWidget(
-                categories: _categories,
-                selectedCategory: _controller.state.category,
-                onCategorySelected: _onCategorySelected,
-                onAddCategory: _onAddCategory,
-                onAddCategoryInline: _onAddCategoryInline,
-                textStyle: style,
-                fullEdit: false,
-              ),
-              _controller.isCategoryValid(_categories.isEmpty),
-              _controller.categoryTouched,
-            ),
-            // Show compact location indicator when auto-location is enabled
-            if (widget.initialExpense == null && _autoLocationEnabled) ...[
-              const Spacer(),
-              CompactLocationIndicator(
-                isRetrieving: _controller.state.isRetrievingLocation,
-                location: _controller.state.location,
-                onCancel: _clearLocation,
-                textStyle: style,
-              ),
-            ],
-          ],
-        ),
-      ],
-    );
-  }
-
-  // (Expand button moved into ExpenseFormActionsWidget)
-
   void _clearLocation() {
     _controller.updateLocation(null);
     _controller.setLocationRetrieving(false);
   }
 
-  void _onParticipantSelected(String selectedName) {
-    final participant = widget.participants.firstWhere(
-      (p) => p.name == selectedName,
-      orElse: () => widget.participants.isNotEmpty
-          ? widget.participants.first
-          : ExpenseParticipant(name: ''),
-    );
-    _controller.updatePaidBy(participant);
-    _notifyFormValidityChanged();
-  }
-
-  void _onCategorySelected(ExpenseCategory? selected) {
-    _controller.updateCategory(selected);
-    _notifyFormValidityChanged();
-  }
-
-  Future<void> _onAddCategory() async {
-    final newCategoryName = await CategoryDialog.show(context: context);
-    if (newCategoryName != null && newCategoryName.isNotEmpty) {
-      widget.onCategoryAdded(newCategoryName);
-      final found = widget.categories.firstWhere(
-        (c) => c.name == newCategoryName,
-        orElse: () => widget.categories.isNotEmpty
-            ? widget.categories.first
-            : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000)),
-      );
-      if (!_categories.contains(found)) {
-        _categories.add(found);
-        _controller.addCategory(found);
-      }
-      await Future.delayed(const Duration(milliseconds: 100));
-      final foundAfter = widget.categories.firstWhere(
-        (c) => c.name == newCategoryName,
-        orElse: () => widget.categories.isNotEmpty
-            ? widget.categories.first
-            : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000)),
-      );
-      _categories = List.from(widget.categories);
-      _controller.updateCategory(foundAfter);
-    }
-  }
-
-  Future<void> _onAddCategoryInline(String categoryName) async {
+  Future<void> _onCategoryAdded(String categoryName) async {
     widget.onCategoryAdded(categoryName);
     await Future.delayed(const Duration(milliseconds: 100));
     final found = widget.categories.firstWhere(
@@ -581,7 +350,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
           : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000)),
     );
     if (!_categories.contains(found)) {
-      _categories.add(found);
+      setState(() {
+        _categories = List.from(widget.categories);
+      });
       _controller.addCategory(found);
     }
     await Future.delayed(const Duration(milliseconds: 100));
@@ -591,87 +362,11 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
           ? widget.categories.first
           : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000)),
     );
-    _categories = List.from(widget.categories);
+    setState(() {
+      _categories = List.from(widget.categories);
+    });
     _controller.updateCategory(foundAfter);
-  }
-
-  Widget _buildExtendedFields(String locale, TextStyle? style) {
-    if (!_shouldShowExtendedFields) return const SizedBox.shrink();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _spacer(),
-        DateSelectorWidget(
-          selectedDate: _controller.state.date,
-          tripStartDate: widget.tripStartDate,
-          tripEndDate: widget.tripEndDate,
-          onDateSelected: _controller.updateDate,
-          locale: locale,
-          textStyle: style,
-        ),
-        _spacer(),
-        KeyedSubtree(
-          key: _controller.locationFieldKey,
-          child: LocationInputWidget(
-            initialLocation: _controller.state.location,
-            textStyle: style,
-            onLocationChanged: _controller.updateLocation,
-            externalFocusNode: _controller.locationFocus,
-            autoRetrieve: widget.initialExpense == null && _autoLocationEnabled,
-            onRetrievalStatusChanged: _controller.setLocationRetrieving,
-          ),
-        ),
-        _spacer(),
-        AttachmentInputWidget(
-          groupId: widget.groupId,
-          attachments: _controller.state.attachments,
-          onAttachmentAdded: _controller.addAttachment,
-          onAttachmentRemoved: (index) {
-            // Delete the file from storage
-            final filePath = _controller.state.attachments[index];
-            try {
-              File(filePath).deleteSync();
-            } catch (e) {
-              // File might not exist, ignore error
-            }
-            _controller.removeAttachment(index);
-          },
-          onAttachmentTapped: (path) {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => AttachmentViewerPage(
-                  attachments: _controller.state.attachments,
-                  initialIndex: _controller.state.attachments.indexOf(path),
-                  onDelete: (index) {
-                    // Delete the file from storage
-                    final filePath = _controller.state.attachments[index];
-                    try {
-                      File(filePath).deleteSync();
-                    } catch (e) {
-                      // File might not exist, ignore error
-                    }
-                    _controller.removeAttachment(index);
-                  },
-                ),
-              ),
-            );
-          },
-        ),
-        _spacer(),
-        KeyedSubtree(
-          key: _controller.noteFieldKey,
-          child: NoteInputWidget(
-            controller: _controller.noteController,
-            textStyle: style,
-            focusNode: _controller.noteFocus,
-            textInputAction: _controller.isFormValid
-                ? TextInputAction.done
-                : TextInputAction.newline,
-            onFieldSubmitted: _controller.isFormValid ? _saveExpense : null,
-          ),
-        ),
-      ],
-    );
+    _notifyFormValidityChanged();
   }
 
   Widget _buildDivider(BuildContext context) {

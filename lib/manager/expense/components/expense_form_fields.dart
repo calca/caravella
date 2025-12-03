@@ -5,6 +5,8 @@ import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../widgets/amount_input_widget.dart';
+import '../widgets/category_dialog.dart';
+import '../location/widgets/compact_location_indicator.dart';
 import '../widgets/participant_selector_widget.dart';
 import '../widgets/category_selector_widget.dart';
 import '../state/expense_form_controller.dart';
@@ -16,6 +18,7 @@ class ExpenseFormFields extends StatelessWidget {
   final List<ExpenseParticipant> participants;
   final List<ExpenseCategory> categories;
   final Function(String) onCategoryAdded;
+  final Function(List<ExpenseCategory>) onCategoriesUpdated;
   final bool fullEdit;
   final bool autoLocationEnabled;
   final ExpenseLocation? location;
@@ -23,6 +26,7 @@ class ExpenseFormFields extends StatelessWidget {
   final VoidCallback onClearLocation;
   final String? currency;
   final VoidCallback onSaveExpense;
+  final bool isInitialExpense;
 
   const ExpenseFormFields({
     super.key,
@@ -37,6 +41,8 @@ class ExpenseFormFields extends StatelessWidget {
     required this.onClearLocation,
     required this.currency,
     required this.onSaveExpense,
+    required this.onCategoriesUpdated,
+    required this.isInitialExpense,
   });
 
   @override
@@ -218,6 +224,16 @@ class ExpenseFormFields extends StatelessWidget {
           controller.isCategoryValid(categories.isEmpty),
           controller.categoryTouched,
         ),
+        // Show compact location indicator when auto-location is enabled
+        if (!isInitialExpense && autoLocationEnabled) ...[
+          const Spacer(),
+          CompactLocationIndicator(
+            isRetrieving: isRetrievingLocation,
+            location: location,
+            onCancel: onClearLocation,
+            textStyle: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ],
       ],
     );
   }
@@ -243,9 +259,13 @@ class ExpenseFormFields extends StatelessWidget {
   }
 
   Future<void> _onAddCategory(BuildContext context) async {
-    // This would need to be handled by showing the CategoryDialog
-    // For now, this is a placeholder that calls the parent callback
-    // The actual implementation should use CategoryDialog.show
+    final newCategoryName = await CategoryDialog.show(context: context);
+    if (newCategoryName != null && newCategoryName.isNotEmpty) {
+      onCategoryAdded(newCategoryName);
+      await Future.delayed(const Duration(milliseconds: 100));
+      // Notify parent to update categories list
+      // The parent will handle finding the new category and updating the controller
+    }
   }
 
   Future<void> _onAddCategoryInline(
@@ -253,7 +273,8 @@ class ExpenseFormFields extends StatelessWidget {
     String categoryName,
   ) async {
     onCategoryAdded(categoryName);
-    // Wait for the category to be added
     await Future.delayed(const Duration(milliseconds: 100));
+    // Notify parent to update categories list
+    // The parent will handle finding the new category and updating the controller
   }
 }
