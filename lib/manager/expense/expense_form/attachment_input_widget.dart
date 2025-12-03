@@ -35,10 +35,7 @@ class AttachmentInputWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              loc.attachments,
-              style: theme.textTheme.titleSmall,
-            ),
+            Text(loc.attachments, style: theme.textTheme.titleSmall),
             if (attachments.length < 5)
               TextButton.icon(
                 onPressed: () => _showAttachmentSourcePicker(context),
@@ -80,7 +77,7 @@ class AttachmentInputWidget extends StatelessWidget {
 
   Future<void> _showAttachmentSourcePicker(BuildContext context) async {
     final loc = gen.AppLocalizations.of(context);
-    
+
     if (attachments.length >= 5) {
       AppToast.show(
         context,
@@ -121,7 +118,10 @@ class AttachmentInputWidget extends StatelessWidget {
     }
   }
 
-  Future<void> _pickAttachment(BuildContext context, _AttachmentSource source) async {
+  Future<void> _pickAttachment(
+    BuildContext context,
+    _AttachmentSource source,
+  ) async {
     try {
       String? filePath;
 
@@ -149,17 +149,17 @@ class AttachmentInputWidget extends StatelessWidget {
               ),
             ),
           );
-          
+
           if (mediaType != null && context.mounted) {
             final picker = ImagePicker();
             XFile? file;
-            
+
             if (mediaType == _CameraMediaType.photo) {
               file = await picker.pickImage(source: ImageSource.camera);
             } else {
               file = await picker.pickVideo(source: ImageSource.camera);
             }
-            
+
             if (file != null) {
               filePath = await _saveAttachment(file.path);
             }
@@ -167,7 +167,9 @@ class AttachmentInputWidget extends StatelessWidget {
           break;
         case _AttachmentSource.gallery:
           final picker = ImagePicker();
-          final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+          final XFile? image = await picker.pickImage(
+            source: ImageSource.gallery,
+          );
           if (image != null) {
             filePath = await _saveAttachment(image.path);
           }
@@ -188,11 +190,7 @@ class AttachmentInputWidget extends StatelessWidget {
       }
     } catch (e) {
       if (context.mounted) {
-        AppToast.show(
-          context,
-          'Error: $e',
-          type: ToastType.error,
-        );
+        AppToast.show(context, 'Error: $e', type: ToastType.error);
       }
     }
   }
@@ -200,22 +198,23 @@ class AttachmentInputWidget extends StatelessWidget {
   Future<String> _saveAttachment(String sourcePath) async {
     final directory = await getApplicationDocumentsDirectory();
     final attachmentsDir = Directory('${directory.path}/attachments/$groupId');
-    
+
     if (!await attachmentsDir.exists()) {
       await attachmentsDir.create(recursive: true);
     }
 
-    final fileName = '${DateTime.now().millisecondsSinceEpoch}_${path.basename(sourcePath)}';
+    final fileName =
+        '${DateTime.now().millisecondsSinceEpoch}_${path.basename(sourcePath)}';
     final targetPath = '${attachmentsDir.path}/$fileName';
     final extension = path.extension(sourcePath).toLowerCase();
-    
+
     // Compress images to reduce storage
     if (['.jpg', '.jpeg', '.png'].contains(extension)) {
       try {
         final sourceFile = File(sourcePath);
         final imageBytes = await sourceFile.readAsBytes();
         final image = img.decodeImage(imageBytes);
-        
+
         if (image != null) {
           // Resize if too large (max 1920px on longest side)
           final resized = image.width > 1920 || image.height > 1920
@@ -225,11 +224,11 @@ class AttachmentInputWidget extends StatelessWidget {
                   height: image.height > image.width ? 1920 : null,
                 )
               : image;
-          
+
           // Compress as JPEG with 85% quality
           final compressed = img.encodeJpg(resized, quality: 85);
           await File(targetPath).writeAsBytes(compressed);
-          
+
           return targetPath;
         }
       } catch (e) {
@@ -238,23 +237,17 @@ class AttachmentInputWidget extends StatelessWidget {
         return targetPath;
       }
     }
-    
+
     // For non-images (PDF, video), just copy
     await File(sourcePath).copy(targetPath);
-    
+
     return targetPath;
   }
 }
-enum _AttachmentSource {
-  camera,
-  gallery,
-  files,
-}
 
-enum _CameraMediaType {
-  photo,
-  video,
-}
+enum _AttachmentSource { camera, gallery, files }
+
+enum _CameraMediaType { photo, video }
 
 class _AttachmentThumbnail extends StatelessWidget {
   final String filePath;
@@ -286,7 +279,7 @@ class _AttachmentThumbnail extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: theme.colorScheme.outline.withOpacity(0.5),
+                  color: theme.colorScheme.outline.withValues(alpha: 0.5),
                 ),
               ),
               child: ClipRRect(

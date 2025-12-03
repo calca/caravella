@@ -1867,4 +1867,33 @@ class AppLocalizationsIt extends AppLocalizations {
   ) {
     return 'Ciao $participantName! 👋\n\nVorrei ricordarti i tuoi pagamenti per il gruppo \"$groupName\":\n\n$debtsList\n\nGrazie! 😊';
   }
+
+  @override
+  String get attachments => 'Allegati';
+
+  @override
+  String get add_attachment => 'Aggiungi allegato';
+
+  @override
+  String get attachment_limit_reached =>
+      'Limite massimo di 5 allegati raggiunto';
+
+  @override
+  String get delete_attachment => 'Elimina allegato';
+
+  @override
+  String get share_attachment => 'Condividi allegato';
+
+  @override
+  String get delete_attachment_confirm_title => 'Elimina allegato';
+
+  @override
+  String get delete_attachment_confirm_message =>
+      'Sei sicuro di voler eliminare questo allegato?';
+
+  @override
+  String get attachment_source => 'Scegli sorgente';
+
+  @override
+  String get from_files => 'Dai file';
 }

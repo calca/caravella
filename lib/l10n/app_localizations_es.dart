@@ -1870,4 +1870,33 @@ class AppLocalizationsEs extends AppLocalizations {
   ) {
     return '¡Hola $participantName! 👋\n\nQuisiera recordarte tus pagos para el grupo \"$groupName\":\n\n$debtsList\n\n¡Gracias! 😊';
   }
+
+  @override
+  String get attachments => 'Adjuntos';
+
+  @override
+  String get add_attachment => 'Agregar adjunto';
+
+  @override
+  String get attachment_limit_reached =>
+      'Límite máximo de 5 adjuntos alcanzado';
+
+  @override
+  String get delete_attachment => 'Eliminar adjunto';
+
+  @override
+  String get share_attachment => 'Compartir adjunto';
+
+  @override
+  String get delete_attachment_confirm_title => 'Eliminar adjunto';
+
+  @override
+  String get delete_attachment_confirm_message =>
+      '¿Estás seguro de que deseas eliminar este adjunto?';
+
+  @override
+  String get attachment_source => 'Elegir fuente';
+
+  @override
+  String get from_files => 'Desde archivos';
 }

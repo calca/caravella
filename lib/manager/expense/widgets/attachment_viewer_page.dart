@@ -44,7 +44,6 @@ class _AttachmentViewerPageState extends State<AttachmentViewerPage> {
   @override
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
-    final theme = Theme.of(context);
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -58,7 +57,8 @@ class _AttachmentViewerPageState extends State<AttachmentViewerPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.share),
-            onPressed: () => _shareAttachment(widget.attachments[_currentIndex]),
+            onPressed: () =>
+                _shareAttachment(widget.attachments[_currentIndex]),
             tooltip: loc.share_attachment,
           ),
           if (widget.onDelete != null)
@@ -78,9 +78,7 @@ class _AttachmentViewerPageState extends State<AttachmentViewerPage> {
           });
         },
         itemBuilder: (context, index) {
-          return _AttachmentContent(
-            filePath: widget.attachments[index],
-          );
+          return _AttachmentContent(filePath: widget.attachments[index]);
         },
       ),
     );
@@ -88,19 +86,22 @@ class _AttachmentViewerPageState extends State<AttachmentViewerPage> {
 
   Future<void> _shareAttachment(String filePath) async {
     try {
-      await Share.shareXFiles([XFile(filePath)]);
+      // ignore: deprecated_member_use
+      await Share.shareXFiles(
+        [XFile(filePath)],
+        fileNameOverrides: [path.basename(filePath)],
+      );
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error sharing: $e')),
-        );
-      }
+      if (!mounted) return;
+      final messenger = ScaffoldMessenger.of(context);
+      messenger.showSnackBar(SnackBar(content: Text('Error sharing: $e')));
     }
   }
 
   Future<void> _confirmDelete(BuildContext context) async {
     final loc = gen.AppLocalizations.of(context);
-    
+    final navigator = Navigator.of(context);
+
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => Material3Dialog(
@@ -122,9 +123,10 @@ class _AttachmentViewerPageState extends State<AttachmentViewerPage> {
       ),
     );
 
-    if (confirmed == true && mounted) {
+    if (confirmed == true) {
+      if (!mounted) return;
       widget.onDelete?.call(_currentIndex);
-      Navigator.of(context).pop();
+      navigator.pop();
     }
   }
 }
@@ -132,9 +134,7 @@ class _AttachmentViewerPageState extends State<AttachmentViewerPage> {
 class _AttachmentContent extends StatefulWidget {
   final String filePath;
 
-  const _AttachmentContent({
-    required this.filePath,
-  });
+  const _AttachmentContent({required this.filePath});
 
   @override
   State<_AttachmentContent> createState() => _AttachmentContentState();
@@ -165,11 +165,7 @@ class _AttachmentContentState extends State<_AttachmentContent> {
     } else if (['.mp4', '.mov'].contains(extension)) {
       return _VideoPlayer(filePath: widget.filePath);
     } else {
-      return _buildFilePreview(
-        context,
-        Icons.insert_drive_file,
-        'File',
-      );
+      return _buildFilePreview(context, Icons.insert_drive_file, 'File');
     }
   }
 
@@ -178,26 +174,16 @@ class _AttachmentContentState extends State<_AttachmentContent> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            icon,
-            size: 120,
-            color: Colors.white70,
-          ),
+          Icon(icon, size: 120, color: Colors.white70),
           const SizedBox(height: 16),
           Text(
             label,
-            style: const TextStyle(
-              color: Colors.white70,
-              fontSize: 18,
-            ),
+            style: const TextStyle(color: Colors.white70, fontSize: 18),
           ),
           const SizedBox(height: 8),
           Text(
             path.basename(widget.filePath),
-            style: const TextStyle(
-              color: Colors.white54,
-              fontSize: 14,
-            ),
+            style: const TextStyle(color: Colors.white54, fontSize: 14),
             textAlign: TextAlign.center,
           ),
         ],
@@ -210,18 +196,11 @@ class _AttachmentContentState extends State<_AttachmentContent> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.error_outline,
-            size: 64,
-            color: Colors.white54,
-          ),
+          Icon(Icons.error_outline, size: 64, color: Colors.white54),
           SizedBox(height: 16),
           Text(
             'Error loading file',
-            style: TextStyle(
-              color: Colors.white54,
-              fontSize: 16,
-            ),
+            style: TextStyle(color: Colors.white54, fontSize: 16),
           ),
         ],
       ),
@@ -251,9 +230,10 @@ class _PdfViewerState extends State<_PdfViewer> {
 
   Future<void> _loadPdf() async {
     try {
-      final document = await PdfDocument.openFile(widget.filePath);
       setState(() {
-        _pdfController = PdfController(document: document);
+        _pdfController = PdfController(
+          document: PdfDocument.openFile(widget.filePath),
+        );
         _isLoading = false;
       });
     } catch (e) {
@@ -283,26 +263,16 @@ class _PdfViewerState extends State<_PdfViewer> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.white54,
-            ),
+            const Icon(Icons.error_outline, size: 64, color: Colors.white54),
             const SizedBox(height: 16),
             const Text(
               'Error loading PDF',
-              style: TextStyle(
-                color: Colors.white54,
-                fontSize: 16,
-              ),
+              style: TextStyle(color: Colors.white54, fontSize: 16),
             ),
             const SizedBox(height: 8),
             Text(
               path.basename(widget.filePath),
-              style: const TextStyle(
-                color: Colors.white54,
-                fontSize: 14,
-              ),
+              style: const TextStyle(color: Colors.white54, fontSize: 14),
               textAlign: TextAlign.center,
             ),
           ],
@@ -310,11 +280,7 @@ class _PdfViewerState extends State<_PdfViewer> {
       );
     }
 
-    return PdfView(
-      controller: _pdfController!,
-      scrollDirection: Axis.vertical,
-      backgroundColor: Colors.black,
-    );
+    return PdfView(controller: _pdfController!, scrollDirection: Axis.vertical);
   }
 }
 
@@ -343,7 +309,7 @@ class _VideoPlayerState extends State<_VideoPlayer> {
     try {
       _videoController = VideoPlayerController.file(File(widget.filePath));
       await _videoController!.initialize();
-      
+
       _chewieController = ChewieController(
         videoPlayerController: _videoController!,
         autoPlay: false,
@@ -355,9 +321,7 @@ class _VideoPlayerState extends State<_VideoPlayer> {
           backgroundColor: Colors.white24,
           bufferedColor: Colors.white38,
         ),
-        placeholder: Container(
-          color: Colors.black,
-        ),
+        placeholder: Container(color: Colors.black),
         autoInitialize: true,
       );
 
@@ -392,26 +356,16 @@ class _VideoPlayerState extends State<_VideoPlayer> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.white54,
-            ),
+            const Icon(Icons.error_outline, size: 64, color: Colors.white54),
             const SizedBox(height: 16),
             const Text(
               'Error loading video',
-              style: TextStyle(
-                color: Colors.white54,
-                fontSize: 16,
-              ),
+              style: TextStyle(color: Colors.white54, fontSize: 16),
             ),
             const SizedBox(height: 8),
             Text(
               path.basename(widget.filePath),
-              style: const TextStyle(
-                color: Colors.white54,
-                fontSize: 14,
-              ),
+              style: const TextStyle(color: Colors.white54, fontSize: 14),
               textAlign: TextAlign.center,
             ),
           ],
@@ -419,8 +373,6 @@ class _VideoPlayerState extends State<_VideoPlayer> {
       );
     }
 
-    return Center(
-      child: Chewie(controller: _chewieController!),
-    );
+    return Center(child: Chewie(controller: _chewieController!));
   }
 }

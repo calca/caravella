@@ -87,6 +87,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
                       onFormValidityChanged: _updateFormValidity,
                       onSaveCallbackChanged: (callback) =>
                           _saveCallback = callback,
+                      groupId: widget.group.id,
                     ),
                   ],
                 ),

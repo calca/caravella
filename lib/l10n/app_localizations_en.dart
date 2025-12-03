@@ -1857,4 +1857,33 @@ class AppLocalizationsEn extends AppLocalizations {
   ) {
     return 'Hi $participantName! 👋\n\nJust a friendly reminder of your payments for the group \"$groupName\":\n\n$debtsList\n\nThank you! 😊';
   }
+
+  @override
+  String get attachments => 'Attachments';
+
+  @override
+  String get add_attachment => 'Add attachment';
+
+  @override
+  String get attachment_limit_reached =>
+      'Maximum limit of 5 attachments reached';
+
+  @override
+  String get delete_attachment => 'Delete attachment';
+
+  @override
+  String get share_attachment => 'Share attachment';
+
+  @override
+  String get delete_attachment_confirm_title => 'Delete attachment';
+
+  @override
+  String get delete_attachment_confirm_message =>
+      'Are you sure you want to delete this attachment?';
+
+  @override
+  String get attachment_source => 'Choose source';
+
+  @override
+  String get from_files => 'From files';
 }

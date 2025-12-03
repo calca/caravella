@@ -62,6 +62,7 @@ dependencies:
   geolocator: ^14.0.2
   geocoding: ^4.0.0
   http: ^1.6.0
+  path: ^1.9.1
   intl: ^0.20.2
   timeago: ^3.7.1
   gpt_markdown: ^1.1.4
