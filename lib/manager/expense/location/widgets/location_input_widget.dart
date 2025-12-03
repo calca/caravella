@@ -5,7 +5,7 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:caravella_core/caravella_core.dart';
 import '../location_service.dart';
 import '../location_widget_constants.dart';
-import 'place_search_page.dart';
+import '../../pages/place_search_page.dart';
 
 class LocationInputWidget extends StatefulWidget {
   final ExpenseLocation? initialLocation;

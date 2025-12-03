@@ -4,7 +4,7 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../manager/details/widgets/expense_entry_sheet.dart';
-import '../../../manager/expense/expense_form_page.dart';
+import '../../../manager/expense/pages/expense_form_page.dart';
 import '../../../manager/details/pages/tabs/usecase/daily_totals_utils.dart';
 
 class GroupCardContent extends StatelessWidget {

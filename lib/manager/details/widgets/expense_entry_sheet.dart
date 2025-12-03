@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
-import '../../expense/expense_form_component.dart';
+import '../../expense/components/expense_form_component.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 /// Unified sheet for creating or editing an expense.

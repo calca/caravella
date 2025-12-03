@@ -7,7 +7,7 @@ import '../widgets/date_selector_widget.dart';
 import '../widgets/note_input_widget.dart';
 import '../widgets/attachment_input_widget.dart';
 import '../location/widgets/location_input_widget.dart';
-import '../widgets/attachment_viewer_page.dart';
+import '../pages/attachment_viewer_page.dart';
 import '../state/expense_form_controller.dart';
 
 /// Builds extended form fields: date, location, attachments, notes
