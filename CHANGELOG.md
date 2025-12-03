@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2025-12-03
+
 ### Added
 - Theme-aware color palette for expense groups that adapts colors based on light/dark mode
 - OpenStreetMap integration for visualizing expense locations on an interactive map
@@ -19,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dynamic color support with Material 3 integration for personalized app theming (Android 12+, limited iOS support)
 - Settings toggle to enable colors derived from device wallpaper with graceful fallback to default themes
 - Android Quick Actions (App Shortcuts) for quick access to expense groups from launcher (Android only)
-- **Dynamic icons for Android Quick Launch shortcuts with group initials and background colors or images**
+- Dynamic icons for Android Quick Launch shortcuts with group initials and background colors or images
 - F-Droid metadata and distribution support
 - Comprehensive F-Droid submission documentation
 - Context menu (long-press) for expense groups in history page with pin/unpin, archive/unarchive, and delete actions
@@ -46,7 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored PreferencesService architecture with singleton pattern and separated preference categories
 - Improved PreferencesService API with synchronous read operations where possible
 - Organized preference keys and defaults into centralized abstract classes
-- **Android Quick Launch shortcut icons now dynamically display group initials with theme colors or group images**
+- Android Quick Launch shortcut icons now dynamically display group initials with theme colors or group images
 - Consolidated currency formatting using CurrencyDisplay widget throughout the app for consistency
 - Currency display now uses locale-aware decimal separators respecting user's regional settings
 - Applied consistent TabBar styling across History, Stats, and Overview pages for unified experience
@@ -99,7 +101,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Material 3 design with dark/light theme support
 - Cross-platform support (Android, iOS, Web, Desktop)
 
-[Unreleased]: https://github.com/calca/caravella/compare/v1.0.45...HEAD
+[Unreleased]: https://github.com/calca/caravella/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/calca/caravella/compare/v1.0.45...v1.2.0
 [1.0.45]: https://github.com/calca/caravella/compare/v1.0.44...v1.0.45
 [1.0.44]: https://github.com/calca/caravella/compare/v1.0.38...v1.0.44
 [1.0.38]: https://github.com/calca/caravella/compare/v1.0.0...v1.0.38

@@ -74,6 +74,14 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
   <img src="store/screenshot/09 - Grops History.png" alt="Groups History" width="200"/>
 </p>
 
+## 🎉 What's New in v1.2.0
+
+- **Interactive Maps**: Visualize your expenses on OpenStreetMap with location search and automatic GPS capture
+- **Dynamic App Colors**: Material 3 theming adapts to your device wallpaper for a personalized experience
+- **Smart Quick Actions**: Launch your favorite expense groups directly from your Android home screen
+- **Enhanced Loading**: Beautiful skeleton animations make the app feel smoother and more responsive
+- **Automatic Updates**: Stay up-to-date with weekly update checks and one-tap installations
+
 ## 🛠️ Tech Stack & Architecture
 
 - **Framework**: Flutter 3.x with Material 3

@@ -1,3 +1,14 @@
+## 1.2.0 (03.12.2025)
+
+- **New**: Interactive maps with OpenStreetMap showing expense locations
+- **New**: Location search with autocomplete and automatic GPS capture
+- **New**: Dynamic color theming adapts to your device wallpaper (Android 12+)
+- **New**: Android Quick Actions to launch expense groups from home screen
+- **New**: Automatic update checks with weekly notifications
+- **Improvements**: Beautiful skeleton loader animations for smoother loading
+- **Improvements**: Enhanced currency display with locale-aware formatting
+- **Fixed**: Auto-location setting now saves correctly
+
 ## 1.0.45 (16.10.2025)
 
 - **Fixed**: Completed translations for all supported languages
