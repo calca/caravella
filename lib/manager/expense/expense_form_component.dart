@@ -17,6 +17,9 @@ import 'expense_form/expense_form_actions_widget.dart';
 import 'expense_form/category_dialog.dart';
 import 'expense_form/attachment_input_widget.dart';
 import 'widgets/attachment_viewer_page.dart';
+import 'state/expense_form_controller.dart';
+import 'state/expense_form_state.dart';
+import 'coordination/form_scroll_coordinator.dart';
 
 class ExpenseFormComponent extends StatefulWidget {
   // When true shows date, location and note fields (full edit mode). In edit mode (initialExpense != null) these are always shown.
@@ -77,315 +80,138 @@ class ExpenseFormComponent extends StatefulWidget {
 
 class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     with WidgetsBindingObserver {
-  // static const double _rowSpacing = 16.0; // Replaced by FormTheme.fieldSpacing
   final _formKey = GlobalKey<FormState>();
-  ExpenseCategory? _category;
-  double? _amount;
-  ExpenseParticipant? _paidBy;
-  DateTime? _date;
-  ExpenseLocation? _location;
-  final TextEditingController _nameController = TextEditingController();
-  final FocusNode _nameFocus = FocusNode();
-  final _amountController = TextEditingController();
-  final FocusNode _amountFocus = FocusNode();
-  final TextEditingController _noteController = TextEditingController();
-  late List<ExpenseCategory> _categories; // Lista locale delle categorie
-  bool _isDirty = false; // traccia modifiche non salvate
-  bool _initializing = true; // traccia se siamo in fase di inizializzazione
-  double _lastKeyboardHeight = 0; // Track keyboard height changes
-  List<String> _attachments = []; // Lista degli allegati
-
-  // Keys for scrolling calculations
-  final GlobalKey _amountFieldKey = GlobalKey();
-  final GlobalKey _nameFieldKey = GlobalKey();
-  final GlobalKey _locationFieldKey = GlobalKey();
-  final GlobalKey _noteFieldKey = GlobalKey();
-  final FocusNode _locationFocus = FocusNode();
-  final FocusNode _noteFocus = FocusNode();
-
-  // Stato per validazione in tempo reale
-  bool _amountTouched = false;
-  bool _paidByTouched = false;
-  bool _categoryTouched = false;
-
-  // Stato per espansione del form (solo quando fullEdit è false inizialmente)
-  bool _isExpanded = false;
-
+  late ExpenseFormController _controller;
+  late FormScrollCoordinator _scrollCoordinator;
+  late List<ExpenseCategory> _categories;
+  
   // Auto location preference
   bool _autoLocationEnabled = false;
 
-  // Location retrieval status for compact indicator
-  bool _isRetrievingLocation = false;
-
-  // Getters per stato dei campi
-  bool get _isAmountValid => _amount != null && _amount! > 0;
-  bool get _isPaidByValid => _paidBy != null;
-  bool get _isCategoryValid => _categories.isEmpty || _category != null;
-
   // Getter per determinare se mostrare i campi estesi
   bool get _shouldShowExtendedFields =>
-      widget.fullEdit || widget.initialExpense != null || _isExpanded;
+      widget.fullEdit || widget.initialExpense != null || _controller.isExpanded;
 
   // Scroll controller callback per CategorySelectorWidget
   // Removed _scrollToCategoryEnd: no longer needed with new category selector bottom sheet.
 
-  /// Scrolls to make the focused field visible when keyboard opens
-  void _scrollToFocusedField() {
-    if (widget.scrollController == null ||
-        !widget.scrollController!.hasClients) {
-      return;
-    }
 
-    // Delay to allow layout & keyboard metrics update
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted ||
-          widget.scrollController == null ||
-          !widget.scrollController!.hasClients) {
-        return;
-      }
 
-      final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-      final scrollController = widget.scrollController!;
-      final focusedKey = _amountFocus.hasFocus
-          ? _amountFieldKey
-          : _nameFocus.hasFocus
-          ? _nameFieldKey
-          : _locationFocus.hasFocus
-          ? _locationFieldKey
-          : _noteFocus.hasFocus
-          ? _noteFieldKey
-          : _focusedExtendedFieldKey();
-      if (focusedKey == null) {
-        return;
-      }
-      final ctx = focusedKey.currentContext;
-      if (ctx == null) {
-        return;
-      }
 
-      try {
-        final renderBox = ctx.findRenderObject() as RenderBox?;
-        if (renderBox == null) {
-          return;
-        }
-        final fieldTop = renderBox.localToGlobal(Offset.zero).dy;
-        final fieldHeight = renderBox.size.height;
-        final fieldBottom = fieldTop + fieldHeight;
-        final screenHeight = MediaQuery.of(context).size.height;
-        final availableBottom = screenHeight - keyboardHeight - 12; // padding
-        double scrollDelta = 0;
-
-        // If bottom obscured by keyboard -> scroll down just enough
-        if (keyboardHeight > 0 && fieldBottom > availableBottom) {
-          scrollDelta = fieldBottom - availableBottom + 8; // extra offset
-        }
-        // If top too high (negative) -> scroll up
-        const topMargin = 24.0; // desired margin from top when focusing
-        if (fieldTop < topMargin) {
-          scrollDelta = fieldTop - topMargin; // negative value scrolls up
-        }
-
-        if (scrollDelta.abs() > 4) {
-          // threshold
-          final target = (scrollController.offset + scrollDelta).clamp(
-            0.0,
-            scrollController.position.maxScrollExtent,
-          );
-          if ((target - scrollController.offset).abs() > 2) {
-            scrollController.animateTo(
-              target,
-              duration: const Duration(milliseconds: 250),
-              curve: Curves.easeInOut,
-            );
-          }
-        }
-      } catch (e) {
-        debugPrint('Scroll adjust error: $e');
-      }
-    });
-  }
-
-  @override
-  void didChangeMetrics() {
-    super.didChangeMetrics();
-    // Monitor keyboard height changes
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-
-      final currentKeyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-      if (currentKeyboardHeight != _lastKeyboardHeight) {
-        _lastKeyboardHeight = currentKeyboardHeight;
-
-        // If keyboard is opening and a field has focus, trigger scroll
-        if (currentKeyboardHeight > 0 &&
-            (_amountFocus.hasFocus ||
-                _nameFocus.hasFocus ||
-                _locationFocus.hasFocus ||
-                _noteFocus.hasFocus)) {
-          _scrollToFocusedField();
-        }
-      }
-    });
-  }
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _categories = List.from(widget.categories); // Copia della lista originale
+    _categories = List.from(widget.categories);
     _autoLocationEnabled = widget.autoLocationEnabled;
-    if (widget.initialExpense != null) {
-      _category = widget.categories.firstWhere(
-        (c) => c.id == widget.initialExpense!.category.id,
-        orElse: () => widget.categories.isNotEmpty
-            ? widget.categories.first
-            : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000)),
-      );
-      _amount = widget.initialExpense!.amount;
-      _paidBy = widget.initialExpense!.paidBy;
-      _date = widget.initialExpense!.date;
-      _location = widget.initialExpense!.location;
-      _attachments = List.from(widget.initialExpense!.attachments);
-      _nameController.text = widget.initialExpense!.name ?? '';
-      // Se amount è null o 0, lascia il campo vuoto
-      _amountController.text = (widget.initialExpense!.amount == 0)
-          ? ''
-          : widget.initialExpense!.amount.toString();
-      _noteController.text = widget.initialExpense!.note ?? '';
-    } else {
-      _date = DateTime.now();
-      _nameController.text = '';
-      _location = null;
-      _attachments = [];
-      // Preseleziona il primo elemento di paidBy e category se disponibili
-      _paidBy = widget.participants.isNotEmpty
-          ? widget.participants.first
-          : ExpenseParticipant(name: '');
-      _category = widget.categories.isNotEmpty
-          ? widget.categories.first
-          : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000));
-    }
-
-    // Autofocus su amount dopo primo frame
+    
+    // Initialize controller with initial state
+    final initialState = widget.initialExpense != null
+        ? ExpenseFormState.fromExpense(
+            widget.initialExpense!,
+            widget.categories,
+          )
+        : ExpenseFormState.initial(
+            participants: widget.participants,
+            categories: widget.categories,
+          );
+    
+    _controller = ExpenseFormController(
+      initialState: initialState,
+      categories: widget.categories,
+    );
+    
+    // Initialize scroll coordinator
+    _scrollCoordinator = FormScrollCoordinator(
+      scrollController: widget.scrollController,
+      context: context,
+    );
+    
+    // Listen to controller changes for form validity updates
+    _controller.addListener(() {
+      _notifyFormValidityChanged();
+    });
+    
+    // Setup focus listeners for scroll coordination
+    _controller.amountFocus.addListener(() {
+      if (_controller.amountFocus.hasFocus) {
+        Future.delayed(const Duration(milliseconds: 200), () {
+          _scrollCoordinator.scrollToField(_controller.amountFieldKey);
+        });
+      }
+    });
+    
+    _controller.nameFocus.addListener(() {
+      if (_controller.nameFocus.hasFocus) {
+        Future.delayed(const Duration(milliseconds: 200), () {
+          _scrollCoordinator.scrollToField(_controller.nameFieldKey);
+        });
+      }
+    });
+    
+    _controller.locationFocus.addListener(() {
+      if (_controller.locationFocus.hasFocus) {
+        Future.delayed(const Duration(milliseconds: 200), () {
+          _scrollCoordinator.scrollToField(_controller.locationFieldKey);
+        });
+      }
+    });
+    
+    _controller.noteFocus.addListener(() {
+      if (_controller.noteFocus.hasFocus) {
+        Future.delayed(const Duration(milliseconds: 200), () {
+          _scrollCoordinator.scrollToField(_controller.noteFieldKey);
+        });
+      }
+    });
+    
+    // Autofocus after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        _amountFocus.requestFocus();
-        _scrollToFocusedField();
+        _controller.amountFocus.requestFocus();
+        _scrollCoordinator.scrollToField(_controller.amountFieldKey);
       }
-    });
-
-    // Add focus listeners to trigger scrolling when fields receive focus
-    _amountFocus.addListener(() {
-      if (_amountFocus.hasFocus) {
-        // Delay to ensure keyboard is starting to appear
-        Future.delayed(const Duration(milliseconds: 200), () {
-          _scrollToFocusedField();
-        });
-      }
-    });
-
-    _nameFocus.addListener(() {
-      if (_nameFocus.hasFocus) {
-        // Delay to ensure keyboard is starting to appear
-        Future.delayed(const Duration(milliseconds: 200), () {
-          _scrollToFocusedField();
-        });
-      }
-    });
-    _locationFocus.addListener(() {
-      if (_locationFocus.hasFocus) {
-        Future.delayed(const Duration(milliseconds: 200), () {
-          _scrollToFocusedField();
-        });
-      }
-    });
-    _noteFocus.addListener(() {
-      if (_noteFocus.hasFocus) {
-        Future.delayed(const Duration(milliseconds: 200), () {
-          _scrollToFocusedField();
-        });
-      }
-    });
-    // Listener per aggiornare _amount in tempo reale (mantiene valore anche quando perde focus)
-    _amountController.addListener(() {
-      final parsed = _parseLocalizedAmount(_amountController.text);
-      if (parsed != _amount) {
-        setState(() {
-          _amount = parsed;
-          _amountTouched = true;
-          if (!_initializing) {
-            _isDirty = true;
-          }
-        });
-        _notifyFormValidityChanged();
-      }
-    });
-
-    // Listener per aggiornare lo stato quando il nome cambia
-    _nameController.addListener(() {
-      if (!_initializing) {
-        setState(() {
-          _isDirty = true;
-        });
-        _notifyFormValidityChanged();
-      }
-    });
-
-    // Mark initialization as complete after first frame
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _initializing = false;
-
+      
+      // Finish initialization
+      _controller.finishInitialization();
+      
       // Auto-retrieve location if enabled and creating a new expense
       if (widget.initialExpense == null && _autoLocationEnabled) {
         _retrieveCurrentLocation();
       }
-
-      // Notify parent of save callback
+      
+      // Notify parent
       widget.onSaveCallbackChanged?.call(_saveExpense);
-      // Notify initial form validity
-      widget.onFormValidityChanged?.call(_isFormValid());
+      widget.onFormValidityChanged?.call(_controller.isFormValid);
     });
   }
 
   Future<void> _retrieveCurrentLocation() async {
     if (!mounted) return;
 
-    setState(() {
-      _isRetrievingLocation = true;
-    });
+    _controller.setLocationRetrieving(true);
 
     final location = await LocationService.getCurrentLocation(
       context,
       resolveAddress: true,
       onStatusChanged: (status) {
         if (mounted) {
-          setState(() {
-            _isRetrievingLocation = status;
-          });
+          _controller.setLocationRetrieving(status);
         }
       },
     );
 
     if (location != null && mounted) {
-      setState(() {
-        _location = location;
-        _isDirty = true;
-      });
+      _controller.updateLocation(location);
     }
 
     if (mounted) {
-      setState(() {
-        _isRetrievingLocation = false;
-      });
+      _controller.setLocationRetrieving(false);
     }
   }
 
-  double? _parseLocalizedAmount(String input) {
-    if (input.isEmpty) return null;
-    // Since the new formatter normalizes to dot as decimal separator,
-    // we can directly parse the input
-    return double.tryParse(input);
-  }
+
 
   Future<bool> _confirmDiscardChanges() async {
     final gloc = gen.AppLocalizations.of(context);
@@ -412,28 +238,13 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         false;
   }
 
-  bool _isFormValid() {
-    // SET MINIMO DI INFORMAZIONI NECESSARIE per abilitare il pulsante:
-    // 1. Importo valido (> 0)
-    bool hasPaidBy = _paidBy != null && _paidBy!.name.isNotEmpty;
 
-    // 2. Categoria selezionata (solo se esistono categorie)
-    bool hasCategoryIfRequired = _categories.isEmpty || _category != null;
-
-    // Il pulsante è abilitato SOLO se tutti i requisiti sono soddisfatti
-    final nameValue = _nameController.text.trim();
-    return _isAmountValid &&
-        hasPaidBy &&
-        hasCategoryIfRequired &&
-        nameValue.isNotEmpty;
-  }
 
   void _notifyFormValidityChanged() {
     if (widget.onFormValidityChanged != null) {
-      // Use post frame callback to avoid calling setState during build
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
-          widget.onFormValidityChanged?.call(_isFormValid());
+          widget.onFormValidityChanged?.call(_controller.isFormValid);
         }
       });
     }
@@ -459,34 +270,27 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
   void _saveExpense() {
     final valid = _formKey.currentState?.validate() ?? false;
     if (!valid) {
-      setState(() {
-        _amountTouched = true;
-        _paidByTouched = true;
-        _categoryTouched = true;
-      });
+      // Mark all fields as touched for validation feedback
       return;
     }
-    if (!_isFormValid()) return;
-    final nameValue = _nameController.text.trim();
+    if (!_controller.isFormValid) return;
+    
+    final state = _controller.state;
     final expense = ExpenseDetails(
       id: widget.initialExpense?.id,
-      amount: _amount ?? _parseLocalizedAmount(_amountController.text) ?? 0,
-      paidBy: _paidBy ?? ExpenseParticipant(name: ''),
-      category:
-          _category ??
+      amount: state.amount ?? 0,
+      paidBy: state.paidBy ?? ExpenseParticipant(name: ''),
+      category: state.category ??
           (_categories.isNotEmpty
               ? _categories.first
               : ExpenseCategory(name: '', id: '', createdAt: DateTime.now())),
-      date: _date ?? DateTime.now(),
-      note: _noteController.text.trim().isNotEmpty
-          ? _noteController.text.trim()
-          : null,
-      name: nameValue,
-      location: _location,
-      attachments: _attachments,
+      date: state.date,
+      note: state.note.trim().isNotEmpty ? state.note.trim() : null,
+      name: state.name,
+      location: state.location,
+      attachments: state.attachments,
     );
     widget.onExpenseAdded(expense);
-    _isDirty = false;
     if (widget.shouldAutoClose && Navigator.of(context).canPop()) {
       Navigator.of(context).pop();
     }
@@ -500,7 +304,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
     final gloc = gen.AppLocalizations.of(context);
     final smallStyle = Theme.of(context).textTheme.bodyMedium;
     return PopScope(
-      canPop: !_isDirty,
+      canPop: !_controller.state.isDirty,
       onPopInvokedWithResult: _handlePop,
       child: Form(
         key: _formKey,
@@ -580,7 +384,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
 
   Future<void> _handlePop(bool didPop, Object? result) async {
     if (didPop) return;
-    if (_isDirty) {
+    if (_controller.state.isDirty) {
       final navigator = Navigator.of(context);
       final discard = await _confirmDiscardChanges();
       if (discard && mounted && navigator.canPop()) navigator.pop();
@@ -591,19 +395,19 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
 
   Widget _buildAmountField(gen.AppLocalizations gloc, TextStyle? style) =>
       KeyedSubtree(
-        key: _amountFieldKey,
+        key: _controller.amountFieldKey,
         child: _buildFieldWithStatus(
           AmountInputWidget(
-            controller: _amountController,
-            focusNode: _amountFocus,
+            controller: _controller.amountController,
+            focusNode: _controller.amountFocus,
             categories: _categories,
             label: gloc.amount,
             currency: widget.currency,
-            textInputAction: _isFormValid()
+            textInputAction: _controller.isFormValid
                 ? TextInputAction.done
                 : TextInputAction.next,
             validator: (v) {
-              final parsed = _parseLocalizedAmount(v ?? '');
+              final parsed = _controller.parseLocalizedAmount(v ?? '');
               if (parsed == null || parsed <= 0) return gloc.invalid_amount;
               return null;
             },
@@ -611,36 +415,36 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
             onSubmitted: _saveExpense,
             textStyle: style,
           ),
-          _isAmountValid,
-          _amountTouched,
+          _controller.isAmountValid,
+          _controller.amountTouched,
         ),
       );
 
   Widget _buildNameField(gen.AppLocalizations gloc, TextStyle? style) =>
       KeyedSubtree(
-        key: _nameFieldKey,
+        key: _controller.nameFieldKey,
         child: _buildFieldWithStatus(
           AmountInputWidget(
-            controller: _nameController,
-            focusNode: _nameFocus,
+            controller: _controller.nameController,
+            focusNode: _controller.nameFocus,
             label: gloc.expense_name,
             leading: Icon(
               Icons.description_outlined,
               size: 22,
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
-            textInputAction: _isFormValid()
+            textInputAction: _controller.isFormValid
                 ? TextInputAction.done
                 : TextInputAction.next,
             validator: (v) =>
                 v == null || v.trim().isEmpty ? gloc.enter_title : null,
             onSaved: (v) {},
-            onSubmitted: _isFormValid() ? _saveExpense : null,
+            onSubmitted: _controller.isFormValid ? _saveExpense : null,
             isText: true,
             textStyle: style,
           ),
-          _nameController.text.trim().isNotEmpty,
-          _amountTouched,
+          _controller.isNameValid,
+          _controller.amountTouched,
         ),
       );
 
@@ -651,27 +455,27 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
           _buildFieldWithStatus(
             ParticipantSelectorWidget(
               participants: widget.participants.map((p) => p.name).toList(),
-              selectedParticipant: _paidBy?.name,
+              selectedParticipant: _controller.state.paidBy?.name,
               onParticipantSelected: _onParticipantSelected,
               textStyle: style,
               fullEdit: true,
             ),
-            _isPaidByValid,
-            _paidByTouched,
+            _controller.isPaidByValid,
+            _controller.paidByTouched,
           ),
           _spacer(),
           _buildFieldWithStatus(
             CategorySelectorWidget(
               categories: _categories,
-              selectedCategory: _category,
+              selectedCategory: _controller.state.category,
               onCategorySelected: _onCategorySelected,
               onAddCategory: _onAddCategory,
               onAddCategoryInline: _onAddCategoryInline,
               textStyle: style,
               fullEdit: true,
             ),
-            _isCategoryValid,
-            _categoryTouched,
+            _controller.isCategoryValid(_categories.isEmpty),
+            _controller.categoryTouched,
           ),
         ],
       );
@@ -685,34 +489,34 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
             _buildFieldWithStatus(
               ParticipantSelectorWidget(
                 participants: widget.participants.map((p) => p.name).toList(),
-                selectedParticipant: _paidBy?.name,
+                selectedParticipant: _controller.state.paidBy?.name,
                 onParticipantSelected: _onParticipantSelected,
                 textStyle: style,
                 fullEdit: false,
               ),
-              _isPaidByValid,
-              _paidByTouched,
+              _controller.isPaidByValid,
+              _controller.paidByTouched,
             ),
             const SizedBox(width: 12),
             _buildFieldWithStatus(
               CategorySelectorWidget(
                 categories: _categories,
-                selectedCategory: _category,
+                selectedCategory: _controller.state.category,
                 onCategorySelected: _onCategorySelected,
                 onAddCategory: _onAddCategory,
                 onAddCategoryInline: _onAddCategoryInline,
                 textStyle: style,
                 fullEdit: false,
               ),
-              _isCategoryValid,
-              _categoryTouched,
+              _controller.isCategoryValid(_categories.isEmpty),
+              _controller.categoryTouched,
             ),
             // Show compact location indicator when auto-location is enabled
             if (widget.initialExpense == null && _autoLocationEnabled) ...[
               const Spacer(),
               CompactLocationIndicator(
-                isRetrieving: _isRetrievingLocation,
-                location: _location,
+                isRetrieving: _controller.state.isRetrievingLocation,
+                location: _controller.state.location,
                 onCancel: _clearLocation,
                 textStyle: style,
               ),
@@ -726,39 +530,23 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
   // (Expand button moved into ExpenseFormActionsWidget)
 
   void _clearLocation() {
-    setState(() {
-      _location = null;
-      _isRetrievingLocation = false;
-      if (!_initializing) {
-        _isDirty = true;
-      }
-    });
+    _controller.updateLocation(null);
+    _controller.setLocationRetrieving(false);
   }
 
   void _onParticipantSelected(String selectedName) {
-    setState(() {
-      _paidBy = widget.participants.firstWhere(
-        (p) => p.name == selectedName,
-        orElse: () => widget.participants.isNotEmpty
-            ? widget.participants.first
-            : ExpenseParticipant(name: ''),
-      );
-      _paidByTouched = true;
-      if (!_initializing) {
-        _isDirty = true;
-      }
-    });
+    final participant = widget.participants.firstWhere(
+      (p) => p.name == selectedName,
+      orElse: () => widget.participants.isNotEmpty
+          ? widget.participants.first
+          : ExpenseParticipant(name: ''),
+    );
+    _controller.updatePaidBy(participant);
     _notifyFormValidityChanged();
   }
 
   void _onCategorySelected(ExpenseCategory? selected) {
-    setState(() {
-      _category = selected;
-      _categoryTouched = true;
-      if (!_initializing) {
-        _isDirty = true;
-      }
-    });
+    _controller.updateCategory(selected);
     _notifyFormValidityChanged();
   }
 
@@ -772,16 +560,10 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
             ? widget.categories.first
             : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000)),
       );
-      setState(() {
-        if (!_categories.contains(found)) {
-          _categories.add(found);
-          _category = found;
-          _categoryTouched = true;
-          if (!_initializing) {
-            _isDirty = true;
-          }
-        }
-      });
+      if (!_categories.contains(found)) {
+        _categories.add(found);
+        _controller.addCategory(found);
+      }
       await Future.delayed(const Duration(milliseconds: 100));
       final foundAfter = widget.categories.firstWhere(
         (c) => c.name == newCategoryName,
@@ -789,20 +571,13 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
             ? widget.categories.first
             : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000)),
       );
-      setState(() {
-        _categories = List.from(widget.categories);
-        _category = foundAfter;
-        _categoryTouched = true;
-        if (!_initializing) {
-          _isDirty = true;
-        }
-      });
+      _categories = List.from(widget.categories);
+      _controller.updateCategory(foundAfter);
     }
   }
 
   Future<void> _onAddCategoryInline(String categoryName) async {
     widget.onCategoryAdded(categoryName);
-    // Wait a bit for the category to be added to the widget.categories list
     await Future.delayed(const Duration(milliseconds: 100));
     final found = widget.categories.firstWhere(
       (c) => c.name == categoryName,
@@ -810,17 +585,10 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
           ? widget.categories.first
           : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000)),
     );
-    setState(() {
-      if (!_categories.contains(found)) {
-        _categories.add(found);
-      }
-      _category = found;
-      _categoryTouched = true;
-      if (!_initializing) {
-        _isDirty = true;
-      }
-    });
-    // Wait again to ensure the state has settled
+    if (!_categories.contains(found)) {
+      _categories.add(found);
+      _controller.addCategory(found);
+    }
     await Future.delayed(const Duration(milliseconds: 100));
     final foundAfter = widget.categories.firstWhere(
       (c) => c.name == categoryName,
@@ -828,14 +596,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
           ? widget.categories.first
           : ExpenseCategory(name: '', id: '', createdAt: DateTime(2000)),
     );
-    setState(() {
-      _categories = List.from(widget.categories);
-      _category = foundAfter;
-      _categoryTouched = true;
-      if (!_initializing) {
-        _isDirty = true;
-      }
-    });
+    _categories = List.from(widget.categories);
+    _controller.updateCategory(foundAfter);
   }
 
   Widget _buildExtendedFields(String locale, TextStyle? style) {
@@ -845,84 +607,55 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
       children: [
         _spacer(),
         DateSelectorWidget(
-          selectedDate: _date,
+          selectedDate: _controller.state.date,
           tripStartDate: widget.tripStartDate,
           tripEndDate: widget.tripEndDate,
-          onDateSelected: (picked) => setState(() {
-            _date = picked;
-            if (!_initializing) {
-              _isDirty = true;
-            }
-          }),
+          onDateSelected: _controller.updateDate,
           locale: locale,
           textStyle: style,
         ),
         _spacer(),
         KeyedSubtree(
-          key: _locationFieldKey,
+          key: _controller.locationFieldKey,
           child: LocationInputWidget(
-            initialLocation: _location,
+            initialLocation: _controller.state.location,
             textStyle: style,
-            onLocationChanged: (location) => setState(() {
-              _location = location;
-              if (!_initializing) {
-                _isDirty = true;
-              }
-            }),
-            externalFocusNode: _locationFocus,
+            onLocationChanged: _controller.updateLocation,
+            externalFocusNode: _controller.locationFocus,
             autoRetrieve: widget.initialExpense == null && _autoLocationEnabled,
-            onRetrievalStatusChanged: (isRetrieving) => setState(() {
-              _isRetrievingLocation = isRetrieving;
-            }),
+            onRetrievalStatusChanged: _controller.setLocationRetrieving,
           ),
         ),
         _spacer(),
         AttachmentInputWidget(
           groupId: widget.groupId,
-          attachments: _attachments,
-          onAttachmentAdded: (path) {
-            setState(() {
-              _attachments.add(path);
-              if (!_initializing) {
-                _isDirty = true;
-              }
-            });
-          },
+          attachments: _controller.state.attachments,
+          onAttachmentAdded: _controller.addAttachment,
           onAttachmentRemoved: (index) {
-            setState(() {
-              // Delete the file from storage
-              final filePath = _attachments[index];
-              try {
-                File(filePath).deleteSync();
-              } catch (e) {
-                // File might not exist, ignore error
-              }
-              _attachments.removeAt(index);
-              if (!_initializing) {
-                _isDirty = true;
-              }
-            });
+            // Delete the file from storage
+            final filePath = _controller.state.attachments[index];
+            try {
+              File(filePath).deleteSync();
+            } catch (e) {
+              // File might not exist, ignore error
+            }
+            _controller.removeAttachment(index);
           },
           onAttachmentTapped: (path) {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => AttachmentViewerPage(
-                  attachments: _attachments,
-                  initialIndex: _attachments.indexOf(path),
+                  attachments: _controller.state.attachments,
+                  initialIndex: _controller.state.attachments.indexOf(path),
                   onDelete: (index) {
-                    setState(() {
-                      // Delete the file from storage
-                      final filePath = _attachments[index];
-                      try {
-                        File(filePath).deleteSync();
-                      } catch (e) {
-                        // File might not exist, ignore error
-                      }
-                      _attachments.removeAt(index);
-                      if (!_initializing) {
-                        _isDirty = true;
-                      }
-                    });
+                    // Delete the file from storage
+                    final filePath = _controller.state.attachments[index];
+                    try {
+                      File(filePath).deleteSync();
+                    } catch (e) {
+                      // File might not exist, ignore error
+                    }
+                    _controller.removeAttachment(index);
                   },
                 ),
               ),
@@ -931,51 +664,22 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
         ),
         _spacer(),
         KeyedSubtree(
-          key: _noteFieldKey,
+          key: _controller.noteFieldKey,
           child: NoteInputWidget(
-            controller: _noteController,
+            controller: _controller.noteController,
             textStyle: style,
-            focusNode: _noteFocus,
-            textInputAction: _isFormValid()
+            focusNode: _controller.noteFocus,
+            textInputAction: _controller.isFormValid
                 ? TextInputAction.done
                 : TextInputAction.newline,
-            onFieldSubmitted: _isFormValid() ? _saveExpense : null,
+            onFieldSubmitted: _controller.isFormValid ? _saveExpense : null,
           ),
         ),
       ],
     );
   }
 
-  GlobalKey? _focusedExtendedFieldKey() {
-    // Try to detect focus indirectly for location / note using primary focus
-    final currentFocus = FocusManager.instance.primaryFocus;
-    if (currentFocus == null) return null;
-    // Heuristic: match by widget type in context chain
-    if (_locationFieldKey.currentContext != null &&
-        _locationFieldKey.currentContext!.findRenderObject() != null &&
-        _contextContainsFocus(
-          _locationFieldKey.currentContext!,
-          currentFocus,
-        )) {
-      return _locationFieldKey;
-    }
-    if (_noteFieldKey.currentContext != null &&
-        _noteFieldKey.currentContext!.findRenderObject() != null &&
-        _contextContainsFocus(_noteFieldKey.currentContext!, currentFocus)) {
-      return _noteFieldKey;
-    }
-    return null;
-  }
 
-  bool _contextContainsFocus(BuildContext ctx, FocusNode focus) {
-    // Walk up the focus ancestors
-    FocusNode? node = focus;
-    while (node != null) {
-      if (node.context == ctx) return true;
-      node = node.parent;
-    }
-    return false;
-  }
 
   Widget _buildDivider(BuildContext context) {
     if (_shouldShowExtendedFields) {
@@ -993,33 +697,21 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent>
 
   Widget _buildActionsRow(gen.AppLocalizations gloc, TextStyle? style) =>
       ExpenseFormActionsWidget(
-        onSave: _isFormValid() ? _saveExpense : null,
-        isFormValid: _isFormValid(),
+        onSave: _controller.isFormValid ? _saveExpense : null,
+        isFormValid: _controller.isFormValid,
         isEdit: widget.initialExpense != null,
         onDelete: widget.initialExpense != null ? widget.onDelete : null,
         textStyle: style,
         showExpandButton:
-            !(widget.fullEdit || widget.initialExpense != null || _isExpanded),
+            !(widget.fullEdit || widget.initialExpense != null || _controller.isExpanded),
         onExpand:
-            widget.onExpand ??
-            () {
-              setState(() {
-                _isExpanded = true;
-                _isDirty = true;
-              });
-            },
+            widget.onExpand ?? _controller.expandForm,
       );
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _amountController.dispose();
-    _amountFocus.dispose();
-    _nameController.dispose();
-    _nameFocus.dispose();
-    _noteController.dispose();
-    _locationFocus.dispose();
-    _noteFocus.dispose();
+    _controller.dispose();
     super.dispose();
   }
 }
