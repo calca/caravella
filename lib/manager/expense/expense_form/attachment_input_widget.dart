@@ -35,13 +35,32 @@ class AttachmentInputWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(loc.attachments, style: theme.textTheme.titleSmall),
-            if (attachments.length < 5)
-              TextButton.icon(
-                onPressed: () => _showAttachmentSourcePicker(context),
-                icon: const Icon(Icons.add, size: 20),
-                label: Text(loc.add_attachment),
-              ),
+            Icon(
+              Icons.attach_file,
+              size: 20,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+            Row(
+              children: [
+                Text(
+                  '${attachments.length}/5',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                if (attachments.length < 5)
+                  IconButton(
+                    onPressed: () => _showAttachmentSourcePicker(context),
+                    icon: Icon(
+                      Icons.add,
+                      size: 24,
+                      color: theme.colorScheme.primary,
+                    ),
+                    tooltip: loc.add_attachment,
+                  ),
+              ],
+            ),
           ],
         ),
         if (attachments.isNotEmpty) ...[
@@ -279,8 +298,9 @@ class _AttachmentThumbnail extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: theme.colorScheme.outline.withValues(alpha: 0.5),
+                  color: theme.colorScheme.outlineVariant,
                 ),
+                color: theme.colorScheme.surfaceContainerHighest,
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
@@ -296,13 +316,20 @@ class _AttachmentThumbnail extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.errorContainer,
+                  color: theme.colorScheme.surface,
                   shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: theme.colorScheme.shadow.withValues(alpha: 0.1),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
                 child: Icon(
                   Icons.close,
                   size: 16,
-                  color: theme.colorScheme.onErrorContainer,
+                  color: theme.colorScheme.onSurface,
                 ),
               ),
             ),
