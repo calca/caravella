@@ -1,16 +1,35 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:caravella_core/caravella_core.dart';
 import 'nominatim_place.dart';
 
 /// Service for searching places using OpenStreetMap Nominatim API
 /// Respecting usage policy: https://operations.osmfoundation.org/policies/nominatim/
 class NominatimSearchService {
   static const String _baseUrl = 'https://nominatim.openstreetmap.org/search';
-  static const String _userAgent = 'Caravella-ExpenseTracker/1.1.0';
+  // Nominatim requires a descriptive User-Agent with contact info
+  static const String _userAgent =
+      'Caravella/1.2.0 (https://github.com/calca/caravella)';
   static const String _acceptLanguage = 'it,en';
+
+  // Rate limiting: Nominatim allows max 1 request per second
+  static DateTime? _lastRequestTime;
+  static const Duration _minRequestInterval = Duration(milliseconds: 1000);
+
+  /// Ensures rate limiting compliance by waiting if needed
+  static Future<void> _ensureRateLimit() async {
+    if (_lastRequestTime != null) {
+      final elapsed = DateTime.now().difference(_lastRequestTime!);
+      if (elapsed < _minRequestInterval) {
+        await Future.delayed(_minRequestInterval - elapsed);
+      }
+    }
+    _lastRequestTime = DateTime.now();
+  }
 
   /// Searches for places matching the query
   /// Returns a list of up to [limit] results
+  /// Throws an exception if the search fails
   static Future<List<NominatimPlace>> searchPlaces(
     String query, {
     int limit = 10,
@@ -28,6 +47,9 @@ class NominatimSearchService {
     );
 
     try {
+      // Respect rate limiting
+      await _ensureRateLimit();
+
       final response = await http
           .get(
             url,
@@ -36,26 +58,37 @@ class NominatimSearchService {
               'Accept-Language': _acceptLanguage,
             },
           )
-          .timeout(
-            const Duration(seconds: 5),
-            onTimeout: () {
-              // Return empty response on timeout
-              return http.Response('[]', 408);
-            },
-          );
+          .timeout(const Duration(seconds: 5));
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonList = json.decode(response.body);
-        return jsonList.map((json) => NominatimPlace.fromJson(json)).toList();
+        final results = jsonList
+            .map((json) => NominatimPlace.fromJson(json))
+            .toList();
+        LoggerService.info(
+          'Place search for "$query" returned ${results.length} results',
+        );
+        return results;
+      } else if (response.statusCode == 418) {
+        // 418 I'm a teapot - Nominatim rate limiting or blocked request
+        LoggerService.warning(
+          'Place search blocked by Nominatim (rate limit or invalid User-Agent)',
+        );
+        throw Exception(
+          'Search temporarily unavailable. Please try again in a moment.',
+        );
+      } else {
+        LoggerService.warning(
+          'Place search failed with status code: ${response.statusCode}',
+        );
+        throw Exception(
+          'Search failed with status code: ${response.statusCode}',
+        );
       }
-    } on http.ClientException catch (_) {
-      // SSL/TLS or network error - return empty list
-    } on FormatException catch (_) {
-      // JSON parsing error - return empty list
-    } catch (_) {
-      // Any other error - return empty list
+    } catch (e) {
+      LoggerService.warning('Place search error for "$query": $e');
+      rethrow;
     }
-    return [];
   }
 
   /// Reverse geocodes coordinates to get the address at that exact location
@@ -66,6 +99,9 @@ class NominatimSearchService {
     int zoom = 18, // Higher zoom = more specific address
   }) async {
     try {
+      // Respect rate limiting
+      await _ensureRateLimit();
+
       final url = Uri.parse(
         'https://nominatim.openstreetmap.org/reverse?'
         'lat=$latitude'
@@ -116,6 +152,9 @@ class NominatimSearchService {
     int zoom = 16, // Higher zoom = smaller area
   }) async {
     try {
+      // Respect rate limiting
+      await _ensureRateLimit();
+
       final url = Uri.parse(
         'https://nominatim.openstreetmap.org/reverse?'
         'lat=$latitude'

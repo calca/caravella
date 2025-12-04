@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automatic file cleanup when deleting expenses or expense groups
 - Organized attachment storage by expense group ID for better file management
 
+### Fixed
+- Fixed place search not showing error messages when network requests fail, timeout, or encounter SSL/TLS issues
+- Improved error feedback for location search to display localized error messages instead of silently failing
+
 ### Technical
 - **Platform Abstraction Services**: Added service abstractions in `caravella_core` for better testability:
   - `FilePickerService`: Abstraction for `image_picker` and `file_picker` dependencies
