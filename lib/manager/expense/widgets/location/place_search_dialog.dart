@@ -188,6 +188,7 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
         setState(() {
           _searchResults = results;
           _isSearching = false;
+          _errorMessage = '';
           // Deselect manually selected map point when showing search results
           _selectedMapLocation = null;
           _selectedLocationAddress = null;
@@ -196,8 +197,10 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
       }
     } catch (e) {
       if (mounted) {
+        final gloc = gen.AppLocalizations.of(context);
         setState(() {
-          _errorMessage = 'Search failed';
+          _searchResults = [];
+          _errorMessage = gloc.location_error;
           _isSearching = false;
         });
       }

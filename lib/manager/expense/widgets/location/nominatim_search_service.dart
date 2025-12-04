@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:caravella_core/caravella_core.dart';
 import 'nominatim_place.dart';
 
 /// Service for searching places using OpenStreetMap Nominatim API
@@ -11,6 +12,7 @@ class NominatimSearchService {
 
   /// Searches for places matching the query
   /// Returns a list of up to [limit] results
+  /// Throws an exception if the search fails
   static Future<List<NominatimPlace>> searchPlaces(
     String query, {
     int limit = 10,
@@ -38,24 +40,21 @@ class NominatimSearchService {
           )
           .timeout(
             const Duration(seconds: 5),
-            onTimeout: () {
-              // Return empty response on timeout
-              return http.Response('[]', 408);
-            },
           );
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonList = json.decode(response.body);
-        return jsonList.map((json) => NominatimPlace.fromJson(json)).toList();
+        final results = jsonList.map((json) => NominatimPlace.fromJson(json)).toList();
+        LoggerService.info('Place search for "$query" returned ${results.length} results');
+        return results;
+      } else {
+        LoggerService.warning('Place search failed with status code: ${response.statusCode}');
+        throw Exception('Search failed with status code: ${response.statusCode}');
       }
-    } on http.ClientException catch (_) {
-      // SSL/TLS or network error - return empty list
-    } on FormatException catch (_) {
-      // JSON parsing error - return empty list
-    } catch (_) {
-      // Any other error - return empty list
+    } catch (e) {
+      LoggerService.warning('Place search error for "$query": $e');
+      rethrow;
     }
-    return [];
   }
 
   /// Reverse geocodes coordinates to get the address at that exact location
