@@ -14,7 +14,7 @@ dependencies:
   shared_preferences: ^2.3.3
   uuid: ^4.5.1
   intl: ^0.20.2
-  archive: ^3.6.1
+  archive: ^4.0.7
   in_app_review: ^2.0.10
 
 dev_dependencies:
