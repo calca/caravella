@@ -20,7 +20,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 // Replaced bottom sheet overview with full page navigation
 import '../widgets/delete_expense_dialog.dart';
-import '../../expense/expense_form_page.dart';
+import '../../expense/pages/expense_form_page.dart';
 import '../widgets/group_header.dart';
 import '../widgets/group_total.dart';
 import '../widgets/group_actions.dart';
@@ -412,6 +412,15 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       builder: (context) => DeleteExpenseDialog(
         expense: expense,
         onDelete: () async {
+          // Delete attachment files
+          for (final attachmentPath in expense.attachments) {
+            try {
+              await File(attachmentPath).delete();
+            } catch (e) {
+              // File might not exist, ignore error
+            }
+          }
+
           // Rimuovi la spesa
           setState(() {
             _trip!.expenses.removeWhere((e) => e.id == expense.id);

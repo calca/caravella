@@ -691,6 +691,24 @@
   ,"@reminder_message_single": {"description": "Messaggio di promemoria quando un partecipante deve denaro a una sola persona", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
   ,"reminder_message_multiple": "Ciao {participantName}! 👋\n\nVorrei ricordarti i tuoi pagamenti per il gruppo \"{groupName}\":\n\n{debtsList}\n\nGrazie! 😊"
   ,"@reminder_message_multiple": {"description": "Messaggio di promemoria quando un partecipante deve denaro a più persone", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
+  ,"attachments": "Allegati"
+  ,"@attachments": {"description": "Etichetta per gli allegati delle spese"}
+  ,"add_attachment": "Aggiungi allegato"
+  ,"@add_attachment": {"description": "Pulsante per aggiungere un allegato"}
+  ,"attachment_limit_reached": "Limite massimo di 5 allegati raggiunto"
+  ,"@attachment_limit_reached": {"description": "Messaggio di errore quando si tenta di aggiungere più di 5 allegati"}
+  ,"delete_attachment": "Elimina allegato"
+  ,"@delete_attachment": {"description": "Azione per eliminare un allegato"}
+  ,"share_attachment": "Condividi allegato"
+  ,"@share_attachment": {"description": "Azione per condividere un allegato"}
+  ,"delete_attachment_confirm_title": "Elimina allegato"
+  ,"@delete_attachment_confirm_title": {"description": "Titolo dialogo conferma eliminazione allegato"}
+  ,"delete_attachment_confirm_message": "Sei sicuro di voler eliminare questo allegato?"
+  ,"@delete_attachment_confirm_message": {"description": "Messaggio dialogo conferma eliminazione allegato"}
+  ,"attachment_source": "Scegli sorgente"
+  ,"@attachment_source": {"description": "Titolo per scegliere la sorgente dell'allegato"}
+  ,"from_files": "Dai file"
+  ,"@from_files": {"description": "Opzione per scegliere un file"}
   ,"expenses_map": "Mappa delle spese"
   ,"@expenses_map": {"description": "Sottotitolo della pagina che mostra le spese su una mappa"}
 }

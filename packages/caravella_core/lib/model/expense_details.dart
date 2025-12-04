@@ -12,6 +12,7 @@ class ExpenseDetails {
   final String? note;
   final String? name;
   final ExpenseLocation? location;
+  final List<String> attachments; // Percorsi relativi ai file allegati (max 5)
 
   ExpenseDetails({
     required this.category,
@@ -21,8 +22,10 @@ class ExpenseDetails {
     this.note,
     this.name,
     this.location,
+    List<String>? attachments,
     String? id, // opzionale, generato se mancante
-  }) : id = id ?? const Uuid().v4();
+  }) : id = id ?? const Uuid().v4(),
+       attachments = attachments != null ? List.from(attachments) : [];
 
   factory ExpenseDetails.fromJson(Map<String, dynamic> json) {
     return ExpenseDetails(
@@ -38,6 +41,9 @@ class ExpenseDetails {
       location: json['location'] != null
           ? ExpenseLocation.fromJson(json['location'])
           : null,
+      attachments: json['attachments'] != null
+          ? List<String>.from(json['attachments'])
+          : null,
     );
   }
 
@@ -50,6 +56,7 @@ class ExpenseDetails {
     if (note != null) 'note': note,
     if (name != null) 'name': name,
     if (location != null) 'location': location!.toJson(),
+    if (attachments.isNotEmpty) 'attachments': attachments,
   };
 
   ExpenseDetails copyWith({
@@ -61,6 +68,7 @@ class ExpenseDetails {
     String? note,
     String? name,
     ExpenseLocation? location,
+    List<String>? attachments,
   }) {
     return ExpenseDetails(
       id: id ?? this.id,
@@ -71,6 +79,7 @@ class ExpenseDetails {
       note: note ?? this.note,
       name: name ?? this.name,
       location: location ?? this.location,
+      attachments: attachments ?? List.from(this.attachments),
     );
   }
 }

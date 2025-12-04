@@ -1830,4 +1830,31 @@ class AppLocalizationsZh extends AppLocalizations {
   ) {
     return '嗨 $participantName！👋\n\n友情提醒您对群组 \"$groupName\" 的付款：\n\n$debtsList\n\n谢谢！😊';
   }
+
+  @override
+  String get attachments => '附件';
+
+  @override
+  String get add_attachment => '添加附件';
+
+  @override
+  String get attachment_limit_reached => '已达到5个附件的最大限制';
+
+  @override
+  String get delete_attachment => '删除附件';
+
+  @override
+  String get share_attachment => '分享附件';
+
+  @override
+  String get delete_attachment_confirm_title => '删除附件';
+
+  @override
+  String get delete_attachment_confirm_message => '您确定要删除此附件吗？';
+
+  @override
+  String get attachment_source => '选择来源';
+
+  @override
+  String get from_files => '从文件';
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'expense_form_component.dart';
+import '../components/expense_form_component.dart';
 
 /// Full-screen page for creating or editing an expense
 class ExpenseFormPage extends StatefulWidget {
@@ -69,7 +69,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
                       description: '${gloc.group} ${widget.group.title}',
                     ),
                     const SizedBox(height: 24),
-                    ExpenseFormComponent(
+                    ExpenseFormComponent.legacy(
                       initialExpense: widget.initialExpense,
                       participants: widget.group.participants,
                       categories: widget.group.categories,
@@ -87,6 +87,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
                       onFormValidityChanged: _updateFormValidity,
                       onSaveCallbackChanged: (callback) =>
                           _saveCallback = callback,
+                      groupId: widget.group.id,
                     ),
                   ],
                 ),

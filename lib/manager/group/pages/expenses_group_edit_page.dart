@@ -5,7 +5,7 @@ import 'package:io_caravella_egm/manager/group/data/group_form_state.dart';
 import 'package:io_caravella_egm/manager/group/widgets/section_flat.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../expense/expense_form/icon_leading_field.dart';
+import '../../expense/widgets/icon_leading_field.dart';
 import '../group_form_controller.dart';
 import '../group_edit_mode.dart';
 import '../widgets/group_title_field.dart';

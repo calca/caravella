@@ -3646,6 +3646,60 @@ abstract class AppLocalizations {
     Object groupName,
     Object debtsList,
   );
+
+  /// Label for expense attachments
+  ///
+  /// In en, this message translates to:
+  /// **'Attachments'**
+  String get attachments;
+
+  /// Button to add an attachment
+  ///
+  /// In en, this message translates to:
+  /// **'Add attachment'**
+  String get add_attachment;
+
+  /// Error message when trying to add more than 5 attachments
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum limit of 5 attachments reached'**
+  String get attachment_limit_reached;
+
+  /// Action to delete an attachment
+  ///
+  /// In en, this message translates to:
+  /// **'Delete attachment'**
+  String get delete_attachment;
+
+  /// Action to share an attachment
+  ///
+  /// In en, this message translates to:
+  /// **'Share attachment'**
+  String get share_attachment;
+
+  /// Delete attachment confirmation dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete attachment'**
+  String get delete_attachment_confirm_title;
+
+  /// Delete attachment confirmation dialog message
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this attachment?'**
+  String get delete_attachment_confirm_message;
+
+  /// Title for choosing attachment source
+  ///
+  /// In en, this message translates to:
+  /// **'Choose source'**
+  String get attachment_source;
+
+  /// Option to choose from files
+  ///
+  /// In en, this message translates to:
+  /// **'From files'**
+  String get from_files;
 }
 
 class _AppLocalizationsDelegate

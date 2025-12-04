@@ -729,4 +729,22 @@
   ,"@reminder_message_single": {"description": "Reminder message when a participant owes money to a single person", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
   ,"reminder_message_multiple": "Hi {participantName}! 👋\n\nJust a friendly reminder of your payments for the group \"{groupName}\":\n\n{debtsList}\n\nThank you! 😊"
   ,"@reminder_message_multiple": {"description": "Reminder message when a participant owes money to multiple people", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
+  ,"attachments": "Attachments"
+  ,"@attachments": {"description": "Label for expense attachments"}
+  ,"add_attachment": "Add attachment"
+  ,"@add_attachment": {"description": "Button to add an attachment"}
+  ,"attachment_limit_reached": "Maximum limit of 5 attachments reached"
+  ,"@attachment_limit_reached": {"description": "Error message when trying to add more than 5 attachments"}
+  ,"delete_attachment": "Delete attachment"
+  ,"@delete_attachment": {"description": "Action to delete an attachment"}
+  ,"share_attachment": "Share attachment"
+  ,"@share_attachment": {"description": "Action to share an attachment"}
+  ,"delete_attachment_confirm_title": "Delete attachment"
+  ,"@delete_attachment_confirm_title": {"description": "Delete attachment confirmation dialog title"}
+  ,"delete_attachment_confirm_message": "Are you sure you want to delete this attachment?"
+  ,"@delete_attachment_confirm_message": {"description": "Delete attachment confirmation dialog message"}
+  ,"attachment_source": "Choose source"
+  ,"@attachment_source": {"description": "Title for choosing attachment source"}
+  ,"from_files": "From files"
+  ,"@from_files": {"description": "Option to choose from files"}
 }
