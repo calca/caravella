@@ -191,15 +191,15 @@ class DataBackupPage extends StatelessWidget {
       );
       archive.addFile(archiveFile);
       final zipData = ZipEncoder().encode(archive);
+      if (zipData == null) throw Exception('Failed to encode ZIP archive');
       await File(zipPath).writeAsBytes(zipData);
 
       if (!context.mounted) return;
 
-      final params = ShareParams(
+      await Share.shareXFiles(
+        [XFile(zipPath)],
         text: loc.backup_share_message,
-        files: [XFile(zipPath)],
       );
-      await SharePlus.instance.share(params);
     } catch (e) {
       if (!context.mounted) return;
       AppToast.show(

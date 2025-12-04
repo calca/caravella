@@ -40,9 +40,10 @@ void main() {
       final archiveFile = ArchiveFile('expense_group_storage.json', fileBytes.length, fileBytes);
       archive.addFile(archiveFile);
       final zipData = ZipEncoder().encode(archive);
+      expect(zipData, isNotNull);
       
       final zipFile = File('${tempDir.path}/test_backup.zip');
-      await zipFile.writeAsBytes(zipData);
+      await zipFile.writeAsBytes(zipData!);
 
       // Verify ZIP file was created and is not empty
       expect(await zipFile.exists(), true);
@@ -57,7 +58,7 @@ void main() {
       expect(decodedArchive.first.size, fileBytes.length);
       
       // Verify the content is correct
-      final extractedContent = String.fromCharCodes(decodedArchive.first.content as List<int>);
+      final extractedContent = String.fromCharCodes(decodedArchive.first.content!);
       final expectedContent = await testDataFile.readAsString();
       expect(extractedContent, expectedContent);
 
@@ -77,9 +78,10 @@ void main() {
       final archiveFile = ArchiveFile('expense_group_storage.json', fileBytes.length, fileBytes);
       archive.addFile(archiveFile);
       final zipData = ZipEncoder().encode(archive);
+      expect(zipData, isNotNull);
       
       final zipFile = File('${tempDir.path}/empty_backup.zip');
-      await zipFile.writeAsBytes(zipData);
+      await zipFile.writeAsBytes(zipData!);
 
       // Verify ZIP file structure is correct even with empty content
       expect(await zipFile.exists(), true);

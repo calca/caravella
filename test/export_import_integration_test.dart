@@ -51,9 +51,10 @@ void main() {
       final archiveFile = ArchiveFile(fileName, fileBytes.length, fileBytes);
       archive.addFile(archiveFile);
       final zipData = ZipEncoder().encode(archive);
+      expect(zipData, isNotNull, reason: 'ZIP encoding should not return null');
       
       final zipFile = File('${tempDir.path}/test_backup.zip');
-      await zipFile.writeAsBytes(zipData);
+      await zipFile.writeAsBytes(zipData!);
       
       // Step 3: Simulate IMPORT - read ZIP using existing import logic
       final zipBytes = await zipFile.readAsBytes();
@@ -66,7 +67,7 @@ void main() {
       
       for (final file in decodedArchive) {
         if (file.name == fileName) {
-          extractedContent = String.fromCharCodes(file.content as List<int>);
+          extractedContent = String.fromCharCodes(file.content!);
           fileFound = true;
           break;
         }

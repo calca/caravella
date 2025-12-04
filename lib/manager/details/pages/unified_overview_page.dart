@@ -110,7 +110,7 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
     final gloc = gen.AppLocalizations.of(context);
     try {
       final summary = _buildTextSummary(gloc);
-      await SharePlus.instance.share(ShareParams(text: summary));
+      await Share.share(summary);
     } catch (_) {
       // swallow errors silently or add toast if available
     } finally {
@@ -139,8 +139,9 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
       final dir = await getTemporaryDirectory();
       final file = File('${dir.path}/overview_${widget.trip.id}.png');
       await file.writeAsBytes(bytes);
-      await SharePlus.instance.share(
-        ShareParams(files: [XFile(file.path)], text: widget.trip.title),
+      await Share.shareXFiles(
+        [XFile(file.path)],
+        text: widget.trip.title,
       );
     } catch (_) {
       // optionally handle error
