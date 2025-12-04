@@ -45,7 +45,6 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
   final MapController _mapController = MapController();
   List<NominatimPlace> _searchResults = [];
   bool _isSearching = false;
-  String _errorMessage = '';
   LatLng _mapCenter = const LatLng(41.9028, 12.4964); // Default: Rome, Italy
   final double _mapZoom = 18.0; // Maximum zoom to see nearby shops and POIs
   LatLng? _selectedMapLocation;
@@ -116,7 +115,6 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
 
     setState(() {
       _isCenteringOnLocation = true;
-      _errorMessage = '';
     });
 
     try {
@@ -142,9 +140,8 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
     } catch (e) {
       // Show error if location fails
       if (mounted) {
-        setState(() {
-          _errorMessage = 'Unable to get current location';
-        });
+        final gloc = gen.AppLocalizations.of(context);
+        AppToast.show(context, gloc.location_error, type: ToastType.error);
       }
     } finally {
       if (mounted) {
@@ -169,7 +166,6 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
       setState(() {
         _searchResults = [];
         _isSearching = false;
-        _errorMessage = '';
       });
       return;
     }
@@ -178,7 +174,6 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
 
     setState(() {
       _isSearching = true;
-      _errorMessage = '';
     });
 
     try {
@@ -188,7 +183,6 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
         setState(() {
           _searchResults = results;
           _isSearching = false;
-          _errorMessage = '';
           // Deselect manually selected map point when showing search results
           _selectedMapLocation = null;
           _selectedLocationAddress = null;
@@ -200,9 +194,9 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
         final gloc = gen.AppLocalizations.of(context);
         setState(() {
           _searchResults = [];
-          _errorMessage = gloc.location_error;
           _isSearching = false;
         });
+        AppToast.show(context, gloc.location_error, type: ToastType.error);
       }
     }
   }
@@ -211,7 +205,6 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
     _searchController.clear();
     setState(() {
       _searchResults = [];
-      _errorMessage = '';
       _isSearching = false;
     });
   }
@@ -278,15 +271,6 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
                     left: 0,
                     right: 0,
                     child: _buildAutocompleteResults(theme, colorScheme),
-                  ),
-
-                // Error overlay
-                if (_errorMessage.isNotEmpty)
-                  Positioned(
-                    top: 16,
-                    left: 16,
-                    right: 16,
-                    child: MapErrorOverlay(message: _errorMessage),
                   ),
 
                 // FAB per centrare su posizione corrente
