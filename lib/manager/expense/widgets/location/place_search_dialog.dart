@@ -180,8 +180,11 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
       // Run search and wait for results
       final results = await NominatimSearchService.searchPlaces(query);
       if (mounted) {
+        // Sort results by distance from current map center (user location)
+        final sortedResults = _sortResultsByDistance(results, _mapCenter);
+        
         setState(() {
-          _searchResults = results;
+          _searchResults = sortedResults;
           _isSearching = false;
           // Deselect manually selected map point when showing search results
           _selectedMapLocation = null;
@@ -207,6 +210,48 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
       _searchResults = [];
       _isSearching = false;
     });
+  }
+
+  /// Sorts search results by distance from the given location
+  /// If location is the default (Rome), sorts alphabetically instead
+  List<NominatimPlace> _sortResultsByDistance(
+    List<NominatimPlace> results,
+    LatLng fromLocation,
+  ) {
+    // Check if we're using the default location (Rome)
+    const defaultLocation = LatLng(41.9028, 12.4964);
+    final isDefaultLocation = 
+        (fromLocation.latitude - defaultLocation.latitude).abs() < 0.0001 &&
+        (fromLocation.longitude - defaultLocation.longitude).abs() < 0.0001;
+    
+    // If using default location, sort alphabetically
+    if (isDefaultLocation) {
+      final sortedResults = List<NominatimPlace>.from(results);
+      sortedResults.sort((a, b) => 
+        a.displayName.toLowerCase().compareTo(b.displayName.toLowerCase())
+      );
+      return sortedResults;
+    }
+    
+    // Otherwise, sort by distance
+    const distance = Distance();
+    
+    // Create a list of results with their distances
+    final resultsWithDistance = results.map((place) {
+      final placeLocation = LatLng(place.latitude, place.longitude);
+      final distanceInMeters = distance.as(
+        LengthUnit.Meter,
+        fromLocation,
+        placeLocation,
+      );
+      return MapEntry(place, distanceInMeters);
+    }).toList();
+    
+    // Sort by distance
+    resultsWithDistance.sort((a, b) => a.value.compareTo(b.value));
+    
+    // Return only the places
+    return resultsWithDistance.map((entry) => entry.key).toList();
   }
 
   Future<void> _geocodeSelectedLocation(LatLng location) async {
