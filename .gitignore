@@ -61,3 +61,12 @@ dartsdk-linux-*.zip
 dart-sdk.zip
 stable.zip
 flutter/
+packages/caravella_core/build/native_assets/macos/native_assets.json
+packages/caravella_core/build/test_cache/build/ca33f282d90356a564f3e3da52c97351.cache.dill.track.dill
+packages/caravella_core/build/unit_test_assets/AssetManifest.bin
+packages/caravella_core/build/unit_test_assets/FontManifest.json
+packages/caravella_core/build/unit_test_assets/NativeAssetsManifest.json
+packages/caravella_core/build/unit_test_assets/NOTICES.Z
+packages/caravella_core/build/unit_test_assets/fonts/MaterialIcons-Regular.otf
+packages/caravella_core/build/unit_test_assets/shaders/ink_sparkle.frag
+packages/caravella_core/build/unit_test_assets/shaders/stretch_effect.frag

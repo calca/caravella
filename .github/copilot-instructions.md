@@ -1,6 +1,6 @@
 # Caravella Flutter App
 - Multi-platform group expense tracker built with Flutter 3 stable + Material 3; flavors selected via `--dart-define=FLAVOR=dev|staging|prod`.
-- Run inside macOS/zsh; prefer flutter stable (CI uses 3.35.x) and consult these notes before ad-hoc scripts.
+- Run inside macOS/zsh; prefer flutter stable (CI uses 3.38.x) and consult these notes before ad-hoc scripts.
 - **Multi-package architecture**: Core logic in `packages/caravella_core`, UI components in `packages/caravella_core_ui`, updates in `packages/play_store_updates`, main app in `lib/`.
 
 ## Core Architecture

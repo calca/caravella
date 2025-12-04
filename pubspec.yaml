@@ -42,38 +42,38 @@ dependencies:
     path: packages/caravella_core_ui
   
   # External dependencies
-  provider: ^6.1.5+1
-  file_picker: ^10.3.7
+  provider: ^6.1.5
+  file_picker: ^8.1.4
   image_picker: ^1.2.1
   image_picker_android: ^0.8.13
-  image: ^4.5.4
-  package_info_plus: ^9.0.0
+  image: ^4.3.0
+  package_info_plus: ^8.1.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   path_provider: ^2.1.5
-  shared_preferences: ^2.5.3
+  shared_preferences: ^2.3.3
   url_launcher: ^6.3.2
-  uuid: ^4.5.2
-  share_plus: ^12.0.1
-  archive: ^4.0.7
+  uuid: ^4.5.1
+  share_plus: ^10.1.1
+  archive: ^3.6.1
   flag_secure: ^2.0.2
   geolocator: ^14.0.2
   geocoding: ^4.0.0
-  http: ^1.6.0
-  path: ^1.9.1
+  http: ^1.2.2
+  path: ^1.9.0
   intl: ^0.20.2
-  timeago: ^3.7.1
+  timeago: ^3.7.0
   gpt_markdown: ^1.1.4
   image_picker_platform_interface: ^2.11.1
-  flutter_map: ^8.2.2
+  flutter_map: ^8.0.0
   latlong2: ^0.9.1
-  in_app_review: ^2.0.11
+  in_app_review: ^2.0.10
   dynamic_color: ^1.8.1
   pdfx: ^2.9.2
   video_player: ^2.10.1
-  chewie: ^1.13.0
+  chewie: ^1.9.0
   # Conditional dependency: only included when ENABLE_PLAY_UPDATES=true
   play_store_updates:
     path: packages/play_store_updates
@@ -81,14 +81,14 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^6.0.0
+  flutter_lints: ^5.0.0
   flutter_launcher_icons: ^0.14.4
   path_provider_platform_interface: ^2.1.2
 
 dependency_overrides:
-  # Force package_info_plus to 9.0.0 even if geolocator_linux requires 8.0.0
+  # Force package_info_plus to 8.1.0 for compatibility
   # We don't use Linux platform so geolocator_linux won't be used at runtime
-  package_info_plus: ^9.0.0
+  package_info_plus: ^8.1.0
 
 flutter_launcher_icons:
   android: true

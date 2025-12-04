@@ -23,6 +23,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved error feedback for location search to display localized error messages instead of silently failing
 
 ### Technical
+- **Flutter 3.38.3 Update**: Upgraded from Flutter 3.35.5 to 3.38.3 (Dart 3.10.1)
+  - Updated all package dependencies to stable versions
+  - Downgraded `file_picker` 10.x → 8.x, `share_plus` 12.x → 10.x, `image` 4.5 → 4.3, `archive` 4.x → 3.x for stability
+  - Fixed `share_plus` API changes (v12→v10): migrated from `SharePlus.instance.share(ShareParams(...))` to `Share.share()` / `Share.shareXFiles()`
+  - Fixed `archive` package breaking changes: handled nullable `ZipEncoder().encode()` return value and nullable `ArchiveFile.content`
+  - Updated Dart SDK constraint in `play_store_updates` from >=3.0.0 to >=3.9.0 for consistency
+  - All 443 tests passing, accessibility validation confirmed
 - **Platform Abstraction Services**: Added service abstractions in `caravella_core` for better testability:
   - `FilePickerService`: Abstraction for `image_picker` and `file_picker` dependencies
   - `ImageCompressionService`: Abstraction for image compression logic
