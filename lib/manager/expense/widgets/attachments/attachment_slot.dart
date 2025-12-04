@@ -61,7 +61,7 @@ class _EmptySlot extends StatelessWidget {
   }
 }
 
-class _FilledSlot extends StatelessWidget {
+class _FilledSlot extends StatefulWidget {
   final String filePath;
   final VoidCallback onTap;
   final VoidCallback onRemove;
@@ -73,17 +73,24 @@ class _FilledSlot extends StatelessWidget {
   });
 
   @override
+  State<_FilledSlot> createState() => _FilledSlotState();
+}
+
+class _FilledSlotState extends State<_FilledSlot> {
+  bool _imageLoaded = false;
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final file = File(filePath);
-    final extension = path.extension(filePath).toLowerCase();
+    final file = File(widget.filePath);
+    final extension = path.extension(widget.filePath).toLowerCase();
 
     return Padding(
       padding: const EdgeInsets.only(right: 12),
       child: Stack(
         children: [
           InkWell(
-            onTap: onTap,
+            onTap: widget.onTap,
             borderRadius: BorderRadius.circular(8),
             child: Container(
               width: 100,
@@ -103,7 +110,7 @@ class _FilledSlot extends StatelessWidget {
             top: 4,
             right: 4,
             child: InkWell(
-              onTap: onRemove,
+              onTap: widget.onRemove,
               child: Container(
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
@@ -132,12 +139,32 @@ class _FilledSlot extends StatelessWidget {
 
   Widget _buildThumbnailContent(File file, String extension, ThemeData theme) {
     if (['.jpg', '.jpeg', '.png'].contains(extension)) {
-      return Image.file(
-        file,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          return _buildErrorWidget(theme);
-        },
+      return AnimatedOpacity(
+        opacity: _imageLoaded ? 1.0 : 0.0,
+        duration: const Duration(milliseconds: 300),
+        child: Image.file(
+          file,
+          fit: BoxFit.cover,
+          frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+            if (wasSynchronouslyLoaded) {
+              _imageLoaded = true;
+              return child;
+            }
+            if (frame != null && !_imageLoaded) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (mounted) {
+                  setState(() {
+                    _imageLoaded = true;
+                  });
+                }
+              });
+            }
+            return child;
+          },
+          errorBuilder: (context, error, stackTrace) {
+            return _buildErrorWidget(theme);
+          },
+        ),
       );
     } else if (extension == '.pdf') {
       return Center(
