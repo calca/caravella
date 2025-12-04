@@ -182,7 +182,7 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
       if (mounted) {
         // Sort results by distance from current map center (user location)
         final sortedResults = _sortResultsByDistance(results, _mapCenter);
-        
+
         setState(() {
           _searchResults = sortedResults;
           _isSearching = false;
@@ -220,22 +220,23 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
   ) {
     // Check if we're using the default location (Rome)
     const defaultLocation = LatLng(41.9028, 12.4964);
-    final isDefaultLocation = 
+    final isDefaultLocation =
         (fromLocation.latitude - defaultLocation.latitude).abs() < 0.0001 &&
         (fromLocation.longitude - defaultLocation.longitude).abs() < 0.0001;
-    
+
     // If using default location, sort alphabetically
     if (isDefaultLocation) {
       final sortedResults = List<NominatimPlace>.from(results);
-      sortedResults.sort((a, b) => 
-        a.displayName.toLowerCase().compareTo(b.displayName.toLowerCase())
+      sortedResults.sort(
+        (a, b) =>
+            a.displayName.toLowerCase().compareTo(b.displayName.toLowerCase()),
       );
       return sortedResults;
     }
-    
+
     // Otherwise, sort by distance
     const distance = Distance();
-    
+
     // Create a list of results with their distances
     final resultsWithDistance = results.map((place) {
       final placeLocation = LatLng(place.latitude, place.longitude);
@@ -246,10 +247,10 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
       );
       return MapEntry(place, distanceInMeters);
     }).toList();
-    
+
     // Sort by distance
     resultsWithDistance.sort((a, b) => a.value.compareTo(b.value));
-    
+
     // Return only the places
     return resultsWithDistance.map((entry) => entry.key).toList();
   }
