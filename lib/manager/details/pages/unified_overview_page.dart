@@ -139,7 +139,10 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
       final dir = await getTemporaryDirectory();
       final file = File('${dir.path}/overview_${widget.trip.id}.png');
       await file.writeAsBytes(bytes);
-      await Share.shareXFiles([XFile(file.path)], text: widget.trip.title);
+      await Share.shareXFiles(
+        [XFile(file.path)],
+        text: widget.trip.title,
+      );
     } catch (_) {
       // optionally handle error
     } finally {

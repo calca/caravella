@@ -75,10 +75,10 @@ void main() {
         bool fileFound = false;
         String? extractedContent;
 
-        for (final file in decodedArchive) {
-          if (file.name == fileName) {
-            extractedContent = String.fromCharCodes(file.content!);
-            fileFound = true;
+      for (final file in decodedArchive) {
+        if (file.name == fileName) {
+          extractedContent = String.fromCharCodes(file.content as List<int>);
+          fileFound = true;
             break;
           }
         }

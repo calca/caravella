@@ -219,9 +219,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           ).create();
           await file.writeAsString(csv);
           if (!rootContext.mounted) return; // ensure still alive before share
-          await Share.shareXFiles([
-            XFile(file.path),
-          ], text: '${_trip!.title} - CSV');
+          await Share.shareXFiles(
+            [XFile(file.path)],
+            text: '${_trip!.title} - CSV',
+          );
           if (!rootContext.mounted) return;
           nav.pop();
         },
@@ -295,9 +296,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           ).create();
           await file.writeAsString(ofx);
           if (!rootContext.mounted) return; // ensure still alive before share
-          await Share.shareXFiles([
-            XFile(file.path),
-          ], text: '${_trip!.title} - OFX');
+          await Share.shareXFiles(
+            [XFile(file.path)],
+            text: '${_trip!.title} - OFX',
+          );
           if (!rootContext.mounted) return;
           nav.pop();
         },
