@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Fixed place search not showing error messages when network requests fail, timeout, or encounter SSL/TLS issues
+- Improved error feedback for location search to display localized error messages instead of silently failing
+
 ## [1.2.0] - 2025-12-03
 
 ### Added

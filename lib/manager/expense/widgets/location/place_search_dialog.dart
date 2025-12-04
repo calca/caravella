@@ -45,7 +45,6 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
   final MapController _mapController = MapController();
   List<NominatimPlace> _searchResults = [];
   bool _isSearching = false;
-  String _errorMessage = '';
   LatLng _mapCenter = const LatLng(41.9028, 12.4964); // Default: Rome, Italy
   final double _mapZoom = 18.0; // Maximum zoom to see nearby shops and POIs
   LatLng? _selectedMapLocation;
@@ -116,7 +115,6 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
 
     setState(() {
       _isCenteringOnLocation = true;
-      _errorMessage = '';
     });
 
     try {
@@ -142,9 +140,8 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
     } catch (e) {
       // Show error if location fails
       if (mounted) {
-        setState(() {
-          _errorMessage = 'Unable to get current location';
-        });
+        final gloc = gen.AppLocalizations.of(context);
+        AppToast.show(context, gloc.location_error, type: ToastType.error);
       }
     } finally {
       if (mounted) {
@@ -169,7 +166,6 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
       setState(() {
         _searchResults = [];
         _isSearching = false;
-        _errorMessage = '';
       });
       return;
     }
@@ -178,15 +174,17 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
 
     setState(() {
       _isSearching = true;
-      _errorMessage = '';
     });
 
     try {
       // Run search and wait for results
       final results = await NominatimSearchService.searchPlaces(query);
       if (mounted) {
+        // Sort results by distance from current map center (user location)
+        final sortedResults = _sortResultsByDistance(results, _mapCenter);
+
         setState(() {
-          _searchResults = results;
+          _searchResults = sortedResults;
           _isSearching = false;
           // Deselect manually selected map point when showing search results
           _selectedMapLocation = null;
@@ -196,10 +194,12 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
       }
     } catch (e) {
       if (mounted) {
+        final gloc = gen.AppLocalizations.of(context);
         setState(() {
-          _errorMessage = 'Search failed';
+          _searchResults = [];
           _isSearching = false;
         });
+        AppToast.show(context, gloc.location_error, type: ToastType.error);
       }
     }
   }
@@ -208,9 +208,51 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
     _searchController.clear();
     setState(() {
       _searchResults = [];
-      _errorMessage = '';
       _isSearching = false;
     });
+  }
+
+  /// Sorts search results by distance from the given location
+  /// If location is the default (Rome), sorts alphabetically instead
+  List<NominatimPlace> _sortResultsByDistance(
+    List<NominatimPlace> results,
+    LatLng fromLocation,
+  ) {
+    // Check if we're using the default location (Rome)
+    const defaultLocation = LatLng(41.9028, 12.4964);
+    final isDefaultLocation =
+        (fromLocation.latitude - defaultLocation.latitude).abs() < 0.0001 &&
+        (fromLocation.longitude - defaultLocation.longitude).abs() < 0.0001;
+
+    // If using default location, sort alphabetically
+    if (isDefaultLocation) {
+      final sortedResults = List<NominatimPlace>.from(results);
+      sortedResults.sort(
+        (a, b) =>
+            a.displayName.toLowerCase().compareTo(b.displayName.toLowerCase()),
+      );
+      return sortedResults;
+    }
+
+    // Otherwise, sort by distance
+    const distance = Distance();
+
+    // Create a list of results with their distances
+    final resultsWithDistance = results.map((place) {
+      final placeLocation = LatLng(place.latitude, place.longitude);
+      final distanceInMeters = distance.as(
+        LengthUnit.Meter,
+        fromLocation,
+        placeLocation,
+      );
+      return MapEntry(place, distanceInMeters);
+    }).toList();
+
+    // Sort by distance
+    resultsWithDistance.sort((a, b) => a.value.compareTo(b.value));
+
+    // Return only the places
+    return resultsWithDistance.map((entry) => entry.key).toList();
   }
 
   Future<void> _geocodeSelectedLocation(LatLng location) async {
@@ -275,15 +317,6 @@ class _PlaceSearchDialogState extends State<PlaceSearchDialog> {
                     left: 0,
                     right: 0,
                     child: _buildAutocompleteResults(theme, colorScheme),
-                  ),
-
-                // Error overlay
-                if (_errorMessage.isNotEmpty)
-                  Positioned(
-                    top: 16,
-                    left: 16,
-                    right: 16,
-                    child: MapErrorOverlay(message: _errorMessage),
                   ),
 
                 // FAB per centrare su posizione corrente
