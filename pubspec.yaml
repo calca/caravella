@@ -37,9 +37,9 @@ dependencies:
   
   # Local packages
   caravella_core:
-    path: ^1.9.1
+    path: packages/caravella_core
   caravella_core_ui:
-    path: ^1.9.1
+    path: packages/caravella_core_ui
   
   # External dependencies
   provider: ^6.1.5
@@ -47,7 +47,7 @@ dependencies:
   image_picker: ^1.2.1
   image_picker_android: ^0.8.13
   image: ^4.3.0
-  package_info_plus: ^9.0.0
+  package_info_plus: ^8.1.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -76,7 +76,7 @@ dependencies:
   chewie: ^1.9.0
   # Conditional dependency: only included when ENABLE_PLAY_UPDATES=true
   play_store_updates:
-    path: ^1.9.1
+    path: packages/play_store_updates
 
 dev_dependencies:
   flutter_test:
@@ -88,7 +88,7 @@ dev_dependencies:
 dependency_overrides:
   # Force package_info_plus to 8.1.0 for compatibility
   # We don't use Linux platform so geolocator_linux won't be used at runtime
-  package_info_plus: ^9.0.0
+  package_info_plus: ^8.1.0
 
 flutter_launcher_icons:
   android: true
