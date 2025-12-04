@@ -4,9 +4,9 @@ import 'package:image/image.dart' as img;
 import 'package:path/path.dart' as path;
 import 'package:caravella_core/caravella_core.dart';
 
-/// Platform implementation of ImageCompressionService using image package
-/// Optimized version that uses isolate for CPU-intensive operations
-class ImageCompressionServiceImpl implements ImageCompressionService {
+/// Optimized platform implementation of ImageCompressionService
+/// Uses Isolate for CPU-intensive operations to keep UI responsive
+class ImageCompressionServiceImplOptimized implements ImageCompressionService {
   static final _compressibleExtensions = {'.jpg', '.jpeg', '.png'};
 
   @override

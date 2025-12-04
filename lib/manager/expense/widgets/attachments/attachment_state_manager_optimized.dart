@@ -4,7 +4,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:caravella_core/caravella_core.dart';
 import '../../services/file_picker_service_impl.dart';
-import '../../services/image_compression_service_impl.dart';
+import '../../services/image_compression_service_impl_optimized.dart';
 
 /// Attachment source types
 enum AttachmentSource { camera, gallery, files }
@@ -15,10 +15,10 @@ enum CameraMediaType { photo, video }
 /// Processing state for attachment operations
 enum AttachmentProcessingState { idle, picking, compressing, saving }
 
-/// State manager for attachment operations
+/// State manager for attachment operations with progress tracking
 /// Handles file picking, compression, and storage using service abstractions
-/// Optimized version with progress tracking
-class AttachmentStateManager extends ChangeNotifier {
+/// Optimized version with non-blocking operations and progress feedback
+class AttachmentStateManagerOptimized extends ChangeNotifier {
   final String groupId;
   final FilePickerService _filePickerService;
   final ImageCompressionService _compressionService;
@@ -27,7 +27,7 @@ class AttachmentStateManager extends ChangeNotifier {
 
   AttachmentProcessingState _processingState = AttachmentProcessingState.idle;
 
-  AttachmentStateManager({
+  AttachmentStateManagerOptimized({
     required this.groupId,
     FilePickerService? filePickerService,
     ImageCompressionService? compressionService,
@@ -35,7 +35,7 @@ class AttachmentStateManager extends ChangeNotifier {
     List<String>? initialAttachments,
   }) : _filePickerService = filePickerService ?? FilePickerServiceImpl(),
        _compressionService =
-           compressionService ?? ImageCompressionServiceImpl() {
+           compressionService ?? ImageCompressionServiceImplOptimized() {
     if (initialAttachments != null) {
       _attachments.addAll(initialAttachments);
     }
@@ -116,7 +116,7 @@ class AttachmentStateManager extends ChangeNotifier {
   }
 
   /// Save attachment to app storage and compress if needed
-  /// This now runs compression in a separate isolate (non-blocking)
+  /// This now runs compression in a separate isolate
   Future<String> _saveAttachment(String sourcePath) async {
     final directory = await getApplicationDocumentsDirectory();
     final attachmentsDir = Directory('${directory.path}/attachments/$groupId');
