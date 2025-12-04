@@ -99,15 +99,47 @@ class _AttachmentInputWidgetState extends State<AttachmentInputWidget> {
                     widget.onAttachmentRemoved(index);
                   },
                 );
+              } else if (index == attachments.length &&
+                  _stateManager.isProcessing) {
+                // Show loading slot while processing
+                return _buildLoadingSlot(theme);
               } else {
                 return AttachmentSlot(
-                  onTap: () => _showAttachmentSourcePicker(context),
+                  onTap: () {
+                    if (!_stateManager.isProcessing) {
+                      _showAttachmentSourcePicker(context);
+                    }
+                  },
                 );
               }
             },
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildLoadingSlot(ThemeData theme) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 12),
+      child: Container(
+        width: 100,
+        height: 100,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: theme.colorScheme.surfaceContainerHighest,
+        ),
+        child: Center(
+          child: SizedBox(
+            width: 24,
+            height: 24,
+            child: CircularProgressIndicator(
+              strokeWidth: 3,
+              color: theme.colorScheme.surfaceContainerLow,
+            ),
+          ),
+        ),
+      ),
     );
   }
 
