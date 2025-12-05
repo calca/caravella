@@ -3659,10 +3659,10 @@ abstract class AppLocalizations {
   /// **'Choose the group type'**
   String get group_type_description;
 
-  /// Group type: travel or vacation
+  /// Group type: travel
   ///
   /// In en, this message translates to:
-  /// **'Travel / Vacation'**
+  /// **'Travel'**
   String get group_type_travel;
 
   /// Group type: personal

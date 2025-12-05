@@ -733,8 +733,8 @@
   ,"@group_type": {"description": "Label for expense group type"}
   ,"group_type_description": "Choose the group type"
   ,"@group_type_description": {"description": "Description for group type selection"}
-  ,"group_type_travel": "Travel / Vacation"
-  ,"@group_type_travel": {"description": "Group type: travel or vacation"}
+  ,"group_type_travel": "Travel"
+  ,"@group_type_travel": {"description": "Group type: travel"}
   ,"group_type_personal": "Personal"
   ,"@group_type_personal": {"description": "Group type: personal"}
   ,"group_type_family": "Family"

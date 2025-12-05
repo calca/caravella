@@ -16,7 +16,7 @@ class GroupFormState extends ChangeNotifier {
     'code': 'EUR',
     'name': 'Euro',
   };
-  ExpenseGroupType? groupType;
+  ExpenseGroupType? groupType = ExpenseGroupType.personal;
   bool autoLocationEnabled = false;
   bool loadingImage = false;
   bool isSaving = false;

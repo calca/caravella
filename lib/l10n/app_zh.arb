@@ -870,9 +870,9 @@
   "@group_type_description": {
     "description": "组类型选择的描述"
   },
-  "group_type_travel": "旅行 / 度假",
+  "group_type_travel": "旅行",
   "@group_type_travel": {
-    "description": "组类型：旅行或度假"
+    "description": "组类型：旅行"
   },
   "group_type_personal": "个人",
   "@group_type_personal": {

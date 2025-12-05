@@ -1874,7 +1874,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get group_type_description => 'Escolha o tipo de grupo';
 
   @override
-  String get group_type_travel => 'Viagem / Férias';
+  String get group_type_travel => 'Viagem';
 
   @override
   String get group_type_personal => 'Pessoal';

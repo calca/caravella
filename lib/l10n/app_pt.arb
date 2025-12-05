@@ -676,8 +676,8 @@
   ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
   ,"group_type_description": "Escolha o tipo de grupo"
   ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
-  ,"group_type_travel": "Viagem / Férias"
-  ,"@group_type_travel": {"description": "Tipo de grupo: viagem ou férias"}
+  ,"group_type_travel": "Viagem"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem"}
   ,"group_type_personal": "Pessoal"
   ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
   ,"group_type_family": "Família"

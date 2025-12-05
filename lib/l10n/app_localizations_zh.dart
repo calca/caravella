@@ -1838,7 +1838,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get group_type_description => '选择组类型';
 
   @override
-  String get group_type_travel => '旅行 / 度假';
+  String get group_type_travel => '旅行';
 
   @override
   String get group_type_personal => '个人';

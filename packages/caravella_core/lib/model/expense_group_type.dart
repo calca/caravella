@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 /// Each type has associated default categories that are pre-populated
 /// when the type is selected.
 enum ExpenseGroupType {
-  travel, // viaggio / vacanza
   personal, // personale
   family, // famiglia
+  travel, // viaggio / vacanza
   other; // altro
 
   /// Returns the icon for this group type

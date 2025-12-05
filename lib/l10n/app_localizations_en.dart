@@ -1865,7 +1865,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get group_type_description => 'Choose the group type';
 
   @override
-  String get group_type_travel => 'Travel / Vacation';
+  String get group_type_travel => 'Travel';
 
   @override
   String get group_type_personal => 'Personal';
