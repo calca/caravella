@@ -87,7 +87,8 @@ class ExpenseValidationService {
     ExpenseFormState state,
     List<ExpenseCategory> categories,
   ) {
-    return isAmountValid(state.amount) &&
+    return isNameValid(state.name) &&
+        isAmountValid(state.amount) &&
         isPaidByValid(state.paidBy) &&
         isCategoryValid(state.category, categories);
   }
@@ -99,6 +100,9 @@ class ExpenseValidationService {
   ) {
     final errors = <String>[];
 
+    if (!isNameValid(state.name)) {
+      errors.add('Missing description');
+    }
     if (!isAmountValid(state.amount)) {
       errors.add('Invalid amount');
     }

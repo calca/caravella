@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
+import '../state/expense_form_state.dart';
 
 /// Configuration object for ExpenseFormComponent
 ///
@@ -16,7 +17,7 @@ class ExpenseFormConfig {
   final Function(ExpenseDetails) onExpenseAdded;
   final Function(String) onCategoryAdded;
   final VoidCallback? onDelete;
-  final VoidCallback? onExpand;
+  final void Function(ExpenseFormState)? onExpand;
   final void Function(bool)? onFormValidityChanged;
   final void Function(VoidCallback?)? onSaveCallbackChanged;
 
@@ -89,7 +90,7 @@ class ExpenseFormConfig {
     String? newlyAddedCategory,
     bool fullEdit = false,
     ScrollController? scrollController,
-    VoidCallback? onExpand,
+    void Function(ExpenseFormState)? onExpand,
     bool showGroupHeader = true,
     bool showActionsRow = true,
     void Function(bool)? onFormValidityChanged,

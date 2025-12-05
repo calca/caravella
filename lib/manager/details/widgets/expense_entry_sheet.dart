@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
 import '../../expense/components/expense_form_component.dart';
+import '../../expense/state/expense_form_state.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 /// Unified sheet for creating or editing an expense.
@@ -12,7 +13,8 @@ class ExpenseEntrySheet extends StatefulWidget {
   final void Function(String) onCategoryAdded;
   final VoidCallback? onDelete; // only used in edit mode
   final bool fullEdit;
-  final VoidCallback? onExpand; // callback to expand to full page
+  final void Function(ExpenseFormState)?
+  onExpand; // callback to expand to full page
   final bool showGroupHeader; // whether to show group header in form
 
   const ExpenseEntrySheet({

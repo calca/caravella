@@ -6,7 +6,7 @@ import 'expense_form_config.dart';
 import '../state/expense_form_controller.dart';
 
 /// Orchestrates business logic for ExpenseFormComponent
-/// 
+///
 /// Handles save/delete flows, form validation callbacks, and coordination
 /// between controller and configuration.
 class ExpenseFormOrchestrator {
@@ -28,11 +28,9 @@ class ExpenseFormOrchestrator {
       _notifyFormValidity(); // Initial state
     }
 
-    // Setup save callback
-    if (config.onSaveCallbackChanged != null) {
-      controller.addListener(_notifySaveCallback);
-      _notifySaveCallback(); // Initial state
-    }
+    // Note: onSaveCallbackChanged listener is now managed by ExpenseFormComponent
+    // because it needs BuildContext to create the proper callback.
+    // See _notifySaveCallbackWithContext in expense_form_component.dart
   }
 
   /// Save expense
@@ -66,7 +64,7 @@ class ExpenseFormOrchestrator {
   /// Expand to full edit mode
   void expand() {
     controller.expandForm();
-    config.onExpand?.call();
+    config.onExpand?.call(controller.state);
   }
 
   /// Cleanup
@@ -74,22 +72,13 @@ class ExpenseFormOrchestrator {
     if (config.onFormValidityChanged != null) {
       controller.removeListener(_notifyFormValidity);
     }
-    if (config.onSaveCallbackChanged != null) {
-      controller.removeListener(_notifySaveCallback);
-    }
+    // Note: onSaveCallbackChanged cleanup is now in ExpenseFormComponent
   }
 
   // Private methods
 
   void _notifyFormValidity() {
     config.onFormValidityChanged?.call(controller.isFormValid);
-  }
-
-  void _notifySaveCallback() {
-    final callback = controller.isFormValid 
-        ? () => saveExpense
-        : null;
-    config.onSaveCallbackChanged?.call(callback);
   }
 
   ExpenseDetails _buildExpenseFromState() {
@@ -107,7 +96,7 @@ class ExpenseFormOrchestrator {
 
   Future<bool?> _showDeleteConfirmation(BuildContext context) async {
     final loc = gen.AppLocalizations.of(context);
-    
+
     return showDialog<bool>(
       context: context,
       builder: (ctx) => Material3Dialog(

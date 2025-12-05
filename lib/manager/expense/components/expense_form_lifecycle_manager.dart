@@ -65,6 +65,9 @@ class ExpenseFormLifecycleManager with WidgetsBindingObserver {
     // Notify ready
     onControllerReady(_controller!);
 
+    // Finish initialization to enable state updates
+    _controller!.finishInitialization();
+
     // Register observers
     WidgetsBinding.instance.addObserver(this);
 

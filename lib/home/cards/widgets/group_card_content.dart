@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../manager/details/widgets/expense_entry_sheet.dart';
 import '../../../manager/expense/pages/expense_form_page.dart';
+import '../../../manager/expense/state/expense_form_state.dart';
 import '../../../manager/details/pages/tabs/usecase/daily_totals_utils.dart';
 
 class GroupCardContent extends StatelessWidget {
@@ -104,11 +105,11 @@ class GroupCardContent extends StatelessWidget {
             onCategoryAdded: (categoryName) async {
               await notifier.addCategory(categoryName);
             },
-            onExpand: () {
+            onExpand: (currentState) {
               // Chiudi il bottom sheet
               Navigator.of(context).pop();
-              // Apri la full page
-              _openFullExpenseForm(context, currentGroup);
+              // Apri la full page con lo stato corrente
+              _openFullExpenseForm(context, currentGroup, currentState);
             },
           );
         },
@@ -119,9 +120,29 @@ class GroupCardContent extends StatelessWidget {
     });
   }
 
-  void _openFullExpenseForm(BuildContext context, ExpenseGroup currentGroup) {
+  void _openFullExpenseForm(
+    BuildContext context,
+    ExpenseGroup currentGroup,
+    ExpenseFormState? partialState,
+  ) {
     final notifier = Provider.of<ExpenseGroupNotifier>(context, listen: false);
     notifier.setCurrentGroup(currentGroup);
+
+    // Crea un expense parziale dallo stato se presente
+    ExpenseDetails? partialExpense;
+    if (partialState != null) {
+      partialExpense = ExpenseDetails(
+        id: null,
+        name: partialState.name.isEmpty ? null : partialState.name,
+        amount: partialState.amount,
+        paidBy: partialState.paidBy!,
+        category: partialState.category!,
+        date: partialState.date,
+        location: partialState.location,
+        note: partialState.note.isEmpty ? null : partialState.note,
+        attachments: partialState.attachments,
+      );
+    }
 
     Navigator.of(context)
         .push(
@@ -131,6 +152,7 @@ class GroupCardContent extends StatelessWidget {
                 final currentGroup = groupNotifier.currentGroup ?? group;
                 return ExpenseFormPage(
                   group: currentGroup,
+                  initialExpense: partialExpense,
                   onExpenseSaved: (expense) async {
                     final pageCtx = context;
                     final nav = Navigator.of(pageCtx);

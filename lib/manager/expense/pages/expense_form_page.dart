@@ -31,11 +31,15 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
   VoidCallback? _saveCallback;
 
   void _updateFormValidity(bool isValid) {
+    print(
+      '🔍 _updateFormValidity called: isValid=$isValid, current=$_isFormValid',
+    );
     if (_isFormValid != isValid) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
           setState(() {
             _isFormValid = isValid;
+            print('✅ Form validity updated to: $_isFormValid');
           });
         }
       });
@@ -43,9 +47,17 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
   }
 
   void _updateSaveCallback(VoidCallback? callback) {
+    print(
+      '🔍 _updateSaveCallback called: callback=${callback != null ? "NOT NULL" : "NULL"}',
+    );
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        _saveCallback = callback;
+        setState(() {
+          _saveCallback = callback;
+          print(
+            '✅ Save callback updated: ${_saveCallback != null ? "NOT NULL" : "NULL"}',
+          );
+        });
       }
     });
   }

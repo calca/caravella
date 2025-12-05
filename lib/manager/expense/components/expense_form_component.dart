@@ -6,6 +6,7 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import '../widgets/expense_form_actions_widget.dart';
 import '../state/expense_form_controller.dart';
+import '../state/expense_form_state.dart';
 import 'expense_form_config.dart';
 import 'expense_form_lifecycle_manager.dart';
 import 'expense_form_orchestrator.dart';
@@ -37,7 +38,7 @@ class ExpenseFormComponent extends StatefulWidget {
     String? newlyAddedCategory,
     bool fullEdit = false,
     ScrollController? scrollController,
-    VoidCallback? onExpand,
+    void Function(ExpenseFormState)? onExpand,
     bool showGroupHeader = true,
     bool showActionsRow = true,
     void Function(bool)? onFormValidityChanged,
@@ -123,7 +124,7 @@ class ExpenseFormComponent extends StatefulWidget {
     required bool autoLocationEnabled,
     bool fullEdit = false,
     ScrollController? scrollController,
-    VoidCallback? onExpand,
+    void Function(ExpenseFormState)? onExpand,
     bool showGroupHeader = true,
     bool showActionsRow = true,
     void Function(bool)? onFormValidityChanged,
@@ -186,6 +187,12 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         );
         _orchestrator.initialize();
 
+        // Setup save callback wrapper to provide context
+        if (widget.config.onSaveCallbackChanged != null) {
+          _controller.addListener(_notifySaveCallbackWithContext);
+          _notifySaveCallbackWithContext(); // Initial state
+        }
+
         // Setup focus listeners for scroll coordination
         _setupFocusListeners();
 
@@ -240,6 +247,19 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         });
       }
     });
+  }
+
+  void _notifySaveCallbackWithContext() {
+    // Create a proper callback with context access
+    final isValid = _controller.isFormValid;
+    print(
+      '🔍 Component: _notifySaveCallbackWithContext called, isValid=$isValid',
+    );
+    final callback = isValid ? () => _orchestrator.saveExpense(context) : null;
+    print(
+      '🔍 Component: Calling onSaveCallbackChanged with ${callback != null ? "callback" : "null"}',
+    );
+    widget.config.onSaveCallbackChanged?.call(callback);
   }
 
   Future<bool> _confirmDiscardChanges() async {
@@ -400,11 +420,16 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
             !(widget.config.fullEdit ||
                 widget.config.initialExpense != null ||
                 _controller.isExpanded),
-        onExpand: widget.config.onExpand ?? _controller.expandForm,
+        onExpand: widget.config.onExpand != null
+            ? () => widget.config.onExpand!(_controller.state)
+            : null,
       );
 
   @override
   void dispose() {
+    if (widget.config.onSaveCallbackChanged != null) {
+      _controller.removeListener(_notifySaveCallbackWithContext);
+    }
     _orchestrator.dispose();
     _lifecycleManager.dispose();
     super.dispose();

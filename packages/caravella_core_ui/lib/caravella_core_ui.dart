@@ -8,7 +8,8 @@ export 'themes/form_theme.dart';
 
 // Widgets
 export 'widgets/add_fab.dart';
-export 'widgets/app_toast.dart' show AppToast, ToastType, rootScaffoldMessengerKey;
+export 'widgets/app_toast.dart'
+    show AppToast, ToastType, rootScaffoldMessengerKey;
 export 'widgets/base_card.dart';
 export 'widgets/bottom_sheet_scaffold.dart';
 export 'widgets/caravella_app_bar.dart';

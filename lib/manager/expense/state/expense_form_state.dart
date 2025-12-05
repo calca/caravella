@@ -43,13 +43,17 @@ class ExpenseFormState {
   });
 
   // Computed validation state
+  bool get isNameValid => name.trim().isNotEmpty;
   bool get isAmountValid => amount != null && amount! > 0;
   bool get isPaidByValid => paidBy != null;
   bool isCategoryValid(List<ExpenseCategory> categories) =>
       categories.isEmpty || category != null;
 
   bool isFormValid(List<ExpenseCategory> categories) =>
-      isAmountValid && isPaidByValid && isCategoryValid(categories);
+      isNameValid &&
+      isAmountValid &&
+      isPaidByValid &&
+      isCategoryValid(categories);
 
   // Factory for creating initial state
   factory ExpenseFormState.initial({
