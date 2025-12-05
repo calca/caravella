@@ -3647,6 +3647,114 @@ abstract class AppLocalizations {
     Object debtsList,
   );
 
+  /// Label for expense group type
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get group_type;
+
+  /// Description for group type selection
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the group type'**
+  String get group_type_description;
+
+  /// Group type: travel
+  ///
+  /// In en, this message translates to:
+  /// **'Travel'**
+  String get group_type_travel;
+
+  /// Group type: personal
+  ///
+  /// In en, this message translates to:
+  /// **'Personal'**
+  String get group_type_personal;
+
+  /// Group type: family
+  ///
+  /// In en, this message translates to:
+  /// **'Family'**
+  String get group_type_family;
+
+  /// Group type: other
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get group_type_other;
+
+  /// Default category for travel group type
+  ///
+  /// In en, this message translates to:
+  /// **'Transport'**
+  String get category_travel_transport;
+
+  /// Default category for travel group type
+  ///
+  /// In en, this message translates to:
+  /// **'Accommodation'**
+  String get category_travel_accommodation;
+
+  /// Default category for travel group type
+  ///
+  /// In en, this message translates to:
+  /// **'Restaurants'**
+  String get category_travel_restaurants;
+
+  /// Default category for personal group type
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping'**
+  String get category_personal_shopping;
+
+  /// Default category for personal group type
+  ///
+  /// In en, this message translates to:
+  /// **'Health'**
+  String get category_personal_health;
+
+  /// Default category for personal group type
+  ///
+  /// In en, this message translates to:
+  /// **'Entertainment'**
+  String get category_personal_entertainment;
+
+  /// Default category for family group type
+  ///
+  /// In en, this message translates to:
+  /// **'Groceries'**
+  String get category_family_groceries;
+
+  /// Default category for family group type
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get category_family_home;
+
+  /// Default category for family group type
+  ///
+  /// In en, this message translates to:
+  /// **'Bills'**
+  String get category_family_bills;
+
+  /// Default category for other group type
+  ///
+  /// In en, this message translates to:
+  /// **'Miscellaneous'**
+  String get category_other_misc;
+
+  /// Default category for other group type
+  ///
+  /// In en, this message translates to:
+  /// **'Utilities'**
+  String get category_other_utilities;
+
+  /// Default category for other group type
+  ///
+  /// In en, this message translates to:
+  /// **'Services'**
+  String get category_other_services;
+
   /// Label for expense attachments
   ///
   /// In en, this message translates to:

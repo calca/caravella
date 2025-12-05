@@ -1872,6 +1872,60 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get group_type => 'Tipo';
+
+  @override
+  String get group_type_description => 'Elige el tipo de grupo';
+
+  @override
+  String get group_type_travel => 'Viaje';
+
+  @override
+  String get group_type_personal => 'Personal';
+
+  @override
+  String get group_type_family => 'Familia';
+
+  @override
+  String get group_type_other => 'Otro';
+
+  @override
+  String get category_travel_transport => 'Transporte';
+
+  @override
+  String get category_travel_accommodation => 'Alojamiento';
+
+  @override
+  String get category_travel_restaurants => 'Restaurantes';
+
+  @override
+  String get category_personal_shopping => 'Compras';
+
+  @override
+  String get category_personal_health => 'Salud';
+
+  @override
+  String get category_personal_entertainment => 'Entretenimiento';
+
+  @override
+  String get category_family_groceries => 'Comestibles';
+
+  @override
+  String get category_family_home => 'Casa';
+
+  @override
+  String get category_family_bills => 'Facturas';
+
+  @override
+  String get category_other_misc => 'Varios';
+
+  @override
+  String get category_other_utilities => 'Utilidades';
+
+  @override
+  String get category_other_services => 'Servicios';
+
+  @override
   String get attachments => 'Adjuntos';
 
   @override

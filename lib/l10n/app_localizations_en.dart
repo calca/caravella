@@ -1859,6 +1859,60 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get group_type => 'Type';
+
+  @override
+  String get group_type_description => 'Choose the group type';
+
+  @override
+  String get group_type_travel => 'Travel';
+
+  @override
+  String get group_type_personal => 'Personal';
+
+  @override
+  String get group_type_family => 'Family';
+
+  @override
+  String get group_type_other => 'Other';
+
+  @override
+  String get category_travel_transport => 'Transport';
+
+  @override
+  String get category_travel_accommodation => 'Accommodation';
+
+  @override
+  String get category_travel_restaurants => 'Restaurants';
+
+  @override
+  String get category_personal_shopping => 'Shopping';
+
+  @override
+  String get category_personal_health => 'Health';
+
+  @override
+  String get category_personal_entertainment => 'Entertainment';
+
+  @override
+  String get category_family_groceries => 'Groceries';
+
+  @override
+  String get category_family_home => 'Home';
+
+  @override
+  String get category_family_bills => 'Bills';
+
+  @override
+  String get category_other_misc => 'Miscellaneous';
+
+  @override
+  String get category_other_utilities => 'Utilities';
+
+  @override
+  String get category_other_services => 'Services';
+
+  @override
   String get attachments => 'Attachments';
 
   @override
