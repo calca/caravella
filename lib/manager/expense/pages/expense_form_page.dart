@@ -31,35 +31,19 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
   VoidCallback? _saveCallback;
 
   void _updateFormValidity(bool isValid) {
-    print(
-      '🔍 _updateFormValidity called: isValid=$isValid, current=$_isFormValid',
-    );
-    if (_isFormValid != isValid) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          setState(() {
-            _isFormValid = isValid;
-            print('✅ Form validity updated to: $_isFormValid');
-          });
-        }
+    if (_isFormValid != isValid && mounted) {
+      setState(() {
+        _isFormValid = isValid;
       });
     }
   }
 
   void _updateSaveCallback(VoidCallback? callback) {
-    print(
-      '🔍 _updateSaveCallback called: callback=${callback != null ? "NOT NULL" : "NULL"}',
-    );
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        setState(() {
-          _saveCallback = callback;
-          print(
-            '✅ Save callback updated: ${_saveCallback != null ? "NOT NULL" : "NULL"}',
-          );
-        });
-      }
-    });
+    if (mounted) {
+      setState(() {
+        _saveCallback = callback;
+      });
+    }
   }
 
   void _handleSave() {

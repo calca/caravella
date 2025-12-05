@@ -68,7 +68,7 @@ class GroupCardContent extends StatelessWidget {
       builder: (context) => Consumer<ExpenseGroupNotifier>(
         builder: (context, groupNotifier, child) {
           final currentGroup = groupNotifier.currentGroup ?? group;
-          return ExpenseEntrySheet(
+          return _ExpenseEntrySheetWithState(
             group: currentGroup,
             fullEdit: false,
             showGroupHeader: false,
@@ -526,6 +526,55 @@ class GroupCardContent extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Stateful wrapper for ExpenseEntrySheet to manage form validity
+class _ExpenseEntrySheetWithState extends StatefulWidget {
+  final ExpenseGroup group;
+  final void Function(ExpenseDetails) onExpenseSaved;
+  final void Function(String) onCategoryAdded;
+  final bool fullEdit;
+  final void Function(ExpenseFormState)? onExpand;
+  final bool showGroupHeader;
+
+  const _ExpenseEntrySheetWithState({
+    required this.group,
+    required this.onExpenseSaved,
+    required this.onCategoryAdded,
+    this.fullEdit = true,
+    this.onExpand,
+    this.showGroupHeader = true,
+  });
+
+  @override
+  State<_ExpenseEntrySheetWithState> createState() =>
+      _ExpenseEntrySheetWithStateState();
+}
+
+class _ExpenseEntrySheetWithStateState
+    extends State<_ExpenseEntrySheetWithState> {
+  bool _isFormValid = false;
+
+  void _updateFormValidity(bool isValid) {
+    if (mounted && _isFormValid != isValid) {
+      setState(() {
+        _isFormValid = isValid;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ExpenseEntrySheet(
+      group: widget.group,
+      onExpenseSaved: widget.onExpenseSaved,
+      onCategoryAdded: widget.onCategoryAdded,
+      fullEdit: widget.fullEdit,
+      onExpand: widget.onExpand,
+      showGroupHeader: widget.showGroupHeader,
+      onFormValidityChanged: _updateFormValidity,
     );
   }
 }

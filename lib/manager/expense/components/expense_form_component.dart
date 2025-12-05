@@ -252,13 +252,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   void _notifySaveCallbackWithContext() {
     // Create a proper callback with context access
     final isValid = _controller.isFormValid;
-    print(
-      '🔍 Component: _notifySaveCallbackWithContext called, isValid=$isValid',
-    );
     final callback = isValid ? () => _orchestrator.saveExpense(context) : null;
-    print(
-      '🔍 Component: Calling onSaveCallbackChanged with ${callback != null ? "callback" : "null"}',
-    );
     widget.config.onSaveCallbackChanged?.call(callback);
   }
 

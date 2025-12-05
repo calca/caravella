@@ -41,20 +41,8 @@ class ExpenseFormController extends ChangeNotifier {
   ExpenseFormState get state => _state;
   List<ExpenseCategory> get categories => _categories;
   bool get isInitializing => _isInitializing;
-  bool get isFormValid {
-    final nameValid = ExpenseValidationService.isNameValid(_state.name);
-    final amountValid = ExpenseValidationService.isAmountValid(_state.amount);
-    final paidByValid = ExpenseValidationService.isPaidByValid(_state.paidBy);
-    final categoryValid = ExpenseValidationService.isCategoryValid(
-      _state.category,
-      _categories,
-    );
-    final result = nameValid && amountValid && paidByValid && categoryValid;
-    print(
-      '🔍 Controller.isFormValid: name=$nameValid ("${_state.name}"), amount=$amountValid (${_state.amount}), paidBy=$paidByValid (${_state.paidBy?.name}), category=$categoryValid (${_state.category?.name}) → result=$result',
-    );
-    return result;
-  }
+  bool get isFormValid =>
+      ExpenseValidationService.isFormValid(_state, _categories);
 
   // Field validation getters
   bool get isAmountValid =>
