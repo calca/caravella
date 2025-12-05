@@ -17,19 +17,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Image compression for attachments (max 1920px, 85% quality JPEG) to optimize storage
 - Automatic file cleanup when deleting expenses or expense groups
 - Organized attachment storage by expense group ID for better file management
+- Share button in expense form page to share expense details as formatted text
+- Quick access to delete expense from app bar when editing
+
+### Changed
+- Moved delete button from bottom bar to app bar in expense form for better accessibility
+- Repositioned expense form actions to reduce clutter in the main editing area
 
 ### Fixed
+- Fixed setState() during build error in expense form page when form validity or save callback changed
 - Fixed place search not showing error messages when network requests fail, timeout, or encounter SSL/TLS issues
 - Improved error feedback for location search to display localized error messages instead of silently failing
 
 ### Technical
 - **Flutter 3.38.3 Update**: Upgraded from Flutter 3.35.5 to 3.38.3 (Dart 3.10.1)
-  - Updated all package dependencies to stable versions
-  - Downgraded `file_picker` 10.x → 8.x, `share_plus` 12.x → 10.x, `image` 4.5 → 4.3, `archive` 4.x → 3.x for stability
-  - Fixed `share_plus` API changes (v12→v10): migrated from `SharePlus.instance.share(ShareParams(...))` to `Share.share()` / `Share.shareXFiles()`
-  - Fixed `archive` package breaking changes: handled nullable `ZipEncoder().encode()` return value and nullable `ArchiveFile.content`
+  - Updated all package dependencies to latest compatible versions
+  - Updated `file_picker` to ^10.3.7, `share_plus` to ^12.0.1, `image` to ^4.5.4, `archive` to ^4.0.7, `shared_preferences` to ^2.5.3, `http` to ^1.6.0
+  - Upgraded 19 transitive dependencies to latest compatible versions
+  - Fixed `share_plus` API changes (v10→v12): migrated from `Share.share()` / `Share.shareXFiles()` to `SharePlus.instance.share(ShareParams(...))`
+  - Fixed `archive` package breaking changes (v3→v4): updated for non-nullable `ZipEncoder().encode()` return value
   - Updated Dart SDK constraint in `play_store_updates` from >=3.0.0 to >=3.9.0 for consistency
+  - Removed dependency_overrides for cleaner dependency resolution
   - All 443 tests passing, accessibility validation confirmed
+  - Used `addPostFrameCallback` pattern in expense form to prevent setState() during build lifecycle
 - **Platform Abstraction Services**: Added service abstractions in `caravella_core` for better testability:
   - `FilePickerService`: Abstraction for `image_picker` and `file_picker` dependencies
   - `ImageCompressionService`: Abstraction for image compression logic
