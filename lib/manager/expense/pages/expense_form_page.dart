@@ -31,10 +31,22 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
 
   void _updateFormValidity(bool isValid) {
     if (_isFormValid != isValid) {
-      setState(() {
-        _isFormValid = isValid;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          setState(() {
+            _isFormValid = isValid;
+          });
+        }
       });
     }
+  }
+
+  void _updateSaveCallback(VoidCallback? callback) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _saveCallback = callback;
+      }
+    });
   }
 
   void _handleSave() {
@@ -85,8 +97,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
                       onCategoryAdded: widget.onCategoryAdded,
                       onDelete: widget.onDelete,
                       onFormValidityChanged: _updateFormValidity,
-                      onSaveCallbackChanged: (callback) =>
-                          _saveCallback = callback,
+                      onSaveCallbackChanged: _updateSaveCallback,
                       groupId: widget.group.id,
                     ),
                   ],
