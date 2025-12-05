@@ -32,16 +32,24 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
 
   void _updateFormValidity(bool isValid) {
     if (_isFormValid != isValid && mounted) {
-      setState(() {
-        _isFormValid = isValid;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          setState(() {
+            _isFormValid = isValid;
+          });
+        }
       });
     }
   }
 
   void _updateSaveCallback(VoidCallback? callback) {
     if (mounted) {
-      setState(() {
-        _saveCallback = callback;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          setState(() {
+            _saveCallback = callback;
+          });
+        }
       });
     }
   }

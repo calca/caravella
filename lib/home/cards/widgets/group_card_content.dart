@@ -559,8 +559,12 @@ class _ExpenseEntrySheetWithStateState
 
   void _updateFormValidity(bool isValid) {
     if (mounted && _isFormValid != isValid) {
-      setState(() {
-        _isFormValid = isValid;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          setState(() {
+            _isFormValid = isValid;
+          });
+        }
       });
     }
   }
