@@ -139,12 +139,7 @@ class _AttachmentViewerPageState extends State<AttachmentViewerPage> {
       );
     } catch (e) {
       if (!mounted) return;
-      final messenger = ScaffoldMessenger.of(context);
-      AppToast.showFromMessenger(
-        messenger,
-        'Error sharing: $e',
-        type: ToastType.error,
-      );
+      AppToast.show(context, 'Error sharing: $e', type: ToastType.error);
     }
   }
 

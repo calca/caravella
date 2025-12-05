@@ -73,16 +73,11 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
     onPin?.call();
 
     if (!context.mounted) return;
-    AppToast.showFromMessenger(
-      messenger,
+    AppToast.show(
+      context,
       '$actionText • ${trip.title}',
       type: ToastType.info,
       duration: const Duration(seconds: 4),
-      onUndo: () async {
-        await notifier.updateGroupPin(trip.id, isPinned);
-        // Reload again after undo
-        onPin?.call();
-      },
     );
   }
 
@@ -103,14 +98,11 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
     await Future.delayed(const Duration(milliseconds: 100));
 
     // Show AppToast with undo
-    AppToast.showFromMessenger(
-      messenger,
+    AppToast.show(
+      context,
       '$actionText • ${trip.title}',
       type: ToastType.info,
       duration: const Duration(seconds: 4),
-      onUndo: () async {
-        await onArchiveToggle(trip.id, isArchived);
-      },
     );
   }
 
@@ -158,8 +150,8 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
     onDelete?.call();
 
     if (!context.mounted) return;
-    AppToast.showFromMessenger(
-      messenger,
+    AppToast.show(
+      context,
       '${gloc.deleted_with_undo} • ${trip.title}',
       type: ToastType.success,
       duration: const Duration(seconds: 3),

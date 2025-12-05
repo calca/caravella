@@ -9,7 +9,6 @@ import 'home/services/shortcuts_initialization.dart';
 
 // Re-export routeObserver for backward compatibility
 export 'main/route_observer.dart';
-export 'main/caravella_app.dart' show rootScaffoldMessenger;
 
 void main() async {
   // Catch all uncaught async errors (e.g., from tile loading)

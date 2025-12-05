@@ -90,9 +90,8 @@ class ExpenseErrorHandler {
     BuildContext context,
     String message,
   ) {
-    final messenger = ScaffoldMessenger.of(context);
-    AppToast.showFromMessenger(
-      messenger,
+    AppToast.show(
+      context,
       message,
       type: ToastType.error,
       duration: const Duration(seconds: 5),

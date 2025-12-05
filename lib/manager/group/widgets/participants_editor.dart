@@ -21,11 +21,10 @@ class ParticipantsEditor extends StatelessWidget {
       onEditParticipant: (i, name) => state.editParticipant(i, name),
       onRemoveParticipant: (i) async {
         final loc = gen.AppLocalizations.of(context);
-        final messenger = ScaffoldMessenger.of(context);
         final removed = await controller.removeParticipantIfUnused(i);
         if (!removed) {
-          AppToast.showFromMessenger(
-            messenger,
+          AppToast.show(
+            context,
             loc.cannot_delete_assigned_participant,
             type: ToastType.info,
           );

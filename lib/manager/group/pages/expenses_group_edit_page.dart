@@ -252,8 +252,8 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                   // Show error toast using captured messenger if possible (avoids using
                   // BuildContext after async gap).
                   if (scaffoldMessenger != null) {
-                    AppToast.showFromMessenger(
-                      scaffoldMessenger,
+                    AppToast.show(
+                      context,
                       gloc.backup_error,
                       type: ToastType.error,
                     );
@@ -306,8 +306,8 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                           if (navigator.canPop()) navigator.pop(saved.id);
                         } catch (e) {
                           if (scaffoldMessenger != null) {
-                            AppToast.showFromMessenger(
-                              scaffoldMessenger,
+                            AppToast.show(
+                              context,
                               gloc.backup_error,
                               type: ToastType.error,
                             );

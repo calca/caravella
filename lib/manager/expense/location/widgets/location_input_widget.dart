@@ -100,9 +100,8 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
       // Optional lightweight feedback when an address gets resolved
       if (location.address != null) {
         final gloc = gen.AppLocalizations.of(context);
-        final messenger = ScaffoldMessenger.of(context);
-        AppToast.showFromMessenger(
-          messenger,
+        AppToast.show(
+          context,
           gloc.address_resolved,
           duration: const Duration(seconds: 2),
         );
@@ -129,7 +128,6 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
 
   Future<void> _showPlaceSearch() async {
     final gloc = gen.AppLocalizations.of(context);
-    final messenger = ScaffoldMessenger.of(context);
 
     // Convert current location to NominatimPlace if exists
     NominatimPlace? initialPlace;
@@ -191,8 +189,8 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
         widget.onLocationChanged(location);
 
         if (mounted) {
-          AppToast.showFromMessenger(
-            messenger,
+          AppToast.show(
+            context,
             gloc.address_resolved,
             duration: const Duration(seconds: 2),
           );
@@ -202,11 +200,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
           setState(() {
             _isResolvingAddress = false;
           });
-          AppToast.showFromMessenger(
-            messenger,
-            gloc.location_error,
-            type: ToastType.error,
-          );
+          AppToast.show(context, gloc.location_error, type: ToastType.error);
         }
       }
     }

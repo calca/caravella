@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/manager/expense/components/expense_form_config.dart';
+import 'package:io_caravella_egm/manager/expense/state/expense_form_state.dart';
 
 void main() {
   group('ExpenseFormConfig', () {
@@ -109,7 +110,7 @@ void main() {
         onExpenseAdded: (_) => expenseAdded = true,
         onCategoryAdded: (_) => categoryAdded = true,
         autoLocationEnabled: true,
-        onExpand: () => expanded = true,
+        onExpand: (_) => expanded = true,
         onFormValidityChanged: (_) => validityChanged = true,
         onSaveCallbackChanged: (_) => saveCallbackChanged = true,
       );
@@ -128,7 +129,12 @@ void main() {
       config.onCategoryAdded('New Category');
       expect(categoryAdded, true);
 
-      config.onExpand?.call();
+      config.onExpand?.call(
+        ExpenseFormState.initial(
+          participants: mockParticipants,
+          categories: mockCategories,
+        ),
+      );
       expect(expanded, true);
 
       config.onFormValidityChanged?.call(true);

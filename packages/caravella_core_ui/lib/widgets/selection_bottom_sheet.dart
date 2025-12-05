@@ -139,9 +139,6 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
     final val = _inlineController.text.trim();
     if (val.isEmpty || widget.onAddItemInline == null) return;
 
-    // Capture messenger before any async gaps
-    final messenger = ScaffoldMessenger.of(context);
-
     // Check for duplicates (case-insensitive)
     final lower = val.toLowerCase();
     final isDuplicate = widget.items.any(
@@ -150,8 +147,8 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
 
     if (isDuplicate) {
       if (widget.alreadyExistsMessage != null) {
-        AppToast.showFromMessenger(
-          messenger,
+        AppToast.show(
+          context,
           widget.alreadyExistsMessage!,
           type: ToastType.info,
         );
@@ -168,11 +165,7 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
       }
     } catch (e) {
       if (mounted) {
-        AppToast.showFromMessenger(
-          messenger,
-          'Error adding item: $e',
-          type: ToastType.error,
-        );
+        AppToast.show(context, 'Error adding item: $e', type: ToastType.error);
       }
     }
   }
