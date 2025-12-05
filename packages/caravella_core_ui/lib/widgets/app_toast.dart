@@ -17,6 +17,12 @@ import 'package:flutter/material.dart';
 /// ```
 GlobalKey<ScaffoldMessengerState>? rootScaffoldMessengerKey;
 
+/// Toast type for different message categories
+enum ToastType { info, success, error }
+
+/// Toast position on screen
+enum ToastPosition { top, bottom }
+
 /// Lightweight toast / inline feedback using Flutter's native SnackBar
 /// with Material 3 theming and automatic queue management.
 class AppToast {
@@ -106,28 +112,41 @@ class AppToast {
   }) {
     final theme = Theme.of(referenceContext);
     final colorScheme = theme.colorScheme;
+    final mediaQuery = MediaQuery.of(referenceContext);
 
     Color backgroundColor;
     Color textColor;
+    Color iconColor;
     IconData effectiveIcon;
 
     switch (type) {
       case ToastType.success:
-        backgroundColor = colorScheme.primaryFixedDim;
-        textColor = colorScheme.onPrimaryFixed;
+        backgroundColor = colorScheme.surfaceContainerHighest;
+        textColor = colorScheme.onSurface;
+        iconColor = colorScheme.tertiary;
         effectiveIcon = icon ?? Icons.check_circle_outline_rounded;
         break;
       case ToastType.error:
-        backgroundColor = colorScheme.errorContainer;
-        textColor = colorScheme.onErrorContainer;
-        effectiveIcon = icon ?? Icons.error_outline;
+        backgroundColor = colorScheme.surfaceContainerHighest;
+        textColor = colorScheme.onSurface;
+        iconColor = colorScheme.error;
+        effectiveIcon = icon ?? Icons.error_outline_rounded;
         break;
       case ToastType.info:
-        backgroundColor = colorScheme.primaryFixed;
-        textColor = colorScheme.onPrimaryFixed;
-        effectiveIcon = icon ?? Icons.info_outline;
+        backgroundColor = colorScheme.surfaceContainerHighest;
+        textColor = colorScheme.onSurface;
+        iconColor = colorScheme.primary;
+        effectiveIcon = icon ?? Icons.info_outline_rounded;
         break;
     }
+
+    // Always position at top with safe area padding
+    final margin = EdgeInsets.only(
+      top: mediaQuery.padding.top + 8,
+      left: 16,
+      right: 16,
+      bottom: 16,
+    );
 
     messenger.clearSnackBars();
     messenger.showSnackBar(
@@ -138,13 +157,17 @@ class AppToast {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(effectiveIcon, color: textColor, size: 20),
-              const SizedBox(width: 10),
+              Icon(effectiveIcon, color: iconColor, size: 18),
+              const SizedBox(width: 12),
               Flexible(
                 child: Text(
                   message,
-                  style: theme.textTheme.bodyMedium?.copyWith(color: textColor),
-                  maxLines: 3,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: textColor,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -154,25 +177,18 @@ class AppToast {
         action: onUndo != null && undoLabel != null
             ? SnackBarAction(
                 label: undoLabel,
-                textColor: textColor,
+                textColor: iconColor,
                 onPressed: onUndo,
               )
             : null,
         backgroundColor: backgroundColor,
         duration: duration,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
-          side: BorderSide(
-            color: colorScheme.outlineVariant.withValues(alpha: 0.25),
-            width: 1,
-          ),
-        ),
-        elevation: 0,
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: 2,
+        margin: margin,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
     );
   }
 }
-
-enum ToastType { info, success, error }
