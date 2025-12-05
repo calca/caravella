@@ -357,7 +357,7 @@ class GroupFormController {
           state.addCategory(ExpenseCategory(name: categoryName));
         }
       }
-      
+
       state.refresh();
     }
   }
