@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../data/model/expense_details.dart';
-import '../../../data/model/expense_group.dart';
+import 'package:caravella_core/caravella_core.dart';
 import '../../expense/expense_form_component.dart';
-import '../../../../widgets/bottom_sheet_scaffold.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 /// Unified sheet for creating or editing an expense.
 /// If [initialExpense] is provided we are editing, otherwise creating a new one.
@@ -13,6 +12,8 @@ class ExpenseEntrySheet extends StatefulWidget {
   final void Function(String) onCategoryAdded;
   final VoidCallback? onDelete; // only used in edit mode
   final bool fullEdit;
+  final VoidCallback? onExpand; // callback to expand to full page
+  final bool showGroupHeader; // whether to show group header in form
 
   const ExpenseEntrySheet({
     super.key,
@@ -22,6 +23,8 @@ class ExpenseEntrySheet extends StatefulWidget {
     required this.onCategoryAdded,
     this.onDelete,
     this.fullEdit = true,
+    this.onExpand,
+    this.showGroupHeader = true,
   });
 
   @override
@@ -64,12 +67,15 @@ class _ExpenseEntrySheetState extends State<ExpenseEntrySheet> {
           tripEndDate: widget.group.endDate,
           shouldAutoClose: false,
           fullEdit: widget.fullEdit,
+          showGroupHeader: widget.showGroupHeader,
           groupTitle: widget.group.title,
           currency: widget.group.currency,
+          autoLocationEnabled: widget.group.autoLocationEnabled,
           onExpenseAdded: widget.onExpenseSaved,
           onCategoryAdded: widget.onCategoryAdded,
           onDelete: widget.onDelete,
           scrollController: _scrollController,
+          onExpand: widget.onExpand,
         ),
       ),
     );

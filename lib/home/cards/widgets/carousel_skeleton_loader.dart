@@ -5,10 +5,7 @@ import 'package:flutter/material.dart';
 class CarouselSkeletonLoader extends StatefulWidget {
   final ThemeData theme;
 
-  const CarouselSkeletonLoader({
-    super.key,
-    required this.theme,
-  });
+  const CarouselSkeletonLoader({super.key, required this.theme});
 
   @override
   State<CarouselSkeletonLoader> createState() => _CarouselSkeletonLoaderState();
@@ -50,17 +47,17 @@ class _CarouselSkeletonLoaderState extends State<CarouselSkeletonLoader>
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   // Add slight delay to each card animation for wave effect
-                  final shimmerValue = (_shimmerController.value +
-                          (index * 0.1)) %
-                      1.0;
+                  final shimmerValue =
+                      (_shimmerController.value + (index * 0.1)) % 1.0;
 
                   return AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
                     margin: const EdgeInsets.only(right: 16, bottom: 16),
-                    child: _SkeletonCard(
+                    child: SkeletonCard(
                       shimmerValue: shimmerValue,
                       colorScheme: colorScheme,
+                      enableEntranceAnimation: false,
                     ),
                   );
                 },
@@ -91,15 +88,66 @@ class _CarouselSkeletonLoaderState extends State<CarouselSkeletonLoader>
   }
 }
 
-/// Individual skeleton card with shimmer effect
-class _SkeletonCard extends StatelessWidget {
+/// Unified skeleton card with optional entrance animations.
+/// Can be used for both initial loading (multiple static cards)
+/// and dynamic insertion (single animated card).
+class SkeletonCard extends StatefulWidget {
   final double shimmerValue;
   final ColorScheme colorScheme;
+  final bool isSelected;
+  final double selectionProgress;
+  final bool enableEntranceAnimation;
 
-  const _SkeletonCard({
+  const SkeletonCard({
+    super.key,
     required this.shimmerValue,
     required this.colorScheme,
+    this.isSelected = false,
+    this.selectionProgress = 0.0,
+    this.enableEntranceAnimation = false,
   });
+
+  @override
+  State<SkeletonCard> createState() => _SkeletonCardState();
+}
+
+class _SkeletonCardState extends State<SkeletonCard>
+    with SingleTickerProviderStateMixin {
+  AnimationController? _entranceController;
+  Animation<double>? _scaleAnimation;
+  Animation<double>? _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Only create entrance animations if enabled
+    if (widget.enableEntranceAnimation) {
+      _entranceController = AnimationController(
+        vsync: this,
+        duration: const Duration(milliseconds: 400),
+      );
+
+      _scaleAnimation = Tween<double>(begin: 0.92, end: 1.0).animate(
+        CurvedAnimation(
+          parent: _entranceController!,
+          curve: Curves.easeOutCubic,
+        ),
+      );
+
+      _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(parent: _entranceController!, curve: Curves.easeIn),
+      );
+
+      _entranceController!.forward();
+    }
+  }
+
+  @override
+  void dispose() {
+    _entranceController?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,25 +156,34 @@ class _SkeletonCard extends StatelessWidget {
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
       colors: [
-        colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-        colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
-        colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+        widget.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+        widget.colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
+        widget.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       ],
       stops: [
-        (shimmerValue - 0.3).clamp(0.0, 1.0),
-        shimmerValue,
-        (shimmerValue + 0.3).clamp(0.0, 1.0),
+        (widget.shimmerValue - 0.3).clamp(0.0, 1.0),
+        widget.shimmerValue,
+        (widget.shimmerValue + 0.3).clamp(0.0, 1.0),
       ],
     );
 
-    return Container(
+    Widget cardContent = Container(
       decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHigh,
+        color: widget.colorScheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: colorScheme.outline.withValues(alpha: 0.2),
+          color: widget.colorScheme.outline.withValues(alpha: 0.2),
           width: 1,
         ),
+        boxShadow: widget.isSelected
+            ? [
+                BoxShadow(
+                  color: widget.colorScheme.shadow.withValues(alpha: 0.15),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ]
+            : null,
       ),
       child: Stack(
         children: [
@@ -148,7 +205,7 @@ class _SkeletonCard extends StatelessWidget {
                   width: 160,
                   height: 24,
                   borderRadius: 12,
-                  color: colorScheme.onSurface.withValues(alpha: 0.1),
+                  color: widget.colorScheme.onSurface.withValues(alpha: 0.1),
                 ),
                 const SizedBox(height: 12),
                 // Subtitle skeleton
@@ -156,7 +213,7 @@ class _SkeletonCard extends StatelessWidget {
                   width: 120,
                   height: 16,
                   borderRadius: 8,
-                  color: colorScheme.onSurface.withValues(alpha: 0.08),
+                  color: widget.colorScheme.onSurface.withValues(alpha: 0.08),
                 ),
                 const Spacer(),
                 // Stats skeleton at bottom
@@ -170,14 +227,18 @@ class _SkeletonCard extends StatelessWidget {
                           width: 80,
                           height: 14,
                           borderRadius: 7,
-                          color: colorScheme.onSurface.withValues(alpha: 0.08),
+                          color: widget.colorScheme.onSurface.withValues(
+                            alpha: 0.08,
+                          ),
                         ),
                         const SizedBox(height: 8),
                         _SkeletonBox(
                           width: 100,
                           height: 20,
                           borderRadius: 10,
-                          color: colorScheme.onSurface.withValues(alpha: 0.1),
+                          color: widget.colorScheme.onSurface.withValues(
+                            alpha: 0.1,
+                          ),
                         ),
                       ],
                     ),
@@ -185,7 +246,9 @@ class _SkeletonCard extends StatelessWidget {
                       width: 56,
                       height: 56,
                       borderRadius: 28,
-                      color: colorScheme.onSurface.withValues(alpha: 0.08),
+                      color: widget.colorScheme.onSurface.withValues(
+                        alpha: 0.08,
+                      ),
                     ),
                   ],
                 ),
@@ -195,6 +258,18 @@ class _SkeletonCard extends StatelessWidget {
         ],
       ),
     );
+
+    // Wrap with entrance animations if enabled
+    if (widget.enableEntranceAnimation &&
+        _scaleAnimation != null &&
+        _fadeAnimation != null) {
+      return ScaleTransition(
+        scale: _scaleAnimation!,
+        child: FadeTransition(opacity: _fadeAnimation!, child: cardContent),
+      );
+    }
+
+    return cardContent;
   }
 }
 

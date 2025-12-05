@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../../config/app_icons.dart';
-import '../../../widgets/selection_bottom_sheet.dart';
+import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'inline_select_field.dart';
-import '../../../themes/form_theme.dart';
 
 class ParticipantSelectorWidget extends StatelessWidget {
   final List<String> participants;
@@ -24,7 +23,6 @@ class ParticipantSelectorWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final selected = selectedParticipant;
-    final borderColor = theme.colorScheme.outlineVariant;
     final gloc = gen.AppLocalizations.of(context);
 
     Future<void> openPicker() async {
@@ -33,7 +31,6 @@ class ParticipantSelectorWidget extends StatelessWidget {
         context: context,
         items: participants,
         selected: selected,
-        gloc: gloc,
         sheetTitle: gloc.participants_label,
         itemLabel: (p) => p,
       );
@@ -42,28 +39,34 @@ class ParticipantSelectorWidget extends StatelessWidget {
       }
     }
 
+    // Disable selection when there's only one participant or none
+    final canSelect = participants.length > 1;
+
     if (fullEdit) {
       return InlineSelectField(
         icon: AppIcons.participant,
         label: selected ?? gloc.participants_label,
-        onTap: openPicker,
-        enabled: participants.isNotEmpty,
+        onTap: canSelect ? openPicker : null,
+        enabled: canSelect,
         semanticsLabel: gloc.paid_by,
         textStyle: textStyle,
+        showArrow: canSelect,
       );
     }
 
-    return OutlinedButton(
-      style: OutlinedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    return TextButton(
+      style: TextButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 12),
         foregroundColor: theme.colorScheme.onSurface,
-        side: BorderSide(color: borderColor.withValues(alpha: 0.8), width: 1),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        minimumSize: Size.zero,
       ),
-      onPressed: participants.isEmpty ? null : openPicker,
+      onPressed: canSelect ? openPicker : null,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
+          const SizedBox(width: 5),
           Icon(
             AppIcons.participant,
             size: 20,
@@ -81,6 +84,13 @@ class ParticipantSelectorWidget extends StatelessWidget {
                   ),
             ),
           ),
+          const SizedBox(width: 4),
+          if (canSelect)
+            Icon(
+              Icons.arrow_drop_down,
+              size: 20,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
         ],
       ),
     );

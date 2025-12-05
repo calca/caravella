@@ -3,6 +3,7 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 class ExpenseFormActionsWidget extends StatelessWidget {
   final VoidCallback? onSave;
+  final bool isFormValid;
   final VoidCallback? onDelete; // Shown only in edit mode
   final bool isEdit;
   final TextStyle? textStyle;
@@ -13,6 +14,7 @@ class ExpenseFormActionsWidget extends StatelessWidget {
   const ExpenseFormActionsWidget({
     super.key,
     required this.onSave,
+    this.isFormValid = false,
     this.onDelete,
     this.isEdit = false,
     this.textStyle,
@@ -23,7 +25,6 @@ class ExpenseFormActionsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
-    final saveLabel = gloc.save_change_expense;
     final colorScheme = Theme.of(context).colorScheme;
     final leftButtons = <Widget>[];
     if (showExpandButton && onExpand != null) {
@@ -74,11 +75,22 @@ class ExpenseFormActionsWidget extends StatelessWidget {
         ...leftChildren,
         if (leftChildren.isNotEmpty) const SizedBox(width: 12),
         const Spacer(),
-        IconButton.filled(
+        TextButton(
           onPressed: onSave,
-          tooltip: saveLabel,
-          icon: const Icon(Icons.send_outlined, size: 24),
-          style: IconButton.styleFrom(padding: const EdgeInsets.all(8)),
+          style: TextButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          ),
+          child: Text(
+            isEdit ? gloc.save.toUpperCase() : gloc.add.toUpperCase(),
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+              fontWeight: FontWeight.w600,
+              letterSpacing: 1.2,
+              color: isFormValid
+                  ? colorScheme.primary
+                  : colorScheme.onSurface.withValues(alpha: 0.8),
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
       ],
     );

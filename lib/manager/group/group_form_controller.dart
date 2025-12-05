@@ -1,23 +1,31 @@
 import 'dart:io';
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
-import '../../data/model/expense_group.dart';
-import '../../data/model/expense_participant.dart';
-import '../../data/model/expense_category.dart';
-import '../../data/model/expense_group_type.dart';
-import '../../data/expense_group_storage_v2.dart';
+import 'package:caravella_core/caravella_core.dart';
 // ...existing code...
 import 'data/group_form_state.dart';
 import 'group_edit_mode.dart';
-import '../../state/expense_group_notifier.dart';
 
 /// Controller encapsulates business logic for the group form.
 class GroupFormController {
   final GroupFormState state;
   final GroupEditMode mode;
   final ExpenseGroupNotifier? _notifier;
+  final VoidCallback? onSaveSuccess;
+  final Function(String)? onSaveError;
 
-  GroupFormController(this.state, this.mode, [this._notifier]);
+  GroupFormController(
+    this.state,
+    this.mode, [
+    this._notifier,
+    this.onSaveSuccess,
+    this.onSaveError,
+  ]) {
+    // No automatic auto-save: saving is performed explicitly (e.g. on back)
+  }
+
+  // Auto-save removed: saving performed explicitly (for example on back press)
 
   void load(ExpenseGroup? group) {
     if (mode == GroupEditMode.create) return; // nothing to load in create mode
@@ -37,6 +45,7 @@ class GroupFormController {
     state.imagePath = group.file;
     state.color = group.color;
     state.groupType = group.groupType;
+    state.autoLocationEnabled = group.autoLocationEnabled;
     // Keep a snapshot in the state to avoid extra repository fetches
     state.setOriginalGroup(group.copyWith());
     state.refresh();
@@ -96,6 +105,7 @@ class GroupFormController {
     if (g.file != state.imagePath) return true;
     if (g.color != state.color) return true;
     if (g.groupType != state.groupType) return true;
+    if (g.autoLocationEnabled != state.autoLocationEnabled) return true;
     return false;
   }
 
@@ -141,6 +151,7 @@ class GroupFormController {
         file: state.imagePath,
         color: state.color,
         groupType: state.groupType,
+        autoLocationEnabled: state.autoLocationEnabled,
         timestamp: state.originalGroup?.timestamp ?? now,
       );
 
@@ -315,5 +326,9 @@ class GroupFormController {
         state.addCategory(ExpenseCategory(name: categoryName));
       }
     }
+  }
+
+  void dispose() {
+    // Nothing to dispose related to auto-save; keep method for symmetry.
   }
 }

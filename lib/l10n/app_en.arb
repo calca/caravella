@@ -20,6 +20,10 @@
   "@monthlyChartBadge": {
     "description": "Letter indicator for monthly chart badge"
   },
+  "dateRangeChartBadge": "D",
+  "@dateRangeChartBadge": {
+    "description": "Letter indicator for date range chart badge"
+  },
   "weeklyExpensesChart": "Weekly expenses",
   "@weeklyExpensesChart": {
     "description": "Label for weekly expenses chart"
@@ -28,12 +32,38 @@
   "@monthlyExpensesChart": {
     "description": "Label for monthly expenses chart"
   },
+  "dateRangeExpensesChart": "Date range expenses",
+  "@dateRangeExpensesChart": {
+    "description": "Label for date range expenses chart"
+  },
   "settings_flag_secure_desc": "Prevents screenshots and screen recording",
   "settings_flag_secure_title": "Secure screen",
   "settings_privacy": "Privacy",
   "select_currency": "Select currency",
   "select_period_hint_short": "Set dates",
-  "select_period_hint": "Select a date range",
+  "select_period_hint": "Select dates",
+  "suggested_duration": "Suggested duration",
+  "days_count": "{count} days",
+  "@days_count": {"description": "Number of days", "placeholders": {"count": {"type": "int"}}},
+  "weekday_mon": "M",
+  "weekday_tue": "T",
+  "weekday_wed": "W",
+  "weekday_thu": "T",
+  "weekday_fri": "F",
+  "weekday_sat": "S",
+  "weekday_sun": "S",
+  "month_january": "January",
+  "month_february": "February",
+  "month_march": "March",
+  "month_april": "April",
+  "month_may": "May",
+  "month_june": "June",
+  "month_july": "July",
+  "month_august": "August",
+  "month_september": "September",
+  "month_october": "October",
+  "month_november": "November",
+  "month_december": "December",
   "in_group_prefix": "in",
   "save_change_expense": "Save changes",
   "group_total": "Total",
@@ -59,6 +89,8 @@
   "no_active_groups_subtitle": "Create an expense group",
   "create_first_group": "Create a group",
   "new_expense_group": "New Expense Group",
+  "new_expense": "New Expense",
+  "edit_expense": "Edit Expense",
   "tap_to_create": "Tap to create",
   "no_expense_label": "No expenses found",
   "image": "Image",
@@ -81,6 +113,19 @@
   "participants_description": "People sharing costs",
   "categories_description": "Group expenses by type",
   "dates_description": "Optional start and end",
+  "select_period": "Select period",
+  "select_period_dates": "Select the period dates",
+  "suggested_duration": "Suggested duration",
+  "duration_days": "{days} days",
+  "@duration_days": {"description": "Label for duration in days", "placeholders": {"days": {"type": "int"}}},
+  "period_from_to": "From {start} to {end} ({days} days)",
+  "@period_from_to": {"description": "Formatted period", "placeholders": {"start": {"type": "String"}, "end": {"type": "String"}, "days": {"type": "int"}}},
+  "period_from_select_end": "From {start} - Select end",
+  "@period_from_select_end": {"description": "Period with only start date", "placeholders": {"start": {"type": "String"}}},
+  "period_to_select_start": "To {end} - Select start",
+  "@period_to_select_start": {"description": "Period with only end date", "placeholders": {"end": {"type": "String"}}},
+  "confirm": "Confirm",
+  "clear": "Clear",
   "currency_description": "Base currency for group",
   "background_color_selected": "Color selected",
   "background_tap_to_replace": "Tap to replace",
@@ -104,8 +149,10 @@
   "license_hint": "This app is released under the MIT license.",
   "license_link": "View MIT License on GitHub",
   "license_section": "License",
-  "add_trip": "Add group",
+  "add_trip": "Add a group",
   "new_group": "New Group",
+  "group": "Group",
+  "create": "Create",
   "group_name": "Name",
   "enter_title": "Enter a name",
   "enter_participant": "Enter at least one participant",
@@ -212,6 +259,8 @@
   "select_expense_date_short": "Select date",
   "date": "Date",
   "edit_group": "Edit Group",
+  "edit_group_desc": "Modify group settings, participants, and categories",
+  "new_group_desc": "Create a new expense group with custom settings",
   "delete_group": "Delete group",
   "delete_group_confirm": "Are you sure you want to delete this expense group? This action cannot be undone.",
   "add_expense_fab": "Add Expense",
@@ -260,8 +309,8 @@
   "csv_date": "Date",
   "csv_note": "Note",
   "csv_location": "Location",
-  "location": "Location",
-  "location_hint": "Location",
+  "location": "Place",
+  "location_hint": "Place",
   "get_current_location": "Use current location",
   "enter_location_manually": "Enter manually",
   "location_permission_denied": "Location permission denied",
@@ -270,8 +319,14 @@
   "location_error": "Error getting location",
   "resolving_address": "Resolving address…",
   "address_resolved": "Address resolved",
+  "search_place": "Search place",
+  "search_place_hint": "Search for a place or address",
   "settings_general": "General",
   "settings_general_desc": "Language and appearance settings",
+  "settings_auto_location_section": "Location Detection",
+  "settings_auto_location_section_desc": "Configure automatic location detection",
+  "settings_auto_location_title": "Enable to detect",
+  "settings_auto_location_desc": "Detect GPS when adding an expense",
   "settings_language": "Language",
   "settings_language_desc": "Choose your preferred language",
   "settings_language_it": "Italian",
@@ -283,6 +338,8 @@
   "settings_theme": "Theme",
   "settings_theme_desc": "Light, dark or system",
   "settings_select_theme": "Select theme",
+  "settings_dynamic_color": "Dynamic color",
+  "settings_dynamic_color_desc": "Use colors from your wallpaper",
   "settings_privacy": "Privacy",
   "settings_privacy_desc": "Security and privacy options",
   "settings_data": "Data",
@@ -570,8 +627,8 @@
   ,"currency_ZMW": "Zambian Kwacha"
   ,"currency_ZWL": "Zimbabwean Dollar"
   ,"search_currency": "Search currency..."
-  ,"activity": "Activity"
-  ,"@activity": {"description": "Section title for expense list recent activity"}
+  ,"activity": "Expenses"
+  ,"@activity": {"description": "Section title for expense list"}
   ,"search_expenses_hint": "Search by name or note..."
   ,"@search_expenses_hint": {"description": "Placeholder for searching expenses by name or note"}
   ,"clear_filters": "Clear"
@@ -610,6 +667,10 @@
   ,"@whats_new_subtitle": {"description": "Card headline describing the what's new section"}
   ,"whats_new_latest": "Stay up to date with recent improvements"
   ,"@whats_new_latest": {"description": "Support text explaining that the content lists the most recent updates"}
+  ,"changelog_title": "Changelog"
+  ,"@changelog_title": {"description": "Title for the changelog section"}
+  ,"changelog_desc": "Version history and improvements"
+  ,"@changelog_desc": {"description": "Description for the changelog section"}
   ,"average_per_person": "Average per person"
   ,"@average_per_person": {"description": "Label shown before the computed average spent per person in the Participants tab"}
   ,"more": "more"
@@ -618,6 +679,50 @@
   ,"@less": {"description": "Inline toggle label to collapse and show fewer items"}
   ,"debt_prefix_to": "to "
   ,"@debt_prefix_to": {"description": "Short prefix shown before the recipient in a debt/settlement line (e.g., 'to Alice 10€')"}
+  ,"view_on_map": "View on map"
+  ,"@view_on_map": {"description": "Tooltip for the map button to view expenses on a map"}
+  ,"expenses_map": "Expenses Map"
+  ,"@expenses_map": {"description": "Title of the page showing expenses on a map"}
+  ,"no_locations_available": "No locations available"
+  ,"@no_locations_available": {"description": "Message shown when no expenses have location data"}
+  ,"no_locations_subtitle": "Add location data to your expenses to see them on the map"
+  ,"@no_locations_subtitle": {"description": "Subtitle explaining how to add locations"}
+  ,"expense_count": "{count, plural, =1{1 expense} other{{count} expenses}}"
+  ,"@expense_count": {"description": "Label showing number of expenses at a location", "placeholders": {"count": {"type": "int"}}}
+  ,"check_for_updates": "Check for updates"
+  ,"@check_for_updates": {"description": "Label to check for updates from Google Play Store"}
+  ,"check_for_updates_desc": "Check for new version availability"
+  ,"@check_for_updates_desc": {"description": "Description for update check"}
+  ,"update_available": "Update available"
+  ,"@update_available": {"description": "Title when an update is available"}
+  ,"update_available_desc": "A new version of the app is available"
+  ,"@update_available_desc": {"description": "Description when an update is available"}
+  ,"no_update_available": "App up to date"
+  ,"@no_update_available": {"description": "Message when there are no updates"}
+  ,"no_update_available_desc": "You're using the latest version"
+  ,"@no_update_available_desc": {"description": "Description when there are no updates"}
+  ,"update_now": "Update now"
+  ,"@update_now": {"description": "Button to start the update"}
+  ,"update_later": "Later"
+  ,"@update_later": {"description": "Button to postpone the update"}
+  ,"checking_for_updates": "Checking for updates..."
+  ,"@checking_for_updates": {"description": "Message while checking for updates"}
+  ,"update_error": "Update check error"
+  ,"@update_error": {"description": "Error message during update check"}
+  ,"update_downloading": "Downloading..."
+  ,"@update_downloading": {"description": "Message while downloading update"}
+  ,"update_installing": "Installing..."
+  ,"@update_installing": {"description": "Message while installing update"}
+  ,"update_feature_android_only": "Feature only available on Android with Google Play Store"
+  ,"@update_feature_android_only": {"description": "Message explaining the feature is Android-only"}
+  ,"update_recommendation_title": "Update recommended"
+  ,"@update_recommendation_title": {"description": "Title of bottom sheet to recommend update"}
+  ,"update_recommendation_desc": "A new version of Caravella is available. Update the app to always have the latest features and improvements!"
+  ,"@update_recommendation_desc": {"description": "Description in bottom sheet recommending to update"}
+  ,"update_install": "Install update"
+  ,"@update_install": {"description": "Button to install update from bottom sheet"}
+  ,"update_remind_later": "Remind me later"
+  ,"@update_remind_later": {"description": "Button to postpone update from bottom sheet"}
   ,"send_reminder": "Send reminder"
   ,"@send_reminder": {"description": "Button label to send a payment reminder to a participant"}
   ,"reminder_message_single": "Hi {participantName}! 👋\n\nJust a friendly reminder that you owe {amount} to {creditorName} for the group \"{groupName}\".\n\nThank you! 😊"

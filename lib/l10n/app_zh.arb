@@ -32,6 +32,13 @@
   "@monthlyChartBadge": {
     "description": "Letter indicator for monthly chart badge"
   },
+  "dateRangeChartBadge": "日",
+  "@dateRangeChartBadge": {
+    "description": "Letter indicator for date range chart badge"
+  },
+  "@monthlyChartBadge": {
+    "description": "Letter indicator for monthly chart badge"
+  },
   "weeklyExpensesChart": "每周支出",
   "@weeklyExpensesChart": {
     "description": "Label for weekly expenses chart"
@@ -40,12 +47,38 @@
   "@monthlyExpensesChart": {
     "description": "Label for monthly expenses chart"
   },
+  "dateRangeExpensesChart": "期间支出",
+  "@dateRangeExpensesChart": {
+    "description": "Label for date range expenses chart"
+  },
   "settings_flag_secure_desc": "防止截屏和录屏",
   "settings_flag_secure_title": "安全屏幕",
   "settings_privacy": "隐私",
   "select_currency": "选择货币",
   "select_period_hint_short": "设置日期",
-  "select_period_hint": "选择日期范围",
+  "select_period_hint": "选择日期",
+  "suggested_duration": "建议时长",
+  "days_count": "{count}天",
+  "@days_count": {"description": "天数", "placeholders": {"count": {"type": "int"}}},
+  "weekday_mon": "一",
+  "weekday_tue": "二",
+  "weekday_wed": "三",
+  "weekday_thu": "四",
+  "weekday_fri": "五",
+  "weekday_sat": "六",
+  "weekday_sun": "日",
+  "month_january": "一月",
+  "month_february": "二月",
+  "month_march": "三月",
+  "month_april": "四月",
+  "month_may": "五月",
+  "month_june": "六月",
+  "month_july": "七月",
+  "month_august": "八月",
+  "month_september": "九月",
+  "month_october": "十月",
+  "month_november": "十一月",
+  "month_december": "十二月",
   "in_group_prefix": "在",
   "save_change_expense": "保存更改",
   "group_total": "总计",
@@ -123,6 +156,7 @@
   "license_section": "许可证",
   "add_trip": "添加群组",
   "new_group": "新群组",
+  "create": "创建",
   "group_name": "群组名称",
   "enter_title": "输入名称",
   "enter_participant": "输入至少一个参与者",
@@ -220,6 +254,8 @@
   "select_expense_date_short": "选择日期",
   "date": "日期",
   "edit_group": "编辑群组",
+  "edit_group_desc": "修改群组设置、参与者和类别",
+  "new_group_desc": "创建具有自定义设置的新支出群组",
   "delete_group": "删除群组",
   "delete_group_confirm": "您确定要删除此支出群组吗？此操作无法撤销。",
   "add_expense_fab": "添加支出",
@@ -279,8 +315,14 @@
   "location_error": "获取位置时出错",
   "resolving_address": "解析地址...",
   "address_resolved": "地址已解析",
-  "settings_general": "一般",
-  "settings_general_desc": "应用程序通用设置",
+  "search_place": "搜索地点",
+  "search_place_hint": "搜索地点或地址",
+  "settings_general": "常规",
+  "settings_general_desc": "语言和外观设置",
+  "settings_auto_location_section": "位置检测",
+  "settings_auto_location_section_desc": "配置自动位置检测",
+  "settings_auto_location_title": "启用检测",
+  "settings_auto_location_desc": "添加费用时检测GPS",
   "settings_language": "语言",
   "settings_language_desc": "选择您的首选语言",
   "settings_language_it": "意大利语",
@@ -292,6 +334,8 @@
   "settings_theme": "主题",
   "settings_theme_desc": "选择应用主题",
   "settings_select_theme": "选择主题",
+  "settings_dynamic_color": "动态颜色",
+  "settings_dynamic_color_desc": "使用壁纸颜色",
   "settings_privacy_desc": "安全和隐私选项",
   "settings_data": "数据",
   "settings_data_desc": "管理和备份数据",
@@ -550,7 +594,7 @@
   "currency_ZMW": "赞比亚克瓦查",
   "currency_ZWL": "津巴布韦元",
   "search_currency": "搜索货币...",
-  "activity": "活动",
+  "activity": "支出",
   "search_expenses_hint": "按名称或备注搜索...",
   "clear_filters": "清除",
   "show_filters": "显示筛选器",
@@ -578,7 +622,181 @@
     "description": "Main section header for the list of expense groups/trips on the history page"
   },
   "expense_groups_desc": "管理您的支出群组",
-  "@expense_groups_desc": {
+  "@expense_groups_desc": {"description": "Short subtitle describing the purpose of the expense groups section (e.g. add, edit, view trips)"}
+  ,"participant_count": "{count, plural, other {{count} 名参与者}}"
+  ,"@participant_count": {"description": "参与者计数（中文无需复数, 使用other形式）", "placeholders": {"count": {}}}
+  ,"whats_new_title": "新功能"
+  ,"@whats_new_title": {"description": "显示更新日志页面的标题"}
+  ,"whats_new_desc": "了解最新功能和更新"
+  ,"@whats_new_desc": {"description": "新功能页面的副标题"}
+  ,"average_per_person": "人均支出"
+  ,"@average_per_person": {"description": "参与者标签页中显示的人均支出标签"}
+  ,"more": "更多"
+  ,"@more": {"description": "展开并显示所有项目的内联按钮标签"}
+  ,"less": "更少"
+  ,"@less": {"description": "收起并显示更少项目的内联按钮标签"}
+  ,"debt_prefix_to": "给 "
+  ,"@debt_prefix_to": {"description": "在债务/结算行中显示在收款人之前的简短前缀（例如：'给 Alice 10€'）"}
+  ,"new_expense_group": "新支出群组"
+  ,"tap_to_create": "点击创建"
+  ,"no_expense_label": "未找到支出"
+  ,"image": "图片"
+  ,"select_image": "选择图片"
+  ,"change_image": "更换图片"
+  ,"from_gallery": "从图库选择"
+  ,"from_camera": "拍照"
+  ,"remove_image": "删除图片"
+  ,"color": "颜色"
+  ,"remove_color": "删除颜色"
+  ,"color_alternative": "图片的替代颜色"
+  ,"background": "背景"
+  ,"select_background": "选择背景"
+  ,"background_options": "背景选项"
+  ,"choose_image_or_color": "选择图片或颜色"
+  ,"background_color_selected": "颜色已选择"
+  ,"background_tap_to_replace": "点击替换"
+  ,"background_tap_to_change": "点击更换"
+  ,"background_select_image_or_color": "选择图片或颜色"
+  ,"background_random_color": "随机颜色"
+  ,"background_remove": "删除背景"
+  ,"crop_image_title": "裁剪图片"
+  ,"crop_confirm": "确认"
+  ,"saving": "保存中..."
+  ,"processing_image": "处理图片中..."
+  ,"no_trips_found": "您想去哪里？"
+  ,"participants_label": "参与者"
+  ,"last_7_days": "过去7天"
+  ,"recent_activity": "最近活动"
+  ,"about": "关于"
+  ,"license_hint": "此应用在MIT许可证下发布。"
+  ,"license_section": "许可证"
+  ,"new_group": "新群组"
+  ,"enter_title": "输入名称"
+  ,"enter_participant": "输入至少一个参与者"
+  ,"select_start": "选择开始日期"
+  ,"select_end": "选择结束日期"
+  ,"start_date_not_selected": "选择开始日期"
+  ,"end_date_not_selected": "选择结束日期"
+  ,"select_from_date": "选择开始日期"
+  ,"select_to_date": "选择结束日期"
+  ,"date_range_not_selected": "选择时间段"
+  ,"add_participants_button": "添加参与者"
+  ,"enter_group_name": "输入群组名称"
+  ,"edit_group": "编辑群组"
+  ,"delete_group": "删除群组"
+  ,"delete_group_confirm": "您确定要删除此支出群组吗？此操作无法撤销。"
+  ,"add_expense_fab": "添加支出"
+  ,"pin_group": "固定群组"
+  ,"unpin_group": "取消固定群组"
+  ,"pin": "固定"
+  ,"developed_by": "开发者：calca"
+  ,"links": "链接"
+  ,"daily_expenses_chart": "每日支出"
+  ,"weekly_expenses_chart": "每周支出"
+  ,"general_statistics": "总体统计"
+  ,"overview_and_statistics": "概览和统计"
+  ,"spent_today": "今日支出"
+  ,"average_expense": "平均支出"
+  ,"welcome_v3_cta": "开始使用！"
+  ,"discard_changes_title": "舍弃更改？"
+  ,"discard_changes_message": "您确定要舍弃未保存的更改吗？"
+  ,"discard": "舍弃"
+  ,"category_placeholder": "类别"
+  ,"image_requirements": "PNG、JPG、GIF（最大10MB）"
+  ,"error_selecting_image": "选择图片出错"
+  ,"error_saving_image": "保存图片出错"
+  ,"already_exists": "已存在"
+  ,"status_all": "全部"
+  ,"status_active": "活跃"
+  ,"status_archived": "已归档"
+  ,"no_archived_groups": "没有已归档的群组"
+  ,"no_archived_groups_subtitle": "您还没有归档任何群组"
+  ,"all_groups_archived_info": "您的所有群组都已归档。您可以从归档部分恢复它们或创建新的群组。"
+  ,"filter_status_tooltip": "筛选群组"
+  ,"welcome_logo_semantic": "Caravella应用标志"
+  ,"create_new_group": "创建新群组"
+  ,"accessibility_add_new_item": "添加新项目"
+  ,"accessibility_navigation_bar": "导航栏"
+  ,"accessibility_back_button": "返回"
+  ,"accessibility_loading_groups": "正在加载群组"
+  ,"accessibility_loading_your_groups": "正在加载您的群组"
+  ,"accessibility_groups_list": "群组列表"
+  ,"accessibility_welcome_screen": "欢迎屏幕"
+  ,"accessibility_add_expense": "添加支出"
+  ,"accessibility_toast_success": "成功"
+  ,"accessibility_toast_error": "错误"
+  ,"accessibility_toast_info": "信息"
+  ,"activity": "活动"
+  ,"search_expenses_hint": "按名称或备注搜索..."
+  ,"clear_filters": "清除"
+  ,"show_filters": "显示筛选器"
+  ,"hide_filters": "隐藏筛选器"
+  ,"all_categories": "全部"
+  ,"all_participants": "全部"
+  ,"no_expenses_with_filters": "没有符合所选筛选条件的支出"
+  ,"no_expenses_yet": "尚未添加支出"
+  ,"expenses_by_category": "按类别分类的支出"
+  ,"uncategorized": "未分类"
+  ,"backup": "备份"
+  ,"no_trips_to_backup": "没有可备份的行程"
+  ,"backup_error": "备份失败"
+  ,"backup_share_message": "这是您的Caravella备份"
+  ,"import": "导入"
+  ,"import_success_message": "导入成功！已重新加载数据。"
+  ,"no_backup_file_selected": "未选择备份文件"
+  ,"manage_data": "管理数据"
+  ,"manage_data_desc": "导出、导入和备份您的数据"
+  ,"language_system": "系统"
+  ,"language_pt": "葡萄牙语"
+  ,"welcome_v3_desc": "轻松管理群组支出、分摊费用和跟踪结算。"
+  ,"welcome_v3_tagline": "完美适用于群组旅行、室友或任何共享支出的情况。"
+  ,"currency_WST": "萨摩亚塔拉"
+  ,"search_currency": "搜索货币..."
+  ,"view_on_map": "在地图上查看"
+  ,"@view_on_map": {"description": "Tooltip for the map button to view expenses on a map"}
+  ,"expenses_map": "支出地图"
+  ,"@expenses_map": {"description": "Title of the page showing expenses on a map"}
+  ,"no_locations_available": "没有可用的位置"
+  ,"@no_locations_available": {"description": "Message shown when no expenses have location data"}
+  ,"no_locations_subtitle": "在支出中添加位置数据以在地图上查看它们"
+  ,"@no_locations_subtitle": {"description": "Subtitle explaining how to add locations"}
+  ,"expense_count": "{count, plural, =1{1 笔支出} other{{count} 笔支出}}"
+  ,"@expense_count": {"description": "Label showing number of expenses at a location", "placeholders": {"count": {"type": "int"}}}
+  ,"check_for_updates": "检查更新"
+  ,"@check_for_updates": {"description": "从Google Play商店检查更新的标签"}
+  ,"check_for_updates_desc": "检查新版本可用性"
+  ,"@check_for_updates_desc": {"description": "更新检查的描述"}
+  ,"update_available": "有可用更新"
+  ,"@update_available": {"description": "当有更新可用时的标题"}
+  ,"update_available_desc": "应用的新版本已可用"
+  ,"@update_available_desc": {"description": "当有更新可用时的描述"}
+  ,"no_update_available": "应用已是最新"
+  ,"@no_update_available": {"description": "没有更新时的消息"}
+  ,"no_update_available_desc": "您正在使用最新版本"
+  ,"@no_update_available_desc": {"description": "没有更新时的描述"}
+  ,"update_now": "立即更新"
+  ,"@update_now": {"description": "开始更新的按钮"}
+  ,"update_later": "稍后"
+  ,"@update_later": {"description": "推迟更新的按钮"}
+  ,"checking_for_updates": "正在检查更新..."
+  ,"@checking_for_updates": {"description": "检查更新时的消息"}
+  ,"update_error": "更新检查错误"
+  ,"@update_error": {"description": "更新检查期间的错误消息"}
+  ,"update_downloading": "正在下载..."
+  ,"@update_downloading": {"description": "下载更新时的消息"}
+  ,"update_installing": "正在安装..."
+  ,"@update_installing": {"description": "安装更新时的消息"}
+  ,"update_feature_android_only": "此功能仅适用于带有Google Play商店的Android设备"
+  ,"@update_feature_android_only": {"description": "说明该功能仅适用于Android的消息"}
+  ,"update_recommendation_title": "推荐更新"
+  ,"@update_recommendation_title": {"description": "推荐更新的底部表单标题"}
+  ,"update_recommendation_desc": "Caravella有新版本可用。更新应用以始终获得最新功能和改进！"
+  ,"@update_recommendation_desc": {"description": "底部表单中建议更新的描述"}
+  ,"update_install": "安装更新"
+  ,"@update_install": {"description": "从底部表单安装更新的按钮"}
+  ,"update_remind_later": "稍后提醒我"
+  ,"@update_remind_later": {"description": "从底部表单推迟更新的按钮"}
+  ,"@expense_groups_desc": {
     "description": "Short subtitle describing the purpose of the expense groups section (e.g. add, edit, view trips)"
   },
   "whats_new_title": "新功能",
@@ -596,6 +814,14 @@
   "whats_new_latest": "随时掌握最新改进",
   "@whats_new_latest": {
     "description": "新功能页面标题卡中的描述文字"
+  },
+  "changelog_title": "更新日志",
+  "@changelog_title": {
+    "description": "更新日志部分的标题"
+  },
+  "changelog_desc": "版本历史和改进",
+  "@changelog_desc": {
+    "description": "更新日志部分的描述"
   },
   "average_per_person": "人均支出",
   "@average_per_person": {

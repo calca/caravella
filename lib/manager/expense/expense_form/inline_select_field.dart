@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'icon_leading_field.dart';
-import '../../../themes/form_theme.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 /// Generic inline (row style) selectable field used in fullEdit mode for
 /// participant, category, date-like pickers. Provides consistent layout
@@ -12,6 +12,7 @@ class InlineSelectField extends StatelessWidget {
   final String? semanticsLabel;
   final TextStyle? textStyle;
   final bool enabled;
+  final bool showArrow;
 
   const InlineSelectField({
     super.key,
@@ -21,6 +22,7 @@ class InlineSelectField extends StatelessWidget {
     required this.enabled,
     this.semanticsLabel,
     this.textStyle,
+    this.showArrow = false,
   });
 
   @override
@@ -36,10 +38,24 @@ class InlineSelectField extends StatelessWidget {
 
     final child = Padding(
       padding: EdgeInsets.symmetric(vertical: FormTheme.fieldVerticalPadding),
-      child: Text(
-        label,
-        overflow: TextOverflow.ellipsis,
-        style: effectiveStyle,
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              label,
+              overflow: TextOverflow.ellipsis,
+              style: effectiveStyle,
+            ),
+          ),
+          if (showArrow) ...[
+            const SizedBox(width: 8),
+            Icon(
+              Icons.arrow_drop_down,
+              size: 20,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ],
+        ],
       ),
     );
 

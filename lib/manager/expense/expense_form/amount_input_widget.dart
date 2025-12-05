@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../data/model/expense_category.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'package:flutter/services.dart';
 import 'icon_leading_field.dart';
-import '../../../themes/form_theme.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 class AmountInputWidget extends StatelessWidget {
   final TextEditingController controller;
@@ -18,6 +18,7 @@ class AmountInputWidget extends StatelessWidget {
   final Widget? trailing; // optional trailing icon for text mode
   final Widget?
   leading; // optional leading icon for text mode aligned like currency
+  final TextInputAction? textInputAction; // override default textInputAction
 
   const AmountInputWidget({
     super.key,
@@ -33,6 +34,7 @@ class AmountInputWidget extends StatelessWidget {
     this.currency,
     this.trailing,
     this.leading,
+    this.textInputAction,
   });
 
   @override
@@ -62,7 +64,7 @@ class AmountInputWidget extends StatelessWidget {
           semanticCounterText: '',
         ),
         keyboardType: TextInputType.text,
-        textInputAction: TextInputAction.next,
+        textInputAction: textInputAction ?? TextInputAction.next,
         validator: validator,
         onSaved: onSaved,
         onFieldSubmitted: (_) => onSubmitted?.call(),
@@ -111,7 +113,7 @@ class AmountInputWidget extends StatelessWidget {
         semanticCounterText: '',
       ),
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
-      textInputAction: TextInputAction.next,
+      textInputAction: textInputAction ?? TextInputAction.next,
       validator: validator,
       onSaved: onSaved,
       onFieldSubmitted: (_) => onSubmitted?.call(),
