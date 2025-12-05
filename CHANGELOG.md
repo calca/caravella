@@ -82,6 +82,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Linear dependency chain: Widgets → LocationService → LocationRepository → Platform services
   - Error handling migrated to ExpenseErrorHandler for consistency
   - Removed circular dependencies between widgets and services
+- **AppToast Centralization**: Completed 100% centralization of ScaffoldMessenger usage through AppToast
+  - Connected `rootScaffoldMessengerKey` in main app to enable fallback mechanism for unmounted contexts
+  - Replaced remaining direct SnackBar usage in attachment viewer with AppToast
+  - Added comprehensive documentation for `rootScaffoldMessengerKey` setup requirement
+  - Exported `rootScaffoldMessengerKey` from caravella_core_ui for main app access
+  - Toast messages now work reliably after navigation or sheet dismissal in async operations
 
 ## [1.2.0] - 2025-12-03
 

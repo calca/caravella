@@ -1,6 +1,20 @@
 import 'package:flutter/material.dart';
 
-/// Global key for root scaffold messenger - should be set by the app.
+/// Global key for root scaffold messenger - MUST be set by the app during initialization.
+///
+/// This key enables AppToast to show messages even when the original BuildContext
+/// is no longer mounted (e.g., after navigation or sheet dismissal in async operations).
+///
+/// Setup example in your app's main widget initState():
+/// ```dart
+/// import 'package:caravella_core_ui/caravella_core_ui.dart' show rootScaffoldMessengerKey;
+///
+/// @override
+/// void initState() {
+///   super.initState();
+///   rootScaffoldMessengerKey = _scaffoldMessengerKey;
+/// }
+/// ```
 GlobalKey<ScaffoldMessengerState>? rootScaffoldMessengerKey;
 
 /// Lightweight toast / inline feedback using Flutter's native SnackBar

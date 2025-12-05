@@ -30,6 +30,8 @@ class _CaravellaAppState extends State<CaravellaApp> {
   @override
   void initState() {
     super.initState();
+    // Connect AppToast's root key to enable fallback for unmounted contexts
+    rootScaffoldMessengerKey = _scaffoldMessengerKey;
     _loadLocale();
     _loadThemeMode();
     _loadDynamicColorPreference();
