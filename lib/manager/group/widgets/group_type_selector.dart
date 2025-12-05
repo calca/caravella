@@ -100,6 +100,9 @@ class GroupTypeSelector extends StatelessWidget {
                       defaultCategoryNames: !isSelected
                           ? _getLocalizedCategories(gloc, type)
                           : null,
+                      previousTypeCategoryNames: currentType != null
+                          ? _getLocalizedCategories(gloc, currentType)
+                          : null,
                     );
                     Navigator.of(context).pop();
                   },

@@ -314,28 +314,51 @@ class GroupFormController {
     state.refresh();
   }
 
-  /// Sets the group type and optionally auto-populates default categories
-  /// if the categories list is currently empty.
+  /// Sets the group type and manages default categories based on edit mode.
+  ///
+  /// In CREATE mode:
+  /// - Removes categories from the previous type (if any)
+  /// - Adds categories for the new type
+  ///
+  /// In EDIT mode:
+  /// - Only updates the type, categories are never modified
   ///
   /// [defaultCategoryNames] should be the localized category names to populate.
-  /// Required when [autoPopulateCategories] is true.
+  /// [previousTypeCategoryNames] are the localized names from the previous type to remove.
   void setGroupType(
     ExpenseGroupType? type, {
     bool autoPopulateCategories = true,
     List<String>? defaultCategoryNames,
+    List<String>? previousTypeCategoryNames,
   }) {
     state.setGroupType(type);
 
-    // Auto-populate categories only if the list is empty and a type is selected
-    if (autoPopulateCategories && type != null && state.categories.isEmpty) {
+    // In edit mode, never modify categories
+    if (mode == GroupEditMode.edit) return;
+
+    // In create mode, manage category replacement
+    if (autoPopulateCategories && type != null) {
       if (defaultCategoryNames == null) {
         throw ArgumentError(
           'defaultCategoryNames is required when autoPopulateCategories is true',
         );
       }
-      for (final categoryName in defaultCategoryNames) {
-        state.addCategory(ExpenseCategory(name: categoryName));
+
+      // Remove categories from previous type
+      if (previousTypeCategoryNames != null) {
+        state.categories.removeWhere(
+          (category) => previousTypeCategoryNames.contains(category.name),
+        );
       }
+
+      // Add new categories if not already present
+      for (final categoryName in defaultCategoryNames) {
+        if (!state.categories.any((c) => c.name == categoryName)) {
+          state.addCategory(ExpenseCategory(name: categoryName));
+        }
+      }
+      
+      state.refresh();
     }
   }
 
