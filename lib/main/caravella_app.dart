@@ -123,17 +123,23 @@ class _CaravellaAppState extends State<CaravellaApp> {
                 supportedLocales: gen.AppLocalizations.supportedLocales,
                 localizationsDelegates:
                     gen.AppLocalizations.localizationsDelegates,
-                builder: (context, child) => Stack(
-                  children: [
-                    Positioned.fill(child: child ?? const SizedBox()),
-                    SafeArea(
-                      child: ToastViewer(
-                        alignment: Alignment.topCenter,
-                        delay: const Duration(milliseconds: 2400),
-                        visibleCount: 3,
+                builder: (context, child) => ToastThemeProvider(
+                  data: const ToastTheme(
+                    gap: 8,
+                    viewerPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  ),
+                  child: Stack(
+                    children: [
+                      Positioned.fill(child: child ?? const SizedBox()),
+                      SafeArea(
+                        child: ToastViewer(
+                          alignment: Alignment.topCenter,
+                          delay: const Duration(milliseconds: 2400),
+                          visibleCount: 3,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 home: const CaravellaHomePage(title: 'Caravella'),
                 navigatorObservers: [routeObserver],
