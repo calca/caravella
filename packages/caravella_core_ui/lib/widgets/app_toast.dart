@@ -31,7 +31,7 @@ class AppToast {
       case ToastType.success:
         backgroundColor = colorScheme.surfaceContainerHighest;
         textColor = colorScheme.onSurface;
-        iconColor = colorScheme.tertiary;
+        iconColor = colorScheme.primary;
         effectiveIcon = icon ?? Icons.check_circle_outline_rounded;
         break;
       case ToastType.error:
