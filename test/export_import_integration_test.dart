@@ -60,7 +60,7 @@ void main() {
         );
 
         final zipFile = File('${tempDir.path}/test_backup.zip');
-        await zipFile.writeAsBytes(zipData!);
+        await zipFile.writeAsBytes(zipData);
 
         // Step 3: Simulate IMPORT - read ZIP using existing import logic
         final zipBytes = await zipFile.readAsBytes();
@@ -75,10 +75,10 @@ void main() {
         bool fileFound = false;
         String? extractedContent;
 
-      for (final file in decodedArchive) {
-        if (file.name == fileName) {
-          extractedContent = String.fromCharCodes(file.content as List<int>);
-          fileFound = true;
+        for (final file in decodedArchive) {
+          if (file.name == fileName) {
+            extractedContent = String.fromCharCodes(file.content as List<int>);
+            fileFound = true;
             break;
           }
         }

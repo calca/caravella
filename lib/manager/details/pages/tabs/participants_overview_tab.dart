@@ -217,7 +217,7 @@ class _ParticipantStatCardState extends State<_ParticipantStatCard> {
     if (message.isEmpty) return;
 
     try {
-      await Share.share(message);
+      await SharePlus.instance.share(ShareParams(text: message));
     } catch (e) {
       // Silently handle errors
       debugPrint('Error sharing reminder: $e');

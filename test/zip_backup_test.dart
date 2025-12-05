@@ -47,7 +47,7 @@ void main() {
       expect(zipData, isNotNull);
 
       final zipFile = File('${tempDir.path}/test_backup.zip');
-      await zipFile.writeAsBytes(zipData!);
+      await zipFile.writeAsBytes(zipData);
 
       // Verify ZIP file was created and is not empty
       expect(await zipFile.exists(), true);
@@ -66,7 +66,7 @@ void main() {
 
       // Verify the content is correct
       final extractedContent = String.fromCharCodes(
-        decodedArchive.first.content!,
+        decodedArchive.first.content as List<int>,
       );
       final expectedContent = await testDataFile.readAsString();
       expect(extractedContent, expectedContent);
@@ -94,7 +94,7 @@ void main() {
       expect(zipData, isNotNull);
 
       final zipFile = File('${tempDir.path}/empty_backup.zip');
-      await zipFile.writeAsBytes(zipData!);
+      await zipFile.writeAsBytes(zipData);
 
       // Verify ZIP file structure is correct even with empty content
       expect(await zipFile.exists(), true);

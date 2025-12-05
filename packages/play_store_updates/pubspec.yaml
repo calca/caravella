@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   in_app_update: ^4.2.3
-  shared_preferences: ^2.3.3
+  shared_preferences: ^2.5.3
   provider: ^6.1.5
   caravella_core:
     path: ../caravella_core
