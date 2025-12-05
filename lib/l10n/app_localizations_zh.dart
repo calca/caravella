@@ -1830,4 +1830,22 @@ class AppLocalizationsZh extends AppLocalizations {
   ) {
     return '嗨 $participantName！👋\n\n友情提醒您对群组 \"$groupName\" 的付款：\n\n$debtsList\n\n谢谢！😊';
   }
+
+  @override
+  String get group_type => '类型';
+
+  @override
+  String get group_type_description => '选择组类型';
+
+  @override
+  String get group_type_travel => '旅行 / 度假';
+
+  @override
+  String get group_type_personal => '个人';
+
+  @override
+  String get group_type_family => '家庭';
+
+  @override
+  String get group_type_other => '其他';
 }

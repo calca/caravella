@@ -1857,4 +1857,22 @@ class AppLocalizationsEn extends AppLocalizations {
   ) {
     return 'Hi $participantName! 👋\n\nJust a friendly reminder of your payments for the group \"$groupName\":\n\n$debtsList\n\nThank you! 😊';
   }
+
+  @override
+  String get group_type => 'Type';
+
+  @override
+  String get group_type_description => 'Choose the group type';
+
+  @override
+  String get group_type_travel => 'Travel / Vacation';
+
+  @override
+  String get group_type_personal => 'Personal';
+
+  @override
+  String get group_type_family => 'Family';
+
+  @override
+  String get group_type_other => 'Other';
 }

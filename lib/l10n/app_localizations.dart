@@ -3646,6 +3646,42 @@ abstract class AppLocalizations {
     Object groupName,
     Object debtsList,
   );
+
+  /// Label for expense group type
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get group_type;
+
+  /// Description for group type selection
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the group type'**
+  String get group_type_description;
+
+  /// Group type: travel or vacation
+  ///
+  /// In en, this message translates to:
+  /// **'Travel / Vacation'**
+  String get group_type_travel;
+
+  /// Group type: personal
+  ///
+  /// In en, this message translates to:
+  /// **'Personal'**
+  String get group_type_personal;
+
+  /// Group type: family
+  ///
+  /// In en, this message translates to:
+  /// **'Family'**
+  String get group_type_family;
+
+  /// Group type: other
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get group_type_other;
 }
 
 class _AppLocalizationsDelegate

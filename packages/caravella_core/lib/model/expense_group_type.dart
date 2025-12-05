@@ -19,7 +19,7 @@ enum ExpenseGroupType {
       case ExpenseGroupType.family:
         return Icons.family_restroom;
       case ExpenseGroupType.other:
-        return Icons.more_horiz;
+        return Icons.widgets_outlined;
     }
   }
 
