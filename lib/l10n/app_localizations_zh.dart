@@ -1848,4 +1848,40 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get group_type_other => '其他';
+
+  @override
+  String get category_travel_transport => '交通';
+
+  @override
+  String get category_travel_accommodation => '住宿';
+
+  @override
+  String get category_travel_restaurants => '餐厅';
+
+  @override
+  String get category_personal_shopping => '购物';
+
+  @override
+  String get category_personal_health => '健康';
+
+  @override
+  String get category_personal_entertainment => '娱乐';
+
+  @override
+  String get category_family_groceries => '食品杂货';
+
+  @override
+  String get category_family_home => '家居';
+
+  @override
+  String get category_family_bills => '账单';
+
+  @override
+  String get category_other_misc => '杂项';
+
+  @override
+  String get category_other_utilities => '公用事业';
+
+  @override
+  String get category_other_services => '服务';
 }

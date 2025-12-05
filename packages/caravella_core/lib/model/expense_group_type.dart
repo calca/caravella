@@ -23,17 +23,34 @@ enum ExpenseGroupType {
     }
   }
 
-  /// Returns default category names for this group type
-  List<String> get defaultCategories {
+  /// Returns default category translation keys for this group type.
+  /// Use [getLocalizedCategories] with AppLocalizations to get translated strings.
+  List<String> get defaultCategoryKeys {
     switch (this) {
       case ExpenseGroupType.travel:
-        return ['Trasporti', 'Alloggio', 'Ristoranti'];
+        return [
+          'category_travel_transport',
+          'category_travel_accommodation',
+          'category_travel_restaurants',
+        ];
       case ExpenseGroupType.personal:
-        return ['Shopping', 'Salute', 'Intrattenimento'];
+        return [
+          'category_personal_shopping',
+          'category_personal_health',
+          'category_personal_entertainment',
+        ];
       case ExpenseGroupType.family:
-        return ['Spesa', 'Casa', 'Bambini'];
+        return [
+          'category_family_groceries',
+          'category_family_home',
+          'category_family_bills',
+        ];
       case ExpenseGroupType.other:
-        return ['Varie', 'Utilità', 'Servizi'];
+        return [
+          'category_other_misc',
+          'category_other_utilities',
+          'category_other_services',
+        ];
     }
   }
 

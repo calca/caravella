@@ -885,5 +885,53 @@
   "group_type_other": "其他",
   "@group_type_other": {
     "description": "组类型：其他"
+  },
+  "category_travel_transport": "交通",
+  "@category_travel_transport": {
+    "description": "旅行组类型的默认类别"
+  },
+  "category_travel_accommodation": "住宿",
+  "@category_travel_accommodation": {
+    "description": "旅行组类型的默认类别"
+  },
+  "category_travel_restaurants": "餐厅",
+  "@category_travel_restaurants": {
+    "description": "旅行组类型的默认类别"
+  },
+  "category_personal_shopping": "购物",
+  "@category_personal_shopping": {
+    "description": "个人组类型的默认类别"
+  },
+  "category_personal_health": "健康",
+  "@category_personal_health": {
+    "description": "个人组类型的默认类别"
+  },
+  "category_personal_entertainment": "娱乐",
+  "@category_personal_entertainment": {
+    "description": "个人组类型的默认类别"
+  },
+  "category_family_groceries": "食品杂货",
+  "@category_family_groceries": {
+    "description": "家庭组类型的默认类别"
+  },
+  "category_family_home": "家居",
+  "@category_family_home": {
+    "description": "家庭组类型的默认类别"
+  },
+  "category_family_bills": "账单",
+  "@category_family_bills": {
+    "description": "家庭组类型的默认类别"
+  },
+  "category_other_misc": "杂项",
+  "@category_other_misc": {
+    "description": "其他组类型的默认类别"
+  },
+  "category_other_utilities": "公用事业",
+  "@category_other_utilities": {
+    "description": "其他组类型的默认类别"
+  },
+  "category_other_services": "服务",
+  "@category_other_services": {
+    "description": "其他组类型的默认类别"
   }
 }

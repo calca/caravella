@@ -10,39 +10,39 @@ void main() {
       expect(ExpenseGroupType.other.icon.codePoint, isNotNull);
     });
 
-    test('has default categories for each type', () {
-      expect(ExpenseGroupType.travel.defaultCategories.length, 3);
-      expect(ExpenseGroupType.personal.defaultCategories.length, 3);
-      expect(ExpenseGroupType.family.defaultCategories.length, 3);
-      expect(ExpenseGroupType.other.defaultCategories.length, 3);
+    test('has default category keys for each type', () {
+      expect(ExpenseGroupType.travel.defaultCategoryKeys.length, 3);
+      expect(ExpenseGroupType.personal.defaultCategoryKeys.length, 3);
+      expect(ExpenseGroupType.family.defaultCategoryKeys.length, 3);
+      expect(ExpenseGroupType.other.defaultCategoryKeys.length, 3);
     });
 
-    test('travel type has correct default categories', () {
-      final categories = ExpenseGroupType.travel.defaultCategories;
-      expect(categories, contains('Trasporti'));
-      expect(categories, contains('Alloggio'));
-      expect(categories, contains('Ristoranti'));
+    test('travel type has correct default category keys', () {
+      final keys = ExpenseGroupType.travel.defaultCategoryKeys;
+      expect(keys, contains('category_travel_transport'));
+      expect(keys, contains('category_travel_accommodation'));
+      expect(keys, contains('category_travel_restaurants'));
     });
 
-    test('personal type has correct default categories', () {
-      final categories = ExpenseGroupType.personal.defaultCategories;
-      expect(categories, contains('Shopping'));
-      expect(categories, contains('Salute'));
-      expect(categories, contains('Intrattenimento'));
+    test('personal type has correct default category keys', () {
+      final keys = ExpenseGroupType.personal.defaultCategoryKeys;
+      expect(keys, contains('category_personal_shopping'));
+      expect(keys, contains('category_personal_health'));
+      expect(keys, contains('category_personal_entertainment'));
     });
 
-    test('family type has correct default categories', () {
-      final categories = ExpenseGroupType.family.defaultCategories;
-      expect(categories, contains('Spesa'));
-      expect(categories, contains('Casa'));
-      expect(categories, contains('Bambini'));
+    test('family type has correct default category keys', () {
+      final keys = ExpenseGroupType.family.defaultCategoryKeys;
+      expect(keys, contains('category_family_groceries'));
+      expect(keys, contains('category_family_home'));
+      expect(keys, contains('category_family_bills'));
     });
 
-    test('other type has correct default categories', () {
-      final categories = ExpenseGroupType.other.defaultCategories;
-      expect(categories, contains('Varie'));
-      expect(categories, contains('Utilità'));
-      expect(categories, contains('Servizi'));
+    test('other type has correct default category keys', () {
+      final keys = ExpenseGroupType.other.defaultCategoryKeys;
+      expect(keys, contains('category_other_misc'));
+      expect(keys, contains('category_other_utilities'));
+      expect(keys, contains('category_other_services'));
     });
 
     test('toJson returns correct string', () {

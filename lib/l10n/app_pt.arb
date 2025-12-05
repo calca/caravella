@@ -684,4 +684,28 @@
   ,"@group_type_family": {"description": "Tipo de grupo: família"}
   ,"group_type_other": "Outro"
   ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+  ,"category_travel_transport": "Transporte"
+  ,"@category_travel_transport": {"description": "Categoria padrão para grupo tipo viagem"}
+  ,"category_travel_accommodation": "Acomodação"
+  ,"@category_travel_accommodation": {"description": "Categoria padrão para grupo tipo viagem"}
+  ,"category_travel_restaurants": "Restaurantes"
+  ,"@category_travel_restaurants": {"description": "Categoria padrão para grupo tipo viagem"}
+  ,"category_personal_shopping": "Compras"
+  ,"@category_personal_shopping": {"description": "Categoria padrão para grupo tipo pessoal"}
+  ,"category_personal_health": "Saúde"
+  ,"@category_personal_health": {"description": "Categoria padrão para grupo tipo pessoal"}
+  ,"category_personal_entertainment": "Entretenimento"
+  ,"@category_personal_entertainment": {"description": "Categoria padrão para grupo tipo pessoal"}
+  ,"category_family_groceries": "Supermercado"
+  ,"@category_family_groceries": {"description": "Categoria padrão para grupo tipo família"}
+  ,"category_family_home": "Casa"
+  ,"@category_family_home": {"description": "Categoria padrão para grupo tipo família"}
+  ,"category_family_bills": "Contas"
+  ,"@category_family_bills": {"description": "Categoria padrão para grupo tipo família"}
+  ,"category_other_misc": "Diversos"
+  ,"@category_other_misc": {"description": "Categoria padrão para grupo tipo outro"}
+  ,"category_other_utilities": "Utilidades"
+  ,"@category_other_utilities": {"description": "Categoria padrão para grupo tipo outro"}
+  ,"category_other_services": "Serviços"
+  ,"@category_other_services": {"description": "Categoria padrão para grupo tipo outro"}
 }

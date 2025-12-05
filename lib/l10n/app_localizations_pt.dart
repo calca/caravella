@@ -1884,4 +1884,40 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get group_type_other => 'Outro';
+
+  @override
+  String get category_travel_transport => 'Transporte';
+
+  @override
+  String get category_travel_accommodation => 'Acomodação';
+
+  @override
+  String get category_travel_restaurants => 'Restaurantes';
+
+  @override
+  String get category_personal_shopping => 'Compras';
+
+  @override
+  String get category_personal_health => 'Saúde';
+
+  @override
+  String get category_personal_entertainment => 'Entretenimento';
+
+  @override
+  String get category_family_groceries => 'Supermercado';
+
+  @override
+  String get category_family_home => 'Casa';
+
+  @override
+  String get category_family_bills => 'Contas';
+
+  @override
+  String get category_other_misc => 'Diversos';
+
+  @override
+  String get category_other_utilities => 'Utilidades';
+
+  @override
+  String get category_other_services => 'Serviços';
 }

@@ -316,13 +316,24 @@ class GroupFormController {
 
   /// Sets the group type and optionally auto-populates default categories
   /// if the categories list is currently empty.
-  void setGroupType(ExpenseGroupType? type, {bool autoPopulateCategories = true}) {
+  ///
+  /// [defaultCategoryNames] should be the localized category names to populate.
+  /// Required when [autoPopulateCategories] is true.
+  void setGroupType(
+    ExpenseGroupType? type, {
+    bool autoPopulateCategories = true,
+    List<String>? defaultCategoryNames,
+  }) {
     state.setGroupType(type);
-    
+
     // Auto-populate categories only if the list is empty and a type is selected
     if (autoPopulateCategories && type != null && state.categories.isEmpty) {
-      final defaultCategories = type.defaultCategories;
-      for (final categoryName in defaultCategories) {
+      if (defaultCategoryNames == null) {
+        throw ArgumentError(
+          'defaultCategoryNames is required when autoPopulateCategories is true',
+        );
+      }
+      for (final categoryName in defaultCategoryNames) {
         state.addCategory(ExpenseCategory(name: categoryName));
       }
     }

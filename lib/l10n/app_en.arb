@@ -741,4 +741,28 @@
   ,"@group_type_family": {"description": "Group type: family"}
   ,"group_type_other": "Other"
   ,"@group_type_other": {"description": "Group type: other"}
+  ,"category_travel_transport": "Transport"
+  ,"@category_travel_transport": {"description": "Default category for travel group type"}
+  ,"category_travel_accommodation": "Accommodation"
+  ,"@category_travel_accommodation": {"description": "Default category for travel group type"}
+  ,"category_travel_restaurants": "Restaurants"
+  ,"@category_travel_restaurants": {"description": "Default category for travel group type"}
+  ,"category_personal_shopping": "Shopping"
+  ,"@category_personal_shopping": {"description": "Default category for personal group type"}
+  ,"category_personal_health": "Health"
+  ,"@category_personal_health": {"description": "Default category for personal group type"}
+  ,"category_personal_entertainment": "Entertainment"
+  ,"@category_personal_entertainment": {"description": "Default category for personal group type"}
+  ,"category_family_groceries": "Groceries"
+  ,"@category_family_groceries": {"description": "Default category for family group type"}
+  ,"category_family_home": "Home"
+  ,"@category_family_home": {"description": "Default category for family group type"}
+  ,"category_family_bills": "Bills"
+  ,"@category_family_bills": {"description": "Default category for family group type"}
+  ,"category_other_misc": "Miscellaneous"
+  ,"@category_other_misc": {"description": "Default category for other group type"}
+  ,"category_other_utilities": "Utilities"
+  ,"@category_other_utilities": {"description": "Default category for other group type"}
+  ,"category_other_services": "Services"
+  ,"@category_other_services": {"description": "Default category for other group type"}
 }

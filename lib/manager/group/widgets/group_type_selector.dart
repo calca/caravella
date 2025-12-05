@@ -97,6 +97,9 @@ class GroupTypeSelector extends StatelessWidget {
                     controller.setGroupType(
                       isSelected ? null : type,
                       autoPopulateCategories: !isSelected,
+                      defaultCategoryNames: !isSelected
+                          ? _getLocalizedCategories(gloc, type)
+                          : null,
                     );
                     Navigator.of(context).pop();
                   },
@@ -124,6 +127,39 @@ class GroupTypeSelector extends StatelessWidget {
         return gloc.group_type_family;
       case ExpenseGroupType.other:
         return gloc.group_type_other;
+    }
+  }
+
+  /// Gets localized category names for the given type
+  List<String> _getLocalizedCategories(
+    gen.AppLocalizations gloc,
+    ExpenseGroupType type,
+  ) {
+    switch (type) {
+      case ExpenseGroupType.travel:
+        return [
+          gloc.category_travel_transport,
+          gloc.category_travel_accommodation,
+          gloc.category_travel_restaurants,
+        ];
+      case ExpenseGroupType.personal:
+        return [
+          gloc.category_personal_shopping,
+          gloc.category_personal_health,
+          gloc.category_personal_entertainment,
+        ];
+      case ExpenseGroupType.family:
+        return [
+          gloc.category_family_groceries,
+          gloc.category_family_home,
+          gloc.category_family_bills,
+        ];
+      case ExpenseGroupType.other:
+        return [
+          gloc.category_other_misc,
+          gloc.category_other_utilities,
+          gloc.category_other_services,
+        ];
     }
   }
 }

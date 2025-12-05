@@ -720,4 +720,28 @@
   ,"@group_type_family": {"description": "Tipo de grupo: familia"}
   ,"group_type_other": "Otro"
   ,"@group_type_other": {"description": "Tipo de grupo: otro"}
+  ,"category_travel_transport": "Transporte"
+  ,"@category_travel_transport": {"description": "Categoría predeterminada para grupo tipo viaje"}
+  ,"category_travel_accommodation": "Alojamiento"
+  ,"@category_travel_accommodation": {"description": "Categoría predeterminada para grupo tipo viaje"}
+  ,"category_travel_restaurants": "Restaurantes"
+  ,"@category_travel_restaurants": {"description": "Categoría predeterminada para grupo tipo viaje"}
+  ,"category_personal_shopping": "Compras"
+  ,"@category_personal_shopping": {"description": "Categoría predeterminada para grupo tipo personal"}
+  ,"category_personal_health": "Salud"
+  ,"@category_personal_health": {"description": "Categoría predeterminada para grupo tipo personal"}
+  ,"category_personal_entertainment": "Entretenimiento"
+  ,"@category_personal_entertainment": {"description": "Categoría predeterminada para grupo tipo personal"}
+  ,"category_family_groceries": "Comestibles"
+  ,"@category_family_groceries": {"description": "Categoría predeterminada para grupo tipo familia"}
+  ,"category_family_home": "Casa"
+  ,"@category_family_home": {"description": "Categoría predeterminada para grupo tipo familia"}
+  ,"category_family_bills": "Facturas"
+  ,"@category_family_bills": {"description": "Categoría predeterminada para grupo tipo familia"}
+  ,"category_other_misc": "Varios"
+  ,"@category_other_misc": {"description": "Categoría predeterminada para grupo tipo otro"}
+  ,"category_other_utilities": "Utilidades"
+  ,"@category_other_utilities": {"description": "Categoría predeterminada para grupo tipo otro"}
+  ,"category_other_services": "Servicios"
+  ,"@category_other_services": {"description": "Categoría predeterminada para grupo tipo otro"}
 }
