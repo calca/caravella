@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
-import '../../expense/expense_form_component.dart';
+import '../../expense/components/expense_form_component.dart';
+import '../../expense/state/expense_form_state.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 /// Unified sheet for creating or editing an expense.
@@ -12,8 +13,11 @@ class ExpenseEntrySheet extends StatefulWidget {
   final void Function(String) onCategoryAdded;
   final VoidCallback? onDelete; // only used in edit mode
   final bool fullEdit;
-  final VoidCallback? onExpand; // callback to expand to full page
+  final void Function(ExpenseFormState)?
+  onExpand; // callback to expand to full page
   final bool showGroupHeader; // whether to show group header in form
+  final void Function(bool)? onFormValidityChanged;
+  final void Function(VoidCallback?)? onSaveCallbackChanged;
 
   const ExpenseEntrySheet({
     super.key,
@@ -25,6 +29,8 @@ class ExpenseEntrySheet extends StatefulWidget {
     this.fullEdit = true,
     this.onExpand,
     this.showGroupHeader = true,
+    this.onFormValidityChanged,
+    this.onSaveCallbackChanged,
   });
 
   @override
@@ -59,7 +65,7 @@ class _ExpenseEntrySheetState extends State<ExpenseEntrySheet> {
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
       child: Padding(
         padding: EdgeInsets.only(bottom: internalBottom),
-        child: ExpenseFormComponent(
+        child: ExpenseFormComponent.legacy(
           initialExpense: widget.initialExpense,
           participants: widget.group.participants,
           categories: widget.group.categories,
@@ -69,6 +75,7 @@ class _ExpenseEntrySheetState extends State<ExpenseEntrySheet> {
           fullEdit: widget.fullEdit,
           showGroupHeader: widget.showGroupHeader,
           groupTitle: widget.group.title,
+          groupId: widget.group.id,
           currency: widget.group.currency,
           autoLocationEnabled: widget.group.autoLocationEnabled,
           onExpenseAdded: widget.onExpenseSaved,
@@ -76,6 +83,8 @@ class _ExpenseEntrySheetState extends State<ExpenseEntrySheet> {
           onDelete: widget.onDelete,
           scrollController: _scrollController,
           onExpand: widget.onExpand,
+          onFormValidityChanged: widget.onFormValidityChanged,
+          onSaveCallbackChanged: widget.onSaveCallbackChanged,
         ),
       ),
     );

@@ -1859,56 +1859,31 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get group_type => 'Type';
+  String get attachments => 'Attachments';
 
   @override
-  String get group_type_description => 'Choose the group type';
+  String get add_attachment => 'Add attachment';
 
   @override
-  String get group_type_travel => 'Travel';
+  String get attachment_limit_reached =>
+      'Maximum limit of 5 attachments reached';
 
   @override
-  String get group_type_personal => 'Personal';
+  String get delete_attachment => 'Delete attachment';
 
   @override
-  String get group_type_family => 'Family';
+  String get share_attachment => 'Share attachment';
 
   @override
-  String get group_type_other => 'Other';
+  String get delete_attachment_confirm_title => 'Delete attachment';
 
   @override
-  String get category_travel_transport => 'Transport';
+  String get delete_attachment_confirm_message =>
+      'Are you sure you want to delete this attachment?';
 
   @override
-  String get category_travel_accommodation => 'Accommodation';
+  String get attachment_source => 'Choose source';
 
   @override
-  String get category_travel_restaurants => 'Restaurants';
-
-  @override
-  String get category_personal_shopping => 'Shopping';
-
-  @override
-  String get category_personal_health => 'Health';
-
-  @override
-  String get category_personal_entertainment => 'Entertainment';
-
-  @override
-  String get category_family_groceries => 'Groceries';
-
-  @override
-  String get category_family_home => 'Home';
-
-  @override
-  String get category_family_bills => 'Bills';
-
-  @override
-  String get category_other_misc => 'Miscellaneous';
-
-  @override
-  String get category_other_utilities => 'Utilities';
-
-  @override
-  String get category_other_services => 'Services';
+  String get from_files => 'From files';
 }

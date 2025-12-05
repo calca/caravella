@@ -1872,56 +1872,31 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get group_type => 'Tipo';
+  String get attachments => 'Adjuntos';
 
   @override
-  String get group_type_description => 'Elige el tipo de grupo';
+  String get add_attachment => 'Agregar adjunto';
 
   @override
-  String get group_type_travel => 'Viaje';
+  String get attachment_limit_reached =>
+      'Límite máximo de 5 adjuntos alcanzado';
 
   @override
-  String get group_type_personal => 'Personal';
+  String get delete_attachment => 'Eliminar adjunto';
 
   @override
-  String get group_type_family => 'Familia';
+  String get share_attachment => 'Compartir adjunto';
 
   @override
-  String get group_type_other => 'Otro';
+  String get delete_attachment_confirm_title => 'Eliminar adjunto';
 
   @override
-  String get category_travel_transport => 'Transporte';
+  String get delete_attachment_confirm_message =>
+      '¿Estás seguro de que deseas eliminar este adjunto?';
 
   @override
-  String get category_travel_accommodation => 'Alojamiento';
+  String get attachment_source => 'Elegir fuente';
 
   @override
-  String get category_travel_restaurants => 'Restaurantes';
-
-  @override
-  String get category_personal_shopping => 'Compras';
-
-  @override
-  String get category_personal_health => 'Salud';
-
-  @override
-  String get category_personal_entertainment => 'Entretenimiento';
-
-  @override
-  String get category_family_groceries => 'Comestibles';
-
-  @override
-  String get category_family_home => 'Casa';
-
-  @override
-  String get category_family_bills => 'Facturas';
-
-  @override
-  String get category_other_misc => 'Varios';
-
-  @override
-  String get category_other_utilities => 'Utilidades';
-
-  @override
-  String get category_other_services => 'Servicios';
+  String get from_files => 'Desde archivos';
 }

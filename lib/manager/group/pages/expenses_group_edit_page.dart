@@ -5,7 +5,7 @@ import 'package:io_caravella_egm/manager/group/data/group_form_state.dart';
 import 'package:io_caravella_egm/manager/group/widgets/section_flat.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../expense/expense_form/icon_leading_field.dart';
+import '../../expense/widgets/icon_leading_field.dart';
 import '../group_form_controller.dart';
 import '../group_edit_mode.dart';
 import '../widgets/group_title_field.dart';
@@ -253,9 +253,9 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                 } catch (e) {
                   // Show error toast using captured messenger if possible (avoids using
                   // BuildContext after async gap).
-                  if (scaffoldMessenger != null) {
-                    AppToast.showFromMessenger(
-                      scaffoldMessenger,
+                  if (scaffoldMessenger != null && context.mounted) {
+                    AppToast.show(
+                      context,
                       gloc.backup_error,
                       type: ToastType.error,
                     );
@@ -307,9 +307,9 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
 
                           if (navigator.canPop()) navigator.pop(saved.id);
                         } catch (e) {
-                          if (scaffoldMessenger != null) {
-                            AppToast.showFromMessenger(
-                              scaffoldMessenger,
+                          if (scaffoldMessenger != null && context.mounted) {
+                            AppToast.show(
+                              context,
                               gloc.backup_error,
                               type: ToastType.error,
                             );

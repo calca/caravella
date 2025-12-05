@@ -1869,56 +1869,31 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get group_type => 'Tipologia';
+  String get attachments => 'Allegati';
 
   @override
-  String get group_type_description => 'Scegli il tipo di gruppo';
+  String get add_attachment => 'Aggiungi allegato';
 
   @override
-  String get group_type_travel => 'Viaggio';
+  String get attachment_limit_reached =>
+      'Limite massimo di 5 allegati raggiunto';
 
   @override
-  String get group_type_personal => 'Personale';
+  String get delete_attachment => 'Elimina allegato';
 
   @override
-  String get group_type_family => 'Famiglia';
+  String get share_attachment => 'Condividi allegato';
 
   @override
-  String get group_type_other => 'Altro';
+  String get delete_attachment_confirm_title => 'Elimina allegato';
 
   @override
-  String get category_travel_transport => 'Trasporti';
+  String get delete_attachment_confirm_message =>
+      'Sei sicuro di voler eliminare questo allegato?';
 
   @override
-  String get category_travel_accommodation => 'Alloggio';
+  String get attachment_source => 'Scegli sorgente';
 
   @override
-  String get category_travel_restaurants => 'Ristoranti';
-
-  @override
-  String get category_personal_shopping => 'Shopping';
-
-  @override
-  String get category_personal_health => 'Salute';
-
-  @override
-  String get category_personal_entertainment => 'Intrattenimento';
-
-  @override
-  String get category_family_groceries => 'Spesa';
-
-  @override
-  String get category_family_home => 'Casa';
-
-  @override
-  String get category_family_bills => 'Bolletta';
-
-  @override
-  String get category_other_misc => 'Varie';
-
-  @override
-  String get category_other_utilities => 'Utilità';
-
-  @override
-  String get category_other_services => 'Servizi';
+  String get from_files => 'Dai file';
 }

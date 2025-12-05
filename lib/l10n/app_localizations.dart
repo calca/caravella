@@ -3647,113 +3647,59 @@ abstract class AppLocalizations {
     Object debtsList,
   );
 
-  /// Label for expense group type
+  /// Label for expense attachments
   ///
   /// In en, this message translates to:
-  /// **'Type'**
-  String get group_type;
+  /// **'Attachments'**
+  String get attachments;
 
-  /// Description for group type selection
+  /// Button to add an attachment
   ///
   /// In en, this message translates to:
-  /// **'Choose the group type'**
-  String get group_type_description;
+  /// **'Add attachment'**
+  String get add_attachment;
 
-  /// Group type: travel
+  /// Error message when trying to add more than 5 attachments
   ///
   /// In en, this message translates to:
-  /// **'Travel'**
-  String get group_type_travel;
+  /// **'Maximum limit of 5 attachments reached'**
+  String get attachment_limit_reached;
 
-  /// Group type: personal
+  /// Action to delete an attachment
   ///
   /// In en, this message translates to:
-  /// **'Personal'**
-  String get group_type_personal;
+  /// **'Delete attachment'**
+  String get delete_attachment;
 
-  /// Group type: family
+  /// Action to share an attachment
   ///
   /// In en, this message translates to:
-  /// **'Family'**
-  String get group_type_family;
+  /// **'Share attachment'**
+  String get share_attachment;
 
-  /// Group type: other
+  /// Delete attachment confirmation dialog title
   ///
   /// In en, this message translates to:
-  /// **'Other'**
-  String get group_type_other;
+  /// **'Delete attachment'**
+  String get delete_attachment_confirm_title;
 
-  /// Default category for travel group type
+  /// Delete attachment confirmation dialog message
   ///
   /// In en, this message translates to:
-  /// **'Transport'**
-  String get category_travel_transport;
+  /// **'Are you sure you want to delete this attachment?'**
+  String get delete_attachment_confirm_message;
 
-  /// Default category for travel group type
+  /// Title for choosing attachment source
   ///
   /// In en, this message translates to:
-  /// **'Accommodation'**
-  String get category_travel_accommodation;
+  /// **'Choose source'**
+  String get attachment_source;
 
-  /// Default category for travel group type
+  /// Option to choose from files
   ///
   /// In en, this message translates to:
-  /// **'Restaurants'**
-  String get category_travel_restaurants;
-
-  /// Default category for personal group type
-  ///
-  /// In en, this message translates to:
-  /// **'Shopping'**
-  String get category_personal_shopping;
-
-  /// Default category for personal group type
-  ///
-  /// In en, this message translates to:
-  /// **'Health'**
-  String get category_personal_health;
-
-  /// Default category for personal group type
-  ///
-  /// In en, this message translates to:
-  /// **'Entertainment'**
-  String get category_personal_entertainment;
-
-  /// Default category for family group type
-  ///
-  /// In en, this message translates to:
-  /// **'Groceries'**
-  String get category_family_groceries;
-
-  /// Default category for family group type
-  ///
-  /// In en, this message translates to:
-  /// **'Home'**
-  String get category_family_home;
-
-  /// Default category for family group type
-  ///
-  /// In en, this message translates to:
-  /// **'Bills'**
-  String get category_family_bills;
-
-  /// Default category for other group type
-  ///
-  /// In en, this message translates to:
-  /// **'Miscellaneous'**
-  String get category_other_misc;
-
-  /// Default category for other group type
-  ///
-  /// In en, this message translates to:
-  /// **'Utilities'**
-  String get category_other_utilities;
-
-  /// Default category for other group type
-  ///
-  /// In en, this message translates to:
-  /// **'Services'**
-  String get category_other_services;
+  /// **'From files'**
+  String get from_files;
 }
 
 class _AppLocalizationsDelegate

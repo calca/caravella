@@ -33,6 +33,11 @@ export 'services/storage/preferences_service.dart';
 // Services - User Feedback
 export 'services/user/rating_service.dart';
 
+// Services - Media
+export 'services/media/file_picker_service.dart';
+export 'services/media/image_compression_service.dart';
+export 'services/media/location_service_abstraction.dart';
+
 // Services - Shortcuts
 export 'services/shortcuts/app_shortcuts_service.dart';
 export 'services/shortcuts/platform_shortcuts_manager.dart';

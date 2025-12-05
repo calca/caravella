@@ -703,6 +703,24 @@
   ,"@group_type_family": {"description": "Tipologia gruppo: famiglia"}
   ,"group_type_other": "Altro"
   ,"@group_type_other": {"description": "Tipologia gruppo: altro"}
+  ,"attachments": "Allegati"
+  ,"@attachments": {"description": "Etichetta per gli allegati delle spese"}
+  ,"add_attachment": "Aggiungi allegato"
+  ,"@add_attachment": {"description": "Pulsante per aggiungere un allegato"}
+  ,"attachment_limit_reached": "Limite massimo di 5 allegati raggiunto"
+  ,"@attachment_limit_reached": {"description": "Messaggio di errore quando si tenta di aggiungere più di 5 allegati"}
+  ,"delete_attachment": "Elimina allegato"
+  ,"@delete_attachment": {"description": "Azione per eliminare un allegato"}
+  ,"share_attachment": "Condividi allegato"
+  ,"@share_attachment": {"description": "Azione per condividere un allegato"}
+  ,"delete_attachment_confirm_title": "Elimina allegato"
+  ,"@delete_attachment_confirm_title": {"description": "Titolo dialogo conferma eliminazione allegato"}
+  ,"delete_attachment_confirm_message": "Sei sicuro di voler eliminare questo allegato?"
+  ,"@delete_attachment_confirm_message": {"description": "Messaggio dialogo conferma eliminazione allegato"}
+  ,"attachment_source": "Scegli sorgente"
+  ,"@attachment_source": {"description": "Titolo per scegliere la sorgente dell'allegato"}
+  ,"from_files": "Dai file"
+  ,"@from_files": {"description": "Opzione per scegliere un file"}
   ,"expenses_map": "Mappa delle spese"
   ,"@expenses_map": {"description": "Sottotitolo della pagina che mostra le spese su una mappa"}
   ,"category_travel_transport": "Trasporti"

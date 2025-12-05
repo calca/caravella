@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-import 'package:image_picker/image_picker.dart';
+import 'package:image_picker/image_picker.dart' as picker;
 import 'package:provider/provider.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
@@ -93,7 +93,7 @@ class BackgroundPicker extends StatelessWidget {
             // New palette index - resolve to theme-aware color
             displayColor =
                 ExpenseGroupColorPalette.resolveColor(state.color, scheme) ??
-                    scheme.primary;
+                scheme.primary;
           }
           child = Container(
             key: ValueKey(state.color),
@@ -158,7 +158,7 @@ class _BackgroundSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
-    final picker = ImagePicker();
+    final imagePicker = picker.ImagePicker();
     final tiles = [
       ListTile(
         contentPadding: EdgeInsets.zero,
@@ -170,8 +170,8 @@ class _BackgroundSheet extends StatelessWidget {
           if (sheetNav.mounted) sheetNav.pop();
           // Usa il navigator del parent
           final parentNav = Navigator.of(parentContext);
-          final x = await picker.pickImage(
-            source: ImageSource.gallery,
+          final x = await imagePicker.pickImage(
+            source: picker.ImageSource.gallery,
             imageQuality: 85,
           );
           if (x != null) {
@@ -205,8 +205,8 @@ class _BackgroundSheet extends StatelessWidget {
           final sheetNav = Navigator.of(context);
           if (sheetNav.mounted) sheetNav.pop();
           final parentNav = Navigator.of(parentContext);
-          final x = await picker.pickImage(
-            source: ImageSource.camera,
+          final x = await imagePicker.pickImage(
+            source: picker.ImageSource.camera,
             imageQuality: 85,
           );
           if (x != null) {
@@ -520,7 +520,8 @@ class _RandomColorButtonState extends State<_RandomColorButton>
     _controller.forward(from: 0);
     await Future.delayed(const Duration(milliseconds: 320));
     // Pick a random palette index
-    final randomIndex = (DateTime.now().microsecondsSinceEpoch) %
+    final randomIndex =
+        (DateTime.now().microsecondsSinceEpoch) %
         ExpenseGroupColorPalette.paletteSize;
     widget.state.setColor(randomIndex);
     await _controller.forward();

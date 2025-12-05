@@ -1832,56 +1832,29 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get group_type => '类型';
+  String get attachments => '附件';
 
   @override
-  String get group_type_description => '选择组类型';
+  String get add_attachment => '添加附件';
 
   @override
-  String get group_type_travel => '旅行';
+  String get attachment_limit_reached => '已达到5个附件的最大限制';
 
   @override
-  String get group_type_personal => '个人';
+  String get delete_attachment => '删除附件';
 
   @override
-  String get group_type_family => '家庭';
+  String get share_attachment => '分享附件';
 
   @override
-  String get group_type_other => '其他';
+  String get delete_attachment_confirm_title => '删除附件';
 
   @override
-  String get category_travel_transport => '交通';
+  String get delete_attachment_confirm_message => '您确定要删除此附件吗？';
 
   @override
-  String get category_travel_accommodation => '住宿';
+  String get attachment_source => '选择来源';
 
   @override
-  String get category_travel_restaurants => '餐厅';
-
-  @override
-  String get category_personal_shopping => '购物';
-
-  @override
-  String get category_personal_health => '健康';
-
-  @override
-  String get category_personal_entertainment => '娱乐';
-
-  @override
-  String get category_family_groceries => '食品杂货';
-
-  @override
-  String get category_family_home => '家居';
-
-  @override
-  String get category_family_bills => '账单';
-
-  @override
-  String get category_other_misc => '杂项';
-
-  @override
-  String get category_other_utilities => '公用事业';
-
-  @override
-  String get category_other_services => '服务';
+  String get from_files => '从文件';
 }

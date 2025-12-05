@@ -744,4 +744,22 @@
   ,"@category_other_utilities": {"description": "Categoría predeterminada para grupo tipo otro"}
   ,"category_other_services": "Servicios"
   ,"@category_other_services": {"description": "Categoría predeterminada para grupo tipo otro"}
+  ,"attachments": "Adjuntos"
+  ,"@attachments": {"description": "Etiqueta para los adjuntos de gastos"}
+  ,"add_attachment": "Agregar adjunto"
+  ,"@add_attachment": {"description": "Botón para agregar un adjunto"}
+  ,"attachment_limit_reached": "Límite máximo de 5 adjuntos alcanzado"
+  ,"@attachment_limit_reached": {"description": "Mensaje de error al intentar agregar más de 5 adjuntos"}
+  ,"delete_attachment": "Eliminar adjunto"
+  ,"@delete_attachment": {"description": "Acción para eliminar un adjunto"}
+  ,"share_attachment": "Compartir adjunto"
+  ,"@share_attachment": {"description": "Acción para compartir un adjunto"}
+  ,"delete_attachment_confirm_title": "Eliminar adjunto"
+  ,"@delete_attachment_confirm_title": {"description": "Título del diálogo de confirmación de eliminación de adjunto"}
+  ,"delete_attachment_confirm_message": "¿Estás seguro de que deseas eliminar este adjunto?"
+  ,"@delete_attachment_confirm_message": {"description": "Mensaje del diálogo de confirmación de eliminación de adjunto"}
+  ,"attachment_source": "Elegir fuente"
+  ,"@attachment_source": {"description": "Título para elegir la fuente del adjunto"}
+  ,"from_files": "Desde archivos"
+  ,"@from_files": {"description": "Opción para elegir desde archivos"}
 }

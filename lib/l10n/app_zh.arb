@@ -933,5 +933,45 @@
   "category_other_services": "服务",
   "@category_other_services": {
     "description": "其他组类型的默认类别"
+  },
+  "debt_prefix_to": "给 ",
+  "@debt_prefix_to": {
+    "description": "在债务/结算行中显示在收款人之前的简短前缀（例如：'给 Alice 10€'）"
+  },
+  "attachments": "附件",
+  "@attachments": {
+    "description": "费用附件的标签"
+  },
+  "add_attachment": "添加附件",
+  "@add_attachment": {
+    "description": "添加附件的按钮"
+  },
+  "attachment_limit_reached": "已达到5个附件的最大限制",
+  "@attachment_limit_reached": {
+    "description": "尝试添加超过5个附件时的错误消息"
+  },
+  "delete_attachment": "删除附件",
+  "@delete_attachment": {
+    "description": "删除附件的操作"
+  },
+  "share_attachment": "分享附件",
+  "@share_attachment": {
+    "description": "分享附件的操作"
+  },
+  "delete_attachment_confirm_title": "删除附件",
+  "@delete_attachment_confirm_title": {
+    "description": "删除附件确认对话框标题"
+  },
+  "delete_attachment_confirm_message": "您确定要删除此附件吗？",
+  "@delete_attachment_confirm_message": {
+    "description": "删除附件确认对话框消息"
+  },
+  "attachment_source": "选择来源",
+  "@attachment_source": {
+    "description": "选择附件来源的标题"
+  },
+  "from_files": "从文件",
+  "@from_files": {
+    "description": "从文件选择的选项"
   }
 }
