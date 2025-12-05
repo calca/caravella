@@ -16,6 +16,7 @@ class GroupFormState extends ChangeNotifier {
     'code': 'EUR',
     'name': 'Euro',
   };
+  ExpenseGroupType? groupType = ExpenseGroupType.personal;
   bool autoLocationEnabled = false;
   bool loadingImage = false;
   bool isSaving = false;
@@ -88,6 +89,11 @@ class GroupFormState extends ChangeNotifier {
 
   void setCurrency(Map<String, String> c) {
     currency = c;
+    notifyListeners();
+  }
+
+  void setGroupType(ExpenseGroupType? type) {
+    groupType = type;
     notifyListeners();
   }
 

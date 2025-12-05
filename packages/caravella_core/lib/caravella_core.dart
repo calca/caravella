@@ -10,6 +10,7 @@ export 'model/expense_category.dart';
 export 'model/expense_details.dart';
 export 'model/expense_group.dart';
 export 'model/expense_group_color_palette.dart';
+export 'model/expense_group_type.dart';
 export 'model/expense_location.dart';
 export 'model/expense_participant.dart';
 

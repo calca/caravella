@@ -708,6 +708,42 @@
   ,"@settings_user_name_desc": {"description": "Descripción de la configuración del nombre de usuario"}
   ,"settings_user_name_hint": "Ingresa tu nombre"
   ,"@settings_user_name_hint": {"description": "Placeholder del campo de nombre de usuario"}
+  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para el tipo de grupo de gastos"}
+  ,"group_type_description": "Elige el tipo de grupo"
+  ,"@group_type_description": {"description": "Descripción para la selección del tipo de grupo"}
+  ,"group_type_travel": "Viaje"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viaje"}
+  ,"group_type_personal": "Personal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: personal"}
+  ,"group_type_family": "Familia"
+  ,"@group_type_family": {"description": "Tipo de grupo: familia"}
+  ,"group_type_other": "Otro"
+  ,"@group_type_other": {"description": "Tipo de grupo: otro"}
+  ,"category_travel_transport": "Transporte"
+  ,"@category_travel_transport": {"description": "Categoría predeterminada para grupo tipo viaje"}
+  ,"category_travel_accommodation": "Alojamiento"
+  ,"@category_travel_accommodation": {"description": "Categoría predeterminada para grupo tipo viaje"}
+  ,"category_travel_restaurants": "Restaurantes"
+  ,"@category_travel_restaurants": {"description": "Categoría predeterminada para grupo tipo viaje"}
+  ,"category_personal_shopping": "Compras"
+  ,"@category_personal_shopping": {"description": "Categoría predeterminada para grupo tipo personal"}
+  ,"category_personal_health": "Salud"
+  ,"@category_personal_health": {"description": "Categoría predeterminada para grupo tipo personal"}
+  ,"category_personal_entertainment": "Entretenimiento"
+  ,"@category_personal_entertainment": {"description": "Categoría predeterminada para grupo tipo personal"}
+  ,"category_family_groceries": "Comestibles"
+  ,"@category_family_groceries": {"description": "Categoría predeterminada para grupo tipo familia"}
+  ,"category_family_home": "Casa"
+  ,"@category_family_home": {"description": "Categoría predeterminada para grupo tipo familia"}
+  ,"category_family_bills": "Facturas"
+  ,"@category_family_bills": {"description": "Categoría predeterminada para grupo tipo familia"}
+  ,"category_other_misc": "Varios"
+  ,"@category_other_misc": {"description": "Categoría predeterminada para grupo tipo otro"}
+  ,"category_other_utilities": "Utilidades"
+  ,"@category_other_utilities": {"description": "Categoría predeterminada para grupo tipo otro"}
+  ,"category_other_services": "Servicios"
+  ,"@category_other_services": {"description": "Categoría predeterminada para grupo tipo otro"}
   ,"attachments": "Adjuntos"
   ,"@attachments": {"description": "Etiqueta para los adjuntos de gastos"}
   ,"add_attachment": "Agregar adjunto"

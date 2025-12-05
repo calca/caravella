@@ -11,6 +11,7 @@ import '../group_edit_mode.dart';
 import '../widgets/group_title_field.dart';
 import '../widgets/participants_editor.dart';
 import '../widgets/categories_editor.dart';
+import '../widgets/group_type_selector.dart';
 import '../widgets/currency_selector_sheet.dart';
 import '../widgets/background_picker.dart';
 import '../widgets/selection_tile.dart';
@@ -216,6 +217,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
             state.imagePath,
             state.color,
             state.currency['code'],
+            state.groupType,
             state.autoLocationEnabled,
           );
         },
@@ -408,6 +410,8 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                                               ),
                                             ],
                                           ),
+                                          const SizedBox(height: 24),
+                                          const GroupTypeSelector(),
                                           const SizedBox(height: 24),
                                           const ParticipantsEditor(),
                                           const SizedBox(height: 24),

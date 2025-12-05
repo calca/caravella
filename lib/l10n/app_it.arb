@@ -691,6 +691,18 @@
   ,"@reminder_message_single": {"description": "Messaggio di promemoria quando un partecipante deve denaro a una sola persona", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
   ,"reminder_message_multiple": "Ciao {participantName}! 👋\n\nVorrei ricordarti i tuoi pagamenti per il gruppo \"{groupName}\":\n\n{debtsList}\n\nGrazie! 😊"
   ,"@reminder_message_multiple": {"description": "Messaggio di promemoria quando un partecipante deve denaro a più persone", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
+  ,"group_type": "Tipologia"
+  ,"@group_type": {"description": "Etichetta per la tipologia del gruppo di spese"}
+  ,"group_type_description": "Scegli il tipo di gruppo"
+  ,"@group_type_description": {"description": "Descrizione per la selezione della tipologia del gruppo"}
+  ,"group_type_travel": "Viaggio"
+  ,"@group_type_travel": {"description": "Tipologia gruppo: viaggio"}
+  ,"group_type_personal": "Personale"
+  ,"@group_type_personal": {"description": "Tipologia gruppo: personale"}
+  ,"group_type_family": "Famiglia"
+  ,"@group_type_family": {"description": "Tipologia gruppo: famiglia"}
+  ,"group_type_other": "Altro"
+  ,"@group_type_other": {"description": "Tipologia gruppo: altro"}
   ,"attachments": "Allegati"
   ,"@attachments": {"description": "Etichetta per gli allegati delle spese"}
   ,"add_attachment": "Aggiungi allegato"
@@ -711,4 +723,28 @@
   ,"@from_files": {"description": "Opzione per scegliere un file"}
   ,"expenses_map": "Mappa delle spese"
   ,"@expenses_map": {"description": "Sottotitolo della pagina che mostra le spese su una mappa"}
+  ,"category_travel_transport": "Trasporti"
+  ,"@category_travel_transport": {"description": "Categoria predefinita per gruppo tipo viaggio"}
+  ,"category_travel_accommodation": "Alloggio"
+  ,"@category_travel_accommodation": {"description": "Categoria predefinita per gruppo tipo viaggio"}
+  ,"category_travel_restaurants": "Ristoranti"
+  ,"@category_travel_restaurants": {"description": "Categoria predefinita per gruppo tipo viaggio"}
+  ,"category_personal_shopping": "Shopping"
+  ,"@category_personal_shopping": {"description": "Categoria predefinita per gruppo tipo personale"}
+  ,"category_personal_health": "Salute"
+  ,"@category_personal_health": {"description": "Categoria predefinita per gruppo tipo personale"}
+  ,"category_personal_entertainment": "Intrattenimento"
+  ,"@category_personal_entertainment": {"description": "Categoria predefinita per gruppo tipo personale"}
+  ,"category_family_groceries": "Spesa"
+  ,"@category_family_groceries": {"description": "Categoria predefinita per gruppo tipo famiglia"}
+  ,"category_family_home": "Casa"
+  ,"@category_family_home": {"description": "Categoria predefinita per gruppo tipo famiglia"}
+  ,"category_family_bills": "Bolletta"
+  ,"@category_family_bills": {"description": "Categoria predefinita per gruppo tipo famiglia"}
+  ,"category_other_misc": "Varie"
+  ,"@category_other_misc": {"description": "Categoria predefinita per gruppo tipo altro"}
+  ,"category_other_utilities": "Utilità"
+  ,"@category_other_utilities": {"description": "Categoria predefinita per gruppo tipo altro"}
+  ,"category_other_services": "Servizi"
+  ,"@category_other_services": {"description": "Categoria predefinita per gruppo tipo altro"}
 }

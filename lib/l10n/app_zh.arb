@@ -232,7 +232,7 @@
   "archived": "已归档",
   "archive": "归档",
   "unarchive": "取消归档",
-  "pin": "置顶",
+  "pin": "固定",
   "unpin": "取消置顶",
   "delete": "删除",
   "undo": "撤销",
@@ -261,7 +261,6 @@
   "add_expense_fab": "添加支出",
   "pin_group": "固定群组",
   "unpin_group": "取消固定群组",
-  "pin": "固定",
   "theme_automatic": "自动",
   "theme_light": "浅色",
   "theme_dark": "深色",
@@ -371,7 +370,6 @@
   "check_form": "检查输入的数据",
   "delete_expense": "删除支出",
   "delete_expense_confirm": "您确定要删除此支出吗?",
-  "delete": "删除",
   "no_results_found": "未找到结果。",
   "try_adjust_filter_or_search": "尝试调整筛选器或搜索。",
   "general_statistics": "总体统计",
@@ -864,33 +862,77 @@
       "debtsList": {}
     }
   },
-  "whats_new_title": "新功能",
-  "@whats_new_title": {
-    "description": "显示更新日志页面的标题"
+  "group_type": "类型",
+  "@group_type": {
+    "description": "费用组类型标签"
   },
-  "whats_new_desc": "了解最新功能和更新",
-  "@whats_new_desc": {
-    "description": "新功能页面的副标题"
+  "group_type_description": "选择组类型",
+  "@group_type_description": {
+    "description": "组类型选择的描述"
   },
-  "whats_new_subtitle": "最新亮点",
-  "@whats_new_subtitle": {
-    "description": "新功能页面标题卡中的副标题"
+  "group_type_travel": "旅行",
+  "@group_type_travel": {
+    "description": "组类型：旅行"
   },
-  "whats_new_latest": "随时掌握最新改进",
-  "@whats_new_latest": {
-    "description": "新功能页面标题卡中的描述文字"
+  "group_type_personal": "个人",
+  "@group_type_personal": {
+    "description": "组类型：个人"
   },
-  "average_per_person": "人均支出",
-  "@average_per_person": {
-    "description": "参与者标签页中显示的人均支出标签"
+  "group_type_family": "家庭",
+  "@group_type_family": {
+    "description": "组类型：家庭"
   },
-  "more": "更多",
-  "@more": {
-    "description": "展开并显示所有项目的内联按钮标签"
+  "group_type_other": "其他",
+  "@group_type_other": {
+    "description": "组类型：其他"
   },
-  "less": "更少",
-  "@less": {
-    "description": "收起并显示更少项目的内联按钮标签"
+  "category_travel_transport": "交通",
+  "@category_travel_transport": {
+    "description": "旅行组类型的默认类别"
+  },
+  "category_travel_accommodation": "住宿",
+  "@category_travel_accommodation": {
+    "description": "旅行组类型的默认类别"
+  },
+  "category_travel_restaurants": "餐厅",
+  "@category_travel_restaurants": {
+    "description": "旅行组类型的默认类别"
+  },
+  "category_personal_shopping": "购物",
+  "@category_personal_shopping": {
+    "description": "个人组类型的默认类别"
+  },
+  "category_personal_health": "健康",
+  "@category_personal_health": {
+    "description": "个人组类型的默认类别"
+  },
+  "category_personal_entertainment": "娱乐",
+  "@category_personal_entertainment": {
+    "description": "个人组类型的默认类别"
+  },
+  "category_family_groceries": "食品杂货",
+  "@category_family_groceries": {
+    "description": "家庭组类型的默认类别"
+  },
+  "category_family_home": "家居",
+  "@category_family_home": {
+    "description": "家庭组类型的默认类别"
+  },
+  "category_family_bills": "账单",
+  "@category_family_bills": {
+    "description": "家庭组类型的默认类别"
+  },
+  "category_other_misc": "杂项",
+  "@category_other_misc": {
+    "description": "其他组类型的默认类别"
+  },
+  "category_other_utilities": "公用事业",
+  "@category_other_utilities": {
+    "description": "其他组类型的默认类别"
+  },
+  "category_other_services": "服务",
+  "@category_other_services": {
+    "description": "其他组类型的默认类别"
   },
   "debt_prefix_to": "给 ",
   "@debt_prefix_to": {

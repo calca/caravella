@@ -729,6 +729,42 @@
   ,"@reminder_message_single": {"description": "Reminder message when a participant owes money to a single person", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
   ,"reminder_message_multiple": "Hi {participantName}! 👋\n\nJust a friendly reminder of your payments for the group \"{groupName}\":\n\n{debtsList}\n\nThank you! 😊"
   ,"@reminder_message_multiple": {"description": "Reminder message when a participant owes money to multiple people", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
+  ,"group_type": "Type"
+  ,"@group_type": {"description": "Label for expense group type"}
+  ,"group_type_description": "Choose the group type"
+  ,"@group_type_description": {"description": "Description for group type selection"}
+  ,"group_type_travel": "Travel"
+  ,"@group_type_travel": {"description": "Group type: travel"}
+  ,"group_type_personal": "Personal"
+  ,"@group_type_personal": {"description": "Group type: personal"}
+  ,"group_type_family": "Family"
+  ,"@group_type_family": {"description": "Group type: family"}
+  ,"group_type_other": "Other"
+  ,"@group_type_other": {"description": "Group type: other"}
+  ,"category_travel_transport": "Transport"
+  ,"@category_travel_transport": {"description": "Default category for travel group type"}
+  ,"category_travel_accommodation": "Accommodation"
+  ,"@category_travel_accommodation": {"description": "Default category for travel group type"}
+  ,"category_travel_restaurants": "Restaurants"
+  ,"@category_travel_restaurants": {"description": "Default category for travel group type"}
+  ,"category_personal_shopping": "Shopping"
+  ,"@category_personal_shopping": {"description": "Default category for personal group type"}
+  ,"category_personal_health": "Health"
+  ,"@category_personal_health": {"description": "Default category for personal group type"}
+  ,"category_personal_entertainment": "Entertainment"
+  ,"@category_personal_entertainment": {"description": "Default category for personal group type"}
+  ,"category_family_groceries": "Groceries"
+  ,"@category_family_groceries": {"description": "Default category for family group type"}
+  ,"category_family_home": "Home"
+  ,"@category_family_home": {"description": "Default category for family group type"}
+  ,"category_family_bills": "Bills"
+  ,"@category_family_bills": {"description": "Default category for family group type"}
+  ,"category_other_misc": "Miscellaneous"
+  ,"@category_other_misc": {"description": "Default category for other group type"}
+  ,"category_other_utilities": "Utilities"
+  ,"@category_other_utilities": {"description": "Default category for other group type"}
+  ,"category_other_services": "Services"
+  ,"@category_other_services": {"description": "Default category for other group type"}
   ,"attachments": "Attachments"
   ,"@attachments": {"description": "Label for expense attachments"}
   ,"add_attachment": "Add attachment"
