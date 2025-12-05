@@ -126,7 +126,10 @@ class _CaravellaAppState extends State<CaravellaApp> {
                 builder: (context, child) => ToastThemeProvider(
                   data: const ToastTheme(
                     gap: 8,
-                    viewerPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    viewerPadding: EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                   ),
                   child: Stack(
                     children: [
