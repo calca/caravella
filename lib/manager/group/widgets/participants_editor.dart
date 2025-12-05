@@ -22,7 +22,7 @@ class ParticipantsEditor extends StatelessWidget {
       onRemoveParticipant: (i) async {
         final loc = gen.AppLocalizations.of(context);
         final removed = await controller.removeParticipantIfUnused(i);
-        if (!removed) {
+        if (!removed && context.mounted) {
           AppToast.show(
             context,
             loc.cannot_delete_assigned_participant,

@@ -26,7 +26,7 @@ class CategoriesEditor extends StatelessWidget {
           onEditCategory: (i, name) => state.editCategory(i, name),
           onRemoveCategory: (i) async {
             final removed = await controller.removeCategoryIfUnused(i);
-            if (!removed) {
+            if (!removed && context.mounted) {
               AppToast.show(
                 context,
                 loc.cannot_delete_assigned_category,

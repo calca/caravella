@@ -98,12 +98,14 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
     await Future.delayed(const Duration(milliseconds: 100));
 
     // Show AppToast with undo
-    AppToast.show(
-      context,
-      '$actionText • ${trip.title}',
-      type: ToastType.info,
-      duration: const Duration(seconds: 4),
-    );
+    if (context.mounted) {
+      AppToast.show(
+        context,
+        '$actionText • ${trip.title}',
+        type: ToastType.info,
+        duration: const Duration(seconds: 4),
+      );
+    }
   }
 
   Future<void> _executeDeleteAction(
