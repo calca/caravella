@@ -538,6 +538,18 @@ class AppLocalizationsEs extends AppLocalizations {
   String get categories => 'Categorías';
 
   @override
+  String get other_settings => 'Otras configuraciones';
+
+  @override
+  String get other_settings_desc => 'Moneda, fondo y ubicación automática';
+
+  @override
+  String get segment_general => 'General';
+
+  @override
+  String get segment_other => 'Otro';
+
+  @override
   String get from => 'Desde';
 
   @override

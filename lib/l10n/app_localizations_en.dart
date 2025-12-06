@@ -536,6 +536,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get categories => 'Categories';
 
   @override
+  String get other_settings => 'Other settings';
+
+  @override
+  String get other_settings_desc =>
+      'Currency, background, and automatic location';
+
+  @override
+  String get segment_general => 'General';
+
+  @override
+  String get segment_other => 'Other';
+
+  @override
   String get from => 'From';
 
   @override

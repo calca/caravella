@@ -539,6 +539,18 @@ class AppLocalizationsIt extends AppLocalizations {
   String get categories => 'Categorie';
 
   @override
+  String get other_settings => 'Altre impostazioni';
+
+  @override
+  String get other_settings_desc => 'Valuta, sfondo e posizione automatica';
+
+  @override
+  String get segment_general => 'Generali';
+
+  @override
+  String get segment_other => 'Altro';
+
+  @override
   String get from => 'Dal';
 
   @override

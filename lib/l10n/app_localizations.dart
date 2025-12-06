@@ -1100,6 +1100,30 @@ abstract class AppLocalizations {
   /// **'Categories'**
   String get categories;
 
+  /// No description provided for @other_settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Other settings'**
+  String get other_settings;
+
+  /// No description provided for @other_settings_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Currency, background, and automatic location'**
+  String get other_settings_desc;
+
+  /// No description provided for @segment_general.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get segment_general;
+
+  /// No description provided for @segment_other.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get segment_other;
+
   /// No description provided for @from.
   ///
   /// In en, this message translates to:

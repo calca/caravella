@@ -536,6 +536,19 @@ class AppLocalizationsPt extends AppLocalizations {
   String get categories => 'Categorias';
 
   @override
+  String get other_settings => 'Outras configurações';
+
+  @override
+  String get other_settings_desc =>
+      'Moeda, plano de fundo e localização automática';
+
+  @override
+  String get segment_general => 'Geral';
+
+  @override
+  String get segment_other => 'Outro';
+
+  @override
   String get from => 'De';
 
   @override

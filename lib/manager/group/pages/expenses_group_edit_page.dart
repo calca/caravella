@@ -12,10 +12,10 @@ import '../widgets/group_title_field.dart';
 import '../widgets/participants_editor.dart';
 import '../widgets/categories_editor.dart';
 import '../widgets/group_type_selector.dart';
-import '../widgets/currency_selector_sheet.dart';
-import '../widgets/background_picker.dart';
 import '../widgets/selection_tile.dart';
 import '../widgets/period_section_editor.dart';
+import '../widgets/currency_selector_sheet.dart';
+import '../widgets/background_picker.dart';
 
 class ExpensesGroupEditPage extends StatelessWidget {
   final ExpenseGroup? trip;
@@ -83,9 +83,11 @@ class _GroupFormScaffold extends StatefulWidget {
   State<_GroupFormScaffold> createState() => _GroupFormScaffoldState();
 }
 
-class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
+class _GroupFormScaffoldState extends State<_GroupFormScaffold>
+    with TickerProviderStateMixin {
   String? _dateError;
   final _formKey = GlobalKey<FormState>();
+  late TabController _tabController;
 
   GroupFormState get _state => context.read<GroupFormState>();
   GroupFormController get _controller => context.read<GroupFormController>();
@@ -93,6 +95,11 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(
+      length: 4,
+      vsync: this,
+      animationDuration: const Duration(milliseconds: 350),
+    );
     if (widget.trip != null && widget.mode == GroupEditMode.edit) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted && _state.title.isEmpty) {
@@ -115,6 +122,12 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
         }
       });
     }
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   Future<DateTime?> _pickDate(BuildContext context, bool isStart) async {
@@ -196,6 +209,210 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
     if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
       currentFocus.unfocus();
     }
+  }
+
+  Widget _buildGeneralTab(BuildContext context) {
+    final gloc = gen.AppLocalizations.of(context);
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Nome gruppo
+          SectionFlat(
+            title: '',
+            children: [
+              Selector<GroupFormState, bool>(
+                selector: (context, s) => s.title.trim().isEmpty,
+                builder: (context, isEmpty, child) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SectionHeader(
+                      title: gloc.group_name,
+                      requiredMark: true,
+                      showRequiredHint: isEmpty,
+                      padding: EdgeInsets.zero,
+                      spacing: 4,
+                    ),
+                    const SizedBox(height: 12),
+                    IconLeadingField(
+                      icon: const Icon(Icons.title_outlined),
+                      semanticsLabel: gloc.group_name,
+                      tooltip: gloc.group_name,
+                      child: const GroupTitleField(),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          // Tipologia
+          const GroupTypeSelector(),
+          const SizedBox(height: 24),
+          // Periodo
+          PeriodSectionEditor(
+            onPickDate: (isStart) async => _pickDate(context, isStart),
+            onClearDates: _clearDates,
+            errorText: _dateError,
+          ),
+          const SizedBox(height: 24),
+          // Valuta
+          SectionFlat(
+            title: '',
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SectionHeader(
+                    title: gloc.currency,
+                    description: gloc.currency_description,
+                    padding: EdgeInsets.zero,
+                    spacing: 4,
+                  ),
+                  const SizedBox(height: 8),
+                  Selector<GroupFormState, Map<String, String>>(
+                    selector: (context, s) => s.currency,
+                    builder: (context, cur, child) => SelectionTile(
+                      leading: Text(
+                        cur['symbol'] ?? '',
+                        style: Theme.of(
+                          context,
+                        ).textTheme.titleLarge?.copyWith(fontSize: 28),
+                        semanticsLabel: '${cur['symbol']} ${cur['code']}',
+                      ),
+                      title: cur['name']!,
+                      subtitle: '${cur['code']}',
+                      trailing: Icon(
+                        Icons.chevron_right,
+                        size: 24,
+                        color: Theme.of(context).colorScheme.outline,
+                      ),
+                      onTap: () async {
+                        final selected =
+                            await showModalBottomSheet<Map<String, String>>(
+                              context: context,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(20),
+                                ),
+                              ),
+                              builder: (_) => const CurrencySelectorSheet(),
+                            );
+                        if (selected != null && context.mounted) {
+                          context.read<GroupFormState>().setCurrency(selected);
+                        }
+                      },
+                      borderRadius: 8,
+                      padding: const EdgeInsets.only(
+                        left: 8,
+                        top: 8,
+                        bottom: 8,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 100),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildParticipantsTab() {
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: 8),
+      child: ParticipantsEditor(),
+    );
+  }
+
+  Widget _buildCategoriesTab() {
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: 8),
+      child: CategoriesEditor(),
+    );
+  }
+
+  Widget _buildOtherTab(BuildContext context) {
+    final gloc = gen.AppLocalizations.of(context);
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SectionFlat(
+            title: '',
+            children: [
+              // Sfondo
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SectionHeader(
+                    title: gloc.background,
+                    description: gloc.choose_image_or_color,
+                    padding: EdgeInsets.zero,
+                    spacing: 4,
+                  ),
+                  const SizedBox(height: 12),
+                  const BackgroundPicker(),
+                ],
+              ),
+              const SizedBox(height: 32),
+              // Posizione automatica
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SectionHeader(
+                    title: gloc.settings_auto_location_section,
+                    description: gloc.settings_auto_location_section_desc,
+                    padding: EdgeInsets.zero,
+                    spacing: 4,
+                  ),
+                  const SizedBox(height: 12),
+                  Selector<GroupFormState, bool>(
+                    selector: (context, s) => s.autoLocationEnabled,
+                    builder: (context, enabled, child) => Semantics(
+                      toggled: enabled,
+                      label:
+                          '${gloc.settings_auto_location_title} - ${enabled ? gloc.accessibility_currently_enabled : gloc.accessibility_currently_disabled}',
+                      hint: gloc.settings_auto_location_desc,
+                      child: SwitchListTile(
+                        title: Text(gloc.settings_auto_location_title),
+                        subtitle: Text(gloc.settings_auto_location_desc),
+                        value: enabled,
+                        onChanged: (value) async {
+                          final controller = context
+                              .read<GroupFormController>();
+                          final notifier = context.read<ExpenseGroupNotifier>();
+                          controller.state.setAutoLocationEnabled(value);
+                          try {
+                            await controller.save();
+                            if (controller.state.id != null) {
+                              notifier.notifyGroupUpdated(controller.state.id!);
+                            }
+                          } catch (e) {
+                            if (context.mounted) {
+                              AppToast.show(
+                                context,
+                                gloc.backup_error,
+                                type: ToastType.error,
+                              );
+                            }
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 100),
+        ],
+      ),
+    );
   }
 
   @override
@@ -333,307 +550,42 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold> {
                       key: _formKey,
                       child: DefaultTextStyle.merge(
                         style: Theme.of(context).textTheme.bodyMedium,
-                        child: DefaultTabController(
-                          length: 2,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SectionHeader(
-                                title: widget.mode == GroupEditMode.edit
-                                    ? gloc.edit_group
-                                    : gloc.new_group,
-                                description: widget.mode == GroupEditMode.edit
-                                    ? gloc.edit_group_desc
-                                    : gloc.new_group_desc,
-                              ),
-                              const SizedBox(height: 12),
-                              CaravellaTabBar(
-                                tabs: [
-                                  Tab(text: gloc.settings_general),
-                                  Tab(text: gloc.settings_tab),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SectionHeader(
+                              title: widget.mode == GroupEditMode.edit
+                                  ? gloc.edit_group
+                                  : gloc.new_group,
+                              description: widget.mode == GroupEditMode.edit
+                                  ? gloc.edit_group_desc
+                                  : gloc.new_group_desc,
+                            ),
+                            const SizedBox(height: 12),
+                            CaravellaTabBar(
+                              controller: _tabController,
+                              isScrollable: true,
+                              tabAlignment: TabAlignment.start,
+                              tabs: [
+                                Tab(text: gloc.segment_general),
+                                Tab(text: gloc.participants),
+                                Tab(text: gloc.categories),
+                                Tab(text: gloc.segment_other),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                            Expanded(
+                              child: TabBarView(
+                                controller: _tabController,
+                                children: [
+                                  _buildGeneralTab(context),
+                                  _buildParticipantsTab(),
+                                  _buildCategoriesTab(),
+                                  _buildOtherTab(context),
                                 ],
                               ),
-                              const SizedBox(height: 12),
-                              Expanded(
-                                child: TabBarView(
-                                  children: [
-                                    // Tab 1: nome, partecipanti, categorie, periodo
-                                    SingleChildScrollView(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const SizedBox(height: 8),
-                                          SectionFlat(
-                                            title: '',
-                                            children: [
-                                              Selector<GroupFormState, bool>(
-                                                selector: (context, s) =>
-                                                    s.title.trim().isEmpty,
-                                                builder:
-                                                    (
-                                                      context,
-                                                      isEmpty,
-                                                      child,
-                                                    ) => Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        SectionHeader(
-                                                          title:
-                                                              gloc.group_name,
-                                                          requiredMark: true,
-                                                          showRequiredHint:
-                                                              isEmpty,
-                                                          padding:
-                                                              EdgeInsets.zero,
-                                                          spacing: 4,
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 12,
-                                                        ),
-                                                        IconLeadingField(
-                                                          icon: const Icon(
-                                                            Icons
-                                                                .title_outlined,
-                                                          ),
-                                                          semanticsLabel:
-                                                              gloc.group_name,
-                                                          tooltip:
-                                                              gloc.group_name,
-                                                          child:
-                                                              const GroupTitleField(),
-                                                        ),
-                                                      ],
-                                                    ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 24),
-                                          const GroupTypeSelector(),
-                                          const SizedBox(height: 24),
-                                          const ParticipantsEditor(),
-                                          const SizedBox(height: 24),
-                                          const CategoriesEditor(),
-                                          const SizedBox(height: 24),
-                                          PeriodSectionEditor(
-                                            onPickDate: (isStart) async =>
-                                                _pickDate(context, isStart),
-                                            onClearDates: _clearDates,
-                                            errorText: _dateError,
-                                          ),
-                                          const SizedBox(height: 132),
-                                        ],
-                                      ),
-                                    ),
-                                    // Tab 2: valuta, sfondo, posizione automatica
-                                    SingleChildScrollView(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const SizedBox(height: 8),
-                                          SectionFlat(
-                                            title: '',
-                                            children: [
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  SectionHeader(
-                                                    title: gloc.currency,
-                                                    description: gloc
-                                                        .currency_description,
-                                                    padding: EdgeInsets.zero,
-                                                    spacing: 4,
-                                                  ),
-                                                  const SizedBox(height: 8),
-                                                  Selector<
-                                                    GroupFormState,
-                                                    Map<String, String>
-                                                  >(
-                                                    selector: (context, s) =>
-                                                        s.currency,
-                                                    builder: (context, cur, child) => SelectionTile(
-                                                      leading: Text(
-                                                        cur['symbol'] ?? '',
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .titleLarge
-                                                            ?.copyWith(
-                                                              fontSize: 28,
-                                                            ),
-                                                        semanticsLabel:
-                                                            '${cur['symbol']} ${cur['code']}',
-                                                      ),
-                                                      title: cur['name']!,
-                                                      subtitle:
-                                                          '${cur['code']}',
-                                                      trailing: Icon(
-                                                        Icons.chevron_right,
-                                                        size: 24,
-                                                        color: Theme.of(
-                                                          context,
-                                                        ).colorScheme.outline,
-                                                      ),
-                                                      onTap: () async {
-                                                        final selected =
-                                                            await showModalBottomSheet<
-                                                              Map<
-                                                                String,
-                                                                String
-                                                              >
-                                                            >(
-                                                              context: context,
-                                                              shape: const RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius.vertical(
-                                                                      top:
-                                                                          Radius.circular(
-                                                                            20,
-                                                                          ),
-                                                                    ),
-                                                              ),
-                                                              builder: (_) =>
-                                                                  const CurrencySelectorSheet(),
-                                                            );
-                                                        if (selected != null &&
-                                                            context.mounted) {
-                                                          context
-                                                              .read<
-                                                                GroupFormState
-                                                              >()
-                                                              .setCurrency(
-                                                                selected,
-                                                              );
-                                                        }
-                                                      },
-                                                      borderRadius: 8,
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                            left: 8,
-                                                            top: 8,
-                                                            bottom: 8,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              const SizedBox(height: 32),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  SectionHeader(
-                                                    title: gloc.background,
-                                                    description: gloc
-                                                        .choose_image_or_color,
-                                                    padding: EdgeInsets.zero,
-                                                    spacing: 4,
-                                                  ),
-                                                  const SizedBox(height: 12),
-                                                  const BackgroundPicker(),
-                                                ],
-                                              ),
-                                              const SizedBox(height: 32),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  SectionHeader(
-                                                    title: gloc
-                                                        .settings_auto_location_section,
-                                                    description: gloc
-                                                        .settings_auto_location_section_desc,
-                                                    padding: EdgeInsets.zero,
-                                                    spacing: 4,
-                                                  ),
-                                                  const SizedBox(height: 12),
-                                                  Selector<
-                                                    GroupFormState,
-                                                    bool
-                                                  >(
-                                                    selector: (context, s) =>
-                                                        s.autoLocationEnabled,
-                                                    builder: (context, enabled, child) => Semantics(
-                                                      toggled: enabled,
-                                                      label:
-                                                          '${gloc.settings_auto_location_title} - ${enabled ? gloc.accessibility_currently_enabled : gloc.accessibility_currently_disabled}',
-                                                      hint: gloc
-                                                          .settings_auto_location_desc,
-                                                      child: SwitchListTile(
-                                                        title: Text(
-                                                          gloc.settings_auto_location_title,
-                                                        ),
-                                                        subtitle: Text(
-                                                          gloc.settings_auto_location_desc,
-                                                        ),
-                                                        value: enabled,
-                                                        onChanged: (value) async {
-                                                          // Capture context-dependent objects before async operations
-                                                          final controller = context
-                                                              .read<
-                                                                GroupFormController
-                                                              >();
-                                                          final notifier = context
-                                                              .read<
-                                                                ExpenseGroupNotifier
-                                                              >();
-
-                                                          // Update state immediately for UI feedback
-                                                          controller.state
-                                                              .setAutoLocationEnabled(
-                                                                value,
-                                                              );
-
-                                                          // Save the change immediately to persist the setting
-                                                          try {
-                                                            await controller
-                                                                .save();
-
-                                                            // Notify listeners that the group was updated
-                                                            if (controller
-                                                                    .state
-                                                                    .id !=
-                                                                null) {
-                                                              notifier
-                                                                  .notifyGroupUpdated(
-                                                                    controller
-                                                                        .state
-                                                                        .id!,
-                                                                  );
-                                                            }
-                                                          } catch (e) {
-                                                            // Show error if save fails
-                                                            if (context
-                                                                .mounted) {
-                                                              AppToast.show(
-                                                                context,
-                                                                gloc.backup_error,
-                                                                type: ToastType
-                                                                    .error,
-                                                              );
-                                                            }
-                                                          }
-                                                        },
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 100),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ),

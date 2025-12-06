@@ -528,6 +528,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get categories => '类别';
 
   @override
+  String get other_settings => '其他设置';
+
+  @override
+  String get other_settings_desc => '货币、背景和自动定位';
+
+  @override
+  String get segment_general => '常规';
+
+  @override
+  String get segment_other => '其他';
+
+  @override
   String get from => '从';
 
   @override
