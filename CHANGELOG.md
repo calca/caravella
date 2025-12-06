@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Tab-based navigation in group edit page with four segments: General, Participants, Categories, and Other settings
 - Media attachments support for expenses with image, PDF, and video file types (max 5 per expense)
 - Attachment picker with camera, gallery, and file selection options
 - Full-screen attachment viewer with swipe navigation, delete and share actions
@@ -21,6 +22,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Quick access to delete expense from app bar when editing
 
 ### Changed
+- Consolidated group edit and other settings pages into single interface with tab navigation for easier access to all group options
+- Relocated group type selection to tappable icon button (42×42px) next to group name field for streamlined layout
+- Reorganized group settings into logical tabs: General (name, type, period, currency), Participants, Categories, and Other (background, auto-location)
 - Moved delete button from bottom bar to app bar in expense form for better accessibility
 - Repositioned expense form actions to reduce clutter in the main editing area
 
