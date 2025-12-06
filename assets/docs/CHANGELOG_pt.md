@@ -1,3 +1,14 @@
+## 1.2.0 (03.12.2025)
+
+- **Novo**: Mapas interativos com OpenStreetMap mostrando localizações de despesas
+- **Novo**: Pesquisa de localização com autocompletar e captura GPS automática
+- **Novo**: Tema dinâmico que se adapta ao papel de parede do dispositivo (Android 12+)
+- **Novo**: Ações rápidas do Android para iniciar grupos de despesas da tela inicial
+- **Novo**: Verificação automática de atualizações com notificações semanais
+- **Melhorias**: Animações de carregamento skeleton mais suaves
+- **Melhorias**: Exibição de moeda aprimorada com formatação local
+- **Correções**: A configuração de localização automática agora salva corretamente
+
 ## 1.0.45 (16.10.2025)
 
 - **Correções**: Completadas as traduções para todos os idiomas suportados

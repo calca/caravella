@@ -1,5 +1,5 @@
+import 'package:caravella_core_ui/widgets/currency_display.dart';
 import 'package:flutter/material.dart';
-import '../../../widgets/currency_display.dart';
 
 /// Small KPI card consistent with app dark surfaces.
 class StatCard extends StatelessWidget {
@@ -172,10 +172,7 @@ class StatCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (trailing != null) ...[
-                  const SizedBox(width: 8),
-                  trailing!,
-                ],
+                if (trailing != null) ...[const SizedBox(width: 8), trailing!],
               ],
             ),
           ),

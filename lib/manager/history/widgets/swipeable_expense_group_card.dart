@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/manager/details/widgets/group_header.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../../data/model/expense_group.dart';
-import '../../../data/expense_group_storage_v2.dart';
-import '../../../state/expense_group_notifier.dart';
-import '../../../widgets/currency_display.dart';
-import '../../../widgets/base_card.dart';
-import '../../../widgets/material3_dialog.dart';
-import '../../../widgets/app_toast.dart';
 import '../../details/pages/expense_group_detail_page.dart';
 import 'history_options_sheet.dart';
 
@@ -70,22 +65,19 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
         ? gloc.unpinned_with_undo
         : gloc.pinned_with_undo;
 
-    await ExpenseGroupStorageV2.updateGroupPin(trip.id, !isPinned);
+    // Use notifier to update pin state (handles storage + shortcuts)
+    final notifier = Provider.of<ExpenseGroupNotifier>(context, listen: false);
+    await notifier.updateGroupPin(trip.id, !isPinned);
 
     // Trigger reload callback if provided
     onPin?.call();
 
     if (!context.mounted) return;
-    AppToast.showFromMessenger(
-      messenger,
+    AppToast.show(
+      context,
       '$actionText • ${trip.title}',
       type: ToastType.info,
       duration: const Duration(seconds: 4),
-      onUndo: () async {
-        await ExpenseGroupStorageV2.updateGroupPin(trip.id, isPinned);
-        // Reload again after undo
-        onPin?.call();
-      },
     );
   }
 
@@ -106,15 +98,14 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
     await Future.delayed(const Duration(milliseconds: 100));
 
     // Show AppToast with undo
-    AppToast.showFromMessenger(
-      messenger,
-      '$actionText • ${trip.title}',
-      type: ToastType.info,
-      duration: const Duration(seconds: 4),
-      onUndo: () async {
-        await onArchiveToggle(trip.id, isArchived);
-      },
-    );
+    if (context.mounted) {
+      AppToast.show(
+        context,
+        '$actionText • ${trip.title}',
+        type: ToastType.info,
+        duration: const Duration(seconds: 4),
+      );
+    }
   }
 
   Future<void> _executeDeleteAction(
@@ -161,8 +152,8 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
     onDelete?.call();
 
     if (!context.mounted) return;
-    AppToast.showFromMessenger(
-      messenger,
+    AppToast.show(
+      context,
       '${gloc.deleted_with_undo} • ${trip.title}',
       type: ToastType.success,
       duration: const Duration(seconds: 3),
@@ -197,7 +188,7 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.surface,
         noBorder: true,
         margin: EdgeInsets.zero,
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

@@ -1,6 +1,6 @@
-import '../../../data/model/expense_group.dart';
+import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../../widgets/currency_display.dart';
 
 /// Utility per generare CSV per un gruppo di spese.
 class CsvExporter {

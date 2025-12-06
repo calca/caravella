@@ -20,6 +20,10 @@
   "@monthlyChartBadge": {
     "description": "Letter indicator for monthly chart badge"
   },
+  "dateRangeChartBadge": "D",
+  "@dateRangeChartBadge": {
+    "description": "Letter indicator for date range chart badge"
+  },
   "weeklyExpensesChart": "Gastos semanales",
   "@weeklyExpensesChart": {
     "description": "Label for weekly expenses chart"
@@ -28,12 +32,38 @@
   "@monthlyExpensesChart": {
     "description": "Label for monthly expenses chart"
   },
+  "dateRangeExpensesChart": "Gastos por período",
+  "@dateRangeExpensesChart": {
+    "description": "Label for date range expenses chart"
+  },
   "settings_flag_secure_desc": "Impide capturas de pantalla y grabación de pantalla",
   "settings_flag_secure_title": "Pantalla segura",
   "settings_privacy": "Privacidad",
   "select_currency": "Seleccionar moneda",
   "select_period_hint_short": "Establecer fechas",
-  "select_period_hint": "Seleccionar un rango de fechas",
+  "select_period_hint": "Seleccionar fechas",
+  "suggested_duration": "Duración sugerida",
+  "days_count": "{count} días",
+  "@days_count": {"description": "Número de días", "placeholders": {"count": {"type": "int"}}},
+  "weekday_mon": "L",
+  "weekday_tue": "M",
+  "weekday_wed": "M",
+  "weekday_thu": "J",
+  "weekday_fri": "V",
+  "weekday_sat": "S",
+  "weekday_sun": "D",
+  "month_january": "Enero",
+  "month_february": "Febrero",
+  "month_march": "Marzo",
+  "month_april": "Abril",
+  "month_may": "Mayo",
+  "month_june": "Junio",
+  "month_july": "Julio",
+  "month_august": "Agosto",
+  "month_september": "Septiembre",
+  "month_october": "Octubre",
+  "month_november": "Noviembre",
+  "month_december": "Diciembre",
   "in_group_prefix": "en",
   "save_change_expense": "Guardar cambios",
   "group_total": "Total",
@@ -104,6 +134,7 @@
   "license_section": "Licencia",
   "add_trip": "Agregar grupo",
   "new_group": "Nuevo Grupo",
+  "create": "Crear",
   "group_name": "Nombre",
   "enter_title": "Introducir un nombre",
   "enter_participant": "Introducir al menos un participante",
@@ -209,6 +240,8 @@
   "select_expense_date_short": "Seleccionar fecha",
   "date": "Fecha",
   "edit_group": "Editar Grupo",
+  "edit_group_desc": "Modifica la configuración, participantes y categorías del grupo",
+  "new_group_desc": "Crea un nuevo grupo de gastos con configuración personalizada",
   "delete_group": "Eliminar grupo",
   "delete_group_confirm": "¿Estás seguro de que quieres eliminar este grupo de gastos? Esta acción no se puede deshacer.",
   "add_expense_fab": "Agregar Gasto",
@@ -257,8 +290,8 @@
   "csv_date": "Fecha",
   "csv_note": "Nota",
   "csv_location": "Ubicación",
-  "location": "Ubicación",
-  "location_hint": "Ubicación",
+  "location": "Lugar",
+  "location_hint": "Lugar",
   "get_current_location": "Usar ubicación actual",
   "enter_location_manually": "Ingresar manualmente",
   "location_permission_denied": "Permiso de ubicación denegado",
@@ -267,8 +300,14 @@
   "location_error": "Error obteniendo ubicación",
   "resolving_address": "Resolviendo dirección…",
   "address_resolved": "Dirección resuelta",
+  "search_place": "Buscar lugar",
+  "search_place_hint": "Buscar un lugar o dirección",
   "settings_general": "General",
-  "settings_general_desc": "Configuración idioma y apariencia",
+  "settings_general_desc": "Configuración de idioma y apariencia",
+  "settings_auto_location_section": "Detección de ubicación",
+  "settings_auto_location_section_desc": "Configurar la detección automática de ubicación",
+  "settings_auto_location_title": "Activar para detectar",
+  "settings_auto_location_desc": "Detectar GPS al agregar un gasto",
   "settings_language": "Idioma",
   "settings_language_desc": "Elige tu idioma preferido",
   "settings_language_it": "Italiano",
@@ -280,6 +319,8 @@
   "settings_theme": "Tema",
   "settings_theme_desc": "Claro, oscuro o sistema",
   "settings_select_theme": "Seleccionar tema",
+  "settings_dynamic_color": "Color dinámico",
+  "settings_dynamic_color_desc": "Usar colores del fondo de pantalla",
   "settings_privacy": "Privacidad",
   "settings_privacy_desc": "Opciones seguridad y privacidad",
   "settings_data": "Datos",
@@ -565,7 +606,7 @@
   ,"currency_ZMW": "Kwacha zambiano"
   ,"currency_ZWL": "Dólar zimbabuense"
   ,"search_currency": "Buscar moneda..."
-  ,"activity": "Actividad"
+  ,"activity": "Gastos"
   ,"@activity": {"description": "Título de sección actividad reciente lista de gastos"}
   ,"search_expenses_hint": "Buscar por nombre o nota..."
   ,"@search_expenses_hint": {"description": "Placeholder para buscar gastos por nombre o nota"}
@@ -599,6 +640,10 @@
   ,"@whats_new_subtitle": {"description": "Subtítulo en la tarjeta de encabezado de la página de novedades"}
   ,"whats_new_latest": "Mantente al día con las mejoras más recientes"
   ,"@whats_new_latest": {"description": "Texto descriptivo en la tarjeta de encabezado de la página de novedades"}
+  ,"changelog_title": "Registro de cambios"
+  ,"@changelog_title": {"description": "Título de la sección de changelog"}
+  ,"changelog_desc": "Historial de versiones y mejoras"
+  ,"@changelog_desc": {"description": "Descripción de la sección de changelog"}
   ,"average_per_person": "Promedio por persona"
   ,"@average_per_person": {"description": "Etiqueta mostrada antes del promedio gastado por persona en la pestaña Participantes"}
   ,"more": "más"
@@ -607,6 +652,50 @@
   ,"@less": {"description": "Etiqueta inline para contraer y mostrar menos elementos"}
   ,"debt_prefix_to": "a "
   ,"@debt_prefix_to": {"description": "Prefijo corto mostrado antes del destinatario en una línea de deuda/liquidación (p. ej., 'a Alicia 10€')"}
+  ,"view_on_map": "Ver en el mapa"
+  ,"@view_on_map": {"description": "Tooltip for the map button to view expenses on a map"}
+  ,"expenses_map": "Mapa de Gastos"
+  ,"@expenses_map": {"description": "Title of the page showing expenses on a map"}
+  ,"no_locations_available": "No hay ubicaciones disponibles"
+  ,"@no_locations_available": {"description": "Message shown when no expenses have location data"}
+  ,"no_locations_subtitle": "Agrega datos de ubicación a tus gastos para verlos en el mapa"
+  ,"@no_locations_subtitle": {"description": "Subtitle explaining how to add locations"}
+  ,"expense_count": "{count, plural, =1{1 gasto} other{{count} gastos}}"
+  ,"@expense_count": {"description": "Label showing number of expenses at a location", "placeholders": {"count": {"type": "int"}}}
+  ,"check_for_updates": "Buscar actualizaciones"
+  ,"@check_for_updates": {"description": "Etiqueta para buscar actualizaciones de Google Play Store"}
+  ,"check_for_updates_desc": "Verificar disponibilidad de nueva versión"
+  ,"@check_for_updates_desc": {"description": "Descripción para verificación de actualizaciones"}
+  ,"update_available": "Actualización disponible"
+  ,"@update_available": {"description": "Título cuando hay una actualización disponible"}
+  ,"update_available_desc": "Una nueva versión de la app está disponible"
+  ,"@update_available_desc": {"description": "Descripción cuando hay una actualización disponible"}
+  ,"no_update_available": "App actualizada"
+  ,"@no_update_available": {"description": "Mensaje cuando no hay actualizaciones"}
+  ,"no_update_available_desc": "Estás usando la última versión"
+  ,"@no_update_available_desc": {"description": "Descripción cuando no hay actualizaciones"}
+  ,"update_now": "Actualizar ahora"
+  ,"@update_now": {"description": "Botón para iniciar la actualización"}
+  ,"update_later": "Más tarde"
+  ,"@update_later": {"description": "Botón para posponer la actualización"}
+  ,"checking_for_updates": "Verificando actualizaciones..."
+  ,"@checking_for_updates": {"description": "Mensaje durante verificación de actualizaciones"}
+  ,"update_error": "Error al verificar actualizaciones"
+  ,"@update_error": {"description": "Mensaje de error durante verificación de actualizaciones"}
+  ,"update_downloading": "Descargando..."
+  ,"@update_downloading": {"description": "Mensaje durante descarga de actualización"}
+  ,"update_installing": "Instalando..."
+  ,"@update_installing": {"description": "Mensaje durante instalación de actualización"}
+  ,"update_feature_android_only": "Función disponible solo en Android con Google Play Store"
+  ,"@update_feature_android_only": {"description": "Mensaje que explica que la función es solo para Android"}
+  ,"update_recommendation_title": "Actualización recomendada"
+  ,"@update_recommendation_title": {"description": "Título del bottom sheet para recomendar actualización"}
+  ,"update_recommendation_desc": "Una nueva versión de Caravella está disponible. ¡Actualiza la app para tener siempre las últimas funciones y mejoras!"
+  ,"@update_recommendation_desc": {"description": "Descripción en bottom sheet recomendando actualizar"}
+  ,"update_install": "Instalar actualización"
+  ,"@update_install": {"description": "Botón para instalar actualización desde bottom sheet"}
+  ,"update_remind_later": "Recuérdamelo después"
+  ,"@update_remind_later": {"description": "Botón para posponer actualización desde bottom sheet"}
   ,"send_reminder": "Enviar recordatorio"
   ,"@send_reminder": {"description": "Etiqueta del botón para enviar un recordatorio de pago a un participante"}
   ,"reminder_message_single": "¡Hola {participantName}! 👋\n\nQuisiera recordarte que debes {amount} a {creditorName} para el grupo \"{groupName}\".\n\n¡Gracias! 😊"
@@ -619,4 +708,58 @@
   ,"@settings_user_name_desc": {"description": "Descripción de la configuración del nombre de usuario"}
   ,"settings_user_name_hint": "Ingresa tu nombre"
   ,"@settings_user_name_hint": {"description": "Placeholder del campo de nombre de usuario"}
+  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para el tipo de grupo de gastos"}
+  ,"group_type_description": "Elige el tipo de grupo"
+  ,"@group_type_description": {"description": "Descripción para la selección del tipo de grupo"}
+  ,"group_type_travel": "Viaje"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viaje"}
+  ,"group_type_personal": "Personal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: personal"}
+  ,"group_type_family": "Familia"
+  ,"@group_type_family": {"description": "Tipo de grupo: familia"}
+  ,"group_type_other": "Otro"
+  ,"@group_type_other": {"description": "Tipo de grupo: otro"}
+  ,"category_travel_transport": "Transporte"
+  ,"@category_travel_transport": {"description": "Categoría predeterminada para grupo tipo viaje"}
+  ,"category_travel_accommodation": "Alojamiento"
+  ,"@category_travel_accommodation": {"description": "Categoría predeterminada para grupo tipo viaje"}
+  ,"category_travel_restaurants": "Restaurantes"
+  ,"@category_travel_restaurants": {"description": "Categoría predeterminada para grupo tipo viaje"}
+  ,"category_personal_shopping": "Compras"
+  ,"@category_personal_shopping": {"description": "Categoría predeterminada para grupo tipo personal"}
+  ,"category_personal_health": "Salud"
+  ,"@category_personal_health": {"description": "Categoría predeterminada para grupo tipo personal"}
+  ,"category_personal_entertainment": "Entretenimiento"
+  ,"@category_personal_entertainment": {"description": "Categoría predeterminada para grupo tipo personal"}
+  ,"category_family_groceries": "Comestibles"
+  ,"@category_family_groceries": {"description": "Categoría predeterminada para grupo tipo familia"}
+  ,"category_family_home": "Casa"
+  ,"@category_family_home": {"description": "Categoría predeterminada para grupo tipo familia"}
+  ,"category_family_bills": "Facturas"
+  ,"@category_family_bills": {"description": "Categoría predeterminada para grupo tipo familia"}
+  ,"category_other_misc": "Varios"
+  ,"@category_other_misc": {"description": "Categoría predeterminada para grupo tipo otro"}
+  ,"category_other_utilities": "Utilidades"
+  ,"@category_other_utilities": {"description": "Categoría predeterminada para grupo tipo otro"}
+  ,"category_other_services": "Servicios"
+  ,"@category_other_services": {"description": "Categoría predeterminada para grupo tipo otro"}
+  ,"attachments": "Adjuntos"
+  ,"@attachments": {"description": "Etiqueta para los adjuntos de gastos"}
+  ,"add_attachment": "Agregar adjunto"
+  ,"@add_attachment": {"description": "Botón para agregar un adjunto"}
+  ,"attachment_limit_reached": "Límite máximo de 5 adjuntos alcanzado"
+  ,"@attachment_limit_reached": {"description": "Mensaje de error al intentar agregar más de 5 adjuntos"}
+  ,"delete_attachment": "Eliminar adjunto"
+  ,"@delete_attachment": {"description": "Acción para eliminar un adjunto"}
+  ,"share_attachment": "Compartir adjunto"
+  ,"@share_attachment": {"description": "Acción para compartir un adjunto"}
+  ,"delete_attachment_confirm_title": "Eliminar adjunto"
+  ,"@delete_attachment_confirm_title": {"description": "Título del diálogo de confirmación de eliminación de adjunto"}
+  ,"delete_attachment_confirm_message": "¿Estás seguro de que deseas eliminar este adjunto?"
+  ,"@delete_attachment_confirm_message": {"description": "Mensaje del diálogo de confirmación de eliminación de adjunto"}
+  ,"attachment_source": "Elegir fuente"
+  ,"@attachment_source": {"description": "Título para elegir la fuente del adjunto"}
+  ,"from_files": "Desde archivos"
+  ,"@from_files": {"description": "Opción para elegir desde archivos"}
 }

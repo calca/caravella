@@ -1,9 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:io_caravella_egm/manager/details/pages/tabs/usecase/daily_totals_utils.dart';
-import 'package:io_caravella_egm/data/model/expense_group.dart';
-import 'package:io_caravella_egm/data/model/expense_details.dart';
-import 'package:io_caravella_egm/data/model/expense_category.dart';
-import 'package:io_caravella_egm/data/model/expense_participant.dart';
+import 'package:caravella_core/caravella_core.dart';
 
 ExpenseGroup _group({
   required List<ExpenseDetails> expenses,

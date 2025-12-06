@@ -20,6 +20,10 @@
   "@monthlyChartBadge": {
     "description": "Letter indicator for monthly chart badge"
   },
+  "dateRangeChartBadge": "D",
+  "@dateRangeChartBadge": {
+    "description": "Letter indicator for date range chart badge"
+  },
   "weeklyExpensesChart": "Despesas semanais",
   "@weeklyExpensesChart": {
     "description": "Label for weekly expenses chart"
@@ -28,12 +32,38 @@
   "@monthlyExpensesChart": {
     "description": "Label for monthly expenses chart"
   },
+  "dateRangeExpensesChart": "Despesas por período",
+  "@dateRangeExpensesChart": {
+    "description": "Label for date range expenses chart"
+  },
   "settings_flag_secure_desc": "Impede capturas de tela e gravação da tela",
   "settings_flag_secure_title": "Tela segura",
   "settings_privacy": "Privacidade",
   "select_currency": "Selecionar moeda",
   "select_period_hint_short": "Definir datas",
-  "select_period_hint": "Selecione um intervalo de datas",
+  "select_period_hint": "Selecionar datas",
+  "suggested_duration": "Duração sugerida",
+  "days_count": "{count} dias",
+  "@days_count": {"description": "Número de dias", "placeholders": {"count": {"type": "int"}}},
+  "weekday_mon": "S",
+  "weekday_tue": "T",
+  "weekday_wed": "Q",
+  "weekday_thu": "Q",
+  "weekday_fri": "S",
+  "weekday_sat": "S",
+  "weekday_sun": "D",
+  "month_january": "Janeiro",
+  "month_february": "Fevereiro",
+  "month_march": "Março",
+  "month_april": "Abril",
+  "month_may": "Maio",
+  "month_june": "Junho",
+  "month_july": "Julho",
+  "month_august": "Agosto",
+  "month_september": "Setembro",
+  "month_october": "Outubro",
+  "month_november": "Novembro",
+  "month_december": "Dezembro",
   "in_group_prefix": "em",
   "save_change_expense": "Salvar alterações",
   "group_total": "Total",
@@ -96,6 +126,7 @@
   "license_hint": "Este aplicativo é distribuído sob a licença MIT.",
   "license_section": "Licença",
   "new_group": "Novo grupo",
+  "create": "Criar",
   "enter_title": "Digite um nome",
   "select_start": "Selecionar início",
   "start_date_not_selected": "Selecione o início",
@@ -205,7 +236,7 @@
   "color_suggested_subtitle": "Escolha uma das cores compatíveis com o tema",
   "color_random_subtitle": "Deixe o app escolher uma cor",
   "search_currency": "Pesquisar moeda...",
-  "activity": "Atividade",
+  "activity": "Despesas",
   "search_expenses_hint": "Pesquisar por nome ou nota...",
   "clear_filters": "Limpar",
   "show_filters": "Mostrar filtros",
@@ -225,6 +256,8 @@
   "no_expenses_to_analyze": "Nenhuma despesa para analisar",
   "select_expense_date_short": "Selecionar data",
   "edit_group": "Editar grupo",
+  "edit_group_desc": "Modificar configurações, participantes e categorias do grupo",
+  "new_group_desc": "Criar um novo grupo de despesas com configurações personalizadas",
   "delete_group_confirm": "Tem certeza de que deseja excluir este grupo de despesas? Esta ação não pode ser desfeita.",
   "pin_group": "Fixar grupo",
   "pin": "Fixar",
@@ -262,8 +295,14 @@
   "location_error": "Erro ao obter localização",
   "resolving_address": "Resolvendo endereço…",
   "address_resolved": "Endereço resolvido",
+  "search_place": "Procurar lugar",
+  "search_place_hint": "Procurar um lugar ou endereço",
   "settings_general": "Geral",
   "settings_general_desc": "Idioma e aparência",
+  "settings_auto_location_section": "Detecção de localização",
+  "settings_auto_location_section_desc": "Configurar a detecção automática de localização",
+  "settings_auto_location_title": "Ativar para detectar",
+  "settings_auto_location_desc": "Detectar GPS ao adicionar uma despesa",
   "settings_language": "Idioma",
   "settings_language_desc": "Escolha o idioma preferido",
   "settings_language_it": "Italiano",
@@ -274,6 +313,8 @@
   "settings_theme": "Tema",
   "settings_theme_desc": "Claro, escuro ou sistema",
   "settings_select_theme": "Selecionar tema",
+  "settings_dynamic_color": "Cor dinâmica",
+  "settings_dynamic_color_desc": "Usar cores do papel de parede",
   "settings_privacy": "Privacidade",
   "settings_privacy_desc": "Opções de segurança e privacidade",
   "settings_data": "Dados",
@@ -502,6 +543,10 @@
   ,"@whats_new_subtitle": {"description": "Subtítulo no cartão de cabeçalho da página de novidades"}
   ,"whats_new_latest": "Fique por dentro das melhorias mais recentes"
   ,"@whats_new_latest": {"description": "Texto descritivo no cartão de cabeçalho da página de novidades"}
+  ,"changelog_title": "Histórico de versões"
+  ,"@changelog_title": {"description": "Título da seção de changelog"}
+  ,"changelog_desc": "Histórico de versões e melhorias"
+  ,"@changelog_desc": {"description": "Descrição da seção de changelog"}
   ,"average_per_person": "Média por pessoa"
   ,"@average_per_person": {"description": "Rótulo mostrado antes da média gasta por pessoa na aba Participantes"}
   ,"more": "mais"
@@ -510,6 +555,40 @@
   ,"@less": {"description": "Rótulo inline para recolher e mostrar menos itens"}
   ,"debt_prefix_to": "a "
   ,"@debt_prefix_to": {"description": "Prefixo curto mostrado antes do destinatário em uma linha de dívida/liquidação (ex.: 'a Alice 10€')"}
+  ,"check_for_updates": "Verificar atualizações"
+  ,"@check_for_updates": {"description": "Rótulo para verificar atualizações da Google Play Store"}
+  ,"check_for_updates_desc": "Verificar disponibilidade de nova versão"
+  ,"@check_for_updates_desc": {"description": "Descrição para verificação de atualizações"}
+  ,"update_available": "Atualização disponível"
+  ,"@update_available": {"description": "Título quando há uma atualização disponível"}
+  ,"update_available_desc": "Uma nova versão do aplicativo está disponível"
+  ,"@update_available_desc": {"description": "Descrição quando há uma atualização disponível"}
+  ,"no_update_available": "App atualizado"
+  ,"@no_update_available": {"description": "Mensagem quando não há atualizações"}
+  ,"no_update_available_desc": "Você está usando a versão mais recente"
+  ,"@no_update_available_desc": {"description": "Descrição quando não há atualizações"}
+  ,"update_now": "Atualizar agora"
+  ,"@update_now": {"description": "Botão para iniciar a atualização"}
+  ,"update_later": "Mais tarde"
+  ,"@update_later": {"description": "Botão para adiar a atualização"}
+  ,"checking_for_updates": "Verificando atualizações..."
+  ,"@checking_for_updates": {"description": "Mensagem durante verificação de atualizações"}
+  ,"update_error": "Erro ao verificar atualizações"
+  ,"@update_error": {"description": "Mensagem de erro durante verificação de atualizações"}
+  ,"update_downloading": "Baixando..."
+  ,"@update_downloading": {"description": "Mensagem durante download da atualização"}
+  ,"update_installing": "Instalando..."
+  ,"@update_installing": {"description": "Mensagem durante instalação da atualização"}
+  ,"update_feature_android_only": "Recurso disponível apenas no Android com Google Play Store"
+  ,"@update_feature_android_only": {"description": "Mensagem explicando que o recurso é apenas para Android"}
+  ,"update_recommendation_title": "Atualização recomendada"
+  ,"@update_recommendation_title": {"description": "Título do bottom sheet para recomendar atualização"}
+  ,"update_recommendation_desc": "Uma nova versão do Caravella está disponível. Atualize o aplicativo para ter sempre os recursos e melhorias mais recentes!"
+  ,"@update_recommendation_desc": {"description": "Descrição no bottom sheet recomendando atualizar"}
+  ,"update_install": "Instalar atualização"
+  ,"@update_install": {"description": "Botão para instalar atualização do bottom sheet"}
+  ,"update_remind_later": "Lembrar mais tarde"
+  ,"@update_remind_later": {"description": "Botão para adiar atualização do bottom sheet"}
   ,"send_reminder": "Enviar lembrete"
   ,"@send_reminder": {"description": "Rótulo do botão para enviar um lembrete de pagamento a um participante"}
   ,"reminder_message_single": "Oi {participantName}! 👋\n\nGostaria de lembrar que você deve {amount} a {creditorName} para o grupo \"{groupName}\".\n\nObrigado! 😊"
@@ -593,4 +672,58 @@
   ,"unarchive_confirm": "Deseja desarquivar"
   ,"unpin_group": "Desafixar grupo"
   ,"weekly_expenses_chart": "Despesas semanais"
+  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+  ,"category_travel_transport": "Transporte"
+  ,"@category_travel_transport": {"description": "Categoria padrão para grupo tipo viagem"}
+  ,"category_travel_accommodation": "Acomodação"
+  ,"@category_travel_accommodation": {"description": "Categoria padrão para grupo tipo viagem"}
+  ,"category_travel_restaurants": "Restaurantes"
+  ,"@category_travel_restaurants": {"description": "Categoria padrão para grupo tipo viagem"}
+  ,"category_personal_shopping": "Compras"
+  ,"@category_personal_shopping": {"description": "Categoria padrão para grupo tipo pessoal"}
+  ,"category_personal_health": "Saúde"
+  ,"@category_personal_health": {"description": "Categoria padrão para grupo tipo pessoal"}
+  ,"category_personal_entertainment": "Entretenimento"
+  ,"@category_personal_entertainment": {"description": "Categoria padrão para grupo tipo pessoal"}
+  ,"category_family_groceries": "Supermercado"
+  ,"@category_family_groceries": {"description": "Categoria padrão para grupo tipo família"}
+  ,"category_family_home": "Casa"
+  ,"@category_family_home": {"description": "Categoria padrão para grupo tipo família"}
+  ,"category_family_bills": "Contas"
+  ,"@category_family_bills": {"description": "Categoria padrão para grupo tipo família"}
+  ,"category_other_misc": "Diversos"
+  ,"@category_other_misc": {"description": "Categoria padrão para grupo tipo outro"}
+  ,"category_other_utilities": "Utilidades"
+  ,"@category_other_utilities": {"description": "Categoria padrão para grupo tipo outro"}
+  ,"category_other_services": "Serviços"
+  ,"@category_other_services": {"description": "Categoria padrão para grupo tipo outro"}
+  ,"attachments": "Anexos"
+  ,"@attachments": {"description": "Etiqueta para anexos de despesas"}
+  ,"add_attachment": "Adicionar anexo"
+  ,"@add_attachment": {"description": "Botão para adicionar um anexo"}
+  ,"attachment_limit_reached": "Limite máximo de 5 anexos atingido"
+  ,"@attachment_limit_reached": {"description": "Mensagem de erro ao tentar adicionar mais de 5 anexos"}
+  ,"delete_attachment": "Excluir anexo"
+  ,"@delete_attachment": {"description": "Ação para excluir um anexo"}
+  ,"share_attachment": "Compartilhar anexo"
+  ,"@share_attachment": {"description": "Ação para compartilhar um anexo"}
+  ,"delete_attachment_confirm_title": "Excluir anexo"
+  ,"@delete_attachment_confirm_title": {"description": "Título do diálogo de confirmação de exclusão de anexo"}
+  ,"delete_attachment_confirm_message": "Tem certeza de que deseja excluir este anexo?"
+  ,"@delete_attachment_confirm_message": {"description": "Mensagem do diálogo de confirmação de exclusão de anexo"}
+  ,"attachment_source": "Escolher fonte"
+  ,"@attachment_source": {"description": "Título para escolher a fonte do anexo"}
+  ,"from_files": "Dos arquivos"
+  ,"@from_files": {"description": "Opção para escolher dos arquivos"}
 }

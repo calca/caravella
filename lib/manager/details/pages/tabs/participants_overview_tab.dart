@@ -1,12 +1,11 @@
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:flutter/material.dart';
-import '../../../../data/model/expense_group.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'usecase/settlements_logic.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../widgets/group_header.dart'; // ParticipantAvatar
-import '../../widgets/stat_card.dart';
-import '../../../../widgets/currency_display.dart';
-import '../../../../data/model/expense_participant.dart';
 import 'package:share_plus/share_plus.dart';
+import '../../widgets/stat_card.dart';
+import '../../widgets/group_header.dart';
 
 /// Participants tab: per participant totals, contribution percentages and settlements.
 class ParticipantsOverviewTab extends StatelessWidget {
@@ -225,6 +224,60 @@ class _ParticipantStatCardState extends State<_ParticipantStatCard> {
     }
   }
 
+  void _showReminderBottomSheet() {
+    final message = _buildReminderMessage(context);
+    if (message.isEmpty) return;
+
+    final loc = gen.AppLocalizations.of(context);
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => GroupBottomSheetScaffold(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Message preview
+            Container(
+              padding: const EdgeInsets.all(16),
+              margin: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.outline.withValues(alpha: 0.2),
+                ),
+              ),
+              child: Text(
+                message,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ),
+            // Send button
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: FilledButton.icon(
+                onPressed: () {
+                  Navigator.pop(context);
+                  _shareReminder();
+                },
+                icon: const Icon(Icons.send),
+                label: Text(loc.send_reminder),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -335,30 +388,21 @@ class _ParticipantStatCardState extends State<_ParticipantStatCard> {
 
     final subtitleSpans = buildLines(expanded: _expanded);
 
-    // Only show share button if participant has debts
+    // Only show long-press gesture if participant has debts
     final hasDebts = owes.isNotEmpty;
 
-    return StatCard(
-      title: widget.participant.name,
-      value: widget.total,
-      currency: widget.currency,
-      subtitleSpans: subtitleSpans,
-      subtitleMaxLines: _expanded ? 100 : 3,
-      leading: ParticipantAvatar(participant: widget.participant, size: 48),
-      percent: widget.percent,
-      inlineHeader: true,
-      trailing: hasDebts
-          ? IconButton(
-              icon: Icon(
-                Icons.send_outlined,
-                size: 20,
-                color: theme.colorScheme.primary,
-              ),
-              tooltip: loc.send_reminder,
-              onPressed: _shareReminder,
-              visualDensity: VisualDensity.compact,
-            )
-          : null,
+    return GestureDetector(
+      onLongPress: hasDebts ? _showReminderBottomSheet : null,
+      child: StatCard(
+        title: widget.participant.name,
+        value: widget.total,
+        currency: widget.currency,
+        subtitleSpans: subtitleSpans,
+        subtitleMaxLines: _expanded ? 100 : 3,
+        leading: ParticipantAvatar(participant: widget.participant, size: 48),
+        percent: widget.percent,
+        inlineHeader: true,
+      ),
     );
   }
 }

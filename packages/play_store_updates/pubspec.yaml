@@ -1,0 +1,21 @@
+name: play_store_updates
+description: Google Play Store in-app update functionality for Caravella
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: '>=3.9.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  in_app_update: ^4.2.3
+  shared_preferences: ^2.5.3
+  provider: ^6.1.5
+  caravella_core:
+    path: ../caravella_core
+  caravella_core_ui:
+    path: ../caravella_core_ui
+
+dev_dependencies:
+  flutter_lints: ^5.0.0

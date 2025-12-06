@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../l10n/app_localizations.dart' as gen;
-import '../../../data/model/expense_details.dart';
-import '../../../data/model/expense_category.dart';
-import '../../../data/model/expense_participant.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'expense_amount_card.dart';
 import 'empty_expense_state.dart';
 
@@ -386,11 +384,11 @@ class _CategoryParticipantChip extends StatelessWidget {
       showCheckmark: false,
       side: BorderSide(
         color: selected
-            ? scheme.primaryFixedDim
+            ? scheme.onSurfaceVariant.withValues(alpha: 0.2)
             : scheme.outlineVariant.withValues(alpha: 0.4),
       ),
       backgroundColor: scheme.surfaceContainerHigh,
-      selectedColor: scheme.primaryFixedDim,
+      selectedColor: scheme.onSurfaceVariant.withValues(alpha: 0.15),
       labelStyle: Theme.of(context).textTheme.labelMedium?.copyWith(
         fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
         color: selected ? scheme.onPrimaryContainer : scheme.onSurfaceVariant,

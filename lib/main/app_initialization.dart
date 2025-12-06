@@ -1,18 +1,63 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker_android/image_picker_android.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
+import 'package:caravella_core/caravella_core.dart';
 
-import '../config/app_config.dart';
-import '../data/services/preferences_service.dart';
-import '../data/services/hive_initialization_service.dart';
-import '../data/services/storage_migration_service.dart';
 import '../settings/flag_secure_android.dart';
 
 /// Initializes the app: platform-specific setup, orientation, system UI, and image cache.
 class AppInitialization {
+  /// Configures error handling for Flutter framework errors
+  static void configureErrorHandling() {
+    // Handle Flutter framework errors (e.g., widget build errors)
+    FlutterError.onError = (details) {
+      // Network-related errors from tile loading are expected - silently ignore them
+      final errorString = details.exception.toString();
+      if (errorString.contains('NetworkImage') ||
+          errorString.contains('SocketException') ||
+          errorString.contains('Failed host lookup') ||
+          errorString.contains('HttpException') ||
+          errorString.contains('Connection') ||
+          errorString.contains('NetworkTileImageProvider') ||
+          errorString.contains('Image provider')) {
+        // Silently ignore network-related errors from tile loading
+        return;
+      }
+
+      // For other errors, log and show in debug mode
+      LoggerService.warning('Flutter error: ${details.exception}');
+      FlutterError.presentError(details);
+    };
+
+    // Handle errors from the platform dispatcher (isolate errors)
+    PlatformDispatcher.instance.onError = (error, stack) {
+      final errorString = error.toString();
+      if (errorString.contains('NetworkImage') ||
+          errorString.contains('SocketException') ||
+          errorString.contains('Failed host lookup') ||
+          errorString.contains('HttpException') ||
+          errorString.contains('Connection') ||
+          errorString.contains('NetworkTileImageProvider') ||
+          errorString.contains('Image provider') ||
+          errorString.contains('_loadImage') ||
+          errorString.contains('TileLayer') ||
+          errorString.contains('flutter_map') ||
+          errorString.contains('MapController') ||
+          errorString.contains('fitCamera')) {
+        // Silently ignore network-related and map-related errors
+        return true; // Mark as handled
+      }
+
+      // Log unexpected errors
+      LoggerService.warning('Platform error: $error');
+      return true; // Mark as handled to prevent crash
+    };
+  }
+
   /// Configures Android-specific image picker to use the native photo picker.
   static void configureImagePicker() {
     if (Platform.isAndroid) {
@@ -37,10 +82,10 @@ class AppInitialization {
     }
   }
   
-  /// Initializes Hive storage system if STORAGE_BACKEND is set to 'hive'
+  /// Initializes Hive storage system (default backend)
   /// Also handles automatic migration from JSON to Hive if needed
   static Future<void> initializeStorage() async {
-    const backend = String.fromEnvironment('STORAGE_BACKEND', defaultValue: 'file');
+    const backend = String.fromEnvironment('STORAGE_BACKEND', defaultValue: 'hive');
     if (backend.toLowerCase() == 'hive') {
       // Initialize Hive first
       await HiveInitializationService.initialize();
@@ -90,6 +135,7 @@ class AppInitialization {
   /// Runs all initialization steps in the correct order.
   static Future<void> initialize() async {
     WidgetsFlutterBinding.ensureInitialized();
+    configureErrorHandling();
     configureImagePicker();
     configureEnvironment();
     await initializeStorage(); // Initialize storage (Hive if needed)

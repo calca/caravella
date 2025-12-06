@@ -3,9 +3,7 @@
 // properly updates the current group and persists changes.
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:io_caravella_egm/state/expense_group_notifier.dart';
-import 'package:io_caravella_egm/data/model/expense_group.dart';
-import 'package:io_caravella_egm/data/model/expense_category.dart';
+import 'package:caravella_core/caravella_core.dart';
 
 void main() {
   group('ExpenseGroupNotifier addCategory', () {

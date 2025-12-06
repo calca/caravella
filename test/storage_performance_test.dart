@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:io_caravella_egm/data/storage_performance.dart';
+import 'package:caravella_core/caravella_core.dart';
 
 void main() {
   group('StoragePerformanceMonitor', () {
