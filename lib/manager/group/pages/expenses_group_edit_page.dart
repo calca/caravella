@@ -5,13 +5,11 @@ import 'package:io_caravella_egm/manager/group/data/group_form_state.dart';
 import 'package:io_caravella_egm/manager/group/widgets/section_flat.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../expense/widgets/icon_leading_field.dart';
 import '../group_form_controller.dart';
 import '../group_edit_mode.dart';
 import '../widgets/group_title_field.dart';
 import '../widgets/participants_editor.dart';
 import '../widgets/categories_editor.dart';
-import '../widgets/group_type_selector.dart';
 import '../widgets/selection_tile.dart';
 import '../widgets/period_section_editor.dart';
 import '../widgets/currency_selector_sheet.dart';
@@ -211,6 +209,113 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
     }
   }
 
+  void _showGroupTypeSelector(BuildContext context) {
+    final gloc = gen.AppLocalizations.of(context);
+    final controller = context.read<GroupFormController>();
+    final currentType = context.read<GroupFormState>().groupType;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => GroupBottomSheetScaffold(
+        title: gloc.group_type,
+        scrollable: false,
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ...ExpenseGroupType.values.map((type) {
+              final isSelected = currentType == type;
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: SelectionTile(
+                  leading: Icon(
+                    type.icon,
+                    size: 24,
+                    color: isSelected
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context).colorScheme.onSurface,
+                  ),
+                  title: _getGroupTypeName(gloc, type),
+                  trailing: isSelected
+                      ? Icon(
+                          Icons.check_circle,
+                          size: 24,
+                          color: Theme.of(context).colorScheme.primary,
+                        )
+                      : null,
+                  onTap: () {
+                    controller.setGroupType(
+                      isSelected ? null : type,
+                      autoPopulateCategories: !isSelected,
+                      defaultCategoryNames: !isSelected
+                          ? _getLocalizedCategories(gloc, type)
+                          : null,
+                      previousTypeCategoryNames: currentType != null
+                          ? _getLocalizedCategories(gloc, currentType)
+                          : null,
+                    );
+                    Navigator.of(context).pop();
+                  },
+                  borderRadius: 8,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 12,
+                  ),
+                ),
+              );
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _getGroupTypeName(gen.AppLocalizations gloc, ExpenseGroupType type) {
+    switch (type) {
+      case ExpenseGroupType.travel:
+        return gloc.group_type_travel;
+      case ExpenseGroupType.personal:
+        return gloc.group_type_personal;
+      case ExpenseGroupType.family:
+        return gloc.group_type_family;
+      case ExpenseGroupType.other:
+        return gloc.group_type_other;
+    }
+  }
+
+  List<String> _getLocalizedCategories(
+    gen.AppLocalizations gloc,
+    ExpenseGroupType type,
+  ) {
+    switch (type) {
+      case ExpenseGroupType.travel:
+        return [
+          gloc.category_travel_transport,
+          gloc.category_travel_accommodation,
+          gloc.category_travel_restaurants,
+        ];
+      case ExpenseGroupType.personal:
+        return [
+          gloc.category_personal_shopping,
+          gloc.category_personal_health,
+          gloc.category_personal_entertainment,
+        ];
+      case ExpenseGroupType.family:
+        return [
+          gloc.category_family_groceries,
+          gloc.category_family_home,
+          gloc.category_family_bills,
+        ];
+      case ExpenseGroupType.other:
+        return [
+          gloc.category_other_misc,
+          gloc.category_other_utilities,
+          gloc.category_other_services,
+        ];
+    }
+  }
+
   Widget _buildGeneralTab(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
     return SingleChildScrollView(
@@ -218,7 +323,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Nome gruppo
+          // Nome gruppo con icona categoria
           SectionFlat(
             title: '',
             children: [
@@ -235,20 +340,43 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                       spacing: 4,
                     ),
                     const SizedBox(height: 12),
-                    IconLeadingField(
-                      icon: const Icon(Icons.title_outlined),
-                      semanticsLabel: gloc.group_name,
-                      tooltip: gloc.group_name,
-                      child: const GroupTitleField(),
+                    Selector<GroupFormState, ExpenseGroupType?>(
+                      selector: (context, s) => s.groupType,
+                      builder: (context, groupType, child) => Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          InkWell(
+                            onTap: () => _showGroupTypeSelector(context),
+                            borderRadius: BorderRadius.circular(8),
+                            child: Container(
+                              width: 42,
+                              height: 42,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.outlineVariant,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Icon(
+                                groupType?.icon ?? Icons.category_outlined,
+                                size: 24,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          const Expanded(child: GroupTitleField()),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 24),
-          // Tipologia
-          const GroupTypeSelector(),
           const SizedBox(height: 24),
           // Periodo
           PeriodSectionEditor(
