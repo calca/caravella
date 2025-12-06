@@ -9,6 +9,8 @@ import '../utils/auth_guard.dart';
 import '../models/subscription_tier.dart';
 import '../../manager/details/pages/expense_group_detail_page.dart';
 import '../../widgets/toast.dart';
+import 'donation_page.dart';
+import 'subscription_page.dart';
 
 /// Page for joining a group by scanning a QR code
 /// Requires authentication before showing the scanner
@@ -86,13 +88,32 @@ class _GroupJoinQrPageState extends State<GroupJoinQrPage> {
         if (!_subscriptionStatus!.canShareGroup(syncedGroups)) {
           if (mounted) {
             final limits = _subscriptionStatus!.limits;
-            AppToast.show(
-              context,
-              'You have reached the maximum of ${limits.maxSharedGroups} shared groups for your ${_subscriptionStatus!.tier.name.toUpperCase()} plan. Upgrade to PREMIUM for unlimited groups.',
-              type: ToastType.error,
-            );
-            Navigator.of(context).pop();
-            return;
+            
+            // Show donation page if RevenueCat not configured, otherwise show upgrade option
+            if (!_revenueCat.isConfigured) {
+              await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (ctx) => const DonationPage(isFromUpgradeFlow: true),
+                ),
+              );
+              Navigator.of(context).pop();
+              return;
+            } else {
+              AppToast.show(
+                context,
+                'You have reached the maximum of ${limits.maxSharedGroups} shared groups for your ${_subscriptionStatus!.tier.name.toUpperCase()} plan. Upgrade to PREMIUM for unlimited groups.',
+                type: ToastType.error,
+              );
+              
+              // Show subscription page for upgrade
+              await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (ctx) => const SubscriptionPage(isFromShareFlow: true),
+                ),
+              );
+              Navigator.of(context).pop();
+              return;
+            }
           }
         }
 
@@ -103,13 +124,32 @@ class _GroupJoinQrPageState extends State<GroupJoinQrPage> {
           if (!_subscriptionStatus!.canAddParticipant(participantCount)) {
             if (mounted) {
               final limits = _subscriptionStatus!.limits;
-              AppToast.show(
-                context,
-                'This group has ${participantCount} participants. Your ${_subscriptionStatus!.tier.name.toUpperCase()} plan allows maximum ${limits.maxParticipantsPerGroup} participants per group. Upgrade to PREMIUM for unlimited participants.',
-                type: ToastType.error,
-              );
-              Navigator.of(context).pop();
-              return;
+              
+              // Show donation page if RevenueCat not configured, otherwise show upgrade option
+              if (!_revenueCat.isConfigured) {
+                await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (ctx) => const DonationPage(isFromUpgradeFlow: true),
+                  ),
+                );
+                Navigator.of(context).pop();
+                return;
+              } else {
+                AppToast.show(
+                  context,
+                  'This group has ${participantCount} participants. Your ${_subscriptionStatus!.tier.name.toUpperCase()} plan allows maximum ${limits.maxParticipantsPerGroup} participants per group. Upgrade to PREMIUM for unlimited participants.',
+                  type: ToastType.error,
+                );
+                
+                // Show subscription page for upgrade
+                await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (ctx) => const SubscriptionPage(isFromShareFlow: true),
+                  ),
+                );
+                Navigator.of(context).pop();
+                return;
+              }
             }
           }
         }

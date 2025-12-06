@@ -35,6 +35,7 @@ export 'pages/device_management_page.dart';
 export 'pages/key_backup_page.dart';
 export 'pages/auth_page.dart';
 export 'pages/subscription_page.dart';
+export 'pages/donation_page.dart';
 
 // Utilities
 export 'utils/auth_guard.dart';

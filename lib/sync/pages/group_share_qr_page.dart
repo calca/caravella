@@ -10,6 +10,7 @@ import '../models/subscription_tier.dart';
 import '../widgets/qr_display_widget.dart';
 import '../../widgets/toast.dart';
 import 'subscription_page.dart';
+import 'donation_page.dart';
 
 /// Page for sharing a group via QR code
 class GroupShareQrPage extends StatefulWidget {
@@ -106,13 +107,32 @@ class _GroupShareQrPageState extends State<GroupShareQrPage> {
       if (!_subscriptionStatus!.canShareGroup(syncedGroups)) {
         if (mounted) {
           final limits = _subscriptionStatus!.limits;
-          AppToast.show(
-            context,
-            'You have reached the maximum of ${limits.maxSharedGroups} shared groups for your ${_subscriptionStatus!.tier.name.toUpperCase()} plan.',
-            type: ToastType.error,
-          );
-          Navigator.of(context).pop();
-          return;
+          
+          // Show donation page if RevenueCat not configured, otherwise show upgrade prompt
+          if (!_revenueCat.isConfigured) {
+            await Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (ctx) => const DonationPage(isFromUpgradeFlow: true),
+              ),
+            );
+            Navigator.of(context).pop();
+            return;
+          } else {
+            AppToast.show(
+              context,
+              'You have reached the maximum of ${limits.maxSharedGroups} shared groups for your ${_subscriptionStatus!.tier.name.toUpperCase()} plan.',
+              type: ToastType.error,
+            );
+            
+            // Show subscription page for upgrade
+            await Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (ctx) => const SubscriptionPage(isFromShareFlow: true),
+              ),
+            );
+            Navigator.of(context).pop();
+            return;
+          }
         }
       }
 
@@ -121,13 +141,32 @@ class _GroupShareQrPageState extends State<GroupShareQrPage> {
       if (!_subscriptionStatus!.canAddParticipant(participantCount)) {
         if (mounted) {
           final limits = _subscriptionStatus!.limits;
-          AppToast.show(
-            context,
-            'This group has ${participantCount} participants. Your ${_subscriptionStatus!.tier.name.toUpperCase()} plan allows maximum ${limits.maxParticipantsPerGroup} participants per group.',
-            type: ToastType.error,
-          );
-          Navigator.of(context).pop();
-          return;
+          
+          // Show donation page if RevenueCat not configured, otherwise show upgrade prompt
+          if (!_revenueCat.isConfigured) {
+            await Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (ctx) => const DonationPage(isFromUpgradeFlow: true),
+              ),
+            );
+            Navigator.of(context).pop();
+            return;
+          } else {
+            AppToast.show(
+              context,
+              'This group has ${participantCount} participants. Your ${_subscriptionStatus!.tier.name.toUpperCase()} plan allows maximum ${limits.maxParticipantsPerGroup} participants per group.',
+              type: ToastType.error,
+            );
+            
+            // Show subscription page for upgrade
+            await Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (ctx) => const SubscriptionPage(isFromShareFlow: true),
+              ),
+            );
+            Navigator.of(context).pop();
+            return;
+          }
         }
       }
     } catch (e) {
