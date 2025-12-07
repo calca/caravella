@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Markdown export format for expense groups with comprehensive statistics and expenses table
+  - Includes group header with title, period, currency, and participant count
+  - Statistics section with total expenses, per-participant breakdown, per-category breakdown, and settlement calculations
+  - Expenses table with all expense details (description, amount, paid by, category, date)
+  - Available in all supported languages (EN, IT, ES, PT, ZH)
 - Tab-based navigation in group edit page with four segments: General, Participants, Categories, and Other settings
 - Media attachments support for expenses with image, PDF, and video file types (max 5 per expense)
 - Attachment picker with camera, gallery, and file selection options
