@@ -759,4 +759,6 @@
   ,"@expense_readonly": {"description": "Titolo per una spesa in modalità sola lettura"}
   ,"expense_readonly_archived": "Questa spesa appartiene a un gruppo archiviato e non può essere modificata."
   ,"@expense_readonly_archived": {"description": "Messaggio che spiega che una spesa non può essere modificata perché il gruppo è archiviato"}
+  ,"expense": "Spesa"
+  ,"@expense": {"description": "Titolo generico per una spesa"}
 }

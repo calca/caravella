@@ -774,4 +774,6 @@
   ,"@expense_readonly": {"description": "Título para un gasto en modo solo lectura"}
   ,"expense_readonly_archived": "Este gasto pertenece a un grupo archivado y no se puede modificar."
   ,"@expense_readonly_archived": {"description": "Mensaje que explica que un gasto no se puede modificar porque el grupo está archivado"}
+  ,"expense": "Gasto"
+  ,"@expense": {"description": "Título genérico para un gasto"}
 }

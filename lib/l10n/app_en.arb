@@ -795,4 +795,6 @@
   ,"@expense_readonly": {"description": "Title for an expense in read-only mode"}
   ,"expense_readonly_archived": "This expense belongs to an archived group and cannot be modified."
   ,"@expense_readonly_archived": {"description": "Message explaining that an expense cannot be modified because the group is archived"}
+  ,"expense": "Expense"
+  ,"@expense": {"description": "Generic title for an expense"}
 }

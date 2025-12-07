@@ -738,4 +738,6 @@
   ,"@expense_readonly": {"description": "Título para uma despesa no modo somente leitura"}
   ,"expense_readonly_archived": "Esta despesa pertence a um grupo arquivado e não pode ser modificada."
   ,"@expense_readonly_archived": {"description": "Mensagem explicando que uma despesa não pode ser modificada porque o grupo está arquivado"}
+  ,"expense": "Despesa"
+  ,"@expense": {"description": "Título genérico para uma despesa"}
 }
