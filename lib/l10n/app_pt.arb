@@ -164,14 +164,14 @@
   "no_search_results": "Nenhum grupo encontrado para",
   "active": "Ativo",
   "archive": "Arquivar",
-  "pin": "Fixar",
-  "unpin": "Desfixar",
+  "pin": "Favorito",
+  "unpin": "Desfavorito",
   "delete": "Excluir",
   "undo": "DESFAZER",
   "archived_with_undo": "Arquivado",
   "unarchived_with_undo": "Desarquivado",
-  "pinned_with_undo": "Fixado",
-  "unpinned_with_undo": "Desfixado",
+  "pinned_with_undo": "Adicionado aos favoritos",
+  "unpinned_with_undo": "Removido dos favoritos",
   "deleted_with_undo": "Excluído",
   "archive_confirm": "Deseja arquivar",
   "overview": "Visão geral",
@@ -263,7 +263,7 @@
   "edit_group_desc": "Modificar configurações, participantes e categorias do grupo",
   "new_group_desc": "Criar um novo grupo de despesas com configurações personalizadas",
   "delete_group_confirm": "Tem certeza de que deseja excluir este grupo de despesas? Esta ação não pode ser desfeita.",
-  "pin_group": "Fixar grupo",
+  "pin_group": "Adicionar aos favoritos",
   "pin": "Fixar",
   "theme_light": "Claro",
   "developed_by": "Desenvolvido por calca",
@@ -674,7 +674,7 @@
   ,"try_different_search": "Tente pesquisar com palavras diferentes"
   ,"unarchive": "Desarquivar"
   ,"unarchive_confirm": "Deseja desarquivar"
-  ,"unpin_group": "Desafixar grupo"
+  ,"unpin_group": "Remover dos favoritos"
   ,"weekly_expenses_chart": "Despesas semanais"
   ,"group_type": "Tipo"
   ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
