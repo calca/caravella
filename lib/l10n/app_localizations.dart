@@ -152,6 +152,12 @@ abstract class AppLocalizations {
   /// **'M'**
   String get monthlyChartBadge;
 
+  /// Letter indicator for date range chart badge
+  ///
+  /// In en, this message translates to:
+  /// **'D'**
+  String get dateRangeChartBadge;
+
   /// Label for weekly expenses chart
   ///
   /// In en, this message translates to:
@@ -163,6 +169,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Monthly expenses'**
   String get monthlyExpensesChart;
+
+  /// Label for date range expenses chart
+  ///
+  /// In en, this message translates to:
+  /// **'Date range expenses'**
+  String get dateRangeExpensesChart;
 
   /// No description provided for @settings_flag_secure_desc.
   ///
@@ -197,8 +209,134 @@ abstract class AppLocalizations {
   /// No description provided for @select_period_hint.
   ///
   /// In en, this message translates to:
-  /// **'Select a date range'**
+  /// **'Select dates'**
   String get select_period_hint;
+
+  /// No description provided for @suggested_duration.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested duration'**
+  String get suggested_duration;
+
+  /// Number of days
+  ///
+  /// In en, this message translates to:
+  /// **'{count} days'**
+  String days_count(int count);
+
+  /// No description provided for @weekday_mon.
+  ///
+  /// In en, this message translates to:
+  /// **'M'**
+  String get weekday_mon;
+
+  /// No description provided for @weekday_tue.
+  ///
+  /// In en, this message translates to:
+  /// **'T'**
+  String get weekday_tue;
+
+  /// No description provided for @weekday_wed.
+  ///
+  /// In en, this message translates to:
+  /// **'W'**
+  String get weekday_wed;
+
+  /// No description provided for @weekday_thu.
+  ///
+  /// In en, this message translates to:
+  /// **'T'**
+  String get weekday_thu;
+
+  /// No description provided for @weekday_fri.
+  ///
+  /// In en, this message translates to:
+  /// **'F'**
+  String get weekday_fri;
+
+  /// No description provided for @weekday_sat.
+  ///
+  /// In en, this message translates to:
+  /// **'S'**
+  String get weekday_sat;
+
+  /// No description provided for @weekday_sun.
+  ///
+  /// In en, this message translates to:
+  /// **'S'**
+  String get weekday_sun;
+
+  /// No description provided for @month_january.
+  ///
+  /// In en, this message translates to:
+  /// **'January'**
+  String get month_january;
+
+  /// No description provided for @month_february.
+  ///
+  /// In en, this message translates to:
+  /// **'February'**
+  String get month_february;
+
+  /// No description provided for @month_march.
+  ///
+  /// In en, this message translates to:
+  /// **'March'**
+  String get month_march;
+
+  /// No description provided for @month_april.
+  ///
+  /// In en, this message translates to:
+  /// **'April'**
+  String get month_april;
+
+  /// No description provided for @month_may.
+  ///
+  /// In en, this message translates to:
+  /// **'May'**
+  String get month_may;
+
+  /// No description provided for @month_june.
+  ///
+  /// In en, this message translates to:
+  /// **'June'**
+  String get month_june;
+
+  /// No description provided for @month_july.
+  ///
+  /// In en, this message translates to:
+  /// **'July'**
+  String get month_july;
+
+  /// No description provided for @month_august.
+  ///
+  /// In en, this message translates to:
+  /// **'August'**
+  String get month_august;
+
+  /// No description provided for @month_september.
+  ///
+  /// In en, this message translates to:
+  /// **'September'**
+  String get month_september;
+
+  /// No description provided for @month_october.
+  ///
+  /// In en, this message translates to:
+  /// **'October'**
+  String get month_october;
+
+  /// No description provided for @month_november.
+  ///
+  /// In en, this message translates to:
+  /// **'November'**
+  String get month_november;
+
+  /// No description provided for @month_december.
+  ///
+  /// In en, this message translates to:
+  /// **'December'**
+  String get month_december;
 
   /// No description provided for @in_group_prefix.
   ///
@@ -247,6 +385,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Share all (OFX)'**
   String get share_all_ofx;
+
+  /// No description provided for @download_all_markdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Download all (Markdown)'**
+  String get download_all_markdown;
+
+  /// No description provided for @share_all_markdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Share all (Markdown)'**
+  String get share_all_markdown;
+
+  /// No description provided for @markdown_select_directory_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Select folder to save Markdown'**
+  String get markdown_select_directory_title;
+
+  /// Toast message when Markdown export is saved
+  ///
+  /// In en, this message translates to:
+  /// **'Markdown saved in: {path}'**
+  String markdown_saved_in(String path);
+
+  /// No description provided for @markdown_save_cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Markdown export cancelled'**
+  String get markdown_save_cancelled;
+
+  /// No description provided for @markdown_save_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving Markdown file'**
+  String get markdown_save_error;
 
   /// No description provided for @share_label.
   ///
@@ -343,6 +517,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'New Expense Group'**
   String get new_expense_group;
+
+  /// No description provided for @new_expense.
+  ///
+  /// In en, this message translates to:
+  /// **'New Expense'**
+  String get new_expense;
+
+  /// No description provided for @edit_expense.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit expense'**
+  String get edit_expense;
 
   /// No description provided for @tap_to_create.
   ///
@@ -463,6 +649,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Optional start and end'**
   String get dates_description;
+
+  /// No description provided for @select_period.
+  ///
+  /// In en, this message translates to:
+  /// **'Select period'**
+  String get select_period;
+
+  /// No description provided for @select_period_dates.
+  ///
+  /// In en, this message translates to:
+  /// **'Select the period dates'**
+  String get select_period_dates;
+
+  /// Label for duration in days
+  ///
+  /// In en, this message translates to:
+  /// **'{days} days'**
+  String duration_days(int days);
+
+  /// Formatted period
+  ///
+  /// In en, this message translates to:
+  /// **'From {start} to {end} ({days} days)'**
+  String period_from_to(String start, String end, int days);
+
+  /// Period with only start date
+  ///
+  /// In en, this message translates to:
+  /// **'From {start} - Select end'**
+  String period_from_select_end(String start);
+
+  /// Period with only end date
+  ///
+  /// In en, this message translates to:
+  /// **'To {end} - Select start'**
+  String period_to_select_start(String end);
+
+  /// No description provided for @confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirm;
+
+  /// No description provided for @clear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clear;
 
   /// No description provided for @currency_description.
   ///
@@ -599,7 +833,7 @@ abstract class AppLocalizations {
   /// No description provided for @add_trip.
   ///
   /// In en, this message translates to:
-  /// **'Add group'**
+  /// **'Add a group'**
   String get add_trip;
 
   /// No description provided for @new_group.
@@ -607,6 +841,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'New Group'**
   String get new_group;
+
+  /// No description provided for @group.
+  ///
+  /// In en, this message translates to:
+  /// **'Group'**
+  String get group;
+
+  /// No description provided for @create.
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get create;
 
   /// No description provided for @group_name.
   ///
@@ -715,12 +961,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'New expense'**
   String get add_expense;
-
-  /// No description provided for @edit_expense.
-  ///
-  /// In en, this message translates to:
-  /// **'Edit expense'**
-  String get edit_expense;
 
   /// No description provided for @expand_form.
   ///
@@ -896,6 +1136,30 @@ abstract class AppLocalizations {
   /// **'Categories'**
   String get categories;
 
+  /// No description provided for @other_settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Other settings'**
+  String get other_settings;
+
+  /// No description provided for @other_settings_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Currency, background, and automatic location'**
+  String get other_settings_desc;
+
+  /// No description provided for @segment_general.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get segment_general;
+
+  /// No description provided for @segment_other.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get segment_other;
+
   /// No description provided for @from.
   ///
   /// In en, this message translates to:
@@ -1058,16 +1322,16 @@ abstract class AppLocalizations {
   /// **'Unarchive'**
   String get unarchive;
 
-  /// Action to pin a group to the top
+  /// Action to mark a group as favorite
   ///
   /// In en, this message translates to:
-  /// **'Pin'**
+  /// **'Favorite'**
   String get pin;
 
-  /// Action to unpin a group
+  /// Action to remove favorite mark from a group
   ///
   /// In en, this message translates to:
-  /// **'Unpin'**
+  /// **'Unfavorite'**
   String get unpin;
 
   /// Action to delete a group
@@ -1094,16 +1358,16 @@ abstract class AppLocalizations {
   /// **'Unarchived'**
   String get unarchived_with_undo;
 
-  /// Snackbar message when group is pinned
+  /// Snackbar message when group is marked as favorite
   ///
   /// In en, this message translates to:
-  /// **'Pinned'**
+  /// **'Marked as favorite'**
   String get pinned_with_undo;
 
-  /// Snackbar message when group is unpinned
+  /// Snackbar message when favorite mark is removed from group
   ///
   /// In en, this message translates to:
-  /// **'Unpinned'**
+  /// **'Favorite removed'**
   String get unpinned_with_undo;
 
   /// Snackbar message when group is deleted
@@ -1135,6 +1399,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Statistics'**
   String get statistics;
+
+  /// No description provided for @period.
+  ///
+  /// In en, this message translates to:
+  /// **'Period'**
+  String get period;
+
+  /// No description provided for @total_expenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Total expenses'**
+  String get total_expenses;
+
+  /// No description provided for @number_of_expenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of expenses'**
+  String get number_of_expenses;
 
   /// No description provided for @options.
   ///
@@ -1190,6 +1472,18 @@ abstract class AppLocalizations {
   /// **'Edit Group'**
   String get edit_group;
 
+  /// No description provided for @edit_group_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Modify group settings, participants, and categories'**
+  String get edit_group_desc;
+
+  /// No description provided for @new_group_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a new expense group with custom settings'**
+  String get new_group_desc;
+
   /// No description provided for @delete_group.
   ///
   /// In en, this message translates to:
@@ -1211,13 +1505,13 @@ abstract class AppLocalizations {
   /// No description provided for @pin_group.
   ///
   /// In en, this message translates to:
-  /// **'Pin group'**
+  /// **'Mark as favorite'**
   String get pin_group;
 
   /// No description provided for @unpin_group.
   ///
   /// In en, this message translates to:
-  /// **'Unpin group'**
+  /// **'Remove favorite'**
   String get unpin_group;
 
   /// No description provided for @theme_automatic.
@@ -1469,13 +1763,13 @@ abstract class AppLocalizations {
   /// No description provided for @location.
   ///
   /// In en, this message translates to:
-  /// **'Location'**
+  /// **'Place'**
   String get location;
 
   /// No description provided for @location_hint.
   ///
   /// In en, this message translates to:
-  /// **'Location'**
+  /// **'Place'**
   String get location_hint;
 
   /// No description provided for @get_current_location.
@@ -1526,6 +1820,18 @@ abstract class AppLocalizations {
   /// **'Address resolved'**
   String get address_resolved;
 
+  /// No description provided for @search_place.
+  ///
+  /// In en, this message translates to:
+  /// **'Search place'**
+  String get search_place;
+
+  /// No description provided for @search_place_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for a place or address'**
+  String get search_place_hint;
+
   /// No description provided for @settings_general.
   ///
   /// In en, this message translates to:
@@ -1537,6 +1843,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Language and appearance settings'**
   String get settings_general_desc;
+
+  /// No description provided for @settings_auto_location_section.
+  ///
+  /// In en, this message translates to:
+  /// **'Location Detection'**
+  String get settings_auto_location_section;
+
+  /// No description provided for @settings_auto_location_section_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Configure automatic location detection'**
+  String get settings_auto_location_section_desc;
+
+  /// No description provided for @settings_auto_location_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable to detect'**
+  String get settings_auto_location_title;
+
+  /// No description provided for @settings_auto_location_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Detect GPS when adding an expense'**
+  String get settings_auto_location_desc;
 
   /// No description provided for @settings_language.
   ///
@@ -1603,6 +1933,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select theme'**
   String get settings_select_theme;
+
+  /// No description provided for @settings_dynamic_color.
+  ///
+  /// In en, this message translates to:
+  /// **'Dynamic color'**
+  String get settings_dynamic_color;
+
+  /// No description provided for @settings_dynamic_color_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Use colors from your wallpaper'**
+  String get settings_dynamic_color_desc;
 
   /// No description provided for @settings_privacy_desc.
   ///
@@ -3068,10 +3410,10 @@ abstract class AppLocalizations {
   /// **'Search currency...'**
   String get search_currency;
 
-  /// Section title for expense list recent activity
+  /// Section title for expense list
   ///
   /// In en, this message translates to:
-  /// **'Activity'**
+  /// **'Expenses'**
   String get activity;
 
   /// Placeholder for searching expenses by name or note
@@ -3188,6 +3530,18 @@ abstract class AppLocalizations {
   /// **'Stay up to date with recent improvements'**
   String get whats_new_latest;
 
+  /// Title for the changelog section
+  ///
+  /// In en, this message translates to:
+  /// **'Changelog'**
+  String get changelog_title;
+
+  /// Description for the changelog section
+  ///
+  /// In en, this message translates to:
+  /// **'Version history and improvements'**
+  String get changelog_desc;
+
   /// Label shown before the computed average spent per person in the Participants tab
   ///
   /// In en, this message translates to:
@@ -3211,6 +3565,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'to '**
   String get debt_prefix_to;
+
+  /// Tooltip for the map button to view expenses on a map
+  ///
+  /// In en, this message translates to:
+  /// **'View on map'**
+  String get view_on_map;
+
+  /// Title of the page showing expenses on a map
+  ///
+  /// In en, this message translates to:
+  /// **'Expenses Map'**
+  String get expenses_map;
+
+  /// Message shown when no expenses have location data
+  ///
+  /// In en, this message translates to:
+  /// **'No locations available'**
+  String get no_locations_available;
+
+  /// Subtitle explaining how to add locations
+  ///
+  /// In en, this message translates to:
+  /// **'Add location data to your expenses to see them on the map'**
+  String get no_locations_subtitle;
+
+  /// Label showing number of expenses at a location
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 expense} other{{count} expenses}}'**
+  String expense_count(int count);
+
+  /// Label to check for updates from Google Play Store
+  ///
+  /// In en, this message translates to:
+  /// **'Check for updates'**
+  String get check_for_updates;
+
+  /// Description for update check
+  ///
+  /// In en, this message translates to:
+  /// **'Check for new version availability'**
+  String get check_for_updates_desc;
+
+  /// Title when an update is available
+  ///
+  /// In en, this message translates to:
+  /// **'Update available'**
+  String get update_available;
+
+  /// Description when an update is available
+  ///
+  /// In en, this message translates to:
+  /// **'A new version of the app is available'**
+  String get update_available_desc;
+
+  /// Message when there are no updates
+  ///
+  /// In en, this message translates to:
+  /// **'App up to date'**
+  String get no_update_available;
+
+  /// Description when there are no updates
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re using the latest version'**
+  String get no_update_available_desc;
+
+  /// Button to start the update
+  ///
+  /// In en, this message translates to:
+  /// **'Update now'**
+  String get update_now;
+
+  /// Button to postpone the update
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get update_later;
+
+  /// Message while checking for updates
+  ///
+  /// In en, this message translates to:
+  /// **'Checking for updates...'**
+  String get checking_for_updates;
+
+  /// Error message during update check
+  ///
+  /// In en, this message translates to:
+  /// **'Update check error'**
+  String get update_error;
+
+  /// Message while downloading update
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading...'**
+  String get update_downloading;
+
+  /// Message while installing update
+  ///
+  /// In en, this message translates to:
+  /// **'Installing...'**
+  String get update_installing;
+
+  /// Message explaining the feature is Android-only
+  ///
+  /// In en, this message translates to:
+  /// **'Feature only available on Android with Google Play Store'**
+  String get update_feature_android_only;
+
+  /// Title of bottom sheet to recommend update
+  ///
+  /// In en, this message translates to:
+  /// **'Update recommended'**
+  String get update_recommendation_title;
+
+  /// Description in bottom sheet recommending to update
+  ///
+  /// In en, this message translates to:
+  /// **'A new version of Caravella is available. Update the app to always have the latest features and improvements!'**
+  String get update_recommendation_desc;
+
+  /// Button to install update from bottom sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Install update'**
+  String get update_install;
+
+  /// Button to postpone update from bottom sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Remind me later'**
+  String get update_remind_later;
 
   /// Button label to send a payment reminder to a participant
   ///
@@ -3238,6 +3724,168 @@ abstract class AppLocalizations {
     Object groupName,
     Object debtsList,
   );
+
+  /// Label for expense group type
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get group_type;
+
+  /// Description for group type selection
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the group type'**
+  String get group_type_description;
+
+  /// Group type: travel
+  ///
+  /// In en, this message translates to:
+  /// **'Travel'**
+  String get group_type_travel;
+
+  /// Group type: personal
+  ///
+  /// In en, this message translates to:
+  /// **'Personal'**
+  String get group_type_personal;
+
+  /// Group type: family
+  ///
+  /// In en, this message translates to:
+  /// **'Family'**
+  String get group_type_family;
+
+  /// Group type: other
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get group_type_other;
+
+  /// Default category for travel group type
+  ///
+  /// In en, this message translates to:
+  /// **'Transport'**
+  String get category_travel_transport;
+
+  /// Default category for travel group type
+  ///
+  /// In en, this message translates to:
+  /// **'Accommodation'**
+  String get category_travel_accommodation;
+
+  /// Default category for travel group type
+  ///
+  /// In en, this message translates to:
+  /// **'Restaurants'**
+  String get category_travel_restaurants;
+
+  /// Default category for personal group type
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping'**
+  String get category_personal_shopping;
+
+  /// Default category for personal group type
+  ///
+  /// In en, this message translates to:
+  /// **'Health'**
+  String get category_personal_health;
+
+  /// Default category for personal group type
+  ///
+  /// In en, this message translates to:
+  /// **'Entertainment'**
+  String get category_personal_entertainment;
+
+  /// Default category for family group type
+  ///
+  /// In en, this message translates to:
+  /// **'Groceries'**
+  String get category_family_groceries;
+
+  /// Default category for family group type
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get category_family_home;
+
+  /// Default category for family group type
+  ///
+  /// In en, this message translates to:
+  /// **'Bills'**
+  String get category_family_bills;
+
+  /// Default category for other group type
+  ///
+  /// In en, this message translates to:
+  /// **'Miscellaneous'**
+  String get category_other_misc;
+
+  /// Default category for other group type
+  ///
+  /// In en, this message translates to:
+  /// **'Utilities'**
+  String get category_other_utilities;
+
+  /// Default category for other group type
+  ///
+  /// In en, this message translates to:
+  /// **'Services'**
+  String get category_other_services;
+
+  /// Label for expense attachments
+  ///
+  /// In en, this message translates to:
+  /// **'Attachments'**
+  String get attachments;
+
+  /// Button to add an attachment
+  ///
+  /// In en, this message translates to:
+  /// **'Add attachment'**
+  String get add_attachment;
+
+  /// Error message when trying to add more than 5 attachments
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum limit of 5 attachments reached'**
+  String get attachment_limit_reached;
+
+  /// Action to delete an attachment
+  ///
+  /// In en, this message translates to:
+  /// **'Delete attachment'**
+  String get delete_attachment;
+
+  /// Action to share an attachment
+  ///
+  /// In en, this message translates to:
+  /// **'Share attachment'**
+  String get share_attachment;
+
+  /// Delete attachment confirmation dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete attachment'**
+  String get delete_attachment_confirm_title;
+
+  /// Delete attachment confirmation dialog message
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this attachment?'**
+  String get delete_attachment_confirm_message;
+
+  /// Title for choosing attachment source
+  ///
+  /// In en, this message translates to:
+  /// **'Choose source'**
+  String get attachment_source;
+
+  /// Option to choose from files
+  ///
+  /// In en, this message translates to:
+  /// **'From files'**
+  String get from_files;
 }
 
 class _AppLocalizationsDelegate

@@ -49,5 +49,7 @@
 	<string>This app needs access to camera to take photos for expense groups.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app needs access to photo library to select images for expense groups.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app needs access to your location to tag expenses with their location context.</string>
 </dict>
 </plist>

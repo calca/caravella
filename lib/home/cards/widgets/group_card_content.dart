@@ -1,15 +1,11 @@
-import '../../../widgets/charts/weekly_expense_chart.dart';
-import '../../../widgets/charts/monthly_expense_chart.dart';
-import '../../../widgets/charts/date_range_expense_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../../state/expense_group_notifier.dart';
-import '../../../data/model/expense_group.dart';
 import '../../../manager/details/widgets/expense_entry_sheet.dart';
-import '../../../data/expense_group_storage_v2.dart';
-import '../../../widgets/app_toast.dart';
-import '../../../widgets/currency_display.dart';
+import '../../../manager/expense/pages/expense_form_page.dart';
+import '../../../manager/expense/state/expense_form_state.dart';
 import '../../../manager/details/pages/tabs/usecase/daily_totals_utils.dart';
 
 class GroupCardContent extends StatelessWidget {
@@ -72,8 +68,10 @@ class GroupCardContent extends StatelessWidget {
       builder: (context) => Consumer<ExpenseGroupNotifier>(
         builder: (context, groupNotifier, child) {
           final currentGroup = groupNotifier.currentGroup ?? group;
-          return ExpenseEntrySheet(
+          return _ExpenseEntrySheetWithState(
             group: currentGroup,
+            fullEdit: false,
+            showGroupHeader: false,
             onExpenseSaved: (expense) async {
               final sheetCtx = context;
               final nav = Navigator.of(sheetCtx);
@@ -93,6 +91,9 @@ class GroupCardContent extends StatelessWidget {
               await groupNotifier.refreshGroup();
               groupNotifier.notifyGroupUpdated(currentGroup.id);
 
+              // Check if we should prompt for rating
+              RatingService.checkAndPromptForRating();
+
               if (!sheetCtx.mounted) return;
               AppToast.show(
                 sheetCtx,
@@ -101,10 +102,15 @@ class GroupCardContent extends StatelessWidget {
               );
               nav.pop();
             },
-            onCategoryAdded: (newCategory) async {
-              await groupNotifier.addCategory(newCategory);
+            onCategoryAdded: (categoryName) async {
+              await notifier.addCategory(categoryName);
             },
-            fullEdit: false,
+            onExpand: (currentState) {
+              // Chiudi il bottom sheet
+              Navigator.of(context).pop();
+              // Apri la full page con lo stato corrente
+              _openFullExpenseForm(context, currentGroup, currentState);
+            },
           );
         },
       ),
@@ -112,6 +118,79 @@ class GroupCardContent extends StatelessWidget {
       // Pulisci il notifier quando il dialog si chiude
       notifier.clearCurrentGroup();
     });
+  }
+
+  void _openFullExpenseForm(
+    BuildContext context,
+    ExpenseGroup currentGroup,
+    ExpenseFormState? partialState,
+  ) {
+    final notifier = Provider.of<ExpenseGroupNotifier>(context, listen: false);
+    notifier.setCurrentGroup(currentGroup);
+
+    // Crea un expense parziale dallo stato se presente
+    ExpenseDetails? partialExpense;
+    if (partialState != null) {
+      partialExpense = ExpenseDetails(
+        id: null,
+        name: partialState.name.isEmpty ? null : partialState.name,
+        amount: partialState.amount,
+        paidBy: partialState.paidBy!,
+        category: partialState.category!,
+        date: partialState.date,
+        location: partialState.location,
+        note: partialState.note.isEmpty ? null : partialState.note,
+        attachments: partialState.attachments,
+      );
+    }
+
+    Navigator.of(context)
+        .push(
+          MaterialPageRoute(
+            builder: (context) => Consumer<ExpenseGroupNotifier>(
+              builder: (context, groupNotifier, child) {
+                final currentGroup = groupNotifier.currentGroup ?? group;
+                return ExpenseFormPage(
+                  group: currentGroup,
+                  initialExpense: partialExpense,
+                  onExpenseSaved: (expense) async {
+                    final pageCtx = context;
+                    final nav = Navigator.of(pageCtx);
+                    final gloc = gen.AppLocalizations.of(pageCtx);
+
+                    final expenseWithId = expense.copyWith(
+                      id: DateTime.now().millisecondsSinceEpoch.toString(),
+                    );
+
+                    await ExpenseGroupStorageV2.addExpenseToGroup(
+                      currentGroup.id,
+                      expenseWithId,
+                    );
+
+                    await groupNotifier.refreshGroup();
+                    groupNotifier.notifyGroupUpdated(currentGroup.id);
+
+                    RatingService.checkAndPromptForRating();
+
+                    if (!pageCtx.mounted) return;
+                    AppToast.show(
+                      pageCtx,
+                      gloc.expense_added_success,
+                      type: ToastType.success,
+                    );
+                    nav.pop();
+                  },
+                  onCategoryAdded: (categoryName) async {
+                    await notifier.addCategory(categoryName);
+                  },
+                );
+              },
+            ),
+          ),
+        )
+        .whenComplete(() {
+          notifier.clearCurrentGroup();
+        });
   }
 
   // Computed properties memoizzate per performance
@@ -145,7 +224,7 @@ class GroupCardContent extends StatelessWidget {
             _buildTotalAmount(context, currentGroup),
             const SizedBox(height: _largSpacing),
             const Spacer(),
-            _buildStatistics(currentGroup),
+            _buildStatistics(context, currentGroup),
             const SizedBox(height: 24),
             _buildAddButton(context, currentGroup),
           ],
@@ -358,51 +437,62 @@ class GroupCardContent extends StatelessWidget {
     );
   }
 
-  Widget _buildStatistics(ExpenseGroup currentGroup) {
+  Widget _buildStatistics(BuildContext context, ExpenseGroup currentGroup) {
     // Check if we should show date range chart for groups with dates < 1 month
     if (shouldShowDateRangeChart(currentGroup)) {
       return _buildDateRangeStatistics(currentGroup);
     }
 
     // Default behavior: show weekly + monthly charts
-    return _buildDefaultStatistics(currentGroup);
+    return _buildDefaultStatistics(context, currentGroup);
   }
 
   Widget _buildDateRangeStatistics(ExpenseGroup currentGroup) {
-    final startDate = currentGroup.startDate!;
-    final endDate = currentGroup.endDate!;
-    final duration = endDate.difference(startDate).inDays + 1; // inclusive
-
-    // Usa il metodo ottimizzato per calcolare i totali giornalieri
-    final dailyTotals = calculateDailyTotalsOptimized(
-      currentGroup,
-      startDate,
-      duration,
-    );
+    // Usa il metodo adattivo che gestisce sia gruppi con date che senza
+    final dailyTotals = buildAdaptiveDateRangeSeries(currentGroup);
 
     return Column(
       children: [
         // Extra info for short duration trips
         _buildExtraInfo(currentGroup),
-        DateRangeExpenseChart(dailyTotals: dailyTotals, theme: theme),
+        DateRangeExpenseChart(
+          dailyTotals: dailyTotals,
+          theme: theme,
+          badgeText: localizations.dateRangeChartBadge,
+          semanticLabel: localizations.dateRangeExpensesChart,
+        ),
       ],
     );
   }
 
-  Widget _buildDefaultStatistics(ExpenseGroup currentGroup) {
+  Widget _buildDefaultStatistics(
+    BuildContext context,
+    ExpenseGroup currentGroup,
+  ) {
     // Serie settimanale e mensile tramite helper condivisi
     final dailyTotals = buildWeeklySeries(currentGroup);
     final dailyMonthTotals = buildMonthlySeries(currentGroup);
+    final gloc = gen.AppLocalizations.of(context);
 
     // Statistiche base
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Settimana
-        WeeklyExpenseChart(dailyTotals: dailyTotals, theme: theme),
+        WeeklyExpenseChart(
+          dailyTotals: dailyTotals,
+          theme: theme,
+          badgeText: gloc.weeklyChartBadge,
+          semanticLabel: gloc.weeklyExpensesChart,
+        ),
         const SizedBox(height: 16),
         // Mese
-        MonthlyExpenseChart(dailyTotals: dailyMonthTotals, theme: theme),
+        MonthlyExpenseChart(
+          dailyTotals: dailyMonthTotals,
+          theme: theme,
+          badgeText: gloc.monthlyChartBadge,
+          semanticLabel: gloc.monthlyExpensesChart,
+        ),
       ],
     );
   }
@@ -436,6 +526,59 @@ class GroupCardContent extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Stateful wrapper for ExpenseEntrySheet to manage form validity
+class _ExpenseEntrySheetWithState extends StatefulWidget {
+  final ExpenseGroup group;
+  final void Function(ExpenseDetails) onExpenseSaved;
+  final void Function(String) onCategoryAdded;
+  final bool fullEdit;
+  final void Function(ExpenseFormState)? onExpand;
+  final bool showGroupHeader;
+
+  const _ExpenseEntrySheetWithState({
+    required this.group,
+    required this.onExpenseSaved,
+    required this.onCategoryAdded,
+    this.fullEdit = true,
+    this.onExpand,
+    this.showGroupHeader = true,
+  });
+
+  @override
+  State<_ExpenseEntrySheetWithState> createState() =>
+      _ExpenseEntrySheetWithStateState();
+}
+
+class _ExpenseEntrySheetWithStateState
+    extends State<_ExpenseEntrySheetWithState> {
+  bool _isFormValid = false;
+
+  void _updateFormValidity(bool isValid) {
+    if (mounted && _isFormValid != isValid) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          setState(() {
+            _isFormValid = isValid;
+          });
+        }
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ExpenseEntrySheet(
+      group: widget.group,
+      onExpenseSaved: widget.onExpenseSaved,
+      onCategoryAdded: widget.onCategoryAdded,
+      fullEdit: widget.fullEdit,
+      onExpand: widget.onExpand,
+      showGroupHeader: widget.showGroupHeader,
+      onFormValidityChanged: _updateFormValidity,
     );
   }
 }

@@ -14,14 +14,38 @@
   "@license_section_desc": {"description": "Descrizione sezione per link licenza in DeveloperPage"},
   "weeklyChartBadge": "S",
   "monthlyChartBadge": "M",
+  "dateRangeChartBadge": "G",
   "weeklyExpensesChart": "Spese settimanali",
   "monthlyExpensesChart": "Spese mensili",
+  "dateRangeExpensesChart": "Spese per periodo",
   "settings_flag_secure_desc": "Impedisce screenshot e registrazione schermo",
   "settings_flag_secure_title": "Proteggi schermata",
   "settings_privacy": "Privacy",
   "select_currency": "Seleziona valuta",
   "select_period_hint_short": "Imposta date",
-  "select_period_hint": "Seleziona un intervallo di date",
+  "select_period_hint": "Seleziona le date",
+  "suggested_duration": "Durata suggerita",
+  "days_count": "{count} giorni",
+  "@days_count": {"description": "Numero di giorni", "placeholders": {"count": {"type": "int"}}},
+  "weekday_mon": "L",
+  "weekday_tue": "M",
+  "weekday_wed": "M",
+  "weekday_thu": "G",
+  "weekday_fri": "V",
+  "weekday_sat": "S",
+  "weekday_sun": "D",
+  "month_january": "Gennaio",
+  "month_february": "Febbraio",
+  "month_march": "Marzo",
+  "month_april": "Aprile",
+  "month_may": "Maggio",
+  "month_june": "Giugno",
+  "month_july": "Luglio",
+  "month_august": "Agosto",
+  "month_september": "Settembre",
+  "month_october": "Ottobre",
+  "month_november": "Novembre",
+  "month_december": "Dicembre",
   "in_group_prefix": "in",
   "save_change_expense": "Salva modifiche",
   "group_total": "Totale",
@@ -31,6 +55,12 @@
   "share_all_csv": "Condividi tutto (CSV)",
   "download_all_ofx": "Scarica tutto (OFX)",
   "share_all_ofx": "Condividi tutto (OFX)",
+  "download_all_markdown": "Scarica tutto (Markdown)",
+  "share_all_markdown": "Condividi tutto (Markdown)",
+  "markdown_select_directory_title": "Seleziona cartella per salvare Markdown",
+  "markdown_saved_in": "Markdown salvato in: {path}",
+  "markdown_save_cancelled": "Esportazione Markdown annullata",
+  "markdown_save_error": "Errore nel salvataggio del file Markdown",
   "share_label": "Condividi",
   "share_text_label": "Condividi testo",
   "share_image_label": "Condividi immagine",
@@ -46,6 +76,8 @@
   "no_active_groups_subtitle": "Crea un gruppo di spese",
   "create_first_group": "Crea un gruppo",
   "new_expense_group": "Nuovo Gruppo di Spese",
+  "new_expense": "Nuova spesa",
+  "edit_expense": "Modifica spesa",
   "tap_to_create": "Tocca per creare",
   "no_expense_label": "Nessuna spesa trovata",
   "image": "Immagine",
@@ -64,6 +96,19 @@
   "participants_description": "Persone che condividono spese",
   "categories_description": "Organizza spese per tipo",
   "dates_description": "Date inizio/fine opzionali",
+  "select_period": "Seleziona periodo",
+  "select_period_dates": "Seleziona le date del periodo",
+  "suggested_duration": "Durata suggerita",
+  "duration_days": "{days} giorni",
+  "@duration_days": {"description": "Etichetta per durata in giorni", "placeholders": {"days": {"type": "int"}}},
+  "period_from_to": "Dal {start} al {end} ({days} giorni)",
+  "@period_from_to": {"description": "Periodo formattato", "placeholders": {"start": {"type": "String"}, "end": {"type": "String"}, "days": {"type": "int"}}},
+  "period_from_select_end": "Dal {start} - Seleziona fine",
+  "@period_from_select_end": {"description": "Periodo con solo data inizio", "placeholders": {"start": {"type": "String"}}},
+  "period_to_select_start": "Al {end} - Seleziona inizio",
+  "@period_to_select_start": {"description": "Periodo con solo data fine", "placeholders": {"end": {"type": "String"}}},
+  "confirm": "Conferma",
+  "clear": "Cancella",
   "currency_description": "Valuta base del gruppo",
   "background_color_selected": "Colore selezionato",
   "background_tap_to_replace": "Tocca per sostituire",
@@ -89,6 +134,8 @@
   "license_section": "Licenza",
   "add_trip": "Aggiungi un gruppo",
   "new_group": "Nuovo Gruppo",
+  "group": "Gruppo",
+  "create": "Crea",
   "group_name": "Nome",
   "enter_title": "Inserisci un nome",
   "enter_participant": "Inserisci almeno un partecipante",
@@ -153,6 +200,10 @@
   "category_name_semantics": "Categoria: {name}",
   "currency": "Valuta",
   "settings_tab": "Impostazioni",
+  "other_settings": "Altre impostazioni",
+  "other_settings_desc": "Valuta, sfondo e posizione automatica",
+  "segment_general": "Generali",
+  "segment_other": "Altro",
   "basic_info": "Informazioni di base",
   "settings": "Impostazioni",
   "history": "Cronologia",
@@ -183,19 +234,22 @@
   "archived": "Archiviato",
   "archive": "Archivia",
   "unarchive": "Disarchivia",
-  "pin": "Fissa",
-  "unpin": "Rimuovi fissaggio",
+  "pin": "Preferito",
+  "unpin": "Rimuovi preferito",
   "delete": "Elimina",
   "undo": "ANNULLA",
   "archived_with_undo": "Archiviato",
   "unarchived_with_undo": "Disarchiviato",
-  "pinned_with_undo": "Fissato",
-  "unpinned_with_undo": "Fissaggio rimosso",
+  "pinned_with_undo": "Segnato come preferito",
+  "unpinned_with_undo": "Preferito rimosso",
   "deleted_with_undo": "Eliminato",
   "archive_confirm": "Vuoi archiviare",
   "unarchive_confirm": "Vuoi disarchiviare",
   "overview": "Panoramica",
   "statistics": "Statistiche",
+  "period": "Periodo",
+  "total_expenses": "Totale spese",
+  "number_of_expenses": "Numero di spese",
   "options": "Opzioni",
   "show_overview": "Mostra panoramica",
   "show_statistics": "Mostra statistiche",
@@ -205,12 +259,13 @@
   "select_expense_date_short": "Seleziona data",
   "date": "Data",
   "edit_group": "Modifica gruppo",
+  "edit_group_desc": "Modifica impostazioni, partecipanti e categorie del gruppo",
+  "new_group_desc": "Crea un nuovo gruppo spese con impostazioni personalizzate",
   "delete_group": "Elimina gruppo",
   "delete_group_confirm": "Sei sicuro di voler eliminare questo gruppo di spese? Questa azione non può essere annullata.",
   "add_expense_fab": "Aggiungi Spesa",
-  "pin_group": "Aggiungi pin",
-  "unpin_group": "Rimuovi pin",
-  "pin": "Pin",
+  "pin_group": "Segna come preferito",
+  "unpin_group": "Rimuovi preferito",
   "theme_automatic": "Automatico",
   "theme_light": "Chiaro",
   "theme_dark": "Scuro",
@@ -244,9 +299,9 @@
   "csv_category": "Categoria",
   "csv_date": "Data",
   "csv_note": "Nota",
-  "csv_location": "Posizione",
-  "location": "Posizione",
-  "location_hint": "Posizione",
+  "csv_location": "Luogo",
+  "location": "Luogo",
+  "location_hint": "Luogo",
   "get_current_location": "Usa posizione corrente",
   "enter_location_manually": "Inserisci manualmente",
   "location_permission_denied": "Permesso posizione negato",
@@ -255,8 +310,14 @@
   "location_error": "Errore nel rilevare la posizione",
   "resolving_address": "Risolvo indirizzo…",
   "address_resolved": "Indirizzo trovato",
+  "search_place": "Cerca luogo",
+  "search_place_hint": "Cerca un luogo o indirizzo",
   "settings_general": "Generali",
   "settings_general_desc": "Impostazioni lingua e aspetto",
+  "settings_auto_location_section": "Rilevamento posizione",
+  "settings_auto_location_section_desc": "Configura il rilevamento automatico della posizione",
+  "settings_auto_location_title": "Attiva per rilevare",
+  "settings_auto_location_desc": "Rileva GPS quando aggiungi una spesa",
   "settings_language": "Lingua",
   "settings_language_desc": "Scegli la lingua preferita",
   "settings_language_it": "Italiano",
@@ -268,6 +329,8 @@
   "settings_theme": "Tema",
   "settings_theme_desc": "Chiaro, scuro o sistema",
   "settings_select_theme": "Seleziona tema",
+  "settings_dynamic_color": "Colore dinamico",
+  "settings_dynamic_color_desc": "Usa i colori dello sfondo",
   "settings_privacy": "Privacy",
   "settings_privacy_desc": "Opzioni sicurezza e privacy",
   "settings_data": "Dati",
@@ -548,8 +611,8 @@
   ,"currency_ZMW": "Kwacha dello Zambia"
   ,"currency_ZWL": "Dollaro zimbabwiano"
   ,"search_currency": "Cerca valuta..."
-  ,"activity": "Attività"
-  ,"@activity": {"description": "Titolo sezione attività elenco spese"}
+  ,"activity": "Spese"
+  ,"@activity": {"description": "Titolo sezione elenco spese"}
   ,"search_expenses_hint": "Cerca per nome o nota..."
   ,"@search_expenses_hint": {"description": "Placeholder ricerca spese per nome o nota"}
   ,"clear_filters": "Pulisci"
@@ -588,6 +651,10 @@
   ,"@whats_new_subtitle": {"description": "Sottotitolo nella card header della pagina novità"}
   ,"whats_new_latest": "Resta aggiornato con i miglioramenti più recenti"
   ,"@whats_new_latest": {"description": "Testo di supporto che spiega che la lista contiene gli ultimi aggiornamenti"}
+  ,"changelog_title": "Cronologia versioni"
+  ,"@changelog_title": {"description": "Titolo della sezione changelog"}
+  ,"changelog_desc": "Storico delle versioni e miglioramenti"
+  ,"@changelog_desc": {"description": "Descrizione della sezione changelog"}
   ,"average_per_person": "Speso medio per persona"
   ,"@average_per_person": {"description": "Etichetta mostrata prima della media spesa per persona nella tab Partecipanti"}
   ,"more": "altro"
@@ -596,6 +663,40 @@
   ,"@less": {"description": "Etichetta inline per comprimere e mostrare meno elementi"}
   ,"debt_prefix_to": "a "
   ,"@debt_prefix_to": {"description": "Prefisso breve mostrato prima del destinatario nella riga di debito/pareggio (es. 'a Alice 10€')"}
+  ,"check_for_updates": "Controlla aggiornamenti"
+  ,"@check_for_updates": {"description": "Etichetta per controllare aggiornamenti da Google Play Store"}
+  ,"check_for_updates_desc": "Verifica disponibilità nuova versione"
+  ,"@check_for_updates_desc": {"description": "Descrizione per controllo aggiornamenti"}
+  ,"update_available": "Aggiornamento disponibile"
+  ,"@update_available": {"description": "Titolo quando è disponibile un aggiornamento"}
+  ,"update_available_desc": "È disponibile una nuova versione dell'app"
+  ,"@update_available_desc": {"description": "Descrizione quando è disponibile un aggiornamento"}
+  ,"no_update_available": "App aggiornata"
+  ,"@no_update_available": {"description": "Messaggio quando non ci sono aggiornamenti"}
+  ,"no_update_available_desc": "Stai usando l'ultima versione"
+  ,"@no_update_available_desc": {"description": "Descrizione quando non ci sono aggiornamenti"}
+  ,"update_now": "Aggiorna ora"
+  ,"@update_now": {"description": "Pulsante per avviare l'aggiornamento"}
+  ,"update_later": "Più tardi"
+  ,"@update_later": {"description": "Pulsante per rimandare l'aggiornamento"}
+  ,"checking_for_updates": "Verifica aggiornamenti..."
+  ,"@checking_for_updates": {"description": "Messaggio durante verifica aggiornamenti"}
+  ,"update_error": "Errore verifica aggiornamenti"
+  ,"@update_error": {"description": "Messaggio di errore durante verifica aggiornamenti"}
+  ,"update_downloading": "Download in corso..."
+  ,"@update_downloading": {"description": "Messaggio durante download aggiornamento"}
+  ,"update_installing": "Installazione in corso..."
+  ,"@update_installing": {"description": "Messaggio durante installazione aggiornamento"}
+  ,"update_feature_android_only": "Funzione disponibile solo su Android con Google Play Store"
+  ,"@update_feature_android_only": {"description": "Messaggio che spiega che la funzione è solo per Android"}
+  ,"update_recommendation_title": "Aggiornamento consigliato"
+  ,"@update_recommendation_title": {"description": "Titolo del bottom sheet per raccomandare l'aggiornamento"}
+  ,"update_recommendation_desc": "È disponibile una nuova versione di Caravella. Aggiorna l'app per avere sempre le ultime funzionalità e miglioramenti!"
+  ,"@update_recommendation_desc": {"description": "Descrizione nel bottom sheet che consiglia di aggiornare"}
+  ,"update_install": "Installa aggiornamento"
+  ,"@update_install": {"description": "Pulsante per installare l'aggiornamento dal bottom sheet"}
+  ,"update_remind_later": "Ricordamelo dopo"
+  ,"@update_remind_later": {"description": "Pulsante per rimandare l'aggiornamento dal bottom sheet"}
   ,"send_reminder": "Invia promemoria"
   ,"@send_reminder": {"description": "Etichetta del pulsante per inviare un promemoria di pagamento a un partecipante"}
   ,"reminder_message_single": "Ciao {participantName}! 👋\n\nVorrei ricordarti che devi {amount} a {creditorName} per il gruppo \"{groupName}\".\n\nGrazie! 😊"
@@ -614,4 +715,60 @@
   ,"@notification_add_expense": {"description": "Etichetta del pulsante nella notifica per aggiungere una nuova spesa"}
   ,"notification_close": "Chiudi"
   ,"@notification_close": {"description": "Etichetta del pulsante nella notifica per chiudere la notifica"}
+  ,"group_type": "Tipologia"
+  ,"@group_type": {"description": "Etichetta per la tipologia del gruppo di spese"}
+  ,"group_type_description": "Scegli il tipo di gruppo"
+  ,"@group_type_description": {"description": "Descrizione per la selezione della tipologia del gruppo"}
+  ,"group_type_travel": "Viaggio"
+  ,"@group_type_travel": {"description": "Tipologia gruppo: viaggio"}
+  ,"group_type_personal": "Personale"
+  ,"@group_type_personal": {"description": "Tipologia gruppo: personale"}
+  ,"group_type_family": "Famiglia"
+  ,"@group_type_family": {"description": "Tipologia gruppo: famiglia"}
+  ,"group_type_other": "Altro"
+  ,"@group_type_other": {"description": "Tipologia gruppo: altro"}
+  ,"attachments": "Allegati"
+  ,"@attachments": {"description": "Etichetta per gli allegati delle spese"}
+  ,"add_attachment": "Aggiungi allegato"
+  ,"@add_attachment": {"description": "Pulsante per aggiungere un allegato"}
+  ,"attachment_limit_reached": "Limite massimo di 5 allegati raggiunto"
+  ,"@attachment_limit_reached": {"description": "Messaggio di errore quando si tenta di aggiungere più di 5 allegati"}
+  ,"delete_attachment": "Elimina allegato"
+  ,"@delete_attachment": {"description": "Azione per eliminare un allegato"}
+  ,"share_attachment": "Condividi allegato"
+  ,"@share_attachment": {"description": "Azione per condividere un allegato"}
+  ,"delete_attachment_confirm_title": "Elimina allegato"
+  ,"@delete_attachment_confirm_title": {"description": "Titolo dialogo conferma eliminazione allegato"}
+  ,"delete_attachment_confirm_message": "Sei sicuro di voler eliminare questo allegato?"
+  ,"@delete_attachment_confirm_message": {"description": "Messaggio dialogo conferma eliminazione allegato"}
+  ,"attachment_source": "Scegli sorgente"
+  ,"@attachment_source": {"description": "Titolo per scegliere la sorgente dell'allegato"}
+  ,"from_files": "Dai file"
+  ,"@from_files": {"description": "Opzione per scegliere un file"}
+  ,"expenses_map": "Mappa delle spese"
+  ,"@expenses_map": {"description": "Sottotitolo della pagina che mostra le spese su una mappa"}
+  ,"category_travel_transport": "Trasporti"
+  ,"@category_travel_transport": {"description": "Categoria predefinita per gruppo tipo viaggio"}
+  ,"category_travel_accommodation": "Alloggio"
+  ,"@category_travel_accommodation": {"description": "Categoria predefinita per gruppo tipo viaggio"}
+  ,"category_travel_restaurants": "Ristoranti"
+  ,"@category_travel_restaurants": {"description": "Categoria predefinita per gruppo tipo viaggio"}
+  ,"category_personal_shopping": "Shopping"
+  ,"@category_personal_shopping": {"description": "Categoria predefinita per gruppo tipo personale"}
+  ,"category_personal_health": "Salute"
+  ,"@category_personal_health": {"description": "Categoria predefinita per gruppo tipo personale"}
+  ,"category_personal_entertainment": "Intrattenimento"
+  ,"@category_personal_entertainment": {"description": "Categoria predefinita per gruppo tipo personale"}
+  ,"category_family_groceries": "Spesa"
+  ,"@category_family_groceries": {"description": "Categoria predefinita per gruppo tipo famiglia"}
+  ,"category_family_home": "Casa"
+  ,"@category_family_home": {"description": "Categoria predefinita per gruppo tipo famiglia"}
+  ,"category_family_bills": "Bolletta"
+  ,"@category_family_bills": {"description": "Categoria predefinita per gruppo tipo famiglia"}
+  ,"category_other_misc": "Varie"
+  ,"@category_other_misc": {"description": "Categoria predefinita per gruppo tipo altro"}
+  ,"category_other_utilities": "Utilità"
+  ,"@category_other_utilities": {"description": "Categoria predefinita per gruppo tipo altro"}
+  ,"category_other_services": "Servizi"
+  ,"@category_other_services": {"description": "Categoria predefinita per gruppo tipo altro"}
 }
