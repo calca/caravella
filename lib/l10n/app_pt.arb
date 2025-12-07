@@ -264,7 +264,6 @@
   "new_group_desc": "Criar um novo grupo de despesas com configurações personalizadas",
   "delete_group_confirm": "Tem certeza de que deseja excluir este grupo de despesas? Esta ação não pode ser desfeita.",
   "pin_group": "Adicionar aos favoritos",
-  "pin": "Fixar",
   "theme_light": "Claro",
   "developed_by": "Desenvolvido por calca",
   "daily_expenses_chart": "Despesas diárias",
