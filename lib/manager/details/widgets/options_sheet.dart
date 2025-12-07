@@ -39,7 +39,7 @@ class OptionsSheet extends StatelessWidget {
         children: [
           ListTile(
             leading: Icon(
-              trip.pinned ? Icons.push_pin : Icons.push_pin_outlined,
+              trip.pinned ? Icons.favorite : Icons.favorite_border,
               color: trip.archived
                   ? Theme.of(
                       context,

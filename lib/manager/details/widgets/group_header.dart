@@ -148,7 +148,7 @@ class GroupHeader extends StatelessWidget {
                     padding: const EdgeInsets.all(12),
                     child: Icon(
                       trip.pinned
-                          ? Icons.push_pin_outlined
+                          ? Icons.favorite
                           : Icons.archive_outlined,
                       size: circleSize * 0.15,
                       color: colorScheme.onSurface.withValues(alpha: 0.6),

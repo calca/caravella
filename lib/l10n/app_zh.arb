@@ -242,14 +242,14 @@
   "archived": "已归档",
   "archive": "归档",
   "unarchive": "取消归档",
-  "pin": "固定",
-  "unpin": "取消置顶",
+  "pin": "收藏",
+  "unpin": "取消收藏",
   "delete": "删除",
   "undo": "撤销",
   "archived_with_undo": "已归档",
   "unarchived_with_undo": "已取消归档",
-  "pinned_with_undo": "已置顶",
-  "unpinned_with_undo": "已取消置顶",
+  "pinned_with_undo": "已标记为收藏",
+  "unpinned_with_undo": "已移除收藏",
   "deleted_with_undo": "已删除",
   "archive_confirm": "您想要归档吗",
   "unarchive_confirm": "您想取消归档吗",
@@ -272,8 +272,8 @@
   "delete_group": "删除群组",
   "delete_group_confirm": "您确定要删除此支出群组吗？此操作无法撤销。",
   "add_expense_fab": "添加支出",
-  "pin_group": "固定群组",
-  "unpin_group": "取消固定群组",
+  "pin_group": "标记为收藏",
+  "unpin_group": "移除收藏",
   "theme_automatic": "自动",
   "theme_light": "浅色",
   "theme_dark": "深色",
@@ -699,9 +699,9 @@
   ,"delete_group": "删除群组"
   ,"delete_group_confirm": "您确定要删除此支出群组吗？此操作无法撤销。"
   ,"add_expense_fab": "添加支出"
-  ,"pin_group": "固定群组"
-  ,"unpin_group": "取消固定群组"
-  ,"pin": "固定"
+  ,"pin_group": "标记为收藏"
+  ,"unpin_group": "移除收藏"
+  ,"pin": "收藏"
   ,"developed_by": "开发者：calca"
   ,"links": "链接"
   ,"daily_expenses_chart": "每日支出"
