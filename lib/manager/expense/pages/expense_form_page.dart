@@ -93,6 +93,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
+    final isReadOnly = widget.group.archived;
 
     return Scaffold(
       appBar: AppBar(
@@ -107,7 +108,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
               tooltip: gloc.share_label,
               onPressed: _handleShare,
             ),
-            if (widget.onDelete != null)
+            if (widget.onDelete != null && !isReadOnly)
               IconButton(
                 icon: Icon(
                   Icons.delete_outline,
@@ -130,11 +131,41 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SectionHeader(
-                      title: widget.initialExpense != null
-                          ? gloc.edit_expense
-                          : gloc.new_expense,
+                      title: isReadOnly
+                          ? gloc.expense_readonly
+                          : (widget.initialExpense != null
+                              ? gloc.edit_expense
+                              : gloc.new_expense),
                       description: '${gloc.group} ${widget.group.title}',
                     ),
+                    if (isReadOnly) ...[
+                      const SizedBox(height: 12),
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .surfaceContainerHighest,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.info_outline,
+                              size: 20,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                gloc.expense_readonly_archived,
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                     const SizedBox(height: 24),
                     ExpenseFormComponent.legacy(
                       initialExpense: widget.initialExpense,
@@ -154,52 +185,54 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
                       onFormValidityChanged: _updateFormValidity,
                       onSaveCallbackChanged: _updateSaveCallback,
                       groupId: widget.group.id,
+                      isReadOnly: isReadOnly,
                     ),
                   ],
                 ),
               ),
             ),
           ),
-          SafeArea(
-            top: false,
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                border: Border(
-                  top: BorderSide(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.outlineVariant.withValues(alpha: 0.3),
-                    width: 1,
+          if (!isReadOnly)
+            SafeArea(
+              top: false,
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  border: Border(
+                    top: BorderSide(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.outlineVariant.withValues(alpha: 0.3),
+                      width: 1,
+                    ),
                   ),
                 ),
-              ),
-              child: Row(
-                children: [
-                  const Spacer(),
-                  FilledButton(
-                    onPressed: _isFormValid ? _handleSave : null,
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 14,
+                child: Row(
+                  children: [
+                    const Spacer(),
+                    FilledButton(
+                      onPressed: _isFormValid ? _handleSave : null,
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 14,
+                        ),
+                      ),
+                      child: Text(
+                        widget.initialExpense != null
+                            ? gloc.save.toUpperCase()
+                            : gloc.add.toUpperCase(),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 1.2,
+                        ),
                       ),
                     ),
-                    child: Text(
-                      widget.initialExpense != null
-                          ? gloc.save.toUpperCase()
-                          : gloc.add.toUpperCase(),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
         ],
       ),
     );

@@ -751,4 +751,12 @@
   ,"@category_other_utilities": {"description": "Categoria predefinita per gruppo tipo altro"}
   ,"category_other_services": "Servizi"
   ,"@category_other_services": {"description": "Categoria predefinita per gruppo tipo altro"}
+  ,"archived_group_readonly": "Gruppo archiviato - Sola lettura"
+  ,"@archived_group_readonly": {"description": "Messaggio che indica che un gruppo archiviato è in modalità sola lettura"}
+  ,"archived_group_readonly_desc": "Questo gruppo è archiviato. Non è possibile modificarlo o aggiungere nuove spese."
+  ,"@archived_group_readonly_desc": {"description": "Descrizione per gruppo archiviato in modalità sola lettura"}
+  ,"expense_readonly": "Spesa - Sola lettura"
+  ,"@expense_readonly": {"description": "Titolo per una spesa in modalità sola lettura"}
+  ,"expense_readonly_archived": "Questa spesa appartiene a un gruppo archiviato e non può essere modificata."
+  ,"@expense_readonly_archived": {"description": "Messaggio che spiega che una spesa non può essere modificata perché il gruppo è archiviato"}
 }

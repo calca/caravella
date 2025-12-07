@@ -730,4 +730,12 @@
   ,"@attachment_source": {"description": "Título para escolher a fonte do anexo"}
   ,"from_files": "Dos arquivos"
   ,"@from_files": {"description": "Opção para escolher dos arquivos"}
+  ,"archived_group_readonly": "Grupo arquivado - Somente leitura"
+  ,"@archived_group_readonly": {"description": "Mensagem indicando que um grupo arquivado está no modo somente leitura"}
+  ,"archived_group_readonly_desc": "Este grupo está arquivado. Você não pode modificá-lo ou adicionar novas despesas."
+  ,"@archived_group_readonly_desc": {"description": "Descrição para grupo arquivado no modo somente leitura"}
+  ,"expense_readonly": "Despesa - Somente leitura"
+  ,"@expense_readonly": {"description": "Título para uma despesa no modo somente leitura"}
+  ,"expense_readonly_archived": "Esta despesa pertence a um grupo arquivado e não pode ser modificada."
+  ,"@expense_readonly_archived": {"description": "Mensagem explicando que uma despesa não pode ser modificada porque o grupo está arquivado"}
 }

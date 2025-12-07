@@ -14,6 +14,7 @@ class AttachmentInputWidget extends StatefulWidget {
   final Function(String) onAttachmentAdded;
   final Function(int) onAttachmentRemoved;
   final Function(String) onAttachmentTapped;
+  final bool enabled;
 
   const AttachmentInputWidget({
     super.key,
@@ -22,6 +23,7 @@ class AttachmentInputWidget extends StatefulWidget {
     required this.onAttachmentAdded,
     required this.onAttachmentRemoved,
     required this.onAttachmentTapped,
+    this.enabled = true,
   });
 
   @override
@@ -94,10 +96,10 @@ class _AttachmentInputWidgetState extends State<AttachmentInputWidget> {
                 return AttachmentSlot(
                   filePath: attachments[index],
                   onTap: () => widget.onAttachmentTapped(attachments[index]),
-                  onRemove: () {
+                  onRemove: widget.enabled ? () {
                     _stateManager.removeAttachment(index);
                     widget.onAttachmentRemoved(index);
-                  },
+                  } : null,
                 );
               } else if (index == attachments.length &&
                   _stateManager.isProcessing) {
@@ -105,11 +107,11 @@ class _AttachmentInputWidgetState extends State<AttachmentInputWidget> {
                 return _buildLoadingSlot(theme);
               } else {
                 return AttachmentSlot(
-                  onTap: () {
+                  onTap: widget.enabled ? () {
                     if (!_stateManager.isProcessing) {
                       _showAttachmentSourcePicker(context);
                     }
-                  },
+                  } : null,
                 );
               }
             },

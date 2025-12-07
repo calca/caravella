@@ -977,5 +977,21 @@
   "from_files": "从文件",
   "@from_files": {
     "description": "从文件选择的选项"
+  },
+  "archived_group_readonly": "已归档的组 - 只读",
+  "@archived_group_readonly": {
+    "description": "表示已归档的组处于只读模式的消息"
+  },
+  "archived_group_readonly_desc": "该组已归档。您无法修改它或添加新费用。",
+  "@archived_group_readonly_desc": {
+    "description": "只读模式下归档组的描述"
+  },
+  "expense_readonly": "费用 - 只读",
+  "@expense_readonly": {
+    "description": "只读模式下费用的标题"
+  },
+  "expense_readonly_archived": "此费用属于已归档的组，无法修改。",
+  "@expense_readonly_archived": {
+    "description": "解释费用无法修改的消息，因为组已归档"
   }
 }
