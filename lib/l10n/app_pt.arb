@@ -73,6 +73,12 @@
   "share_all_csv": "Compartilhar tudo (CSV)",
   "download_all_ofx": "Baixar tudo (OFX)",
   "share_all_ofx": "Compartilhar tudo (OFX)",
+  "download_all_markdown": "Baixar tudo (Markdown)",
+  "share_all_markdown": "Compartilhar tudo (Markdown)",
+  "markdown_select_directory_title": "Selecionar pasta para salvar Markdown",
+  "markdown_saved_in": "Markdown salvo em: {path}",
+  "markdown_save_cancelled": "Exportação Markdown cancelada",
+  "markdown_save_error": "Erro ao salvar arquivo Markdown",
   "share_label": "Compartilhar",
   "share_text_label": "Compartilhar texto",
   "share_image_label": "Compartilhar imagem",
@@ -669,6 +675,9 @@
   ,"show_overview": "Mostrar visão geral"
   ,"start_date_optional": "De"
   ,"statistics": "Estatísticas"
+  ,"period": "Período"
+  ,"total_expenses": "Total de despesas"
+  ,"number_of_expenses": "Número de despesas"
   ,"theme_automatic": "Automático"
   ,"theme_dark": "Escuro"
   ,"try_different_search": "Tente pesquisar com palavras diferentes"
