@@ -12,11 +12,11 @@ class MarkdownExporter {
     if (group == null || group.expenses.isEmpty) return '';
     final buffer = StringBuffer();
 
-    // Intestazione con le info del gruppo
+    // Header with group info
     buffer.writeln('# ${_escape(group.title)}');
     buffer.writeln();
     
-    // Informazioni generali
+    // General information
     if (group.startDate != null || group.endDate != null) {
       buffer.write('**${loc.period}**: ');
       if (group.startDate != null) {
@@ -37,11 +37,11 @@ class MarkdownExporter {
     buffer.writeln('**${loc.participants}**: ${group.participants.length}');
     buffer.writeln();
 
-    // Sezione statistiche del gruppo
+    // Statistics section
     buffer.writeln('## ${loc.statistics}');
     buffer.writeln();
 
-    // Totale spese
+    // Total expenses
     final totalAmount = group.expenses.fold<double>(
       0.0,
       (sum, expense) => sum + (expense.amount ?? 0.0),
@@ -51,11 +51,11 @@ class MarkdownExporter {
     );
     buffer.writeln();
 
-    // Numero spese
+    // Number of expenses
     buffer.writeln('**${loc.number_of_expenses}**: ${group.expenses.length}');
     buffer.writeln();
 
-    // Statistiche per partecipante
+    // Statistics by participant
     buffer.writeln('### ${loc.expenses_by_participant}');
     buffer.writeln();
     
@@ -71,7 +71,7 @@ class MarkdownExporter {
     }
     buffer.writeln();
 
-    // Statistiche per categoria
+    // Statistics by category
     if (group.categories.isNotEmpty) {
       buffer.writeln('### ${loc.expenses_by_category}');
       buffer.writeln();
@@ -113,17 +113,17 @@ class MarkdownExporter {
       buffer.writeln();
     }
 
-    // Tabella con le spese
+    // Expenses table
     buffer.writeln('## ${loc.expenses}');
     buffer.writeln();
 
-    // Intestazione tabella
+    // Table header
     buffer.writeln(
       '| ${loc.csv_expense_name} | ${loc.csv_amount} | ${loc.csv_paid_by} | ${loc.csv_category} | ${loc.csv_date} |',
     );
     buffer.writeln('|---|---|---|---|---|');
 
-    // Righe spese
+    // Expense rows
     for (final e in group.expenses) {
       buffer.writeln(
         '| ${_escape(e.name ?? '')} | ${CurrencyDisplay.formatCurrencyText(e.amount ?? 0, group.currency)} | ${_escape(e.paidBy.name)} | ${_escape(e.category.name)} | ${_formatDate(e.date)} |',
