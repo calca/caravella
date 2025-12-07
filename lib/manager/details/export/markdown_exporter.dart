@@ -144,7 +144,8 @@ class MarkdownExporter {
     final safeTitle = rawTitle
         .toLowerCase()
         .replaceAll(RegExp(r'[^a-z0-9_-]+'), '_')
-        .replaceAll(RegExp(r'_+'), '_');
+        .replaceAll(RegExp(r'_+'), '_')
+        .replaceAll(RegExp(r'^_+|_+$'), '');
     return '${date}_${safeTitle}_export.md';
   }
 
