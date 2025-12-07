@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import '../model/expense_group.dart';
+import '../../model/expense_group.dart';
 import 'notification_service.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 

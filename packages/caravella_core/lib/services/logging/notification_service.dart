@@ -3,8 +3,8 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import '../model/expense_group.dart';
-import '../../l10n/app_localizations.dart' as gen;
+import '../../model/expense_group.dart';
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
