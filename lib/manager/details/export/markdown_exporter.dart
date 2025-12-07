@@ -3,11 +3,11 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../pages/tabs/usecase/settlements_logic.dart';
 
-/// Utility per generare Markdown per un gruppo di spese.
+/// Utility for generating Markdown export for an expense group.
 class MarkdownExporter {
   const MarkdownExporter._();
 
-  /// Genera il contenuto Markdown. Ritorna stringa vuota se gruppo nullo o senza spese.
+  /// Generates Markdown content. Returns empty string if group is null or has no expenses.
   static String generate(ExpenseGroup? group, gen.AppLocalizations loc) {
     if (group == null || group.expenses.isEmpty) return '';
     final buffer = StringBuffer();
@@ -133,7 +133,7 @@ class MarkdownExporter {
     return buffer.toString();
   }
 
-  /// Costruisce il nome file Markdown nel formato: YYYYMMDD_[titolo]_export.md
+  /// Builds the Markdown filename in the format: YYYYMMDD_[title]_export.md
   static String buildFilename(ExpenseGroup? group, {DateTime? now}) {
     now ??= DateTime.now();
     final date =
@@ -144,8 +144,7 @@ class MarkdownExporter {
     final safeTitle = rawTitle
         .toLowerCase()
         .replaceAll(RegExp(r'[^a-z0-9_-]+'), '_')
-        .replaceAll(RegExp(r'_+'), '_')
-        .trim();
+        .replaceAll(RegExp(r'_+'), '_');
     return '${date}_${safeTitle}_export.md';
   }
 

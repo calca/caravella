@@ -19,7 +19,6 @@ void main() {
     });
 
     test('Markdown should generate empty string for null group', () {
-      // Create a mock localization - we'll use a simple approach
       final result = MarkdownExporter.generate(null, _MockLocalizations());
       expect(result, equals(''));
     });
