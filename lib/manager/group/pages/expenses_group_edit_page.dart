@@ -546,42 +546,6 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
-    final isArchived = widget.trip?.archived ?? false;
-
-    // Show read-only message for archived groups
-    if (isArchived && widget.mode == GroupEditMode.edit) {
-      return Scaffold(
-        appBar: CaravellaAppBar(actions: []),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.archive_outlined,
-                  size: 64,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  gloc.archived_group_readonly,
-                  style: Theme.of(context).textTheme.headlineSmall,
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  gloc.archived_group_readonly_desc,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
-
     return GestureDetector(
       onTap: _unfocusAll,
       behavior: HitTestBehavior.translucent,

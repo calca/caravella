@@ -131,41 +131,11 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SectionHeader(
-                      title: isReadOnly
-                          ? gloc.expense_readonly
-                          : (widget.initialExpense != null
-                              ? gloc.edit_expense
-                              : gloc.new_expense),
+                      title: widget.initialExpense != null
+                          ? gloc.edit_expense
+                          : gloc.new_expense,
                       description: '${gloc.group} ${widget.group.title}',
                     ),
-                    if (isReadOnly) ...[
-                      const SizedBox(height: 12),
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .surfaceContainerHighest,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.info_outline,
-                              size: 20,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Text(
-                                gloc.expense_readonly_archived,
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
                     const SizedBox(height: 24),
                     ExpenseFormComponent.legacy(
                       initialExpense: widget.initialExpense,
