@@ -623,9 +623,125 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
             },
             child: Scaffold(
               appBar: CaravellaAppBar(actions: []),
-              extendBody: true,
-              floatingActionButton: widget.mode == GroupEditMode.create
-                  ? FloatingActionButton.extended(
+              body: Column(
+                children: [
+                  Expanded(
+                    child: Stack(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Form(
+                            key: _formKey,
+                            child: DefaultTextStyle.merge(
+                              style: Theme.of(context).textTheme.bodyMedium,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SectionHeader(
+                                    title: widget.mode == GroupEditMode.edit
+                                        ? gloc.edit_group
+                                        : gloc.new_group,
+                                    description:
+                                        widget.mode == GroupEditMode.edit
+                                        ? gloc.edit_group_desc
+                                        : gloc.new_group_desc,
+                                  ),
+                                  const SizedBox(height: 12),
+                                  CaravellaTabBar(
+                                    controller: _tabController,
+                                    isScrollable: true,
+                                    tabAlignment: TabAlignment.start,
+                                    tabs: [
+                                      Tab(text: gloc.segment_general),
+                                      Tab(text: gloc.participants),
+                                      Tab(text: gloc.categories),
+                                      Tab(text: gloc.segment_other),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 12),
+                                  Expanded(
+                                    child: TabBarView(
+                                      controller: _tabController,
+                                      children: [
+                                        _buildGeneralTab(context),
+                                        _buildParticipantsTab(),
+                                        _buildCategoriesTab(),
+                                        _buildOtherTab(context),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Selector<GroupFormState, bool>(
+                          selector: (_, s) => s.isBusy,
+                          builder: (ctx, busy, _) {
+                            final loc = gen.AppLocalizations.of(ctx);
+                            final state = ctx.read<GroupFormState>();
+                            final message = state.isSaving
+                                ? loc.saving
+                                : loc.processing_image;
+                            return IgnorePointer(
+                              ignoring: !busy,
+                              child: AnimatedOpacity(
+                                opacity: busy ? 1 : 0,
+                                duration: const Duration(milliseconds: 220),
+                                curve: Curves.easeOutQuad,
+                                child: Container(
+                                  color: Theme.of(
+                                    ctx,
+                                  ).colorScheme.surface.withValues(alpha: 0.72),
+                                  child: Center(
+                                    child: AnimatedSwitcher(
+                                      duration: const Duration(
+                                        milliseconds: 260,
+                                      ),
+                                      switchInCurve: Curves.easeOutBack,
+                                      switchOutCurve: Curves.easeIn,
+                                      child: !busy
+                                          ? const SizedBox.shrink()
+                                          : Column(
+                                              key: const ValueKey(
+                                                'busy_overlay',
+                                              ),
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                const SizedBox(
+                                                  width: 46,
+                                                  height: 46,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                        strokeWidth: 3.2,
+                                                      ),
+                                                ),
+                                                const SizedBox(height: 18),
+                                                Text(
+                                                  message,
+                                                  textAlign: TextAlign.center,
+                                                  style: Theme.of(ctx)
+                                                      .textTheme
+                                                      .bodyMedium
+                                                      ?.copyWith(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                ),
+                                              ],
+                                            ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ], // Stack children
+                    ), // Stack
+                  ), // Expanded
+                  if (widget.mode == GroupEditMode.create)
+                    BottomActionBar(
                       onPressed: () async {
                         if (!_formKey.currentState!.validate()) return;
                         if (_dateError != null) return;
@@ -667,113 +783,9 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                           }
                         }
                       },
-                      label: Text(gloc.create),
-                    )
-                  : null,
-              body: Stack(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Form(
-                      key: _formKey,
-                      child: DefaultTextStyle.merge(
-                        style: Theme.of(context).textTheme.bodyMedium,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SectionHeader(
-                              title: widget.mode == GroupEditMode.edit
-                                  ? gloc.edit_group
-                                  : gloc.new_group,
-                              description: widget.mode == GroupEditMode.edit
-                                  ? gloc.edit_group_desc
-                                  : gloc.new_group_desc,
-                            ),
-                            const SizedBox(height: 12),
-                            CaravellaTabBar(
-                              controller: _tabController,
-                              isScrollable: true,
-                              tabAlignment: TabAlignment.start,
-                              tabs: [
-                                Tab(text: gloc.segment_general),
-                                Tab(text: gloc.participants),
-                                Tab(text: gloc.categories),
-                                Tab(text: gloc.segment_other),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
-                            Expanded(
-                              child: TabBarView(
-                                controller: _tabController,
-                                children: [
-                                  _buildGeneralTab(context),
-                                  _buildParticipantsTab(),
-                                  _buildCategoriesTab(),
-                                  _buildOtherTab(context),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      label: gloc.create,
+                      enabled: true,
                     ),
-                  ),
-                  Selector<GroupFormState, bool>(
-                    selector: (_, s) => s.isBusy,
-                    builder: (ctx, busy, _) {
-                      final loc = gen.AppLocalizations.of(ctx);
-                      final state = ctx.read<GroupFormState>();
-                      final message = state.isSaving
-                          ? loc.saving
-                          : loc.processing_image;
-                      return IgnorePointer(
-                        ignoring: !busy,
-                        child: AnimatedOpacity(
-                          opacity: busy ? 1 : 0,
-                          duration: const Duration(milliseconds: 220),
-                          curve: Curves.easeOutQuad,
-                          child: Container(
-                            color: Theme.of(
-                              ctx,
-                            ).colorScheme.surface.withValues(alpha: 0.72),
-                            child: Center(
-                              child: AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 260),
-                                switchInCurve: Curves.easeOutBack,
-                                switchOutCurve: Curves.easeIn,
-                                child: !busy
-                                    ? const SizedBox.shrink()
-                                    : Column(
-                                        key: const ValueKey('busy_overlay'),
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          const SizedBox(
-                                            width: 46,
-                                            height: 46,
-                                            child: CircularProgressIndicator(
-                                              strokeWidth: 3.2,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 18),
-                                          Text(
-                                            message,
-                                            textAlign: TextAlign.center,
-                                            style: Theme.of(ctx)
-                                                .textTheme
-                                                .bodyMedium
-                                                ?.copyWith(
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                          ),
-                                        ],
-                                      ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
                 ],
               ),
             ),

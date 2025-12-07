@@ -1,5 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:caravella_core/caravella_core.dart';
+import 'package:io_caravella_egm/l10n/app_localizations.dart';
 import 'package:io_caravella_egm/manager/details/export/markdown_exporter.dart';
 
 void main() {
@@ -19,7 +21,8 @@ void main() {
     });
 
     test('Markdown should generate empty string for null group', () {
-      final result = MarkdownExporter.generate(null, _MockLocalizations());
+      final localization = lookupAppLocalizations(const Locale('en'));
+      final result = MarkdownExporter.generate(null, localization);
       expect(result, equals(''));
     });
 
@@ -31,29 +34,9 @@ void main() {
         currency: '€',
       );
       
-      final result = MarkdownExporter.generate(group, _MockLocalizations());
+      final localization = lookupAppLocalizations(const Locale('en'));
+      final result = MarkdownExporter.generate(group, localization);
       expect(result, equals(''));
     });
   });
-}
-
-// Mock localization class for testing
-class _MockLocalizations {
-  String get period => 'Period';
-  String get currency => 'Currency';
-  String get participants => 'Participants';
-  String get statistics => 'Statistics';
-  String get total_expenses => 'Total expenses';
-  String get number_of_expenses => 'Number of expenses';
-  String get daily_average => 'Daily average';
-  String get expenses_by_participant => 'By participant';
-  String get expenses_by_category => 'By category';
-  String get settlement => 'Settlement';
-  String get all_balanced => 'All accounts are balanced!';
-  String get expenses => 'Expenses';
-  String get csv_expense_name => 'Description';
-  String get csv_amount => 'Amount';
-  String get csv_paid_by => 'Paid by';
-  String get csv_category => 'Category';
-  String get csv_date => 'Date';
 }

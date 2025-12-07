@@ -160,45 +160,10 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
               ),
             ),
           ),
-          SafeArea(
-            top: false,
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                border: Border(
-                  top: BorderSide(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.outlineVariant.withValues(alpha: 0.3),
-                    width: 1,
-                  ),
-                ),
-              ),
-              child: Row(
-                children: [
-                  const Spacer(),
-                  FilledButton(
-                    onPressed: _isFormValid ? _handleSave : null,
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 14,
-                      ),
-                    ),
-                    child: Text(
-                      widget.initialExpense != null
-                          ? gloc.save.toUpperCase()
-                          : gloc.add.toUpperCase(),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          BottomActionBar(
+            onPressed: _handleSave,
+            label: widget.initialExpense != null ? gloc.save : gloc.add,
+            enabled: _isFormValid,
           ),
         ],
       ),
