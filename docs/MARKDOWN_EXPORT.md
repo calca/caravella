@@ -28,6 +28,8 @@ The Markdown export includes:
    - Paid by
    - Category
    - Date
+   - Note
+   - Location
 
 ## Usage
 
@@ -84,11 +86,11 @@ Example: `20241207_summer_vacation_export.md`
 
 ## Expenses
 
-| Description | Amount | Paid by | Category | Date |
-|---|---|---|---|---|
-| Hotel booking | €500.00 | Alice | Accommodation | 2024-07-01 |
-| Dinner at restaurant | €120.00 | Bob | Food | 2024-07-02 |
-| Train tickets | €150.00 | Alice | Transport | 2024-07-03 |
+| Description | Amount | Paid by | Category | Date | Note | Location |
+|---|---|---|---|---|---|---|
+| Hotel booking | €500.00 | Alice | Accommodation | 2024-07-01 | Two nights | City Center Hotel |
+| Dinner at restaurant | €120.00 | Bob | Food | 2024-07-02 |  | Main Street Restaurant |
+| Train tickets | €150.00 | Alice | Transport | 2024-07-03 | Round trip |  |
 ...
 ```
 

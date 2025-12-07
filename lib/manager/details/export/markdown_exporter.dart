@@ -124,14 +124,14 @@ class MarkdownExporter {
 
     // Table header
     buffer.writeln(
-      '| ${loc.csv_expense_name} | ${loc.csv_amount} | ${loc.csv_paid_by} | ${loc.csv_category} | ${loc.csv_date} |',
+      '| ${loc.csv_expense_name} | ${loc.csv_amount} | ${loc.csv_paid_by} | ${loc.csv_category} | ${loc.csv_date} | ${loc.csv_note} | ${loc.csv_location} |',
     );
-    buffer.writeln('|---|---|---|---|---|');
+    buffer.writeln('|---|---|---|---|---|---|---|');
 
     // Expense rows
     for (final e in group.expenses) {
       buffer.writeln(
-        '| ${_escape(e.name ?? '')} | ${CurrencyDisplay.formatCurrencyText(e.amount ?? 0, group.currency)} | ${_escape(e.paidBy.name)} | ${_escape(e.category.name)} | ${_formatDate(e.date)} |',
+        '| ${_escape(e.name ?? '')} | ${CurrencyDisplay.formatCurrencyText(e.amount ?? 0, group.currency)} | ${_escape(e.paidBy.name)} | ${_escape(e.category.name)} | ${_formatDate(e.date)} | ${_escape(e.note ?? '')} | ${_escape(e.location?.displayText ?? '')} |',
       );
     }
 
