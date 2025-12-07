@@ -55,6 +55,13 @@ class MarkdownExporter {
     buffer.writeln('**${loc.number_of_expenses}**: ${group.expenses.length}');
     buffer.writeln();
 
+    // Daily average
+    final dailyAverage = _calculateDailyAverage(group);
+    buffer.writeln(
+      '**${loc.daily_average}**: ${CurrencyDisplay.formatCurrencyText(dailyAverage, group.currency)}',
+    );
+    buffer.writeln();
+
     // Statistics by participant
     buffer.writeln('### ${loc.expenses_by_participant}');
     buffer.writeln();
@@ -161,5 +168,19 @@ class MarkdownExporter {
     return '${date.year.toString().padLeft(4, '0')}-'
         '${date.month.toString().padLeft(2, '0')}-'
         '${date.day.toString().padLeft(2, '0')}';
+  }
+
+  static double _calculateDailyAverage(ExpenseGroup group) {
+    if (group.expenses.isEmpty) return 0;
+    // Calculate distinct days with at least one expense for fairer average
+    final days = group.expenses
+        .map((e) => DateTime(e.date.year, e.date.month, e.date.day))
+        .toSet()
+        .length;
+    final total = group.expenses.fold<double>(
+      0.0,
+      (sum, expense) => sum + (expense.amount ?? 0.0),
+    );
+    return days == 0 ? 0 : total / days;
   }
 }

@@ -17,6 +17,7 @@ The Markdown export includes:
 2. **Statistics Section**: Group-level statistics
    - Total expenses
    - Number of expenses
+   - Daily average (based on distinct days with expenses)
    - Expenses by participant (amount paid by each)
    - Expenses by category (total per category)
    - Settlement information (who owes whom)
@@ -60,6 +61,8 @@ Example: `20241207_summer_vacation_export.md`
 **Total expenses**: €1,250.00
 
 **Number of expenses**: 8
+
+**Daily average**: €156.25
 
 ### By participant
 

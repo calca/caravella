@@ -45,6 +45,7 @@ class _MockLocalizations {
   String get statistics => 'Statistics';
   String get total_expenses => 'Total expenses';
   String get number_of_expenses => 'Number of expenses';
+  String get daily_average => 'Daily average';
   String get expenses_by_participant => 'By participant';
   String get expenses_by_category => 'By category';
   String get settlement => 'Settlement';
