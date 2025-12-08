@@ -1952,4 +1952,19 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get from_files => '从文件';
+
+  @override
+  String get archived_group_readonly => '已归档的组 - 只读';
+
+  @override
+  String get archived_group_readonly_desc => '该组已归档。您无法修改它或添加新费用。';
+
+  @override
+  String get expense_readonly => '费用 - 只读';
+
+  @override
+  String get expense_readonly_archived => '此费用属于已归档的组，无法修改。';
+
+  @override
+  String get expense => '费用';
 }

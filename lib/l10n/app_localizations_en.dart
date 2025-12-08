@@ -1983,4 +1983,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get from_files => 'From files';
+
+  @override
+  String get archived_group_readonly => 'Archived Group - Read-only';
+
+  @override
+  String get archived_group_readonly_desc =>
+      'This group is archived. You cannot modify it or add new expenses.';
+
+  @override
+  String get expense_readonly => 'Expense - Read-only';
+
+  @override
+  String get expense_readonly_archived =>
+      'This expense belongs to an archived group and cannot be modified.';
+
+  @override
+  String get expense => 'Expense';
 }

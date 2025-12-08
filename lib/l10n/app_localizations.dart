@@ -3886,6 +3886,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'From files'**
   String get from_files;
+
+  /// Message indicating that an archived group is in read-only mode
+  ///
+  /// In en, this message translates to:
+  /// **'Archived Group - Read-only'**
+  String get archived_group_readonly;
+
+  /// Description for archived group in read-only mode
+  ///
+  /// In en, this message translates to:
+  /// **'This group is archived. You cannot modify it or add new expenses.'**
+  String get archived_group_readonly_desc;
+
+  /// Title for an expense in read-only mode
+  ///
+  /// In en, this message translates to:
+  /// **'Expense - Read-only'**
+  String get expense_readonly;
+
+  /// Message explaining that an expense cannot be modified because the group is archived
+  ///
+  /// In en, this message translates to:
+  /// **'This expense belongs to an archived group and cannot be modified.'**
+  String get expense_readonly_archived;
+
+  /// Generic title for an expense
+  ///
+  /// In en, this message translates to:
+  /// **'Expense'**
+  String get expense;
 }
 
 class _AppLocalizationsDelegate

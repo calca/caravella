@@ -1991,4 +1991,21 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get from_files => 'Dos arquivos';
+
+  @override
+  String get archived_group_readonly => 'Grupo arquivado - Somente leitura';
+
+  @override
+  String get archived_group_readonly_desc =>
+      'Este grupo está arquivado. Você não pode modificá-lo ou adicionar novas despesas.';
+
+  @override
+  String get expense_readonly => 'Despesa - Somente leitura';
+
+  @override
+  String get expense_readonly_archived =>
+      'Esta despesa pertence a um grupo arquivado e não pode ser modificada.';
+
+  @override
+  String get expense => 'Despesa';
 }

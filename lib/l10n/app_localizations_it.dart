@@ -1992,4 +1992,21 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get from_files => 'Dai file';
+
+  @override
+  String get archived_group_readonly => 'Gruppo archiviato - Sola lettura';
+
+  @override
+  String get archived_group_readonly_desc =>
+      'Questo gruppo è archiviato. Non è possibile modificarlo o aggiungere nuove spese.';
+
+  @override
+  String get expense_readonly => 'Spesa - Sola lettura';
+
+  @override
+  String get expense_readonly_archived =>
+      'Questa spesa appartiene a un gruppo archiviato e non può essere modificata.';
+
+  @override
+  String get expense => 'Spesa';
 }

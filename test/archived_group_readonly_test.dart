@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:caravella_core/caravella_core.dart';
+import 'package:io_caravella_egm/manager/expense/components/expense_form_config.dart';
 
 void main() {
   group('Archived Group Read-Only Behavior', () {
@@ -32,20 +33,15 @@ void main() {
     });
 
     test('ExpenseFormConfig.edit should accept isReadOnly parameter', () {
+      final participant = ExpenseParticipant(name: 'Test', id: '1');
       final config = ExpenseFormConfig.edit(
         initialExpense: ExpenseDetails(
           id: 'test-expense',
           name: 'Test Expense',
           amount: 100.0,
-          paidBy: ExpenseParticipant(name: 'Test', id: '1'),
+          paidBy: participant,
           category: ExpenseCategory(name: 'Test', id: '1'),
           date: DateTime.now(),
-          participants: [
-            ExpenseParticipantAmount(
-              participant: ExpenseParticipant(name: 'Test', id: '1'),
-              amount: 100.0,
-            ),
-          ],
         ),
         participants: [],
         categories: [],

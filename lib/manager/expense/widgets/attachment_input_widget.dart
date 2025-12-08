@@ -107,11 +107,9 @@ class _AttachmentInputWidgetState extends State<AttachmentInputWidget> {
                 return _buildLoadingSlot(theme);
               } else {
                 return AttachmentSlot(
-                  onTap: widget.enabled ? () {
-                    if (!_stateManager.isProcessing) {
-                      _showAttachmentSourcePicker(context);
-                    }
-                  } : null,
+                  onTap: (widget.enabled && !_stateManager.isProcessing)
+                      ? () => _showAttachmentSourcePicker(context)
+                      : () {}, // no-op when disabled
                 );
               }
             },
