@@ -335,6 +335,46 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
     }
   }
 
+  // Tab validation helpers
+  bool _isGeneralTabValid() {
+    return _state.title.trim().isNotEmpty;
+  }
+
+  bool _isParticipantsTabValid() {
+    return _state.participants.isNotEmpty;
+  }
+
+  bool _isCategoriesTabValid() {
+    return _state.categories.isNotEmpty;
+  }
+
+  Widget _buildTabWithValidation(
+    String label,
+    bool isValid,
+    BuildContext context,
+  ) {
+    return Tab(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(label),
+          const SizedBox(width: 4),
+          Text(
+            '*',
+            style: TextStyle(
+              color: isValid
+                  ? Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.6)
+                  : Theme.of(context).colorScheme.error,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildGeneralTab(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
     return SingleChildScrollView(
@@ -666,16 +706,37 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                                         : gloc.new_group_desc,
                                   ),
                                   const SizedBox(height: 12),
-                                  CaravellaTabBar(
-                                    controller: _tabController,
-                                    isScrollable: true,
-                                    tabAlignment: TabAlignment.start,
-                                    tabs: [
-                                      Tab(text: gloc.segment_general),
-                                      Tab(text: gloc.participants),
-                                      Tab(text: gloc.categories),
-                                      Tab(text: gloc.segment_other),
-                                    ],
+                                  Selector<GroupFormState, int>(
+                                    selector: (_, s) => Object.hash(
+                                      s.title.trim().isEmpty,
+                                      s.participants.isEmpty,
+                                      s.categories.isEmpty,
+                                    ),
+                                    builder: (context, hash, child) {
+                                      return CaravellaTabBar(
+                                        controller: _tabController,
+                                        isScrollable: true,
+                                        tabAlignment: TabAlignment.start,
+                                        tabs: [
+                                          _buildTabWithValidation(
+                                            gloc.segment_general,
+                                            _isGeneralTabValid(),
+                                            context,
+                                          ),
+                                          _buildTabWithValidation(
+                                            gloc.participants,
+                                            _isParticipantsTabValid(),
+                                            context,
+                                          ),
+                                          _buildTabWithValidation(
+                                            gloc.categories,
+                                            _isCategoriesTabValid(),
+                                            context,
+                                          ),
+                                          Tab(text: gloc.segment_other),
+                                        ],
+                                      );
+                                    },
                                   ),
                                   const SizedBox(height: 12),
                                   Expanded(
