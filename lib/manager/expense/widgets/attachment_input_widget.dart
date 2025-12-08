@@ -96,10 +96,12 @@ class _AttachmentInputWidgetState extends State<AttachmentInputWidget> {
                 return AttachmentSlot(
                   filePath: attachments[index],
                   onTap: () => widget.onAttachmentTapped(attachments[index]),
-                  onRemove: widget.enabled ? () {
-                    _stateManager.removeAttachment(index);
-                    widget.onAttachmentRemoved(index);
-                  } : null,
+                  onRemove: widget.enabled
+                      ? () {
+                          _stateManager.removeAttachment(index);
+                          widget.onAttachmentRemoved(index);
+                        }
+                      : null,
                 );
               } else if (index == attachments.length &&
                   _stateManager.isProcessing) {
