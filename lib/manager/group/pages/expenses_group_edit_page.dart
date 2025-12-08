@@ -106,6 +106,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
       });
     } else if (widget.mode == GroupEditMode.create) {
       // For new groups, add user as first participant if name is available
+      // and add default categories for the default group type (personal)
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
           final userNameNotifier = context.read<UserNameNotifier>();
@@ -116,6 +117,24 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                 name: userNameNotifier.name,
               ),
             );
+          }
+
+          // Add default categories for personal type (default type)
+          if (_state.categories.isEmpty &&
+              _state.groupType == ExpenseGroupType.personal) {
+            final gloc = gen.AppLocalizations.of(context);
+            final defaultCategories = _getLocalizedCategories(
+              gloc,
+              ExpenseGroupType.personal,
+            );
+            for (int i = 0; i < defaultCategories.length; i++) {
+              _state.addCategory(
+                ExpenseCategory(
+                  id: '${DateTime.now().millisecondsSinceEpoch}_$i',
+                  name: defaultCategories[i],
+                ),
+              );
+            }
           }
         }
       });
