@@ -741,50 +741,58 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                     ), // Stack
                   ), // Expanded
                   if (widget.mode == GroupEditMode.create)
-                    BottomActionBar(
-                      onPressed: () async {
-                        if (!_formKey.currentState!.validate()) return;
-                        if (_dateError != null) return;
-
-                        final controller = context.read<GroupFormController>();
-                        final navigator = Navigator.of(context);
-                        ExpenseGroupNotifier? notifier;
-                        try {
-                          notifier = context.read<ExpenseGroupNotifier>();
-                        } catch (_) {
-                          notifier = null;
-                        }
-                        final scaffoldMessenger = ScaffoldMessenger.maybeOf(
-                          context,
-                        );
+                    Selector<GroupFormState, bool>(
+                      selector: (_, state) => state.isValid,
+                      builder: (context, isValid, _) {
                         final gloc = gen.AppLocalizations.of(context);
+                        return BottomActionBar(
+                          onPressed: () async {
+                            if (!_formKey.currentState!.validate()) return;
+                            if (_dateError != null) return;
 
-                        try {
-                          final saved = await controller.save();
-                          ExpenseGroupStorageV2.forceReload();
-                          try {
-                            notifier?.notifyGroupUpdated(saved.id);
-                          } catch (_) {}
+                            final controller = context
+                                .read<GroupFormController>();
+                            final navigator = Navigator.of(context);
+                            ExpenseGroupNotifier? notifier;
+                            try {
+                              notifier = context.read<ExpenseGroupNotifier>();
+                            } catch (_) {
+                              notifier = null;
+                            }
+                            final scaffoldMessenger = ScaffoldMessenger.maybeOf(
+                              context,
+                            );
+                            final gloc = gen.AppLocalizations.of(context);
 
-                          if (navigator.canPop()) navigator.pop(saved.id);
-                        } catch (e) {
-                          if (scaffoldMessenger != null && context.mounted) {
-                            AppToast.show(
-                              context,
-                              gloc.backup_error,
-                              type: ToastType.error,
-                            );
-                          } else if (context.mounted) {
-                            AppToast.show(
-                              context,
-                              gloc.backup_error,
-                              type: ToastType.error,
-                            );
-                          }
-                        }
+                            try {
+                              final saved = await controller.save();
+                              ExpenseGroupStorageV2.forceReload();
+                              try {
+                                notifier?.notifyGroupUpdated(saved.id);
+                              } catch (_) {}
+
+                              if (navigator.canPop()) navigator.pop(saved.id);
+                            } catch (e) {
+                              if (scaffoldMessenger != null &&
+                                  context.mounted) {
+                                AppToast.show(
+                                  context,
+                                  gloc.backup_error,
+                                  type: ToastType.error,
+                                );
+                              } else if (context.mounted) {
+                                AppToast.show(
+                                  context,
+                                  gloc.backup_error,
+                                  type: ToastType.error,
+                                );
+                              }
+                            }
+                          },
+                          label: gloc.create,
+                          enabled: isValid,
+                        );
                       },
-                      label: gloc.create,
-                      enabled: true,
                     ),
                 ],
               ),

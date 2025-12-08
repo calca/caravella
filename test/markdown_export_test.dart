@@ -6,7 +6,6 @@ import 'package:io_caravella_egm/manager/details/export/markdown_exporter.dart';
 
 void main() {
   group('Markdown Export Tests', () {
-
     test('Markdown filename generation should create valid filename', () {
       final now = DateTime(2024, 12, 7);
       final group = ExpenseGroup(
@@ -15,7 +14,7 @@ void main() {
         participants: [],
         currency: '€',
       );
-      
+
       final result = MarkdownExporter.buildFilename(group, now: now);
       expect(result, equals('20241207_test_trip_special_chars_export.md'));
     });
@@ -26,17 +25,20 @@ void main() {
       expect(result, equals(''));
     });
 
-    test('Markdown should generate empty string for group without expenses', () {
-      final group = ExpenseGroup(
-        title: 'Empty Group',
-        expenses: [],
-        participants: [],
-        currency: '€',
-      );
-      
-      final localization = lookupAppLocalizations(const Locale('en'));
-      final result = MarkdownExporter.generate(group, localization);
-      expect(result, equals(''));
-    });
+    test(
+      'Markdown should generate empty string for group without expenses',
+      () {
+        final group = ExpenseGroup(
+          title: 'Empty Group',
+          expenses: [],
+          participants: [],
+          currency: '€',
+        );
+
+        final localization = lookupAppLocalizations(const Locale('en'));
+        final result = MarkdownExporter.generate(group, localization);
+        expect(result, equals(''));
+      },
+    );
   });
 }
