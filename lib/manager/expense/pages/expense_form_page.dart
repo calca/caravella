@@ -134,8 +134,8 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
                       title: isReadOnly
                           ? gloc.expense
                           : (widget.initialExpense != null
-                              ? gloc.edit_expense
-                              : gloc.new_expense),
+                                ? gloc.edit_expense
+                                : gloc.new_expense),
                       description: '${gloc.group} ${widget.group.title}',
                     ),
                     const SizedBox(height: 24),
