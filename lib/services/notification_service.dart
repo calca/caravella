@@ -215,6 +215,8 @@ class NotificationService {
       maxProgress: maxProgress ?? 0,
       progress: progress ?? 0,
       indeterminate: false,
+      // Small icon in notification bar (uses app launcher icon)
+      icon: '@mipmap/ic_launcher',
       // Large icon with expense group initials
       largeIcon: largeIcon,
       actions: [
