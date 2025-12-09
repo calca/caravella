@@ -93,6 +93,32 @@ class NotificationManager {
     }
   }
 
+  /// Handles the "close" action from notification
+  /// Disables the notification setting for the group
+  static Future<void> handleCloseAction(String groupId) async {
+    try {
+      debugPrint('Handling close action for group: $groupId');
+
+      // Load the expense group
+      final group = await ExpenseGroupStorageV2.getTripById(groupId);
+      if (group == null) {
+        debugPrint('Group not found: $groupId');
+        return;
+      }
+
+      // Update the group to disable notifications
+      final updatedGroup = group.copyWith(notificationEnabled: false);
+      await ExpenseGroupStorageV2.updateGroupMetadata(updatedGroup);
+
+      // Cancel the notification
+      await NotificationService().cancelGroupNotification();
+
+      debugPrint('Notification disabled for group: ${group.title}');
+    } catch (e) {
+      debugPrint('Error handling close action: $e');
+    }
+  }
+
   /// Shows the add expense bottom sheet
   static void _showAddExpenseSheet(
     BuildContext context,

@@ -53,10 +53,17 @@ class NotificationService {
   void _onNotificationTap(NotificationResponse response) {
     debugPrint('Notification tapped: ${response.actionId}');
 
+    if (response.payload == null) return;
+
+    final groupId = response.payload!;
+
     // Handle 'add_expense' action
-    if (response.actionId == 'add_expense' && response.payload != null) {
-      final groupId = response.payload!;
+    if (response.actionId == 'add_expense') {
       NotificationManager.handleAddExpenseAction(groupId);
+    }
+    // Handle 'close' action
+    else if (response.actionId == 'close') {
+      NotificationManager.handleCloseAction(groupId);
     }
   }
 
