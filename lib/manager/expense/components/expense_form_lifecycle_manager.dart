@@ -52,9 +52,6 @@ class ExpenseFormLifecycleManager with WidgetsBindingObserver {
       );
     }
 
-    // Notify ready immediately - controller is ready to use
-    onControllerReady(_controller!);
-
     // Finish initialization to enable state updates
     _controller!.finishInitialization();
 
@@ -62,6 +59,9 @@ class ExpenseFormLifecycleManager with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
 
     _isInitialized = true;
+
+    // Notify ready - controller is now fully initialized and ready to use
+    onControllerReady(_controller!);
 
     // Run async initialization tasks in background without blocking UI
     _initializeAsync(context);
