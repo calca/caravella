@@ -5,16 +5,17 @@ import '../model/expense_details.dart';
 import '../model/expense_participant.dart';
 import '../model/expense_category.dart';
 import 'expense_group_repository.dart';
-import 'file_based_expense_group_repository.dart';
+import 'expense_group_repository_factory.dart';
 
 /// Backward-compatible wrapper for ExpenseGroupStorage
 /// Maintains the same API while using the improved repository internally
+/// Now supports both JSON and SQLite backends via factory
 class ExpenseGroupStorageV2 {
   static const String fileName = 'expense_group_storage.json';
 
-  // Singleton repository instance
-  static final IExpenseGroupRepository _repository =
-      FileBasedExpenseGroupRepository();
+  // Get repository instance from factory
+  static IExpenseGroupRepository get _repository => 
+      ExpenseGroupRepositoryFactory.getRepository();
 
   /// Gets a trip by ID
   static Future<ExpenseGroup?> getTripById(String id) async {
