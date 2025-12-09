@@ -1,9 +1,8 @@
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import '../../model/expense_group.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 class NotificationService {
@@ -24,7 +23,9 @@ class NotificationService {
   Future<void> initialize() async {
     if (_initialized) return;
 
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings = AndroidInitializationSettings(
+      '@mipmap/ic_launcher',
+    );
     const initSettings = InitializationSettings(android: androidSettings);
 
     await _notifications.initialize(
@@ -36,9 +37,11 @@ class NotificationService {
   }
 
   Future<bool> requestPermissions() async {
-    final android = _notifications.resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>();
-    
+    final android = _notifications
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >();
+
     if (android != null) {
       final granted = await android.requestNotificationsPermission();
       return granted ?? false;
@@ -56,10 +59,10 @@ class NotificationService {
   /// Extracts initials from the expense group title
   String _getInitials(String title) {
     if (title.isEmpty) return '?';
-    
+
     final words = title.trim().split(RegExp(r'\s+'));
     if (words.isEmpty) return '?';
-    
+
     if (words.length == 1) {
       // Single word: take first 2 characters
       return words[0].substring(0, words[0].length >= 2 ? 2 : 1).toUpperCase();
@@ -70,21 +73,24 @@ class NotificationService {
   }
 
   /// Generates a bitmap image with the initials as a large icon
-  Future<Uint8List?> _generateInitialsIcon(String initials, Color? groupColor) async {
+  Future<Uint8List?> _generateInitialsIcon(
+    String initials,
+    Color? groupColor,
+  ) async {
     try {
       final size = 192.0; // Android notification large icon size
       final recorder = ui.PictureRecorder();
       final canvas = Canvas(recorder);
-      
+
       // Use group color or default teal color
       final bgColor = groupColor ?? const Color(0xFF009688);
-      
+
       // Draw circle background
       final paint = Paint()
         ..color = bgColor
         ..style = PaintingStyle.fill;
       canvas.drawCircle(Offset(size / 2, size / 2), size / 2, paint);
-      
+
       // Draw text
       final textPainter = TextPainter(
         text: TextSpan(
@@ -99,18 +105,18 @@ class NotificationService {
         textDirection: ui.TextDirection.ltr,
       );
       textPainter.layout();
-      
+
       final textOffset = Offset(
         (size - textPainter.width) / 2,
         (size - textPainter.height) / 2,
       );
       textPainter.paint(canvas, textOffset);
-      
+
       // Convert to image
       final picture = recorder.endRecording();
       final img = await picture.toImage(size.toInt(), size.toInt());
       final byteData = await img.toByteData(format: ui.ImageByteFormat.png);
-      
+
       return byteData?.buffer.asUint8List();
     } catch (e) {
       debugPrint('Error generating initials icon: $e');
@@ -150,7 +156,7 @@ class NotificationService {
     // Build notification content
     final title = group.title.isEmpty ? loc.new_expense_group : group.title;
     final titleWithPeriod = period.isEmpty ? title : '$title ($period)';
-    
+
     final dailyText = loc.notification_daily_spent(
       dailyAverage.toStringAsFixed(2),
       group.currency,
@@ -165,18 +171,18 @@ class NotificationService {
     int? progress;
     int? maxProgress;
     bool showProgress = false;
-    
+
     if (group.startDate != null && group.endDate != null) {
       final now = DateTime.now();
       final start = group.startDate!;
       final end = group.endDate!;
-      
+
       // Total days in the trip (inclusive)
       final totalDays = end.difference(start).inDays + 1;
-      
+
       // Days elapsed from start to now (clamped between 0 and totalDays)
       final elapsedDays = now.difference(start).inDays + 1;
-      
+
       if (totalDays > 0) {
         maxProgress = totalDays;
         progress = elapsedDays.clamp(0, totalDays);
@@ -188,7 +194,7 @@ class NotificationService {
     final initials = _getInitials(title);
     final iconColor = group.color != null ? Color(group.color!) : null;
     final largeIconBytes = await _generateInitialsIcon(initials, iconColor);
-    final largeIcon = largeIconBytes != null 
+    final largeIcon = largeIconBytes != null
         ? ByteArrayAndroidBitmap(largeIconBytes)
         : null;
 

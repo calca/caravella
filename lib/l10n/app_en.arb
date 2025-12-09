@@ -818,4 +818,14 @@
   ,"@expense_readonly_archived": {"description": "Message explaining that an expense cannot be modified because the group is archived"}
   ,"expense": "Expense"
   ,"@expense": {"description": "Generic title for an expense"}
+  ,"notification_enabled": "Persistent notification"
+  ,"@notification_enabled": {"description": "Label for persistent notification toggle"}
+  ,"notification_daily_spent": "Daily: {amount} {currency}"
+  ,"@notification_daily_spent": {"description": "Daily spent amount in notification", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
+  ,"notification_total_spent": "Total: {amount} {currency}"
+  ,"@notification_total_spent": {"description": "Total spent amount in notification", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
+  ,"notification_add_expense": "Add Expense"
+  ,"@notification_add_expense": {"description": "Action button in notification to add expense"}
+  ,"notification_close": "Close"
+  ,"@notification_close": {"description": "Action button in notification to close"}
 }

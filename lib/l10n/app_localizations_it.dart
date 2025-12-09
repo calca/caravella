@@ -1911,6 +1911,29 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String get notification_enabled => 'Notifica persistente';
+
+  @override
+  String get notification_enabled_desc =>
+      'Mostra una notifica persistente con spese giornaliere e totale';
+
+  @override
+  String notification_daily_spent(String amount, String currency) {
+    return 'Giornaliero: $amount $currency';
+  }
+
+  @override
+  String notification_total_spent(String amount, String currency) {
+    return 'Totale: $amount $currency';
+  }
+
+  @override
+  String get notification_add_expense => 'Aggiungi Spesa';
+
+  @override
+  String get notification_close => 'Chiudi';
+
+  @override
   String get group_type => 'Tipologia';
 
   @override

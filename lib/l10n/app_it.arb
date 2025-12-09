@@ -781,4 +781,14 @@
   ,"@expense_readonly_archived": {"description": "Messaggio che spiega che una spesa non può essere modificata perché il gruppo è archiviato"}
   ,"expense": "Spesa"
   ,"@expense": {"description": "Titolo generico per una spesa"}
+  ,"notification_enabled": "Notifica persistente"
+  ,"@notification_enabled": {"description": "Etichetta per attivare/disattivare la notifica persistente"}
+  ,"notification_daily_spent": "Giornaliero: {amount} {currency}"
+  ,"@notification_daily_spent": {"description": "Importo speso giornaliero nella notifica", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
+  ,"notification_total_spent": "Totale: {amount} {currency}"
+  ,"@notification_total_spent": {"description": "Importo totale speso nella notifica", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
+  ,"notification_add_expense": "Aggiungi Spesa"
+  ,"@notification_add_expense": {"description": "Pulsante azione nella notifica per aggiungere una spesa"}
+  ,"notification_close": "Chiudi"
+  ,"@notification_close": {"description": "Pulsante azione nella notifica per chiudere"}
 }

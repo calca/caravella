@@ -3725,6 +3725,42 @@ abstract class AppLocalizations {
     Object debtsList,
   );
 
+  /// Label for persistent notification toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Persistent notification'**
+  String get notification_enabled;
+
+  /// Description of the persistent notification setting
+  ///
+  /// In en, this message translates to:
+  /// **'Show a persistent notification with daily and total expenses'**
+  String get notification_enabled_desc;
+
+  /// Daily spent amount in notification
+  ///
+  /// In en, this message translates to:
+  /// **'Daily: {amount} {currency}'**
+  String notification_daily_spent(String amount, String currency);
+
+  /// Total spent amount in notification
+  ///
+  /// In en, this message translates to:
+  /// **'Total: {amount} {currency}'**
+  String notification_total_spent(String amount, String currency);
+
+  /// Action button in notification to add expense
+  ///
+  /// In en, this message translates to:
+  /// **'Add Expense'**
+  String get notification_add_expense;
+
+  /// Action button in notification to close
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get notification_close;
+
   /// Label for expense group type
   ///
   /// In en, this message translates to:

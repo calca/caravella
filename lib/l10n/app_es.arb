@@ -796,4 +796,14 @@
   ,"@expense_readonly_archived": {"description": "Mensaje que explica que un gasto no se puede modificar porque el grupo está archivado"}
   ,"expense": "Gasto"
   ,"@expense": {"description": "Título genérico para un gasto"}
+  ,"notification_enabled": "Notificación persistente"
+  ,"@notification_enabled": {"description": "Etiqueta para activar/desactivar la notificación persistente"}
+  ,"notification_daily_spent": "Diario: {amount} {currency}"
+  ,"@notification_daily_spent": {"description": "Cantidad gastada diaria en la notificación", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
+  ,"notification_total_spent": "Total: {amount} {currency}"
+  ,"@notification_total_spent": {"description": "Cantidad total gastada en la notificación", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
+  ,"notification_add_expense": "Añadir Gasto"
+  ,"@notification_add_expense": {"description": "Botón de acción en la notificación para añadir gasto"}
+  ,"notification_close": "Cerrar"
+  ,"@notification_close": {"description": "Botón de acción en la notificación para cerrar"}
 }

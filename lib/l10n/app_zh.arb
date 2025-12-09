@@ -1038,5 +1038,33 @@
   "expense": "费用",
   "@expense": {
     "description": "费用的通用标题"
+  },
+  "notification_enabled": "持久通知",
+  "@notification_enabled": {
+    "description": "持久通知切换标签"
+  },
+  "notification_daily_spent": "每日: {amount} {currency}",
+  "@notification_daily_spent": {
+    "description": "通知中的每日花费金额",
+    "placeholders": {
+      "amount": {"type": "String"},
+      "currency": {"type": "String"}
+    }
+  },
+  "notification_total_spent": "总计: {amount} {currency}",
+  "@notification_total_spent": {
+    "description": "通知中的总花费金额",
+    "placeholders": {
+      "amount": {"type": "String"},
+      "currency": {"type": "String"}
+    }
+  },
+  "notification_add_expense": "添加支出",
+  "@notification_add_expense": {
+    "description": "通知中添加支出的操作按钮"
+  },
+  "notification_close": "关闭",
+  "@notification_close": {
+    "description": "通知中关闭的操作按钮"
   }
 }

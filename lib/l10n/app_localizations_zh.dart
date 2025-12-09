@@ -1873,6 +1873,28 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String get notification_enabled => '持久通知';
+
+  @override
+  String get notification_enabled_desc => '显示包含每日和总费用的持久通知';
+
+  @override
+  String notification_daily_spent(String amount, String currency) {
+    return '每日: $amount $currency';
+  }
+
+  @override
+  String notification_total_spent(String amount, String currency) {
+    return '总计: $amount $currency';
+  }
+
+  @override
+  String get notification_add_expense => '添加支出';
+
+  @override
+  String get notification_close => '关闭';
+
+  @override
   String get group_type => '类型';
 
   @override
