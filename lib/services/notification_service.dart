@@ -153,6 +153,9 @@ class NotificationService {
   ) async {
     await initialize();
 
+    // Cancel any existing notification for this group first to prevent duplicates
+    await cancelGroupNotification(group.id);
+
     // Calculate today's spent
     final now = DateTime.now();
 

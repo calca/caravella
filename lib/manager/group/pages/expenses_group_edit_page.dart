@@ -592,38 +592,24 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                         onChanged: (value) async {
                           final controller = context
                               .read<GroupFormController>();
-                          final notifier = context.read<ExpenseGroupNotifier>();
                           final notificationService = NotificationService();
 
-                          controller.state.setNotificationEnabled(value);
-                          try {
-                            final savedGroup = await controller.save();
-                            if (controller.state.id != null) {
-                              notifier.notifyGroupUpdated(controller.state.id!);
-
-                              // Handle notification based on new value
-                              if (value && context.mounted) {
-                                // Request permissions and show notification
-                                await notificationService.requestPermissions();
-                                await notificationService.showGroupNotification(
-                                  savedGroup,
-                                  gloc,
-                                );
-                              } else {
-                                // Cancel notification for this group
-                                await notificationService
-                                    .cancelGroupNotification(savedGroup.id);
-                              }
-                            }
-                          } catch (e) {
-                            if (context.mounted) {
+                          // If enabling, request permissions first
+                          if (value) {
+                            final granted = await notificationService
+                                .requestPermissions();
+                            if (!granted && context.mounted) {
                               AppToast.show(
                                 context,
-                                gloc.backup_error,
-                                type: ToastType.error,
+                                gloc.notification_enabled,
+                                type: ToastType.info,
                               );
+                              return;
                             }
                           }
+
+                          // Update state (save happens on PopScope)
+                          controller.state.setNotificationEnabled(value);
                         },
                       ),
                     ),
@@ -735,6 +721,19 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                   try {
                     notifier?.notifyGroupUpdated(saved.id);
                   } catch (_) {}
+
+                  // Handle notification state after save
+                  final notificationService = NotificationService();
+                  if (saved.notificationEnabled && context.mounted) {
+                    // Show or update notification
+                    await notificationService.showGroupNotification(
+                      saved,
+                      gloc,
+                    );
+                  } else {
+                    // Cancel notification if disabled
+                    await notificationService.cancelGroupNotification(saved.id);
+                  }
 
                   // Pop returning the saved id so caller can react
                   if (navigator.canPop()) navigator.pop(saved.id);
@@ -934,6 +933,17 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                               try {
                                 notifier?.notifyGroupUpdated(saved.id);
                               } catch (_) {}
+
+                              // Handle notification state after save
+                              final notificationService = NotificationService();
+                              if (saved.notificationEnabled &&
+                                  context.mounted) {
+                                // Show notification for new group
+                                await notificationService.showGroupNotification(
+                                  saved,
+                                  gloc,
+                                );
+                              }
 
                               if (navigator.canPop()) navigator.pop(saved.id);
                             } catch (e) {
