@@ -159,15 +159,21 @@ class NotificationService {
     // Build notification content
     final title = group.title.isEmpty ? loc.new_expense_group : group.title;
 
-    final dailyText = loc.notification_daily_spent(
-      dailyAverage.toStringAsFixed(2),
-      group.currency,
-    );
-    final totalText = loc.notification_total_spent(
-      totalSpent.toStringAsFixed(2),
-      group.currency,
-    );
-    final content = '$dailyText\n$totalText';
+    // Show daily average if group has dates, otherwise show total
+    final String content;
+    if (group.startDate != null && group.endDate != null) {
+      // Group with dates: show daily average
+      content = loc.notification_daily_spent(
+        dailyAverage.toStringAsFixed(2),
+        group.currency,
+      );
+    } else {
+      // Group without dates: show total
+      content = loc.notification_total_spent(
+        totalSpent.toStringAsFixed(2),
+        group.currency,
+      );
+    }
 
     // Calculate progress for groups with start and end dates
     int? progress;
