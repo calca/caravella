@@ -7,6 +7,8 @@ class ExportOptionsSheet extends StatelessWidget {
   final VoidCallback onShareCsv;
   final VoidCallback onDownloadOfx;
   final VoidCallback onShareOfx;
+  final VoidCallback onDownloadMarkdown;
+  final VoidCallback onShareMarkdown;
 
   const ExportOptionsSheet({
     super.key,
@@ -14,6 +16,8 @@ class ExportOptionsSheet extends StatelessWidget {
     required this.onShareCsv,
     required this.onDownloadOfx,
     required this.onShareOfx,
+    required this.onDownloadMarkdown,
+    required this.onShareMarkdown,
   });
 
   @override
@@ -49,6 +53,14 @@ class ExportOptionsSheet extends StatelessWidget {
             title: Text(gloc.share_all_ofx),
             onTap: onShareOfx,
           ),
+          ListTile(
+            leading: Icon(
+              Icons.share_outlined,
+              color: Theme.of(context).colorScheme.onPrimaryFixed,
+            ),
+            title: Text(gloc.share_all_markdown),
+            onTap: onShareMarkdown,
+          ),
           // Download options second
           ListTile(
             leading: Icon(
@@ -65,6 +77,14 @@ class ExportOptionsSheet extends StatelessWidget {
             ),
             title: Text(gloc.download_all_ofx),
             onTap: onDownloadOfx,
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.file_download_outlined,
+              color: Theme.of(context).colorScheme.onPrimaryFixed,
+            ),
+            title: Text(gloc.download_all_markdown),
+            onTap: onDownloadMarkdown,
           ),
         ],
       ),

@@ -27,6 +27,7 @@ import '../widgets/group_actions.dart';
 import '../widgets/filtered_expense_list.dart';
 import '../export/ofx_exporter.dart';
 import '../export/csv_exporter.dart';
+import '../export/markdown_exporter.dart';
 
 import 'unified_overview_page.dart';
 
@@ -301,6 +302,85 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           await SharePlus.instance.share(
             ShareParams(
               text: '${_trip!.title} - OFX',
+              files: [XFile(file.path)],
+            ),
+          );
+          if (!rootContext.mounted) return;
+          nav.pop();
+        },
+        onDownloadMarkdown: () async {
+          final gloc = gen.AppLocalizations.of(context);
+          final nav = Navigator.of(sheetCtx);
+          final rootContext = context;
+          final markdown = MarkdownExporter.generate(_trip, gloc);
+          if (markdown.isEmpty) {
+            if (rootContext.mounted) {
+              AppToast.show(
+                rootContext,
+                gloc.no_expenses_to_export,
+                type: ToastType.info,
+              );
+            }
+            return;
+          }
+          final filename = MarkdownExporter.buildFilename(_trip);
+          String? dirPath;
+          try {
+            dirPath = await FilePicker.platform.getDirectoryPath(
+              dialogTitle: gloc.markdown_select_directory_title,
+            );
+          } catch (_) {
+            dirPath = null;
+          }
+          if (dirPath == null) {
+            if (!rootContext.mounted) return;
+            AppToast.show(
+              rootContext,
+              gloc.markdown_save_cancelled,
+              type: ToastType.info,
+            );
+            return;
+          }
+          try {
+            final file = File('$dirPath/$filename');
+            await file.writeAsString(markdown);
+            if (!rootContext.mounted) return;
+            final msg = gloc.markdown_saved_in(file.path);
+            AppToast.show(rootContext, msg, type: ToastType.success);
+            nav.pop();
+          } catch (e) {
+            if (!rootContext.mounted) return;
+            AppToast.show(
+              rootContext,
+              gloc.markdown_save_error,
+              type: ToastType.error,
+            );
+          }
+        },
+        onShareMarkdown: () async {
+          final gloc = gen.AppLocalizations.of(context);
+          final nav = Navigator.of(sheetCtx);
+          final rootContext = context;
+          final markdown = MarkdownExporter.generate(_trip, gloc);
+          if (markdown.isEmpty) {
+            if (rootContext.mounted) {
+              AppToast.show(
+                rootContext,
+                gloc.no_expenses_to_export,
+                type: ToastType.info,
+              );
+            }
+            return;
+          }
+          final tempDir = await getTemporaryDirectory();
+          final file = await File(
+            '${tempDir.path}/${MarkdownExporter.buildFilename(_trip)}',
+          ).create();
+          await file.writeAsString(markdown);
+          if (!rootContext.mounted) return;
+          await SharePlus.instance.share(
+            ShareParams(
+              text: '${_trip!.title} - Markdown',
               files: [XFile(file.path)],
             ),
           );

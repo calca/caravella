@@ -73,6 +73,12 @@
   "share_all_csv": "Compartilhar tudo (CSV)",
   "download_all_ofx": "Baixar tudo (OFX)",
   "share_all_ofx": "Compartilhar tudo (OFX)",
+  "download_all_markdown": "Baixar tudo (Markdown)",
+  "share_all_markdown": "Compartilhar tudo (Markdown)",
+  "markdown_select_directory_title": "Selecionar pasta para salvar Markdown",
+  "markdown_saved_in": "Markdown salvo em: {path}",
+  "markdown_save_cancelled": "Exportação Markdown cancelada",
+  "markdown_save_error": "Erro ao salvar arquivo Markdown",
   "share_label": "Compartilhar",
   "share_text_label": "Compartilhar texto",
   "share_image_label": "Compartilhar imagem",
@@ -164,14 +170,14 @@
   "no_search_results": "Nenhum grupo encontrado para",
   "active": "Ativo",
   "archive": "Arquivar",
-  "pin": "Fixar",
-  "unpin": "Desfixar",
+  "pin": "Favorito",
+  "unpin": "Desfavorito",
   "delete": "Excluir",
   "undo": "DESFAZER",
   "archived_with_undo": "Arquivado",
   "unarchived_with_undo": "Desarquivado",
-  "pinned_with_undo": "Fixado",
-  "unpinned_with_undo": "Desfixado",
+  "pinned_with_undo": "Marcado como favorito",
+  "unpinned_with_undo": "Favorito removido",
   "deleted_with_undo": "Excluído",
   "archive_confirm": "Deseja arquivar",
   "overview": "Visão geral",
@@ -263,8 +269,7 @@
   "edit_group_desc": "Modificar configurações, participantes e categorias do grupo",
   "new_group_desc": "Criar um novo grupo de despesas com configurações personalizadas",
   "delete_group_confirm": "Tem certeza de que deseja excluir este grupo de despesas? Esta ação não pode ser desfeita.",
-  "pin_group": "Fixar grupo",
-  "pin": "Fixar",
+  "pin_group": "Marcar como favorito",
   "theme_light": "Claro",
   "developed_by": "Desenvolvido por calca",
   "daily_expenses_chart": "Despesas diárias",
@@ -669,12 +674,15 @@
   ,"show_overview": "Mostrar visão geral"
   ,"start_date_optional": "De"
   ,"statistics": "Estatísticas"
+  ,"period": "Período"
+  ,"total_expenses": "Total de despesas"
+  ,"number_of_expenses": "Número de despesas"
   ,"theme_automatic": "Automático"
   ,"theme_dark": "Escuro"
   ,"try_different_search": "Tente pesquisar com palavras diferentes"
   ,"unarchive": "Desarquivar"
   ,"unarchive_confirm": "Deseja desarquivar"
-  ,"unpin_group": "Desafixar grupo"
+  ,"unpin_group": "Remover favorito"
   ,"weekly_expenses_chart": "Despesas semanais"
   ,"group_type": "Tipo"
   ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}

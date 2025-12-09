@@ -386,6 +386,42 @@ abstract class AppLocalizations {
   /// **'Share all (OFX)'**
   String get share_all_ofx;
 
+  /// No description provided for @download_all_markdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Download all (Markdown)'**
+  String get download_all_markdown;
+
+  /// No description provided for @share_all_markdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Share all (Markdown)'**
+  String get share_all_markdown;
+
+  /// No description provided for @markdown_select_directory_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Select folder to save Markdown'**
+  String get markdown_select_directory_title;
+
+  /// Toast message when Markdown export is saved
+  ///
+  /// In en, this message translates to:
+  /// **'Markdown saved in: {path}'**
+  String markdown_saved_in(String path);
+
+  /// No description provided for @markdown_save_cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Markdown export cancelled'**
+  String get markdown_save_cancelled;
+
+  /// No description provided for @markdown_save_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving Markdown file'**
+  String get markdown_save_error;
+
   /// No description provided for @share_label.
   ///
   /// In en, this message translates to:
@@ -1286,16 +1322,16 @@ abstract class AppLocalizations {
   /// **'Unarchive'**
   String get unarchive;
 
-  /// Action to pin a group to the top
+  /// Action to mark a group as favorite
   ///
   /// In en, this message translates to:
-  /// **'Pin'**
+  /// **'Favorite'**
   String get pin;
 
-  /// Action to unpin a group
+  /// Action to remove favorite mark from a group
   ///
   /// In en, this message translates to:
-  /// **'Unpin'**
+  /// **'Unfavorite'**
   String get unpin;
 
   /// Action to delete a group
@@ -1322,16 +1358,16 @@ abstract class AppLocalizations {
   /// **'Unarchived'**
   String get unarchived_with_undo;
 
-  /// Snackbar message when group is pinned
+  /// Snackbar message when group is marked as favorite
   ///
   /// In en, this message translates to:
-  /// **'Pinned'**
+  /// **'Marked as favorite'**
   String get pinned_with_undo;
 
-  /// Snackbar message when group is unpinned
+  /// Snackbar message when favorite mark is removed from group
   ///
   /// In en, this message translates to:
-  /// **'Unpinned'**
+  /// **'Favorite removed'**
   String get unpinned_with_undo;
 
   /// Snackbar message when group is deleted
@@ -1363,6 +1399,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Statistics'**
   String get statistics;
+
+  /// No description provided for @period.
+  ///
+  /// In en, this message translates to:
+  /// **'Period'**
+  String get period;
+
+  /// No description provided for @total_expenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Total expenses'**
+  String get total_expenses;
+
+  /// No description provided for @number_of_expenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of expenses'**
+  String get number_of_expenses;
 
   /// No description provided for @options.
   ///
@@ -1451,13 +1505,13 @@ abstract class AppLocalizations {
   /// No description provided for @pin_group.
   ///
   /// In en, this message translates to:
-  /// **'Pin group'**
+  /// **'Mark as favorite'**
   String get pin_group;
 
   /// No description provided for @unpin_group.
   ///
   /// In en, this message translates to:
-  /// **'Unpin group'**
+  /// **'Remove favorite'**
   String get unpin_group;
 
   /// No description provided for @theme_automatic.

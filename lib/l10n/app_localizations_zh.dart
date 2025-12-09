@@ -152,6 +152,26 @@ class AppLocalizationsZh extends AppLocalizations {
   String get share_all_ofx => '分享全部 (OFX)';
 
   @override
+  String get download_all_markdown => '下载全部 (Markdown)';
+
+  @override
+  String get share_all_markdown => '分享全部 (Markdown)';
+
+  @override
+  String get markdown_select_directory_title => '选择保存 Markdown 的文件夹';
+
+  @override
+  String markdown_saved_in(String path) {
+    return 'Markdown 已保存至: $path';
+  }
+
+  @override
+  String get markdown_save_cancelled => 'Markdown 导出已取消';
+
+  @override
+  String get markdown_save_error => '保存 Markdown 文件时出错';
+
+  @override
   String get share_label => '分享';
 
   @override
@@ -625,10 +645,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get unarchive => '取消归档';
 
   @override
-  String get pin => '固定';
+  String get pin => '收藏';
 
   @override
-  String get unpin => '取消置顶';
+  String get unpin => '取消收藏';
 
   @override
   String get delete => '删除';
@@ -643,10 +663,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get unarchived_with_undo => '已取消归档';
 
   @override
-  String get pinned_with_undo => '已置顶';
+  String get pinned_with_undo => '已标记为收藏';
 
   @override
-  String get unpinned_with_undo => '已取消置顶';
+  String get unpinned_with_undo => '已移除收藏';
 
   @override
   String get deleted_with_undo => '已删除';
@@ -662,6 +682,15 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get statistics => '统计';
+
+  @override
+  String get period => '期间';
+
+  @override
+  String get total_expenses => '总支出';
+
+  @override
+  String get number_of_expenses => '支出数量';
 
   @override
   String get options => '选项';
@@ -706,10 +735,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get add_expense_fab => '添加支出';
 
   @override
-  String get pin_group => '固定群组';
+  String get pin_group => '标记为收藏';
 
   @override
-  String get unpin_group => '取消固定群组';
+  String get unpin_group => '移除收藏';
 
   @override
   String get theme_automatic => '自动';

@@ -153,6 +153,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get share_all_ofx => 'Share all (OFX)';
 
   @override
+  String get download_all_markdown => 'Download all (Markdown)';
+
+  @override
+  String get share_all_markdown => 'Share all (Markdown)';
+
+  @override
+  String get markdown_select_directory_title =>
+      'Select folder to save Markdown';
+
+  @override
+  String markdown_saved_in(String path) {
+    return 'Markdown saved in: $path';
+  }
+
+  @override
+  String get markdown_save_cancelled => 'Markdown export cancelled';
+
+  @override
+  String get markdown_save_error => 'Error saving Markdown file';
+
+  @override
   String get share_label => 'Share';
 
   @override
@@ -634,10 +655,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unarchive => 'Unarchive';
 
   @override
-  String get pin => 'Pin';
+  String get pin => 'Favorite';
 
   @override
-  String get unpin => 'Unpin';
+  String get unpin => 'Unfavorite';
 
   @override
   String get delete => 'Delete';
@@ -652,10 +673,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unarchived_with_undo => 'Unarchived';
 
   @override
-  String get pinned_with_undo => 'Pinned';
+  String get pinned_with_undo => 'Marked as favorite';
 
   @override
-  String get unpinned_with_undo => 'Unpinned';
+  String get unpinned_with_undo => 'Favorite removed';
 
   @override
   String get deleted_with_undo => 'Deleted';
@@ -671,6 +692,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get statistics => 'Statistics';
+
+  @override
+  String get period => 'Period';
+
+  @override
+  String get total_expenses => 'Total expenses';
+
+  @override
+  String get number_of_expenses => 'Number of expenses';
 
   @override
   String get options => 'Options';
@@ -718,10 +748,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get add_expense_fab => 'Add Expense';
 
   @override
-  String get pin_group => 'Pin group';
+  String get pin_group => 'Mark as favorite';
 
   @override
-  String get unpin_group => 'Unpin group';
+  String get unpin_group => 'Remove favorite';
 
   @override
   String get theme_automatic => 'Automatic';

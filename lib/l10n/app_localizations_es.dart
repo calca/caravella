@@ -153,6 +153,27 @@ class AppLocalizationsEs extends AppLocalizations {
   String get share_all_ofx => 'Compartir todo (OFX)';
 
   @override
+  String get download_all_markdown => 'Descargar todo (Markdown)';
+
+  @override
+  String get share_all_markdown => 'Compartir todo (Markdown)';
+
+  @override
+  String get markdown_select_directory_title =>
+      'Seleccionar carpeta para guardar Markdown';
+
+  @override
+  String markdown_saved_in(String path) {
+    return 'Markdown guardado en: $path';
+  }
+
+  @override
+  String get markdown_save_cancelled => 'Exportación Markdown cancelada';
+
+  @override
+  String get markdown_save_error => 'Error al guardar el archivo Markdown';
+
+  @override
   String get share_label => 'Compartir';
 
   @override
@@ -635,10 +656,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get unarchive => 'Desarchivar';
 
   @override
-  String get pin => 'Pin';
+  String get pin => 'Favorito';
 
   @override
-  String get unpin => 'Desfijar';
+  String get unpin => 'Desfavorito';
 
   @override
   String get delete => 'Eliminar';
@@ -653,10 +674,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get unarchived_with_undo => 'Desarchivado';
 
   @override
-  String get pinned_with_undo => 'Fijado';
+  String get pinned_with_undo => 'Marcado como favorito';
 
   @override
-  String get unpinned_with_undo => 'Desfijado';
+  String get unpinned_with_undo => 'Favorito quitado';
 
   @override
   String get deleted_with_undo => 'Eliminado';
@@ -672,6 +693,15 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get statistics => 'Estadísticas';
+
+  @override
+  String get period => 'Período';
+
+  @override
+  String get total_expenses => 'Total de gastos';
+
+  @override
+  String get number_of_expenses => 'Número de gastos';
 
   @override
   String get options => 'Opciones';
@@ -719,10 +749,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get add_expense_fab => 'Agregar Gasto';
 
   @override
-  String get pin_group => 'Fijar grupo';
+  String get pin_group => 'Marcar como favorito';
 
   @override
-  String get unpin_group => 'Desfijar grupo';
+  String get unpin_group => 'Quitar favorito';
 
   @override
   String get theme_automatic => 'Automático';
