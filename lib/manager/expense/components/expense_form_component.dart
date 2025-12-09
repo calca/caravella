@@ -221,45 +221,46 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
 
   void _setupFocusListeners() {
     final scrollCoordinator = _lifecycleManager.scrollCoordinator;
-    if (scrollCoordinator == null) return;
+    if (scrollCoordinator == null || _controller == null) return;
 
-    _controller.amountFocus.addListener(() {
-      if (_controller.amountFocus.hasFocus) {
+    _controller!.amountFocus.addListener(() {
+      if (_controller!.amountFocus.hasFocus) {
         Future.delayed(const Duration(milliseconds: 200), () {
-          scrollCoordinator.scrollToField(_controller.amountFieldKey);
+          scrollCoordinator.scrollToField(_controller!.amountFieldKey);
         });
       }
     });
 
-    _controller.nameFocus.addListener(() {
-      if (_controller.nameFocus.hasFocus) {
+    _controller!.nameFocus.addListener(() {
+      if (_controller!.nameFocus.hasFocus) {
         Future.delayed(const Duration(milliseconds: 200), () {
-          scrollCoordinator.scrollToField(_controller.nameFieldKey);
+          scrollCoordinator.scrollToField(_controller!.nameFieldKey);
         });
       }
     });
 
-    _controller.locationFocus.addListener(() {
-      if (_controller.locationFocus.hasFocus) {
+    _controller!.locationFocus.addListener(() {
+      if (_controller!.locationFocus.hasFocus) {
         Future.delayed(const Duration(milliseconds: 200), () {
-          scrollCoordinator.scrollToField(_controller.locationFieldKey);
+          scrollCoordinator.scrollToField(_controller!.locationFieldKey);
         });
       }
     });
 
-    _controller.noteFocus.addListener(() {
-      if (_controller.noteFocus.hasFocus) {
+    _controller!.noteFocus.addListener(() {
+      if (_controller!.noteFocus.hasFocus) {
         Future.delayed(const Duration(milliseconds: 200), () {
-          scrollCoordinator.scrollToField(_controller.noteFieldKey);
+          scrollCoordinator.scrollToField(_controller!.noteFieldKey);
         });
       }
     });
   }
 
   void _notifySaveCallbackWithContext() {
+    if (_controller == null || _orchestrator == null) return;
     // Create a proper callback with context access
-    final isValid = _controller.isFormValid;
-    final callback = isValid ? () => _orchestrator.saveExpense(context) : null;
+    final isValid = _controller!.isFormValid;
+    final callback = isValid ? () => _orchestrator!.saveExpense(context) : null;
     widget.config.onSaveCallbackChanged?.call(callback);
   }
 
