@@ -162,14 +162,14 @@ class ExpenseFormComponent extends StatefulWidget {
 class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   final _formKey = GlobalKey<FormState>();
   late ExpenseFormLifecycleManager _lifecycleManager;
-  late ExpenseFormOrchestrator _orchestrator;
-  late ExpenseFormController _controller;
+  ExpenseFormOrchestrator? _orchestrator;
+  ExpenseFormController? _controller;
 
   // Getter per determinare se mostrare i campi estesi
   bool get _shouldShowExtendedFields =>
       widget.config.fullEdit ||
       widget.config.initialExpense != null ||
-      _controller.isExpanded;
+      (_controller?.isExpanded ?? false);
 
   @override
   void initState() {
@@ -184,26 +184,31 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         // Initialize orchestrator after controller is ready
         _orchestrator = ExpenseFormOrchestrator(
           config: widget.config,
-          controller: _controller,
+          controller: _controller!,
           formKey: _formKey,
         );
-        _orchestrator.initialize();
+        _orchestrator!.initialize();
 
         // Setup save callback wrapper to provide context
         if (widget.config.onSaveCallbackChanged != null) {
-          _controller.addListener(_notifySaveCallbackWithContext);
+          _controller!.addListener(_notifySaveCallbackWithContext);
           _notifySaveCallbackWithContext(); // Initial state
         }
 
         // Setup focus listeners for scroll coordination
         _setupFocusListeners();
 
+        // Rebuild widget now that controller is ready
+        if (mounted) {
+          setState(() {});
+        }
+
         // Autofocus after first frame
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) {
-            _controller.amountFocus.requestFocus();
+            _controller!.amountFocus.requestFocus();
             _lifecycleManager.scrollCoordinator?.scrollToField(
-              _controller.amountFieldKey,
+              _controller!.amountFieldKey,
             );
           }
         });
@@ -285,12 +290,19 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
 
   @override
   Widget build(BuildContext context) {
+    // Show loading indicator while controller is being initialized
+    if (_controller == null || _orchestrator == null) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
     final gloc = gen.AppLocalizations.of(context);
     final smallStyle = Theme.of(context).textTheme.bodyMedium;
 
     return PopScope(
-      canPop: !_controller.state.isDirty,
+      canPop: !_controller!.state.isDirty,
       onPopInvokedWithResult: _handlePop,
       child: Form(
         key: _formKey,
@@ -302,7 +314,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
               showGroupHeader: widget.config.showGroupHeader,
             ),
             ExpenseFormFields(
-              controller: _controller,
+              controller: _controller!,
               participants: widget.config.participants,
               categories: _lifecycleManager.categories,
               onCategoryAdded: _onCategoryAdded,
@@ -312,25 +324,25 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
               },
               fullEdit: widget.config.fullEdit,
               autoLocationEnabled: widget.config.autoLocationEnabled,
-              location: _controller.state.location,
+              location: _controller!.state.location,
               isRetrievingLocation: _lifecycleManager.isRetrievingLocation,
               onClearLocation: _clearLocation,
               currency: widget.config.currency,
-              onSaveExpense: () => _orchestrator.saveExpense(context),
+              onSaveExpense: () => _orchestrator!.saveExpense(context),
               isInitialExpense: widget.config.initialExpense != null,
               isReadOnly: widget.config.isReadOnly,
             ),
             if (_shouldShowExtendedFields)
               ExpenseFormExtendedFields(
-                controller: _controller,
+                controller: _controller!,
                 tripStartDate: widget.config.tripStartDate,
                 tripEndDate: widget.config.tripEndDate,
                 locale: locale,
                 groupId: widget.config.groupId,
                 autoLocationEnabled: widget.config.autoLocationEnabled,
                 isInitialExpense: widget.config.initialExpense != null,
-                isFormValid: _controller.isFormValid,
-                onSaveExpense: () => _orchestrator.saveExpense(context),
+                isFormValid: _controller!.isFormValid,
+                onSaveExpense: () => _orchestrator!.saveExpense(context),
                 isReadOnly: widget.config.isReadOnly,
               ),
             if (widget.config.showActionsRow) ...[
@@ -345,7 +357,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
 
   Future<void> _handlePop(bool didPop, Object? result) async {
     if (didPop) return;
-    if (_controller.state.isDirty) {
+    if (_controller?.state.isDirty ?? false) {
       final navigator = Navigator.of(context);
       final discard = await _confirmDiscardChanges();
       if (discard && mounted && navigator.canPop()) navigator.pop();
@@ -353,11 +365,13 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   }
 
   void _clearLocation() {
-    _controller.updateLocation(null);
-    _controller.setLocationRetrieving(false);
+    _controller?.updateLocation(null);
+    _controller?.setLocationRetrieving(false);
   }
 
   Future<void> _onCategoryAdded(String categoryName) async {
+    if (_controller == null) return;
+    
     widget.config.onCategoryAdded(categoryName);
     await Future.delayed(const Duration(milliseconds: 100));
 
@@ -372,7 +386,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     final currentCategories = _lifecycleManager.categories;
     if (!currentCategories.contains(found)) {
       _lifecycleManager.updateCategories(List.from(categories));
-      _controller.addCategory(found);
+      _controller!.addCategory(found);
       setState(() {});
     }
 
@@ -385,7 +399,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     );
 
     _lifecycleManager.updateCategories(List.from(categories));
-    _controller.updateCategory(foundAfter);
+    _controller!.updateCategory(foundAfter);
     setState(() {});
   }
 
@@ -405,30 +419,30 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
 
   Widget _buildActionsRow(gen.AppLocalizations gloc, TextStyle? style) =>
       ExpenseFormActionsWidget(
-        onSave: _controller.isFormValid
-            ? () => _orchestrator.saveExpense(context)
+        onSave: (_controller?.isFormValid ?? false)
+            ? () => _orchestrator!.saveExpense(context)
             : null,
-        isFormValid: _controller.isFormValid,
+        isFormValid: _controller?.isFormValid ?? false,
         isEdit: widget.config.initialExpense != null,
         onDelete: widget.config.hasDeleteAction
-            ? () => _orchestrator.deleteExpense(context)
+            ? () => _orchestrator!.deleteExpense(context)
             : null,
         textStyle: style,
         showExpandButton:
             !(widget.config.fullEdit ||
                 widget.config.initialExpense != null ||
-                _controller.isExpanded),
-        onExpand: widget.config.onExpand != null
-            ? () => widget.config.onExpand!(_controller.state)
+                (_controller?.isExpanded ?? false)),
+        onExpand: widget.config.onExpand != null && _controller != null
+            ? () => widget.config.onExpand!(_controller!.state)
             : null,
       );
 
   @override
   void dispose() {
-    if (widget.config.onSaveCallbackChanged != null) {
-      _controller.removeListener(_notifySaveCallbackWithContext);
+    if (widget.config.onSaveCallbackChanged != null && _controller != null) {
+      _controller!.removeListener(_notifySaveCallbackWithContext);
     }
-    _orchestrator.dispose();
+    _orchestrator?.dispose();
     _lifecycleManager.dispose();
     super.dispose();
   }
