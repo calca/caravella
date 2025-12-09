@@ -28,6 +28,7 @@ import '../widgets/filtered_expense_list.dart';
 import '../export/ofx_exporter.dart';
 import '../export/csv_exporter.dart';
 import '../export/markdown_exporter.dart';
+import '../../../services/notification_manager.dart';
 
 import 'unified_overview_page.dart';
 
@@ -489,9 +490,12 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   void _showDeleteExpenseDialog(ExpenseDetails expense) {
     showDialog(
       context: context,
-      builder: (context) => DeleteExpenseDialog(
+      builder: (dialogContext) => DeleteExpenseDialog(
         expense: expense,
         onDelete: () async {
+          // Capture context before async operations
+          final gloc = gen.AppLocalizations.of(dialogContext);
+
           // Delete attachment files
           for (final attachmentPath in expense.attachments) {
             try {
@@ -511,6 +515,19 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             _trip!.id,
             expense.id,
           );
+
+          // Update notification if enabled
+          if (_trip?.notificationEnabled == true) {
+            final updatedGroup = await ExpenseGroupStorageV2.getTripById(
+              _trip!.id,
+            );
+            if (updatedGroup != null) {
+              await NotificationManager().updateNotificationForGroup(
+                updatedGroup,
+                gloc,
+              );
+            }
+          }
         },
       ),
     );
@@ -541,6 +558,19 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                 // Refresh local state and notifier
                 await _refreshGroup();
                 _groupNotifier?.notifyGroupUpdated(widget.trip.id);
+
+                // Update notification if enabled
+                if (_trip?.notificationEnabled == true) {
+                  final updatedGroup = await ExpenseGroupStorageV2.getTripById(
+                    widget.trip.id,
+                  );
+                  if (updatedGroup != null) {
+                    await NotificationManager().updateNotificationForGroup(
+                      updatedGroup,
+                      gloc,
+                    );
+                  }
+                }
 
                 // Check if we should prompt for rating
                 // This is done after successful expense save
@@ -592,6 +622,19 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                 // Refresh local state and notifier
                 await _refreshGroup();
                 _groupNotifier?.notifyGroupUpdated(_trip!.id);
+
+                // Update notification if enabled
+                if (_trip?.notificationEnabled == true) {
+                  final updatedGroup = await ExpenseGroupStorageV2.getTripById(
+                    _trip!.id,
+                  );
+                  if (updatedGroup != null) {
+                    await NotificationManager().updateNotificationForGroup(
+                      updatedGroup,
+                      gloc,
+                    );
+                  }
+                }
 
                 if (!sheetCtx.mounted) return;
                 AppToast.show(
