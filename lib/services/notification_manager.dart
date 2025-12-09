@@ -41,6 +41,30 @@ class NotificationManager {
     }
   }
 
+  /// Restores notifications for all groups that have notifications enabled
+  /// Should be called at app startup to ensure notifications are displayed
+  static Future<void> restoreNotifications(BuildContext context) async {
+    try {
+      // Get localizations before async operations
+      final loc = gen.AppLocalizations.of(context);
+      
+      // Get all active (non-archived) groups
+      final groups = await ExpenseGroupStorageV2.getActiveGroups();
+      
+      // Find groups with notifications enabled
+      for (final group in groups) {
+        if (group.notificationEnabled) {
+          debugPrint('Restoring notification for group: ${group.title}');
+          await NotificationManager().updateNotificationForGroup(group, loc);
+          // Only show one notification at a time (the first enabled group found)
+          break;
+        }
+      }
+    } catch (e) {
+      debugPrint('Failed to restore notifications: $e');
+    }
+  }
+
   /// Handles the "add expense" action from notification
   /// Navigates to home page and opens the add expense bottom sheet for the group
   static Future<void> handleAddExpenseAction(String groupId) async {
