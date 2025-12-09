@@ -2,10 +2,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:provider/provider.dart';
-import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'package:io_caravella_egm/settings/widgets/settings_card.dart';
 import 'update_service_factory.dart';
 import 'update_service_interface.dart';
+import 'update_localizations.dart';
 
 /// Widget for displaying update check functionality in settings.
 ///
@@ -17,7 +16,14 @@ import 'update_service_interface.dart';
 ///
 /// On non-Android platforms, returns an empty SizedBox to hide completely.
 class UpdateCheckWidget extends StatelessWidget {
-  const UpdateCheckWidget({super.key});
+  final UpdateLocalizations localizations;
+  final Widget Function(BuildContext, Widget) cardBuilder;
+
+  const UpdateCheckWidget({
+    super.key,
+    required this.localizations,
+    required this.cardBuilder,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +32,6 @@ class UpdateCheckWidget extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    final loc = gen.AppLocalizations.of(context);
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
 
@@ -38,7 +43,6 @@ class UpdateCheckWidget extends StatelessWidget {
           if (notifier.updateAvailable) {
             return _buildUpdateAvailableCard(
               context,
-              loc,
               notifier,
               colorScheme,
               textTheme,
@@ -46,19 +50,21 @@ class UpdateCheckWidget extends StatelessWidget {
           }
 
           // Show compact card for normal state
-          return SettingsCard(
-            context: context,
-            color: colorScheme.surface,
-            child: ListTile(
+          return cardBuilder(
+            context,
+            ListTile(
               leading: const Icon(Icons.system_update_outlined),
-              title: Text(loc.check_for_updates, style: textTheme.titleMedium),
-              subtitle: _buildUpdateSubtitle(context, loc, notifier),
-              trailing: _buildUpdateTrailing(context, loc, notifier),
+              title: Text(
+                localizations.checkForUpdates,
+                style: textTheme.titleMedium,
+              ),
+              subtitle: _buildUpdateSubtitle(context, notifier),
+              trailing: _buildUpdateTrailing(context, notifier),
               onTap: notifier.isChecking ||
                       notifier.isDownloading ||
                       notifier.isInstalling
                   ? null
-                  : () => _handleUpdateCheck(context, loc, notifier),
+                  : () => _handleUpdateCheck(context, notifier),
             ),
           );
         },
@@ -68,7 +74,6 @@ class UpdateCheckWidget extends StatelessWidget {
 
   Widget _buildUpdateAvailableCard(
     BuildContext context,
-    gen.AppLocalizations loc,
     UpdateNotifier notifier,
     ColorScheme colorScheme,
     TextTheme textTheme,
@@ -98,7 +103,7 @@ class UpdateCheckWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        loc.update_available,
+                        localizations.updateAvailable,
                         style: textTheme.titleMedium?.copyWith(
                           color: colorScheme.onPrimaryContainer,
                           fontWeight: FontWeight.w600,
@@ -120,7 +125,7 @@ class UpdateCheckWidget extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              loc.update_available_desc(notifier.availableVersion ?? ''),
+              localizations.updateAvailableDesc,
               style: textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onPrimaryContainer,
               ),
@@ -131,15 +136,15 @@ class UpdateCheckWidget extends StatelessWidget {
               children: [
                 if (!notifier.isDownloading && !notifier.isInstalling)
                   TextButton(
-                    onPressed: () => _handleUpdateCheck(context, loc, notifier),
-                    child: Text(loc.update_later),
+                    onPressed: () => _handleUpdateCheck(context, notifier),
+                    child: Text(localizations.updateLater),
                   ),
                 if (!notifier.isDownloading && !notifier.isInstalling)
                   const SizedBox(width: 8),
                 FilledButton.icon(
                   onPressed: notifier.isDownloading || notifier.isInstalling
                       ? null
-                      : () => _handleStartUpdate(context, loc, notifier),
+                      : () => _handleStartUpdate(context, notifier),
                   icon: notifier.isDownloading || notifier.isInstalling
                       ? const SizedBox(
                           width: 16,
@@ -149,10 +154,10 @@ class UpdateCheckWidget extends StatelessWidget {
                       : const Icon(Icons.download),
                   label: Text(
                     notifier.isDownloading
-                        ? loc.update_downloading
+                        ? localizations.updateDownloading
                         : notifier.isInstalling
-                            ? loc.update_installing
-                            : loc.update_now,
+                            ? localizations.updateInstalling
+                            : localizations.updateNow,
                   ),
                 ),
               ],
@@ -165,26 +170,25 @@ class UpdateCheckWidget extends StatelessWidget {
 
   Widget _buildUpdateSubtitle(
     BuildContext context,
-    gen.AppLocalizations loc,
     UpdateNotifier notifier,
   ) {
     final textTheme = Theme.of(context).textTheme;
 
     if (notifier.isChecking) {
-      return Text(loc.checking_for_updates, style: textTheme.bodySmall);
+      return Text(localizations.checkingForUpdates, style: textTheme.bodySmall);
     }
 
     if (notifier.isDownloading) {
-      return Text(loc.update_downloading, style: textTheme.bodySmall);
+      return Text(localizations.updateDownloading, style: textTheme.bodySmall);
     }
 
     if (notifier.isInstalling) {
-      return Text(loc.update_installing, style: textTheme.bodySmall);
+      return Text(localizations.updateInstalling, style: textTheme.bodySmall);
     }
 
     if (notifier.error != null) {
       return Text(
-        loc.update_error,
+        localizations.updateError,
         style: textTheme.bodySmall?.copyWith(
           color: Theme.of(context).colorScheme.error,
         ),
@@ -193,19 +197,18 @@ class UpdateCheckWidget extends StatelessWidget {
 
     if (notifier.updateAvailable) {
       return Text(
-        loc.update_available_desc(notifier.availableVersion ?? ''),
+        localizations.updateAvailableDesc,
         style: textTheme.bodySmall?.copyWith(
           color: Theme.of(context).colorScheme.primary,
         ),
       );
     }
 
-    return Text(loc.check_for_updates_desc, style: textTheme.bodySmall);
+    return Text(localizations.checkForUpdatesDesc, style: textTheme.bodySmall);
   }
 
   Widget? _buildUpdateTrailing(
     BuildContext context,
-    gen.AppLocalizations loc,
     UpdateNotifier notifier,
   ) {
     if (notifier.isChecking ||
@@ -220,8 +223,8 @@ class UpdateCheckWidget extends StatelessWidget {
 
     if (notifier.updateAvailable) {
       return FilledButton(
-        onPressed: () => _handleStartUpdate(context, loc, notifier),
-        child: Text(loc.update_now),
+        onPressed: () => _handleStartUpdate(context, notifier),
+        child: Text(localizations.updateNow),
       );
     }
 
@@ -230,7 +233,6 @@ class UpdateCheckWidget extends StatelessWidget {
 
   Future<void> _handleUpdateCheck(
     BuildContext context,
-    gen.AppLocalizations loc,
     UpdateNotifier notifier,
   ) async {
     await notifier.checkForUpdate();
@@ -238,15 +240,22 @@ class UpdateCheckWidget extends StatelessWidget {
     if (!context.mounted) return;
 
     if (notifier.error != null) {
-      AppToast.show(context, loc.update_error, type: ToastType.error);
+      AppToast.show(
+        context,
+        localizations.updateError,
+        type: ToastType.error,
+      );
     } else if (!notifier.updateAvailable) {
-      AppToast.show(context, loc.no_update_available, type: ToastType.info);
+      AppToast.show(
+        context,
+        localizations.noUpdateAvailable,
+        type: ToastType.info,
+      );
     }
   }
 
   Future<void> _handleStartUpdate(
     BuildContext context,
-    gen.AppLocalizations loc,
     UpdateNotifier notifier,
   ) async {
     // Start flexible update (allows background download)
@@ -257,12 +266,16 @@ class UpdateCheckWidget extends StatelessWidget {
     if (success) {
       AppToast.show(
         context,
-        loc.update_downloading,
+        localizations.updateDownloading,
         type: ToastType.info,
         icon: Icons.download,
       );
     } else if (notifier.error != null) {
-      AppToast.show(context, loc.update_error, type: ToastType.error);
+      AppToast.show(
+        context,
+        localizations.updateError,
+        type: ToastType.error,
+      );
     }
   }
 }

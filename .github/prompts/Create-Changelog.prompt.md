@@ -1,5 +1,5 @@
 ---
-mode: agent
+agent: agent
 ---
 
 # Task: Update CHANGELOG.md with Recent Changes

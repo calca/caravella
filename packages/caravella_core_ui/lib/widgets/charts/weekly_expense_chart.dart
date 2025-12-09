@@ -6,11 +6,15 @@ import 'chart_type.dart';
 class WeeklyExpenseChart extends StatelessWidget {
   final List<double> dailyTotals;
   final ThemeData theme;
+  final String badgeText;
+  final String semanticLabel;
 
   const WeeklyExpenseChart({
     super.key,
     required this.dailyTotals,
     required this.theme,
+    required this.badgeText,
+    required this.semanticLabel,
   });
 
   @override
@@ -25,7 +29,12 @@ class WeeklyExpenseChart extends StatelessWidget {
       children: [
         Expanded(child: _buildChart()),
         const SizedBox(width: 12),
-        ChartBadge(chartType: ChartType.weekly, theme: theme),
+        ChartBadge(
+          chartType: ChartType.weekly,
+          theme: theme,
+          badgeText: badgeText,
+          semanticLabel: semanticLabel,
+        ),
       ],
     );
   }

@@ -20,6 +20,10 @@
   "@monthlyChartBadge": {
     "description": "Letter indicator for monthly chart badge"
   },
+  "dateRangeChartBadge": "D",
+  "@dateRangeChartBadge": {
+    "description": "Letter indicator for date range chart badge"
+  },
   "weeklyExpensesChart": "Despesas semanais",
   "@weeklyExpensesChart": {
     "description": "Label for weekly expenses chart"
@@ -27,6 +31,10 @@
   "monthlyExpensesChart": "Despesas mensais",
   "@monthlyExpensesChart": {
     "description": "Label for monthly expenses chart"
+  },
+  "dateRangeExpensesChart": "Despesas por período",
+  "@dateRangeExpensesChart": {
+    "description": "Label for date range expenses chart"
   },
   "settings_flag_secure_desc": "Impede capturas de tela e gravação da tela",
   "settings_flag_secure_title": "Tela segura",
@@ -65,6 +73,12 @@
   "share_all_csv": "Compartilhar tudo (CSV)",
   "download_all_ofx": "Baixar tudo (OFX)",
   "share_all_ofx": "Compartilhar tudo (OFX)",
+  "download_all_markdown": "Baixar tudo (Markdown)",
+  "share_all_markdown": "Compartilhar tudo (Markdown)",
+  "markdown_select_directory_title": "Selecionar pasta para salvar Markdown",
+  "markdown_saved_in": "Markdown salvo em: {path}",
+  "markdown_save_cancelled": "Exportação Markdown cancelada",
+  "markdown_save_error": "Erro ao salvar arquivo Markdown",
   "share_label": "Compartilhar",
   "share_text_label": "Compartilhar texto",
   "share_image_label": "Compartilhar imagem",
@@ -156,14 +170,14 @@
   "no_search_results": "Nenhum grupo encontrado para",
   "active": "Ativo",
   "archive": "Arquivar",
-  "pin": "Fixar",
-  "unpin": "Desfixar",
+  "pin": "Favorito",
+  "unpin": "Desfavorito",
   "delete": "Excluir",
   "undo": "DESFAZER",
   "archived_with_undo": "Arquivado",
   "unarchived_with_undo": "Desarquivado",
-  "pinned_with_undo": "Fixado",
-  "unpinned_with_undo": "Desfixado",
+  "pinned_with_undo": "Marcado como favorito",
+  "unpinned_with_undo": "Favorito removido",
   "deleted_with_undo": "Excluído",
   "archive_confirm": "Deseja arquivar",
   "overview": "Visão geral",
@@ -195,6 +209,10 @@
   "error_selecting_image": "Erro ao selecionar imagem",
   "error_saving_image": "Erro ao salvar imagem",
   "already_exists": "já existe",
+  "other_settings": "Outras configurações",
+  "other_settings_desc": "Moeda, plano de fundo e localização automática",
+  "segment_general": "Geral",
+  "segment_other": "Outro",
   "status_all": "Todos",
   "status_active": "Ativos",
   "status_archived": "Arquivados",
@@ -228,7 +246,7 @@
   "color_suggested_subtitle": "Escolha uma das cores compatíveis com o tema",
   "color_random_subtitle": "Deixe o app escolher uma cor",
   "search_currency": "Pesquisar moeda...",
-  "activity": "Atividade",
+  "activity": "Despesas",
   "search_expenses_hint": "Pesquisar por nome ou nota...",
   "clear_filters": "Limpar",
   "show_filters": "Mostrar filtros",
@@ -250,10 +268,8 @@
   "edit_group": "Editar grupo",
   "edit_group_desc": "Modificar configurações, participantes e categorias do grupo",
   "new_group_desc": "Criar um novo grupo de despesas com configurações personalizadas",
-  "delete_group": "Excluir grupo",
   "delete_group_confirm": "Tem certeza de que deseja excluir este grupo de despesas? Esta ação não pode ser desfeita.",
-  "pin_group": "Fixar grupo",
-  "pin": "Fixar",
+  "pin_group": "Marcar como favorito",
   "theme_light": "Claro",
   "developed_by": "Desenvolvido por calca",
   "daily_expenses_chart": "Despesas diárias",
@@ -288,6 +304,8 @@
   "location_error": "Erro ao obter localização",
   "resolving_address": "Resolvendo endereço…",
   "address_resolved": "Endereço resolvido",
+  "search_place": "Procurar lugar",
+  "search_place_hint": "Procurar um lugar ou endereço",
   "settings_general": "Geral",
   "settings_general_desc": "Idioma e aparência",
   "settings_auto_location_section": "Detecção de localização",
@@ -583,7 +601,7 @@
   ,"send_reminder": "Enviar lembrete"
   ,"@send_reminder": {"description": "Rótulo do botão para enviar um lembrete de pagamento a um participante"}
   ,"reminder_message_single": "Oi {participantName}! 👋\n\nGostaria de lembrar que você deve {amount} a {creditorName} para o grupo \"{groupName}\".\n\nObrigado! 😊"
-  ,"@reminder_message_single": {"description": "Mensagem de lembrete quando um participante deve dinheiro a uma única pessoa", "placeholders": {"participantName": {}, "amount": {"type": "String"}, "creditorName": {}, "groupName": {}}}
+  ,"@reminder_message_single": {"description": "Mensagem de lembrete quando um participante deve dinheiro a uma única pessoa", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
   ,"reminder_message_multiple": "Oi {participantName}! 👋\n\nGostaria de lembrar seus pagamentos para o grupo \"{groupName}\":\n\n{debtsList}\n\nObrigado! 😊"
   ,"@reminder_message_multiple": {"description": "Mensagem de lembrete quando um participante deve dinheiro a várias pessoas", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
   ,"about": "Sobre"
@@ -607,6 +625,7 @@
   ,"date": "Data"
   ,"date_range_partial": "Selecione ambas as datas"
   ,"dates": "Período"
+  ,"delete_group": "Excluir grupo"
   ,"delete_participant": "Excluir participante"
   ,"delete_trip": "Excluir viagem"
   ,"edit_category": "Editar categoria"
@@ -655,13 +674,104 @@
   ,"show_overview": "Mostrar visão geral"
   ,"start_date_optional": "De"
   ,"statistics": "Estatísticas"
+  ,"period": "Período"
+  ,"total_expenses": "Total de despesas"
+  ,"number_of_expenses": "Número de despesas"
   ,"theme_automatic": "Automático"
   ,"theme_dark": "Escuro"
   ,"try_different_search": "Tente pesquisar com palavras diferentes"
   ,"unarchive": "Desarquivar"
   ,"unarchive_confirm": "Deseja desarquivar"
-  ,"unpin_group": "Desafixar grupo"
+  ,"unpin_group": "Remover favorito"
   ,"weekly_expenses_chart": "Despesas semanais"
+  ,"notification_enabled": "Notificação persistente"
+  ,"@notification_enabled": {"description": "Etiqueta para a configuração de notificação persistente no grupo"}
+  ,"notification_enabled_desc": "Mostra as despesas de hoje em uma notificação sempre visível"
+  ,"@notification_enabled_desc": {"description": "Descrição da configuração de notificação persistente"}
+  ,"notification_daily_spent": "Gasto diário: {amount} {currency}"
+  ,"@notification_daily_spent": {"description": "Texto na notificação que mostra o gasto diário médio", "placeholders": {"amount": {}, "currency": {}}}
+  ,"notification_total_spent": "Total: {amount} {currency}"
+  ,"@notification_total_spent": {"description": "Texto na notificação que mostra o gasto total", "placeholders": {"amount": {}, "currency": {}}}
+  ,"notification_add_expense": "Adicionar despesa"
+  ,"@notification_add_expense": {"description": "Etiqueta do botão na notificação para adicionar uma nova despesa"}
+  ,"notification_close": "Fechar"
+  ,"@notification_close": {"description": "Etiqueta do botão na notificação para fechar a notificação"}
+  ,"group_type": "Tipo"
+  ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
+  ,"group_type_description": "Escolha o tipo de grupo"
+  ,"@group_type_description": {"description": "Descrição para seleção do tipo de grupo"}
+  ,"group_type_travel": "Viagem"
+  ,"@group_type_travel": {"description": "Tipo de grupo: viagem"}
+  ,"group_type_personal": "Pessoal"
+  ,"@group_type_personal": {"description": "Tipo de grupo: pessoal"}
+  ,"group_type_family": "Família"
+  ,"@group_type_family": {"description": "Tipo de grupo: família"}
+  ,"group_type_other": "Outro"
+  ,"@group_type_other": {"description": "Tipo de grupo: outro"}
+  ,"category_travel_transport": "Transporte"
+  ,"@category_travel_transport": {"description": "Categoria padrão para grupo tipo viagem"}
+  ,"category_travel_accommodation": "Acomodação"
+  ,"@category_travel_accommodation": {"description": "Categoria padrão para grupo tipo viagem"}
+  ,"category_travel_restaurants": "Restaurantes"
+  ,"@category_travel_restaurants": {"description": "Categoria padrão para grupo tipo viagem"}
+  ,"category_personal_shopping": "Compras"
+  ,"@category_personal_shopping": {"description": "Categoria padrão para grupo tipo pessoal"}
+  ,"category_personal_health": "Saúde"
+  ,"@category_personal_health": {"description": "Categoria padrão para grupo tipo pessoal"}
+  ,"category_personal_entertainment": "Entretenimento"
+  ,"@category_personal_entertainment": {"description": "Categoria padrão para grupo tipo pessoal"}
+  ,"category_family_groceries": "Supermercado"
+  ,"@category_family_groceries": {"description": "Categoria padrão para grupo tipo família"}
+  ,"category_family_home": "Casa"
+  ,"@category_family_home": {"description": "Categoria padrão para grupo tipo família"}
+  ,"category_family_bills": "Contas"
+  ,"@category_family_bills": {"description": "Categoria padrão para grupo tipo família"}
+  ,"category_other_misc": "Diversos"
+  ,"@category_other_misc": {"description": "Categoria padrão para grupo tipo outro"}
+  ,"category_other_utilities": "Utilidades"
+  ,"@category_other_utilities": {"description": "Categoria padrão para grupo tipo outro"}
+  ,"category_other_services": "Serviços"
+  ,"@category_other_services": {"description": "Categoria padrão para grupo tipo outro"}
+  ,"attachments": "Anexos"
+  ,"@attachments": {"description": "Etiqueta para anexos de despesas"}
+  ,"add_attachment": "Adicionar anexo"
+  ,"@add_attachment": {"description": "Botão para adicionar um anexo"}
+  ,"attachment_limit_reached": "Limite máximo de 5 anexos atingido"
+  ,"@attachment_limit_reached": {"description": "Mensagem de erro ao tentar adicionar mais de 5 anexos"}
+  ,"delete_attachment": "Excluir anexo"
+  ,"@delete_attachment": {"description": "Ação para excluir um anexo"}
+  ,"share_attachment": "Compartilhar anexo"
+  ,"@share_attachment": {"description": "Ação para compartilhar um anexo"}
+  ,"delete_attachment_confirm_title": "Excluir anexo"
+  ,"@delete_attachment_confirm_title": {"description": "Título do diálogo de confirmação de exclusão de anexo"}
+  ,"delete_attachment_confirm_message": "Tem certeza de que deseja excluir este anexo?"
+  ,"@delete_attachment_confirm_message": {"description": "Mensagem do diálogo de confirmação de exclusão de anexo"}
+  ,"attachment_source": "Escolher fonte"
+  ,"@attachment_source": {"description": "Título para escolher a fonte do anexo"}
+  ,"from_files": "Dos arquivos"
+  ,"@from_files": {"description": "Opção para escolher dos arquivos"}
+  ,"archived_group_readonly": "Grupo arquivado - Somente leitura"
+  ,"@archived_group_readonly": {"description": "Mensagem indicando que um grupo arquivado está no modo somente leitura"}
+  ,"archived_group_readonly_desc": "Este grupo está arquivado. Você não pode modificá-lo ou adicionar novas despesas."
+  ,"@archived_group_readonly_desc": {"description": "Descrição para grupo arquivado no modo somente leitura"}
+  ,"expense_readonly": "Despesa - Somente leitura"
+  ,"@expense_readonly": {"description": "Título para uma despesa no modo somente leitura"}
+  ,"expense_readonly_archived": "Esta despesa pertence a um grupo arquivado e não pode ser modificada."
+  ,"@expense_readonly_archived": {"description": "Mensagem explicando que uma despesa não pode ser modificada porque o grupo está arquivado"}
+  ,"expense": "Despesa"
+  ,"@expense": {"description": "Título genérico para uma despesa"}
+  ,"notification_enabled": "Notificação persistente"
+  ,"@notification_enabled": {"description": "Rótulo para ativar/desativar notificação persistente"}
+  ,"notification_daily_spent": "Despesas de hoje: {amount} {currency}"
+  ,"@notification_daily_spent": {"description": "Valor gasto no dia atual na notificação", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
+  ,"notification_total_spent": "Total: {amount} {currency}"
+  ,"@notification_total_spent": {"description": "Valor total gasto na notificação", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
+  ,"notification_add_expense": "Adicionar Despesa"
+  ,"@notification_add_expense": {"description": "Botão de ação na notificação para adicionar despesa"}
+  ,"notification_close": "Fechar"
+  ,"@notification_close": {"description": "Botão de ação na notificação para fechar"}
+  ,"notification_disable": "Desativar"
+  ,"@notification_disable": {"description": "Botão de ação na notificação para desativar notificações"}
   ,"wizard_group_creation_title": "Novo Grupo"
   ,"@wizard_group_creation_title": {"description": "Título do assistente de criação de grupo"}
   ,"wizard_step_name": "Nome"
@@ -738,57 +848,4 @@
   ,"@wizard_success_title": {"description": "Título do diálogo de sucesso"}
   ,"wizard_go_to_group": "Ir para o grupo"
   ,"@wizard_go_to_group": {"description": "Botão para ir ao grupo criado"}
-  ,"create": "Criar"
-  ,"undo": "Desfazer"
-  ,"weekday_mon": "Seg"
-  ,"weekday_tue": "Ter"
-  ,"weekday_wed": "Qua"
-  ,"weekday_thu": "Qui"
-  ,"weekday_fri": "Sex"
-  ,"weekday_sat": "Sáb"
-  ,"weekday_sun": "Dom"
-  ,"month_january": "Janeiro"
-  ,"month_february": "Fevereiro"
-  ,"month_march": "Março"
-  ,"month_april": "Abril"
-  ,"month_may": "Maio"
-  ,"month_june": "Junho"
-  ,"month_july": "Julho"
-  ,"month_august": "Agosto"
-  ,"month_september": "Setembro"
-  ,"month_october": "Outubro"
-  ,"month_november": "Novembro"
-  ,"month_december": "Dezembro"
-  ,"expenses_map": "Mapa de despesas"
-  ,"view_on_map": "Ver no mapa"
-  ,"no_locations_available": "Nenhuma localização disponível"
-  ,"no_locations_subtitle": "Adicione localizações às despesas para vê-las no mapa"
-  ,"expense_count": "{count, plural, =1{1 despesa} other{{count} despesas}}"
-  ,"days_count": "{count, plural, =1{1 dia} other{{count} dias}}"
-  ,"suggested_duration": "Duração sugerida"
-  ,"settings_auto_location_section": "Localização automática"
-  ,"settings_auto_location_section_desc": "Capturar automaticamente a localização das despesas"
-  ,"settings_auto_location_title": "Ativar localização automática"
-  ,"settings_auto_location_desc": "Salvar automaticamente a localização ao adicionar despesas"
-  ,"send_reminder": "Enviar lembrete"
-  ,"archived_with_undo": "Arquivado"
-  ,"unarchived_with_undo": "Desarquivado"
-  ,"pinned_with_undo": "Fixado"
-  ,"unpinned_with_undo": "Desfixado"
-  ,"deleted_with_undo": "Eliminado"
-  ,"settings_dynamic_color": "Cor dinâmica"
-  ,"settings_dynamic_color_desc": "Usar esquema de cores do sistema (Android 12+)"
-  ,"check_for_updates": "Verificar atualizações"
-  ,"check_for_updates_desc": "Verificar se há uma nova versão disponível"
-  ,"checking_for_updates": "Verificando atualizações..."
-  ,"no_update_available": "Você está atualizado!"
-  ,"update_available": "Atualização disponível"
-  ,"update_available_desc": "A versão {version} está disponível"
-  ,"update_now": "Atualizar agora"
-  ,"update_later": "Mais tarde"
-  ,"update_downloading": "Baixando atualização..."
-  ,"update_installing": "Instalando atualização..."
-  ,"update_error": "Falha na atualização"
-  ,"changelog_title": "Novidades"
-  ,"changelog_desc": "Alterações e melhorias recentes"
 }

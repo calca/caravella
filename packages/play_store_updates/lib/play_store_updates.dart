@@ -10,6 +10,9 @@ export 'src/update_service_interface.dart';
 export 'src/update_service_noop.dart';
 export 'src/update_service_factory.dart';
 
+// Localizations interface
+export 'src/update_localizations.dart';
+
 // UI components and helpers
 export 'src/update_check_helper.dart';
 export 'src/update_check_widget.dart';

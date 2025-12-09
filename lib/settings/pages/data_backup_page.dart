@@ -195,11 +195,9 @@ class DataBackupPage extends StatelessWidget {
 
       if (!context.mounted) return;
 
-      final params = ShareParams(
-        text: loc.backup_share_message,
-        files: [XFile(zipPath)],
+      await SharePlus.instance.share(
+        ShareParams(text: loc.backup_share_message, files: [XFile(zipPath)]),
       );
-      await SharePlus.instance.share(params);
     } catch (e) {
       if (!context.mounted) return;
       AppToast.show(

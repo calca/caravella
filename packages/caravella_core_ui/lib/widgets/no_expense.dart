@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 class NoExpense extends StatelessWidget {
   final String semanticLabel;
-  const NoExpense({super.key, required this.semanticLabel});
+  final String noExpenseLabel;
+  final String addFirstExpenseLabel;
+
+  const NoExpense({
+    super.key,
+    required this.semanticLabel,
+    required this.noExpenseLabel,
+    required this.addFirstExpenseLabel,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +26,7 @@ class NoExpense extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            gen.AppLocalizations.of(context).no_expense_label,
+            noExpenseLabel,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               color: Theme.of(
                 context,
@@ -28,7 +35,7 @@ class NoExpense extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            gen.AppLocalizations.of(context).add_first_expense,
+            addFirstExpenseLabel,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: Theme.of(
                 context,

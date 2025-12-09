@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'bottom_sheet_scaffold.dart';
 import 'app_toast.dart';
 
@@ -10,12 +9,14 @@ Future<T?> showSelectionBottomSheet<T>({
   required List<T> items,
   required T? selected,
   required String Function(T) itemLabel,
-  gen.AppLocalizations? gloc,
   Future<void> Function(String)? onAddItemInline,
   String? addItemHint,
   String? sheetTitle,
+  String? addLabel,
+  String? cancelLabel,
+  String? addCategoryLabel,
+  String? alreadyExistsMessage,
 }) async {
-  final resolved = gloc ?? gen.AppLocalizations.of(context);
   return showModalBottomSheet<T>(
     context: context,
     isScrollControlled: true,
@@ -29,8 +30,11 @@ Future<T?> showSelectionBottomSheet<T>({
       itemLabel: itemLabel,
       onAddItemInline: onAddItemInline,
       addItemHint: addItemHint,
-      gloc: resolved,
       sheetTitle: sheetTitle,
+      addLabel: addLabel,
+      cancelLabel: cancelLabel,
+      addCategoryLabel: addCategoryLabel,
+      alreadyExistsMessage: alreadyExistsMessage,
     ),
   );
 }
@@ -41,16 +45,22 @@ class _SelectionSheet<T> extends StatefulWidget {
   final String Function(T) itemLabel;
   final Future<void> Function(String)? onAddItemInline;
   final String? addItemHint;
-  final gen.AppLocalizations gloc;
   final String? sheetTitle;
+  final String? addLabel;
+  final String? cancelLabel;
+  final String? addCategoryLabel;
+  final String? alreadyExistsMessage;
   const _SelectionSheet({
     required this.items,
     required this.selected,
     required this.itemLabel,
-    required this.gloc,
     this.onAddItemInline,
     this.addItemHint,
     this.sheetTitle,
+    this.addLabel,
+    this.cancelLabel,
+    this.addCategoryLabel,
+    this.alreadyExistsMessage,
   });
 
   @override
@@ -129,9 +139,6 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
     final val = _inlineController.text.trim();
     if (val.isEmpty || widget.onAddItemInline == null) return;
 
-    // Capture messenger before any async gaps
-    final messenger = ScaffoldMessenger.of(context);
-
     // Check for duplicates (case-insensitive)
     final lower = val.toLowerCase();
     final isDuplicate = widget.items.any(
@@ -139,11 +146,13 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
     );
 
     if (isDuplicate) {
-      AppToast.showFromMessenger(
-        messenger,
-        '${widget.gloc.category_name} ${widget.gloc.already_exists}',
-        type: ToastType.info,
-      );
+      if (widget.alreadyExistsMessage != null) {
+        AppToast.show(
+          context,
+          widget.alreadyExistsMessage!,
+          type: ToastType.info,
+        );
+      }
       return;
     }
 
@@ -156,11 +165,7 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
       }
     } catch (e) {
       if (mounted) {
-        AppToast.showFromMessenger(
-          messenger,
-          'Error adding item: $e',
-          type: ToastType.error,
-        );
+        AppToast.show(context, 'Error adding item: $e', type: ToastType.error);
       }
     }
   }
@@ -182,7 +187,7 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
                 autofocus: true,
                 decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintText: widget.addItemHint ?? widget.gloc.category_name,
+                  hintText: widget.addItemHint,
                 ),
                 textInputAction: TextInputAction.done,
                 onSubmitted: (_) => _commitInlineAdd(),
@@ -190,12 +195,12 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
             ),
           ),
           IconButton(
-            tooltip: widget.gloc.add,
+            tooltip: widget.addLabel,
             icon: const Icon(Icons.check_rounded),
             onPressed: _commitInlineAdd,
           ),
           IconButton(
-            tooltip: widget.gloc.cancel,
+            tooltip: widget.cancelLabel,
             icon: const Icon(Icons.close_outlined),
             onPressed: _cancelInlineAdd,
           ),
@@ -219,7 +224,7 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
               const SizedBox(width: 16),
               Expanded(
                 child: Text(
-                  widget.gloc.add_category,
+                  widget.addCategoryLabel ?? '',
                   style: theme.textTheme.bodyMedium,
                 ),
               ),
@@ -302,9 +307,7 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
         minHeight: screenHeight * 0.3, // Minimum 30% height
       ),
       child: GroupBottomSheetScaffold(
-        title:
-            widget.sheetTitle ??
-            (widget.onAddItemInline != null ? widget.gloc.add : null),
+        title: widget.sheetTitle,
         showHandle: true,
         scrollable: false,
         child: Padding(

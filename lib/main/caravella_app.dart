@@ -4,6 +4,7 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
+import 'package:zentoast/zentoast.dart';
 
 import 'route_observer.dart';
 import 'provider_setup.dart';
@@ -21,11 +22,6 @@ class _CaravellaAppState extends State<CaravellaApp> {
   String _locale = 'it';
   ThemeMode _themeMode = ThemeMode.system;
   bool _dynamicColorEnabled = false;
-
-  // Global scaffold messenger key to allow showing SnackBars/toasts safely
-  // even when the local BuildContext that requested it is already disposed.
-  static final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
-      GlobalKey<ScaffoldMessengerState>();
 
   @override
   void initState() {
@@ -106,43 +102,55 @@ class _CaravellaAppState extends State<CaravellaApp> {
             onThemeChange: _changeTheme,
             dynamicColorEnabled: _dynamicColorEnabled,
             onDynamicColorChange: _changeDynamicColor,
-            child: MaterialApp(
-              title: AppConfig.appName,
-              debugShowCheckedModeBanner: AppConfig.showDebugBanner,
-              theme: _dynamicColorEnabled && lightDynamic != null
-                  ? CaravellaThemes.createLightTheme(
-                      dynamicColorScheme: lightDynamic,
-                    )
-                  : CaravellaThemes.light,
-              darkTheme: _dynamicColorEnabled && darkDynamic != null
-                  ? CaravellaThemes.createDarkTheme(
-                      dynamicColorScheme: darkDynamic,
-                    )
-                  : CaravellaThemes.dark,
-              themeMode: _themeMode,
-              scaffoldMessengerKey: _scaffoldMessengerKey,
-              navigatorKey: navigatorKey,
-              locale: Locale(_locale),
-              // Use generated locales & delegates to avoid divergence and ensure pt is enabled
-              supportedLocales: gen.AppLocalizations.supportedLocales,
-              localizationsDelegates:
-                  gen.AppLocalizations.localizationsDelegates,
-              home: const CaravellaHomePage(title: 'Caravella'),
-              navigatorObservers: [routeObserver],
+            child: ToastProvider.create(
+              child: MaterialApp(
+                title: AppConfig.appName,
+                debugShowCheckedModeBanner: AppConfig.showDebugBanner,
+                theme: _dynamicColorEnabled && lightDynamic != null
+                    ? CaravellaThemes.createLightTheme(
+                        dynamicColorScheme: lightDynamic,
+                      )
+                    : CaravellaThemes.light,
+                darkTheme: _dynamicColorEnabled && darkDynamic != null
+                    ? CaravellaThemes.createDarkTheme(
+                        dynamicColorScheme: darkDynamic,
+                      )
+                    : CaravellaThemes.dark,
+                themeMode: _themeMode,
+                navigatorKey: navigatorKey,
+                locale: Locale(_locale),
+                // Use generated locales & delegates to avoid divergence and ensure pt is enabled
+                supportedLocales: gen.AppLocalizations.supportedLocales,
+                localizationsDelegates:
+                    gen.AppLocalizations.localizationsDelegates,
+                builder: (context, child) => ToastThemeProvider(
+                  data: const ToastTheme(
+                    gap: 8,
+                    viewerPadding: EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                  ),
+                  child: Stack(
+                    children: [
+                      Positioned.fill(child: child ?? const SizedBox()),
+                      SafeArea(
+                        child: ToastViewer(
+                          alignment: Alignment.topCenter,
+                          delay: const Duration(milliseconds: 2400),
+                          visibleCount: 3,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                home: const CaravellaHomePage(title: 'Caravella'),
+                navigatorObservers: [routeObserver],
+              ),
             ),
           );
         },
       ),
     );
   }
-
-  /// Expose a top-level getter for the scaffold messenger state so utility
-  /// classes (e.g. AppToast) can fallback to it when the original context
-  /// becomes unmounted between an async operation and UI feedback.
-  static ScaffoldMessengerState? get rootScaffoldMessenger =>
-      _scaffoldMessengerKey.currentState;
 }
-
-/// Expose the root scaffold messenger for global access.
-ScaffoldMessengerState? get rootScaffoldMessenger =>
-    _CaravellaAppState.rootScaffoldMessenger;

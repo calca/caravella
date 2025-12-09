@@ -16,9 +16,11 @@ class GroupFormState extends ChangeNotifier {
     'code': 'EUR',
     'name': 'Euro',
   };
+  ExpenseGroupType? groupType = ExpenseGroupType.personal;
   bool autoLocationEnabled = false;
   bool loadingImage = false;
   bool isSaving = false;
+  bool notificationEnabled = false;
 
   bool get isBusy => loadingImage || isSaving;
 
@@ -101,6 +103,11 @@ class GroupFormState extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setGroupType(ExpenseGroupType? type) {
+    groupType = type;
+    notifyListeners();
+  }
+
   void setColor(int? c) {
     color = c;
     if (c != null) imagePath = null;
@@ -128,6 +135,12 @@ class GroupFormState extends ChangeNotifier {
   void setSaving(bool v) {
     if (isSaving == v) return;
     isSaving = v;
+    notifyListeners();
+  }
+
+  void setNotificationEnabled(bool v) {
+    if (notificationEnabled == v) return;
+    notificationEnabled = v;
     notifyListeners();
   }
 

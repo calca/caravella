@@ -20,6 +20,10 @@
   "@monthlyChartBadge": {
     "description": "Letter indicator for monthly chart badge"
   },
+  "dateRangeChartBadge": "D",
+  "@dateRangeChartBadge": {
+    "description": "Letter indicator for date range chart badge"
+  },
   "weeklyExpensesChart": "Weekly expenses",
   "@weeklyExpensesChart": {
     "description": "Label for weekly expenses chart"
@@ -28,12 +32,38 @@
   "@monthlyExpensesChart": {
     "description": "Label for monthly expenses chart"
   },
+  "dateRangeExpensesChart": "Date range expenses",
+  "@dateRangeExpensesChart": {
+    "description": "Label for date range expenses chart"
+  },
   "settings_flag_secure_desc": "Prevents screenshots and screen recording",
   "settings_flag_secure_title": "Secure screen",
   "settings_privacy": "Privacy",
   "select_currency": "Select currency",
   "select_period_hint_short": "Set dates",
-  "select_period_hint": "Select a date range",
+  "select_period_hint": "Select dates",
+  "suggested_duration": "Suggested duration",
+  "days_count": "{count} days",
+  "@days_count": {"description": "Number of days", "placeholders": {"count": {"type": "int"}}},
+  "weekday_mon": "M",
+  "weekday_tue": "T",
+  "weekday_wed": "W",
+  "weekday_thu": "T",
+  "weekday_fri": "F",
+  "weekday_sat": "S",
+  "weekday_sun": "S",
+  "month_january": "January",
+  "month_february": "February",
+  "month_march": "March",
+  "month_april": "April",
+  "month_may": "May",
+  "month_june": "June",
+  "month_july": "July",
+  "month_august": "August",
+  "month_september": "September",
+  "month_october": "October",
+  "month_november": "November",
+  "month_december": "December",
   "in_group_prefix": "in",
   "save_change_expense": "Save changes",
   "group_total": "Total",
@@ -43,6 +73,13 @@
   "share_all_csv": "Share all (CSV)",
   "download_all_ofx": "Download all (OFX)",
   "share_all_ofx": "Share all (OFX)",
+  "download_all_markdown": "Download all (Markdown)",
+  "share_all_markdown": "Share all (Markdown)",
+  "markdown_select_directory_title": "Select folder to save Markdown",
+  "markdown_saved_in": "Markdown saved in: {path}",
+  "@markdown_saved_in": {"description": "Toast message when Markdown export is saved", "placeholders": {"path": {"type": "String"}}},
+  "markdown_save_cancelled": "Markdown export cancelled",
+  "markdown_save_error": "Error saving Markdown file",
   "share_label": "Share",
   "share_text_label": "Share text",
   "share_image_label": "Share image",
@@ -59,6 +96,8 @@
   "no_active_groups_subtitle": "Create an expense group",
   "create_first_group": "Create a group",
   "new_expense_group": "New Expense Group",
+  "new_expense": "New Expense",
+  "edit_expense": "Edit Expense",
   "tap_to_create": "Tap to create",
   "no_expense_label": "No expenses found",
   "image": "Image",
@@ -81,6 +120,19 @@
   "participants_description": "People sharing costs",
   "categories_description": "Group expenses by type",
   "dates_description": "Optional start and end",
+  "select_period": "Select period",
+  "select_period_dates": "Select the period dates",
+  "suggested_duration": "Suggested duration",
+  "duration_days": "{days} days",
+  "@duration_days": {"description": "Label for duration in days", "placeholders": {"days": {"type": "int"}}},
+  "period_from_to": "From {start} to {end} ({days} days)",
+  "@period_from_to": {"description": "Formatted period", "placeholders": {"start": {"type": "String"}, "end": {"type": "String"}, "days": {"type": "int"}}},
+  "period_from_select_end": "From {start} - Select end",
+  "@period_from_select_end": {"description": "Period with only start date", "placeholders": {"start": {"type": "String"}}},
+  "period_to_select_start": "To {end} - Select start",
+  "@period_to_select_start": {"description": "Period with only end date", "placeholders": {"end": {"type": "String"}}},
+  "confirm": "Confirm",
+  "clear": "Clear",
   "currency_description": "Base currency for group",
   "background_color_selected": "Color selected",
   "background_tap_to_replace": "Tap to replace",
@@ -104,8 +156,10 @@
   "license_hint": "This app is released under the MIT license.",
   "license_link": "View MIT License on GitHub",
   "license_section": "License",
-  "add_trip": "Add group",
+  "add_trip": "Add a group",
   "new_group": "New Group",
+  "group": "Group",
+  "create": "Create",
   "group_name": "Name",
   "enter_title": "Enter a name",
   "enter_participant": "Enter at least one participant",
@@ -154,6 +208,10 @@
   "import_success": "Import successful! Data reloaded.",
   "import_error": "Import failed. Check the file format.",
   "categories": "Categories",
+  "other_settings": "Other settings",
+  "other_settings_desc": "Currency, background, and automatic location",
+  "segment_general": "General",
+  "segment_other": "Other",
   "from": "From",
   "to": "To",
   "add": "Add",
@@ -181,10 +239,31 @@
   "archived": "Archived",
   "archive": "Archive",
   "unarchive": "Unarchive",
+  "pin": "Favorite",
+  "@pin": {"description": "Action to mark a group as favorite"},
+  "unpin": "Unfavorite",
+  "@unpin": {"description": "Action to remove favorite mark from a group"},
+  "delete": "Delete",
+  "@delete": {"description": "Action to delete a group"},
+  "undo": "UNDO",
+  "@undo": {"description": "Undo action label for SnackBar"},
+  "archived_with_undo": "Archived",
+  "@archived_with_undo": {"description": "Snackbar message when group is archived"},
+  "unarchived_with_undo": "Unarchived",
+  "@unarchived_with_undo": {"description": "Snackbar message when group is unarchived"},
+  "pinned_with_undo": "Marked as favorite",
+  "@pinned_with_undo": {"description": "Snackbar message when group is marked as favorite"},
+  "unpinned_with_undo": "Favorite removed",
+  "@unpinned_with_undo": {"description": "Snackbar message when favorite mark is removed from group"},
+  "deleted_with_undo": "Deleted",
+  "@deleted_with_undo": {"description": "Snackbar message when group is deleted"},
   "archive_confirm": "Do you want to archive",
   "unarchive_confirm": "Do you want to unarchive",
   "overview": "Overview",
   "statistics": "Statistics",
+  "period": "Period",
+  "total_expenses": "Total expenses",
+  "number_of_expenses": "Number of expenses",
   "options": "Options",
   "show_overview": "Show overview",
   "show_statistics": "Show statistics",
@@ -199,9 +278,8 @@
   "delete_group": "Delete group",
   "delete_group_confirm": "Are you sure you want to delete this expense group? This action cannot be undone.",
   "add_expense_fab": "Add Expense",
-  "pin_group": "Pin group",
-  "unpin_group": "Unpin group",
-  "pin": "Pin",
+  "pin_group": "Mark as favorite",
+  "unpin_group": "Remove favorite",
   "theme_automatic": "Automatic",
   "theme_light": "Light",
   "theme_dark": "Dark",
@@ -244,8 +322,8 @@
   "csv_date": "Date",
   "csv_note": "Note",
   "csv_location": "Location",
-  "location": "Location",
-  "location_hint": "Location",
+  "location": "Place",
+  "location_hint": "Place",
   "get_current_location": "Use current location",
   "enter_location_manually": "Enter manually",
   "location_permission_denied": "Location permission denied",
@@ -254,8 +332,14 @@
   "location_error": "Error getting location",
   "resolving_address": "Resolving address…",
   "address_resolved": "Address resolved",
+  "search_place": "Search place",
+  "search_place_hint": "Search for a place or address",
   "settings_general": "General",
   "settings_general_desc": "Language and appearance settings",
+  "settings_auto_location_section": "Location Detection",
+  "settings_auto_location_section_desc": "Configure automatic location detection",
+  "settings_auto_location_title": "Enable to detect",
+  "settings_auto_location_desc": "Detect GPS when adding an expense",
   "settings_language": "Language",
   "settings_language_desc": "Choose your preferred language",
   "settings_language_it": "Italian",
@@ -267,6 +351,8 @@
   "settings_theme": "Theme",
   "settings_theme_desc": "Light, dark or system",
   "settings_select_theme": "Select theme",
+  "settings_dynamic_color": "Dynamic color",
+  "settings_dynamic_color_desc": "Use colors from your wallpaper",
   "settings_privacy": "Privacy",
   "settings_privacy_desc": "Security and privacy options",
   "settings_data": "Data",
@@ -554,8 +640,8 @@
   ,"currency_ZMW": "Zambian Kwacha"
   ,"currency_ZWL": "Zimbabwean Dollar"
   ,"search_currency": "Search currency..."
-  ,"activity": "Activity"
-  ,"@activity": {"description": "Section title for expense list recent activity"}
+  ,"activity": "Expenses"
+  ,"@activity": {"description": "Section title for expense list"}
   ,"search_expenses_hint": "Search by name or note..."
   ,"@search_expenses_hint": {"description": "Placeholder for searching expenses by name or note"}
   ,"clear_filters": "Clear"
@@ -590,6 +676,14 @@
   ,"@whats_new_title": {"description": "Title of the page showing the changelog"}
   ,"whats_new_desc": "Discover the latest features and updates"
   ,"@whats_new_desc": {"description": "Subtitle of the what's new page"}
+  ,"whats_new_subtitle": "Latest highlights"
+  ,"@whats_new_subtitle": {"description": "Card headline describing the what's new section"}
+  ,"whats_new_latest": "Stay up to date with recent improvements"
+  ,"@whats_new_latest": {"description": "Support text explaining that the content lists the most recent updates"}
+  ,"changelog_title": "Changelog"
+  ,"@changelog_title": {"description": "Title for the changelog section"}
+  ,"changelog_desc": "Version history and improvements"
+  ,"@changelog_desc": {"description": "Description for the changelog section"}
   ,"average_per_person": "Average per person"
   ,"@average_per_person": {"description": "Label shown before the computed average spent per person in the Participants tab"}
   ,"more": "more"
@@ -598,8 +692,146 @@
   ,"@less": {"description": "Inline toggle label to collapse and show fewer items"}
   ,"debt_prefix_to": "to "
   ,"@debt_prefix_to": {"description": "Short prefix shown before the recipient in a debt/settlement line (e.g., 'to Alice 10€')"}
+  ,"view_on_map": "View on map"
+  ,"@view_on_map": {"description": "Tooltip for the map button to view expenses on a map"}
+  ,"expenses_map": "Expenses Map"
+  ,"@expenses_map": {"description": "Title of the page showing expenses on a map"}
+  ,"no_locations_available": "No locations available"
+  ,"@no_locations_available": {"description": "Message shown when no expenses have location data"}
+  ,"no_locations_subtitle": "Add location data to your expenses to see them on the map"
+  ,"@no_locations_subtitle": {"description": "Subtitle explaining how to add locations"}
+  ,"expense_count": "{count, plural, =1{1 expense} other{{count} expenses}}"
+  ,"@expense_count": {"description": "Label showing number of expenses at a location", "placeholders": {"count": {"type": "int"}}}
+  ,"check_for_updates": "Check for updates"
+  ,"@check_for_updates": {"description": "Label to check for updates from Google Play Store"}
+  ,"check_for_updates_desc": "Check for new version availability"
+  ,"@check_for_updates_desc": {"description": "Description for update check"}
+  ,"update_available": "Update available"
+  ,"@update_available": {"description": "Title when an update is available"}
+  ,"update_available_desc": "A new version of the app is available"
+  ,"@update_available_desc": {"description": "Description when an update is available"}
+  ,"no_update_available": "App up to date"
+  ,"@no_update_available": {"description": "Message when there are no updates"}
+  ,"no_update_available_desc": "You're using the latest version"
+  ,"@no_update_available_desc": {"description": "Description when there are no updates"}
+  ,"update_now": "Update now"
+  ,"@update_now": {"description": "Button to start the update"}
+  ,"update_later": "Later"
+  ,"@update_later": {"description": "Button to postpone the update"}
+  ,"checking_for_updates": "Checking for updates..."
+  ,"@checking_for_updates": {"description": "Message while checking for updates"}
+  ,"update_error": "Update check error"
+  ,"@update_error": {"description": "Error message during update check"}
+  ,"update_downloading": "Downloading..."
+  ,"@update_downloading": {"description": "Message while downloading update"}
+  ,"update_installing": "Installing..."
+  ,"@update_installing": {"description": "Message while installing update"}
+  ,"update_feature_android_only": "Feature only available on Android with Google Play Store"
+  ,"@update_feature_android_only": {"description": "Message explaining the feature is Android-only"}
+  ,"update_recommendation_title": "Update recommended"
+  ,"@update_recommendation_title": {"description": "Title of bottom sheet to recommend update"}
+  ,"update_recommendation_desc": "A new version of Caravella is available. Update the app to always have the latest features and improvements!"
+  ,"@update_recommendation_desc": {"description": "Description in bottom sheet recommending to update"}
+  ,"update_install": "Install update"
+  ,"@update_install": {"description": "Button to install update from bottom sheet"}
+  ,"update_remind_later": "Remind me later"
+  ,"@update_remind_later": {"description": "Button to postpone update from bottom sheet"}
+  ,"send_reminder": "Send reminder"
+  ,"@send_reminder": {"description": "Button label to send a payment reminder to a participant"}
+  ,"reminder_message_single": "Hi {participantName}! 👋\n\nJust a friendly reminder that you owe {amount} to {creditorName} for the group \"{groupName}\".\n\nThank you! 😊"
+  ,"@reminder_message_single": {"description": "Reminder message when a participant owes money to a single person", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
+  ,"reminder_message_multiple": "Hi {participantName}! 👋\n\nJust a friendly reminder of your payments for the group \"{groupName}\":\n\n{debtsList}\n\nThank you! 😊"
+  ,"@reminder_message_multiple": {"description": "Reminder message when a participant owes money to multiple people", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
+  ,"notification_enabled": "Persistent notification"
+  ,"@notification_enabled": {"description": "Label for the persistent notification setting in the group"}
+  ,"notification_enabled_desc": "Display today's expenses in an always-visible notification"
+  ,"@notification_enabled_desc": {"description": "Description of the persistent notification setting"}
+  ,"notification_daily_spent": "Daily spent: {amount} {currency}"
+  ,"@notification_daily_spent": {"description": "Text in the notification showing the daily average expense", "placeholders": {"amount": {}, "currency": {}}}
+  ,"notification_total_spent": "Total: {amount} {currency}"
+  ,"@notification_total_spent": {"description": "Text in the notification showing the total expense", "placeholders": {"amount": {}, "currency": {}}}
+  ,"notification_add_expense": "Add expense"
+  ,"@notification_add_expense": {"description": "Button label in the notification to add a new expense"}
+  ,"notification_close": "Close"
+  ,"@notification_close": {"description": "Button label in the notification to close the notification"}
+  ,"group_type": "Type"
+  ,"@group_type": {"description": "Label for expense group type"}
+  ,"group_type_description": "Choose the group type"
+  ,"@group_type_description": {"description": "Description for group type selection"}
+  ,"group_type_travel": "Travel"
+  ,"@group_type_travel": {"description": "Group type: travel"}
+  ,"group_type_personal": "Personal"
+  ,"@group_type_personal": {"description": "Group type: personal"}
+  ,"group_type_family": "Family"
+  ,"@group_type_family": {"description": "Group type: family"}
+  ,"group_type_other": "Other"
+  ,"@group_type_other": {"description": "Group type: other"}
+  ,"category_travel_transport": "Transport"
+  ,"@category_travel_transport": {"description": "Default category for travel group type"}
+  ,"category_travel_accommodation": "Accommodation"
+  ,"@category_travel_accommodation": {"description": "Default category for travel group type"}
+  ,"category_travel_restaurants": "Restaurants"
+  ,"@category_travel_restaurants": {"description": "Default category for travel group type"}
+  ,"category_personal_shopping": "Shopping"
+  ,"@category_personal_shopping": {"description": "Default category for personal group type"}
+  ,"category_personal_health": "Health"
+  ,"@category_personal_health": {"description": "Default category for personal group type"}
+  ,"category_personal_entertainment": "Entertainment"
+  ,"@category_personal_entertainment": {"description": "Default category for personal group type"}
+  ,"category_family_groceries": "Groceries"
+  ,"@category_family_groceries": {"description": "Default category for family group type"}
+  ,"category_family_home": "Home"
+  ,"@category_family_home": {"description": "Default category for family group type"}
+  ,"category_family_bills": "Bills"
+  ,"@category_family_bills": {"description": "Default category for family group type"}
+  ,"category_other_misc": "Miscellaneous"
+  ,"@category_other_misc": {"description": "Default category for other group type"}
+  ,"category_other_utilities": "Utilities"
+  ,"@category_other_utilities": {"description": "Default category for other group type"}
+  ,"category_other_services": "Services"
+  ,"@category_other_services": {"description": "Default category for other group type"}
+  ,"attachments": "Attachments"
+  ,"@attachments": {"description": "Label for expense attachments"}
+  ,"add_attachment": "Add attachment"
+  ,"@add_attachment": {"description": "Button to add an attachment"}
+  ,"attachment_limit_reached": "Maximum limit of 5 attachments reached"
+  ,"@attachment_limit_reached": {"description": "Error message when trying to add more than 5 attachments"}
+  ,"delete_attachment": "Delete attachment"
+  ,"@delete_attachment": {"description": "Action to delete an attachment"}
+  ,"share_attachment": "Share attachment"
+  ,"@share_attachment": {"description": "Action to share an attachment"}
+  ,"delete_attachment_confirm_title": "Delete attachment"
+  ,"@delete_attachment_confirm_title": {"description": "Delete attachment confirmation dialog title"}
+  ,"delete_attachment_confirm_message": "Are you sure you want to delete this attachment?"
+  ,"@delete_attachment_confirm_message": {"description": "Delete attachment confirmation dialog message"}
+  ,"attachment_source": "Choose source"
+  ,"@attachment_source": {"description": "Title for choosing attachment source"}
+  ,"from_files": "From files"
+  ,"@from_files": {"description": "Option to choose from files"}
+  ,"archived_group_readonly": "Archived Group - Read-only"
+  ,"@archived_group_readonly": {"description": "Message indicating that an archived group is in read-only mode"}
+  ,"archived_group_readonly_desc": "This group is archived. You cannot modify it or add new expenses."
+  ,"@archived_group_readonly_desc": {"description": "Description for archived group in read-only mode"}
+  ,"expense_readonly": "Expense - Read-only"
+  ,"@expense_readonly": {"description": "Title for an expense in read-only mode"}
+  ,"expense_readonly_archived": "This expense belongs to an archived group and cannot be modified."
+  ,"@expense_readonly_archived": {"description": "Message explaining that an expense cannot be modified because the group is archived"}
+  ,"expense": "Expense"
+  ,"@expense": {"description": "Generic title for an expense"}
+  ,"notification_enabled": "Persistent notification"
+  ,"@notification_enabled": {"description": "Label for persistent notification toggle"}
+  ,"notification_daily_spent": "Today's expenses: {amount} {currency}"
+  ,"@notification_daily_spent": {"description": "Today's spent amount in notification", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
+  ,"notification_total_spent": "Total: {amount} {currency}"
+  ,"@notification_total_spent": {"description": "Total spent amount in notification", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
+  ,"notification_add_expense": "Add Expense"
+  ,"@notification_add_expense": {"description": "Action button in notification to add expense"}
+  ,"notification_close": "Close"
+  ,"@notification_close": {"description": "Action button in notification to close"}
+  ,"notification_disable": "Disable"
+  ,"@notification_disable": {"description": "Action button in notification to disable notifications"}
   ,"wizard_group_creation_title": "New Group"
-  ,"@wizard_group_creation_title": {"description": "Title of the group creation wizard"}
+  ,"@wizard_group_creation_title": {"description": "Title of group creation wizard"}
   ,"wizard_step_name": "Name"
   ,"@wizard_step_name": {"description": "Title of wizard step 1: group name"}
   ,"wizard_step_participants": "Participants"
@@ -615,13 +847,13 @@
   ,"wizard_step_of": "of"
   ,"@wizard_step_of": {"description": "Separator for progress indicator (e.g. 'Step 1 of 6')"}
   ,"wizard_next": "Next"
-  ,"@wizard_next": {"description": "Text for button to go to next step"}
+  ,"@wizard_next": {"description": "Text of button to go to next step"}
   ,"wizard_previous": "Previous"
-  ,"@wizard_previous": {"description": "Text for button to go to previous step"}
+  ,"@wizard_previous": {"description": "Text of button to go back to previous step"}
   ,"wizard_skip": "Skip"
-  ,"@wizard_skip": {"description": "Text for button to skip an optional step"}
+  ,"@wizard_skip": {"description": "Text of button to skip an optional step"}
   ,"wizard_finish": "Create Group"
-  ,"@wizard_finish": {"description": "Text for final button to create the group"}
+  ,"@wizard_finish": {"description": "Text of final button to create the group"}
   ,"wizard_name_description": "Enter a name for your expense group"
   ,"@wizard_name_description": {"description": "Description of the name step in the wizard"}
   ,"wizard_participants_description": "Add people who will share expenses"
@@ -674,114 +906,4 @@
   ,"@wizard_success_title": {"description": "Title of success dialog"}
   ,"wizard_go_to_group": "Go to group"
   ,"@wizard_go_to_group": {"description": "Button to go to created group"}
-  ,"create": "Create"
-  ,"@create": {"description": "Create action"}
-  ,"undo": "Undo"
-  ,"@undo": {"description": "Undo action"}
-  ,"weekday_mon": "Mon"
-  ,"@weekday_mon": {"description": "Monday abbreviation"}
-  ,"weekday_tue": "Tue"
-  ,"@weekday_tue": {"description": "Tuesday abbreviation"}
-  ,"weekday_wed": "Wed"
-  ,"@weekday_wed": {"description": "Wednesday abbreviation"}
-  ,"weekday_thu": "Thu"
-  ,"@weekday_thu": {"description": "Thursday abbreviation"}
-  ,"weekday_fri": "Fri"
-  ,"@weekday_fri": {"description": "Friday abbreviation"}
-  ,"weekday_sat": "Sat"
-  ,"@weekday_sat": {"description": "Saturday abbreviation"}
-  ,"weekday_sun": "Sun"
-  ,"@weekday_sun": {"description": "Sunday abbreviation"}
-  ,"month_january": "January"
-  ,"@month_january": {"description": "January month name"}
-  ,"month_february": "February"
-  ,"@month_february": {"description": "February month name"}
-  ,"month_march": "March"
-  ,"@month_march": {"description": "March month name"}
-  ,"month_april": "April"
-  ,"@month_april": {"description": "April month name"}
-  ,"month_may": "May"
-  ,"@month_may": {"description": "May month name"}
-  ,"month_june": "June"
-  ,"@month_june": {"description": "June month name"}
-  ,"month_july": "July"
-  ,"@month_july": {"description": "July month name"}
-  ,"month_august": "August"
-  ,"@month_august": {"description": "August month name"}
-  ,"month_september": "September"
-  ,"@month_september": {"description": "September month name"}
-  ,"month_october": "October"
-  ,"@month_october": {"description": "October month name"}
-  ,"month_november": "November"
-  ,"@month_november": {"description": "November month name"}
-  ,"month_december": "December"
-  ,"@month_december": {"description": "December month name"}
-  ,"expenses_map": "Expenses map"
-  ,"@expenses_map": {"description": "Title for expenses map page"}
-  ,"view_on_map": "View on map"
-  ,"@view_on_map": {"description": "Action to view location on map"}
-  ,"no_locations_available": "No locations available"
-  ,"@no_locations_available": {"description": "Message when no expense has location data"}
-  ,"no_locations_subtitle": "Add locations to expenses to see them on the map"
-  ,"@no_locations_subtitle": {"description": "Subtitle for empty map state"}
-  ,"expense_count": "{count, plural, =1{1 expense} other{{count} expenses}}"
-  ,"@expense_count": {"description": "Pluralized expense count", "placeholders": {"count": {"type": "int"}}}
-  ,"days_count": "{count, plural, =1{1 day} other{{count} days}}"
-  ,"@days_count": {"description": "Pluralized days count", "placeholders": {"count": {"type": "int"}}}
-  ,"suggested_duration": "Suggested duration"
-  ,"@suggested_duration": {"description": "Label for suggested duration presets"}
-  ,"settings_auto_location_section": "Auto-location"
-  ,"@settings_auto_location_section": {"description": "Section title for auto-location settings"}
-  ,"settings_auto_location_section_desc": "Automatically capture location for expenses"
-  ,"@settings_auto_location_section_desc": {"description": "Section description for auto-location settings"}
-  ,"settings_auto_location_title": "Enable auto-location"
-  ,"@settings_auto_location_title": {"description": "Title for auto-location toggle"}
-  ,"settings_auto_location_desc": "Automatically save location when adding expenses"
-  ,"@settings_auto_location_desc": {"description": "Description for auto-location feature"}
-  ,"send_reminder": "Send reminder"
-  ,"@send_reminder": {"description": "Button to send payment reminder"}
-  ,"reminder_message_single": "Hi {participantName}! 👋\n\nI'd like to remind you that you owe {amount} to {creditorName} for the group \"{groupName}\".\n\nThank you! �"
-  ,"@reminder_message_single": {"description": "Reminder message when a participant owes money to a single person", "placeholders": {"participantName": {}, "amount": {"type": "String"}, "creditorName": {}, "groupName": {}}}
-  ,"reminder_message_multiple": "Hi {participantName}! 👋\n\nI'd like to remind you of your payments for the group \"{groupName}\":\n\n{debtsList}\n\nThank you! 😊"
-  ,"@reminder_message_multiple": {"description": "Reminder message when a participant owes money to multiple people", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
-  ,"archived_with_undo": "Archived"
-  ,"@archived_with_undo": {"description": "Message when group is archived"}
-  ,"unarchived_with_undo": "Unarchived"
-  ,"@unarchived_with_undo": {"description": "Message when group is unarchived"}
-  ,"pinned_with_undo": "Pinned"
-  ,"@pinned_with_undo": {"description": "Message when group is pinned"}
-  ,"unpinned_with_undo": "Unpinned"
-  ,"@unpinned_with_undo": {"description": "Message when group is unpinned"}
-  ,"deleted_with_undo": "Deleted"
-  ,"@deleted_with_undo": {"description": "Message when item is deleted"}
-  ,"settings_dynamic_color": "Dynamic color"
-  ,"@settings_dynamic_color": {"description": "Title for dynamic color setting"}
-  ,"settings_dynamic_color_desc": "Use system color scheme (Android 12+)"
-  ,"@settings_dynamic_color_desc": {"description": "Description for dynamic color feature"}
-  ,"check_for_updates": "Check for updates"
-  ,"@check_for_updates": {"description": "Button to check for app updates"}
-  ,"check_for_updates_desc": "Check if a new version is available"
-  ,"@check_for_updates_desc": {"description": "Description for update check feature"}
-  ,"checking_for_updates": "Checking for updates..."
-  ,"@checking_for_updates": {"description": "Message while checking for updates"}
-  ,"no_update_available": "You're up to date!"
-  ,"@no_update_available": {"description": "Message when no update is available"}
-  ,"update_available": "Update available"
-  ,"@update_available": {"description": "Title when update is available"}
-  ,"update_available_desc": "Version {version} is available"
-  ,"@update_available_desc": {"description": "Description of available update", "placeholders": {"version": {"type": "String"}}}
-  ,"update_now": "Update now"
-  ,"@update_now": {"description": "Button to start update"}
-  ,"update_later": "Later"
-  ,"@update_later": {"description": "Button to postpone update"}
-  ,"update_downloading": "Downloading update..."
-  ,"@update_downloading": {"description": "Message while downloading update"}
-  ,"update_installing": "Installing update..."
-  ,"@update_installing": {"description": "Message while installing update"}
-  ,"update_error": "Update failed"
-  ,"@update_error": {"description": "Message when update fails"}
-  ,"changelog_title": "What's new"
-  ,"@changelog_title": {"description": "Title for changelog page"}
-  ,"changelog_desc": "Recent changes and improvements"
-  ,"@changelog_desc": {"description": "Description for changelog page"}
 }

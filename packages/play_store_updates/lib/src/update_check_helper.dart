@@ -1,26 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
-import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'update_service_factory.dart';
+import 'update_localizations.dart';
 
 /// Shows a bottom sheet recommending the user to update the app.
 ///
 /// This is typically shown when an automatic weekly check detects
 /// an available update.
-Future<bool?> showUpdateRecommendationSheet(BuildContext context) async {
-  final loc = gen.AppLocalizations.of(context);
-
+Future<bool?> showUpdateRecommendationSheet(
+  BuildContext context,
+  UpdateLocalizations localizations,
+  Widget Function(BuildContext, {required String title, required Widget child})
+      bottomSheetBuilder,
+) async {
   return showModalBottomSheet<bool>(
     context: context,
     isScrollControlled: true,
-    builder: (context) => GroupBottomSheetScaffold(
-      title: loc.update_available,
+    builder: (context) => bottomSheetBuilder(
+      context,
+      title: localizations.updateAvailable,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            loc.update_available_desc(''),
+            localizations.updateAvailableDesc,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 24),
@@ -29,13 +33,13 @@ Future<bool?> showUpdateRecommendationSheet(BuildContext context) async {
             children: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: Text(loc.update_later),
+                child: Text(localizations.updateLater),
               ),
               const SizedBox(width: 8),
               FilledButton.icon(
                 onPressed: () => Navigator.of(context).pop(true),
                 icon: const Icon(Icons.download),
-                label: Text(loc.update_now),
+                label: Text(localizations.updateNow),
               ),
             ],
           ),
@@ -53,7 +57,12 @@ Future<bool?> showUpdateRecommendationSheet(BuildContext context) async {
 /// 3. If update available, show recommendation sheet
 /// 4. If user accepts, start flexible update
 /// 5. Record the check timestamp
-Future<void> checkAndShowUpdateIfNeeded(BuildContext context) async {
+Future<void> checkAndShowUpdateIfNeeded(
+  BuildContext context,
+  UpdateLocalizations localizations,
+  Widget Function(BuildContext, {required String title, required Widget child})
+      bottomSheetBuilder,
+) async {
   final updateService = UpdateServiceFactory.createUpdateService();
 
   // Check if we should perform an update check
@@ -79,7 +88,11 @@ Future<void> checkAndShowUpdateIfNeeded(BuildContext context) async {
   // Show recommendation sheet
   if (!context.mounted) return;
 
-  final shouldUpdate = await showUpdateRecommendationSheet(context);
+  final shouldUpdate = await showUpdateRecommendationSheet(
+    context,
+    localizations,
+    bottomSheetBuilder,
+  );
 
   // If user wants to update, start flexible update
   if (shouldUpdate == true) {
@@ -90,7 +103,7 @@ Future<void> checkAndShowUpdateIfNeeded(BuildContext context) async {
     // Show toast to inform user
     AppToast.show(
       context,
-      gen.AppLocalizations.of(context).update_downloading,
+      localizations.updateDownloading,
       type: ToastType.info,
       icon: Icons.download,
     );

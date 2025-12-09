@@ -1,0 +1,8 @@
+Versão 1.2.0 - Mapas e Localizações
+
+• Integração OpenStreetMap: visualize despesas em mapa interativo com busca de lugares
+• Localização automática: adicione coordenadas GPS a novas despesas automaticamente
+• Cores adaptáveis: grupos se adaptam a tema claro/escuro para melhor visibilidade
+• Ações rápidas Android: abra grupos diretamente da tela inicial
+
+Mapas melhores, localizações mais inteligentes!

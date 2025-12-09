@@ -9,6 +9,8 @@ export 'config/app_icons.dart';
 export 'model/expense_category.dart';
 export 'model/expense_details.dart';
 export 'model/expense_group.dart';
+export 'model/expense_group_color_palette.dart';
+export 'model/expense_group_type.dart';
 export 'model/expense_location.dart';
 export 'model/expense_participant.dart';
 
@@ -30,6 +32,11 @@ export 'services/storage/preferences_service.dart';
 
 // Services - User Feedback
 export 'services/user/rating_service.dart';
+
+// Services - Media
+export 'services/media/file_picker_service.dart';
+export 'services/media/image_compression_service.dart';
+export 'services/media/location_service_abstraction.dart';
 
 // Services - Shortcuts
 export 'services/shortcuts/app_shortcuts_service.dart';

@@ -8,7 +8,7 @@ export 'themes/form_theme.dart';
 
 // Widgets
 export 'widgets/add_fab.dart';
-export 'widgets/app_toast.dart';
+export 'widgets/app_toast.dart' show AppToast, ToastType;
 export 'widgets/base_card.dart';
 export 'widgets/bottom_sheet_scaffold.dart';
 export 'widgets/caravella_app_bar.dart';
@@ -25,6 +25,12 @@ export 'widgets/charts/chart_type.dart';
 export 'widgets/charts/date_range_expense_chart.dart';
 export 'widgets/charts/monthly_expense_chart.dart';
 export 'widgets/charts/weekly_expense_chart.dart';
+
+// Map widgets
+export 'map/map.dart';
+
+// Utilities
+export 'utils/debounce.dart';
 
 // Convenience barrel export
 export 'widgets/widgets.dart';

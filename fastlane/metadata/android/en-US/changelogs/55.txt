@@ -1,0 +1,8 @@
+Version 1.2.0 - Maps & Locations
+
+• OpenStreetMap integration: visualize expenses on interactive map with location search
+• Auto-location capture: automatically add GPS coordinates to new expenses
+• Theme-aware colors: expense groups adapt to light/dark mode for better visibility
+• Android Quick Actions: launch groups directly from home screen
+
+Better maps, smarter locations!

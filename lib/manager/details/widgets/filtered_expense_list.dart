@@ -384,11 +384,11 @@ class _CategoryParticipantChip extends StatelessWidget {
       showCheckmark: false,
       side: BorderSide(
         color: selected
-            ? scheme.primaryFixedDim
+            ? scheme.onSurfaceVariant.withValues(alpha: 0.2)
             : scheme.outlineVariant.withValues(alpha: 0.4),
       ),
       backgroundColor: scheme.surfaceContainerHigh,
-      selectedColor: scheme.primaryFixedDim,
+      selectedColor: scheme.onSurfaceVariant.withValues(alpha: 0.15),
       labelStyle: Theme.of(context).textTheme.labelMedium?.copyWith(
         fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
         color: selected ? scheme.onPrimaryContainer : scheme.onSurfaceVariant,

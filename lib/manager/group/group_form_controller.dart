@@ -44,6 +44,8 @@ class GroupFormController {
     state.currency = _currencyFromGroup(group.currency);
     state.imagePath = group.file;
     state.color = group.color;
+    state.notificationEnabled = group.notificationEnabled;
+    state.groupType = group.groupType;
     state.autoLocationEnabled = group.autoLocationEnabled;
     // Keep a snapshot in the state to avoid extra repository fetches
     state.setOriginalGroup(group.copyWith());
@@ -103,6 +105,8 @@ class GroupFormController {
     }
     if (g.file != state.imagePath) return true;
     if (g.color != state.color) return true;
+    if (g.groupType != state.groupType) return true;
+    if (g.autoLocationEnabled != state.autoLocationEnabled) return true;
     return false;
   }
 
@@ -147,6 +151,8 @@ class GroupFormController {
         currency: state.currency['symbol'] ?? state.currency['code'] ?? 'EUR',
         file: state.imagePath,
         color: state.color,
+        notificationEnabled: state.notificationEnabled,
+        groupType: state.groupType,
         autoLocationEnabled: state.autoLocationEnabled,
         timestamp: state.originalGroup?.timestamp ?? now,
       );
@@ -308,6 +314,54 @@ class GroupFormController {
     state.imagePath = null;
     state.color = null;
     state.refresh();
+  }
+
+  /// Sets the group type and manages default categories based on edit mode.
+  ///
+  /// In CREATE mode:
+  /// - Removes categories from the previous type (if any)
+  /// - Adds categories for the new type
+  ///
+  /// In EDIT mode:
+  /// - Only updates the type, categories are never modified
+  ///
+  /// [defaultCategoryNames] should be the localized category names to populate.
+  /// [previousTypeCategoryNames] are the localized names from the previous type to remove.
+  void setGroupType(
+    ExpenseGroupType? type, {
+    bool autoPopulateCategories = true,
+    List<String>? defaultCategoryNames,
+    List<String>? previousTypeCategoryNames,
+  }) {
+    state.setGroupType(type);
+
+    // In edit mode, never modify categories
+    if (mode == GroupEditMode.edit) return;
+
+    // In create mode, manage category replacement
+    if (autoPopulateCategories && type != null) {
+      if (defaultCategoryNames == null) {
+        throw ArgumentError(
+          'defaultCategoryNames is required when autoPopulateCategories is true',
+        );
+      }
+
+      // Remove categories from previous type
+      if (previousTypeCategoryNames != null) {
+        state.categories.removeWhere(
+          (category) => previousTypeCategoryNames.contains(category.name),
+        );
+      }
+
+      // Add new categories if not already present
+      for (final categoryName in defaultCategoryNames) {
+        if (!state.categories.any((c) => c.name == categoryName)) {
+          state.addCategory(ExpenseCategory(name: categoryName));
+        }
+      }
+
+      state.refresh();
+    }
   }
 
   void dispose() {

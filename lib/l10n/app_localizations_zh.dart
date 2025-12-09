@@ -33,10 +33,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get monthlyChartBadge => '月';
 
   @override
+  String get dateRangeChartBadge => '日';
+
+  @override
   String get weeklyExpensesChart => '每周支出';
 
   @override
   String get monthlyExpensesChart => '每月支出';
+
+  @override
+  String get dateRangeExpensesChart => '期间支出';
 
   @override
   String get settings_flag_secure_desc => '防止截屏和录屏';
@@ -55,6 +61,71 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get select_period_hint => '选择日期';
+
+  @override
+  String get suggested_duration => '建议时长';
+
+  @override
+  String days_count(int count) {
+    return '$count天';
+  }
+
+  @override
+  String get weekday_mon => '一';
+
+  @override
+  String get weekday_tue => '二';
+
+  @override
+  String get weekday_wed => '三';
+
+  @override
+  String get weekday_thu => '四';
+
+  @override
+  String get weekday_fri => '五';
+
+  @override
+  String get weekday_sat => '六';
+
+  @override
+  String get weekday_sun => '日';
+
+  @override
+  String get month_january => '一月';
+
+  @override
+  String get month_february => '二月';
+
+  @override
+  String get month_march => '三月';
+
+  @override
+  String get month_april => '四月';
+
+  @override
+  String get month_may => '五月';
+
+  @override
+  String get month_june => '六月';
+
+  @override
+  String get month_july => '七月';
+
+  @override
+  String get month_august => '八月';
+
+  @override
+  String get month_september => '九月';
+
+  @override
+  String get month_october => '十月';
+
+  @override
+  String get month_november => '十一月';
+
+  @override
+  String get month_december => '十二月';
 
   @override
   String get in_group_prefix => '在';
@@ -79,6 +150,26 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get share_all_ofx => '分享全部 (OFX)';
+
+  @override
+  String get download_all_markdown => '下载全部 (Markdown)';
+
+  @override
+  String get share_all_markdown => '分享全部 (Markdown)';
+
+  @override
+  String get markdown_select_directory_title => '选择保存 Markdown 的文件夹';
+
+  @override
+  String markdown_saved_in(String path) {
+    return 'Markdown 已保存至: $path';
+  }
+
+  @override
+  String get markdown_save_cancelled => 'Markdown 导出已取消';
+
+  @override
+  String get markdown_save_error => '保存 Markdown 文件时出错';
 
   @override
   String get share_label => '分享';
@@ -127,6 +218,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get new_expense_group => '新支出群组';
+
+  @override
+  String get new_expense => 'New Expense';
+
+  @override
+  String get edit_expense => '编辑支出';
 
   @override
   String get tap_to_create => '点击创建';
@@ -187,6 +284,38 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get dates_description => '可选的开始和结束';
+
+  @override
+  String get select_period => 'Select period';
+
+  @override
+  String get select_period_dates => 'Select the period dates';
+
+  @override
+  String duration_days(int days) {
+    return '$days days';
+  }
+
+  @override
+  String period_from_to(String start, String end, int days) {
+    return 'From $start to $end ($days days)';
+  }
+
+  @override
+  String period_from_select_end(String start) {
+    return 'From $start - Select end';
+  }
+
+  @override
+  String period_to_select_start(String end) {
+    return 'To $end - Select start';
+  }
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
+  String get clear => 'Clear';
 
   @override
   String get currency_description => '群组的基础货币';
@@ -268,6 +397,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get new_group => '新群组';
 
   @override
+  String get group => 'Group';
+
+  @override
+  String get create => '创建';
+
+  @override
   String get group_name => '群组名称';
 
   @override
@@ -322,9 +457,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get add_expense => '添加支出';
-
-  @override
-  String get edit_expense => '编辑支出';
 
   @override
   String get expand_form => '展开表单';
@@ -416,6 +548,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get categories => '类别';
 
   @override
+  String get other_settings => '其他设置';
+
+  @override
+  String get other_settings_desc => '货币、背景和自动定位';
+
+  @override
+  String get segment_general => '常规';
+
+  @override
+  String get segment_other => '其他';
+
+  @override
   String get from => '从';
 
   @override
@@ -501,6 +645,33 @@ class AppLocalizationsZh extends AppLocalizations {
   String get unarchive => '取消归档';
 
   @override
+  String get pin => '收藏';
+
+  @override
+  String get unpin => '取消收藏';
+
+  @override
+  String get delete => '删除';
+
+  @override
+  String get undo => '撤销';
+
+  @override
+  String get archived_with_undo => '已归档';
+
+  @override
+  String get unarchived_with_undo => '已取消归档';
+
+  @override
+  String get pinned_with_undo => '已标记为收藏';
+
+  @override
+  String get unpinned_with_undo => '已移除收藏';
+
+  @override
+  String get deleted_with_undo => '已删除';
+
+  @override
   String get archive_confirm => '您想要归档吗';
 
   @override
@@ -511,6 +682,15 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get statistics => '统计';
+
+  @override
+  String get period => '期间';
+
+  @override
+  String get total_expenses => '总支出';
+
+  @override
+  String get number_of_expenses => '支出数量';
 
   @override
   String get options => '选项';
@@ -555,13 +735,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get add_expense_fab => '添加支出';
 
   @override
-  String get pin_group => '固定群组';
+  String get pin_group => '标记为收藏';
 
   @override
-  String get unpin_group => '取消固定群组';
-
-  @override
-  String get pin => '固定';
+  String get unpin_group => '移除收藏';
 
   @override
   String get theme_automatic => '自动';
@@ -721,10 +898,28 @@ class AppLocalizationsZh extends AppLocalizations {
   String get address_resolved => '地址已解析';
 
   @override
+  String get search_place => '搜索地点';
+
+  @override
+  String get search_place_hint => '搜索地点或地址';
+
+  @override
   String get settings_general => '常规';
 
   @override
   String get settings_general_desc => '语言和外观设置';
+
+  @override
+  String get settings_auto_location_section => '位置检测';
+
+  @override
+  String get settings_auto_location_section_desc => '配置自动位置检测';
+
+  @override
+  String get settings_auto_location_title => '启用检测';
+
+  @override
+  String get settings_auto_location_desc => '添加费用时检测GPS';
 
   @override
   String get settings_language => '语言';
@@ -758,6 +953,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get settings_select_theme => '选择主题';
+
+  @override
+  String get settings_dynamic_color => '动态颜色';
+
+  @override
+  String get settings_dynamic_color_desc => '使用壁纸颜色';
 
   @override
   String get settings_privacy_desc => '安全和隐私选项';
@@ -860,9 +1061,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get delete_expense_confirm => '您确定要删除此支出吗?';
-
-  @override
-  String get delete => '删除';
 
   @override
   String get no_results_found => '未找到结果。';
@@ -1555,6 +1753,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get whats_new_desc => '了解最新功能和更新';
 
   @override
+  String get whats_new_subtitle => '最新亮点';
+
+  @override
+  String get whats_new_latest => '随时掌握最新改进';
+
+  @override
+  String get changelog_title => '更新日志';
+
+  @override
+  String get changelog_desc => '版本历史和改进';
+
+  @override
   String get average_per_person => '人均支出';
 
   @override
@@ -1567,246 +1777,78 @@ class AppLocalizationsZh extends AppLocalizations {
   String get debt_prefix_to => '给 ';
 
   @override
-  String get wizard_group_creation_title => '新建群组';
-
-  @override
-  String get wizard_step_name => '名称';
-
-  @override
-  String get wizard_step_participants => '参与者';
-
-  @override
-  String get wizard_step_categories => '类别';
-
-  @override
-  String get wizard_step_period => '时间段';
-
-  @override
-  String get wizard_step_background => '背景';
-
-  @override
-  String get wizard_step_congratulations => '恭喜！';
-
-  @override
-  String get wizard_step_of => '的';
-
-  @override
-  String get wizard_next => '下一步';
-
-  @override
-  String get wizard_previous => '上一步';
-
-  @override
-  String get wizard_skip => '跳过';
-
-  @override
-  String get wizard_finish => '创建群组';
-
-  @override
-  String get wizard_name_description => '为您的费用群组输入名称';
-
-  @override
-  String get wizard_participants_description => '添加将共享费用的人员';
-
-  @override
-  String get wizard_categories_description => '创建类别以组织费用';
-
-  @override
-  String get wizard_period_description => '设置开始和结束日期（可选）';
-
-  @override
-  String get wizard_background_description => '为群组选择背景颜色';
-
-  @override
-  String wizard_congratulations_message(String groupName) {
-    return '您的群组\'$groupName\'已成功创建！';
-  }
-
-  @override
-  String get wizard_group_summary => '群组摘要：';
-
-  @override
-  String wizard_created_participants(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count位参与者',
-      one: '1位参与者',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String wizard_created_categories(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count个类别',
-      one: '1个类别',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String get wizard_step_user_name => '您的名字';
-
-  @override
-  String get wizard_user_name_welcome => '你好！您叫什么名字？';
-
-  @override
-  String get wizard_user_name_description => '这样我们就可以在群组中显示您 😊';
-
-  @override
-  String get wizard_user_name_local_storage_note => '您的名字将仅保存在您的设备上，不会被共享';
-
-  @override
-  String get wizard_user_name_label => '您的名字（可选）';
-
-  @override
-  String get wizard_user_name_hint => '例如 Mario';
-
-  @override
-  String get wizard_step_participants_and_categories => '谁和什么';
-
-  @override
-  String get wizard_participants_and_categories_description => '定义谁参与以及将共享哪些费用';
-
-  @override
-  String get wizard_participants_section_title => '谁在参与？';
-
-  @override
-  String get wizard_participants_section_hint => '添加朋友或室友。您可以稍后修改。';
-
-  @override
-  String get wizard_categories_section_title => '将共享什么？';
-
-  @override
-  String get wizard_categories_section_hint => '例如 食物、住宿、交通。您可以稍后添加或重命名。';
-
-  @override
-  String get wizard_step_color_and_final => '颜色和确认';
-
-  @override
-  String get wizard_color_and_final_description => '为群组选择颜色并查看摘要';
-
-  @override
-  String get wizard_preview_title => '群组预览';
-
-  @override
-  String get wizard_success_title => '🎉 恭喜！';
-
-  @override
-  String get wizard_go_to_group => '转到群组';
-
-  @override
-  String get create => '创建';
-
-  @override
-  String get undo => '撤销';
-
-  @override
-  String get weekday_mon => '周一';
-
-  @override
-  String get weekday_tue => '周二';
-
-  @override
-  String get weekday_wed => '周三';
-
-  @override
-  String get weekday_thu => '周四';
-
-  @override
-  String get weekday_fri => '周五';
-
-  @override
-  String get weekday_sat => '周六';
-
-  @override
-  String get weekday_sun => '周日';
-
-  @override
-  String get month_january => '一月';
-
-  @override
-  String get month_february => '二月';
-
-  @override
-  String get month_march => '三月';
-
-  @override
-  String get month_april => '四月';
-
-  @override
-  String get month_may => '五月';
-
-  @override
-  String get month_june => '六月';
-
-  @override
-  String get month_july => '七月';
-
-  @override
-  String get month_august => '八月';
-
-  @override
-  String get month_september => '九月';
-
-  @override
-  String get month_october => '十月';
-
-  @override
-  String get month_november => '十一月';
-
-  @override
-  String get month_december => '十二月';
+  String get view_on_map => '在地图上查看';
 
   @override
   String get expenses_map => '支出地图';
 
   @override
-  String get view_on_map => '在地图上查看';
+  String get no_locations_available => '没有可用的位置';
 
   @override
-  String get no_locations_available => '没有可用位置';
-
-  @override
-  String get no_locations_subtitle => '为支出添加位置以在地图上查看';
+  String get no_locations_subtitle => '在支出中添加位置数据以在地图上查看它们';
 
   @override
   String expense_count(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count笔支出',
+      other: '$count 笔支出',
+      one: '1 笔支出',
     );
     return '$_temp0';
   }
 
   @override
-  String days_count(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count天',
-    );
-    return '$_temp0';
-  }
+  String get check_for_updates => '检查更新';
 
   @override
-  String get suggested_duration => '建议时长';
+  String get check_for_updates_desc => '检查新版本可用性';
 
   @override
-  String get settings_auto_location_section => '自动定位';
+  String get update_available => '有可用更新';
 
   @override
-  String get settings_auto_location_section_desc => '自动捕获支出位置';
+  String get update_available_desc => '应用的新版本已可用';
 
   @override
-  String get settings_auto_location_title => '启用自动定位';
+  String get no_update_available => '应用已是最新';
 
   @override
-  String get settings_auto_location_desc => '添加支出时自动保存位置';
+  String get no_update_available_desc => '您正在使用最新版本';
+
+  @override
+  String get update_now => '立即更新';
+
+  @override
+  String get update_later => '稍后';
+
+  @override
+  String get checking_for_updates => '正在检查更新...';
+
+  @override
+  String get update_error => '更新检查错误';
+
+  @override
+  String get update_downloading => '正在下载...';
+
+  @override
+  String get update_installing => '正在安装...';
+
+  @override
+  String get update_feature_android_only => '此功能仅适用于带有Google Play商店的Android设备';
+
+  @override
+  String get update_recommendation_title => '推荐更新';
+
+  @override
+  String get update_recommendation_desc => 'Caravella有新版本可用。更新应用以始终获得最新功能和改进！';
+
+  @override
+  String get update_install => '安装更新';
+
+  @override
+  String get update_remind_later => '稍后提醒我';
 
   @override
   String get send_reminder => '发送提醒';
@@ -1814,7 +1856,7 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String reminder_message_single(
     Object participantName,
-    String amount,
+    Object amount,
     Object creditorName,
     Object groupName,
   ) {
@@ -1831,64 +1873,123 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get archived_with_undo => '已存档';
+  String get notification_enabled => '持久通知';
 
   @override
-  String get unarchived_with_undo => '已取消存档';
+  String get notification_enabled_desc => '在常驻通知中显示今日消费';
 
   @override
-  String get pinned_with_undo => '已固定';
-
-  @override
-  String get unpinned_with_undo => '已取消固定';
-
-  @override
-  String get deleted_with_undo => '已删除';
-
-  @override
-  String get settings_dynamic_color => '动态颜色';
-
-  @override
-  String get settings_dynamic_color_desc => '使用系统配色方案（Android 12+）';
-
-  @override
-  String get check_for_updates => '检查更新';
-
-  @override
-  String get check_for_updates_desc => '检查是否有新版本可用';
-
-  @override
-  String get checking_for_updates => '正在检查更新...';
-
-  @override
-  String get no_update_available => '您已是最新版本！';
-
-  @override
-  String get update_available => '有可用更新';
-
-  @override
-  String update_available_desc(String version) {
-    return '版本$version可用';
+  String notification_daily_spent(String amount, String currency) {
+    return '今日消费: $amount $currency';
   }
 
   @override
-  String get update_now => '立即更新';
+  String notification_total_spent(String amount, String currency) {
+    return '总计: $amount $currency';
+  }
 
   @override
-  String get update_later => '稍后';
+  String get notification_add_expense => '添加支出';
 
   @override
-  String get update_downloading => '正在下载更新...';
+  String get notification_close => '关闭';
 
   @override
-  String get update_installing => '正在安装更新...';
+  String get group_type => '类型';
 
   @override
-  String get update_error => '更新失败';
+  String get group_type_description => '选择组类型';
 
   @override
-  String get changelog_title => '更新内容';
+  String get group_type_travel => '旅行';
 
   @override
-  String get changelog_desc => '最近的更改和改进';
+  String get group_type_personal => '个人';
+
+  @override
+  String get group_type_family => '家庭';
+
+  @override
+  String get group_type_other => '其他';
+
+  @override
+  String get category_travel_transport => '交通';
+
+  @override
+  String get category_travel_accommodation => '住宿';
+
+  @override
+  String get category_travel_restaurants => '餐厅';
+
+  @override
+  String get category_personal_shopping => '购物';
+
+  @override
+  String get category_personal_health => '健康';
+
+  @override
+  String get category_personal_entertainment => '娱乐';
+
+  @override
+  String get category_family_groceries => '食品杂货';
+
+  @override
+  String get category_family_home => '家居';
+
+  @override
+  String get category_family_bills => '账单';
+
+  @override
+  String get category_other_misc => '杂项';
+
+  @override
+  String get category_other_utilities => '公用事业';
+
+  @override
+  String get category_other_services => '服务';
+
+  @override
+  String get attachments => '附件';
+
+  @override
+  String get add_attachment => '添加附件';
+
+  @override
+  String get attachment_limit_reached => '已达到5个附件的最大限制';
+
+  @override
+  String get delete_attachment => '删除附件';
+
+  @override
+  String get share_attachment => '分享附件';
+
+  @override
+  String get delete_attachment_confirm_title => '删除附件';
+
+  @override
+  String get delete_attachment_confirm_message => '您确定要删除此附件吗？';
+
+  @override
+  String get attachment_source => '选择来源';
+
+  @override
+  String get from_files => '从文件';
+
+  @override
+  String get archived_group_readonly => '已归档的组 - 只读';
+
+  @override
+  String get archived_group_readonly_desc => '该组已归档。您无法修改它或添加新费用。';
+
+  @override
+  String get expense_readonly => '费用 - 只读';
+
+  @override
+  String get expense_readonly_archived => '此费用属于已归档的组，无法修改。';
+
+  @override
+  String get expense => '费用';
+
+  @override
+  String get notification_disable => '禁用';
 }

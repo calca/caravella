@@ -33,10 +33,16 @@ class AppLocalizationsPt extends AppLocalizations {
   String get monthlyChartBadge => 'M';
 
   @override
+  String get dateRangeChartBadge => 'D';
+
+  @override
   String get weeklyExpensesChart => 'Despesas semanais';
 
   @override
   String get monthlyExpensesChart => 'Despesas mensais';
+
+  @override
+  String get dateRangeExpensesChart => 'Despesas por período';
 
   @override
   String get settings_flag_secure_desc =>
@@ -56,6 +62,71 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get select_period_hint => 'Selecionar datas';
+
+  @override
+  String get suggested_duration => 'Duração sugerida';
+
+  @override
+  String days_count(int count) {
+    return '$count dias';
+  }
+
+  @override
+  String get weekday_mon => 'S';
+
+  @override
+  String get weekday_tue => 'T';
+
+  @override
+  String get weekday_wed => 'Q';
+
+  @override
+  String get weekday_thu => 'Q';
+
+  @override
+  String get weekday_fri => 'S';
+
+  @override
+  String get weekday_sat => 'S';
+
+  @override
+  String get weekday_sun => 'D';
+
+  @override
+  String get month_january => 'Janeiro';
+
+  @override
+  String get month_february => 'Fevereiro';
+
+  @override
+  String get month_march => 'Março';
+
+  @override
+  String get month_april => 'Abril';
+
+  @override
+  String get month_may => 'Maio';
+
+  @override
+  String get month_june => 'Junho';
+
+  @override
+  String get month_july => 'Julho';
+
+  @override
+  String get month_august => 'Agosto';
+
+  @override
+  String get month_september => 'Setembro';
+
+  @override
+  String get month_october => 'Outubro';
+
+  @override
+  String get month_november => 'Novembro';
+
+  @override
+  String get month_december => 'Dezembro';
 
   @override
   String get in_group_prefix => 'em';
@@ -80,6 +151,27 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get share_all_ofx => 'Compartilhar tudo (OFX)';
+
+  @override
+  String get download_all_markdown => 'Baixar tudo (Markdown)';
+
+  @override
+  String get share_all_markdown => 'Compartilhar tudo (Markdown)';
+
+  @override
+  String get markdown_select_directory_title =>
+      'Selecionar pasta para salvar Markdown';
+
+  @override
+  String markdown_saved_in(String path) {
+    return 'Markdown salvo em: $path';
+  }
+
+  @override
+  String get markdown_save_cancelled => 'Exportação Markdown cancelada';
+
+  @override
+  String get markdown_save_error => 'Erro ao salvar arquivo Markdown';
 
   @override
   String get share_label => 'Compartilhar';
@@ -129,6 +221,12 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get new_expense_group => 'Novo grupo de despesas';
+
+  @override
+  String get new_expense => 'New Expense';
+
+  @override
+  String get edit_expense => 'Editar despesa';
 
   @override
   String get tap_to_create => 'Toque para criar';
@@ -191,6 +289,38 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get dates_description => 'Início e fim opcionais';
+
+  @override
+  String get select_period => 'Select period';
+
+  @override
+  String get select_period_dates => 'Select the period dates';
+
+  @override
+  String duration_days(int days) {
+    return '$days days';
+  }
+
+  @override
+  String period_from_to(String start, String end, int days) {
+    return 'From $start to $end ($days days)';
+  }
+
+  @override
+  String period_from_select_end(String start) {
+    return 'From $start - Select end';
+  }
+
+  @override
+  String period_to_select_start(String end) {
+    return 'To $end - Select start';
+  }
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
+  String get clear => 'Clear';
 
   @override
   String get currency_description => 'Moeda base do grupo';
@@ -273,6 +403,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get new_group => 'Novo grupo';
 
   @override
+  String get group => 'Group';
+
+  @override
+  String get create => 'Criar';
+
+  @override
   String get group_name => 'Nome';
 
   @override
@@ -328,9 +464,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get add_expense => 'Nova despesa';
-
-  @override
-  String get edit_expense => 'Editar despesa';
 
   @override
   String get expand_form => 'Expandir formulário';
@@ -424,6 +557,19 @@ class AppLocalizationsPt extends AppLocalizations {
   String get categories => 'Categorias';
 
   @override
+  String get other_settings => 'Outras configurações';
+
+  @override
+  String get other_settings_desc =>
+      'Moeda, plano de fundo e localização automática';
+
+  @override
+  String get segment_general => 'Geral';
+
+  @override
+  String get segment_other => 'Outro';
+
+  @override
   String get from => 'De';
 
   @override
@@ -509,6 +655,33 @@ class AppLocalizationsPt extends AppLocalizations {
   String get unarchive => 'Desarquivar';
 
   @override
+  String get pin => 'Favorito';
+
+  @override
+  String get unpin => 'Desfavorito';
+
+  @override
+  String get delete => 'Excluir';
+
+  @override
+  String get undo => 'DESFAZER';
+
+  @override
+  String get archived_with_undo => 'Arquivado';
+
+  @override
+  String get unarchived_with_undo => 'Desarquivado';
+
+  @override
+  String get pinned_with_undo => 'Marcado como favorito';
+
+  @override
+  String get unpinned_with_undo => 'Favorito removido';
+
+  @override
+  String get deleted_with_undo => 'Excluído';
+
+  @override
   String get archive_confirm => 'Deseja arquivar';
 
   @override
@@ -519,6 +692,15 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get statistics => 'Estatísticas';
+
+  @override
+  String get period => 'Período';
+
+  @override
+  String get total_expenses => 'Total de despesas';
+
+  @override
+  String get number_of_expenses => 'Número de despesas';
 
   @override
   String get options => 'Opções';
@@ -566,13 +748,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get add_expense_fab => 'Adicionar Despesa';
 
   @override
-  String get pin_group => 'Fixar grupo';
+  String get pin_group => 'Marcar como favorito';
 
   @override
-  String get unpin_group => 'Desafixar grupo';
-
-  @override
-  String get pin => 'Fixar';
+  String get unpin_group => 'Remover favorito';
 
   @override
   String get theme_automatic => 'Automático';
@@ -734,10 +913,30 @@ class AppLocalizationsPt extends AppLocalizations {
   String get address_resolved => 'Endereço resolvido';
 
   @override
+  String get search_place => 'Procurar lugar';
+
+  @override
+  String get search_place_hint => 'Procurar um lugar ou endereço';
+
+  @override
   String get settings_general => 'Geral';
 
   @override
   String get settings_general_desc => 'Idioma e aparência';
+
+  @override
+  String get settings_auto_location_section => 'Detecção de localização';
+
+  @override
+  String get settings_auto_location_section_desc =>
+      'Configurar a detecção automática de localização';
+
+  @override
+  String get settings_auto_location_title => 'Ativar para detectar';
+
+  @override
+  String get settings_auto_location_desc =>
+      'Detectar GPS ao adicionar uma despesa';
 
   @override
   String get settings_language => 'Idioma';
@@ -771,6 +970,12 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get settings_select_theme => 'Selecionar tema';
+
+  @override
+  String get settings_dynamic_color => 'Cor dinâmica';
+
+  @override
+  String get settings_dynamic_color_desc => 'Usar cores do papel de parede';
 
   @override
   String get settings_privacy_desc => 'Opções de segurança e privacidade';
@@ -877,9 +1082,6 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get delete_expense_confirm =>
       'Tem certeza de que deseja excluir esta despesa?';
-
-  @override
-  String get delete => 'Excluir';
 
   @override
   String get no_results_found => 'Nenhum resultado encontrado.';
@@ -1583,6 +1785,18 @@ class AppLocalizationsPt extends AppLocalizations {
       'Descubra os recursos e atualizações mais recentes';
 
   @override
+  String get whats_new_subtitle => 'Destaques recentes';
+
+  @override
+  String get whats_new_latest => 'Fique por dentro das melhorias mais recentes';
+
+  @override
+  String get changelog_title => 'Histórico de versões';
+
+  @override
+  String get changelog_desc => 'Histórico de versões e melhorias';
+
+  @override
   String get average_per_person => 'Média por pessoa';
 
   @override
@@ -1595,262 +1809,84 @@ class AppLocalizationsPt extends AppLocalizations {
   String get debt_prefix_to => 'a ';
 
   @override
-  String get wizard_group_creation_title => 'Novo Grupo';
+  String get view_on_map => 'View on map';
 
   @override
-  String get wizard_step_name => 'Nome';
+  String get expenses_map => 'Expenses Map';
 
   @override
-  String get wizard_step_participants => 'Participantes';
-
-  @override
-  String get wizard_step_categories => 'Categorias';
-
-  @override
-  String get wizard_step_period => 'Período';
-
-  @override
-  String get wizard_step_background => 'Fundo';
-
-  @override
-  String get wizard_step_congratulations => 'Parabéns!';
-
-  @override
-  String get wizard_step_of => 'de';
-
-  @override
-  String get wizard_next => 'Próximo';
-
-  @override
-  String get wizard_previous => 'Anterior';
-
-  @override
-  String get wizard_skip => 'Pular';
-
-  @override
-  String get wizard_finish => 'Criar Grupo';
-
-  @override
-  String get wizard_name_description =>
-      'Insira um nome para seu grupo de despesas';
-
-  @override
-  String get wizard_participants_description =>
-      'Adicione pessoas que compartilharão despesas';
-
-  @override
-  String get wizard_categories_description =>
-      'Crie categorias para organizar despesas';
-
-  @override
-  String get wizard_period_description =>
-      'Defina datas de início e fim (opcional)';
-
-  @override
-  String get wizard_background_description =>
-      'Escolha uma cor de fundo para o grupo';
-
-  @override
-  String wizard_congratulations_message(String groupName) {
-    return 'Seu grupo \'$groupName\' foi criado com sucesso!';
-  }
-
-  @override
-  String get wizard_group_summary => 'Resumo do grupo:';
-
-  @override
-  String wizard_created_participants(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count participantes',
-      one: '1 participante',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String wizard_created_categories(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count categorias',
-      one: '1 categoria',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String get wizard_step_user_name => 'Seu nome';
-
-  @override
-  String get wizard_user_name_welcome => 'Olá! Qual é o seu nome?';
-
-  @override
-  String get wizard_user_name_description =>
-      'Para que possamos mostrar você nos grupos 😊';
-
-  @override
-  String get wizard_user_name_local_storage_note =>
-      'Seu nome será salvo apenas no seu dispositivo e não será compartilhado';
-
-  @override
-  String get wizard_user_name_label => 'Seu nome (opcional)';
-
-  @override
-  String get wizard_user_name_hint => 'ex. Mario';
-
-  @override
-  String get wizard_step_participants_and_categories => 'Quem e o quê';
-
-  @override
-  String get wizard_participants_and_categories_description =>
-      'Defina quem participa e quais despesas serão compartilhadas';
-
-  @override
-  String get wizard_participants_section_title => 'Quem está participando?';
-
-  @override
-  String get wizard_participants_section_hint =>
-      'Adicione amigos ou colegas de quarto. Você pode modificá-los depois.';
-
-  @override
-  String get wizard_categories_section_title => 'O que será compartilhado?';
-
-  @override
-  String get wizard_categories_section_hint =>
-      'Ex. Comida, Acomodação, Transporte. Você pode adicionar ou renomear depois.';
-
-  @override
-  String get wizard_step_color_and_final => 'Cor e confirmar';
-
-  @override
-  String get wizard_color_and_final_description =>
-      'Escolha uma cor para o grupo e revise o resumo';
-
-  @override
-  String get wizard_preview_title => 'Visualização do grupo';
-
-  @override
-  String get wizard_success_title => '🎉 Parabéns!';
-
-  @override
-  String get wizard_go_to_group => 'Ir para o grupo';
-
-  @override
-  String get create => 'Criar';
-
-  @override
-  String get undo => 'Desfazer';
-
-  @override
-  String get weekday_mon => 'Seg';
-
-  @override
-  String get weekday_tue => 'Ter';
-
-  @override
-  String get weekday_wed => 'Qua';
-
-  @override
-  String get weekday_thu => 'Qui';
-
-  @override
-  String get weekday_fri => 'Sex';
-
-  @override
-  String get weekday_sat => 'Sáb';
-
-  @override
-  String get weekday_sun => 'Dom';
-
-  @override
-  String get month_january => 'Janeiro';
-
-  @override
-  String get month_february => 'Fevereiro';
-
-  @override
-  String get month_march => 'Março';
-
-  @override
-  String get month_april => 'Abril';
-
-  @override
-  String get month_may => 'Maio';
-
-  @override
-  String get month_june => 'Junho';
-
-  @override
-  String get month_july => 'Julho';
-
-  @override
-  String get month_august => 'Agosto';
-
-  @override
-  String get month_september => 'Setembro';
-
-  @override
-  String get month_october => 'Outubro';
-
-  @override
-  String get month_november => 'Novembro';
-
-  @override
-  String get month_december => 'Dezembro';
-
-  @override
-  String get expenses_map => 'Mapa de despesas';
-
-  @override
-  String get view_on_map => 'Ver no mapa';
-
-  @override
-  String get no_locations_available => 'Nenhuma localização disponível';
+  String get no_locations_available => 'No locations available';
 
   @override
   String get no_locations_subtitle =>
-      'Adicione localizações às despesas para vê-las no mapa';
+      'Add location data to your expenses to see them on the map';
 
   @override
   String expense_count(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count despesas',
-      one: '1 despesa',
+      other: '$count expenses',
+      one: '1 expense',
     );
     return '$_temp0';
   }
 
   @override
-  String days_count(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count dias',
-      one: '1 dia',
-    );
-    return '$_temp0';
-  }
+  String get check_for_updates => 'Verificar atualizações';
 
   @override
-  String get suggested_duration => 'Duração sugerida';
+  String get check_for_updates_desc =>
+      'Verificar disponibilidade de nova versão';
 
   @override
-  String get settings_auto_location_section => 'Localização automática';
+  String get update_available => 'Atualização disponível';
 
   @override
-  String get settings_auto_location_section_desc =>
-      'Capturar automaticamente a localização das despesas';
+  String get update_available_desc =>
+      'Uma nova versão do aplicativo está disponível';
 
   @override
-  String get settings_auto_location_title => 'Ativar localização automática';
+  String get no_update_available => 'App atualizado';
 
   @override
-  String get settings_auto_location_desc =>
-      'Salvar automaticamente a localização ao adicionar despesas';
+  String get no_update_available_desc =>
+      'Você está usando a versão mais recente';
+
+  @override
+  String get update_now => 'Atualizar agora';
+
+  @override
+  String get update_later => 'Mais tarde';
+
+  @override
+  String get checking_for_updates => 'Verificando atualizações...';
+
+  @override
+  String get update_error => 'Erro ao verificar atualizações';
+
+  @override
+  String get update_downloading => 'Baixando...';
+
+  @override
+  String get update_installing => 'Instalando...';
+
+  @override
+  String get update_feature_android_only =>
+      'Recurso disponível apenas no Android com Google Play Store';
+
+  @override
+  String get update_recommendation_title => 'Atualização recomendada';
+
+  @override
+  String get update_recommendation_desc =>
+      'Uma nova versão do Caravella está disponível. Atualize o aplicativo para ter sempre os recursos e melhorias mais recentes!';
+
+  @override
+  String get update_install => 'Instalar atualização';
+
+  @override
+  String get update_remind_later => 'Lembrar mais tarde';
 
   @override
   String get send_reminder => 'Enviar lembrete';
@@ -1858,7 +1894,7 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String reminder_message_single(
     Object participantName,
-    String amount,
+    Object amount,
     Object creditorName,
     Object groupName,
   ) {
@@ -1875,66 +1911,127 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get archived_with_undo => 'Arquivado';
+  String get notification_enabled => 'Notificação persistente';
 
   @override
-  String get unarchived_with_undo => 'Desarquivado';
+  String get notification_enabled_desc =>
+      'Mostra as despesas de hoje em uma notificação sempre visível';
 
   @override
-  String get pinned_with_undo => 'Fixado';
-
-  @override
-  String get unpinned_with_undo => 'Desfixado';
-
-  @override
-  String get deleted_with_undo => 'Eliminado';
-
-  @override
-  String get settings_dynamic_color => 'Cor dinâmica';
-
-  @override
-  String get settings_dynamic_color_desc =>
-      'Usar esquema de cores do sistema (Android 12+)';
-
-  @override
-  String get check_for_updates => 'Verificar atualizações';
-
-  @override
-  String get check_for_updates_desc =>
-      'Verificar se há uma nova versão disponível';
-
-  @override
-  String get checking_for_updates => 'Verificando atualizações...';
-
-  @override
-  String get no_update_available => 'Você está atualizado!';
-
-  @override
-  String get update_available => 'Atualização disponível';
-
-  @override
-  String update_available_desc(String version) {
-    return 'A versão $version está disponível';
+  String notification_daily_spent(String amount, String currency) {
+    return 'Despesas de hoje: $amount $currency';
   }
 
   @override
-  String get update_now => 'Atualizar agora';
+  String notification_total_spent(String amount, String currency) {
+    return 'Total: $amount $currency';
+  }
 
   @override
-  String get update_later => 'Mais tarde';
+  String get notification_add_expense => 'Adicionar Despesa';
 
   @override
-  String get update_downloading => 'Baixando atualização...';
+  String get notification_close => 'Fechar';
 
   @override
-  String get update_installing => 'Instalando atualização...';
+  String get group_type => 'Tipo';
 
   @override
-  String get update_error => 'Falha na atualização';
+  String get group_type_description => 'Escolha o tipo de grupo';
 
   @override
-  String get changelog_title => 'Novidades';
+  String get group_type_travel => 'Viagem';
 
   @override
-  String get changelog_desc => 'Alterações e melhorias recentes';
+  String get group_type_personal => 'Pessoal';
+
+  @override
+  String get group_type_family => 'Família';
+
+  @override
+  String get group_type_other => 'Outro';
+
+  @override
+  String get category_travel_transport => 'Transporte';
+
+  @override
+  String get category_travel_accommodation => 'Acomodação';
+
+  @override
+  String get category_travel_restaurants => 'Restaurantes';
+
+  @override
+  String get category_personal_shopping => 'Compras';
+
+  @override
+  String get category_personal_health => 'Saúde';
+
+  @override
+  String get category_personal_entertainment => 'Entretenimento';
+
+  @override
+  String get category_family_groceries => 'Supermercado';
+
+  @override
+  String get category_family_home => 'Casa';
+
+  @override
+  String get category_family_bills => 'Contas';
+
+  @override
+  String get category_other_misc => 'Diversos';
+
+  @override
+  String get category_other_utilities => 'Utilidades';
+
+  @override
+  String get category_other_services => 'Serviços';
+
+  @override
+  String get attachments => 'Anexos';
+
+  @override
+  String get add_attachment => 'Adicionar anexo';
+
+  @override
+  String get attachment_limit_reached => 'Limite máximo de 5 anexos atingido';
+
+  @override
+  String get delete_attachment => 'Excluir anexo';
+
+  @override
+  String get share_attachment => 'Compartilhar anexo';
+
+  @override
+  String get delete_attachment_confirm_title => 'Excluir anexo';
+
+  @override
+  String get delete_attachment_confirm_message =>
+      'Tem certeza de que deseja excluir este anexo?';
+
+  @override
+  String get attachment_source => 'Escolher fonte';
+
+  @override
+  String get from_files => 'Dos arquivos';
+
+  @override
+  String get archived_group_readonly => 'Grupo arquivado - Somente leitura';
+
+  @override
+  String get archived_group_readonly_desc =>
+      'Este grupo está arquivado. Você não pode modificá-lo ou adicionar novas despesas.';
+
+  @override
+  String get expense_readonly => 'Despesa - Somente leitura';
+
+  @override
+  String get expense_readonly_archived =>
+      'Esta despesa pertence a um grupo arquivado e não pode ser modificada.';
+
+  @override
+  String get expense => 'Despesa';
+
+  @override
+  String get notification_disable => 'Desativar';
 }

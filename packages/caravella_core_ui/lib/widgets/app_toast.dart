@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'package:io_caravella_egm/main.dart'
-    show rootScaffoldMessenger; // for fallback usage
+import 'package:zentoast/zentoast.dart';
 
-/// Lightweight toast / inline feedback using Flutter's native SnackBar
-/// with Material 3 theming and automatic queue management.
+/// Toast type for different message categories
+enum ToastType { info, success, error }
+
+/// Centralized toast system using zentoast for smooth animations and gestures.
+/// Provides Material 3-styled toasts with consistent design across the app.
 class AppToast {
   AppToast._();
 
@@ -14,164 +15,81 @@ class AppToast {
     Duration duration = const Duration(milliseconds: 2400),
     ToastType type = ToastType.info,
     IconData? icon,
-    VoidCallback? onUndo,
-    String? undoLabel,
+    String? semanticLabel,
   }) {
-    // If the context is no longer mounted we use the root scaffold messenger.
-    // This avoids "Looking up a deactivated widget's ancestor" errors when an
-    // async operation finishes after a route/sheet was closed.
-    final bool contextMounted = context.mounted;
-    final scaffoldMessenger = contextMounted
-        ? ScaffoldMessenger.maybeOf(context)
-        : rootScaffoldMessenger;
-    if (scaffoldMessenger == null) {
-      // Nowhere safe to show the toast; silently ignore.
-      return;
-    }
+    if (!context.mounted) return;
 
-    // Delegate to the centralized helper using an appropriate context for
-    // localization/theme. If the provided context is no longer mounted we
-    // fall back to the root scaffold messenger's context (if any).
-    final BuildContext referenceContext = contextMounted
-        ? context
-        : (rootScaffoldMessenger?.context ?? context);
-    _showUsingMessenger(
-      scaffoldMessenger,
-      referenceContext,
-      message,
-      duration: duration,
-      type: type,
-      icon: icon,
-      onUndo: onUndo,
-      undoLabel: undoLabel,
-    );
-  }
-
-  static String _getTypeDescription(BuildContext context, ToastType type) {
-    final localizations = gen.AppLocalizations.of(context);
-    switch (type) {
-      case ToastType.success:
-        return localizations.accessibility_toast_success;
-      case ToastType.error:
-        return localizations.accessibility_toast_error;
-      case ToastType.info:
-        return localizations.accessibility_toast_info;
-    }
-  }
-
-  /// Variant that accepts an already-obtained [ScaffoldMessengerState].
-  ///
-  /// Useful when the call site needs to capture the messenger before an
-  /// async gap to avoid using a `BuildContext` after awaiting.
-  static void showFromMessenger(
-    ScaffoldMessengerState messenger,
-    String message, {
-    Duration duration = const Duration(milliseconds: 2400),
-    ToastType type = ToastType.info,
-    IconData? icon,
-    VoidCallback? onUndo,
-    String? undoLabel,
-  }) {
-    _showUsingMessenger(
-      messenger,
-      messenger.context,
-      message,
-      duration: duration,
-      type: type,
-      icon: icon,
-      onUndo: onUndo,
-      undoLabel: undoLabel,
-    );
-  }
-
-  /// Centralized helper that builds and shows the SnackBar using the given
-  /// [ScaffoldMessengerState] and a [BuildContext] suitable for localization
-  /// and theme resolution.
-  static void _showUsingMessenger(
-    ScaffoldMessengerState messenger,
-    BuildContext referenceContext,
-    String message, {
-    Duration duration = const Duration(milliseconds: 2400),
-    ToastType type = ToastType.info,
-    IconData? icon,
-    VoidCallback? onUndo,
-    String? undoLabel,
-  }) {
-    final theme = Theme.of(referenceContext);
+    final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
     Color backgroundColor;
     Color textColor;
+    Color iconColor;
     IconData effectiveIcon;
 
     switch (type) {
       case ToastType.success:
-        backgroundColor = colorScheme.primaryFixedDim;
-        textColor = colorScheme.onPrimaryFixed;
+        backgroundColor = colorScheme.surfaceContainerHighest;
+        textColor = colorScheme.onSurface;
+        iconColor = colorScheme.primary;
         effectiveIcon = icon ?? Icons.check_circle_outline_rounded;
         break;
       case ToastType.error:
-        backgroundColor = colorScheme.errorContainer;
-        textColor = colorScheme.onErrorContainer;
-        effectiveIcon = icon ?? Icons.error_outline;
+        backgroundColor = colorScheme.surfaceContainerHighest;
+        textColor = colorScheme.onSurface;
+        iconColor = colorScheme.error;
+        effectiveIcon = icon ?? Icons.error_outline_rounded;
         break;
       case ToastType.info:
-        backgroundColor = colorScheme.primaryFixed;
-        textColor = colorScheme.onPrimaryFixed;
-        effectiveIcon = icon ?? Icons.info_outline;
+        backgroundColor = colorScheme.surfaceContainerHighest;
+        textColor = colorScheme.onSurface;
+        iconColor = colorScheme.primary;
+        effectiveIcon = icon ?? Icons.info_outline_rounded;
         break;
     }
 
-    messenger.clearSnackBars();
-    messenger.showSnackBar(
-      SnackBar(
-        content: Semantics(
-          liveRegion: true,
-          label: '${_getTypeDescription(referenceContext, type)}: $message',
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                effectiveIcon,
-                color: textColor,
-                size: 20,
-                semanticLabel: _getTypeDescription(referenceContext, type),
-              ),
-              const SizedBox(width: 10),
-              Flexible(
-                child: Text(
-                  message,
-                  style: theme.textTheme.bodyMedium?.copyWith(color: textColor),
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                ),
+    Toast(
+      height: 56,
+      builder: (toast) => Material(
+        color: Colors.transparent,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
               ),
             ],
           ),
-        ),
-        action: onUndo != null
-            ? SnackBarAction(
-                label:
-                    undoLabel ?? gen.AppLocalizations.of(referenceContext).undo,
-                textColor: textColor,
-                onPressed: onUndo,
-              )
-            : null,
-        backgroundColor: backgroundColor,
-        duration: duration,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
-          side: BorderSide(
-            color: colorScheme.outlineVariant.withValues(alpha: 0.25),
-            width: 1,
+          child: Semantics(
+            liveRegion: true,
+            label: semanticLabel ?? message,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(effectiveIcon, color: iconColor, size: 18),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    message,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: textColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-        elevation: 0,
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       ),
-    );
+    ).show(context);
   }
 }
-
-enum ToastType { info, success, error }

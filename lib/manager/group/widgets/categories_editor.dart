@@ -25,11 +25,10 @@ class CategoriesEditor extends StatelessWidget {
               state.addCategory(ExpenseCategory(name: name)),
           onEditCategory: (i, name) => state.editCategory(i, name),
           onRemoveCategory: (i) async {
-            final messenger = ScaffoldMessenger.of(context);
             final removed = await controller.removeCategoryIfUnused(i);
-            if (!removed) {
-              AppToast.showFromMessenger(
-                messenger,
+            if (!removed && context.mounted) {
+              AppToast.show(
+                context,
                 loc.cannot_delete_assigned_category,
                 type: ToastType.info,
               );
