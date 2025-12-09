@@ -155,39 +155,26 @@ class NotificationService {
   ) async {
     await initialize();
 
-    // Calculate daily and total spent
-    final totalSpent = group.expenses.fold<double>(
-      0.0,
-      (sum, expense) => sum + (expense.amount ?? 0.0),
-    );
+    // Calculate today's spent
+    final now = DateTime.now();
 
-    // Calculate daily average
-    double dailyAverage = 0.0;
-    if (group.startDate != null && group.endDate != null) {
-      final days = group.endDate!.difference(group.startDate!).inDays + 1;
-      if (days > 0) {
-        dailyAverage = totalSpent / days;
+    final todaySpent = group.expenses.fold<double>(0.0, (sum, expense) {
+      final expenseDate = expense.date;
+      // Check if expense is from today by comparing year, month, and day
+      if (expenseDate.year == now.year &&
+          expenseDate.month == now.month &&
+          expenseDate.day == now.day) {
+        return sum + (expense.amount ?? 0.0);
       }
-    }
+      return sum;
+    });
 
     // Build notification content
     final title = group.title.isEmpty ? loc.new_expense_group : group.title;
-
-    // Show daily average if group has dates, otherwise show total
-    final String content;
-    if (group.startDate != null && group.endDate != null) {
-      // Group with dates: show daily average
-      content = loc.notification_daily_spent(
-        dailyAverage.toStringAsFixed(2),
-        group.currency,
-      );
-    } else {
-      // Group without dates: show total
-      content = loc.notification_total_spent(
-        totalSpent.toStringAsFixed(2),
-        group.currency,
-      );
-    }
+    final content = loc.notification_daily_spent(
+      todaySpent.toStringAsFixed(2),
+      group.currency,
+    );
 
     // Calculate progress for groups with start and end dates
     int? progress;
@@ -273,8 +260,9 @@ class NotificationService {
     int activeNotificationsCount,
     gen.AppLocalizations loc,
   ) async {
-    if (activeNotificationsCount <= 1)
+    if (activeNotificationsCount <= 1) {
       return; // No summary needed for 0 or 1 notifications
+    }
 
     final androidDetails = AndroidNotificationDetails(
       _channelId,
