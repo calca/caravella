@@ -579,8 +579,8 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                     builder: (context, enabled, child) => Semantics(
                       toggled: enabled,
                       label:
-                          '${gloc.notification_enabled} - ${enabled ? gloc.accessibility_currently_enabled : gloc.accessibility_currently_disabled}',
-                      hint: gloc.notification_enabled,
+                          '${gloc.notification_enabled_desc} - ${enabled ? gloc.accessibility_currently_enabled : gloc.accessibility_currently_disabled}',
+                      hint: gloc.notification_enabled_desc,
                       child: SwitchListTile(
                         title: Text(gloc.notification_enabled),
                         subtitle: Text(
