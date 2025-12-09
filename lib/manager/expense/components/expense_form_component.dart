@@ -372,7 +372,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
 
   Future<void> _onCategoryAdded(String categoryName) async {
     if (_controller == null) return;
-    
+
     widget.config.onCategoryAdded(categoryName);
     await Future.delayed(const Duration(milliseconds: 100));
 
