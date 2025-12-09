@@ -20,6 +20,7 @@ class GroupFormState extends ChangeNotifier {
   bool autoLocationEnabled = false;
   bool loadingImage = false;
   bool isSaving = false;
+  bool notificationEnabled = false;
 
   bool get isBusy => loadingImage || isSaving;
 
@@ -124,6 +125,12 @@ class GroupFormState extends ChangeNotifier {
   void setSaving(bool v) {
     if (isSaving == v) return;
     isSaving = v;
+    notifyListeners();
+  }
+
+  void setNotificationEnabled(bool v) {
+    if (notificationEnabled == v) return;
+    notificationEnabled = v;
     notifyListeners();
   }
 

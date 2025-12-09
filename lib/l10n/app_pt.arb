@@ -684,6 +684,18 @@
   ,"unarchive_confirm": "Deseja desarquivar"
   ,"unpin_group": "Remover favorito"
   ,"weekly_expenses_chart": "Despesas semanais"
+  ,"notification_enabled": "Notificação persistente"
+  ,"@notification_enabled": {"description": "Etiqueta para a configuração de notificação persistente no grupo"}
+  ,"notification_enabled_desc": "Mostra as despesas de hoje em uma notificação sempre visível"
+  ,"@notification_enabled_desc": {"description": "Descrição da configuração de notificação persistente"}
+  ,"notification_daily_spent": "Gasto diário: {amount} {currency}"
+  ,"@notification_daily_spent": {"description": "Texto na notificação que mostra o gasto diário médio", "placeholders": {"amount": {}, "currency": {}}}
+  ,"notification_total_spent": "Total: {amount} {currency}"
+  ,"@notification_total_spent": {"description": "Texto na notificação que mostra o gasto total", "placeholders": {"amount": {}, "currency": {}}}
+  ,"notification_add_expense": "Adicionar despesa"
+  ,"@notification_add_expense": {"description": "Etiqueta do botão na notificação para adicionar uma nova despesa"}
+  ,"notification_close": "Fechar"
+  ,"@notification_close": {"description": "Etiqueta do botão na notificação para fechar a notificação"}
   ,"group_type": "Tipo"
   ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
   ,"group_type_description": "Escolha o tipo de grupo"
@@ -748,4 +760,16 @@
   ,"@expense_readonly_archived": {"description": "Mensagem explicando que uma despesa não pode ser modificada porque o grupo está arquivado"}
   ,"expense": "Despesa"
   ,"@expense": {"description": "Título genérico para uma despesa"}
+  ,"notification_enabled": "Notificação persistente"
+  ,"@notification_enabled": {"description": "Rótulo para ativar/desativar notificação persistente"}
+  ,"notification_daily_spent": "Despesas de hoje: {amount} {currency}"
+  ,"@notification_daily_spent": {"description": "Valor gasto no dia atual na notificação", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
+  ,"notification_total_spent": "Total: {amount} {currency}"
+  ,"@notification_total_spent": {"description": "Valor total gasto na notificação", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
+  ,"notification_add_expense": "Adicionar Despesa"
+  ,"@notification_add_expense": {"description": "Botão de ação na notificação para adicionar despesa"}
+  ,"notification_close": "Fechar"
+  ,"@notification_close": {"description": "Botão de ação na notificação para fechar"}
+  ,"notification_disable": "Desativar"
+  ,"@notification_disable": {"description": "Botão de ação na notificação para desativar notificações"}
 }

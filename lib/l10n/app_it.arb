@@ -703,6 +703,18 @@
   ,"@reminder_message_single": {"description": "Messaggio di promemoria quando un partecipante deve denaro a una sola persona", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
   ,"reminder_message_multiple": "Ciao {participantName}! 👋\n\nVorrei ricordarti i tuoi pagamenti per il gruppo \"{groupName}\":\n\n{debtsList}\n\nGrazie! 😊"
   ,"@reminder_message_multiple": {"description": "Messaggio di promemoria quando un partecipante deve denaro a più persone", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
+  ,"notification_enabled": "Notifica persistente"
+  ,"@notification_enabled": {"description": "Etichetta per l'impostazione della notifica persistente nel gruppo"}
+  ,"notification_enabled_desc": "Visualizza le spese del giorno in una notifica sempre visibile"
+  ,"@notification_enabled_desc": {"description": "Descrizione dell'impostazione della notifica persistente"}
+  ,"notification_daily_spent": "Speso giornaliero: {amount} {currency}"
+  ,"@notification_daily_spent": {"description": "Testo nella notifica che mostra la spesa giornaliera media", "placeholders": {"amount": {}, "currency": {}}}
+  ,"notification_total_spent": "Totale: {amount} {currency}"
+  ,"@notification_total_spent": {"description": "Testo nella notifica che mostra la spesa totale", "placeholders": {"amount": {}, "currency": {}}}
+  ,"notification_add_expense": "Aggiungi spesa"
+  ,"@notification_add_expense": {"description": "Etichetta del pulsante nella notifica per aggiungere una nuova spesa"}
+  ,"notification_close": "Chiudi"
+  ,"@notification_close": {"description": "Etichetta del pulsante nella notifica per chiudere la notifica"}
   ,"group_type": "Tipologia"
   ,"@group_type": {"description": "Etichetta per la tipologia del gruppo di spese"}
   ,"group_type_description": "Scegli il tipo di gruppo"
@@ -769,4 +781,16 @@
   ,"@expense_readonly_archived": {"description": "Messaggio che spiega che una spesa non può essere modificata perché il gruppo è archiviato"}
   ,"expense": "Spesa"
   ,"@expense": {"description": "Titolo generico per una spesa"}
+  ,"notification_enabled": "Notifica persistente"
+  ,"@notification_enabled": {"description": "Etichetta per attivare/disattivare la notifica persistente"}
+  ,"notification_daily_spent": "Spese del giorno: {amount} {currency}"
+  ,"@notification_daily_spent": {"description": "Importo speso nel giorno corrente nella notifica", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
+  ,"notification_total_spent": "Totale: {amount} {currency}"
+  ,"@notification_total_spent": {"description": "Importo totale speso nella notifica", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
+  ,"notification_add_expense": "Aggiungi Spesa"
+  ,"@notification_add_expense": {"description": "Pulsante azione nella notifica per aggiungere una spesa"}
+  ,"notification_close": "Chiudi"
+  ,"@notification_close": {"description": "Pulsante azione nella notifica per chiudere"}
+  ,"notification_disable": "Disabilita"
+  ,"@notification_disable": {"description": "Pulsante azione nella notifica per disabilitare le notifiche"}
 }

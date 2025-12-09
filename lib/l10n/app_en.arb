@@ -742,6 +742,18 @@
   ,"@reminder_message_single": {"description": "Reminder message when a participant owes money to a single person", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
   ,"reminder_message_multiple": "Hi {participantName}! 👋\n\nJust a friendly reminder of your payments for the group \"{groupName}\":\n\n{debtsList}\n\nThank you! 😊"
   ,"@reminder_message_multiple": {"description": "Reminder message when a participant owes money to multiple people", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
+  ,"notification_enabled": "Persistent notification"
+  ,"@notification_enabled": {"description": "Label for the persistent notification setting in the group"}
+  ,"notification_enabled_desc": "Display today's expenses in an always-visible notification"
+  ,"@notification_enabled_desc": {"description": "Description of the persistent notification setting"}
+  ,"notification_daily_spent": "Daily spent: {amount} {currency}"
+  ,"@notification_daily_spent": {"description": "Text in the notification showing the daily average expense", "placeholders": {"amount": {}, "currency": {}}}
+  ,"notification_total_spent": "Total: {amount} {currency}"
+  ,"@notification_total_spent": {"description": "Text in the notification showing the total expense", "placeholders": {"amount": {}, "currency": {}}}
+  ,"notification_add_expense": "Add expense"
+  ,"@notification_add_expense": {"description": "Button label in the notification to add a new expense"}
+  ,"notification_close": "Close"
+  ,"@notification_close": {"description": "Button label in the notification to close the notification"}
   ,"group_type": "Type"
   ,"@group_type": {"description": "Label for expense group type"}
   ,"group_type_description": "Choose the group type"
@@ -806,4 +818,16 @@
   ,"@expense_readonly_archived": {"description": "Message explaining that an expense cannot be modified because the group is archived"}
   ,"expense": "Expense"
   ,"@expense": {"description": "Generic title for an expense"}
+  ,"notification_enabled": "Persistent notification"
+  ,"@notification_enabled": {"description": "Label for persistent notification toggle"}
+  ,"notification_daily_spent": "Today's expenses: {amount} {currency}"
+  ,"@notification_daily_spent": {"description": "Today's spent amount in notification", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
+  ,"notification_total_spent": "Total: {amount} {currency}"
+  ,"@notification_total_spent": {"description": "Total spent amount in notification", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
+  ,"notification_add_expense": "Add Expense"
+  ,"@notification_add_expense": {"description": "Action button in notification to add expense"}
+  ,"notification_close": "Close"
+  ,"@notification_close": {"description": "Action button in notification to close"}
+  ,"notification_disable": "Disable"
+  ,"@notification_disable": {"description": "Action button in notification to disable notifications"}
 }

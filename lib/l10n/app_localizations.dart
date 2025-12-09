@@ -3725,6 +3725,42 @@ abstract class AppLocalizations {
     Object debtsList,
   );
 
+  /// Label for persistent notification toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Persistent notification'**
+  String get notification_enabled;
+
+  /// Description of the persistent notification setting
+  ///
+  /// In en, this message translates to:
+  /// **'Display today\'s expenses in an always-visible notification'**
+  String get notification_enabled_desc;
+
+  /// Today's spent amount in notification
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s expenses: {amount} {currency}'**
+  String notification_daily_spent(String amount, String currency);
+
+  /// Total spent amount in notification
+  ///
+  /// In en, this message translates to:
+  /// **'Total: {amount} {currency}'**
+  String notification_total_spent(String amount, String currency);
+
+  /// Action button in notification to add expense
+  ///
+  /// In en, this message translates to:
+  /// **'Add Expense'**
+  String get notification_add_expense;
+
+  /// Action button in notification to close
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get notification_close;
+
   /// Label for expense group type
   ///
   /// In en, this message translates to:
@@ -3916,6 +3952,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Expense'**
   String get expense;
+
+  /// Action button in notification to disable notifications
+  ///
+  /// In en, this message translates to:
+  /// **'Disable'**
+  String get notification_disable;
 }
 
 class _AppLocalizationsDelegate

@@ -1911,6 +1911,29 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get notification_enabled => 'Notificação persistente';
+
+  @override
+  String get notification_enabled_desc =>
+      'Mostra as despesas de hoje em uma notificação sempre visível';
+
+  @override
+  String notification_daily_spent(String amount, String currency) {
+    return 'Despesas de hoje: $amount $currency';
+  }
+
+  @override
+  String notification_total_spent(String amount, String currency) {
+    return 'Total: $amount $currency';
+  }
+
+  @override
+  String get notification_add_expense => 'Adicionar Despesa';
+
+  @override
+  String get notification_close => 'Fechar';
+
+  @override
   String get group_type => 'Tipo';
 
   @override
@@ -2008,4 +2031,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get expense => 'Despesa';
+
+  @override
+  String get notification_disable => 'Desativar';
 }

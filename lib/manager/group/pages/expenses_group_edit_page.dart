@@ -5,6 +5,8 @@ import 'package:io_caravella_egm/manager/group/data/group_form_state.dart';
 import 'package:io_caravella_egm/manager/group/widgets/section_flat.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import 'package:io_caravella_egm/services/notification_service.dart';
+import 'package:io_caravella_egm/services/notification_manager.dart';
 import '../group_form_controller.dart';
 import '../group_edit_mode.dart';
 import '../widgets/group_title_field.dart';
@@ -98,6 +100,10 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
       vsync: this,
       animationDuration: const Duration(milliseconds: 350),
     );
+
+    // Register callback to handle notification disable from notification
+    NotificationManager.onNotificationDisabled = _handleNotificationDisabled;
+
     if (widget.trip != null && widget.mode == GroupEditMode.edit) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted && _state.title.isEmpty) {
@@ -143,8 +149,18 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
 
   @override
   void dispose() {
+    // Unregister callback
+    NotificationManager.onNotificationDisabled = null;
     _tabController.dispose();
     super.dispose();
+  }
+
+  /// Handles notification disable events from the notification
+  void _handleNotificationDisabled(String groupId) {
+    // Only update if this is the group being edited
+    if (widget.trip?.id == groupId && mounted) {
+      _state.setNotificationEnabled(false);
+    }
   }
 
   Future<DateTime?> _pickDate(BuildContext context, bool isStart) async {
@@ -547,6 +563,60 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                 ],
               ),
               const SizedBox(height: 32),
+              // Notifica persistente
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SectionHeader(
+                    title: gloc.notification_enabled,
+                    description: gloc.notification_enabled_desc,
+                    padding: EdgeInsets.zero,
+                    spacing: 4,
+                  ),
+                  const SizedBox(height: 12),
+                  Selector<GroupFormState, bool>(
+                    selector: (context, s) => s.notificationEnabled,
+                    builder: (context, enabled, child) => Semantics(
+                      toggled: enabled,
+                      label:
+                          '${gloc.notification_enabled_desc} - ${enabled ? gloc.accessibility_currently_enabled : gloc.accessibility_currently_disabled}',
+                      hint: gloc.notification_enabled_desc,
+                      child: SwitchListTile(
+                        title: Text(gloc.notification_enabled),
+                        subtitle: Text(
+                          enabled
+                              ? gloc.accessibility_currently_enabled
+                              : gloc.accessibility_currently_disabled,
+                        ),
+                        value: enabled,
+                        onChanged: (value) async {
+                          final controller = context
+                              .read<GroupFormController>();
+                          final notificationService = NotificationService();
+
+                          // If enabling, request permissions first
+                          if (value) {
+                            final granted = await notificationService
+                                .requestPermissions();
+                            if (!granted && context.mounted) {
+                              AppToast.show(
+                                context,
+                                gloc.notification_enabled,
+                                type: ToastType.info,
+                              );
+                              return;
+                            }
+                          }
+
+                          // Update state (save happens on PopScope)
+                          controller.state.setNotificationEnabled(value);
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 32),
               // Posizione automatica
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -651,6 +721,19 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                   try {
                     notifier?.notifyGroupUpdated(saved.id);
                   } catch (_) {}
+
+                  // Handle notification state after save
+                  final notificationService = NotificationService();
+                  if (saved.notificationEnabled && context.mounted) {
+                    // Show or update notification
+                    await notificationService.showGroupNotification(
+                      saved,
+                      gloc,
+                    );
+                  } else {
+                    // Cancel notification if disabled
+                    await notificationService.cancelGroupNotification(saved.id);
+                  }
 
                   // Pop returning the saved id so caller can react
                   if (navigator.canPop()) navigator.pop(saved.id);
@@ -850,6 +933,17 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                               try {
                                 notifier?.notifyGroupUpdated(saved.id);
                               } catch (_) {}
+
+                              // Handle notification state after save
+                              final notificationService = NotificationService();
+                              if (saved.notificationEnabled &&
+                                  context.mounted) {
+                                // Show notification for new group
+                                await notificationService.showGroupNotification(
+                                  saved,
+                                  gloc,
+                                );
+                              }
 
                               if (navigator.canPop()) navigator.pop(saved.id);
                             } catch (e) {

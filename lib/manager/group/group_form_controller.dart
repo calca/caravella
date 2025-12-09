@@ -44,6 +44,7 @@ class GroupFormController {
     state.currency = _currencyFromGroup(group.currency);
     state.imagePath = group.file;
     state.color = group.color;
+    state.notificationEnabled = group.notificationEnabled;
     state.groupType = group.groupType;
     state.autoLocationEnabled = group.autoLocationEnabled;
     // Keep a snapshot in the state to avoid extra repository fetches
@@ -150,6 +151,7 @@ class GroupFormController {
         currency: state.currency['symbol'] ?? state.currency['code'] ?? 'EUR',
         file: state.imagePath,
         color: state.color,
+        notificationEnabled: state.notificationEnabled,
         groupType: state.groupType,
         autoLocationEnabled: state.autoLocationEnabled,
         timestamp: state.originalGroup?.timestamp ?? now,

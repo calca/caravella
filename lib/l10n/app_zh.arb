@@ -951,6 +951,38 @@
   "@debt_prefix_to": {
     "description": "在债务/结算行中显示在收款人之前的简短前缀（例如：'给 Alice 10€'）"
   },
+  "notification_enabled": "持久通知",
+  "@notification_enabled": {
+    "description": "组中持久通知设置的标签"
+  },
+  "notification_enabled_desc": "在常驻通知中显示今日消费",
+  "@notification_enabled_desc": {
+    "description": "持久通知设置的描述"
+  },
+  "notification_daily_spent": "每日消费：{amount} {currency}",
+  "@notification_daily_spent": {
+    "description": "通知中显示每日平均费用的文本",
+    "placeholders": {
+      "amount": {},
+      "currency": {}
+    }
+  },
+  "notification_total_spent": "总计：{amount} {currency}",
+  "@notification_total_spent": {
+    "description": "通知中显示总费用的文本",
+    "placeholders": {
+      "amount": {},
+      "currency": {}
+    }
+  },
+  "notification_add_expense": "添加费用",
+  "@notification_add_expense": {
+    "description": "通知中添加新费用的按钮标签"
+  },
+  "notification_close": "关闭",
+  "@notification_close": {
+    "description": "通知中关闭通知的按钮标签"
+  },
   "attachments": "附件",
   "@attachments": {
     "description": "费用附件的标签"
@@ -1006,5 +1038,37 @@
   "expense": "费用",
   "@expense": {
     "description": "费用的通用标题"
+  },
+  "notification_enabled": "持久通知",
+  "@notification_enabled": {
+    "description": "持久通知切换标签"
+  },
+  "notification_daily_spent": "今日消费: {amount} {currency}",
+  "@notification_daily_spent": {
+    "description": "通知中今日的花费金额",
+    "placeholders": {
+      "amount": {"type": "String"},
+      "currency": {"type": "String"}
+    }
+  },
+  "notification_total_spent": "总计: {amount} {currency}",
+  "@notification_total_spent": {
+    "description": "通知中的总花费金额",
+    "placeholders": {
+      "amount": {"type": "String"},
+      "currency": {"type": "String"}
+    }
+  },
+  "notification_add_expense": "添加支出",
+  "@notification_add_expense": {
+    "description": "通知中添加支出的操作按钮"
+  },
+  "notification_close": "关闭",
+  "@notification_close": {
+    "description": "通知中关闭的操作按钮"
+  },
+  "notification_disable": "禁用",
+  "@notification_disable": {
+    "description": "通知中用于禁用通知的操作按钮"
   }
 }
