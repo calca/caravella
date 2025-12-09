@@ -152,6 +152,26 @@ class AppLocalizationsZh extends AppLocalizations {
   String get share_all_ofx => '分享全部 (OFX)';
 
   @override
+  String get download_all_markdown => '下载全部 (Markdown)';
+
+  @override
+  String get share_all_markdown => '分享全部 (Markdown)';
+
+  @override
+  String get markdown_select_directory_title => '选择保存 Markdown 的文件夹';
+
+  @override
+  String markdown_saved_in(String path) {
+    return 'Markdown 已保存至: $path';
+  }
+
+  @override
+  String get markdown_save_cancelled => 'Markdown 导出已取消';
+
+  @override
+  String get markdown_save_error => '保存 Markdown 文件时出错';
+
+  @override
   String get share_label => '分享';
 
   @override
@@ -528,6 +548,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get categories => '类别';
 
   @override
+  String get other_settings => '其他设置';
+
+  @override
+  String get other_settings_desc => '货币、背景和自动定位';
+
+  @override
+  String get segment_general => '常规';
+
+  @override
+  String get segment_other => '其他';
+
+  @override
   String get from => '从';
 
   @override
@@ -613,10 +645,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get unarchive => '取消归档';
 
   @override
-  String get pin => '固定';
+  String get pin => '收藏';
 
   @override
-  String get unpin => '取消置顶';
+  String get unpin => '取消收藏';
 
   @override
   String get delete => '删除';
@@ -631,10 +663,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get unarchived_with_undo => '已取消归档';
 
   @override
-  String get pinned_with_undo => '已置顶';
+  String get pinned_with_undo => '已标记为收藏';
 
   @override
-  String get unpinned_with_undo => '已取消置顶';
+  String get unpinned_with_undo => '已移除收藏';
 
   @override
   String get deleted_with_undo => '已删除';
@@ -650,6 +682,15 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get statistics => '统计';
+
+  @override
+  String get period => '期间';
+
+  @override
+  String get total_expenses => '总支出';
+
+  @override
+  String get number_of_expenses => '支出数量';
 
   @override
   String get options => '选项';
@@ -694,10 +735,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get add_expense_fab => '添加支出';
 
   @override
-  String get pin_group => '固定群组';
+  String get pin_group => '标记为收藏';
 
   @override
-  String get unpin_group => '取消固定群组';
+  String get unpin_group => '移除收藏';
 
   @override
   String get theme_automatic => '自动';
@@ -1832,6 +1873,82 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String get notification_enabled => '持久通知';
+
+  @override
+  String get notification_enabled_desc => '在常驻通知中显示今日消费';
+
+  @override
+  String notification_daily_spent(String amount, String currency) {
+    return '今日消费: $amount $currency';
+  }
+
+  @override
+  String notification_total_spent(String amount, String currency) {
+    return '总计: $amount $currency';
+  }
+
+  @override
+  String get notification_add_expense => '添加支出';
+
+  @override
+  String get notification_close => '关闭';
+
+  @override
+  String get group_type => '类型';
+
+  @override
+  String get group_type_description => '选择组类型';
+
+  @override
+  String get group_type_travel => '旅行';
+
+  @override
+  String get group_type_personal => '个人';
+
+  @override
+  String get group_type_family => '家庭';
+
+  @override
+  String get group_type_other => '其他';
+
+  @override
+  String get category_travel_transport => '交通';
+
+  @override
+  String get category_travel_accommodation => '住宿';
+
+  @override
+  String get category_travel_restaurants => '餐厅';
+
+  @override
+  String get category_personal_shopping => '购物';
+
+  @override
+  String get category_personal_health => '健康';
+
+  @override
+  String get category_personal_entertainment => '娱乐';
+
+  @override
+  String get category_family_groceries => '食品杂货';
+
+  @override
+  String get category_family_home => '家居';
+
+  @override
+  String get category_family_bills => '账单';
+
+  @override
+  String get category_other_misc => '杂项';
+
+  @override
+  String get category_other_utilities => '公用事业';
+
+  @override
+  String get category_other_services => '服务';
+
+  @override
   String get attachments => '附件';
 
   @override
@@ -1857,4 +1974,22 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get from_files => '从文件';
+
+  @override
+  String get archived_group_readonly => '已归档的组 - 只读';
+
+  @override
+  String get archived_group_readonly_desc => '该组已归档。您无法修改它或添加新费用。';
+
+  @override
+  String get expense_readonly => '费用 - 只读';
+
+  @override
+  String get expense_readonly_archived => '此费用属于已归档的组，无法修改。';
+
+  @override
+  String get expense => '费用';
+
+  @override
+  String get notification_disable => '禁用';
 }

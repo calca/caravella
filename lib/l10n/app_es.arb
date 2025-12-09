@@ -73,6 +73,12 @@
   "share_all_csv": "Compartir todo (CSV)",
   "download_all_ofx": "Descargar todo (OFX)",
   "share_all_ofx": "Compartir todo (OFX)",
+  "download_all_markdown": "Descargar todo (Markdown)",
+  "share_all_markdown": "Compartir todo (Markdown)",
+  "markdown_select_directory_title": "Seleccionar carpeta para guardar Markdown",
+  "markdown_saved_in": "Markdown guardado en: {path}",
+  "markdown_save_cancelled": "Exportación Markdown cancelada",
+  "markdown_save_error": "Error al guardar el archivo Markdown",
   "share_label": "Compartir",
   "share_text_label": "Compartir texto",
   "share_image_label": "Compartir imagen",
@@ -199,6 +205,10 @@
   "category_name_semantics": "Categoría: {name}",
   "currency": "Moneda",
   "settings_tab": "Configuración",
+  "other_settings": "Otras configuraciones",
+  "other_settings_desc": "Moneda, fondo y ubicación automática",
+  "segment_general": "General",
+  "segment_other": "Otro",
   "basic_info": "Información Básica",
   "settings": "Configuración",
   "history": "Historial",
@@ -218,19 +228,22 @@
   "archived": "Archivado",
   "archive": "Archivar",
   "unarchive": "Desarchivar",
-  "pin": "Fijar",
-  "unpin": "Desfijar",
+  "pin": "Favorito",
+  "unpin": "Desfavorito",
   "delete": "Eliminar",
   "undo": "DESHACER",
   "archived_with_undo": "Archivado",
   "unarchived_with_undo": "Desarchivado",
-  "pinned_with_undo": "Fijado",
-  "unpinned_with_undo": "Desfijado",
+  "pinned_with_undo": "Marcado como favorito",
+  "unpinned_with_undo": "Favorito quitado",
   "deleted_with_undo": "Eliminado",
   "archive_confirm": "¿Quieres archivar",
   "unarchive_confirm": "¿Quieres desarchivar",
   "overview": "Resumen",
   "statistics": "Estadísticas",
+  "period": "Período",
+  "total_expenses": "Total de gastos",
+  "number_of_expenses": "Número de gastos",
   "options": "Opciones",
   "show_overview": "Mostrar resumen",
   "show_statistics": "Mostrar estadísticas",
@@ -245,9 +258,8 @@
   "delete_group": "Eliminar grupo",
   "delete_group_confirm": "¿Estás seguro de que quieres eliminar este grupo de gastos? Esta acción no se puede deshacer.",
   "add_expense_fab": "Agregar Gasto",
-  "pin_group": "Fijar grupo",
-  "unpin_group": "Desfijar grupo",
-  "pin": "Pin",
+  "pin_group": "Marcar como favorito",
+  "unpin_group": "Quitar favorito",
   "theme_automatic": "Automático",
   "theme_light": "Claro",
   "theme_dark": "Oscuro",
@@ -708,6 +720,18 @@
   ,"@settings_user_name_desc": {"description": "Descripción de la configuración del nombre de usuario"}
   ,"settings_user_name_hint": "Ingresa tu nombre"
   ,"@settings_user_name_hint": {"description": "Placeholder del campo de nombre de usuario"}
+  ,"notification_enabled": "Notificación persistente"
+  ,"@notification_enabled": {"description": "Etiqueta para la configuración de notificación persistente en el grupo"}
+  ,"notification_enabled_desc": "Muestra los gastos del día en una notificación siempre visible"
+  ,"@notification_enabled_desc": {"description": "Descripción de la configuración de notificación persistente"}
+  ,"notification_daily_spent": "Gasto diario: {amount} {currency}"
+  ,"@notification_daily_spent": {"description": "Texto en la notificación que muestra el gasto diario promedio", "placeholders": {"amount": {}, "currency": {}}}
+  ,"notification_total_spent": "Total: {amount} {currency}"
+  ,"@notification_total_spent": {"description": "Texto en la notificación que muestra el gasto total", "placeholders": {"amount": {}, "currency": {}}}
+  ,"notification_add_expense": "Agregar gasto"
+  ,"@notification_add_expense": {"description": "Etiqueta del botón en la notificación para agregar un nuevo gasto"}
+  ,"notification_close": "Cerrar"
+  ,"@notification_close": {"description": "Etiqueta del botón en la notificación para cerrar la notificación"}
   ,"group_type": "Tipo"
   ,"@group_type": {"description": "Etiqueta para el tipo de grupo de gastos"}
   ,"group_type_description": "Elige el tipo de grupo"
@@ -762,4 +786,26 @@
   ,"@attachment_source": {"description": "Título para elegir la fuente del adjunto"}
   ,"from_files": "Desde archivos"
   ,"@from_files": {"description": "Opción para elegir desde archivos"}
+  ,"archived_group_readonly": "Grupo archivado - Solo lectura"
+  ,"@archived_group_readonly": {"description": "Mensaje que indica que un grupo archivado está en modo solo lectura"}
+  ,"archived_group_readonly_desc": "Este grupo está archivado. No puedes modificarlo ni agregar nuevos gastos."
+  ,"@archived_group_readonly_desc": {"description": "Descripción para grupo archivado en modo solo lectura"}
+  ,"expense_readonly": "Gasto - Solo lectura"
+  ,"@expense_readonly": {"description": "Título para un gasto en modo solo lectura"}
+  ,"expense_readonly_archived": "Este gasto pertenece a un grupo archivado y no se puede modificar."
+  ,"@expense_readonly_archived": {"description": "Mensaje que explica que un gasto no se puede modificar porque el grupo está archivado"}
+  ,"expense": "Gasto"
+  ,"@expense": {"description": "Título genérico para un gasto"}
+  ,"notification_enabled": "Notificación persistente"
+  ,"@notification_enabled": {"description": "Etiqueta para activar/desactivar la notificación persistente"}
+  ,"notification_daily_spent": "Gastos de hoy: {amount} {currency}"
+  ,"@notification_daily_spent": {"description": "Cantidad gastada en el día actual en la notificación", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
+  ,"notification_total_spent": "Total: {amount} {currency}"
+  ,"@notification_total_spent": {"description": "Cantidad total gastada en la notificación", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
+  ,"notification_add_expense": "Añadir Gasto"
+  ,"@notification_add_expense": {"description": "Botón de acción en la notificación para añadir gasto"}
+  ,"notification_close": "Cerrar"
+  ,"@notification_close": {"description": "Botón de acción en la notificación para cerrar"}
+  ,"notification_disable": "Desactivar"
+  ,"@notification_disable": {"description": "Botón de acción en la notificación para desactivar notificaciones"}
 }

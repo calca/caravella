@@ -14,6 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Automatic migration from JSON to Hive on first launch when using Hive backend
   - Backend-agnostic backup/import system works seamlessly with both JSON and Hive
   - Build-time variable `STORAGE_BACKEND` to select between 'file' (JSON) and 'hive' (default)
+- Markdown export format for expense groups with comprehensive statistics and expenses table
+  - Includes group header with title, period, currency, and participant count
+  - Statistics section with total expenses, daily average, per-participant breakdown, per-category breakdown, and settlement calculations
+  - Expenses table with all expense details (description, amount, paid by, category, date)
+  - Available in all supported languages (EN, IT, ES, PT, ZH)
+- Tab-based navigation in group edit page with four segments: General, Participants, Categories, and Other settings
 - Media attachments support for expenses with image, PDF, and video file types (max 5 per expense)
 - Attachment picker with camera, gallery, and file selection options
 - Full-screen attachment viewer with swipe navigation, delete and share actions
@@ -27,6 +33,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Quick access to delete expense from app bar when editing
 
 ### Changed
+- Consolidated group edit and other settings pages into single interface with tab navigation for easier access to all group options
+- Relocated group type selection to tappable icon button (42×42px) next to group name field for streamlined layout
+- Reorganized group settings into logical tabs: General (name, type, period, currency), Participants, Categories, and Other (background, auto-location)
 - Moved delete button from bottom bar to app bar in expense form for better accessibility
 - Repositioned expense form actions to reduce clutter in the main editing area
 
@@ -112,6 +121,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dynamic icons for Android Quick Launch shortcuts with group initials and background colors or images
 - F-Droid metadata and distribution support
 - Comprehensive F-Droid submission documentation
+- Persistent notification feature for expense groups showing daily and total spending
 - Context menu (long-press) for expense groups in history page with pin/unpin, archive/unarchive, and delete actions
 - Material 3 expressive swipe behavior for history page with Gmail-style dismissible actions
 - Smooth skeleton loader animation for carousel during cold start with shimmer effect

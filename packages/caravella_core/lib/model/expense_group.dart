@@ -18,6 +18,7 @@ class ExpenseGroup {
   final bool archived; // Nuovo campo per archiviare il gruppo
   final String? file; // Nuovo campo opzionale per il path del file
   final int? color; // Nuovo campo opzionale per il colore (Color.value)
+  final bool notificationEnabled; // Campo per abilitare la notifica persistente
   final ExpenseGroupType? groupType; // Tipologia del gruppo (viaggio, personale, famiglia, altro)
   final bool autoLocationEnabled; // Nuovo campo per abilitare auto-location per gruppo
 
@@ -35,6 +36,7 @@ class ExpenseGroup {
     this.archived = false, // Default a false
     this.file, // Opzionale, path del file
     this.color, // Opzionale, colore del gruppo
+    this.notificationEnabled = false, // Default a false
     this.groupType, // Opzionale, tipologia del gruppo
     this.autoLocationEnabled = false, // Default a false
   }) : timestamp = timestamp ?? DateTime.now(),
@@ -73,6 +75,7 @@ class ExpenseGroup {
       archived: json['archived'] ?? false, // Legge il valore archiviato
       file: json['file'], // Legge il valore del file
       color: json['color'], // Legge il valore del colore
+      notificationEnabled: json['notificationEnabled'] ?? false, // Legge il valore della notifica
       groupType: ExpenseGroupType.fromJson(json['groupType']), // Legge la tipologia
       autoLocationEnabled:
           json['autoLocationEnabled'] ?? false, // Legge il valore auto-location
@@ -93,6 +96,7 @@ class ExpenseGroup {
     'archived': archived, // Salva il valore archiviato
     'file': file, // Salva il valore del file
     'color': color, // Salva il valore del colore
+    'notificationEnabled': notificationEnabled, // Salva il valore della notifica
     'groupType': groupType?.toJson(), // Salva la tipologia
     'autoLocationEnabled': autoLocationEnabled, // Salva il valore auto-location
   };
@@ -109,6 +113,7 @@ class ExpenseGroup {
     DateTime? timestamp,
     bool? pinned,
     bool? archived,
+    bool? notificationEnabled,
     // Special handling for nullable fields that need to support explicit null
     Object? file = _notProvided,
     Object? color = _notProvided,
@@ -127,6 +132,7 @@ class ExpenseGroup {
       timestamp: timestamp ?? this.timestamp,
       pinned: pinned ?? this.pinned,
       archived: archived ?? this.archived,
+      notificationEnabled: notificationEnabled ?? this.notificationEnabled,
       // Fix: Handle explicit null values correctly for nullable fields
       file: file == _notProvided ? this.file : file as String?,
       color: color == _notProvided ? this.color : color as int?,
@@ -153,6 +159,7 @@ class ExpenseGroup {
       archived: false,
       file: null, // Path del file inizialmente vuoto
       color: null, // Colore inizialmente vuoto
+      notificationEnabled: false, // Notifica inizialmente disabilitata
       groupType: null, // Tipologia inizialmente vuota
       autoLocationEnabled: false, // Auto-location disabilitata di default
     );

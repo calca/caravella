@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:caravella_core/caravella_core.dart';
+import '../services/notification_manager.dart';
 
 /// Sets up all global providers for the app.
 class ProviderSetup {
@@ -8,7 +9,16 @@ class ProviderSetup {
   static Widget createProviders({required Widget child}) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ExpenseGroupNotifier()),
+        ChangeNotifierProvider(
+          create: (_) {
+            final notifier = ExpenseGroupNotifier();
+            // Register callback to cancel notification when archiving
+            notifier.setNotificationCancelCallback((groupId) async {
+              await NotificationManager().cancelNotificationForGroup(groupId);
+            });
+            return notifier;
+          },
+        ),
         ChangeNotifierProvider(create: (_) => UserNameNotifier()),
       ],
       child: child,

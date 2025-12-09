@@ -39,7 +39,7 @@ class OptionsSheet extends StatelessWidget {
         children: [
           ListTile(
             leading: Icon(
-              trip.pinned ? Icons.push_pin : Icons.push_pin_outlined,
+              trip.pinned ? Icons.favorite : Icons.favorite_border,
               color: trip.archived
                   ? Theme.of(
                       context,
@@ -69,10 +69,23 @@ class OptionsSheet extends StatelessWidget {
           ListTile(
             leading: Icon(
               Icons.edit_outlined,
-              color: Theme.of(context).colorScheme.onPrimaryFixed,
+              color: trip.archived
+                  ? Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.38)
+                  : Theme.of(context).colorScheme.onPrimaryFixed,
             ),
-            title: Text(gloc.edit_group),
-            onTap: onEdit,
+            title: Text(
+              gloc.edit_group,
+              style: trip.archived
+                  ? TextStyle(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withValues(alpha: 0.38),
+                    )
+                  : null,
+            ),
+            onTap: trip.archived ? null : onEdit,
           ),
           ListTile(
             leading: Icon(

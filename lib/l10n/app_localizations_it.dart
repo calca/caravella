@@ -155,6 +155,27 @@ class AppLocalizationsIt extends AppLocalizations {
   String get share_all_ofx => 'Condividi tutto (OFX)';
 
   @override
+  String get download_all_markdown => 'Scarica tutto (Markdown)';
+
+  @override
+  String get share_all_markdown => 'Condividi tutto (Markdown)';
+
+  @override
+  String get markdown_select_directory_title =>
+      'Seleziona cartella per salvare Markdown';
+
+  @override
+  String markdown_saved_in(String path) {
+    return 'Markdown salvato in: $path';
+  }
+
+  @override
+  String get markdown_save_cancelled => 'Esportazione Markdown annullata';
+
+  @override
+  String get markdown_save_error => 'Errore nel salvataggio del file Markdown';
+
+  @override
   String get share_label => 'Condividi';
 
   @override
@@ -539,6 +560,18 @@ class AppLocalizationsIt extends AppLocalizations {
   String get categories => 'Categorie';
 
   @override
+  String get other_settings => 'Altre impostazioni';
+
+  @override
+  String get other_settings_desc => 'Valuta, sfondo e posizione automatica';
+
+  @override
+  String get segment_general => 'Generali';
+
+  @override
+  String get segment_other => 'Altro';
+
+  @override
   String get from => 'Dal';
 
   @override
@@ -624,10 +657,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get unarchive => 'Disarchivia';
 
   @override
-  String get pin => 'Pin';
+  String get pin => 'Preferito';
 
   @override
-  String get unpin => 'Rimuovi fissaggio';
+  String get unpin => 'Rimuovi preferito';
 
   @override
   String get delete => 'Elimina';
@@ -642,10 +675,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get unarchived_with_undo => 'Disarchiviato';
 
   @override
-  String get pinned_with_undo => 'Fissato';
+  String get pinned_with_undo => 'Segnato come preferito';
 
   @override
-  String get unpinned_with_undo => 'Fissaggio rimosso';
+  String get unpinned_with_undo => 'Preferito rimosso';
 
   @override
   String get deleted_with_undo => 'Eliminato';
@@ -661,6 +694,15 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get statistics => 'Statistiche';
+
+  @override
+  String get period => 'Periodo';
+
+  @override
+  String get total_expenses => 'Totale spese';
+
+  @override
+  String get number_of_expenses => 'Numero di spese';
 
   @override
   String get options => 'Opzioni';
@@ -708,10 +750,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get add_expense_fab => 'Aggiungi Spesa';
 
   @override
-  String get pin_group => 'Aggiungi pin';
+  String get pin_group => 'Segna come preferito';
 
   @override
-  String get unpin_group => 'Rimuovi pin';
+  String get unpin_group => 'Rimuovi preferito';
 
   @override
   String get theme_automatic => 'Automatico';
@@ -1869,6 +1911,83 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String get notification_enabled => 'Notifica persistente';
+
+  @override
+  String get notification_enabled_desc =>
+      'Visualizza le spese del giorno in una notifica sempre visibile';
+
+  @override
+  String notification_daily_spent(String amount, String currency) {
+    return 'Spese del giorno: $amount $currency';
+  }
+
+  @override
+  String notification_total_spent(String amount, String currency) {
+    return 'Totale: $amount $currency';
+  }
+
+  @override
+  String get notification_add_expense => 'Aggiungi Spesa';
+
+  @override
+  String get notification_close => 'Chiudi';
+
+  @override
+  String get group_type => 'Tipologia';
+
+  @override
+  String get group_type_description => 'Scegli il tipo di gruppo';
+
+  @override
+  String get group_type_travel => 'Viaggio';
+
+  @override
+  String get group_type_personal => 'Personale';
+
+  @override
+  String get group_type_family => 'Famiglia';
+
+  @override
+  String get group_type_other => 'Altro';
+
+  @override
+  String get category_travel_transport => 'Trasporti';
+
+  @override
+  String get category_travel_accommodation => 'Alloggio';
+
+  @override
+  String get category_travel_restaurants => 'Ristoranti';
+
+  @override
+  String get category_personal_shopping => 'Shopping';
+
+  @override
+  String get category_personal_health => 'Salute';
+
+  @override
+  String get category_personal_entertainment => 'Intrattenimento';
+
+  @override
+  String get category_family_groceries => 'Spesa';
+
+  @override
+  String get category_family_home => 'Casa';
+
+  @override
+  String get category_family_bills => 'Bolletta';
+
+  @override
+  String get category_other_misc => 'Varie';
+
+  @override
+  String get category_other_utilities => 'Utilità';
+
+  @override
+  String get category_other_services => 'Servizi';
+
+  @override
   String get attachments => 'Allegati';
 
   @override
@@ -1896,4 +2015,24 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get from_files => 'Dai file';
+
+  @override
+  String get archived_group_readonly => 'Gruppo archiviato - Sola lettura';
+
+  @override
+  String get archived_group_readonly_desc =>
+      'Questo gruppo è archiviato. Non è possibile modificarlo o aggiungere nuove spese.';
+
+  @override
+  String get expense_readonly => 'Spesa - Sola lettura';
+
+  @override
+  String get expense_readonly_archived =>
+      'Questa spesa appartiene a un gruppo archiviato e non può essere modificata.';
+
+  @override
+  String get expense => 'Spesa';
+
+  @override
+  String get notification_disable => 'Disabilita';
 }

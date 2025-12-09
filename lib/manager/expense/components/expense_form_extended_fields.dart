@@ -22,6 +22,7 @@ class ExpenseFormExtendedFields extends StatelessWidget {
   final bool isInitialExpense;
   final bool isFormValid;
   final VoidCallback onSaveExpense;
+  final bool isReadOnly;
 
   const ExpenseFormExtendedFields({
     super.key,
@@ -34,6 +35,7 @@ class ExpenseFormExtendedFields extends StatelessWidget {
     required this.isInitialExpense,
     required this.isFormValid,
     required this.onSaveExpense,
+    this.isReadOnly = false,
   });
 
   @override
@@ -54,6 +56,7 @@ class ExpenseFormExtendedFields extends StatelessWidget {
               onDateSelected: controller.updateDate,
               locale: locale,
               textStyle: style,
+              enabled: !isReadOnly,
             ),
             SizedBox(height: FormTheme.fieldSpacing),
             KeyedSubtree(
@@ -65,6 +68,7 @@ class ExpenseFormExtendedFields extends StatelessWidget {
                 externalFocusNode: controller.locationFocus,
                 autoRetrieve: !isInitialExpense && autoLocationEnabled,
                 onRetrievalStatusChanged: controller.setLocationRetrieving,
+                enabled: !isReadOnly,
               ),
             ),
             SizedBox(height: FormTheme.fieldSpacing),
@@ -85,6 +89,7 @@ class ExpenseFormExtendedFields extends StatelessWidget {
               onAttachmentTapped: (path) {
                 _openAttachmentViewer(context, path);
               },
+              enabled: !isReadOnly,
             ),
             SizedBox(height: FormTheme.fieldSpacing),
             KeyedSubtree(
@@ -97,6 +102,7 @@ class ExpenseFormExtendedFields extends StatelessWidget {
                     ? TextInputAction.done
                     : TextInputAction.newline,
                 onFieldSubmitted: isFormValid ? onSaveExpense : null,
+                enabled: !isReadOnly,
               ),
             ),
           ],

@@ -90,6 +90,12 @@
   "share_all_csv": "分享全部 (CSV)",
   "download_all_ofx": "下载全部 (OFX)",
   "share_all_ofx": "分享全部 (OFX)",
+  "download_all_markdown": "下载全部 (Markdown)",
+  "share_all_markdown": "分享全部 (Markdown)",
+  "markdown_select_directory_title": "选择保存 Markdown 的文件夹",
+  "markdown_saved_in": "Markdown 已保存至: {path}",
+  "markdown_save_cancelled": "Markdown 导出已取消",
+  "markdown_save_error": "保存 Markdown 文件时出错",
   "share_label": "分享",
   "share_text_label": "分享文本",
   "share_image_label": "分享图片",
@@ -205,6 +211,10 @@
   "import_success": "导入成功！数据已重新加载。",
   "import_error": "导入失败。请检查文件格式。",
   "categories": "类别",
+  "other_settings": "其他设置",
+  "other_settings_desc": "货币、背景和自动定位",
+  "segment_general": "常规",
+  "segment_other": "其他",
   "from": "从",
   "to": "到",
   "add": "添加",
@@ -232,19 +242,22 @@
   "archived": "已归档",
   "archive": "归档",
   "unarchive": "取消归档",
-  "pin": "固定",
-  "unpin": "取消置顶",
+  "pin": "收藏",
+  "unpin": "取消收藏",
   "delete": "删除",
   "undo": "撤销",
   "archived_with_undo": "已归档",
   "unarchived_with_undo": "已取消归档",
-  "pinned_with_undo": "已置顶",
-  "unpinned_with_undo": "已取消置顶",
+  "pinned_with_undo": "已标记为收藏",
+  "unpinned_with_undo": "已移除收藏",
   "deleted_with_undo": "已删除",
   "archive_confirm": "您想要归档吗",
   "unarchive_confirm": "您想取消归档吗",
   "overview": "概览",
   "statistics": "统计",
+  "period": "期间",
+  "total_expenses": "总支出",
+  "number_of_expenses": "支出数量",
   "options": "选项",
   "show_overview": "显示概览",
   "show_statistics": "显示统计",
@@ -259,8 +272,8 @@
   "delete_group": "删除群组",
   "delete_group_confirm": "您确定要删除此支出群组吗？此操作无法撤销。",
   "add_expense_fab": "添加支出",
-  "pin_group": "固定群组",
-  "unpin_group": "取消固定群组",
+  "pin_group": "标记为收藏",
+  "unpin_group": "移除收藏",
   "theme_automatic": "自动",
   "theme_light": "浅色",
   "theme_dark": "深色",
@@ -686,9 +699,9 @@
   ,"delete_group": "删除群组"
   ,"delete_group_confirm": "您确定要删除此支出群组吗？此操作无法撤销。"
   ,"add_expense_fab": "添加支出"
-  ,"pin_group": "固定群组"
-  ,"unpin_group": "取消固定群组"
-  ,"pin": "固定"
+  ,"pin_group": "标记为收藏"
+  ,"unpin_group": "移除收藏"
+  ,"pin": "收藏"
   ,"developed_by": "开发者：calca"
   ,"links": "链接"
   ,"daily_expenses_chart": "每日支出"
@@ -938,6 +951,38 @@
   "@debt_prefix_to": {
     "description": "在债务/结算行中显示在收款人之前的简短前缀（例如：'给 Alice 10€'）"
   },
+  "notification_enabled": "持久通知",
+  "@notification_enabled": {
+    "description": "组中持久通知设置的标签"
+  },
+  "notification_enabled_desc": "在常驻通知中显示今日消费",
+  "@notification_enabled_desc": {
+    "description": "持久通知设置的描述"
+  },
+  "notification_daily_spent": "每日消费：{amount} {currency}",
+  "@notification_daily_spent": {
+    "description": "通知中显示每日平均费用的文本",
+    "placeholders": {
+      "amount": {},
+      "currency": {}
+    }
+  },
+  "notification_total_spent": "总计：{amount} {currency}",
+  "@notification_total_spent": {
+    "description": "通知中显示总费用的文本",
+    "placeholders": {
+      "amount": {},
+      "currency": {}
+    }
+  },
+  "notification_add_expense": "添加费用",
+  "@notification_add_expense": {
+    "description": "通知中添加新费用的按钮标签"
+  },
+  "notification_close": "关闭",
+  "@notification_close": {
+    "description": "通知中关闭通知的按钮标签"
+  },
   "attachments": "附件",
   "@attachments": {
     "description": "费用附件的标签"
@@ -973,5 +1018,57 @@
   "from_files": "从文件",
   "@from_files": {
     "description": "从文件选择的选项"
+  },
+  "archived_group_readonly": "已归档的组 - 只读",
+  "@archived_group_readonly": {
+    "description": "表示已归档的组处于只读模式的消息"
+  },
+  "archived_group_readonly_desc": "该组已归档。您无法修改它或添加新费用。",
+  "@archived_group_readonly_desc": {
+    "description": "只读模式下归档组的描述"
+  },
+  "expense_readonly": "费用 - 只读",
+  "@expense_readonly": {
+    "description": "只读模式下费用的标题"
+  },
+  "expense_readonly_archived": "此费用属于已归档的组，无法修改。",
+  "@expense_readonly_archived": {
+    "description": "解释费用无法修改的消息，因为组已归档"
+  },
+  "expense": "费用",
+  "@expense": {
+    "description": "费用的通用标题"
+  },
+  "notification_enabled": "持久通知",
+  "@notification_enabled": {
+    "description": "持久通知切换标签"
+  },
+  "notification_daily_spent": "今日消费: {amount} {currency}",
+  "@notification_daily_spent": {
+    "description": "通知中今日的花费金额",
+    "placeholders": {
+      "amount": {"type": "String"},
+      "currency": {"type": "String"}
+    }
+  },
+  "notification_total_spent": "总计: {amount} {currency}",
+  "@notification_total_spent": {
+    "description": "通知中的总花费金额",
+    "placeholders": {
+      "amount": {"type": "String"},
+      "currency": {"type": "String"}
+    }
+  },
+  "notification_add_expense": "添加支出",
+  "@notification_add_expense": {
+    "description": "通知中添加支出的操作按钮"
+  },
+  "notification_close": "关闭",
+  "@notification_close": {
+    "description": "通知中关闭的操作按钮"
+  },
+  "notification_disable": "禁用",
+  "@notification_disable": {
+    "description": "通知中用于禁用通知的操作按钮"
   }
 }

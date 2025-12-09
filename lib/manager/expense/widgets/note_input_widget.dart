@@ -9,6 +9,7 @@ class NoteInputWidget extends StatelessWidget {
   final FocusNode? focusNode;
   final TextInputAction? textInputAction;
   final VoidCallback? onFieldSubmitted;
+  final bool enabled;
 
   const NoteInputWidget({
     super.key,
@@ -17,6 +18,7 @@ class NoteInputWidget extends StatelessWidget {
     this.focusNode,
     this.textInputAction,
     this.onFieldSubmitted,
+    this.enabled = true,
   });
 
   @override
@@ -25,6 +27,7 @@ class NoteInputWidget extends StatelessWidget {
     final field = TextFormField(
       controller: controller,
       focusNode: focusNode,
+      enabled: enabled,
       maxLines: null, // auto-grow illimitato
       minLines: 6, // minimo 4 righe visibili
       style: textStyle ?? FormTheme.getMultilineTextStyle(context),

@@ -386,6 +386,42 @@ abstract class AppLocalizations {
   /// **'Share all (OFX)'**
   String get share_all_ofx;
 
+  /// No description provided for @download_all_markdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Download all (Markdown)'**
+  String get download_all_markdown;
+
+  /// No description provided for @share_all_markdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Share all (Markdown)'**
+  String get share_all_markdown;
+
+  /// No description provided for @markdown_select_directory_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Select folder to save Markdown'**
+  String get markdown_select_directory_title;
+
+  /// Toast message when Markdown export is saved
+  ///
+  /// In en, this message translates to:
+  /// **'Markdown saved in: {path}'**
+  String markdown_saved_in(String path);
+
+  /// No description provided for @markdown_save_cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Markdown export cancelled'**
+  String get markdown_save_cancelled;
+
+  /// No description provided for @markdown_save_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving Markdown file'**
+  String get markdown_save_error;
+
   /// No description provided for @share_label.
   ///
   /// In en, this message translates to:
@@ -1100,6 +1136,30 @@ abstract class AppLocalizations {
   /// **'Categories'**
   String get categories;
 
+  /// No description provided for @other_settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Other settings'**
+  String get other_settings;
+
+  /// No description provided for @other_settings_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Currency, background, and automatic location'**
+  String get other_settings_desc;
+
+  /// No description provided for @segment_general.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get segment_general;
+
+  /// No description provided for @segment_other.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get segment_other;
+
   /// No description provided for @from.
   ///
   /// In en, this message translates to:
@@ -1262,16 +1322,16 @@ abstract class AppLocalizations {
   /// **'Unarchive'**
   String get unarchive;
 
-  /// Action to pin a group to the top
+  /// Action to mark a group as favorite
   ///
   /// In en, this message translates to:
-  /// **'Pin'**
+  /// **'Favorite'**
   String get pin;
 
-  /// Action to unpin a group
+  /// Action to remove favorite mark from a group
   ///
   /// In en, this message translates to:
-  /// **'Unpin'**
+  /// **'Unfavorite'**
   String get unpin;
 
   /// Action to delete a group
@@ -1298,16 +1358,16 @@ abstract class AppLocalizations {
   /// **'Unarchived'**
   String get unarchived_with_undo;
 
-  /// Snackbar message when group is pinned
+  /// Snackbar message when group is marked as favorite
   ///
   /// In en, this message translates to:
-  /// **'Pinned'**
+  /// **'Marked as favorite'**
   String get pinned_with_undo;
 
-  /// Snackbar message when group is unpinned
+  /// Snackbar message when favorite mark is removed from group
   ///
   /// In en, this message translates to:
-  /// **'Unpinned'**
+  /// **'Favorite removed'**
   String get unpinned_with_undo;
 
   /// Snackbar message when group is deleted
@@ -1339,6 +1399,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Statistics'**
   String get statistics;
+
+  /// No description provided for @period.
+  ///
+  /// In en, this message translates to:
+  /// **'Period'**
+  String get period;
+
+  /// No description provided for @total_expenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Total expenses'**
+  String get total_expenses;
+
+  /// No description provided for @number_of_expenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of expenses'**
+  String get number_of_expenses;
 
   /// No description provided for @options.
   ///
@@ -1427,13 +1505,13 @@ abstract class AppLocalizations {
   /// No description provided for @pin_group.
   ///
   /// In en, this message translates to:
-  /// **'Pin group'**
+  /// **'Mark as favorite'**
   String get pin_group;
 
   /// No description provided for @unpin_group.
   ///
   /// In en, this message translates to:
-  /// **'Unpin group'**
+  /// **'Remove favorite'**
   String get unpin_group;
 
   /// No description provided for @theme_automatic.
@@ -3647,6 +3725,150 @@ abstract class AppLocalizations {
     Object debtsList,
   );
 
+  /// Label for persistent notification toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Persistent notification'**
+  String get notification_enabled;
+
+  /// Description of the persistent notification setting
+  ///
+  /// In en, this message translates to:
+  /// **'Display today\'s expenses in an always-visible notification'**
+  String get notification_enabled_desc;
+
+  /// Today's spent amount in notification
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s expenses: {amount} {currency}'**
+  String notification_daily_spent(String amount, String currency);
+
+  /// Total spent amount in notification
+  ///
+  /// In en, this message translates to:
+  /// **'Total: {amount} {currency}'**
+  String notification_total_spent(String amount, String currency);
+
+  /// Action button in notification to add expense
+  ///
+  /// In en, this message translates to:
+  /// **'Add Expense'**
+  String get notification_add_expense;
+
+  /// Action button in notification to close
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get notification_close;
+
+  /// Label for expense group type
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get group_type;
+
+  /// Description for group type selection
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the group type'**
+  String get group_type_description;
+
+  /// Group type: travel
+  ///
+  /// In en, this message translates to:
+  /// **'Travel'**
+  String get group_type_travel;
+
+  /// Group type: personal
+  ///
+  /// In en, this message translates to:
+  /// **'Personal'**
+  String get group_type_personal;
+
+  /// Group type: family
+  ///
+  /// In en, this message translates to:
+  /// **'Family'**
+  String get group_type_family;
+
+  /// Group type: other
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get group_type_other;
+
+  /// Default category for travel group type
+  ///
+  /// In en, this message translates to:
+  /// **'Transport'**
+  String get category_travel_transport;
+
+  /// Default category for travel group type
+  ///
+  /// In en, this message translates to:
+  /// **'Accommodation'**
+  String get category_travel_accommodation;
+
+  /// Default category for travel group type
+  ///
+  /// In en, this message translates to:
+  /// **'Restaurants'**
+  String get category_travel_restaurants;
+
+  /// Default category for personal group type
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping'**
+  String get category_personal_shopping;
+
+  /// Default category for personal group type
+  ///
+  /// In en, this message translates to:
+  /// **'Health'**
+  String get category_personal_health;
+
+  /// Default category for personal group type
+  ///
+  /// In en, this message translates to:
+  /// **'Entertainment'**
+  String get category_personal_entertainment;
+
+  /// Default category for family group type
+  ///
+  /// In en, this message translates to:
+  /// **'Groceries'**
+  String get category_family_groceries;
+
+  /// Default category for family group type
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get category_family_home;
+
+  /// Default category for family group type
+  ///
+  /// In en, this message translates to:
+  /// **'Bills'**
+  String get category_family_bills;
+
+  /// Default category for other group type
+  ///
+  /// In en, this message translates to:
+  /// **'Miscellaneous'**
+  String get category_other_misc;
+
+  /// Default category for other group type
+  ///
+  /// In en, this message translates to:
+  /// **'Utilities'**
+  String get category_other_utilities;
+
+  /// Default category for other group type
+  ///
+  /// In en, this message translates to:
+  /// **'Services'**
+  String get category_other_services;
+
   /// Label for expense attachments
   ///
   /// In en, this message translates to:
@@ -3700,6 +3922,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'From files'**
   String get from_files;
+
+  /// Message indicating that an archived group is in read-only mode
+  ///
+  /// In en, this message translates to:
+  /// **'Archived Group - Read-only'**
+  String get archived_group_readonly;
+
+  /// Description for archived group in read-only mode
+  ///
+  /// In en, this message translates to:
+  /// **'This group is archived. You cannot modify it or add new expenses.'**
+  String get archived_group_readonly_desc;
+
+  /// Title for an expense in read-only mode
+  ///
+  /// In en, this message translates to:
+  /// **'Expense - Read-only'**
+  String get expense_readonly;
+
+  /// Message explaining that an expense cannot be modified because the group is archived
+  ///
+  /// In en, this message translates to:
+  /// **'This expense belongs to an archived group and cannot be modified.'**
+  String get expense_readonly_archived;
+
+  /// Generic title for an expense
+  ///
+  /// In en, this message translates to:
+  /// **'Expense'**
+  String get expense;
+
+  /// Action button in notification to disable notifications
+  ///
+  /// In en, this message translates to:
+  /// **'Disable'**
+  String get notification_disable;
 }
 
 class _AppLocalizationsDelegate

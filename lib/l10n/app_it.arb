@@ -55,6 +55,12 @@
   "share_all_csv": "Condividi tutto (CSV)",
   "download_all_ofx": "Scarica tutto (OFX)",
   "share_all_ofx": "Condividi tutto (OFX)",
+  "download_all_markdown": "Scarica tutto (Markdown)",
+  "share_all_markdown": "Condividi tutto (Markdown)",
+  "markdown_select_directory_title": "Seleziona cartella per salvare Markdown",
+  "markdown_saved_in": "Markdown salvato in: {path}",
+  "markdown_save_cancelled": "Esportazione Markdown annullata",
+  "markdown_save_error": "Errore nel salvataggio del file Markdown",
   "share_label": "Condividi",
   "share_text_label": "Condividi testo",
   "share_image_label": "Condividi immagine",
@@ -194,6 +200,10 @@
   "category_name_semantics": "Categoria: {name}",
   "currency": "Valuta",
   "settings_tab": "Impostazioni",
+  "other_settings": "Altre impostazioni",
+  "other_settings_desc": "Valuta, sfondo e posizione automatica",
+  "segment_general": "Generali",
+  "segment_other": "Altro",
   "basic_info": "Informazioni di base",
   "settings": "Impostazioni",
   "history": "Cronologia",
@@ -224,19 +234,22 @@
   "archived": "Archiviato",
   "archive": "Archivia",
   "unarchive": "Disarchivia",
-  "pin": "Fissa",
-  "unpin": "Rimuovi fissaggio",
+  "pin": "Preferito",
+  "unpin": "Rimuovi preferito",
   "delete": "Elimina",
   "undo": "ANNULLA",
   "archived_with_undo": "Archiviato",
   "unarchived_with_undo": "Disarchiviato",
-  "pinned_with_undo": "Fissato",
-  "unpinned_with_undo": "Fissaggio rimosso",
+  "pinned_with_undo": "Segnato come preferito",
+  "unpinned_with_undo": "Preferito rimosso",
   "deleted_with_undo": "Eliminato",
   "archive_confirm": "Vuoi archiviare",
   "unarchive_confirm": "Vuoi disarchiviare",
   "overview": "Panoramica",
   "statistics": "Statistiche",
+  "period": "Periodo",
+  "total_expenses": "Totale spese",
+  "number_of_expenses": "Numero di spese",
   "options": "Opzioni",
   "show_overview": "Mostra panoramica",
   "show_statistics": "Mostra statistiche",
@@ -251,9 +264,8 @@
   "delete_group": "Elimina gruppo",
   "delete_group_confirm": "Sei sicuro di voler eliminare questo gruppo di spese? Questa azione non può essere annullata.",
   "add_expense_fab": "Aggiungi Spesa",
-  "pin_group": "Aggiungi pin",
-  "unpin_group": "Rimuovi pin",
-  "pin": "Pin",
+  "pin_group": "Segna come preferito",
+  "unpin_group": "Rimuovi preferito",
   "theme_automatic": "Automatico",
   "theme_light": "Chiaro",
   "theme_dark": "Scuro",
@@ -691,6 +703,18 @@
   ,"@reminder_message_single": {"description": "Messaggio di promemoria quando un partecipante deve denaro a una sola persona", "placeholders": {"participantName": {}, "amount": {}, "creditorName": {}, "groupName": {}}}
   ,"reminder_message_multiple": "Ciao {participantName}! 👋\n\nVorrei ricordarti i tuoi pagamenti per il gruppo \"{groupName}\":\n\n{debtsList}\n\nGrazie! 😊"
   ,"@reminder_message_multiple": {"description": "Messaggio di promemoria quando un partecipante deve denaro a più persone", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
+  ,"notification_enabled": "Notifica persistente"
+  ,"@notification_enabled": {"description": "Etichetta per l'impostazione della notifica persistente nel gruppo"}
+  ,"notification_enabled_desc": "Visualizza le spese del giorno in una notifica sempre visibile"
+  ,"@notification_enabled_desc": {"description": "Descrizione dell'impostazione della notifica persistente"}
+  ,"notification_daily_spent": "Speso giornaliero: {amount} {currency}"
+  ,"@notification_daily_spent": {"description": "Testo nella notifica che mostra la spesa giornaliera media", "placeholders": {"amount": {}, "currency": {}}}
+  ,"notification_total_spent": "Totale: {amount} {currency}"
+  ,"@notification_total_spent": {"description": "Testo nella notifica che mostra la spesa totale", "placeholders": {"amount": {}, "currency": {}}}
+  ,"notification_add_expense": "Aggiungi spesa"
+  ,"@notification_add_expense": {"description": "Etichetta del pulsante nella notifica per aggiungere una nuova spesa"}
+  ,"notification_close": "Chiudi"
+  ,"@notification_close": {"description": "Etichetta del pulsante nella notifica per chiudere la notifica"}
   ,"group_type": "Tipologia"
   ,"@group_type": {"description": "Etichetta per la tipologia del gruppo di spese"}
   ,"group_type_description": "Scegli il tipo di gruppo"
@@ -747,4 +771,26 @@
   ,"@category_other_utilities": {"description": "Categoria predefinita per gruppo tipo altro"}
   ,"category_other_services": "Servizi"
   ,"@category_other_services": {"description": "Categoria predefinita per gruppo tipo altro"}
+  ,"archived_group_readonly": "Gruppo archiviato - Sola lettura"
+  ,"@archived_group_readonly": {"description": "Messaggio che indica che un gruppo archiviato è in modalità sola lettura"}
+  ,"archived_group_readonly_desc": "Questo gruppo è archiviato. Non è possibile modificarlo o aggiungere nuove spese."
+  ,"@archived_group_readonly_desc": {"description": "Descrizione per gruppo archiviato in modalità sola lettura"}
+  ,"expense_readonly": "Spesa - Sola lettura"
+  ,"@expense_readonly": {"description": "Titolo per una spesa in modalità sola lettura"}
+  ,"expense_readonly_archived": "Questa spesa appartiene a un gruppo archiviato e non può essere modificata."
+  ,"@expense_readonly_archived": {"description": "Messaggio che spiega che una spesa non può essere modificata perché il gruppo è archiviato"}
+  ,"expense": "Spesa"
+  ,"@expense": {"description": "Titolo generico per una spesa"}
+  ,"notification_enabled": "Notifica persistente"
+  ,"@notification_enabled": {"description": "Etichetta per attivare/disattivare la notifica persistente"}
+  ,"notification_daily_spent": "Spese del giorno: {amount} {currency}"
+  ,"@notification_daily_spent": {"description": "Importo speso nel giorno corrente nella notifica", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
+  ,"notification_total_spent": "Totale: {amount} {currency}"
+  ,"@notification_total_spent": {"description": "Importo totale speso nella notifica", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
+  ,"notification_add_expense": "Aggiungi Spesa"
+  ,"@notification_add_expense": {"description": "Pulsante azione nella notifica per aggiungere una spesa"}
+  ,"notification_close": "Chiudi"
+  ,"@notification_close": {"description": "Pulsante azione nella notifica per chiudere"}
+  ,"notification_disable": "Disabilita"
+  ,"@notification_disable": {"description": "Pulsante azione nella notifica per disabilitare le notifiche"}
 }

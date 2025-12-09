@@ -13,6 +13,9 @@ class ExpenseGroupNotifier extends ChangeNotifier {
   // Optional callback for platform-specific shortcuts (e.g., Android Quick Actions)
   VoidCallback? _onShortcutsUpdate;
 
+  // Optional callback for canceling notifications when archiving
+  Future<void> Function(String groupId)? _onNotificationCancel;
+
   ExpenseGroup? get currentGroup => _currentGroup;
 
   // Lista degli ID dei gruppi che sono stati aggiornati
@@ -165,6 +168,11 @@ class ExpenseGroupNotifier extends ChangeNotifier {
 
   /// Update archive state of a group
   Future<void> updateGroupArchive(String groupId, bool archived) async {
+    // If archiving (not unarchiving), cancel the notification via callback
+    if (archived && _onNotificationCancel != null) {
+      await _onNotificationCancel!(groupId);
+    }
+
     await ExpenseGroupStorageV2.updateGroupArchive(groupId, archived);
 
     // Update current group if it's the one being modified
@@ -192,5 +200,10 @@ class ExpenseGroupNotifier extends ChangeNotifier {
   /// Set callback for shortcuts update (platform-specific)
   void setShortcutsUpdateCallback(VoidCallback? callback) {
     _onShortcutsUpdate = callback;
+  }
+
+  /// Set callback for canceling notifications when archiving groups
+  void setNotificationCancelCallback(Future<void> Function(String)? callback) {
+    _onNotificationCancel = callback;
   }
 }

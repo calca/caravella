@@ -73,6 +73,12 @@
   "share_all_csv": "Compartilhar tudo (CSV)",
   "download_all_ofx": "Baixar tudo (OFX)",
   "share_all_ofx": "Compartilhar tudo (OFX)",
+  "download_all_markdown": "Baixar tudo (Markdown)",
+  "share_all_markdown": "Compartilhar tudo (Markdown)",
+  "markdown_select_directory_title": "Selecionar pasta para salvar Markdown",
+  "markdown_saved_in": "Markdown salvo em: {path}",
+  "markdown_save_cancelled": "Exportação Markdown cancelada",
+  "markdown_save_error": "Erro ao salvar arquivo Markdown",
   "share_label": "Compartilhar",
   "share_text_label": "Compartilhar texto",
   "share_image_label": "Compartilhar imagem",
@@ -164,14 +170,14 @@
   "no_search_results": "Nenhum grupo encontrado para",
   "active": "Ativo",
   "archive": "Arquivar",
-  "pin": "Fixar",
-  "unpin": "Desfixar",
+  "pin": "Favorito",
+  "unpin": "Desfavorito",
   "delete": "Excluir",
   "undo": "DESFAZER",
   "archived_with_undo": "Arquivado",
   "unarchived_with_undo": "Desarquivado",
-  "pinned_with_undo": "Fixado",
-  "unpinned_with_undo": "Desfixado",
+  "pinned_with_undo": "Marcado como favorito",
+  "unpinned_with_undo": "Favorito removido",
   "deleted_with_undo": "Excluído",
   "archive_confirm": "Deseja arquivar",
   "overview": "Visão geral",
@@ -203,6 +209,10 @@
   "error_selecting_image": "Erro ao selecionar imagem",
   "error_saving_image": "Erro ao salvar imagem",
   "already_exists": "já existe",
+  "other_settings": "Outras configurações",
+  "other_settings_desc": "Moeda, plano de fundo e localização automática",
+  "segment_general": "Geral",
+  "segment_other": "Outro",
   "status_all": "Todos",
   "status_active": "Ativos",
   "status_archived": "Arquivados",
@@ -259,8 +269,7 @@
   "edit_group_desc": "Modificar configurações, participantes e categorias do grupo",
   "new_group_desc": "Criar um novo grupo de despesas com configurações personalizadas",
   "delete_group_confirm": "Tem certeza de que deseja excluir este grupo de despesas? Esta ação não pode ser desfeita.",
-  "pin_group": "Fixar grupo",
-  "pin": "Fixar",
+  "pin_group": "Marcar como favorito",
   "theme_light": "Claro",
   "developed_by": "Desenvolvido por calca",
   "daily_expenses_chart": "Despesas diárias",
@@ -665,13 +674,28 @@
   ,"show_overview": "Mostrar visão geral"
   ,"start_date_optional": "De"
   ,"statistics": "Estatísticas"
+  ,"period": "Período"
+  ,"total_expenses": "Total de despesas"
+  ,"number_of_expenses": "Número de despesas"
   ,"theme_automatic": "Automático"
   ,"theme_dark": "Escuro"
   ,"try_different_search": "Tente pesquisar com palavras diferentes"
   ,"unarchive": "Desarquivar"
   ,"unarchive_confirm": "Deseja desarquivar"
-  ,"unpin_group": "Desafixar grupo"
+  ,"unpin_group": "Remover favorito"
   ,"weekly_expenses_chart": "Despesas semanais"
+  ,"notification_enabled": "Notificação persistente"
+  ,"@notification_enabled": {"description": "Etiqueta para a configuração de notificação persistente no grupo"}
+  ,"notification_enabled_desc": "Mostra as despesas de hoje em uma notificação sempre visível"
+  ,"@notification_enabled_desc": {"description": "Descrição da configuração de notificação persistente"}
+  ,"notification_daily_spent": "Gasto diário: {amount} {currency}"
+  ,"@notification_daily_spent": {"description": "Texto na notificação que mostra o gasto diário médio", "placeholders": {"amount": {}, "currency": {}}}
+  ,"notification_total_spent": "Total: {amount} {currency}"
+  ,"@notification_total_spent": {"description": "Texto na notificação que mostra o gasto total", "placeholders": {"amount": {}, "currency": {}}}
+  ,"notification_add_expense": "Adicionar despesa"
+  ,"@notification_add_expense": {"description": "Etiqueta do botão na notificação para adicionar uma nova despesa"}
+  ,"notification_close": "Fechar"
+  ,"@notification_close": {"description": "Etiqueta do botão na notificação para fechar a notificação"}
   ,"group_type": "Tipo"
   ,"@group_type": {"description": "Etiqueta para tipo de grupo de despesas"}
   ,"group_type_description": "Escolha o tipo de grupo"
@@ -726,4 +750,26 @@
   ,"@attachment_source": {"description": "Título para escolher a fonte do anexo"}
   ,"from_files": "Dos arquivos"
   ,"@from_files": {"description": "Opção para escolher dos arquivos"}
+  ,"archived_group_readonly": "Grupo arquivado - Somente leitura"
+  ,"@archived_group_readonly": {"description": "Mensagem indicando que um grupo arquivado está no modo somente leitura"}
+  ,"archived_group_readonly_desc": "Este grupo está arquivado. Você não pode modificá-lo ou adicionar novas despesas."
+  ,"@archived_group_readonly_desc": {"description": "Descrição para grupo arquivado no modo somente leitura"}
+  ,"expense_readonly": "Despesa - Somente leitura"
+  ,"@expense_readonly": {"description": "Título para uma despesa no modo somente leitura"}
+  ,"expense_readonly_archived": "Esta despesa pertence a um grupo arquivado e não pode ser modificada."
+  ,"@expense_readonly_archived": {"description": "Mensagem explicando que uma despesa não pode ser modificada porque o grupo está arquivado"}
+  ,"expense": "Despesa"
+  ,"@expense": {"description": "Título genérico para uma despesa"}
+  ,"notification_enabled": "Notificação persistente"
+  ,"@notification_enabled": {"description": "Rótulo para ativar/desativar notificação persistente"}
+  ,"notification_daily_spent": "Despesas de hoje: {amount} {currency}"
+  ,"@notification_daily_spent": {"description": "Valor gasto no dia atual na notificação", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
+  ,"notification_total_spent": "Total: {amount} {currency}"
+  ,"@notification_total_spent": {"description": "Valor total gasto na notificação", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
+  ,"notification_add_expense": "Adicionar Despesa"
+  ,"@notification_add_expense": {"description": "Botão de ação na notificação para adicionar despesa"}
+  ,"notification_close": "Fechar"
+  ,"@notification_close": {"description": "Botão de ação na notificação para fechar"}
+  ,"notification_disable": "Desativar"
+  ,"@notification_disable": {"description": "Botão de ação na notificação para desativar notificações"}
 }

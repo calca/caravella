@@ -19,6 +19,7 @@ class AmountInputWidget extends StatelessWidget {
   final Widget?
   leading; // optional leading icon for text mode aligned like currency
   final TextInputAction? textInputAction; // override default textInputAction
+  final bool enabled;
 
   const AmountInputWidget({
     super.key,
@@ -35,6 +36,7 @@ class AmountInputWidget extends StatelessWidget {
     this.trailing,
     this.leading,
     this.textInputAction,
+    this.enabled = true,
   });
 
   @override
@@ -44,6 +46,7 @@ class AmountInputWidget extends StatelessWidget {
       final textField = TextFormField(
         controller: controller,
         focusNode: focusNode,
+        enabled: enabled,
         style: textStyle ?? FormTheme.getFieldTextStyle(context),
         decoration: InputDecoration(
           hintText: label != null ? '${label!} *' : null,
@@ -103,6 +106,7 @@ class AmountInputWidget extends StatelessWidget {
     final amountField = TextFormField(
       controller: controller,
       focusNode: focusNode,
+      enabled: enabled,
       style: textStyle ?? FormTheme.getAmountTextStyle(context),
       decoration: InputDecoration(
         hintText: label != null ? '${label!} *' : null,
