@@ -806,4 +806,6 @@
   ,"@notification_add_expense": {"description": "Botón de acción en la notificación para añadir gasto"}
   ,"notification_close": "Cerrar"
   ,"@notification_close": {"description": "Botón de acción en la notificación para cerrar"}
+  ,"notification_disable": "Desactivar"
+  ,"@notification_disable": {"description": "Botón de acción en la notificación para desactivar notificaciones"}
 }

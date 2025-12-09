@@ -2035,4 +2035,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get expense => 'Gasto';
+
+  @override
+  String get notification_disable => 'Desactivar';
 }

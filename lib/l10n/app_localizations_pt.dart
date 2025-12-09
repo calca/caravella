@@ -2031,4 +2031,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get expense => 'Despesa';
+
+  @override
+  String get notification_disable => 'Desativar';
 }

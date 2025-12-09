@@ -1066,5 +1066,9 @@
   "notification_close": "关闭",
   "@notification_close": {
     "description": "通知中关闭的操作按钮"
+  },
+  "notification_disable": "禁用",
+  "@notification_disable": {
+    "description": "通知中用于禁用通知的操作按钮"
   }
 }

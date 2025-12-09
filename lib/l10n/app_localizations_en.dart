@@ -2023,4 +2023,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get expense => 'Expense';
+
+  @override
+  String get notification_disable => 'Disable';
 }

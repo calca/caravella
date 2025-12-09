@@ -3952,6 +3952,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Expense'**
   String get expense;
+
+  /// Action button in notification to disable notifications
+  ///
+  /// In en, this message translates to:
+  /// **'Disable'**
+  String get notification_disable;
 }
 
 class _AppLocalizationsDelegate

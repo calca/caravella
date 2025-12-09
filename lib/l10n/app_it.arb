@@ -791,4 +791,6 @@
   ,"@notification_add_expense": {"description": "Pulsante azione nella notifica per aggiungere una spesa"}
   ,"notification_close": "Chiudi"
   ,"@notification_close": {"description": "Pulsante azione nella notifica per chiudere"}
+  ,"notification_disable": "Disabilita"
+  ,"@notification_disable": {"description": "Pulsante azione nella notifica per disabilitare le notifiche"}
 }

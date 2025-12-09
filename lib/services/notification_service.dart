@@ -64,10 +64,10 @@ class NotificationService {
       // Add expense action button clicked
       debugPrint('Add expense action triggered');
       NotificationManager.handleAddExpenseAction(groupId);
-    } else if (response.actionId == 'close') {
-      // Close action button clicked
-      debugPrint('Close action triggered');
-      NotificationManager.handleCloseAction(groupId);
+    } else if (response.actionId == 'disable') {
+      // Disable action button clicked
+      debugPrint('Disable action triggered');
+      NotificationManager.handleDisableAction(groupId);
     } else if (response.actionId == null) {
       // Notification body clicked (not an action button)
       debugPrint('Notification body clicked - opening group detail page');
@@ -243,9 +243,9 @@ class NotificationService {
           cancelNotification: false,
         ),
         AndroidNotificationAction(
-          'close',
-          loc.notification_close,
-          showsUserInterface: false,
+          'disable',
+          loc.notification_disable,
+          showsUserInterface: true,
         ),
       ],
     );

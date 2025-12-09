@@ -94,11 +94,11 @@ class NotificationManager {
     }
   }
 
-  /// Handles the "close" action from notification
-  /// Disables the notification setting for the group
-  static Future<void> handleCloseAction(String groupId) async {
+  /// Handles the "disable" action from notification
+  /// Disables the notification setting for the group and cancels the notification
+  static Future<void> handleDisableAction(String groupId) async {
     try {
-      debugPrint('Handling close action for group: $groupId');
+      debugPrint('Handling disable action for group: $groupId');
 
       // Load the expense group
       final group = await ExpenseGroupStorageV2.getTripById(groupId);

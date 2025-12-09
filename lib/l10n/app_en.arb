@@ -828,4 +828,6 @@
   ,"@notification_add_expense": {"description": "Action button in notification to add expense"}
   ,"notification_close": "Close"
   ,"@notification_close": {"description": "Action button in notification to close"}
+  ,"notification_disable": "Disable"
+  ,"@notification_disable": {"description": "Action button in notification to disable notifications"}
 }

@@ -2032,4 +2032,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get expense => 'Spesa';
+
+  @override
+  String get notification_disable => 'Disabilita';
 }

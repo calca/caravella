@@ -1989,4 +1989,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get expense => '费用';
+
+  @override
+  String get notification_disable => '禁用';
 }
