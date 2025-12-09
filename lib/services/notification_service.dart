@@ -51,19 +51,27 @@ class NotificationService {
   }
 
   void _onNotificationTap(NotificationResponse response) {
-    debugPrint('Notification tapped: ${response.actionId}');
+    debugPrint(
+      'Notification tapped: actionId=${response.actionId}, payload=${response.payload}',
+    );
 
     if (response.payload == null) return;
 
     final groupId = response.payload!;
 
-    // Handle 'add_expense' action
+    // Handle different actions
     if (response.actionId == 'add_expense') {
+      // Add expense action button clicked
+      debugPrint('Add expense action triggered');
       NotificationManager.handleAddExpenseAction(groupId);
-    }
-    // Handle 'close' action
-    else if (response.actionId == 'close') {
+    } else if (response.actionId == 'close') {
+      // Close action button clicked
+      debugPrint('Close action triggered');
       NotificationManager.handleCloseAction(groupId);
+    } else if (response.actionId == null) {
+      // Notification body clicked (not an action button)
+      debugPrint('Notification body clicked - opening group detail page');
+      NotificationManager.handleOpenGroupDetail(groupId);
     }
   }
 
@@ -232,11 +240,12 @@ class NotificationService {
           'add_expense',
           loc.notification_add_expense,
           showsUserInterface: true,
+          cancelNotification: false,
         ),
         AndroidNotificationAction(
           'close',
           loc.notification_close,
-          cancelNotification: true,
+          showsUserInterface: false,
         ),
       ],
     );

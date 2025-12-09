@@ -5,6 +5,7 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'notification_service.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../manager/details/widgets/expense_entry_sheet.dart';
+import '../manager/details/pages/expense_group_detail_page.dart';
 
 /// Helper class to manage notification updates when expense groups change
 class NotificationManager {
@@ -116,6 +117,59 @@ class NotificationManager {
       debugPrint('Notification disabled for group: ${group.title}');
     } catch (e) {
       debugPrint('Error handling close action: $e');
+    }
+  }
+
+  /// Handles tapping on the notification body (not action buttons)
+  /// Opens the expense group detail page
+  static Future<void> handleOpenGroupDetail(String groupId) async {
+    try {
+      debugPrint('Opening group detail for: $groupId');
+
+      // Get the navigation key from the app
+      final context = navigatorKey.currentContext;
+      if (context == null || !context.mounted) {
+        debugPrint('Cannot navigate: context not available');
+        return;
+      }
+
+      // Load the expense group
+      final group = await ExpenseGroupStorageV2.getTripById(groupId);
+      if (group == null) {
+        debugPrint('Group not found: $groupId');
+        // Check context is still valid after async operation
+        final currentContext = navigatorKey.currentContext;
+        if (currentContext != null && currentContext.mounted) {
+          AppToast.show(
+            currentContext,
+            'Gruppo non trovato',
+            type: ToastType.error,
+          );
+        }
+        return;
+      }
+
+      // Navigate to home if not already there
+      final navigator = navigatorKey.currentState;
+      if (navigator != null) {
+        // Pop all routes to get to home
+        navigator.popUntil((route) => route.isFirst);
+
+        // Wait a bit for the navigation to complete
+        await Future.delayed(const Duration(milliseconds: 300));
+
+        // Navigate to group detail page
+        final currentContext = navigatorKey.currentContext;
+        if (currentContext != null && currentContext.mounted) {
+          await navigator.push(
+            MaterialPageRoute(
+              builder: (ctx) => ExpenseGroupDetailPage(trip: group),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint('Error opening group detail: $e');
     }
   }
 
