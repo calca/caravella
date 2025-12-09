@@ -27,6 +27,7 @@ class ExpenseFormFields extends StatelessWidget {
   final String? currency;
   final VoidCallback onSaveExpense;
   final bool isInitialExpense;
+  final bool isReadOnly;
 
   const ExpenseFormFields({
     super.key,
@@ -43,6 +44,7 @@ class ExpenseFormFields extends StatelessWidget {
     required this.onSaveExpense,
     required this.onCategoriesUpdated,
     required this.isInitialExpense,
+    this.isReadOnly = false,
   });
 
   @override
@@ -93,6 +95,7 @@ class ExpenseFormFields extends StatelessWidget {
           onSaved: (v) {},
           onSubmitted: onSaveExpense,
           textStyle: style,
+          enabled: !isReadOnly,
         ),
         controller.isAmountValid,
         controller.amountTouched,
@@ -127,6 +130,7 @@ class ExpenseFormFields extends StatelessWidget {
           onSubmitted: controller.isFormValid ? onSaveExpense : null,
           isText: true,
           textStyle: style,
+          enabled: !isReadOnly,
         ),
         controller.isNameValid,
         controller.amountTouched,
@@ -156,6 +160,7 @@ class ExpenseFormFields extends StatelessWidget {
               ),
               textStyle: style,
               fullEdit: true,
+              enabled: !isReadOnly,
             ),
             controller.isPaidByValid,
             controller.paidByTouched,
@@ -172,6 +177,7 @@ class ExpenseFormFields extends StatelessWidget {
                   _onAddCategoryInline(context, name),
               textStyle: style,
               fullEdit: true,
+              enabled: !isReadOnly,
             ),
             controller.isCategoryValid(categories.isEmpty),
             controller.categoryTouched,
@@ -205,6 +211,7 @@ class ExpenseFormFields extends StatelessWidget {
             ),
             textStyle: style,
             fullEdit: false,
+            enabled: !isReadOnly,
           ),
           controller.isPaidByValid,
           controller.paidByTouched,
@@ -220,6 +227,7 @@ class ExpenseFormFields extends StatelessWidget {
             onAddCategoryInline: (name) => _onAddCategoryInline(context, name),
             textStyle: style,
             fullEdit: false,
+            enabled: !isReadOnly,
           ),
           controller.isCategoryValid(categories.isEmpty),
           controller.categoryTouched,

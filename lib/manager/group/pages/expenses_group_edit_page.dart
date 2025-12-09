@@ -106,6 +106,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
       });
     } else if (widget.mode == GroupEditMode.create) {
       // For new groups, add user as first participant if name is available
+      // and add default categories for the default group type (personal)
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
           final userNameNotifier = context.read<UserNameNotifier>();
@@ -116,6 +117,24 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                 name: userNameNotifier.name,
               ),
             );
+          }
+
+          // Add default categories for personal type (default type)
+          if (_state.categories.isEmpty &&
+              _state.groupType == ExpenseGroupType.personal) {
+            final gloc = gen.AppLocalizations.of(context);
+            final defaultCategories = _getLocalizedCategories(
+              gloc,
+              ExpenseGroupType.personal,
+            );
+            for (int i = 0; i < defaultCategories.length; i++) {
+              _state.addCategory(
+                ExpenseCategory(
+                  id: '${DateTime.now().millisecondsSinceEpoch}_$i',
+                  name: defaultCategories[i],
+                ),
+              );
+            }
           }
         }
       });
@@ -314,6 +333,46 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
           gloc.category_other_services,
         ];
     }
+  }
+
+  // Tab validation helpers
+  bool _isGeneralTabValid() {
+    return _state.title.trim().isNotEmpty;
+  }
+
+  bool _isParticipantsTabValid() {
+    return _state.participants.isNotEmpty;
+  }
+
+  bool _isCategoriesTabValid() {
+    return _state.categories.isNotEmpty;
+  }
+
+  Widget _buildTabWithValidation(
+    String label,
+    bool isValid,
+    BuildContext context,
+  ) {
+    return Tab(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(label),
+          const SizedBox(width: 4),
+          Text(
+            '*',
+            style: TextStyle(
+              color: isValid
+                  ? Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.6)
+                  : Theme.of(context).colorScheme.error,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildGeneralTab(BuildContext context) {
@@ -623,157 +682,198 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
             },
             child: Scaffold(
               appBar: CaravellaAppBar(actions: []),
-              extendBody: true,
-              floatingActionButton: widget.mode == GroupEditMode.create
-                  ? FloatingActionButton.extended(
-                      onPressed: () async {
-                        if (!_formKey.currentState!.validate()) return;
-                        if (_dateError != null) return;
-
-                        final controller = context.read<GroupFormController>();
-                        final navigator = Navigator.of(context);
-                        ExpenseGroupNotifier? notifier;
-                        try {
-                          notifier = context.read<ExpenseGroupNotifier>();
-                        } catch (_) {
-                          notifier = null;
-                        }
-                        final scaffoldMessenger = ScaffoldMessenger.maybeOf(
-                          context,
-                        );
-                        final gloc = gen.AppLocalizations.of(context);
-
-                        try {
-                          final saved = await controller.save();
-                          ExpenseGroupStorageV2.forceReload();
-                          try {
-                            notifier?.notifyGroupUpdated(saved.id);
-                          } catch (_) {}
-
-                          if (navigator.canPop()) navigator.pop(saved.id);
-                        } catch (e) {
-                          if (scaffoldMessenger != null && context.mounted) {
-                            AppToast.show(
-                              context,
-                              gloc.backup_error,
-                              type: ToastType.error,
-                            );
-                          } else if (context.mounted) {
-                            AppToast.show(
-                              context,
-                              gloc.backup_error,
-                              type: ToastType.error,
-                            );
-                          }
-                        }
-                      },
-                      label: Text(gloc.create),
-                    )
-                  : null,
-              body: Stack(
+              body: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Form(
-                      key: _formKey,
-                      child: DefaultTextStyle.merge(
-                        style: Theme.of(context).textTheme.bodyMedium,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SectionHeader(
-                              title: widget.mode == GroupEditMode.edit
-                                  ? gloc.edit_group
-                                  : gloc.new_group,
-                              description: widget.mode == GroupEditMode.edit
-                                  ? gloc.edit_group_desc
-                                  : gloc.new_group_desc,
-                            ),
-                            const SizedBox(height: 12),
-                            CaravellaTabBar(
-                              controller: _tabController,
-                              isScrollable: true,
-                              tabAlignment: TabAlignment.start,
-                              tabs: [
-                                Tab(text: gloc.segment_general),
-                                Tab(text: gloc.participants),
-                                Tab(text: gloc.categories),
-                                Tab(text: gloc.segment_other),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
-                            Expanded(
-                              child: TabBarView(
-                                controller: _tabController,
+                  Expanded(
+                    child: Stack(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Form(
+                            key: _formKey,
+                            child: DefaultTextStyle.merge(
+                              style: Theme.of(context).textTheme.bodyMedium,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  _buildGeneralTab(context),
-                                  _buildParticipantsTab(),
-                                  _buildCategoriesTab(),
-                                  _buildOtherTab(context),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Selector<GroupFormState, bool>(
-                    selector: (_, s) => s.isBusy,
-                    builder: (ctx, busy, _) {
-                      final loc = gen.AppLocalizations.of(ctx);
-                      final state = ctx.read<GroupFormState>();
-                      final message = state.isSaving
-                          ? loc.saving
-                          : loc.processing_image;
-                      return IgnorePointer(
-                        ignoring: !busy,
-                        child: AnimatedOpacity(
-                          opacity: busy ? 1 : 0,
-                          duration: const Duration(milliseconds: 220),
-                          curve: Curves.easeOutQuad,
-                          child: Container(
-                            color: Theme.of(
-                              ctx,
-                            ).colorScheme.surface.withValues(alpha: 0.72),
-                            child: Center(
-                              child: AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 260),
-                                switchInCurve: Curves.easeOutBack,
-                                switchOutCurve: Curves.easeIn,
-                                child: !busy
-                                    ? const SizedBox.shrink()
-                                    : Column(
-                                        key: const ValueKey('busy_overlay'),
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          const SizedBox(
-                                            width: 46,
-                                            height: 46,
-                                            child: CircularProgressIndicator(
-                                              strokeWidth: 3.2,
-                                            ),
+                                  SectionHeader(
+                                    title: widget.mode == GroupEditMode.edit
+                                        ? gloc.edit_group
+                                        : gloc.new_group,
+                                    description:
+                                        widget.mode == GroupEditMode.edit
+                                        ? gloc.edit_group_desc
+                                        : gloc.new_group_desc,
+                                  ),
+                                  const SizedBox(height: 12),
+                                  Selector<GroupFormState, int>(
+                                    selector: (_, s) => Object.hash(
+                                      s.title.trim().isEmpty,
+                                      s.participants.isEmpty,
+                                      s.categories.isEmpty,
+                                    ),
+                                    builder: (context, hash, child) {
+                                      return CaravellaTabBar(
+                                        controller: _tabController,
+                                        isScrollable: true,
+                                        tabAlignment: TabAlignment.start,
+                                        tabs: [
+                                          _buildTabWithValidation(
+                                            gloc.segment_general,
+                                            _isGeneralTabValid(),
+                                            context,
                                           ),
-                                          const SizedBox(height: 18),
-                                          Text(
-                                            message,
-                                            textAlign: TextAlign.center,
-                                            style: Theme.of(ctx)
-                                                .textTheme
-                                                .bodyMedium
-                                                ?.copyWith(
-                                                  fontWeight: FontWeight.w600,
-                                                ),
+                                          _buildTabWithValidation(
+                                            gloc.participants,
+                                            _isParticipantsTabValid(),
+                                            context,
                                           ),
+                                          _buildTabWithValidation(
+                                            gloc.categories,
+                                            _isCategoriesTabValid(),
+                                            context,
+                                          ),
+                                          Tab(text: gloc.segment_other),
                                         ],
-                                      ),
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(height: 12),
+                                  Expanded(
+                                    child: TabBarView(
+                                      controller: _tabController,
+                                      children: [
+                                        _buildGeneralTab(context),
+                                        _buildParticipantsTab(),
+                                        _buildCategoriesTab(),
+                                        _buildOtherTab(context),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
                         ),
-                      );
-                    },
-                  ),
+                        Selector<GroupFormState, bool>(
+                          selector: (_, s) => s.isBusy,
+                          builder: (ctx, busy, _) {
+                            final loc = gen.AppLocalizations.of(ctx);
+                            final state = ctx.read<GroupFormState>();
+                            final message = state.isSaving
+                                ? loc.saving
+                                : loc.processing_image;
+                            return IgnorePointer(
+                              ignoring: !busy,
+                              child: AnimatedOpacity(
+                                opacity: busy ? 1 : 0,
+                                duration: const Duration(milliseconds: 220),
+                                curve: Curves.easeOutQuad,
+                                child: Container(
+                                  color: Theme.of(
+                                    ctx,
+                                  ).colorScheme.surface.withValues(alpha: 0.72),
+                                  child: Center(
+                                    child: AnimatedSwitcher(
+                                      duration: const Duration(
+                                        milliseconds: 260,
+                                      ),
+                                      switchInCurve: Curves.easeOutBack,
+                                      switchOutCurve: Curves.easeIn,
+                                      child: !busy
+                                          ? const SizedBox.shrink()
+                                          : Column(
+                                              key: const ValueKey(
+                                                'busy_overlay',
+                                              ),
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                const SizedBox(
+                                                  width: 46,
+                                                  height: 46,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                        strokeWidth: 3.2,
+                                                      ),
+                                                ),
+                                                const SizedBox(height: 18),
+                                                Text(
+                                                  message,
+                                                  textAlign: TextAlign.center,
+                                                  style: Theme.of(ctx)
+                                                      .textTheme
+                                                      .bodyMedium
+                                                      ?.copyWith(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                ),
+                                              ],
+                                            ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ], // Stack children
+                    ), // Stack
+                  ), // Expanded
+                  if (widget.mode == GroupEditMode.create)
+                    Selector<GroupFormState, bool>(
+                      selector: (_, state) => state.isValid,
+                      builder: (context, isValid, _) {
+                        final gloc = gen.AppLocalizations.of(context);
+                        return BottomActionBar(
+                          onPressed: () async {
+                            if (!_formKey.currentState!.validate()) return;
+                            if (_dateError != null) return;
+
+                            final controller = context
+                                .read<GroupFormController>();
+                            final navigator = Navigator.of(context);
+                            ExpenseGroupNotifier? notifier;
+                            try {
+                              notifier = context.read<ExpenseGroupNotifier>();
+                            } catch (_) {
+                              notifier = null;
+                            }
+                            final scaffoldMessenger = ScaffoldMessenger.maybeOf(
+                              context,
+                            );
+                            final gloc = gen.AppLocalizations.of(context);
+
+                            try {
+                              final saved = await controller.save();
+                              ExpenseGroupStorageV2.forceReload();
+                              try {
+                                notifier?.notifyGroupUpdated(saved.id);
+                              } catch (_) {}
+
+                              if (navigator.canPop()) navigator.pop(saved.id);
+                            } catch (e) {
+                              if (scaffoldMessenger != null &&
+                                  context.mounted) {
+                                AppToast.show(
+                                  context,
+                                  gloc.backup_error,
+                                  type: ToastType.error,
+                                );
+                              } else if (context.mounted) {
+                                AppToast.show(
+                                  context,
+                                  gloc.backup_error,
+                                  type: ToastType.error,
+                                );
+                              }
+                            }
+                          },
+                          label: gloc.create,
+                          enabled: isValid,
+                        );
+                      },
+                    ),
                 ],
               ),
             ),

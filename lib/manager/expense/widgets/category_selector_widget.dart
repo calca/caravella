@@ -12,6 +12,7 @@ class CategorySelectorWidget extends StatelessWidget {
   final Future<void> Function(String)? onAddCategoryInline;
   final TextStyle? textStyle;
   final bool fullEdit;
+  final bool enabled;
   const CategorySelectorWidget({
     super.key,
     required this.categories,
@@ -21,6 +22,7 @@ class CategorySelectorWidget extends StatelessWidget {
     this.onAddCategoryInline,
     this.textStyle,
     this.fullEdit = false,
+    this.enabled = true,
   });
 
   @override
@@ -51,11 +53,11 @@ class CategorySelectorWidget extends StatelessWidget {
       return InlineSelectField(
         icon: AppIcons.category,
         label: selectedCategory?.name ?? gloc.category_placeholder,
-        onTap: openPicker,
-        enabled: true,
+        onTap: enabled ? openPicker : null,
+        enabled: enabled,
         semanticsLabel: gloc.category,
         textStyle: textStyle,
-        showArrow: true,
+        showArrow: enabled,
       );
     }
 
@@ -67,7 +69,7 @@ class CategorySelectorWidget extends StatelessWidget {
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         minimumSize: Size.zero,
       ),
-      onPressed: openPicker,
+      onPressed: enabled ? openPicker : null,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

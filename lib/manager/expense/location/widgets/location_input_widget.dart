@@ -14,6 +14,7 @@ class LocationInputWidget extends StatefulWidget {
   final FocusNode? externalFocusNode;
   final bool autoRetrieve;
   final Function(bool)? onRetrievalStatusChanged;
+  final bool enabled;
 
   const LocationInputWidget({
     super.key,
@@ -23,6 +24,7 @@ class LocationInputWidget extends StatefulWidget {
     this.externalFocusNode,
     this.autoRetrieve = false,
     this.onRetrievalStatusChanged,
+    this.enabled = true,
   });
 
   @override
@@ -273,7 +275,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
         alignTop: false,
         iconPadding: FormTheme.standardIconPadding,
         child: InkWell(
-          onTap: _showLocationDetails,
+          onTap: widget.enabled ? _showLocationDetails : null,
           child: Padding(
             padding: FormTheme.standardContentPadding,
             child: Row(
@@ -306,7 +308,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
       alignTop: false,
       iconPadding: FormTheme.standardIconPadding,
       child: InkWell(
-        onTap: _showPlaceSearch,
+        onTap: widget.enabled ? _showPlaceSearch : null,
         child: Padding(
           padding: FormTheme.standardContentPadding,
           child: Row(
@@ -319,21 +321,24 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
                   )?.copyWith(color: colorScheme.onSurfaceVariant),
                 ),
               ),
-              IconButton(
-                icon: const Icon(Icons.my_location),
-                iconSize: LocationConstants.iconSize,
-                color: colorScheme.onSurfaceVariant,
-                tooltip: gloc.get_current_location,
-                onPressed: _getCurrentLocation,
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-              ),
-              const SizedBox(width: 8),
-              Icon(
-                Icons.search,
-                size: LocationConstants.iconSize,
-                color: colorScheme.onSurfaceVariant,
-              ),
+              if (widget.enabled)
+                IconButton(
+                  icon: const Icon(Icons.my_location),
+                  iconSize: LocationConstants.iconSize,
+                  color: colorScheme.onSurfaceVariant,
+                  tooltip: gloc.get_current_location,
+                  onPressed: _getCurrentLocation,
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                ),
+              if (widget.enabled) ...[
+                const SizedBox(width: 8),
+                Icon(
+                  Icons.search,
+                  size: LocationConstants.iconSize,
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ],
             ],
           ),
         ),

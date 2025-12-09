@@ -10,6 +10,7 @@ class ParticipantSelectorWidget extends StatelessWidget {
   final void Function(String) onParticipantSelected;
   final TextStyle? textStyle;
   final bool fullEdit; // when true mimic inline row style
+  final bool enabled;
   const ParticipantSelectorWidget({
     super.key,
     required this.participants,
@@ -17,6 +18,7 @@ class ParticipantSelectorWidget extends StatelessWidget {
     required this.onParticipantSelected,
     this.textStyle,
     this.fullEdit = false,
+    this.enabled = true,
   });
 
   @override
@@ -39,8 +41,8 @@ class ParticipantSelectorWidget extends StatelessWidget {
       }
     }
 
-    // Disable selection when there's only one participant or none
-    final canSelect = participants.length > 1;
+    // Disable selection when there's only one participant or none, or when disabled
+    final canSelect = participants.length > 1 && enabled;
 
     if (fullEdit) {
       return InlineSelectField(

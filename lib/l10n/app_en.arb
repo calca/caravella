@@ -808,4 +808,14 @@
   ,"@attachment_source": {"description": "Title for choosing attachment source"}
   ,"from_files": "From files"
   ,"@from_files": {"description": "Option to choose from files"}
+  ,"archived_group_readonly": "Archived Group - Read-only"
+  ,"@archived_group_readonly": {"description": "Message indicating that an archived group is in read-only mode"}
+  ,"archived_group_readonly_desc": "This group is archived. You cannot modify it or add new expenses."
+  ,"@archived_group_readonly_desc": {"description": "Description for archived group in read-only mode"}
+  ,"expense_readonly": "Expense - Read-only"
+  ,"@expense_readonly": {"description": "Title for an expense in read-only mode"}
+  ,"expense_readonly_archived": "This expense belongs to an archived group and cannot be modified."
+  ,"@expense_readonly_archived": {"description": "Message explaining that an expense cannot be modified because the group is archived"}
+  ,"expense": "Expense"
+  ,"@expense": {"description": "Generic title for an expense"}
 }
