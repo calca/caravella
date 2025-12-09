@@ -210,8 +210,8 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       },
     );
 
-    // Initialize asynchronously
-    _lifecycleManager.initialize(context);
+    // Initialize synchronously - no loader needed!
+    _lifecycleManager.initializeSync(context);
   }
 
   void _setupFocusListeners() {

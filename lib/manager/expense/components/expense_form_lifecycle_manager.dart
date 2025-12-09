@@ -31,14 +31,14 @@ class ExpenseFormLifecycleManager with WidgetsBindingObserver {
   ExpenseLocation? get autoRetrievedLocation => _autoRetrievedLocation;
   FormScrollCoordinator? get scrollCoordinator => _scrollCoordinator;
 
-  /// Initialize all components
-  Future<void> initialize(BuildContext context) async {
+  /// Initialize all components synchronously
+  void initializeSync(BuildContext context) {
     if (_isInitialized) return;
 
     _autoLocationEnabled = config.autoLocationEnabled;
     _categories = List.from(config.categories);
 
-    // Initialize controller
+    // Initialize controller synchronously
     _controller = ExpenseFormController(
       initialState: _buildInitialState(),
       categories: _categories,
@@ -52,6 +52,23 @@ class ExpenseFormLifecycleManager with WidgetsBindingObserver {
       );
     }
 
+    // Finish initialization to enable state updates
+    _controller!.finishInitialization();
+
+    // Register observers
+    WidgetsBinding.instance.addObserver(this);
+
+    _isInitialized = true;
+
+    // Notify ready - controller is now fully initialized and ready to use
+    onControllerReady(_controller!);
+
+    // Run async initialization tasks in background without blocking UI
+    _initializeAsync(context);
+  }
+
+  /// Run async initialization tasks in background
+  Future<void> _initializeAsync(BuildContext context) async {
     // Handle newly added category
     if (config.newlyAddedCategory != null) {
       await _handleNewlyAddedCategory();
@@ -61,17 +78,6 @@ class ExpenseFormLifecycleManager with WidgetsBindingObserver {
     if (_shouldAutoRetrieveLocation() && context.mounted) {
       await _retrieveAutoLocation(context);
     }
-
-    // Notify ready
-    onControllerReady(_controller!);
-
-    // Finish initialization to enable state updates
-    _controller!.finishInitialization();
-
-    // Register observers
-    WidgetsBinding.instance.addObserver(this);
-
-    _isInitialized = true;
   }
 
   /// Handle widget updates
