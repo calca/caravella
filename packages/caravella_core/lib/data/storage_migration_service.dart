@@ -233,7 +233,8 @@ class StorageMigrationService {
       final sourceFile = File('${dir.path}/expense_group_storage.json');
       
       if (await sourceFile.exists()) {
-        final timestamp = DateTime.now().millisecondsSinceEpoch;
+        // Use ISO 8601 format with hyphens for readability
+        final timestamp = DateTime.now().toIso8601String().replaceAll(':', '-').split('.').first;
         final backupFile = File('${dir.path}/expense_group_storage.json.backup.$timestamp');
         await sourceFile.copy(backupFile.path);
         LoggerService.info('JSON file backed up to ${backupFile.path}', name: 'migration');
