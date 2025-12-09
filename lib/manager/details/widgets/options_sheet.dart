@@ -10,7 +10,6 @@ class OptionsSheet extends StatelessWidget {
   final VoidCallback onDelete;
   final VoidCallback onEdit;
   final VoidCallback onExportShare;
-  final VoidCallback? onNotificationToggle;
 
   const OptionsSheet({
     super.key,
@@ -20,7 +19,6 @@ class OptionsSheet extends StatelessWidget {
     required this.onDelete,
     required this.onEdit,
     required this.onExportShare,
-    this.onNotificationToggle,
   });
 
   @override
@@ -67,26 +65,6 @@ class OptionsSheet extends StatelessWidget {
             ),
             title: Text(trip.archived ? gloc.unarchive : gloc.archive),
             onTap: onArchiveToggle,
-          ),
-          ListTile(
-            leading: Icon(
-              trip.notificationEnabled 
-                  ? Icons.notifications_active_outlined 
-                  : Icons.notifications_outlined,
-              color: Theme.of(context).colorScheme.onPrimaryFixed,
-            ),
-            title: Text(gloc.notification_enabled),
-            subtitle: Text(
-              trip.notificationEnabled
-                  ? gloc.accessibility_currently_enabled
-                  : gloc.accessibility_currently_disabled,
-            ),
-            trailing: Switch(
-              value: trip.notificationEnabled,
-              onChanged: onNotificationToggle != null 
-                  ? (val) => onNotificationToggle!() 
-                  : null,
-            ),
           ),
           ListTile(
             leading: Icon(
