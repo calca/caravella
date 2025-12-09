@@ -10,6 +10,7 @@ class DateSelectorWidget extends StatelessWidget {
   final void Function(DateTime) onDateSelected;
   final String locale;
   final TextStyle? textStyle;
+  final bool enabled;
 
   const DateSelectorWidget({
     super.key,
@@ -19,6 +20,7 @@ class DateSelectorWidget extends StatelessWidget {
     this.tripStartDate,
     this.tripEndDate,
     this.textStyle,
+    this.enabled = true,
   });
 
   @override
@@ -51,8 +53,8 @@ class DateSelectorWidget extends StatelessWidget {
     return InlineSelectField(
       icon: Icons.event_outlined,
       label: dateText,
-      onTap: pickDate,
-      enabled: true,
+      onTap: enabled ? pickDate : null,
+      enabled: enabled,
       semanticsLabel: semanticLabel,
       textStyle: textStyle ?? FormTheme.getSelectTextStyle(context),
     );

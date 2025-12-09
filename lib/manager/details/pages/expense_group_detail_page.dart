@@ -662,6 +662,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
 
     // Hide FAB when there are no expenses (EmptyExpenseState handles the call-to-action)
     if (_trip?.expenses.isEmpty == true) return const SizedBox.shrink();
+    if (_trip?.archived == true) return const SizedBox.shrink();
 
     return AnimatedSlide(
       duration: const Duration(milliseconds: 260),

@@ -774,4 +774,14 @@
   ,"@attachment_source": {"description": "Título para elegir la fuente del adjunto"}
   ,"from_files": "Desde archivos"
   ,"@from_files": {"description": "Opción para elegir desde archivos"}
+  ,"archived_group_readonly": "Grupo archivado - Solo lectura"
+  ,"@archived_group_readonly": {"description": "Mensaje que indica que un grupo archivado está en modo solo lectura"}
+  ,"archived_group_readonly_desc": "Este grupo está archivado. No puedes modificarlo ni agregar nuevos gastos."
+  ,"@archived_group_readonly_desc": {"description": "Descripción para grupo archivado en modo solo lectura"}
+  ,"expense_readonly": "Gasto - Solo lectura"
+  ,"@expense_readonly": {"description": "Título para un gasto en modo solo lectura"}
+  ,"expense_readonly_archived": "Este gasto pertenece a un grupo archivado y no se puede modificar."
+  ,"@expense_readonly_archived": {"description": "Mensaje que explica que un gasto no se puede modificar porque el grupo está archivado"}
+  ,"expense": "Gasto"
+  ,"@expense": {"description": "Título genérico para un gasto"}
 }

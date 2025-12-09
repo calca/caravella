@@ -7,12 +7,15 @@ import 'package:io_caravella_egm/home/welcome/home_welcome_section.dart';
 import 'package:zentoast/zentoast.dart';
 
 void main() {
-  Widget localizedApp({required Widget home, ThemeMode? mode}) => MaterialApp(
-    themeMode: mode,
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
-    supportedLocales: AppLocalizations.supportedLocales,
-    home: home,
-  );
+  Widget localizedApp({required Widget home, ThemeMode? mode}) =>
+      ToastProvider.create(
+        child: MaterialApp(
+          themeMode: mode,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: home,
+        ),
+      );
 
   group('WCAG 2.2 Accessibility Tests', () {
     testWidgets('Welcome screen image has semantic label', (tester) async {

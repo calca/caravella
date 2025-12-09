@@ -93,6 +93,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
+    final isReadOnly = widget.group.archived;
 
     return Scaffold(
       appBar: AppBar(
@@ -107,7 +108,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
               tooltip: gloc.share_label,
               onPressed: _handleShare,
             ),
-            if (widget.onDelete != null)
+            if (widget.onDelete != null && !isReadOnly)
               IconButton(
                 icon: Icon(
                   Icons.delete_outline,
@@ -130,9 +131,11 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SectionHeader(
-                      title: widget.initialExpense != null
-                          ? gloc.edit_expense
-                          : gloc.new_expense,
+                      title: isReadOnly
+                          ? gloc.expense
+                          : (widget.initialExpense != null
+                                ? gloc.edit_expense
+                                : gloc.new_expense),
                       description: '${gloc.group} ${widget.group.title}',
                     ),
                     const SizedBox(height: 24),
@@ -154,17 +157,19 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
                       onFormValidityChanged: _updateFormValidity,
                       onSaveCallbackChanged: _updateSaveCallback,
                       groupId: widget.group.id,
+                      isReadOnly: isReadOnly,
                     ),
                   ],
                 ),
               ),
             ),
           ),
-          BottomActionBar(
-            onPressed: _handleSave,
-            label: widget.initialExpense != null ? gloc.save : gloc.add,
-            enabled: _isFormValid,
-          ),
+          if (!isReadOnly)
+            BottomActionBar(
+              onPressed: _handleSave,
+              label: widget.initialExpense != null ? gloc.save : gloc.add,
+              enabled: _isFormValid,
+            ),
         ],
       ),
     );

@@ -123,6 +123,7 @@ class ExpenseFormComponent extends StatefulWidget {
     String? currency,
     required bool autoLocationEnabled,
     bool fullEdit = false,
+    bool isReadOnly = false,
     ScrollController? scrollController,
     void Function(ExpenseFormState)? onExpand,
     bool showGroupHeader = true,
@@ -151,6 +152,7 @@ class ExpenseFormComponent extends StatefulWidget {
          showActionsRow: showActionsRow,
          onFormValidityChanged: onFormValidityChanged,
          onSaveCallbackChanged: onSaveCallbackChanged,
+         isReadOnly: isReadOnly,
        );
 
   @override
@@ -316,6 +318,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
               currency: widget.config.currency,
               onSaveExpense: () => _orchestrator.saveExpense(context),
               isInitialExpense: widget.config.initialExpense != null,
+              isReadOnly: widget.config.isReadOnly,
             ),
             if (_shouldShowExtendedFields)
               ExpenseFormExtendedFields(
@@ -328,6 +331,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                 isInitialExpense: widget.config.initialExpense != null,
                 isFormValid: _controller.isFormValid,
                 onSaveExpense: () => _orchestrator.saveExpense(context),
+                isReadOnly: widget.config.isReadOnly,
               ),
             if (widget.config.showActionsRow) ...[
               _buildDivider(context),

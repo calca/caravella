@@ -36,6 +36,7 @@ class ExpenseFormConfig {
 
   // Settings
   final bool autoLocationEnabled;
+  final bool isReadOnly;
 
   // Controllers
   final ScrollController? scrollController;
@@ -70,6 +71,7 @@ class ExpenseFormConfig {
 
     // Settings
     required this.autoLocationEnabled,
+    this.isReadOnly = false,
 
     // Controllers
     this.scrollController,
@@ -89,6 +91,7 @@ class ExpenseFormConfig {
     DateTime? tripEndDate,
     String? newlyAddedCategory,
     bool fullEdit = false,
+    bool isReadOnly = false,
     ScrollController? scrollController,
     void Function(ExpenseFormState)? onExpand,
     bool showGroupHeader = true,
@@ -115,6 +118,7 @@ class ExpenseFormConfig {
       showActionsRow: showActionsRow,
       onFormValidityChanged: onFormValidityChanged,
       onSaveCallbackChanged: onSaveCallbackChanged,
+      isReadOnly: isReadOnly,
     );
   }
 
@@ -133,6 +137,7 @@ class ExpenseFormConfig {
     DateTime? tripStartDate,
     DateTime? tripEndDate,
     bool shouldAutoClose = true,
+    bool isReadOnly = false,
     ScrollController? scrollController,
   }) {
     return ExpenseFormConfig(
@@ -152,6 +157,7 @@ class ExpenseFormConfig {
       scrollController: scrollController,
       fullEdit: true,
       showGroupHeader: false,
+      isReadOnly: isReadOnly,
     );
   }
 
