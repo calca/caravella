@@ -14,7 +14,7 @@ class ExpenseGroupNotifier extends ChangeNotifier {
   VoidCallback? _onShortcutsUpdate;
 
   // Optional callback for canceling notifications when archiving
-  Future<void> Function()? _onNotificationCancel;
+  Future<void> Function(String groupId)? _onNotificationCancel;
 
   ExpenseGroup? get currentGroup => _currentGroup;
 
@@ -170,7 +170,7 @@ class ExpenseGroupNotifier extends ChangeNotifier {
   Future<void> updateGroupArchive(String groupId, bool archived) async {
     // If archiving (not unarchiving), cancel the notification via callback
     if (archived && _onNotificationCancel != null) {
-      await _onNotificationCancel!();
+      await _onNotificationCancel!(groupId);
     }
 
     await ExpenseGroupStorageV2.updateGroupArchive(groupId, archived);
@@ -203,7 +203,7 @@ class ExpenseGroupNotifier extends ChangeNotifier {
   }
 
   /// Set callback for canceling notifications when archiving groups
-  void setNotificationCancelCallback(Future<void> Function()? callback) {
+  void setNotificationCancelCallback(Future<void> Function(String)? callback) {
     _onNotificationCancel = callback;
   }
 }

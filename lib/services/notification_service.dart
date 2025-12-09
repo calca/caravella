@@ -19,7 +19,13 @@ class NotificationService {
   static const String _channelName = 'Expense Tracking';
   static const String _channelDescription =
       'Persistent notifications for expense group tracking';
-  static const int _notificationId = 1000;
+  static const String _notificationGroupKey = 'expense_groups';
+  static const int _summaryNotificationId = 1000;
+
+  // Generate unique notification ID from group ID
+  static int _getNotificationId(String groupId) {
+    return groupId.hashCode.abs() % 100000 + 1001;
+  }
 
   Future<void> initialize() async {
     if (_initialized) return;
@@ -251,9 +257,10 @@ class NotificationService {
     );
 
     final details = NotificationDetails(android: androidDetails);
+    final notificationId = _getNotificationId(group.id);
 
     await _notifications.show(
-      _notificationId,
+      notificationId,
       title,
       content,
       details,
@@ -261,8 +268,50 @@ class NotificationService {
     );
   }
 
-  Future<void> cancelGroupNotification() async {
-    await _notifications.cancel(_notificationId);
+  /// Shows a summary notification when multiple groups have notifications
+  Future<void> showSummaryNotification(
+    int activeNotificationsCount,
+    gen.AppLocalizations loc,
+  ) async {
+    if (activeNotificationsCount <= 1)
+      return; // No summary needed for 0 or 1 notifications
+
+    final androidDetails = AndroidNotificationDetails(
+      _channelId,
+      _channelName,
+      channelDescription: _channelDescription,
+      importance: Importance.low,
+      priority: Priority.low,
+      ongoing: true,
+      autoCancel: false,
+      showWhen: false,
+      groupKey: _notificationGroupKey,
+      setAsGroupSummary: true,
+      icon: 'ic_notification',
+      styleInformation: InboxStyleInformation(
+        [],
+        contentTitle: '$activeNotificationsCount gruppi attivi',
+        summaryText: 'Tracciamento spese',
+      ),
+    );
+
+    final details = NotificationDetails(android: androidDetails);
+
+    await _notifications.show(
+      _summaryNotificationId,
+      'Gruppi Spese',
+      '$activeNotificationsCount gruppi attivi',
+      details,
+    );
+  }
+
+  Future<void> cancelGroupNotification(String groupId) async {
+    final notificationId = _getNotificationId(groupId);
+    await _notifications.cancel(notificationId);
+  }
+
+  Future<void> cancelSummaryNotification() async {
+    await _notifications.cancel(_summaryNotificationId);
   }
 
   Future<void> cancelAllNotifications() async {

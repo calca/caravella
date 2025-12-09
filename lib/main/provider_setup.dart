@@ -13,8 +13,8 @@ class ProviderSetup {
           create: (_) {
             final notifier = ExpenseGroupNotifier();
             // Register callback to cancel notification when archiving
-            notifier.setNotificationCancelCallback(() async {
-              await NotificationManager().cancelNotificationForGroup();
+            notifier.setNotificationCancelCallback((groupId) async {
+              await NotificationManager().cancelNotificationForGroup(groupId);
             });
             return notifier;
           },

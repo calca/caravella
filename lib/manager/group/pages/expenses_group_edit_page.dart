@@ -610,9 +610,9 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                                   gloc,
                                 );
                               } else {
-                                // Cancel notification
+                                // Cancel notification for this group
                                 await notificationService
-                                    .cancelGroupNotification();
+                                    .cancelGroupNotification(savedGroup.id);
                               }
                             }
                           } catch (e) {

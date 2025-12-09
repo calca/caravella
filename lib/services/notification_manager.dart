@@ -32,12 +32,21 @@ class NotificationManager {
     }
   }
 
-  /// Cancels the notification for a group
-  Future<void> cancelNotificationForGroup() async {
+  /// Cancels the notification for a specific group
+  Future<void> cancelNotificationForGroup(String groupId) async {
     try {
-      await _notificationService.cancelGroupNotification();
+      await _notificationService.cancelGroupNotification(groupId);
     } catch (e) {
-      debugPrint('Failed to cancel notification: $e');
+      debugPrint('Failed to cancel notification for group $groupId: $e');
+    }
+  }
+
+  /// Cancels the summary notification
+  Future<void> cancelSummaryNotification() async {
+    try {
+      await _notificationService.cancelSummaryNotification();
+    } catch (e) {
+      debugPrint('Failed to cancel summary notification: $e');
     }
   }
 
@@ -51,14 +60,30 @@ class NotificationManager {
       // Get all active (non-archived) groups
       final groups = await ExpenseGroupStorageV2.getActiveGroups();
 
-      // Find groups with notifications enabled
-      for (final group in groups) {
-        if (group.notificationEnabled) {
-          debugPrint('Restoring notification for group: ${group.title}');
-          await NotificationManager().updateNotificationForGroup(group, loc);
-          // Only show one notification at a time (the first enabled group found)
-          break;
-        }
+      // Find all groups with notifications enabled
+      final notificationEnabledGroups = groups
+          .where((g) => g.notificationEnabled)
+          .toList();
+
+      debugPrint(
+        'Restoring ${notificationEnabledGroups.length} notification(s)',
+      );
+
+      // Show notification for each enabled group
+      for (final group in notificationEnabledGroups) {
+        debugPrint('Restoring notification for group: ${group.title}');
+        await NotificationManager().updateNotificationForGroup(group, loc);
+      }
+
+      // Show summary notification if there are multiple groups
+      if (notificationEnabledGroups.length > 1) {
+        await NotificationService().showSummaryNotification(
+          notificationEnabledGroups.length,
+          loc,
+        );
+      } else if (notificationEnabledGroups.isEmpty) {
+        // Cancel summary if no notifications are active
+        await NotificationManager().cancelSummaryNotification();
       }
     } catch (e) {
       debugPrint('Failed to restore notifications: $e');
@@ -157,8 +182,8 @@ class NotificationManager {
         onNotificationDisabled!(groupId);
       }
 
-      // Cancel the notification
-      await NotificationService().cancelGroupNotification();
+      // Cancel the notification for this specific group
+      await NotificationService().cancelGroupNotification(groupId);
 
       debugPrint('Notification disabled for group: ${group.title}');
     } catch (e) {
