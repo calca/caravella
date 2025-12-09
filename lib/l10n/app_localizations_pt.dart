@@ -1919,7 +1919,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String notification_daily_spent(String amount, String currency) {
-    return 'Diário: $amount $currency';
+    return 'Despesas de hoje: $amount $currency';
   }
 
   @override

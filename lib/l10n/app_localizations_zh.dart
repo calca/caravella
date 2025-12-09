@@ -1880,7 +1880,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String notification_daily_spent(String amount, String currency) {
-    return '每日: $amount $currency';
+    return '今日消费: $amount $currency';
   }
 
   @override

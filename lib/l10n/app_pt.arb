@@ -762,8 +762,8 @@
   ,"@expense": {"description": "Título genérico para uma despesa"}
   ,"notification_enabled": "Notificação persistente"
   ,"@notification_enabled": {"description": "Rótulo para ativar/desativar notificação persistente"}
-  ,"notification_daily_spent": "Diário: {amount} {currency}"
-  ,"@notification_daily_spent": {"description": "Valor gasto diário na notificação", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
+  ,"notification_daily_spent": "Despesas de hoje: {amount} {currency}"
+  ,"@notification_daily_spent": {"description": "Valor gasto no dia atual na notificação", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
   ,"notification_total_spent": "Total: {amount} {currency}"
   ,"@notification_total_spent": {"description": "Valor total gasto na notificação", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
   ,"notification_add_expense": "Adicionar Despesa"

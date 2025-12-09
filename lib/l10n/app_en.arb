@@ -820,8 +820,8 @@
   ,"@expense": {"description": "Generic title for an expense"}
   ,"notification_enabled": "Persistent notification"
   ,"@notification_enabled": {"description": "Label for persistent notification toggle"}
-  ,"notification_daily_spent": "Daily: {amount} {currency}"
-  ,"@notification_daily_spent": {"description": "Daily spent amount in notification", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
+  ,"notification_daily_spent": "Today's expenses: {amount} {currency}"
+  ,"@notification_daily_spent": {"description": "Today's spent amount in notification", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
   ,"notification_total_spent": "Total: {amount} {currency}"
   ,"@notification_total_spent": {"description": "Total spent amount in notification", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
   ,"notification_add_expense": "Add Expense"

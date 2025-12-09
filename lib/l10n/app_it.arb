@@ -783,8 +783,8 @@
   ,"@expense": {"description": "Titolo generico per una spesa"}
   ,"notification_enabled": "Notifica persistente"
   ,"@notification_enabled": {"description": "Etichetta per attivare/disattivare la notifica persistente"}
-  ,"notification_daily_spent": "Giornaliero: {amount} {currency}"
-  ,"@notification_daily_spent": {"description": "Importo speso giornaliero nella notifica", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
+  ,"notification_daily_spent": "Spese del giorno: {amount} {currency}"
+  ,"@notification_daily_spent": {"description": "Importo speso nel giorno corrente nella notifica", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
   ,"notification_total_spent": "Totale: {amount} {currency}"
   ,"@notification_total_spent": {"description": "Importo totale speso nella notifica", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
   ,"notification_add_expense": "Aggiungi Spesa"

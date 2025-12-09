@@ -1922,7 +1922,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String notification_daily_spent(String amount, String currency) {
-    return 'Diario: $amount $currency';
+    return 'Gastos de hoy: $amount $currency';
   }
 
   @override

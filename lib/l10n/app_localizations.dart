@@ -3737,10 +3737,10 @@ abstract class AppLocalizations {
   /// **'Show a persistent notification with daily and total expenses'**
   String get notification_enabled_desc;
 
-  /// Daily spent amount in notification
+  /// Today's spent amount in notification
   ///
   /// In en, this message translates to:
-  /// **'Daily: {amount} {currency}'**
+  /// **'Today\'s expenses: {amount} {currency}'**
   String notification_daily_spent(String amount, String currency);
 
   /// Total spent amount in notification

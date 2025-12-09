@@ -798,8 +798,8 @@
   ,"@expense": {"description": "Título genérico para un gasto"}
   ,"notification_enabled": "Notificación persistente"
   ,"@notification_enabled": {"description": "Etiqueta para activar/desactivar la notificación persistente"}
-  ,"notification_daily_spent": "Diario: {amount} {currency}"
-  ,"@notification_daily_spent": {"description": "Cantidad gastada diaria en la notificación", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
+  ,"notification_daily_spent": "Gastos de hoy: {amount} {currency}"
+  ,"@notification_daily_spent": {"description": "Cantidad gastada en el día actual en la notificación", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
   ,"notification_total_spent": "Total: {amount} {currency}"
   ,"@notification_total_spent": {"description": "Cantidad total gastada en la notificación", "placeholders": {"amount": {"type": "String"}, "currency": {"type": "String"}}}
   ,"notification_add_expense": "Añadir Gasto"

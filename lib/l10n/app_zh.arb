@@ -1043,9 +1043,9 @@
   "@notification_enabled": {
     "description": "持久通知切换标签"
   },
-  "notification_daily_spent": "每日: {amount} {currency}",
+  "notification_daily_spent": "今日消费: {amount} {currency}",
   "@notification_daily_spent": {
-    "description": "通知中的每日花费金额",
+    "description": "通知中今日的花费金额",
     "placeholders": {
       "amount": {"type": "String"},
       "currency": {"type": "String"}
