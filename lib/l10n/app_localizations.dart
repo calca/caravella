@@ -3734,7 +3734,7 @@ abstract class AppLocalizations {
   /// Description of the persistent notification setting
   ///
   /// In en, this message translates to:
-  /// **'Show a persistent notification with daily and total expenses'**
+  /// **'Display today\'s expenses in an always-visible notification'**
   String get notification_enabled_desc;
 
   /// Today's spent amount in notification

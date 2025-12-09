@@ -686,7 +686,7 @@
   ,"weekly_expenses_chart": "Despesas semanais"
   ,"notification_enabled": "Notificação persistente"
   ,"@notification_enabled": {"description": "Etiqueta para a configuração de notificação persistente no grupo"}
-  ,"notification_enabled_desc": "Mostrar uma notificação persistente com despesas diárias e totais"
+  ,"notification_enabled_desc": "Mostra as despesas de hoje em uma notificação sempre visível"
   ,"@notification_enabled_desc": {"description": "Descrição da configuração de notificação persistente"}
   ,"notification_daily_spent": "Gasto diário: {amount} {currency}"
   ,"@notification_daily_spent": {"description": "Texto na notificação que mostra o gasto diário médio", "placeholders": {"amount": {}, "currency": {}}}

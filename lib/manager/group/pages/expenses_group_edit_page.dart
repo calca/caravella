@@ -569,7 +569,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                 children: [
                   SectionHeader(
                     title: gloc.notification_enabled,
-                    description: gloc.notification_enabled,
+                    description: gloc.notification_enabled_desc,
                     padding: EdgeInsets.zero,
                     spacing: 4,
                   ),

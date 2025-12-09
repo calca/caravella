@@ -705,7 +705,7 @@
   ,"@reminder_message_multiple": {"description": "Messaggio di promemoria quando un partecipante deve denaro a più persone", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
   ,"notification_enabled": "Notifica persistente"
   ,"@notification_enabled": {"description": "Etichetta per l'impostazione della notifica persistente nel gruppo"}
-  ,"notification_enabled_desc": "Mostra una notifica persistente con spese giornaliere e totale"
+  ,"notification_enabled_desc": "Visualizza le spese del giorno in una notifica sempre visibile"
   ,"@notification_enabled_desc": {"description": "Descrizione dell'impostazione della notifica persistente"}
   ,"notification_daily_spent": "Speso giornaliero: {amount} {currency}"
   ,"@notification_daily_spent": {"description": "Testo nella notifica che mostra la spesa giornaliera media", "placeholders": {"amount": {}, "currency": {}}}

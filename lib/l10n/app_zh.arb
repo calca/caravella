@@ -955,7 +955,7 @@
   "@notification_enabled": {
     "description": "组中持久通知设置的标签"
   },
-  "notification_enabled_desc": "显示包含每日和总费用的持久通知",
+  "notification_enabled_desc": "在常驻通知中显示今日消费",
   "@notification_enabled_desc": {
     "description": "持久通知设置的描述"
   },

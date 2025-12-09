@@ -744,7 +744,7 @@
   ,"@reminder_message_multiple": {"description": "Reminder message when a participant owes money to multiple people", "placeholders": {"participantName": {}, "groupName": {}, "debtsList": {}}}
   ,"notification_enabled": "Persistent notification"
   ,"@notification_enabled": {"description": "Label for the persistent notification setting in the group"}
-  ,"notification_enabled_desc": "Show a persistent notification with daily and total expenses"
+  ,"notification_enabled_desc": "Display today's expenses in an always-visible notification"
   ,"@notification_enabled_desc": {"description": "Description of the persistent notification setting"}
   ,"notification_daily_spent": "Daily spent: {amount} {currency}"
   ,"@notification_daily_spent": {"description": "Text in the notification showing the daily average expense", "placeholders": {"amount": {}, "currency": {}}}

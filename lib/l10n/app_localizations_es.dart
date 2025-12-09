@@ -1918,7 +1918,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get notification_enabled_desc =>
-      'Mostrar una notificación persistente con gastos diarios y totales';
+      'Muestra los gastos del día en una notificación siempre visible';
 
   @override
   String notification_daily_spent(String amount, String currency) {

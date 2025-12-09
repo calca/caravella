@@ -722,7 +722,7 @@
   ,"@settings_user_name_hint": {"description": "Placeholder del campo de nombre de usuario"}
   ,"notification_enabled": "Notificación persistente"
   ,"@notification_enabled": {"description": "Etiqueta para la configuración de notificación persistente en el grupo"}
-  ,"notification_enabled_desc": "Mostrar una notificación persistente con gastos diarios y totales"
+  ,"notification_enabled_desc": "Muestra los gastos del día en una notificación siempre visible"
   ,"@notification_enabled_desc": {"description": "Descripción de la configuración de notificación persistente"}
   ,"notification_daily_spent": "Gasto diario: {amount} {currency}"
   ,"@notification_daily_spent": {"description": "Texto en la notificación que muestra el gasto diario promedio", "placeholders": {"amount": {}, "currency": {}}}

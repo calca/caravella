@@ -1915,7 +1915,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get notification_enabled_desc =>
-      'Mostrar uma notificação persistente com despesas diárias e totais';
+      'Mostra as despesas de hoje em uma notificação sempre visível';
 
   @override
   String notification_daily_spent(String amount, String currency) {

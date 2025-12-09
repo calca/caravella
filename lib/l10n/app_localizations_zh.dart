@@ -1876,7 +1876,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get notification_enabled => '持久通知';
 
   @override
-  String get notification_enabled_desc => '显示包含每日和总费用的持久通知';
+  String get notification_enabled_desc => '在常驻通知中显示今日消费';
 
   @override
   String notification_daily_spent(String amount, String currency) {
