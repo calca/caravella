@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import 'notification_manager.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -51,9 +52,12 @@ class NotificationService {
 
   void _onNotificationTap(NotificationResponse response) {
     debugPrint('Notification tapped: ${response.actionId}');
-    // TODO: Handle navigation based on action
-    // 'add_expense' -> open add expense page
-    // null -> open home page
+
+    // Handle 'add_expense' action
+    if (response.actionId == 'add_expense' && response.payload != null) {
+      final groupId = response.payload!;
+      NotificationManager.handleAddExpenseAction(groupId);
+    }
   }
 
   /// Extracts initials from the expense group title
@@ -240,6 +244,7 @@ class NotificationService {
       titleWithPeriod,
       content,
       details,
+      payload: group.id, // Pass group ID for navigation
     );
   }
 
