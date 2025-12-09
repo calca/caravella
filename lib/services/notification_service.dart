@@ -156,17 +156,8 @@ class NotificationService {
       }
     }
 
-    // Format period
-    String period = '';
-    if (group.startDate != null && group.endDate != null) {
-      final start = '${group.startDate!.day}/${group.startDate!.month}';
-      final end = '${group.endDate!.day}/${group.endDate!.month}';
-      period = '$start - $end';
-    }
-
     // Build notification content
     final title = group.title.isEmpty ? loc.new_expense_group : group.title;
-    final titleWithPeriod = period.isEmpty ? title : '$title ($period)';
 
     final dailyText = loc.notification_daily_spent(
       dailyAverage.toStringAsFixed(2),
@@ -248,7 +239,7 @@ class NotificationService {
 
     await _notifications.show(
       _notificationId,
-      titleWithPeriod,
+      title,
       content,
       details,
       payload: group.id, // Pass group ID for navigation
