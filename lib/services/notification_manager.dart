@@ -15,6 +15,9 @@ class NotificationManager {
 
   final NotificationService _notificationService = NotificationService();
 
+  /// Callback that can be set by the group edit page to receive notification disable events
+  static void Function(String groupId)? onNotificationDisabled;
+
   /// Updates the notification for a group if notifications are enabled
   Future<void> updateNotificationForGroup(
     ExpenseGroup group,
@@ -100,6 +103,14 @@ class NotificationManager {
     try {
       debugPrint('Handling disable action for group: $groupId');
 
+      // Get context for notifier before async operations
+      final context = navigatorKey.currentContext;
+      ExpenseGroupNotifier? notifier;
+
+      if (context != null && context.mounted) {
+        notifier = Provider.of<ExpenseGroupNotifier>(context, listen: false);
+      }
+
       // Load the expense group
       final group = await ExpenseGroupStorageV2.getTripById(groupId);
       if (group == null) {
@@ -111,12 +122,23 @@ class NotificationManager {
       final updatedGroup = group.copyWith(notificationEnabled: false);
       await ExpenseGroupStorageV2.updateGroupMetadata(updatedGroup);
 
+      // Notify the UI about the change
+      if (notifier != null) {
+        await notifier.refreshGroup();
+        notifier.notifyGroupUpdated(groupId);
+      }
+
+      // Notify the edit page if it's open via callback
+      if (onNotificationDisabled != null) {
+        onNotificationDisabled!(groupId);
+      }
+
       // Cancel the notification
       await NotificationService().cancelGroupNotification();
 
       debugPrint('Notification disabled for group: ${group.title}');
     } catch (e) {
-      debugPrint('Error handling close action: $e');
+      debugPrint('Error handling disable action: $e');
     }
   }
 

@@ -6,6 +6,7 @@ import 'package:io_caravella_egm/manager/group/widgets/section_flat.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:io_caravella_egm/services/notification_service.dart';
+import 'package:io_caravella_egm/services/notification_manager.dart';
 import '../group_form_controller.dart';
 import '../group_edit_mode.dart';
 import '../widgets/group_title_field.dart';
@@ -99,6 +100,10 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
       vsync: this,
       animationDuration: const Duration(milliseconds: 350),
     );
+
+    // Register callback to handle notification disable from notification
+    NotificationManager.onNotificationDisabled = _handleNotificationDisabled;
+
     if (widget.trip != null && widget.mode == GroupEditMode.edit) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted && _state.title.isEmpty) {
@@ -144,8 +149,18 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
 
   @override
   void dispose() {
+    // Unregister callback
+    NotificationManager.onNotificationDisabled = null;
     _tabController.dispose();
     super.dispose();
+  }
+
+  /// Handles notification disable events from the notification
+  void _handleNotificationDisabled(String groupId) {
+    // Only update if this is the group being edited
+    if (widget.trip?.id == groupId && mounted) {
+      _state.setNotificationEnabled(false);
+    }
   }
 
   Future<DateTime?> _pickDate(BuildContext context, bool isStart) async {
