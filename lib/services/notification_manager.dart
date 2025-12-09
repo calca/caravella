@@ -47,10 +47,10 @@ class NotificationManager {
     try {
       // Get localizations before async operations
       final loc = gen.AppLocalizations.of(context);
-      
+
       // Get all active (non-archived) groups
       final groups = await ExpenseGroupStorageV2.getActiveGroups();
-      
+
       // Find groups with notifications enabled
       for (final group in groups) {
         if (group.notificationEnabled) {

@@ -17,12 +17,12 @@ class CaravellaHomePage extends StatefulWidget {
 class _CaravellaHomePageState extends State<CaravellaHomePage>
     with WidgetsBindingObserver, RouteAware {
   bool _notificationsRestored = false;
-  
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     routeObserver.subscribe(this, ModalRoute.of(context)! as PageRoute);
-    
+
     // Restore notifications on first build (when context is available)
     if (!_notificationsRestored && mounted) {
       _notificationsRestored = true;
