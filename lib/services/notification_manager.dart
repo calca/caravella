@@ -41,15 +41,6 @@ class NotificationManager {
     }
   }
 
-  /// Cancels the summary notification
-  Future<void> cancelSummaryNotification() async {
-    try {
-      await _notificationService.cancelSummaryNotification();
-    } catch (e) {
-      debugPrint('Failed to cancel summary notification: $e');
-    }
-  }
-
   /// Restores notifications for all groups that have notifications enabled
   /// Should be called at app startup to ensure notifications are displayed
   static Future<void> restoreNotifications(BuildContext context) async {
@@ -73,17 +64,6 @@ class NotificationManager {
       for (final group in notificationEnabledGroups) {
         debugPrint('Restoring notification for group: ${group.title}');
         await NotificationManager().updateNotificationForGroup(group, loc);
-      }
-
-      // Show summary notification if there are multiple groups
-      if (notificationEnabledGroups.length > 1) {
-        await NotificationService().showSummaryNotification(
-          notificationEnabledGroups.length,
-          loc,
-        );
-      } else if (notificationEnabledGroups.isEmpty) {
-        // Cancel summary if no notifications are active
-        await NotificationManager().cancelSummaryNotification();
       }
     } catch (e) {
       debugPrint('Failed to restore notifications: $e');
