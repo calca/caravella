@@ -592,6 +592,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                         onChanged: (value) async {
                           final controller = context
                               .read<GroupFormController>();
+                          final notifier = context.read<ExpenseGroupNotifier>();
                           final notificationService = NotificationService();
 
                           // If enabling, request permissions first
@@ -608,8 +609,61 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                             }
                           }
 
-                          // Update state (save happens on PopScope)
+                          // Update state and save immediately
                           controller.state.setNotificationEnabled(value);
+
+                          try {
+                            final savedGroup = await controller.save();
+
+                            // Force repository reload
+                            ExpenseGroupStorageV2.forceReload();
+
+                            // Notify listeners
+                            if (controller.state.id != null) {
+                              notifier.notifyGroupUpdated(controller.state.id!);
+                            }
+
+                            // Handle notification based on new value
+                            if (value && context.mounted) {
+                              // Show or update notification
+                              await notificationService.showGroupNotification(
+                                savedGroup,
+                                gloc,
+                              );
+
+                              if (context.mounted) {
+                                AppToast.show(
+                                  context,
+                                  gloc.notification_enabled,
+                                  type: ToastType.success,
+                                );
+                              }
+                            } else {
+                              // Cancel notification for this group
+                              await notificationService.cancelGroupNotification(
+                                savedGroup.id,
+                              );
+
+                              if (context.mounted) {
+                                AppToast.show(
+                                  context,
+                                  '${gloc.notification_enabled} ${gloc.accessibility_currently_disabled.toLowerCase()}',
+                                  type: ToastType.info,
+                                );
+                              }
+                            }
+                          } catch (e) {
+                            // Revert state on error
+                            controller.state.setNotificationEnabled(!value);
+
+                            if (context.mounted) {
+                              AppToast.show(
+                                context,
+                                gloc.backup_error,
+                                type: ToastType.error,
+                              );
+                            }
+                          }
                         },
                       ),
                     ),
