@@ -56,7 +56,11 @@ class ExpensesGroupEditPage extends StatelessWidget {
             },
             (error) {
               final gloc = gen.AppLocalizations.of(context);
-              AppToast.show(context, gloc.backup_error, type: ToastType.error);
+              AppToast.show(
+                context,
+                gloc.error_saving_group(error.toString()),
+                type: ToastType.error,
+              );
             },
           ),
         ),
@@ -659,7 +663,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                             if (context.mounted) {
                               AppToast.show(
                                 context,
-                                gloc.backup_error,
+                                gloc.error_saving_group(e.toString()),
                                 type: ToastType.error,
                               );
                             }
@@ -707,7 +711,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                             if (context.mounted) {
                               AppToast.show(
                                 context,
-                                gloc.backup_error,
+                                gloc.error_saving_group(e.toString()),
                                 type: ToastType.error,
                               );
                             }
@@ -797,13 +801,13 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                   if (scaffoldMessenger != null && context.mounted) {
                     AppToast.show(
                       context,
-                      gloc.backup_error,
+                      gloc.error_saving_group(e.toString()),
                       type: ToastType.error,
                     );
                   } else if (context.mounted) {
                     AppToast.show(
                       context,
-                      gloc.backup_error,
+                      gloc.error_saving_group(e.toString()),
                       type: ToastType.error,
                     );
                   }
@@ -1005,13 +1009,13 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                                   context.mounted) {
                                 AppToast.show(
                                   context,
-                                  gloc.backup_error,
+                                  gloc.error_saving_group(e.toString()),
                                   type: ToastType.error,
                                 );
                               } else if (context.mounted) {
                                 AppToast.show(
                                   context,
-                                  gloc.backup_error,
+                                  gloc.error_saving_group(e.toString()),
                                   type: ToastType.error,
                                 );
                               }
