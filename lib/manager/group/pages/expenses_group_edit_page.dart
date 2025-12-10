@@ -751,6 +751,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
             state.currency['code'],
             state.groupType,
             state.autoLocationEnabled,
+            state.notificationEnabled,
           );
         },
         builder: (context, _, _) {

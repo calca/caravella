@@ -107,6 +107,7 @@ class GroupFormController {
     if (g.color != state.color) return true;
     if (g.groupType != state.groupType) return true;
     if (g.autoLocationEnabled != state.autoLocationEnabled) return true;
+    if (g.notificationEnabled != state.notificationEnabled) return true;
     return false;
   }
 
