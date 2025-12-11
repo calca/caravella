@@ -8,7 +8,7 @@ This document describes the notification icon setup for the Caravella app on And
 
 The app uses `ic_notification` as the small notification icon displayed in the Android status bar and notification drawer.
 
-### PNG Icons (Primary)
+### PNG Icons
 
 PNG versions are provided in multiple densities for maximum compatibility:
 
@@ -23,17 +23,15 @@ These icons are:
 - Derived from the monochrome launcher icon
 - Follow Android notification icon guidelines
 
-### Vector Drawable (Fallback)
-
-A vector drawable version exists at `drawable/ic_notification.xml` as a fallback for devices that support it.
+**Important:** Only PNG files are used. Vector drawables are NOT supported as they can cause "invalid_icon" errors with the `flutter_local_notifications` plugin on some devices.
 
 ## Android Requirements
 
 According to Android design guidelines:
 - Notification icons must be white on transparent background
 - Icons should be simple, flat silhouettes
-- PNG versions are recommended for maximum compatibility
-- Vector drawables can work but may cause issues on some devices/versions
+- PNG versions are required for maximum compatibility
+- Vector drawables MUST NOT be used as they cause "invalid_icon" PlatformException with `flutter_local_notifications`
 
 ## Usage in Code
 
@@ -75,6 +73,11 @@ If the icon needs to be updated:
 
 You can use image editing tools like GIMP, Photoshop, or command-line tools like ImageMagick to resize and process the icons.
 
-## Related Issue
+## Related Issues
 
-This setup was implemented to fix the "invalid icon" error that could occur on certain Android devices when notifications were enabled. The issue was resolved by providing PNG versions in all densities instead of relying solely on the vector drawable.
+This setup was implemented to fix the "invalid_icon" PlatformException that occurs on Android devices when notifications are enabled:
+
+1. **Initial fix**: Added PNG versions in all densities to provide compatibility across all Android versions and screen densities.
+2. **Complete fix**: Removed the vector drawable (`drawable/ic_notification.xml`) entirely, as its presence caused Android to prefer it over PNG files on some devices, leading to "invalid_icon" errors when the `flutter_local_notifications` plugin tried to use it.
+
+The solution is to use only PNG notification icons in density-specific folders and avoid any vector drawable versions of notification icons.
