@@ -119,6 +119,43 @@ class AppInitialization {
     await FlagSecureAndroid.setFlagSecure(enabled);
   }
 
+  /// Initializes storage backend and performs migration if needed.
+  static Future<void> initStorage() async {
+    // Check if we should use JSON backend (via dart-define flag)
+    const useJsonBackend = String.fromEnvironment('USE_JSON_BACKEND', defaultValue: 'false');
+    final shouldUseJson = useJsonBackend.toLowerCase() == 'true';
+    
+    // Initialize the repository factory with the appropriate backend
+    ExpenseGroupRepositoryFactory.getRepository(useJsonBackend: shouldUseJson);
+    
+    if (shouldUseJson) {
+      LoggerService.info('Using JSON backend (migration skipped)', name: 'storage');
+      return;
+    }
+    
+    // Using SQLite backend - check if migration is needed
+    LoggerService.info('Initializing SQLite backend', name: 'storage');
+    
+    final migrationCompleted = await StorageMigrationService.isMigrationCompleted();
+    if (!migrationCompleted) {
+      LoggerService.info('Starting storage migration from JSON to SQLite', name: 'storage');
+      final result = await StorageMigrationService.migrateToSqlite();
+      
+      if (result.isFailure) {
+        LoggerService.warning(
+          'Migration failed: ${result.error?.message}',
+          name: 'storage',
+        );
+        // Don't fail app startup - just log the error
+        // The app will start with an empty SQLite database
+      } else {
+        LoggerService.info('Storage migration completed successfully', name: 'storage');
+      }
+    } else {
+      LoggerService.info('Storage migration already completed', name: 'storage');
+    }
+  }
+
   /// Runs all initialization steps in the correct order.
   static Future<void> initialize() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -129,5 +166,6 @@ class AppInitialization {
     configureSystemUI();
     configureImageCache();
     await initFlagSecure();
+    await initStorage();
   }
 }

@@ -70,3 +70,13 @@ class ConcurrentModificationError extends StorageError {
     super.cause,
   });
 }
+
+/// Thrown when data migration fails
+class MigrationError extends StorageError {
+  const MigrationError(super.message, {super.details, super.cause});
+}
+
+/// Thrown when an entity is not found
+class NotFoundError extends StorageError {
+  const NotFoundError(super.message, {super.details, super.cause});
+}
