@@ -53,10 +53,19 @@ Android automatically selects the appropriate density version based on the devic
 
 If the icon needs to be updated:
 
-1. Update the monochrome launcher icons first
-2. Use the Python script at `/tmp/create_notification_icons.py` to regenerate notification icons
-3. Verify all density versions are created correctly
-4. Test on multiple Android devices/emulators
+1. Update the monochrome launcher icons first (`ic_launcher_monochrome.png` in each density folder)
+2. Resize each monochrome icon to the notification icon size for that density:
+   - mdpi: 24x24 px
+   - hdpi: 36x36 px
+   - xhdpi: 48x48 px
+   - xxhdpi: 72x72 px
+   - xxxhdpi: 96x96 px
+3. Ensure all pixels are white (RGB 255,255,255) with transparency preserved
+4. Save as `ic_notification.png` in the corresponding `drawable-{density}` folder
+5. Verify all density versions are created correctly
+6. Test on multiple Android devices/emulators
+
+You can use image editing tools like GIMP, Photoshop, or command-line tools like ImageMagick to resize and process the icons.
 
 ## Related Issue
 
