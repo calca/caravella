@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fixed invalid launcher icon error in APK builds caused by duplicate icon resources in main source set conflicting with flavor-specific icons
+- Fixed invalid notification icon error in push notifications by using correct drawable reference instead of removed launcher icon
 - Fixed invalid notification icon error on Android devices
 - Fixed incorrect "Backup non riuscito" error message appearing when notification toggle or group save operations failed - now shows proper "Errore durante il salvataggio" with error details
 - Fixed setState() during build error in expense form page when form validity or save callback changed

@@ -40,6 +40,12 @@ According to Android design guidelines:
 The notification icon is referenced in `lib/services/notification_service.dart`:
 
 ```dart
+// Initialization settings use ic_notification
+AndroidInitializationSettings(
+  'ic_notification',  // Default icon for notification plugin initialization
+)
+
+// Notification display also uses ic_notification
 AndroidNotificationDetails(
   // ...
   icon: 'ic_notification',  // Uses PNG files from drawable-{density} folders
@@ -48,6 +54,8 @@ AndroidNotificationDetails(
 ```
 
 Android automatically selects the appropriate density version based on the device's screen density.
+
+**Important:** The initialization icon must reference a drawable resource that exists in the `main` source set (not flavor-specific), as it's used during plugin initialization before any flavor-specific resources are available.
 
 ## Regenerating Icons
 
