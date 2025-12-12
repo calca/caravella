@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Android notification icon missing in flavor-specific builds causing "invalid_icon" error when enabling notifications
+  - Added ic_notification.png resources to all Android build flavors (dev, staging, prod)
+  - Ensures notifications work correctly on all Android devices regardless of build variant
+
 ### Added
 - Markdown export format for expense groups with comprehensive statistics and expenses table
   - Includes group header with title, period, currency, and participant count
