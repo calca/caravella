@@ -101,7 +101,7 @@ jobs:
             echo "FILE_PREFIX=io_caravella_egm" >> $GITHUB_ENV
           fi
       - name: Build APK (signed)
-        run: flutter build apk --flavor ${{ env.FLAVOR }} --release --dart-define=FLAVOR=${{ env.FLAVOR }}
+        run: flutter build apk --flavor ${{ env.FLAVOR }} --release --dart-define=FLAVOR=${{ env.FLAVOR }} --dart-define=ENABLE_TALKER_SCREEN=true
       - name: Get app version
         id: get_version
         run: |
