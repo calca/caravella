@@ -18,6 +18,8 @@ PNG versions are provided in multiple densities for maximum compatibility:
 - `drawable-xxhdpi/ic_notification.png` - 72x72 px (3x)
 - `drawable-xxxhdpi/ic_notification.png` - 96x96 px (4x)
 
+In addition to the density-specific folders, we keep a fallback copy in every flavor's base `drawable/` directory (e.g. `android/app/src/staging/res/drawable/ic_notification.png`). Some OEM builds expect the non-density-qualified version when the notification plugin initializes, so this fallback prevents `invalid_icon` errors on devices that ignore the density folders during initialization.
+
 These icons are:
 - White silhouettes on transparent background
 - Derived from the monochrome launcher icon
