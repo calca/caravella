@@ -656,9 +656,16 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                                 );
                               }
                             }
-                          } catch (e) {
+                          } catch (e, st) {
                             // Revert state on error
                             controller.state.setNotificationEnabled(!value);
+
+                            LoggerService.error(
+                              'Failed to toggle notification',
+                              name: 'manager.group',
+                              error: e,
+                              stackTrace: st,
+                            );
 
                             if (context.mounted) {
                               AppToast.show(
@@ -707,7 +714,14 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                             if (controller.state.id != null) {
                               notifier.notifyGroupUpdated(controller.state.id!);
                             }
-                          } catch (e) {
+                          } catch (e, st) {
+                            LoggerService.error(
+                              'Failed to toggle auto location',
+                              name: 'manager.group',
+                              error: e,
+                              stackTrace: st,
+                            );
+
                             if (context.mounted) {
                               AppToast.show(
                                 context,
@@ -796,7 +810,14 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
 
                   // Pop returning the saved id so caller can react
                   if (navigator.canPop()) navigator.pop(saved.id);
-                } catch (e) {
+                } catch (e, st) {
+                  LoggerService.error(
+                    'Failed to save group on back navigation',
+                    name: 'manager.group',
+                    error: e,
+                    stackTrace: st,
+                  );
+
                   // Show error toast using captured messenger if possible (avoids using
                   // BuildContext after async gap).
                   if (scaffoldMessenger != null && context.mounted) {
@@ -1005,7 +1026,14 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                               }
 
                               if (navigator.canPop()) navigator.pop(saved.id);
-                            } catch (e) {
+                            } catch (e, st) {
+                              LoggerService.error(
+                                'Failed to save group',
+                                name: 'manager.group',
+                                error: e,
+                                stackTrace: st,
+                              );
+
                               if (scaffoldMessenger != null &&
                                   context.mounted) {
                                 AppToast.show(
