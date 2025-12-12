@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'bottom_sheet_scaffold.dart';
 import 'app_toast.dart';
 
@@ -114,7 +115,7 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
       }
     } catch (e) {
       // Gracefully handle any scrolling errors
-      debugPrint('Error during scroll-to-input: $e');
+      LoggerService.warning('Error during scroll-to-input', name: 'ui.sheet');
     }
   }
 

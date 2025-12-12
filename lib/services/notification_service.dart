@@ -28,9 +28,7 @@ class NotificationService {
   Future<void> initialize() async {
     if (_initialized) return;
 
-    const androidSettings = AndroidInitializationSettings(
-      '@mipmap/ic_launcher',
-    );
+    const androidSettings = AndroidInitializationSettings('ic_notification');
     const initSettings = InitializationSettings(android: androidSettings);
 
     await _notifications.initialize(
@@ -55,8 +53,9 @@ class NotificationService {
   }
 
   void _onNotificationTap(NotificationResponse response) {
-    debugPrint(
+    LoggerService.debug(
       'Notification tapped: actionId=${response.actionId}, payload=${response.payload}',
+      name: 'notification',
     );
 
     if (response.payload == null) return;
@@ -66,15 +65,18 @@ class NotificationService {
     // Handle different actions
     if (response.actionId == 'add_expense') {
       // Add expense action button clicked
-      debugPrint('Add expense action triggered');
+      LoggerService.debug('Add expense action triggered', name: 'notification');
       NotificationManager.handleAddExpenseAction(groupId);
     } else if (response.actionId == 'disable') {
       // Disable action button clicked
-      debugPrint('Disable action triggered');
+      LoggerService.debug('Disable action triggered', name: 'notification');
       NotificationManager.handleDisableAction(groupId);
     } else if (response.actionId == null) {
       // Notification body clicked (not an action button)
-      debugPrint('Notification body clicked - opening group detail page');
+      LoggerService.debug(
+        'Notification body clicked - opening group detail page',
+        name: 'notification',
+      );
       NotificationManager.handleOpenGroupDetail(groupId);
     }
   }
@@ -142,7 +144,11 @@ class NotificationService {
 
       return byteData?.buffer.asUint8List();
     } catch (e) {
-      debugPrint('Error generating initials icon: $e');
+      LoggerService.error(
+        'Error generating initials icon',
+        name: 'notification',
+        error: e,
+      );
       return null;
     }
   }

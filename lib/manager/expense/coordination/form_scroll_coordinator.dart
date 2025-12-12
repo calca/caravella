@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:caravella_core/caravella_core.dart';
 
 /// Coordinator for form scrolling logic
 /// Manages GlobalKeys and calculates scroll positions to make fields visible
@@ -66,7 +67,7 @@ class FormScrollCoordinator {
           }
         }
       } catch (e) {
-        debugPrint('Scroll adjust error: $e');
+        LoggerService.warning('Scroll adjust error', name: 'ui.scroll');
       }
     });
   }

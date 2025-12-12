@@ -17,6 +17,8 @@ dependencies:
   archive: ^4.0.7
   in_app_review: ^2.0.10
   sqflite: ^2.4.1
+  talker: ^5.1.7
+  talker_flutter: ^5.1.7
 
 dev_dependencies:
   flutter_test:

@@ -11,6 +11,15 @@ import 'home/services/shortcuts_initialization.dart';
 export 'main/route_observer.dart';
 
 void main() async {
+  // Initialize Talker logging backend before app initialization
+  LoggerService.initialize(
+    useHistory: AppConfig.environment != Environment.prod,
+    maxHistoryItems: AppConfig.environment == Environment.dev ? 1000 : 100,
+    minLevel: AppConfig.environment == Environment.prod
+        ? LogLevel.warning
+        : LogLevel.debug,
+  );
+
   // Catch all uncaught async errors (e.g., from tile loading)
   runZonedGuarded(
     () async {

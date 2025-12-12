@@ -43,6 +43,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Repositioned expense form actions to reduce clutter in the main editing area
 
 ### Fixed
+- Fixed "invalid_icon" PlatformException when enabling persistent notifications by removing conflicting vector drawable - Android now always uses PNG notification icons which are fully supported by flutter_local_notifications plugin
+- Fixed incorrect "Backup non riuscito" error message appearing when notification toggle or group save operations failed - now shows proper "Errore durante il salvataggio" with error details
 - Fixed setState() during build error in expense form page when form validity or save callback changed
 - Fixed place search not showing error messages when network requests fail, timeout, or encounter SSL/TLS issues
 - Improved error feedback for location search to display localized error messages instead of silently failing

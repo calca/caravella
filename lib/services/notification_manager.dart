@@ -27,7 +27,11 @@ class NotificationManager {
       try {
         await _notificationService.showGroupNotification(group, loc);
       } catch (e) {
-        debugPrint('Failed to update notification for group ${group.id}: $e');
+        LoggerService.error(
+          'Failed to update notification for group ${group.id}',
+          name: 'notification',
+          error: e,
+        );
       }
     }
   }
@@ -37,7 +41,11 @@ class NotificationManager {
     try {
       await _notificationService.cancelGroupNotification(groupId);
     } catch (e) {
-      debugPrint('Failed to cancel notification for group $groupId: $e');
+      LoggerService.error(
+        'Failed to cancel notification for group $groupId',
+        name: 'notification',
+        error: e,
+      );
     }
   }
 
@@ -56,17 +64,25 @@ class NotificationManager {
           .where((g) => g.notificationEnabled)
           .toList();
 
-      debugPrint(
+      LoggerService.info(
         'Restoring ${notificationEnabledGroups.length} notification(s)',
+        name: 'notification',
       );
 
       // Show notification for each enabled group
       for (final group in notificationEnabledGroups) {
-        debugPrint('Restoring notification for group: ${group.title}');
+        LoggerService.info(
+          'Restoring notification for group: ${group.title}',
+          name: 'notification',
+        );
         await NotificationManager().updateNotificationForGroup(group, loc);
       }
     } catch (e) {
-      debugPrint('Failed to restore notifications: $e');
+      LoggerService.error(
+        'Failed to restore notifications',
+        name: 'notification',
+        error: e,
+      );
     }
   }
 
@@ -77,7 +93,10 @@ class NotificationManager {
       // Get the navigation key from the app
       final context = navigatorKey.currentContext;
       if (context == null || !context.mounted) {
-        debugPrint('Cannot navigate: context not available');
+        LoggerService.warning(
+          'Cannot navigate: context not available',
+          name: 'notification',
+        );
         return;
       }
 
@@ -90,7 +109,10 @@ class NotificationManager {
       // Load the expense group
       final group = await ExpenseGroupStorageV2.getTripById(groupId);
       if (group == null) {
-        debugPrint('Group not found: $groupId');
+        LoggerService.warning(
+          'Group not found: $groupId',
+          name: 'notification',
+        );
         // Check context is still valid after async operation
         final currentContext = navigatorKey.currentContext;
         if (currentContext != null && currentContext.mounted) {
@@ -122,7 +144,11 @@ class NotificationManager {
         }
       }
     } catch (e) {
-      debugPrint('Error handling add expense action: $e');
+      LoggerService.error(
+        'Error handling add expense action',
+        name: 'notification',
+        error: e,
+      );
     }
   }
 
@@ -130,7 +156,10 @@ class NotificationManager {
   /// Disables the notification setting for the group and cancels the notification
   static Future<void> handleDisableAction(String groupId) async {
     try {
-      debugPrint('Handling disable action for group: $groupId');
+      LoggerService.info(
+        'Handling disable action for group: $groupId',
+        name: 'notification',
+      );
 
       // Get context for notifier before async operations
       final context = navigatorKey.currentContext;
@@ -143,7 +172,10 @@ class NotificationManager {
       // Load the expense group
       final group = await ExpenseGroupStorageV2.getTripById(groupId);
       if (group == null) {
-        debugPrint('Group not found: $groupId');
+        LoggerService.warning(
+          'Group not found: $groupId',
+          name: 'notification',
+        );
         return;
       }
 
@@ -165,9 +197,16 @@ class NotificationManager {
       // Cancel the notification for this specific group
       await NotificationService().cancelGroupNotification(groupId);
 
-      debugPrint('Notification disabled for group: ${group.title}');
+      LoggerService.info(
+        'Notification disabled for group: ${group.title}',
+        name: 'notification',
+      );
     } catch (e) {
-      debugPrint('Error handling disable action: $e');
+      LoggerService.error(
+        'Error handling disable action',
+        name: 'notification',
+        error: e,
+      );
     }
   }
 
@@ -175,19 +214,28 @@ class NotificationManager {
   /// Opens the expense group detail page
   static Future<void> handleOpenGroupDetail(String groupId) async {
     try {
-      debugPrint('Opening group detail for: $groupId');
+      LoggerService.info(
+        'Opening group detail for: $groupId',
+        name: 'notification',
+      );
 
       // Get the navigation key from the app
       final context = navigatorKey.currentContext;
       if (context == null || !context.mounted) {
-        debugPrint('Cannot navigate: context not available');
+        LoggerService.warning(
+          'Cannot navigate: context not available',
+          name: 'notification',
+        );
         return;
       }
 
       // Load the expense group
       final group = await ExpenseGroupStorageV2.getTripById(groupId);
       if (group == null) {
-        debugPrint('Group not found: $groupId');
+        LoggerService.warning(
+          'Group not found: $groupId',
+          name: 'notification',
+        );
         // Check context is still valid after async operation
         final currentContext = navigatorKey.currentContext;
         if (currentContext != null && currentContext.mounted) {
@@ -220,7 +268,11 @@ class NotificationManager {
         }
       }
     } catch (e) {
-      debugPrint('Error opening group detail: $e');
+      LoggerService.error(
+        'Error opening group detail',
+        name: 'notification',
+        error: e,
+      );
     }
   }
 
@@ -271,7 +323,10 @@ class NotificationManager {
             },
             onCategoryAdded: (categoryId) {
               // Category was added inline in the form, no need to do anything
-              debugPrint('Category added: $categoryId');
+              LoggerService.debug(
+                'Category added: $categoryId',
+                name: 'notification',
+              );
             },
           );
         },
