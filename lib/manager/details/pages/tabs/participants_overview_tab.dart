@@ -220,7 +220,7 @@ class _ParticipantStatCardState extends State<_ParticipantStatCard> {
       await SharePlus.instance.share(ShareParams(text: message));
     } catch (e) {
       // Silently handle errors
-      debugPrint('Error sharing reminder: $e');
+      LoggerService.warning('Error sharing reminder', name: 'ui.share');
     }
   }
 

@@ -126,13 +126,17 @@ class GroupFormController {
           if (fetched != null) {
             state.setOriginalGroup(fetched.copyWith());
           } else {
-            debugPrint(
+            LoggerService.warning(
               'GroupFormController.save: original group not found for id ${state.id}',
+              name: 'manager.group',
             );
           }
         } catch (e, st) {
-          debugPrint(
-            'GroupFormController.save: failed to fetch original group: $e\n$st',
+          LoggerService.error(
+            'GroupFormController.save: failed to fetch original group',
+            name: 'manager.group',
+            error: e,
+            stackTrace: st,
           );
         }
       }
@@ -289,7 +293,12 @@ class GroupFormController {
       state.setImage(target.path);
       return target.path;
     } catch (e, st) {
-      debugPrint('persistPickedImage error: $e\n$st');
+      LoggerService.error(
+        'persistPickedImage error',
+        name: 'manager.group',
+        error: e,
+        stackTrace: st,
+      );
       return null;
     } finally {
       state.setLoading(false);
@@ -307,7 +316,12 @@ class GroupFormController {
           await f.delete();
         }
       } catch (e, st) {
-        debugPrint('removeImage error: $e\n$st');
+        LoggerService.error(
+          'removeImage error',
+          name: 'manager.group',
+          error: e,
+          stackTrace: st,
+        );
       }
     }
     // Clear both background image and color completely by directly setting the fields

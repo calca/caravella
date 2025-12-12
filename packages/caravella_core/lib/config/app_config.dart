@@ -9,6 +9,13 @@ class AppConfig {
 
   static Environment get environment => _environment ?? Environment.prod;
 
+  /// Enable TalkerScreen UI in settings via build flag
+  /// Usage: --dart-define=ENABLE_TALKER_SCREEN=true
+  static const bool enableTalkerScreen = bool.fromEnvironment(
+    'ENABLE_TALKER_SCREEN',
+    defaultValue: false,
+  );
+
   static String get appName {
     switch (environment) {
       case Environment.dev:

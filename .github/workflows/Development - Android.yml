@@ -39,7 +39,7 @@ jobs:
       - name: Run tests
         run: flutter test
       - name: Build staging APK (signed)
-        run: flutter build apk --flavor staging --release --dart-define=FLAVOR=staging
+        run: flutter build apk --flavor staging --release --dart-define=FLAVOR=staging --dart-define=ENABLE_TALKER_SCREEN=true
       - name: Get app version
         id: get_version
         run: |

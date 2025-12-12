@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart'
     as gen; // generated strongly-typed
+import 'package:talker_flutter/talker_flutter.dart';
 
 import '../flag_secure_android.dart';
 import 'package:provider/provider.dart';
@@ -86,6 +88,9 @@ class SettingsPage extends StatelessWidget {
   }
 
   Widget _buildInfoSection(BuildContext context, gen.AppLocalizations loc) {
+    // Show debug logs in debug mode or if build flag is enabled
+    final showDebugLogs = kDebugMode || AppConfig.enableTalkerScreen;
+
     return SettingsSection(
       title: loc.settings_info,
       description: loc.settings_info_desc,
@@ -93,6 +98,10 @@ class SettingsPage extends StatelessWidget {
         _buildInfoCardRow(context, loc),
         const SizedBox(height: 8),
         _buildAppVersionRow(context, loc),
+        if (showDebugLogs) ...[
+          const SizedBox(height: 8),
+          _buildDebugLogsRow(context, loc),
+        ],
       ],
     );
   }
@@ -318,6 +327,32 @@ class SettingsPage extends StatelessWidget {
         onTap: () => Navigator.of(
           context,
         ).push(MaterialPageRoute(builder: (ctx) => const DeveloperPage())),
+      ),
+    );
+  }
+
+  Widget _buildDebugLogsRow(BuildContext context, gen.AppLocalizations loc) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+    return SettingsCard(
+      context: context,
+      color: colorScheme.surface,
+      child: ListTile(
+        leading: const Icon(Icons.bug_report),
+        title: Text('Debug Logs', style: textTheme.titleMedium),
+        subtitle: Text(
+          'View application logs and error history',
+          style: textTheme.bodySmall,
+        ),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) =>
+                  TalkerScreen(talker: LoggerService.instance),
+            ),
+          );
+        },
       ),
     );
   }
