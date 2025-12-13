@@ -376,9 +376,9 @@
   "auto_backup_desc": "启用操作系统自动备份",
   "settings_user_name_title": "您的名称",
   "settings_user_name_desc": "在应用中使用的名称或昵称",
-  "settings_user_name_hint": "输入您的名称",
-  "default_participant_me": "我",
-  "info_tab": "信息",
+  "settings_user_name_hint": "输入您的名称"
+  ,"default_participant_me": "我"
+  ,"info_tab": "信息",
   "select_paid_by": "选择付款人",
   "select_category": "选择类别",
   "check_form": "检查输入的数据",
