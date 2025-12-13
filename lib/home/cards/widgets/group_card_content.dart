@@ -115,8 +115,8 @@ class GroupCardContent extends StatelessWidget {
             onExpand: (currentState) {
               // Chiudi il bottom sheet
               Navigator.of(context).pop();
-              // Apri la full page con lo stato corrente
-              _openFullExpenseForm(context, currentGroup, currentState);
+              // Apri la full page con lo stato corrente, usando parentContext che rimane valido
+              _openFullExpenseForm(parentContext, currentGroup, currentState);
             },
           );
         },
