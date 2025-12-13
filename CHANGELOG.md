@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- Button style consistency across expense and group forms
+  - Save/add buttons in expense group and expense forms now use text-only style (TextButton) to match the compact expense form
+  - Ensures consistent visual design across all form submission buttons
 - Android notification icon missing in flavor-specific builds causing "invalid_icon" error when enabling notifications
   - Added ic_notification.png resources to all Android build flavors (dev, staging, prod)
   - Added default notification icon metadata in AndroidManifest.xml for improved compatibility
