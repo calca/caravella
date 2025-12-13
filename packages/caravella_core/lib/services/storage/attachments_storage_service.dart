@@ -71,7 +71,8 @@ class AttachmentsStorageService {
     try {
       final metadataFile = File(path.join(dir.path, _metadataFileName));
       if (await metadataFile.exists()) {
-        return await metadataFile.readAsString();
+        final content = await metadataFile.readAsString();
+        return content.trim(); // Trim whitespace to ensure clean comparison
       }
     } catch (e) {
       // If we can't read the metadata, log and return null
@@ -138,6 +139,10 @@ class AttachmentsStorageService {
       return true;
     } catch (e) {
       // Log error but don't throw - deletion failure shouldn't crash
+      LoggerService.warning(
+        'Failed to delete group attachments for $groupName: $e',
+        name: 'storage.attachments',
+      );
       return false;
     }
   }
