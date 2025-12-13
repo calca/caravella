@@ -117,12 +117,13 @@ class AttachmentsMigrationService {
       );
     } catch (e, st) {
       LoggerService.error(
-        'Failed to update expense attachment paths',
+        'Failed to update expense attachment paths - files migrated but DB not updated',
         name: 'storage.migration',
         error: e,
         stackTrace: st,
       );
-      rethrow;
+      // Don't rethrow - files are migrated, and both old and new paths will work
+      // The app can continue functioning with the old paths in the database
     }
   }
   
