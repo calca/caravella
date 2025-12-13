@@ -102,7 +102,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         actions: [
-          if (widget.initialExpense != null) ...[
+          if (widget.initialExpense?.id != null && widget.initialExpense!.id.isNotEmpty) ...[
             IconButton(
               icon: const Icon(Icons.share_outlined),
               tooltip: gloc.share_label,
@@ -133,7 +133,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
                     SectionHeader(
                       title: isReadOnly
                           ? gloc.expense
-                          : (widget.initialExpense != null
+                          : (widget.initialExpense?.id != null && widget.initialExpense!.id.isNotEmpty
                                 ? gloc.edit_expense
                                 : gloc.new_expense),
                       description: '${gloc.group} ${widget.group.title}',
@@ -167,7 +167,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
           if (!isReadOnly)
             BottomActionBar(
               onPressed: _handleSave,
-              label: widget.initialExpense != null ? gloc.save : gloc.add,
+              label: widget.initialExpense?.id != null && widget.initialExpense!.id.isNotEmpty ? gloc.save : gloc.add,
               enabled: _isFormValid,
             ),
         ],

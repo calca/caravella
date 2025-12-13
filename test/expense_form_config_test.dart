@@ -167,5 +167,34 @@ void main() {
       expect(configWithDelete.hasDeleteAction, true);
       expect(configWithoutDelete.hasDeleteAction, false);
     });
+
+    test('initialExpense without ID is treated as create mode (expand from home)', () {
+      // This simulates the case when user starts entering data on home page
+      // and clicks "expand" - data is pre-filled but it's still creating a new expense
+      final partialExpense = ExpenseDetails(
+        id: '', // Empty ID means it's not saved yet (partial data from expand)
+        name: 'Partial Entry',
+        amount: 25.0,
+        paidBy: mockParticipants[0],
+        category: mockCategories[0],
+        date: DateTime(2024, 1, 1),
+      );
+
+      final config = ExpenseFormConfig(
+        initialExpense: partialExpense,
+        participants: mockParticipants,
+        categories: mockCategories,
+        groupId: 'group123',
+        onExpenseAdded: (_) {},
+        onCategoryAdded: (_) {},
+        autoLocationEnabled: true,
+      );
+
+      // Even though initialExpense is not null, it should be create mode
+      // because the expense has an empty ID (not saved yet)
+      expect(config.isCreateMode, true);
+      expect(config.isEditMode, false);
+      expect(config.hasDeleteAction, false);
+    });
   });
 }

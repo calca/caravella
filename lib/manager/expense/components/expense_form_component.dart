@@ -409,7 +409,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
             ? () => _orchestrator.saveExpense(context)
             : null,
         isFormValid: _controller.isFormValid,
-        isEdit: widget.config.initialExpense != null,
+        isEdit: widget.config.initialExpense?.id != null && widget.config.initialExpense!.id.isNotEmpty,
         onDelete: widget.config.hasDeleteAction
             ? () => _orchestrator.deleteExpense(context)
             : null,

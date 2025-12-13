@@ -132,7 +132,7 @@ class GroupCardContent extends StatelessWidget {
     ExpenseDetails? partialExpense;
     if (partialState != null) {
       partialExpense = ExpenseDetails(
-        id: null,
+        id: '', // Empty ID to indicate this is partial data, not a saved expense
         name: partialState.name.isEmpty ? null : partialState.name,
         amount: partialState.amount,
         paidBy: partialState.paidBy!,
