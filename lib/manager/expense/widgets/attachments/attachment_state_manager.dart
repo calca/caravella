@@ -18,6 +18,10 @@ enum AttachmentProcessingState { idle, picking, compressing, saving }
 /// Handles file picking, compression, and storage using service abstractions
 /// Optimized version with progress tracking
 class AttachmentStateManager extends ChangeNotifier {
+  // Compression thresholds
+  static const int _minFileSizeForCompression = 200 * 1024; // 200 KB
+  static const int _maxFileSizeForCompression = 50 * 1024 * 1024; // 50 MB
+
   final String groupId;
   final String groupName;
   final FilePickerService _filePickerService;
@@ -156,7 +160,7 @@ class AttachmentStateManager extends ChangeNotifier {
           );
 
           // Skip compression for very small files (< 200KB) or very large files (> 50MB)
-          if (fileSizeInBytes < 200 * 1024) {
+          if (fileSizeInBytes < _minFileSizeForCompression) {
             LoggerService.debug('Skipping compression for small file', name: 'attachment');
             _updateProcessingState(AttachmentProcessingState.saving);
             await sourceFile.copy(targetPath);
@@ -164,7 +168,7 @@ class AttachmentStateManager extends ChangeNotifier {
             return targetPath;
           }
 
-          if (fileSizeInMB > 50) {
+          if (fileSizeInBytes > _maxFileSizeForCompression) {
             LoggerService.warning(
               'Image file too large (${fileSizeInMB.toStringAsFixed(2)} MB), skipping compression',
               name: 'attachment',
