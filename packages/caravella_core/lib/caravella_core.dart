@@ -29,6 +29,7 @@ export 'services/logging/logger_service.dart';
 
 // Services - Storage
 export 'services/storage/preferences_service.dart';
+export 'services/storage/attachments_storage_service.dart';
 
 // Services - User Feedback
 export 'services/user/rating_service.dart';

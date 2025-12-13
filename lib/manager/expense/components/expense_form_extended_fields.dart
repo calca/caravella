@@ -18,6 +18,7 @@ class ExpenseFormExtendedFields extends StatelessWidget {
   final DateTime? tripEndDate;
   final String locale;
   final String groupId;
+  final String groupName;
   final bool autoLocationEnabled;
   final bool isInitialExpense;
   final bool isFormValid;
@@ -31,6 +32,7 @@ class ExpenseFormExtendedFields extends StatelessWidget {
     required this.tripEndDate,
     required this.locale,
     required this.groupId,
+    required this.groupName,
     required this.autoLocationEnabled,
     required this.isInitialExpense,
     required this.isFormValid,
@@ -74,6 +76,7 @@ class ExpenseFormExtendedFields extends StatelessWidget {
             SizedBox(height: FormTheme.fieldSpacing),
             AttachmentInputWidget(
               groupId: groupId,
+              groupName: groupName,
               attachments: controller.state.attachments,
               onAttachmentAdded: controller.addAttachment,
               onAttachmentRemoved: (index) {

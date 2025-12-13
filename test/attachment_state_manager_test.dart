@@ -59,6 +59,7 @@ void main() {
     test('initializes with empty attachments', () {
       final manager = AttachmentStateManager(
         groupId: 'test-group',
+        groupName: 'Test Group',
         filePickerService: mockFilePicker,
         compressionService: mockCompression,
       );
@@ -72,6 +73,7 @@ void main() {
       final initialAttachments = ['/path/to/file1.jpg', '/path/to/file2.pdf'];
       final manager = AttachmentStateManager(
         groupId: 'test-group',
+        groupName: 'Test Group',
         filePickerService: mockFilePicker,
         compressionService: mockCompression,
         initialAttachments: initialAttachments,
@@ -86,6 +88,7 @@ void main() {
       final initialAttachments = List.generate(5, (i) => '/path/file$i.jpg');
       final manager = AttachmentStateManager(
         groupId: 'test-group',
+        groupName: 'Test Group',
         filePickerService: mockFilePicker,
         compressionService: mockCompression,
         initialAttachments: initialAttachments,
@@ -98,6 +101,7 @@ void main() {
     test('removeAttachment removes at correct index', () {
       final manager = AttachmentStateManager(
         groupId: 'test-group',
+        groupName: 'Test Group',
         filePickerService: mockFilePicker,
         compressionService: mockCompression,
         initialAttachments: ['/file1.jpg', '/file2.jpg', '/file3.jpg'],
@@ -112,6 +116,7 @@ void main() {
     test('removeAttachment handles invalid index gracefully', () {
       final manager = AttachmentStateManager(
         groupId: 'test-group',
+        groupName: 'Test Group',
         filePickerService: mockFilePicker,
         compressionService: mockCompression,
         initialAttachments: ['/file1.jpg'],
@@ -126,6 +131,7 @@ void main() {
     test('clear removes all attachments', () {
       final manager = AttachmentStateManager(
         groupId: 'test-group',
+        groupName: 'Test Group',
         filePickerService: mockFilePicker,
         compressionService: mockCompression,
         initialAttachments: ['/file1.jpg', '/file2.jpg'],
@@ -141,6 +147,7 @@ void main() {
     test('notifies listeners on state changes', () {
       final manager = AttachmentStateManager(
         groupId: 'test-group',
+        groupName: 'Test Group',
         filePickerService: mockFilePicker,
         compressionService: mockCompression,
         initialAttachments: ['/file1.jpg'],
@@ -159,6 +166,7 @@ void main() {
     test('attachments list is unmodifiable', () {
       final manager = AttachmentStateManager(
         groupId: 'test-group',
+        groupName: 'Test Group',
         filePickerService: mockFilePicker,
         compressionService: mockCompression,
         initialAttachments: ['/file1.jpg'],

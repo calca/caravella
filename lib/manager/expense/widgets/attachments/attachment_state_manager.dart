@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:caravella_core/caravella_core.dart';
 import '../../services/file_picker_service_impl.dart';
@@ -20,6 +19,7 @@ enum AttachmentProcessingState { idle, picking, compressing, saving }
 /// Optimized version with progress tracking
 class AttachmentStateManager extends ChangeNotifier {
   final String groupId;
+  final String groupName;
   final FilePickerService _filePickerService;
   final ImageCompressionService _compressionService;
   final List<String> _attachments = [];
@@ -29,6 +29,7 @@ class AttachmentStateManager extends ChangeNotifier {
 
   AttachmentStateManager({
     required this.groupId,
+    required this.groupName,
     FilePickerService? filePickerService,
     ImageCompressionService? compressionService,
     this.maxAttachments = 5,
@@ -118,16 +119,11 @@ class AttachmentStateManager extends ChangeNotifier {
   /// Save attachment to app storage and compress if needed
   /// This now runs compression in a separate isolate (non-blocking)
   Future<String> _saveAttachment(String sourcePath) async {
-    final directory = await getApplicationDocumentsDirectory();
-    final attachmentsDir = Directory('${directory.path}/attachments/$groupId');
-
-    if (!await attachmentsDir.exists()) {
-      await attachmentsDir.create(recursive: true);
-    }
-
-    final fileName =
-        '${DateTime.now().millisecondsSinceEpoch}_${path.basename(sourcePath)}';
-    final targetPath = '${attachmentsDir.path}/$fileName';
+    final targetPath = await AttachmentsStorageService.getAttachmentPath(
+      groupName,
+      groupId,
+      path.basename(sourcePath),
+    );
 
     // Check if we need to compress
     if (_compressionService.isCompressibleImage(sourcePath)) {
