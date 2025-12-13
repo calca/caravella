@@ -121,6 +121,7 @@ class AttachmentStateManager extends ChangeNotifier {
   Future<String> _saveAttachment(String sourcePath) async {
     final targetPath = await AttachmentsStorageService.getAttachmentPath(
       groupName,
+      groupId,
       path.basename(sourcePath),
     );
 

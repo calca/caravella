@@ -462,7 +462,10 @@ class FileBasedExpenseGroupRepository
 
     // Delete all attachment files for this group using the new service
     try {
-      await AttachmentsStorageService.deleteGroupAttachments(group.title);
+      await AttachmentsStorageService.deleteGroupAttachments(
+        group.title,
+        group.id,
+      );
     } catch (e) {
       // Log error but continue with deletion
       // Attachments cleanup failure shouldn't prevent group deletion

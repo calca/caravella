@@ -19,13 +19,18 @@ class AttachmentsStorageService {
   }
 
   /// Get the attachments directory for a specific group
-  /// Returns: Documents/Caravella/$groupName/
+  /// Returns: Documents/Caravella/$groupName_$groupId/
   /// 
-  /// The groupName is sanitized to be filesystem-safe
-  static Future<Directory> getGroupAttachmentsDirectory(String groupName) async {
+  /// The groupName is sanitized to be filesystem-safe and groupId is appended for uniqueness
+  static Future<Directory> getGroupAttachmentsDirectory(
+    String groupName,
+    String groupId,
+  ) async {
     final caravellaDir = await getCaravellaDirectory();
     final sanitizedName = _sanitizeDirectoryName(groupName);
-    final groupDir = Directory(path.join(caravellaDir.path, sanitizedName));
+    // Append groupId (first 8 chars) to ensure uniqueness even with duplicate names
+    final uniqueDirName = '${sanitizedName}_${groupId.substring(0, 8)}';
+    final groupDir = Directory(path.join(caravellaDir.path, uniqueDirName));
     
     if (!await groupDir.exists()) {
       await groupDir.create(recursive: true);
@@ -59,9 +64,12 @@ class AttachmentsStorageService {
 
   /// Delete all attachments for a specific group
   /// Returns true if deletion was successful
-  static Future<bool> deleteGroupAttachments(String groupName) async {
+  static Future<bool> deleteGroupAttachments(
+    String groupName,
+    String groupId,
+  ) async {
     try {
-      final groupDir = await getGroupAttachmentsDirectory(groupName);
+      final groupDir = await getGroupAttachmentsDirectory(groupName, groupId);
       if (await groupDir.exists()) {
         await groupDir.delete(recursive: true);
       }
@@ -73,12 +81,13 @@ class AttachmentsStorageService {
   }
 
   /// Get the full path for a new attachment file
-  /// Returns: Documents/Caravella/$groupName/$timestamp_$filename
+  /// Returns: Documents/Caravella/$groupName_$groupId/$timestamp_$filename
   static Future<String> getAttachmentPath(
     String groupName,
+    String groupId,
     String originalFilename,
   ) async {
-    final groupDir = await getGroupAttachmentsDirectory(groupName);
+    final groupDir = await getGroupAttachmentsDirectory(groupName, groupId);
     final timestamp = DateTime.now().millisecondsSinceEpoch;
     final filename = path.basename(originalFilename);
     return path.join(groupDir.path, '${timestamp}_$filename');
