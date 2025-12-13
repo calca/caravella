@@ -57,6 +57,18 @@ Android automatically selects the appropriate density version based on the devic
 
 **Important:** The initialization icon must reference a drawable resource that exists in the `main` source set (not flavor-specific), as it's used during plugin initialization before any flavor-specific resources are available.
 
+## Default Notification Icon in AndroidManifest
+
+The app also declares a default notification icon in `AndroidManifest.xml`:
+
+```xml
+<meta-data
+    android:name="com.google.firebase.messaging.default_notification_icon"
+    android:resource="@drawable/ic_notification" />
+```
+
+This metadata ensures that any notifications (including those from Firebase Cloud Messaging or other services) will use the correct icon if they don't specify one explicitly.
+
 ## Regenerating Icons
 
 If the icon needs to be updated:
