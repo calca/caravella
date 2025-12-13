@@ -4,7 +4,15 @@ import 'package:path/path.dart' as path;
 import '../logging/logger_service.dart';
 
 /// Service for managing attachment storage locations
-/// Attachments are saved to Documents/Caravella/$GroupName for OS backup
+/// 
+/// Attachments are saved to Documents/Caravella/$GroupName for OS backup.
+/// 
+/// **Note on File Visibility:**
+/// - Files are stored in app-private storage (Documents directory)
+/// - They are NOT visible in Android Photos or Files apps by design
+/// - This prevents cluttering the user's gallery with expense attachments
+/// - Users can use the Share button in the attachment viewer to export files
+/// - Future enhancement: Add MediaStore integration for optional gallery visibility
 class AttachmentsStorageService {
   static const String _metadataFileName = '.group_metadata';
 
