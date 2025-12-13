@@ -73,7 +73,7 @@ class AttachmentsStorageService {
       if (await metadataFile.exists()) {
         return await metadataFile.readAsString();
       }
-    } catch (e, st) {
+    } catch (e) {
       // If we can't read the metadata, log and return null
       LoggerService.warning(
         'Failed to read group metadata from ${dir.path}: $e',
@@ -91,7 +91,7 @@ class AttachmentsStorageService {
     try {
       final metadataFile = File(path.join(dir.path, _metadataFileName));
       await metadataFile.writeAsString(groupId);
-    } catch (e, st) {
+    } catch (e) {
       // If we can't write metadata, log warning but continue anyway
       // The directory will still work, just without metadata tracking
       LoggerService.warning(
