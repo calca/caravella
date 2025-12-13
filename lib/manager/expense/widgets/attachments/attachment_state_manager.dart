@@ -54,6 +54,10 @@ class AttachmentStateManager extends ChangeNotifier {
     CameraMediaType? cameraMediaType,
   }) async {
     if (!canAddMore || isProcessing) {
+      LoggerService.debug(
+        'Cannot add attachment: canAddMore=$canAddMore, isProcessing=$isProcessing',
+        name: 'attachment',
+      );
       return null;
     }
 
@@ -62,6 +66,7 @@ class AttachmentStateManager extends ChangeNotifier {
     try {
       // Step 1: Pick file
       _updateProcessingState(AttachmentProcessingState.picking);
+      LoggerService.debug('Starting file picking from $source', name: 'attachment');
 
       switch (source) {
         case AttachmentSource.camera:
@@ -90,16 +95,25 @@ class AttachmentStateManager extends ChangeNotifier {
       }
 
       if (filePath != null) {
+        LoggerService.debug('File picked: $filePath', name: 'attachment');
         // Step 2: Save (and potentially compress)
         final savedPath = await _saveAttachment(filePath);
         _attachments.add(savedPath);
         _updateProcessingState(AttachmentProcessingState.idle);
         notifyListeners();
+        LoggerService.info('Attachment added successfully: $savedPath', name: 'attachment');
         return savedPath;
       } else {
+        LoggerService.debug('File picking cancelled', name: 'attachment');
         _updateProcessingState(AttachmentProcessingState.idle);
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      LoggerService.error(
+        'Failed to add attachment from $source',
+        name: 'attachment',
+        error: e,
+        stackTrace: stackTrace,
+      );
       _updateProcessingState(AttachmentProcessingState.idle);
       // Error handling delegated to caller
       rethrow;
@@ -119,6 +133,8 @@ class AttachmentStateManager extends ChangeNotifier {
   /// Save attachment to app storage and compress if needed
   /// This now runs compression in a separate isolate (non-blocking)
   Future<String> _saveAttachment(String sourcePath) async {
+    LoggerService.debug('Saving attachment: $sourcePath', name: 'attachment');
+    
     final targetPath = await AttachmentsStorageService.getAttachmentPath(
       groupName,
       groupId,
@@ -130,6 +146,7 @@ class AttachmentStateManager extends ChangeNotifier {
       try {
         // Step 3: Compress (runs in isolate, non-blocking)
         _updateProcessingState(AttachmentProcessingState.compressing);
+        LoggerService.debug('Compressing image: $sourcePath', name: 'attachment');
 
         final sourceFile = File(sourcePath);
         final compressed = await _compressionService.compressImage(
@@ -140,21 +157,29 @@ class AttachmentStateManager extends ChangeNotifier {
 
         // Step 4: Copy to final location
         _updateProcessingState(AttachmentProcessingState.saving);
+        LoggerService.debug('Copying compressed image to: $targetPath', name: 'attachment');
         await compressed.copy(targetPath);
 
+        LoggerService.info('Image compressed and saved: $targetPath', name: 'attachment');
         return targetPath;
-      } catch (e) {
-        LoggerService.warning('Compression failed, falling back to copy: $e');
+      } catch (e, stackTrace) {
+        LoggerService.warning(
+          'Compression failed, falling back to copy: $e',
+          name: 'attachment',
+        );
         // If compression fails, fall back to simple copy
         _updateProcessingState(AttachmentProcessingState.saving);
         await File(sourcePath).copy(targetPath);
+        LoggerService.info('Image saved without compression: $targetPath', name: 'attachment');
         return targetPath;
       }
     }
 
     // For non-images (PDF, video), just copy
     _updateProcessingState(AttachmentProcessingState.saving);
+    LoggerService.debug('Copying non-image file to: $targetPath', name: 'attachment');
     await File(sourcePath).copy(targetPath);
+    LoggerService.info('File saved: $targetPath', name: 'attachment');
     return targetPath;
   }
 

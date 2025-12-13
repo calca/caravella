@@ -225,6 +225,7 @@ class _AttachmentInputWidgetState extends State<AttachmentInputWidget> {
 
     return showDialog<CameraMediaType>(
       context: context,
+      barrierDismissible: true,
       builder: (ctx) => AlertDialog(
         title: Text(loc.attachment_source),
         content: Column(
@@ -242,6 +243,12 @@ class _AttachmentInputWidgetState extends State<AttachmentInputWidget> {
             ),
           ],
         ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(loc.cancel),
+          ),
+        ],
       ),
     );
   }
