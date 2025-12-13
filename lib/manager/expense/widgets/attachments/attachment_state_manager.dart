@@ -133,54 +133,93 @@ class AttachmentStateManager extends ChangeNotifier {
   /// Save attachment to app storage and compress if needed
   /// This now runs compression in a separate isolate (non-blocking)
   Future<String> _saveAttachment(String sourcePath) async {
-    LoggerService.debug('Saving attachment: $sourcePath', name: 'attachment');
-    
-    final targetPath = await AttachmentsStorageService.getAttachmentPath(
-      groupName,
-      groupId,
-      path.basename(sourcePath),
-    );
+    try {
+      LoggerService.debug('Saving attachment: $sourcePath', name: 'attachment');
+      
+      final targetPath = await AttachmentsStorageService.getAttachmentPath(
+        groupName,
+        groupId,
+        path.basename(sourcePath),
+      );
 
-    // Check if we need to compress
-    if (_compressionService.isCompressibleImage(sourcePath)) {
-      try {
-        // Step 3: Compress (runs in isolate, non-blocking)
-        _updateProcessingState(AttachmentProcessingState.compressing);
-        LoggerService.debug('Compressing image: $sourcePath', name: 'attachment');
+      // Check if we need to compress
+      if (_compressionService.isCompressibleImage(sourcePath)) {
+        try {
+          // Check file size before compression
+          final sourceFile = File(sourcePath);
+          final fileSizeInBytes = await sourceFile.length();
+          final fileSizeInMB = fileSizeInBytes / (1024 * 1024);
+          
+          LoggerService.debug(
+            'Image file size: ${fileSizeInMB.toStringAsFixed(2)} MB',
+            name: 'attachment',
+          );
 
-        final sourceFile = File(sourcePath);
-        final compressed = await _compressionService.compressImage(
-          sourceFile,
-          quality: 85,
-          maxDimension: 1920,
-        );
+          // Skip compression for very small files (< 200KB) or very large files (> 50MB)
+          if (fileSizeInBytes < 200 * 1024) {
+            LoggerService.debug('Skipping compression for small file', name: 'attachment');
+            _updateProcessingState(AttachmentProcessingState.saving);
+            await sourceFile.copy(targetPath);
+            LoggerService.info('Small image saved without compression: $targetPath', name: 'attachment');
+            return targetPath;
+          }
 
-        // Step 4: Copy to final location
-        _updateProcessingState(AttachmentProcessingState.saving);
-        LoggerService.debug('Copying compressed image to: $targetPath', name: 'attachment');
-        await compressed.copy(targetPath);
+          if (fileSizeInMB > 50) {
+            LoggerService.warning(
+              'Image file too large (${fileSizeInMB.toStringAsFixed(2)} MB), skipping compression',
+              name: 'attachment',
+            );
+            _updateProcessingState(AttachmentProcessingState.saving);
+            await sourceFile.copy(targetPath);
+            LoggerService.info('Large image saved without compression: $targetPath', name: 'attachment');
+            return targetPath;
+          }
 
-        LoggerService.info('Image compressed and saved: $targetPath', name: 'attachment');
-        return targetPath;
-      } catch (e, stackTrace) {
-        LoggerService.warning(
-          'Compression failed, falling back to copy: $e',
-          name: 'attachment',
-        );
-        // If compression fails, fall back to simple copy
-        _updateProcessingState(AttachmentProcessingState.saving);
-        await File(sourcePath).copy(targetPath);
-        LoggerService.info('Image saved without compression: $targetPath', name: 'attachment');
-        return targetPath;
+          // Step 3: Compress (runs in isolate, non-blocking)
+          _updateProcessingState(AttachmentProcessingState.compressing);
+          LoggerService.debug('Compressing image: $sourcePath', name: 'attachment');
+
+          final compressed = await _compressionService.compressImage(
+            sourceFile,
+            quality: 85,
+            maxDimension: 1920,
+          );
+
+          // Step 4: Copy to final location
+          _updateProcessingState(AttachmentProcessingState.saving);
+          LoggerService.debug('Copying compressed image to: $targetPath', name: 'attachment');
+          await compressed.copy(targetPath);
+
+          LoggerService.info('Image compressed and saved: $targetPath', name: 'attachment');
+          return targetPath;
+        } catch (e, stackTrace) {
+          LoggerService.warning(
+            'Compression failed, falling back to copy: $e',
+            name: 'attachment',
+          );
+          // If compression fails, fall back to simple copy
+          _updateProcessingState(AttachmentProcessingState.saving);
+          await File(sourcePath).copy(targetPath);
+          LoggerService.info('Image saved without compression: $targetPath', name: 'attachment');
+          return targetPath;
+        }
       }
-    }
 
-    // For non-images (PDF, video), just copy
-    _updateProcessingState(AttachmentProcessingState.saving);
-    LoggerService.debug('Copying non-image file to: $targetPath', name: 'attachment');
-    await File(sourcePath).copy(targetPath);
-    LoggerService.info('File saved: $targetPath', name: 'attachment');
-    return targetPath;
+      // For non-images (PDF, video), just copy
+      _updateProcessingState(AttachmentProcessingState.saving);
+      LoggerService.debug('Copying non-image file to: $targetPath', name: 'attachment');
+      await File(sourcePath).copy(targetPath);
+      LoggerService.info('File saved: $targetPath', name: 'attachment');
+      return targetPath;
+    } catch (e, stackTrace) {
+      LoggerService.error(
+        'Failed to save attachment',
+        name: 'attachment',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
   }
 
   void _updateProcessingState(AttachmentProcessingState newState) {
