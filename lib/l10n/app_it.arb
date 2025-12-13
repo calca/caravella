@@ -359,7 +359,8 @@
   "auto_backup_desc": "Abilita il backup automatico del sistema operativo",
   "settings_user_name_title": "Il tuo nome",
   "settings_user_name_desc": "Nome o nickname da usare nell'app",
-  "settings_user_name_hint": "Inserisci il tuo nome"
+  "settings_user_name_hint": "Inserisci il tuo nome",
+  "default_participant_me": "Io"
   ,"category_placeholder": "Categoria"
   ,"discard_changes_title": "Scartare le modifiche?"
   ,"discard_changes_message": "Sei sicuro di voler scartare le modifiche non salvate?"
