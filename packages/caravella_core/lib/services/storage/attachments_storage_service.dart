@@ -44,15 +44,23 @@ class AttachmentsStorageService {
         final shortId = groupId.length > 8 ? groupId.substring(0, 8) : groupId;
         final uniqueDirName = '${sanitizedName}_$shortId';
         groupDir = Directory(path.join(caravellaDir.path, uniqueDirName));
+      } else if (existingGroupId == null) {
+        // Directory exists but has no metadata - could be from different group
+        // To be safe, append groupId to avoid potential conflict
+        final shortId = groupId.length > 8 ? groupId.substring(0, 8) : groupId;
+        final uniqueDirName = '${sanitizedName}_$shortId';
+        groupDir = Directory(path.join(caravellaDir.path, uniqueDirName));
       }
+      // else: existingGroupId == groupId, reuse the directory
     }
     
-    // Create directory if it doesn't exist
+    // Create directory if it doesn't exist and write/update metadata
     if (!await groupDir.exists()) {
       await groupDir.create(recursive: true);
-      // Write metadata file to track which group owns this directory
-      await _writeGroupIdToDirectory(groupDir, groupId);
     }
+    
+    // Always ensure metadata file exists and is correct
+    await _writeGroupIdToDirectory(groupDir, groupId);
     
     return groupDir;
   }
