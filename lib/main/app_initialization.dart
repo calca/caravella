@@ -129,5 +129,34 @@ class AppInitialization {
     configureSystemUI();
     configureImageCache();
     await initFlagSecure();
+    
+    // Run attachment migration in background (non-blocking)
+    _migrateAttachmentsInBackground();
   }
-}
+  
+  /// Migrate attachments from old location to new location in background
+  static void _migrateAttachmentsInBackground() {
+    Future.microtask(() async {
+      try {
+        final needsMigration = await AttachmentsMigrationService.isMigrationNeeded();
+        if (needsMigration) {
+          LoggerService.info(
+            'Starting background attachment migration',
+            name: 'storage.migration',
+          );
+          final migratedCount = await AttachmentsMigrationService.migrateAllAttachments();
+          LoggerService.info(
+            'Background attachment migration complete: $migratedCount files migrated',
+            name: 'storage.migration',
+          );
+        }
+      } catch (e, st) {
+        LoggerService.error(
+          'Background attachment migration failed',
+          name: 'storage.migration',
+          error: e,
+          stackTrace: st,
+        );
+      }
+    });
+  }
