@@ -327,6 +327,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                 tripEndDate: widget.config.tripEndDate,
                 locale: locale,
                 groupId: widget.config.groupId,
+                groupName: widget.config.groupTitle ?? 'Unnamed',
                 autoLocationEnabled: widget.config.autoLocationEnabled,
                 isInitialExpense: widget.config.initialExpense != null,
                 isFormValid: _controller.isFormValid,
