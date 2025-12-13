@@ -28,8 +28,9 @@ class AttachmentsStorageService {
   ) async {
     final caravellaDir = await getCaravellaDirectory();
     final sanitizedName = _sanitizeDirectoryName(groupName);
-    // Append groupId (first 8 chars) to ensure uniqueness even with duplicate names
-    final uniqueDirName = '${sanitizedName}_${groupId.substring(0, 8)}';
+    // Append groupId (first 8 chars or full if shorter) to ensure uniqueness even with duplicate names
+    final shortId = groupId.length > 8 ? groupId.substring(0, 8) : groupId;
+    final uniqueDirName = '${sanitizedName}_$shortId';
     final groupDir = Directory(path.join(caravellaDir.path, uniqueDirName));
     
     if (!await groupDir.exists()) {
