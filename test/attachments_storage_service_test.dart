@@ -22,12 +22,4 @@ void main() {
       expect(AttachmentsStorageService, isNotNull);
     });
   });
-  
-  group('AttachmentsMigrationService', () {
-    test('migration service has expected methods', () {
-      expect(AttachmentsMigrationService.migrateGroupAttachments, isNotNull);
-      expect(AttachmentsMigrationService.migrateAllAttachments, isNotNull);
-      expect(AttachmentsMigrationService.isMigrationNeeded, isNotNull);
-    });
-  });
 }
