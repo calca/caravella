@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Android notification icon missing in flavor-specific builds causing "invalid_icon" error when enabling notifications
   - Added ic_notification.png resources to all Android build flavors (dev, staging, prod)
+  - Added default notification icon metadata in AndroidManifest.xml for improved compatibility
   - Ensures notifications work correctly on all Android devices regardless of build variant
 
 ### Added
