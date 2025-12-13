@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
+import '../logging/logger_service.dart';
 
 /// Service for managing attachment storage locations
 /// Attachments are saved to Documents/Caravella/$GroupName for OS backup
@@ -39,16 +40,10 @@ class AttachmentsStorageService {
     if (await groupDir.exists()) {
       final existingGroupId = await _getGroupIdFromDirectory(groupDir);
       
-      // If directory exists but belongs to a different group, append groupId
-      if (existingGroupId != null && existingGroupId != groupId) {
-        final shortId = groupId.length > 8 ? groupId.substring(0, 8) : groupId;
-        final uniqueDirName = '${sanitizedName}_$shortId';
-        groupDir = Directory(path.join(caravellaDir.path, uniqueDirName));
-      } else if (existingGroupId == null) {
-        // Directory exists but has no metadata - could be from different group
-        // To be safe, append groupId to avoid potential conflict
-        final shortId = groupId.length > 8 ? groupId.substring(0, 8) : groupId;
-        final uniqueDirName = '${sanitizedName}_$shortId';
+      // If directory exists but belongs to a different group, or has no metadata, append groupId
+      if (existingGroupId != groupId) {
+        // Create unique directory name with groupId suffix
+        final uniqueDirName = _createUniqueDirName(sanitizedName, groupId);
         groupDir = Directory(path.join(caravellaDir.path, uniqueDirName));
       }
       // else: existingGroupId == groupId, reuse the directory
@@ -65,6 +60,12 @@ class AttachmentsStorageService {
     return groupDir;
   }
 
+  /// Create a unique directory name by appending a short version of the groupId
+  static String _createUniqueDirName(String sanitizedName, String groupId) {
+    final shortId = groupId.length > 8 ? groupId.substring(0, 8) : groupId;
+    return '${sanitizedName}_$shortId';
+  }
+
   /// Read the groupId from a directory's metadata file
   static Future<String?> _getGroupIdFromDirectory(Directory dir) async {
     try {
@@ -72,8 +73,12 @@ class AttachmentsStorageService {
       if (await metadataFile.exists()) {
         return await metadataFile.readAsString();
       }
-    } catch (e) {
-      // If we can't read the metadata, return null
+    } catch (e, st) {
+      // If we can't read the metadata, log and return null
+      LoggerService.warning(
+        'Failed to read group metadata from ${dir.path}: $e',
+        name: 'storage.attachments',
+      );
     }
     return null;
   }
@@ -86,9 +91,13 @@ class AttachmentsStorageService {
     try {
       final metadataFile = File(path.join(dir.path, _metadataFileName));
       await metadataFile.writeAsString(groupId);
-    } catch (e) {
-      // If we can't write metadata, continue anyway
+    } catch (e, st) {
+      // If we can't write metadata, log warning but continue anyway
       // The directory will still work, just without metadata tracking
+      LoggerService.warning(
+        'Failed to write group metadata to ${dir.path}: $e',
+        name: 'storage.attachments',
+      );
     }
   }
 
