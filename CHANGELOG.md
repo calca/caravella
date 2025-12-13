@@ -12,6 +12,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added ic_notification.png resources to all Android build flavors (dev, staging, prod)
   - Added default notification icon metadata in AndroidManifest.xml for improved compatibility
   - Ensures notifications work correctly on all Android devices regardless of build variant
+- Camera now opens with rear (back) camera by default instead of front camera when taking photos or videos for attachments or group backgrounds
+  - Added `preferredCameraDevice` parameter to image picker calls
+  - Improved user experience by defaulting to the more commonly used rear camera
+- Improved attachment handling to prevent black screen issues and app instability
+  - Added comprehensive logging throughout attachment flow for better debugging
+  - Added file size checks to skip compression for very small (<200KB) or very large (>50MB) files
+  - Prevents memory pressure issues during compression that could cause app crashes
+  - Added cancel button to camera media type picker dialog
+  - Enhanced error handling in compression and save operations
+
+### Known Limitations
+- **Attachment Visibility**: Attachments are stored in app-private storage and are not visible in Android Photos or Files apps by design
+  - This prevents cluttering the user's photo gallery with expense attachments
+  - Users can use the Share button in the attachment viewer to export files to their gallery or other apps
+  - Future enhancement may add optional MediaStore integration for gallery visibility
 
 ### Added
 - Markdown export format for expense groups with comprehensive statistics and expenses table

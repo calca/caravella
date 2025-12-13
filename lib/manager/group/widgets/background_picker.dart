@@ -208,6 +208,7 @@ class _BackgroundSheet extends StatelessWidget {
           final x = await imagePicker.pickImage(
             source: picker.ImageSource.camera,
             imageQuality: 85,
+            preferredCameraDevice: picker.CameraDevice.rear,
           );
           if (x != null) {
             final original = File(x.path);

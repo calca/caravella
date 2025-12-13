@@ -9,13 +9,19 @@ class MockFilePickerService implements FilePickerService {
   bool shouldFail = false;
 
   @override
-  Future<String?> pickImage({required ImageSource source}) async {
+  Future<String?> pickImage({
+    required ImageSource source,
+    bool preferFrontCamera = false,
+  }) async {
     if (shouldFail) throw Exception('Pick failed');
     return mockPickedPath;
   }
 
   @override
-  Future<String?> pickVideo({required ImageSource source}) async {
+  Future<String?> pickVideo({
+    required ImageSource source,
+    bool preferFrontCamera = false,
+  }) async {
     if (shouldFail) throw Exception('Pick failed');
     return mockPickedPath;
   }
