@@ -62,6 +62,9 @@ class GroupCardContent extends StatelessWidget {
     final notifier = Provider.of<ExpenseGroupNotifier>(context, listen: false);
     notifier.setCurrentGroup(currentGroup);
 
+    // Capture parent context for showing toast after navigation
+    final parentContext = context;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -75,7 +78,6 @@ class GroupCardContent extends StatelessWidget {
             onExpenseSaved: (expense) async {
               final sheetCtx = context;
               final nav = Navigator.of(sheetCtx);
-              final gloc = gen.AppLocalizations.of(sheetCtx);
 
               final expenseWithId = expense.copyWith(
                 id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -94,13 +96,18 @@ class GroupCardContent extends StatelessWidget {
               // Check if we should prompt for rating
               RatingService.checkAndPromptForRating();
 
-              if (!sheetCtx.mounted) return;
-              AppToast.show(
-                sheetCtx,
-                gloc.expense_added_success,
-                type: ToastType.success,
-              );
+              // Pop first to avoid context issues
               nav.pop();
+
+              // Show toast using parent context after navigation completes
+              if (parentContext.mounted) {
+                final gloc = gen.AppLocalizations.of(parentContext);
+                AppToast.show(
+                  parentContext,
+                  gloc.expense_added_success,
+                  type: ToastType.success,
+                );
+              }
             },
             onCategoryAdded: (categoryName) async {
               await notifier.addCategory(categoryName);
@@ -127,6 +134,9 @@ class GroupCardContent extends StatelessWidget {
   ) {
     final notifier = Provider.of<ExpenseGroupNotifier>(context, listen: false);
     notifier.setCurrentGroup(currentGroup);
+
+    // Capture parent context for showing toast after navigation
+    final parentContext = context;
 
     // Crea un expense parziale dallo stato se presente
     ExpenseDetails? partialExpense;
@@ -156,7 +166,6 @@ class GroupCardContent extends StatelessWidget {
                   onExpenseSaved: (expense) async {
                     final pageCtx = context;
                     final nav = Navigator.of(pageCtx);
-                    final gloc = gen.AppLocalizations.of(pageCtx);
 
                     final expenseWithId = expense.copyWith(
                       id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -172,13 +181,18 @@ class GroupCardContent extends StatelessWidget {
 
                     RatingService.checkAndPromptForRating();
 
-                    if (!pageCtx.mounted) return;
-                    AppToast.show(
-                      pageCtx,
-                      gloc.expense_added_success,
-                      type: ToastType.success,
-                    );
+                    // Pop first to avoid context issues
                     nav.pop();
+
+                    // Show toast using parent context after navigation completes
+                    if (parentContext.mounted) {
+                      final gloc = gen.AppLocalizations.of(parentContext);
+                      AppToast.show(
+                        parentContext,
+                        gloc.expense_added_success,
+                        type: ToastType.success,
+                      );
+                    }
                   },
                   onCategoryAdded: (categoryName) async {
                     await notifier.addCategory(categoryName);
