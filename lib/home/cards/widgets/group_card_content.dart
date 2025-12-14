@@ -164,9 +164,6 @@ class GroupCardContent extends StatelessWidget {
                   group: currentGroup,
                   initialExpense: partialExpense,
                   onExpenseSaved: (expense) async {
-                    final pageCtx = context;
-                    final nav = Navigator.of(pageCtx);
-
                     final expenseWithId = expense.copyWith(
                       id: DateTime.now().millisecondsSinceEpoch.toString(),
                     );
@@ -181,8 +178,8 @@ class GroupCardContent extends StatelessWidget {
 
                     RatingService.checkAndPromptForRating();
 
-                    // Pop first to avoid context issues
-                    nav.pop();
+                    // Note: nav.pop() removed - ExpenseFormComponent handles navigation
+                    // when shouldAutoClose is true to avoid double pop
 
                     // Show toast using parent context after navigation completes
                     if (parentContext.mounted) {
