@@ -196,7 +196,7 @@ class AttachmentStateManager extends ChangeNotifier {
 
           LoggerService.info('Image compressed and saved: $targetPath', name: 'attachment');
           return targetPath;
-        } catch (e, stackTrace) {
+        } catch (e) {
           LoggerService.warning(
             'Compression failed, falling back to copy: $e',
             name: 'attachment',
