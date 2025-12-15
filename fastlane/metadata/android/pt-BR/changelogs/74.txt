@@ -1,0 +1,8 @@
+Versão 1.4.0 - Mídia e Exportação
+
+• Anexos de mídia: adicione fotos, vídeos, PDFs às despesas com visualizador em tela cheia
+• Exportação markdown: exporte grupos com estatísticas completas e tabelas
+• Edição organizada: configurações de grupo com guias para gerenciamento mais fácil
+• Câmera melhorada: abre com câmera traseira por padrão
+
+Rastreamento mais rico, melhores exportações!

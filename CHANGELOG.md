@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2025-12-16
+
 ### Fixed
 - Button style consistency across expense and group forms
   - Save/add buttons in expense group and expense forms now use text-only style (TextButton) to match the compact expense form
@@ -219,7 +221,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Material 3 design with dark/light theme support
 - Cross-platform support (Android, iOS, Web, Desktop)
 
-[Unreleased]: https://github.com/calca/caravella/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/calca/caravella/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/calca/caravella/compare/v1.2.0...v1.4.0
 [1.2.0]: https://github.com/calca/caravella/compare/v1.0.45...v1.2.0
 [1.0.45]: https://github.com/calca/caravella/compare/v1.0.44...v1.0.45
 [1.0.44]: https://github.com/calca/caravella/compare/v1.0.38...v1.0.44

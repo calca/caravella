@@ -1,3 +1,16 @@
+## 1.4.0 (16.12.2025)
+
+- **Nuevo**: Soporte de archivos adjuntos multimedia para gastos (imágenes, PDF, videos) con visor de pantalla completa
+- **Nuevo**: Formato de exportación markdown con estadísticas completas y tablas de gastos
+- **Nuevo**: Edición de grupo con pestañas organizadas para General, Participantes, Categorías y Configuración
+- **Nuevo**: Botón compartir en formulario de gasto para compartir detalles como texto
+- **Mejoras**: La cámara ahora se abre con la cámara trasera por defecto para fotos más naturales
+- **Mejoras**: Manejo de archivos adjuntos mejorado con mejor retroalimentación de errores y estabilidad
+- **Mejoras**: Configuración de grupo consolidada en una sola interfaz con navegación por pestañas
+- **Correcciones**: Los iconos de notificación de Android ahora funcionan correctamente en todas las variantes de compilación
+- **Correcciones**: Estilo de botones consistente en todos los formularios
+- **Técnico**: Actualización a Flutter 3.38.3 con versiones de dependencias más recientes
+
 ## 1.2.0 (03.12.2025)
 
 - **Nuevo**: Mapas interactivos con OpenStreetMap mostrando ubicaciones de gastos

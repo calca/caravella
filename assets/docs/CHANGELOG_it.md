@@ -1,3 +1,16 @@
+## 1.4.0 (16.12.2025)
+
+- **Novità**: Supporto allegati multimediali per spese (immagini, PDF, video) con visualizzatore a schermo intero
+- **Novità**: Esportazione in formato markdown con statistiche complete e tabelle spese
+- **Novità**: Modifica gruppo con schede organizzate per Generale, Partecipanti, Categorie e Impostazioni
+- **Novità**: Pulsante condividi nel modulo spesa per condividere dettagli come testo
+- **Miglioramenti**: La fotocamera ora si apre con la camera posteriore per default per foto più naturali
+- **Miglioramenti**: Gestione allegati migliorata con feedback errori migliore e maggiore stabilità
+- **Miglioramenti**: Impostazioni gruppo consolidate in un'unica interfaccia con navigazione a schede
+- **Bug fix**: Le icone notifiche Android ora funzionano correttamente in tutte le varianti di build
+- **Bug fix**: Stile pulsanti coerente in tutti i moduli
+- **Tecnico**: Aggiornamento a Flutter 3.38.3 con versioni dipendenze più recenti
+
 ## 1.2.0 (03.12.2025)
 
 - **Novità**: Mappe interattive con OpenStreetMap che mostrano le posizioni delle spese

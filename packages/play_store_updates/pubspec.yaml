@@ -1,6 +1,6 @@
 name: play_store_updates
 description: Google Play Store in-app update functionality for Caravella
-version: 1.0.0
+version: 1.4.0
 publish_to: none
 
 environment:

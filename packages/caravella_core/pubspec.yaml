@@ -1,6 +1,6 @@
 name: caravella_core
 description: "Caravella Core - Business logic, models, and storage services"
-version: 1.0.0
+version: 1.4.0
 publish_to: 'none'
 
 environment:
