@@ -12,13 +12,11 @@ void main() {
       // Simulate the logic from ExpensesGroupEditPage for create mode
       // When user has no name, use the localized "Me"
       const defaultParticipantMe = 'Me'; // English version
-      const hasName = false;
-      const userName = '';
 
       state.addParticipant(
         ExpenseParticipant(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
-          name: hasName ? userName : defaultParticipantMe,
+          name: defaultParticipantMe,
         ),
       );
 
@@ -32,14 +30,12 @@ void main() {
 
       // Simulate the logic from ExpensesGroupEditPage for create mode
       // When user has a name, use their name
-      const defaultParticipantMe = 'Me';
-      const hasName = true;
       const userName = 'John Doe';
 
       state.addParticipant(
         ExpenseParticipant(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
-          name: hasName ? userName : defaultParticipantMe,
+          name: userName,
         ),
       );
 
@@ -54,13 +50,11 @@ void main() {
       // Simulate the logic from ExpensesGroupEditPage for create mode
       // In Italian locale, when user has no name, use "Io"
       const defaultParticipantIo = 'Io'; // Italian version
-      const hasName = false;
-      const userName = '';
 
       state.addParticipant(
         ExpenseParticipant(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
-          name: hasName ? userName : defaultParticipantIo,
+          name: defaultParticipantIo,
         ),
       );
 
