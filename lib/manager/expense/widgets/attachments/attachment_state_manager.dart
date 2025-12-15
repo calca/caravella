@@ -70,7 +70,10 @@ class AttachmentStateManager extends ChangeNotifier {
     try {
       // Step 1: Pick file
       _updateProcessingState(AttachmentProcessingState.picking);
-      LoggerService.debug('Starting file picking from $source', name: 'attachment');
+      LoggerService.debug(
+        'Starting file picking from $source',
+        name: 'attachment',
+      );
 
       switch (source) {
         case AttachmentSource.camera:
@@ -105,7 +108,10 @@ class AttachmentStateManager extends ChangeNotifier {
         _attachments.add(savedPath);
         _updateProcessingState(AttachmentProcessingState.idle);
         notifyListeners();
-        LoggerService.info('Attachment added successfully: $savedPath', name: 'attachment');
+        LoggerService.info(
+          'Attachment added successfully: $savedPath',
+          name: 'attachment',
+        );
         return savedPath;
       } else {
         LoggerService.debug('File picking cancelled', name: 'attachment');
@@ -139,7 +145,7 @@ class AttachmentStateManager extends ChangeNotifier {
   Future<String> _saveAttachment(String sourcePath) async {
     try {
       LoggerService.debug('Saving attachment: $sourcePath', name: 'attachment');
-      
+
       final targetPath = await AttachmentsStorageService.getAttachmentPath(
         groupName,
         groupId,
@@ -153,7 +159,7 @@ class AttachmentStateManager extends ChangeNotifier {
           final sourceFile = File(sourcePath);
           final fileSizeInBytes = await sourceFile.length();
           final fileSizeInMB = fileSizeInBytes / (1024 * 1024);
-          
+
           LoggerService.debug(
             'Image file size: ${fileSizeInMB.toStringAsFixed(2)} MB',
             name: 'attachment',
@@ -161,10 +167,16 @@ class AttachmentStateManager extends ChangeNotifier {
 
           // Skip compression for very small files (< 200KB) or very large files (> 50MB)
           if (fileSizeInBytes < _minFileSizeForCompression) {
-            LoggerService.debug('Skipping compression for small file', name: 'attachment');
+            LoggerService.debug(
+              'Skipping compression for small file',
+              name: 'attachment',
+            );
             _updateProcessingState(AttachmentProcessingState.saving);
             await sourceFile.copy(targetPath);
-            LoggerService.info('Small image saved without compression: $targetPath', name: 'attachment');
+            LoggerService.info(
+              'Small image saved without compression: $targetPath',
+              name: 'attachment',
+            );
             return targetPath;
           }
 
@@ -175,13 +187,19 @@ class AttachmentStateManager extends ChangeNotifier {
             );
             _updateProcessingState(AttachmentProcessingState.saving);
             await sourceFile.copy(targetPath);
-            LoggerService.info('Large image saved without compression: $targetPath', name: 'attachment');
+            LoggerService.info(
+              'Large image saved without compression: $targetPath',
+              name: 'attachment',
+            );
             return targetPath;
           }
 
           // Step 3: Compress (runs in isolate, non-blocking)
           _updateProcessingState(AttachmentProcessingState.compressing);
-          LoggerService.debug('Compressing image: $sourcePath', name: 'attachment');
+          LoggerService.debug(
+            'Compressing image: $sourcePath',
+            name: 'attachment',
+          );
 
           final compressed = await _compressionService.compressImage(
             sourceFile,
@@ -191,10 +209,16 @@ class AttachmentStateManager extends ChangeNotifier {
 
           // Step 4: Copy to final location
           _updateProcessingState(AttachmentProcessingState.saving);
-          LoggerService.debug('Copying compressed image to: $targetPath', name: 'attachment');
+          LoggerService.debug(
+            'Copying compressed image to: $targetPath',
+            name: 'attachment',
+          );
           await compressed.copy(targetPath);
 
-          LoggerService.info('Image compressed and saved: $targetPath', name: 'attachment');
+          LoggerService.info(
+            'Image compressed and saved: $targetPath',
+            name: 'attachment',
+          );
           return targetPath;
         } catch (e) {
           LoggerService.warning(
@@ -204,14 +228,20 @@ class AttachmentStateManager extends ChangeNotifier {
           // If compression fails, fall back to simple copy
           _updateProcessingState(AttachmentProcessingState.saving);
           await File(sourcePath).copy(targetPath);
-          LoggerService.info('Image saved without compression: $targetPath', name: 'attachment');
+          LoggerService.info(
+            'Image saved without compression: $targetPath',
+            name: 'attachment',
+          );
           return targetPath;
         }
       }
 
       // For non-images (PDF, video), just copy
       _updateProcessingState(AttachmentProcessingState.saving);
-      LoggerService.debug('Copying non-image file to: $targetPath', name: 'attachment');
+      LoggerService.debug(
+        'Copying non-image file to: $targetPath',
+        name: 'attachment',
+      );
       await File(sourcePath).copy(targetPath);
       LoggerService.info('File saved: $targetPath', name: 'attachment');
       return targetPath;
