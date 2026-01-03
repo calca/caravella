@@ -25,6 +25,25 @@ class NotificationService {
     return groupId.hashCode.abs() % 100000 + 1001;
   }
 
+  /// Returns the notification icon name based on expense group type
+  /// Falls back to default 'ic_notification' if type is null
+  static String _getIconForGroupType(ExpenseGroupType? groupType) {
+    if (groupType == null) {
+      return 'ic_notification';
+    }
+
+    switch (groupType) {
+      case ExpenseGroupType.travel:
+        return 'ic_notification_travel';
+      case ExpenseGroupType.personal:
+        return 'ic_notification_personal';
+      case ExpenseGroupType.family:
+        return 'ic_notification_family';
+      case ExpenseGroupType.other:
+        return 'ic_notification_other';
+    }
+  }
+
   Future<void> initialize() async {
     if (_initialized) {
       LoggerService.debug(
@@ -240,6 +259,9 @@ class NotificationService {
         ? ByteArrayAndroidBitmap(largeIconBytes)
         : null;
 
+    // Get icon based on group type
+    final iconName = _getIconForGroupType(group.groupType);
+
     final androidDetails = AndroidNotificationDetails(
       _channelId,
       _channelName,
@@ -257,8 +279,8 @@ class NotificationService {
       maxProgress: maxProgress ?? 0,
       progress: progress ?? 0,
       indeterminate: false,
-      // Small icon in notification bar (uses app launcher icon)
-      icon: 'ic_notification',
+      // Small icon in notification bar - dynamically selected based on group type
+      icon: iconName,
       // Large icon with expense group initials
       largeIcon: largeIcon,
       actions: [
@@ -289,7 +311,7 @@ class NotificationService {
       );
 
       LoggerService.debug(
-        'Notification shown for group ${group.id} (id=$notificationId, todaySpent=$todaySpent)',
+        'Notification shown for group ${group.id} (id=$notificationId, todaySpent=$todaySpent, icon=$iconName, type=${group.groupType?.name})',
         name: 'notification',
       );
     } catch (e, st) {
