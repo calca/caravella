@@ -52,7 +52,11 @@ class NotificationManager {
     ExpenseGroup group,
     gen.AppLocalizations loc,
   ) async {
-    if (group.notificationEnabled && _isWithinDateRange(group)) {
+    if (!group.notificationEnabled) {
+      return;
+    }
+
+    if (_isWithinDateRange(group)) {
       try {
         await _notificationService.showGroupNotification(group, loc);
       } catch (e) {
@@ -62,7 +66,7 @@ class NotificationManager {
           error: e,
         );
       }
-    } else if (group.notificationEnabled && !_isWithinDateRange(group)) {
+    } else {
       // Cancel notification if it's outside the date range
       try {
         await cancelNotificationForGroup(group.id);
