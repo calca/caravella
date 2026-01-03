@@ -49,7 +49,11 @@ void main() {
 }
 
 /// Helper function that mirrors the private method in NotificationService
-/// This allows us to test the logic without making the method public
+/// This allows us to test the logic without making the method public.
+/// 
+/// NOTE: This duplicates the logic from NotificationService._getIconForGroupType()
+/// intentionally. If that method changes, this test helper must be updated to match.
+/// This is a trade-off between testing coverage and not exposing implementation details.
 String _getIconForGroupType(ExpenseGroupType? groupType) {
   if (groupType == null) {
     return 'ic_notification';

@@ -40,6 +40,7 @@ ICONS = {
 }
 
 # Density configurations: folder suffix -> size in pixels
+# Note: ldpi (18px) is omitted as it's deprecated and rarely used on modern devices
 DENSITIES = {
     'mdpi': 24,
     'hdpi': 36,
@@ -49,7 +50,11 @@ DENSITIES = {
 }
 
 def create_svg(path_data, size=24):
-    """Create SVG content from path data"""
+    """Create SVG content from path data
+    
+    The viewBox remains '0 0 24 24' regardless of output size to maintain
+    the coordinate system of the Material Design icon paths.
+    """
     return f'''<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24">
     <path fill="#FFFFFF" d="{path_data}"/>
