@@ -18,17 +18,57 @@ class NotificationManager {
   /// Callback that can be set by the group edit page to receive notification disable events
   static void Function(String groupId)? onNotificationDisabled;
 
+  /// Checks if the current date is within the group's date range
+  /// Returns true if:
+  /// - The group has no date range set (startDate or endDate is null)
+  /// - The current date is within the startDate and endDate range (inclusive)
+  static bool _isWithinDateRange(ExpenseGroup group) {
+    if (group.startDate == null || group.endDate == null) {
+      // No date range set, so notification should always be shown
+      return true;
+    }
+
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final start = DateTime(
+      group.startDate!.year,
+      group.startDate!.month,
+      group.startDate!.day,
+    );
+    final end = DateTime(
+      group.endDate!.year,
+      group.endDate!.month,
+      group.endDate!.day,
+    );
+
+    // Check if today is within the date range (inclusive)
+    return (today.isAfter(start) || today.isAtSameMomentAs(start)) &&
+        (today.isBefore(end) || today.isAtSameMomentAs(end));
+  }
+
   /// Updates the notification for a group if notifications are enabled
+  /// and the current date is within the group's date range
   Future<void> updateNotificationForGroup(
     ExpenseGroup group,
     gen.AppLocalizations loc,
   ) async {
-    if (group.notificationEnabled) {
+    if (group.notificationEnabled && _isWithinDateRange(group)) {
       try {
         await _notificationService.showGroupNotification(group, loc);
       } catch (e) {
         LoggerService.error(
           'Failed to update notification for group ${group.id}',
+          name: 'notification',
+          error: e,
+        );
+      }
+    } else if (group.notificationEnabled && !_isWithinDateRange(group)) {
+      // Cancel notification if it's outside the date range
+      try {
+        await cancelNotificationForGroup(group.id);
+      } catch (e) {
+        LoggerService.error(
+          'Failed to cancel notification for group ${group.id}',
           name: 'notification',
           error: e,
         );
@@ -50,6 +90,7 @@ class NotificationManager {
   }
 
   /// Restores notifications for all groups that have notifications enabled
+  /// and are within their date range (if dates are set).
   /// Should be called at app startup to ensure notifications are displayed
   static Future<void> restoreNotifications(BuildContext context) async {
     try {
@@ -69,7 +110,7 @@ class NotificationManager {
         name: 'notification',
       );
 
-      // Show notification for each enabled group
+      // Show notification for each enabled group (date range check is done in updateNotificationForGroup)
       for (final group in notificationEnabledGroups) {
         LoggerService.info(
           'Restoring notification for group: ${group.title}',
