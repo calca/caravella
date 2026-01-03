@@ -630,8 +630,8 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
 
                             // Handle notification based on new value
                             if (value && context.mounted) {
-                              // Show or update notification
-                              await notificationService.showGroupNotification(
+                              // Show or update notification (with date range check)
+                              await NotificationManager().updateNotificationForGroup(
                                 savedGroup,
                                 gloc,
                               );
@@ -645,7 +645,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                               }
                             } else {
                               // Cancel notification for this group
-                              await notificationService.cancelGroupNotification(
+                              await NotificationManager().cancelNotificationForGroup(
                                 savedGroup.id,
                               );
 
@@ -797,16 +797,15 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                   } catch (_) {}
 
                   // Handle notification state after save
-                  final notificationService = NotificationService();
                   if (saved.notificationEnabled && context.mounted) {
-                    // Show or update notification
-                    await notificationService.showGroupNotification(
+                    // Show or update notification (with date range check)
+                    await NotificationManager().updateNotificationForGroup(
                       saved,
                       gloc,
                     );
                   } else {
                     // Cancel notification if disabled
-                    await notificationService.cancelGroupNotification(saved.id);
+                    await NotificationManager().cancelNotificationForGroup(saved.id);
                   }
 
                   // Pop returning the saved id so caller can react
@@ -1016,11 +1015,10 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                               } catch (_) {}
 
                               // Handle notification state after save
-                              final notificationService = NotificationService();
                               if (saved.notificationEnabled &&
                                   context.mounted) {
-                                // Show notification for new group
-                                await notificationService.showGroupNotification(
+                                // Show notification for new group (with date range check)
+                                await NotificationManager().updateNotificationForGroup(
                                   saved,
                                   gloc,
                                 );
