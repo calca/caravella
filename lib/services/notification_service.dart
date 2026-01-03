@@ -27,6 +27,10 @@ class NotificationService {
 
   /// Returns the notification icon name based on expense group type
   /// Falls back to default 'ic_notification' if type is null
+  /// 
+  /// NOTE: Type-specific PNG icons must exist in all required density folders
+  /// (drawable-{mdpi,hdpi,xhdpi,xxhdpi,xxxhdpi}) for the icon to display correctly.
+  /// See docs/ANDROID_NOTIFICATION_ICONS.md for requirements and icon generation instructions.
   static String _getIconForGroupType(ExpenseGroupType? groupType) {
     if (groupType == null) {
       return 'ic_notification';

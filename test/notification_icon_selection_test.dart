@@ -5,6 +5,10 @@ import 'package:caravella_core/caravella_core.dart';
 /// 
 /// This verifies that the NotificationService correctly selects the appropriate
 /// icon drawable resource based on the ExpenseGroupType.
+/// 
+/// NOTE: The actual PNG icon files must be created separately in the Android
+/// resource directories. See docs/DYNAMIC_NOTIFICATION_ICONS.md for instructions.
+/// These tests verify the selection logic, not the presence of the actual files.
 void main() {
   group('NotificationService - Icon Selection', () {
     test('_getIconForGroupType returns travel icon for travel type', () {
