@@ -20,14 +20,17 @@ class NotificationManager {
 
   /// Checks if the current date is within the group's date range
   /// Returns true if:
-  /// - The group has no date range set (startDate or endDate is null)
-  /// - The current date is within the startDate and endDate range (inclusive)
+  /// - Both startDate and endDate are null (no date range defined)
+  /// - Only one of startDate or endDate is set (partial range - treated as no constraint)
+  /// - Both dates are set AND current date is within [startDate, endDate] inclusive
   static bool _isWithinDateRange(ExpenseGroup group) {
+    // If either date is missing, treat as no date range constraint
+    // This handles: no dates set, or partial dates (only start OR only end)
     if (group.startDate == null || group.endDate == null) {
-      // No date range set, so notification should always be shown
       return true;
     }
 
+    // Both dates are set - check if today is within the range
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final start = DateTime(
