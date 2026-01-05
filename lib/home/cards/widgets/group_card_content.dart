@@ -37,19 +37,12 @@ class GroupCardContent extends StatelessWidget {
 
   /// Updates the notification for a group if notifications are enabled
   Future<void> _updateNotificationIfEnabled(
-    ExpenseGroup group,
+    String groupId,
     BuildContext context,
   ) async {
-    if (!group.notificationEnabled) return;
-
-    final updatedGroup = await ExpenseGroupStorageV2.getTripById(group.id);
-    if (updatedGroup != null && context.mounted) {
-      final gloc = gen.AppLocalizations.of(context);
-      await NotificationManager().updateNotificationForGroup(
-        updatedGroup,
-        gloc,
-      );
-    }
+    if (!context.mounted) return;
+    final gloc = gen.AppLocalizations.of(context);
+    await NotificationManager().updateNotificationForGroupById(groupId, gloc);
   }
 
   String _formatDateRange(ExpenseGroup group, gen.AppLocalizations loc) {
@@ -112,7 +105,7 @@ class GroupCardContent extends StatelessWidget {
               groupNotifier.notifyGroupUpdated(currentGroup.id);
 
               // Update notification if enabled
-              await _updateNotificationIfEnabled(currentGroup, parentContext);
+              await _updateNotificationIfEnabled(currentGroup.id, parentContext);
 
               // Check if we should prompt for rating
               RatingService.checkAndPromptForRating();
@@ -198,7 +191,7 @@ class GroupCardContent extends StatelessWidget {
                     groupNotifier.notifyGroupUpdated(currentGroup.id);
 
                     // Update notification if enabled
-                    await _updateNotificationIfEnabled(currentGroup, parentContext);
+                    await _updateNotificationIfEnabled(currentGroup.id, parentContext);
 
                     RatingService.checkAndPromptForRating();
 
