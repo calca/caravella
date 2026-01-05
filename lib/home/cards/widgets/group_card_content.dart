@@ -35,6 +35,23 @@ class GroupCardContent extends StatelessWidget {
     this.onCategoryAdded,
   });
 
+  /// Updates the notification for a group if notifications are enabled
+  Future<void> _updateNotificationIfEnabled(
+    ExpenseGroup group,
+    BuildContext context,
+  ) async {
+    if (!group.notificationEnabled) return;
+
+    final updatedGroup = await ExpenseGroupStorageV2.getTripById(group.id);
+    if (updatedGroup != null && context.mounted) {
+      final gloc = gen.AppLocalizations.of(context);
+      await NotificationManager().updateNotificationForGroup(
+        updatedGroup,
+        gloc,
+      );
+    }
+  }
+
   String _formatDateRange(ExpenseGroup group, gen.AppLocalizations loc) {
     final start = group.startDate;
     final end = group.endDate;
@@ -95,18 +112,7 @@ class GroupCardContent extends StatelessWidget {
               groupNotifier.notifyGroupUpdated(currentGroup.id);
 
               // Update notification if enabled
-              if (currentGroup.notificationEnabled) {
-                final updatedGroup = await ExpenseGroupStorageV2.getTripById(
-                  currentGroup.id,
-                );
-                if (updatedGroup != null && parentContext.mounted) {
-                  final gloc = gen.AppLocalizations.of(parentContext);
-                  await NotificationManager().updateNotificationForGroup(
-                    updatedGroup,
-                    gloc,
-                  );
-                }
-              }
+              await _updateNotificationIfEnabled(currentGroup, parentContext);
 
               // Check if we should prompt for rating
               RatingService.checkAndPromptForRating();
@@ -192,18 +198,7 @@ class GroupCardContent extends StatelessWidget {
                     groupNotifier.notifyGroupUpdated(currentGroup.id);
 
                     // Update notification if enabled
-                    if (currentGroup.notificationEnabled) {
-                      final updatedGroup = await ExpenseGroupStorageV2.getTripById(
-                        currentGroup.id,
-                      );
-                      if (updatedGroup != null && parentContext.mounted) {
-                        final gloc = gen.AppLocalizations.of(parentContext);
-                        await NotificationManager().updateNotificationForGroup(
-                          updatedGroup,
-                          gloc,
-                        );
-                      }
-                    }
+                    await _updateNotificationIfEnabled(currentGroup, parentContext);
 
                     RatingService.checkAndPromptForRating();
 

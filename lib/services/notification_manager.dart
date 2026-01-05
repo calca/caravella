@@ -364,7 +364,6 @@ class NotificationManager {
                   currentGroup.id,
                 );
                 if (updatedGroup != null && sheetContext.mounted) {
-                  final gloc = gen.AppLocalizations.of(sheetContext);
                   await NotificationManager().updateNotificationForGroup(
                     updatedGroup,
                     gloc,
