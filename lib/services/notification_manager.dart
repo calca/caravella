@@ -49,6 +49,18 @@ class NotificationManager {
         (today.isBefore(end) || today.isAtSameMomentAs(end));
   }
 
+  /// Updates the notification for a group after reloading it from storage
+  /// Convenience method that reloads the group and updates notification if enabled
+  Future<void> updateNotificationForGroupById(
+    String groupId,
+    gen.AppLocalizations loc,
+  ) async {
+    final group = await ExpenseGroupStorageV2.getTripById(groupId);
+    if (group != null) {
+      await updateNotificationForGroup(group, loc);
+    }
+  }
+
   /// Updates the notification for a group if notifications are enabled
   /// and the current date is within the group's date range
   Future<void> updateNotificationForGroup(
@@ -357,6 +369,14 @@ class NotificationManager {
               // Refresh notifier state and notify UI
               await groupNotifier.refreshGroup();
               groupNotifier.notifyGroupUpdated(currentGroup.id);
+
+              // Update notification if enabled
+              if (sheetContext.mounted) {
+                await NotificationManager().updateNotificationForGroupById(
+                  currentGroup.id,
+                  gloc,
+                );
+              }
 
               // Check if we should prompt for rating
               RatingService.checkAndPromptForRating();

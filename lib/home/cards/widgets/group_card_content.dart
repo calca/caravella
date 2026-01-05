@@ -7,6 +7,7 @@ import '../../../manager/details/widgets/expense_entry_sheet.dart';
 import '../../../manager/expense/pages/expense_form_page.dart';
 import '../../../manager/expense/state/expense_form_state.dart';
 import '../../../manager/details/pages/tabs/usecase/daily_totals_utils.dart';
+import '../../../services/notification_manager.dart';
 
 class GroupCardContent extends StatelessWidget {
   // Design constants
@@ -93,6 +94,15 @@ class GroupCardContent extends StatelessWidget {
               await groupNotifier.refreshGroup();
               groupNotifier.notifyGroupUpdated(currentGroup.id);
 
+              // Update notification if enabled
+              if (parentContext.mounted) {
+                final gloc = gen.AppLocalizations.of(parentContext);
+                await NotificationManager().updateNotificationForGroupById(
+                  currentGroup.id,
+                  gloc,
+                );
+              }
+
               // Check if we should prompt for rating
               RatingService.checkAndPromptForRating();
 
@@ -175,6 +185,15 @@ class GroupCardContent extends StatelessWidget {
 
                     await groupNotifier.refreshGroup();
                     groupNotifier.notifyGroupUpdated(currentGroup.id);
+
+                    // Update notification if enabled
+                    if (parentContext.mounted) {
+                      final gloc = gen.AppLocalizations.of(parentContext);
+                      await NotificationManager().updateNotificationForGroupById(
+                        currentGroup.id,
+                        gloc,
+                      );
+                    }
 
                     RatingService.checkAndPromptForRating();
 
