@@ -358,6 +358,20 @@ class NotificationManager {
               await groupNotifier.refreshGroup();
               groupNotifier.notifyGroupUpdated(currentGroup.id);
 
+              // Update notification if enabled
+              if (currentGroup.notificationEnabled) {
+                final updatedGroup = await ExpenseGroupStorageV2.getTripById(
+                  currentGroup.id,
+                );
+                if (updatedGroup != null && sheetContext.mounted) {
+                  final gloc = gen.AppLocalizations.of(sheetContext);
+                  await NotificationManager().updateNotificationForGroup(
+                    updatedGroup,
+                    gloc,
+                  );
+                }
+              }
+
               // Check if we should prompt for rating
               RatingService.checkAndPromptForRating();
 
