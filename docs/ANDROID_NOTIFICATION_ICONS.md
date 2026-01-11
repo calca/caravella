@@ -4,6 +4,12 @@
 
 This document describes the notification icon setup for the Caravella app on Android.
 
+As of the dynamic icons feature, the app supports:
+- **Default icon**: `ic_notification` - Used for groups without a type or as fallback
+- **Type-specific icons**: Different icons based on `ExpenseGroupType` (travel, personal, family, other)
+
+See `DYNAMIC_NOTIFICATION_ICONS.md` for details on type-specific notification icons.
+
 ## Icon Resources
 
 The app uses `ic_notification` as the small notification icon displayed in the Android status bar and notification drawer.
@@ -45,13 +51,20 @@ AndroidInitializationSettings(
   'ic_notification',  // Default icon for notification plugin initialization
 )
 
-// Notification display also uses ic_notification
+// Notification display uses dynamic icon selection based on group type
 AndroidNotificationDetails(
   // ...
-  icon: 'ic_notification',  // Uses PNG files from drawable-{density} folders
+  icon: _getIconForGroupType(group.groupType),  // Dynamically selected icon
   // ...
 )
 ```
+
+The `_getIconForGroupType()` method returns:
+- `ic_notification_travel` for travel groups
+- `ic_notification_personal` for personal groups
+- `ic_notification_family` for family groups
+- `ic_notification_other` for other groups
+- `ic_notification` as default/fallback
 
 Android automatically selects the appropriate density version based on the device's screen density.
 

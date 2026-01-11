@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Dynamic notification icons based on expense group type
+  - Notification "tracker icon" (small icon in Android status bar) now changes based on group type
+  - Travel groups show flight icon, personal groups show person icon, family groups show family icon, other groups show widgets icon
+  - Improves visual identification of notifications for different expense groups
+  - Falls back to default icon for groups without a type
+  - Includes Python script (`tools/generate_notification_icons.py`) to regenerate icons from Material Design SVG paths
+
 ## [1.4.0] - 2025-12-16
 
 ### Fixed
