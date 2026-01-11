@@ -1060,6 +1060,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_user_name_hint => 'Enter your name';
 
   @override
+  String get default_participant_me => 'Me';
+
+  @override
   String get info_tab => 'Info';
 
   @override

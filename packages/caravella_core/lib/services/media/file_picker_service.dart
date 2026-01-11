@@ -3,11 +3,21 @@
 abstract class FilePickerService {
   /// Pick an image from the specified source (camera or gallery)
   /// Returns the file path if successful, null if cancelled or failed
-  Future<String?> pickImage({required ImageSource source});
+  /// 
+  /// [preferFrontCamera] - If true and source is camera, prefer front camera (default: false)
+  Future<String?> pickImage({
+    required ImageSource source,
+    bool preferFrontCamera = false,
+  });
 
   /// Pick a video from the specified source (camera or gallery)
   /// Returns the file path if successful, null if cancelled or failed
-  Future<String?> pickVideo({required ImageSource source});
+  /// 
+  /// [preferFrontCamera] - If true and source is camera, prefer front camera (default: false)
+  Future<String?> pickVideo({
+    required ImageSource source,
+    bool preferFrontCamera = false,
+  });
 
   /// Pick any file with the specified extensions
   /// Returns the file path if successful, null if cancelled or failed

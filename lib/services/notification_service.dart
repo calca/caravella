@@ -26,17 +26,43 @@ class NotificationService {
   }
 
   Future<void> initialize() async {
-    if (_initialized) return;
+    if (_initialized) {
+      LoggerService.debug(
+        'NotificationService already initialized, skipping re-init',
+        name: 'notification',
+      );
+      return;
+    }
 
-    const androidSettings = AndroidInitializationSettings('ic_notification');
-    const initSettings = InitializationSettings(android: androidSettings);
-
-    await _notifications.initialize(
-      initSettings,
-      onDidReceiveNotificationResponse: _onNotificationTap,
+    const iconName = 'ic_notification';
+    LoggerService.info(
+      'Initializing notification plugin (icon=$iconName)',
+      name: 'notification',
     );
 
-    _initialized = true;
+    const androidSettings = AndroidInitializationSettings(iconName);
+    const initSettings = InitializationSettings(android: androidSettings);
+
+    try {
+      final initialized = await _notifications.initialize(
+        initSettings,
+        onDidReceiveNotificationResponse: _onNotificationTap,
+      );
+
+      _initialized = initialized ?? true;
+      LoggerService.info(
+        'Notification plugin initialized (result=$_initialized)',
+        name: 'notification',
+      );
+    } catch (e, st) {
+      LoggerService.error(
+        'Failed to initialize notification plugin',
+        name: 'notification',
+        error: e,
+        stackTrace: st,
+      );
+      rethrow;
+    }
   }
 
   Future<bool> requestPermissions() async {
@@ -253,13 +279,28 @@ class NotificationService {
     final details = NotificationDetails(android: androidDetails);
     final notificationId = _getNotificationId(group.id);
 
-    await _notifications.show(
-      notificationId,
-      title,
-      content,
-      details,
-      payload: group.id, // Pass group ID for navigation
-    );
+    try {
+      await _notifications.show(
+        notificationId,
+        title,
+        content,
+        details,
+        payload: group.id, // Pass group ID for navigation
+      );
+
+      LoggerService.debug(
+        'Notification shown for group ${group.id} (id=$notificationId, todaySpent=$todaySpent)',
+        name: 'notification',
+      );
+    } catch (e, st) {
+      LoggerService.error(
+        'Failed to show notification for group ${group.id}',
+        name: 'notification',
+        error: e,
+        stackTrace: st,
+      );
+      rethrow;
+    }
   }
 
   Future<void> cancelGroupNotification(String groupId) async {

@@ -115,24 +115,25 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
         }
       });
     } else if (widget.mode == GroupEditMode.create) {
-      // For new groups, add user as first participant if name is available
-      // and add default categories for the default group type (personal)
+      // For new groups, add user as first participant (using their name if set,
+      // otherwise "Me" localized) and add default categories for the default group type (personal)
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
           final userNameNotifier = context.read<UserNameNotifier>();
-          if (userNameNotifier.hasName) {
-            _state.addParticipant(
-              ExpenseParticipant(
-                id: DateTime.now().millisecondsSinceEpoch.toString(),
-                name: userNameNotifier.name,
-              ),
-            );
-          }
+          final gloc = gen.AppLocalizations.of(context);
+          final participantName = userNameNotifier.hasName
+              ? userNameNotifier.name
+              : gloc.default_participant_me;
+          _state.addParticipant(
+            ExpenseParticipant(
+              id: DateTime.now().millisecondsSinceEpoch.toString(),
+              name: participantName,
+            ),
+          );
 
           // Add default categories for personal type (default type)
           if (_state.categories.isEmpty &&
               _state.groupType == ExpenseGroupType.personal) {
-            final gloc = gen.AppLocalizations.of(context);
             final defaultCategories = _getLocalizedCategories(
               gloc,
               ExpenseGroupType.personal,
@@ -629,8 +630,8 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
 
                             // Handle notification based on new value
                             if (value && context.mounted) {
-                              // Show or update notification
-                              await notificationService.showGroupNotification(
+                              // Show or update notification (with date range check)
+                              await NotificationManager().updateNotificationForGroup(
                                 savedGroup,
                                 gloc,
                               );
@@ -644,7 +645,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                               }
                             } else {
                               // Cancel notification for this group
-                              await notificationService.cancelGroupNotification(
+                              await NotificationManager().cancelNotificationForGroup(
                                 savedGroup.id,
                               );
 
@@ -796,16 +797,15 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                   } catch (_) {}
 
                   // Handle notification state after save
-                  final notificationService = NotificationService();
                   if (saved.notificationEnabled && context.mounted) {
-                    // Show or update notification
-                    await notificationService.showGroupNotification(
+                    // Show or update notification (with date range check)
+                    await NotificationManager().updateNotificationForGroup(
                       saved,
                       gloc,
                     );
                   } else {
                     // Cancel notification if disabled
-                    await notificationService.cancelGroupNotification(saved.id);
+                    await NotificationManager().cancelNotificationForGroup(saved.id);
                   }
 
                   // Pop returning the saved id so caller can react
@@ -1015,11 +1015,10 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                               } catch (_) {}
 
                               // Handle notification state after save
-                              final notificationService = NotificationService();
                               if (saved.notificationEnabled &&
                                   context.mounted) {
-                                // Show notification for new group
-                                await notificationService.showGroupNotification(
+                                // Show notification for new group (with date range check)
+                                await NotificationManager().updateNotificationForGroup(
                                   saved,
                                   gloc,
                                 );

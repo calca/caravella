@@ -161,7 +161,7 @@ class ExpenseFormConfig {
     );
   }
 
-  bool get isEditMode => initialExpense != null;
-  bool get isCreateMode => initialExpense == null;
+  bool get isEditMode => initialExpense?.id != null && initialExpense!.id.isNotEmpty;
+  bool get isCreateMode => initialExpense?.id == null || initialExpense!.id.isEmpty;
   bool get hasDeleteAction => onDelete != null;
 }

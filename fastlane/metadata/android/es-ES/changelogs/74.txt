@@ -1,0 +1,8 @@
+Versión 1.4.0 - Media y Exportación
+
+• Archivos adjuntos: agrega fotos, videos, PDFs a gastos con visor de pantalla completa
+• Exportación markdown: exporta grupos con estadísticas completas y tablas
+• Edición organizada: configuración de grupo con pestañas para gestión más fácil
+• Cámara mejorada: se abre con cámara trasera por defecto
+
+¡Seguimiento más rico, mejores exportaciones!

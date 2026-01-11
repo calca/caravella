@@ -1068,6 +1068,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settings_user_name_hint => 'Ingresa tu nombre';
 
   @override
+  String get default_participant_me => 'Yo';
+
+  @override
   String get info_tab => 'Info';
 
   @override

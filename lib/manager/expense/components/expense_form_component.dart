@@ -327,6 +327,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
                 tripEndDate: widget.config.tripEndDate,
                 locale: locale,
                 groupId: widget.config.groupId,
+                groupName: widget.config.groupTitle ?? 'Unnamed',
                 autoLocationEnabled: widget.config.autoLocationEnabled,
                 isInitialExpense: widget.config.initialExpense != null,
                 isFormValid: _controller.isFormValid,
@@ -409,7 +410,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
             ? () => _orchestrator.saveExpense(context)
             : null,
         isFormValid: _controller.isFormValid,
-        isEdit: widget.config.initialExpense != null,
+        isEdit: widget.config.initialExpense?.id != null && widget.config.initialExpense!.id.isNotEmpty,
         onDelete: widget.config.hasDeleteAction
             ? () => _orchestrator.deleteExpense(context)
             : null,

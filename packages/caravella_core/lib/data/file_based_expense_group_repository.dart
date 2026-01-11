@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import '../model/expense_group.dart';
 import '../model/expense_details.dart';
+import '../services/storage/attachments_storage_service.dart';
 import 'expense_group_repository.dart';
 import 'storage_errors.dart';
 import 'storage_performance.dart';
@@ -456,13 +457,15 @@ class FileBasedExpenseGroupRepository
       );
     }
 
-    // Delete all attachment files for this group
+    // Get the group to extract its title for attachment cleanup
+    final group = groups[index];
+
+    // Delete all attachment files for this group using the new service
     try {
-      final directory = await getApplicationDocumentsDirectory();
-      final groupAttachmentsDir = Directory('${directory.path}/attachments/$groupId');
-      if (await groupAttachmentsDir.exists()) {
-        await groupAttachmentsDir.delete(recursive: true);
-      }
+      await AttachmentsStorageService.deleteGroupAttachments(
+        group.title,
+        group.id,
+      );
     } catch (e) {
       // Log error but continue with deletion
       // Attachments cleanup failure shouldn't prevent group deletion

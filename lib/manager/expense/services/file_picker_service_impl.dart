@@ -10,10 +10,18 @@ class FilePickerServiceImpl implements FilePickerService {
     : _imagePicker = imagePicker ?? picker.ImagePicker();
 
   @override
-  Future<String?> pickImage({required ImageSource source}) async {
+  Future<String?> pickImage({
+    required ImageSource source,
+    bool preferFrontCamera = false,
+  }) async {
     try {
       final pickerSource = _toImagePickerSource(source);
-      final file = await _imagePicker.pickImage(source: pickerSource);
+      final file = await _imagePicker.pickImage(
+        source: pickerSource,
+        preferredCameraDevice: preferFrontCamera
+            ? picker.CameraDevice.front
+            : picker.CameraDevice.rear,
+      );
       return file?.path;
     } catch (e) {
       return null;
@@ -21,10 +29,18 @@ class FilePickerServiceImpl implements FilePickerService {
   }
 
   @override
-  Future<String?> pickVideo({required ImageSource source}) async {
+  Future<String?> pickVideo({
+    required ImageSource source,
+    bool preferFrontCamera = false,
+  }) async {
     try {
       final pickerSource = _toImagePickerSource(source);
-      final file = await _imagePicker.pickVideo(source: pickerSource);
+      final file = await _imagePicker.pickVideo(
+        source: pickerSource,
+        preferredCameraDevice: preferFrontCamera
+            ? picker.CameraDevice.front
+            : picker.CameraDevice.rear,
+      );
       return file?.path;
     } catch (e) {
       return null;

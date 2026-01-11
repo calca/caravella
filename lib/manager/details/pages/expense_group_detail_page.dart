@@ -517,17 +517,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           );
 
           // Update notification if enabled
-          if (_trip?.notificationEnabled == true) {
-            final updatedGroup = await ExpenseGroupStorageV2.getTripById(
-              _trip!.id,
-            );
-            if (updatedGroup != null) {
-              await NotificationManager().updateNotificationForGroup(
-                updatedGroup,
-                gloc,
-              );
-            }
-          }
+          await NotificationManager().updateNotificationForGroupById(
+            _trip!.id,
+            gloc,
+          );
         },
       ),
     );
@@ -560,17 +553,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                 _groupNotifier?.notifyGroupUpdated(widget.trip.id);
 
                 // Update notification if enabled
-                if (_trip?.notificationEnabled == true) {
-                  final updatedGroup = await ExpenseGroupStorageV2.getTripById(
-                    widget.trip.id,
-                  );
-                  if (updatedGroup != null) {
-                    await NotificationManager().updateNotificationForGroup(
-                      updatedGroup,
-                      gloc,
-                    );
-                  }
-                }
+                await NotificationManager().updateNotificationForGroupById(
+                  widget.trip.id,
+                  gloc,
+                );
 
                 // Check if we should prompt for rating
                 // This is done after successful expense save
@@ -624,17 +610,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                 _groupNotifier?.notifyGroupUpdated(_trip!.id);
 
                 // Update notification if enabled
-                if (_trip?.notificationEnabled == true) {
-                  final updatedGroup = await ExpenseGroupStorageV2.getTripById(
-                    _trip!.id,
-                  );
-                  if (updatedGroup != null) {
-                    await NotificationManager().updateNotificationForGroup(
-                      updatedGroup,
-                      gloc,
-                    );
-                  }
-                }
+                await NotificationManager().updateNotificationForGroupById(
+                  _trip!.id,
+                  gloc,
+                );
 
                 if (!sheetCtx.mounted) return;
                 AppToast.show(

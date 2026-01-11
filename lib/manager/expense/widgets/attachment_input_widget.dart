@@ -10,6 +10,7 @@ import '../errors/expense_error_handler.dart';
 /// Reduces complexity from 406 lines to ~200 lines
 class AttachmentInputWidget extends StatefulWidget {
   final String groupId;
+  final String groupName;
   final List<String> attachments;
   final Function(String) onAttachmentAdded;
   final Function(int) onAttachmentRemoved;
@@ -19,6 +20,7 @@ class AttachmentInputWidget extends StatefulWidget {
   const AttachmentInputWidget({
     super.key,
     required this.groupId,
+    required this.groupName,
     required this.attachments,
     required this.onAttachmentAdded,
     required this.onAttachmentRemoved,
@@ -38,6 +40,7 @@ class _AttachmentInputWidgetState extends State<AttachmentInputWidget> {
     super.initState();
     _stateManager = AttachmentStateManager(
       groupId: widget.groupId,
+      groupName: widget.groupName,
       initialAttachments: widget.attachments,
     );
     _stateManager.addListener(_onStateChanged);
@@ -222,6 +225,7 @@ class _AttachmentInputWidgetState extends State<AttachmentInputWidget> {
 
     return showDialog<CameraMediaType>(
       context: context,
+      barrierDismissible: true,
       builder: (ctx) => AlertDialog(
         title: Text(loc.attachment_source),
         content: Column(
@@ -239,6 +243,12 @@ class _AttachmentInputWidgetState extends State<AttachmentInputWidget> {
             ),
           ],
         ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(loc.cancel),
+          ),
+        ],
       ),
     );
   }

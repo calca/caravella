@@ -55,14 +55,14 @@ packages:
       path: "packages/caravella_core"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.4.0"
   caravella_core_ui:
     dependency: "direct main"
     description:
       path: "packages/caravella_core_ui"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.4.0"
   characters:
     dependency: transitive
     description:
@@ -873,7 +873,7 @@ packages:
       path: "packages/play_store_updates"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.4.0"
   plugin_platform_interface:
     dependency: transitive
     description:

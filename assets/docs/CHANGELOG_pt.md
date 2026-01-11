@@ -1,3 +1,16 @@
+## 1.4.0 (16.12.2025)
+
+- **Novo**: Suporte a anexos de mídia para despesas (imagens, PDFs, vídeos) com visualizador de tela inteira
+- **Novo**: Formato de exportação markdown com estatísticas abrangentes e tabelas de despesas
+- **Novo**: Edição de grupo com guias organizadas para Geral, Participantes, Categorias e Configurações
+- **Novo**: Botão compartilhar no formulário de despesa para compartilhar detalhes como texto
+- **Melhorias**: Câmera agora abre com câmera traseira por padrão para fotos mais naturais
+- **Melhorias**: Manuseio de anexos aprimorado com melhor feedback de erros e estabilidade
+- **Melhorias**: Configurações de grupo consolidadas em interface única com navegação por guias
+- **Correções**: Ícones de notificação Android agora funcionam corretamente em todas as variantes de compilação
+- **Correções**: Estilo de botões consistente em todos os formulários
+- **Técnico**: Atualização para Flutter 3.38.3 com versões de dependências mais recentes
+
 ## 1.2.0 (03.12.2025)
 
 - **Novo**: Mapas interativos com OpenStreetMap mostrando localizações de despesas

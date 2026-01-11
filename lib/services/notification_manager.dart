@@ -18,17 +18,76 @@ class NotificationManager {
   /// Callback that can be set by the group edit page to receive notification disable events
   static void Function(String groupId)? onNotificationDisabled;
 
+  /// Checks if the current date is within the group's date range
+  /// Returns true if:
+  /// - Both startDate and endDate are null (no date range defined)
+  /// - Only one of startDate or endDate is set (partial range - treated as no constraint)
+  /// - Both dates are set AND current date is within [startDate, endDate] inclusive
+  static bool _isWithinDateRange(ExpenseGroup group) {
+    // If either date is missing, treat as no date range constraint
+    // This handles: no dates set, or partial dates (only start OR only end)
+    if (group.startDate == null || group.endDate == null) {
+      return true;
+    }
+
+    // Both dates are set - check if today is within the range
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final start = DateTime(
+      group.startDate!.year,
+      group.startDate!.month,
+      group.startDate!.day,
+    );
+    final end = DateTime(
+      group.endDate!.year,
+      group.endDate!.month,
+      group.endDate!.day,
+    );
+
+    // Check if today is within the date range (inclusive)
+    return (today.isAfter(start) || today.isAtSameMomentAs(start)) &&
+        (today.isBefore(end) || today.isAtSameMomentAs(end));
+  }
+
+  /// Updates the notification for a group after reloading it from storage
+  /// Convenience method that reloads the group and updates notification if enabled
+  Future<void> updateNotificationForGroupById(
+    String groupId,
+    gen.AppLocalizations loc,
+  ) async {
+    final group = await ExpenseGroupStorageV2.getTripById(groupId);
+    if (group != null) {
+      await updateNotificationForGroup(group, loc);
+    }
+  }
+
   /// Updates the notification for a group if notifications are enabled
+  /// and the current date is within the group's date range
   Future<void> updateNotificationForGroup(
     ExpenseGroup group,
     gen.AppLocalizations loc,
   ) async {
-    if (group.notificationEnabled) {
+    if (!group.notificationEnabled) {
+      return;
+    }
+
+    if (_isWithinDateRange(group)) {
       try {
         await _notificationService.showGroupNotification(group, loc);
       } catch (e) {
         LoggerService.error(
           'Failed to update notification for group ${group.id}',
+          name: 'notification',
+          error: e,
+        );
+      }
+    } else {
+      // Cancel notification if it's outside the date range
+      try {
+        await cancelNotificationForGroup(group.id);
+      } catch (e) {
+        LoggerService.error(
+          'Failed to cancel notification for group ${group.id}',
           name: 'notification',
           error: e,
         );
@@ -50,6 +109,7 @@ class NotificationManager {
   }
 
   /// Restores notifications for all groups that have notifications enabled
+  /// and are within their date range (if dates are set).
   /// Should be called at app startup to ensure notifications are displayed
   static Future<void> restoreNotifications(BuildContext context) async {
     try {
@@ -69,7 +129,7 @@ class NotificationManager {
         name: 'notification',
       );
 
-      // Show notification for each enabled group
+      // Show notification for each enabled group (date range check is done in updateNotificationForGroup)
       for (final group in notificationEnabledGroups) {
         LoggerService.info(
           'Restoring notification for group: ${group.title}',
@@ -309,6 +369,14 @@ class NotificationManager {
               // Refresh notifier state and notify UI
               await groupNotifier.refreshGroup();
               groupNotifier.notifyGroupUpdated(currentGroup.id);
+
+              // Update notification if enabled
+              if (sheetContext.mounted) {
+                await NotificationManager().updateNotificationForGroupById(
+                  currentGroup.id,
+                  gloc,
+                );
+              }
 
               // Check if we should prompt for rating
               RatingService.checkAndPromptForRating();

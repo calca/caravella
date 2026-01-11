@@ -720,6 +720,7 @@
   ,"@settings_user_name_desc": {"description": "Descripción de la configuración del nombre de usuario"}
   ,"settings_user_name_hint": "Ingresa tu nombre"
   ,"@settings_user_name_hint": {"description": "Placeholder del campo de nombre de usuario"}
+  ,"default_participant_me": "Yo"
   ,"notification_enabled": "Notificación persistente"
   ,"@notification_enabled": {"description": "Etiqueta para la configuración de notificación persistente en el grupo"}
   ,"notification_enabled_desc": "Muestra los gastos del día en una notificación siempre visible"

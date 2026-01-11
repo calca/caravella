@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 /// - Material 3 styling with surface container
 /// - Border top with outline variant color
 /// - SafeArea padding
-/// - Right-aligned primary action button
+/// - Right-aligned text-only button (TextButton)
 /// - Disabled state when action is invalid
 class BottomActionBar extends StatelessWidget {
   /// The callback to execute when the button is pressed
@@ -46,19 +46,22 @@ class BottomActionBar extends StatelessWidget {
         child: Row(
           children: [
             const Spacer(),
-            FilledButton(
+            TextButton(
               onPressed: enabled ? onPressed : null,
-              style: FilledButton.styleFrom(
+              style: TextButton.styleFrom(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 14,
+                  horizontal: 12,
+                  vertical: 12,
                 ),
               ),
               child: Text(
                 label.toUpperCase(),
-                style: const TextStyle(
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
                   fontWeight: FontWeight.w600,
                   letterSpacing: 1.2,
+                  color: enabled
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
                 ),
               ),
             ),

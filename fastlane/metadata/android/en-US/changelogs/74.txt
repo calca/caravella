@@ -1,0 +1,8 @@
+Version 1.4.0 - Media & Export
+
+• Media attachments: add photos, videos, PDFs to expenses with full-screen viewer
+• Markdown export: export groups with complete statistics and tables
+• Organized editing: tab-based group settings for easier management
+• Better camera: opens with rear camera by default
+
+Richer tracking, better exports!

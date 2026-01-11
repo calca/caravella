@@ -18,6 +18,8 @@ PNG versions are provided in multiple densities for maximum compatibility:
 - `drawable-xxhdpi/ic_notification.png` - 72x72 px (3x)
 - `drawable-xxxhdpi/ic_notification.png` - 96x96 px (4x)
 
+In addition to the density-specific folders, we keep a fallback copy in every flavor's base `drawable/` directory (e.g. `android/app/src/staging/res/drawable/ic_notification.png`). Some OEM builds expect the non-density-qualified version when the notification plugin initializes, so this fallback prevents `invalid_icon` errors on devices that ignore the density folders during initialization.
+
 These icons are:
 - White silhouettes on transparent background
 - Derived from the monochrome launcher icon
@@ -55,6 +57,18 @@ Android automatically selects the appropriate density version based on the devic
 
 **Important:** The initialization icon must reference a drawable resource that exists in the `main` source set (not flavor-specific), as it's used during plugin initialization before any flavor-specific resources are available.
 
+## Default Notification Icon in AndroidManifest
+
+The app also declares a default notification icon in `AndroidManifest.xml`:
+
+```xml
+<meta-data
+    android:name="com.google.firebase.messaging.default_notification_icon"
+    android:resource="@drawable/ic_notification" />
+```
+
+This metadata ensures that any notifications (including those from Firebase Cloud Messaging or other services) will use the correct icon if they don't specify one explicitly.
+
 ## Regenerating Icons
 
 If the icon needs to be updated:
@@ -79,5 +93,6 @@ This setup was implemented to fix the "invalid_icon" PlatformException that occu
 
 1. **Initial fix**: Added PNG versions in all densities to provide compatibility across all Android versions and screen densities.
 2. **Complete fix**: Removed the vector drawable (`drawable/ic_notification.xml`) entirely, as its presence caused Android to prefer it over PNG files on some devices, leading to "invalid_icon" errors when the `flutter_local_notifications` plugin tried to use it.
+3. **Flavor-specific fix**: Icons must be present in all flavor-specific resource directories (`dev`, `staging`, `prod`) in addition to `main`. When using flavors with `applicationIdSuffix`, Android prioritizes flavor-specific resources, and missing icons in those directories cause "invalid_icon" errors even if they exist in `main`.
 
-The solution is to use only PNG notification icons in density-specific folders and avoid any vector drawable versions of notification icons.
+The solution is to use only PNG notification icons in density-specific folders for **all flavors** and avoid any vector drawable versions of notification icons.

@@ -670,6 +670,7 @@
   ,"settings_user_name_title": "Seu nome"
   ,"settings_user_name_desc": "Nome ou apelido para usar no aplicativo"
   ,"settings_user_name_hint": "Insira seu nome"
+  ,"default_participant_me": "Eu"
   ,"settlement": "Acerto"
   ,"show_overview": "Mostrar visão geral"
   ,"start_date_optional": "De"

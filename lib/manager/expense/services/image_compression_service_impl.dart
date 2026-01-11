@@ -16,6 +16,11 @@ class ImageCompressionServiceImpl implements ImageCompressionService {
     int maxDimension = 1920,
   }) async {
     try {
+      LoggerService.debug(
+        'Starting image compression: ${file.path}',
+        name: 'compression',
+      );
+      
       // Run compression in a separate isolate to avoid blocking UI
       final result = await compute(
         _compressImageIsolate,
@@ -27,13 +32,26 @@ class ImageCompressionServiceImpl implements ImageCompressionService {
       );
 
       if (result.success && result.compressedPath != null) {
+        LoggerService.info(
+          'Image compression succeeded: ${result.compressedPath}',
+          name: 'compression',
+        );
         return File(result.compressedPath!);
       }
 
       // If compression fails, return original
+      LoggerService.warning(
+        'Image compression failed: ${result.error ?? "unknown error"}',
+        name: 'compression',
+      );
       return file;
-    } catch (e) {
-      LoggerService.warning('Image compression failed: $e');
+    } catch (e, stackTrace) {
+      LoggerService.error(
+        'Image compression exception: $e',
+        name: 'compression',
+        error: e,
+        stackTrace: stackTrace,
+      );
       // If compression fails, return original file
       return file;
     }

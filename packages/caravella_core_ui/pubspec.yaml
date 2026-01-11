@@ -1,6 +1,6 @@
 name: caravella_core_ui
 description: "Caravella Core UI - Common widgets and themes"
-version: 1.0.0
+version: 1.4.0
 publish_to: 'none'
 
 environment:
