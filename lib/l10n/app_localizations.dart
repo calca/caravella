@@ -4204,6 +4204,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Go to group'**
   String get wizard_go_to_group;
+
+  /// Button to go to group settings
+  ///
+  /// In en, this message translates to:
+  /// **'Group settings'**
+  String get wizard_go_to_settings;
+
+  /// Title of next actions section
+  ///
+  /// In en, this message translates to:
+  /// **'What you can do now:'**
+  String get wizard_completion_what_next;
+
+  /// Title of add expenses option
+  ///
+  /// In en, this message translates to:
+  /// **'Add expenses'**
+  String get wizard_completion_add_expenses;
+
+  /// Description of add expenses option
+  ///
+  /// In en, this message translates to:
+  /// **'Start tracking group expenses'**
+  String get wizard_completion_add_expenses_description;
+
+  /// Title of customize group option
+  ///
+  /// In en, this message translates to:
+  /// **'Customize group'**
+  String get wizard_completion_customize_group;
+
+  /// Description of customize group option
+  ///
+  /// In en, this message translates to:
+  /// **'Edit participants, categories, and settings'**
+  String get wizard_completion_customize_group_description;
 }
 
 class _AppLocalizationsDelegate

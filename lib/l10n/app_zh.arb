@@ -1246,5 +1246,29 @@
   "wizard_go_to_group": "转到群组",
   "@wizard_go_to_group": {
     "description": "转到已创建群组的按钮"
+  },
+  "wizard_go_to_settings": "群组设置",
+  "@wizard_go_to_settings": {
+    "description": "前往群组设置的按钮"
+  },
+  "wizard_completion_what_next": "您现在可以：",
+  "@wizard_completion_what_next": {
+    "description": "下一步操作部分标题"
+  },
+  "wizard_completion_add_expenses": "添加支出",
+  "@wizard_completion_add_expenses": {
+    "description": "添加支出选项标题"
+  },
+  "wizard_completion_add_expenses_description": "开始跟踪群组支出",
+  "@wizard_completion_add_expenses_description": {
+    "description": "添加支出选项描述"
+  },
+  "wizard_completion_customize_group": "自定义群组",
+  "@wizard_completion_customize_group": {
+    "description": "自定义群组选项标题"
+  },
+  "wizard_completion_customize_group_description": "编辑参与者、类别和设置",
+  "@wizard_completion_customize_group_description": {
+    "description": "自定义群组选项描述"
   }
 }

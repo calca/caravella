@@ -889,4 +889,16 @@
   ,"@wizard_success_title": {"description": "Título del diálogo de éxito"}
   ,"wizard_go_to_group": "Ir al grupo"
   ,"@wizard_go_to_group": {"description": "Botón para ir al grupo creado"}
+  ,"wizard_go_to_settings": "Configuración del grupo"
+  ,"@wizard_go_to_settings": {"description": "Botón para ir a la configuración del grupo"}
+  ,"wizard_completion_what_next": "Lo que puedes hacer ahora:"
+  ,"@wizard_completion_what_next": {"description": "Título de la sección de acciones siguientes"}
+  ,"wizard_completion_add_expenses": "Agregar gastos"
+  ,"@wizard_completion_add_expenses": {"description": "Título de la opción agregar gastos"}
+  ,"wizard_completion_add_expenses_description": "Comienza a rastrear los gastos del grupo"
+  ,"@wizard_completion_add_expenses_description": {"description": "Descripción de la opción agregar gastos"}
+  ,"wizard_completion_customize_group": "Personalizar grupo"
+  ,"@wizard_completion_customize_group": {"description": "Título de la opción personalizar grupo"}
+  ,"wizard_completion_customize_group_description": "Editar participantes, categorías y configuración"
+  ,"@wizard_completion_customize_group_description": {"description": "Descripción de la opción personalizar grupo"}
 }

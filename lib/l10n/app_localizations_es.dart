@@ -2188,4 +2188,24 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get wizard_go_to_group => 'Ir al grupo';
+
+  @override
+  String get wizard_go_to_settings => 'Configuración del grupo';
+
+  @override
+  String get wizard_completion_what_next => 'Lo que puedes hacer ahora:';
+
+  @override
+  String get wizard_completion_add_expenses => 'Agregar gastos';
+
+  @override
+  String get wizard_completion_add_expenses_description =>
+      'Comienza a rastrear los gastos del grupo';
+
+  @override
+  String get wizard_completion_customize_group => 'Personalizar grupo';
+
+  @override
+  String get wizard_completion_customize_group_description =>
+      'Editar participantes, categorías y configuración';
 }

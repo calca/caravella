@@ -2133,4 +2133,22 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get wizard_go_to_group => '转到群组';
+
+  @override
+  String get wizard_go_to_settings => '群组设置';
+
+  @override
+  String get wizard_completion_what_next => '您现在可以：';
+
+  @override
+  String get wizard_completion_add_expenses => '添加支出';
+
+  @override
+  String get wizard_completion_add_expenses_description => '开始跟踪群组支出';
+
+  @override
+  String get wizard_completion_customize_group => '自定义群组';
+
+  @override
+  String get wizard_completion_customize_group_description => '编辑参与者、类别和设置';
 }

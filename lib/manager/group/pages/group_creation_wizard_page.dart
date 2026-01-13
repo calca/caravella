@@ -10,6 +10,7 @@ import '../wizard/wizard_step_indicator.dart';
 import '../wizard/wizard_navigation_bar.dart';
 import '../wizard/wizard_steps/wizard_user_name_step.dart';
 import '../wizard/wizard_steps/wizard_type_and_name_step.dart';
+import '../wizard/wizard_steps/wizard_completion_step.dart';
 
 class GroupCreationWizardPage extends StatelessWidget {
   const GroupCreationWizardPage({super.key});
@@ -37,12 +38,19 @@ class GroupCreationWizardPage extends StatelessWidget {
 class WizardState extends ChangeNotifier {
   int _currentStep = 0;
   final PageController _pageController = PageController();
+  String? _savedGroupId;
 
   int get currentStep => _currentStep;
   PageController get pageController => _pageController;
+  String? get savedGroupId => _savedGroupId;
 
   // Total number of wizard steps
-  static const int totalSteps = 2;
+  static const int totalSteps = 3;
+
+  void setSavedGroupId(String groupId) {
+    _savedGroupId = groupId;
+    notifyListeners();
+  }
 
   void nextStep() {
     if (_currentStep < totalSteps - 1) {
@@ -197,12 +205,18 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
                 builder: (context, wizardState, child) {
                   return PageView(
                     controller: wizardState.pageController,
+                    physics: wizardState.currentStep == 2
+                        ? const NeverScrollableScrollPhysics()
+                        : null,
                     onPageChanged: (index) {
                       wizardState.syncWithPage(index);
                     },
-                    children: const [
-                      WizardUserNameStep(),
-                      WizardTypeAndNameStep(),
+                    children: [
+                      const WizardUserNameStep(),
+                      const WizardTypeAndNameStep(),
+                      WizardCompletionStep(
+                        groupId: wizardState.savedGroupId ?? '',
+                      ),
                     ],
                   );
                 },

@@ -1,7 +1,7 @@
+import 'package:caravella_core/model/expense_group.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'package:caravella_core_ui/caravella_core_ui.dart';
 import '../pages/group_creation_wizard_page.dart';
 import '../data/group_form_state.dart';
 import '../group_form_controller.dart';
@@ -30,6 +30,11 @@ class WizardNavigationBar extends StatelessWidget {
         top: false,
         child: Consumer<WizardState>(
           builder: (context, wizardState, child) {
+            // Hide navigation bar on completion step
+            if (wizardState.currentStep == WizardState.totalSteps - 1) {
+              return const SizedBox.shrink();
+            }
+
             return Row(
               children: [
                 // Previous button
@@ -71,29 +76,26 @@ class WizardNavigationBar extends StatelessWidget {
                 // Next/Finish button
                 Consumer2<GroupFormState, GroupFormController>(
                   builder: (context, formState, controller, child) {
-                    final isLastStep =
-                        wizardState.currentStep == WizardState.totalSteps - 1;
+                    final isSecondToLastStep =
+                        wizardState.currentStep == WizardState.totalSteps - 2;
                     final canProceed = _canProceedFromStep(
                       wizardState.currentStep,
                       formState,
                     );
 
-                    if (isLastStep) {
+                    if (isSecondToLastStep) {
+                      // Second to last step: save and go to completion
                       return FilledButton.icon(
                         onPressed: canProceed
                             ? () async {
-                                final success = await _saveGroup(
+                                final group = await _saveGroup(
                                   context,
                                   controller,
+                                  wizardState,
                                 );
-                                if (success && context.mounted) {
-                                  await _showSuccessDialog(
-                                    context,
-                                    formState.title,
-                                  );
-                                  if (context.mounted) {
-                                    Navigator.of(context).pop(true);
-                                  }
+                                if (group != null && context.mounted) {
+                                  wizardState.setSavedGroupId(group.id);
+                                  wizardState.nextStep();
                                 }
                               }
                             : null,
@@ -151,13 +153,14 @@ class WizardNavigationBar extends StatelessWidget {
     }
   }
 
-  Future<bool> _saveGroup(
+  Future<ExpenseGroup?> _saveGroup(
     BuildContext context,
     GroupFormController controller,
+    WizardState wizardState,
   ) async {
     try {
-      await controller.save();
-      return true;
+      final groupId = await controller.save();
+      return groupId;
     } catch (e) {
       if (context.mounted) {
         final gloc = gen.AppLocalizations.of(context);
@@ -168,44 +171,7 @@ class WizardNavigationBar extends StatelessWidget {
           ),
         );
       }
-      return false;
+      return null;
     }
-  }
-
-  Future<void> _showSuccessDialog(
-    BuildContext context,
-    String groupName,
-  ) async {
-    final gloc = gen.AppLocalizations.of(context);
-    final theme = Theme.of(context);
-
-    await showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) => Material3Dialog(
-        icon: Container(
-          width: 64,
-          height: 64,
-          decoration: BoxDecoration(
-            color: theme.colorScheme.primaryContainer,
-            shape: BoxShape.circle,
-          ),
-          child: Icon(
-            Icons.celebration_outlined,
-            size: 32,
-            color: theme.colorScheme.primary,
-          ),
-        ),
-        title: Text(gloc.wizard_success_title),
-        content: Text(gloc.wizard_congratulations_message(groupName)),
-        actions: [
-          Material3DialogActions.primary(
-            ctx,
-            gloc.wizard_go_to_group,
-            onPressed: () => Navigator.of(ctx).pop(),
-          ),
-        ],
-      ),
-    );
   }
 }

@@ -2174,4 +2174,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get wizard_go_to_group => 'Go to group';
+
+  @override
+  String get wizard_go_to_settings => 'Group settings';
+
+  @override
+  String get wizard_completion_what_next => 'What you can do now:';
+
+  @override
+  String get wizard_completion_add_expenses => 'Add expenses';
+
+  @override
+  String get wizard_completion_add_expenses_description =>
+      'Start tracking group expenses';
+
+  @override
+  String get wizard_completion_customize_group => 'Customize group';
+
+  @override
+  String get wizard_completion_customize_group_description =>
+      'Edit participants, categories, and settings';
 }

@@ -8,7 +8,7 @@ class WizardStepIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final gloc = gen.AppLocalizations.of(context);
+    gen.AppLocalizations.of(context);
     final theme = Theme.of(context);
 
     return Container(
