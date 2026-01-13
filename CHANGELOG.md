@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Technical
+- SQLite repository code refactoring for improved readability and formatting
+- Enhanced SQLite backend with attachments table support for expense management
+
 ## [1.4.0] - 2025-12-16
 
 ### Fixed
@@ -34,6 +38,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Future enhancement may add optional MediaStore integration for gallery visibility
 
 ### Added
+- **SQLite Database Backend**: New high-performance storage backend using SQLite (default)
+  - Improved query performance with indexed columns and normalized schema
+  - Better scalability for large datasets
+  - Automatic migration from JSON file storage to SQLite database
+  - Backward compatibility: legacy JSON backend still available via `USE_JSON_BACKEND=true` flag
+  - Comprehensive test suite for SQLite repository and migration service
+  - Database schema with separate tables for groups, participants, categories, and expenses
+  - Transaction support for atomic operations and data integrity
+  - Automatic backup of JSON data after successful migration
 - Markdown export format for expense groups with comprehensive statistics and expenses table
   - Includes group header with title, period, currency, and participant count
   - Statistics section with total expenses, daily average, per-participant breakdown, per-category breakdown, and settlement calculations

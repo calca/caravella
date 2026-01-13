@@ -87,6 +87,7 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   flutter_launcher_icons: ^0.14.4
   path_provider_platform_interface: ^2.1.2
+  sqflite_common_ffi: ^2.3.4
 
 dependency_overrides:
   # Force package_info_plus to 9.0.0 for compatibility
