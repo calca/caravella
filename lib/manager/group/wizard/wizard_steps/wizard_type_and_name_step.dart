@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../data/group_form_state.dart';
-import '../group_title_field.dart';
-import '../group_type_selector.dart';
+import '../../widgets/group_title_field.dart';
+import '../../widgets/group_type_selector.dart';
 
 class WizardTypeAndNameStep extends StatelessWidget {
   const WizardTypeAndNameStep({super.key});

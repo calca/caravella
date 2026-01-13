@@ -6,10 +6,10 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import '../data/group_form_state.dart';
 import '../group_form_controller.dart';
 import '../group_edit_mode.dart';
-import '../widgets/wizard_step_indicator.dart';
-import '../widgets/wizard_navigation_bar.dart';
-import '../widgets/wizard_steps/wizard_user_name_step.dart';
-import '../widgets/wizard_steps/wizard_type_and_name_step.dart';
+import '../wizard/wizard_step_indicator.dart';
+import '../wizard/wizard_navigation_bar.dart';
+import '../wizard/wizard_steps/wizard_user_name_step.dart';
+import '../wizard/wizard_steps/wizard_type_and_name_step.dart';
 
 class GroupCreationWizardPage extends StatelessWidget {
   const GroupCreationWizardPage({super.key});
