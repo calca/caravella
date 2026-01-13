@@ -5,10 +5,10 @@ packages:
     dependency: transitive
     description:
       name: alien_signals
-      sha256: "4e69390450cf316f7725618884b39ff0d772a29074e042f6c4ad4cce3fa1a5e1"
+      sha256: "7fa6365d943fc58b02cfab1f21dbb057a288160bd8d78fd3664b1b87b5ec2f50"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3"
+    version: "2.1.2"
   ansicolor:
     dependency: transitive
     description:
@@ -314,10 +314,10 @@ packages:
     dependency: transitive
     description:
       name: oref
-      sha256: c0794a3c067b6e4281728759369f4c4f5bb9f1704672eee64d717eb7290bf52d
+      sha256: c2121ea38de8da457d96b8cd4a7a6c1d6b06a5d6075c86f7d631250750a9ee59
       url: "https://pub.dev"
     source: hosted
-    version: "2.5.1"
+    version: "2.6.0"
   path:
     dependency: transitive
     description:
@@ -507,6 +507,46 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
+  sqflite:
+    dependency: transitive
+    description:
+      name: sqflite
+      sha256: e2297b1da52f127bc7a3da11439985d9b536f75070f3325e62ada69a5c585d03
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.2"
+  sqflite_android:
+    dependency: transitive
+    description:
+      name: sqflite_android
+      sha256: ecd684501ebc2ae9a83536e8b15731642b9570dc8623e0073d227d0ee2bfea88
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.2+2"
+  sqflite_common:
+    dependency: transitive
+    description:
+      name: sqflite_common
+      sha256: "6ef422a4525ecc601db6c0a2233ff448c731307906e92cabc9ba292afaae16a6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.5.6"
+  sqflite_darwin:
+    dependency: transitive
+    description:
+      name: sqflite_darwin
+      sha256: "279832e5cde3fe99e8571879498c9211f3ca6391b0d818df4e17d9fff5c6ccb3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.2"
+  sqflite_platform_interface:
+    dependency: transitive
+    description:
+      name: sqflite_platform_interface
+      sha256: "8dd4515c7bdcae0a785b0062859336de775e8c65db81ae33dd5445f35be61920"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.0"
   string_scanner:
     dependency: transitive
     description:
@@ -515,6 +555,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
+  synchronized:
+    dependency: transitive
+    description:
+      name: synchronized
+      sha256: c254ade258ec8282947a0acbbc90b9575b4f19673533ee46f2f6e9b3aeefd7c0
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.4.0"
   talker:
     dependency: transitive
     description:
@@ -687,10 +735,10 @@ packages:
     dependency: transitive
     description:
       name: zentoast
-      sha256: "4dbb5761158abf5d415f314760907ea8752a64c4e96c28652d167087c5de62b5"
+      sha256: a0d246910e902c881f021afb5e1b093b6d3d73a132663f9beb3e8b97eb080124
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.3"
+    version: "0.2.0"
 sdks:
-  dart: ">=3.9.0 <4.0.0"
+  dart: ">=3.10.0 <4.0.0"
   flutter: ">=3.35.0"
