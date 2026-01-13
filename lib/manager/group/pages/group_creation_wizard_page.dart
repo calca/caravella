@@ -112,10 +112,12 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
   void initState() {
     super.initState();
     // Add user as first participant if name is available
+    // and skip the user name step if already set
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         final userNameNotifier = context.read<UserNameNotifier>();
         final state = context.read<GroupFormState>();
+        final wizardState = context.read<WizardState>();
         if (userNameNotifier.hasName) {
           state.addParticipant(
             ExpenseParticipant(
@@ -123,6 +125,8 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
               name: userNameNotifier.name,
             ),
           );
+          // Skip to step 1 (type and name) if user name already exists
+          wizardState.goToStep(1);
         }
       }
     });

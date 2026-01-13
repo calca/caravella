@@ -5,8 +5,7 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'dart:async';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../group/pages/expenses_group_edit_page.dart';
-import '../group/group_edit_mode.dart';
+import '../group/pages/group_creation_wizard_page.dart';
 import 'widgets/expense_group_empty_states.dart';
 import 'widgets/swipeable_expense_group_card.dart';
 
@@ -192,8 +191,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
             onPressed: () async {
               final result = await Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) =>
-                      const ExpensesGroupEditPage(mode: GroupEditMode.create),
+                  builder: (context) => const GroupCreationWizardPage(),
                 ),
               );
               if (result == true) await _loadTrips();
@@ -294,8 +292,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
         onTripAdded: () async {
           final result = await Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) =>
-                  const ExpensesGroupEditPage(mode: GroupEditMode.create),
+              builder: (context) => const GroupCreationWizardPage(),
             ),
           );
           if (result == true) {
