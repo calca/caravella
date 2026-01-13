@@ -26,19 +26,43 @@ class NotificationService {
   }
 
   Future<void> initialize() async {
-    if (_initialized) return;
+    if (_initialized) {
+      LoggerService.debug(
+        'NotificationService already initialized, skipping re-init',
+        name: 'notification',
+      );
+      return;
+    }
 
-    const androidSettings = AndroidInitializationSettings(
-      '@mipmap/ic_launcher',
+    const iconName = 'ic_notification';
+    LoggerService.info(
+      'Initializing notification plugin (icon=$iconName)',
+      name: 'notification',
     );
+
+    const androidSettings = AndroidInitializationSettings(iconName);
     const initSettings = InitializationSettings(android: androidSettings);
 
-    await _notifications.initialize(
-      initSettings,
-      onDidReceiveNotificationResponse: _onNotificationTap,
-    );
+    try {
+      final initialized = await _notifications.initialize(
+        initSettings,
+        onDidReceiveNotificationResponse: _onNotificationTap,
+      );
 
-    _initialized = true;
+      _initialized = initialized ?? true;
+      LoggerService.info(
+        'Notification plugin initialized (result=$_initialized)',
+        name: 'notification',
+      );
+    } catch (e, st) {
+      LoggerService.error(
+        'Failed to initialize notification plugin',
+        name: 'notification',
+        error: e,
+        stackTrace: st,
+      );
+      rethrow;
+    }
   }
 
   Future<bool> requestPermissions() async {
@@ -55,8 +79,9 @@ class NotificationService {
   }
 
   void _onNotificationTap(NotificationResponse response) {
-    debugPrint(
+    LoggerService.debug(
       'Notification tapped: actionId=${response.actionId}, payload=${response.payload}',
+      name: 'notification',
     );
 
     if (response.payload == null) return;
@@ -66,15 +91,18 @@ class NotificationService {
     // Handle different actions
     if (response.actionId == 'add_expense') {
       // Add expense action button clicked
-      debugPrint('Add expense action triggered');
+      LoggerService.debug('Add expense action triggered', name: 'notification');
       NotificationManager.handleAddExpenseAction(groupId);
     } else if (response.actionId == 'disable') {
       // Disable action button clicked
-      debugPrint('Disable action triggered');
+      LoggerService.debug('Disable action triggered', name: 'notification');
       NotificationManager.handleDisableAction(groupId);
     } else if (response.actionId == null) {
       // Notification body clicked (not an action button)
-      debugPrint('Notification body clicked - opening group detail page');
+      LoggerService.debug(
+        'Notification body clicked - opening group detail page',
+        name: 'notification',
+      );
       NotificationManager.handleOpenGroupDetail(groupId);
     }
   }
@@ -142,7 +170,11 @@ class NotificationService {
 
       return byteData?.buffer.asUint8List();
     } catch (e) {
-      debugPrint('Error generating initials icon: $e');
+      LoggerService.error(
+        'Error generating initials icon',
+        name: 'notification',
+        error: e,
+      );
       return null;
     }
   }
@@ -247,13 +279,28 @@ class NotificationService {
     final details = NotificationDetails(android: androidDetails);
     final notificationId = _getNotificationId(group.id);
 
-    await _notifications.show(
-      notificationId,
-      title,
-      content,
-      details,
-      payload: group.id, // Pass group ID for navigation
-    );
+    try {
+      await _notifications.show(
+        notificationId,
+        title,
+        content,
+        details,
+        payload: group.id, // Pass group ID for navigation
+      );
+
+      LoggerService.debug(
+        'Notification shown for group ${group.id} (id=$notificationId, todaySpent=$todaySpent)',
+        name: 'notification',
+      );
+    } catch (e, st) {
+      LoggerService.error(
+        'Failed to show notification for group ${group.id}',
+        name: 'notification',
+        error: e,
+        stackTrace: st,
+      );
+      rethrow;
+    }
   }
 
   Future<void> cancelGroupNotification(String groupId) async {

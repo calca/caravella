@@ -39,11 +39,35 @@
 
 ## Services Organization
 - Services in `packages/caravella_core/lib/services/` are organized by category:
-  - **`logging/`**: `LoggerService` for structured logging
+  - **`logging/`**: `LoggerService` for structured logging (powered by Talker 5.x backend)
   - **`shortcuts/`**: Android app shortcuts (`AppShortcutsService`, `PlatformShortcutsManager`, `ShortcutsNavigationService`)
   - **`storage/`**: `PreferencesService` for SharedPreferences access
   - **`user/`**: `RatingService` for in-app reviews
 - Use `import 'package:caravella_core/caravella_core.dart';` to access all services.
+
+## Logging & Instrumentation
+- **ALWAYS use `LoggerService`** (from `caravella_core`) for all logging—never use `print()` or `debugPrint()`.
+- `LoggerService` is backed by Talker 5.x and provides structured logging with history, categorization, and optional UI (TalkerScreen).
+- **Log levels**: Use appropriate methods based on severity:
+  - `LoggerService.debug()` - Development/troubleshooting info
+  - `LoggerService.info()` - General informational messages (operations, events)
+  - `LoggerService.warning()` - Recoverable issues, fallbacks
+  - `LoggerService.error()` - Errors with optional `error` and `stackTrace` parameters
+- **Categorization**: Always provide a `name` parameter for filtering/organization:
+  - `notification` - Notification system operations
+  - `manager.group` - Group management controllers
+  - `state.notifier` - State management operations
+  - `storage` - Database/file operations
+  - `ui.*` - UI-specific issues (e.g., `ui.scroll`, `ui.sheet`, `ui.share`)
+  - `api.*` - Network/API calls (e.g., `api.nominatim`)
+  - `settings` - Settings and preferences
+- **Examples**:
+  ```dart
+  LoggerService.info('Restoring notification for group: ${group.title}', name: 'notification');
+  LoggerService.warning('Group not found: $groupId', name: 'notification');
+  LoggerService.error('Failed to save group', name: 'storage', error: e, stackTrace: st);
+  ```
+- **TalkerScreen access**: Available in debug mode or with `--dart-define=ENABLE_TALKER_SCREEN=true` via Settings → Debug Logs.
 
 ## Workflows & Quality Gates
 - Standard loop: `flutter pub get` (run in root and packages), `flutter analyze`, `flutter test` (2–3 min; do not abort). CI will fail without all three.
@@ -56,6 +80,7 @@
 ## Contribution Checklist
 - Favor provider-driven state and notify through `ExpenseGroupNotifier` (from `caravella_core`) so `HomeCardsSection` refreshes without full reloads.
 - Preserve model IDs when cloning (`copyWith`) to keep repository indexes valid.
+- **Logging**: Always use `LoggerService` with appropriate log levels and category names—never `print()` or `debugPrint()`.
 - **When adding new features**: Place business logic in `caravella_core`, reusable UI in `caravella_core_ui`, app-specific UI in `lib/`
 - **Package dependencies**: `lib/` can depend on all packages; `caravella_core_ui` can depend on `caravella_core`; `caravella_core` should remain independent
 - Update `CHANGELOG.md` `[Unreleased]` for every user-visible change and note flavor-specific impacts when relevant.

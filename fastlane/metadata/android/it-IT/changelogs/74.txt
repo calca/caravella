@@ -1,0 +1,8 @@
+Versione 1.4.0 - Media ed Esportazione
+
+• Allegati multimediali: aggiungi foto, video, PDF alle spese con visualizzatore a schermo intero
+• Esportazione markdown: esporta gruppi con statistiche complete e tabelle
+• Modifica organizzata: impostazioni gruppo con schede per gestione più semplice
+• Camera migliorata: si apre con camera posteriore per default
+
+Tracciamento più ricco, esportazioni migliori!

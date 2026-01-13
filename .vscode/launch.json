@@ -41,6 +41,21 @@
         "ENABLE_PLAY_UPDATES=true"
       ]
     },
+        {
+      "name": "Run Release (Staging)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": [
+        "--flavor",
+        "staging",
+        "--release",
+        "--dart-define",
+        "FLAVOR=staging",
+        "--dart-define",
+        "ENABLE_PLAY_UPDATES=true"
+      ]
+    },
     {
       "name": "Run (Staging - F-Droid)",
       "request": "launch",

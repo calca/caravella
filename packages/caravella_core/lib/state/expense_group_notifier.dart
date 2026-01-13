@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import '../model/expense_group.dart';
 import '../model/expense_category.dart';
 import '../data/expense_group_storage_v2.dart';
+import '../services/logging/logger_service.dart';
 
 class ExpenseGroupNotifier extends ChangeNotifier {
   ExpenseGroup? _currentGroup;
@@ -64,7 +65,11 @@ class ExpenseGroupNotifier extends ChangeNotifier {
       // Update shortcuts when group metadata changes
       _updateShortcuts();
     } catch (e) {
-      debugPrint('Error updating group metadata: $e');
+      LoggerService.error(
+        'Error updating group metadata',
+        name: 'state.notifier',
+        error: e,
+      );
     }
   }
 
@@ -96,7 +101,11 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     try {
       await ExpenseGroupStorageV2.updateGroupMetadata(_currentGroup!);
     } catch (e) {
-      debugPrint('Error updating group metadata after adding category: $e');
+      LoggerService.error(
+        'Error updating group metadata after adding category',
+        name: 'state.notifier',
+        error: e,
+      );
     }
   }
 
@@ -113,7 +122,11 @@ class ExpenseGroupNotifier extends ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      debugPrint('Error refreshing group: $e');
+      LoggerService.error(
+        'Error refreshing group',
+        name: 'state.notifier',
+        error: e,
+      );
     }
   }
 

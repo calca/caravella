@@ -7,7 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Technical
+- SQLite repository code refactoring for improved readability and formatting
+- Enhanced SQLite backend with attachments table support for expense management
+
+## [1.4.0] - 2025-12-16
+
+### Fixed
+- Button style consistency across expense and group forms
+  - Save/add buttons in expense group and expense forms now use text-only style (TextButton) to match the compact expense form
+  - Ensures consistent visual design across all form submission buttons
+- Android notification icon missing in flavor-specific builds causing "invalid_icon" error when enabling notifications
+  - Added ic_notification.png resources to all Android build flavors (dev, staging, prod)
+  - Added default notification icon metadata in AndroidManifest.xml for improved compatibility
+  - Ensures notifications work correctly on all Android devices regardless of build variant
+- Camera now opens with rear (back) camera by default instead of front camera when taking photos or videos for attachments or group backgrounds
+  - Added `preferredCameraDevice` parameter to image picker calls
+  - Improved user experience by defaulting to the more commonly used rear camera
+- Improved attachment handling to prevent black screen issues and app instability
+  - Added comprehensive logging throughout attachment flow for better debugging
+  - Added file size checks to skip compression for very small (<200KB) or very large (>50MB) files
+  - Prevents memory pressure issues during compression that could cause app crashes
+  - Added cancel button to camera media type picker dialog
+  - Enhanced error handling in compression and save operations
+
+### Known Limitations
+- **Attachment Visibility**: Attachments are stored in app-private storage and are not visible in Android Photos or Files apps by design
+  - This prevents cluttering the user's photo gallery with expense attachments
+  - Users can use the Share button in the attachment viewer to export files to their gallery or other apps
+  - Future enhancement may add optional MediaStore integration for gallery visibility
+
 ### Added
+- **SQLite Database Backend**: New high-performance storage backend using SQLite (default)
+  - Improved query performance with indexed columns and normalized schema
+  - Better scalability for large datasets
+  - Automatic migration from JSON file storage to SQLite database
+  - Backward compatibility: legacy JSON backend still available via `USE_JSON_BACKEND=true` flag
+  - Comprehensive test suite for SQLite repository and migration service
+  - Database schema with separate tables for groups, participants, categories, and expenses
+  - Transaction support for atomic operations and data integrity
+  - Automatic backup of JSON data after successful migration
 - Markdown export format for expense groups with comprehensive statistics and expenses table
   - Includes group header with title, period, currency, and participant count
   - Statistics section with total expenses, daily average, per-participant breakdown, per-category breakdown, and settlement calculations
@@ -34,6 +73,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Repositioned expense form actions to reduce clutter in the main editing area
 
 ### Fixed
+- Fixed "invalid_icon" PlatformException when enabling persistent notifications by removing conflicting vector drawable - Android now always uses PNG notification icons which are fully supported by flutter_local_notifications plugin
+- Fixed incorrect "Backup non riuscito" error message appearing when notification toggle or group save operations failed - now shows proper "Errore durante il salvataggio" with error details
 - Fixed setState() during build error in expense form page when form validity or save callback changed
 - Fixed place search not showing error messages when network requests fail, timeout, or encounter SSL/TLS issues
 - Improved error feedback for location search to display localized error messages instead of silently failing
@@ -193,7 +234,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Material 3 design with dark/light theme support
 - Cross-platform support (Android, iOS, Web, Desktop)
 
-[Unreleased]: https://github.com/calca/caravella/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/calca/caravella/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/calca/caravella/compare/v1.2.0...v1.4.0
 [1.2.0]: https://github.com/calca/caravella/compare/v1.0.45...v1.2.0
 [1.0.45]: https://github.com/calca/caravella/compare/v1.0.44...v1.0.45
 [1.0.44]: https://github.com/calca/caravella/compare/v1.0.38...v1.0.44

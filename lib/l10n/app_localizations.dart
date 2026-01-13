@@ -2114,6 +2114,12 @@ abstract class AppLocalizations {
   /// **'Enter your name'**
   String get settings_user_name_hint;
 
+  /// No description provided for @default_participant_me.
+  ///
+  /// In en, this message translates to:
+  /// **'Me'**
+  String get default_participant_me;
+
   /// No description provided for @info_tab.
   ///
   /// In en, this message translates to:

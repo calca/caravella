@@ -1045,6 +1045,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_user_name_hint => '输入您的名称';
 
   @override
+  String get default_participant_me => '我';
+
+  @override
   String get info_tab => '信息';
 
   @override

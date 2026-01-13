@@ -18,16 +18,79 @@ class NotificationManager {
   /// Callback that can be set by the group edit page to receive notification disable events
   static void Function(String groupId)? onNotificationDisabled;
 
+  /// Checks if the current date is within the group's date range
+  /// Returns true if:
+  /// - Both startDate and endDate are null (no date range defined)
+  /// - Only one of startDate or endDate is set (partial range - treated as no constraint)
+  /// - Both dates are set AND current date is within [startDate, endDate] inclusive
+  static bool _isWithinDateRange(ExpenseGroup group) {
+    // If either date is missing, treat as no date range constraint
+    // This handles: no dates set, or partial dates (only start OR only end)
+    if (group.startDate == null || group.endDate == null) {
+      return true;
+    }
+
+    // Both dates are set - check if today is within the range
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final start = DateTime(
+      group.startDate!.year,
+      group.startDate!.month,
+      group.startDate!.day,
+    );
+    final end = DateTime(
+      group.endDate!.year,
+      group.endDate!.month,
+      group.endDate!.day,
+    );
+
+    // Check if today is within the date range (inclusive)
+    return (today.isAfter(start) || today.isAtSameMomentAs(start)) &&
+        (today.isBefore(end) || today.isAtSameMomentAs(end));
+  }
+
+  /// Updates the notification for a group after reloading it from storage
+  /// Convenience method that reloads the group and updates notification if enabled
+  Future<void> updateNotificationForGroupById(
+    String groupId,
+    gen.AppLocalizations loc,
+  ) async {
+    final group = await ExpenseGroupStorageV2.getTripById(groupId);
+    if (group != null) {
+      await updateNotificationForGroup(group, loc);
+    }
+  }
+
   /// Updates the notification for a group if notifications are enabled
+  /// and the current date is within the group's date range
   Future<void> updateNotificationForGroup(
     ExpenseGroup group,
     gen.AppLocalizations loc,
   ) async {
-    if (group.notificationEnabled) {
+    if (!group.notificationEnabled) {
+      return;
+    }
+
+    if (_isWithinDateRange(group)) {
       try {
         await _notificationService.showGroupNotification(group, loc);
       } catch (e) {
-        debugPrint('Failed to update notification for group ${group.id}: $e');
+        LoggerService.error(
+          'Failed to update notification for group ${group.id}',
+          name: 'notification',
+          error: e,
+        );
+      }
+    } else {
+      // Cancel notification if it's outside the date range
+      try {
+        await cancelNotificationForGroup(group.id);
+      } catch (e) {
+        LoggerService.error(
+          'Failed to cancel notification for group ${group.id}',
+          name: 'notification',
+          error: e,
+        );
       }
     }
   }
@@ -37,11 +100,16 @@ class NotificationManager {
     try {
       await _notificationService.cancelGroupNotification(groupId);
     } catch (e) {
-      debugPrint('Failed to cancel notification for group $groupId: $e');
+      LoggerService.error(
+        'Failed to cancel notification for group $groupId',
+        name: 'notification',
+        error: e,
+      );
     }
   }
 
   /// Restores notifications for all groups that have notifications enabled
+  /// and are within their date range (if dates are set).
   /// Should be called at app startup to ensure notifications are displayed
   static Future<void> restoreNotifications(BuildContext context) async {
     try {
@@ -56,17 +124,25 @@ class NotificationManager {
           .where((g) => g.notificationEnabled)
           .toList();
 
-      debugPrint(
+      LoggerService.info(
         'Restoring ${notificationEnabledGroups.length} notification(s)',
+        name: 'notification',
       );
 
-      // Show notification for each enabled group
+      // Show notification for each enabled group (date range check is done in updateNotificationForGroup)
       for (final group in notificationEnabledGroups) {
-        debugPrint('Restoring notification for group: ${group.title}');
+        LoggerService.info(
+          'Restoring notification for group: ${group.title}',
+          name: 'notification',
+        );
         await NotificationManager().updateNotificationForGroup(group, loc);
       }
     } catch (e) {
-      debugPrint('Failed to restore notifications: $e');
+      LoggerService.error(
+        'Failed to restore notifications',
+        name: 'notification',
+        error: e,
+      );
     }
   }
 
@@ -77,7 +153,10 @@ class NotificationManager {
       // Get the navigation key from the app
       final context = navigatorKey.currentContext;
       if (context == null || !context.mounted) {
-        debugPrint('Cannot navigate: context not available');
+        LoggerService.warning(
+          'Cannot navigate: context not available',
+          name: 'notification',
+        );
         return;
       }
 
@@ -90,7 +169,10 @@ class NotificationManager {
       // Load the expense group
       final group = await ExpenseGroupStorageV2.getTripById(groupId);
       if (group == null) {
-        debugPrint('Group not found: $groupId');
+        LoggerService.warning(
+          'Group not found: $groupId',
+          name: 'notification',
+        );
         // Check context is still valid after async operation
         final currentContext = navigatorKey.currentContext;
         if (currentContext != null && currentContext.mounted) {
@@ -122,7 +204,11 @@ class NotificationManager {
         }
       }
     } catch (e) {
-      debugPrint('Error handling add expense action: $e');
+      LoggerService.error(
+        'Error handling add expense action',
+        name: 'notification',
+        error: e,
+      );
     }
   }
 
@@ -130,7 +216,10 @@ class NotificationManager {
   /// Disables the notification setting for the group and cancels the notification
   static Future<void> handleDisableAction(String groupId) async {
     try {
-      debugPrint('Handling disable action for group: $groupId');
+      LoggerService.info(
+        'Handling disable action for group: $groupId',
+        name: 'notification',
+      );
 
       // Get context for notifier before async operations
       final context = navigatorKey.currentContext;
@@ -143,7 +232,10 @@ class NotificationManager {
       // Load the expense group
       final group = await ExpenseGroupStorageV2.getTripById(groupId);
       if (group == null) {
-        debugPrint('Group not found: $groupId');
+        LoggerService.warning(
+          'Group not found: $groupId',
+          name: 'notification',
+        );
         return;
       }
 
@@ -165,9 +257,16 @@ class NotificationManager {
       // Cancel the notification for this specific group
       await NotificationService().cancelGroupNotification(groupId);
 
-      debugPrint('Notification disabled for group: ${group.title}');
+      LoggerService.info(
+        'Notification disabled for group: ${group.title}',
+        name: 'notification',
+      );
     } catch (e) {
-      debugPrint('Error handling disable action: $e');
+      LoggerService.error(
+        'Error handling disable action',
+        name: 'notification',
+        error: e,
+      );
     }
   }
 
@@ -175,19 +274,28 @@ class NotificationManager {
   /// Opens the expense group detail page
   static Future<void> handleOpenGroupDetail(String groupId) async {
     try {
-      debugPrint('Opening group detail for: $groupId');
+      LoggerService.info(
+        'Opening group detail for: $groupId',
+        name: 'notification',
+      );
 
       // Get the navigation key from the app
       final context = navigatorKey.currentContext;
       if (context == null || !context.mounted) {
-        debugPrint('Cannot navigate: context not available');
+        LoggerService.warning(
+          'Cannot navigate: context not available',
+          name: 'notification',
+        );
         return;
       }
 
       // Load the expense group
       final group = await ExpenseGroupStorageV2.getTripById(groupId);
       if (group == null) {
-        debugPrint('Group not found: $groupId');
+        LoggerService.warning(
+          'Group not found: $groupId',
+          name: 'notification',
+        );
         // Check context is still valid after async operation
         final currentContext = navigatorKey.currentContext;
         if (currentContext != null && currentContext.mounted) {
@@ -220,7 +328,11 @@ class NotificationManager {
         }
       }
     } catch (e) {
-      debugPrint('Error opening group detail: $e');
+      LoggerService.error(
+        'Error opening group detail',
+        name: 'notification',
+        error: e,
+      );
     }
   }
 
@@ -258,6 +370,14 @@ class NotificationManager {
               await groupNotifier.refreshGroup();
               groupNotifier.notifyGroupUpdated(currentGroup.id);
 
+              // Update notification if enabled
+              if (sheetContext.mounted) {
+                await NotificationManager().updateNotificationForGroupById(
+                  currentGroup.id,
+                  gloc,
+                );
+              }
+
               // Check if we should prompt for rating
               RatingService.checkAndPromptForRating();
 
@@ -271,7 +391,10 @@ class NotificationManager {
             },
             onCategoryAdded: (categoryId) {
               // Category was added inline in the form, no need to do anything
-              debugPrint('Category added: $categoryId');
+              LoggerService.debug(
+                'Category added: $categoryId',
+                name: 'notification',
+              );
             },
           );
         },

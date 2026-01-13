@@ -7,6 +7,7 @@ import '../../../manager/details/widgets/expense_entry_sheet.dart';
 import '../../../manager/expense/pages/expense_form_page.dart';
 import '../../../manager/expense/state/expense_form_state.dart';
 import '../../../manager/details/pages/tabs/usecase/daily_totals_utils.dart';
+import '../../../services/notification_manager.dart';
 
 class GroupCardContent extends StatelessWidget {
   // Design constants
@@ -62,6 +63,9 @@ class GroupCardContent extends StatelessWidget {
     final notifier = Provider.of<ExpenseGroupNotifier>(context, listen: false);
     notifier.setCurrentGroup(currentGroup);
 
+    // Capture parent context for showing toast after navigation
+    final parentContext = context;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -75,7 +79,6 @@ class GroupCardContent extends StatelessWidget {
             onExpenseSaved: (expense) async {
               final sheetCtx = context;
               final nav = Navigator.of(sheetCtx);
-              final gloc = gen.AppLocalizations.of(sheetCtx);
 
               final expenseWithId = expense.copyWith(
                 id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -91,16 +94,30 @@ class GroupCardContent extends StatelessWidget {
               await groupNotifier.refreshGroup();
               groupNotifier.notifyGroupUpdated(currentGroup.id);
 
+              // Update notification if enabled
+              if (parentContext.mounted) {
+                final gloc = gen.AppLocalizations.of(parentContext);
+                await NotificationManager().updateNotificationForGroupById(
+                  currentGroup.id,
+                  gloc,
+                );
+              }
+
               // Check if we should prompt for rating
               RatingService.checkAndPromptForRating();
 
-              if (!sheetCtx.mounted) return;
-              AppToast.show(
-                sheetCtx,
-                gloc.expense_added_success,
-                type: ToastType.success,
-              );
+              // Pop first to avoid context issues
               nav.pop();
+
+              // Show toast using parent context after navigation completes
+              if (parentContext.mounted) {
+                final gloc = gen.AppLocalizations.of(parentContext);
+                AppToast.show(
+                  parentContext,
+                  gloc.expense_added_success,
+                  type: ToastType.success,
+                );
+              }
             },
             onCategoryAdded: (categoryName) async {
               await notifier.addCategory(categoryName);
@@ -108,8 +125,8 @@ class GroupCardContent extends StatelessWidget {
             onExpand: (currentState) {
               // Chiudi il bottom sheet
               Navigator.of(context).pop();
-              // Apri la full page con lo stato corrente
-              _openFullExpenseForm(context, currentGroup, currentState);
+              // Apri la full page con lo stato corrente, usando parentContext che rimane valido
+              _openFullExpenseForm(parentContext, currentGroup, currentState);
             },
           );
         },
@@ -128,11 +145,14 @@ class GroupCardContent extends StatelessWidget {
     final notifier = Provider.of<ExpenseGroupNotifier>(context, listen: false);
     notifier.setCurrentGroup(currentGroup);
 
+    // Capture parent context for showing toast after navigation
+    final parentContext = context;
+
     // Crea un expense parziale dallo stato se presente
     ExpenseDetails? partialExpense;
     if (partialState != null) {
       partialExpense = ExpenseDetails(
-        id: null,
+        id: '', // Empty ID to indicate this is partial data, not a saved expense
         name: partialState.name.isEmpty ? null : partialState.name,
         amount: partialState.amount,
         paidBy: partialState.paidBy!,
@@ -154,10 +174,6 @@ class GroupCardContent extends StatelessWidget {
                   group: currentGroup,
                   initialExpense: partialExpense,
                   onExpenseSaved: (expense) async {
-                    final pageCtx = context;
-                    final nav = Navigator.of(pageCtx);
-                    final gloc = gen.AppLocalizations.of(pageCtx);
-
                     final expenseWithId = expense.copyWith(
                       id: DateTime.now().millisecondsSinceEpoch.toString(),
                     );
@@ -170,15 +186,29 @@ class GroupCardContent extends StatelessWidget {
                     await groupNotifier.refreshGroup();
                     groupNotifier.notifyGroupUpdated(currentGroup.id);
 
+                    // Update notification if enabled
+                    if (parentContext.mounted) {
+                      final gloc = gen.AppLocalizations.of(parentContext);
+                      await NotificationManager().updateNotificationForGroupById(
+                        currentGroup.id,
+                        gloc,
+                      );
+                    }
+
                     RatingService.checkAndPromptForRating();
 
-                    if (!pageCtx.mounted) return;
-                    AppToast.show(
-                      pageCtx,
-                      gloc.expense_added_success,
-                      type: ToastType.success,
-                    );
-                    nav.pop();
+                    // Note: nav.pop() removed - ExpenseFormComponent handles navigation
+                    // when shouldAutoClose is true to avoid double pop
+
+                    // Show toast using parent context after navigation completes
+                    if (parentContext.mounted) {
+                      final gloc = gen.AppLocalizations.of(parentContext);
+                      AppToast.show(
+                        parentContext,
+                        gloc.expense_added_success,
+                        type: ToastType.success,
+                      );
+                    }
                   },
                   onCategoryAdded: (categoryName) async {
                     await notifier.addCategory(categoryName);

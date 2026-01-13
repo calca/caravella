@@ -1,3 +1,16 @@
+## 1.4.0 (16.12.2025)
+
+- **New**: Media attachments support for expenses (images, PDFs, videos) with full-screen viewer
+- **New**: Markdown export format with comprehensive statistics and expense tables
+- **New**: Tab-based group editing with organized sections for General, Participants, Categories, and Settings
+- **New**: Share button in expense form to share expense details as text
+- **Improvements**: Camera now opens with rear camera by default for more natural photo-taking
+- **Improvements**: Improved attachment handling with better error feedback and stability
+- **Improvements**: Consolidated group settings into single interface with tab navigation
+- **Fixed**: Android notification icons now work correctly in all build variants
+- **Fixed**: Button style consistency across all forms
+- **Technical**: Updated to Flutter 3.38.3 with latest dependency versions
+
 ## 1.2.0 (03.12.2025)
 
 - **New**: Interactive maps with OpenStreetMap showing expense locations

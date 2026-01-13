@@ -56,7 +56,11 @@ class ExpensesGroupEditPage extends StatelessWidget {
             },
             (error) {
               final gloc = gen.AppLocalizations.of(context);
-              AppToast.show(context, gloc.backup_error, type: ToastType.error);
+              AppToast.show(
+                context,
+                gloc.error_saving_group(error.toString()),
+                type: ToastType.error,
+              );
             },
           ),
         ),
@@ -111,24 +115,25 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
         }
       });
     } else if (widget.mode == GroupEditMode.create) {
-      // For new groups, add user as first participant if name is available
-      // and add default categories for the default group type (personal)
+      // For new groups, add user as first participant (using their name if set,
+      // otherwise "Me" localized) and add default categories for the default group type (personal)
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
           final userNameNotifier = context.read<UserNameNotifier>();
-          if (userNameNotifier.hasName) {
-            _state.addParticipant(
-              ExpenseParticipant(
-                id: DateTime.now().millisecondsSinceEpoch.toString(),
-                name: userNameNotifier.name,
-              ),
-            );
-          }
+          final gloc = gen.AppLocalizations.of(context);
+          final participantName = userNameNotifier.hasName
+              ? userNameNotifier.name
+              : gloc.default_participant_me;
+          _state.addParticipant(
+            ExpenseParticipant(
+              id: DateTime.now().millisecondsSinceEpoch.toString(),
+              name: participantName,
+            ),
+          );
 
           // Add default categories for personal type (default type)
           if (_state.categories.isEmpty &&
               _state.groupType == ExpenseGroupType.personal) {
-            final gloc = gen.AppLocalizations.of(context);
             final defaultCategories = _getLocalizedCategories(
               gloc,
               ExpenseGroupType.personal,
@@ -592,6 +597,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                         onChanged: (value) async {
                           final controller = context
                               .read<GroupFormController>();
+                          final notifier = context.read<ExpenseGroupNotifier>();
                           final notificationService = NotificationService();
 
                           // If enabling, request permissions first
@@ -608,8 +614,68 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                             }
                           }
 
-                          // Update state (save happens on PopScope)
+                          // Update state and save immediately
                           controller.state.setNotificationEnabled(value);
+
+                          try {
+                            final savedGroup = await controller.save();
+
+                            // Force repository reload
+                            ExpenseGroupStorageV2.forceReload();
+
+                            // Notify listeners
+                            if (controller.state.id != null) {
+                              notifier.notifyGroupUpdated(controller.state.id!);
+                            }
+
+                            // Handle notification based on new value
+                            if (value && context.mounted) {
+                              // Show or update notification (with date range check)
+                              await NotificationManager().updateNotificationForGroup(
+                                savedGroup,
+                                gloc,
+                              );
+
+                              if (context.mounted) {
+                                AppToast.show(
+                                  context,
+                                  gloc.notification_enabled,
+                                  type: ToastType.success,
+                                );
+                              }
+                            } else {
+                              // Cancel notification for this group
+                              await NotificationManager().cancelNotificationForGroup(
+                                savedGroup.id,
+                              );
+
+                              if (context.mounted) {
+                                AppToast.show(
+                                  context,
+                                  '${gloc.notification_enabled} ${gloc.accessibility_currently_disabled.toLowerCase()}',
+                                  type: ToastType.info,
+                                );
+                              }
+                            }
+                          } catch (e, st) {
+                            // Revert state on error
+                            controller.state.setNotificationEnabled(!value);
+
+                            LoggerService.error(
+                              'Failed to toggle notification',
+                              name: 'manager.group',
+                              error: e,
+                              stackTrace: st,
+                            );
+
+                            if (context.mounted) {
+                              AppToast.show(
+                                context,
+                                gloc.error_saving_group(e.toString()),
+                                type: ToastType.error,
+                              );
+                            }
+                          }
                         },
                       ),
                     ),
@@ -649,11 +715,18 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                             if (controller.state.id != null) {
                               notifier.notifyGroupUpdated(controller.state.id!);
                             }
-                          } catch (e) {
+                          } catch (e, st) {
+                            LoggerService.error(
+                              'Failed to toggle auto location',
+                              name: 'manager.group',
+                              error: e,
+                              stackTrace: st,
+                            );
+
                             if (context.mounted) {
                               AppToast.show(
                                 context,
-                                gloc.backup_error,
+                                gloc.error_saving_group(e.toString()),
                                 type: ToastType.error,
                               );
                             }
@@ -693,6 +766,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
             state.currency['code'],
             state.groupType,
             state.autoLocationEnabled,
+            state.notificationEnabled,
           );
         },
         builder: (context, _, _) {
@@ -723,33 +797,39 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                   } catch (_) {}
 
                   // Handle notification state after save
-                  final notificationService = NotificationService();
                   if (saved.notificationEnabled && context.mounted) {
-                    // Show or update notification
-                    await notificationService.showGroupNotification(
+                    // Show or update notification (with date range check)
+                    await NotificationManager().updateNotificationForGroup(
                       saved,
                       gloc,
                     );
                   } else {
                     // Cancel notification if disabled
-                    await notificationService.cancelGroupNotification(saved.id);
+                    await NotificationManager().cancelNotificationForGroup(saved.id);
                   }
 
                   // Pop returning the saved id so caller can react
                   if (navigator.canPop()) navigator.pop(saved.id);
-                } catch (e) {
+                } catch (e, st) {
+                  LoggerService.error(
+                    'Failed to save group on back navigation',
+                    name: 'manager.group',
+                    error: e,
+                    stackTrace: st,
+                  );
+
                   // Show error toast using captured messenger if possible (avoids using
                   // BuildContext after async gap).
                   if (scaffoldMessenger != null && context.mounted) {
                     AppToast.show(
                       context,
-                      gloc.backup_error,
+                      gloc.error_saving_group(e.toString()),
                       type: ToastType.error,
                     );
                   } else if (context.mounted) {
                     AppToast.show(
                       context,
-                      gloc.backup_error,
+                      gloc.error_saving_group(e.toString()),
                       type: ToastType.error,
                     );
                   }
@@ -935,29 +1015,35 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                               } catch (_) {}
 
                               // Handle notification state after save
-                              final notificationService = NotificationService();
                               if (saved.notificationEnabled &&
                                   context.mounted) {
-                                // Show notification for new group
-                                await notificationService.showGroupNotification(
+                                // Show notification for new group (with date range check)
+                                await NotificationManager().updateNotificationForGroup(
                                   saved,
                                   gloc,
                                 );
                               }
 
                               if (navigator.canPop()) navigator.pop(saved.id);
-                            } catch (e) {
+                            } catch (e, st) {
+                              LoggerService.error(
+                                'Failed to save group',
+                                name: 'manager.group',
+                                error: e,
+                                stackTrace: st,
+                              );
+
                               if (scaffoldMessenger != null &&
                                   context.mounted) {
                                 AppToast.show(
                                   context,
-                                  gloc.backup_error,
+                                  gloc.error_saving_group(e.toString()),
                                   type: ToastType.error,
                                 );
                               } else if (context.mounted) {
                                 AppToast.show(
                                   context,
-                                  gloc.backup_error,
+                                  gloc.error_saving_group(e.toString()),
                                   type: ToastType.error,
                                 );
                               }
