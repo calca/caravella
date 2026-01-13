@@ -102,23 +102,16 @@ class WizardNavigationBar extends StatelessWidget {
   }
 
   bool _isOptionalStep(int step) {
-    // Period (step 3) is optional, step 0 (user name) is also optional
-    return step == 0 || step == 3;
+    // User name (step 0) is optional
+    return step == 0;
   }
 
   bool _canProceedFromStep(int step, GroupFormState formState) {
     switch (step) {
       case 0: // User name step (optional)
         return true;
-      case 1: // Group name step (required)
+      case 1: // Type and name step (only name is required)
         return formState.title.trim().isNotEmpty;
-      case 2: // Participants and categories step (both required)
-        return formState.participants.isNotEmpty &&
-            formState.categories.isNotEmpty;
-      case 3: // Period step (optional)
-        return true;
-      case 4: // Color and final step (all set, ready to create)
-        return true;
       default:
         return true;
     }

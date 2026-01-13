@@ -1080,6 +1080,14 @@
   "@wizard_step_name": {
     "description": "向导第1步的标题：群组名称"
   },
+  "wizard_step_type_and_name": "类型和名称",
+  "@wizard_step_type_and_name": {
+    "description": "向导步骤的标题：类型和群组名称"
+  },
+  "wizard_type_and_name_description": "选择类型并为您的群组命名",
+  "@wizard_type_and_name_description": {
+    "description": "向导中类型和名称步骤的描述"
+  },
   "wizard_step_participants": "参与者",
   "@wizard_step_participants": {
     "description": "向导第2步的标题：参与者"

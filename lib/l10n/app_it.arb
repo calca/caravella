@@ -798,6 +798,10 @@
   ,"@wizard_group_creation_title": {"description": "Titolo del wizard di creazione gruppo"}
   ,"wizard_step_name": "Nome"
   ,"@wizard_step_name": {"description": "Titolo step 1 del wizard: nome gruppo"}
+  ,"wizard_step_type_and_name": "Tipologia e Nome"
+  ,"@wizard_step_type_and_name": {"description": "Titolo step del wizard: tipologia e nome gruppo"}
+  ,"wizard_type_and_name_description": "Scegli la tipologia e assegna un nome al tuo gruppo"
+  ,"@wizard_type_and_name_description": {"description": "Descrizione dello step tipologia e nome nel wizard"}
   ,"wizard_step_participants": "Partecipanti"
   ,"@wizard_step_participants": {"description": "Titolo step 2 del wizard: partecipanti"}
   ,"wizard_step_categories": "Categorie"

@@ -835,6 +835,10 @@
   ,"@wizard_group_creation_title": {"description": "Title of group creation wizard"}
   ,"wizard_step_name": "Name"
   ,"@wizard_step_name": {"description": "Title of wizard step 1: group name"}
+  ,"wizard_step_type_and_name": "Type and Name"
+  ,"@wizard_step_type_and_name": {"description": "Title of wizard step: type and group name"}
+  ,"wizard_type_and_name_description": "Choose the type and assign a name to your group"
+  ,"@wizard_type_and_name_description": {"description": "Description of type and name step in wizard"}
   ,"wizard_step_participants": "Participants"
   ,"@wizard_step_participants": {"description": "Title of wizard step 2: participants"}
   ,"wizard_step_categories": "Categories"

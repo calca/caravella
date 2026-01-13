@@ -2038,4 +2038,154 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get notification_disable => 'Disabilita';
+
+  @override
+  String get wizard_group_creation_title => 'Nuovo Gruppo';
+
+  @override
+  String get wizard_step_name => 'Nome';
+
+  @override
+  String get wizard_step_type_and_name => 'Tipologia e Nome';
+
+  @override
+  String get wizard_type_and_name_description =>
+      'Scegli la tipologia e assegna un nome al tuo gruppo';
+
+  @override
+  String get wizard_step_participants => 'Partecipanti';
+
+  @override
+  String get wizard_step_categories => 'Categorie';
+
+  @override
+  String get wizard_step_period => 'Periodo';
+
+  @override
+  String get wizard_step_background => 'Sfondo';
+
+  @override
+  String get wizard_step_congratulations => 'Congratulazioni!';
+
+  @override
+  String get wizard_step_of => 'di';
+
+  @override
+  String get wizard_next => 'Avanti';
+
+  @override
+  String get wizard_previous => 'Indietro';
+
+  @override
+  String get wizard_skip => 'Salta';
+
+  @override
+  String get wizard_finish => 'Crea Gruppo';
+
+  @override
+  String get wizard_name_description =>
+      'Inserisci un nome per il tuo gruppo di spese';
+
+  @override
+  String get wizard_participants_description =>
+      'Aggiungi le persone che parteciperanno alle spese';
+
+  @override
+  String get wizard_categories_description =>
+      'Crea categorie per organizzare le spese';
+
+  @override
+  String get wizard_period_description =>
+      'Imposta date di inizio e fine (opzionale)';
+
+  @override
+  String get wizard_background_description =>
+      'Scegli un colore di sfondo per il gruppo';
+
+  @override
+  String wizard_congratulations_message(String groupName) {
+    return 'Il tuo gruppo \'$groupName\' è stato creato con successo!';
+  }
+
+  @override
+  String get wizard_group_summary => 'Riepilogo gruppo:';
+
+  @override
+  String wizard_created_participants(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count partecipanti',
+      one: '1 partecipante',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String wizard_created_categories(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count categorie',
+      one: '1 categoria',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get wizard_step_user_name => 'Il tuo nome';
+
+  @override
+  String get wizard_user_name_welcome => 'Ciao! Come ti chiami?';
+
+  @override
+  String get wizard_user_name_description =>
+      'Così possiamo mostrarti nei gruppi 😊';
+
+  @override
+  String get wizard_user_name_local_storage_note =>
+      'Il tuo nome verrà salvato solo sul tuo dispositivo e non sarà condiviso';
+
+  @override
+  String get wizard_user_name_label => 'Il tuo nome (facoltativo)';
+
+  @override
+  String get wizard_user_name_hint => 'es. Mario';
+
+  @override
+  String get wizard_step_participants_and_categories => 'Chi e cosa';
+
+  @override
+  String get wizard_participants_and_categories_description =>
+      'Definisci chi partecipa e su cosa si divideranno le spese';
+
+  @override
+  String get wizard_participants_section_title => 'Chi partecipa?';
+
+  @override
+  String get wizard_participants_section_hint =>
+      'Aggiungi amici o coinquilini. Puoi modificarli dopo.';
+
+  @override
+  String get wizard_categories_section_title => 'Cosa si divide?';
+
+  @override
+  String get wizard_categories_section_hint =>
+      'Es. Cibo, Alloggio, Trasporti. Puoi aggiungere o rinominare in seguito.';
+
+  @override
+  String get wizard_step_color_and_final => 'Colore e conferma';
+
+  @override
+  String get wizard_color_and_final_description =>
+      'Scegli un colore per il gruppo e controlla il riepilogo';
+
+  @override
+  String get wizard_preview_title => 'Anteprima gruppo';
+
+  @override
+  String get wizard_success_title => '🎉 Congratulazioni!';
+
+  @override
+  String get wizard_go_to_group => 'Vai al gruppo';
 }

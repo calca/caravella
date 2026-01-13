@@ -3,16 +3,17 @@ import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../data/group_form_state.dart';
 import '../group_title_field.dart';
+import '../group_type_selector.dart';
 
-class WizardNameStep extends StatelessWidget {
-  const WizardNameStep({super.key});
+class WizardTypeAndNameStep extends StatelessWidget {
+  const WizardTypeAndNameStep({super.key});
 
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
     final theme = Theme.of(context);
 
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(20.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -21,13 +22,18 @@ class WizardNameStep extends StatelessWidget {
 
           // Step description
           Text(
-            gloc.wizard_name_description,
+            gloc.wizard_type_and_name_description,
             style: theme.textTheme.bodyLarge?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
 
           const SizedBox(height: 32),
+
+          // Group type selector
+          const GroupTypeSelector(),
+
+          const SizedBox(height: 24),
 
           // Group name input
           const GroupTitleField(),
@@ -51,18 +57,18 @@ class WizardNameStep extends StatelessWidget {
             },
           ),
 
-          const Spacer(),
+          const SizedBox(height: 32),
 
           // Visual hint
           Center(
             child: Icon(
-              Icons.title_outlined,
+              Icons.folder_special_outlined,
               size: 120,
-              color: theme.colorScheme.primary.withAlpha(77),
+              color: theme.colorScheme.primary.withValues(alpha: 0.3),
             ),
           ),
 
-          const Spacer(),
+          const SizedBox(height: 32),
         ],
       ),
     );

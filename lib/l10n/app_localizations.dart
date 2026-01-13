@@ -3964,6 +3964,246 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Disable'**
   String get notification_disable;
+
+  /// Title of group creation wizard
+  ///
+  /// In en, this message translates to:
+  /// **'New Group'**
+  String get wizard_group_creation_title;
+
+  /// Title of wizard step 1: group name
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get wizard_step_name;
+
+  /// Title of wizard step: type and group name
+  ///
+  /// In en, this message translates to:
+  /// **'Type and Name'**
+  String get wizard_step_type_and_name;
+
+  /// Description of type and name step in wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the type and assign a name to your group'**
+  String get wizard_type_and_name_description;
+
+  /// Title of wizard step 2: participants
+  ///
+  /// In en, this message translates to:
+  /// **'Participants'**
+  String get wizard_step_participants;
+
+  /// Title of wizard step 3: categories
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get wizard_step_categories;
+
+  /// Title of wizard step 4: period
+  ///
+  /// In en, this message translates to:
+  /// **'Period'**
+  String get wizard_step_period;
+
+  /// Title of wizard step 5: background color
+  ///
+  /// In en, this message translates to:
+  /// **'Background'**
+  String get wizard_step_background;
+
+  /// Title of final wizard step: congratulations
+  ///
+  /// In en, this message translates to:
+  /// **'Congratulations!'**
+  String get wizard_step_congratulations;
+
+  /// Separator for progress indicator (e.g. 'Step 1 of 6')
+  ///
+  /// In en, this message translates to:
+  /// **'of'**
+  String get wizard_step_of;
+
+  /// Text of button to go to next step
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get wizard_next;
+
+  /// Text of button to go back to previous step
+  ///
+  /// In en, this message translates to:
+  /// **'Previous'**
+  String get wizard_previous;
+
+  /// Text of button to skip an optional step
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get wizard_skip;
+
+  /// Text of final button to create the group
+  ///
+  /// In en, this message translates to:
+  /// **'Create Group'**
+  String get wizard_finish;
+
+  /// Description of the name step in the wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a name for your expense group'**
+  String get wizard_name_description;
+
+  /// Description of the participants step in the wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Add people who will share expenses'**
+  String get wizard_participants_description;
+
+  /// Description of the categories step in the wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Create categories to organize expenses'**
+  String get wizard_categories_description;
+
+  /// Description of the period step in the wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Set start and end dates (optional)'**
+  String get wizard_period_description;
+
+  /// Description of the background step in the wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a background color for the group'**
+  String get wizard_background_description;
+
+  /// Congratulations message with group name
+  ///
+  /// In en, this message translates to:
+  /// **'Your group \'{groupName}\' has been created successfully!'**
+  String wizard_congratulations_message(String groupName);
+
+  /// Title of the summary in the final screen
+  ///
+  /// In en, this message translates to:
+  /// **'Group summary:'**
+  String get wizard_group_summary;
+
+  /// Number of participants in the summary
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 participant} other{{count} participants}}'**
+  String wizard_created_participants(int count);
+
+  /// Number of categories in the summary
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 category} other{{count} categories}}'**
+  String wizard_created_categories(int count);
+
+  /// Title of initial wizard step: user name
+  ///
+  /// In en, this message translates to:
+  /// **'Your Name'**
+  String get wizard_step_user_name;
+
+  /// Welcome message in user name step
+  ///
+  /// In en, this message translates to:
+  /// **'Hi! What\'s your name?'**
+  String get wizard_user_name_welcome;
+
+  /// Description of the user name step
+  ///
+  /// In en, this message translates to:
+  /// **'So we can show you in groups 😊'**
+  String get wizard_user_name_description;
+
+  /// Privacy note for user name
+  ///
+  /// In en, this message translates to:
+  /// **'Your name will be saved only on your device and will not be shared'**
+  String get wizard_user_name_local_storage_note;
+
+  /// Label for user name field
+  ///
+  /// In en, this message translates to:
+  /// **'Your name (optional)'**
+  String get wizard_user_name_label;
+
+  /// Hint for user name field
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Mario'**
+  String get wizard_user_name_hint;
+
+  /// Title of combined participants and categories step
+  ///
+  /// In en, this message translates to:
+  /// **'Who and what'**
+  String get wizard_step_participants_and_categories;
+
+  /// Description of combined participants and categories step
+  ///
+  /// In en, this message translates to:
+  /// **'Define who participates and what expenses will be shared'**
+  String get wizard_participants_and_categories_description;
+
+  /// Title of participants section in combined step
+  ///
+  /// In en, this message translates to:
+  /// **'Who\'s participating?'**
+  String get wizard_participants_section_title;
+
+  /// Hint for participants section
+  ///
+  /// In en, this message translates to:
+  /// **'Add friends or roommates. You can modify them later.'**
+  String get wizard_participants_section_hint;
+
+  /// Title of categories section in combined step
+  ///
+  /// In en, this message translates to:
+  /// **'What will be shared?'**
+  String get wizard_categories_section_title;
+
+  /// Hint for categories section
+  ///
+  /// In en, this message translates to:
+  /// **'E.g. Food, Accommodation, Transportation. You can add or rename later.'**
+  String get wizard_categories_section_hint;
+
+  /// Title of final color and confirm step
+  ///
+  /// In en, this message translates to:
+  /// **'Color and confirm'**
+  String get wizard_step_color_and_final;
+
+  /// Description of final step
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a color for the group and review the summary'**
+  String get wizard_color_and_final_description;
+
+  /// Title of preview section
+  ///
+  /// In en, this message translates to:
+  /// **'Group preview'**
+  String get wizard_preview_title;
+
+  /// Title of success dialog
+  ///
+  /// In en, this message translates to:
+  /// **'🎉 Congratulations!'**
+  String get wizard_success_title;
+
+  /// Button to go to created group
+  ///
+  /// In en, this message translates to:
+  /// **'Go to group'**
+  String get wizard_go_to_group;
 }
 
 class _AppLocalizationsDelegate

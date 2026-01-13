@@ -813,6 +813,10 @@
   ,"@wizard_group_creation_title": {"description": "Título del asistente de creación de grupo"}
   ,"wizard_step_name": "Nombre"
   ,"@wizard_step_name": {"description": "Título del paso 1 del asistente: nombre del grupo"}
+  ,"wizard_step_type_and_name": "Tipo y Nombre"
+  ,"@wizard_step_type_and_name": {"description": "Título del paso del asistente: tipo y nombre del grupo"}
+  ,"wizard_type_and_name_description": "Elige el tipo y asigna un nombre a tu grupo"
+  ,"@wizard_type_and_name_description": {"description": "Descripción del paso de tipo y nombre en el asistente"}
   ,"wizard_step_participants": "Participantes"
   ,"@wizard_step_participants": {"description": "Título del paso 2 del asistente: participantes"}
   ,"wizard_step_categories": "Categorías"

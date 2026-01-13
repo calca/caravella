@@ -9,10 +9,7 @@ import '../group_edit_mode.dart';
 import '../widgets/wizard_step_indicator.dart';
 import '../widgets/wizard_navigation_bar.dart';
 import '../widgets/wizard_steps/wizard_user_name_step.dart';
-import '../widgets/wizard_steps/wizard_name_step.dart';
-import '../widgets/wizard_steps/wizard_participants_and_categories_step.dart';
-import '../widgets/wizard_steps/wizard_period_step.dart';
-import '../widgets/wizard_steps/wizard_color_and_final_step.dart';
+import '../widgets/wizard_steps/wizard_type_and_name_step.dart';
 
 class GroupCreationWizardPage extends StatelessWidget {
   const GroupCreationWizardPage({super.key});
@@ -45,7 +42,7 @@ class WizardState extends ChangeNotifier {
   PageController get pageController => _pageController;
 
   // Total number of wizard steps
-  static const int totalSteps = 5;
+  static const int totalSteps = 2;
 
   void nextStep() {
     if (_currentStep < totalSteps - 1) {
@@ -201,10 +198,7 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
                     },
                     children: const [
                       WizardUserNameStep(),
-                      WizardNameStep(),
-                      WizardParticipantsAndCategoriesStep(),
-                      WizardPeriodStep(),
-                      WizardColorAndFinalStep(),
+                      WizardTypeAndNameStep(),
                     ],
                   );
                 },
