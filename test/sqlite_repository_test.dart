@@ -15,11 +15,11 @@ class _FakePathProvider extends PathProviderPlatform {
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  
+
   // Initialize sqflite for testing
   sqfliteFfiInit();
   databaseFactory = databaseFactoryFfi;
-  
+
   PathProviderPlatform.instance = _FakePathProvider();
 
   group('SqliteExpenseGroupRepository', () {
@@ -181,7 +181,7 @@ void main() {
       test('should get only active groups', () async {
         final result = await repository.getActiveGroups();
         expect(result.isSuccess, isTrue);
-        
+
         final groups = result.data!;
         expect(groups.length, equals(2));
         expect(groups.every((g) => !g.archived), isTrue);
@@ -190,7 +190,7 @@ void main() {
       test('should get only archived groups', () async {
         final result = await repository.getArchivedGroups();
         expect(result.isSuccess, isTrue);
-        
+
         final groups = result.data!;
         expect(groups.length, equals(1));
         expect(groups.first.archived, isTrue);
@@ -206,7 +206,7 @@ void main() {
       test('should get pinned group', () async {
         final result = await repository.getPinnedGroup();
         expect(result.isSuccess, isTrue);
-        
+
         final pinned = result.data;
         expect(pinned, isNotNull);
         expect(pinned!.id, equals('pinned-group'));
@@ -289,7 +289,7 @@ void main() {
           testGroup.id,
           'e1',
         );
-        
+
         expect(expenseResult.isSuccess, isTrue);
         expect(expenseResult.data, isNotNull);
         expect(expenseResult.data!.id, equals('e1'));
@@ -303,7 +303,7 @@ void main() {
           testGroup.id,
           'non-existent',
         );
-        
+
         expect(result.isFailure, isTrue);
       });
 
@@ -361,7 +361,10 @@ void main() {
         final getResult = await repository.getGroupById(testGroup.id);
         expect(getResult.data!.title, equals('New Title'));
         expect(getResult.data!.currency, equals('EUR'));
-        expect(getResult.data!.expenses.length, equals(1)); // Expenses preserved
+        expect(
+          getResult.data!.expenses.length,
+          equals(1),
+        ); // Expenses preserved
       });
     });
 
@@ -389,7 +392,7 @@ void main() {
 
         final getResult = await repository.getGroupById(testGroup.id);
         final retrievedExpense = getResult.data!.expenses.first;
-        
+
         expect(retrievedExpense.location, isNotNull);
         expect(retrievedExpense.location!.latitude, equals(40.7128));
         expect(retrievedExpense.location!.longitude, equals(-74.0060));
@@ -415,7 +418,7 @@ void main() {
 
         final getResult = await repository.getGroupById(testGroup.id);
         final retrievedExpense = getResult.data!.expenses.first;
-        
+
         expect(retrievedExpense.attachments, contains('/path/to/receipt.jpg'));
       });
     });

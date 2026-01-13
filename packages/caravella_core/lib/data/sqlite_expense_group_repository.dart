@@ -128,16 +128,32 @@ class SqliteExpenseGroupRepository
     ''');
 
     // Create indexes for performance
-    await db.execute('CREATE INDEX idx_groups_timestamp ON $_tableGroups(timestamp DESC)');
-    await db.execute('CREATE INDEX idx_groups_pinned ON $_tableGroups(pinned, archived)');
-    await db.execute('CREATE INDEX idx_participants_group ON $_tableParticipants(group_id)');
-    await db.execute('CREATE INDEX idx_categories_group ON $_tableCategories(group_id)');
-    await db.execute('CREATE INDEX idx_expenses_group ON $_tableExpenses(group_id)');
-    await db.execute('CREATE INDEX idx_expenses_date ON $_tableExpenses(date DESC)');
+    await db.execute(
+      'CREATE INDEX idx_groups_timestamp ON $_tableGroups(timestamp DESC)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_groups_pinned ON $_tableGroups(pinned, archived)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_participants_group ON $_tableParticipants(group_id)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_categories_group ON $_tableCategories(group_id)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_expenses_group ON $_tableExpenses(group_id)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_expenses_date ON $_tableExpenses(date DESC)',
+    );
   }
 
   /// Handle database upgrades
-  Future<void> _upgradeDatabase(Database db, int oldVersion, int newVersion) async {
+  Future<void> _upgradeDatabase(
+    Database db,
+    int oldVersion,
+    int newVersion,
+  ) async {
     // Handle future schema migrations here
   }
 
@@ -244,7 +260,7 @@ class SqliteExpenseGroupRepository
         final db = await database;
         final group = await _loadGroupById(db, groupId);
         if (group == null) return StorageResult.success(null);
-        
+
         final expense = group.expenses.firstWhere(
           (e) => e.id == expenseId,
           orElse: () => throw NotFoundError('Expense not found: $expenseId'),
@@ -271,7 +287,9 @@ class SqliteExpenseGroupRepository
       try {
         final db = await database;
         final groups = await _loadAllGroups(db);
-        final pinnedGroup = groups.where((g) => g.pinned && !g.archived).firstOrNull;
+        final pinnedGroup = groups
+            .where((g) => g.pinned && !g.archived)
+            .firstOrNull;
         return StorageResult.success(pinnedGroup);
       } catch (e) {
         if (e is StorageError) {
@@ -299,7 +317,7 @@ class SqliteExpenseGroupRepository
         }
 
         final db = await database;
-        
+
         await db.transaction((txn) async {
           // Save group metadata
           await txn.insert(
@@ -309,9 +327,21 @@ class SqliteExpenseGroupRepository
           );
 
           // Delete existing related data
-          await txn.delete(_tableParticipants, where: 'group_id = ?', whereArgs: [group.id]);
-          await txn.delete(_tableCategories, where: 'group_id = ?', whereArgs: [group.id]);
-          await txn.delete(_tableExpenses, where: 'group_id = ?', whereArgs: [group.id]);
+          await txn.delete(
+            _tableParticipants,
+            where: 'group_id = ?',
+            whereArgs: [group.id],
+          );
+          await txn.delete(
+            _tableCategories,
+            where: 'group_id = ?',
+            whereArgs: [group.id],
+          );
+          await txn.delete(
+            _tableExpenses,
+            where: 'group_id = ?',
+            whereArgs: [group.id],
+          );
           // Attachments will be deleted by CASCADE
 
           // Save participants
@@ -335,7 +365,7 @@ class SqliteExpenseGroupRepository
           // Save expenses and attachments
           for (final expense in group.expenses) {
             await txn.insert(_tableExpenses, _expenseToMap(expense, group.id));
-            
+
             // Save attachments
             for (final attachment in expense.attachments) {
               await txn.insert(_tableAttachments, {
@@ -421,11 +451,11 @@ class SqliteExpenseGroupRepository
     return await measureOperation('setPinnedGroup', () async {
       try {
         final db = await database;
-        
+
         await db.transaction((txn) async {
           // Unpin all groups
           await txn.update(_tableGroups, {'pinned': 0});
-          
+
           // Pin the specified group
           await txn.update(
             _tableGroups,
@@ -434,7 +464,7 @@ class SqliteExpenseGroupRepository
             whereArgs: [groupId],
           );
         });
-        
+
         return const StorageResult.success(null);
       } catch (e) {
         if (e is StorageError) {
@@ -588,7 +618,10 @@ class SqliteExpenseGroupRepository
   }
 
   /// Convert database map to ExpenseGroup
-  Future<ExpenseGroup> _mapToGroup(Database db, Map<String, dynamic> map) async {
+  Future<ExpenseGroup> _mapToGroup(
+    Database db,
+    Map<String, dynamic> map,
+  ) async {
     final groupId = map['id'] as String;
 
     // Load participants
@@ -597,10 +630,14 @@ class SqliteExpenseGroupRepository
       where: 'group_id = ?',
       whereArgs: [groupId],
     );
-    final participants = participantMaps.map((m) => ExpenseParticipant(
-      id: m['id'] as String,
-      name: m['name'] as String,
-    )).toList();
+    final participants = participantMaps
+        .map(
+          (m) => ExpenseParticipant(
+            id: m['id'] as String,
+            name: m['name'] as String,
+          ),
+        )
+        .toList();
 
     // Load categories
     final categoryMaps = await db.query(
@@ -608,10 +645,12 @@ class SqliteExpenseGroupRepository
       where: 'group_id = ?',
       whereArgs: [groupId],
     );
-    final categories = categoryMaps.map((m) => ExpenseCategory(
-      id: m['id'] as String,
-      name: m['name'] as String,
-    )).toList();
+    final categories = categoryMaps
+        .map(
+          (m) =>
+              ExpenseCategory(id: m['id'] as String, name: m['name'] as String),
+        )
+        .toList();
 
     // Load expenses
     final expenseMaps = await db.query(
@@ -620,10 +659,15 @@ class SqliteExpenseGroupRepository
       whereArgs: [groupId],
       orderBy: 'date DESC',
     );
-    
+
     final expenses = <ExpenseDetails>[];
     for (final expenseMap in expenseMaps) {
-      final expense = await _mapToExpense(db, expenseMap, participants, categories);
+      final expense = await _mapToExpense(
+        db,
+        expenseMap,
+        participants,
+        categories,
+      );
       expenses.add(expense);
     }
 
@@ -634,7 +678,7 @@ class SqliteExpenseGroupRepository
       participants: participants,
       categories: categories,
       expenses: expenses,
-      startDate: map['start_date'] != null 
+      startDate: map['start_date'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['start_date'] as int)
           : null,
       endDate: map['end_date'] != null
@@ -646,7 +690,7 @@ class SqliteExpenseGroupRepository
       file: map['file'] as String?,
       color: map['color'] as int?,
       notificationEnabled: (map['notification_enabled'] as int) == 1,
-      groupType: map['group_type'] != null 
+      groupType: map['group_type'] != null
           ? ExpenseGroupType.fromJson(map['group_type'])
           : null,
       autoLocationEnabled: (map['auto_location_enabled'] as int) == 1,
@@ -710,7 +754,9 @@ class SqliteExpenseGroupRepository
       category: category,
       paidBy: paidBy,
       note: map['note'] as String?,
-      location: (map['location_latitude'] != null && map['location_longitude'] != null)
+      location:
+          (map['location_latitude'] != null &&
+              map['location_longitude'] != null)
           ? ExpenseLocation(
               latitude: map['location_latitude'] as double,
               longitude: map['location_longitude'] as double,

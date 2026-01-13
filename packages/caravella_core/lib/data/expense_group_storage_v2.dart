@@ -15,7 +15,7 @@ class ExpenseGroupStorageV2 {
   static const String fileName = 'expense_group_storage.json';
 
   // Get repository instance from factory
-  static IExpenseGroupRepository get _repository => 
+  static IExpenseGroupRepository get _repository =>
       ExpenseGroupRepositoryFactory.getRepository();
 
   /// Gets a trip by ID
