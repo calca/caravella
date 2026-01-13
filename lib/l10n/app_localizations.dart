@@ -3986,7 +3986,7 @@ abstract class AppLocalizations {
   /// Description of type and name step in wizard
   ///
   /// In en, this message translates to:
-  /// **'Choose the type and assign a name to your group'**
+  /// **'Create your group'**
   String get wizard_type_and_name_description;
 
   /// Title of wizard step 2: participants
@@ -4052,7 +4052,7 @@ abstract class AppLocalizations {
   /// Description of the name step in the wizard
   ///
   /// In en, this message translates to:
-  /// **'Enter a name for your expense group'**
+  /// **'Group name'**
   String get wizard_name_description;
 
   /// Description of the participants step in the wizard
@@ -4112,19 +4112,19 @@ abstract class AppLocalizations {
   /// Welcome message in user name step
   ///
   /// In en, this message translates to:
-  /// **'Hi! What\'s your name?'**
+  /// **'Hey! 👋'**
   String get wizard_user_name_welcome;
 
-  /// Description of the user name step
+  /// Description of user name step
   ///
   /// In en, this message translates to:
-  /// **'So we can show you in groups 😊'**
+  /// **'What should we call you?'**
   String get wizard_user_name_description;
 
   /// Privacy note for user name
   ///
   /// In en, this message translates to:
-  /// **'Your name will be saved only on your device and will not be shared'**
+  /// **'Saved on your device only'**
   String get wizard_user_name_local_storage_note;
 
   /// Label for user name field
@@ -4136,7 +4136,7 @@ abstract class AppLocalizations {
   /// Hint for user name field
   ///
   /// In en, this message translates to:
-  /// **'e.g. Mario'**
+  /// **'John'**
   String get wizard_user_name_hint;
 
   /// Title of combined participants and categories step

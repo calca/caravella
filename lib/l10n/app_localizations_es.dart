@@ -2052,8 +2052,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get wizard_step_type_and_name => 'Tipo y Nombre';
 
   @override
-  String get wizard_type_and_name_description =>
-      'Elige el tipo y asigna un nombre a tu grupo';
+  String get wizard_type_and_name_description => 'Crea tu grupo';
 
   @override
   String get wizard_step_participants => 'Participantes';
@@ -2086,8 +2085,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get wizard_finish => 'Crear Grupo';
 
   @override
-  String get wizard_name_description =>
-      'Ingresa un nombre para tu grupo de gastos';
+  String get wizard_name_description => 'Nombre del grupo';
 
   @override
   String get wizard_participants_description =>
@@ -2139,21 +2137,20 @@ class AppLocalizationsEs extends AppLocalizations {
   String get wizard_step_user_name => 'Tu nombre';
 
   @override
-  String get wizard_user_name_welcome => '¡Hola! ¿Cómo te llamas?';
+  String get wizard_user_name_welcome => '¡Hola! 👋';
 
   @override
-  String get wizard_user_name_description =>
-      'Para que podamos mostrarte en los grupos 😊';
+  String get wizard_user_name_description => '¿Cómo te llamamos?';
 
   @override
   String get wizard_user_name_local_storage_note =>
-      'Tu nombre se guardará solo en tu dispositivo y no se compartirá';
+      'Guardado solo en tu dispositivo';
 
   @override
   String get wizard_user_name_label => 'Tu nombre (opcional)';
 
   @override
-  String get wizard_user_name_hint => 'ej. Mario';
+  String get wizard_user_name_hint => 'Juan';
 
   @override
   String get wizard_step_participants_and_categories => 'Quién y qué';

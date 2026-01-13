@@ -2006,7 +2006,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get wizard_step_type_and_name => '类型和名称';
 
   @override
-  String get wizard_type_and_name_description => '选择类型并为您的群组命名';
+  String get wizard_type_and_name_description => '创建您的群组';
 
   @override
   String get wizard_step_participants => '参与者';

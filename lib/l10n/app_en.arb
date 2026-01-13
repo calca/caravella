@@ -837,7 +837,7 @@
   ,"@wizard_step_name": {"description": "Title of wizard step 1: group name"}
   ,"wizard_step_type_and_name": "Type and Name"
   ,"@wizard_step_type_and_name": {"description": "Title of wizard step: type and group name"}
-  ,"wizard_type_and_name_description": "Choose the type and assign a name to your group"
+  ,"wizard_type_and_name_description": "Create your group"
   ,"@wizard_type_and_name_description": {"description": "Description of type and name step in wizard"}
   ,"wizard_step_participants": "Participants"
   ,"@wizard_step_participants": {"description": "Title of wizard step 2: participants"}
@@ -859,7 +859,7 @@
   ,"@wizard_skip": {"description": "Text of button to skip an optional step"}
   ,"wizard_finish": "Create Group"
   ,"@wizard_finish": {"description": "Text of final button to create the group"}
-  ,"wizard_name_description": "Enter a name for your expense group"
+  ,"wizard_name_description": "Group name"
   ,"@wizard_name_description": {"description": "Description of the name step in the wizard"}
   ,"wizard_participants_description": "Add people who will share expenses"
   ,"@wizard_participants_description": {"description": "Description of the participants step in the wizard"}
@@ -879,15 +879,15 @@
   ,"@wizard_created_categories": {"description": "Number of categories in the summary", "placeholders": {"count": {"type": "int"}}}
   ,"wizard_step_user_name": "Your Name"
   ,"@wizard_step_user_name": {"description": "Title of initial wizard step: user name"}
-  ,"wizard_user_name_welcome": "Hi! What's your name?"
+  ,"wizard_user_name_welcome": "Hey! 👋"
   ,"@wizard_user_name_welcome": {"description": "Welcome message in user name step"}
-  ,"wizard_user_name_description": "So we can show you in groups 😊"
-  ,"@wizard_user_name_description": {"description": "Description of the user name step"}
-  ,"wizard_user_name_local_storage_note": "Your name will be saved only on your device and will not be shared"
+  ,"wizard_user_name_description": "What should we call you?"
+  ,"@wizard_user_name_description": {"description": "Description of user name step"}
+  ,"wizard_user_name_local_storage_note": "Saved on your device only"
   ,"@wizard_user_name_local_storage_note": {"description": "Privacy note for user name"}
   ,"wizard_user_name_label": "Your name (optional)"
   ,"@wizard_user_name_label": {"description": "Label for user name field"}
-  ,"wizard_user_name_hint": "e.g. Mario"
+  ,"wizard_user_name_hint": "John"
   ,"@wizard_user_name_hint": {"description": "Hint for user name field"}
   ,"wizard_step_participants_and_categories": "Who and what"
   ,"@wizard_step_participants_and_categories": {"description": "Title of combined participants and categories step"}

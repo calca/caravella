@@ -800,7 +800,7 @@
   ,"@wizard_step_name": {"description": "Titolo step 1 del wizard: nome gruppo"}
   ,"wizard_step_type_and_name": "Tipologia e Nome"
   ,"@wizard_step_type_and_name": {"description": "Titolo step del wizard: tipologia e nome gruppo"}
-  ,"wizard_type_and_name_description": "Scegli la tipologia e assegna un nome al tuo gruppo"
+  ,"wizard_type_and_name_description": "Crea il tuo gruppo"
   ,"@wizard_type_and_name_description": {"description": "Descrizione dello step tipologia e nome nel wizard"}
   ,"wizard_step_participants": "Partecipanti"
   ,"@wizard_step_participants": {"description": "Titolo step 2 del wizard: partecipanti"}
@@ -822,7 +822,7 @@
   ,"@wizard_skip": {"description": "Testo del pulsante per saltare uno step opzionale"}
   ,"wizard_finish": "Crea Gruppo"
   ,"@wizard_finish": {"description": "Testo del pulsante finale per creare il gruppo"}
-  ,"wizard_name_description": "Inserisci un nome per il tuo gruppo di spese"
+  ,"wizard_name_description": "Nome del gruppo"
   ,"@wizard_name_description": {"description": "Descrizione dello step nome nel wizard"}
   ,"wizard_participants_description": "Aggiungi le persone che parteciperanno alle spese"
   ,"@wizard_participants_description": {"description": "Descrizione dello step partecipanti nel wizard"}
@@ -842,15 +842,15 @@
   ,"@wizard_created_categories": {"description": "Numero categorie nel riepilogo", "placeholders": {"count": {"type": "int"}}}
   ,"wizard_step_user_name": "Il tuo nome"
   ,"@wizard_step_user_name": {"description": "Titolo step iniziale del wizard: nome utente"}
-  ,"wizard_user_name_welcome": "Ciao! Come ti chiami?"
+  ,"wizard_user_name_welcome": "Ciao! 👋"
   ,"@wizard_user_name_welcome": {"description": "Messaggio di benvenuto nello step nome utente"}
-  ,"wizard_user_name_description": "Così possiamo mostrarti nei gruppi 😊"
+  ,"wizard_user_name_description": "Come vuoi essere chiamato?"
   ,"@wizard_user_name_description": {"description": "Descrizione dello step nome utente"}
-  ,"wizard_user_name_local_storage_note": "Il tuo nome verrà salvato solo sul tuo dispositivo e non sarà condiviso"
+  ,"wizard_user_name_local_storage_note": "Salvato solo sul tuo dispositivo"
   ,"@wizard_user_name_local_storage_note": {"description": "Nota sulla privacy per il nome utente"}
   ,"wizard_user_name_label": "Il tuo nome (facoltativo)"
   ,"@wizard_user_name_label": {"description": "Etichetta del campo nome utente"}
-  ,"wizard_user_name_hint": "es. Mario"
+  ,"wizard_user_name_hint": "Mario"
   ,"@wizard_user_name_hint": {"description": "Suggerimento per il campo nome utente"}
   ,"wizard_step_participants_and_categories": "Chi e cosa"
   ,"@wizard_step_participants_and_categories": {"description": "Titolo step combinato partecipanti e categorie"}

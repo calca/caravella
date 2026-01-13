@@ -815,7 +815,7 @@
   ,"@wizard_step_name": {"description": "Título del paso 1 del asistente: nombre del grupo"}
   ,"wizard_step_type_and_name": "Tipo y Nombre"
   ,"@wizard_step_type_and_name": {"description": "Título del paso del asistente: tipo y nombre del grupo"}
-  ,"wizard_type_and_name_description": "Elige el tipo y asigna un nombre a tu grupo"
+  ,"wizard_type_and_name_description": "Crea tu grupo"
   ,"@wizard_type_and_name_description": {"description": "Descripción del paso de tipo y nombre en el asistente"}
   ,"wizard_step_participants": "Participantes"
   ,"@wizard_step_participants": {"description": "Título del paso 2 del asistente: participantes"}
@@ -837,7 +837,7 @@
   ,"@wizard_skip": {"description": "Texto del botón para omitir un paso opcional"}
   ,"wizard_finish": "Crear Grupo"
   ,"@wizard_finish": {"description": "Texto del botón final para crear el grupo"}
-  ,"wizard_name_description": "Ingresa un nombre para tu grupo de gastos"
+  ,"wizard_name_description": "Nombre del grupo"
   ,"@wizard_name_description": {"description": "Descripción del paso nombre en el asistente"}
   ,"wizard_participants_description": "Agrega personas que compartirán gastos"
   ,"@wizard_participants_description": {"description": "Descripción del paso participantes en el asistente"}
@@ -857,15 +857,15 @@
   ,"@wizard_created_categories": {"description": "Número de categorías en el resumen", "placeholders": {"count": {"type": "int"}}}
   ,"wizard_step_user_name": "Tu nombre"
   ,"@wizard_step_user_name": {"description": "Título del paso inicial del asistente: nombre de usuario"}
-  ,"wizard_user_name_welcome": "¡Hola! ¿Cómo te llamas?"
-  ,"@wizard_user_name_welcome": {"description": "Mensaje de bienvenida en el paso de nombre de usuario"}
-  ,"wizard_user_name_description": "Para que podamos mostrarte en los grupos 😊"
-  ,"@wizard_user_name_description": {"description": "Descripción del paso de nombre de usuario"}
-  ,"wizard_user_name_local_storage_note": "Tu nombre se guardará solo en tu dispositivo y no se compartirá"
+  ,"wizard_user_name_welcome": "¡Hola! 👋"
+  ,"@wizard_user_name_welcome": {"description": "Mensaje de bienvenida en el paso del nombre de usuario"}
+  ,"wizard_user_name_description": "¿Cómo te llamamos?"
+  ,"@wizard_user_name_description": {"description": "Descripción del paso del nombre de usuario"}
+  ,"wizard_user_name_local_storage_note": "Guardado solo en tu dispositivo"
   ,"@wizard_user_name_local_storage_note": {"description": "Nota de privacidad para el nombre de usuario"}
   ,"wizard_user_name_label": "Tu nombre (opcional)"
   ,"@wizard_user_name_label": {"description": "Etiqueta del campo de nombre de usuario"}
-  ,"wizard_user_name_hint": "ej. Mario"
+  ,"wizard_user_name_hint": "Juan"
   ,"@wizard_user_name_hint": {"description": "Sugerencia para el campo de nombre de usuario"}
   ,"wizard_step_participants_and_categories": "Quién y qué"
   ,"@wizard_step_participants_and_categories": {"description": "Título del paso combinado de participantes y categorías"}

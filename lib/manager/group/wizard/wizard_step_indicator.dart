@@ -25,14 +25,10 @@ class WizardStepIndicator extends StatelessWidget {
       ),
       child: Consumer<WizardState>(
         builder: (context, wizardState, child) {
-          final progress =
-              (wizardState.currentStep + 1) / WizardState.totalSteps;
-
-          return Column(
+          return Row(
             children: [
               // Step dots indicator
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(WizardState.totalSteps, (index) {
                   final isCompleted = index < wizardState.currentStep;
                   final isCurrent = index == wizardState.currentStep;
@@ -69,66 +65,19 @@ class WizardStepIndicator extends StatelessWidget {
                 }),
               ),
 
-              const SizedBox(height: 16),
-
-              // Step info
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          _getStepTitle(wizardState.currentStep, gloc),
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.onSurface,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '${gloc.wizard_step_of.split(' ')[0]} ${wizardState.currentStep + 1} ${gloc.wizard_step_of} ${WizardState.totalSteps}',
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
+              if (WizardState.totalSteps > 1) ...[
+                const Spacer(),
+                Text(
+                  '${gloc.wizard_step_of.split(' ')[0]} ${wizardState.currentStep + 1} ${gloc.wizard_step_of} ${WizardState.totalSteps}',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.primaryContainer,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      '${(progress * 100).toInt()}%',
-                      style: theme.textTheme.labelLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.primary,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ],
           );
         },
       ),
     );
-  }
-
-  String _getStepTitle(int step, gen.AppLocalizations gloc) {
-    switch (step) {
-      case 0:
-        return gloc.wizard_step_user_name;
-      case 1:
-        return gloc.wizard_step_type_and_name;
-      default:
-        return '';
-    }
   }
 }
