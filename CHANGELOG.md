@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- SQLite backend compilation errors with missing imports for ExpenseLocation and ExpenseGroupType
+
+### Technical
+- SQLite repository code refactoring for improved readability and formatting
+- Enhanced SQLite backend with attachments table support for expense management
+
 ## [1.4.0] - 2025-12-16
 
 ### Fixed
