@@ -35,8 +35,9 @@ void main() {
       await tester.pumpAndSettle();
       final pageContext = tester.element(find.byType(GroupCreationWizardPage));
       final gloc = gen.AppLocalizations.of(pageContext);
+      final wizardState = Provider.of<WizardState>(pageContext, listen: false);
       final currentStepLabel =
-          '1 ${gloc.wizard_step_of} ${WizardState.totalSteps}';
+          '1 ${gloc.wizard_step_of} ${wizardState.totalSteps}';
 
       // Should start on step 1 (Name)
       expect(find.text(gloc.wizard_step_name), findsOneWidget);
@@ -112,7 +113,8 @@ void main() {
       await tester.pumpAndSettle();
       final pageContext = tester.element(find.byType(GroupCreationWizardPage));
       final gloc = gen.AppLocalizations.of(pageContext);
-      final stepTwoLabel = '2 ${gloc.wizard_step_of} ${WizardState.totalSteps}';
+      final wizardState = Provider.of<WizardState>(pageContext, listen: false);
+      final stepTwoLabel = '2 ${gloc.wizard_step_of} ${wizardState.totalSteps}';
 
       // Step 1: Name
       expect(find.text(gloc.wizard_step_name), findsOneWidget);
@@ -155,7 +157,7 @@ void main() {
       for (int i = 0; i < 10; i++) {
         wizardState.nextStep();
       }
-      expect(wizardState.currentStep, WizardState.totalSteps - 1);
+      expect(wizardState.currentStep, wizardState.totalSteps - 1);
     });
 
     test('Should validate required steps correctly', () {

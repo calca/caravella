@@ -31,7 +31,7 @@ class WizardNavigationBar extends StatelessWidget {
         child: Consumer<WizardState>(
           builder: (context, wizardState, child) {
             // Hide navigation bar on completion step
-            if (wizardState.currentStep == WizardState.totalSteps - 1) {
+            if (wizardState.currentStep == wizardState.totalSteps - 1) {
               return const SizedBox.shrink();
             }
 
@@ -59,7 +59,7 @@ class WizardNavigationBar extends StatelessWidget {
                 const Spacer(),
 
                 // Skip button for optional steps
-                if (_isOptionalStep(wizardState.currentStep)) ...[
+                if (_isOptionalStep(wizardState.currentStep, wizardState)) ...[
                   TextButton(
                     onPressed: wizardState.nextStep,
                     style: TextButton.styleFrom(
@@ -77,10 +77,11 @@ class WizardNavigationBar extends StatelessWidget {
                 Consumer2<GroupFormState, GroupFormController>(
                   builder: (context, formState, controller, child) {
                     final isSecondToLastStep =
-                        wizardState.currentStep == WizardState.totalSteps - 2;
+                        wizardState.currentStep == wizardState.totalSteps - 2;
                     final canProceed = _canProceedFromStep(
                       wizardState.currentStep,
                       formState,
+                      wizardState,
                     );
 
                     if (isSecondToLastStep) {
@@ -137,19 +138,34 @@ class WizardNavigationBar extends StatelessWidget {
     );
   }
 
-  bool _isOptionalStep(int step) {
-    // User name (step 0) is optional
-    return step == 0;
+  bool _isOptionalStep(int step, WizardState wizardState) {
+    // User name step (step 0) is optional if it's included
+    return wizardState.includeUserNameStep && step == 0;
   }
 
-  bool _canProceedFromStep(int step, GroupFormState formState) {
-    switch (step) {
-      case 0: // User name step (optional)
-        return true;
-      case 1: // Type and name step (only name is required)
-        return formState.title.trim().isNotEmpty;
-      default:
-        return true;
+  bool _canProceedFromStep(
+    int step,
+    GroupFormState formState,
+    WizardState wizardState,
+  ) {
+    if (wizardState.includeUserNameStep) {
+      // With user name step: 0=name, 1=type&name, 2=completion
+      switch (step) {
+        case 0: // User name step (optional)
+          return true;
+        case 1: // Type and name step (only name is required)
+          return formState.title.trim().isNotEmpty;
+        default:
+          return true;
+      }
+    } else {
+      // Without user name step: 0=type&name, 1=completion
+      switch (step) {
+        case 0: // Type and name step (only name is required)
+          return formState.title.trim().isNotEmpty;
+        default:
+          return true;
+      }
     }
   }
 

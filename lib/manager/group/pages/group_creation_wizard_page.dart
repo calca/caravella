@@ -17,10 +17,16 @@ class GroupCreationWizardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Check if user already has a name to skip the name step
+    final userNameNotifier = context.read<UserNameNotifier>();
+    final includeUserNameStep = !userNameNotifier.hasName;
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => GroupFormState()),
-        ChangeNotifierProvider(create: (_) => WizardState()),
+        ChangeNotifierProvider(
+          create: (_) => WizardState(includeUserNameStep: includeUserNameStep),
+        ),
         ProxyProvider2<
           GroupFormState,
           ExpenseGroupNotifier,
@@ -37,15 +43,20 @@ class GroupCreationWizardPage extends StatelessWidget {
 
 class WizardState extends ChangeNotifier {
   int _currentStep = 0;
-  final PageController _pageController = PageController();
+  late final PageController _pageController;
   String? _savedGroupId;
+  final bool includeUserNameStep;
+
+  WizardState({this.includeUserNameStep = true}) {
+    _pageController = PageController(initialPage: 0);
+  }
 
   int get currentStep => _currentStep;
   PageController get pageController => _pageController;
   String? get savedGroupId => _savedGroupId;
 
-  // Total number of wizard steps
-  static const int totalSteps = 3;
+  // Total number of wizard steps (dynamic based on whether user name step is included)
+  int get totalSteps => includeUserNameStep ? 3 : 2;
 
   void setSavedGroupId(String groupId) {
     _savedGroupId = groupId;
@@ -120,12 +131,10 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
   void initState() {
     super.initState();
     // Add user as first participant if name is available
-    // and skip the user name step if already set
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         final userNameNotifier = context.read<UserNameNotifier>();
         final state = context.read<GroupFormState>();
-        final wizardState = context.read<WizardState>();
         if (userNameNotifier.hasName) {
           state.addParticipant(
             ExpenseParticipant(
@@ -133,8 +142,6 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
               name: userNameNotifier.name,
             ),
           );
-          // Skip to step 1 (type and name) if user name already exists
-          wizardState.goToStep(1);
         }
       }
     });
@@ -203,16 +210,19 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
             Expanded(
               child: Consumer<WizardState>(
                 builder: (context, wizardState, child) {
+                  final isLastStep =
+                      wizardState.currentStep == wizardState.totalSteps - 1;
                   return PageView(
                     controller: wizardState.pageController,
-                    physics: wizardState.currentStep == 2
+                    physics: isLastStep
                         ? const NeverScrollableScrollPhysics()
                         : null,
                     onPageChanged: (index) {
                       wizardState.syncWithPage(index);
                     },
                     children: [
-                      const WizardUserNameStep(),
+                      if (wizardState.includeUserNameStep)
+                        const WizardUserNameStep(),
                       const WizardTypeAndNameStep(),
                       WizardCompletionStep(
                         groupId: wizardState.savedGroupId ?? '',

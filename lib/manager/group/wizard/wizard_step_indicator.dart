@@ -29,7 +29,7 @@ class WizardStepIndicator extends StatelessWidget {
             children: [
               // Step dots indicator
               Row(
-                children: List.generate(WizardState.totalSteps, (index) {
+                children: List.generate(wizardState.totalSteps, (index) {
                   final isCompleted = index < wizardState.currentStep;
                   final isCurrent = index == wizardState.currentStep;
 
@@ -37,7 +37,7 @@ class WizardStepIndicator extends StatelessWidget {
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
                     margin: EdgeInsets.symmetric(
-                      horizontal: index < WizardState.totalSteps - 1 ? 4 : 0,
+                      horizontal: index < wizardState.totalSteps - 1 ? 4 : 0,
                     ),
                     child: Row(
                       children: [
@@ -51,7 +51,7 @@ class WizardStepIndicator extends StatelessWidget {
                             borderRadius: BorderRadius.circular(4),
                           ),
                         ),
-                        if (index < WizardState.totalSteps - 1)
+                        if (index < wizardState.totalSteps - 1)
                           Container(
                             width: 24,
                             height: 2,
@@ -65,10 +65,10 @@ class WizardStepIndicator extends StatelessWidget {
                 }),
               ),
 
-              if (WizardState.totalSteps > 1) ...[
+              if (wizardState.totalSteps > 1) ...[
                 const Spacer(),
                 Text(
-                  '${wizardState.currentStep + 1}/${WizardState.totalSteps}',
+                  '${wizardState.currentStep + 1}/${wizardState.totalSteps}',
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
