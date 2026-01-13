@@ -9,7 +9,6 @@ import 'package:io_caravella_egm/services/notification_service.dart';
 import 'package:io_caravella_egm/services/notification_manager.dart';
 import '../group_form_controller.dart';
 import '../group_edit_mode.dart';
-import '../widgets/group_title_field.dart';
 import '../widgets/group_name_with_icon_field.dart';
 import '../widgets/participants_editor.dart';
 import '../widgets/categories_editor.dart';

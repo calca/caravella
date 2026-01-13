@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core/caravella_core.dart';
 import '../data/group_form_state.dart';
 import 'group_title_field.dart';

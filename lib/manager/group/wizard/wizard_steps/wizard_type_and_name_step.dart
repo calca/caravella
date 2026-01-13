@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:caravella_core/caravella_core.dart';
@@ -8,8 +9,29 @@ import '../../group_form_controller.dart';
 import '../../widgets/group_name_with_icon_field.dart';
 import '../../widgets/selection_tile.dart';
 
-class WizardTypeAndNameStep extends StatelessWidget {
+class WizardTypeAndNameStep extends StatefulWidget {
   const WizardTypeAndNameStep({super.key});
+
+  @override
+  State<WizardTypeAndNameStep> createState() => _WizardTypeAndNameStepState();
+}
+
+class _WizardTypeAndNameStepState extends State<WizardTypeAndNameStep> {
+  static const List<String> _friendlyEmojis = [
+    '✨',
+    '🎯',
+    '🚀',
+    '🌟',
+    '🎊',
+    '📝',
+  ];
+  late final String _selectedEmoji;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedEmoji = _friendlyEmojis[Random().nextInt(_friendlyEmojis.length)];
+  }
 
   void _showGroupTypeSelector(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
@@ -130,8 +152,8 @@ class WizardTypeAndNameStep extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Friendly emoji icon
-            Text('📁', style: const TextStyle(fontSize: 72)),
+            // Friendly emoji icon (random selection)
+            Text(_selectedEmoji, style: const TextStyle(fontSize: 72)),
 
             const SizedBox(height: 24),
 
