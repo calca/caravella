@@ -45,92 +45,148 @@ class _WizardUserNameStepState extends State<WizardUserNameStep> {
     final gloc = gen.AppLocalizations.of(context);
     final theme = Theme.of(context);
 
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(height: 24),
+          // Hero illustration
+          Center(
+            child: Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primaryContainer,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.waving_hand_rounded,
+                size: 56,
+                color: theme.colorScheme.primary,
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 32),
 
           // Friendly message
           Text(
             gloc.wizard_user_name_welcome,
-            style: theme.textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.w600,
+            style: theme.textTheme.headlineMedium?.copyWith(
+              fontWeight: FontWeight.bold,
               color: theme.colorScheme.onSurface,
             ),
+            textAlign: TextAlign.center,
           ),
 
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
 
           // Step description
           Text(
             gloc.wizard_user_name_description,
             style: theme.textTheme.bodyLarge?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
+              height: 1.5,
             ),
+            textAlign: TextAlign.center,
           ),
 
-          const SizedBox(height: 8),
+          const SizedBox(height: 40),
 
-          // Local storage note with emoji
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: theme.colorScheme.primary.withValues(alpha: 0.3),
+          // Name input card
+          Card(
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+              side: BorderSide(
+                color: theme.colorScheme.outlineVariant,
                 width: 1,
               ),
             ),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.primaryContainer,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                          Icons.person_outline,
+                          size: 20,
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        gloc.wizard_user_name_label,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: _controller,
+                    decoration: InputDecoration(
+                      hintText: gloc.wizard_user_name_hint,
+                      filled: true,
+                      fillColor: theme.colorScheme.surfaceContainerHighest,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 16,
+                      ),
+                    ),
+                    style: theme.textTheme.bodyLarge,
+                    textInputAction: TextInputAction.next,
+                    autofocus: true,
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 24),
+
+          // Privacy note
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.secondaryContainer.withValues(
+                alpha: 0.3,
+              ),
+              borderRadius: BorderRadius.circular(12),
+            ),
             child: Row(
               children: [
-                Text('😊', style: const TextStyle(fontSize: 20)),
+                Icon(
+                  Icons.lock_outline,
+                  size: 20,
+                  color: theme.colorScheme.secondary,
+                ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     gloc.wizard_user_name_local_storage_note,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
+                      color: theme.colorScheme.onSecondaryContainer,
+                      height: 1.4,
                     ),
                   ),
                 ),
               ],
             ),
           ),
-
-          const SizedBox(height: 32),
-
-          // Name input
-          TextField(
-            controller: _controller,
-            decoration: InputDecoration(
-              labelText: gloc.wizard_user_name_label,
-              hintText: gloc.wizard_user_name_hint,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              prefixIcon: Icon(
-                Icons.person_outline,
-                color: theme.colorScheme.primary,
-              ),
-            ),
-            textInputAction: TextInputAction.next,
-          ),
-
-          const Spacer(),
-
-          // Visual hint
-          Center(
-            child: Icon(
-              Icons.person_add_outlined,
-              size: 120,
-              color: theme.colorScheme.primary.withValues(alpha: 0.3),
-            ),
-          ),
-
-          const Spacer(),
         ],
       ),
     );

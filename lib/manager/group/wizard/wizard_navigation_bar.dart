@@ -15,15 +15,16 @@ class WizardNavigationBar extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        border: Border(
-          top: BorderSide(
-            color: theme.colorScheme.outline.withAlpha(51),
-            width: 1,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 8,
+            offset: const Offset(0, -2),
           ),
-        ),
+        ],
       ),
       child: SafeArea(
         top: false,
@@ -33,22 +34,38 @@ class WizardNavigationBar extends StatelessWidget {
               children: [
                 // Previous button
                 if (wizardState.currentStep > 0) ...[
-                  TextButton(
+                  OutlinedButton.icon(
                     onPressed: wizardState.previousStep,
-                    child: Text(gloc.wizard_previous),
+                    icon: const Icon(Icons.arrow_back_rounded, size: 20),
+                    label: Text(gloc.wizard_previous),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 12,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: 12),
                 ],
 
                 const Spacer(),
 
-                // Skip button for optional steps (period, background)
+                // Skip button for optional steps
                 if (_isOptionalStep(wizardState.currentStep)) ...[
                   TextButton(
                     onPressed: wizardState.nextStep,
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                    ),
                     child: Text(gloc.wizard_skip),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: 12),
                 ],
 
                 // Next/Finish button
@@ -62,7 +79,6 @@ class WizardNavigationBar extends StatelessWidget {
                     );
 
                     if (isLastStep) {
-                      // Final step - show create button that saves and shows success
                       return FilledButton.icon(
                         onPressed: canProceed
                             ? () async {
@@ -71,7 +87,6 @@ class WizardNavigationBar extends StatelessWidget {
                                   controller,
                                 );
                                 if (success && context.mounted) {
-                                  // Show success dialog
                                   await _showSuccessDialog(
                                     context,
                                     formState.title,
@@ -82,14 +97,33 @@ class WizardNavigationBar extends StatelessWidget {
                                 }
                               }
                             : null,
-                        icon: const Icon(Icons.check_circle_outline),
+                        icon: const Icon(Icons.check_circle_rounded, size: 20),
                         label: Text(gloc.wizard_finish),
+                        style: FilledButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 16,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
                       );
                     }
 
-                    return FilledButton(
+                    return FilledButton.icon(
                       onPressed: canProceed ? wizardState.nextStep : null,
-                      child: Text(gloc.wizard_next),
+                      icon: const Icon(Icons.arrow_forward_rounded, size: 20),
+                      label: Text(gloc.wizard_next),
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 16,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
                     );
                   },
                 ),
