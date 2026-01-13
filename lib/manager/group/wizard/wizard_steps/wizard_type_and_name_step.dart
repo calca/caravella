@@ -21,10 +21,7 @@ class WizardTypeAndNameStep extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Friendly emoji icon
-            Text(
-              '📁',
-              style: const TextStyle(fontSize: 72),
-            ),
+            Text('📁', style: const TextStyle(fontSize: 72)),
 
             const SizedBox(height: 24),
 
@@ -80,7 +77,10 @@ class WizardTypeAndNameStep extends StatelessWidget {
                         builder: (context, state, child) {
                           return state.title.isEmpty
                               ? Padding(
-                                  padding: const EdgeInsets.only(top: 8.0, left: 4),
+                                  padding: const EdgeInsets.only(
+                                    top: 8.0,
+                                    left: 4,
+                                  ),
                                   child: Row(
                                     children: [
                                       Icon(
@@ -91,9 +91,10 @@ class WizardTypeAndNameStep extends StatelessWidget {
                                       const SizedBox(width: 6),
                                       Text(
                                         gloc.enter_title,
-                                        style: theme.textTheme.bodySmall?.copyWith(
-                                          color: theme.colorScheme.error,
-                                        ),
+                                        style: theme.textTheme.bodySmall
+                                            ?.copyWith(
+                                              color: theme.colorScheme.error,
+                                            ),
                                       ),
                                     ],
                                   ),
