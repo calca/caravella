@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
@@ -12,10 +13,14 @@ class WizardUserNameStep extends StatefulWidget {
 
 class _WizardUserNameStepState extends State<WizardUserNameStep> {
   final TextEditingController _controller = TextEditingController();
+  late final String _randomEmoji;
+
+  static const _emojis = ['👋', '🙋', '😊', '🎉', '💫', '🌈'];
 
   @override
   void initState() {
     super.initState();
+    _randomEmoji = _emojis[Random().nextInt(_emojis.length)];
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         final userNameNotifier = context.read<UserNameNotifier>();
@@ -53,7 +58,7 @@ class _WizardUserNameStepState extends State<WizardUserNameStep> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Friendly emoji icon
-            Text('👋', style: const TextStyle(fontSize: 72)),
+            Text(_randomEmoji, style: const TextStyle(fontSize: 72)),
 
             const SizedBox(height: 24),
 
