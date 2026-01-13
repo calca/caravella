@@ -404,7 +404,7 @@ void main() {
           paidBy: participant1,
           date: DateTime.now(),
           name: 'Receipt',
-          attachmentPath: '/path/to/receipt.jpg',
+          attachments: ['/path/to/receipt.jpg'],
         );
 
         final groupWithAttachment = testGroup.copyWith(
@@ -416,7 +416,7 @@ void main() {
         final getResult = await repository.getGroupById(testGroup.id);
         final retrievedExpense = getResult.data!.expenses.first;
         
-        expect(retrievedExpense.attachmentPath, equals('/path/to/receipt.jpg'));
+        expect(retrievedExpense.attachments, contains('/path/to/receipt.jpg'));
       });
     });
   });

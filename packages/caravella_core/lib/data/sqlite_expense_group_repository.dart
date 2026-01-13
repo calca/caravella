@@ -24,6 +24,7 @@ class SqliteExpenseGroupRepository
   static const String _tableParticipants = 'participants';
   static const String _tableCategories = 'categories';
   static const String _tableExpenses = 'expenses';
+  static const String _tableAttachments = 'attachments';
 
   Database? _database;
 
@@ -92,7 +93,6 @@ class SqliteExpenseGroupRepository
         id TEXT PRIMARY KEY,
         group_id TEXT NOT NULL,
         name TEXT NOT NULL,
-        icon TEXT,
         FOREIGN KEY (group_id) REFERENCES $_tableGroups (id) ON DELETE CASCADE
       )
     ''');
@@ -110,10 +110,20 @@ class SqliteExpenseGroupRepository
         location_latitude REAL,
         location_longitude REAL,
         location_name TEXT,
-        attachment_path TEXT,
+        note TEXT,
         FOREIGN KEY (group_id) REFERENCES $_tableGroups (id) ON DELETE CASCADE,
         FOREIGN KEY (category_id) REFERENCES $_tableCategories (id),
         FOREIGN KEY (paid_by_id) REFERENCES $_tableParticipants (id)
+      )
+    ''');
+
+    // Attachments table
+    await db.execute('''
+      CREATE TABLE $_tableAttachments (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        expense_id TEXT NOT NULL,
+        file_path TEXT NOT NULL,
+        FOREIGN KEY (expense_id) REFERENCES $_tableExpenses (id) ON DELETE CASCADE
       )
     ''');
 
@@ -302,6 +312,7 @@ class SqliteExpenseGroupRepository
           await txn.delete(_tableParticipants, where: 'group_id = ?', whereArgs: [group.id]);
           await txn.delete(_tableCategories, where: 'group_id = ?', whereArgs: [group.id]);
           await txn.delete(_tableExpenses, where: 'group_id = ?', whereArgs: [group.id]);
+          // Attachments will be deleted by CASCADE
 
           // Save participants
           for (final participant in group.participants) {
@@ -318,13 +329,20 @@ class SqliteExpenseGroupRepository
               'id': category.id,
               'group_id': group.id,
               'name': category.name,
-              'icon': category.icon,
             });
           }
 
-          // Save expenses
+          // Save expenses and attachments
           for (final expense in group.expenses) {
             await txn.insert(_tableExpenses, _expenseToMap(expense, group.id));
+            
+            // Save attachments
+            for (final attachment in expense.attachments) {
+              await txn.insert(_tableAttachments, {
+                'expense_id': expense.id,
+                'file_path': attachment,
+              });
+            }
           }
         });
 
@@ -593,7 +611,6 @@ class SqliteExpenseGroupRepository
     final categories = categoryMaps.map((m) => ExpenseCategory(
       id: m['id'] as String,
       name: m['name'] as String,
-      icon: m['icon'] as String?,
     )).toList();
 
     // Load expenses
@@ -603,7 +620,12 @@ class SqliteExpenseGroupRepository
       whereArgs: [groupId],
       orderBy: 'date DESC',
     );
-    final expenses = expenseMaps.map((m) => _mapToExpense(m, participants, categories)).toList();
+    
+    final expenses = <ExpenseDetails>[];
+    for (final expenseMap in expenseMaps) {
+      final expense = await _mapToExpense(db, expenseMap, participants, categories);
+      expenses.add(expense);
+    }
 
     return ExpenseGroup(
       id: groupId,
@@ -651,13 +673,15 @@ class SqliteExpenseGroupRepository
   }
 
   /// Convert database map to ExpenseDetails
-  ExpenseDetails _mapToExpense(
+  Future<ExpenseDetails> _mapToExpense(
+    Database db,
     Map<String, dynamic> map,
     List<ExpenseParticipant> participants,
     List<ExpenseCategory> categories,
-  ) {
+  ) async {
     final paidById = map['paid_by_id'] as String;
     final categoryId = map['category_id'] as String;
+    final expenseId = map['id'] as String;
 
     final paidBy = participants.firstWhere(
       (p) => p.id == paidById,
@@ -668,13 +692,24 @@ class SqliteExpenseGroupRepository
       orElse: () => ExpenseCategory(id: categoryId, name: 'Unknown'),
     );
 
+    // Load attachments
+    final attachmentMaps = await db.query(
+      _tableAttachments,
+      where: 'expense_id = ?',
+      whereArgs: [expenseId],
+    );
+    final attachments = attachmentMaps
+        .map((m) => m['file_path'] as String)
+        .toList();
+
     return ExpenseDetails(
-      id: map['id'] as String,
+      id: expenseId,
       name: map['name'] as String,
       amount: map['amount'] as double?,
       date: DateTime.fromMillisecondsSinceEpoch(map['date'] as int),
       category: category,
       paidBy: paidBy,
+      note: map['note'] as String?,
       location: (map['location_latitude'] != null && map['location_longitude'] != null)
           ? ExpenseLocation(
               latitude: map['location_latitude'] as double,
@@ -682,7 +717,7 @@ class SqliteExpenseGroupRepository
               name: map['location_name'] as String?,
             )
           : null,
-      attachmentPath: map['attachment_path'] as String?,
+      attachments: attachments,
     );
   }
 
@@ -696,10 +731,10 @@ class SqliteExpenseGroupRepository
       'date': expense.date.millisecondsSinceEpoch,
       'category_id': expense.category.id,
       'paid_by_id': expense.paidBy.id,
+      'note': expense.note,
       'location_latitude': expense.location?.latitude,
       'location_longitude': expense.location?.longitude,
       'location_name': expense.location?.name,
-      'attachment_path': expense.attachmentPath,
     };
   }
 

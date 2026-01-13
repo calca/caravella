@@ -6,6 +6,7 @@ import '../model/expense_participant.dart';
 import '../model/expense_category.dart';
 import 'expense_group_repository.dart';
 import 'expense_group_repository_factory.dart';
+import 'file_based_expense_group_repository.dart';
 
 /// Backward-compatible wrapper for ExpenseGroupStorage
 /// Maintains the same API while using the improved repository internally
@@ -128,6 +129,7 @@ class ExpenseGroupStorageV2 {
 
   /// Clears internal cache (useful for testing)
   static void clearCache() {
+    // Clear cache if the repository supports it
     if (_repository is FileBasedExpenseGroupRepository) {
       (_repository as FileBasedExpenseGroupRepository).clearCache();
     }
@@ -135,6 +137,7 @@ class ExpenseGroupStorageV2 {
 
   /// Forces reload from disk on next access
   static void forceReload() {
+    // Force reload if the repository supports it
     if (_repository is FileBasedExpenseGroupRepository) {
       (_repository as FileBasedExpenseGroupRepository).forceReload();
     }
