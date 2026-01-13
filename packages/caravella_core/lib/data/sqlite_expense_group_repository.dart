@@ -5,6 +5,8 @@ import '../model/expense_group.dart';
 import '../model/expense_details.dart';
 import '../model/expense_participant.dart';
 import '../model/expense_category.dart';
+import '../model/expense_location.dart';
+import '../model/expense_group_type.dart';
 import 'expense_group_repository.dart';
 import 'storage_errors.dart';
 import 'storage_performance.dart';
