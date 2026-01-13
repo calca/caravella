@@ -68,7 +68,7 @@ class WizardStepIndicator extends StatelessWidget {
               if (WizardState.totalSteps > 1) ...[
                 const Spacer(),
                 Text(
-                  '${gloc.wizard_step_of.split(' ')[0]} ${wizardState.currentStep + 1} ${gloc.wizard_step_of} ${WizardState.totalSteps}',
+                  '${wizardState.currentStep + 1}/${WizardState.totalSteps}',
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
