@@ -112,9 +112,8 @@ class _WizardCompletionStepState extends State<WizardCompletionStep> {
                   // Go to group page (primary action)
                   FilledButton.icon(
                     onPressed: () {
-                      Navigator.of(context).pop(true);
-                      // Navigation to group page will happen automatically
-                      // since the wizard returns true and the caller opens the group
+                      // Return the group ID so the caller can open it
+                      Navigator.of(context).pop(widget.groupId);
                     },
                     icon: const Icon(Icons.arrow_forward_rounded, size: 20),
                     label: Text(gloc.wizard_go_to_group),
@@ -130,20 +129,12 @@ class _WizardCompletionStepState extends State<WizardCompletionStep> {
 
                   // Go to settings (secondary action)
                   OutlinedButton.icon(
-                    onPressed: () async {
-                      // Close wizard first
-                      Navigator.of(context).pop(true);
-
-                      // Wait a frame to ensure navigation is complete
-                      await Future.delayed(const Duration(milliseconds: 100));
-
-                      if (context.mounted) {
-                        // Navigate to group settings
-                        // Import the settings page and navigate
-                        // This will be handled by passing a special result
-                        // to indicate we want to go to settings
-                        Navigator.of(context).pop('settings');
-                      }
+                    onPressed: () {
+                      // Return a map indicating we want to go to settings
+                      Navigator.of(context).pop({
+                        'action': 'settings',
+                        'groupId': widget.groupId,
+                      });
                     },
                     icon: const Icon(Icons.settings_rounded, size: 20),
                     label: Text(gloc.wizard_go_to_settings),

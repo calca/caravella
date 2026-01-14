@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import 'package:caravella_core/caravella_core.dart';
 import '../../../manager/group/pages/group_creation_wizard_page.dart';
+import '../../../manager/group/pages/expenses_group_edit_page.dart';
 
 class EmptyGroupsState extends StatelessWidget {
   final gen.AppLocalizations localizations;
@@ -91,8 +93,32 @@ class EmptyGroupsState extends StatelessWidget {
                   builder: (context) => const GroupCreationWizardPage(),
                 ),
               );
-              if (result == true) {
-                onGroupAdded();
+              if (result != null) {
+                if (result is String) {
+                  // User wants to go to group - trigger refresh
+                  onGroupAdded();
+                } else if (result is Map && result['action'] == 'settings') {
+                  // User wants to go to settings
+                  final groupId = result['groupId'] as String?;
+                  if (groupId != null && context.mounted) {
+                    final storage = ExpenseGroupStorageV2();
+                    final group = await storage.getGroupById(groupId);
+                    if (group != null && context.mounted) {
+                      await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => ExpensesGroupEditPage(
+                            trip: group,
+                            mode: GroupEditMode.edit,
+                          ),
+                        ),
+                      );
+                      // After editing, trigger refresh
+                      if (context.mounted) {
+                        onGroupAdded();
+                      }
+                    }
+                  }
+                }
               }
             },
             icon: const Icon(Icons.add),
