@@ -175,21 +175,26 @@ class HomeWelcomeSection extends StatelessWidget {
                                 if (onTripAdded != null) {
                                   onTripAdded!();
                                 }
-                              } else if (result is Map && result['action'] == 'settings') {
+                              } else if (result is Map &&
+                                  result['action'] == 'settings') {
                                 final groupId = result['groupId'] as String?;
                                 if (groupId != null && context.mounted) {
                                   final storage = ExpenseGroupStorageV2();
-                                  final group = await storage.getGroupById(groupId);
+                                  final group = await storage.getGroupById(
+                                    groupId,
+                                  );
                                   if (group != null && context.mounted) {
                                     await Navigator.of(context).push(
                                       MaterialPageRoute(
-                                        builder: (context) => ExpensesGroupEditPage(
-                                          trip: group,
-                                          mode: GroupEditMode.edit,
-                                        ),
+                                        builder: (context) =>
+                                            ExpensesGroupEditPage(
+                                              trip: group,
+                                              mode: GroupEditMode.edit,
+                                            ),
                                       ),
                                     );
-                                    if (context.mounted && onTripAdded != null) {
+                                    if (context.mounted &&
+                                        onTripAdded != null) {
                                       onTripAdded!();
                                     }
                                   }

@@ -131,10 +131,9 @@ class _WizardCompletionStepState extends State<WizardCompletionStep> {
                   OutlinedButton.icon(
                     onPressed: () {
                       // Return a map indicating we want to go to settings
-                      Navigator.of(context).pop({
-                        'action': 'settings',
-                        'groupId': widget.groupId,
-                      });
+                      Navigator.of(
+                        context,
+                      ).pop({'action': 'settings', 'groupId': widget.groupId});
                     },
                     icon: const Icon(Icons.settings_rounded, size: 20),
                     label: Text(gloc.wizard_go_to_settings),
