@@ -773,4 +773,6 @@
   ,"@notification_close": {"description": "Botão de ação na notificação para fechar"}
   ,"notification_disable": "Desativar"
   ,"@notification_disable": {"description": "Botão de ação na notificação para desativar notificações"}
+  ,"load_more_expenses": "Carregar mais despesas"
+  ,"@load_more_expenses": {"description": "Botão para carregar mais despesas na lista paginada"}
 }

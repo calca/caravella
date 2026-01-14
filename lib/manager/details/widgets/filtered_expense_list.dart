@@ -35,6 +35,12 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
   String? _selectedParticipantId;
   bool _showFilters = false;
   final TextEditingController _searchController = TextEditingController();
+  
+  // Pagination state
+  static const int _initialLoadCount = 100;
+  static const int _pageSize = 50;
+  int _displayedExpenseCount = _initialLoadCount;
+  bool _isLoadingMore = false;
 
   List<ExpenseDetails> get _filteredExpenses {
     List<ExpenseDetails> filtered = List.from(widget.expenses);
@@ -67,6 +73,48 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
     filtered.sort((a, b) => b.date.compareTo(a.date));
 
     return filtered;
+  }
+
+  /// Returns the paginated list of expenses to display
+  List<ExpenseDetails> get _paginatedExpenses {
+    final filtered = _filteredExpenses;
+    // Return only the first N expenses based on current page
+    if (filtered.length <= _displayedExpenseCount) {
+      return filtered;
+    }
+    return filtered.sublist(0, _displayedExpenseCount);
+  }
+
+  /// Check if there are more expenses to load
+  bool get _hasMoreExpenses {
+    return _filteredExpenses.length > _displayedExpenseCount;
+  }
+
+  /// Load more expenses (called when user scrolls near the end)
+  void _loadMoreExpenses() {
+    if (_isLoadingMore || !_hasMoreExpenses) return;
+    
+    setState(() {
+      _isLoadingMore = true;
+    });
+
+    // Simulate a small delay for better UX (prevents too rapid loading)
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (!mounted) return;
+      setState(() {
+        _displayedExpenseCount = (_displayedExpenseCount + _pageSize)
+            .clamp(0, _filteredExpenses.length);
+        _isLoadingMore = false;
+      });
+    });
+  }
+
+  /// Reset pagination when filters change
+  void _resetPagination() {
+    setState(() {
+      _displayedExpenseCount = _initialLoadCount;
+      _isLoadingMore = false;
+    });
   }
 
   /// Groups expenses by month and returns a map of month keys to expense lists
@@ -160,6 +208,42 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
       }
     }
 
+    // Add "Load More" button if there are more expenses to load
+    if (_hasMoreExpenses) {
+      widgets.add(
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+          child: _isLoadingMore
+              ? Center(
+                  child: SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                )
+              : TextButton.icon(
+                  onPressed: _loadMoreExpenses,
+                  icon: Icon(Icons.expand_more, size: 20),
+                  label: Text(
+                    gen.AppLocalizations.of(context).load_more_expenses,
+                  ),
+                  style: TextButton.styleFrom(
+                    foregroundColor: colorScheme.primary,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                  ),
+                ),
+        ),
+      );
+    }
+
     // Add bottom spacing
     widgets.add(const SizedBox(height: 12));
 
@@ -179,6 +263,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
       _selectedParticipantId = null;
     });
     _searchController.clear();
+    _resetPagination();
   }
 
   @override
@@ -276,7 +361,10 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                       vertical: 12,
                     ),
                   ),
-                  onChanged: (value) => setState(() => _searchQuery = value),
+                  onChanged: (value) {
+                    setState(() => _searchQuery = value);
+                    _resetPagination();
+                  },
                 ),
                 const SizedBox(height: 16),
                 if (widget.categories.isNotEmpty) ...[
@@ -297,8 +385,10 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                           _CategoryParticipantChip(
                             label: gloc.all_categories,
                             selected: _selectedCategoryId == null,
-                            onSelected: () =>
-                                setState(() => _selectedCategoryId = null),
+                            onSelected: () {
+                              setState(() => _selectedCategoryId = null);
+                              _resetPagination();
+                            },
                           ),
                           const SizedBox(width: 8),
                           ...List.generate(widget.categories.length, (i) {
@@ -308,12 +398,15 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                                 _CategoryParticipantChip(
                                   label: category.name,
                                   selected: _selectedCategoryId == category.id,
-                                  onSelected: () => setState(
-                                    () => _selectedCategoryId =
-                                        _selectedCategoryId == category.id
-                                        ? null
-                                        : category.id,
-                                  ),
+                                  onSelected: () {
+                                    setState(
+                                      () => _selectedCategoryId =
+                                          _selectedCategoryId == category.id
+                                          ? null
+                                          : category.id,
+                                    );
+                                    _resetPagination();
+                                  },
                                 ),
                                 if (i != widget.categories.length - 1)
                                   const SizedBox(width: 8),
@@ -344,8 +437,10 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                           _CategoryParticipantChip(
                             label: gloc.all_participants,
                             selected: _selectedParticipantId == null,
-                            onSelected: () =>
-                                setState(() => _selectedParticipantId = null),
+                            onSelected: () {
+                              setState(() => _selectedParticipantId = null);
+                              _resetPagination();
+                            },
                           ),
                           const SizedBox(width: 8),
                           ...List.generate(widget.participants.length, (i) {
@@ -356,12 +451,15 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                                   label: participant.name,
                                   selected:
                                       _selectedParticipantId == participant.id,
-                                  onSelected: () => setState(
-                                    () => _selectedParticipantId =
-                                        _selectedParticipantId == participant.id
-                                        ? null
-                                        : participant.id,
-                                  ),
+                                  onSelected: () {
+                                    setState(
+                                      () => _selectedParticipantId =
+                                          _selectedParticipantId == participant.id
+                                          ? null
+                                          : participant.id,
+                                    );
+                                    _resetPagination();
+                                  },
                                 ),
                                 if (i != widget.participants.length - 1)
                                   const SizedBox(width: 8),
@@ -429,7 +527,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
           ],
         ] else ...[
           Column(
-            children: _buildExpenseListWithMonthHeaders(filteredExpenses),
+            children: _buildExpenseListWithMonthHeaders(_paginatedExpenses),
           ),
         ],
       ],

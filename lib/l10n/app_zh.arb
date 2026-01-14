@@ -1071,5 +1071,9 @@
   "notification_disable": "禁用",
   "@notification_disable": {
     "description": "通知中用于禁用通知的操作按钮"
+  },
+  "load_more_expenses": "加载更多支出",
+  "@load_more_expenses": {
+    "description": "在分页列表中加载更多支出的按钮"
   }
 }
