@@ -809,4 +809,6 @@
   ,"@notification_close": {"description": "Botón de acción en la notificación para cerrar"}
   ,"notification_disable": "Desactivar"
   ,"@notification_disable": {"description": "Botón de acción en la notificación para desactivar notificaciones"}
+  ,"load_more_expenses": "Cargar más gastos"
+  ,"@load_more_expenses": {"description": "Botón para cargar más gastos en la lista paginada"}
 }
