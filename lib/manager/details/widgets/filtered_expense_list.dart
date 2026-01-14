@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../l10n/app_localizations.dart' as gen;
 import 'package:caravella_core/caravella_core.dart';
+import 'package:intl/intl.dart';
 import 'expense_amount_card.dart';
 import 'empty_expense_state.dart';
 
@@ -66,6 +67,103 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
     filtered.sort((a, b) => b.date.compareTo(a.date));
 
     return filtered;
+  }
+
+  /// Groups expenses by month and returns a map of month keys to expense lists
+  Map<String, List<ExpenseDetails>> _groupExpensesByMonth(
+    List<ExpenseDetails> expenses,
+  ) {
+    final Map<String, List<ExpenseDetails>> grouped = {};
+    
+    for (final expense in expenses) {
+      // Create a key in format "yyyy-MM" for grouping
+      final monthKey = '${expense.date.year}-${expense.date.month.toString().padLeft(2, '0')}';
+      
+      if (!grouped.containsKey(monthKey)) {
+        grouped[monthKey] = [];
+      }
+      grouped[monthKey]!.add(expense);
+    }
+    
+    return grouped;
+  }
+
+  /// Formats a month key to a localized month/year string
+  String _formatMonthHeader(String monthKey, Locale locale) {
+    final parts = monthKey.split('-');
+    final year = int.parse(parts[0]);
+    final month = int.parse(parts[1]);
+    final date = DateTime(year, month);
+    
+    // Use DateFormat to get localized month and year (e.g., "January 2024" or "gennaio 2024")
+    final formatter = DateFormat.yMMMM(locale.toString());
+    return formatter.format(date);
+  }
+
+  /// Builds the expense list with month headers inserted between different months
+  List<Widget> _buildExpenseListWithMonthHeaders(
+    List<ExpenseDetails> expenses,
+  ) {
+    if (expenses.isEmpty) return [];
+
+    final locale = Localizations.localeOf(context);
+    final colorScheme = Theme.of(context).colorScheme;
+    final groupedByMonth = _groupExpensesByMonth(expenses);
+    
+    // Sort month keys in descending order (newest first)
+    final sortedMonthKeys = groupedByMonth.keys.toList()
+      ..sort((a, b) => b.compareTo(a));
+
+    final widgets = <Widget>[];
+
+    for (final monthKey in sortedMonthKeys) {
+      final monthExpenses = groupedByMonth[monthKey]!;
+      
+      // Add month header
+      widgets.add(
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+          child: Text(
+            _formatMonthHeader(monthKey, locale),
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: colorScheme.onSurface.withValues(alpha: 0.7),
+            ),
+          ),
+        ),
+      );
+
+      // Add expenses for this month
+      for (final expense in monthExpenses) {
+        widgets.add(
+          Container(
+            width: double.infinity,
+            margin: const EdgeInsets.symmetric(
+              vertical: 2,
+              horizontal: 0,
+            ),
+            child: ExpenseAmountCard(
+              title: expense.name ?? '',
+              coins: (expense.amount ?? 0).toInt(),
+              checked: true,
+              paidBy: expense.paidBy,
+              category: expense.category.name,
+              date: expense.date,
+              currency: widget.currency,
+              highlightQuery: _searchQuery.trim().isEmpty
+                  ? null
+                  : _searchQuery,
+              onTap: () => widget.onExpenseTap(expense),
+            ),
+          ),
+        );
+      }
+    }
+
+    // Add bottom spacing
+    widgets.add(const SizedBox(height: 12));
+
+    return widgets;
   }
 
   bool get _hasActiveFilters {
@@ -331,31 +429,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
           ],
         ] else ...[
           Column(
-            children: [
-              ...filteredExpenses.map(
-                (expense) => Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.symmetric(
-                    vertical: 2,
-                    horizontal: 0,
-                  ),
-                  child: ExpenseAmountCard(
-                    title: expense.name ?? '',
-                    coins: (expense.amount ?? 0).toInt(),
-                    checked: true,
-                    paidBy: expense.paidBy,
-                    category: expense.category.name,
-                    date: expense.date,
-                    currency: widget.currency,
-                    highlightQuery: _searchQuery.trim().isEmpty
-                        ? null
-                        : _searchQuery,
-                    onTap: () => widget.onExpenseTap(expense),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
-            ],
+            children: _buildExpenseListWithMonthHeaders(filteredExpenses),
           ),
         ],
       ],
