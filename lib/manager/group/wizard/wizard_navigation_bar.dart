@@ -39,11 +39,11 @@ class WizardNavigationBar extends StatelessWidget {
               children: [
                 // Previous button
                 if (wizardState.currentStep > 0) ...[
-                  OutlinedButton.icon(
+                  TextButton.icon(
                     onPressed: wizardState.previousStep,
                     icon: const Icon(Icons.arrow_back_rounded, size: 20),
                     label: Text(gloc.wizard_previous),
-                    style: OutlinedButton.styleFrom(
+                    style: TextButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 20,
                         vertical: 12,
@@ -86,7 +86,7 @@ class WizardNavigationBar extends StatelessWidget {
 
                     if (isSecondToLastStep) {
                       // Second to last step: save and go to completion
-                      return FilledButton.icon(
+                      return FilledButton(
                         onPressed: canProceed
                             ? () async {
                                 // Close keyboard before proceeding
@@ -102,8 +102,6 @@ class WizardNavigationBar extends StatelessWidget {
                                 }
                               }
                             : null,
-                        icon: const Icon(Icons.check_circle_rounded, size: 20),
-                        label: Text(gloc.wizard_finish),
                         style: FilledButton.styleFrom(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 24,
@@ -113,12 +111,12 @@ class WizardNavigationBar extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
+                        child: Text(gloc.wizard_finish),
                       );
                     }
 
                     return FilledButton.icon(
                       onPressed: canProceed ? wizardState.nextStep : null,
-                      icon: const Icon(Icons.arrow_forward_rounded, size: 20),
                       label: Text(gloc.wizard_next),
                       style: FilledButton.styleFrom(
                         padding: const EdgeInsets.symmetric(

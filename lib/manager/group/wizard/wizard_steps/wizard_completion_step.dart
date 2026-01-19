@@ -72,10 +72,6 @@ class _WizardCompletionStepState extends State<WizardCompletionStep> {
             Container(
               constraints: const BoxConstraints(maxWidth: 400),
               padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceContainerHigh,
-                borderRadius: BorderRadius.circular(16),
-              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -91,6 +87,13 @@ class _WizardCompletionStepState extends State<WizardCompletionStep> {
                     icon: Icons.receipt_long_rounded,
                     title: gloc.wizard_completion_add_expenses,
                     subtitle: gloc.wizard_completion_add_expenses_description,
+                  ),
+                  const SizedBox(height: 8),
+                  _NextStepTile(
+                    icon: Icons.people_rounded,
+                    title: gloc.wizard_completion_customize_group,
+                    subtitle:
+                        gloc.wizard_completion_customize_group_description,
                   ),
                 ],
               ),
@@ -122,7 +125,6 @@ class _WizardCompletionStepState extends State<WizardCompletionStep> {
                     }
                   }
                 },
-                icon: const Icon(Icons.arrow_forward_rounded, size: 20),
                 label: Text(gloc.wizard_go_to_group),
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
@@ -160,10 +162,14 @@ class _NextStepTile extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: theme.colorScheme.primaryContainer,
+            color: theme.colorScheme.surfaceContainerHigh,
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Icon(icon, size: 20, color: theme.colorScheme.primary),
+          child: Icon(
+            icon,
+            size: 20,
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
         ),
         const SizedBox(width: 12),
         Expanded(
