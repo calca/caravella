@@ -842,15 +842,15 @@
   ,"@wizard_created_categories": {"description": "Numero categorie nel riepilogo", "placeholders": {"count": {"type": "int"}}}
   ,"wizard_step_user_name": "Il tuo nome"
   ,"@wizard_step_user_name": {"description": "Titolo step iniziale del wizard: nome utente"}
-  ,"wizard_user_name_welcome": "Ciao! 👋"
+  ,"wizard_user_name_welcome": "Benvenuto!"
   ,"@wizard_user_name_welcome": {"description": "Messaggio di benvenuto nello step nome utente"}
-  ,"wizard_user_name_description": "Come vuoi essere chiamato?"
+  ,"wizard_user_name_description": "Prima di iniziare, dicci il tuo nome per personalizzare la tua esperienza"
   ,"@wizard_user_name_description": {"description": "Descrizione dello step nome utente"}
-  ,"wizard_user_name_local_storage_note": "Salvato solo sul tuo dispositivo"
+  ,"wizard_user_name_local_storage_note": "I tuoi dati restano privati sul tuo dispositivo"
   ,"@wizard_user_name_local_storage_note": {"description": "Nota sulla privacy per il nome utente"}
   ,"wizard_user_name_label": "Il tuo nome (facoltativo)"
   ,"@wizard_user_name_label": {"description": "Etichetta del campo nome utente"}
-  ,"wizard_user_name_hint": "Mario"
+  ,"wizard_user_name_hint": "es. Marco"
   ,"@wizard_user_name_hint": {"description": "Suggerimento per il campo nome utente"}
   ,"wizard_step_participants_and_categories": "Chi e cosa"
   ,"@wizard_step_participants_and_categories": {"description": "Titolo step combinato partecipanti e categorie"}

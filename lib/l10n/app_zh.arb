@@ -1183,15 +1183,15 @@
   "@wizard_step_user_name": {
     "description": "向导初始步骤的标题：用户名"
   },
-  "wizard_user_name_welcome": "你好！您叫什么名字？",
+  "wizard_user_name_welcome": "欢迎！",
   "@wizard_user_name_welcome": {
     "description": "用户名步骤中的欢迎消息"
   },
-  "wizard_user_name_description": "这样我们就可以在群组中显示您 😊",
+  "wizard_user_name_description": "在开始之前，请告诉我们您的名字，以便我们个性化您的体验",
   "@wizard_user_name_description": {
     "description": "用户名步骤的描述"
   },
-  "wizard_user_name_local_storage_note": "您的名字将仅保存在您的设备上，不会被共享",
+  "wizard_user_name_local_storage_note": "您的数据保存在您的设备上，保持私密",
   "@wizard_user_name_local_storage_note": {
     "description": "用户名的隐私说明"
   },
@@ -1199,7 +1199,7 @@
   "@wizard_user_name_label": {
     "description": "用户名字段的标签"
   },
-  "wizard_user_name_hint": "例如 Mario",
+  "wizard_user_name_hint": "例如 小明",
   "@wizard_user_name_hint": {
     "description": "用户名字段的提示"
   },

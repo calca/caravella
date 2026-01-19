@@ -821,15 +821,15 @@
   ,"@wizard_created_categories": {"description": "Número de categorias no resumo", "placeholders": {"count": {"type": "int"}}}
   ,"wizard_step_user_name": "Seu nome"
   ,"@wizard_step_user_name": {"description": "Título do passo inicial do assistente: nome de usuário"}
-  ,"wizard_user_name_welcome": "Olá! Qual é o seu nome?"
+  ,"wizard_user_name_welcome": "Bem-vindo!"
   ,"@wizard_user_name_welcome": {"description": "Mensagem de boas-vindas no passo de nome de usuário"}
-  ,"wizard_user_name_description": "Para que possamos mostrar você nos grupos 😊"
+  ,"wizard_user_name_description": "Antes de começar, diga-nos seu nome para personalizar sua experiência"
   ,"@wizard_user_name_description": {"description": "Descrição do passo de nome de usuário"}
-  ,"wizard_user_name_local_storage_note": "Seu nome será salvo apenas no seu dispositivo e não será compartilhado"
+  ,"wizard_user_name_local_storage_note": "Seus dados permanecem privados no seu dispositivo"
   ,"@wizard_user_name_local_storage_note": {"description": "Nota de privacidade para o nome de usuário"}
   ,"wizard_user_name_label": "Seu nome (opcional)"
   ,"@wizard_user_name_label": {"description": "Etiqueta do campo de nome de usuário"}
-  ,"wizard_user_name_hint": "ex. Mario"
+  ,"wizard_user_name_hint": "ex. Pedro"
   ,"@wizard_user_name_hint": {"description": "Sugestão para o campo de nome de usuário"}
   ,"wizard_step_participants_and_categories": "Quem e o quê"
   ,"@wizard_step_participants_and_categories": {"description": "Título do passo combinado de participantes e categorias"}

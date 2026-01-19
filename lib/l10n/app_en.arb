@@ -879,15 +879,15 @@
   ,"@wizard_created_categories": {"description": "Number of categories in the summary", "placeholders": {"count": {"type": "int"}}}
   ,"wizard_step_user_name": "Your Name"
   ,"@wizard_step_user_name": {"description": "Title of initial wizard step: user name"}
-  ,"wizard_user_name_welcome": "Hey! 👋"
+  ,"wizard_user_name_welcome": "Welcome!"
   ,"@wizard_user_name_welcome": {"description": "Welcome message in user name step"}
-  ,"wizard_user_name_description": "What should we call you?"
+  ,"wizard_user_name_description": "Before we start, tell us your name so we can personalize your experience"
   ,"@wizard_user_name_description": {"description": "Description of user name step"}
-  ,"wizard_user_name_local_storage_note": "Saved on your device only"
+  ,"wizard_user_name_local_storage_note": "Your data stays private on your device"
   ,"@wizard_user_name_local_storage_note": {"description": "Privacy note for user name"}
   ,"wizard_user_name_label": "Your name (optional)"
   ,"@wizard_user_name_label": {"description": "Label for user name field"}
-  ,"wizard_user_name_hint": "John"
+  ,"wizard_user_name_hint": "e.g. Alex"
   ,"@wizard_user_name_hint": {"description": "Hint for user name field"}
   ,"wizard_step_participants_and_categories": "Who and what"
   ,"@wizard_step_participants_and_categories": {"description": "Title of combined participants and categories step"}

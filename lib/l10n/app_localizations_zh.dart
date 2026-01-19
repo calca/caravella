@@ -2087,19 +2087,19 @@ class AppLocalizationsZh extends AppLocalizations {
   String get wizard_step_user_name => '您的名字';
 
   @override
-  String get wizard_user_name_welcome => '你好！您叫什么名字？';
+  String get wizard_user_name_welcome => '欢迎！';
 
   @override
-  String get wizard_user_name_description => '这样我们就可以在群组中显示您 😊';
+  String get wizard_user_name_description => '在开始之前，请告诉我们您的名字，以便我们个性化您的体验';
 
   @override
-  String get wizard_user_name_local_storage_note => '您的名字将仅保存在您的设备上，不会被共享';
+  String get wizard_user_name_local_storage_note => '您的数据保存在您的设备上，保持私密';
 
   @override
   String get wizard_user_name_label => '您的名字（可选）';
 
   @override
-  String get wizard_user_name_hint => '例如 Mario';
+  String get wizard_user_name_hint => '例如 小明';
 
   @override
   String get wizard_step_participants_and_categories => '谁和什么';

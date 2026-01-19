@@ -2124,19 +2124,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get wizard_step_user_name => 'Your Name';
 
   @override
-  String get wizard_user_name_welcome => 'Hey! 👋';
+  String get wizard_user_name_welcome => 'Welcome!';
 
   @override
-  String get wizard_user_name_description => 'What should we call you?';
+  String get wizard_user_name_description =>
+      'Before we start, tell us your name so we can personalize your experience';
 
   @override
-  String get wizard_user_name_local_storage_note => 'Saved on your device only';
+  String get wizard_user_name_local_storage_note =>
+      'Your data stays private on your device';
 
   @override
   String get wizard_user_name_label => 'Your name (optional)';
 
   @override
-  String get wizard_user_name_hint => 'John';
+  String get wizard_user_name_hint => 'e.g. Alex';
 
   @override
   String get wizard_step_participants_and_categories => 'Who and what';

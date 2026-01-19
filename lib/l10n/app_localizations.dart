@@ -4112,19 +4112,19 @@ abstract class AppLocalizations {
   /// Welcome message in user name step
   ///
   /// In en, this message translates to:
-  /// **'Hey! 👋'**
+  /// **'Welcome!'**
   String get wizard_user_name_welcome;
 
   /// Description of user name step
   ///
   /// In en, this message translates to:
-  /// **'What should we call you?'**
+  /// **'Before we start, tell us your name so we can personalize your experience'**
   String get wizard_user_name_description;
 
   /// Privacy note for user name
   ///
   /// In en, this message translates to:
-  /// **'Saved on your device only'**
+  /// **'Your data stays private on your device'**
   String get wizard_user_name_local_storage_note;
 
   /// Label for user name field
@@ -4136,7 +4136,7 @@ abstract class AppLocalizations {
   /// Hint for user name field
   ///
   /// In en, this message translates to:
-  /// **'John'**
+  /// **'e.g. Alex'**
   String get wizard_user_name_hint;
 
   /// Title of combined participants and categories step
