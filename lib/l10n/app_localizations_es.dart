@@ -2184,7 +2184,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get wizard_preview_title => 'Vista previa del grupo';
 
   @override
-  String get wizard_success_title => '🎉 ¡Felicitaciones!';
+  String get wizard_success_title => '¡Felicitaciones!';
 
   @override
   String get wizard_go_to_group => 'Ir al grupo';

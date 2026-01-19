@@ -4196,7 +4196,7 @@ abstract class AppLocalizations {
   /// Title of success dialog
   ///
   /// In en, this message translates to:
-  /// **'🎉 Congratulations!'**
+  /// **'Congratulations!'**
   String get wizard_success_title;
 
   /// Button to go to created group

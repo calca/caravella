@@ -870,7 +870,7 @@
   ,"@wizard_color_and_final_description": {"description": "Descrizione step finale"}
   ,"wizard_preview_title": "Anteprima gruppo"
   ,"@wizard_preview_title": {"description": "Titolo sezione anteprima"}
-  ,"wizard_success_title": "🎉 Congratulazioni!"
+  ,"wizard_success_title": "Congratulazioni!"
   ,"@wizard_success_title": {"description": "Titolo dialogo successo"}
   ,"wizard_go_to_group": "Vai al gruppo"
   ,"@wizard_go_to_group": {"description": "Pulsante per andare al gruppo creato"}

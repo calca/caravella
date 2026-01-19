@@ -2,7 +2,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import 'package:caravella_core/caravella_core.dart';
 import '../../data/group_form_state.dart';
+import '../../../details/pages/expense_group_detail_page.dart';
 
 class WizardCompletionStep extends StatefulWidget {
   final String groupId;
@@ -31,102 +33,91 @@ class _WizardCompletionStepState extends State<WizardCompletionStep> {
     final theme = Theme.of(context);
     final groupName = context.watch<GroupFormState>().title;
 
-    return Column(
-      children: [
-        // Scrollable content
-        Expanded(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24.0),
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Celebration emoji
+            Text(_randomEmoji, style: const TextStyle(fontSize: 72)),
+
+            const SizedBox(height: 24),
+
+            // Success title
+            Text(
+              gloc.wizard_success_title,
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: theme.colorScheme.onSurface,
+              ),
+              textAlign: TextAlign.center,
+            ),
+
+            const SizedBox(height: 8),
+
+            // Success message
+            Text(
+              gloc.wizard_congratulations_message(groupName),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+
+            const SizedBox(height: 32),
+
+            // What's next section
+            Container(
+              constraints: const BoxConstraints(maxWidth: 400),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surfaceContainerHigh,
+                borderRadius: BorderRadius.circular(16),
+              ),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Celebration emoji
-                  Text(_randomEmoji, style: const TextStyle(fontSize: 72)),
-
-                  const SizedBox(height: 24),
-
-                  // Success title
                   Text(
-                    gloc.wizard_success_title,
-                    style: theme.textTheme.headlineSmall?.copyWith(
+                    gloc.wizard_completion_what_next,
+                    style: theme.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurface,
                     ),
-                    textAlign: TextAlign.center,
                   ),
-
-                  const SizedBox(height: 8),
-
-                  // Success message
-                  Text(
-                    gloc.wizard_congratulations_message(groupName),
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-
-                  const SizedBox(height: 32),
-
-                  // What's next section
-                  Container(
-                    constraints: const BoxConstraints(maxWidth: 400),
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.surfaceContainerHigh,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          gloc.wizard_completion_what_next,
-                          style: theme.textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.onSurface,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        _NextStepTile(
-                          icon: Icons.receipt_long_rounded,
-                          title: gloc.wizard_completion_add_expenses,
-                          subtitle:
-                              gloc.wizard_completion_add_expenses_description,
-                        ),
-                      ],
-                    ),
+                  const SizedBox(height: 12),
+                  _NextStepTile(
+                    icon: Icons.receipt_long_rounded,
+                    title: gloc.wizard_completion_add_expenses,
+                    subtitle: gloc.wizard_completion_add_expenses_description,
                   ),
                 ],
               ),
             ),
-          ),
-        ),
 
-        // Fixed button at bottom
-        Container(
-          padding: const EdgeInsets.fromLTRB(24.0, 12.0, 24.0, 12.0),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surface,
-            boxShadow: [
-              BoxShadow(
-                color: theme.colorScheme.shadow.withValues(alpha: 0.1),
-                blurRadius: 8,
-                offset: const Offset(0, -2),
-              ),
-            ],
-          ),
-          child: SafeArea(
-            top: false,
-            minimum: EdgeInsets.zero,
-            child: Container(
+            const SizedBox(height: 32),
+
+            // Action button
+            Container(
               constraints: const BoxConstraints(maxWidth: 400),
               width: double.infinity,
               child: FilledButton.icon(
-                onPressed: () {
-                  // Return the group ID so the caller can open it
-                  Navigator.of(context).pop(widget.groupId);
+                onPressed: () async {
+                  // Load the group and navigate to detail page
+                  final group = await ExpenseGroupStorageV2.getTripById(widget.groupId);
+                  if (group != null && context.mounted) {
+                    // Pop the wizard
+                    Navigator.of(context).pop();
+                    // Navigate to the group detail page
+                    if (context.mounted) {
+                      await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => ExpenseGroupDetailPage(trip: group),
+                        ),
+                      );
+                    }
+                  }
                 },
                 icon: const Icon(Icons.arrow_forward_rounded, size: 20),
                 label: Text(gloc.wizard_go_to_group),
@@ -138,9 +129,9 @@ class _WizardCompletionStepState extends State<WizardCompletionStep> {
                 ),
               ),
             ),
-          ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

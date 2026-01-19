@@ -2129,7 +2129,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get wizard_preview_title => '群组预览';
 
   @override
-  String get wizard_success_title => '🎉 恭喜！';
+  String get wizard_success_title => '恭喜！';
 
   @override
   String get wizard_go_to_group => '转到群组';

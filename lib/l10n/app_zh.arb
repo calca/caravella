@@ -1239,7 +1239,7 @@
   "@wizard_preview_title": {
     "description": "预览部分的标题"
   },
-  "wizard_success_title": "🎉 恭喜！",
+  "wizard_success_title": "恭喜！",
   "@wizard_success_title": {
     "description": "成功对话框的标题"
   },

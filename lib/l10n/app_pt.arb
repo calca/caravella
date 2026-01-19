@@ -849,7 +849,7 @@
   ,"@wizard_color_and_final_description": {"description": "Descrição do passo final"}
   ,"wizard_preview_title": "Visualização do grupo"
   ,"@wizard_preview_title": {"description": "Título da seção de visualização"}
-  ,"wizard_success_title": "🎉 Parabéns!"
+  ,"wizard_success_title": "Parabéns!"
   ,"@wizard_success_title": {"description": "Título do diálogo de sucesso"}
   ,"wizard_go_to_group": "Ir para o grupo"
   ,"@wizard_go_to_group": {"description": "Botão para ir ao grupo criado"}
