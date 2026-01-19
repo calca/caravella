@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'package:caravella_core/caravella_core.dart';
 import '../../../manager/group/pages/group_creation_wizard_page.dart';
-import '../../../manager/group/pages/expenses_group_edit_page.dart';
-import '../../../manager/group/group_edit_mode.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 class NewGroupCard extends StatelessWidget {
@@ -56,26 +53,6 @@ class NewGroupCard extends StatelessWidget {
             if (result is String) {
               // User wants to go to group page
               onGroupAdded(result);
-            } else if (result is Map && result['action'] == 'settings') {
-              // User wants to go to settings
-              final groupId = result['groupId'] as String?;
-              if (groupId != null && context.mounted) {
-                final group = await ExpenseGroupStorageV2.getTripById(groupId);
-                if (group != null && context.mounted) {
-                  await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => ExpensesGroupEditPage(
-                        trip: group,
-                        mode: GroupEditMode.edit,
-                      ),
-                    ),
-                  );
-                  // After editing, go to the group
-                  if (context.mounted) {
-                    onGroupAdded(groupId);
-                  }
-                }
-              }
             }
           }
         },

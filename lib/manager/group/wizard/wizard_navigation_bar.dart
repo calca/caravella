@@ -89,6 +89,8 @@ class WizardNavigationBar extends StatelessWidget {
                       return FilledButton.icon(
                         onPressed: canProceed
                             ? () async {
+                                // Close keyboard before proceeding
+                                FocusScope.of(context).unfocus();
                                 final group = await _saveGroup(
                                   context,
                                   controller,

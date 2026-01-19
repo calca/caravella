@@ -148,11 +148,22 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
   }
 
   bool _canPop() {
+    final wizardState = context.read<WizardState>();
+    // Cannot go back from completion step
+    if (wizardState.currentStep == wizardState.totalSteps - 1) {
+      return false;
+    }
     final controller = context.read<GroupFormController>();
     return !controller.hasChanges;
   }
 
   Future<bool> _onWillPop() async {
+    final wizardState = context.read<WizardState>();
+    // Prevent going back from completion step
+    if (wizardState.currentStep == wizardState.totalSteps - 1) {
+      return false;
+    }
+
     final gloc = gen.AppLocalizations.of(context);
     final controller = context.read<GroupFormController>();
 

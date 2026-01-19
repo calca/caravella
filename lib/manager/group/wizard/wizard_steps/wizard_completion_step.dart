@@ -31,125 +31,116 @@ class _WizardCompletionStepState extends State<WizardCompletionStep> {
     final theme = Theme.of(context);
     final groupName = context.watch<GroupFormState>().title;
 
-    return Center(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // Celebration emoji
-            Text(_randomEmoji, style: const TextStyle(fontSize: 72)),
-
-            const SizedBox(height: 24),
-
-            // Success title
-            Text(
-              gloc.wizard_success_title,
-              style: theme.textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.onSurface,
-              ),
-              textAlign: TextAlign.center,
-            ),
-
-            const SizedBox(height: 8),
-
-            // Success message
-            Text(
-              gloc.wizard_congratulations_message(groupName),
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-              textAlign: TextAlign.center,
-            ),
-
-            const SizedBox(height: 32),
-
-            // What's next section
-            Container(
-              constraints: const BoxConstraints(maxWidth: 400),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceContainerHigh,
-                borderRadius: BorderRadius.circular(16),
-              ),
+    return Column(
+      children: [
+        // Scrollable content
+        Expanded(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  // Celebration emoji
+                  Text(_randomEmoji, style: const TextStyle(fontSize: 72)),
+
+                  const SizedBox(height: 24),
+
+                  // Success title
                   Text(
-                    gloc.wizard_completion_what_next,
-                    style: theme.textTheme.titleSmall?.copyWith(
+                    gloc.wizard_success_title,
+                    style: theme.textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurface,
                     ),
+                    textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 12),
-                  _NextStepTile(
-                    icon: Icons.receipt_long_rounded,
-                    title: gloc.wizard_completion_add_expenses,
-                    subtitle: gloc.wizard_completion_add_expenses_description,
-                  ),
+
                   const SizedBox(height: 8),
-                  _NextStepTile(
-                    icon: Icons.tune_rounded,
-                    title: gloc.wizard_completion_customize_group,
-                    subtitle:
-                        gloc.wizard_completion_customize_group_description,
-                  ),
-                ],
-              ),
-            ),
 
-            const SizedBox(height: 32),
-
-            // Action buttons
-            Container(
-              constraints: const BoxConstraints(maxWidth: 400),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Go to group page (primary action)
-                  FilledButton.icon(
-                    onPressed: () {
-                      // Return the group ID so the caller can open it
-                      Navigator.of(context).pop(widget.groupId);
-                    },
-                    icon: const Icon(Icons.arrow_forward_rounded, size: 20),
-                    label: Text(gloc.wizard_go_to_group),
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 16,
-                        horizontal: 24,
-                      ),
+                  // Success message
+                  Text(
+                    gloc.wizard_congratulations_message(groupName),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
+                    textAlign: TextAlign.center,
                   ),
 
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 32),
 
-                  // Go to settings (secondary action)
-                  OutlinedButton.icon(
-                    onPressed: () {
-                      // Return a map indicating we want to go to settings
-                      Navigator.of(
-                        context,
-                      ).pop({'action': 'settings', 'groupId': widget.groupId});
-                    },
-                    icon: const Icon(Icons.settings_rounded, size: 20),
-                    label: Text(gloc.wizard_go_to_settings),
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 16,
-                        horizontal: 24,
-                      ),
+                  // What's next section
+                  Container(
+                    constraints: const BoxConstraints(maxWidth: 400),
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surfaceContainerHigh,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          gloc.wizard_completion_what_next,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorScheme.onSurface,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        _NextStepTile(
+                          icon: Icons.receipt_long_rounded,
+                          title: gloc.wizard_completion_add_expenses,
+                          subtitle:
+                              gloc.wizard_completion_add_expenses_description,
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
-          ],
+          ),
         ),
-      ),
+
+        // Fixed button at bottom
+        Container(
+          padding: const EdgeInsets.fromLTRB(24.0, 12.0, 24.0, 12.0),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.shadow.withValues(alpha: 0.1),
+                blurRadius: 8,
+                offset: const Offset(0, -2),
+              ),
+            ],
+          ),
+          child: SafeArea(
+            top: false,
+            minimum: EdgeInsets.zero,
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 400),
+              width: double.infinity,
+              child: FilledButton.icon(
+                onPressed: () {
+                  // Return the group ID so the caller can open it
+                  Navigator.of(context).pop(widget.groupId);
+                },
+                icon: const Icon(Icons.arrow_forward_rounded, size: 20),
+                label: Text(gloc.wizard_go_to_group),
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 16,
+                    horizontal: 24,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

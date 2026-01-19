@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'package:caravella_core/caravella_core.dart';
 import '../../manager/group/pages/group_creation_wizard_page.dart';
-import '../../manager/group/pages/expenses_group_edit_page.dart';
-import '../../manager/group/group_edit_mode.dart';
 import '../../settings/pages/settings_page.dart';
 
 typedef RefreshCallback = void Function();
@@ -175,30 +172,6 @@ class HomeWelcomeSection extends StatelessWidget {
                                 // User wants to go to group
                                 if (onTripAdded != null) {
                                   onTripAdded!();
-                                }
-                              } else if (result is Map &&
-                                  result['action'] == 'settings') {
-                                final groupId = result['groupId'] as String?;
-                                if (groupId != null && context.mounted) {
-                                  final group =
-                                      await ExpenseGroupStorageV2.getTripById(
-                                        groupId,
-                                      );
-                                  if (group != null && context.mounted) {
-                                    await Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            ExpensesGroupEditPage(
-                                              trip: group,
-                                              mode: GroupEditMode.edit,
-                                            ),
-                                      ),
-                                    );
-                                    if (context.mounted &&
-                                        onTripAdded != null) {
-                                      onTripAdded!();
-                                    }
-                                  }
                                 }
                               }
                             }
