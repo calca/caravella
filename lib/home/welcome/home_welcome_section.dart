@@ -3,6 +3,7 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core/caravella_core.dart';
 import '../../manager/group/pages/group_creation_wizard_page.dart';
 import '../../manager/group/pages/expenses_group_edit_page.dart';
+import '../../manager/group/group_edit_mode.dart';
 import '../../settings/pages/settings_page.dart';
 
 typedef RefreshCallback = void Function();
@@ -179,8 +180,7 @@ class HomeWelcomeSection extends StatelessWidget {
                                   result['action'] == 'settings') {
                                 final groupId = result['groupId'] as String?;
                                 if (groupId != null && context.mounted) {
-                                  final storage = ExpenseGroupStorageV2();
-                                  final group = await storage.getGroupById(
+                                  final group = await ExpenseGroupStorageV2.getTripById(
                                     groupId,
                                   );
                                   if (group != null && context.mounted) {
