@@ -105,7 +105,9 @@ class _WizardCompletionStepState extends State<WizardCompletionStep> {
               child: FilledButton.icon(
                 onPressed: () async {
                   // Load the group and navigate to detail page
-                  final group = await ExpenseGroupStorageV2.getTripById(widget.groupId);
+                  final group = await ExpenseGroupStorageV2.getTripById(
+                    widget.groupId,
+                  );
                   if (group != null && context.mounted) {
                     // Pop the wizard
                     Navigator.of(context).pop();
@@ -113,7 +115,8 @@ class _WizardCompletionStepState extends State<WizardCompletionStep> {
                     if (context.mounted) {
                       await Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => ExpenseGroupDetailPage(trip: group),
+                          builder: (context) =>
+                              ExpenseGroupDetailPage(trip: group),
                         ),
                       );
                     }
