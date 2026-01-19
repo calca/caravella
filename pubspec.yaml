@@ -76,7 +76,7 @@ dependencies:
   video_player: ^2.10.1
   chewie: ^1.13.0
   zentoast: ^0.2.0
-  talker_flutter: ^5.1.9
+  talker_flutter: ^5.1.12
   # Conditional dependency: only included when ENABLE_PLAY_UPDATES=true
   play_store_updates:
     path: packages/play_store_updates
@@ -87,7 +87,7 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   flutter_launcher_icons: ^0.14.4
   path_provider_platform_interface: ^2.1.2
-  sqflite_common_ffi: ^2.3.4
+  sqflite_common_ffi: ^2.4.0+2
 
 dependency_overrides:
   # Force package_info_plus to 9.0.0 for compatibility
