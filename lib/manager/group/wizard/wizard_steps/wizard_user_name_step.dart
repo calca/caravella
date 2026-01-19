@@ -85,22 +85,26 @@ class _WizardUserNameStepState extends State<WizardUserNameStep> {
 
             const SizedBox(height: 32),
 
+            // Icon above input
+            Icon(
+              Icons.person_rounded,
+              size: 48,
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+            ),
+
+            const SizedBox(height: 16),
+
             // Input field
-            Container(
-              constraints: const BoxConstraints(maxWidth: 400),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.8,
               child: TextField(
                 controller: _controller,
                 decoration: InputDecoration(
                   hintText: gloc.wizard_user_name_hint,
-                  prefixIcon: Icon(
-                    Icons.person_rounded,
-                    size: 22,
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
                   isDense: true,
                   contentPadding: const EdgeInsets.symmetric(
-                    vertical: 8.0,
-                    horizontal: 0.0,
+                    vertical: 12.0,
+                    horizontal: 16.0,
                   ),
                 ),
                 style: theme.textTheme.bodyMedium?.copyWith(
@@ -108,6 +112,7 @@ class _WizardUserNameStepState extends State<WizardUserNameStep> {
                 ),
                 textInputAction: TextInputAction.next,
                 autofocus: true,
+                textAlign: TextAlign.center,
               ),
             ),
 
