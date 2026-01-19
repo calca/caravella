@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:caravella_core/caravella_core.dart';
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 class ParticipantAvatar extends StatelessWidget {
   final ExpenseParticipant participant;
@@ -123,23 +124,41 @@ class ExpenseGroupAvatar extends StatelessWidget {
 
 class GroupHeader extends StatelessWidget {
   final ExpenseGroup trip;
-  const GroupHeader({super.key, required this.trip});
+  final VoidCallback? onPinToggle;
+  
+  const GroupHeader({
+    super.key,
+    required this.trip,
+    this.onPinToggle,
+  });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final double circleSize = MediaQuery.of(context).size.width * 0.3;
+    final gloc = gen.AppLocalizations.of(context);
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Center(
           child: Stack(
             children: [
-              ExpenseGroupAvatar(trip: trip, size: circleSize),
-              if (trip.pinned || trip.archived)
-                Positioned(
-                  bottom: 0,
-                  right: 0,
+              GestureDetector(
+                onTap: trip.archived ? null : onPinToggle,
+                child: Semantics(
+                  button: true,
+                  enabled: !trip.archived,
+                  label: trip.pinned 
+                      ? gloc.unpin_group 
+                      : gloc.pin_group,
+                  child: ExpenseGroupAvatar(trip: trip, size: circleSize),
+                ),
+              ),
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: IgnorePointer(
                   child: Container(
                     decoration: BoxDecoration(
                       color: colorScheme.surfaceDim,
@@ -149,12 +168,17 @@ class GroupHeader extends StatelessWidget {
                     child: Icon(
                       trip.pinned
                           ? Icons.favorite
-                          : Icons.archive_outlined,
+                          : (trip.archived 
+                              ? Icons.archive_outlined 
+                              : Icons.favorite_border),
                       size: circleSize * 0.15,
-                      color: colorScheme.onSurface.withValues(alpha: 0.6),
+                      color: trip.pinned
+                          ? colorScheme.primary
+                          : colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
                 ),
+              ),
             ],
           ),
         ),

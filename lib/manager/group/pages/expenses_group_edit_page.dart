@@ -24,12 +24,16 @@ class ExpensesGroupEditPage extends StatelessWidget {
   /// Specifica se la pagina opera in modalità creazione o modifica.
   /// Se non fornito, viene dedotto automaticamente: trip == null => create, altrimenti edit.
   final GroupEditMode mode;
+  
+  /// Indice della tab iniziale (0=General, 1=Participants, 2=Categories, 3=Other)
+  final int initialTab;
 
   const ExpensesGroupEditPage({
     super.key,
     this.trip,
     this.onTripDeleted,
     required this.mode,
+    this.initialTab = 0,
   });
 
   @override
@@ -69,6 +73,7 @@ class ExpensesGroupEditPage extends StatelessWidget {
         trip: trip,
         onTripDeleted: onTripDeleted,
         mode: mode,
+        initialTab: initialTab,
       ),
     );
   }
@@ -78,10 +83,13 @@ class _GroupFormScaffold extends StatefulWidget {
   final ExpenseGroup? trip;
   final VoidCallback? onTripDeleted;
   final GroupEditMode mode;
+  final int initialTab;
+  
   const _GroupFormScaffold({
     required this.trip,
     this.onTripDeleted,
     required this.mode,
+    this.initialTab = 0,
   });
   @override
   State<_GroupFormScaffold> createState() => _GroupFormScaffoldState();
@@ -102,6 +110,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
     _tabController = TabController(
       length: 4,
       vsync: this,
+      initialIndex: widget.initialTab.clamp(0, 3),
       animationDuration: const Duration(milliseconds: 350),
     );
 

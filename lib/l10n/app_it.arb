@@ -886,4 +886,8 @@
   ,"@wizard_completion_customize_group": {"description": "Titolo opzione personalizza gruppo"}
   ,"wizard_completion_customize_group_description": "Modifica partecipanti, categorie e impostazioni"
   ,"@wizard_completion_customize_group_description": {"description": "Descrizione opzione personalizza gruppo"}
+  ,"danger_zone": "Zona Pericolosa"
+  ,"@danger_zone": {"description": "Titolo sezione per azioni pericolose come archiviazione ed eliminazione"}
+  ,"export_options_desc": "Scarica o condividi le spese in vari formati"
+  ,"@export_options_desc": {"description": "Descrizione per le opzioni di esportazione"}
 }

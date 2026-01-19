@@ -1270,5 +1270,13 @@
   "wizard_completion_customize_group_description": "编辑参与者、类别和设置",
   "@wizard_completion_customize_group_description": {
     "description": "自定义群组选项描述"
+  },
+  "danger_zone": "危险区域",
+  "@danger_zone": {
+    "description": "危险操作（如归档和删除）的部分标题"
+  },
+  "export_options_desc": "以各种格式下载或分享费用",
+  "@export_options_desc": {
+    "description": "导出选项的描述"
   }
 }
