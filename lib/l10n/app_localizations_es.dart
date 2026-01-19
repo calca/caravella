@@ -2052,7 +2052,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get wizard_step_type_and_name => 'Tipo y Nombre';
 
   @override
-  String get wizard_type_and_name_description => 'Crea tu grupo';
+  String get wizard_type_and_name_description => '¿Para qué es este grupo?';
 
   @override
   String get wizard_step_participants => 'Participantes';
@@ -2085,7 +2085,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get wizard_finish => 'Crear Grupo';
 
   @override
-  String get wizard_name_description => 'Nombre del grupo';
+  String get wizard_name_description => 'Nombre';
 
   @override
   String get wizard_participants_description =>

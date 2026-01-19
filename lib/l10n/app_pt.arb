@@ -779,7 +779,7 @@
   ,"@wizard_step_name": {"description": "Título do passo 1 do assistente: nome do grupo"}
   ,"wizard_step_type_and_name": "Tipo e Nome"
   ,"@wizard_step_type_and_name": {"description": "Título do passo do assistente: tipo e nome do grupo"}
-  ,"wizard_type_and_name_description": "Crie seu grupo"
+  ,"wizard_type_and_name_description": "Para que é este grupo?"
   ,"@wizard_type_and_name_description": {"description": "Descrição do passo de tipo e nome no assistente"}
   ,"wizard_step_participants": "Participantes"
   ,"@wizard_step_participants": {"description": "Título do passo 2 do assistente: participantes"}
@@ -801,7 +801,7 @@
   ,"@wizard_skip": {"description": "Texto do botão para pular um passo opcional"}
   ,"wizard_finish": "Criar Grupo"
   ,"@wizard_finish": {"description": "Texto do botão final para criar o grupo"}
-  ,"wizard_name_description": "Nome do grupo"
+  ,"wizard_name_description": "Nome"
   ,"@wizard_name_description": {"description": "Descrição do passo nome no assistente"}
   ,"wizard_participants_description": "Adicione pessoas que compartilharão despesas"
   ,"@wizard_participants_description": {"description": "Descrição do passo participantes no assistente"}

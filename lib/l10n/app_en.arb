@@ -837,7 +837,7 @@
   ,"@wizard_step_name": {"description": "Title of wizard step 1: group name"}
   ,"wizard_step_type_and_name": "Type and Name"
   ,"@wizard_step_type_and_name": {"description": "Title of wizard step: type and group name"}
-  ,"wizard_type_and_name_description": "Create your group"
+  ,"wizard_type_and_name_description": "What's this group for?"
   ,"@wizard_type_and_name_description": {"description": "Description of type and name step in wizard"}
   ,"wizard_step_participants": "Participants"
   ,"@wizard_step_participants": {"description": "Title of wizard step 2: participants"}
@@ -859,7 +859,7 @@
   ,"@wizard_skip": {"description": "Text of button to skip an optional step"}
   ,"wizard_finish": "Create Group"
   ,"@wizard_finish": {"description": "Text of final button to create the group"}
-  ,"wizard_name_description": "Group name"
+  ,"wizard_name_description": "Name"
   ,"@wizard_name_description": {"description": "Description of the name step in the wizard"}
   ,"wizard_participants_description": "Add people who will share expenses"
   ,"@wizard_participants_description": {"description": "Description of the participants step in the wizard"}

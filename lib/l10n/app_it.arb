@@ -800,7 +800,7 @@
   ,"@wizard_step_name": {"description": "Titolo step 1 del wizard: nome gruppo"}
   ,"wizard_step_type_and_name": "Tipologia e Nome"
   ,"@wizard_step_type_and_name": {"description": "Titolo step del wizard: tipologia e nome gruppo"}
-  ,"wizard_type_and_name_description": "Crea il tuo gruppo"
+  ,"wizard_type_and_name_description": "A cosa serve questo gruppo?"
   ,"@wizard_type_and_name_description": {"description": "Descrizione dello step tipologia e nome nel wizard"}
   ,"wizard_step_participants": "Partecipanti"
   ,"@wizard_step_participants": {"description": "Titolo step 2 del wizard: partecipanti"}
@@ -822,7 +822,7 @@
   ,"@wizard_skip": {"description": "Testo del pulsante per saltare uno step opzionale"}
   ,"wizard_finish": "Crea Gruppo"
   ,"@wizard_finish": {"description": "Testo del pulsante finale per creare il gruppo"}
-  ,"wizard_name_description": "Nome del gruppo"
+  ,"wizard_name_description": "Nome"
   ,"@wizard_name_description": {"description": "Descrizione dello step nome nel wizard"}
   ,"wizard_participants_description": "Aggiungi le persone che parteciperanno alle spese"
   ,"@wizard_participants_description": {"description": "Descrizione dello step partecipanti nel wizard"}

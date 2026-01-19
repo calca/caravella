@@ -3986,7 +3986,7 @@ abstract class AppLocalizations {
   /// Description of type and name step in wizard
   ///
   /// In en, this message translates to:
-  /// **'Create your group'**
+  /// **'What\'s this group for?'**
   String get wizard_type_and_name_description;
 
   /// Title of wizard step 2: participants
@@ -4052,7 +4052,7 @@ abstract class AppLocalizations {
   /// Description of the name step in the wizard
   ///
   /// In en, this message translates to:
-  /// **'Group name'**
+  /// **'Name'**
   String get wizard_name_description;
 
   /// Description of the participants step in the wizard

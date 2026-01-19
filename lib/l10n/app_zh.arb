@@ -1084,7 +1084,7 @@
   "@wizard_step_type_and_name": {
     "description": "向导步骤的标题：类型和群组名称"
   },
-  "wizard_type_and_name_description": "创建您的群组",
+  "wizard_type_and_name_description": "这个群组是用来做什么的？",
   "@wizard_type_and_name_description": {
     "description": "向导中类型和名称步骤的描述"
   },
@@ -1128,7 +1128,7 @@
   "@wizard_finish": {
     "description": "最终创建群组的按钮文本"
   },
-  "wizard_name_description": "为您的费用群组输入名称",
+  "wizard_name_description": "名称",
   "@wizard_name_description": {
     "description": "向导中名称步骤的描述"
   },

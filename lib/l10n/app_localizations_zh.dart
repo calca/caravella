@@ -2006,7 +2006,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get wizard_step_type_and_name => '类型和名称';
 
   @override
-  String get wizard_type_and_name_description => '创建您的群组';
+  String get wizard_type_and_name_description => '这个群组是用来做什么的？';
 
   @override
   String get wizard_step_participants => '参与者';
@@ -2039,7 +2039,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get wizard_finish => '创建群组';
 
   @override
-  String get wizard_name_description => '为您的费用群组输入名称';
+  String get wizard_name_description => '名称';
 
   @override
   String get wizard_participants_description => '添加将共享费用的人员';
