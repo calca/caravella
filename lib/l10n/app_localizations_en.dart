@@ -2029,4 +2029,171 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notification_disable => 'Disable';
+
+  @override
+  String get wizard_group_creation_title => 'New Group';
+
+  @override
+  String get wizard_step_name => 'Name';
+
+  @override
+  String get wizard_step_type_and_name => 'Type and Name';
+
+  @override
+  String get wizard_type_and_name_description => 'What\'s this group for?';
+
+  @override
+  String get wizard_step_participants => 'Participants';
+
+  @override
+  String get wizard_step_categories => 'Categories';
+
+  @override
+  String get wizard_step_period => 'Period';
+
+  @override
+  String get wizard_step_background => 'Background';
+
+  @override
+  String get wizard_step_congratulations => 'Congratulations!';
+
+  @override
+  String get wizard_step_of => 'of';
+
+  @override
+  String get wizard_next => 'Next';
+
+  @override
+  String get wizard_previous => 'Previous';
+
+  @override
+  String get wizard_skip => 'Skip';
+
+  @override
+  String get wizard_finish => 'Create Group';
+
+  @override
+  String get wizard_name_description => 'Name';
+
+  @override
+  String get wizard_participants_description =>
+      'Add people who will share expenses';
+
+  @override
+  String get wizard_categories_description =>
+      'Create categories to organize expenses';
+
+  @override
+  String get wizard_period_description => 'Set start and end dates (optional)';
+
+  @override
+  String get wizard_background_description =>
+      'Choose a background color for the group';
+
+  @override
+  String wizard_congratulations_message(String groupName) {
+    return 'Your group \'$groupName\' has been created successfully!';
+  }
+
+  @override
+  String get wizard_group_summary => 'Group summary:';
+
+  @override
+  String wizard_created_participants(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count participants',
+      one: '1 participant',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String wizard_created_categories(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count categories',
+      one: '1 category',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get wizard_step_user_name => 'Your Name';
+
+  @override
+  String get wizard_user_name_welcome => 'Welcome!';
+
+  @override
+  String get wizard_user_name_description =>
+      'Before we start, tell us your name so we can personalize your experience';
+
+  @override
+  String get wizard_user_name_local_storage_note =>
+      'Your data stays private on your device';
+
+  @override
+  String get wizard_user_name_label => 'Your name (optional)';
+
+  @override
+  String get wizard_user_name_hint => 'e.g. Alex';
+
+  @override
+  String get wizard_step_participants_and_categories => 'Who and what';
+
+  @override
+  String get wizard_participants_and_categories_description =>
+      'Define who participates and what expenses will be shared';
+
+  @override
+  String get wizard_participants_section_title => 'Who\'s participating?';
+
+  @override
+  String get wizard_participants_section_hint =>
+      'Add friends or roommates. You can modify them later.';
+
+  @override
+  String get wizard_categories_section_title => 'What will be shared?';
+
+  @override
+  String get wizard_categories_section_hint =>
+      'E.g. Food, Accommodation, Transportation. You can add or rename later.';
+
+  @override
+  String get wizard_step_color_and_final => 'Color and confirm';
+
+  @override
+  String get wizard_color_and_final_description =>
+      'Choose a color for the group and review the summary';
+
+  @override
+  String get wizard_preview_title => 'Group preview';
+
+  @override
+  String get wizard_success_title => 'Congratulations!';
+
+  @override
+  String get wizard_go_to_group => 'Go to group';
+
+  @override
+  String get wizard_go_to_settings => 'Group settings';
+
+  @override
+  String get wizard_completion_what_next => 'What you can do now:';
+
+  @override
+  String get wizard_completion_add_expenses => 'Add expenses';
+
+  @override
+  String get wizard_completion_add_expenses_description =>
+      'Start tracking group expenses';
+
+  @override
+  String get wizard_completion_customize_group => 'Customize group';
+
+  @override
+  String get wizard_completion_customize_group_description =>
+      'Edit participants, categories, and settings';
 }

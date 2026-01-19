@@ -831,4 +831,96 @@
   ,"@notification_close": {"description": "Action button in notification to close"}
   ,"notification_disable": "Disable"
   ,"@notification_disable": {"description": "Action button in notification to disable notifications"}
+  ,"wizard_group_creation_title": "New Group"
+  ,"@wizard_group_creation_title": {"description": "Title of group creation wizard"}
+  ,"wizard_step_name": "Name"
+  ,"@wizard_step_name": {"description": "Title of wizard step 1: group name"}
+  ,"wizard_step_type_and_name": "Type and Name"
+  ,"@wizard_step_type_and_name": {"description": "Title of wizard step: type and group name"}
+  ,"wizard_type_and_name_description": "What's this group for?"
+  ,"@wizard_type_and_name_description": {"description": "Description of type and name step in wizard"}
+  ,"wizard_step_participants": "Participants"
+  ,"@wizard_step_participants": {"description": "Title of wizard step 2: participants"}
+  ,"wizard_step_categories": "Categories"
+  ,"@wizard_step_categories": {"description": "Title of wizard step 3: categories"}
+  ,"wizard_step_period": "Period"
+  ,"@wizard_step_period": {"description": "Title of wizard step 4: period"}
+  ,"wizard_step_background": "Background"
+  ,"@wizard_step_background": {"description": "Title of wizard step 5: background color"}
+  ,"wizard_step_congratulations": "Congratulations!"
+  ,"@wizard_step_congratulations": {"description": "Title of final wizard step: congratulations"}
+  ,"wizard_step_of": "of"
+  ,"@wizard_step_of": {"description": "Separator for progress indicator (e.g. 'Step 1 of 6')"}
+  ,"wizard_next": "Next"
+  ,"@wizard_next": {"description": "Text of button to go to next step"}
+  ,"wizard_previous": "Previous"
+  ,"@wizard_previous": {"description": "Text of button to go back to previous step"}
+  ,"wizard_skip": "Skip"
+  ,"@wizard_skip": {"description": "Text of button to skip an optional step"}
+  ,"wizard_finish": "Create Group"
+  ,"@wizard_finish": {"description": "Text of final button to create the group"}
+  ,"wizard_name_description": "Name"
+  ,"@wizard_name_description": {"description": "Description of the name step in the wizard"}
+  ,"wizard_participants_description": "Add people who will share expenses"
+  ,"@wizard_participants_description": {"description": "Description of the participants step in the wizard"}
+  ,"wizard_categories_description": "Create categories to organize expenses"
+  ,"@wizard_categories_description": {"description": "Description of the categories step in the wizard"}
+  ,"wizard_period_description": "Set start and end dates (optional)"
+  ,"@wizard_period_description": {"description": "Description of the period step in the wizard"}
+  ,"wizard_background_description": "Choose a background color for the group"
+  ,"@wizard_background_description": {"description": "Description of the background step in the wizard"}
+  ,"wizard_congratulations_message": "Your group '{groupName}' has been created successfully!"
+  ,"@wizard_congratulations_message": {"description": "Congratulations message with group name", "placeholders": {"groupName": {"type": "String"}}}
+  ,"wizard_group_summary": "Group summary:"
+  ,"@wizard_group_summary": {"description": "Title of the summary in the final screen"}
+  ,"wizard_created_participants": "{count, plural, =1{1 participant} other{{count} participants}}"
+  ,"@wizard_created_participants": {"description": "Number of participants in the summary", "placeholders": {"count": {"type": "int"}}}
+  ,"wizard_created_categories": "{count, plural, =1{1 category} other{{count} categories}}"
+  ,"@wizard_created_categories": {"description": "Number of categories in the summary", "placeholders": {"count": {"type": "int"}}}
+  ,"wizard_step_user_name": "Your Name"
+  ,"@wizard_step_user_name": {"description": "Title of initial wizard step: user name"}
+  ,"wizard_user_name_welcome": "Welcome!"
+  ,"@wizard_user_name_welcome": {"description": "Welcome message in user name step"}
+  ,"wizard_user_name_description": "Before we start, tell us your name so we can personalize your experience"
+  ,"@wizard_user_name_description": {"description": "Description of user name step"}
+  ,"wizard_user_name_local_storage_note": "Your data stays private on your device"
+  ,"@wizard_user_name_local_storage_note": {"description": "Privacy note for user name"}
+  ,"wizard_user_name_label": "Your name (optional)"
+  ,"@wizard_user_name_label": {"description": "Label for user name field"}
+  ,"wizard_user_name_hint": "e.g. Alex"
+  ,"@wizard_user_name_hint": {"description": "Hint for user name field"}
+  ,"wizard_step_participants_and_categories": "Who and what"
+  ,"@wizard_step_participants_and_categories": {"description": "Title of combined participants and categories step"}
+  ,"wizard_participants_and_categories_description": "Define who participates and what expenses will be shared"
+  ,"@wizard_participants_and_categories_description": {"description": "Description of combined participants and categories step"}
+  ,"wizard_participants_section_title": "Who's participating?"
+  ,"@wizard_participants_section_title": {"description": "Title of participants section in combined step"}
+  ,"wizard_participants_section_hint": "Add friends or roommates. You can modify them later."
+  ,"@wizard_participants_section_hint": {"description": "Hint for participants section"}
+  ,"wizard_categories_section_title": "What will be shared?"
+  ,"@wizard_categories_section_title": {"description": "Title of categories section in combined step"}
+  ,"wizard_categories_section_hint": "E.g. Food, Accommodation, Transportation. You can add or rename later."
+  ,"@wizard_categories_section_hint": {"description": "Hint for categories section"}
+  ,"wizard_step_color_and_final": "Color and confirm"
+  ,"@wizard_step_color_and_final": {"description": "Title of final color and confirm step"}
+  ,"wizard_color_and_final_description": "Choose a color for the group and review the summary"
+  ,"@wizard_color_and_final_description": {"description": "Description of final step"}
+  ,"wizard_preview_title": "Group preview"
+  ,"@wizard_preview_title": {"description": "Title of preview section"}
+  ,"wizard_success_title": "Congratulations!"
+  ,"@wizard_success_title": {"description": "Title of success dialog"}
+  ,"wizard_go_to_group": "Go to group"
+  ,"@wizard_go_to_group": {"description": "Button to go to created group"}
+  ,"wizard_go_to_settings": "Group settings"
+  ,"@wizard_go_to_settings": {"description": "Button to go to group settings"}
+  ,"wizard_completion_what_next": "What you can do now:"
+  ,"@wizard_completion_what_next": {"description": "Title of next actions section"}
+  ,"wizard_completion_add_expenses": "Add expenses"
+  ,"@wizard_completion_add_expenses": {"description": "Title of add expenses option"}
+  ,"wizard_completion_add_expenses_description": "Start tracking group expenses"
+  ,"@wizard_completion_add_expenses_description": {"description": "Description of add expenses option"}
+  ,"wizard_completion_customize_group": "Customize group"
+  ,"@wizard_completion_customize_group": {"description": "Title of customize group option"}
+  ,"wizard_completion_customize_group_description": "Edit participants, categories, and settings"
+  ,"@wizard_completion_customize_group_description": {"description": "Description of customize group option"}
 }

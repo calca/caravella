@@ -1995,4 +1995,160 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get notification_disable => '禁用';
+
+  @override
+  String get wizard_group_creation_title => '新建群组';
+
+  @override
+  String get wizard_step_name => '名称';
+
+  @override
+  String get wizard_step_type_and_name => '类型和名称';
+
+  @override
+  String get wizard_type_and_name_description => '这个群组是用来做什么的？';
+
+  @override
+  String get wizard_step_participants => '参与者';
+
+  @override
+  String get wizard_step_categories => '类别';
+
+  @override
+  String get wizard_step_period => '时间段';
+
+  @override
+  String get wizard_step_background => '背景';
+
+  @override
+  String get wizard_step_congratulations => '恭喜！';
+
+  @override
+  String get wizard_step_of => '的';
+
+  @override
+  String get wizard_next => '下一步';
+
+  @override
+  String get wizard_previous => '上一步';
+
+  @override
+  String get wizard_skip => '跳过';
+
+  @override
+  String get wizard_finish => '创建群组';
+
+  @override
+  String get wizard_name_description => '名称';
+
+  @override
+  String get wizard_participants_description => '添加将共享费用的人员';
+
+  @override
+  String get wizard_categories_description => '创建类别以组织费用';
+
+  @override
+  String get wizard_period_description => '设置开始和结束日期（可选）';
+
+  @override
+  String get wizard_background_description => '为群组选择背景颜色';
+
+  @override
+  String wizard_congratulations_message(String groupName) {
+    return '您的群组\'$groupName\'已成功创建！';
+  }
+
+  @override
+  String get wizard_group_summary => '群组摘要：';
+
+  @override
+  String wizard_created_participants(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count位参与者',
+      one: '1位参与者',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String wizard_created_categories(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count个类别',
+      one: '1个类别',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get wizard_step_user_name => '您的名字';
+
+  @override
+  String get wizard_user_name_welcome => '欢迎！';
+
+  @override
+  String get wizard_user_name_description => '在开始之前，请告诉我们您的名字，以便我们个性化您的体验';
+
+  @override
+  String get wizard_user_name_local_storage_note => '您的数据保存在您的设备上，保持私密';
+
+  @override
+  String get wizard_user_name_label => '您的名字（可选）';
+
+  @override
+  String get wizard_user_name_hint => '例如 小明';
+
+  @override
+  String get wizard_step_participants_and_categories => '谁和什么';
+
+  @override
+  String get wizard_participants_and_categories_description => '定义谁参与以及将共享哪些费用';
+
+  @override
+  String get wizard_participants_section_title => '谁在参与？';
+
+  @override
+  String get wizard_participants_section_hint => '添加朋友或室友。您可以稍后修改。';
+
+  @override
+  String get wizard_categories_section_title => '将共享什么？';
+
+  @override
+  String get wizard_categories_section_hint => '例如 食物、住宿、交通。您可以稍后添加或重命名。';
+
+  @override
+  String get wizard_step_color_and_final => '颜色和确认';
+
+  @override
+  String get wizard_color_and_final_description => '为群组选择颜色并查看摘要';
+
+  @override
+  String get wizard_preview_title => '群组预览';
+
+  @override
+  String get wizard_success_title => '恭喜！';
+
+  @override
+  String get wizard_go_to_group => '转到群组';
+
+  @override
+  String get wizard_go_to_settings => '群组设置';
+
+  @override
+  String get wizard_completion_what_next => '您现在可以：';
+
+  @override
+  String get wizard_completion_add_expenses => '添加支出';
+
+  @override
+  String get wizard_completion_add_expenses_description => '开始跟踪群组支出';
+
+  @override
+  String get wizard_completion_customize_group => '自定义群组';
+
+  @override
+  String get wizard_completion_customize_group_description => '编辑参与者、类别和设置';
 }

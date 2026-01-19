@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../../manager/group/pages/expenses_group_edit_page.dart';
-import '../../../manager/group/group_edit_mode.dart';
+import '../../../manager/group/pages/group_creation_wizard_page.dart';
 
 class EmptyGroupsState extends StatelessWidget {
   final gen.AppLocalizations localizations;
@@ -89,12 +88,14 @@ class EmptyGroupsState extends StatelessWidget {
             onPressed: () async {
               final result = await Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) =>
-                      const ExpensesGroupEditPage(mode: GroupEditMode.create),
+                  builder: (context) => const GroupCreationWizardPage(),
                 ),
               );
-              if (result == true) {
-                onGroupAdded();
+              if (result != null) {
+                if (result is String) {
+                  // User wants to go to group - trigger refresh
+                  onGroupAdded();
+                }
               }
             },
             icon: const Icon(Icons.add),
