@@ -102,7 +102,9 @@ class EmptyGroupsState extends StatelessWidget {
                   // User wants to go to settings
                   final groupId = result['groupId'] as String?;
                   if (groupId != null && context.mounted) {
-                    final group = await ExpenseGroupStorageV2.getTripById(groupId);
+                    final group = await ExpenseGroupStorageV2.getTripById(
+                      groupId,
+                    );
                     if (group != null && context.mounted) {
                       await Navigator.of(context).push(
                         MaterialPageRoute(
