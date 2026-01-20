@@ -24,9 +24,12 @@ class ExportOptionsSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
     final bottomInset = MediaQuery.of(context).padding.bottom;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return GroupBottomSheetScaffold(
       title: gloc.export_options,
-      scrollable: false, // dynamic height, no internal scroll
+      scrollable: true,
       padding: EdgeInsets.fromLTRB(
         20,
         20,
@@ -35,53 +38,80 @@ class ExportOptionsSheet extends StatelessWidget {
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Share options first
-          ListTile(
-            leading: Icon(
-              Icons.share_outlined,
-              color: Theme.of(context).colorScheme.onPrimaryFixed,
+          // CSV - Spreadsheet format
+          Padding(
+            padding: const EdgeInsets.only(left: 16, top: 8, bottom: 4),
+            child: Text(
+              'CSV',
+              style: textTheme.labelLarge?.copyWith(
+                color: colorScheme.primary,
+                fontWeight: FontWeight.bold,
+              ),
             ),
+          ),
+          ListTile(
+            leading: Icon(Icons.share_outlined, color: colorScheme.onSurface),
             title: Text(gloc.share_all_csv),
             onTap: onShareCsv,
           ),
           ListTile(
             leading: Icon(
-              Icons.share_outlined,
-              color: Theme.of(context).colorScheme.onPrimaryFixed,
+              Icons.file_download_outlined,
+              color: colorScheme.onSurface,
             ),
+            title: Text(gloc.download_all_csv),
+            onTap: onDownloadCsv,
+          ),
+          const SizedBox(height: 8),
+
+          // OFX - Banking format
+          Padding(
+            padding: const EdgeInsets.only(left: 16, top: 8, bottom: 4),
+            child: Text(
+              'OFX',
+              style: textTheme.labelLarge?.copyWith(
+                color: colorScheme.primary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.share_outlined, color: colorScheme.onSurface),
             title: Text(gloc.share_all_ofx),
             onTap: onShareOfx,
           ),
           ListTile(
             leading: Icon(
-              Icons.share_outlined,
-              color: Theme.of(context).colorScheme.onPrimaryFixed,
-            ),
-            title: Text(gloc.share_all_markdown),
-            onTap: onShareMarkdown,
-          ),
-          // Download options second
-          ListTile(
-            leading: Icon(
               Icons.file_download_outlined,
-              color: Theme.of(context).colorScheme.onPrimaryFixed,
-            ),
-            title: Text(gloc.download_all_csv),
-            onTap: onDownloadCsv,
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.file_download_outlined,
-              color: Theme.of(context).colorScheme.onPrimaryFixed,
+              color: colorScheme.onSurface,
             ),
             title: Text(gloc.download_all_ofx),
             onTap: onDownloadOfx,
           ),
+          const SizedBox(height: 8),
+
+          // Markdown - Document format
+          Padding(
+            padding: const EdgeInsets.only(left: 16, top: 8, bottom: 4),
+            child: Text(
+              'Markdown',
+              style: textTheme.labelLarge?.copyWith(
+                color: colorScheme.primary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.share_outlined, color: colorScheme.onSurface),
+            title: Text(gloc.share_all_markdown),
+            onTap: onShareMarkdown,
+          ),
           ListTile(
             leading: Icon(
               Icons.file_download_outlined,
-              color: Theme.of(context).colorScheme.onPrimaryFixed,
+              color: colorScheme.onSurface,
             ),
             title: Text(gloc.download_all_markdown),
             onTap: onDownloadMarkdown,
