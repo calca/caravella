@@ -3965,6 +3965,12 @@ abstract class AppLocalizations {
   /// **'Disable'**
   String get notification_disable;
 
+  /// Button to load more expenses in paginated list
+  ///
+  /// In en, this message translates to:
+  /// **'Load more expenses'**
+  String get load_more_expenses;
+
   /// Title of group creation wizard
   ///
   /// In en, this message translates to:

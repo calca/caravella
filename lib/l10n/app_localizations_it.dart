@@ -2040,6 +2040,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get notification_disable => 'Disabilita';
 
   @override
+  String get load_more_expenses => 'Carica altre spese';
+
+  @override
   String get wizard_group_creation_title => 'Nuovo Gruppo';
 
   @override

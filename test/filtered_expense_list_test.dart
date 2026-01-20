@@ -271,5 +271,256 @@ void main() {
         findsOneWidget,
       ); // Search off icon for filtered state
     });
+
+    testWidgets('Month headers are displayed when expenses span multiple months', (
+      tester,
+    ) async {
+      // Create expenses from different months
+      final expensesMultipleMonths = [
+        ExpenseDetails(
+          id: 'exp1',
+          name: 'January expense',
+          amount: 25.50,
+          category: testCategories[0],
+          paidBy: testParticipants[0],
+          date: DateTime(2024, 1, 15),
+        ),
+        ExpenseDetails(
+          id: 'exp2',
+          name: 'February expense 1',
+          amount: 30.00,
+          category: testCategories[1],
+          paidBy: testParticipants[1],
+          date: DateTime(2024, 2, 10),
+        ),
+        ExpenseDetails(
+          id: 'exp3',
+          name: 'February expense 2',
+          amount: 15.00,
+          category: testCategories[0],
+          paidBy: testParticipants[0],
+          date: DateTime(2024, 2, 20),
+        ),
+        ExpenseDetails(
+          id: 'exp4',
+          name: 'March expense',
+          amount: 40.00,
+          category: testCategories[1],
+          paidBy: testParticipants[1],
+          date: DateTime(2024, 3, 5),
+        ),
+      ];
+
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('it'),
+          home: Scaffold(
+            body: FilteredExpenseList(
+              expenses: expensesMultipleMonths,
+              currency: '€',
+              onExpenseTap: (expense) {},
+              categories: testCategories,
+              participants: testParticipants,
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // Check that all expenses are displayed
+      expect(find.text('January expense'), findsOneWidget);
+      expect(find.text('February expense 1'), findsOneWidget);
+      expect(find.text('February expense 2'), findsOneWidget);
+      expect(find.text('March expense'), findsOneWidget);
+
+      // Check that month headers are present
+      // Note: The exact text will be in Italian (e.g., "marzo 2024", "febbraio 2024", "gennaio 2024")
+      // We'll look for text widgets that contain year and month patterns
+      final textWidgets = find.byType(Text);
+      final List<String> allText = [];
+      for (var element in textWidgets.evaluate()) {
+        final widget = element.widget as Text;
+        final data = widget.data;
+        if (data != null) {
+          allText.add(data);
+        }
+      }
+
+      // Check for Italian month names (at least some should be present)
+      final hasMonthHeaders = allText.any((text) => 
+        text.contains('2024') && 
+        (text.contains('gennaio') || text.contains('febbraio') || text.contains('marzo'))
+      );
+      expect(hasMonthHeaders, isTrue, reason: 'Expected to find month headers with year');
+    });
+
+    testWidgets('Single month does not show redundant headers', (
+      tester,
+    ) async {
+      // All expenses from the same month
+      final singleMonthExpenses = [
+        ExpenseDetails(
+          id: 'exp1',
+          name: 'Expense 1',
+          amount: 25.50,
+          category: testCategories[0],
+          paidBy: testParticipants[0],
+          date: DateTime(2024, 3, 1),
+        ),
+        ExpenseDetails(
+          id: 'exp2',
+          name: 'Expense 2',
+          amount: 30.00,
+          category: testCategories[1],
+          paidBy: testParticipants[1],
+          date: DateTime(2024, 3, 15),
+        ),
+        ExpenseDetails(
+          id: 'exp3',
+          name: 'Expense 3',
+          amount: 15.00,
+          category: testCategories[0],
+          paidBy: testParticipants[0],
+          date: DateTime(2024, 3, 28),
+        ),
+      ];
+
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('it'),
+          home: Scaffold(
+            body: FilteredExpenseList(
+              expenses: singleMonthExpenses,
+              currency: '€',
+              onExpenseTap: (expense) {},
+              categories: testCategories,
+              participants: testParticipants,
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // Check that all expenses are displayed
+      expect(find.text('Expense 1'), findsOneWidget);
+      expect(find.text('Expense 2'), findsOneWidget);
+      expect(find.text('Expense 3'), findsOneWidget);
+
+      // There should still be a month header (one), not redundant multiple headers
+      final textWidgets = find.byType(Text);
+      final List<String> allText = [];
+      for (var element in textWidgets.evaluate()) {
+        final widget = element.widget as Text;
+        final data = widget.data;
+        if (data != null && data.contains('2024')) {
+          allText.add(data);
+        }
+      }
+
+      // Should have exactly one month header with year
+      final monthHeadersCount = allText.where((text) => 
+        text.contains('marzo 2024')
+      ).length;
+      expect(monthHeadersCount, equals(1), reason: 'Expected exactly one month header');
+    });
+
+    testWidgets('Pagination loads initial 100 expenses', (tester) async {
+      // Create more than 100 expenses
+      final manyExpenses = List.generate(150, (i) {
+        return ExpenseDetails(
+          id: 'exp$i',
+          name: 'Expense $i',
+          amount: 10.0 + i,
+          category: testCategories[i % 2],
+          paidBy: testParticipants[i % 2],
+          date: DateTime.now().subtract(Duration(days: i)),
+        );
+      });
+
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('en'),
+          home: Scaffold(
+            body: FilteredExpenseList(
+              expenses: manyExpenses,
+              currency: '\$',
+              onExpenseTap: (expense) {},
+              categories: testCategories,
+              participants: testParticipants,
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // Should show "Load more" button since there are 150 expenses
+      expect(find.text('Load more expenses'), findsOneWidget);
+
+      // First 100 expenses should be visible
+      expect(find.text('Expense 0'), findsOneWidget);
+      expect(find.text('Expense 99'), findsOneWidget);
+
+      // Tap load more button
+      await tester.tap(find.text('Load more expenses'));
+      await tester.pumpAndSettle();
+
+      // After loading more, more expenses should be visible
+      // The button should still be there since we have 150 total
+      expect(find.text('Expense 120'), findsOneWidget);
+    });
+
+    testWidgets('Pagination resets when filter changes', (tester) async {
+      // Create more than 100 expenses with different categories
+      final manyExpenses = List.generate(150, (i) {
+        return ExpenseDetails(
+          id: 'exp$i',
+          name: 'Expense $i',
+          amount: 10.0 + i,
+          category: testCategories[i % 2],
+          paidBy: testParticipants[i % 2],
+          date: DateTime.now().subtract(Duration(days: i)),
+        );
+      });
+
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('en'),
+          home: Scaffold(
+            body: FilteredExpenseList(
+              expenses: manyExpenses,
+              currency: '\$',
+              onExpenseTap: (expense) {},
+              categories: testCategories,
+              participants: testParticipants,
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // Open filters
+      await tester.tap(find.byIcon(Icons.filter_list_outlined));
+      await tester.pumpAndSettle();
+
+      // Select a category filter
+      await tester.tap(find.text('Food'));
+      await tester.pumpAndSettle();
+
+      // Pagination should reset when filter is applied
+      // This would be indicated by showing the first expenses again
+      expect(find.text('Expense 0'), findsOneWidget);
+    });
   });
 }

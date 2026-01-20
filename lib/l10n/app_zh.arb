@@ -1072,6 +1072,11 @@
   "@notification_disable": {
     "description": "通知中用于禁用通知的操作按钮"
   },
+  "load_more_expenses": "加载更多支出",
+  "@load_more_expenses": {
+    "description": "在分页列表中加载更多支出的按钮"
+  },
+
   "wizard_group_creation_title": "新建群组",
   "@wizard_group_creation_title": {
     "description": "群组创建向导的标题"

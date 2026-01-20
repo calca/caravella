@@ -773,6 +773,9 @@
   ,"@notification_close": {"description": "Botão de ação na notificação para fechar"}
   ,"notification_disable": "Desativar"
   ,"@notification_disable": {"description": "Botão de ação na notificação para desativar notificações"}
+  ,"load_more_expenses": "Carregar mais despesas"
+  ,"@load_more_expenses": {"description": "Botão para carregar mais despesas na lista paginada"}
+
   ,"wizard_group_creation_title": "Novo Grupo"
   ,"@wizard_group_creation_title": {"description": "Título do assistente de criação de grupo"}
   ,"wizard_step_name": "Nome"

@@ -831,6 +831,8 @@
   ,"@notification_close": {"description": "Action button in notification to close"}
   ,"notification_disable": "Disable"
   ,"@notification_disable": {"description": "Action button in notification to disable notifications"}
+  ,"load_more_expenses": "Load more expenses"
+  ,"@load_more_expenses": {"description": "Button to load more expenses in paginated list"}
   ,"wizard_group_creation_title": "New Group"
   ,"@wizard_group_creation_title": {"description": "Title of group creation wizard"}
   ,"wizard_step_name": "Name"

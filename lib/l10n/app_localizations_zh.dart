@@ -1997,6 +1997,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get notification_disable => '禁用';
 
   @override
+  String get load_more_expenses => '加载更多支出';
+
+  @override
   String get wizard_group_creation_title => '新建群组';
 
   @override

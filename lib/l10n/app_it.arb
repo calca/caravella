@@ -794,6 +794,8 @@
   ,"@notification_close": {"description": "Pulsante azione nella notifica per chiudere"}
   ,"notification_disable": "Disabilita"
   ,"@notification_disable": {"description": "Pulsante azione nella notifica per disabilitare le notifiche"}
+  ,"load_more_expenses": "Carica altre spese"
+  ,"@load_more_expenses": {"description": "Pulsante per caricare più spese nella lista paginata"}
   ,"wizard_group_creation_title": "Nuovo Gruppo"
   ,"@wizard_group_creation_title": {"description": "Titolo del wizard di creazione gruppo"}
   ,"wizard_step_name": "Nome"
