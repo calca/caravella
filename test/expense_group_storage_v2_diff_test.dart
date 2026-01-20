@@ -19,7 +19,7 @@ class _FakePathProvider extends PathProviderPlatform {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   PathProviderPlatform.instance = _FakePathProvider();
-  
+
   setUpAll(() {
     // Force use of JSON backend for all tests
     ExpenseGroupRepositoryFactory.reset();
