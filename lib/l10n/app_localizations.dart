@@ -4258,6 +4258,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Download or share expenses in various formats'**
   String get export_options_desc;
+
+  /// Short description for CSV export format
+  ///
+  /// In en, this message translates to:
+  /// **'Spreadsheet format'**
+  String get export_csv_description;
+
+  /// Short description for OFX export format
+  ///
+  /// In en, this message translates to:
+  /// **'Banking format'**
+  String get export_ofx_description;
+
+  /// Short description for Markdown export format
+  ///
+  /// In en, this message translates to:
+  /// **'Document format'**
+  String get export_markdown_description;
+
+  /// Label for save action button
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save_label;
 }
 
 class _AppLocalizationsDelegate

@@ -1282,5 +1282,21 @@
   "export_options_desc": "以各种格式下载或分享费用",
   "@export_options_desc": {
     "description": "导出选项的描述"
+  },
+  "export_csv_description": "电子表格格式",
+  "@export_csv_description": {
+    "description": "CSV导出格式的简短描述"
+  },
+  "export_ofx_description": "银行格式",
+  "@export_ofx_description": {
+    "description": "OFX导出格式的简短描述"
+  },
+  "export_markdown_description": "文档格式",
+  "@export_markdown_description": {
+    "description": "Markdown导出格式的简短描述"
+  },
+  "save_label": "保存",
+  "@save_label": {
+    "description": "保存按钮的标签"
   }
 }

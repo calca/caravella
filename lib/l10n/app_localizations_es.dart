@@ -2219,4 +2219,16 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get export_options_desc =>
       'Descargar o compartir gastos en varios formatos';
+
+  @override
+  String get export_csv_description => 'Formato hoja de cálculo';
+
+  @override
+  String get export_ofx_description => 'Formato bancario';
+
+  @override
+  String get export_markdown_description => 'Formato documento';
+
+  @override
+  String get save_label => 'Guardar';
 }

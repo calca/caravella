@@ -2160,4 +2160,16 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get export_options_desc => '以各种格式下载或分享费用';
+
+  @override
+  String get export_csv_description => '电子表格格式';
+
+  @override
+  String get export_ofx_description => '银行格式';
+
+  @override
+  String get export_markdown_description => '文档格式';
+
+  @override
+  String get save_label => '保存';
 }

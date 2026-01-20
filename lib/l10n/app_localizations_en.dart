@@ -2206,4 +2206,16 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get export_options_desc =>
       'Download or share expenses in various formats';
+
+  @override
+  String get export_csv_description => 'Spreadsheet format';
+
+  @override
+  String get export_ofx_description => 'Banking format';
+
+  @override
+  String get export_markdown_description => 'Document format';
+
+  @override
+  String get save_label => 'Save';
 }

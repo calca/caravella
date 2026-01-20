@@ -24,99 +24,122 @@ class ExportOptionsSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
     final bottomInset = MediaQuery.of(context).padding.bottom;
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
 
     return GroupBottomSheetScaffold(
       title: gloc.export_options,
       scrollable: true,
       padding: EdgeInsets.fromLTRB(
         20,
-        20,
+        12,
         20,
         bottomInset > 0 ? bottomInset : 12,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // CSV - Spreadsheet format
-          Padding(
-            padding: const EdgeInsets.only(left: 16, top: 8, bottom: 4),
-            child: Text(
-              'CSV',
-              style: textTheme.labelLarge?.copyWith(
-                color: colorScheme.primary,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          ListTile(
-            leading: Icon(Icons.share_outlined, color: colorScheme.onSurface),
-            title: Text(gloc.share_all_csv),
-            onTap: onShareCsv,
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.file_download_outlined,
-              color: colorScheme.onSurface,
-            ),
-            title: Text(gloc.download_all_csv),
-            onTap: onDownloadCsv,
+          _ExportFormatRow(
+            icon: Icons.table_chart_outlined,
+            format: 'CSV',
+            description: gloc.export_csv_description,
+            onShare: onShareCsv,
+            onDownload: onDownloadCsv,
+            shareTooltip: gloc.share_label,
+            downloadTooltip: gloc.save_label,
           ),
           const SizedBox(height: 8),
-
-          // OFX - Banking format
-          Padding(
-            padding: const EdgeInsets.only(left: 16, top: 8, bottom: 4),
-            child: Text(
-              'OFX',
-              style: textTheme.labelLarge?.copyWith(
-                color: colorScheme.primary,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          ListTile(
-            leading: Icon(Icons.share_outlined, color: colorScheme.onSurface),
-            title: Text(gloc.share_all_ofx),
-            onTap: onShareOfx,
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.file_download_outlined,
-              color: colorScheme.onSurface,
-            ),
-            title: Text(gloc.download_all_ofx),
-            onTap: onDownloadOfx,
+          _ExportFormatRow(
+            icon: Icons.account_balance_outlined,
+            format: 'OFX',
+            description: gloc.export_ofx_description,
+            onShare: onShareOfx,
+            onDownload: onDownloadOfx,
+            shareTooltip: gloc.share_label,
+            downloadTooltip: gloc.save_label,
           ),
           const SizedBox(height: 8),
-
-          // Markdown - Document format
-          Padding(
-            padding: const EdgeInsets.only(left: 16, top: 8, bottom: 4),
-            child: Text(
-              'Markdown',
-              style: textTheme.labelLarge?.copyWith(
-                color: colorScheme.primary,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          ListTile(
-            leading: Icon(Icons.share_outlined, color: colorScheme.onSurface),
-            title: Text(gloc.share_all_markdown),
-            onTap: onShareMarkdown,
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.file_download_outlined,
-              color: colorScheme.onSurface,
-            ),
-            title: Text(gloc.download_all_markdown),
-            onTap: onDownloadMarkdown,
+          _ExportFormatRow(
+            icon: Icons.description_outlined,
+            format: 'Markdown',
+            description: gloc.export_markdown_description,
+            onShare: onShareMarkdown,
+            onDownload: onDownloadMarkdown,
+            shareTooltip: gloc.share_label,
+            downloadTooltip: gloc.save_label,
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _ExportFormatRow extends StatelessWidget {
+  final IconData icon;
+  final String format;
+  final String description;
+  final VoidCallback onShare;
+  final VoidCallback onDownload;
+  final String shareTooltip;
+  final String downloadTooltip;
+
+  const _ExportFormatRow({
+    required this.icon,
+    required this.format,
+    required this.description,
+    required this.onShare,
+    required this.onDownload,
+    required this.shareTooltip,
+    required this.downloadTooltip,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    return Card(
+      elevation: 0,
+      color: colorScheme.surfaceContainerLow,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          children: [
+            Icon(icon, color: colorScheme.primary, size: 28),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    format,
+                    style: textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    description,
+                    style: textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.share_outlined),
+              onPressed: onShare,
+              tooltip: shareTooltip,
+              color: colorScheme.onSurfaceVariant,
+            ),
+            IconButton(
+              icon: const Icon(Icons.save_alt_outlined),
+              onPressed: onDownload,
+              tooltip: downloadTooltip,
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ],
+        ),
       ),
     );
   }

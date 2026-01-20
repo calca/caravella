@@ -907,4 +907,12 @@
   ,"@danger_zone_desc": {"description": "Descripción para la sección zona peligrosa"}
   ,"export_options_desc": "Descargar o compartir gastos en varios formatos"
   ,"@export_options_desc": {"description": "Descripción para las opciones de exportación"}
+  ,"export_csv_description": "Formato hoja de cálculo"
+  ,"@export_csv_description": {"description": "Descripción corta para el formato de exportación CSV"}
+  ,"export_ofx_description": "Formato bancario"
+  ,"@export_ofx_description": {"description": "Descripción corta para el formato de exportación OFX"}
+  ,"export_markdown_description": "Formato documento"
+  ,"@export_markdown_description": {"description": "Descripción corta para el formato de exportación Markdown"}
+  ,"save_label": "Guardar"
+  ,"@save_label": {"description": "Etiqueta para el botón de guardar"}
 }
