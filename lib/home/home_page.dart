@@ -111,25 +111,6 @@ class _HomePageState extends State<HomePage> with RouteAware {
         _loading = true;
       });
     }
-    
-    // Pre-load groups data to populate cache before FutureBuilder executes
-    // This prevents race condition on cold start where FutureBuilder might
-    // execute before cache is populated, showing welcome page incorrectly
-    // Note: FileBasedExpenseGroupRepository has a 5-minute cache, so the
-    // FutureBuilder's subsequent calls will be cache hits, not duplicate disk reads
-    try {
-      await Future.wait([
-        ExpenseGroupStorageV2.getActiveGroups(),
-        ExpenseGroupStorageV2.getArchivedGroups(),
-      ]);
-    } catch (e) {
-      LoggerService.warning(
-        'Failed to pre-load groups: $e',
-        name: 'home',
-      );
-      // Continue anyway - FutureBuilder will retry loading
-    }
-    
     final pinnedTrip = await ExpenseGroupStorageV2.getPinnedTrip();
     if (!mounted) return;
     setState(() {
@@ -215,6 +196,11 @@ class _HomePageState extends State<HomePage> with RouteAware {
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
+    
+    // Check if user has ever created a group using preferences
+    // This is faster than loading all groups from disk on every cold start
+    final hasCreatedGroup = PreferencesService.instance.appState.hasCreatedGroup();
+    
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: _loading
@@ -227,70 +213,79 @@ class _HomePageState extends State<HomePage> with RouteAware {
                 ),
               ),
             )
-          : RefreshIndicator(
-              onRefresh: _handleUserRefresh,
-              child: FutureBuilder<List<List<ExpenseGroup>>>(
-                future: Future.wait<List<ExpenseGroup>>([
-                  ExpenseGroupStorageV2.getActiveGroups(),
-                  ExpenseGroupStorageV2.getArchivedGroups(),
-                ]),
-                builder: (context, snapshot) {
-                  final active =
-                      snapshot.data != null && snapshot.data!.isNotEmpty
-                      ? snapshot.data![0]
-                      : <ExpenseGroup>[];
-                  final archived =
-                      snapshot.data != null && snapshot.data!.length > 1
-                      ? snapshot.data![1]
-                      : <ExpenseGroup>[];
+          : hasCreatedGroup
+              ? RefreshIndicator(
+                  onRefresh: _handleUserRefresh,
+                  child: FutureBuilder<List<List<ExpenseGroup>>>(
+                    future: Future.wait<List<ExpenseGroup>>([
+                      ExpenseGroupStorageV2.getActiveGroups(),
+                      ExpenseGroupStorageV2.getArchivedGroups(),
+                    ]),
+                    builder: (context, snapshot) {
+                      final active =
+                          snapshot.data != null && snapshot.data!.isNotEmpty
+                          ? snapshot.data![0]
+                          : <ExpenseGroup>[];
+                      final archived =
+                          snapshot.data != null && snapshot.data!.length > 1
+                          ? snapshot.data![1]
+                          : <ExpenseGroup>[];
 
-                  // Show HomeCardsSection when there are active groups.
-                  // If active is empty but archived groups exist, still show HomeCardsSection
-                  // with an empty list so the UI renders only the add-card.
-                  if (active.isNotEmpty) {
-                    return SafeArea(
-                      child: Semantics(
-                        label: gloc.accessibility_groups_list,
-                        child: HomeCardsSection(
-                          initialGroups: active,
-                          onTripAdded: _handleTripAdded,
-                          onTripDeleted: _handleTripDeleted,
-                          onTripUpdated: _handleTripUpdated,
-                          pinnedTrip: _pinnedTrip,
-                          allArchived: false,
-                        ),
-                      ),
-                    );
-                  }
+                      // Show HomeCardsSection when there are active groups.
+                      // If active is empty but archived groups exist, still show HomeCardsSection
+                      // with an empty list so the UI renders only the add-card.
+                      if (active.isNotEmpty) {
+                        return SafeArea(
+                          child: Semantics(
+                            label: gloc.accessibility_groups_list,
+                            child: HomeCardsSection(
+                              initialGroups: active,
+                              onTripAdded: _handleTripAdded,
+                              onTripDeleted: _handleTripDeleted,
+                              onTripUpdated: _handleTripUpdated,
+                              pinnedTrip: _pinnedTrip,
+                              allArchived: false,
+                            ),
+                          ),
+                        );
+                      }
 
-                  // If no active groups but there are archived groups, enter home with empty cards
-                  if (archived.isNotEmpty) {
-                    return SafeArea(
-                      child: Semantics(
-                        label: gloc.accessibility_groups_list,
-                        child: HomeCardsSection(
-                          initialGroups: <ExpenseGroup>[],
-                          onTripAdded: _handleTripAdded,
-                          onTripDeleted: _handleTripDeleted,
-                          onTripUpdated: _handleTripUpdated,
-                          pinnedTrip: _pinnedTrip,
-                          allArchived: true,
-                        ),
-                      ),
-                    );
-                  } else {
-                    return Semantics(
-                      label: gloc.accessibility_welcome_screen,
-                      child: HomeWelcomeSection(
-                        onTripAdded: () {
-                          _handleTripAdded();
-                        },
-                      ),
-                    );
-                  }
-                },
-              ),
-            ),
+                      // If no active groups but there are archived groups, enter home with empty cards
+                      if (archived.isNotEmpty) {
+                        return SafeArea(
+                          child: Semantics(
+                            label: gloc.accessibility_groups_list,
+                            child: HomeCardsSection(
+                              initialGroups: <ExpenseGroup>[],
+                              onTripAdded: _handleTripAdded,
+                              onTripDeleted: _handleTripDeleted,
+                              onTripUpdated: _handleTripUpdated,
+                              pinnedTrip: _pinnedTrip,
+                              allArchived: true,
+                            ),
+                          ),
+                        );
+                      } else {
+                        return Semantics(
+                          label: gloc.accessibility_welcome_screen,
+                          child: HomeWelcomeSection(
+                            onTripAdded: () {
+                              _handleTripAdded();
+                            },
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                )
+              : Semantics(
+                  label: gloc.accessibility_welcome_screen,
+                  child: HomeWelcomeSection(
+                    onTripAdded: () {
+                      _handleTripAdded();
+                    },
+                  ),
+                ),
     );
   }
 }

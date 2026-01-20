@@ -22,6 +22,9 @@ abstract class _PreferenceKeys {
   static const String totalExpenseCount = 'total_expense_count';
   static const String lastRatingPrompt = 'last_rating_prompt';
   static const String hasShownInitialRating = 'has_shown_initial_rating';
+
+  // App State
+  static const String hasCreatedGroup = 'has_created_group';
 }
 
 /// Default values for preferences
@@ -32,6 +35,7 @@ abstract class _PreferenceDefaults {
   static const bool autoBackupEnabled = false;
   static const int totalExpenseCount = 0;
   static const bool hasShownInitialRating = false;
+  static const bool hasCreatedGroup = false;
 }
 
 /// Centralized service for managing SharedPreferences.
@@ -119,6 +123,13 @@ class PreferencesService {
 
   /// Store rating preferences management
   StoreRatingPreferences get storeRating => StoreRatingPreferences._(_prefs);
+
+  // ============================================================================
+  // App State Preferences
+  // ============================================================================
+
+  /// App state preferences management
+  AppStatePreferences get appState => AppStatePreferences._(_prefs);
 
   // ============================================================================
   // Utility Methods
@@ -325,5 +336,26 @@ class StoreRatingPreferences {
   /// Set whether initial rating prompt has been shown
   Future<void> setHasShownInitialPrompt(bool shown) async {
     await _prefs.setBool(_PreferenceKeys.hasShownInitialRating, shown);
+  }
+}
+
+// ==============================================================================
+// App State Preferences
+// ==============================================================================
+
+/// Manages app state-related preferences
+class AppStatePreferences {
+  AppStatePreferences._(this._prefs);
+  final SharedPreferences _prefs;
+
+  /// Get whether user has created at least one group (default: false)
+  bool hasCreatedGroup() {
+    return _prefs.getBool(_PreferenceKeys.hasCreatedGroup) ??
+        _PreferenceDefaults.hasCreatedGroup;
+  }
+
+  /// Set whether user has created at least one group
+  Future<void> setHasCreatedGroup(bool value) async {
+    await _prefs.setBool(_PreferenceKeys.hasCreatedGroup, value);
   }
 }
