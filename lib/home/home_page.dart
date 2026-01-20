@@ -115,6 +115,8 @@ class _HomePageState extends State<HomePage> with RouteAware {
     // Pre-load groups data to populate cache before FutureBuilder executes
     // This prevents race condition on cold start where FutureBuilder might
     // execute before cache is populated, showing welcome page incorrectly
+    // Note: FileBasedExpenseGroupRepository has a 5-minute cache, so the
+    // FutureBuilder's subsequent calls will be cache hits, not duplicate disk reads
     try {
       await Future.wait([
         ExpenseGroupStorageV2.getActiveGroups(),
