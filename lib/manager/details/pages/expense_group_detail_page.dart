@@ -1,7 +1,5 @@
 import 'package:io_caravella_egm/manager/details/widgets/export_options_sheet.dart';
 
-import '../../group/pages/expenses_group_edit_page.dart';
-import '../../group/group_edit_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:caravella_core/caravella_core.dart';
@@ -394,7 +392,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
 
   void _showSettingsPage() async {
     if (_trip == null) return;
-    
+
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (ctx) => GroupSettingsPage(
@@ -409,24 +407,24 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         ),
       ),
     );
-    
+
     // Refresh after returning from settings
     await _refreshGroup();
   }
 
   Future<void> _handlePinToggle() async {
     if (_trip == null) return;
-    
+
     // Use the notifier to update pin state (handles storage + shortcuts)
     await Provider.of<ExpenseGroupNotifier>(
       context,
       listen: false,
     ).updateGroupPin(_trip!.id, !_trip!.pinned);
-    
+
     await _refreshGroup();
-    
+
     if (!mounted) return;
-    
+
     final gloc = gen.AppLocalizations.of(context);
     AppToast.show(
       context,
