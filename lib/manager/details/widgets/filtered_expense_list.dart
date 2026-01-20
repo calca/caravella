@@ -35,7 +35,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
   String? _selectedParticipantId;
   bool _showFilters = false;
   final TextEditingController _searchController = TextEditingController();
-  
+
   // Pagination state
   static const int _initialLoadCount = 100;
   static const int _pageSize = 50;
@@ -93,7 +93,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
   /// Load more expenses (called when user scrolls near the end)
   void _loadMoreExpenses() {
     if (_isLoadingMore || !_hasMoreExpenses) return;
-    
+
     setState(() {
       _isLoadingMore = true;
     });
@@ -102,8 +102,10 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
     Future.delayed(const Duration(milliseconds: 100), () {
       if (!mounted) return;
       setState(() {
-        _displayedExpenseCount = (_displayedExpenseCount + _pageSize)
-            .clamp(0, _filteredExpenses.length);
+        _displayedExpenseCount = (_displayedExpenseCount + _pageSize).clamp(
+          0,
+          _filteredExpenses.length,
+        );
         _isLoadingMore = false;
       });
     });
@@ -122,17 +124,18 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
     List<ExpenseDetails> expenses,
   ) {
     final Map<String, List<ExpenseDetails>> grouped = {};
-    
+
     for (final expense in expenses) {
       // Create a key in format "yyyy-MM" for grouping
-      final monthKey = '${expense.date.year}-${expense.date.month.toString().padLeft(2, '0')}';
-      
+      final monthKey =
+          '${expense.date.year}-${expense.date.month.toString().padLeft(2, '0')}';
+
       if (!grouped.containsKey(monthKey)) {
         grouped[monthKey] = [];
       }
       grouped[monthKey]!.add(expense);
     }
-    
+
     return grouped;
   }
 
@@ -142,7 +145,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
     final year = int.parse(parts[0]);
     final month = int.parse(parts[1]);
     final date = DateTime(year, month);
-    
+
     // Use DateFormat to get localized month and year (e.g., "January 2024" or "gennaio 2024")
     final formatter = DateFormat.yMMMM(locale.toString());
     return formatter.format(date);
@@ -157,39 +160,47 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
     final locale = Localizations.localeOf(context);
     final colorScheme = Theme.of(context).colorScheme;
     final groupedByMonth = _groupExpensesByMonth(expenses);
-    
+
     // Sort month keys in descending order (newest first)
     final sortedMonthKeys = groupedByMonth.keys.toList()
       ..sort((a, b) => b.compareTo(a));
 
+    // Get current month key for comparison
+    final now = DateTime.now();
+    final currentMonthKey =
+        '${now.year}-${now.month.toString().padLeft(2, '0')}';
+
     final widgets = <Widget>[];
 
-    for (final monthKey in sortedMonthKeys) {
+    for (var i = 0; i < sortedMonthKeys.length; i++) {
+      final monthKey = sortedMonthKeys[i];
       final monthExpenses = groupedByMonth[monthKey]!;
-      
-      // Add month header
-      widgets.add(
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-          child: Text(
-            _formatMonthHeader(monthKey, locale),
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.w600,
-              color: colorScheme.onSurface.withValues(alpha: 0.7),
+      final isFirstMonth = i == 0;
+      final isCurrentMonth = monthKey == currentMonthKey;
+
+      // Add month header (skip if it's the first month and it's the current month)
+      if (!(isFirstMonth && isCurrentMonth)) {
+        widgets.add(
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: Text(
+              _formatMonthHeader(monthKey, locale).toUpperCase(),
+              textAlign: TextAlign.left,
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: colorScheme.onSurface.withValues(alpha: 0.7),
+              ),
             ),
           ),
-        ),
-      );
+        );
+      }
 
       // Add expenses for this month
       for (final expense in monthExpenses) {
         widgets.add(
           Container(
             width: double.infinity,
-            margin: const EdgeInsets.symmetric(
-              vertical: 2,
-              horizontal: 0,
-            ),
+            margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 0),
             child: ExpenseAmountCard(
               title: expense.name ?? '',
               coins: (expense.amount ?? 0).toInt(),
@@ -198,9 +209,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
               category: expense.category.name,
               date: expense.date,
               currency: widget.currency,
-              highlightQuery: _searchQuery.trim().isEmpty
-                  ? null
-                  : _searchQuery,
+              highlightQuery: _searchQuery.trim().isEmpty ? null : _searchQuery,
               onTap: () => widget.onExpenseTap(expense),
             ),
           ),
@@ -454,7 +463,8 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
                                   onSelected: () {
                                     setState(
                                       () => _selectedParticipantId =
-                                          _selectedParticipantId == participant.id
+                                          _selectedParticipantId ==
+                                              participant.id
                                           ? null
                                           : participant.id,
                                     );
