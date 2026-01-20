@@ -125,7 +125,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
       });
     } else if (widget.mode == GroupEditMode.create) {
       // For new groups, add user as first participant (using their name if set,
-      // otherwise "Me" localized) and add default categories for the default group type (personal)
+      // otherwise "Me" localized) and add default categories for the default group type
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
           final userNameNotifier = context.read<UserNameNotifier>();
@@ -140,21 +140,10 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
             ),
           );
 
-          // Add default categories for personal type (default type)
-          if (_state.categories.isEmpty &&
-              _state.groupType == ExpenseGroupType.personal) {
-            final defaultCategories = _getLocalizedCategories(
-              gloc,
-              ExpenseGroupType.personal,
-            );
-            for (int i = 0; i < defaultCategories.length; i++) {
-              _state.addCategory(
-                ExpenseCategory(
-                  id: '${DateTime.now().millisecondsSinceEpoch}_$i',
-                  name: defaultCategories[i],
-                ),
-              );
-            }
+          // Initialize default categories for the current group type
+          if (_state.groupType != null) {
+            final defaultCategories = _getLocalizedCategories(gloc, _state.groupType!);
+            _controller.initializeDefaultCategories(defaultCategories);
           }
         }
       });

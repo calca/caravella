@@ -52,6 +52,18 @@ class GroupFormController {
     state.refresh();
   }
 
+  /// Initializes default categories for the current group type.
+  /// Should be called once during wizard initialization in CREATE mode.
+  void initializeDefaultCategories(List<String> defaultCategoryNames) {
+    if (mode != GroupEditMode.create) return;
+    if (state.groupType == null) return;
+    if (state.categories.isNotEmpty) return; // Already initialized
+
+    for (final categoryName in defaultCategoryNames) {
+      state.addCategory(ExpenseCategory(name: categoryName));
+    }
+  }
+
   Map<String, String> _currencyFromGroup(String codeOrSymbol) {
     // Minimal mapping: if code length 3 treat as code, else assume EUR.
     if (codeOrSymbol.length == 3) {
