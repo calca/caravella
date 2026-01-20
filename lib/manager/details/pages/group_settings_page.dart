@@ -9,7 +9,7 @@ import '../../group/group_edit_mode.dart';
 import '../../../settings/widgets/settings_section.dart';
 import '../../../settings/widgets/settings_card.dart';
 
-class GroupSettingsPage extends StatelessWidget {
+class GroupSettingsPage extends StatefulWidget {
   final ExpenseGroup trip;
   final VoidCallback? onGroupUpdated;
   final VoidCallback? onGroupDeleted;
@@ -22,6 +22,19 @@ class GroupSettingsPage extends StatelessWidget {
     this.onGroupDeleted,
     this.onExportOptions,
   });
+
+  @override
+  State<GroupSettingsPage> createState() => _GroupSettingsPageState();
+}
+
+class _GroupSettingsPageState extends State<GroupSettingsPage> {
+  late ExpenseGroup _currentTrip;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentTrip = widget.trip;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +68,14 @@ class GroupSettingsPage extends StatelessWidget {
                 color: colorScheme.surface,
                 child: ListTile(
                   leading: const Icon(Icons.settings_outlined),
-                  title: Text(gloc.segment_general, style: textTheme.titleMedium),
-                  subtitle: Text(gloc.settings_general_desc, style: textTheme.bodySmall),
+                  title: Text(
+                    gloc.segment_general,
+                    style: textTheme.titleMedium,
+                  ),
+                  subtitle: Text(
+                    gloc.settings_general_desc,
+                    style: textTheme.bodySmall,
+                  ),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                   onTap: () => _openEditPage(context, 0),
                 ),
@@ -68,7 +87,10 @@ class GroupSettingsPage extends StatelessWidget {
                 child: ListTile(
                   leading: const Icon(Icons.people_outline),
                   title: Text(gloc.participants, style: textTheme.titleMedium),
-                  subtitle: Text(gloc.participants_description, style: textTheme.bodySmall),
+                  subtitle: Text(
+                    gloc.participants_description,
+                    style: textTheme.bodySmall,
+                  ),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                   onTap: () => _openEditPage(context, 1),
                 ),
@@ -80,7 +102,10 @@ class GroupSettingsPage extends StatelessWidget {
                 child: ListTile(
                   leading: const Icon(Icons.label_outline),
                   title: Text(gloc.categories, style: textTheme.titleMedium),
-                  subtitle: Text(gloc.categories_description, style: textTheme.bodySmall),
+                  subtitle: Text(
+                    gloc.categories_description,
+                    style: textTheme.bodySmall,
+                  ),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                   onTap: () => _openEditPage(context, 2),
                 ),
@@ -92,7 +117,10 @@ class GroupSettingsPage extends StatelessWidget {
                 child: ListTile(
                   leading: const Icon(Icons.tune_outlined),
                   title: Text(gloc.segment_other, style: textTheme.titleMedium),
-                  subtitle: Text(gloc.other_settings_desc, style: textTheme.bodySmall),
+                  subtitle: Text(
+                    gloc.other_settings_desc,
+                    style: textTheme.bodySmall,
+                  ),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                   onTap: () => _openEditPage(context, 3),
                 ),
@@ -111,14 +139,14 @@ class GroupSettingsPage extends StatelessWidget {
                 child: ListTile(
                   leading: Icon(
                     Icons.ios_share_outlined,
-                    color: trip.expenses.isEmpty
+                    color: _currentTrip.expenses.isEmpty
                         ? colorScheme.onSurface.withValues(alpha: 0.38)
                         : null,
                   ),
                   title: Text(
                     gloc.export_options,
                     style: textTheme.titleMedium?.copyWith(
-                      color: trip.expenses.isEmpty
+                      color: _currentTrip.expenses.isEmpty
                           ? colorScheme.onSurface.withValues(alpha: 0.38)
                           : null,
                     ),
@@ -126,7 +154,7 @@ class GroupSettingsPage extends StatelessWidget {
                   subtitle: Text(
                     gloc.export_options_desc,
                     style: textTheme.bodySmall?.copyWith(
-                      color: trip.expenses.isEmpty
+                      color: _currentTrip.expenses.isEmpty
                           ? colorScheme.onSurface.withValues(alpha: 0.38)
                           : null,
                     ),
@@ -134,11 +162,13 @@ class GroupSettingsPage extends StatelessWidget {
                   trailing: Icon(
                     Icons.arrow_forward_ios,
                     size: 16,
-                    color: trip.expenses.isEmpty
+                    color: _currentTrip.expenses.isEmpty
                         ? colorScheme.outline.withValues(alpha: 0.38)
                         : null,
                   ),
-                  onTap: trip.expenses.isEmpty ? null : () => _openExportOptions(context),
+                  onTap: _currentTrip.expenses.isEmpty
+                      ? null
+                      : () => _openExportOptions(context),
                 ),
               ),
             ],
@@ -154,10 +184,12 @@ class GroupSettingsPage extends StatelessWidget {
                 color: colorScheme.surface,
                 child: ListTile(
                   leading: Icon(
-                    trip.archived ? Icons.unarchive_outlined : Icons.archive_outlined,
+                    _currentTrip.archived
+                        ? Icons.unarchive_outlined
+                        : Icons.archive_outlined,
                   ),
                   title: Text(
-                    trip.archived ? gloc.unarchive : gloc.archive,
+                    _currentTrip.archived ? gloc.unarchive : gloc.archive,
                     style: textTheme.titleMedium,
                   ),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
@@ -169,10 +201,7 @@ class GroupSettingsPage extends StatelessWidget {
                 context: context,
                 color: colorScheme.surface,
                 child: ListTile(
-                  leading: Icon(
-                    Icons.delete_outline,
-                    color: colorScheme.error,
-                  ),
+                  leading: Icon(Icons.delete_outline, color: colorScheme.error),
                   title: Text(
                     gloc.delete_group,
                     style: textTheme.titleMedium?.copyWith(
@@ -194,39 +223,70 @@ class GroupSettingsPage extends StatelessWidget {
     final result = await Navigator.of(context).push<bool>(
       MaterialPageRoute(
         builder: (ctx) => ExpensesGroupEditPage(
-          trip: trip,
+          trip: _currentTrip,
           mode: GroupEditMode.edit,
           initialTab: initialTab,
         ),
       ),
     );
-    
+
     if (result == true && context.mounted) {
-      onGroupUpdated?.call();
+      // Ricarica il gruppo aggiornato
+      final updatedGroup = await ExpenseGroupStorageV2.getTripById(
+        _currentTrip.id,
+      );
+      if (updatedGroup != null && mounted) {
+        setState(() {
+          _currentTrip = updatedGroup;
+        });
+      }
+      widget.onGroupUpdated?.call();
     }
   }
 
   void _openExportOptions(BuildContext context) {
-    if (onExportOptions != null) {
-      onExportOptions!();
+    if (widget.onExportOptions != null) {
+      widget.onExportOptions!();
     }
   }
 
   Future<void> _handleArchiveToggle(BuildContext context) async {
     final gloc = gen.AppLocalizations.of(context);
-    final groupNotifier = Provider.of<ExpenseGroupNotifier>(context, listen: false);
-    
-    await groupNotifier.updateGroupArchive(trip.id, !trip.archived);
-    
-    if (!context.mounted) return;
-    
-    AppToast.show(
+    final groupNotifier = Provider.of<ExpenseGroupNotifier>(
       context,
-      trip.archived ? gloc.unarchived_with_undo : gloc.archived_with_undo,
-      type: ToastType.success,
+      listen: false,
     );
-    
-    onGroupUpdated?.call();
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+    final newArchivedState = !_currentTrip.archived;
+    await groupNotifier.updateGroupArchive(_currentTrip.id, newArchivedState);
+
+    if (!mounted) return;
+
+    // Ricarica il gruppo aggiornato
+    final updatedGroup = await ExpenseGroupStorageV2.getTripById(
+      _currentTrip.id,
+    );
+    if (updatedGroup != null && mounted) {
+      setState(() {
+        _currentTrip = updatedGroup;
+      });
+    }
+
+    if (!mounted) return;
+
+    scaffoldMessenger.showSnackBar(
+      SnackBar(
+        content: Text(
+          newArchivedState
+              ? gloc.archived_with_undo
+              : gloc.unarchived_with_undo,
+        ),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+
+    widget.onGroupUpdated?.call();
   }
 
   Future<void> _handleDelete(BuildContext context) async {
@@ -242,10 +302,7 @@ class GroupSettingsPage extends StatelessWidget {
         title: Text(gloc.delete_group),
         content: Text(gloc.delete_group_confirm),
         actions: [
-          Material3DialogActions.cancel(
-            dialogCtx,
-            gloc.cancel,
-          ),
+          Material3DialogActions.cancel(dialogCtx, gloc.cancel),
           Material3DialogActions.destructive(
             dialogCtx,
             gloc.delete,
@@ -256,15 +313,18 @@ class GroupSettingsPage extends StatelessWidget {
     );
 
     if (confirmed == true && context.mounted) {
-      final groupNotifier = Provider.of<ExpenseGroupNotifier>(context, listen: false);
-      
-      await ExpenseGroupStorageV2.deleteGroup(trip.id);
+      final groupNotifier = Provider.of<ExpenseGroupNotifier>(
+        context,
+        listen: false,
+      );
+
+      await ExpenseGroupStorageV2.deleteGroup(_currentTrip.id);
       ExpenseGroupStorageV2.forceReload();
-      groupNotifier.notifyGroupDeleted(trip.id);
+      groupNotifier.notifyGroupDeleted(_currentTrip.id);
 
       if (!context.mounted) return;
-      
-      onGroupDeleted?.call();
+
+      widget.onGroupDeleted?.call();
       Navigator.of(context).pop(); // Close settings page
     }
   }
