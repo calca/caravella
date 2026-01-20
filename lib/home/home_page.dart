@@ -115,10 +115,18 @@ class _HomePageState extends State<HomePage> with RouteAware {
     // Pre-load groups data to populate cache before FutureBuilder executes
     // This prevents race condition on cold start where FutureBuilder might
     // execute before cache is populated, showing welcome page incorrectly
-    await Future.wait([
-      ExpenseGroupStorageV2.getActiveGroups(),
-      ExpenseGroupStorageV2.getArchivedGroups(),
-    ]);
+    try {
+      await Future.wait([
+        ExpenseGroupStorageV2.getActiveGroups(),
+        ExpenseGroupStorageV2.getArchivedGroups(),
+      ]);
+    } catch (e) {
+      LoggerService.warning(
+        'Failed to pre-load groups: $e',
+        name: 'home',
+      );
+      // Continue anyway - FutureBuilder will retry loading
+    }
     
     final pinnedTrip = await ExpenseGroupStorageV2.getPinnedTrip();
     if (!mounted) return;
