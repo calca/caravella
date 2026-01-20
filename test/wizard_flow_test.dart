@@ -33,9 +33,12 @@ void main() {
       );
 
       await tester.pumpAndSettle();
-      final pageContext = tester.element(find.byType(GroupCreationWizardPage));
-      final gloc = gen.AppLocalizations.of(pageContext);
-      final wizardState = Provider.of<WizardState>(pageContext, listen: false);
+      
+      // Find a context within the wizard that has access to WizardState
+      // Use a widget that's inside the MultiProvider scope
+      final scaffoldContext = tester.element(find.byType(Scaffold).first);
+      final gloc = gen.AppLocalizations.of(scaffoldContext);
+      final wizardState = Provider.of<WizardState>(scaffoldContext, listen: false);
       final currentStepLabel =
           '1 ${gloc.wizard_step_of} ${wizardState.totalSteps}';
 
@@ -111,9 +114,11 @@ void main() {
       );
 
       await tester.pumpAndSettle();
-      final pageContext = tester.element(find.byType(GroupCreationWizardPage));
-      final gloc = gen.AppLocalizations.of(pageContext);
-      final wizardState = Provider.of<WizardState>(pageContext, listen: false);
+      
+      // Find a context within the wizard that has access to WizardState
+      final scaffoldContext = tester.element(find.byType(Scaffold).first);
+      final gloc = gen.AppLocalizations.of(scaffoldContext);
+      final wizardState = Provider.of<WizardState>(scaffoldContext, listen: false);
       final stepTwoLabel = '2 ${gloc.wizard_step_of} ${wizardState.totalSteps}';
 
       // Step 1: Name
