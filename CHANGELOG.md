@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pagination in expense list for improved performance with large datasets
   - Initial load of 100 expenses with "Load more" button for additional items
   - Prevents UI lag when viewing groups with many expenses
+- Smooth animation for newly added expenses in the expense list
+  - Newly created expenses fade in and scale up with a subtle bounce effect
+  - Visual feedback helps users identify their just-added expense in the list
 
 ### Fixed
 - Persistent notifications now respect expense group date ranges
