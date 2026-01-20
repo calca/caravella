@@ -135,10 +135,14 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
   void initState() {
     super.initState();
     // Add user as first participant if name is available
+    // and initialize default categories based on the default group type
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         final userNameNotifier = context.read<UserNameNotifier>();
         final state = context.read<GroupFormState>();
+        final controller = context.read<GroupFormController>();
+        final gloc = gen.AppLocalizations.of(context);
+
         if (userNameNotifier.hasName) {
           state.addParticipant(
             ExpenseParticipant(
@@ -147,8 +151,46 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
             ),
           );
         }
+
+        // Initialize default categories for the default group type
+        if (state.groupType != null) {
+          final defaultCategories = _getLocalizedCategories(gloc, state.groupType!);
+          controller.initializeDefaultCategories(defaultCategories);
+        }
       }
     });
+  }
+
+  List<String> _getLocalizedCategories(
+    gen.AppLocalizations gloc,
+    ExpenseGroupType type,
+  ) {
+    switch (type) {
+      case ExpenseGroupType.travel:
+        return [
+          gloc.category_travel_transport,
+          gloc.category_travel_accommodation,
+          gloc.category_travel_restaurants,
+        ];
+      case ExpenseGroupType.personal:
+        return [
+          gloc.category_personal_shopping,
+          gloc.category_personal_health,
+          gloc.category_personal_entertainment,
+        ];
+      case ExpenseGroupType.family:
+        return [
+          gloc.category_family_groceries,
+          gloc.category_family_home,
+          gloc.category_family_bills,
+        ];
+      case ExpenseGroupType.other:
+        return [
+          gloc.category_other_misc,
+          gloc.category_other_utilities,
+          gloc.category_other_services,
+        ];
+    }
   }
 
   bool _canPop() {
