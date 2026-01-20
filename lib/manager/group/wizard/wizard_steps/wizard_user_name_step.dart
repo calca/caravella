@@ -83,16 +83,7 @@ class _WizardUserNameStepState extends State<WizardUserNameStep> {
               textAlign: TextAlign.center,
             ),
 
-            const SizedBox(height: 32),
-
-            // Icon above input
-            Icon(
-              Icons.person_rounded,
-              size: 48,
-              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-            ),
-
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
 
             // Input field
             SizedBox(
