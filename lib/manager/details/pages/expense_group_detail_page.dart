@@ -422,15 +422,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     ).updateGroupPin(_trip!.id, !_trip!.pinned);
 
     await _refreshGroup();
-
-    if (!mounted) return;
-
-    final gloc = gen.AppLocalizations.of(context);
-    AppToast.show(
-      context,
-      _trip!.pinned ? gloc.pin_group : gloc.unpin_group,
-      type: ToastType.success,
-    );
   }
 
   void _showDeleteExpenseDialog(ExpenseDetails expense) {

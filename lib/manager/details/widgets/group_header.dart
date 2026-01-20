@@ -125,19 +125,15 @@ class ExpenseGroupAvatar extends StatelessWidget {
 class GroupHeader extends StatelessWidget {
   final ExpenseGroup trip;
   final VoidCallback? onPinToggle;
-  
-  const GroupHeader({
-    super.key,
-    required this.trip,
-    this.onPinToggle,
-  });
+
+  const GroupHeader({super.key, required this.trip, this.onPinToggle});
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final double circleSize = MediaQuery.of(context).size.width * 0.3;
     final gloc = gen.AppLocalizations.of(context);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -149,32 +145,46 @@ class GroupHeader extends StatelessWidget {
                 child: Semantics(
                   button: true,
                   enabled: !trip.archived,
-                  label: trip.pinned 
-                      ? gloc.unpin_group 
-                      : gloc.pin_group,
+                  label: trip.pinned ? gloc.unpin_group : gloc.pin_group,
                   child: ExpenseGroupAvatar(trip: trip, size: circleSize),
                 ),
               ),
               Positioned(
                 bottom: 0,
                 right: 0,
-                child: IgnorePointer(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: colorScheme.surfaceDim,
-                      shape: BoxShape.circle,
-                    ),
-                    padding: const EdgeInsets.all(12),
-                    child: Icon(
-                      trip.pinned
-                          ? Icons.favorite
-                          : (trip.archived 
-                              ? Icons.archive_outlined 
-                              : Icons.favorite_border),
-                      size: circleSize * 0.15,
-                      color: trip.pinned
-                          ? colorScheme.primary
-                          : colorScheme.onSurface.withValues(alpha: 0.6),
+                child: GestureDetector(
+                  onTap: trip.archived ? null : onPinToggle,
+                  child: Semantics(
+                    button: true,
+                    enabled: !trip.archived,
+                    label: trip.pinned ? gloc.unpin_group : gloc.pin_group,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: colorScheme.surfaceDim,
+                        shape: BoxShape.circle,
+                      ),
+                      padding: const EdgeInsets.all(12),
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 300),
+                        transitionBuilder: (child, animation) {
+                          return ScaleTransition(
+                            scale: animation,
+                            child: child,
+                          );
+                        },
+                        child: Icon(
+                          trip.pinned
+                              ? Icons.favorite
+                              : (trip.archived
+                                    ? Icons.archive_outlined
+                                    : Icons.favorite_border),
+                          key: ValueKey(trip.pinned ? 'pinned' : 'unpinned'),
+                          size: circleSize * 0.15,
+                          color: trip.pinned
+                              ? colorScheme.primary
+                              : colorScheme.onSurface.withValues(alpha: 0.6),
+                        ),
+                      ),
                     ),
                   ),
                 ),
