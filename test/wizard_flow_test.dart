@@ -27,7 +27,7 @@ void main() {
               GlobalCupertinoLocalizations.delegate,
             ],
             supportedLocales: gen.AppLocalizations.supportedLocales,
-            home: const GroupCreationWizardPage(),
+            home: const GroupCreationWizardPage(fromWelcome: true),
           ),
         ),
       );
@@ -42,25 +42,27 @@ void main() {
         scaffoldContext,
         listen: false,
       );
-      final currentStepLabel =
-          '1 ${gloc.wizard_step_of} ${wizardState.totalSteps}';
+      final currentStepLabel = '1/${wizardState.totalSteps}';
 
-      // Should start on step 1 (Name)
-      expect(find.text(gloc.wizard_step_name), findsOneWidget);
+      // Should start on step 1 (User Name Welcome)
+      expect(find.text(gloc.wizard_user_name_welcome), findsOneWidget);
       expect(find.text(currentStepLabel), findsOneWidget);
 
       // Should show name input field
       expect(find.byType(TextField), findsOneWidget);
 
-      // Next button should be disabled initially
+      // Next button should always be enabled on user name step (name is optional)
       expect(find.text(gloc.wizard_next), findsOneWidget);
       final nextButton = tester.widget<FilledButton>(find.byType(FilledButton));
-      expect(nextButton.onPressed, isNull);
+      expect(nextButton.onPressed, isNotNull);
     });
 
-    testWidgets('Should enable next button when name is entered', (
+    testWidgets('Should enable finish button when group name is entered', (
       WidgetTester tester,
     ) async {
+      // Test without user name step (fromWelcome: false)
+      // With fromWelcome: false, wizard has only 2 steps: TypeAndName -> Completion
+      // So the first step shows "Finish" button, not "Next"
       await tester.pumpWidget(
         MultiProvider(
           providers: [
@@ -75,7 +77,7 @@ void main() {
               GlobalCupertinoLocalizations.delegate,
             ],
             supportedLocales: gen.AppLocalizations.supportedLocales,
-            home: const GroupCreationWizardPage(),
+            home: const GroupCreationWizardPage(fromWelcome: false),
           ),
         ),
       );
@@ -84,14 +86,19 @@ void main() {
       final pageContext = tester.element(find.byType(GroupCreationWizardPage));
       final gloc = gen.AppLocalizations.of(pageContext);
 
+      // Should start on Type and Name step (first step when fromWelcome is false)
+      // Finish button should be disabled initially (group name is required)
+      expect(find.text(gloc.wizard_finish), findsOneWidget);
+      var finishButton = tester.widget<FilledButton>(find.byType(FilledButton));
+      expect(finishButton.onPressed, isNull);
+
       // Enter group name
       await tester.enterText(find.byType(TextField), 'Test Group');
       await tester.pump();
 
-      // Next button should be enabled
-      expect(find.text(gloc.wizard_next), findsOneWidget);
-      final nextButton = tester.widget<FilledButton>(find.byType(FilledButton));
-      expect(nextButton.onPressed, isNotNull);
+      // Finish button should be enabled
+      finishButton = tester.widget<FilledButton>(find.byType(FilledButton));
+      expect(finishButton.onPressed, isNotNull);
     });
 
     testWidgets('Should navigate through all wizard steps', (
@@ -111,7 +118,7 @@ void main() {
               GlobalCupertinoLocalizations.delegate,
             ],
             supportedLocales: gen.AppLocalizations.supportedLocales,
-            home: const GroupCreationWizardPage(),
+            home: const GroupCreationWizardPage(fromWelcome: true),
           ),
         ),
       );
@@ -125,23 +132,20 @@ void main() {
         scaffoldContext,
         listen: false,
       );
-      final stepTwoLabel = '2 ${gloc.wizard_step_of} ${wizardState.totalSteps}';
+      final stepTwoLabel = '2/${wizardState.totalSteps}';
 
-      // Step 1: Name
-      expect(find.text(gloc.wizard_step_name), findsOneWidget);
-      await tester.enterText(find.byType(TextField), 'Test Group');
+      // Step 1: User Name (Welcome step)
+      expect(find.text(gloc.wizard_user_name_welcome), findsOneWidget);
+      // Enter user name and proceed
+      await tester.enterText(find.byType(TextField), 'Test User');
       await tester.pump();
       await tester.tap(find.text(gloc.wizard_next));
       await tester.pumpAndSettle();
 
-      // Step 2: Participants
-      expect(find.text(gloc.wizard_step_participants), findsOneWidget);
+      // Step 2: Type and Name
       expect(find.text(stepTwoLabel), findsOneWidget);
 
-      // Step 3: Categories (skip participants validation for this test)
-      // Step 4: Period
-      // Step 5: Background
-      // Step 6: Congratulations
+      // Step 3: Completion (skip further steps for this test)
     });
   });
 

@@ -164,7 +164,7 @@ class HomeWelcomeSection extends StatelessWidget {
                             final result = await Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    const GroupCreationWizardPage(),
+                                    const GroupCreationWizardPage(fromWelcome: true),
                               ),
                             );
                             if (result != null) {

@@ -13,13 +13,17 @@ import '../wizard/wizard_steps/wizard_type_and_name_step.dart';
 import '../wizard/wizard_steps/wizard_completion_step.dart';
 
 class GroupCreationWizardPage extends StatelessWidget {
-  const GroupCreationWizardPage({super.key});
+  /// If true, shows the user name step when launched from welcome page
+  /// (only if user name is not already set)
+  final bool fromWelcome;
+
+  const GroupCreationWizardPage({super.key, this.fromWelcome = false});
 
   @override
   Widget build(BuildContext context) {
-    // Check if user already has a name to skip the name step
+    // Show user name step only if launched from welcome page AND name is missing
     final userNameNotifier = context.read<UserNameNotifier>();
-    final includeUserNameStep = !userNameNotifier.hasName;
+    final includeUserNameStep = fromWelcome && !userNameNotifier.hasName;
 
     return MultiProvider(
       providers: [
