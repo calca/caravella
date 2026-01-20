@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Group creation wizard with optimized 3-step flow for first-time users
+  - Complete multi-language support (EN, IT, ES, PT, ZH)
+- Month separators in expense list for better organization and navigation
+  - Localized month/year headers automatically inserted between expenses from different months
+  - Visual dividers help users quickly locate expenses by time period
+- Pagination in expense list for improved performance with large datasets
+  - Initial load of 100 expenses with "Load more" button for additional items
+  - Prevents UI lag when viewing groups with many expenses
+
+### Fixed
+- Persistent notifications now respect expense group date ranges
+  - Notifications are automatically cancelled when group end date has passed
+  - Groups with future start dates no longer trigger notifications prematurely
+  - Date range validation applied consistently across all notification update paths
+- Notifications now update correctly after expense operations from all entry points
+  - Adding/editing expenses from home page quick actions properly refreshes notification count
+  - Notification badge accurately reflects current expense totals in all scenarios
+
 ### Changed
 - Group options menu reorganization for improved accessibility and workflow efficiency
   - Pin/favorite action moved to group avatar for faster access (33% fewer taps: 3→2)
