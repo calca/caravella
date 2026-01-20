@@ -2205,4 +2205,26 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get wizard_completion_customize_group_description =>
       'Editar participantes, categorias e configurações';
+
+  @override
+  String get danger_zone => 'Zona Perigosa';
+
+  @override
+  String get danger_zone_desc => 'Arquivar ou excluir este grupo';
+
+  @override
+  String get export_options_desc =>
+      'Baixar ou compartilhar despesas em vários formatos';
+
+  @override
+  String get export_csv_description => 'Formato planilha';
+
+  @override
+  String get export_ofx_description => 'Formato bancário';
+
+  @override
+  String get export_markdown_description => 'Formato documento';
+
+  @override
+  String get save_label => 'Salvar';
 }

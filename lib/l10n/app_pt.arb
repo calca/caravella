@@ -865,4 +865,18 @@
   ,"@wizard_completion_customize_group": {"description": "Título da opção personalizar grupo"}
   ,"wizard_completion_customize_group_description": "Editar participantes, categorias e configurações"
   ,"@wizard_completion_customize_group_description": {"description": "Descrição da opção personalizar grupo"}
+  ,"danger_zone": "Zona Perigosa"
+  ,"@danger_zone": {"description": "Título da seção para ações perigosas como arquivar e excluir"}
+  ,"danger_zone_desc": "Arquivar ou excluir este grupo"
+  ,"@danger_zone_desc": {"description": "Descrição para a seção zona perigosa"}
+  ,"export_options_desc": "Baixar ou compartilhar despesas em vários formatos"
+  ,"@export_options_desc": {"description": "Descrição para as opções de exportação"}
+  ,"export_csv_description": "Formato planilha"
+  ,"@export_csv_description": {"description": "Descrição curta para o formato de exportação CSV"}
+  ,"export_ofx_description": "Formato bancário"
+  ,"@export_ofx_description": {"description": "Descrição curta para o formato de exportação OFX"}
+  ,"export_markdown_description": "Formato documento"
+  ,"@export_markdown_description": {"description": "Descrição curta para o formato de exportação Markdown"}
+  ,"save_label": "Salvar"
+  ,"@save_label": {"description": "Rótulo para o botão de salvar"}
 }

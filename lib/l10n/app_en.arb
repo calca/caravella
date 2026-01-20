@@ -923,4 +923,18 @@
   ,"@wizard_completion_customize_group": {"description": "Title of customize group option"}
   ,"wizard_completion_customize_group_description": "Edit participants, categories, and settings"
   ,"@wizard_completion_customize_group_description": {"description": "Description of customize group option"}
+  ,"danger_zone": "Danger Zone"
+  ,"@danger_zone": {"description": "Section title for dangerous actions like archive and delete"}
+  ,"danger_zone_desc": "Archive or delete this group"
+  ,"@danger_zone_desc": {"description": "Description for danger zone section"}
+  ,"export_options_desc": "Download or share expenses in various formats"
+  ,"@export_options_desc": {"description": "Description for export options"}
+  ,"export_csv_description": "Spreadsheet format"
+  ,"@export_csv_description": {"description": "Short description for CSV export format"}
+  ,"export_ofx_description": "Banking format"
+  ,"@export_ofx_description": {"description": "Short description for OFX export format"}
+  ,"export_markdown_description": "Document format"
+  ,"@export_markdown_description": {"description": "Short description for Markdown export format"}
+  ,"save_label": "Save"
+  ,"@save_label": {"description": "Label for save action button"}
 }

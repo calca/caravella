@@ -4240,6 +4240,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Edit participants, categories, and settings'**
   String get wizard_completion_customize_group_description;
+
+  /// Section title for dangerous actions like archive and delete
+  ///
+  /// In en, this message translates to:
+  /// **'Danger Zone'**
+  String get danger_zone;
+
+  /// Description for danger zone section
+  ///
+  /// In en, this message translates to:
+  /// **'Archive or delete this group'**
+  String get danger_zone_desc;
+
+  /// Description for export options
+  ///
+  /// In en, this message translates to:
+  /// **'Download or share expenses in various formats'**
+  String get export_options_desc;
+
+  /// Short description for CSV export format
+  ///
+  /// In en, this message translates to:
+  /// **'Spreadsheet format'**
+  String get export_csv_description;
+
+  /// Short description for OFX export format
+  ///
+  /// In en, this message translates to:
+  /// **'Banking format'**
+  String get export_ofx_description;
+
+  /// Short description for Markdown export format
+  ///
+  /// In en, this message translates to:
+  /// **'Document format'**
+  String get export_markdown_description;
+
+  /// Label for save action button
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save_label;
 }
 
 class _AppLocalizationsDelegate
