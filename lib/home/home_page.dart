@@ -176,6 +176,8 @@ class _HomePageState extends State<HomePage> with RouteAware {
     setState(() {
       _isFirstStart = false;
     });
+    // Persist the preference change
+    PreferencesService.instance.appState.setIsFirstStart(false);
     _refresh();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
