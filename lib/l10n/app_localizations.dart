@@ -4240,6 +4240,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Edit participants, categories, and settings'**
   String get wizard_completion_customize_group_description;
+
+  /// Section title for dangerous actions like archive and delete
+  ///
+  /// In en, this message translates to:
+  /// **'Danger Zone'**
+  String get danger_zone;
+
+  /// Description for danger zone section
+  ///
+  /// In en, this message translates to:
+  /// **'Archive or delete this group'**
+  String get danger_zone_desc;
+
+  /// Description for export options
+  ///
+  /// In en, this message translates to:
+  /// **'Download or share expenses in various formats'**
+  String get export_options_desc;
 }
 
 class _AppLocalizationsDelegate

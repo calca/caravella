@@ -2206,4 +2206,14 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get wizard_completion_customize_group_description =>
       'Modifica partecipanti, categorie e impostazioni';
+
+  @override
+  String get danger_zone => 'Zona Pericolosa';
+
+  @override
+  String get danger_zone_desc => 'Archivia o elimina questo gruppo';
+
+  @override
+  String get export_options_desc =>
+      'Scarica o condividi le spese in vari formati';
 }

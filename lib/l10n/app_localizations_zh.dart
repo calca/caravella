@@ -2151,4 +2151,13 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get wizard_completion_customize_group_description => '编辑参与者、类别和设置';
+
+  @override
+  String get danger_zone => '危险区域';
+
+  @override
+  String get danger_zone_desc => '归档或删除此群组';
+
+  @override
+  String get export_options_desc => '以各种格式下载或分享费用';
 }
