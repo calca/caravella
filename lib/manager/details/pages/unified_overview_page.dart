@@ -1,17 +1,17 @@
 import 'dart:io';
 import 'dart:ui' as ui;
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../../data/model/expense_group.dart';
 import 'tabs/general_overview_tab.dart';
 import 'tabs/participants_overview_tab.dart';
 import 'tabs/categories_overview_tab.dart';
 import 'tabs/usecase/settlements_logic.dart';
-import '../../group/widgets/section_header.dart';
-import '../../../widgets/bottom_sheet_scaffold.dart';
+import 'expense_locations_map_page.dart';
 
 /// Overview & statistics page with share (text/image) capability.
 class UnifiedOverviewPage extends StatefulWidget {
@@ -25,6 +25,14 @@ class UnifiedOverviewPage extends StatefulWidget {
 class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
   final GlobalKey _captureKey = GlobalKey();
   bool _sharing = false;
+
+  void _openExpenseLocationsMap() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (ctx) => ExpenseLocationsMapPage(group: widget.trip),
+      ),
+    );
+  }
 
   Future<void> _showShareOptions() async {
     final gloc = gen.AppLocalizations.of(context);
@@ -74,7 +82,9 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
       final total = trip.expenses
           .where((e) => e.paidBy.id == p.id)
           .fold<double>(0, (s, e) => s + (e.amount ?? 0));
-      buffer.writeln('- ${p.name}: ${total.toStringAsFixed(2)} $currency');
+      buffer.writeln(
+        '- ${p.name}: ${CurrencyDisplay.formatCurrencyText(total, currency)}',
+      );
     }
     buffer.writeln('');
     // Settlements (shared compute)
@@ -87,7 +97,7 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
         final fromName = idToName[s.fromId] ?? s.fromId;
         final toName = idToName[s.toId] ?? s.toId;
         buffer.writeln(
-          '$fromName -> $toName: ${s.amount.toStringAsFixed(2)} $currency',
+          '$fromName -> $toName: ${CurrencyDisplay.formatCurrencyText(s.amount, currency)}',
         );
       }
     }
@@ -142,6 +152,7 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -155,10 +166,33 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
                 title: widget.trip.title,
                 description: gloc.overview,
                 padding: EdgeInsets.zero,
-                trailing: IconButton(
-                  icon: const Icon(Icons.ios_share_rounded),
-                  tooltip: gloc.share_label,
-                  onPressed: _showShareOptions,
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton.filledTonal(
+                      icon: const Icon(Icons.map_outlined),
+                      tooltip: gloc.view_on_map,
+                      onPressed: _openExpenseLocationsMap,
+                      iconSize: 24,
+                      style: IconButton.styleFrom(
+                        backgroundColor: colorScheme.surfaceContainerHigh,
+                        foregroundColor: colorScheme.onSurface,
+                        minimumSize: const Size(48, 48),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    IconButton.filledTonal(
+                      icon: const Icon(Icons.ios_share_rounded),
+                      tooltip: gloc.share_label,
+                      onPressed: _showShareOptions,
+                      iconSize: 24,
+                      style: IconButton.styleFrom(
+                        backgroundColor: colorScheme.surfaceContainerHigh,
+                        foregroundColor: colorScheme.onSurface,
+                        minimumSize: const Size(48, 48),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -166,7 +200,7 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
             Padding(
               // Symmetric horizontal padding so left/right match header (24px)
               padding: const EdgeInsets.symmetric(horizontal: 0),
-              child: TabBar(
+              child: CaravellaTabBar(
                 isScrollable: true,
                 // Center the group of tabs within available width
                 tabAlignment: TabAlignment.center,
@@ -183,12 +217,15 @@ class _UnifiedOverviewPageState extends State<UnifiedOverviewPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: RepaintBoundary(
                   key: _captureKey,
-                  child: TabBarView(
-                    children: [
-                      GeneralOverviewTab(trip: widget.trip),
-                      ParticipantsOverviewTab(trip: widget.trip),
-                      CategoriesOverviewTab(trip: widget.trip),
-                    ],
+                  child: Container(
+                    color: Theme.of(context).colorScheme.surface,
+                    child: TabBarView(
+                      children: [
+                        GeneralOverviewTab(trip: widget.trip),
+                        ParticipantsOverviewTab(trip: widget.trip),
+                        CategoriesOverviewTab(trip: widget.trip),
+                      ],
+                    ),
                   ),
                 ),
               ),

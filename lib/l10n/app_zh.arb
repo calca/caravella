@@ -1,22 +1,41 @@
 {
   "@@locale": "zh",
   "developer_section_title": "开发者和支持",
-  "@developer_section_title": {"description": "Section title for developer and support links in DeveloperPage"},
+  "@developer_section_title": {
+    "description": "Section title for developer and support links in DeveloperPage"
+  },
   "developer_section_desc": "支持开发者或查看个人资料",
-  "@developer_section_desc": {"description": "Section description for developer and support links in DeveloperPage"},
+  "@developer_section_desc": {
+    "description": "Section description for developer and support links in DeveloperPage"
+  },
   "repo_section_title": "源代码和问题",
-  "@repo_section_title": {"description": "Section title for repository and issues links in DeveloperPage"},
+  "@repo_section_title": {
+    "description": "Section title for repository and issues links in DeveloperPage"
+  },
   "repo_section_desc": "查看源代码或报告问题",
-  "@repo_section_desc": {"description": "Section description for repository and issues links in DeveloperPage"},
+  "@repo_section_desc": {
+    "description": "Section description for repository and issues links in DeveloperPage"
+  },
   "license_section_title": "许可证",
-  "@license_section_title": {"description": "Section title for license link in DeveloperPage"},
+  "@license_section_title": {
+    "description": "Section title for license link in DeveloperPage"
+  },
   "license_section_desc": "查看开源许可证",
-  "@license_section_desc": {"description": "Section description for license link in DeveloperPage"},
+  "@license_section_desc": {
+    "description": "Section description for license link in DeveloperPage"
+  },
   "weeklyChartBadge": "周",
   "@weeklyChartBadge": {
     "description": "Letter indicator for weekly chart badge"
   },
   "monthlyChartBadge": "月",
+  "@monthlyChartBadge": {
+    "description": "Letter indicator for monthly chart badge"
+  },
+  "dateRangeChartBadge": "日",
+  "@dateRangeChartBadge": {
+    "description": "Letter indicator for date range chart badge"
+  },
   "@monthlyChartBadge": {
     "description": "Letter indicator for monthly chart badge"
   },
@@ -28,19 +47,55 @@
   "@monthlyExpensesChart": {
     "description": "Label for monthly expenses chart"
   },
+  "dateRangeExpensesChart": "期间支出",
+  "@dateRangeExpensesChart": {
+    "description": "Label for date range expenses chart"
+  },
   "settings_flag_secure_desc": "防止截屏和录屏",
   "settings_flag_secure_title": "安全屏幕",
   "settings_privacy": "隐私",
   "select_currency": "选择货币",
   "select_period_hint_short": "设置日期",
-  "select_period_hint": "选择日期范围",
+  "select_period_hint": "选择日期",
+  "suggested_duration": "建议时长",
+  "days_count": "{count}天",
+  "@days_count": {"description": "天数", "placeholders": {"count": {"type": "int"}}},
+  "weekday_mon": "一",
+  "weekday_tue": "二",
+  "weekday_wed": "三",
+  "weekday_thu": "四",
+  "weekday_fri": "五",
+  "weekday_sat": "六",
+  "weekday_sun": "日",
+  "month_january": "一月",
+  "month_february": "二月",
+  "month_march": "三月",
+  "month_april": "四月",
+  "month_may": "五月",
+  "month_june": "六月",
+  "month_july": "七月",
+  "month_august": "八月",
+  "month_september": "九月",
+  "month_october": "十月",
+  "month_november": "十一月",
+  "month_december": "十二月",
   "in_group_prefix": "在",
   "save_change_expense": "保存更改",
   "group_total": "总计",
+  "total_spent": "总支出",
+  "@total_spent": {
+    "description": "Label shown before the total amount spent in the group"
+  },
   "download_all_csv": "下载全部 (CSV)",
   "share_all_csv": "分享全部 (CSV)",
   "download_all_ofx": "下载全部 (OFX)",
   "share_all_ofx": "分享全部 (OFX)",
+  "download_all_markdown": "下载全部 (Markdown)",
+  "share_all_markdown": "分享全部 (Markdown)",
+  "markdown_select_directory_title": "选择保存 Markdown 的文件夹",
+  "markdown_saved_in": "Markdown 已保存至: {path}",
+  "markdown_save_cancelled": "Markdown 导出已取消",
+  "markdown_save_error": "保存 Markdown 文件时出错",
   "share_label": "分享",
   "share_text_label": "分享文本",
   "share_image_label": "分享图片",
@@ -56,74 +111,110 @@
   "no_active_groups": "没有活跃的群组",
   "no_active_groups_subtitle": "创建费用群组",
   "create_first_group": "创建您的第一个群组",
-  "create_group": "创建群组",
-  "manage_group": "管理群组",
-  "group_name": "群组名称",
-  "group_name_hint": "输入群组名称",
-  "group_description": "群组描述",
-  "group_description_hint": "输入群组描述（可选）",
-  "participants": "参与者",
-  "add_participants": "添加参与者",
+  "new_expense_group": "新支出群组",
+  "tap_to_create": "点击创建",
+  "no_expense_label": "未找到支出",
+  "image": "图片",
+  "select_image": "选择图片",
+  "change_image": "更换图片",
+  "from_gallery": "从图库选择",
+  "from_camera": "拍照",
+  "remove_image": "删除图片",
+  "cannot_delete_assigned_participant": "无法删除参与者: 已分配给一个或多个支出",
+  "cannot_delete_assigned_category": "无法删除类别: 已分配给一个或多个支出",
+  "color": "颜色",
+  "remove_color": "删除颜色",
+  "color_alternative": "图片的替代颜色",
+  "background": "背景",
+  "select_background": "选择背景",
+  "background_options": "背景选项",
+  "choose_image_or_color": "选择图片或颜色",
+  "participants_description": "共享费用的人员",
+  "categories_description": "按类型对群组支出进行分组",
+  "dates_description": "可选的开始和结束",
+  "currency_description": "群组的基础货币",
+  "background_color_selected": "颜色已选择",
+  "background_tap_to_replace": "点击替换",
+  "background_tap_to_change": "点击更换",
+  "background_select_image_or_color": "选择图片或颜色",
+  "background_random_color": "随机颜色",
+  "background_remove": "删除背景",
+  "crop_image_title": "裁剪图片",
+  "crop_confirm": "确认",
+  "saving": "保存中...",
+  "processing_image": "处理图片中...",
+  "no_trips_found": "您想去哪里？",
   "expenses": "支出",
-  "add_expense": "添加支出",
-  "expense_description": "支出描述",
-  "expense_description_hint": "输入支出描述",
-  "amount": "金额",
-  "amount_hint": "输入金额",
-  "paid_by": "付款人",
-  "split_between": "分摊给",
-  "category": "类别",
-  "date": "日期",
+  "participants": "参与者",
+  "participant_count": "{count, plural, other {{count} 名参与者}}",
+  "@participant_count": {
+    "description": "参与者计数（中文无需复数, 使用other形式）",
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "participants_label": "参与者",
+  "last_7_days": "过去7天",
+  "recent_activity": "最近活动",
+  "about": "关于",
+  "license_hint": "此应用在MIT许可证下发布。",
+  "license_link": "在GitHub上查看MIT许可证",
+  "license_section": "许可证",
+  "add_trip": "添加群组",
+  "new_group": "新群组",
+  "create": "创建",
+  "group_name": "群组名称",
+  "enter_title": "输入名称",
+  "enter_participant": "输入至少一个参与者",
+  "select_start": "选择开始日期",
+  "select_end": "选择结束日期",
+  "start_date_not_selected": "选择开始日期",
+  "end_date_not_selected": "选择结束日期",
+  "select_from_date": "选择开始日期",
+  "select_to_date": "选择结束日期",
+  "date_range_not_selected": "选择时间段",
+  "date_range_partial": "选择两个日期",
   "save": "保存",
+  "delete_trip": "删除行程",
+  "delete_trip_confirm": "您确定要删除此行程吗?",
   "cancel": "取消",
-  "edit": "编辑",
-  "delete": "删除",
-  "confirm": "确认",
-  "settings": "设置",
-  "settings_language": "语言",
-  "settings_language_desc": "选择您的首选语言",
-  "settings_language_it": "意大利语",
-  "settings_language_en": "英语",
-  "settings_language_es": "西班牙语",
-  "settings_language_zh": "中文（简体）",
-  "settings_select_language": "选择语言",
-  "settings_select_theme": "选择主题",
-  "settings_general": "一般",
-  "settings_general_desc": "应用程序通用设置",
-  "settings_info": "信息",
-  "settings_info_desc": "应用程序信息和版本",
-  "settings_info_card": "应用信息",
-  "settings_info_card_desc": "查看应用信息和版本",
-  "settings_data": "数据",
-  "settings_data_desc": "管理和备份数据",
-  "settings_data_manage": "管理数据",
-  "settings_privacy_desc": "安全和隐私选项",
-  "settings_app_version": "应用版本",
-  "accessibility_currently_disabled": "当前已禁用",
-  "accessibility_currently_enabled": "当前已启用",
-  "accessibility_double_tap_disable": "双击以禁用",
-  "accessibility_double_tap_enable": "双击以启用",
-  "accessibility_security_switch": "安全开关",
-  "accessibility_switch_off": "开关关闭",
-  "accessibility_switch_on": "开关开启",
-  "settings_theme": "主题",
-  "settings_theme_desc": "选择应用主题",
-  "theme_light": "浅色",
-  "theme_dark": "深色",
-  "theme_automatic": "自动",
-  "settings_version": "版本",
-  "settings_about": "关于",
-  "settings_backup": "备份",
-  "settings_backup_desc": "备份和恢复数据",
-  "backup_export": "导出数据",
-  "backup_import": "导入数据",
-  "backup_success": "备份成功",
+  "ok": "确定",
+  "from_to": "{start} - {end}",
+  "add_expense": "添加支出",
+  "edit_expense": "编辑支出",
+  "expand_form": "展开表单",
+  "expand_form_tooltip": "添加日期, 位置和备注",
+  "category": "类别",
+  "amount": "金额",
+  "invalid_amount": "无效金额",
+  "no_categories": "无类别",
+  "add_category": "添加类别",
+  "category_name": "类别名称",
+  "note": "备注",
+  "note_hint": "备注",
+  "select_both_dates": "如果选择一个日期, 则必须选择两个日期",
+  "select_both_dates_or_none": "选择两个日期或将两者留空",
+  "end_date_after_start": "结束日期必须在开始日期之后",
+  "start_date_optional": "从",
+  "end_date_optional": "至",
+  "dates": "期间",
+  "expenses_by_participant": "按参与者",
+  "expenses_by_category": "按类别分类的支出",
+  "uncategorized": "未分类",
+  "backup": "备份",
+  "no_trips_to_backup": "没有可备份的行程",
   "backup_error": "备份失败",
+  "backup_share_message": "这是您的Caravella备份",
+  "import": "导入",
   "import_confirm_title": "导入数据",
   "import_confirm_message": "确定要用文件 \"{file}\" 覆盖所有行程吗？此操作无法撤销。",
   "import_success": "导入成功！数据已重新加载。",
   "import_error": "导入失败。请检查文件格式。",
   "categories": "类别",
+  "other_settings": "其他设置",
+  "other_settings_desc": "货币、背景和自动定位",
+  "segment_general": "常规",
+  "segment_other": "其他",
   "from": "从",
   "to": "到",
   "add": "添加",
@@ -134,42 +225,84 @@
   "add_participant": "添加参与者",
   "no_participants": "无参与者",
   "category_name_hint": "输入类别名称",
-  "add_category": "添加类别",
   "edit_category": "编辑类别",
   "delete_category": "删除类别",
-  "no_categories": "无类别",
-  "default_categories": "默认类别",
-  "food": "食物",
-  "transport": "交通",
-  "accommodation": "住宿",
-  "entertainment": "娱乐",
-  "shopping": "购物",
-  "health": "健康",
-  "education": "教育",
-  "other": "其他",
+  "participant_name_semantics": "参与者: {name}",
+  "category_name_semantics": "类别: {name}",
+  "currency": "货币",
+  "settings_tab": "设置",
+  "basic_info": "基本信息",
+  "settings": "设置",
+  "history": "历史记录",
+  "all": "全部",
+  "search_groups": "搜索群组...",
+  "no_search_results": "未找到群组",
+  "try_different_search": "尝试使用不同的词搜索",
+  "active": "活跃",
+  "archived": "已归档",
+  "archive": "归档",
+  "unarchive": "取消归档",
+  "pin": "收藏",
+  "unpin": "取消收藏",
+  "delete": "删除",
+  "undo": "撤销",
+  "archived_with_undo": "已归档",
+  "unarchived_with_undo": "已取消归档",
+  "pinned_with_undo": "已标记为收藏",
+  "unpinned_with_undo": "已移除收藏",
+  "deleted_with_undo": "已删除",
+  "archive_confirm": "您想要归档吗",
+  "unarchive_confirm": "您想取消归档吗",
+  "overview": "概览",
+  "statistics": "统计",
+  "period": "期间",
   "total_expenses": "总支出",
-  "balance": "余额",
-  "owes": "欠款",
-  "owed": "应收",
-  "settled": "已结算",
-  "settle_up": "结算",
-  "expense_details": "支出详情",
-  "share_expense": "分享支出",
-  "duplicate_expense": "复制支出",
-  "no_expenses": "无支出",
-  "add_first_expense": "添加您的第一笔支出",
-  "group_statistics": "群组统计",
-  "total_spent": "总支出",
-  "@total_spent": {"description": "Label shown before the total amount spent in the group"},
-  "daily_average": "每日",
-  "monthly_average": "每月",
-  "@monthly_average": {"description": "Label shown before the computed overall monthly average spending value"},
-  "avg_per_person": "人均支出",
-  "most_expensive": "最贵支出",
+  "number_of_expenses": "支出数量",
+  "options": "选项",
+  "show_overview": "显示概览",
+  "show_statistics": "显示统计",
+  "no_expenses_to_display": "没有可显示的支出",
+  "no_expenses_to_analyze": "没有可分析的支出",
+  "select_expense_date": "选择支出日期",
+  "select_expense_date_short": "选择日期",
+  "date": "日期",
+  "edit_group": "编辑群组",
+  "edit_group_desc": "修改群组设置、参与者和类别",
+  "new_group_desc": "创建具有自定义设置的新支出群组",
+  "delete_group": "删除群组",
+  "delete_group_confirm": "您确定要删除此支出群组吗？此操作无法撤销。",
+  "add_expense_fab": "添加支出",
+  "pin_group": "标记为收藏",
+  "unpin_group": "移除收藏",
+  "theme_automatic": "自动",
+  "theme_light": "浅色",
+  "theme_dark": "深色",
+  "developed_by": "开发者：calca",
+  "links": "链接",
+  "daily_expenses_chart": "每日支出",
+  "weekly_expenses_chart": "每周支出",
+  "daily_average_by_category": "按类别的每日平均值",
+  "per_day": "/天",
+  "no_expenses_for_statistics": "没有可用于统计的支出",
+  "settlement": "结算",
+  "all_balanced": "所有账户已结清！",
+  "owes_to": " 欠 ",
+  "export_csv": "导出 CSV",
+  "no_expenses_to_export": "没有可导出的支出",
+  "export_csv_share_text": "从以下位置导出的支出 ",
+  "export_csv_error": "导出支出时出错",
+  "expense_name": "描述",
+  "paid_by": "付款人",
+  "expense_added_success": "已添加支出",
+  "expense_updated_success": "支出已更新",
+  "data_refreshing": "刷新中...",
+  "data_refreshed": "已更新",
   "refresh": "刷新",
   "group_added_success": "群组已添加",
   "group_deleted_success": "群组已删除",
-  "@group_deleted_success": {"description": "删除费用群组后的提示信息"},
+  "@group_deleted_success": {
+    "description": "删除费用群组后的提示信息"
+  },
   "csv_select_directory_title": "选择保存 CSV 的文件夹",
   "csv_saved_in": "CSV 已保存在：{path}",
   "csv_save_cancelled": "导出已取消",
@@ -183,121 +316,252 @@
   "csv_paid_by": "付款人",
   "csv_category": "类别",
   "csv_date": "日期",
-  "csv_participants": "参与者",
+  "csv_note": "备注",
+  "csv_location": "位置",
+  "location": "位置",
+  "location_hint": "位置",
+  "get_current_location": "使用当前位置",
+  "enter_location_manually": "手动输入",
+  "location_permission_denied": "位置权限被拒绝",
+  "location_service_disabled": "位置服务已禁用",
+  "getting_location": "正在获取位置...",
+  "location_error": "获取位置时出错",
+  "resolving_address": "解析地址...",
+  "address_resolved": "地址已解析",
+  "search_place": "搜索地点",
+  "search_place_hint": "搜索地点或地址",
+  "settings_general": "常规",
+  "settings_general_desc": "语言和外观设置",
+  "settings_auto_location_section": "位置检测",
+  "settings_auto_location_section_desc": "配置自动位置检测",
+  "settings_auto_location_title": "启用检测",
+  "settings_auto_location_desc": "添加费用时检测GPS",
+  "settings_language": "语言",
+  "settings_language_desc": "选择您的首选语言",
+  "settings_language_it": "意大利语",
+  "settings_language_en": "英语",
+  "settings_language_es": "西班牙语",
+  "settings_language_pt": "葡萄牙语",
+  "settings_language_zh": "中文（简体）",
+  "settings_select_language": "选择语言",
+  "settings_theme": "主题",
+  "settings_theme_desc": "选择应用主题",
+  "settings_select_theme": "选择主题",
+  "settings_dynamic_color": "动态颜色",
+  "settings_dynamic_color_desc": "使用壁纸颜色",
+  "settings_privacy_desc": "安全和隐私选项",
+  "settings_data": "数据",
+  "settings_data_desc": "管理和备份数据",
+  "settings_data_manage": "管理数据",
+  "settings_info": "信息",
+  "settings_info_desc": "应用程序信息和版本",
+  "settings_app_version": "应用版本",
+  "settings_info_card": "应用信息",
+  "settings_info_card_desc": "查看应用信息和版本",
+  "terms_github_title": "网站: calca",
+  "terms_github_desc": "开发者的个人网站。",
+  "terms_repo_title": "GitHub仓库",
+  "terms_repo_desc": "应用程序源代码。",
+  "terms_issue_title": "报告问题",
+  "terms_issue_desc": "前往GitHub问题页面。",
+  "terms_license_desc": "查看开源许可证。",
+  "support_developer_title": "请我喝杯咖啡",
+  "support_developer_desc": "支持此应用的开发。",
+  "data_title": "备份与恢复",
+  "data_backup_title": "备份",
+  "data_backup_desc": "创建您的支出备份文件。",
+  "data_restore_title": "恢复",
+  "data_restore_desc": "导入备份以恢复您的数据。",
+  "auto_backup_title": "自动备份",
+  "auto_backup_desc": "启用操作系统自动备份",
+  "settings_user_name_title": "您的名称",
+  "settings_user_name_desc": "在应用中使用的名称或昵称",
+  "settings_user_name_hint": "输入您的名称",
+  "default_participant_me": "我",
+  "info_tab": "信息",
+  "select_paid_by": "选择付款人",
+  "select_category": "选择类别",
+  "check_form": "检查输入的数据",
+  "delete_expense": "删除支出",
+  "delete_expense_confirm": "您确定要删除此支出吗?",
+  "no_results_found": "未找到结果。",
+  "try_adjust_filter_or_search": "尝试调整筛选器或搜索。",
+  "general_statistics": "总体统计",
+  "add_first_expense": "添加您的第一笔支出",
+  "overview_and_statistics": "概览和统计",
+  "daily_average": "每日",
+  "spent_today": "今日支出",
+  "monthly_average": "每月",
+  "@monthly_average": {
+    "description": "Label shown before the computed overall monthly average spending value"
+  },
+  "average_expense": "平均支出",
+  "welcome_v3_cta": "开始使用！",
+  "discard_changes_title": "舍弃更改？",
+  "discard_changes_message": "您确定要舍弃未保存的更改吗？",
+  "discard": "舍弃",
+  "category_placeholder": "类别",
+  "image_requirements": "PNG、JPG、GIF（最大10MB）",
+  "error_saving_group": "保存错误: {error}",
+  "error_selecting_image": "选择图片出错",
+  "error_saving_image": "保存图片出错",
+  "@error_saving_group": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "already_exists": "已存在",
+  "status_all": "全部",
+  "status_active": "活跃",
+  "status_archived": "已归档",
+  "no_archived_groups": "没有已归档的群组",
+  "no_archived_groups_subtitle": "您还没有归档任何群组",
+  "all_groups_archived_info": "您的所有群组都已归档。您可以从归档部分恢复它们或创建新的群组。",
+  "filter_status_tooltip": "筛选群组",
+  "welcome_logo_semantic": "Caravella应用标志",
+  "create_new_group": "创建新群组",
+  "accessibility_add_new_item": "添加新项目",
+  "accessibility_navigation_bar": "导航栏",
+  "accessibility_back_button": "返回",
+  "accessibility_loading_groups": "正在加载群组",
+  "accessibility_loading_your_groups": "正在加载您的群组",
+  "accessibility_groups_list": "群组列表",
+  "accessibility_welcome_screen": "欢迎屏幕",
+  "accessibility_total_expenses": "总支出: {amount}€",
+  "@accessibility_total_expenses": {
+    "description": "总支出无障碍标签",
+    "placeholders": {
+      "amount": {}
+    }
+  },
+  "accessibility_add_expense": "添加支出",
+  "accessibility_security_switch": "安全开关",
+  "accessibility_switch_on": "开关开启",
+  "accessibility_switch_off": "开关关闭",
+  "accessibility_image_source_dialog": "图片来源选择对话框",
+  "accessibility_currently_enabled": "当前已启用",
+  "accessibility_currently_disabled": "当前已禁用",
+  "accessibility_double_tap_disable": "双击以禁用",
+  "accessibility_double_tap_enable": "双击以启用",
+  "accessibility_toast_success": "成功",
+  "accessibility_toast_error": "错误",
+  "accessibility_toast_info": "信息",
+  "color_suggested_title": "建议的颜色",
+  "color_suggested_subtitle": "选择主题兼容的颜色之一",
+  "color_random_subtitle": "让应用为您选择颜色",
+  "currency_AED": "阿联酋迪拉姆",
   "currency_AFN": "阿富汗尼",
   "currency_ALL": "阿尔巴尼亚列克",
-  "currency_DZD": "阿尔及利亚第纳尔",
-  "currency_USD": "美元",
-  "currency_EUR": "欧元",
-  "currency_AOA": "安哥拉宽扎",
-  "currency_XCD": "东加勒比元",
-  "currency_ARS": "阿根廷比索",
   "currency_AMD": "亚美尼亚德拉姆",
-  "currency_AWG": "阿鲁巴弗罗林",
+  "currency_ANG": "荷属安的列斯盾",
+  "currency_AOA": "安哥拉宽扎",
+  "currency_ARS": "阿根廷比索",
   "currency_AUD": "澳大利亚元",
+  "currency_AWG": "阿鲁巴弗罗林",
   "currency_AZN": "阿塞拜疆马纳特",
-  "currency_BSD": "巴哈马元",
-  "currency_BHD": "巴林第纳尔",
-  "currency_BDT": "孟加拉塔卡",
+  "currency_BAM": "波黑可兑换马克",
   "currency_BBD": "巴巴多斯元",
+  "currency_BDT": "孟加拉塔卡",
+  "currency_BGN": "保加利亚列弗",
+  "currency_BHD": "巴林第纳尔",
+  "currency_BIF": "布隆迪法郎",
+  "currency_BMD": "百慕大元",
+  "currency_BND": "文莱元",
+  "currency_BOB": "玻利维亚诺",
+  "currency_BRL": "巴西雷亚尔",
+  "currency_BSD": "巴哈马元",
+  "currency_BTN": "不丹努尔特鲁姆",
+  "currency_BWP": "博茨瓦纳普拉",
   "currency_BYN": "白俄罗斯卢布",
   "currency_BZD": "伯利兹元",
-  "currency_XOF": "西非法郎",
-  "currency_BMD": "百慕大元",
-  "currency_BTN": "不丹努尔特鲁姆",
-  "currency_BOB": "玻利维亚诺",
-  "currency_BAM": "波黑可兑换马克",
-  "currency_BWP": "博茨瓦纳普拉",
-  "currency_BRL": "巴西雷亚尔",
-  "currency_BND": "文莱元",
-  "currency_BGN": "保加利亚列弗",
-  "currency_BIF": "布隆迪法郎",
-  "currency_CVE": "佛得角埃斯库多",
-  "currency_KHR": "柬埔寨瑞尔",
-  "currency_XAF": "中非法郎",
   "currency_CAD": "加拿大元",
   "currency_CDF": "刚果法郎",
   "currency_CHF": "瑞士法郎",
   "currency_CLP": "智利比索",
   "currency_CNY": "人民币",
   "currency_COP": "哥伦比亚比索",
-  "currency_KMF": "科摩罗法郎",
   "currency_CRC": "哥斯达黎加科朗",
-  "currency_HRK": "克罗地亚库纳",
   "currency_CUP": "古巴比索",
+  "currency_CVE": "佛得角埃斯库多",
   "currency_CZK": "捷克克朗",
-  "currency_DKK": "丹麦克朗",
   "currency_DJF": "吉布提法郎",
+  "currency_DKK": "丹麦克朗",
   "currency_DOP": "多米尼加比索",
+  "currency_DZD": "阿尔及利亚第纳尔",
   "currency_EGP": "埃及镑",
-  "currency_SVC": "萨尔瓦多科朗",
   "currency_ERN": "厄立特里亚纳克法",
-  "currency_SZL": "斯威士兰里兰吉尼",
   "currency_ETB": "埃塞俄比亚比尔",
-  "currency_FKP": "福克兰群岛镑",
+  "currency_EUR": "欧元",
   "currency_FJD": "斐济元",
-  "currency_XPF": "太平洋法郎",
-  "currency_GMD": "冈比亚达拉西",
+  "currency_FKP": "福克兰群岛镑",
+  "currency_GBP": "英镑",
   "currency_GEL": "格鲁吉亚拉里",
   "currency_GHS": "加纳塞地",
   "currency_GIP": "直布罗陀镑",
-  "currency_GTQ": "危地马拉格查尔",
-  "currency_GBP": "英镑",
+  "currency_GMD": "冈比亚达拉西",
   "currency_GNF": "几内亚法郎",
+  "currency_GTQ": "危地马拉格查尔",
   "currency_GYD": "圭亚那元",
-  "currency_HTG": "海地古德",
-  "currency_HNL": "洪都拉斯伦皮拉",
   "currency_HKD": "港币",
+  "currency_HNL": "洪都拉斯伦皮拉",
+  "currency_HTG": "海地古德",
   "currency_HUF": "匈牙利福林",
-  "currency_ISK": "冰岛克朗",
-  "currency_INR": "印度卢比",
   "currency_IDR": "印尼盾",
-  "currency_IRR": "伊朗里亚尔",
-  "currency_IQD": "伊拉克第纳尔",
   "currency_ILS": "以色列新谢克尔",
+  "currency_INR": "印度卢比",
+  "currency_IQD": "伊拉克第纳尔",
+  "currency_IRR": "伊朗里亚尔",
+  "currency_ISK": "冰岛克朗",
   "currency_JMD": "牙买加元",
-  "currency_JPY": "日元",
   "currency_JOD": "约旦第纳尔",
-  "currency_KZT": "哈萨克斯坦坚戈",
+  "currency_JPY": "日元",
   "currency_KES": "肯尼亚先令",
+  "currency_KGS": "吉尔吉斯斯坦索姆",
+  "currency_KHR": "柬埔寨瑞尔",
+  "currency_KID": "基里巴斯元",
+  "currency_KMF": "科摩罗法郎",
   "currency_KPW": "朝鲜圆",
   "currency_KRW": "韩元",
   "currency_KWD": "科威特第纳尔",
-  "currency_KGS": "吉尔吉斯斯坦索姆",
+  "currency_KYD": "开曼群岛元",
+  "currency_KZT": "哈萨克斯坦坚戈",
   "currency_LAK": "老挝基普",
   "currency_LBP": "黎巴嫩镑",
-  "currency_LSL": "莱索托洛蒂",
+  "currency_LKR": "斯里兰卡卢比",
   "currency_LRD": "利比里亚元",
+  "currency_LSL": "莱索托洛蒂",
   "currency_LYD": "利比亚第纳尔",
-  "currency_MOP": "澳门帕塔卡",
-  "currency_MKD": "北马其顿第纳尔",
+  "currency_MAD": "摩洛哥迪拉姆",
+  "currency_MDL": "摩尔多瓦列伊",
   "currency_MGA": "马达加斯加阿里亚里",
-  "currency_MWK": "马拉维克瓦查",
-  "currency_MYR": "马来西亚林吉特",
-  "currency_MVR": "马尔代夫拉菲亚",
+  "currency_MKD": "北马其顿第纳尔",
+  "currency_MMK": "缅甸缅元",
+  "currency_MNT": "蒙古图格里克",
+  "currency_MOP": "澳门帕塔卡",
   "currency_MRU": "毛里塔尼亚乌吉亚",
   "currency_MUR": "毛里求斯卢比",
+  "currency_MVR": "马尔代夫拉菲亚",
+  "currency_MWK": "马拉维克瓦查",
   "currency_MXN": "墨西哥比索",
-  "currency_MDL": "摩尔多瓦列伊",
-  "currency_MNT": "蒙古图格里克",
-  "currency_MAD": "摩洛哥迪拉姆",
+  "currency_MYR": "马来西亚林吉特",
   "currency_MZN": "莫桑比克梅蒂卡尔",
-  "currency_MMK": "缅甸缅元",
   "currency_NAD": "纳米比亚元",
-  "currency_NPR": "尼泊尔卢比",
-  "currency_NIO": "尼加拉瓜科多巴",
   "currency_NGN": "尼日利亚奈拉",
+  "currency_NIO": "尼加拉瓜科多巴",
   "currency_NOK": "挪威克朗",
+  "currency_NPR": "尼泊尔卢比",
+  "currency_NZD": "新西兰元",
   "currency_OMR": "阿曼里亚尔",
-  "currency_PKR": "巴基斯坦卢比",
   "currency_PAB": "巴拿马巴波亚",
-  "currency_PGK": "巴布亚新几内亚基那",
-  "currency_PYG": "巴拉圭瓜拉尼",
   "currency_PEN": "秘鲁索尔",
+  "currency_PGK": "巴布亚新几内亚基那",
   "currency_PHP": "菲律宾比索",
+  "currency_PKR": "巴基斯坦卢比",
   "currency_PLN": "波兰兹罗提",
+  "currency_PYG": "巴拉圭瓜拉尼",
   "currency_QAR": "卡塔尔里亚尔",
   "currency_RON": "罗马尼亚列伊",
+  "currency_RSD": "塞尔维亚第纳尔",
   "currency_RUB": "俄罗斯卢布",
   "currency_RWF": "卢旺达法郎",
   "currency_SAR": "沙特里亚尔",
@@ -308,48 +572,69 @@
   "currency_SGD": "新加坡元",
   "currency_SHP": "圣赫勒拿镑",
   "currency_SLE": "塞拉利昂利昂",
+  "currency_SLL": "塞拉利昂利昂(旧)",
   "currency_SOS": "索马里先令",
-  "currency_ZAR": "南非兰特",
-  "currency_SSP": "南苏丹镑",
-  "currency_LKR": "斯里兰卡卢比",
-  "currency_STN": "圣多美和普林西比多布拉",
   "currency_SRD": "苏里南元",
+  "currency_SSP": "南苏丹镑",
+  "currency_STN": "圣多美和普林西比多布拉",
+  "currency_SVC": "萨尔瓦多科朗",
   "currency_SYP": "叙利亚镑",
-  "currency_TWD": "新台币",
-  "currency_TJS": "塔吉克斯坦索莫尼",
-  "currency_TZS": "坦桑尼亚先令",
+  "currency_SZL": "斯威士兰里兰吉尼",
   "currency_THB": "泰铢",
-  "currency_TOP": "汤加潘加",
-  "currency_TTD": "特立尼达和多巴哥元",
-  "currency_TND": "突尼斯第纳尔",
-  "currency_TRY": "土耳其里拉",
+  "currency_TJS": "塔吉克斯坦索莫尼",
   "currency_TMT": "土库曼斯坦马纳特",
-  "currency_UGX": "乌干达先令",
+  "currency_TND": "突尼斯第纳尔",
+  "currency_TOP": "汤加潘加",
+  "currency_TRY": "土耳其里拉",
+  "currency_TTD": "特立尼达和多巴哥元",
+  "currency_TVD": "图瓦卢元",
+  "currency_TWD": "新台币",
+  "currency_TZS": "坦桑尼亚先令",
   "currency_UAH": "乌克兰格里夫纳",
-  "currency_AED": "阿联酋迪拉姆",
+  "currency_UGX": "乌干达先令",
+  "currency_USD": "美元",
   "currency_UYU": "乌拉圭比索",
   "currency_UZS": "乌兹别克斯坦苏姆",
-  "currency_VUV": "瓦努阿图瓦图",
+  "currency_VED": "委内瑞拉数字玻利瓦尔",
   "currency_VES": "委内瑞拉玻利瓦尔",
   "currency_VND": "越南盾",
+  "currency_VUV": "瓦努阿图瓦图",
+  "currency_WST": "萨摩亚塔拉",
+  "currency_XAF": "中非法郎",
+  "currency_XOF": "西非法郎",
+  "currency_XPF": "太平洋法郎",
   "currency_YER": "也门里亚尔",
+  "currency_ZAR": "南非兰特",
   "currency_ZMW": "赞比亚克瓦查",
   "currency_ZWL": "津巴布韦元",
-  "currency_search_hint": "搜索货币...",
-  "select_participants": "选择参与者",
-  "all_participants": "所有参与者",
-  "expense_split_equally": "平均分摊",
-  "expense_split_custom": "自定义分摊",
-  "split_amount": "分摊金额",
-  "remaining_amount": "剩余金额",
+  "search_currency": "搜索货币...",
+  "activity": "支出",
+  "search_expenses_hint": "按名称或备注搜索...",
+  "clear_filters": "清除",
+  "show_filters": "显示筛选器",
+  "hide_filters": "隐藏筛选器",
+  "all_categories": "全部",
+  "all_participants": "全部",
+  "no_expenses_with_filters": "没有符合所选筛选条件的支出",
+  "no_expenses_yet": "尚未添加支出",
+  "empty_expenses_title": "准备开始跟踪?",
+  "empty_expenses_subtitle": "添加您的第一笔支出以开始使用此群组!",
   "add_first_expense_button": "添加支出",
-  "@add_first_expense_button": {"description": "Button text for adding the first expense in empty state"},
+  "@add_first_expense_button": {
+    "description": "Button text for adding the first expense in empty state"
+  },
   "show_search": "显示搜索栏",
-  "@show_search": {"description": "Tooltip to show the group search bar"},
+  "@show_search": {
+    "description": "Tooltip to show the group search bar"
+  },
   "hide_search": "隐藏搜索栏",
-  "@hide_search": {"description": "Tooltip to hide the group search bar"},
+  "@hide_search": {
+    "description": "Tooltip to hide the group search bar"
+  },
   "expense_groups_title": "支出群组",
-  "@expense_groups_title": {"description": "Main section header for the list of expense groups/trips on the history page"},
+  "@expense_groups_title": {
+    "description": "Main section header for the list of expense groups/trips on the history page"
+  },
   "expense_groups_desc": "管理您的支出群组",
   "@expense_groups_desc": {"description": "Short subtitle describing the purpose of the expense groups section (e.g. add, edit, view trips)"}
   ,"participant_count": "{count, plural, other {{count} 名参与者}}"
@@ -358,10 +643,6 @@
   ,"@whats_new_title": {"description": "显示更新日志页面的标题"}
   ,"whats_new_desc": "了解最新功能和更新"
   ,"@whats_new_desc": {"description": "新功能页面的副标题"}
-  ,"whats_new_subtitle": "最新亮点"
-  ,"@whats_new_subtitle": {"description": "新功能页面标题卡中的副标题"}
-  ,"whats_new_latest": "随时掌握最新改进"
-  ,"@whats_new_latest": {"description": "新功能页面标题卡中的描述文字"}
   ,"average_per_person": "人均支出"
   ,"@average_per_person": {"description": "参与者标签页中显示的人均支出标签"}
   ,"more": "更多"
@@ -419,9 +700,9 @@
   ,"delete_group": "删除群组"
   ,"delete_group_confirm": "您确定要删除此支出群组吗？此操作无法撤销。"
   ,"add_expense_fab": "添加支出"
-  ,"pin_group": "固定群组"
-  ,"unpin_group": "取消固定群组"
-  ,"pin": "固定"
+  ,"pin_group": "标记为收藏"
+  ,"unpin_group": "移除收藏"
+  ,"pin": "收藏"
   ,"developed_by": "开发者：calca"
   ,"links": "链接"
   ,"daily_expenses_chart": "每日支出"
@@ -485,4 +766,310 @@
   ,"welcome_v3_tagline": "完美适用于群组旅行、室友或任何共享支出的情况。"
   ,"currency_WST": "萨摩亚塔拉"
   ,"search_currency": "搜索货币..."
+  ,"view_on_map": "在地图上查看"
+  ,"@view_on_map": {"description": "Tooltip for the map button to view expenses on a map"}
+  ,"expenses_map": "支出地图"
+  ,"@expenses_map": {"description": "Title of the page showing expenses on a map"}
+  ,"no_locations_available": "没有可用的位置"
+  ,"@no_locations_available": {"description": "Message shown when no expenses have location data"}
+  ,"no_locations_subtitle": "在支出中添加位置数据以在地图上查看它们"
+  ,"@no_locations_subtitle": {"description": "Subtitle explaining how to add locations"}
+  ,"expense_count": "{count, plural, =1{1 笔支出} other{{count} 笔支出}}"
+  ,"@expense_count": {"description": "Label showing number of expenses at a location", "placeholders": {"count": {"type": "int"}}}
+  ,"check_for_updates": "检查更新"
+  ,"@check_for_updates": {"description": "从Google Play商店检查更新的标签"}
+  ,"check_for_updates_desc": "检查新版本可用性"
+  ,"@check_for_updates_desc": {"description": "更新检查的描述"}
+  ,"update_available": "有可用更新"
+  ,"@update_available": {"description": "当有更新可用时的标题"}
+  ,"update_available_desc": "应用的新版本已可用"
+  ,"@update_available_desc": {"description": "当有更新可用时的描述"}
+  ,"no_update_available": "应用已是最新"
+  ,"@no_update_available": {"description": "没有更新时的消息"}
+  ,"no_update_available_desc": "您正在使用最新版本"
+  ,"@no_update_available_desc": {"description": "没有更新时的描述"}
+  ,"update_now": "立即更新"
+  ,"@update_now": {"description": "开始更新的按钮"}
+  ,"update_later": "稍后"
+  ,"@update_later": {"description": "推迟更新的按钮"}
+  ,"checking_for_updates": "正在检查更新..."
+  ,"@checking_for_updates": {"description": "检查更新时的消息"}
+  ,"update_error": "更新检查错误"
+  ,"@update_error": {"description": "更新检查期间的错误消息"}
+  ,"update_downloading": "正在下载..."
+  ,"@update_downloading": {"description": "下载更新时的消息"}
+  ,"update_installing": "正在安装..."
+  ,"@update_installing": {"description": "安装更新时的消息"}
+  ,"update_feature_android_only": "此功能仅适用于带有Google Play商店的Android设备"
+  ,"@update_feature_android_only": {"description": "说明该功能仅适用于Android的消息"}
+  ,"update_recommendation_title": "推荐更新"
+  ,"@update_recommendation_title": {"description": "推荐更新的底部表单标题"}
+  ,"update_recommendation_desc": "Caravella有新版本可用。更新应用以始终获得最新功能和改进！"
+  ,"@update_recommendation_desc": {"description": "底部表单中建议更新的描述"}
+  ,"update_install": "安装更新"
+  ,"@update_install": {"description": "从底部表单安装更新的按钮"}
+  ,"update_remind_later": "稍后提醒我"
+  ,"@update_remind_later": {"description": "从底部表单推迟更新的按钮"}
+  ,"@expense_groups_desc": {
+    "description": "Short subtitle describing the purpose of the expense groups section (e.g. add, edit, view trips)"
+  },
+  "whats_new_title": "新功能",
+  "@whats_new_title": {
+    "description": "显示更新日志页面的标题"
+  },
+  "whats_new_desc": "了解最新功能和更新",
+  "@whats_new_desc": {
+    "description": "新功能页面的副标题"
+  },
+  "whats_new_subtitle": "最新亮点",
+  "@whats_new_subtitle": {
+    "description": "新功能页面标题卡中的副标题"
+  },
+  "whats_new_latest": "随时掌握最新改进",
+  "@whats_new_latest": {
+    "description": "新功能页面标题卡中的描述文字"
+  },
+  "changelog_title": "更新日志",
+  "@changelog_title": {
+    "description": "更新日志部分的标题"
+  },
+  "changelog_desc": "版本历史和改进",
+  "@changelog_desc": {
+    "description": "更新日志部分的描述"
+  },
+  "average_per_person": "人均支出",
+  "@average_per_person": {
+    "description": "参与者标签页中显示的人均支出标签"
+  },
+  "more": "更多",
+  "@more": {
+    "description": "展开并显示所有项目的内联按钮标签"
+  },
+  "less": "更少",
+  "@less": {
+    "description": "收起并显示更少项目的内联按钮标签"
+  },
+  "debt_prefix_to": "给 ",
+  "@debt_prefix_to": {
+    "description": "在债务/结算行中显示在收款人之前的简短前缀（例如：'给 Alice 10€'）"
+  },
+  "send_reminder": "发送提醒",
+  "@send_reminder": {
+    "description": "向参与者发送付款提醒的按钮标签"
+  },
+  "reminder_message_single": "嗨 {participantName}！👋\n\n友情提醒，您需要向 {creditorName} 支付 {amount}，用于群组 \"{groupName}\"。\n\n谢谢！😊",
+  "@reminder_message_single": {
+    "description": "参与者欠一个人钱时的提醒消息",
+    "placeholders": {
+      "participantName": {},
+      "amount": {},
+      "creditorName": {},
+      "groupName": {}
+    }
+  },
+  "reminder_message_multiple": "嗨 {participantName}！👋\n\n友情提醒您对群组 \"{groupName}\" 的付款：\n\n{debtsList}\n\n谢谢！😊",
+  "@reminder_message_multiple": {
+    "description": "参与者欠多个人钱时的提醒消息",
+    "placeholders": {
+      "participantName": {},
+      "groupName": {},
+      "debtsList": {}
+    }
+  },
+  "group_type": "类型",
+  "@group_type": {
+    "description": "费用组类型标签"
+  },
+  "group_type_description": "选择组类型",
+  "@group_type_description": {
+    "description": "组类型选择的描述"
+  },
+  "group_type_travel": "旅行",
+  "@group_type_travel": {
+    "description": "组类型：旅行"
+  },
+  "group_type_personal": "个人",
+  "@group_type_personal": {
+    "description": "组类型：个人"
+  },
+  "group_type_family": "家庭",
+  "@group_type_family": {
+    "description": "组类型：家庭"
+  },
+  "group_type_other": "其他",
+  "@group_type_other": {
+    "description": "组类型：其他"
+  },
+  "category_travel_transport": "交通",
+  "@category_travel_transport": {
+    "description": "旅行组类型的默认类别"
+  },
+  "category_travel_accommodation": "住宿",
+  "@category_travel_accommodation": {
+    "description": "旅行组类型的默认类别"
+  },
+  "category_travel_restaurants": "餐厅",
+  "@category_travel_restaurants": {
+    "description": "旅行组类型的默认类别"
+  },
+  "category_personal_shopping": "购物",
+  "@category_personal_shopping": {
+    "description": "个人组类型的默认类别"
+  },
+  "category_personal_health": "健康",
+  "@category_personal_health": {
+    "description": "个人组类型的默认类别"
+  },
+  "category_personal_entertainment": "娱乐",
+  "@category_personal_entertainment": {
+    "description": "个人组类型的默认类别"
+  },
+  "category_family_groceries": "食品杂货",
+  "@category_family_groceries": {
+    "description": "家庭组类型的默认类别"
+  },
+  "category_family_home": "家居",
+  "@category_family_home": {
+    "description": "家庭组类型的默认类别"
+  },
+  "category_family_bills": "账单",
+  "@category_family_bills": {
+    "description": "家庭组类型的默认类别"
+  },
+  "category_other_misc": "杂项",
+  "@category_other_misc": {
+    "description": "其他组类型的默认类别"
+  },
+  "category_other_utilities": "公用事业",
+  "@category_other_utilities": {
+    "description": "其他组类型的默认类别"
+  },
+  "category_other_services": "服务",
+  "@category_other_services": {
+    "description": "其他组类型的默认类别"
+  },
+  "debt_prefix_to": "给 ",
+  "@debt_prefix_to": {
+    "description": "在债务/结算行中显示在收款人之前的简短前缀（例如：'给 Alice 10€'）"
+  },
+  "notification_enabled": "持久通知",
+  "@notification_enabled": {
+    "description": "组中持久通知设置的标签"
+  },
+  "notification_enabled_desc": "在常驻通知中显示今日消费",
+  "@notification_enabled_desc": {
+    "description": "持久通知设置的描述"
+  },
+  "notification_daily_spent": "每日消费：{amount} {currency}",
+  "@notification_daily_spent": {
+    "description": "通知中显示每日平均费用的文本",
+    "placeholders": {
+      "amount": {},
+      "currency": {}
+    }
+  },
+  "notification_total_spent": "总计：{amount} {currency}",
+  "@notification_total_spent": {
+    "description": "通知中显示总费用的文本",
+    "placeholders": {
+      "amount": {},
+      "currency": {}
+    }
+  },
+  "notification_add_expense": "添加费用",
+  "@notification_add_expense": {
+    "description": "通知中添加新费用的按钮标签"
+  },
+  "notification_close": "关闭",
+  "@notification_close": {
+    "description": "通知中关闭通知的按钮标签"
+  },
+  "attachments": "附件",
+  "@attachments": {
+    "description": "费用附件的标签"
+  },
+  "add_attachment": "添加附件",
+  "@add_attachment": {
+    "description": "添加附件的按钮"
+  },
+  "attachment_limit_reached": "已达到5个附件的最大限制",
+  "@attachment_limit_reached": {
+    "description": "尝试添加超过5个附件时的错误消息"
+  },
+  "delete_attachment": "删除附件",
+  "@delete_attachment": {
+    "description": "删除附件的操作"
+  },
+  "share_attachment": "分享附件",
+  "@share_attachment": {
+    "description": "分享附件的操作"
+  },
+  "delete_attachment_confirm_title": "删除附件",
+  "@delete_attachment_confirm_title": {
+    "description": "删除附件确认对话框标题"
+  },
+  "delete_attachment_confirm_message": "您确定要删除此附件吗？",
+  "@delete_attachment_confirm_message": {
+    "description": "删除附件确认对话框消息"
+  },
+  "attachment_source": "选择来源",
+  "@attachment_source": {
+    "description": "选择附件来源的标题"
+  },
+  "from_files": "从文件",
+  "@from_files": {
+    "description": "从文件选择的选项"
+  },
+  "archived_group_readonly": "已归档的组 - 只读",
+  "@archived_group_readonly": {
+    "description": "表示已归档的组处于只读模式的消息"
+  },
+  "archived_group_readonly_desc": "该组已归档。您无法修改它或添加新费用。",
+  "@archived_group_readonly_desc": {
+    "description": "只读模式下归档组的描述"
+  },
+  "expense_readonly": "费用 - 只读",
+  "@expense_readonly": {
+    "description": "只读模式下费用的标题"
+  },
+  "expense_readonly_archived": "此费用属于已归档的组，无法修改。",
+  "@expense_readonly_archived": {
+    "description": "解释费用无法修改的消息，因为组已归档"
+  },
+  "expense": "费用",
+  "@expense": {
+    "description": "费用的通用标题"
+  },
+  "notification_enabled": "持久通知",
+  "@notification_enabled": {
+    "description": "持久通知切换标签"
+  },
+  "notification_daily_spent": "今日消费: {amount} {currency}",
+  "@notification_daily_spent": {
+    "description": "通知中今日的花费金额",
+    "placeholders": {
+      "amount": {"type": "String"},
+      "currency": {"type": "String"}
+    }
+  },
+  "notification_total_spent": "总计: {amount} {currency}",
+  "@notification_total_spent": {
+    "description": "通知中的总花费金额",
+    "placeholders": {
+      "amount": {"type": "String"},
+      "currency": {"type": "String"}
+    }
+  },
+  "notification_add_expense": "添加支出",
+  "@notification_add_expense": {
+    "description": "通知中添加支出的操作按钮"
+  },
+  "notification_close": "关闭",
+  "@notification_close": {
+    "description": "通知中关闭的操作按钮"
+  },
+  "notification_disable": "禁用",
+  "@notification_disable": {
+    "description": "通知中用于禁用通知的操作按钮"
+  }
 }

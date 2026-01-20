@@ -39,7 +39,7 @@ jobs:
       - name: Run tests
         run: flutter test
       - name: Build staging APK (signed)
-        run: flutter build apk --flavor staging --release --dart-define=FLAVOR=staging
+        run: flutter build apk --flavor staging --release --dart-define=FLAVOR=staging --dart-define=ENABLE_TALKER_SCREEN=true
       - name: Get app version
         id: get_version
         run: |
@@ -94,14 +94,16 @@ jobs:
             echo "BUILD_TYPE=staging" >> $GITHUB_ENV
             echo "APK_NAME=app-staging-release.apk" >> $GITHUB_ENV
             echo "FILE_PREFIX=io_caravella_egm-staging" >> $GITHUB_ENV
+            echo "TALKER_FLAG=--dart-define=ENABLE_TALKER_SCREEN=true" >> $GITHUB_ENV
           else
             echo "FLAVOR=prod" >> $GITHUB_ENV
             echo "BUILD_TYPE=production" >> $GITHUB_ENV
             echo "APK_NAME=app-prod-release.apk" >> $GITHUB_ENV
             echo "FILE_PREFIX=io_caravella_egm" >> $GITHUB_ENV
+            echo "TALKER_FLAG=" >> $GITHUB_ENV
           fi
       - name: Build APK (signed)
-        run: flutter build apk --flavor ${{ env.FLAVOR }} --release --dart-define=FLAVOR=${{ env.FLAVOR }}
+        run: flutter build apk --flavor ${{ env.FLAVOR }} --release --dart-define=FLAVOR=${{ env.FLAVOR }} ${{ env.TALKER_FLAG }}
       - name: Get app version
         id: get_version
         run: |

@@ -3,7 +3,8 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:io_caravella_egm/settings/widgets/settings_card.dart';
 import '../../settings/widgets/settings_section.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../widgets/app_toast.dart';
+import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 class DeveloperPage extends StatelessWidget {
   const DeveloperPage({super.key});
@@ -22,8 +23,7 @@ class DeveloperPage extends StatelessWidget {
         title: Text(loc.support_developer_title, style: textTheme.titleMedium),
         subtitle: Text(loc.support_developer_desc, style: textTheme.bodySmall),
         trailing: const Icon(Icons.launch, size: 16),
-        onTap: () =>
-            _launchUrl(context, 'https://buymeacoffee.com/gianluigick'),
+        onTap: () => _launchUrl(context, 'https://ko-fi.com/calca'),
       ),
     );
   }
@@ -151,7 +151,7 @@ class DeveloperPage extends StatelessWidget {
         'Impossibile aprire il link: $url',
         type: ToastType.error,
       );
-      debugPrint('Could not launch $url: $e');
+      LoggerService.error('Could not launch $url', name: 'settings', error: e);
     }
   }
 }

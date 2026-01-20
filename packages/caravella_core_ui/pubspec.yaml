@@ -1,0 +1,37 @@
+name: caravella_core_ui
+description: "Caravella Core UI - Common widgets and themes"
+version: 1.4.0
+publish_to: 'none'
+
+environment:
+  sdk: ">=3.9.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  caravella_core:
+    path: ../caravella_core
+  fl_chart: ^1.1.0
+  flutter_map: ^8.0.0
+  intl: ^0.20.2
+  latlong2: ^0.9.1
+  timeago: ^3.7.0
+  zentoast: ^0.1.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/fonts/
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat-Regular.ttf
+        - asset: assets/fonts/Montserrat-Bold.ttf
+          weight: 700

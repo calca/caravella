@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../../data/model/expense_group.dart';
-import '../../../../widgets/bottom_sheet_scaffold.dart';
+import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 class OptionsSheet extends StatelessWidget {
   final ExpenseGroup trip;
@@ -45,7 +45,7 @@ class OptionsSheet extends StatelessWidget {
         children: [
           ListTile(
             leading: Icon(
-              trip.pinned ? Icons.push_pin_outlined : Icons.push_pin_outlined,
+              trip.pinned ? Icons.favorite : Icons.favorite_border,
               color: trip.archived
                   ? Theme.of(
                       context,
@@ -75,10 +75,23 @@ class OptionsSheet extends StatelessWidget {
           ListTile(
             leading: Icon(
               Icons.edit_outlined,
-              color: Theme.of(context).colorScheme.onPrimaryFixed,
+              color: trip.archived
+                  ? Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.38)
+                  : Theme.of(context).colorScheme.onPrimaryFixed,
             ),
-            title: Text(gloc.edit_group),
-            onTap: onEdit,
+            title: Text(
+              gloc.edit_group,
+              style: trip.archived
+                  ? TextStyle(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withValues(alpha: 0.38),
+                    )
+                  : null,
+            ),
+            onTap: trip.archived ? null : onEdit,
           ),
           if (onShareQr != null)
             ListTile(

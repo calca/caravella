@@ -1,326 +1,88 @@
 # Caravella Flutter App
+- Multi-platform group expense tracker built with Flutter 3 stable + Material 3; flavors selected via `--dart-define=FLAVOR=dev|staging|prod`.
+- Run inside macOS/zsh; prefer flutter stable (CI uses 3.38.x) and consult these notes before ad-hoc scripts.
+- **Multi-package architecture**: Core logic in `packages/caravella_core`, UI components in `packages/caravella_core_ui`, updates in `packages/play_store_updates`, main app in `lib/`.
 
-Caravella is a modern Flutter application for managing group expenses, travel costs, and participants with local persistence and Material 3 UX. Ideal for group trips, roommates, events, or any situation where multiple people share expenses. Designed to be simple, intuitive, multi-platform (Android/iOS/web/desktop), and easily extensible.
+## Core Architecture
+- Entry point `lib/main.dart` wires `AppConfig` from the FLAVOR define, locks portrait, enables Android edge-to-edge, and injects providers (`ExpenseGroupNotifier`, `UserNameNotifier`, `LocaleNotifier`, `ThemeModeNotifier`).
+- Routes observe navigation through `routeObserver` so pages like `HomePage` can refresh on `didPopNext`.
+- Environment-aware app name/banner live in `packages/caravella_core/lib/config/app_config.dart`; avoid hardcoding labels elsewhere.
+- SharedPreferences back locale/theme selection; mutations update via notifier callbacks not direct prefs writes.
 
-**ALWAYS reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.**
+## Package Structure
+- **`packages/caravella_core/`**: Business logic, data models, storage, services (logging, shortcuts, preferences, rating), state management
+  - Services organized by category: `logging/`, `shortcuts/`, `storage/`, `user/`
+  - Export: `import 'package:caravella_core/caravella_core.dart';`
+- **`packages/caravella_core_ui/`**: Reusable UI components, widgets, themes-independent components
+  - Export: `import 'package:caravella_core_ui/caravella_core_ui.dart';`
+- **`packages/play_store_updates/`**: Google Play Store update functionality (conditional with `ENABLE_PLAY_UPDATES=true`)
+  - Export: `import 'package:play_store_updates/play_store_updates.dart';`
+- **`lib/`**: App-specific UI, pages, managers, main app logic
 
-## Working Effectively
+## Data & Persistence
+- Use `ExpenseGroupStorageV2` (from `caravella_core`) as the façade for all trip/expense CRUD; it wraps `FileBasedExpenseGroupRepository` which performs caching, indexing, and integrity checks.
+- `FileBasedExpenseGroupRepository` saves to `${ApplicationDocumentsDirectory}/expense_group_storage.json`; it automatically enforces a single pinned group and prunes stale cache with `forceReload`.
+- When editing groups, rely on helper APIs like `updateParticipantReferencesFromDiff`/`updateCategoryReferencesFromDiff` so embedded expense snapshots stay consistent.
+- Logger output flows through `packages/caravella_core/lib/services/logging/logger_service.dart`; prefer `LoggerService.warning` instead of `print`.
 
-### Prerequisites
-- **Install Flutter SDK (latest stable channel)** (CI now tracks latest stable):
-  ```bash
-  # Option 1: Use Flutter Version Manager (recommended)
-  # git clone https://github.com/fvm/fvm.git
-  # fvm install stable
-  # fvm use stable
-  
-  # Option 2: Direct download (if FVM not available)
-  # (Oppure scarica l'ultima stable manualmente dal sito Flutter)
-  export PATH="$PWD/flutter/bin:$PATH"
-  
-  # Verify installation
-  flutter --version
-  flutter doctor
+## UI & Interaction Patterns
+- Home experience (`lib/home/home_page.dart` + `home/cards`) listens to `ExpenseGroupNotifier.updatedGroupIds` (from `caravella_core`) and consumes `lastEvent` to show `AppToast` messages (from `caravella_core_ui`) via the global `rootScaffoldMessenger`.
+- Feature flows live under `lib/manager/**`; controllers (e.g., `group/group_form_controller.dart`) own form state, diff original models, and notify the global notifier after calling storage.
+- Reusable UI components live in `packages/caravella_core_ui/` (`base_card.dart`, `bottom_sheet_scaffold.dart`, `material3_dialog.dart`, `app_toast.dart`); match spacing/shape tokens instead of bespoke layouts.
+- For toasts or snackbars, always use `AppToast.show` (from `caravella_core_ui`) or the shared `ScaffoldMessenger` key—direct `ScaffoldMessenger.of` calls break when contexts unmount after async work.
+
+## Localization, Theming, Platform
+- Strings come from the generated `io_caravella_egm` package (`gen.AppLocalizations`); never hardcode literals—inject locale via `LocaleNotifier` (from `caravella_core`).
+- Themes originate from `packages/caravella_core_ui/lib/themes/caravella_themes.dart` and respect Material 3 color roles; update both light/dark variants together.
+- Android-only secure flag toggles through `settings/flag_secure_android.dart` and `PreferencesService` (from `caravella_core/services/storage/`); reuse `_initFlagSecure` logic when adding new secure surfaces.
+- Android 15+ compatibility: system bar colors managed via `SystemChrome.setSystemUIOverlayStyle` in `main.dart`; avoid setting colors in theme XML to prevent deprecated API warnings (see `docs/ANDROID_15_FIX.md`).
+
+## Services Organization
+- Services in `packages/caravella_core/lib/services/` are organized by category:
+  - **`logging/`**: `LoggerService` for structured logging (powered by Talker 5.x backend)
+  - **`shortcuts/`**: Android app shortcuts (`AppShortcutsService`, `PlatformShortcutsManager`, `ShortcutsNavigationService`)
+  - **`storage/`**: `PreferencesService` for SharedPreferences access
+  - **`user/`**: `RatingService` for in-app reviews
+- Use `import 'package:caravella_core/caravella_core.dart';` to access all services.
+
+## Logging & Instrumentation
+- **ALWAYS use `LoggerService`** (from `caravella_core`) for all logging—never use `print()` or `debugPrint()`.
+- `LoggerService` is backed by Talker 5.x and provides structured logging with history, categorization, and optional UI (TalkerScreen).
+- **Log levels**: Use appropriate methods based on severity:
+  - `LoggerService.debug()` - Development/troubleshooting info
+  - `LoggerService.info()` - General informational messages (operations, events)
+  - `LoggerService.warning()` - Recoverable issues, fallbacks
+  - `LoggerService.error()` - Errors with optional `error` and `stackTrace` parameters
+- **Categorization**: Always provide a `name` parameter for filtering/organization:
+  - `notification` - Notification system operations
+  - `manager.group` - Group management controllers
+  - `state.notifier` - State management operations
+  - `storage` - Database/file operations
+  - `ui.*` - UI-specific issues (e.g., `ui.scroll`, `ui.sheet`, `ui.share`)
+  - `api.*` - Network/API calls (e.g., `api.nominatim`)
+  - `settings` - Settings and preferences
+- **Examples**:
+  ```dart
+  LoggerService.info('Restoring notification for group: ${group.title}', name: 'notification');
+  LoggerService.warning('Group not found: $groupId', name: 'notification');
+  LoggerService.error('Failed to save group', name: 'storage', error: e, stackTrace: st);
   ```
+- **TalkerScreen access**: Available in debug mode or with `--dart-define=ENABLE_TALKER_SCREEN=true` via Settings → Debug Logs.
 
-### Exact Commands from CI Pipeline
-**These commands are validated to work in the CI environment (latest stable):**
-### Exact Commands from CI Pipeline
-**These commands are validated to work in the CI environment:**
+## Workflows & Quality Gates
+- Standard loop: `flutter pub get` (run in root and packages), `flutter analyze`, `flutter test` (2–3 min; do not abort). CI will fail without all three.
+- Launch flavors with `flutter run --flavor dev|staging --dart-define=FLAVOR=...` or VS Code configs in `.vscode/launch.json`.
+- **Play Store builds**: Add `--dart-define=ENABLE_PLAY_UPDATES=true` to enable Google Play updates (from `play_store_updates` package)
+- **F-Droid builds**: Omit `ENABLE_PLAY_UPDATES` flag to exclude Play Store dependencies entirely
+- Release APK builds use `flutter build apk --flavor {staging|prod} --release --dart-define=FLAVOR=...`; expect 8–12 minutes and avoid cancelling.
+- Accessibility regression scripts (`validate_accessibility.sh`) and tests like `test/accessibility_localization_test.dart` assume semantics labels stay in sync.
 
-- **Install dependencies**:
-  ```bash
-  flutter pub get
-  ```
-  
-- **Code analysis** (required before commit):
-  ```bash
-  flutter analyze
-  ```
-
-- **Run tests** (currently minimal but functional):
-  ```bash
-  flutter test
-  ```
-  Takes ~2-3 minutes. NEVER CANCEL. Set timeout to 5+ minutes.
-
-- **Build APK** - Production staging (validated in CI):
-  ```bash
-  flutter build apk --flavor staging --release --dart-define=FLAVOR=staging
-  ```
-  Build takes 8-12 minutes. NEVER CANCEL. Set timeout to 20+ minutes.
-
-- **Build APK** - Other flavors:
-  ```bash
-  # Development build
-  flutter build apk --flavor dev --dart-define=FLAVOR=dev
-  
-  # Production build
-  flutter build apk --flavor prod --release --dart-define=FLAVOR=prod
-  ```
-
-### Additional Setup Commands
-### Additional Setup Commands
-
-- **Generate app icons** (for different flavors):
-  ```bash
-  # Production icons (default configuration)
-  flutter pub run flutter_launcher_icons:main
-  
-  # Note: Staging and dev icon configs exist in pubspec.yaml but 
-  # may require additional setup. The main production icons should work.
-  ```
-
-- **Analyze code**:
-  ```bash
-  flutter analyze
-  ```
-
-- **Run tests**:
-  ```bash
-  flutter test
-  ```
-  Takes ~2-3 minutes. NEVER CANCEL. Set timeout to 5+ minutes.
-
-- **Build APK** (with signing for release):
-  ```bash
-  # Development build
-  flutter build apk --flavor dev --dart-define=FLAVOR=dev
-  
-  # Staging build  
-  flutter build apk --flavor staging --release --dart-define=FLAVOR=staging
-  
-  # Production build
-  flutter build apk --flavor prod --release --dart-define=FLAVOR=prod
-  ```
-  Build takes 5-10 minutes. NEVER CANCEL. Set timeout to 15+ minutes.
-
-### Run the Application
-
-- **Development mode** (hot reload enabled):
-  ```bash
-  # Default prod flavor
-  flutter run
-  
-  # Development flavor
-  flutter run --flavor dev --dart-define=FLAVOR=dev
-  
-  # Staging flavor
-  flutter run --flavor staging --dart-define=FLAVOR=staging
-  ```
-
-- **VS Code debugging**: Use the configured launch configurations in `.vscode/launch.json`:
-  - "Run (Dev)" - Development flavor
-  - "Run (Staging)" - Staging flavor  
-  - "Run (Prod)" - Production flavor
-
-### Platform-Specific Builds
-- **Android**: `flutter build apk --flavor [dev|staging|prod]`
-- **iOS**: `flutter build ios --flavor [dev|staging|prod]` (requires macOS)
-- **Web**: `flutter build web --dart-define=FLAVOR=prod`
-- **Linux**: `flutter build linux --dart-define=FLAVOR=prod`
-- **Windows**: `flutter build windows --dart-define=FLAVOR=prod`
-- **macOS**: `flutter build macos --dart-define=FLAVOR=prod`
-
-## Validation
-
-### Manual Testing Scenarios
-**ALWAYS run through at least one complete end-to-end scenario after making changes:**
-
-1. **App Launch Flow**:
-   - App launches without crashing on target platform
-   - Home page displays correctly with Material 3 design
-   - Navigation between pages works smoothly
-   - Theme switching (light/dark) works correctly
-
-2. **Core Group Management**:
-   - Create a new group/trip with name and participants
-   - Add at least 2-3 participants to the group
-   - Navigate to group details and verify data persistence
-   - Edit group information and verify changes saved
-
-3. **Expense Management**:
-   - Add expenses with different categories and amounts
-   - Assign expenses to different participants
-   - View expense summary and verify calculations
-   - Test expense editing and deletion
-
-4. **Data Operations**:
-   - Export group data to CSV and verify file creation
-   - Test backup functionality (data export)
-   - Test restore functionality (data import)
-   - Verify data persistence after app restart
-
-5. **Settings and Preferences**:
-   - Change theme (light/dark/system) and verify persistence
-   - Switch language (IT/EN) and verify UI updates
-   - Test flag secure setting (Android)
-   - Verify app version display in settings
-
-6. **Multi-flavor Testing** (when working with flavors):
-   - Verify correct app name for each flavor (Caravella, Caravella - Staging, Caravella - Dev)
-   - Check app icon displays correctly for flavor
-   - Verify flavor-specific configurations work
-   - Test that different flavors can be installed simultaneously
-
-### Automated Testing
-- Run `flutter test` to execute unit and widget tests
-- Main test files:
-  - `test/smoke_test.dart` - Basic app launch test
-  - `test/widget_test.dart` - Currently empty but available for expansion
-
-### Pre-commit Validation
-**ALWAYS run these commands before committing changes or the CI will fail:**
-```bash
-flutter analyze
-flutter test
-```
-
-## Build and CI Information
-
-### CI Pipeline (.github/workflows/flutter.yml)
-- Runs on Ubuntu latest
-- Uses Flutter 3.35.1 stable
-- **Build timeout**: 15+ minutes for APK builds. NEVER CANCEL.
-- **Test timeout**: 5+ minutes for test execution. NEVER CANCEL.
-- Supports signed APK generation for staging and production
-- Automatic version bumping on releases
-
-### Build Artifacts
-- **Debug builds**: Located in `build/app/outputs/flutter-apk/`
-- **APK naming**: `app-[flavor]-[debug|release].apk`
-- **Signed APKs**: Require keystore configuration in `android/key.properties`
-
-## Project Structure and Key Files
-
-### Main Directories
-- `lib/` — Main source code (pages, modules, widgets, storage, state)
-  - `lib/main.dart` — App entry point with flavor support
-  - `lib/config/` — App configuration and environment settings
-  - `lib/state/` — State management with Provider
-  - `lib/widgets/` — Reusable UI components
-  - `lib/home/` — Home page implementation
-  - `lib/settings/` — Settings and preferences
-  - `lib/themes/` — Material 3 theme configuration
-- `assets/` — Images, icons, fonts
-  - `assets/icons/caravella-icon.png` — Main app icon
-  - `assets/fonts/` — Montserrat font family
-- `test/` — Unit and widget tests
-- `android/`, `ios/`, `web/`, `linux/`, `windows/`, `macos/` — Platform-specific code
-
-### Configuration Files
-- `pubspec.yaml` — Dependencies, assets, version (v1.0.26+28)
-- `analysis_options.yaml` — Dart linting rules (uses flutter_lints)
-- `.vscode/launch.json` — VS Code debug configurations with flavors
-- `android/app/build.gradle.kts` — Android build configuration with flavors
-- `android/app/src/main/AndroidManifest.xml` — Android permissions and config
-
-### Common File Patterns
-- **State management**: Provider pattern, check files in `lib/state/`
-- **Themes**: Material 3 implementation in `lib/themes/`
-- **Storage**: Local JSON file persistence using `path_provider`
-
-## Dependencies and Packages
-
-### Key Dependencies
-- `provider` ^6.1.1 — State management
-- `path_provider` ^2.1.5 — Local file storage
-- `package_info_plus` ^8.3.0 — App version info
-- `shared_preferences` ^2.5.3 — User preferences
-- `fl_chart` ^1.0.0 — Data visualization
-- `share_plus` ^11.0.0 — File sharing (CSV export)
-- `file_picker` ^10.2.0 — File import/export
-- `url_launcher` ^6.3.1 — External links
-
-### Development Dependencies
-- `flutter_lints` ^6.0.0 — Code analysis
-- `flutter_launcher_icons` ^0.14.4 — Icon generation
-
-## Troubleshooting
-
-### Common Issues
-1. **Icon generation fails**: Ensure `assets/icons/caravella-icon.png` exists (verified present)
-2. **Build failures**: Clean build cache with `flutter clean && flutter pub get`
-3. **Flavor issues**: Always use `--dart-define=FLAVOR=[flavor]` with builds
-4. **Signing errors**: Verify `android/key.properties` exists for release builds
-5. **Permission issues**: App requires camera and storage permissions (see AndroidManifest.xml)
-
-### Build Cache Management
-```bash
-# Clean build cache
-flutter clean
-
-# Clean and rebuild dependencies
-flutter clean && flutter pub get
-
-# Full reset with icon regeneration
-flutter clean && flutter pub get && flutter pub run flutter_launcher_icons:main
-```
-
-### Platform-Specific Issues
-- **Android**: Requires NDK version 27.0.12077973, compile SDK from Flutter
-- **Signing**: Production builds require keystore configuration
-- **Flavors**: Each flavor has different app ID suffix (.dev, .staging)
-
-## Timing Expectations
-
-- **pub get**: 30-60 seconds
-- **flutter analyze**: 10-30 seconds  
-- **flutter test**: 2-3 minutes (NEVER CANCEL - set 5+ minute timeout)
-- **debug build**: 2-5 minutes
-- **release APK build**: 8-12 minutes (NEVER CANCEL - set 20+ minute timeout)
-- **icon generation**: 30-60 seconds
-- **Hot reload**: <3 seconds
-- **Hot restart**: 5-10 seconds
-
-**CRITICAL**: Never cancel builds or long-running commands. Flutter release builds can take 12+ minutes (confirmed from CI), tests can take 3+ minutes. Always set appropriate timeouts and wait for completion.
-
-
-## Principi generali
-- Scrivere sempre codice **manutenibile, leggibile e scalabile**.
-- Applicare le **best practice di sicurezza** (validazione input, gestione errori, niente credenziali hardcoded).
-- Seguire un approccio **enterprise-grade**, adatto ad applicazioni di **complessità alta**.
-- Favorire sempre **riuso e astrazione**: non duplicare codice se può essere estratto in un componente/servizio condiviso.
-- Ogni modifica deve rispettare e rinforzare le convenzioni già presenti nel progetto.
-
-## Componenti e UI
-- Ogni nuovo widget o componente UI deve:
-  - Seguire **unico design system** definito dal progetto (colori, tipografia, spaziature, bordi, ecc.).
-  - Essere progettato come **riutilizzabile** e **parametrizzabile**.
-  - Essere **compatibile con la preview di Visual Studio Code** (se il linguaggio/framework lo supporta).
-- Verificare sempre se esiste già un widget simile prima di crearne uno nuovo.
-- Ogni componente deve avere una chiara separazione tra **presentazione (UI)** e **logica (stato/servizi)**.
-
-## Gestione dello stato
-- Lo stato deve essere **centralizzato e condiviso** (es. tramite state manager globale o pattern architetturale coerente).
-- Evitare gestione dello stato locale non necessaria.
-- La sincronizzazione dello stato tra componenti deve seguire i principi di **single source of truth**.
-
-## Servizi e data layer
-- Tutti i servizi per l’accesso ai dati devono essere:
-  - **Condivisi e riutilizzabili**.
-  - Integrati con un **sistema di caching** per ridurre le chiamate ridondanti.
-  - Strutturati in modo coerente (pattern repository o simili).
-- Gestire sempre gli errori e i fallback nei servizi.
-- Non accedere mai direttamente alle API dai widget: usare solo i servizi definiti.
-
-## Sicurezza
-- Validare sempre input e output dei servizi.
-- Usare protocolli sicuri (https, token, gestione sessioni).
-- Evitare injection e vulnerabilità comuni (es. SQLi, XSS).
-- Non esporre mai informazioni sensibili lato client.
-
-## Checklist per Copilot prima di generare/modificare codice
-1. Esiste già un componente/servizio che può essere riutilizzato?
-2. Il codice segue il design system unico del progetto?
-3. Lo stato è gestito in modo centralizzato e coerente?
-4. I dati passano attraverso un servizio condiviso con caching?
-5. La sicurezza è garantita (input, error handling, credenziali)?
-6. Il widget è pronto per la preview in Visual Studio Code?
-7. La soluzione proposta è scalabile e manutenibile nel lungo periodo?
-
-## Nota finale
-Se Copilot deve scegliere tra più soluzioni possibili:
-- Preferire sempre quella **più riutilizzabile e modulare**.
-- Preferire sempre quella **più sicura**.
-- Preferire sempre quella **più allineata alle convenzioni e best practice** già adottate.
+## Contribution Checklist
+- Favor provider-driven state and notify through `ExpenseGroupNotifier` (from `caravella_core`) so `HomeCardsSection` refreshes without full reloads.
+- Preserve model IDs when cloning (`copyWith`) to keep repository indexes valid.
+- **Logging**: Always use `LoggerService` with appropriate log levels and category names—never `print()` or `debugPrint()`.
+- **When adding new features**: Place business logic in `caravella_core`, reusable UI in `caravella_core_ui`, app-specific UI in `lib/`
+- **Package dependencies**: `lib/` can depend on all packages; `caravella_core_ui` can depend on `caravella_core`; `caravella_core` should remain independent
+- Update `CHANGELOG.md` `[Unreleased]` for every user-visible change and note flavor-specific impacts when relevant.
+- After touching persistence or i18n, run targeted tests (`flutter test test/background_removal_integration_test.dart`, etc.) to ensure storage and localization helpers still pass.
+- When modifying packages, run `flutter pub get` in both the package directory and root to update dependencies.

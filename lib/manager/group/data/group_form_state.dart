@@ -1,6 +1,4 @@
-import '../../../data/model/expense_participant.dart';
-import '../../../data/model/expense_category.dart';
-import '../../../data/model/expense_group.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'package:flutter/foundation.dart';
 
 class GroupFormState extends ChangeNotifier {
@@ -18,8 +16,11 @@ class GroupFormState extends ChangeNotifier {
     'code': 'EUR',
     'name': 'Euro',
   };
+  ExpenseGroupType? groupType = ExpenseGroupType.personal;
+  bool autoLocationEnabled = false;
   bool loadingImage = false;
   bool isSaving = false;
+  bool notificationEnabled = false;
 
   bool get isBusy => loadingImage || isSaving;
 
@@ -92,9 +93,20 @@ class GroupFormState extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setGroupType(ExpenseGroupType? type) {
+    groupType = type;
+    notifyListeners();
+  }
+
   void setColor(int? c) {
     color = c;
     if (c != null) imagePath = null;
+    notifyListeners();
+  }
+
+  void setAutoLocationEnabled(bool enabled) {
+    if (autoLocationEnabled == enabled) return;
+    autoLocationEnabled = enabled;
     notifyListeners();
   }
 
@@ -113,6 +125,12 @@ class GroupFormState extends ChangeNotifier {
   void setSaving(bool v) {
     if (isSaving == v) return;
     isSaving = v;
+    notifyListeners();
+  }
+
+  void setNotificationEnabled(bool v) {
+    if (notificationEnabled == v) return;
+    notificationEnabled = v;
     notifyListeners();
   }
 

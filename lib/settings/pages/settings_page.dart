@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../widgets/caravella_app_bar.dart';
+import 'package:flutter/foundation.dart';
+import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart'
     as gen; // generated strongly-typed
-import '../../state/locale_notifier.dart';
-import '../../state/theme_mode_notifier.dart';
-import '../flag_secure_notifier.dart';
-import '../user_name_notifier.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 import '../flag_secure_android.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +12,6 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'developer_page.dart';
 import 'data_backup_page.dart';
 import 'whats_new_page.dart';
-import '../../widgets/bottom_sheet_scaffold.dart';
 import '../../settings/widgets/settings_card.dart';
 import '../../settings/widgets/settings_section.dart';
 
@@ -25,8 +23,12 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    return ChangeNotifierProvider<FlagSecureNotifier>(
-      create: (_) => FlagSecureNotifier(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<FlagSecureNotifier>(
+          create: (_) => FlagSecureNotifier(),
+        ),
+      ],
       child: Scaffold(
         appBar: const CaravellaAppBar(),
         body: ListView(
@@ -61,6 +63,8 @@ class SettingsPage extends StatelessWidget {
         const SizedBox(height: 8),
         _buildLanguageRow(context, loc, locale),
         const SizedBox(height: 8),
+        _buildDynamicColorRow(context, loc),
+        const SizedBox(height: 8),
         _buildThemeRow(context, loc),
       ],
     );
@@ -84,6 +88,9 @@ class SettingsPage extends StatelessWidget {
   }
 
   Widget _buildInfoSection(BuildContext context, gen.AppLocalizations loc) {
+    // Show debug logs in debug mode or if build flag is enabled
+    final showDebugLogs = kDebugMode || AppConfig.enableTalkerScreen;
+
     return SettingsSection(
       title: loc.settings_info,
       description: loc.settings_info_desc,
@@ -91,6 +98,10 @@ class SettingsPage extends StatelessWidget {
         _buildInfoCardRow(context, loc),
         const SizedBox(height: 8),
         _buildAppVersionRow(context, loc),
+        if (showDebugLogs) ...[
+          const SizedBox(height: 8),
+          _buildDebugLogsRow(context, loc),
+        ],
       ],
     );
   }
@@ -101,7 +112,7 @@ class SettingsPage extends StatelessWidget {
       builder: (context, userNameNotifier, child) {
         final textTheme = Theme.of(context).textTheme;
         final colorScheme = Theme.of(context).colorScheme;
-        
+
         return SettingsCard(
           context: context,
           semanticsButton: true,
@@ -110,12 +121,15 @@ class SettingsPage extends StatelessWidget {
           color: colorScheme.surface,
           child: ListTile(
             leading: const Icon(Icons.person_outline),
-            title: Text(loc.settings_user_name_title, style: textTheme.titleMedium),
+            title: Text(
+              loc.settings_user_name_title,
+              style: textTheme.titleMedium,
+            ),
             subtitle: Text(
-              userNameNotifier.hasName 
-                ? userNameNotifier.name 
-                : loc.settings_user_name_desc,
-              style: textTheme.bodySmall
+              userNameNotifier.hasName
+                  ? userNameNotifier.name
+                  : loc.settings_user_name_desc,
+              style: textTheme.bodySmall,
             ),
             trailing: const Icon(Icons.edit),
             onTap: () => _showNameDialog(context, loc, userNameNotifier),
@@ -171,6 +185,47 @@ class SettingsPage extends StatelessWidget {
         subtitle: Text(label),
         trailing: const Icon(Icons.arrow_drop_down),
         onTap: () => _showThemePicker(context, loc),
+      ),
+    );
+  }
+
+  Widget _buildDynamicColorRow(BuildContext context, gen.AppLocalizations loc) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+    final dynamicColorNotifier = DynamicColorNotifier.of(context);
+    final enabled = dynamicColorNotifier?.dynamicColorEnabled ?? false;
+
+    return SettingsCard(
+      context: context,
+      color: colorScheme.surface,
+      child: Semantics(
+        toggled: enabled,
+        label:
+            '${loc.settings_dynamic_color} - ${enabled ? loc.accessibility_currently_enabled : loc.accessibility_currently_disabled}',
+        hint: enabled
+            ? loc.accessibility_double_tap_disable
+            : loc.accessibility_double_tap_enable,
+        child: ListTile(
+          leading: const Icon(Icons.palette_outlined),
+          title: Text(loc.settings_dynamic_color, style: textTheme.titleMedium),
+          subtitle: Text(
+            loc.settings_dynamic_color_desc,
+            style: textTheme.bodySmall,
+          ),
+          trailing: Semantics(
+            label: loc.accessibility_security_switch(
+              enabled
+                  ? loc.accessibility_switch_on
+                  : loc.accessibility_switch_off,
+            ),
+            child: Switch(
+              value: enabled,
+              onChanged: (val) {
+                dynamicColorNotifier?.changeDynamicColor(val);
+              },
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -272,6 +327,32 @@ class SettingsPage extends StatelessWidget {
         onTap: () => Navigator.of(
           context,
         ).push(MaterialPageRoute(builder: (ctx) => const DeveloperPage())),
+      ),
+    );
+  }
+
+  Widget _buildDebugLogsRow(BuildContext context, gen.AppLocalizations loc) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+    return SettingsCard(
+      context: context,
+      color: colorScheme.surface,
+      child: ListTile(
+        leading: const Icon(Icons.bug_report),
+        title: Text('Debug Logs', style: textTheme.titleMedium),
+        subtitle: Text(
+          'View application logs and error history',
+          style: textTheme.bodySmall,
+        ),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) =>
+                  TalkerScreen(talker: LoggerService.instance),
+            ),
+          );
+        },
       ),
     );
   }
@@ -417,9 +498,14 @@ void _showThemePicker(BuildContext context, gen.AppLocalizations loc) {
     },
   );
 }
-void _showNameDialog(BuildContext context, gen.AppLocalizations loc, UserNameNotifier userNameNotifier) {
+
+void _showNameDialog(
+  BuildContext context,
+  gen.AppLocalizations loc,
+  UserNameNotifier userNameNotifier,
+) {
   final controller = TextEditingController(text: userNameNotifier.name);
-  
+
   showDialog(
     context: context,
     builder: (context) {

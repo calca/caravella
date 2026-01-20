@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
-import '../../../data/model/expense_group.dart';
-import '../../../data/model/expense_participant.dart';
+import 'package:caravella_core/caravella_core.dart';
 import '../../../sync/services/group_sync_coordinator.dart';
 import '../../../sync/widgets/sync_status_indicator.dart';
 
@@ -67,9 +66,21 @@ class ExpenseGroupAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final Color bgColor = trip.color != null
-        ? Color(trip.color!)
-        : (backgroundColor ?? colorScheme.surfaceContainerLowest);
+    // Resolve color from palette index or use legacy color value
+    Color bgColor;
+    if (trip.color != null) {
+      if (ExpenseGroupColorPalette.isLegacyColorValue(trip.color)) {
+        // Legacy ARGB value - use as-is
+        bgColor = Color(trip.color!);
+      } else {
+        // New palette index - resolve to theme-aware color
+        bgColor =
+            ExpenseGroupColorPalette.resolveColor(trip.color, colorScheme) ??
+            (backgroundColor ?? colorScheme.surfaceContainerLowest);
+      }
+    } else {
+      bgColor = backgroundColor ?? colorScheme.surfaceContainerLowest;
+    }
     return Container(
       margin: const EdgeInsets.only(top: 8, bottom: 8),
       width: size,
@@ -151,8 +162,8 @@ class _GroupHeaderState extends State<GroupHeader> {
                     ),
                     padding: const EdgeInsets.all(12),
                     child: Icon(
-                      widget.trip.pinned
-                          ? Icons.push_pin_outlined
+                      trip.pinned
+                          ? Icons.favorite
                           : Icons.archive_outlined,
                       size: circleSize * 0.15,
                       color: colorScheme.onSurface.withValues(alpha: 0.6),

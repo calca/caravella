@@ -1,0 +1,98 @@
+import 'package:flutter/material.dart';
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+
+class ExpenseFormActionsWidget extends StatelessWidget {
+  final VoidCallback? onSave;
+  final bool isFormValid;
+  final VoidCallback? onDelete; // Shown only in edit mode
+  final bool isEdit;
+  final TextStyle? textStyle;
+  final bool
+  showExpandButton; // When true shows an expand button (only in add/compact mode)
+  final VoidCallback? onExpand;
+
+  const ExpenseFormActionsWidget({
+    super.key,
+    required this.onSave,
+    this.isFormValid = false,
+    this.onDelete,
+    this.isEdit = false,
+    this.textStyle,
+    this.showExpandButton = false,
+    this.onExpand,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final gloc = gen.AppLocalizations.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
+    final leftButtons = <Widget>[];
+    if (showExpandButton && onExpand != null) {
+      leftButtons.add(
+        IconButton(
+          tooltip: gloc.expand_form_tooltip.isNotEmpty
+              ? gloc.expand_form_tooltip
+              : gloc.expand_form,
+          onPressed: onExpand,
+          icon: const Icon(Icons.arrow_circle_up_outlined, size: 24),
+          style: IconButton.styleFrom(
+            // Ensures transparent background while keeping minimum hit area
+            backgroundColor: Colors.transparent,
+            minimumSize: const Size(48, 48),
+            padding: EdgeInsets.zero,
+          ),
+        ),
+      );
+    }
+    if (isEdit && onDelete != null) {
+      leftButtons.add(
+        IconButton.filledTonal(
+          style: IconButton.styleFrom(
+            minimumSize: const Size(48, 48),
+            padding: EdgeInsets.zero,
+            backgroundColor: colorScheme.surfaceContainer,
+          ),
+          tooltip: gloc.delete_expense,
+          onPressed: onDelete,
+          icon: Icon(Icons.delete_outline, color: colorScheme.error, size: 24),
+        ),
+      );
+    }
+
+    // Intersperse spacing between left buttons
+    final leftChildren = <Widget>[];
+    for (var i = 0; i < leftButtons.length; i++) {
+      leftChildren.add(leftButtons[i]);
+      if (i != leftButtons.length - 1) {
+        leftChildren.add(const SizedBox(width: 12));
+      }
+    }
+
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        ...leftChildren,
+        if (leftChildren.isNotEmpty) const SizedBox(width: 12),
+        const Spacer(),
+        TextButton(
+          onPressed: onSave,
+          style: TextButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          ),
+          child: Text(
+            isEdit ? gloc.save.toUpperCase() : gloc.add.toUpperCase(),
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+              fontWeight: FontWeight.w600,
+              letterSpacing: 1.2,
+              color: isFormValid
+                  ? colorScheme.primary
+                  : colorScheme.onSurface.withValues(alpha: 0.8),
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+    );
+  }
+}

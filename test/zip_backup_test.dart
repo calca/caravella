@@ -37,27 +37,37 @@ void main() {
       // Create ZIP using the same method as the fixed implementation
       final archive = Archive();
       final fileBytes = await testDataFile.readAsBytes();
-      final archiveFile = ArchiveFile('expense_group_storage.json', fileBytes.length, fileBytes);
+      final archiveFile = ArchiveFile(
+        'expense_group_storage.json',
+        fileBytes.length,
+        fileBytes,
+      );
       archive.addFile(archiveFile);
       final zipData = ZipEncoder().encode(archive);
-      
+      expect(zipData, isNotNull);
+
       final zipFile = File('${tempDir.path}/test_backup.zip');
       await zipFile.writeAsBytes(zipData);
 
       // Verify ZIP file was created and is not empty
       expect(await zipFile.exists(), true);
-      expect(await zipFile.length(), greaterThan(22)); // Greater than empty ZIP size
+      expect(
+        await zipFile.length(),
+        greaterThan(22),
+      ); // Greater than empty ZIP size
 
       // Verify ZIP content by reading it back
       final zipBytes = await zipFile.readAsBytes();
       final decodedArchive = ZipDecoder().decodeBytes(zipBytes);
-      
+
       expect(decodedArchive.length, 1);
       expect(decodedArchive.first.name, 'expense_group_storage.json');
       expect(decodedArchive.first.size, fileBytes.length);
-      
+
       // Verify the content is correct
-      final extractedContent = String.fromCharCodes(decodedArchive.first.content as List<int>);
+      final extractedContent = String.fromCharCodes(
+        decodedArchive.first.content as List<int>,
+      );
       final expectedContent = await testDataFile.readAsString();
       expect(extractedContent, expectedContent);
 
@@ -74,10 +84,15 @@ void main() {
       // Create ZIP with empty file
       final archive = Archive();
       final fileBytes = await emptyFile.readAsBytes();
-      final archiveFile = ArchiveFile('expense_group_storage.json', fileBytes.length, fileBytes);
+      final archiveFile = ArchiveFile(
+        'expense_group_storage.json',
+        fileBytes.length,
+        fileBytes,
+      );
       archive.addFile(archiveFile);
       final zipData = ZipEncoder().encode(archive);
-      
+      expect(zipData, isNotNull);
+
       final zipFile = File('${tempDir.path}/empty_backup.zip');
       await zipFile.writeAsBytes(zipData);
 
@@ -87,7 +102,7 @@ void main() {
 
       final zipBytes = await zipFile.readAsBytes();
       final decodedArchive = ZipDecoder().decodeBytes(zipBytes);
-      
+
       expect(decodedArchive.length, 1);
       expect(decodedArchive.first.name, 'expense_group_storage.json');
       expect(decodedArchive.first.size, 0);

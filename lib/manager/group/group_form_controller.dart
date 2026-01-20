@@ -1,22 +1,31 @@
 import 'dart:io';
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
-import '../../data/model/expense_group.dart';
-import '../../data/model/expense_participant.dart';
-import '../../data/model/expense_category.dart';
-import '../../data/expense_group_storage_v2.dart';
+import 'package:caravella_core/caravella_core.dart';
 // ...existing code...
 import 'data/group_form_state.dart';
 import 'group_edit_mode.dart';
-import '../../state/expense_group_notifier.dart';
 
 /// Controller encapsulates business logic for the group form.
 class GroupFormController {
   final GroupFormState state;
   final GroupEditMode mode;
   final ExpenseGroupNotifier? _notifier;
+  final VoidCallback? onSaveSuccess;
+  final Function(String)? onSaveError;
 
-  GroupFormController(this.state, this.mode, [this._notifier]);
+  GroupFormController(
+    this.state,
+    this.mode, [
+    this._notifier,
+    this.onSaveSuccess,
+    this.onSaveError,
+  ]) {
+    // No automatic auto-save: saving is performed explicitly (e.g. on back)
+  }
+
+  // Auto-save removed: saving performed explicitly (for example on back press)
 
   void load(ExpenseGroup? group) {
     if (mode == GroupEditMode.create) return; // nothing to load in create mode
@@ -35,6 +44,9 @@ class GroupFormController {
     state.currency = _currencyFromGroup(group.currency);
     state.imagePath = group.file;
     state.color = group.color;
+    state.notificationEnabled = group.notificationEnabled;
+    state.groupType = group.groupType;
+    state.autoLocationEnabled = group.autoLocationEnabled;
     // Keep a snapshot in the state to avoid extra repository fetches
     state.setOriginalGroup(group.copyWith());
     state.refresh();
@@ -93,6 +105,9 @@ class GroupFormController {
     }
     if (g.file != state.imagePath) return true;
     if (g.color != state.color) return true;
+    if (g.groupType != state.groupType) return true;
+    if (g.autoLocationEnabled != state.autoLocationEnabled) return true;
+    if (g.notificationEnabled != state.notificationEnabled) return true;
     return false;
   }
 
@@ -111,13 +126,17 @@ class GroupFormController {
           if (fetched != null) {
             state.setOriginalGroup(fetched.copyWith());
           } else {
-            debugPrint(
+            LoggerService.warning(
               'GroupFormController.save: original group not found for id ${state.id}',
+              name: 'manager.group',
             );
           }
         } catch (e, st) {
-          debugPrint(
-            'GroupFormController.save: failed to fetch original group: $e\n$st',
+          LoggerService.error(
+            'GroupFormController.save: failed to fetch original group',
+            name: 'manager.group',
+            error: e,
+            stackTrace: st,
           );
         }
       }
@@ -137,6 +156,9 @@ class GroupFormController {
         currency: state.currency['symbol'] ?? state.currency['code'] ?? 'EUR',
         file: state.imagePath,
         color: state.color,
+        notificationEnabled: state.notificationEnabled,
+        groupType: state.groupType,
+        autoLocationEnabled: state.autoLocationEnabled,
         timestamp: state.originalGroup?.timestamp ?? now,
       );
 
@@ -271,7 +293,12 @@ class GroupFormController {
       state.setImage(target.path);
       return target.path;
     } catch (e, st) {
-      debugPrint('persistPickedImage error: $e\n$st');
+      LoggerService.error(
+        'persistPickedImage error',
+        name: 'manager.group',
+        error: e,
+        stackTrace: st,
+      );
       return null;
     } finally {
       state.setLoading(false);
@@ -289,7 +316,12 @@ class GroupFormController {
           await f.delete();
         }
       } catch (e, st) {
-        debugPrint('removeImage error: $e\n$st');
+        LoggerService.error(
+          'removeImage error',
+          name: 'manager.group',
+          error: e,
+          stackTrace: st,
+        );
       }
     }
     // Clear both background image and color completely by directly setting the fields
@@ -297,5 +329,57 @@ class GroupFormController {
     state.imagePath = null;
     state.color = null;
     state.refresh();
+  }
+
+  /// Sets the group type and manages default categories based on edit mode.
+  ///
+  /// In CREATE mode:
+  /// - Removes categories from the previous type (if any)
+  /// - Adds categories for the new type
+  ///
+  /// In EDIT mode:
+  /// - Only updates the type, categories are never modified
+  ///
+  /// [defaultCategoryNames] should be the localized category names to populate.
+  /// [previousTypeCategoryNames] are the localized names from the previous type to remove.
+  void setGroupType(
+    ExpenseGroupType? type, {
+    bool autoPopulateCategories = true,
+    List<String>? defaultCategoryNames,
+    List<String>? previousTypeCategoryNames,
+  }) {
+    state.setGroupType(type);
+
+    // In edit mode, never modify categories
+    if (mode == GroupEditMode.edit) return;
+
+    // In create mode, manage category replacement
+    if (autoPopulateCategories && type != null) {
+      if (defaultCategoryNames == null) {
+        throw ArgumentError(
+          'defaultCategoryNames is required when autoPopulateCategories is true',
+        );
+      }
+
+      // Remove categories from previous type
+      if (previousTypeCategoryNames != null) {
+        state.categories.removeWhere(
+          (category) => previousTypeCategoryNames.contains(category.name),
+        );
+      }
+
+      // Add new categories if not already present
+      for (final categoryName in defaultCategoryNames) {
+        if (!state.categories.any((c) => c.name == categoryName)) {
+          state.addCategory(ExpenseCategory(name: categoryName));
+        }
+      }
+
+      state.refresh();
+    }
+  }
+
+  void dispose() {
+    // Nothing to dispose related to auto-save; keep method for symmetry.
   }
 }

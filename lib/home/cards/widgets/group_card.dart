@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../../data/model/expense_group.dart';
+import 'package:caravella_core/caravella_core.dart';
 import '../../../manager/details/pages/expense_group_detail_page.dart';
-import '../../../widgets/widgets.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'group_card_content.dart';
 
 class GroupCard extends StatelessWidget {
@@ -47,8 +47,20 @@ class GroupCard extends StatelessWidget {
         selectionProgress * 0.3, // 30% di intensità massima
       );
     } else if (group.color != null) {
-      // No image but color is set, use group color with selection overlay
-      final groupColor = Color(group.color!);
+      // No image but color is set, resolve from palette or use legacy color
+      Color groupColor;
+      if (ExpenseGroupColorPalette.isLegacyColorValue(group.color)) {
+        // Legacy ARGB value - use as-is
+        groupColor = Color(group.color!);
+      } else {
+        // New palette index - resolve to theme-aware color
+        groupColor =
+            ExpenseGroupColorPalette.resolveColor(
+              group.color,
+              theme.colorScheme,
+            ) ??
+            theme.colorScheme.primary;
+      }
       backgroundColor = Color.lerp(
         groupColor,
         selectedColor,
