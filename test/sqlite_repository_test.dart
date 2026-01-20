@@ -1,16 +1,58 @@
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:caravella_core/caravella_core.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-class _FakePathProvider extends PathProviderPlatform {
-  late final String _tempDir = Directory.systemTemp
-      .createTempSync('sqlite_test')
-      .path;
-  @override
-  Future<String?> getApplicationDocumentsPath() async => _tempDir;
+/// Creates a unique ExpenseGroup with all entities having unique IDs
+ExpenseGroup createUniqueGroup({
+  required String groupId,
+  String title = 'Test Group',
+  String currency = 'USD',
+  bool archived = false,
+  bool pinned = false,
+  List<String>? participantNames,
+  List<String>? categoryNames,
+  bool includeExpense = true,
+}) {
+  final names = participantNames ?? ['John', 'Jane'];
+  final catNames = categoryNames ?? ['Food'];
+
+  final participants = names
+      .asMap()
+      .entries
+      .map((e) => ExpenseParticipant(name: e.value, id: '${groupId}_p${e.key}'))
+      .toList();
+
+  final categories = catNames
+      .asMap()
+      .entries
+      .map((e) => ExpenseCategory(name: e.value, id: '${groupId}_c${e.key}'))
+      .toList();
+
+  final expenses = includeExpense
+      ? [
+          ExpenseDetails(
+            id: '${groupId}_e1',
+            category: categories.first,
+            amount: 50.0,
+            paidBy: participants.first,
+            date: DateTime.now(),
+            name: 'Lunch',
+          ),
+        ]
+      : <ExpenseDetails>[];
+
+  return ExpenseGroup(
+    id: groupId,
+    title: title,
+    currency: currency,
+    participants: participants,
+    categories: categories,
+    expenses: expenses,
+    timestamp: DateTime.now(),
+    archived: archived,
+    pinned: pinned,
+  );
 }
 
 void main() {
@@ -20,30 +62,24 @@ void main() {
   sqfliteFfiInit();
   databaseFactory = databaseFactoryFfi;
 
-  PathProviderPlatform.instance = _FakePathProvider();
-
   group('SqliteExpenseGroupRepository', () {
     late SqliteExpenseGroupRepository repository;
     late ExpenseGroup testGroup;
     late ExpenseParticipant participant1;
     late ExpenseParticipant participant2;
     late ExpenseCategory category;
+    late Directory tempDir;
 
     setUp(() async {
-      repository = SqliteExpenseGroupRepository();
+      // Create a unique temp directory for each test
+      tempDir = Directory.systemTemp.createTempSync(
+        'sqlite_test_${DateTime.now().millisecondsSinceEpoch}',
+      );
+      final dbPath = '${tempDir.path}/expense_groups.db';
 
-      // Clean up any existing test data
-      try {
-        final dir = await getApplicationDocumentsDirectory();
-        final dbFile = File('${dir.path}/expense_groups.db');
-        if (await dbFile.exists()) {
-          await dbFile.delete();
-        }
-      } catch (e) {
-        // Ignore errors during cleanup
-      }
+      repository = SqliteExpenseGroupRepository(databasePath: dbPath);
 
-      // Set up test data
+      // Set up test data with unique IDs
       participant1 = ExpenseParticipant(name: 'John', id: 'p1');
       participant2 = ExpenseParticipant(name: 'Jane', id: 'p2');
       category = ExpenseCategory(name: 'Food', id: 'c1');
@@ -71,6 +107,15 @@ void main() {
     tearDown(() async {
       // Close database connection
       await repository.close();
+
+      // Clean up temp directory
+      try {
+        if (await tempDir.exists()) {
+          await tempDir.delete(recursive: true);
+        }
+      } catch (e) {
+        // Ignore cleanup errors
+      }
     });
 
     group('Basic Operations', () {
@@ -130,8 +175,9 @@ void main() {
       });
 
       test('should handle multiple groups', () async {
-        final group2 = testGroup.copyWith(
-          id: 'test-group-2',
+        // Create a second group with completely unique IDs
+        final group2 = createUniqueGroup(
+          groupId: 'test-group-2',
           title: 'Test Group 2',
         );
 
@@ -152,22 +198,23 @@ void main() {
       late ExpenseGroup pinnedGroup;
 
       setUp(() async {
-        activeGroup = testGroup.copyWith(
-          id: 'active-group',
+        // Create groups with completely unique IDs for each entity
+        activeGroup = createUniqueGroup(
+          groupId: 'active-group',
           title: 'Active Group',
           archived: false,
           pinned: false,
         );
 
-        archivedGroup = testGroup.copyWith(
-          id: 'archived-group',
+        archivedGroup = createUniqueGroup(
+          groupId: 'archived-group',
           title: 'Archived Group',
           archived: true,
           pinned: false,
         );
 
-        pinnedGroup = testGroup.copyWith(
-          id: 'pinned-group',
+        pinnedGroup = createUniqueGroup(
+          groupId: 'pinned-group',
           title: 'Pinned Group',
           archived: false,
           pinned: true,
@@ -259,8 +306,9 @@ void main() {
       });
 
       test('should enforce single pin constraint', () async {
-        final group1 = testGroup.copyWith(id: 'group-1');
-        final group2 = testGroup.copyWith(id: 'group-2');
+        // Create two groups with completely unique IDs
+        final group1 = createUniqueGroup(groupId: 'group-1', title: 'Group 1');
+        final group2 = createUniqueGroup(groupId: 'group-2', title: 'Group 2');
 
         await repository.saveGroup(group1);
         await repository.saveGroup(group2);

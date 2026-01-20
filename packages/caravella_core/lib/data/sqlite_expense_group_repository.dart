@@ -28,6 +28,16 @@ class SqliteExpenseGroupRepository
 
   Database? _database;
 
+  /// Optional custom database path for testing
+  final String? _customDatabasePath;
+
+  /// Creates a SQLite repository.
+  ///
+  /// If [databasePath] is provided, it will be used instead of the default path.
+  /// This is useful for testing with in-memory databases or custom paths.
+  SqliteExpenseGroupRepository({String? databasePath})
+    : _customDatabasePath = databasePath;
+
   /// Get or initialize the database
   Future<Database> get database async {
     if (_database != null) return _database!;
@@ -38,8 +48,13 @@ class SqliteExpenseGroupRepository
   /// Initialize the database
   Future<Database> _initDatabase() async {
     try {
-      final databasesPath = await getDatabasesPath();
-      final path = join(databasesPath, _databaseName);
+      final String path;
+      if (_customDatabasePath != null) {
+        path = _customDatabasePath;
+      } else {
+        final databasesPath = await getDatabasesPath();
+        path = join(databasesPath, _databaseName);
+      }
 
       return await openDatabase(
         path,

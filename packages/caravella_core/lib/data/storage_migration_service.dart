@@ -31,12 +31,18 @@ class StorageMigrationService {
   }
 
   /// Check if JSON storage file exists and has data
-  static Future<bool> hasJsonData() async {
+  static Future<bool> hasJsonData({String? customPath}) async {
     try {
-      final dir = await getApplicationDocumentsDirectory();
-      final file = File('${dir.path}/expense_group_storage.json');
+      final String dirPath;
+      if (customPath != null) {
+        dirPath = customPath;
+      } else {
+        final dir = await getApplicationDocumentsDirectory();
+        dirPath = dir.path;
+      }
+      final file = File('$dirPath/expense_group_storage.json');
       if (!await file.exists()) return false;
-      
+
       final contents = await file.readAsString();
       return contents.trim().isNotEmpty && contents.trim() != '[]';
     } catch (e) {
@@ -49,9 +55,18 @@ class StorageMigrationService {
   }
 
   /// Perform migration from JSON to SQLite
-  static Future<StorageResult<void>> migrateToSqlite() async {
+  ///
+  /// Optional [jsonRepo] and [sqliteRepo] parameters allow injecting custom
+  /// repositories for testing purposes.
+  static Future<StorageResult<void>> migrateToSqlite({
+    FileBasedExpenseGroupRepository? jsonRepo,
+    SqliteExpenseGroupRepository? sqliteRepo,
+  }) async {
     try {
-      LoggerService.info('Starting migration from JSON to SQLite', name: 'migration');
+      LoggerService.info(
+        'Starting migration from JSON to SQLite',
+        name: 'migration',
+      );
 
       // Check if migration is needed
       final migrationCompleted = await isMigrationCompleted();
@@ -60,8 +75,18 @@ class StorageMigrationService {
         return const StorageResult.success(null);
       }
 
-      // Check if there's data to migrate
-      final hasData = await hasJsonData();
+      // When custom repositories are provided (for testing), skip the hasJsonData check
+      // and use the repository's getAllGroups to determine if there's data
+      final bool hasData;
+      if (jsonRepo != null) {
+        // For custom repo, check by loading groups directly
+        final loadCheck = await jsonRepo.getAllGroups();
+        hasData = loadCheck.isSuccess && (loadCheck.data?.isNotEmpty ?? false);
+      } else {
+        // For default repo, use the standard file check
+        hasData = await hasJsonData();
+      }
+
       if (!hasData) {
         LoggerService.info('No JSON data to migrate', name: 'migration');
         await _markMigrationCompleted();
@@ -69,9 +94,9 @@ class StorageMigrationService {
       }
 
       // Load data from JSON
-      final jsonRepo = FileBasedExpenseGroupRepository();
-      final loadResult = await jsonRepo.getAllGroups();
-      
+      final jsonRepository = jsonRepo ?? FileBasedExpenseGroupRepository();
+      final loadResult = await jsonRepository.getAllGroups();
+
       if (loadResult.isFailure) {
         LoggerService.warning(
           'Failed to load data from JSON: ${loadResult.error}',
@@ -86,7 +111,10 @@ class StorageMigrationService {
       }
 
       final groups = loadResult.data ?? [];
-      LoggerService.info('Loaded ${groups.length} groups from JSON', name: 'migration');
+      LoggerService.info(
+        'Loaded ${groups.length} groups from JSON',
+        name: 'migration',
+      );
 
       if (groups.isEmpty) {
         LoggerService.info('No groups to migrate', name: 'migration');
@@ -95,19 +123,21 @@ class StorageMigrationService {
       }
 
       // Save data to SQLite
-      final sqliteRepo = SqliteExpenseGroupRepository();
-      
+      final sqliteRepository = sqliteRepo ?? SqliteExpenseGroupRepository();
+
       int successCount = 0;
       int errorCount = 0;
       final errors = <String>[];
 
       for (final group in groups) {
-        final saveResult = await sqliteRepo.saveGroup(group);
+        final saveResult = await sqliteRepository.saveGroup(group);
         if (saveResult.isSuccess) {
           successCount++;
         } else {
           errorCount++;
-          errors.add('Group ${group.title} (${group.id}): ${saveResult.error?.message}');
+          errors.add(
+            'Group ${group.title} (${group.id}): ${saveResult.error?.message}',
+          );
           LoggerService.warning(
             'Failed to migrate group ${group.title}: ${saveResult.error}',
             name: 'migration',
@@ -130,7 +160,10 @@ class StorageMigrationService {
       }
 
       // Validate migrated data
-      final validationResult = await _validateMigration(groups, sqliteRepo);
+      final validationResult = await _validateMigration(
+        groups,
+        sqliteRepository,
+      );
       if (validationResult.isFailure) {
         return validationResult;
       }
@@ -144,7 +177,10 @@ class StorageMigrationService {
       LoggerService.info('Migration successfully completed', name: 'migration');
       return const StorageResult.success(null);
     } catch (e) {
-      LoggerService.warning('Migration failed with exception: $e', name: 'migration');
+      LoggerService.warning(
+        'Migration failed with exception: $e',
+        name: 'migration',
+      );
       return StorageResult.failure(
         MigrationError(
           'Migration failed with exception',
@@ -179,7 +215,8 @@ class StorageMigrationService {
         return StorageResult.failure(
           MigrationError(
             'Migration validation failed: group count mismatch',
-            details: 'Expected ${originalGroups.length}, found ${migratedGroups.length}',
+            details:
+                'Expected ${originalGroups.length}, found ${migratedGroups.length}',
           ),
         );
       }
@@ -231,13 +268,22 @@ class StorageMigrationService {
     try {
       final dir = await getApplicationDocumentsDirectory();
       final sourceFile = File('${dir.path}/expense_group_storage.json');
-      
+
       if (await sourceFile.exists()) {
         // Use ISO 8601 format with hyphens for readability
-        final timestamp = DateTime.now().toIso8601String().replaceAll(':', '-').split('.').first;
-        final backupFile = File('${dir.path}/expense_group_storage.json.backup.$timestamp');
+        final timestamp = DateTime.now()
+            .toIso8601String()
+            .replaceAll(':', '-')
+            .split('.')
+            .first;
+        final backupFile = File(
+          '${dir.path}/expense_group_storage.json.backup.$timestamp',
+        );
         await sourceFile.copy(backupFile.path);
-        LoggerService.info('JSON file backed up to ${backupFile.path}', name: 'migration');
+        LoggerService.info(
+          'JSON file backed up to ${backupFile.path}',
+          name: 'migration',
+        );
       }
     } catch (e) {
       LoggerService.warning(
