@@ -351,16 +351,21 @@ void main() {
 
       // Check for Italian month names in UPPERCASE (at least some should be present)
       // Note: The first month might be hidden if it's the current month
-      final hasMonthHeaders = allText.any((text) => 
-        text.contains('2024') && 
-        (text.contains('GENNAIO') || text.contains('FEBBRAIO') || text.contains('MARZO'))
+      final hasMonthHeaders = allText.any(
+        (text) =>
+            text.contains('2024') &&
+            (text.contains('GENNAIO') ||
+                text.contains('FEBBRAIO') ||
+                text.contains('MARZO')),
       );
-      expect(hasMonthHeaders, isTrue, reason: 'Expected to find month headers with year');
+      expect(
+        hasMonthHeaders,
+        isTrue,
+        reason: 'Expected to find month headers with year',
+      );
     });
 
-    testWidgets('Single month does not show redundant headers', (
-      tester,
-    ) async {
+    testWidgets('Single month does not show redundant headers', (tester) async {
       // All expenses from the same month
       final singleMonthExpenses = [
         ExpenseDetails(
@@ -426,10 +431,17 @@ void main() {
 
       // Should have at most one month header with year
       // (might be 0 if March is the current month and it's the only month)
-      final monthHeadersCount = allText.where((text) => 
-        text.toUpperCase().contains('MARZO') && text.contains('2024')
-      ).length;
-      expect(monthHeadersCount, lessThanOrEqualTo(1), reason: 'Expected at most one month header');
+      final monthHeadersCount = allText
+          .where(
+            (text) =>
+                text.toUpperCase().contains('MARZO') && text.contains('2024'),
+          )
+          .length;
+      expect(
+        monthHeadersCount,
+        lessThanOrEqualTo(1),
+        reason: 'Expected at most one month header',
+      );
     });
 
     testWidgets('Pagination loads initial 100 expenses', (tester) async {
