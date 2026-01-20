@@ -2039,6 +2039,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get notification_disable => 'Desativar';
 
   @override
+  String get load_more_expenses => 'Carregar mais despesas';
+
+  @override
   String get wizard_group_creation_title => 'Novo Grupo';
 
   @override

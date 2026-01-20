@@ -2031,6 +2031,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notification_disable => 'Disable';
 
   @override
+  String get load_more_expenses => 'Load more expenses';
+
+  @override
   String get wizard_group_creation_title => 'New Group';
 
   @override
