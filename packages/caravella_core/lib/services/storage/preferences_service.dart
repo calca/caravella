@@ -24,7 +24,7 @@ abstract class _PreferenceKeys {
   static const String hasShownInitialRating = 'has_shown_initial_rating';
 
   // App State
-  static const String hasCreatedGroup = 'has_created_group';
+  static const String isFirstStart = 'is_first_start';
 }
 
 /// Default values for preferences
@@ -35,7 +35,7 @@ abstract class _PreferenceDefaults {
   static const bool autoBackupEnabled = false;
   static const int totalExpenseCount = 0;
   static const bool hasShownInitialRating = false;
-  static const bool hasCreatedGroup = false;
+  static const bool isFirstStart = true;
 }
 
 /// Centralized service for managing SharedPreferences.
@@ -348,14 +348,16 @@ class AppStatePreferences {
   AppStatePreferences._(this._prefs);
   final SharedPreferences _prefs;
 
-  /// Get whether user has created at least one group (default: false)
-  bool hasCreatedGroup() {
-    return _prefs.getBool(_PreferenceKeys.hasCreatedGroup) ??
-        _PreferenceDefaults.hasCreatedGroup;
+  /// Get whether this is the first start (default: true)
+  /// Returns false after user completes the group creation wizard
+  bool isFirstStart() {
+    return _prefs.getBool(_PreferenceKeys.isFirstStart) ??
+        _PreferenceDefaults.isFirstStart;
   }
 
-  /// Set whether user has created at least one group
-  Future<void> setHasCreatedGroup(bool value) async {
-    await _prefs.setBool(_PreferenceKeys.hasCreatedGroup, value);
+  /// Set whether this is the first start
+  /// Should be set to false after user completes the group creation wizard
+  Future<void> setIsFirstStart(bool value) async {
+    await _prefs.setBool(_PreferenceKeys.isFirstStart, value);
   }
 }

@@ -22,13 +22,13 @@ class _HomePageState extends State<HomePage> with RouteAware {
   ExpenseGroupNotifier? _groupNotifier;
   bool _refreshing = false;
   bool _updateCheckPerformed = false;
-  bool _hasCreatedGroup = false; // Cache preference value
+  bool _isFirstStart = true; // Cache preference value
 
   @override
   void initState() {
     super.initState();
     // Cache the preference value to avoid repeated reads during builds
-    _hasCreatedGroup = PreferencesService.instance.appState.hasCreatedGroup();
+    _isFirstStart = PreferencesService.instance.appState.isFirstStart();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadLocaleAndTrip();
       _performUpdateCheckIfNeeded();
@@ -174,7 +174,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
     final gloc = gen.AppLocalizations.of(context);
     // Update cached preference value since user just added a group
     setState(() {
-      _hasCreatedGroup = true;
+      _isFirstStart = false;
     });
     _refresh();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -216,7 +216,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
                 ),
               ),
             )
-          : _hasCreatedGroup
+          : !_isFirstStart
               ? RefreshIndicator(
                   onRefresh: _handleUserRefresh,
                   child: FutureBuilder<List<List<ExpenseGroup>>>(

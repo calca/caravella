@@ -1,4 +1,5 @@
 import 'package:caravella_core/model/expense_group.dart';
+import 'package:caravella_core/services/storage/preferences_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
@@ -87,7 +88,7 @@ class WizardNavigationBar extends StatelessWidget {
                     if (isSecondToLastStep) {
                       // Second to last step: save and go to completion
                       return FilledButton(
-                        onPressed: canProceed
+                         onPressed: canProceed
                             ? () async {
                                 // Close keyboard before proceeding
                                 FocusScope.of(context).unfocus();
@@ -98,6 +99,9 @@ class WizardNavigationBar extends StatelessWidget {
                                 );
                                 if (group != null && context.mounted) {
                                   wizardState.setSavedGroupId(group.id);
+                                  // Mark that user completed wizard (no longer first start)
+                                  await PreferencesService.instance.appState
+                                      .setIsFirstStart(false);
                                   wizardState.nextStep();
                                 }
                               }

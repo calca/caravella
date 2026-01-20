@@ -1,6 +1,5 @@
 // Updated wrapper for ExpenseGroupStorage - removes print statements
 import '../services/logging/logger_service.dart';
-import '../services/storage/preferences_service.dart';
 import '../model/expense_group.dart';
 import '../model/expense_details.dart';
 import '../model/expense_participant.dart';
@@ -188,9 +187,6 @@ class ExpenseGroupStorageV2 {
         'Warning: Failed to add group ${group.id}: ${result.error}',
         name: 'storage',
       );
-    } else {
-      // Mark that user has created at least one group
-      await PreferencesService.instance.appState.setHasCreatedGroup(true);
     }
   }
 
