@@ -925,6 +925,8 @@
   ,"@wizard_completion_customize_group_description": {"description": "Description of customize group option"}
   ,"danger_zone": "Danger Zone"
   ,"@danger_zone": {"description": "Section title for dangerous actions like archive and delete"}
+  ,"danger_zone_desc": "Archive or delete this group"
+  ,"@danger_zone_desc": {"description": "Description for danger zone section"}
   ,"export_options_desc": "Download or share expenses in various formats"
   ,"@export_options_desc": {"description": "Description for export options"}
 }

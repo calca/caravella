@@ -903,6 +903,8 @@
   ,"@wizard_completion_customize_group_description": {"description": "Descripción de la opción personalizar grupo"}
   ,"danger_zone": "Zona Peligrosa"
   ,"@danger_zone": {"description": "Título de sección para acciones peligrosas como archivar y eliminar"}
+  ,"danger_zone_desc": "Archivar o eliminar este grupo"
+  ,"@danger_zone_desc": {"description": "Descripción para la sección zona peligrosa"}
   ,"export_options_desc": "Descargar o compartir gastos en varios formatos"
   ,"@export_options_desc": {"description": "Descripción para las opciones de exportación"}
 }

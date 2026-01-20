@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 
 import '../../group/pages/expenses_group_edit_page.dart';
 import '../../group/group_edit_mode.dart';
+import '../../../settings/widgets/settings_section.dart';
+import '../../../settings/widgets/settings_card.dart';
 
 class GroupSettingsPage extends StatelessWidget {
   final ExpenseGroup trip;
@@ -25,6 +27,7 @@ class GroupSettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
       appBar: AppBar(
@@ -35,147 +38,153 @@ class GroupSettingsPage extends StatelessWidget {
         ),
       ),
       body: ListView(
+        padding: EdgeInsets.fromLTRB(
+          0,
+          0,
+          0,
+          MediaQuery.of(context).padding.bottom + 24,
+        ),
         children: [
           // Group section
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-            child: Text(
-              gloc.group,
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                color: colorScheme.primary,
-                fontWeight: FontWeight.w600,
+          SettingsSection(
+            title: gloc.group,
+            description: gloc.edit_group_desc,
+            children: [
+              SettingsCard(
+                context: context,
+                color: colorScheme.surface,
+                child: ListTile(
+                  leading: const Icon(Icons.settings_outlined),
+                  title: Text(gloc.segment_general, style: textTheme.titleMedium),
+                  subtitle: Text(gloc.settings_general_desc, style: textTheme.bodySmall),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                  onTap: () => _openEditPage(context, 0),
+                ),
               ),
-            ),
+              const SizedBox(height: 8),
+              SettingsCard(
+                context: context,
+                color: colorScheme.surface,
+                child: ListTile(
+                  leading: const Icon(Icons.people_outline),
+                  title: Text(gloc.participants, style: textTheme.titleMedium),
+                  subtitle: Text(gloc.participants_description, style: textTheme.bodySmall),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                  onTap: () => _openEditPage(context, 1),
+                ),
+              ),
+              const SizedBox(height: 8),
+              SettingsCard(
+                context: context,
+                color: colorScheme.surface,
+                child: ListTile(
+                  leading: const Icon(Icons.label_outline),
+                  title: Text(gloc.categories, style: textTheme.titleMedium),
+                  subtitle: Text(gloc.categories_description, style: textTheme.bodySmall),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                  onTap: () => _openEditPage(context, 2),
+                ),
+              ),
+              const SizedBox(height: 8),
+              SettingsCard(
+                context: context,
+                color: colorScheme.surface,
+                child: ListTile(
+                  leading: const Icon(Icons.tune_outlined),
+                  title: Text(gloc.segment_other, style: textTheme.titleMedium),
+                  subtitle: Text(gloc.other_settings_desc, style: textTheme.bodySmall),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                  onTap: () => _openEditPage(context, 3),
+                ),
+              ),
+            ],
           ),
-          ListTile(
-            leading: Icon(
-              Icons.settings_outlined,
-              color: colorScheme.onSurface,
-            ),
-            title: Text(gloc.segment_general),
-            subtitle: Text(gloc.settings_general_desc),
-            trailing: Icon(
-              Icons.chevron_right,
-              color: colorScheme.outline,
-            ),
-            onTap: () => _openEditPage(context, 0),
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.people_outline,
-              color: colorScheme.onSurface,
-            ),
-            title: Text(gloc.participants),
-            subtitle: Text(gloc.participants_description),
-            trailing: Icon(
-              Icons.chevron_right,
-              color: colorScheme.outline,
-            ),
-            onTap: () => _openEditPage(context, 1),
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.label_outline,
-              color: colorScheme.onSurface,
-            ),
-            title: Text(gloc.categories),
-            subtitle: Text(gloc.categories_description),
-            trailing: Icon(
-              Icons.chevron_right,
-              color: colorScheme.outline,
-            ),
-            onTap: () => _openEditPage(context, 2),
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.tune_outlined,
-              color: colorScheme.onSurface,
-            ),
-            title: Text(gloc.segment_other),
-            subtitle: Text(gloc.other_settings_desc),
-            trailing: Icon(
-              Icons.chevron_right,
-              color: colorScheme.outline,
-            ),
-            onTap: () => _openEditPage(context, 3),
-          ),
-          const Divider(height: 32),
 
           // Export and Share section
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-            child: Text(
-              gloc.export_share,
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                color: colorScheme.primary,
-                fontWeight: FontWeight.w600,
+          SettingsSection(
+            title: gloc.export_share,
+            description: gloc.export_options_desc,
+            children: [
+              SettingsCard(
+                context: context,
+                color: colorScheme.surface,
+                child: ListTile(
+                  leading: Icon(
+                    Icons.ios_share_outlined,
+                    color: trip.expenses.isEmpty
+                        ? colorScheme.onSurface.withValues(alpha: 0.38)
+                        : null,
+                  ),
+                  title: Text(
+                    gloc.export_options,
+                    style: textTheme.titleMedium?.copyWith(
+                      color: trip.expenses.isEmpty
+                          ? colorScheme.onSurface.withValues(alpha: 0.38)
+                          : null,
+                    ),
+                  ),
+                  subtitle: Text(
+                    gloc.export_options_desc,
+                    style: textTheme.bodySmall?.copyWith(
+                      color: trip.expenses.isEmpty
+                          ? colorScheme.onSurface.withValues(alpha: 0.38)
+                          : null,
+                    ),
+                  ),
+                  trailing: Icon(
+                    Icons.arrow_forward_ios,
+                    size: 16,
+                    color: trip.expenses.isEmpty
+                        ? colorScheme.outline.withValues(alpha: 0.38)
+                        : null,
+                  ),
+                  onTap: trip.expenses.isEmpty ? null : () => _openExportOptions(context),
+                ),
               ),
-            ),
+            ],
           ),
-          ListTile(
-            leading: Icon(
-              Icons.ios_share_outlined,
-              color: trip.expenses.isEmpty
-                  ? colorScheme.onSurface.withValues(alpha: 0.38)
-                  : colorScheme.onSurface,
-            ),
-            title: Text(
-              gloc.export_options,
-              style: trip.expenses.isEmpty
-                  ? TextStyle(
-                      color: colorScheme.onSurface.withValues(alpha: 0.38),
-                    )
-                  : null,
-            ),
-            subtitle: Text(
-              gloc.export_options_desc,
-              style: trip.expenses.isEmpty
-                  ? TextStyle(
-                      color: colorScheme.onSurface.withValues(alpha: 0.38),
-                    )
-                  : null,
-            ),
-            trailing: Icon(
-              Icons.chevron_right,
-              color: trip.expenses.isEmpty
-                  ? colorScheme.outline.withValues(alpha: 0.38)
-                  : colorScheme.outline,
-            ),
-            onTap: trip.expenses.isEmpty ? null : () => _openExportOptions(context),
-          ),
-          const Divider(height: 32),
 
           // Dangerous section
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-            child: Text(
-              gloc.danger_zone,
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                color: colorScheme.error,
-                fontWeight: FontWeight.w600,
+          SettingsSection(
+            title: gloc.danger_zone,
+            description: gloc.danger_zone_desc,
+            children: [
+              SettingsCard(
+                context: context,
+                color: colorScheme.surface,
+                child: ListTile(
+                  leading: Icon(
+                    trip.archived ? Icons.unarchive_outlined : Icons.archive_outlined,
+                  ),
+                  title: Text(
+                    trip.archived ? gloc.unarchive : gloc.archive,
+                    style: textTheme.titleMedium,
+                  ),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                  onTap: () => _handleArchiveToggle(context),
+                ),
               ),
-            ),
+              const SizedBox(height: 8),
+              SettingsCard(
+                context: context,
+                color: colorScheme.surface,
+                child: ListTile(
+                  leading: Icon(
+                    Icons.delete_outline,
+                    color: colorScheme.error,
+                  ),
+                  title: Text(
+                    gloc.delete_group,
+                    style: textTheme.titleMedium?.copyWith(
+                      color: colorScheme.error,
+                    ),
+                  ),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                  onTap: () => _handleDelete(context),
+                ),
+              ),
+            ],
           ),
-          ListTile(
-            leading: Icon(
-              trip.archived ? Icons.unarchive_outlined : Icons.archive_outlined,
-              color: colorScheme.onSurface,
-            ),
-            title: Text(trip.archived ? gloc.unarchive : gloc.archive),
-            onTap: () => _handleArchiveToggle(context),
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.delete_outline,
-              color: colorScheme.error,
-            ),
-            title: Text(
-              gloc.delete_group,
-              style: TextStyle(color: colorScheme.error),
-            ),
-            onTap: () => _handleDelete(context),
-          ),
-          const SizedBox(height: 16),
         ],
       ),
     );
