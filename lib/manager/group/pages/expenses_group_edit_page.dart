@@ -9,7 +9,7 @@ import 'package:io_caravella_egm/services/notification_service.dart';
 import 'package:io_caravella_egm/services/notification_manager.dart';
 import '../group_form_controller.dart';
 import '../group_edit_mode.dart';
-import '../widgets/group_title_field.dart';
+import '../widgets/group_name_with_icon_field.dart';
 import '../widgets/participants_editor.dart';
 import '../widgets/categories_editor.dart';
 import '../widgets/selection_tile.dart';
@@ -24,12 +24,16 @@ class ExpensesGroupEditPage extends StatelessWidget {
   /// Specifica se la pagina opera in modalità creazione o modifica.
   /// Se non fornito, viene dedotto automaticamente: trip == null => create, altrimenti edit.
   final GroupEditMode mode;
+  
+  /// Indice della tab iniziale (0=General, 1=Participants, 2=Categories, 3=Other)
+  final int initialTab;
 
   const ExpensesGroupEditPage({
     super.key,
     this.trip,
     this.onTripDeleted,
     required this.mode,
+    this.initialTab = 0,
   });
 
   @override
@@ -69,6 +73,7 @@ class ExpensesGroupEditPage extends StatelessWidget {
         trip: trip,
         onTripDeleted: onTripDeleted,
         mode: mode,
+        initialTab: initialTab,
       ),
     );
   }
@@ -78,10 +83,13 @@ class _GroupFormScaffold extends StatefulWidget {
   final ExpenseGroup? trip;
   final VoidCallback? onTripDeleted;
   final GroupEditMode mode;
+  final int initialTab;
+  
   const _GroupFormScaffold({
     required this.trip,
     this.onTripDeleted,
     required this.mode,
+    this.initialTab = 0,
   });
   @override
   State<_GroupFormScaffold> createState() => _GroupFormScaffoldState();
@@ -102,6 +110,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
     _tabController = TabController(
       length: 4,
       vsync: this,
+      initialIndex: widget.initialTab.clamp(0, 3),
       animationDuration: const Duration(milliseconds: 350),
     );
 
@@ -420,37 +429,8 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                       spacing: 4,
                     ),
                     const SizedBox(height: 12),
-                    Selector<GroupFormState, ExpenseGroupType?>(
-                      selector: (context, s) => s.groupType,
-                      builder: (context, groupType, child) => Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          InkWell(
-                            onTap: () => _showGroupTypeSelector(context),
-                            borderRadius: BorderRadius.circular(8),
-                            child: Container(
-                              width: 42,
-                              height: 42,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.outlineVariant,
-                                  width: 1,
-                                ),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Icon(
-                                groupType?.icon ?? Icons.category_outlined,
-                                size: 24,
-                                color: Theme.of(context).colorScheme.onSurface,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          const Expanded(child: GroupTitleField()),
-                        ],
-                      ),
+                    GroupNameWithIconField(
+                      onIconTap: () => _showGroupTypeSelector(context),
                     ),
                   ],
                 ),
@@ -631,10 +611,8 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                             // Handle notification based on new value
                             if (value && context.mounted) {
                               // Show or update notification (with date range check)
-                              await NotificationManager().updateNotificationForGroup(
-                                savedGroup,
-                                gloc,
-                              );
+                              await NotificationManager()
+                                  .updateNotificationForGroup(savedGroup, gloc);
 
                               if (context.mounted) {
                                 AppToast.show(
@@ -645,9 +623,8 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                               }
                             } else {
                               // Cancel notification for this group
-                              await NotificationManager().cancelNotificationForGroup(
-                                savedGroup.id,
-                              );
+                              await NotificationManager()
+                                  .cancelNotificationForGroup(savedGroup.id);
 
                               if (context.mounted) {
                                 AppToast.show(
@@ -805,7 +782,9 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                     );
                   } else {
                     // Cancel notification if disabled
-                    await NotificationManager().cancelNotificationForGroup(saved.id);
+                    await NotificationManager().cancelNotificationForGroup(
+                      saved.id,
+                    );
                   }
 
                   // Pop returning the saved id so caller can react
@@ -1018,10 +997,8 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                               if (saved.notificationEnabled &&
                                   context.mounted) {
                                 // Show notification for new group (with date range check)
-                                await NotificationManager().updateNotificationForGroup(
-                                  saved,
-                                  gloc,
-                                );
+                                await NotificationManager()
+                                    .updateNotificationForGroup(saved, gloc);
                               }
 
                               if (navigator.canPop()) navigator.pop(saved.id);

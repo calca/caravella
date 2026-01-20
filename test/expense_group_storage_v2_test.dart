@@ -18,6 +18,12 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   PathProviderPlatform.instance = _FakePathProvider();
 
+  setUpAll(() {
+    // Force use of JSON backend for all tests
+    ExpenseGroupRepositoryFactory.reset();
+    ExpenseGroupRepositoryFactory.getRepository(useJsonBackend: true);
+  });
+
   group('ExpenseGroupStorageV2 - add/update expense', () {
     const storageFileName = 'expense_group_storage.json';
 

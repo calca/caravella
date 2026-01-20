@@ -19,6 +19,12 @@ class _FakePathProvider extends PathProviderPlatform {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   PathProviderPlatform.instance = _FakePathProvider();
+
+  setUpAll(() {
+    // Force use of JSON backend for all tests
+    ExpenseGroupRepositoryFactory.reset();
+    ExpenseGroupRepositoryFactory.getRepository(useJsonBackend: true);
+  });
   test('updateParticipantReferencesFromDiff replaces paidBy names', () async {
     // Create a minimal group with one expense referencing a participant
     final participant = ExpenseParticipant(id: 'p1', name: 'Alice');

@@ -811,4 +811,110 @@
   ,"@notification_disable": {"description": "Botón de acción en la notificación para desactivar notificaciones"}
   ,"load_more_expenses": "Cargar más gastos"
   ,"@load_more_expenses": {"description": "Botón para cargar más gastos en la lista paginada"}
+  ,"wizard_group_creation_title": "Nuevo Grupo"
+  ,"@wizard_group_creation_title": {"description": "Título del asistente de creación de grupo"}
+  ,"wizard_step_name": "Nombre"
+  ,"@wizard_step_name": {"description": "Título del paso 1 del asistente: nombre del grupo"}
+  ,"wizard_step_type_and_name": "Tipo y Nombre"
+  ,"@wizard_step_type_and_name": {"description": "Título del paso del asistente: tipo y nombre del grupo"}
+  ,"wizard_type_and_name_description": "¿Para qué es este grupo?"
+  ,"@wizard_type_and_name_description": {"description": "Descripción del paso de tipo y nombre en el asistente"}
+  ,"wizard_step_participants": "Participantes"
+  ,"@wizard_step_participants": {"description": "Título del paso 2 del asistente: participantes"}
+  ,"wizard_step_categories": "Categorías"
+  ,"@wizard_step_categories": {"description": "Título del paso 3 del asistente: categorías"}
+  ,"wizard_step_period": "Período"
+  ,"@wizard_step_period": {"description": "Título del paso 4 del asistente: período"}
+  ,"wizard_step_background": "Fondo"
+  ,"@wizard_step_background": {"description": "Título del paso 5 del asistente: color de fondo"}
+  ,"wizard_step_congratulations": "¡Felicitaciones!"
+  ,"@wizard_step_congratulations": {"description": "Título del paso final del asistente: felicitaciones"}
+  ,"wizard_step_of": "de"
+  ,"@wizard_step_of": {"description": "Separador para indicador de progreso (ej. 'Paso 1 de 6')"}
+  ,"wizard_next": "Siguiente"
+  ,"@wizard_next": {"description": "Texto del botón para ir al siguiente paso"}
+  ,"wizard_previous": "Anterior"
+  ,"@wizard_previous": {"description": "Texto del botón para volver al paso anterior"}
+  ,"wizard_skip": "Omitir"
+  ,"@wizard_skip": {"description": "Texto del botón para omitir un paso opcional"}
+  ,"wizard_finish": "Crear Grupo"
+  ,"@wizard_finish": {"description": "Texto del botón final para crear el grupo"}
+  ,"wizard_name_description": "Nombre"
+  ,"@wizard_name_description": {"description": "Descripción del paso nombre en el asistente"}
+  ,"wizard_participants_description": "Agrega personas que compartirán gastos"
+  ,"@wizard_participants_description": {"description": "Descripción del paso participantes en el asistente"}
+  ,"wizard_categories_description": "Crea categorías para organizar gastos"
+  ,"@wizard_categories_description": {"description": "Descripción del paso categorías en el asistente"}
+  ,"wizard_period_description": "Establece fechas de inicio y fin (opcional)"
+  ,"@wizard_period_description": {"description": "Descripción del paso período en el asistente"}
+  ,"wizard_background_description": "Elige un color de fondo para el grupo"
+  ,"@wizard_background_description": {"description": "Descripción del paso fondo en el asistente"}
+  ,"wizard_congratulations_message": "¡Tu grupo '{groupName}' ha sido creado con éxito!"
+  ,"@wizard_congratulations_message": {"description": "Mensaje de felicitaciones con nombre del grupo", "placeholders": {"groupName": {"type": "String"}}}
+  ,"wizard_group_summary": "Resumen del grupo:"
+  ,"@wizard_group_summary": {"description": "Título del resumen en la pantalla final"}
+  ,"wizard_created_participants": "{count, plural, =1{1 participante} other{{count} participantes}}"
+  ,"@wizard_created_participants": {"description": "Número de participantes en el resumen", "placeholders": {"count": {"type": "int"}}}
+  ,"wizard_created_categories": "{count, plural, =1{1 categoría} other{{count} categorías}}"
+  ,"@wizard_created_categories": {"description": "Número de categorías en el resumen", "placeholders": {"count": {"type": "int"}}}
+  ,"wizard_step_user_name": "Tu nombre"
+  ,"@wizard_step_user_name": {"description": "Título del paso inicial del asistente: nombre de usuario"}
+  ,"wizard_user_name_welcome": "¡Bienvenido!"
+  ,"@wizard_user_name_welcome": {"description": "Mensaje de bienvenida en el paso del nombre de usuario"}
+  ,"wizard_user_name_description": "Antes de empezar, dínos tu nombre para personalizar tu experiencia"
+  ,"@wizard_user_name_description": {"description": "Descripción del paso del nombre de usuario"}
+  ,"wizard_user_name_local_storage_note": "Tus datos permanecen privados en tu dispositivo"
+  ,"@wizard_user_name_local_storage_note": {"description": "Nota de privacidad para el nombre de usuario"}
+  ,"wizard_user_name_label": "Tu nombre (opcional)"
+  ,"@wizard_user_name_label": {"description": "Etiqueta del campo de nombre de usuario"}
+  ,"wizard_user_name_hint": "ej. Carlos"
+  ,"@wizard_user_name_hint": {"description": "Sugerencia para el campo de nombre de usuario"}
+  ,"wizard_step_participants_and_categories": "Quién y qué"
+  ,"@wizard_step_participants_and_categories": {"description": "Título del paso combinado de participantes y categorías"}
+  ,"wizard_participants_and_categories_description": "Define quién participa y qué gastos se compartirán"
+  ,"@wizard_participants_and_categories_description": {"description": "Descripción del paso combinado de participantes y categorías"}
+  ,"wizard_participants_section_title": "¿Quién participa?"
+  ,"@wizard_participants_section_title": {"description": "Título de la sección de participantes en el paso combinado"}
+  ,"wizard_participants_section_hint": "Agrega amigos o compañeros. Puedes modificarlos después."
+  ,"@wizard_participants_section_hint": {"description": "Sugerencia para la sección de participantes"}
+  ,"wizard_categories_section_title": "¿Qué se compartirá?"
+  ,"@wizard_categories_section_title": {"description": "Título de la sección de categorías en el paso combinado"}
+  ,"wizard_categories_section_hint": "Ej. Comida, Alojamiento, Transporte. Puedes agregar o renombrar después."
+  ,"@wizard_categories_section_hint": {"description": "Sugerencia para la sección de categorías"}
+  ,"wizard_step_color_and_final": "Color y confirmar"
+  ,"@wizard_step_color_and_final": {"description": "Título del paso final de color y confirmación"}
+  ,"wizard_color_and_final_description": "Elige un color para el grupo y revisa el resumen"
+  ,"@wizard_color_and_final_description": {"description": "Descripción del paso final"}
+  ,"wizard_preview_title": "Vista previa del grupo"
+  ,"@wizard_preview_title": {"description": "Título de la sección de vista previa"}
+  ,"wizard_success_title": "¡Felicitaciones!"
+  ,"@wizard_success_title": {"description": "Título del diálogo de éxito"}
+  ,"wizard_go_to_group": "Ir al grupo"
+  ,"@wizard_go_to_group": {"description": "Botón para ir al grupo creado"}
+  ,"wizard_go_to_settings": "Configuración del grupo"
+  ,"@wizard_go_to_settings": {"description": "Botón para ir a la configuración del grupo"}
+  ,"wizard_completion_what_next": "Lo que puedes hacer ahora:"
+  ,"@wizard_completion_what_next": {"description": "Título de la sección de acciones siguientes"}
+  ,"wizard_completion_add_expenses": "Agregar gastos"
+  ,"@wizard_completion_add_expenses": {"description": "Título de la opción agregar gastos"}
+  ,"wizard_completion_add_expenses_description": "Comienza a rastrear los gastos del grupo"
+  ,"@wizard_completion_add_expenses_description": {"description": "Descripción de la opción agregar gastos"}
+  ,"wizard_completion_customize_group": "Personalizar grupo"
+  ,"@wizard_completion_customize_group": {"description": "Título de la opción personalizar grupo"}
+  ,"wizard_completion_customize_group_description": "Editar participantes, categorías y configuración"
+  ,"@wizard_completion_customize_group_description": {"description": "Descripción de la opción personalizar grupo"}
+  ,"danger_zone": "Zona Peligrosa"
+  ,"@danger_zone": {"description": "Título de sección para acciones peligrosas como archivar y eliminar"}
+  ,"danger_zone_desc": "Archivar o eliminar este grupo"
+  ,"@danger_zone_desc": {"description": "Descripción para la sección zona peligrosa"}
+  ,"export_options_desc": "Descargar o compartir gastos en varios formatos"
+  ,"@export_options_desc": {"description": "Descripción para las opciones de exportación"}
+  ,"export_csv_description": "Formato hoja de cálculo"
+  ,"@export_csv_description": {"description": "Descripción corta para el formato de exportación CSV"}
+  ,"export_ofx_description": "Formato bancario"
+  ,"@export_ofx_description": {"description": "Descripción corta para el formato de exportación OFX"}
+  ,"export_markdown_description": "Formato documento"
+  ,"@export_markdown_description": {"description": "Descripción corta para el formato de exportación Markdown"}
+  ,"save_label": "Guardar"
+  ,"@save_label": {"description": "Etiqueta para el botón de guardar"}
 }

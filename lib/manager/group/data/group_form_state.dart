@@ -82,6 +82,16 @@ class GroupFormState extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setStartDate(DateTime? date) {
+    startDate = date;
+    notifyListeners();
+  }
+
+  void setEndDate(DateTime? date) {
+    endDate = date;
+    notifyListeners();
+  }
+
   void clearDates() {
     startDate = null;
     endDate = null;

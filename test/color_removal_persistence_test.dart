@@ -20,6 +20,12 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   PathProviderPlatform.instance = _FakePathProvider();
 
+  setUpAll(() {
+    // Force use of JSON backend for all tests
+    ExpenseGroupRepositoryFactory.reset();
+    ExpenseGroupRepositoryFactory.getRepository(useJsonBackend: true);
+  });
+
   group('Color removal persistence issue reproduction', () {
     test('CRITICAL: Verify color removal is included in save data', () async {
       final state = GroupFormState();

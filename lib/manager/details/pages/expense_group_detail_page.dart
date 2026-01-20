@@ -1,8 +1,5 @@
 import 'package:io_caravella_egm/manager/details/widgets/export_options_sheet.dart';
-import 'package:io_caravella_egm/manager/details/widgets/options_sheet.dart';
 
-import '../../group/pages/expenses_group_edit_page.dart';
-import '../../group/group_edit_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:caravella_core/caravella_core.dart';
@@ -31,6 +28,7 @@ import '../export/markdown_exporter.dart';
 import '../../../services/notification_manager.dart';
 
 import 'unified_overview_page.dart';
+import 'group_settings_page.dart';
 
 class ExpenseGroupDetailPage extends StatefulWidget {
   final ExpenseGroup trip;
@@ -392,99 +390,38 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     );
   }
 
-  void _showOptionsSheet() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (sheetCtx) => OptionsSheet(
-        trip: _trip!,
-        onPinToggle: () async {
-          if (_trip == null) return;
-          final nav = Navigator.of(sheetCtx);
-          // Use the notifier to update pin state (handles storage + shortcuts)
-          await Provider.of<ExpenseGroupNotifier>(
-            context,
-            listen: false,
-          ).updateGroupPin(_trip!.id, !_trip!.pinned);
-          await _refreshGroup();
-          if (!mounted) return;
-          nav.pop();
-        },
-        onArchiveToggle: () async {
-          if (_trip == null) return;
-          final nav = Navigator.of(sheetCtx);
-          // Use notifier to archive/unarchive (handles storage + shortcuts)
-          await Provider.of<ExpenseGroupNotifier>(
-            context,
-            listen: false,
-          ).updateGroupArchive(_trip!.id, !_trip!.archived);
-          await _refreshGroup();
-          if (!mounted) return;
-          nav.pop();
-        },
-        onEdit: () async {
-          if (_trip == null) return;
-          final nav = Navigator.of(sheetCtx);
-          nav.pop();
-          await Future.delayed(const Duration(milliseconds: 200));
-          if (!mounted) return;
-          await nav.push(
-            MaterialPageRoute(
-              builder: (ctx) =>
-                  ExpensesGroupEditPage(trip: _trip!, mode: GroupEditMode.edit),
-            ),
-          );
-          await _refreshGroup();
-        },
-        onExportShare: () async {
-          final nav = Navigator.of(sheetCtx);
-          nav.pop();
-          await Future.delayed(const Duration(milliseconds: 200));
-          if (!mounted) return;
-          _showExportOptionsSheet();
-        },
-        onDelete: () async {
-          final nav = Navigator.of(sheetCtx);
-          final rootNav = Navigator.of(context);
-          final confirmed = await showDialog<bool>(
-            context: context,
-            builder: (dialogCtx) => Material3Dialog(
-              icon: Icon(
-                Icons.delete_outline,
-                color: Theme.of(context).colorScheme.error,
-                size: 24,
-              ),
-              title: Text(gen.AppLocalizations.of(dialogCtx).delete_group),
-              content: Text(
-                gen.AppLocalizations.of(dialogCtx).delete_group_confirm,
-              ),
-              actions: [
-                Material3DialogActions.cancel(
-                  dialogCtx,
-                  gen.AppLocalizations.of(dialogCtx).cancel,
-                ),
-                Material3DialogActions.destructive(
-                  dialogCtx,
-                  gen.AppLocalizations.of(dialogCtx).delete,
-                  onPressed: () => Navigator.of(dialogCtx).pop(true),
-                ),
-              ],
-            ),
-          );
-          if (confirmed == true && _trip != null) {
-            // Use the storage delete helper which handles persistence atomically
-            await ExpenseGroupStorageV2.deleteGroup(_trip!.id);
-            // Keep behavior consistent: invalidate cache and notify listeners
-            ExpenseGroupStorageV2.forceReload();
-            _groupNotifier?.notifyGroupDeleted(_trip!.id);
+  void _showSettingsPage() async {
+    if (_trip == null) return;
 
-            if (!context.mounted) return;
-            nav.pop(); // close sheet
-            rootNav.pop(true); // go back to list
-          }
-        },
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (ctx) => GroupSettingsPage(
+          trip: _trip!,
+          onGroupUpdated: _refreshGroup,
+          onGroupDeleted: () {
+            if (mounted) {
+              Navigator.of(context).pop(true); // Return to home
+            }
+          },
+          onExportOptions: _showExportOptionsSheet,
+        ),
       ),
     );
+
+    // Refresh after returning from settings
+    await _refreshGroup();
+  }
+
+  Future<void> _handlePinToggle() async {
+    if (_trip == null) return;
+
+    // Use the notifier to update pin state (handles storage + shortcuts)
+    await Provider.of<ExpenseGroupNotifier>(
+      context,
+      listen: false,
+    ).updateGroupPin(_trip!.id, !_trip!.pinned);
+
+    await _refreshGroup();
   }
 
   void _showDeleteExpenseDialog(ExpenseDetails expense) {
@@ -783,7 +720,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              GroupHeader(trip: trip),
+                              GroupHeader(
+                                trip: trip,
+                                onPinToggle: _handlePinToggle,
+                              ),
                               const SizedBox(height: 32),
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -799,7 +739,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                                     onOverview: trip.expenses.isNotEmpty
                                         ? _openUnifiedOverviewPage
                                         : null,
-                                    onOptions: _showOptionsSheet,
+                                    onOptions: _showSettingsPage,
                                   ),
                                 ],
                               ),

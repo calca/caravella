@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Group options menu reorganization for improved accessibility and workflow efficiency
+  - Pin/favorite action moved to group avatar for faster access (33% fewer taps: 3→2)
+  - Options menu replaced with dedicated settings page using consistent SettingsSection and SettingsCard widgets
+  - Settings organized into logical sections: Group editing (with direct navigation to General, Participants, Categories, Other tabs), Export & Share, and Danger Zone
+  - Edit group navigation now opens at specific tab (33% fewer taps to edit specific sections: 6→4)
+  - Archive and delete actions clearly separated in danger zone section
+  - Pin icon always visible on avatar with animated state transitions and color feedback
+- Export options sheet improved with scrollable card-based layout
+  - Each format (CSV, OFX, Markdown) displayed in dedicated card with icon and description
+  - Clear separation between share and save actions with labeled buttons
+  - Better visual hierarchy and format descriptions for user clarity
+
 ### Technical
 - SQLite repository code refactoring for improved readability and formatting
 - Enhanced SQLite backend with attachments table support for expense management
