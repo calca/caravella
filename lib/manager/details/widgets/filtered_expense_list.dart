@@ -14,6 +14,9 @@ class FilteredExpenseList extends StatefulWidget {
   final ValueChanged<bool>? onFiltersVisibilityChanged;
   final VoidCallback? onAddExpense;
 
+  /// ID of the expense that was just added, to animate its insertion
+  final String? newlyAddedExpenseId;
+
   const FilteredExpenseList({
     super.key,
     required this.expenses,
@@ -23,13 +26,15 @@ class FilteredExpenseList extends StatefulWidget {
     required this.participants,
     this.onFiltersVisibilityChanged,
     this.onAddExpense,
+    this.newlyAddedExpenseId,
   });
 
   @override
   State<FilteredExpenseList> createState() => _FilteredExpenseListState();
 }
 
-class _FilteredExpenseListState extends State<FilteredExpenseList> {
+class _FilteredExpenseListState extends State<FilteredExpenseList>
+    with SingleTickerProviderStateMixin {
   String _searchQuery = '';
   String? _selectedCategoryId;
   String? _selectedParticipantId;
@@ -41,6 +46,50 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
   static const int _pageSize = 50;
   int _displayedExpenseCount = _initialLoadCount;
   bool _isLoadingMore = false;
+
+  // Animation state for newly added expenses
+  String? _animatingExpenseId;
+  late AnimationController _insertAnimationController;
+  late Animation<double> _insertAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _insertAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 400),
+      vsync: this,
+    );
+    _insertAnimation = CurvedAnimation(
+      parent: _insertAnimationController,
+      curve: Curves.easeOutCubic,
+    );
+
+    // Check if there's a newly added expense to animate
+    if (widget.newlyAddedExpenseId != null) {
+      _animatingExpenseId = widget.newlyAddedExpenseId;
+      _insertAnimationController.forward();
+    }
+  }
+
+  @override
+  void didUpdateWidget(FilteredExpenseList oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // Check if a new expense was added
+    if (widget.newlyAddedExpenseId != null &&
+        widget.newlyAddedExpenseId != oldWidget.newlyAddedExpenseId) {
+      _animatingExpenseId = widget.newlyAddedExpenseId;
+      _insertAnimationController.reset();
+      _insertAnimationController.forward();
+    }
+  }
+
+  @override
+  void dispose() {
+    _insertAnimationController.dispose();
+    _searchController.dispose();
+    super.dispose();
+  }
 
   List<ExpenseDetails> get _filteredExpenses {
     List<ExpenseDetails> filtered = List.from(widget.expenses);
@@ -197,23 +246,45 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
 
       // Add expenses for this month
       for (final expense in monthExpenses) {
-        widgets.add(
-          Container(
-            width: double.infinity,
-            margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 0),
-            child: ExpenseAmountCard(
-              title: expense.name ?? '',
-              coins: (expense.amount ?? 0).toInt(),
-              checked: true,
-              paidBy: expense.paidBy,
-              category: expense.category.name,
-              date: expense.date,
-              currency: widget.currency,
-              highlightQuery: _searchQuery.trim().isEmpty ? null : _searchQuery,
-              onTap: () => widget.onExpenseTap(expense),
-            ),
+        final expenseCard = Container(
+          width: double.infinity,
+          margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 0),
+          child: ExpenseAmountCard(
+            title: expense.name ?? '',
+            coins: (expense.amount ?? 0).toInt(),
+            checked: true,
+            paidBy: expense.paidBy,
+            category: expense.category.name,
+            date: expense.date,
+            currency: widget.currency,
+            highlightQuery: _searchQuery.trim().isEmpty ? null : _searchQuery,
+            onTap: () => widget.onExpenseTap(expense),
           ),
         );
+
+        // Apply animation to newly added expense
+        if (expense.id == _animatingExpenseId) {
+          widgets.add(
+            AnimatedBuilder(
+              animation: _insertAnimation,
+              builder: (context, child) {
+                return Transform.translate(
+                  offset: Offset((1 - _insertAnimation.value) * 50, 0),
+                  child: Opacity(
+                    opacity: _insertAnimation.value,
+                    child: Transform.scale(
+                      scale: 0.95 + (_insertAnimation.value * 0.05),
+                      child: child,
+                    ),
+                  ),
+                );
+              },
+              child: expenseCard,
+            ),
+          );
+        } else {
+          widgets.add(expenseCard);
+        }
       }
     }
 
@@ -273,12 +344,6 @@ class _FilteredExpenseListState extends State<FilteredExpenseList> {
     });
     _searchController.clear();
     _resetPagination();
-  }
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
   }
 
   @override

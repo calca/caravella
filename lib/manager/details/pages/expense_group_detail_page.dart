@@ -71,6 +71,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   bool _fabVisible = true; // controllo visibilità totale
   Timer? _fabIdleTimer; // timer per ri-mostrare il FAB dopo inattività
   bool _collapsedTitleVisible = false; // mostra titolo in appbar dopo scroll
+  String? _newlyAddedExpenseId; // ID della spesa appena aggiunta per animazione
 
   @override
   void initState() {
@@ -475,15 +476,22 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               onExpenseSaved: (newExpense) async {
                 final sheetCtx = context; // expense form page context
                 final gloc = gen.AppLocalizations.of(sheetCtx);
-                final expenseWithId = newExpense.copyWith(
-                  id: DateTime.now().millisecondsSinceEpoch.toString(),
-                );
+                final newExpenseId = DateTime.now().millisecondsSinceEpoch
+                    .toString();
+                final expenseWithId = newExpense.copyWith(id: newExpenseId);
 
                 // Persist using the new storage API
                 await ExpenseGroupStorageV2.addExpenseToGroup(
                   widget.trip.id,
                   expenseWithId,
                 );
+
+                // Set the newly added expense ID for animation
+                if (mounted) {
+                  setState(() {
+                    _newlyAddedExpenseId = newExpenseId;
+                  });
+                }
 
                 // Refresh local state and notifier
                 await _refreshGroup();
@@ -499,12 +507,15 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                 // This is done after successful expense save
                 RatingService.checkAndPromptForRating();
 
-                if (!sheetCtx.mounted) return;
-                AppToast.show(
-                  sheetCtx,
-                  gloc.expense_added_success,
-                  type: ToastType.success,
-                );
+                // Clear the animation ID after a short delay to allow re-animation
+                // for subsequent additions
+                Future.delayed(const Duration(milliseconds: 500), () {
+                  if (mounted) {
+                    setState(() {
+                      _newlyAddedExpenseId = null;
+                    });
+                  }
+                });
                 // Note: nav.pop() removed - ExpenseFormComponent handles navigation
                 // when shouldAutoClose is true to avoid double pop back to home
               },
@@ -780,6 +791,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                           }
                         },
                         onAddExpense: _showAddExpenseSheet,
+                        newlyAddedExpenseId: _newlyAddedExpenseId,
                       ),
                     ],
                   ),
