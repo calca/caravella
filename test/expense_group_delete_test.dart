@@ -20,6 +20,12 @@ void main() {
 
   const storageFileName = 'expense_group_storage.json';
 
+  setUpAll(() {
+    // Force use of JSON backend for all tests
+    ExpenseGroupRepositoryFactory.reset();
+    ExpenseGroupRepositoryFactory.getRepository(useJsonBackend: true);
+  });
+
   setUp(() async {
     // Ensure clean state on disk and cache
     try {
