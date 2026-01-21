@@ -2,9 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'package:caravella_core/caravella_core.dart';
 import '../../data/group_form_state.dart';
-import '../../../details/pages/expense_group_detail_page.dart';
 
 class WizardCompletionStep extends StatefulWidget {
   final String groupId;
