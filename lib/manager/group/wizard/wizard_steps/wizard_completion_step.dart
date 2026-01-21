@@ -8,8 +8,13 @@ import '../../../details/pages/expense_group_detail_page.dart';
 
 class WizardCompletionStep extends StatefulWidget {
   final String groupId;
+  final bool fromWelcome;
 
-  const WizardCompletionStep({super.key, required this.groupId});
+  const WizardCompletionStep({
+    super.key,
+    required this.groupId,
+    this.fromWelcome = false,
+  });
 
   @override
   State<WizardCompletionStep> createState() => _WizardCompletionStepState();
@@ -107,25 +112,39 @@ class _WizardCompletionStepState extends State<WizardCompletionStep> {
               width: double.infinity,
               child: FilledButton.icon(
                 onPressed: () async {
-                  // Load the group and navigate to detail page
-                  final group = await ExpenseGroupStorageV2.getTripById(
-                    widget.groupId,
-                  );
-                  if (group != null && context.mounted) {
-                    // Pop the wizard
+                  if (widget.fromWelcome) {
+                    // When coming from welcome, just pop back to home
+                    // The home page will automatically refresh and show the new group
                     Navigator.of(context).pop();
-                    // Navigate to the group detail page
-                    if (context.mounted) {
-                      await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              ExpenseGroupDetailPage(trip: group),
-                        ),
-                      );
+                  } else {
+                    // When coming from home with existing groups,
+                    // navigate to the newly created group detail page
+                    final group = await ExpenseGroupStorageV2.getTripById(
+                      widget.groupId,
+                    );
+                    if (group != null && context.mounted) {
+                      // Pop the wizard
+                      Navigator.of(context).pop();
+                      // Navigate to the group detail page
+                      if (context.mounted) {
+                        await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ExpenseGroupDetailPage(trip: group),
+                          ),
+                        );
+                      }
                     }
                   }
                 },
-                label: Text(gloc.wizard_go_to_group),
+                icon: widget.fromWelcome
+                    ? const Icon(Icons.home_rounded)
+                    : null,
+                label: Text(
+                  widget.fromWelcome
+                      ? gloc.wizard_go_to_home
+                      : gloc.wizard_go_to_group,
+                ),
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
                     vertical: 16,

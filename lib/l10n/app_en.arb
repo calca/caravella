@@ -913,6 +913,8 @@
   ,"@wizard_success_title": {"description": "Title of success dialog"}
   ,"wizard_go_to_group": "Go to group"
   ,"@wizard_go_to_group": {"description": "Button to go to created group"}
+  ,"wizard_go_to_home": "Go to home"
+  ,"@wizard_go_to_home": {"description": "Button to go back to home page"}
   ,"wizard_go_to_settings": "Group settings"
   ,"@wizard_go_to_settings": {"description": "Button to go to group settings"}
   ,"wizard_completion_what_next": "What you can do now:"

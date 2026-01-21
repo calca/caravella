@@ -1252,6 +1252,10 @@
   "@wizard_go_to_group": {
     "description": "转到已创建群组的按钮"
   },
+  "wizard_go_to_home": "返回主页",
+  "@wizard_go_to_home": {
+    "description": "返回主页的按钮"
+  },
   "wizard_go_to_settings": "群组设置",
   "@wizard_go_to_settings": {
     "description": "前往群组设置的按钮"
