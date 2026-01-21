@@ -15,6 +15,7 @@ import '../wizard/wizard_steps/wizard_completion_step.dart';
 class GroupCreationWizardPage extends StatelessWidget {
   /// If true, shows the user name step when launched from welcome page
   /// (only if user name is not already set)
+  /// Also affects the completion step navigation behavior
   final bool fromWelcome;
 
   const GroupCreationWizardPage({super.key, this.fromWelcome = false});
@@ -40,7 +41,7 @@ class GroupCreationWizardPage extends StatelessWidget {
               GroupFormController(state, GroupEditMode.create, notifier),
         ),
       ],
-      child: const _WizardScaffold(),
+      child: _WizardScaffold(fromWelcome: fromWelcome),
     );
   }
 }
@@ -124,7 +125,9 @@ class WizardState extends ChangeNotifier {
 }
 
 class _WizardScaffold extends StatefulWidget {
-  const _WizardScaffold();
+  final bool fromWelcome;
+
+  const _WizardScaffold({this.fromWelcome = false});
 
   @override
   State<_WizardScaffold> createState() => _WizardScaffoldState();
@@ -283,6 +286,7 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
                       const WizardTypeAndNameStep(),
                       WizardCompletionStep(
                         groupId: wizardState.savedGroupId ?? '',
+                        fromWelcome: widget.fromWelcome,
                       ),
                     ],
                   );
