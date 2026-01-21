@@ -25,6 +25,7 @@ class GroupCardContent extends StatelessWidget {
   final ThemeData theme;
   final VoidCallback onExpenseAdded;
   final VoidCallback? onCategoryAdded;
+  final bool hideAddButton;
 
   const GroupCardContent({
     super.key,
@@ -33,6 +34,7 @@ class GroupCardContent extends StatelessWidget {
     required this.theme,
     required this.onExpenseAdded,
     this.onCategoryAdded,
+    this.hideAddButton = false,
   });
 
   String _formatDateRange(ExpenseGroup group, gen.AppLocalizations loc) {
@@ -256,7 +258,7 @@ class GroupCardContent extends StatelessWidget {
             const Spacer(),
             _buildStatistics(context, currentGroup),
             const SizedBox(height: 24),
-            _buildAddButton(context, currentGroup),
+            if (!hideAddButton) _buildAddButton(context, currentGroup),
           ],
         );
       },

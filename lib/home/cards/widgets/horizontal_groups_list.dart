@@ -273,6 +273,7 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList>
                     onCategoryAdded: _handleCategoryAdded,
                     isSelected: isSelected,
                     selectionProgress: 1.0 - distanceFromCenter.clamp(0.0, 1.0),
+                    hideAddButton: true,
                   ),
                 );
               },
