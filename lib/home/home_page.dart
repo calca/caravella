@@ -27,8 +27,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
   @override
   void initState() {
     super.initState();
-    // Cache the preference value to avoid repeated reads during builds
-    _isFirstStart = PreferencesService.instance.appState.isFirstStart();
+    // Don't cache the preference value here - we'll determine it after checking storage
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadLocaleAndTrip();
       _performUpdateCheckIfNeeded();
@@ -114,10 +113,37 @@ class _HomePageState extends State<HomePage> with RouteAware {
         _loading = true;
       });
     }
+    
+    // Load pinned trip and check if any groups exist
     final pinnedTrip = await ExpenseGroupStorageV2.getPinnedTrip();
+    
+    // Better first start detection: check if any groups exist in storage
+    // This handles app updates where the flag might be reset but groups exist
+    final activeGroups = await ExpenseGroupStorageV2.getActiveGroups();
+    final archivedGroups = await ExpenseGroupStorageV2.getArchivedGroups();
+    final hasGroups = activeGroups.isNotEmpty || archivedGroups.isNotEmpty;
+    
     if (!mounted) return;
+    
+    // Update first start flag based on whether groups exist
+    // If groups exist, it's not first start regardless of preference
+    // If no groups exist, respect the preference
+    final prefIsFirstStart = PreferencesService.instance.appState.isFirstStart();
+    final shouldShowWelcome = !hasGroups && prefIsFirstStart;
+    
+    // If we determined user has groups but flag says first start,
+    // update the preference to reflect reality
+    if (hasGroups && prefIsFirstStart) {
+      LoggerService.info(
+        'Detected existing groups but isFirstStart=true, correcting preference',
+        name: 'state.home',
+      );
+      await PreferencesService.instance.appState.setIsFirstStart(false);
+    }
+    
     setState(() {
       _pinnedTrip = pinnedTrip;
+      _isFirstStart = shouldShowWelcome;
       _loading = false;
       _refreshing = false;
     });

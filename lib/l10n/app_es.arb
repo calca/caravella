@@ -891,6 +891,8 @@
   ,"@wizard_success_title": {"description": "Título del diálogo de éxito"}
   ,"wizard_go_to_group": "Ir al grupo"
   ,"@wizard_go_to_group": {"description": "Botón para ir al grupo creado"}
+  ,"wizard_go_to_home": "Ir al inicio"
+  ,"@wizard_go_to_home": {"description": "Botón para volver a la página de inicio"}
   ,"wizard_go_to_settings": "Configuración del grupo"
   ,"@wizard_go_to_settings": {"description": "Botón para ir a la configuración del grupo"}
   ,"wizard_completion_what_next": "Lo que puedes hacer ahora:"

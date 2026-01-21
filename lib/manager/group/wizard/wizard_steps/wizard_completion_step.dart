@@ -106,26 +106,13 @@ class _WizardCompletionStepState extends State<WizardCompletionStep> {
               constraints: const BoxConstraints(maxWidth: 400),
               width: double.infinity,
               child: FilledButton.icon(
-                onPressed: () async {
-                  // Load the group and navigate to detail page
-                  final group = await ExpenseGroupStorageV2.getTripById(
-                    widget.groupId,
-                  );
-                  if (group != null && context.mounted) {
-                    // Pop the wizard
-                    Navigator.of(context).pop();
-                    // Navigate to the group detail page
-                    if (context.mounted) {
-                      await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              ExpenseGroupDetailPage(trip: group),
-                        ),
-                      );
-                    }
-                  }
+                onPressed: () {
+                  // Simply pop back to home page
+                  // The home page will automatically refresh and show the new group
+                  Navigator.of(context).pop();
                 },
-                label: Text(gloc.wizard_go_to_group),
+                icon: const Icon(Icons.home_rounded),
+                label: Text(gloc.wizard_go_to_home),
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
                     vertical: 16,
