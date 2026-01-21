@@ -281,6 +281,16 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
     ThemeData theme,
     double contentHeight,
   ) {
+    // Safety check - this should never happen due to calling context, but be defensive
+    if (_activeGroups.isEmpty) {
+      return EmptyGroupsState(
+        localizations: loc,
+        theme: theme,
+        allArchived: widget.allArchived,
+        onGroupAdded: _handleGroupAdded,
+      );
+    }
+
     // Get featured group (pinned or most recent)
     final featuredGroup = _activeGroups.first;
     

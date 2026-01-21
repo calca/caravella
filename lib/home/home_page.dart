@@ -438,86 +438,81 @@ class _HomePageState extends State<HomePage> with RouteAware {
 
   /// Simple featured card skeleton for loading state
   Widget _FeaturedCardSkeleton({required ThemeData theme}) {
-    return AnimatedBuilder(
-      animation: const AlwaysStoppedAnimation(0.5),
-      builder: (context, child) {
-        final colorScheme = theme.colorScheme;
-        
-        return Container(
-          decoration: BoxDecoration(
-            color: colorScheme.surfaceContainerHigh,
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(
-              color: colorScheme.outline.withValues(alpha: 0.2),
-              width: 1,
+    final colorScheme = theme.colorScheme;
+    
+    return Container(
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerHigh,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: colorScheme.outline.withValues(alpha: 0.2),
+          width: 1,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Title skeleton
+            Container(
+              width: 200,
+              height: 28,
+              decoration: BoxDecoration(
+                color: colorScheme.onSurface.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(14),
+              ),
             ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            const SizedBox(height: 16),
+            // Subtitle skeleton
+            Container(
+              width: 160,
+              height: 20,
+              decoration: BoxDecoration(
+                color: colorScheme.onSurface.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            const Spacer(),
+            // Stats skeleton at bottom
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Title skeleton
-                Container(
-                  width: 200,
-                  height: 28,
-                  decoration: BoxDecoration(
-                    color: colorScheme.onSurface.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                // Subtitle skeleton
-                Container(
-                  width: 160,
-                  height: 20,
-                  decoration: BoxDecoration(
-                    color: colorScheme.onSurface.withValues(alpha: 0.08),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                const Spacer(),
-                // Stats skeleton at bottom
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 100,
-                          height: 16,
-                          decoration: BoxDecoration(
-                            color: colorScheme.onSurface.withValues(alpha: 0.08),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        Container(
-                          width: 120,
-                          height: 24,
-                          decoration: BoxDecoration(
-                            color: colorScheme.onSurface.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                      ],
-                    ),
                     Container(
-                      width: 64,
-                      height: 64,
+                      width: 100,
+                      height: 16,
                       decoration: BoxDecoration(
                         color: colorScheme.onSurface.withValues(alpha: 0.08),
-                        borderRadius: BorderRadius.circular(32),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Container(
+                      width: 120,
+                      height: 24,
+                      decoration: BoxDecoration(
+                        color: colorScheme.onSurface.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                     ),
                   ],
                 ),
+                Container(
+                  width: 64,
+                  height: 64,
+                  decoration: BoxDecoration(
+                    color: colorScheme.onSurface.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(32),
+                  ),
+                ),
               ],
             ),
-          ),
-        );
-      },
+          ],
+        ),
+      ),
     );
   }
 }
