@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Smooth animation for newly added expenses in the expense list
   - Newly created expenses fade in and scale up with a subtle bounce effect
   - Visual feedback helps users identify their just-added expense in the list
+- Featured card on home page for pinned/most recent expense group
+  - Prominently displays the most important group in a dedicated 60% height card
+  - Remaining groups shown in carousel below (40% height)
+  - Improved visual hierarchy and user focus on primary group
 
 ### Fixed
 - Persistent notifications now respect expense group date ranges
@@ -41,6 +45,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Each format (CSV, OFX, Markdown) displayed in dedicated card with icon and description
   - Clear separation between share and save actions with labeled buttons
   - Better visual hierarchy and format descriptions for user clarity
+- Home page layout restructured for better content hierarchy
+  - Featured card (60% of content height) displays pinned/favorite or most recent group
+  - Carousel reduced to 40% of content height showing remaining groups
+  - Skeleton loader updated to match new two-section layout
+  - Improved visual balance and focus on primary expense group
 
 ### Technical
 - SQLite repository code refactoring for improved readability and formatting
