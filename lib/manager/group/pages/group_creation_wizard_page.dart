@@ -11,6 +11,7 @@ import '../wizard/wizard_navigation_bar.dart';
 import '../wizard/wizard_steps/wizard_user_name_step.dart';
 import '../wizard/wizard_steps/wizard_type_and_name_step.dart';
 import '../wizard/wizard_steps/wizard_completion_step.dart';
+import '../../details/pages/expense_group_detail_page.dart';
 
 class GroupCreationWizardPage extends StatelessWidget {
   /// If true, shows the user name step when launched from welcome page
@@ -157,7 +158,10 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
 
         // Initialize default categories for the default group type
         if (state.groupType != null) {
-          final defaultCategories = _getLocalizedCategories(gloc, state.groupType!);
+          final defaultCategories = _getLocalizedCategories(
+            gloc,
+            state.groupType!,
+          );
           controller.initializeDefaultCategories(defaultCategories);
         }
       }
@@ -196,14 +200,45 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
     }
   }
 
-  bool _canPop() {
-    final wizardState = context.read<WizardState>();
-    // Cannot go back from completion step
+  bool _canPop(WizardState wizardState) {
+    // Cannot go back from completion step - back gesture triggers CTA action
     if (wizardState.currentStep == wizardState.totalSteps - 1) {
       return false;
     }
     final controller = context.read<GroupFormController>();
     return !controller.hasChanges;
+  }
+
+  Future<void> _handleCompletionBackAction(WizardState wizardState) async {
+    // When on completion step, back gesture acts like the CTA button
+    final groupId = wizardState.savedGroupId;
+    if (groupId == null) {
+      Navigator.of(context).pop();
+      return;
+    }
+
+    if (widget.fromWelcome) {
+      // When coming from welcome, pop back with groupId so home can refresh
+      Navigator.of(context).pop(groupId);
+    } else {
+      // When coming from home with existing groups,
+      // navigate to the newly created group detail page
+      final group = await ExpenseGroupStorageV2.getTripById(groupId);
+      if (group != null && mounted) {
+        // Pop the wizard
+        Navigator.of(context).pop();
+        // Navigate to the group detail page
+        if (mounted) {
+          await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ExpenseGroupDetailPage(trip: group),
+            ),
+          );
+        }
+      } else if (mounted) {
+        Navigator.of(context).pop();
+      }
+    }
   }
 
   Future<bool> _onWillPop() async {
@@ -245,60 +280,75 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
 
-    return PopScope(
-      canPop: _canPop(),
-      onPopInvokedWithResult: (didPop, _) async {
-        if (!didPop) {
-          final shouldPop = await _onWillPop();
-          if (shouldPop && context.mounted) {
-            Navigator.of(context).pop(false);
-          }
-        }
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(gloc.wizard_group_creation_title),
-          elevation: 0,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        ),
-        body: Column(
-          children: [
-            // Step indicator
-            const WizardStepIndicator(),
+    return Consumer<WizardState>(
+      builder: (context, wizardState, child) {
+        final isCompletionStep =
+            wizardState.currentStep == wizardState.totalSteps - 1;
 
-            // Wizard content
-            Expanded(
-              child: Consumer<WizardState>(
-                builder: (context, wizardState, child) {
-                  final isLastStep =
-                      wizardState.currentStep == wizardState.totalSteps - 1;
-                  return PageView(
-                    controller: wizardState.pageController,
-                    physics: isLastStep
-                        ? const NeverScrollableScrollPhysics()
-                        : null,
-                    onPageChanged: (index) {
-                      wizardState.syncWithPage(index);
-                    },
-                    children: [
-                      if (wizardState.includeUserNameStep)
-                        const WizardUserNameStep(),
-                      const WizardTypeAndNameStep(),
-                      WizardCompletionStep(
-                        groupId: wizardState.savedGroupId ?? '',
-                        fromWelcome: widget.fromWelcome,
-                      ),
-                    ],
-                  );
-                },
-              ),
+        return PopScope(
+          canPop: _canPop(wizardState),
+          onPopInvokedWithResult: (didPop, _) async {
+            if (!didPop) {
+              if (isCompletionStep) {
+                // On completion step, back gesture triggers CTA action
+                await _handleCompletionBackAction(wizardState);
+              } else {
+                final shouldPop = await _onWillPop();
+                if (shouldPop && context.mounted) {
+                  Navigator.of(context).pop(false);
+                }
+              }
+            }
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text(gloc.wizard_group_creation_title),
+              elevation: 0,
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              // Hide back button on completion step
+              automaticallyImplyLeading: !isCompletionStep,
+              leading: isCompletionStep ? const SizedBox.shrink() : null,
             ),
+            body: Column(
+              children: [
+                // Step indicator
+                const WizardStepIndicator(),
 
-            // Navigation bar
-            const WizardNavigationBar(),
-          ],
-        ),
-      ),
+                // Wizard content
+                Expanded(
+                  child: Builder(
+                    builder: (context) {
+                      final isLastStep =
+                          wizardState.currentStep == wizardState.totalSteps - 1;
+                      return PageView(
+                        controller: wizardState.pageController,
+                        physics: isLastStep
+                            ? const NeverScrollableScrollPhysics()
+                            : null,
+                        onPageChanged: (index) {
+                          wizardState.syncWithPage(index);
+                        },
+                        children: [
+                          if (wizardState.includeUserNameStep)
+                            const WizardUserNameStep(),
+                          const WizardTypeAndNameStep(),
+                          WizardCompletionStep(
+                            groupId: wizardState.savedGroupId ?? '',
+                            fromWelcome: widget.fromWelcome,
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+
+                // Navigation bar
+                const WizardNavigationBar(),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

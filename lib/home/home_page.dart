@@ -249,13 +249,9 @@ class _HomePageState extends State<HomePage> with RouteAware {
 
   void _handleTripAdded() {
     final gloc = gen.AppLocalizations.of(context);
-    // Update cached preference value since user just added a group
-    setState(() {
-      _isFirstStart = false;
-    });
-    // Persist the preference change
-    PreferencesService.instance.appState.setIsFirstStart(false);
-    _refresh();
+    // Use full reload to properly update _isFirstStart based on actual data
+    // This ensures the welcome→cards transition happens correctly
+    _loadLocaleAndTrip();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       AppToast.show(context, gloc.group_added_success, type: ToastType.success);

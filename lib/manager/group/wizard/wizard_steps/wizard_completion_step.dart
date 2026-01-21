@@ -113,9 +113,9 @@ class _WizardCompletionStepState extends State<WizardCompletionStep> {
               child: FilledButton.icon(
                 onPressed: () async {
                   if (widget.fromWelcome) {
-                    // When coming from welcome, just pop back to home
-                    // The home page will automatically refresh and show the new group
-                    Navigator.of(context).pop();
+                    // When coming from welcome, pop back with the groupId
+                    // so the home page knows a group was created and can refresh
+                    Navigator.of(context).pop(widget.groupId);
                   } else {
                     // When coming from home with existing groups,
                     // navigate to the newly created group detail page
