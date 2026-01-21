@@ -376,7 +376,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
   }
 
   /// Builds a skeleton layout matching HomeCardsSection structure
-  /// Header and bottom bar are real, only carousel is skeleton
+  /// Header and bottom bar are real, only content is skeleton
   Widget _buildSkeletonLayout(gen.AppLocalizations gloc) {
     final theme = Theme.of(context);
     final screenHeight = MediaQuery.of(context).size.height;
@@ -385,6 +385,11 @@ class _HomePageState extends State<HomePage> with RouteAware {
     final headerHeight = screenHeight / 6;
     final bottomBarHeight = screenHeight / 6;
     final contentHeight = screenHeight - headerHeight - bottomBarHeight;
+
+    // Featured card takes 60% of content height
+    final featuredCardHeight = contentHeight * 0.6;
+    // Carousel takes 40% of content height
+    final carouselHeight = contentHeight * 0.4;
 
     return SizedBox(
       height: screenHeight,
@@ -400,10 +405,27 @@ class _HomePageState extends State<HomePage> with RouteAware {
               child: HomeCardsHeader(localizations: gloc, theme: theme),
             ),
 
-            // Skeleton carousel - only this part is loading
+            // Skeleton content - featured card + carousel
             SizedBox(
               height: contentHeight,
-              child: CarouselSkeletonLoader(theme: theme),
+              child: Column(
+                children: [
+                  // Featured card skeleton
+                  SizedBox(
+                    height: featuredCardHeight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: _FeaturedCardSkeleton(theme: theme),
+                    ),
+                  ),
+                  
+                  // Carousel skeleton
+                  SizedBox(
+                    height: carouselHeight,
+                    child: CarouselSkeletonLoader(theme: theme),
+                  ),
+                ],
+              ),
             ),
 
             // Real bottom bar - shows immediately
@@ -411,6 +433,91 @@ class _HomePageState extends State<HomePage> with RouteAware {
           ],
         ),
       ),
+    );
+  }
+
+  /// Simple featured card skeleton for loading state
+  Widget _FeaturedCardSkeleton({required ThemeData theme}) {
+    return AnimatedBuilder(
+      animation: const AlwaysStoppedAnimation(0.5),
+      builder: (context, child) {
+        final colorScheme = theme.colorScheme;
+        
+        return Container(
+          decoration: BoxDecoration(
+            color: colorScheme.surfaceContainerHigh,
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(
+              color: colorScheme.outline.withValues(alpha: 0.2),
+              width: 1,
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Title skeleton
+                Container(
+                  width: 200,
+                  height: 28,
+                  decoration: BoxDecoration(
+                    color: colorScheme.onSurface.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                // Subtitle skeleton
+                Container(
+                  width: 160,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    color: colorScheme.onSurface.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                const Spacer(),
+                // Stats skeleton at bottom
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 100,
+                          height: 16,
+                          decoration: BoxDecoration(
+                            color: colorScheme.onSurface.withValues(alpha: 0.08),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Container(
+                          width: 120,
+                          height: 24,
+                          decoration: BoxDecoration(
+                            color: colorScheme.onSurface.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      width: 64,
+                      height: 64,
+                      decoration: BoxDecoration(
+                        color: colorScheme.onSurface.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(32),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
