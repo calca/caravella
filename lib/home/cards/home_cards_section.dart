@@ -291,11 +291,13 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
       );
     }
 
-    // Get featured group (pinned or most recent)
-    final featuredGroup = _activeGroups.first;
+    // Get featured group: use pinned/favorite if available, otherwise first from active groups
+    final featuredGroup = widget.pinnedTrip ?? _activeGroups.first;
     
     // Get remaining groups for carousel (excluding featured)
-    final carouselGroups = _activeGroups.skip(1).toList();
+    final carouselGroups = _activeGroups
+        .where((g) => g.id != featuredGroup.id)
+        .toList();
 
     // Featured card takes 60% of content height
     final featuredCardHeight = contentHeight * 0.6;
