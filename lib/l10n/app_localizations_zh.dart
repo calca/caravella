@@ -2138,6 +2138,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get wizard_go_to_group => '转到群组';
 
   @override
+  String get wizard_go_to_home => '返回主页';
+
+  @override
   String get wizard_go_to_settings => '群组设置';
 
   @override

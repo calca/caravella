@@ -8,6 +8,7 @@ import 'package:play_store_updates/play_store_updates.dart';
 import '../settings/update/app_update_localizations.dart';
 import 'welcome/home_welcome_section.dart';
 import 'cards/home_cards_section.dart';
+import 'cards/widgets/widgets.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,6 +24,10 @@ class _HomePageState extends State<HomePage> with RouteAware {
   bool _refreshing = false;
   bool _updateCheckPerformed = false;
   bool _isFirstStart = true; // Cache preference value
+
+  // Cached groups to avoid FutureBuilder flash
+  List<ExpenseGroup> _activeGroups = [];
+  List<ExpenseGroup> _archivedGroups = [];
 
   @override
   void initState() {
@@ -113,24 +118,28 @@ class _HomePageState extends State<HomePage> with RouteAware {
         _loading = true;
       });
     }
-    
-    // Load pinned trip and check if any groups exist
-    final pinnedTrip = await ExpenseGroupStorageV2.getPinnedTrip();
-    
-    // Better first start detection: check if any groups exist in storage
-    // This handles app updates where the flag might be reset but groups exist
-    final activeGroups = await ExpenseGroupStorageV2.getActiveGroups();
-    final archivedGroups = await ExpenseGroupStorageV2.getArchivedGroups();
+
+    // Load pinned trip and groups in parallel
+    final results = await Future.wait([
+      ExpenseGroupStorageV2.getPinnedTrip(),
+      ExpenseGroupStorageV2.getActiveGroups(),
+      ExpenseGroupStorageV2.getArchivedGroups(),
+    ]);
+
+    final pinnedTrip = results[0] as ExpenseGroup?;
+    final activeGroups = results[1] as List<ExpenseGroup>;
+    final archivedGroups = results[2] as List<ExpenseGroup>;
     final hasGroups = activeGroups.isNotEmpty || archivedGroups.isNotEmpty;
-    
+
     if (!mounted) return;
-    
+
     // Update first start flag based on whether groups exist
     // If groups exist, it's not first start regardless of preference
     // If no groups exist, respect the preference
-    final prefIsFirstStart = PreferencesService.instance.appState.isFirstStart();
+    final prefIsFirstStart = PreferencesService.instance.appState
+        .isFirstStart();
     final shouldShowWelcome = !hasGroups && prefIsFirstStart;
-    
+
     // If we determined user has groups but flag says first start,
     // update the preference to reflect reality
     if (hasGroups && prefIsFirstStart) {
@@ -140,9 +149,25 @@ class _HomePageState extends State<HomePage> with RouteAware {
       );
       await PreferencesService.instance.appState.setIsFirstStart(false);
     }
-    
+
+    // Determine which view to show for AnimatedSwitcher
+    final newViewKey = shouldShowWelcome
+        ? 'welcome'
+        : activeGroups.isNotEmpty
+        ? 'cards_active'
+        : archivedGroups.isNotEmpty
+        ? 'cards_archived'
+        : 'welcome';
+
+    LoggerService.debug(
+      'View state: isFirstStart=$shouldShowWelcome, active=${activeGroups.length}, archived=${archivedGroups.length}, viewKey=$newViewKey',
+      name: 'state.home',
+    );
+
     setState(() {
       _pinnedTrip = pinnedTrip;
+      _activeGroups = activeGroups;
+      _archivedGroups = archivedGroups;
       _isFirstStart = shouldShowWelcome;
       _loading = false;
       _refreshing = false;
@@ -172,12 +197,38 @@ class _HomePageState extends State<HomePage> with RouteAware {
     );
   }
 
-  /// Soft refresh that only updates the pinned trip without showing loading state
+  /// Soft refresh that only updates the pinned trip and groups without showing loading state
   Future<void> _softRefresh() async {
-    final pinnedTrip = await ExpenseGroupStorageV2.getPinnedTrip();
+    final results = await Future.wait([
+      ExpenseGroupStorageV2.getPinnedTrip(),
+      ExpenseGroupStorageV2.getActiveGroups(),
+      ExpenseGroupStorageV2.getArchivedGroups(),
+    ]);
+
     if (!mounted) return;
+
+    final pinnedTrip = results[0] as ExpenseGroup?;
+    final activeGroups = results[1] as List<ExpenseGroup>;
+    final archivedGroups = results[2] as List<ExpenseGroup>;
+
+    // Determine which view to show
+    final newViewKey = _isFirstStart
+        ? 'welcome'
+        : activeGroups.isNotEmpty
+        ? 'cards_active'
+        : archivedGroups.isNotEmpty
+        ? 'cards_archived'
+        : 'welcome';
+
+    LoggerService.debug(
+      'Soft refresh: active=${activeGroups.length}, archived=${archivedGroups.length}, viewKey=$newViewKey',
+      name: 'state.home',
+    );
+
     setState(() {
       _pinnedTrip = pinnedTrip;
+      _activeGroups = activeGroups;
+      _archivedGroups = archivedGroups;
     });
   }
 
@@ -231,92 +282,139 @@ class _HomePageState extends State<HomePage> with RouteAware {
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
-    
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      body: _loading
-          ? Semantics(
-              liveRegion: true,
-              label: gloc.accessibility_loading_groups,
-              child: Center(
-                child: CircularProgressIndicator(
-                  semanticsLabel: gloc.accessibility_loading_your_groups,
-                ),
-              ),
-            )
-          : !_isFirstStart
-              ? RefreshIndicator(
-                  onRefresh: _handleUserRefresh,
-                  child: FutureBuilder<List<List<ExpenseGroup>>>(
-                    future: Future.wait<List<ExpenseGroup>>([
-                      ExpenseGroupStorageV2.getActiveGroups(),
-                      ExpenseGroupStorageV2.getArchivedGroups(),
-                    ]),
-                    builder: (context, snapshot) {
-                      final active =
-                          snapshot.data != null && snapshot.data!.isNotEmpty
-                          ? snapshot.data![0]
-                          : <ExpenseGroup>[];
-                      final archived =
-                          snapshot.data != null && snapshot.data!.length > 1
-                          ? snapshot.data![1]
-                          : <ExpenseGroup>[];
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 350),
+        switchInCurve: Curves.easeOutCubic,
+        switchOutCurve: Curves.easeInCubic,
+        transitionBuilder: (child, animation) {
+          // Use different transitions based on view type
+          final isWelcome = child.key == const ValueKey('welcome');
 
-                      // Show HomeCardsSection when there are active groups.
-                      // If active is empty but archived groups exist, still show HomeCardsSection
-                      // with an empty list so the UI renders only the add-card.
-                      if (active.isNotEmpty) {
-                        return SafeArea(
-                          child: Semantics(
-                            label: gloc.accessibility_groups_list,
-                            child: HomeCardsSection(
-                              initialGroups: active,
-                              onTripAdded: _handleTripAdded,
-                              onTripDeleted: _handleTripDeleted,
-                              onTripUpdated: _handleTripUpdated,
-                              pinnedTrip: _pinnedTrip,
-                              allArchived: false,
-                            ),
-                          ),
-                        );
-                      }
+          if (isWelcome) {
+            // Slide in from bottom for welcome screen
+            return SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0.0, 0.15),
+                end: Offset.zero,
+              ).animate(animation),
+              child: FadeTransition(opacity: animation, child: child),
+            );
+          } else {
+            // Fade transition for cards and loading
+            return FadeTransition(opacity: animation, child: child);
+          }
+        },
+        child: _buildContent(gloc),
+      ),
+    );
+  }
 
-                      // If no active groups but there are archived groups, enter home with empty cards
-                      if (archived.isNotEmpty) {
-                        return SafeArea(
-                          child: Semantics(
-                            label: gloc.accessibility_groups_list,
-                            child: HomeCardsSection(
-                              initialGroups: <ExpenseGroup>[],
-                              onTripAdded: _handleTripAdded,
-                              onTripDeleted: _handleTripDeleted,
-                              onTripUpdated: _handleTripUpdated,
-                              pinnedTrip: _pinnedTrip,
-                              allArchived: true,
-                            ),
-                          ),
-                        );
-                      } else {
-                        return Semantics(
-                          label: gloc.accessibility_welcome_screen,
-                          child: HomeWelcomeSection(
-                            onTripAdded: () {
-                              _handleTripAdded();
-                            },
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                )
-              : Semantics(
-                  label: gloc.accessibility_welcome_screen,
-                  child: HomeWelcomeSection(
-                    onTripAdded: () {
-                      _handleTripAdded();
-                    },
-                  ),
-                ),
+  Widget _buildContent(gen.AppLocalizations gloc) {
+    if (_loading) {
+      // Show skeleton loader during initial load for better UX
+      // Uses same layout as HomeCardsSection with skeleton only for carousel
+      return SafeArea(
+        key: const ValueKey('loading'),
+        child: _buildSkeletonLayout(gloc),
+      );
+    }
+
+    if (_isFirstStart) {
+      return Semantics(
+        key: const ValueKey('welcome'),
+        label: gloc.accessibility_welcome_screen,
+        child: HomeWelcomeSection(onTripAdded: _handleTripAdded),
+      );
+    }
+
+    // Show cards section - either with active groups or empty (when all archived)
+    if (_activeGroups.isNotEmpty) {
+      return RefreshIndicator(
+        key: const ValueKey('cards_active'),
+        onRefresh: _handleUserRefresh,
+        child: SafeArea(
+          child: Semantics(
+            label: gloc.accessibility_groups_list,
+            child: HomeCardsSection(
+              initialGroups: _activeGroups,
+              onTripAdded: _handleTripAdded,
+              onTripDeleted: _handleTripDeleted,
+              onTripUpdated: _handleTripUpdated,
+              pinnedTrip: _pinnedTrip,
+              allArchived: false,
+            ),
+          ),
+        ),
+      );
+    }
+
+    if (_archivedGroups.isNotEmpty) {
+      return RefreshIndicator(
+        key: const ValueKey('cards_archived'),
+        onRefresh: _handleUserRefresh,
+        child: SafeArea(
+          child: Semantics(
+            label: gloc.accessibility_groups_list,
+            child: HomeCardsSection(
+              initialGroups: <ExpenseGroup>[],
+              onTripAdded: _handleTripAdded,
+              onTripDeleted: _handleTripDeleted,
+              onTripUpdated: _handleTripUpdated,
+              pinnedTrip: _pinnedTrip,
+              allArchived: true,
+            ),
+          ),
+        ),
+      );
+    }
+
+    // No groups at all - show welcome (this handles edge case of all groups deleted)
+    return Semantics(
+      key: const ValueKey('welcome'),
+      label: gloc.accessibility_welcome_screen,
+      child: HomeWelcomeSection(onTripAdded: _handleTripAdded),
+    );
+  }
+
+  /// Builds a skeleton layout matching HomeCardsSection structure
+  /// Header and bottom bar are real, only carousel is skeleton
+  Widget _buildSkeletonLayout(gen.AppLocalizations gloc) {
+    final theme = Theme.of(context);
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    // Same height calculations as HomeCardsSection
+    final headerHeight = screenHeight / 6;
+    final bottomBarHeight = screenHeight / 6;
+    final contentHeight = screenHeight - headerHeight - bottomBarHeight;
+
+    return SizedBox(
+      height: screenHeight,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            // Real header - shows immediately
+            SizedBox(
+              height: headerHeight,
+              child: HomeCardsHeader(localizations: gloc, theme: theme),
+            ),
+
+            // Skeleton carousel - only this part is loading
+            SizedBox(
+              height: contentHeight,
+              child: CarouselSkeletonLoader(theme: theme),
+            ),
+
+            // Real bottom bar - shows immediately
+            SimpleBottomBar(localizations: gloc, theme: theme),
+          ],
+        ),
+      ),
     );
   }
 }

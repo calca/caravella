@@ -4211,6 +4211,12 @@ abstract class AppLocalizations {
   /// **'Go to group'**
   String get wizard_go_to_group;
 
+  /// Button to go back to home page
+  ///
+  /// In en, this message translates to:
+  /// **'Go to home'**
+  String get wizard_go_to_home;
+
   /// Button to go to group settings
   ///
   /// In en, this message translates to:

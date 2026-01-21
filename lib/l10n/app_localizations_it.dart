@@ -2191,6 +2191,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get wizard_go_to_group => 'Vai al gruppo';
 
   @override
+  String get wizard_go_to_home => 'Vai alla home';
+
+  @override
   String get wizard_go_to_settings => 'Impostazioni gruppo';
 
   @override
