@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/manager/group/data/group_form_state.dart';
-import 'package:io_caravella_egm/manager/group/pages/group_creation_wizard_page.dart';
 import 'package:provider/provider.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 class GroupTitleField extends StatefulWidget {
-  const GroupTitleField({super.key});
+  final VoidCallback? onSubmitted;
+
+  const GroupTitleField({super.key, this.onSubmitted});
 
   @override
   State<GroupTitleField> createState() => _GroupTitleFieldState();
@@ -66,17 +67,7 @@ class _GroupTitleFieldState extends State<GroupTitleField> {
       textInputAction: TextInputAction.next,
       autofocus: false,
       decoration: FormTheme.getBorderlessDecoration(hintText: 'Nome gruppo'),
-      onSubmitted: (_) {
-        // If in wizard context and form is valid, proceed to next step
-        try {
-          final wizardState = context.read<WizardState>();
-          if (_controller.text.trim().isNotEmpty) {
-            wizardState.nextStep();
-          }
-        } catch (_) {
-          // Not in wizard context, ignore
-        }
-      },
+      onSubmitted: widget.onSubmitted != null ? (_) => widget.onSubmitted!() : null,
     );
   }
 }

@@ -9,8 +9,13 @@ import 'group_title_field.dart';
 /// the group type.
 class GroupNameWithIconField extends StatelessWidget {
   final VoidCallback onIconTap;
+  final VoidCallback? onSubmitted;
 
-  const GroupNameWithIconField({super.key, required this.onIconTap});
+  const GroupNameWithIconField({
+    super.key,
+    required this.onIconTap,
+    this.onSubmitted,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +45,7 @@ class GroupNameWithIconField extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          const Expanded(child: GroupTitleField()),
+          Expanded(child: GroupTitleField(onSubmitted: onSubmitted)),
         ],
       ),
     );
