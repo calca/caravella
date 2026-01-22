@@ -6,6 +6,7 @@ import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../data/group_form_state.dart';
 import '../../group_form_controller.dart';
+import '../../pages/group_creation_wizard_page.dart';
 import '../../widgets/group_name_with_icon_field.dart';
 import '../../widgets/selection_tile.dart';
 
@@ -190,6 +191,14 @@ class _WizardTypeAndNameStepState extends State<WizardTypeAndNameStep> {
                       ),
                       GroupNameWithIconField(
                         onIconTap: () => _showGroupTypeSelector(context),
+                        onSubmitted: () {
+                          // Proceed to next step if title is valid
+                          final state = context.read<GroupFormState>();
+                          if (state.title.trim().isNotEmpty) {
+                            final wizardState = context.read<WizardState>();
+                            wizardState.nextStep();
+                          }
+                        },
                       ),
                       // Error message
                       Consumer<GroupFormState>(

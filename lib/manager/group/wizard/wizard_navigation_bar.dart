@@ -120,7 +120,13 @@ class WizardNavigationBar extends StatelessWidget {
                     }
 
                     return FilledButton.icon(
-                      onPressed: canProceed ? wizardState.nextStep : null,
+                      onPressed: canProceed
+                          ? () {
+                              // Close keyboard before proceeding
+                              FocusScope.of(context).unfocus();
+                              wizardState.nextStep();
+                            }
+                          : null,
                       label: Text(gloc.wizard_next),
                       style: FilledButton.styleFrom(
                         padding: const EdgeInsets.symmetric(
