@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart'
     as gen; // generated
 import 'package:caravella_core/caravella_core.dart';
+import '../home_constants.dart';
 // Removed locale_notifier import after migration
 // locale_notifier no longer needed after migration
 import 'widgets/widgets.dart';
@@ -230,15 +231,18 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
     final theme = Theme.of(context);
     final screenHeight = MediaQuery.of(context).size.height;
 
-    // Altezze delle varie sezioni
-    final headerHeight = screenHeight / 6;
-    final bottomBarHeight = screenHeight / 6;
+    // Heights based on screen proportions
+    final headerHeight = screenHeight * HomeLayoutConstants.headerHeightRatio;
+    final bottomBarHeight =
+        screenHeight * HomeLayoutConstants.bottomBarHeightRatio;
     final contentHeight = screenHeight - headerHeight - bottomBarHeight;
 
     return SizedBox(
       height: screenHeight, // Fornisce un vincolo di altezza definito
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(
+          horizontal: HomeLayoutConstants.horizontalPadding,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -296,9 +300,11 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
         .toList();
 
     // Featured card takes 60% of content height
-    final featuredCardHeight = contentHeight * 0.6;
+    final featuredCardHeight =
+        contentHeight * HomeLayoutConstants.featuredCardHeightRatio;
     // Carousel takes 40% of content height
-    final carouselHeight = contentHeight * 0.4;
+    final carouselHeight =
+        contentHeight * HomeLayoutConstants.carouselHeightRatio;
 
     return Column(
       children: [
@@ -306,7 +312,9 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
         SizedBox(
           height: featuredCardHeight,
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 16),
+            padding: const EdgeInsets.only(
+              bottom: HomeLayoutConstants.sectionSpacing,
+            ),
             child: GroupCard(
               group: featuredGroup,
               localizations: loc,
@@ -325,7 +333,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
         if (carouselGroups.isNotEmpty) ...[
           // Section header for "Altri Gruppi" (Other Groups)
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
+            padding: const EdgeInsets.fromLTRB(0, 8, 20, 12),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -372,9 +380,11 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
 
   Widget _buildSkeletonContent(ThemeData theme, double contentHeight) {
     // Featured card takes 60% of content height
-    final featuredCardHeight = contentHeight * 0.6;
+    final featuredCardHeight =
+        contentHeight * HomeLayoutConstants.featuredCardHeightRatio;
     // Carousel takes 40% of content height
-    final carouselHeight = contentHeight * 0.4;
+    final carouselHeight =
+        contentHeight * HomeLayoutConstants.carouselHeightRatio;
 
     return Column(
       children: [
@@ -382,8 +392,10 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
         SizedBox(
           height: featuredCardHeight,
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: _FeaturedCardSkeleton(theme: theme),
+            padding: const EdgeInsets.only(
+              bottom: HomeLayoutConstants.sectionSpacing,
+            ),
+            child: FeaturedCardSkeleton(theme: theme),
           ),
         ),
 
@@ -393,177 +405,6 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
           child: CarouselSkeletonLoader(theme: theme),
         ),
       ],
-    );
-  }
-}
-
-/// Skeleton widget for the featured card shown during loading
-class _FeaturedCardSkeleton extends StatefulWidget {
-  final ThemeData theme;
-
-  const _FeaturedCardSkeleton({required this.theme});
-
-  @override
-  State<_FeaturedCardSkeleton> createState() => _FeaturedCardSkeletonState();
-}
-
-class _FeaturedCardSkeletonState extends State<_FeaturedCardSkeleton>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _shimmerController;
-
-  @override
-  void initState() {
-    super.initState();
-    _shimmerController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1500),
-    )..repeat();
-  }
-
-  @override
-  void dispose() {
-    _shimmerController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _shimmerController,
-      builder: (context, child) {
-        final colorScheme = widget.theme.colorScheme;
-
-        // Create shimmer gradient
-        final shimmerGradient = LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-            colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
-            colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-          ],
-          stops: [
-            (_shimmerController.value - 0.3).clamp(0.0, 1.0),
-            _shimmerController.value,
-            (_shimmerController.value + 0.3).clamp(0.0, 1.0),
-          ],
-        );
-
-        return Container(
-          decoration: BoxDecoration(
-            color: colorScheme.surfaceContainerHigh,
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(
-              color: colorScheme.outline.withValues(alpha: 0.2),
-              width: 1,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: colorScheme.shadow.withValues(alpha: 0.15),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Stack(
-            children: [
-              // Shimmer effect overlay
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(24),
-                  gradient: shimmerGradient,
-                ),
-              ),
-              // Card content skeleton
-              Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Title skeleton
-                    _SkeletonBox(
-                      width: 200,
-                      height: 28,
-                      borderRadius: 14,
-                      color: colorScheme.onSurface.withValues(alpha: 0.1),
-                    ),
-                    const SizedBox(height: 16),
-                    // Subtitle skeleton
-                    _SkeletonBox(
-                      width: 160,
-                      height: 20,
-                      borderRadius: 10,
-                      color: colorScheme.onSurface.withValues(alpha: 0.08),
-                    ),
-                    const Spacer(),
-                    // Stats skeleton at bottom
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _SkeletonBox(
-                              width: 100,
-                              height: 16,
-                              borderRadius: 8,
-                              color: colorScheme.onSurface.withValues(
-                                alpha: 0.08,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            _SkeletonBox(
-                              width: 120,
-                              height: 24,
-                              borderRadius: 12,
-                              color: colorScheme.onSurface.withValues(
-                                alpha: 0.1,
-                              ),
-                            ),
-                          ],
-                        ),
-                        _SkeletonBox(
-                          width: 64,
-                          height: 64,
-                          borderRadius: 32,
-                          color: colorScheme.onSurface.withValues(alpha: 0.08),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
-
-/// Simple skeleton box widget for featured card
-class _SkeletonBox extends StatelessWidget {
-  final double width;
-  final double height;
-  final double borderRadius;
-  final Color color;
-
-  const _SkeletonBox({
-    required this.width,
-    required this.height,
-    required this.borderRadius,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(borderRadius),
-      ),
     );
   }
 }

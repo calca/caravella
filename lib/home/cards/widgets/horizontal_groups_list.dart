@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'carousel_group_card.dart';
-import '../../../manager/group/pages/group_creation_wizard_page.dart';
+import '../../navigation_helpers.dart';
 
 class HorizontalGroupsList extends StatefulWidget {
   final List<ExpenseGroup> groups;
@@ -184,14 +184,10 @@ class _AddNewGroupTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        final result = await Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => const GroupCreationWizardPage(),
-          ),
+        await NavigationHelpers.openGroupCreationWithCallback(
+          context,
+          onGroupAdded: onGroupAdded,
         );
-        if (result != null && result is String) {
-          onGroupAdded(result);
-        }
       },
       child: SizedBox(
         width: CarouselGroupCard.tileSize,

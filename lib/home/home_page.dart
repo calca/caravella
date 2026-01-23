@@ -9,6 +9,7 @@ import '../settings/update/app_update_localizations.dart';
 import 'welcome/home_welcome_section.dart';
 import 'cards/home_cards_section.dart';
 import 'cards/widgets/widgets.dart';
+import 'home_constants.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -382,19 +383,24 @@ class _HomePageState extends State<HomePage> with RouteAware {
     final screenHeight = MediaQuery.of(context).size.height;
 
     // Same height calculations as HomeCardsSection
-    final headerHeight = screenHeight / 6;
-    final bottomBarHeight = screenHeight / 6;
+    final headerHeight = screenHeight * HomeLayoutConstants.headerHeightRatio;
+    final bottomBarHeight =
+        screenHeight * HomeLayoutConstants.bottomBarHeightRatio;
     final contentHeight = screenHeight - headerHeight - bottomBarHeight;
 
     // Featured card takes 60% of content height
-    final featuredCardHeight = contentHeight * 0.6;
+    final featuredCardHeight =
+        contentHeight * HomeLayoutConstants.featuredCardHeightRatio;
     // Carousel takes 40% of content height
-    final carouselHeight = contentHeight * 0.4;
+    final carouselHeight =
+        contentHeight * HomeLayoutConstants.carouselHeightRatio;
 
     return SizedBox(
       height: screenHeight,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(
+          horizontal: HomeLayoutConstants.horizontalPadding,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -414,11 +420,13 @@ class _HomePageState extends State<HomePage> with RouteAware {
                   SizedBox(
                     height: featuredCardHeight,
                     child: Padding(
-                      padding: const EdgeInsets.only(bottom: 16),
-                      child: _FeaturedCardSkeleton(theme: theme),
+                      padding: const EdgeInsets.only(
+                        bottom: HomeLayoutConstants.sectionSpacing,
+                      ),
+                      child: FeaturedCardSkeleton(theme: theme),
                     ),
                   ),
-                  
+
                   // Carousel skeleton
                   SizedBox(
                     height: carouselHeight,
@@ -430,86 +438,6 @@ class _HomePageState extends State<HomePage> with RouteAware {
 
             // Real bottom bar - shows immediately
             SimpleBottomBar(localizations: gloc, theme: theme),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// Simple featured card skeleton for loading state
-  Widget _FeaturedCardSkeleton({required ThemeData theme}) {
-    final colorScheme = theme.colorScheme;
-    
-    return Container(
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHigh,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: colorScheme.outline.withValues(alpha: 0.2),
-          width: 1,
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Title skeleton
-            Container(
-              width: 200,
-              height: 28,
-              decoration: BoxDecoration(
-                color: colorScheme.onSurface.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(14),
-              ),
-            ),
-            const SizedBox(height: 16),
-            // Subtitle skeleton
-            Container(
-              width: 160,
-              height: 20,
-              decoration: BoxDecoration(
-                color: colorScheme.onSurface.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            const Spacer(),
-            // Stats skeleton at bottom
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 100,
-                      height: 16,
-                      decoration: BoxDecoration(
-                        color: colorScheme.onSurface.withValues(alpha: 0.08),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Container(
-                      width: 120,
-                      height: 24,
-                      decoration: BoxDecoration(
-                        color: colorScheme.onSurface.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  width: 64,
-                  height: 64,
-                  decoration: BoxDecoration(
-                    color: colorScheme.onSurface.withValues(alpha: 0.08),
-                    borderRadius: BorderRadius.circular(32),
-                  ),
-                ),
-              ],
-            ),
           ],
         ),
       ),

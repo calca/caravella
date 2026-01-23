@@ -53,27 +53,6 @@ class CarouselGroupCard extends StatelessWidget {
     return '${words[0][0]}${words[1][0]}'.toUpperCase();
   }
 
-  /// Resolves the group color from palette or legacy value
-  /// Falls back to surfaceContainerHigh to match the main card style
-  Color _resolveGroupColor() {
-    if (group.color != null) {
-      if (ExpenseGroupColorPalette.isLegacyColorValue(group.color)) {
-        return Color(group.color!);
-      }
-      return ExpenseGroupColorPalette.resolveColor(
-            group.color,
-            theme.colorScheme,
-          ) ??
-          theme.colorScheme.surfaceContainerHigh;
-    }
-    return theme.colorScheme.surfaceContainerHigh;
-  }
-
-  /// Determines if the given color is light or dark
-  bool _isLightColor(Color color) {
-    return color.computeLuminance() > 0.5;
-  }
-
   /// Builds the square tile with image or initials
   Widget _buildTile(BuildContext context) {
     final hasImage =
@@ -100,9 +79,13 @@ class CarouselGroupCard extends StatelessWidget {
     }
 
     // No image - show initials on color background
-    final backgroundColor = _resolveGroupColor();
-    final isLight = _isLightColor(backgroundColor);
-    final textColor = isLight ? Colors.black87 : Colors.white;
+    final backgroundColor = ExpenseGroupColorPalette.resolveGroupColor(
+      group,
+      theme.colorScheme,
+    );
+    final textColor = ExpenseGroupColorPalette.getContrastingTextColor(
+      backgroundColor,
+    );
 
     return Container(
       width: tileSize,
