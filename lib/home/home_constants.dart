@@ -110,6 +110,12 @@ class HomeLayoutConstants {
   /// Large icon size (for add button, etc.)
   static const double largeIconSize = 28.0;
 
+  // ==================== Header ====================
+
+  /// Fixed height of compact header (avatar + text + padding)
+  static const double headerHeight =
+      56.0 + 32.0; // 56 avatar + 32 padding (16 top + 16 bottom)
+
   // ==================== Layout Proportions ====================
 
   /// Featured card height as proportion of content area
@@ -117,9 +123,6 @@ class HomeLayoutConstants {
 
   /// Carousel height as proportion of content area
   static const double carouselHeightRatio = 0.4;
-
-  /// Header height as proportion of screen height
-  static const double headerHeightRatio = 1 / 6;
 
   /// Bottom bar height as proportion of screen height
   static const double bottomBarHeightRatio = 1 / 6;

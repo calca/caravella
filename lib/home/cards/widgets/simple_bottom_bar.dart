@@ -23,47 +23,53 @@ class SimpleBottomBar extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start, // Allinea in alto
         children: [
           // Bottone Tutti
-          TextButton(
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const ExpesensHistoryPage(),
+          Flexible(
+            child: TextButton(
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const ExpesensHistoryPage(),
+                ),
               ),
-            ),
-            style: TextButton.styleFrom(
-              foregroundColor: theme.colorScheme.onSurface.withValues(
-                alpha: 0.8,
+              style: TextButton.styleFrom(
+                foregroundColor: theme.colorScheme.onSurface.withValues(
+                  alpha: 0.8,
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-            ),
-            child: Text(
-              localizations.all.toUpperCase(),
-              style: theme.textTheme.labelLarge?.copyWith(
-                fontWeight: FontWeight.w600,
-                letterSpacing: 1.2,
+              child: Text(
+                localizations.all.toUpperCase(),
+                style: theme.textTheme.labelLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1.0,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
               ),
-              overflow: TextOverflow.ellipsis,
             ),
           ),
 
-          const SizedBox(width: 16), // Spazio tra i bottoni
+          const SizedBox(width: 8), // Spazio tra i bottoni ridotto
           // Bottone Opzioni
-          TextButton(
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const SettingsPage()),
-            ),
-            style: TextButton.styleFrom(
-              foregroundColor: theme.colorScheme.onSurface.withValues(
-                alpha: 0.8,
+          Flexible(
+            child: TextButton(
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const SettingsPage()),
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-            ),
-            child: Text(
-              localizations.options.toUpperCase(),
-              style: theme.textTheme.labelLarge?.copyWith(
-                fontWeight: FontWeight.w600,
-                letterSpacing: 1.2,
+              style: TextButton.styleFrom(
+                foregroundColor: theme.colorScheme.onSurface.withValues(
+                  alpha: 0.8,
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
               ),
-              overflow: TextOverflow.ellipsis,
+              child: Text(
+                localizations.options.toUpperCase(),
+                style: theme.textTheme.labelLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1.0,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
             ),
           ),
         ],

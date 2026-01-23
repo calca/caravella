@@ -229,32 +229,50 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
     final theme = Theme.of(context);
-    final screenHeight = MediaQuery.of(context).size.height;
+    final mediaQuery = MediaQuery.of(context);
+    final screenHeight = mediaQuery.size.height;
+    final topSafeArea = mediaQuery.padding.top;
 
-    // Heights based on screen proportions
-    final headerHeight = screenHeight * HomeLayoutConstants.headerHeightRatio;
+    // Heights: header fixed, bottom bar proportional, content fills remaining
+    const headerHeight = HomeLayoutConstants.headerHeight;
+    const headerPaddingVertical = 32.0; // 16 top + 16 bottom padding
     final bottomBarHeight =
         screenHeight * HomeLayoutConstants.bottomBarHeightRatio;
-    final contentHeight = screenHeight - headerHeight - bottomBarHeight;
+    final contentHeight = screenHeight -
+        headerHeight -
+        headerPaddingVertical -
+        bottomBarHeight -
+        topSafeArea;
 
     return SizedBox(
-      height: screenHeight, // Fornisce un vincolo di altezza definito
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: HomeLayoutConstants.horizontalPadding,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            // Header con avatar e saluto dinamico
-            SizedBox(
+      height: screenHeight,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          // Safe area for status bar
+          SizedBox(height: topSafeArea),
+
+          // Header compatto con altezza fissa
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              HomeLayoutConstants.horizontalPadding,
+              16.0,
+              HomeLayoutConstants.horizontalPadding,
+              16.0,
+            ),
+            child: SizedBox(
               height: headerHeight,
               child: HomeCardsHeader(localizations: loc, theme: theme),
             ),
+          ),
 
-            // Content area - riempie lo spazio tra header e bottom bar
-            SizedBox(
+          // Content area - riempie lo spazio tra header e bottom bar
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: HomeLayoutConstants.horizontalPadding,
+            ),
+            child: SizedBox(
               height: contentHeight,
               child: _loading
                   ? _buildSkeletonContent(theme, contentHeight)
@@ -267,11 +285,16 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
                     )
                   : _buildContent(loc, theme, contentHeight),
             ),
+          ),
 
-            // Bottom bar semplificata d
-            SimpleBottomBar(localizations: loc, theme: theme),
-          ],
-        ),
+          // Bottom bar semplificata
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: HomeLayoutConstants.horizontalPadding,
+            ),
+            child: SimpleBottomBar(localizations: loc, theme: theme),
+          ),
+        ],
       ),
     );
   }

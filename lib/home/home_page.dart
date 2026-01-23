@@ -380,13 +380,20 @@ class _HomePageState extends State<HomePage> with RouteAware {
   /// Header and bottom bar are real, only content is skeleton
   Widget _buildSkeletonLayout(gen.AppLocalizations gloc) {
     final theme = Theme.of(context);
-    final screenHeight = MediaQuery.of(context).size.height;
+    final mediaQuery = MediaQuery.of(context);
+    final screenHeight = mediaQuery.size.height;
+    final topSafeArea = mediaQuery.padding.top;
 
     // Same height calculations as HomeCardsSection
-    final headerHeight = screenHeight * HomeLayoutConstants.headerHeightRatio;
+    const headerHeight = HomeLayoutConstants.headerHeight;
+    const headerPaddingVertical = 32.0; // 16 top + 16 bottom padding
     final bottomBarHeight =
         screenHeight * HomeLayoutConstants.bottomBarHeightRatio;
-    final contentHeight = screenHeight - headerHeight - bottomBarHeight;
+    final contentHeight = screenHeight -
+        headerHeight -
+        headerPaddingVertical -
+        bottomBarHeight -
+        topSafeArea;
 
     // Featured card takes 60% of content height
     final featuredCardHeight =
@@ -397,22 +404,33 @@ class _HomePageState extends State<HomePage> with RouteAware {
 
     return SizedBox(
       height: screenHeight,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: HomeLayoutConstants.horizontalPadding,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            // Real header - shows immediately
-            SizedBox(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          // Safe area for status bar
+          SizedBox(height: topSafeArea),
+
+          // Real header - shows immediately
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              HomeLayoutConstants.horizontalPadding,
+              16.0,
+              HomeLayoutConstants.horizontalPadding,
+              16.0,
+            ),
+            child: SizedBox(
               height: headerHeight,
               child: HomeCardsHeader(localizations: gloc, theme: theme),
             ),
+          ),
 
-            // Skeleton content - featured card + carousel
-            SizedBox(
+          // Skeleton content - featured card + carousel
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: HomeLayoutConstants.horizontalPadding,
+            ),
+            child: SizedBox(
               height: contentHeight,
               child: Column(
                 children: [
@@ -435,11 +453,16 @@ class _HomePageState extends State<HomePage> with RouteAware {
                 ],
               ),
             ),
+          ),
 
-            // Real bottom bar - shows immediately
-            SimpleBottomBar(localizations: gloc, theme: theme),
-          ],
-        ),
+          // Real bottom bar - shows immediately
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: HomeLayoutConstants.horizontalPadding,
+            ),
+            child: SimpleBottomBar(localizations: gloc, theme: theme),
+          ),
+        ],
       ),
     );
   }
