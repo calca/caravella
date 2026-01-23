@@ -119,10 +119,10 @@ class HomeLayoutConstants {
   // ==================== Layout Proportions ====================
 
   /// Featured card height as proportion of content area
-  static const double featuredCardHeightRatio = 0.6;
+  static const double featuredCardHeightRatio = 0.65;
 
   /// Carousel height as proportion of content area
-  static const double carouselHeightRatio = 0.4;
+  static const double carouselHeightRatio = 0.35;
 
   /// Bottom bar height as proportion of screen height
   static const double bottomBarHeightRatio = 1 / 6;
