@@ -24,7 +24,7 @@ class ExpensesGroupEditPage extends StatelessWidget {
   /// Specifica se la pagina opera in modalità creazione o modifica.
   /// Se non fornito, viene dedotto automaticamente: trip == null => create, altrimenti edit.
   final GroupEditMode mode;
-  
+
   /// Indice della tab iniziale (0=General, 1=Participants, 2=Categories, 3=Other)
   final int initialTab;
 
@@ -84,7 +84,7 @@ class _GroupFormScaffold extends StatefulWidget {
   final VoidCallback? onTripDeleted;
   final GroupEditMode mode;
   final int initialTab;
-  
+
   const _GroupFormScaffold({
     required this.trip,
     this.onTripDeleted,
@@ -142,7 +142,10 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
 
           // Initialize default categories for the current group type
           if (_state.groupType != null) {
-            final defaultCategories = _getLocalizedCategories(gloc, _state.groupType!);
+            final defaultCategories = _getLocalizedCategories(
+              gloc,
+              _state.groupType!,
+            );
             _controller.initializeDefaultCategories(defaultCategories);
           }
         }
@@ -776,8 +779,8 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                     );
                   }
 
-                  // Pop returning the saved id so caller can react
-                  if (navigator.canPop()) navigator.pop(saved.id);
+                  // Pop returning true so caller knows save succeeded
+                  if (navigator.canPop()) navigator.pop(true);
                 } catch (e, st) {
                   LoggerService.error(
                     'Failed to save group on back navigation',
@@ -990,7 +993,7 @@ class _GroupFormScaffoldState extends State<_GroupFormScaffold>
                                     .updateNotificationForGroup(saved, gloc);
                               }
 
-                              if (navigator.canPop()) navigator.pop(saved.id);
+                              if (navigator.canPop()) navigator.pop(true);
                             } catch (e, st) {
                               LoggerService.error(
                                 'Failed to save group',
