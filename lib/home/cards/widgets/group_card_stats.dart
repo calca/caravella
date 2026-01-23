@@ -64,6 +64,31 @@ class GroupCardStats extends StatelessWidget {
         .fold<double>(0, (sum, e) => sum + (e.amount ?? 0));
   }
 
+  /// Build daily totals for the last 15 days
+  /// Returns a list of doubles representing spending per day
+  List<double> _buildLast15DaysTotals() {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final List<double> dailyTotals = [];
+
+    for (int i = 14; i >= 0; i--) {
+      final date = today.subtract(Duration(days: i));
+      final dayExpenses = group.expenses.where(
+        (e) =>
+            e.date.year == date.year &&
+            e.date.month == date.month &&
+            e.date.day == date.day,
+      );
+      final total = dayExpenses.fold<double>(
+        0,
+        (sum, e) => sum + (e.amount ?? 0),
+      );
+      dailyTotals.add(total);
+    }
+
+    return dailyTotals;
+  }
+
   @override
   Widget build(BuildContext context) {
     // Check if we should show date range chart for groups with dates < 1 month
@@ -83,10 +108,13 @@ class GroupCardStats extends StatelessWidget {
     );
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         // Daily average
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               '${localizations.daily_average}: ',
@@ -111,6 +139,7 @@ class GroupCardStats extends StatelessWidget {
         // Today's spending
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               '${localizations.spent_today}: ',
@@ -131,25 +160,28 @@ class GroupCardStats extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: HomeLayoutConstants.sectionSpacing),
       ],
     );
   }
 
   Widget _buildDateRangeStatistics() {
-    // Use adaptive method that handles both groups with and without dates
-    final dailyTotals = buildAdaptiveDateRangeSeries(group);
-
-    return Column(
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // Extra info for short duration trips
-        _buildExtraInfo(),
-        DateRangeExpenseChart(
-          dailyTotals: dailyTotals,
-          theme: theme,
-          badgeText: localizations.dateRangeChartBadge,
-          semanticLabel: localizations.dateRangeExpensesChart,
+        // Bar chart on the left (50% max width)
+        Expanded(
+          flex: 1,
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Last15DaysBarChart(
+              dailyTotals: _buildLast15DaysTotals(),
+              theme: theme,
+            ),
+          ),
         ),
+        const SizedBox(width: HomeLayoutConstants.sectionSpacing),
+        // Extra info on the right
+        Expanded(flex: 1, child: _buildExtraInfo()),
       ],
     );
   }
