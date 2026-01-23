@@ -261,11 +261,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
                       allArchived: widget.allArchived,
                       onGroupAdded: _handleGroupAdded,
                     )
-                  : _buildContent(
-                      loc,
-                      theme,
-                      contentHeight,
-                    ),
+                  : _buildContent(loc, theme, contentHeight),
             ),
 
             // Bottom bar semplificata d
@@ -293,7 +289,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
 
     // Get featured group: use pinned/favorite if available, otherwise first from active groups
     final featuredGroup = widget.pinnedTrip ?? _activeGroups.first;
-    
+
     // Get remaining groups for carousel (excluding featured)
     final carouselGroups = _activeGroups
         .where((g) => g.id != featuredGroup.id)
@@ -326,9 +322,22 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
         ),
 
         // Carousel with remaining groups
-        if (carouselGroups.isNotEmpty)
+        if (carouselGroups.isNotEmpty) ...[
+          // Section header for "Altri Gruppi" (Other Groups)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                loc.your_groups,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
           SizedBox(
-            height: carouselHeight,
+            height: carouselHeight - 48, // Account for header
             child: HorizontalGroupsList(
               groups: carouselGroups,
               localizations: loc,
@@ -340,7 +349,8 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
               },
             ),
           ),
-        
+        ],
+
         // Show "Add Group" option in the carousel area if only featured group exists
         if (carouselGroups.isEmpty)
           SizedBox(
@@ -376,7 +386,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
             child: _FeaturedCardSkeleton(theme: theme),
           ),
         ),
-        
+
         // Carousel skeleton
         SizedBox(
           height: carouselHeight,
@@ -422,7 +432,7 @@ class _FeaturedCardSkeletonState extends State<_FeaturedCardSkeleton>
       animation: _shimmerController,
       builder: (context, child) {
         final colorScheme = widget.theme.colorScheme;
-        
+
         // Create shimmer gradient
         final shimmerGradient = LinearGradient(
           begin: Alignment.topLeft,
@@ -516,9 +526,7 @@ class _FeaturedCardSkeletonState extends State<_FeaturedCardSkeleton>
                           width: 64,
                           height: 64,
                           borderRadius: 32,
-                          color: colorScheme.onSurface.withValues(
-                            alpha: 0.08,
-                          ),
+                          color: colorScheme.onSurface.withValues(alpha: 0.08),
                         ),
                       ],
                     ),

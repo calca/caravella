@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'carousel_skeleton_loader.dart';
-import 'group_card.dart';
-import 'new_group_card.dart';
-import 'page_indicator.dart';
+import 'carousel_group_card.dart';
+import '../../../manager/group/pages/group_creation_wizard_page.dart';
 
 class HorizontalGroupsList extends StatefulWidget {
   final List<ExpenseGroup> groups;
@@ -29,29 +27,16 @@ class HorizontalGroupsList extends StatefulWidget {
 }
 
 class _HorizontalGroupsListState extends State<HorizontalGroupsList>
-    with TickerProviderStateMixin {
-  late PageController _pageController;
-  double _currentPage = 0.0;
+    with SingleTickerProviderStateMixin {
   late List<ExpenseGroup> _localGroups;
   bool _isLoadingNewGroup = false;
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
-  late AnimationController _shimmerController;
-
-  void _onPageChanged() {
-    if (mounted) {
-      setState(() {
-        _currentPage = _pageController.page ?? 0.0;
-      });
-    }
-  }
 
   @override
   void initState() {
     super.initState();
     _localGroups = List.from(widget.groups);
-    _pageController = PageController(viewportFraction: 0.85);
-    _pageController.addListener(_onPageChanged);
 
     // Setup fade-in animation for smooth loading
     _fadeController = AnimationController(
@@ -63,12 +48,6 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList>
       curve: Curves.easeIn,
     );
     _fadeController.forward();
-
-    // Setup shimmer animation for skeleton cards
-    _shimmerController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1500),
-    )..repeat();
   }
 
   @override
@@ -78,21 +57,10 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList>
     if (oldWidget.groups != widget.groups) {
       // Check if a new group was added
       if (widget.groups.length > _localGroups.length) {
-        // If we were showing a skeleton and now have more groups, animate to first
         if (_isLoadingNewGroup) {
           setState(() {
             _isLoadingNewGroup = false;
             _localGroups = List.from(widget.groups);
-          });
-          // Smooth animation to the new group
-          Future.delayed(const Duration(milliseconds: 100), () {
-            if (mounted && _pageController.hasClients) {
-              _pageController.animateToPage(
-                0,
-                duration: const Duration(milliseconds: 400),
-                curve: Curves.easeOutCubic,
-              );
-            }
           });
         } else {
           _localGroups = List.from(widget.groups);
@@ -128,45 +96,20 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList>
 
   void _handleGroupUpdated([String? groupId]) async {
     if (groupId != null) {
-      // Specific group ID provided - show skeleton immediately for smooth UX
+      // Specific group ID provided - update locally
       setState(() {
         _isLoadingNewGroup = true;
       });
 
-      // Update the group locally
       await _updateGroupLocally(groupId);
 
       if (mounted) {
         setState(() {
           _isLoadingNewGroup = false;
         });
-
-        // Animate to the new group (first position) with smooth transition
-        final groupIndex = _localGroups.indexWhere((g) => g.id == groupId);
-        if (groupIndex == 0 && _pageController.hasClients) {
-          // New group added at top - animate smoothly
-          await Future.delayed(const Duration(milliseconds: 150));
-          if (mounted && _pageController.hasClients) {
-            await _pageController.animateToPage(
-              0,
-              duration: const Duration(milliseconds: 500),
-              curve: Curves.easeOutCubic,
-            );
-          }
-        } else if (groupIndex > 0 && _pageController.hasClients) {
-          // Updated existing group - animate to its position
-          await Future.delayed(const Duration(milliseconds: 150));
-          if (mounted && _pageController.hasClients) {
-            await _pageController.animateToPage(
-              groupIndex,
-              duration: const Duration(milliseconds: 500),
-              curve: Curves.easeOutCubic,
-            );
-          }
-        }
       }
     } else {
-      // No group ID provided - show skeleton and call parent's onGroupAdded
+      // No group ID provided - call parent's onGroupAdded
       setState(() {
         _isLoadingNewGroup = true;
       });
@@ -176,118 +119,120 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList>
     }
   }
 
-  void _handleCategoryAdded() {
-    widget.onCategoryAdded?.call();
-  }
-
   @override
   void dispose() {
-    _pageController.removeListener(_onPageChanged);
-    _pageController.dispose();
     _fadeController.dispose();
-    _shimmerController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Total items include all groups plus the new group card
-    // Add 1 extra for skeleton if loading
-    final totalItems = _localGroups.length + 1 + (_isLoadingNewGroup ? 1 : 0);
+    // Total items: groups + 1 for "add new" card
+    final totalItems = _localGroups.length + 1;
 
     return FadeTransition(
       opacity: _fadeAnimation,
-      child: Column(
-        children: [
-          // Main PageView slider
-          Expanded(
-            child: PageView.builder(
-              itemCount: totalItems,
-              padEnds: false,
-              controller: _pageController,
-              itemBuilder: (context, index) {
-                // Calcola quanto questa card è vicina al centro
-                final double distanceFromCenter = (index - _currentPage).abs();
-                final bool isSelected = distanceFromCenter < 0.5;
+      child: SizedBox(
+        height: CarouselGroupCard.totalHeight,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.only(left: 20),
+          itemCount: totalItems,
+          itemBuilder: (context, index) {
+            // Last item is the "add new group" card
+            if (index == _localGroups.length) {
+              return Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: _AddNewGroupTile(
+                  localizations: widget.localizations,
+                  theme: widget.theme,
+                  onGroupAdded: _handleGroupUpdated,
+                ),
+              );
+            }
 
-                // Show skeleton at first position if loading
-                if (_isLoadingNewGroup && index == 0) {
-                  return AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    margin: EdgeInsets.only(
-                      right: 16,
-                      top: isSelected ? 0 : 8,
-                      bottom: isSelected ? 0 : 8,
-                    ),
-                    child: SkeletonCard(
-                      shimmerValue: _shimmerController.value,
-                      colorScheme: widget.theme.colorScheme,
-                      isSelected: isSelected,
-                      selectionProgress:
-                          1.0 - distanceFromCenter.clamp(0.0, 1.0),
-                      enableEntranceAnimation: true,
-                    ),
-                  );
-                }
+            final group = _localGroups[index];
+            return Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: CarouselGroupCard(
+                group: group,
+                localizations: widget.localizations,
+                theme: widget.theme,
+                onGroupUpdated: () => _handleGroupUpdated(group.id),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
 
-                // Adjust index if skeleton is shown
-                final adjustedIndex = _isLoadingNewGroup ? index - 1 : index;
+/// Compact "Add New Group" tile for the carousel
+class _AddNewGroupTile extends StatelessWidget {
+  final gen.AppLocalizations localizations;
+  final ThemeData theme;
+  final void Function([String? groupId]) onGroupAdded;
 
-                // If this is the last index, show the new group card
-                if (adjustedIndex == _localGroups.length) {
-                  return AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    margin: EdgeInsets.only(
-                      right: 16,
-                      top: isSelected ? 0 : 8,
-                      bottom: isSelected ? 0 : 8,
-                    ),
-                    child: NewGroupCard(
-                      localizations: widget.localizations,
-                      theme: widget.theme,
-                      onGroupAdded: _handleGroupUpdated,
-                      isSelected: isSelected,
-                      selectionProgress:
-                          1.0 - distanceFromCenter.clamp(0.0, 1.0),
-                    ),
-                  );
-                }
+  const _AddNewGroupTile({
+    required this.localizations,
+    required this.theme,
+    required this.onGroupAdded,
+  });
 
-                // Otherwise show a regular group card
-                final group = _localGroups[adjustedIndex];
-                return AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                  margin: EdgeInsets.only(
-                    right: 16,
-                    top: isSelected ? 0 : 8,
-                    bottom: isSelected ? 0 : 8,
-                  ),
-                  child: GroupCard(
-                    group: group,
-                    localizations: widget.localizations,
-                    theme: widget.theme,
-                    onGroupUpdated: () => _handleGroupUpdated(group.id),
-                    onCategoryAdded: _handleCategoryAdded,
-                    isSelected: isSelected,
-                    selectionProgress: 1.0 - distanceFromCenter.clamp(0.0, 1.0),
-                    hideAddButton: true,
-                  ),
-                );
-              },
-            ),
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () async {
+        final result = await Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const GroupCreationWizardPage(),
           ),
-          // Page indicator
-          Padding(
-            padding: const EdgeInsets.only(top: 12, bottom: 8),
-            child: PageIndicator(
-              itemCount: totalItems,
-              currentPage: _currentPage,
+        );
+        if (result != null && result is String) {
+          onGroupAdded(result);
+        }
+      },
+      child: SizedBox(
+        width: CarouselGroupCard.tileSize,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Square tile with + icon
+            Container(
+              width: CarouselGroupCard.tileSize,
+              height: CarouselGroupCard.tileSize,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surfaceContainerHigh,
+                borderRadius: BorderRadius.circular(
+                  CarouselGroupCard.tileBorderRadius,
+                ),
+                border: Border.all(
+                  color: theme.colorScheme.outline.withValues(alpha: 0.2),
+                  width: 1,
+                ),
+              ),
+              child: Center(
+                child: Icon(
+                  Icons.add_rounded,
+                  size: 28,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 6),
+            // Title
+            Text(
+              localizations.new_expense_group,
+              style: theme.textTheme.bodySmall?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
       ),
     );
   }
