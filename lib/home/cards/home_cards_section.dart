@@ -323,22 +323,16 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
         .where((g) => g.id != featuredGroup.id)
         .toList();
 
-    // Featured card takes 60% of content height
-    final featuredCardHeight =
-        contentHeight * HomeLayoutConstants.featuredCardHeightRatio;
-    // Carousel takes 40% of content height
+    // Carousel takes fixed proportion of content height (if present)
     final carouselHeight =
         contentHeight * HomeLayoutConstants.carouselHeightRatio;
 
     return Column(
       children: [
-        // Featured group card
-        SizedBox(
-          height: featuredCardHeight,
+        // Featured group card - takes all remaining space
+        Expanded(
           child: Padding(
-            padding: const EdgeInsets.only(
-              bottom: HomeLayoutConstants.sectionSpacing,
-            ),
+            padding: const EdgeInsets.only(bottom: 0),
             child: GroupCard(
               group: featuredGroup,
               localizations: loc,
