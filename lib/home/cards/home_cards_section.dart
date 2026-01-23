@@ -238,7 +238,8 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
     const headerPaddingVertical = 32.0; // 16 top + 16 bottom padding
     final bottomBarHeight =
         screenHeight * HomeLayoutConstants.bottomBarHeightRatio;
-    final contentHeight = screenHeight -
+    final contentHeight =
+        screenHeight -
         headerHeight -
         headerPaddingVertical -
         bottomBarHeight -

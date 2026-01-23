@@ -136,7 +136,7 @@ class _HorizontalGroupsListState extends State<HorizontalGroupsList>
         height: CarouselGroupCard.totalHeight,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.only(left: 20),
+          padding: const EdgeInsets.only(left: 0),
           itemCount: totalItems,
           itemBuilder: (context, index) {
             // Last item is the "add new group" card

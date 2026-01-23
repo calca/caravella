@@ -34,7 +34,10 @@ class SimpleBottomBar extends StatelessWidget {
                 foregroundColor: theme.colorScheme.onSurface.withValues(
                   alpha: 0.8,
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 12,
+                ),
               ),
               child: Text(
                 localizations.all.toUpperCase(),
@@ -59,7 +62,10 @@ class SimpleBottomBar extends StatelessWidget {
                 foregroundColor: theme.colorScheme.onSurface.withValues(
                   alpha: 0.8,
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 12,
+                ),
               ),
               child: Text(
                 localizations.options.toUpperCase(),
