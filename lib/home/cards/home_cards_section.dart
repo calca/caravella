@@ -326,7 +326,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
 
         // Section header for "Your Groups" - pinned at bottom
         Padding(
-          padding: const EdgeInsets.fromLTRB(0, 0, 20, 8),
+          padding: const EdgeInsets.fromLTRB(0, 0, 20, 16),
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
@@ -368,7 +368,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
 
         // Section header - real title visible during loading
         Padding(
-          padding: const EdgeInsets.fromLTRB(0, 0, 20, 8),
+          padding: const EdgeInsets.fromLTRB(0, 0, 20, 16),
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
