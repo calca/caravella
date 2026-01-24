@@ -200,7 +200,7 @@ class _AddNewGroupTile extends StatelessWidget {
               width: CarouselGroupCard.tileSize,
               height: CarouselGroupCard.tileSize,
               decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceContainerLow,
+                color: theme.colorScheme.surface,
                 borderRadius: BorderRadius.circular(
                   CarouselGroupCard.tileBorderRadius,
                 ),
@@ -214,7 +214,7 @@ class _AddNewGroupTile extends StatelessWidget {
                   Icons.add_rounded,
                   size: 28,
                   color: theme.colorScheme.onSurfaceVariant.withValues(
-                    alpha: 0.2,
+                    alpha: 0.4,
                   ),
                 ),
               ),

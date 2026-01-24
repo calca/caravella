@@ -30,7 +30,7 @@ class GroupCard extends StatelessWidget {
   Color _getSelectedColor(bool isDarkMode) {
     return theme
         .colorScheme
-        .primaryFixed; //const Color(0xFFC9E9CA); // Colore tema chiaro
+        .surface; //const Color(0xFFC9E9CA); // Colore tema chiaro
   }
 
   @override
