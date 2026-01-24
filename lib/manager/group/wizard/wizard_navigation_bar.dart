@@ -173,7 +173,7 @@ class WizardNavigationBar extends StatelessWidget {
         // Check if user is not already added as participant
         final userName = userNameNotifier.name;
         final alreadyAdded = formState.participants.any(
-          (p) => p.name == userName,
+          (p) => p.name.trim().toLowerCase() == userName.trim().toLowerCase(),
         );
         if (!alreadyAdded) {
           formState.addParticipant(
