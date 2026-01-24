@@ -1,5 +1,4 @@
-import 'package:caravella_core/model/expense_group.dart';
-import 'package:caravella_core/services/storage/preferences_service.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
@@ -61,15 +60,23 @@ class WizardNavigationBar extends StatelessWidget {
 
                 // Skip button for optional steps
                 if (_isOptionalStep(wizardState.currentStep, wizardState)) ...[
-                  TextButton(
-                    onPressed: wizardState.nextStep,
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
-                    ),
-                    child: Text(gloc.wizard_skip),
+                  Consumer<GroupFormState>(
+                    builder: (context, formState, child) {
+                      return TextButton(
+                        onPressed: () {
+                          // Handle transition even when skipping
+                          _handleStepTransition(context, wizardState, formState);
+                          wizardState.nextStep();
+                        },
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
+                        ),
+                        child: Text(gloc.wizard_skip),
+                      );
+                    },
                   ),
                   const SizedBox(width: 12),
                 ],
@@ -124,6 +131,12 @@ class WizardNavigationBar extends StatelessWidget {
                           ? () {
                               // Close keyboard before proceeding
                               FocusScope.of(context).unfocus();
+                              // Add user as participant when moving from user name step
+                              _handleStepTransition(
+                                context,
+                                wizardState,
+                                formState,
+                              );
                               wizardState.nextStep();
                             }
                           : null,
@@ -146,6 +159,32 @@ class WizardNavigationBar extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _handleStepTransition(
+    BuildContext context,
+    WizardState wizardState,
+    GroupFormState formState,
+  ) {
+    // When moving from user name step (step 0), add user as participant
+    if (wizardState.includeUserNameStep && wizardState.currentStep == 0) {
+      final userNameNotifier = context.read<UserNameNotifier>();
+      if (userNameNotifier.hasName) {
+        // Check if user is not already added as participant
+        final userName = userNameNotifier.name;
+        final alreadyAdded = formState.participants.any(
+          (p) => p.name == userName,
+        );
+        if (!alreadyAdded) {
+          formState.addParticipant(
+            ExpenseParticipant(
+              id: DateTime.now().millisecondsSinceEpoch.toString(),
+              name: userName,
+            ),
+          );
+        }
+      }
+    }
   }
 
   bool _isOptionalStep(int step, WizardState wizardState) {
