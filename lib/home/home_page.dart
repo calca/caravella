@@ -439,17 +439,15 @@ class _HomePageState extends State<HomePage> with RouteAware {
                     ),
                   ),
 
-                  // Carousel section header skeleton
+                  // Section header - real title visible during loading
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 8, 20, 12),
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: SkeletonBox(
-                        width: 120,
-                        height: 24,
-                        borderRadius: 12,
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.1,
+                      child: Text(
+                        gloc.your_groups,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),

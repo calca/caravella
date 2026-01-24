@@ -276,7 +276,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
             child: SizedBox(
               height: contentHeight,
               child: _loading
-                  ? _buildSkeletonContent(theme, contentHeight)
+                  ? _buildSkeletonContent(theme, contentHeight, loc)
                   : _activeGroups.isEmpty
                   ? EmptyGroupsState(
                       localizations: loc,
@@ -396,7 +396,11 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
     );
   }
 
-  Widget _buildSkeletonContent(ThemeData theme, double contentHeight) {
+  Widget _buildSkeletonContent(
+    ThemeData theme,
+    double contentHeight,
+    gen.AppLocalizations loc,
+  ) {
     // Carousel takes fixed proportion of content height
     final carouselHeight =
         contentHeight * HomeLayoutConstants.carouselHeightRatio;
@@ -411,16 +415,16 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
           ),
         ),
 
-        // Carousel section header skeleton
+        // Section header - real title visible during loading
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 8, 20, 12),
           child: Align(
             alignment: Alignment.centerLeft,
-            child: SkeletonBox(
-              width: 120,
-              height: 24,
-              borderRadius: 12,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
+            child: Text(
+              loc.your_groups,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),

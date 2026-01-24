@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import '../../../home/home_constants.dart';
 
 /// Shared constants for skeleton loaders
@@ -106,98 +107,106 @@ class _FeaturedCardSkeletonState extends State<FeaturedCardSkeleton>
       animation: _shimmerController,
       builder: (context, child) {
         final colorScheme = widget.theme.colorScheme;
-        final shimmerGradient = createShimmerGradient(
-          _shimmerController.value,
-          colorScheme,
-        );
+        final skeletonColor = colorScheme.onSurface.withValues(alpha: 0.1);
+        final skeletonColorLight = colorScheme.onSurface.withValues(alpha: 0.08);
 
-        return Container(
-          decoration: BoxDecoration(
-            color: colorScheme.surfaceContainerHigh,
-            borderRadius: BorderRadius.circular(
-              SkeletonConstants.cardBorderRadius,
-            ),
-            border: Border.all(
-              color: colorScheme.outline.withValues(alpha: 0.2),
-              width: 1,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: colorScheme.shadow.withValues(alpha: 0.15),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
+        // Use BaseCard as container - same as real GroupCard
+        return BaseCard(
+          margin: const EdgeInsets.only(bottom: 16),
+          backgroundColor: colorScheme.surfaceContainer,
           child: Stack(
             children: [
               // Shimmer effect overlay
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(
-                    SkeletonConstants.cardBorderRadius,
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    gradient: createShimmerGradient(
+                      _shimmerController.value,
+                      colorScheme,
+                    ),
                   ),
-                  gradient: shimmerGradient,
                 ),
               ),
-              // Card content skeleton
-              Padding(
-                padding: SkeletonConstants.cardPadding,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Title skeleton
-                    SkeletonBox(
-                      width: 200,
-                      height: 28,
-                      borderRadius: 14,
-                      color: colorScheme.onSurface.withValues(alpha: 0.1),
-                    ),
-                    const SizedBox(height: 16),
-                    // Subtitle skeleton
-                    SkeletonBox(
-                      width: 160,
-                      height: 20,
-                      borderRadius: 10,
-                      color: colorScheme.onSurface.withValues(alpha: 0.08),
-                    ),
-                    const Spacer(),
-                    // Stats skeleton at bottom
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SkeletonBox(
-                              width: 100,
-                              height: 16,
-                              borderRadius: 8,
-                              color: colorScheme.onSurface.withValues(
-                                alpha: 0.08,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            SkeletonBox(
-                              width: 120,
-                              height: 24,
-                              borderRadius: 12,
-                              color: colorScheme.onSurface.withValues(
-                                alpha: 0.1,
-                              ),
-                            ),
-                          ],
+              // Card content skeleton - matches GroupCardContent structure
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Header skeleton (title + pin badge area)
+                  Row(
+                    children: [
+                      Expanded(
+                        child: SkeletonBox(
+                          width: 180,
+                          height: 28,
+                          borderRadius: 14,
+                          color: skeletonColor,
                         ),
-                        SkeletonBox(
-                          width: 64,
-                          height: 64,
-                          borderRadius: 32,
-                          color: colorScheme.onSurface.withValues(alpha: 0.08),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  // Date range skeleton
+                  SkeletonBox(
+                    width: 140,
+                    height: 16,
+                    borderRadius: 8,
+                    color: skeletonColorLight,
+                  ),
+                  const SizedBox(height: HomeLayoutConstants.largeSpacing),
+                  // Total amount skeleton
+                  SkeletonBox(
+                    width: 160,
+                    height: 32,
+                    borderRadius: 16,
+                    color: skeletonColor,
+                  ),
+                  const Spacer(),
+                  // Stats skeleton (chart + extra info)
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      // Chart skeleton
+                      Expanded(
+                        child: SkeletonBox(
+                          width: double.infinity,
+                          height: 60,
+                          borderRadius: 8,
+                          color: skeletonColorLight,
                         ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                      const SizedBox(width: 16),
+                      // Extra info skeleton (today's spending)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          SkeletonBox(
+                            width: 60,
+                            height: 14,
+                            borderRadius: 7,
+                            color: skeletonColorLight,
+                          ),
+                          const SizedBox(height: 4),
+                          SkeletonBox(
+                            width: 80,
+                            height: 20,
+                            borderRadius: 10,
+                            color: skeletonColor,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: HomeLayoutConstants.largeSpacing),
+                  // Add button skeleton
+                  SkeletonBox(
+                    width: double.infinity,
+                    height: 48,
+                    borderRadius: 24,
+                    color: skeletonColorLight,
+                  ),
+                ],
               ),
             ],
           ),
