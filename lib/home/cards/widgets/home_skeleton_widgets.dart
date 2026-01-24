@@ -108,7 +108,9 @@ class _FeaturedCardSkeletonState extends State<FeaturedCardSkeleton>
       builder: (context, child) {
         final colorScheme = widget.theme.colorScheme;
         final skeletonColor = colorScheme.onSurface.withValues(alpha: 0.1);
-        final skeletonColorLight = colorScheme.onSurface.withValues(alpha: 0.08);
+        final skeletonColorLight = colorScheme.onSurface.withValues(
+          alpha: 0.08,
+        );
 
         // Use BaseCard as container - same as real GroupCard
         return BaseCard(
