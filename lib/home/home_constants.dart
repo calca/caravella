@@ -44,8 +44,8 @@ class HomeLayoutConstants {
   static const double carouselTileSize = 90.0;
 
   /// Total height of carousel card including text
-  /// (tile + spacing + title + spacing + balance)
-  static const double carouselCardTotalHeight = carouselTileSize + 38;
+  /// (tile + spacing + title + spacing + balance + 1px buffer)
+  static const double carouselCardTotalHeight = carouselTileSize + 39;
 
   // ==================== Animation Durations ====================
 

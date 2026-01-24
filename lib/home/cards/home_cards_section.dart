@@ -293,15 +293,13 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
     final featuredGroup = widget.pinnedTrip ?? _activeGroups.first;
 
     // Get remaining groups for carousel (excluding featured)
-    final carouselGroups = _activeGroups
-        .where((g) => g.id != featuredGroup.id)
-        .toList();
+    final carouselGroups =
+        _activeGroups.where((g) => g.id != featuredGroup.id).toList();
 
     return Column(
       children: [
-        // Featured group card - takes ~66% of available space
+        // Featured group card - takes all remaining space
         Expanded(
-          flex: 2,
           child: GroupCard(
             group: featuredGroup,
             localizations: loc,
@@ -315,9 +313,9 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
           ),
         ),
 
-        // Section header for "Your Groups" - always visible
+        // Section header for "Your Groups" - pinned at bottom
         Padding(
-          padding: const EdgeInsets.fromLTRB(0, 8, 20, 12),
+          padding: const EdgeInsets.fromLTRB(0, 12, 20, 8),
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
@@ -329,9 +327,9 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
           ),
         ),
 
-        // Carousel with remaining groups or "Add Group" option - takes ~34% of available space
-        Expanded(
-          flex: 1,
+        // Carousel with remaining groups - fixed height at bottom
+        SizedBox(
+          height: HomeLayoutConstants.carouselCardTotalHeight,
           child: HorizontalGroupsList(
             groups: carouselGroups,
             localizations: loc,
@@ -350,12 +348,12 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
   Widget _buildSkeletonContent(ThemeData theme, gen.AppLocalizations loc) {
     return Column(
       children: [
-        // Featured card skeleton - takes ~66% of available space
-        Expanded(flex: 2, child: FeaturedCardSkeleton(theme: theme)),
+        // Featured card skeleton - takes all remaining space
+        Expanded(child: FeaturedCardSkeleton(theme: theme)),
 
         // Section header - real title visible during loading
         Padding(
-          padding: const EdgeInsets.fromLTRB(0, 8, 20, 12),
+          padding: const EdgeInsets.fromLTRB(0, 12, 20, 8),
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
@@ -367,8 +365,11 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
           ),
         ),
 
-        // Carousel skeleton - takes ~34% of available space
-        Expanded(flex: 1, child: CarouselSkeletonLoader(theme: theme)),
+        // Carousel skeleton - fixed height at bottom
+        SizedBox(
+          height: HomeLayoutConstants.carouselCardTotalHeight,
+          child: CarouselSkeletonLoader(theme: theme),
+        ),
       ],
     );
   }

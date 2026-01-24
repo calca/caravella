@@ -406,12 +406,12 @@ class _HomePageState extends State<HomePage> with RouteAware {
             ),
             child: Column(
               children: [
-                // Featured card skeleton - takes ~66% of available space
-                Expanded(flex: 2, child: FeaturedCardSkeleton(theme: theme)),
+                // Featured card skeleton - takes all remaining space
+                Expanded(child: FeaturedCardSkeleton(theme: theme)),
 
                 // Section header - real title visible during loading
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 8, 20, 12),
+                  padding: const EdgeInsets.fromLTRB(0, 12, 20, 8),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -423,8 +423,11 @@ class _HomePageState extends State<HomePage> with RouteAware {
                   ),
                 ),
 
-                // Carousel skeleton - takes ~34% of available space
-                Expanded(flex: 1, child: CarouselSkeletonLoader(theme: theme)),
+                // Carousel skeleton - fixed height at bottom
+                SizedBox(
+                  height: HomeLayoutConstants.carouselCardTotalHeight,
+                  child: CarouselSkeletonLoader(theme: theme),
+                ),
               ],
             ),
           ),
