@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core/caravella_core.dart';
+import '../../pages/group_creation_wizard_page.dart';
 
 class WizardUserNameStep extends StatefulWidget {
   const WizardUserNameStep({super.key});
@@ -102,8 +103,13 @@ class _WizardUserNameStepState extends State<WizardUserNameStep> {
                   fontWeight: FontWeight.w400,
                 ),
                 textInputAction: TextInputAction.next,
-                autofocus: true,
+                autofocus: false,
                 textAlign: TextAlign.center,
+                onSubmitted: (_) {
+                  // User name step is optional, always proceed to next step
+                  final wizardState = context.read<WizardState>();
+                  wizardState.nextStep();
+                },
               ),
             ),
 
