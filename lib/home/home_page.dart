@@ -291,13 +291,13 @@ class _HomePageState extends State<HomePage> with RouteAware {
           final isWelcome = child.key == const ValueKey('welcome');
 
           if (isWelcome) {
-            // Slide in from bottom for welcome screen
+            // Slide in from left for welcome screen
             return SlideTransition(
               position: Tween<Offset>(
-                begin: const Offset(0.0, 0.15),
+                begin: const Offset(-1.0, 0.0),
                 end: Offset.zero,
               ).animate(animation),
-              child: FadeTransition(opacity: animation, child: child),
+              child: child,
             );
           } else {
             // Fade transition for cards and loading
