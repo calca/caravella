@@ -65,73 +65,70 @@ class HomeCardsHeader extends StatelessWidget {
       }
     }
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // Avatar statico
-          Container(
-            width: 56,
-            height: 56,
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerHigh,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              _getGreetingData().icon,
-              size: 28,
-              color: getFlavorBgColor(),
-            ),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        // Avatar statico
+        Container(
+          width: 56,
+          height: 56,
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surfaceContainerHigh,
+            shape: BoxShape.circle,
           ),
-          const SizedBox(width: 16),
+          child: Icon(
+            _getGreetingData().icon,
+            size: 28,
+            color: getFlavorBgColor(),
+          ),
+        ),
+        const SizedBox(width: 16),
 
-          // Saluto su due righe (saluto + nome), centrato verticalmente
-          Expanded(
-            child: Consumer<UserNameNotifier>(
-              builder: (context, userNameNotifier, child) {
-                final greetingData = _getGreetingData();
-                final hasName = userNameNotifier.hasName;
-                final name = hasName ? userNameNotifier.name : null;
+        // Saluto su due righe (saluto + nome), centrato verticalmente
+        Expanded(
+          child: Consumer<UserNameNotifier>(
+            builder: (context, userNameNotifier, child) {
+              final greetingData = _getGreetingData();
+              final hasName = userNameNotifier.hasName;
+              final name = hasName ? userNameNotifier.name : null;
 
-                return SizedBox(
-                  height: 56, // allinea verticalmente con l'avatar
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+              return SizedBox(
+                height: 56, // allinea verticalmente con l'avatar
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      greetingData.message,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: (name == null || name.isEmpty)
+                          ? theme.textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: theme.colorScheme.onSurface,
+                            )
+                          : theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w400,
+                              color: theme.colorScheme.onSurface,
+                            ),
+                    ),
+                    if (name != null && name.isNotEmpty)
                       Text(
-                        greetingData.message,
+                        name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: (name == null || name.isEmpty)
-                            ? theme.textTheme.titleLarge?.copyWith(
-                                fontWeight: FontWeight.w500,
-                                color: theme.colorScheme.onSurface,
-                              )
-                            : theme.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w400,
-                                color: theme.colorScheme.onSurface,
-                              ),
-                      ),
-                      if (name != null && name.isNotEmpty)
-                        Text(
-                          name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: theme.colorScheme.onSurface,
-                          ),
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: theme.colorScheme.onSurface,
                         ),
-                    ],
-                  ),
-                );
-              },
-            ),
+                      ),
+                  ],
+                ),
+              );
+            },
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

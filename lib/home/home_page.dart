@@ -9,6 +9,7 @@ import '../settings/update/app_update_localizations.dart';
 import 'welcome/home_welcome_section.dart';
 import 'cards/home_cards_section.dart';
 import 'cards/widgets/widgets.dart';
+import 'home_constants.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -312,7 +313,8 @@ class _HomePageState extends State<HomePage> with RouteAware {
     if (_loading) {
       // Show skeleton loader during initial load for better UX
       // Uses same layout as HomeCardsSection with skeleton only for carousel
-      return SafeArea(
+      // Note: No SafeArea here - skeleton layout handles topSafeArea internally
+      return KeyedSubtree(
         key: const ValueKey('loading'),
         child: _buildSkeletonLayout(gloc),
       );
@@ -327,41 +329,39 @@ class _HomePageState extends State<HomePage> with RouteAware {
     }
 
     // Show cards section - either with active groups or empty (when all archived)
+    // Note: No SafeArea here - HomeCardsSection handles topSafeArea internally
     if (_activeGroups.isNotEmpty) {
       return RefreshIndicator(
         key: const ValueKey('cards_active'),
         onRefresh: _handleUserRefresh,
-        child: SafeArea(
-          child: Semantics(
-            label: gloc.accessibility_groups_list,
-            child: HomeCardsSection(
-              initialGroups: _activeGroups,
-              onTripAdded: _handleTripAdded,
-              onTripDeleted: _handleTripDeleted,
-              onTripUpdated: _handleTripUpdated,
-              pinnedTrip: _pinnedTrip,
-              allArchived: false,
-            ),
+        child: Semantics(
+          label: gloc.accessibility_groups_list,
+          child: HomeCardsSection(
+            initialGroups: _activeGroups,
+            onTripAdded: _handleTripAdded,
+            onTripDeleted: _handleTripDeleted,
+            onTripUpdated: _handleTripUpdated,
+            pinnedTrip: _pinnedTrip,
+            allArchived: false,
           ),
         ),
       );
     }
 
+    // Note: No SafeArea here - HomeCardsSection handles topSafeArea internally
     if (_archivedGroups.isNotEmpty) {
       return RefreshIndicator(
         key: const ValueKey('cards_archived'),
         onRefresh: _handleUserRefresh,
-        child: SafeArea(
-          child: Semantics(
-            label: gloc.accessibility_groups_list,
-            child: HomeCardsSection(
-              initialGroups: <ExpenseGroup>[],
-              onTripAdded: _handleTripAdded,
-              onTripDeleted: _handleTripDeleted,
-              onTripUpdated: _handleTripUpdated,
-              pinnedTrip: _pinnedTrip,
-              allArchived: true,
-            ),
+        child: Semantics(
+          label: gloc.accessibility_groups_list,
+          child: HomeCardsSection(
+            initialGroups: <ExpenseGroup>[],
+            onTripAdded: _handleTripAdded,
+            onTripDeleted: _handleTripDeleted,
+            onTripUpdated: _handleTripUpdated,
+            pinnedTrip: _pinnedTrip,
+            allArchived: true,
           ),
         ),
       );
@@ -376,40 +376,101 @@ class _HomePageState extends State<HomePage> with RouteAware {
   }
 
   /// Builds a skeleton layout matching HomeCardsSection structure
-  /// Header and bottom bar are real, only carousel is skeleton
+  /// Header and bottom bar are real, only content is skeleton
   Widget _buildSkeletonLayout(gen.AppLocalizations gloc) {
     final theme = Theme.of(context);
-    final screenHeight = MediaQuery.of(context).size.height;
+    final mediaQuery = MediaQuery.of(context);
+    final screenHeight = mediaQuery.size.height;
+    final topSafeArea = mediaQuery.padding.top;
 
     // Same height calculations as HomeCardsSection
-    final headerHeight = screenHeight / 6;
-    final bottomBarHeight = screenHeight / 6;
-    final contentHeight = screenHeight - headerHeight - bottomBarHeight;
+    const headerHeight = HomeLayoutConstants.headerHeight;
+    const headerPaddingVertical = 32.0; // 16 top + 16 bottom padding
+    final bottomBarHeight =
+        screenHeight * HomeLayoutConstants.bottomBarHeightRatio;
+    final contentHeight =
+        screenHeight -
+        headerHeight -
+        headerPaddingVertical -
+        bottomBarHeight -
+        topSafeArea;
+
+    // Carousel takes fixed proportion of content height
+    final carouselHeight =
+        contentHeight * HomeLayoutConstants.carouselHeightRatio;
 
     return SizedBox(
       height: screenHeight,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            // Real header - shows immediately
-            SizedBox(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          // Safe area for status bar
+          SizedBox(height: topSafeArea),
+
+          // Real header - shows immediately
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              HomeLayoutConstants.horizontalPadding,
+              16.0,
+              HomeLayoutConstants.horizontalPadding,
+              16.0,
+            ),
+            child: SizedBox(
               height: headerHeight,
               child: HomeCardsHeader(localizations: gloc, theme: theme),
             ),
+          ),
 
-            // Skeleton carousel - only this part is loading
-            SizedBox(
-              height: contentHeight,
-              child: CarouselSkeletonLoader(theme: theme),
+          // Skeleton content - featured card + carousel
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: HomeLayoutConstants.horizontalPadding,
             ),
+            child: SizedBox(
+              height: contentHeight,
+              child: Column(
+                children: [
+                  // Featured card skeleton - takes all remaining space
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 0),
+                      child: FeaturedCardSkeleton(theme: theme),
+                    ),
+                  ),
 
-            // Real bottom bar - shows immediately
-            SimpleBottomBar(localizations: gloc, theme: theme),
-          ],
-        ),
+                  // Section header - real title visible during loading
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 8, 20, 12),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        gloc.your_groups,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // Carousel skeleton
+                  SizedBox(
+                    height: carouselHeight - 48, // Account for header
+                    child: CarouselSkeletonLoader(theme: theme),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // Real bottom bar - shows immediately
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: HomeLayoutConstants.horizontalPadding,
+            ),
+            child: SimpleBottomBar(localizations: gloc, theme: theme),
+          ),
+        ],
       ),
     );
   }

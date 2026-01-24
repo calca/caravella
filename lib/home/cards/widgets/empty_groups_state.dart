@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../../manager/group/pages/group_creation_wizard_page.dart';
+import '../../navigation_helpers.dart';
 
 class EmptyGroupsState extends StatelessWidget {
   final gen.AppLocalizations localizations;
@@ -86,16 +86,11 @@ class EmptyGroupsState extends StatelessWidget {
           const SizedBox(height: 32),
           FilledButton.icon(
             onPressed: () async {
-              final result = await Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const GroupCreationWizardPage(),
-                ),
+              final groupId = await NavigationHelpers.openGroupCreation(
+                context,
               );
-              if (result != null) {
-                if (result is String) {
-                  // User wants to go to group - trigger refresh
-                  onGroupAdded();
-                }
+              if (groupId != null) {
+                onGroupAdded();
               }
             },
             icon: const Icon(Icons.add),

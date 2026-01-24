@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'home_skeleton_widgets.dart';
 
 /// A skeleton loader widget that displays animated placeholder cards
 /// while the carousel data is being loaded. Provides smooth UX during cold start.
@@ -20,7 +21,7 @@ class _CarouselSkeletonLoaderState extends State<CarouselSkeletonLoader>
     super.initState();
     _shimmerController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1500),
+      duration: SkeletonConstants.shimmerDuration,
     )..repeat();
   }
 
@@ -37,53 +38,92 @@ class _CarouselSkeletonLoaderState extends State<CarouselSkeletonLoader>
     return AnimatedBuilder(
       animation: _shimmerController,
       builder: (context, child) {
-        return Column(
-          children: [
-            // Main skeleton cards area
-            Expanded(
-              child: PageView.builder(
-                itemCount: 3, // Show 3 skeleton cards
-                controller: PageController(viewportFraction: 0.85),
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  // Add slight delay to each card animation for wave effect
-                  final shimmerValue =
-                      (_shimmerController.value + (index * 0.1)) % 1.0;
+        return ListView.builder(
+          scrollDirection: Axis.horizontal,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: 3, // Show 3 skeleton cards
+          itemBuilder: (context, index) {
+            // Add slight delay to each card animation for wave effect
+            final shimmerValue =
+                (_shimmerController.value + (index * 0.1)) % 1.0;
 
-                  return AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    margin: const EdgeInsets.only(right: 16, bottom: 16),
-                    child: SkeletonCard(
-                      shimmerValue: shimmerValue,
-                      colorScheme: colorScheme,
-                      enableEntranceAnimation: false,
-                    ),
-                  );
-                },
+            return Padding(
+              padding: EdgeInsets.only(right: index < 2 ? 12 : 0),
+              child: CarouselCardSkeleton(
+                shimmerValue: shimmerValue,
+                colorScheme: colorScheme,
               ),
-            ),
-            // Skeleton page indicators
-            Padding(
-              padding: const EdgeInsets.only(top: 12, bottom: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(3, (index) {
-                  return Container(
-                    width: 8,
-                    height: 8,
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: colorScheme.onSurface.withValues(alpha: 0.2),
-                    ),
-                  );
-                }),
-              ),
-            ),
-          ],
+            );
+          },
         );
       },
+    );
+  }
+}
+
+/// Skeleton for a single carousel card matching CarouselGroupCard dimensions
+class CarouselCardSkeleton extends StatelessWidget {
+  final double shimmerValue;
+  final ColorScheme colorScheme;
+
+  /// Size of the square tile (matching CarouselGroupCard.tileSize)
+  static const double tileSize = 90.0;
+
+  /// Border radius for the tile
+  static const double tileBorderRadius = 12.0;
+
+  const CarouselCardSkeleton({
+    super.key,
+    required this.shimmerValue,
+    required this.colorScheme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final shimmerGradient = createShimmerGradient(shimmerValue, colorScheme);
+
+    return SizedBox(
+      width: tileSize,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Square tile skeleton
+          Container(
+            width: tileSize,
+            height: tileSize,
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerHigh,
+              borderRadius: BorderRadius.circular(tileBorderRadius),
+              border: Border.all(
+                color: colorScheme.outline.withValues(alpha: 0.1),
+                width: 1,
+              ),
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(tileBorderRadius),
+                gradient: shimmerGradient,
+              ),
+            ),
+          ),
+          const SizedBox(height: 6),
+          // Title skeleton
+          SkeletonBox(
+            width: tileSize * 0.8,
+            height: 14,
+            borderRadius: 7,
+            color: colorScheme.onSurface.withValues(alpha: 0.1),
+          ),
+          const SizedBox(height: 4),
+          // Balance skeleton
+          SkeletonBox(
+            width: tileSize * 0.6,
+            height: 12,
+            borderRadius: 6,
+            color: colorScheme.onSurface.withValues(alpha: 0.08),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -151,26 +191,16 @@ class _SkeletonCardState extends State<SkeletonCard>
 
   @override
   Widget build(BuildContext context) {
-    // Create shimmer gradient
-    final shimmerGradient = LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [
-        widget.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-        widget.colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
-        widget.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-      ],
-      stops: [
-        (widget.shimmerValue - 0.3).clamp(0.0, 1.0),
-        widget.shimmerValue,
-        (widget.shimmerValue + 0.3).clamp(0.0, 1.0),
-      ],
+    // Create shimmer gradient using shared helper
+    final shimmerGradient = createShimmerGradient(
+      widget.shimmerValue,
+      widget.colorScheme,
     );
 
     Widget cardContent = Container(
       decoration: BoxDecoration(
         color: widget.colorScheme.surfaceContainerHigh,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(SkeletonConstants.cardBorderRadius),
         border: Border.all(
           color: widget.colorScheme.outline.withValues(alpha: 0.2),
           width: 1,
@@ -190,18 +220,20 @@ class _SkeletonCardState extends State<SkeletonCard>
           // Shimmer effect overlay
           Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(24),
+              borderRadius: BorderRadius.circular(
+                SkeletonConstants.cardBorderRadius,
+              ),
               gradient: shimmerGradient,
             ),
           ),
           // Card content skeleton
           Padding(
-            padding: const EdgeInsets.all(24.0),
+            padding: SkeletonConstants.cardPadding,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Title skeleton
-                _SkeletonBox(
+                SkeletonBox(
                   width: 160,
                   height: 24,
                   borderRadius: 12,
@@ -209,7 +241,7 @@ class _SkeletonCardState extends State<SkeletonCard>
                 ),
                 const SizedBox(height: 12),
                 // Subtitle skeleton
-                _SkeletonBox(
+                SkeletonBox(
                   width: 120,
                   height: 16,
                   borderRadius: 8,
@@ -223,7 +255,7 @@ class _SkeletonCardState extends State<SkeletonCard>
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _SkeletonBox(
+                        SkeletonBox(
                           width: 80,
                           height: 14,
                           borderRadius: 7,
@@ -232,7 +264,7 @@ class _SkeletonCardState extends State<SkeletonCard>
                           ),
                         ),
                         const SizedBox(height: 8),
-                        _SkeletonBox(
+                        SkeletonBox(
                           width: 100,
                           height: 20,
                           borderRadius: 10,
@@ -242,7 +274,7 @@ class _SkeletonCardState extends State<SkeletonCard>
                         ),
                       ],
                     ),
-                    _SkeletonBox(
+                    SkeletonBox(
                       width: 56,
                       height: 56,
                       borderRadius: 28,
@@ -270,32 +302,5 @@ class _SkeletonCardState extends State<SkeletonCard>
     }
 
     return cardContent;
-  }
-}
-
-/// Simple skeleton box widget
-class _SkeletonBox extends StatelessWidget {
-  final double width;
-  final double height;
-  final double borderRadius;
-  final Color color;
-
-  const _SkeletonBox({
-    required this.width,
-    required this.height,
-    required this.borderRadius,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(borderRadius),
-      ),
-    );
   }
 }

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart'
     as gen; // generated
 import 'package:caravella_core/caravella_core.dart';
+import '../home_constants.dart';
 // Removed locale_notifier import after migration
 // locale_notifier no longer needed after migration
 import 'widgets/widgets.dart';
@@ -228,32 +229,54 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
     final theme = Theme.of(context);
-    final screenHeight = MediaQuery.of(context).size.height;
+    final mediaQuery = MediaQuery.of(context);
+    final screenHeight = mediaQuery.size.height;
+    final topSafeArea = mediaQuery.padding.top;
 
-    // Altezze delle varie sezioni
-    final headerHeight = screenHeight / 6;
-    final bottomBarHeight = screenHeight / 6;
-    final contentHeight = screenHeight - headerHeight - bottomBarHeight;
+    // Heights: header fixed, bottom bar proportional, content fills remaining
+    const headerHeight = HomeLayoutConstants.headerHeight;
+    const headerPaddingVertical = 32.0; // 16 top + 16 bottom padding
+    final bottomBarHeight =
+        screenHeight * HomeLayoutConstants.bottomBarHeightRatio;
+    final contentHeight =
+        screenHeight -
+        headerHeight -
+        headerPaddingVertical -
+        bottomBarHeight -
+        topSafeArea;
 
     return SizedBox(
-      height: screenHeight, // Fornisce un vincolo di altezza definito
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            // Header con avatar e saluto dinamico
-            SizedBox(
+      height: screenHeight,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          // Safe area for status bar
+          SizedBox(height: topSafeArea),
+
+          // Header compatto con altezza fissa
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              HomeLayoutConstants.horizontalPadding,
+              16.0,
+              HomeLayoutConstants.horizontalPadding,
+              16.0,
+            ),
+            child: SizedBox(
               height: headerHeight,
               child: HomeCardsHeader(localizations: loc, theme: theme),
             ),
+          ),
 
-            // Content area - riempie lo spazio tra header e bottom bar
-            SizedBox(
+          // Content area - riempie lo spazio tra header e bottom bar
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: HomeLayoutConstants.horizontalPadding,
+            ),
+            child: SizedBox(
               height: contentHeight,
               child: _loading
-                  ? CarouselSkeletonLoader(theme: theme)
+                  ? _buildSkeletonContent(theme, contentHeight, loc)
                   : _activeGroups.isEmpty
                   ? EmptyGroupsState(
                       localizations: loc,
@@ -261,23 +284,157 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
                       allArchived: widget.allArchived,
                       onGroupAdded: _handleGroupAdded,
                     )
-                  : HorizontalGroupsList(
-                      groups: _activeGroups,
-                      localizations: loc,
-                      theme: theme,
-                      onGroupUpdated: _handleGroupUpdated,
-                      onGroupAdded: _handleGroupAdded,
-                      onCategoryAdded: () {
-                        _softLoadActiveGroups();
-                      },
-                    ),
+                  : _buildContent(loc, theme, contentHeight),
             ),
+          ),
 
-            // Bottom bar semplificata d
-            SimpleBottomBar(localizations: loc, theme: theme),
-          ],
-        ),
+          // Bottom bar semplificata
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: HomeLayoutConstants.horizontalPadding,
+            ),
+            child: SimpleBottomBar(localizations: loc, theme: theme),
+          ),
+        ],
       ),
+    );
+  }
+
+  Widget _buildContent(
+    gen.AppLocalizations loc,
+    ThemeData theme,
+    double contentHeight,
+  ) {
+    // Safety check - this should never happen due to calling context, but be defensive
+    if (_activeGroups.isEmpty) {
+      return EmptyGroupsState(
+        localizations: loc,
+        theme: theme,
+        allArchived: widget.allArchived,
+        onGroupAdded: _handleGroupAdded,
+      );
+    }
+
+    // Get featured group: use pinned/favorite if available, otherwise first from active groups
+    final featuredGroup = widget.pinnedTrip ?? _activeGroups.first;
+
+    // Get remaining groups for carousel (excluding featured)
+    final carouselGroups = _activeGroups
+        .where((g) => g.id != featuredGroup.id)
+        .toList();
+
+    // Carousel takes fixed proportion of content height (if present)
+    final carouselHeight =
+        contentHeight * HomeLayoutConstants.carouselHeightRatio;
+
+    return Column(
+      children: [
+        // Featured group card - takes all remaining space
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 0),
+            child: GroupCard(
+              group: featuredGroup,
+              localizations: loc,
+              theme: theme,
+              onGroupUpdated: _handleGroupUpdated,
+              onCategoryAdded: () {
+                _softLoadActiveGroups();
+              },
+              isSelected: true,
+              selectionProgress: 1.0,
+            ),
+          ),
+        ),
+
+        // Carousel with remaining groups
+        if (carouselGroups.isNotEmpty) ...[
+          // Section header for "Altri Gruppi" (Other Groups)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 8, 20, 12),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                loc.your_groups,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: carouselHeight - 48, // Account for header
+            child: HorizontalGroupsList(
+              groups: carouselGroups,
+              localizations: loc,
+              theme: theme,
+              onGroupUpdated: _handleGroupUpdated,
+              onGroupAdded: _handleGroupAdded,
+              onCategoryAdded: () {
+                _softLoadActiveGroups();
+              },
+            ),
+          ),
+        ],
+
+        // Show "Add Group" option in the carousel area if only featured group exists
+        if (carouselGroups.isEmpty)
+          SizedBox(
+            height: carouselHeight,
+            child: HorizontalGroupsList(
+              groups: const [], // Empty list, will show only the "add new" card
+              localizations: loc,
+              theme: theme,
+              onGroupUpdated: _handleGroupUpdated,
+              onGroupAdded: _handleGroupAdded,
+              onCategoryAdded: () {
+                _softLoadActiveGroups();
+              },
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildSkeletonContent(
+    ThemeData theme,
+    double contentHeight,
+    gen.AppLocalizations loc,
+  ) {
+    // Carousel takes fixed proportion of content height
+    final carouselHeight =
+        contentHeight * HomeLayoutConstants.carouselHeightRatio;
+
+    return Column(
+      children: [
+        // Featured card skeleton - takes all remaining space
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 0),
+            child: FeaturedCardSkeleton(theme: theme),
+          ),
+        ),
+
+        // Section header - real title visible during loading
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 8, 20, 12),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              loc.your_groups,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+
+        // Carousel skeleton
+        SizedBox(
+          height: carouselHeight - 48, // Account for header
+          child: CarouselSkeletonLoader(theme: theme),
+        ),
+      ],
     );
   }
 }

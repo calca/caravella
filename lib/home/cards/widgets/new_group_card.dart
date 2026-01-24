@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../../manager/group/pages/group_creation_wizard_page.dart';
+import '../../navigation_helpers.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 class NewGroupCard extends StatelessWidget {
@@ -44,17 +44,10 @@ class NewGroupCard extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 16),
         backgroundColor: backgroundColor,
         onTap: () async {
-          final result = await Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const GroupCreationWizardPage(),
-            ),
+          await NavigationHelpers.openGroupCreationWithCallback(
+            context,
+            onGroupAdded: onGroupAdded,
           );
-          if (result != null) {
-            if (result is String) {
-              // User wants to go to group page
-              onGroupAdded(result);
-            }
-          }
         },
         child: _buildNewGroupCardContent(),
       ),

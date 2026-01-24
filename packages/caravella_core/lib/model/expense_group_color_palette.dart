@@ -1,9 +1,48 @@
 import 'package:flutter/material.dart';
+import 'expense_group.dart';
 
 /// Defines a theme-aware color palette for expense groups.
 /// Colors are stored as indices and resolved based on the current theme.
 class ExpenseGroupColorPalette {
   static const int paletteSize = 12;
+
+  /// Resolve the color for an expense group based on its color property.
+  ///
+  /// Handles both legacy ARGB color values and new palette indices.
+  /// Returns [fallback] if the group has no color set or resolution fails.
+  ///
+  /// This is the preferred method for resolving group colors in UI code.
+  static Color resolveGroupColor(
+    ExpenseGroup group,
+    ColorScheme colorScheme, {
+    Color? fallback,
+  }) {
+    final effectiveFallback = fallback ?? colorScheme.surfaceContainerHigh;
+
+    if (group.color == null) {
+      return effectiveFallback;
+    }
+
+    if (isLegacyColorValue(group.color)) {
+      return Color(group.color!);
+    }
+
+    return resolveColor(group.color, colorScheme) ?? effectiveFallback;
+  }
+
+  /// Determines if the given color is light or dark.
+  ///
+  /// Returns true if the color's luminance is greater than 0.5.
+  static bool isLightColor(Color color) {
+    return color.computeLuminance() > 0.5;
+  }
+
+  /// Gets the appropriate text color for content displayed on a given background.
+  ///
+  /// Returns a dark color for light backgrounds and a light color for dark backgrounds.
+  static Color getContrastingTextColor(Color backgroundColor) {
+    return isLightColor(backgroundColor) ? Colors.black87 : Colors.white;
+  }
 
   /// Resolve a color index to the actual color based on the theme's color scheme.
   /// Returns null if colorIndex is null or invalid.
