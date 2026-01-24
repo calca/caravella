@@ -254,16 +254,21 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
             padding: const EdgeInsets.symmetric(
               horizontal: HomeLayoutConstants.horizontalPadding,
             ),
-            child: _loading
-                ? _buildSkeletonContent(theme, loc)
-                : _activeGroups.isEmpty
-                ? EmptyGroupsState(
-                    localizations: loc,
-                    theme: theme,
-                    allArchived: widget.allArchived,
-                    onGroupAdded: _handleGroupAdded,
-                  )
-                : _buildContent(loc, theme),
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              switchInCurve: Curves.easeIn,
+              switchOutCurve: Curves.easeOut,
+              child: _loading
+                  ? _buildSkeletonContent(theme, loc)
+                  : _activeGroups.isEmpty
+                  ? EmptyGroupsState(
+                      localizations: loc,
+                      theme: theme,
+                      allArchived: widget.allArchived,
+                      onGroupAdded: _handleGroupAdded,
+                    )
+                  : _buildContent(loc, theme),
+            ),
           ),
         ),
 
@@ -282,6 +287,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
     // Safety check - this should never happen due to calling context, but be defensive
     if (_activeGroups.isEmpty) {
       return EmptyGroupsState(
+        key: const ValueKey('empty_state'),
         localizations: loc,
         theme: theme,
         allArchived: widget.allArchived,
@@ -298,6 +304,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
         .toList();
 
     return Column(
+      key: const ValueKey('content'),
       children: [
         // Top spacing before featured card
         const SizedBox(height: 8),
@@ -351,6 +358,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
 
   Widget _buildSkeletonContent(ThemeData theme, gen.AppLocalizations loc) {
     return Column(
+      key: const ValueKey('skeleton'),
       children: [
         // Top spacing before featured card
         const SizedBox(height: 8),

@@ -61,18 +61,33 @@ class CarouselGroupCard extends StatelessWidget {
         File(group.file!).existsSync();
 
     if (hasImage) {
-      return Container(
-        width: tileSize,
-        height: tileSize,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(tileBorderRadius),
-          border: Border.all(
-            color: theme.colorScheme.outline.withValues(alpha: 0.2),
-            width: 1,
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(tileBorderRadius),
+        child: Container(
+          width: tileSize,
+          height: tileSize,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: theme.colorScheme.outline.withValues(alpha: 0.2),
+              width: 1,
+            ),
           ),
-          image: DecorationImage(
-            image: FileImage(File(group.file!)),
+          child: Image.file(
+            File(group.file!),
+            width: tileSize,
+            height: tileSize,
             fit: BoxFit.cover,
+            frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+              if (wasSynchronouslyLoaded) {
+                return child;
+              }
+              return AnimatedOpacity(
+                opacity: frame == null ? 0 : 1,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeIn,
+                child: child,
+              );
+            },
           ),
         ),
       );
