@@ -27,7 +27,7 @@ class SimpleBottomBar extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start, // Allinea a sinistra
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // Bottone Tutti
           Flexible(
