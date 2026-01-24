@@ -48,9 +48,7 @@ class _CarouselSkeletonLoaderState extends State<CarouselSkeletonLoader>
                 (_shimmerController.value + (index * 0.1)) % 1.0;
 
             return Padding(
-              padding: EdgeInsets.only(
-                right: index < 2 ? 12 : 0,
-              ),
+              padding: EdgeInsets.only(right: index < 2 ? 12 : 0),
               child: CarouselCardSkeleton(
                 shimmerValue: shimmerValue,
                 colorScheme: colorScheme,

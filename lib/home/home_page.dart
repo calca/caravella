@@ -337,13 +337,13 @@ class _HomePageState extends State<HomePage> with RouteAware {
         child: Semantics(
           label: gloc.accessibility_groups_list,
           child: HomeCardsSection(
-              initialGroups: _activeGroups,
-              onTripAdded: _handleTripAdded,
-              onTripDeleted: _handleTripDeleted,
-              onTripUpdated: _handleTripUpdated,
-              pinnedTrip: _pinnedTrip,
-              allArchived: false,
-            ),
+            initialGroups: _activeGroups,
+            onTripAdded: _handleTripAdded,
+            onTripDeleted: _handleTripDeleted,
+            onTripUpdated: _handleTripUpdated,
+            pinnedTrip: _pinnedTrip,
+            allArchived: false,
+          ),
         ),
       );
     }
@@ -356,13 +356,13 @@ class _HomePageState extends State<HomePage> with RouteAware {
         child: Semantics(
           label: gloc.accessibility_groups_list,
           child: HomeCardsSection(
-              initialGroups: <ExpenseGroup>[],
-              onTripAdded: _handleTripAdded,
-              onTripDeleted: _handleTripDeleted,
-              onTripUpdated: _handleTripUpdated,
-              pinnedTrip: _pinnedTrip,
-              allArchived: true,
-            ),
+            initialGroups: <ExpenseGroup>[],
+            onTripAdded: _handleTripAdded,
+            onTripDeleted: _handleTripDeleted,
+            onTripUpdated: _handleTripUpdated,
+            pinnedTrip: _pinnedTrip,
+            allArchived: true,
+          ),
         ),
       );
     }
@@ -448,7 +448,9 @@ class _HomePageState extends State<HomePage> with RouteAware {
                         width: 120,
                         height: 24,
                         borderRadius: 12,
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.1,
+                        ),
                       ),
                     ),
                   ),
