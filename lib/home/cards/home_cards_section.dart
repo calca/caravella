@@ -347,21 +347,22 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
           ),
         ),
 
-        // Carousel with remaining groups
-        if (carouselGroups.isNotEmpty) ...[
-          // Section header for "Altri Gruppi" (Other Groups)
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 8, 20, 12),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                loc.your_groups,
-                style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+        // Section header for "Your Groups" - always visible
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 8, 20, 12),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              loc.your_groups,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
+        ),
+
+        // Carousel with remaining groups or "Add Group" option
+        if (carouselGroups.isNotEmpty)
           SizedBox(
             height: carouselHeight - 48, // Account for header
             child: HorizontalGroupsList(
@@ -374,13 +375,10 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
                 _softLoadActiveGroups();
               },
             ),
-          ),
-        ],
-
-        // Show "Add Group" option in the carousel area if only featured group exists
-        if (carouselGroups.isEmpty)
+          )
+        else
           SizedBox(
-            height: carouselHeight,
+            height: carouselHeight - 48, // Account for header
             child: HorizontalGroupsList(
               groups: const [], // Empty list, will show only the "add new" card
               localizations: loc,
