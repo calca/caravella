@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:caravella_core/caravella_core.dart';
@@ -280,56 +279,45 @@ class _HomePageState extends State<HomePage> with RouteAware {
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
-    final theme = Theme.of(context);
-    final isDarkMode = theme.brightness == Brightness.dark;
 
-    // Only set surface color for navigation bar when NOT in welcome section
-    final shouldSetSurfaceColor = !_isFirstStart;
+    final scaffoldBody = Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 350),
+        switchInCurve: Curves.easeOutCubic,
+        switchOutCurve: Curves.easeInCubic,
+        transitionBuilder: (child, animation) {
+          // Use different transitions based on view type
+          final isWelcome = child.key == const ValueKey('welcome');
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: shouldSetSurfaceColor
-          ? SystemUiOverlayStyle(
-              statusBarColor: Colors.transparent,
-              statusBarIconBrightness: isDarkMode
-                  ? Brightness.light
-                  : Brightness.dark,
-              statusBarBrightness: isDarkMode
-                  ? Brightness.dark
-                  : Brightness.light,
-              systemNavigationBarColor: theme.colorScheme.surfaceContainer,
-              systemNavigationBarIconBrightness: isDarkMode
-                  ? Brightness.light
-                  : Brightness.dark,
-            )
-          : SystemUiOverlayStyle.light,
-      child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-        body: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 350),
-          switchInCurve: Curves.easeOutCubic,
-          switchOutCurve: Curves.easeInCubic,
-          transitionBuilder: (child, animation) {
-            // Use different transitions based on view type
-            final isWelcome = child.key == const ValueKey('welcome');
-
-            if (isWelcome) {
-              // Slide in from left for welcome screen
-              return SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(-1.0, 0.0),
-                  end: Offset.zero,
-                ).animate(animation),
-                child: child,
-              );
-            } else {
-              // Fade transition for cards and loading
-              return FadeTransition(opacity: animation, child: child);
-            }
-          },
-          child: _buildContent(gloc),
-        ),
+          if (isWelcome) {
+            // Slide in from left for welcome screen
+            return SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(-1.0, 0.0),
+                end: Offset.zero,
+              ).animate(animation),
+              child: child,
+            );
+          } else {
+            // Fade transition for cards and loading
+            return FadeTransition(opacity: animation, child: child);
+          }
+        },
+        child: _buildContent(gloc),
       ),
     );
+
+    // Use surfaceContainer system UI when NOT in welcome section
+    if (!_isFirstStart) {
+      return AppSystemUI.surfaceContainer(
+        context: context,
+        child: scaffoldBody,
+      );
+    }
+
+    // Welcome section handles its own system UI
+    return scaffoldBody;
   }
 
   Widget _buildContent(gen.AppLocalizations gloc) {

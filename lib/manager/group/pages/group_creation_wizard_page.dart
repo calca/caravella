@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core/caravella_core.dart';
@@ -280,28 +279,13 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
   @override
   Widget build(BuildContext context) {
     final gloc = gen.AppLocalizations.of(context);
-    final theme = Theme.of(context);
-    final isDarkMode = theme.brightness == Brightness.dark;
 
     return Consumer<WizardState>(
       builder: (context, wizardState, child) {
         final isCompletionStep =
             wizardState.currentStep == wizardState.totalSteps - 1;
 
-        return AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness: isDarkMode
-                ? Brightness.light
-                : Brightness.dark,
-            statusBarBrightness: isDarkMode
-                ? Brightness.dark
-                : Brightness.light,
-            systemNavigationBarColor: theme.colorScheme.surface,
-            systemNavigationBarIconBrightness: isDarkMode
-                ? Brightness.light
-                : Brightness.dark,
-          ),
+        return AppSystemUI.surface(
           child: PopScope(
             canPop: _canPop(wizardState),
             onPopInvokedWithResult: (didPop, _) async {

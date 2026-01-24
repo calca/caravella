@@ -667,7 +667,8 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     );
     final showCollapsedTitle = _hideHeader || _collapsedTitleVisible;
 
-    return Scaffold(
+    return AppSystemUI.surface(
+      child: Scaffold(
       body: CustomScrollView(
         controller: _scrollController,
         slivers: [
@@ -811,6 +812,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
         ],
       ),
       floatingActionButton: _buildAnimatedFab(colorScheme),
-    );
-  }
+    ),
+  );
+}
 }

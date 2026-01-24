@@ -23,13 +23,14 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
     final locale = LocaleNotifier.of(context)?.locale ?? 'it';
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<FlagSecureNotifier>(
-          create: (_) => FlagSecureNotifier(),
-        ),
-      ],
-      child: Scaffold(
+    return AppSystemUI.surface(
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider<FlagSecureNotifier>(
+            create: (_) => FlagSecureNotifier(),
+          ),
+        ],
+        child: Scaffold(
         appBar: const CaravellaAppBar(),
         body: ListView(
           padding: EdgeInsets.fromLTRB(
@@ -46,8 +47,9 @@ class SettingsPage extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   // SECTION BUILDERS -------------------------------------------------------
   Widget _buildGeneralSection(

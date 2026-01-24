@@ -340,7 +340,8 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     final gloc = gen.AppLocalizations.of(context);
 
     final colorScheme = Theme.of(context).colorScheme;
-    return Scaffold(
+    return AppSystemUI.surface(
+      child: Scaffold(
       appBar: const CaravellaAppBar(),
       floatingActionButton: _buildAnimatedFab(colorScheme, gloc),
       body: Column(
@@ -436,6 +437,7 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 }
