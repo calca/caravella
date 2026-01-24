@@ -21,35 +21,6 @@ class GroupCardStats extends StatelessWidget {
     required this.theme,
   });
 
-  /// Calculate daily average spending for the group
-  double _calculateDailyAverage(ExpenseGroup group) {
-    if (group.expenses.isEmpty) return 0.0;
-
-    final now = DateTime.now();
-    DateTime startDate, endDate;
-
-    if (group.startDate != null && group.endDate != null) {
-      startDate = group.startDate!;
-      endDate = group.endDate!.isBefore(now) ? group.endDate! : now;
-    } else {
-      // If no dates, use first expense to now
-      final sortedExpenses = [...group.expenses]
-        ..sort((a, b) => a.date.compareTo(b.date));
-      startDate = sortedExpenses.first.date;
-      endDate = now;
-    }
-
-    final days = endDate.difference(startDate).inDays + 1;
-    if (days <= 0) return 0.0;
-
-    final totalSpent = group.expenses.fold<double>(
-      0,
-      (sum, expense) => sum + (expense.amount ?? 0),
-    );
-
-    return totalSpent / days;
-  }
-
   /// Calculate today's total spending
   double _calculateTodaySpending(ExpenseGroup group) {
     if (group.expenses.isEmpty) return 0.0;
@@ -101,7 +72,6 @@ class GroupCardStats extends StatelessWidget {
   }
 
   Widget _buildExtraInfo() {
-    final dailyAverage = _calculateDailyAverage(group);
     final todaySpending = _calculateTodaySpending(group);
     final textColor = theme.colorScheme.onSurfaceVariant.withValues(
       alpha: HomeLayoutConstants.mutedTextAlpha,
@@ -111,54 +81,25 @@ class GroupCardStats extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // Daily average
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              '${localizations.daily_average}: ',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: textColor,
-                fontSize: 14,
-              ),
-            ),
-            CurrencyDisplay(
-              value: dailyAverage,
-              currency: group.currency,
-              valueFontSize: 14,
-              currencyFontSize: 12,
-              alignment: MainAxisAlignment.end,
-              showDecimals: true,
-              color: textColor,
-              fontWeight: FontWeight.w600,
-            ),
-          ],
+        // "Oggi:" label
+        Text(
+          '${localizations.spent_today}:',
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: textColor,
+            fontSize: 12,
+          ),
         ),
         const SizedBox(height: 4),
-        // Today's spending
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              '${localizations.spent_today}: ',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: textColor,
-                fontSize: 14,
-              ),
-            ),
-            CurrencyDisplay(
-              value: todaySpending,
-              currency: group.currency,
-              valueFontSize: 14,
-              currencyFontSize: 12,
-              alignment: MainAxisAlignment.end,
-              showDecimals: true,
-              color: textColor,
-              fontWeight: FontWeight.w600,
-            ),
-          ],
+        // Today's spending value
+        CurrencyDisplay(
+          value: todaySpending,
+          currency: group.currency,
+          valueFontSize: 18,
+          currencyFontSize: 14,
+          alignment: MainAxisAlignment.end,
+          showDecimals: true,
+          color: textColor,
+          fontWeight: FontWeight.w600,
         ),
       ],
     );
