@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../manager/history/expenses_history_page.dart';
 import '../../../settings/pages/settings_page.dart';
+import '../../home_constants.dart';
 
 class SimpleBottomBar extends StatelessWidget {
   final gen.AppLocalizations localizations;
@@ -21,12 +22,12 @@ class SimpleBottomBar extends StatelessWidget {
     return Container(
       padding: EdgeInsets.only(
         top: 12,
-        bottom: bottomSafeArea + 16, // Bottom safe area + padding
+        bottom: bottomSafeArea + HomeLayoutConstants.bottomBarExtraPadding,
       ),
       alignment: Alignment.centerLeft,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start, // Allinea a sinistra
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Bottone Tutti
           Flexible(

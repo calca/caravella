@@ -126,4 +126,7 @@ class HomeLayoutConstants {
 
   /// Bottom bar height as proportion of screen height
   static const double bottomBarHeightRatio = 1 / 6;
+
+  /// Bottom bar additional padding (added to safe area)
+  static const double bottomBarExtraPadding = 16.0;
 }
