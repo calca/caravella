@@ -55,8 +55,8 @@ class GroupCardContent extends StatelessWidget {
               localizations: localizations,
               theme: theme,
             ),
-            GroupCardTotalAmount(group: currentGroup, theme: theme),
             const SizedBox(height: HomeLayoutConstants.largeSpacing),
+            GroupCardTotalAmount(group: currentGroup, theme: theme),
             const Spacer(),
             GroupCardStats(
               group: currentGroup,

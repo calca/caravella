@@ -78,8 +78,8 @@ class GroupCardStats extends StatelessWidget {
     );
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
         // "Oggi:" label
         Text(
@@ -107,8 +107,11 @@ class GroupCardStats extends StatelessWidget {
 
   Widget _buildDateRangeStatistics() {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
+        // Extra info on the right
+        Expanded(flex: 0, child: _buildExtraInfo()),
+        const SizedBox(width: HomeLayoutConstants.sectionSpacing),
         // Bar chart on the left (50% max width)
         Expanded(
           flex: 1,
@@ -120,9 +123,6 @@ class GroupCardStats extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: HomeLayoutConstants.sectionSpacing),
-        // Extra info on the right
-        Expanded(flex: 1, child: _buildExtraInfo()),
       ],
     );
   }
