@@ -66,12 +66,14 @@ class _HomeWelcomeSectionState extends State<HomeWelcomeSection>
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness:
-            isDarkMode ? Brightness.light : Brightness.dark,
+        statusBarIconBrightness: isDarkMode
+            ? Brightness.light
+            : Brightness.dark,
         statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,
         systemNavigationBarColor: theme.colorScheme.surface,
-        systemNavigationBarIconBrightness:
-            isDarkMode ? Brightness.light : Brightness.dark,
+        systemNavigationBarIconBrightness: isDarkMode
+            ? Brightness.light
+            : Brightness.dark,
       ),
     );
   }

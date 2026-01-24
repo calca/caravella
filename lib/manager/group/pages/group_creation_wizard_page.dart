@@ -291,78 +291,83 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
         return AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle(
             statusBarColor: Colors.transparent,
-            statusBarIconBrightness:
-                isDarkMode ? Brightness.light : Brightness.dark,
-            statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,
+            statusBarIconBrightness: isDarkMode
+                ? Brightness.light
+                : Brightness.dark,
+            statusBarBrightness: isDarkMode
+                ? Brightness.dark
+                : Brightness.light,
             systemNavigationBarColor: theme.colorScheme.surface,
-            systemNavigationBarIconBrightness:
-                isDarkMode ? Brightness.light : Brightness.dark,
+            systemNavigationBarIconBrightness: isDarkMode
+                ? Brightness.light
+                : Brightness.dark,
           ),
           child: PopScope(
             canPop: _canPop(wizardState),
             onPopInvokedWithResult: (didPop, _) async {
-            if (!didPop) {
-              if (isCompletionStep) {
-                // On completion step, back gesture triggers CTA action
-                await _handleCompletionBackAction(wizardState);
-              } else {
-                final shouldPop = await _onWillPop();
-                if (shouldPop && context.mounted) {
-                  Navigator.of(context).pop(false);
+              if (!didPop) {
+                if (isCompletionStep) {
+                  // On completion step, back gesture triggers CTA action
+                  await _handleCompletionBackAction(wizardState);
+                } else {
+                  final shouldPop = await _onWillPop();
+                  if (shouldPop && context.mounted) {
+                    Navigator.of(context).pop(false);
+                  }
                 }
               }
-            }
-          },
-          child: Scaffold(
-            appBar: AppBar(
-              title: Text(gloc.wizard_group_creation_title),
-              elevation: 0,
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              // Hide back button on completion step
-              automaticallyImplyLeading: !isCompletionStep,
-              leading: isCompletionStep ? const SizedBox.shrink() : null,
-            ),
-            body: Column(
-              children: [
-                // Step indicator
-                const WizardStepIndicator(),
+            },
+            child: Scaffold(
+              appBar: AppBar(
+                title: Text(gloc.wizard_group_creation_title),
+                elevation: 0,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                // Hide back button on completion step
+                automaticallyImplyLeading: !isCompletionStep,
+                leading: isCompletionStep ? const SizedBox.shrink() : null,
+              ),
+              body: Column(
+                children: [
+                  // Step indicator
+                  const WizardStepIndicator(),
 
-                // Wizard content
-                Expanded(
-                  child: Builder(
-                    builder: (context) {
-                      final isLastStep =
-                          wizardState.currentStep == wizardState.totalSteps - 1;
-                      return PageView(
-                        controller: wizardState.pageController,
-                        physics: isLastStep
-                            ? const NeverScrollableScrollPhysics()
-                            : null,
-                        onPageChanged: (index) {
-                          wizardState.syncWithPage(index);
-                        },
-                        children: [
-                          if (wizardState.includeUserNameStep)
-                            const WizardUserNameStep(),
-                          const WizardTypeAndNameStep(),
-                          WizardCompletionStep(
-                            groupId: wizardState.savedGroupId ?? '',
-                            fromWelcome: widget.fromWelcome,
-                          ),
-                        ],
-                      );
-                    },
+                  // Wizard content
+                  Expanded(
+                    child: Builder(
+                      builder: (context) {
+                        final isLastStep =
+                            wizardState.currentStep ==
+                            wizardState.totalSteps - 1;
+                        return PageView(
+                          controller: wizardState.pageController,
+                          physics: isLastStep
+                              ? const NeverScrollableScrollPhysics()
+                              : null,
+                          onPageChanged: (index) {
+                            wizardState.syncWithPage(index);
+                          },
+                          children: [
+                            if (wizardState.includeUserNameStep)
+                              const WizardUserNameStep(),
+                            const WizardTypeAndNameStep(),
+                            WizardCompletionStep(
+                              groupId: wizardState.savedGroupId ?? '',
+                              fromWelcome: widget.fromWelcome,
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                   ),
-                ),
 
-                // Navigation bar
-                const WizardNavigationBar(),
-              ],
+                  // Navigation bar
+                  const WizardNavigationBar(),
+                ],
+              ),
             ),
           ),
-        ),
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
 }
