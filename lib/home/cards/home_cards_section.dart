@@ -229,84 +229,56 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
     final theme = Theme.of(context);
-    final mediaQuery = MediaQuery.of(context);
-    final screenHeight = mediaQuery.size.height;
-    final topSafeArea = mediaQuery.padding.top;
-    final bottomSafeArea = mediaQuery.padding.bottom;
+    final topSafeArea = MediaQuery.of(context).padding.top;
 
-    // Heights: header fixed, bottom bar proportional, content fills remaining
-    const headerHeight = HomeLayoutConstants.headerHeight;
-    const headerPaddingVertical = 32.0; // 16 top + 16 bottom padding
-    final bottomBarHeight =
-        screenHeight * HomeLayoutConstants.bottomBarHeightRatio;
-    final contentHeight =
-        screenHeight -
-        headerHeight -
-        headerPaddingVertical -
-        bottomBarHeight -
-        topSafeArea -
-        bottomSafeArea;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Safe area for status bar
+        SizedBox(height: topSafeArea),
 
-    return SizedBox(
-      height: screenHeight,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          // Safe area for status bar
-          SizedBox(height: topSafeArea),
-
-          // Header compatto con altezza fissa
-          Padding(
-            padding: const EdgeInsets.fromLTRB(
-              HomeLayoutConstants.horizontalPadding,
-              16.0,
-              HomeLayoutConstants.horizontalPadding,
-              16.0,
-            ),
-            child: SizedBox(
-              height: headerHeight,
-              child: HomeCardsHeader(localizations: loc, theme: theme),
-            ),
+        // Header compatto con altezza fissa
+        Padding(
+          padding: const EdgeInsets.fromLTRB(
+            HomeLayoutConstants.horizontalPadding,
+            16.0,
+            HomeLayoutConstants.horizontalPadding,
+            16.0,
           ),
+          child: HomeCardsHeader(localizations: loc, theme: theme),
+        ),
 
-          // Content area - riempie lo spazio tra header e bottom bar
-          Padding(
+        // Content area - fills remaining space dynamically
+        Expanded(
+          child: Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: HomeLayoutConstants.horizontalPadding,
             ),
-            child: SizedBox(
-              height: contentHeight,
-              child: _loading
-                  ? _buildSkeletonContent(theme, contentHeight, loc)
-                  : _activeGroups.isEmpty
-                  ? EmptyGroupsState(
-                      localizations: loc,
-                      theme: theme,
-                      allArchived: widget.allArchived,
-                      onGroupAdded: _handleGroupAdded,
-                    )
-                  : _buildContent(loc, theme, contentHeight),
-            ),
+            child: _loading
+                ? _buildSkeletonContent(theme, loc)
+                : _activeGroups.isEmpty
+                ? EmptyGroupsState(
+                    localizations: loc,
+                    theme: theme,
+                    allArchived: widget.allArchived,
+                    onGroupAdded: _handleGroupAdded,
+                  )
+                : _buildContent(loc, theme),
           ),
+        ),
 
-          // Bottom bar semplificata
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: HomeLayoutConstants.horizontalPadding,
-            ),
-            child: SimpleBottomBar(localizations: loc, theme: theme),
+        // Bottom bar - always at bottom with safe area
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: HomeLayoutConstants.horizontalPadding,
           ),
-        ],
-      ),
+          child: SimpleBottomBar(localizations: loc, theme: theme),
+        ),
+      ],
     );
   }
 
-  Widget _buildContent(
-    gen.AppLocalizations loc,
-    ThemeData theme,
-    double contentHeight,
-  ) {
+  Widget _buildContent(gen.AppLocalizations loc, ThemeData theme) {
     // Safety check - this should never happen due to calling context, but be defensive
     if (_activeGroups.isEmpty) {
       return EmptyGroupsState(
@@ -325,27 +297,21 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
         .where((g) => g.id != featuredGroup.id)
         .toList();
 
-    // Carousel takes fixed proportion of content height (if present)
-    final carouselHeight =
-        contentHeight * HomeLayoutConstants.carouselHeightRatio;
-
     return Column(
       children: [
-        // Featured group card - takes all remaining space
+        // Featured group card - takes ~66% of available space
         Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 0),
-            child: GroupCard(
-              group: featuredGroup,
-              localizations: loc,
-              theme: theme,
-              onGroupUpdated: _handleGroupUpdated,
-              onCategoryAdded: () {
-                _softLoadActiveGroups();
-              },
-              isSelected: true,
-              selectionProgress: 1.0,
-            ),
+          flex: 2,
+          child: GroupCard(
+            group: featuredGroup,
+            localizations: loc,
+            theme: theme,
+            onGroupUpdated: _handleGroupUpdated,
+            onCategoryAdded: () {
+              _softLoadActiveGroups();
+            },
+            isSelected: true,
+            selectionProgress: 1.0,
           ),
         ),
 
@@ -363,57 +329,29 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
           ),
         ),
 
-        // Carousel with remaining groups or "Add Group" option
-        if (carouselGroups.isNotEmpty)
-          SizedBox(
-            height: carouselHeight - 48, // Account for header
-            child: HorizontalGroupsList(
-              groups: carouselGroups,
-              localizations: loc,
-              theme: theme,
-              onGroupUpdated: _handleGroupUpdated,
-              onGroupAdded: _handleGroupAdded,
-              onCategoryAdded: () {
-                _softLoadActiveGroups();
-              },
-            ),
-          )
-        else
-          SizedBox(
-            height: carouselHeight - 48, // Account for header
-            child: HorizontalGroupsList(
-              groups: const [], // Empty list, will show only the "add new" card
-              localizations: loc,
-              theme: theme,
-              onGroupUpdated: _handleGroupUpdated,
-              onGroupAdded: _handleGroupAdded,
-              onCategoryAdded: () {
-                _softLoadActiveGroups();
-              },
-            ),
+        // Carousel with remaining groups or "Add Group" option - takes ~34% of available space
+        Expanded(
+          flex: 1,
+          child: HorizontalGroupsList(
+            groups: carouselGroups,
+            localizations: loc,
+            theme: theme,
+            onGroupUpdated: _handleGroupUpdated,
+            onGroupAdded: _handleGroupAdded,
+            onCategoryAdded: () {
+              _softLoadActiveGroups();
+            },
           ),
+        ),
       ],
     );
   }
 
-  Widget _buildSkeletonContent(
-    ThemeData theme,
-    double contentHeight,
-    gen.AppLocalizations loc,
-  ) {
-    // Carousel takes fixed proportion of content height
-    final carouselHeight =
-        contentHeight * HomeLayoutConstants.carouselHeightRatio;
-
+  Widget _buildSkeletonContent(ThemeData theme, gen.AppLocalizations loc) {
     return Column(
       children: [
-        // Featured card skeleton - takes all remaining space
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 0),
-            child: FeaturedCardSkeleton(theme: theme),
-          ),
-        ),
+        // Featured card skeleton - takes ~66% of available space
+        Expanded(flex: 2, child: FeaturedCardSkeleton(theme: theme)),
 
         // Section header - real title visible during loading
         Padding(
@@ -429,11 +367,8 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
           ),
         ),
 
-        // Carousel skeleton
-        SizedBox(
-          height: carouselHeight - 48, // Account for header
-          child: CarouselSkeletonLoader(theme: theme),
-        ),
+        // Carousel skeleton - takes ~34% of available space
+        Expanded(flex: 1, child: CarouselSkeletonLoader(theme: theme)),
       ],
     );
   }
