@@ -98,10 +98,22 @@ class BaseCard extends StatelessWidget {
     );
 
     if (onTap != null) {
-      return InkWell(
-        borderRadius: effectiveBorderRadius,
-        onTap: onTap,
-        child: cardContent,
+      return Container(
+        margin: margin,
+        child: ClipRRect(
+          borderRadius: effectiveBorderRadius,
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onTap,
+              child: Container(
+                padding: padding ?? const EdgeInsets.all(20),
+                decoration: decoration,
+                child: child,
+              ),
+            ),
+          ),
+        ),
       );
     }
 
