@@ -313,7 +313,8 @@ class _HomePageState extends State<HomePage> with RouteAware {
     if (_loading) {
       // Show skeleton loader during initial load for better UX
       // Uses same layout as HomeCardsSection with skeleton only for carousel
-      return SafeArea(
+      // Note: No SafeArea here - skeleton layout handles topSafeArea internally
+      return KeyedSubtree(
         key: const ValueKey('loading'),
         child: _buildSkeletonLayout(gloc),
       );
@@ -328,14 +329,14 @@ class _HomePageState extends State<HomePage> with RouteAware {
     }
 
     // Show cards section - either with active groups or empty (when all archived)
+    // Note: No SafeArea here - HomeCardsSection handles topSafeArea internally
     if (_activeGroups.isNotEmpty) {
       return RefreshIndicator(
         key: const ValueKey('cards_active'),
         onRefresh: _handleUserRefresh,
-        child: SafeArea(
-          child: Semantics(
-            label: gloc.accessibility_groups_list,
-            child: HomeCardsSection(
+        child: Semantics(
+          label: gloc.accessibility_groups_list,
+          child: HomeCardsSection(
               initialGroups: _activeGroups,
               onTripAdded: _handleTripAdded,
               onTripDeleted: _handleTripDeleted,
@@ -343,19 +344,18 @@ class _HomePageState extends State<HomePage> with RouteAware {
               pinnedTrip: _pinnedTrip,
               allArchived: false,
             ),
-          ),
         ),
       );
     }
 
+    // Note: No SafeArea here - HomeCardsSection handles topSafeArea internally
     if (_archivedGroups.isNotEmpty) {
       return RefreshIndicator(
         key: const ValueKey('cards_archived'),
         onRefresh: _handleUserRefresh,
-        child: SafeArea(
-          child: Semantics(
-            label: gloc.accessibility_groups_list,
-            child: HomeCardsSection(
+        child: Semantics(
+          label: gloc.accessibility_groups_list,
+          child: HomeCardsSection(
               initialGroups: <ExpenseGroup>[],
               onTripAdded: _handleTripAdded,
               onTripDeleted: _handleTripDeleted,
@@ -363,7 +363,6 @@ class _HomePageState extends State<HomePage> with RouteAware {
               pinnedTrip: _pinnedTrip,
               allArchived: true,
             ),
-          ),
         ),
       );
     }
@@ -396,10 +395,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
         bottomBarHeight -
         topSafeArea;
 
-    // Featured card takes 60% of content height
-    final featuredCardHeight =
-        contentHeight * HomeLayoutConstants.featuredCardHeightRatio;
-    // Carousel takes 40% of content height
+    // Carousel takes fixed proportion of content height
     final carouselHeight =
         contentHeight * HomeLayoutConstants.carouselHeightRatio;
 
@@ -435,20 +431,31 @@ class _HomePageState extends State<HomePage> with RouteAware {
               height: contentHeight,
               child: Column(
                 children: [
-                  // Featured card skeleton
-                  SizedBox(
-                    height: featuredCardHeight,
+                  // Featured card skeleton - takes all remaining space
+                  Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.only(
-                        bottom: HomeLayoutConstants.sectionSpacing,
-                      ),
+                      padding: const EdgeInsets.only(bottom: 0),
                       child: FeaturedCardSkeleton(theme: theme),
+                    ),
+                  ),
+
+                  // Carousel section header skeleton
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 8, 20, 12),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: SkeletonBox(
+                        width: 120,
+                        height: 24,
+                        borderRadius: 12,
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
+                      ),
                     ),
                   ),
 
                   // Carousel skeleton
                   SizedBox(
-                    height: carouselHeight,
+                    height: carouselHeight - 48, // Account for header
                     child: CarouselSkeletonLoader(theme: theme),
                   ),
                 ],

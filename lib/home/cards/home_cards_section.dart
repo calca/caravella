@@ -397,29 +397,37 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
   }
 
   Widget _buildSkeletonContent(ThemeData theme, double contentHeight) {
-    // Featured card takes 60% of content height
-    final featuredCardHeight =
-        contentHeight * HomeLayoutConstants.featuredCardHeightRatio;
-    // Carousel takes 40% of content height
+    // Carousel takes fixed proportion of content height
     final carouselHeight =
         contentHeight * HomeLayoutConstants.carouselHeightRatio;
 
     return Column(
       children: [
-        // Featured card skeleton
-        SizedBox(
-          height: featuredCardHeight,
+        // Featured card skeleton - takes all remaining space
+        Expanded(
           child: Padding(
-            padding: const EdgeInsets.only(
-              bottom: HomeLayoutConstants.sectionSpacing,
-            ),
+            padding: const EdgeInsets.only(bottom: 0),
             child: FeaturedCardSkeleton(theme: theme),
+          ),
+        ),
+
+        // Carousel section header skeleton
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 8, 20, 12),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: SkeletonBox(
+              width: 120,
+              height: 24,
+              borderRadius: 12,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
+            ),
           ),
         ),
 
         // Carousel skeleton
         SizedBox(
-          height: carouselHeight,
+          height: carouselHeight - 48, // Account for header
           child: CarouselSkeletonLoader(theme: theme),
         ),
       ],

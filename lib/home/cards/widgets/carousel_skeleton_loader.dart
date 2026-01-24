@@ -38,53 +38,94 @@ class _CarouselSkeletonLoaderState extends State<CarouselSkeletonLoader>
     return AnimatedBuilder(
       animation: _shimmerController,
       builder: (context, child) {
-        return Column(
-          children: [
-            // Main skeleton cards area
-            Expanded(
-              child: PageView.builder(
-                itemCount: 3, // Show 3 skeleton cards
-                controller: PageController(viewportFraction: 0.85),
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  // Add slight delay to each card animation for wave effect
-                  final shimmerValue =
-                      (_shimmerController.value + (index * 0.1)) % 1.0;
+        return ListView.builder(
+          scrollDirection: Axis.horizontal,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: 3, // Show 3 skeleton cards
+          itemBuilder: (context, index) {
+            // Add slight delay to each card animation for wave effect
+            final shimmerValue =
+                (_shimmerController.value + (index * 0.1)) % 1.0;
 
-                  return AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    margin: const EdgeInsets.only(right: 16, bottom: 16),
-                    child: SkeletonCard(
-                      shimmerValue: shimmerValue,
-                      colorScheme: colorScheme,
-                      enableEntranceAnimation: false,
-                    ),
-                  );
-                },
+            return Padding(
+              padding: EdgeInsets.only(
+                right: index < 2 ? 12 : 0,
               ),
-            ),
-            // Skeleton page indicators
-            Padding(
-              padding: const EdgeInsets.only(top: 12, bottom: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(3, (index) {
-                  return Container(
-                    width: 8,
-                    height: 8,
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: colorScheme.onSurface.withValues(alpha: 0.2),
-                    ),
-                  );
-                }),
+              child: CarouselCardSkeleton(
+                shimmerValue: shimmerValue,
+                colorScheme: colorScheme,
               ),
-            ),
-          ],
+            );
+          },
         );
       },
+    );
+  }
+}
+
+/// Skeleton for a single carousel card matching CarouselGroupCard dimensions
+class CarouselCardSkeleton extends StatelessWidget {
+  final double shimmerValue;
+  final ColorScheme colorScheme;
+
+  /// Size of the square tile (matching CarouselGroupCard.tileSize)
+  static const double tileSize = 90.0;
+
+  /// Border radius for the tile
+  static const double tileBorderRadius = 12.0;
+
+  const CarouselCardSkeleton({
+    super.key,
+    required this.shimmerValue,
+    required this.colorScheme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final shimmerGradient = createShimmerGradient(shimmerValue, colorScheme);
+
+    return SizedBox(
+      width: tileSize,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Square tile skeleton
+          Container(
+            width: tileSize,
+            height: tileSize,
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerHigh,
+              borderRadius: BorderRadius.circular(tileBorderRadius),
+              border: Border.all(
+                color: colorScheme.outline.withValues(alpha: 0.1),
+                width: 1,
+              ),
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(tileBorderRadius),
+                gradient: shimmerGradient,
+              ),
+            ),
+          ),
+          const SizedBox(height: 6),
+          // Title skeleton
+          SkeletonBox(
+            width: tileSize * 0.8,
+            height: 14,
+            borderRadius: 7,
+            color: colorScheme.onSurface.withValues(alpha: 0.1),
+          ),
+          const SizedBox(height: 4),
+          // Balance skeleton
+          SkeletonBox(
+            width: tileSize * 0.6,
+            height: 12,
+            borderRadius: 6,
+            color: colorScheme.onSurface.withValues(alpha: 0.08),
+          ),
+        ],
+      ),
     );
   }
 }
