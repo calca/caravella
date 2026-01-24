@@ -15,12 +15,18 @@ class SimpleBottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+    final bottomSafeArea = mediaQuery.padding.bottom;
+    
     return Container(
-      padding: const EdgeInsets.only(top: 12), // Solo padding superiore
-      alignment: Alignment.topLeft, // Allineamento in alto a sinistra
+      padding: EdgeInsets.only(
+        top: 12,
+        bottom: bottomSafeArea + 16, // Bottom safe area + padding
+      ),
+      alignment: Alignment.centerLeft,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start, // Allinea a sinistra
-        crossAxisAlignment: CrossAxisAlignment.start, // Allinea in alto
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // Bottone Tutti
           Flexible(

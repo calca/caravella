@@ -232,6 +232,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
     final mediaQuery = MediaQuery.of(context);
     final screenHeight = mediaQuery.size.height;
     final topSafeArea = mediaQuery.padding.top;
+    final bottomSafeArea = mediaQuery.padding.bottom;
 
     // Heights: header fixed, bottom bar proportional, content fills remaining
     const headerHeight = HomeLayoutConstants.headerHeight;
@@ -243,7 +244,8 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
         headerHeight -
         headerPaddingVertical -
         bottomBarHeight -
-        topSafeArea;
+        topSafeArea -
+        bottomSafeArea;
 
     return SizedBox(
       height: screenHeight,

@@ -382,6 +382,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
     final mediaQuery = MediaQuery.of(context);
     final screenHeight = mediaQuery.size.height;
     final topSafeArea = mediaQuery.padding.top;
+    final bottomSafeArea = mediaQuery.padding.bottom;
 
     // Same height calculations as HomeCardsSection
     const headerHeight = HomeLayoutConstants.headerHeight;
@@ -393,7 +394,8 @@ class _HomePageState extends State<HomePage> with RouteAware {
         headerHeight -
         headerPaddingVertical -
         bottomBarHeight -
-        topSafeArea;
+        topSafeArea -
+        bottomSafeArea;
 
     // Carousel takes fixed proportion of content height
     final carouselHeight =
