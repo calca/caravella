@@ -293,11 +293,15 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
     final featuredGroup = widget.pinnedTrip ?? _activeGroups.first;
 
     // Get remaining groups for carousel (excluding featured)
-    final carouselGroups =
-        _activeGroups.where((g) => g.id != featuredGroup.id).toList();
+    final carouselGroups = _activeGroups
+        .where((g) => g.id != featuredGroup.id)
+        .toList();
 
     return Column(
       children: [
+        // Top spacing before featured card
+        const SizedBox(height: 8),
+
         // Featured group card - takes all remaining space
         Expanded(
           child: GroupCard(
@@ -315,7 +319,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
 
         // Section header for "Your Groups" - pinned at bottom
         Padding(
-          padding: const EdgeInsets.fromLTRB(0, 12, 20, 8),
+          padding: const EdgeInsets.fromLTRB(0, 0, 20, 8),
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
@@ -348,12 +352,15 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
   Widget _buildSkeletonContent(ThemeData theme, gen.AppLocalizations loc) {
     return Column(
       children: [
+        // Top spacing before featured card
+        const SizedBox(height: 8),
+
         // Featured card skeleton - takes all remaining space
         Expanded(child: FeaturedCardSkeleton(theme: theme)),
 
         // Section header - real title visible during loading
         Padding(
-          padding: const EdgeInsets.fromLTRB(0, 12, 20, 8),
+          padding: const EdgeInsets.fromLTRB(0, 0, 20, 8),
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(

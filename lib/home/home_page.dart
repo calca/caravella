@@ -406,12 +406,15 @@ class _HomePageState extends State<HomePage> with RouteAware {
             ),
             child: Column(
               children: [
+                // Top spacing before featured card
+                const SizedBox(height: 8),
+
                 // Featured card skeleton - takes all remaining space
                 Expanded(child: FeaturedCardSkeleton(theme: theme)),
 
                 // Section header - real title visible during loading
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 12, 20, 8),
+                  padding: const EdgeInsets.fromLTRB(0, 0, 20, 8),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
