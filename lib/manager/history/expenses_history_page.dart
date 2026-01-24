@@ -342,102 +342,104 @@ class _ExpesensHistoryPageState extends State<ExpesensHistoryPage>
     final colorScheme = Theme.of(context).colorScheme;
     return AppSystemUI.surface(
       child: Scaffold(
-      appBar: const CaravellaAppBar(),
-      floatingActionButton: _buildAnimatedFab(colorScheme, gloc),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
-            child: Row(
-              children: [
-                Expanded(
-                  child: SectionHeader(
-                    title: gloc.expense_groups_title,
-                    description: gloc.expense_groups_desc,
-                    padding: EdgeInsets.zero,
+        appBar: const CaravellaAppBar(),
+        floatingActionButton: _buildAnimatedFab(colorScheme, gloc),
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: SectionHeader(
+                      title: gloc.expense_groups_title,
+                      description: gloc.expense_groups_desc,
+                      padding: EdgeInsets.zero,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 8),
-                IconButton(
-                  icon: Icon(
-                    _showSearchBar
-                        ? Icons.search_off_rounded
-                        : Icons.search_rounded,
-                  ),
-                  tooltip: _showSearchBar ? gloc.hide_search : gloc.show_search,
-                  onPressed: () {
-                    final willShow = !_showSearchBar;
-                    setState(() {
-                      _showSearchBar = willShow;
-                      // Clear search when hiding search bar
-                      if (!willShow) {
-                        _searchController.clear();
-                        _searchQuery = '';
-                        _filteredActiveTrips = _applyFilter(
-                          _activeTrips,
-                          false,
-                        );
-                        _filteredArchivedTrips = _applyFilter(
-                          _archivedTrips,
-                          false,
-                        );
-                        _filteredAllTrips = _applyFilter(_allTrips, true);
-                      }
-                    });
-                    if (willShow) {
-                      // Post frame to ensure widget is built before requesting focus
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        if (mounted) {
-                          _searchFocusNode.requestFocus();
+                  const SizedBox(width: 8),
+                  IconButton(
+                    icon: Icon(
+                      _showSearchBar
+                          ? Icons.search_off_rounded
+                          : Icons.search_rounded,
+                    ),
+                    tooltip: _showSearchBar
+                        ? gloc.hide_search
+                        : gloc.show_search,
+                    onPressed: () {
+                      final willShow = !_showSearchBar;
+                      setState(() {
+                        _showSearchBar = willShow;
+                        // Clear search when hiding search bar
+                        if (!willShow) {
+                          _searchController.clear();
+                          _searchQuery = '';
+                          _filteredActiveTrips = _applyFilter(
+                            _activeTrips,
+                            false,
+                          );
+                          _filteredArchivedTrips = _applyFilter(
+                            _archivedTrips,
+                            false,
+                          );
+                          _filteredAllTrips = _applyFilter(_allTrips, true);
                         }
                       });
-                    }
-                  },
-                ),
-              ],
-            ),
-          ),
-          // HEADER SECTION - SEARCH BAR AT TOP
-          AnimatedSize(
-            duration: const Duration(milliseconds: 320),
-            curve: Curves.easeInOut,
-            alignment: Alignment.topCenter,
-            child: AnimatedOpacity(
-              duration: const Duration(milliseconds: 220),
-              curve: Curves.easeInOut,
-              opacity: _showSearchBar ? 1 : 0,
-              child: _showSearchBar
-                  ? Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                      child: _buildSearchBar(context, gloc),
-                    )
-                  : const SizedBox.shrink(),
-            ),
-          ),
-          // STATUS FILTER SEGMENTED BUTTONS - Hide when search is active
-          if (!_showSearchBar)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-              child: _buildStatusSegmentedButton(context),
-            ),
-          // MAIN CONTENT - Show search results when searching, tabs when not
-          Expanded(
-            child: _showSearchBar
-                ? _buildTabContent(_filteredAllTrips, 'search')
-                : TabBarView(
-                    controller: _tabController,
-                    physics: const BouncingScrollPhysics(
-                      parent: AlwaysScrollableScrollPhysics(),
-                    ),
-                    children: [
-                      _buildTabContent(_filteredActiveTrips, 'active'),
-                      _buildTabContent(_filteredArchivedTrips, 'archived'),
-                    ],
+                      if (willShow) {
+                        // Post frame to ensure widget is built before requesting focus
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          if (mounted) {
+                            _searchFocusNode.requestFocus();
+                          }
+                        });
+                      }
+                    },
                   ),
-          ),
-        ],
+                ],
+              ),
+            ),
+            // HEADER SECTION - SEARCH BAR AT TOP
+            AnimatedSize(
+              duration: const Duration(milliseconds: 320),
+              curve: Curves.easeInOut,
+              alignment: Alignment.topCenter,
+              child: AnimatedOpacity(
+                duration: const Duration(milliseconds: 220),
+                curve: Curves.easeInOut,
+                opacity: _showSearchBar ? 1 : 0,
+                child: _showSearchBar
+                    ? Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                        child: _buildSearchBar(context, gloc),
+                      )
+                    : const SizedBox.shrink(),
+              ),
+            ),
+            // STATUS FILTER SEGMENTED BUTTONS - Hide when search is active
+            if (!_showSearchBar)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                child: _buildStatusSegmentedButton(context),
+              ),
+            // MAIN CONTENT - Show search results when searching, tabs when not
+            Expanded(
+              child: _showSearchBar
+                  ? _buildTabContent(_filteredAllTrips, 'search')
+                  : TabBarView(
+                      controller: _tabController,
+                      physics: const BouncingScrollPhysics(
+                        parent: AlwaysScrollableScrollPhysics(),
+                      ),
+                      children: [
+                        _buildTabContent(_filteredActiveTrips, 'active'),
+                        _buildTabContent(_filteredArchivedTrips, 'archived'),
+                      ],
+                    ),
+            ),
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 }

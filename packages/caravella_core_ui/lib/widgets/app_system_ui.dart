@@ -44,14 +44,8 @@ class AppSystemUI extends StatelessWidget {
   });
 
   /// Creates an AppSystemUI with surface navigation bar (default for most screens)
-  factory AppSystemUI.surface({
-    Key? key,
-    required Widget child,
-  }) {
-    return AppSystemUI(
-      key: key,
-      child: child,
-    );
+  factory AppSystemUI.surface({Key? key, required Widget child}) {
+    return AppSystemUI(key: key, child: child);
   }
 
   /// Creates an AppSystemUI with surfaceContainer navigation bar (for home screen)
@@ -88,7 +82,8 @@ class AppSystemUI extends StatelessWidget {
     final isDarkMode = theme.brightness == Brightness.dark;
 
     // Determine navigation bar color
-    final effectiveNavBarColor = navigationBarColor ?? theme.colorScheme.surface;
+    final effectiveNavBarColor =
+        navigationBarColor ?? theme.colorScheme.surface;
 
     // Determine icon brightness
     final statusBarIconBrightness = forceStatusBarLight ?? false

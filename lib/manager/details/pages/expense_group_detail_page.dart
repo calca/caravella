@@ -669,150 +669,151 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
 
     return AppSystemUI.surface(
       child: Scaffold(
-      body: CustomScrollView(
-        controller: _scrollController,
-        slivers: [
-          SliverAppBar(
-            pinned: true,
-            floating: false,
-            elevation: 0,
-            scrolledUnderElevation: 1,
-            backgroundColor: colorScheme.surfaceContainer,
-            foregroundColor: colorScheme.onSurface,
-            toolbarHeight: 56,
-            collapsedHeight: 56,
-            centerTitle: false,
-            title: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 220),
-              switchInCurve: Curves.easeOut,
-              switchOutCurve: Curves.easeIn,
-              child: showCollapsedTitle
-                  ? Text(
-                      trip.title,
-                      key: const ValueKey('appbar-title'),
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: colorScheme.onSurface,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    )
-                  : const SizedBox(key: ValueKey('appbar-empty')),
-            ),
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back_rounded),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: AnimatedSize(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-              alignment: Alignment.topCenter,
-              child: AnimatedSwitcher(
+        body: CustomScrollView(
+          controller: _scrollController,
+          slivers: [
+            SliverAppBar(
+              pinned: true,
+              floating: false,
+              elevation: 0,
+              scrolledUnderElevation: 1,
+              backgroundColor: colorScheme.surfaceContainer,
+              foregroundColor: colorScheme.onSurface,
+              toolbarHeight: 56,
+              collapsedHeight: 56,
+              centerTitle: false,
+              title: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 220),
                 switchInCurve: Curves.easeOut,
                 switchOutCurve: Curves.easeIn,
-                transitionBuilder: (child, animation) => FadeTransition(
-                  opacity: animation,
-                  child: SizeTransition(
-                    sizeFactor: animation,
-                    axisAlignment: -1.0,
-                    child: child,
+                child: showCollapsedTitle
+                    ? Text(
+                        trip.title,
+                        key: const ValueKey('appbar-title'),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
+                              color: colorScheme.onSurface,
+                              fontWeight: FontWeight.w600,
+                            ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      )
+                    : const SizedBox(key: ValueKey('appbar-empty')),
+              ),
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back_rounded),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: AnimatedSize(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                alignment: Alignment.topCenter,
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 220),
+                  switchInCurve: Curves.easeOut,
+                  switchOutCurve: Curves.easeIn,
+                  transitionBuilder: (child, animation) => FadeTransition(
+                    opacity: animation,
+                    child: SizeTransition(
+                      sizeFactor: animation,
+                      axisAlignment: -1.0,
+                      child: child,
+                    ),
                   ),
-                ),
-                child: _hideHeader
-                    ? const SizedBox.shrink(key: ValueKey('header-hidden'))
-                    : Container(
-                        key: const ValueKey('header-visible'),
-                        width: double.infinity,
-                        color: colorScheme.surfaceContainer,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              GroupHeader(
-                                trip: trip,
-                                onPinToggle: _handlePinToggle,
-                              ),
-                              const SizedBox(height: 32),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: GroupTotal(
-                                      total: totalExpenses,
-                                      currency: trip.currency,
+                  child: _hideHeader
+                      ? const SizedBox.shrink(key: ValueKey('header-hidden'))
+                      : Container(
+                          key: const ValueKey('header-visible'),
+                          width: double.infinity,
+                          color: colorScheme.surfaceContainer,
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                GroupHeader(
+                                  trip: trip,
+                                  onPinToggle: _handlePinToggle,
+                                ),
+                                const SizedBox(height: 32),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: GroupTotal(
+                                        total: totalExpenses,
+                                        currency: trip.currency,
+                                      ),
                                     ),
-                                  ),
-                                  GroupActions(
-                                    hasExpenses: trip.expenses.isNotEmpty,
-                                    onOverview: trip.expenses.isNotEmpty
-                                        ? _openUnifiedOverviewPage
-                                        : null,
-                                    onOptions: _showSettingsPage,
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 24),
-                            ],
+                                    GroupActions(
+                                      hasExpenses: trip.expenses.isNotEmpty,
+                                      onOverview: trip.expenses.isNotEmpty
+                                          ? _openUnifiedOverviewPage
+                                          : null,
+                                      onOptions: _showSettingsPage,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 24),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
+                ),
               ),
             ),
-          ),
-          SliverToBoxAdapter(
-            child: Container(
-              color: colorScheme
-                  .surfaceContainer, // background behind the decorated box
+            SliverToBoxAdapter(
               child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
+                color: colorScheme
+                    .surfaceContainer, // background behind the decorated box
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: colorScheme.surface,
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(24),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        FilteredExpenseList(
+                          expenses: trip.expenses,
+                          currency: trip.currency,
+                          onExpenseTap: _openEditExpense,
+                          categories: trip.categories,
+                          participants: trip.participants,
+                          onFiltersVisibilityChanged: (visible) {
+                            if (mounted) {
+                              setState(() => _hideHeader = visible);
+                            }
+                          },
+                          onAddExpense: _showAddExpenseSheet,
+                          newlyAddedExpenseId: _newlyAddedExpenseId,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SliverPadding(
+              padding: const EdgeInsets.only(bottom: 0),
+              sliver: SliverToBoxAdapter(
+                child: Container(
+                  height: _calculateBottomPadding(),
                   color: colorScheme.surface,
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(24),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      FilteredExpenseList(
-                        expenses: trip.expenses,
-                        currency: trip.currency,
-                        onExpenseTap: _openEditExpense,
-                        categories: trip.categories,
-                        participants: trip.participants,
-                        onFiltersVisibilityChanged: (visible) {
-                          if (mounted) {
-                            setState(() => _hideHeader = visible);
-                          }
-                        },
-                        onAddExpense: _showAddExpenseSheet,
-                        newlyAddedExpenseId: _newlyAddedExpenseId,
-                      ),
-                    ],
-                  ),
                 ),
               ),
             ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.only(bottom: 0),
-            sliver: SliverToBoxAdapter(
-              child: Container(
-                height: _calculateBottomPadding(),
-                color: colorScheme.surface,
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
+        floatingActionButton: _buildAnimatedFab(colorScheme),
       ),
-      floatingActionButton: _buildAnimatedFab(colorScheme),
-    ),
-  );
-}
+    );
+  }
 }

@@ -31,25 +31,25 @@ class SettingsPage extends StatelessWidget {
           ),
         ],
         child: Scaffold(
-        appBar: const CaravellaAppBar(),
-        body: ListView(
-          padding: EdgeInsets.fromLTRB(
-            0,
-            0,
-            0,
-            MediaQuery.of(context).padding.bottom + 24,
+          appBar: const CaravellaAppBar(),
+          body: ListView(
+            padding: EdgeInsets.fromLTRB(
+              0,
+              0,
+              0,
+              MediaQuery.of(context).padding.bottom + 24,
+            ),
+            children: [
+              _buildGeneralSection(context, loc, locale),
+              _buildPrivacySection(context, loc),
+              _buildDataSection(context, loc),
+              _buildInfoSection(context, loc),
+            ],
           ),
-          children: [
-            _buildGeneralSection(context, loc, locale),
-            _buildPrivacySection(context, loc),
-            _buildDataSection(context, loc),
-            _buildInfoSection(context, loc),
-          ],
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   // SECTION BUILDERS -------------------------------------------------------
   Widget _buildGeneralSection(
