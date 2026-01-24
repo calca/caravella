@@ -281,7 +281,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
     final gloc = gen.AppLocalizations.of(context);
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 350),
         switchInCurve: Curves.easeOutCubic,

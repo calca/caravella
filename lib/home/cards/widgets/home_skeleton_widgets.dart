@@ -140,30 +140,30 @@ class _FeaturedCardSkeletonState extends State<FeaturedCardSkeleton>
                       Expanded(
                         child: SkeletonBox(
                           width: 180,
-                          height: 28,
-                          borderRadius: 14,
+                          height: 24,
+                          borderRadius: 12,
                           color: skeletonColor,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6),
                   // Date range skeleton
                   SkeletonBox(
-                    width: 140,
-                    height: 16,
-                    borderRadius: 8,
+                    width: 120,
+                    height: 14,
+                    borderRadius: 7,
                     color: skeletonColorLight,
                   ),
-                  const SizedBox(height: HomeLayoutConstants.largeSpacing),
+                  const SizedBox(height: 14),
                   // Total amount skeleton
                   SkeletonBox(
-                    width: 160,
-                    height: 32,
-                    borderRadius: 16,
+                    width: 140,
+                    height: 28,
+                    borderRadius: 14,
                     color: skeletonColor,
                   ),
-                  const Spacer(),
+                  const SizedBox(height: 10),
                   // Stats skeleton (chart + extra info)
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -172,40 +172,40 @@ class _FeaturedCardSkeletonState extends State<FeaturedCardSkeleton>
                       Expanded(
                         child: SkeletonBox(
                           width: double.infinity,
-                          height: 60,
+                          height: 50,
                           borderRadius: 8,
                           color: skeletonColorLight,
                         ),
                       ),
-                      const SizedBox(width: 16),
+                      const SizedBox(width: 12),
                       // Extra info skeleton (today's spending)
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           SkeletonBox(
-                            width: 60,
-                            height: 14,
-                            borderRadius: 7,
+                            width: 50,
+                            height: 12,
+                            borderRadius: 6,
                             color: skeletonColorLight,
                           ),
                           const SizedBox(height: 4),
                           SkeletonBox(
-                            width: 80,
-                            height: 20,
-                            borderRadius: 10,
+                            width: 70,
+                            height: 18,
+                            borderRadius: 9,
                             color: skeletonColor,
                           ),
                         ],
                       ),
                     ],
                   ),
-                  const SizedBox(height: HomeLayoutConstants.largeSpacing),
+                  const SizedBox(height: 16),
                   // Add button skeleton
                   SkeletonBox(
                     width: double.infinity,
-                    height: 48,
-                    borderRadius: 24,
+                    height: 40,
+                    borderRadius: 20,
                     color: skeletonColorLight,
                   ),
                 ],

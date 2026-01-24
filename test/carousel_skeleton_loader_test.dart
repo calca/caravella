@@ -16,7 +16,7 @@ void main() {
 
       // Verify the widget renders
       expect(find.byType(CarouselSkeletonLoader), findsOneWidget);
-      expect(find.byType(PageView), findsOneWidget);
+      expect(find.byType(ListView), findsOneWidget);
     });
 
     testWidgets('shows skeleton cards during animation', (
@@ -67,7 +67,7 @@ void main() {
       expect(find.byType(CarouselSkeletonLoader), findsOneWidget);
     });
 
-    testWidgets('displays page indicators', (WidgetTester tester) async {
+    testWidgets('displays skeleton cards', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -76,13 +76,12 @@ void main() {
         ),
       );
 
-      // The widget should show indicator dots
-      expect(find.byType(Row), findsWidgets);
+      // The widget should show skeleton cards
+      expect(find.byType(CarouselCardSkeleton), findsNWidgets(3));
 
-      // Verify structure: there will be multiple Expanded widgets because
-      // each skeleton card contains a Spacer (which uses Expanded internally).
+      // Verify structure: skeleton cards use Column
       expect(find.byType(Column), findsWidgets);
-      expect(find.byType(Expanded), findsWidgets);
+      expect(find.byType(SizedBox), findsWidgets);
     });
 
     testWidgets('animation controller is disposed properly', (
