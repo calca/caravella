@@ -379,99 +379,71 @@ class _HomePageState extends State<HomePage> with RouteAware {
   /// Header and bottom bar are real, only content is skeleton
   Widget _buildSkeletonLayout(gen.AppLocalizations gloc) {
     final theme = Theme.of(context);
-    final mediaQuery = MediaQuery.of(context);
-    final screenHeight = mediaQuery.size.height;
-    final topSafeArea = mediaQuery.padding.top;
+    final topSafeArea = MediaQuery.of(context).padding.top;
 
-    // Same height calculations as HomeCardsSection
-    const headerHeight = HomeLayoutConstants.headerHeight;
-    const headerPaddingVertical = 32.0; // 16 top + 16 bottom padding
-    final bottomBarHeight =
-        screenHeight * HomeLayoutConstants.bottomBarHeightRatio;
-    final contentHeight =
-        screenHeight -
-        headerHeight -
-        headerPaddingVertical -
-        bottomBarHeight -
-        topSafeArea;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Safe area for status bar
+        SizedBox(height: topSafeArea),
 
-    // Carousel takes fixed proportion of content height
-    final carouselHeight =
-        contentHeight * HomeLayoutConstants.carouselHeightRatio;
-
-    return SizedBox(
-      height: screenHeight,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          // Safe area for status bar
-          SizedBox(height: topSafeArea),
-
-          // Real header - shows immediately
-          Padding(
-            padding: const EdgeInsets.fromLTRB(
-              HomeLayoutConstants.horizontalPadding,
-              16.0,
-              HomeLayoutConstants.horizontalPadding,
-              16.0,
-            ),
-            child: SizedBox(
-              height: headerHeight,
-              child: HomeCardsHeader(localizations: gloc, theme: theme),
-            ),
+        // Real header - shows immediately
+        Padding(
+          padding: const EdgeInsets.fromLTRB(
+            HomeLayoutConstants.horizontalPadding,
+            16.0,
+            HomeLayoutConstants.horizontalPadding,
+            16.0,
           ),
+          child: HomeCardsHeader(localizations: gloc, theme: theme),
+        ),
 
-          // Skeleton content - featured card + carousel
-          Padding(
+        // Skeleton content - featured card + carousel (fills remaining space)
+        Expanded(
+          child: Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: HomeLayoutConstants.horizontalPadding,
             ),
-            child: SizedBox(
-              height: contentHeight,
-              child: Column(
-                children: [
-                  // Featured card skeleton - takes all remaining space
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 0),
-                      child: FeaturedCardSkeleton(theme: theme),
-                    ),
-                  ),
+            child: Column(
+              children: [
+                // Top spacing before featured card
+                const SizedBox(height: 8),
 
-                  // Section header - real title visible during loading
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 8, 20, 12),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        gloc.your_groups,
-                        style: theme.textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                // Featured card skeleton - takes all remaining space
+                Expanded(child: FeaturedCardSkeleton(theme: theme)),
+
+                // Section header - real title visible during loading
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 20, 8),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      gloc.your_groups,
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
+                ),
 
-                  // Carousel skeleton
-                  SizedBox(
-                    height: carouselHeight - 48, // Account for header
-                    child: CarouselSkeletonLoader(theme: theme),
-                  ),
-                ],
-              ),
+                // Carousel skeleton - fixed height at bottom
+                SizedBox(
+                  height: HomeLayoutConstants.carouselCardTotalHeight,
+                  child: CarouselSkeletonLoader(theme: theme),
+                ),
+              ],
             ),
           ),
+        ),
 
-          // Real bottom bar - shows immediately
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: HomeLayoutConstants.horizontalPadding,
-            ),
-            child: SimpleBottomBar(localizations: gloc, theme: theme),
+        // Real bottom bar - shows immediately with safe area
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: HomeLayoutConstants.horizontalPadding,
           ),
-        ],
-      ),
+          child: SimpleBottomBar(localizations: gloc, theme: theme),
+        ),
+      ],
     );
   }
 }
