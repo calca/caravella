@@ -18,7 +18,6 @@ class ExpenseGroupColorPalette {
     Color? fallback,
   }) {
     final effectiveFallback = fallback ?? colorScheme.surface;
-    ;
 
     if (group.color == null) {
       return effectiveFallback;
