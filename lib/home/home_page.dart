@@ -447,13 +447,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
           ),
         ),
 
-        // Real bottom bar - shows immediately with safe area
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: HomeLayoutConstants.horizontalPadding,
-          ),
-          child: SimpleBottomBar(localizations: gloc, theme: theme),
-        ),
+        // Bottom bar removed from HomePage skeleton; HomeCardsSection manages its own footer
       ],
     );
   }

@@ -273,13 +273,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
           ),
         ),
 
-        // Bottom bar - always at bottom with safe area
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: HomeLayoutConstants.horizontalPadding,
-          ),
-          child: SimpleBottomBar(localizations: loc, theme: theme),
-        ),
+        // Bottom bar removed from HomeCardsSection; footer handled externally if needed
       ],
     );
   }
@@ -371,18 +365,24 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
           ),
         ),
 
-        // Carousel with remaining groups - fixed height at bottom
-        SizedBox(
-          height: HomeLayoutConstants.carouselCardTotalHeight,
-          child: HorizontalGroupsList(
-            groups: carouselGroups,
-            localizations: loc,
-            theme: theme,
-            onGroupUpdated: _handleGroupUpdated,
-            onGroupAdded: _handleGroupAdded,
-            onCategoryAdded: () {
-              _softLoadActiveGroups();
-            },
+        // Carousel with remaining groups - respect bottom safe area
+        SafeArea(
+          top: false,
+          left: false,
+          right: false,
+          bottom: true,
+          child: SizedBox(
+            height: HomeLayoutConstants.carouselCardTotalHeight,
+            child: HorizontalGroupsList(
+              groups: carouselGroups,
+              localizations: loc,
+              theme: theme,
+              onGroupUpdated: _handleGroupUpdated,
+              onGroupAdded: _handleGroupAdded,
+              onCategoryAdded: () {
+                _softLoadActiveGroups();
+              },
+            ),
           ),
         ),
       ],
@@ -433,10 +433,16 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
           ),
         ),
 
-        // Carousel skeleton - fixed height at bottom
-        SizedBox(
-          height: HomeLayoutConstants.carouselCardTotalHeight,
-          child: CarouselSkeletonLoader(theme: theme),
+        // Carousel skeleton - fixed height at bottom, respect safe area
+        SafeArea(
+          top: false,
+          left: false,
+          right: false,
+          bottom: true,
+          child: SizedBox(
+            height: HomeLayoutConstants.carouselCardTotalHeight,
+            child: CarouselSkeletonLoader(theme: theme),
+          ),
         ),
       ],
     );
