@@ -208,6 +208,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get your_groups => '您的群组';
 
   @override
+  String get see_all => '查看全部';
+
+  @override
   String get no_active_groups => '没有活跃的群组';
 
   @override

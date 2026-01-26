@@ -72,6 +72,8 @@
   "good_afternoon": "Buon pomeriggio",
   "good_evening": "Buonasera",
   "your_groups": "I tuoi gruppi",
+  "see_all": "Vedi tutti",
+  "@see_all": {"description": "Etichetta CTA per aprire la pagina cronologia e vedere tutti i gruppi"},
   "no_active_groups": "Nessun gruppo attivo",
   "no_active_groups_subtitle": "Crea un gruppo di spese",
   "create_first_group": "Crea un gruppo",

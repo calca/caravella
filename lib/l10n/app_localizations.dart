@@ -494,6 +494,12 @@ abstract class AppLocalizations {
   /// **'Your groups'**
   String get your_groups;
 
+  /// CTA label to open the history page and see all groups
+  ///
+  /// In en, this message translates to:
+  /// **'See all'**
+  String get see_all;
+
   /// No description provided for @no_active_groups.
   ///
   /// In en, this message translates to:

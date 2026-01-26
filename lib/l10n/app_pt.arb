@@ -91,6 +91,8 @@
   "good_afternoon": "Boa tarde",
   "good_evening": "Boa noite",
   "your_groups": "Seus grupos",
+  "see_all": "Ver todos",
+  "@see_all": {"description": "Rótulo CTA para abrir a página de histórico e ver todos os grupos"},
   "no_active_groups": "Nenhum grupo ativo",
   "no_active_groups_subtitle": "Crie um grupo de despesas",
   "create_first_group": "Criar um grupo",

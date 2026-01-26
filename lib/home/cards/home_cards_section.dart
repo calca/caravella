@@ -7,6 +7,7 @@ import '../home_constants.dart';
 // Removed locale_notifier import after migration
 // locale_notifier no longer needed after migration
 import 'widgets/widgets.dart';
+import '../../manager/history/expenses_history_page.dart';
 
 class HomeCardsSection extends StatefulWidget {
   final VoidCallback onTripAdded;
@@ -324,17 +325,49 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
           ),
         ),
 
-        // Section header for "Your Groups" - pinned at bottom
+        // Section header for "Your Groups" with CTA to history - pinned at bottom
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 0, 20, 16),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              loc.your_groups,
-              style: theme.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  loc.your_groups,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-            ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const ExpesensHistoryPage(),
+                    ),
+                  );
+                },
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                child: Row(
+                  children: [
+                    Text(
+                      loc.see_all,
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
+                    const SizedBox(width: 2),
+                    Icon(
+                      Icons.chevron_right,
+                      size: 18,
+                      color: theme.colorScheme.primary,
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
 
@@ -366,17 +399,37 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
         // Featured card skeleton - takes all remaining space
         Expanded(child: FeaturedCardSkeleton(theme: theme)),
 
-        // Section header - real title visible during loading
+        // Section header - real title visible during loading (skeleton) with CTA
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 0, 20, 16),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              loc.your_groups,
-              style: theme.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  loc.your_groups,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-            ),
+              // Disabled CTA in skeleton state (no interaction)
+              Row(
+                children: [
+                  Text(
+                    loc.see_all,
+                    style: theme.textTheme.labelLarge?.copyWith(
+                      color: theme.colorScheme.primary.withValues(alpha: 153),
+                    ),
+                  ),
+                  const SizedBox(width: 2),
+                  Icon(
+                    Icons.chevron_right,
+                    size: 18,
+                    color: theme.colorScheme.primary.withValues(alpha: 153),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
 

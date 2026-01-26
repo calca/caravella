@@ -211,6 +211,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get your_groups => 'Seus grupos';
 
   @override
+  String get see_all => 'Ver todos';
+
+  @override
   String get no_active_groups => 'Nenhum grupo ativo';
 
   @override
