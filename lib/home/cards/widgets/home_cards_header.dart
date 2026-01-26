@@ -133,15 +133,12 @@ class HomeCardsHeader extends StatelessWidget {
 
         // CTA button: apre direttamente la pagina delle impostazioni
         IconButton(
-          icon: Icon(
-            Icons.settings,
-            color: theme.colorScheme.onSurface,
-          ),
+          icon: Icon(Icons.settings, color: theme.colorScheme.onSurface),
           tooltip: localizations.settings,
           onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (ctx) => const SettingsPage()),
-            );
+            Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (ctx) => const SettingsPage()));
           },
         ),
       ],
