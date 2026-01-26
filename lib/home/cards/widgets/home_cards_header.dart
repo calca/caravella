@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:provider/provider.dart';
 import 'package:caravella_core/caravella_core.dart';
+import '../../../settings/pages/settings_page.dart';
 
 class HomeCardsHeader extends StatelessWidget {
   final gen.AppLocalizations localizations;
@@ -127,6 +128,21 @@ class HomeCardsHeader extends StatelessWidget {
               );
             },
           ),
+        ),
+        const SizedBox(width: 8),
+
+        // CTA button: apre direttamente la pagina delle impostazioni
+        IconButton(
+          icon: Icon(
+            Icons.settings,
+            color: theme.colorScheme.onSurface,
+          ),
+          tooltip: localizations.settings,
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (ctx) => const SettingsPage()),
+            );
+          },
         ),
       ],
     );
