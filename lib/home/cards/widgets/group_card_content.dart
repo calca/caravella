@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
-import 'package:caravella_core_ui/caravella_core_ui.dart';
+import 'package:io_caravella_egm/manager/details/widgets/group_total.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../home_constants.dart';
@@ -81,16 +81,9 @@ class GroupCardContent extends StatelessWidget {
                         Expanded(
                           child: Align(
                             alignment: Alignment.centerLeft,
-                            child: CurrencyDisplay(
-                              value: totalExpenses,
+                            child: GroupTotal(
+                              total: totalExpenses,
                               currency: currentGroup.currency,
-                              valueFontSize:
-                                  HomeLayoutConstants.cardTotalFontSize,
-                              currencyFontSize:
-                                  HomeLayoutConstants.cardCurrencyFontSize,
-                              alignment: MainAxisAlignment.start,
-                              showDecimals: true,
-                              color: theme.colorScheme.onSurface,
                             ),
                           ),
                         ),
@@ -98,25 +91,10 @@ class GroupCardContent extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Text(
-                                localizations.spent_today,
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  color: theme.colorScheme.onSurface.withValues(
-                                    alpha: HomeLayoutConstants.mutedTextAlpha,
-                                  ),
-                                  fontSize: 12,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              CurrencyDisplay(
-                                value: todaySpending,
+                              GroupTotal(
+                                total: todaySpending,
                                 currency: currentGroup.currency,
-                                valueFontSize: 18,
-                                currencyFontSize: 14,
-                                alignment: MainAxisAlignment.end,
-                                showDecimals: true,
-                                color: theme.colorScheme.onSurface,
-                                fontWeight: FontWeight.w600,
+                                title: localizations.spent_today,
                               ),
                             ],
                           ),
@@ -127,6 +105,7 @@ class GroupCardContent extends StatelessWidget {
                 ),
                 // Show last 2 expenses using the same card widget as the details page
                 Spacer(),
+                
                 Builder(
                   builder: (ctx) {
                     final expenses = List<ExpenseDetails>.from(

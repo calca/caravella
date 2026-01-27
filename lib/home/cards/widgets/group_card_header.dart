@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../home_constants.dart';
+import '../../../manager/details/widgets/group_header.dart'
+    show ExpenseGroupAvatar;
 
 /// Displays the header section of a group card.
 ///
@@ -53,6 +55,13 @@ class GroupCardHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        ExpenseGroupAvatar(
+          trip: group,
+          size: HomeLayoutConstants.headerHeight - 32,
+          backgroundColor:
+              theme.colorScheme.surfaceContainer, // avatar diameter ~56
+        ),
+        const SizedBox(width: 8),
         Expanded(
           child: Text(
             group.title,

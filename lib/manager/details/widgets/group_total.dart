@@ -5,17 +5,24 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 class GroupTotal extends StatelessWidget {
   final double total;
   final String currency;
-  const GroupTotal({super.key, required this.total, required this.currency});
+  final String? title;
+  const GroupTotal({
+    super.key,
+    required this.total,
+    required this.currency,
+    this.title,
+  });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final gloc = gen.AppLocalizations.of(context);
+    final displayTitle = title ?? gloc.group_total;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          gloc.group_total,
+          displayTitle,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             fontWeight: FontWeight.w500,
             color: colorScheme.onSurfaceVariant,
