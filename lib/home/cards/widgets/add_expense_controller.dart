@@ -197,10 +197,7 @@ class GroupCardAddButton extends StatelessWidget {
         child: TextButton(
           onPressed: () => controller.showAddExpenseSheet(context, group),
           style: TextButton.styleFrom(
-            foregroundColor: theme.colorScheme.onSurface,
-            backgroundColor: theme.colorScheme.onSurface.withValues(
-              alpha: 0.05,
-            ),
+            foregroundColor: theme.colorScheme.primary,
             padding: const EdgeInsets.symmetric(
               vertical: HomeLayoutConstants.buttonBorderRadius,
             ),
@@ -210,10 +207,11 @@ class GroupCardAddButton extends StatelessWidget {
               ),
             ),
           ),
-          child: Icon(
-            Icons.add,
-            size: HomeLayoutConstants.standardIconSize + 2,
-            color: theme.colorScheme.onSurface,
+          child: Text(
+            localizations.add_expense_fab.toUpperCase(),
+            style: theme.textTheme.labelLarge?.copyWith(
+              color: theme.colorScheme.primary,
+            ),
           ),
         ),
       ),
