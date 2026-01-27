@@ -23,7 +23,6 @@ class GroupCardContent extends StatelessWidget {
   final ThemeData theme;
   final VoidCallback onExpenseAdded;
   final VoidCallback? onCategoryAdded;
-  final bool hideAddButton;
 
   const GroupCardContent({
     super.key,
@@ -32,7 +31,6 @@ class GroupCardContent extends StatelessWidget {
     required this.theme,
     required this.onExpenseAdded,
     this.onCategoryAdded,
-    this.hideAddButton = false,
   });
 
   @override
@@ -52,8 +50,6 @@ class GroupCardContent extends StatelessWidget {
 
         return LayoutBuilder(
           builder: (ctx2, constraints) {
-            final fillAvailable = constraints.maxHeight != double.infinity;
-
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -130,6 +126,7 @@ class GroupCardContent extends StatelessWidget {
                   },
                 ),
                 // Show last 2 expenses using the same card widget as the details page
+                Spacer(),
                 Builder(
                   builder: (ctx) {
                     final expenses = List<ExpenseDetails>.from(
@@ -169,12 +166,11 @@ class GroupCardContent extends StatelessWidget {
                     );
                   },
                 ),
-                if (!hideAddButton)
-                  GroupCardAddButton(
-                    group: currentGroup,
-                    theme: theme,
-                    controller: addExpenseController,
-                  ),
+                GroupCardAddButton(
+                  group: currentGroup,
+                  theme: theme,
+                  controller: addExpenseController,
+                ),
               ],
             );
           },

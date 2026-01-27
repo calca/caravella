@@ -13,7 +13,6 @@ class GroupCard extends StatelessWidget {
   final VoidCallback? onCategoryAdded;
   final bool isSelected;
   final double selectionProgress;
-  final bool hideAddButton;
 
   const GroupCard({
     super.key,
@@ -24,7 +23,6 @@ class GroupCard extends StatelessWidget {
     this.onCategoryAdded,
     this.isSelected = false,
     this.selectionProgress = 0.0,
-    this.hideAddButton = false,
   });
 
   Color _getSelectedColor(bool isDarkMode) {
@@ -101,7 +99,6 @@ class GroupCard extends StatelessWidget {
           theme: theme,
           onExpenseAdded: onGroupUpdated,
           onCategoryAdded: onCategoryAdded,
-          hideAddButton: hideAddButton,
         ),
       ),
     );
