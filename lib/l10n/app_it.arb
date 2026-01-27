@@ -130,6 +130,8 @@
   "@participant_count": {"description": "Conteggio partecipanti con plurale", "placeholders": {"count": {}}},
   "last_7_days": "7 giorni",
   "recent_activity": "Attività recente",
+  "recent_expenses": "Spese recenti",
+  "@recent_expenses": {"description": "Etichetta per la sezione delle spese recenti"},
   "about": "Informazioni",
   "license_hint": "Questa app è distribuita con licenza MIT.",
   "license_link": "Visualizza licenza MIT",

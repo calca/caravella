@@ -158,6 +158,8 @@
   "participants_label": "参与者",
   "last_7_days": "过去7天",
   "recent_activity": "最近活动",
+  "recent_expenses": "最近支出",
+  "@recent_expenses": {"description": "最近支出部分的标签"},
   "about": "关于",
   "license_hint": "此应用在MIT许可证下发布。",
   "license_link": "在GitHub上查看MIT许可证",

@@ -388,6 +388,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get recent_activity => 'Atividade recente';
 
   @override
+  String get recent_expenses => 'Despesas recentes';
+
+  @override
   String get about => 'Sobre';
 
   @override

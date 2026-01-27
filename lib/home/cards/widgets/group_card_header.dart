@@ -47,7 +47,7 @@ class GroupCardHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [_buildTitle(), _buildDateRange()],
+      children: [_buildDateRange(), _buildTitle()],
     );
   }
 

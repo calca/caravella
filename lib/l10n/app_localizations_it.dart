@@ -390,6 +390,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get recent_activity => 'Attività recente';
 
   @override
+  String get recent_expenses => 'Spese recenti';
+
+  @override
   String get about => 'Informazioni';
 
   @override

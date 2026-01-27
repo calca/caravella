@@ -58,8 +58,6 @@ class GroupCardContent extends StatelessWidget {
                   localizations: localizations,
                   theme: theme,
                 ),
-                const SizedBox(height: HomeLayoutConstants.largeSpacing),
-                // Total (left) and today's spending (right) on same row
                 Builder(
                   builder: (ctx) {
                     final totalExpenses = currentGroup.expenses.fold<double>(
@@ -104,8 +102,15 @@ class GroupCardContent extends StatelessWidget {
                   },
                 ),
                 // Show last 2 expenses using the same card widget as the details page
+                const SizedBox(height: HomeLayoutConstants.smallSpacing),
                 Spacer(),
-                
+                Text(
+                  localizations.recent_expenses,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
                 Builder(
                   builder: (ctx) {
                     final expenses = List<ExpenseDetails>.from(

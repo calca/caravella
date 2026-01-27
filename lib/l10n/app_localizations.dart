@@ -812,6 +812,12 @@ abstract class AppLocalizations {
   /// **'Recent activity'**
   String get recent_activity;
 
+  /// Label for recent expenses section
+  ///
+  /// In en, this message translates to:
+  /// **'Recent expenses'**
+  String get recent_expenses;
+
   /// No description provided for @about.
   ///
   /// In en, this message translates to:

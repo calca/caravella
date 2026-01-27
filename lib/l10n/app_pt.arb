@@ -131,6 +131,8 @@
   "expenses": "Despesas",
   "participants_label": "Participantes",
   "recent_activity": "Atividade recente",
+  "recent_expenses": "Despesas recentes",
+  "@recent_expenses": {"description": "Rótulo para a seção de despesas recentes"},
   "license_hint": "Este aplicativo é distribuído sob a licença MIT.",
   "license_section": "Licença",
   "new_group": "Novo grupo",

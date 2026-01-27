@@ -136,6 +136,8 @@
   "participants_label": "Participantes",
   "last_7_days": "7 días",
   "recent_activity": "Actividad reciente",
+  "recent_expenses": "Gastos recientes",
+  "@recent_expenses": {"description": "Etiqueta para la sección de gastos recientes"},
   "about": "Acerca de",
   "license_hint": "Esta aplicación se distribuye bajo licencia MIT.",
   "license_link": "Ver licencia MIT en GitHub",

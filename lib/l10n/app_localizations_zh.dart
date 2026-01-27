@@ -382,6 +382,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get recent_activity => '最近活动';
 
   @override
+  String get recent_expenses => '最近支出';
+
+  @override
   String get about => '关于';
 
   @override
