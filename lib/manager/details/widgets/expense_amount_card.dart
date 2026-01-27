@@ -55,11 +55,11 @@ class ExpenseAmountCard extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return BaseCard(
-        padding: fullWidth
+      padding: fullWidth
           ? EdgeInsets.symmetric(horizontal: 0, vertical: compact ? 10 : 16)
           : (compact
-            ? const EdgeInsets.symmetric(horizontal: 12, vertical: 10)
-            : const EdgeInsets.symmetric(horizontal: 20, vertical: 16)),
+                ? const EdgeInsets.symmetric(horizontal: 12, vertical: 10)
+                : const EdgeInsets.symmetric(horizontal: 20, vertical: 16)),
       backgroundColor: Colors.transparent,
       noBorder: true,
       child: InkWell(
