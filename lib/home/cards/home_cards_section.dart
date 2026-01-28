@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:android_nav_setting/android_nav_setting.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart'
     as gen; // generated
 import 'package:caravella_core/caravella_core.dart';
@@ -35,6 +36,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
   List<ExpenseGroup> _activeGroups = [];
   bool _loading = true;
   ExpenseGroupNotifier? _groupNotifier;
+  bool _hasNavigationBar = false;
 
   @override
   void initState() {
@@ -44,6 +46,19 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
       _loading = false;
     } else {
       _loadActiveGroups();
+    }
+    _initNavSetting();
+  }
+
+  Future<void> _initNavSetting() async {
+    try {
+      final navSetting = AndroidNavSetting();
+      final isGesture = await navSetting.isGestureNavigationEnabled();
+      if (mounted) {
+        setState(() => _hasNavigationBar = !isGesture);
+      }
+    } catch (e) {
+      // best-effort: silently ignore errors (plugin may fail on some devices)
     }
   }
 
@@ -385,6 +400,8 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
             ),
           ),
         ),
+        // Extra spacing when system navigation bar is present
+        if (_hasNavigationBar) const SizedBox(height: 100),
       ],
     );
   }
@@ -444,6 +461,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
             child: CarouselSkeletonLoader(theme: theme),
           ),
         ),
+        if (_hasNavigationBar) const SizedBox(height: 12),
       ],
     );
   }
