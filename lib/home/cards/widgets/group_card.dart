@@ -81,6 +81,7 @@ class GroupCard extends StatelessWidget {
       height: double.infinity, // Assicura che usi tutto lo spazio verticale
       child: BaseCard(
         margin: const EdgeInsets.only(bottom: 16),
+        borderRadius: BorderRadius.circular(32),
         backgroundColor: backgroundColor,
         backgroundImage: group.file,
         onTap: () async {
