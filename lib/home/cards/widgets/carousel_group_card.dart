@@ -23,7 +23,7 @@ class CarouselGroupCard extends StatelessWidget {
   static const double tileSize = 90.0;
 
   /// Border radius for the tile
-  static const double tileBorderRadius = 12.0;
+  static const double tileBorderRadius = 100.0;
 
   /// Total height including text below the tile
   /// tile (90) + spacing (6) + title (~16) + spacing (2) + balance (~14)
@@ -147,6 +147,7 @@ class CarouselGroupCard extends StatelessWidget {
         color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
         fontWeight: FontWeight.w500,
       ),
+      textAlign: TextAlign.center,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
     );
@@ -169,7 +170,7 @@ class CarouselGroupCard extends StatelessWidget {
         width: tileSize,
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Square tile with image or initials
             _buildTile(context),
@@ -180,6 +181,7 @@ class CarouselGroupCard extends StatelessWidget {
               style: theme.textTheme.bodySmall?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
+              textAlign: TextAlign.center,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),

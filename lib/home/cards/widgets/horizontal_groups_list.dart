@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import 'dart:math' as math;
+
 import 'carousel_group_card.dart';
 import '../../navigation_helpers.dart';
 
@@ -24,6 +26,99 @@ class HorizontalGroupsList extends StatefulWidget {
 
   @override
   State<HorizontalGroupsList> createState() => _HorizontalGroupsListState();
+}
+
+/// Widget helper that draws a rounded dashed border around [child].
+class _DashedBorder extends StatelessWidget {
+  final double width;
+  final double height;
+  final double radius;
+  final Color color;
+  final double strokeWidth;
+  final double dashLength;
+  final double gapLength;
+  final Widget? child;
+
+  const _DashedBorder({
+    required this.width,
+    required this.height,
+    required this.radius,
+    required this.color,
+    this.strokeWidth = 1,
+    this.dashLength = 6,
+    this.gapLength = 4,
+    this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: width,
+      height: height,
+      child: CustomPaint(
+        foregroundPainter: _DashPainter(
+          color: color,
+          strokeWidth: strokeWidth,
+          dashLength: dashLength,
+          gapLength: gapLength,
+          radius: radius,
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(radius),
+          child: child ?? const SizedBox.shrink(),
+        ),
+      ),
+    );
+  }
+}
+
+class _DashPainter extends CustomPainter {
+  final Color color;
+  final double strokeWidth;
+  final double dashLength;
+  final double gapLength;
+  final double radius;
+
+  _DashPainter({
+    required this.color,
+    required this.strokeWidth,
+    required this.dashLength,
+    required this.gapLength,
+    required this.radius,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round;
+
+    final rect = Rect.fromLTWH(0, 0, size.width, size.height);
+    final rrect = RRect.fromRectAndRadius(rect, Radius.circular(radius));
+    final path = Path()..addRRect(rrect);
+
+    final metrics = path.computeMetrics();
+    for (final metric in metrics) {
+      double distance = 0.0;
+      while (distance < metric.length) {
+        final double next = math.min(dashLength, metric.length - distance);
+        final extracted = metric.extractPath(distance, distance + next);
+        canvas.drawPath(extracted, paint);
+        distance += dashLength + gapLength;
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _DashPainter oldDelegate) {
+    return oldDelegate.color != color ||
+        oldDelegate.strokeWidth != strokeWidth ||
+        oldDelegate.dashLength != dashLength ||
+        oldDelegate.gapLength != gapLength ||
+        oldDelegate.radius != radius;
+  }
 }
 
 class _HorizontalGroupsListState extends State<HorizontalGroupsList>
@@ -193,28 +288,26 @@ class _AddNewGroupTile extends StatelessWidget {
         width: CarouselGroupCard.tileSize,
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Square tile with + icon
-            Container(
+            // Square tile with + icon (dashed border)
+            _DashedBorder(
               width: CarouselGroupCard.tileSize,
               height: CarouselGroupCard.tileSize,
-              decoration: BoxDecoration(
+              radius: CarouselGroupCard.tileBorderRadius,
+              color: theme.colorScheme.outline.withValues(alpha: 0.2),
+              strokeWidth: 2,
+              dashLength: 6,
+              gapLength: 10,
+              child: Container(
                 color: theme.colorScheme.surface,
-                borderRadius: BorderRadius.circular(
-                  CarouselGroupCard.tileBorderRadius,
-                ),
-                border: Border.all(
-                  color: theme.colorScheme.outline.withValues(alpha: 0.2),
-                  width: 1,
-                ),
-              ),
-              child: Center(
-                child: Icon(
-                  Icons.add_rounded,
-                  size: 28,
-                  color: theme.colorScheme.onSurfaceVariant.withValues(
-                    alpha: 0.4,
+                child: Center(
+                  child: Icon(
+                    Icons.add_rounded,
+                    size: 28,
+                    color: theme.colorScheme.onSurfaceVariant.withValues(
+                      alpha: 0.4,
+                    ),
                   ),
                 ),
               ),
