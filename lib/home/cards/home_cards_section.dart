@@ -401,7 +401,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
           ),
         ),
         // Extra spacing when system navigation bar is present
-        if (_hasNavigationBar) const SizedBox(height: 100),
+        if (!_hasNavigationBar) const SizedBox(height: 12),
       ],
     );
   }
@@ -461,7 +461,6 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
             child: CarouselSkeletonLoader(theme: theme),
           ),
         ),
-        if (_hasNavigationBar) const SizedBox(height: 12),
       ],
     );
   }
