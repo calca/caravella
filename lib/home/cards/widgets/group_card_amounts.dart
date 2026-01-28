@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/manager/details/widgets/group_total.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 /// Small widget extracted from GroupCardContent showing
@@ -33,24 +34,47 @@ class GroupCardAmounts extends StatelessWidget {
         )
         .fold<double>(0, (s, e) => s + (e.amount ?? 0));
 
-    return Row(
+    final primary = theme.colorScheme.primary;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Expanded(
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: GroupTotal(total: totalExpenses, currency: group.currency),
-          ),
+        Align(
+          alignment: Alignment.center,
+          child: GroupTotal(total: totalExpenses, currency: group.currency),
         ),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              GroupTotal(
-                total: todaySpending,
-                currency: group.currency,
-                title: localizations.spent_today,
-              ),
-            ],
+        const SizedBox(height: 8),
+        Align(
+          alignment: Alignment.center,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: primary.withOpacity(0.08),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CurrencyDisplay(
+                  value: todaySpending.abs(),
+                  currency: group.currency,
+                  valueFontSize: 16,
+                  currencyFontSize: 12,
+                  alignment: MainAxisAlignment.start,
+                  showDecimals: true,
+                  color: primary,
+                  fontWeight: FontWeight.w700,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  localizations.spent_today.toLowerCase(),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ],

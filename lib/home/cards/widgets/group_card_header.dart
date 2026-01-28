@@ -55,13 +55,13 @@ class GroupCardHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        ExpenseGroupAvatar(
-          trip: group,
-          size: HomeLayoutConstants.headerHeight - 32,
-          backgroundColor:
-              theme.colorScheme.surfaceContainer, // avatar diameter ~56
-        ),
-        const SizedBox(width: 8),
+        // ExpenseGroupAvatar(
+        //   trip: group,
+        //   size: HomeLayoutConstants.headerHeight - 32,
+        //   backgroundColor:
+        //       theme.colorScheme.surfaceContainer, // avatar diameter ~56
+        // ),
+        // const SizedBox(width: 8),
         Expanded(
           child: Text(
             group.title,
