@@ -7,8 +7,7 @@ import 'group_card_header.dart';
 import 'group_card_amounts.dart';
 // group_card_stats.dart removed import (not needed here)
 import 'add_expense_controller.dart';
-import '../../../manager/details/widgets/expense_amount_card.dart';
-import '../../../manager/details/pages/expense_group_detail_page.dart';
+import 'group_card_recents.dart';
 
 /// Main content widget for expense group cards.
 ///
@@ -66,51 +65,10 @@ class GroupCardContent extends StatelessWidget {
                 // Show last 2 expenses using the same card widget as the details page
                 const SizedBox(height: HomeLayoutConstants.smallSpacing),
                 Spacer(),
-                Text(
-                  localizations.recent_expenses,
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                Builder(
-                  builder: (ctx) {
-                    final expenses = List<ExpenseDetails>.from(
-                      currentGroup.expenses,
-                    );
-                    expenses.sort((a, b) => b.date.compareTo(a.date));
-                    final lastTwo = expenses.take(2).toList();
-                    if (lastTwo.isEmpty) return const SizedBox.shrink();
-                    return Column(
-                      children: lastTwo.map((e) {
-                        return Container(
-                          width: double.infinity,
-                          margin: const EdgeInsets.only(bottom: 6.0),
-                          child: ExpenseAmountCard(
-                            title: e.name ?? '',
-                            coins: (e.amount ?? 0).toInt(),
-                            checked: true,
-                            paidBy: e.paidBy,
-                            category: e.category.name,
-                            date: e.date,
-                            showDate: false,
-                            compact: true,
-                            fullWidth: true,
-                            currency: currentGroup.currency,
-                            onTap: () {
-                              Navigator.of(ctx).push(
-                                MaterialPageRoute(
-                                  builder: (_) => ExpenseGroupDetailPage(
-                                    trip: currentGroup,
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        );
-                      }).toList(),
-                    );
-                  },
+                GroupCardRecents(
+                  group: currentGroup,
+                  localizations: localizations,
+                  theme: theme,
                 ),
                 GroupCardAddButton(
                   group: currentGroup,
