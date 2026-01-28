@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
-import 'package:io_caravella_egm/manager/details/widgets/group_total.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../home_constants.dart';
 import 'group_card_header.dart';
+import 'group_card_amounts.dart';
 // group_card_stats.dart removed import (not needed here)
 import 'add_expense_controller.dart';
 import '../../../manager/details/widgets/expense_amount_card.dart';
@@ -58,48 +58,10 @@ class GroupCardContent extends StatelessWidget {
                   localizations: localizations,
                   theme: theme,
                 ),
-                Builder(
-                  builder: (ctx) {
-                    final totalExpenses = currentGroup.expenses.fold<double>(
-                      0,
-                      (sum, expense) => sum + (expense.amount ?? 0),
-                    );
-                    final now = DateTime.now();
-                    final todaySpending = currentGroup.expenses
-                        .where(
-                          (e) =>
-                              e.date.year == now.year &&
-                              e.date.month == now.month &&
-                              e.date.day == now.day,
-                        )
-                        .fold<double>(0, (s, e) => s + (e.amount ?? 0));
-
-                    return Row(
-                      children: [
-                        Expanded(
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: GroupTotal(
-                              total: totalExpenses,
-                              currency: currentGroup.currency,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              GroupTotal(
-                                total: todaySpending,
-                                currency: currentGroup.currency,
-                                title: localizations.spent_today,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    );
-                  },
+                GroupCardAmounts(
+                  group: currentGroup,
+                  theme: theme,
+                  localizations: localizations,
                 ),
                 // Show last 2 expenses using the same card widget as the details page
                 const SizedBox(height: HomeLayoutConstants.smallSpacing),
