@@ -22,7 +22,7 @@ class GroupCardRecents extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          localizations.recent_expenses,
+          localizations.recent_expenses.toUpperCase(),
           style: theme.textTheme.labelSmall?.copyWith(
             color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
             fontWeight: FontWeight.w400,
