@@ -187,7 +187,7 @@ class CarouselGroupCard extends StatelessWidget {
             ),
             const SizedBox(height: 1),
             // Total spent
-            _buildTotalSpentText(context),
+            // _buildTotalSpentText(context),
           ],
         ),
       ),
