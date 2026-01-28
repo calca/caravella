@@ -70,7 +70,7 @@ class ExpenseAmountCard extends StatelessWidget {
           children: [
             // Participant Avatar on the left
             if (paidBy != null) ...[
-              ParticipantAvatar(participant: paidBy!, size: compact ? 40 : 52),
+              ParticipantAvatar(participant: paidBy!, size: compact ? 32 : 52),
               SizedBox(width: compact ? 8 : 12),
             ],
             // Main info (title, person, date)
@@ -86,26 +86,11 @@ class ExpenseAmountCard extends StatelessWidget {
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        // if (paidBy != null) ...[
-                        //   Icon(
-                        //     Icons.person_outline_rounded,
-                        //     size: 15,
-                        //     color: colorScheme.onSurface,
-                        //   ),
-                        //   const SizedBox(width: 4),
-                        //   Text(
-                        //     paidBy!.name,
-                        //     style: textTheme.labelSmall?.copyWith(
-                        //       color: colorScheme.onSurface,
-                        //       fontWeight: FontWeight.w400,
-                        //     ),
-                        //   ),
-                        // ],
                         if (category != null && category!.isNotEmpty) ...[
                           //const SizedBox(width: 12),
                           Icon(
                             Icons.local_offer_outlined,
-                            size: 15,
+                            size: compact ? 10 : 15,
                             color: colorScheme.onSurface,
                           ),
                           const SizedBox(width: 4),

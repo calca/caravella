@@ -24,8 +24,8 @@ class GroupCardRecents extends StatelessWidget {
         Text(
           localizations.recent_expenses,
           style: theme.textTheme.labelSmall?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-            fontWeight: FontWeight.w600,
+            color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+            fontWeight: FontWeight.w400,
           ),
         ),
         Builder(
