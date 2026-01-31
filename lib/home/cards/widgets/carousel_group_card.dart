@@ -127,32 +127,6 @@ class CarouselGroupCard extends StatelessWidget {
     );
   }
 
-  /// Calculates and formats the total spent in the group
-  Widget _buildTotalSpentText(BuildContext context) {
-    // Calculate total spent from all expenses
-    double totalSpent = 0.0;
-    for (final expense in group.expenses) {
-      totalSpent += expense.amount ?? 0.0;
-    }
-
-    final totalText = CurrencyDisplay.formatCurrencyText(
-      totalSpent,
-      group.currency,
-      showDecimals: true,
-    );
-
-    return Text(
-      totalText,
-      style: theme.textTheme.bodySmall?.copyWith(
-        color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-        fontWeight: FontWeight.w500,
-      ),
-      textAlign: TextAlign.center,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
