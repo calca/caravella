@@ -33,16 +33,10 @@ class _HomeWelcomeSectionState extends State<HomeWelcomeSection>
       curve: Curves.easeOut,
     );
 
-    // Start animation after first frame to avoid build-time jank
+    // Defer animation and system UI setup to after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         _controller.forward();
-      }
-    });
-
-    // Set system UI colors once in initState
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
         _setSystemUIColors();
       }
     });
