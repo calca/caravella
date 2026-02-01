@@ -149,7 +149,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
     if (!mounted) return;
 
     // Determine if we should show welcome screen based on data and preferences
-    final (shouldShowWelcome, isFirstStartFromPrefs) = _shouldShowWelcomeScreen(hasGroups);
+    final (:shouldShowWelcome, :isFirstStartFromPrefs) = _shouldShowWelcomeScreen(hasGroups);
 
     // If we determined user has groups but flag says first start,
     // update the preference to reflect reality
@@ -224,7 +224,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
     final hasGroups = activeGroups.isNotEmpty || archivedGroups.isNotEmpty;
 
     // Determine if we should show welcome screen based on data and preferences
-    final (shouldShowWelcome, _) = _shouldShowWelcomeScreen(hasGroups);
+    final (:shouldShowWelcome) = _shouldShowWelcomeScreen(hasGroups);
 
     // Determine which view to show
     final newViewKey = shouldShowWelcome
