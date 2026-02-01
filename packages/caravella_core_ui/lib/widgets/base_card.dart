@@ -62,7 +62,7 @@ class BaseCard extends StatelessWidget {
           BoxShadow(
             color: theme.colorScheme.shadow.withValues(alpha: 0.08),
             blurRadius: isFlat ? 4 : (elevation ?? 8),
-            offset: isFlat ? const Offset(0, 2) : const Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       );
@@ -80,7 +80,7 @@ class BaseCard extends StatelessWidget {
           BoxShadow(
             color: theme.colorScheme.shadow.withValues(alpha: 0.08),
             blurRadius: isFlat ? 4 : (elevation ?? 8),
-            offset: isFlat ? const Offset(0, 2) : const Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       );
