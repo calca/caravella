@@ -111,6 +111,18 @@ class _HomePageState extends State<HomePage> with RouteAware {
     }
   }
 
+  /// Determines whether the welcome screen should be shown based on actual data and preferences.
+  /// Returns true only if there are no groups AND the preference indicates first start.
+  /// This data-driven approach ensures groups are always shown if they exist,
+  /// regardless of preference state (handles edge cases like preference update failures).
+  ///
+  /// Also returns the preference value for potential auto-correction logic.
+  ({bool shouldShowWelcome, bool isFirstStartFromPrefs}) _shouldShowWelcomeScreen(bool hasGroups) {
+    final prefValue = PreferencesService.instance.appState
+        .isFirstStart();
+    return (shouldShowWelcome: !hasGroups && prefValue, isFirstStartFromPrefs: prefValue);
+  }
+
   Future<void> _loadLocaleAndTrip() async {
     // Skip loading state if showing welcome screen on first start
     // This prevents flash of loading skeleton before welcome screen
@@ -136,16 +148,12 @@ class _HomePageState extends State<HomePage> with RouteAware {
 
     if (!mounted) return;
 
-    // Update first start flag based on whether groups exist
-    // If groups exist, it's not first start regardless of preference
-    // If no groups exist, respect the preference
-    final prefIsFirstStart = PreferencesService.instance.appState
-        .isFirstStart();
-    final shouldShowWelcome = !hasGroups && prefIsFirstStart;
+    // Determine if we should show welcome screen based on data and preferences
+    final (shouldShowWelcome, isFirstStartFromPrefs) = _shouldShowWelcomeScreen(hasGroups);
 
     // If we determined user has groups but flag says first start,
     // update the preference to reflect reality
-    if (hasGroups && prefIsFirstStart) {
+    if (hasGroups && isFirstStartFromPrefs) {
       LoggerService.info(
         'Detected existing groups but isFirstStart=true, correcting preference',
         name: 'state.home',
@@ -213,9 +221,13 @@ class _HomePageState extends State<HomePage> with RouteAware {
     final pinnedTrip = results[0] as ExpenseGroup?;
     final activeGroups = results[1] as List<ExpenseGroup>;
     final archivedGroups = results[2] as List<ExpenseGroup>;
+    final hasGroups = activeGroups.isNotEmpty || archivedGroups.isNotEmpty;
+
+    // Determine if we should show welcome screen based on data and preferences
+    final (shouldShowWelcome, _) = _shouldShowWelcomeScreen(hasGroups);
 
     // Determine which view to show
-    final newViewKey = _isFirstStart
+    final newViewKey = shouldShowWelcome
         ? 'welcome'
         : activeGroups.isNotEmpty
         ? 'cards_active'
@@ -232,6 +244,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
       _pinnedTrip = pinnedTrip;
       _activeGroups = activeGroups;
       _archivedGroups = archivedGroups;
+      _isFirstStart = shouldShowWelcome;
     });
   }
 

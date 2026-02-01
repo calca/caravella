@@ -298,6 +298,18 @@ class DataBackupPage extends StatelessWidget {
               notifier.notifyGroupUpdated(group.id);
             }
 
+            // Mark that user has groups (no longer first start)
+            try {
+              await PreferencesService.instance.appState.setIsFirstStart(false);
+            } catch (e, st) {
+              LoggerService.error(
+                'Failed to update first start preference',
+                name: 'settings.backup',
+                error: e,
+                stackTrace: st,
+              );
+            }
+
             AppToast.show(context, loc.import_success, type: ToastType.success);
             Navigator.of(context).popUntil((route) => route.isFirst);
           }
