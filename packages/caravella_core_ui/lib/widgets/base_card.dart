@@ -52,37 +52,41 @@ class BaseCard extends StatelessWidget {
             BlendMode.srcOver,
           ),
         ),
-        border: (isFlat && !noBorder)
+        border: (!isFlat && !noBorder)
             ? Border.all(
                 color: theme.colorScheme.outline.withValues(alpha: 0.12),
                 width: 1,
               )
             : null,
-        boxShadow: [
-          BoxShadow(
-            color: theme.colorScheme.shadow.withValues(alpha: 0.08),
-            blurRadius: isFlat ? 4 : (elevation ?? 8),
-            offset: const Offset(0, 2),
-          ),
-        ],
+        boxShadow: !isFlat
+            ? [
+                BoxShadow(
+                  color: theme.colorScheme.shadow.withValues(alpha: 0.08),
+                  blurRadius: elevation ?? 8,
+                  offset: const Offset(0, 2),
+                ),
+              ]
+            : null,
       );
     } else {
       decoration = BoxDecoration(
         color: backgroundColor ?? theme.colorScheme.surfaceContainer,
         borderRadius: effectiveBorderRadius,
-        border: (isFlat && !noBorder)
+        border: (!isFlat && !noBorder)
             ? Border.all(
                 color: theme.colorScheme.outline.withValues(alpha: 0.12),
                 width: 1,
               )
             : null,
-        boxShadow: [
-          BoxShadow(
-            color: theme.colorScheme.shadow.withValues(alpha: 0.08),
-            blurRadius: isFlat ? 4 : (elevation ?? 8),
-            offset: const Offset(0, 2),
-          ),
-        ],
+        boxShadow: !isFlat
+            ? [
+                BoxShadow(
+                  color: theme.colorScheme.shadow.withValues(alpha: 0.08),
+                  blurRadius: elevation ?? 8,
+                  offset: const Offset(0, 2),
+                ),
+              ]
+            : null,
       );
     }
 
