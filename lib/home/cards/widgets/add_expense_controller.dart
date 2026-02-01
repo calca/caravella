@@ -68,15 +68,6 @@ class AddExpenseController {
               RatingService.checkAndPromptForRating();
 
               nav.pop();
-
-              if (parentContext.mounted) {
-                final gloc = gen.AppLocalizations.of(parentContext);
-                AppToast.show(
-                  parentContext,
-                  gloc.expense_added_success,
-                  type: ToastType.success,
-                );
-              }
             },
             onCategoryAdded: (categoryName) async {
               await notifier.addCategory(categoryName);
@@ -150,15 +141,6 @@ class AddExpenseController {
                     }
 
                     RatingService.checkAndPromptForRating();
-
-                    if (parentContext.mounted) {
-                      final gloc = gen.AppLocalizations.of(parentContext);
-                      AppToast.show(
-                        parentContext,
-                        gloc.expense_added_success,
-                        type: ToastType.success,
-                      );
-                    }
                   },
                   onCategoryAdded: (categoryName) async {
                     await notifier.addCategory(categoryName);

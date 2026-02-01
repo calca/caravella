@@ -84,17 +84,8 @@ class _HomePageState extends State<HomePage> with RouteAware {
 
       // Pulisci la lista degli aggiornamenti
       _groupNotifier?.clearUpdatedGroups();
-      final event = _groupNotifier?.consumeLastEvent();
-      if (event == 'expense_added') {
-        final gloc = gen.AppLocalizations.of(context);
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          AppToast.show(
-            context,
-            gloc.expense_added_success,
-            type: ToastType.success,
-          );
-        });
-      }
+      // Consume event but don't show toast for expense_added from home page
+      _groupNotifier?.consumeLastEvent();
     }
   }
 

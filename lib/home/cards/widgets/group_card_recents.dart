@@ -82,33 +82,72 @@ class _GroupCardRecentsState extends State<GroupCardRecents> {
             final lastTwo = snapshot.data!;
             if (lastTwo.isEmpty) return const SizedBox.shrink();
 
-            return Column(
-              children: lastTwo.map((e) {
-                return Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.only(bottom: 6.0),
-                  child: ExpenseAmountCard(
-                    title: e.name ?? '',
-                    coins: (e.amount ?? 0).toInt(),
-                    checked: true,
-                    paidBy: e.paidBy,
-                    category: e.category.name,
-                    date: e.date,
-                    showDate: false,
-                    compact: true,
-                    fullWidth: true,
-                    currency: widget.group.currency,
-                    onTap: () {
-                      Navigator.of(ctx).push(
-                        MaterialPageRoute(
-                          builder: (_) =>
-                              ExpenseGroupDetailPage(trip: widget.group),
+            return AnimatedSwitcher(
+              duration: const Duration(milliseconds: 500),
+              transitionBuilder: (child, animation) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: SlideTransition(
+                    position: Tween<Offset>(
+                      begin: const Offset(0, 0.2),
+                      end: Offset.zero,
+                    ).animate(
+                      CurvedAnimation(
+                        parent: animation,
+                        curve: Curves.easeOutCubic,
+                      ),
+                    ),
+                    child: child,
+                  ),
+                );
+              },
+              child: Column(
+                key: ValueKey<String>(
+                  lastTwo.map((e) => e.id).join('-'),
+                ),
+                children: lastTwo.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final e = entry.value;
+                  return TweenAnimationBuilder<double>(
+                    duration: Duration(milliseconds: 400 + (index * 100)),
+                    tween: Tween<double>(begin: 0.0, end: 1.0),
+                    curve: Curves.easeOutCubic,
+                    builder: (context, value, child) {
+                      return Opacity(
+                        opacity: value,
+                        child: Transform.translate(
+                          offset: Offset(0, 20 * (1 - value)),
+                          child: child,
                         ),
                       );
                     },
-                  ),
-                );
-              }).toList(),
+                    child: Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.only(bottom: 6.0),
+                      child: ExpenseAmountCard(
+                        title: e.name ?? '',
+                        coins: (e.amount ?? 0).toInt(),
+                        checked: true,
+                        paidBy: e.paidBy,
+                        category: e.category.name,
+                        date: e.date,
+                        showDate: false,
+                        compact: true,
+                        fullWidth: true,
+                        currency: widget.group.currency,
+                        onTap: () {
+                          Navigator.of(ctx).push(
+                            MaterialPageRoute(
+                              builder: (_) =>
+                                  ExpenseGroupDetailPage(trip: widget.group),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
             );
           },
         ),

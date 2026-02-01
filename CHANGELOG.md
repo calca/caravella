@@ -23,6 +23,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Prominently displays the most important group in a dedicated 60% height card
   - Remaining groups shown in carousel below (40% height)
   - Improved visual hierarchy and user focus on primary group
+- Enhanced animations for expense additions on home page
+  - Total amount animates with scale and fade effect when updated
+  - Daily spent badge slides in from top with fade animation
+  - Recent expenses animate with staggered slide and fade effects
+  - Creates smooth visual feedback without intrusive toast notifications
 
 ### Fixed
 - Fixed wizard bug where user name entered in first step was not automatically added as participant in the group
