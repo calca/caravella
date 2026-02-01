@@ -17,47 +17,56 @@ class HomeWelcomeSection extends StatefulWidget {
 class _HomeWelcomeSectionState extends State<HomeWelcomeSection>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<double> _titleAnimation;
-  late Animation<double> _logoAnimation;
-  late Animation<double> _buttonAnimation;
-  late Animation<double> _settingsAnimation;
+  late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1400),
+      duration: const Duration(milliseconds: 600),
     );
 
-    // Staggered animations with smooth curves
-    _titleAnimation = CurvedAnimation(
+    // Single smooth fade animation for all elements
+    _fadeAnimation = CurvedAnimation(
       parent: _controller,
-      curve: const Interval(0.0, 0.4, curve: Curves.easeOut),
+      curve: Curves.easeOut,
     );
 
-    _logoAnimation = CurvedAnimation(
-      parent: _controller,
-      curve: const Interval(0.2, 0.6, curve: Curves.easeOut),
-    );
-
-    _buttonAnimation = CurvedAnimation(
-      parent: _controller,
-      curve: const Interval(0.5, 0.9, curve: Curves.easeOut),
-    );
-
-    _settingsAnimation = CurvedAnimation(
-      parent: _controller,
-      curve: const Interval(0.6, 1.0, curve: Curves.easeOut),
-    );
-
-    _controller.forward();
+    // Defer animation and system UI setup to after first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _controller.forward();
+        _setSystemUIColors();
+      }
+    });
   }
 
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  void _setSystemUIColors() {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+    
+    // Calculate the end color of the gradient for navigation bar
+    final navigationBarColor = isDarkMode
+        ? theme.colorScheme.onPrimaryFixed
+        : theme.colorScheme.primary;
+
+    // Set system UI overlay style once
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+        systemNavigationBarColor: navigationBarColor,
+        systemNavigationBarIconBrightness: Brightness.light,
+      ),
+    );
   }
 
   void _restoreSystemUIColors() {
@@ -134,26 +143,6 @@ class _HomeWelcomeSectionState extends State<HomeWelcomeSection>
         ? theme.colorScheme.onPrimary
         : theme.colorScheme.onPrimary;
 
-    // Calculate the end color of the gradient for navigation bar
-    final navigationBarColor = isDarkMode
-        ? theme.colorScheme.onPrimaryFixed
-        : theme.colorScheme.primary;
-
-    // Set system UI overlay style to match gradient
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: isDarkMode
-            ? Brightness.light
-            : Brightness.light,
-        statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.dark,
-        systemNavigationBarColor: navigationBarColor,
-        systemNavigationBarIconBrightness: isDarkMode
-            ? Brightness.light
-            : Brightness.light,
-      ),
-    );
-
     return SizedBox(
       width: screenWidth,
       height: screenHeight,
@@ -176,22 +165,16 @@ class _HomeWelcomeSectionState extends State<HomeWelcomeSection>
                 child: Align(
                   alignment: Alignment.bottomLeft,
                   child: FadeTransition(
-                    opacity: _titleAnimation,
-                    child: SlideTransition(
-                      position: Tween<Offset>(
-                        begin: const Offset(-0.3, 0),
-                        end: Offset.zero,
-                      ).animate(_titleAnimation),
-                      child: Text(
-                        gloc.welcome_v3_title,
-                        style: theme.textTheme.headlineLarge?.copyWith(
-                          fontSize: 36,
-                          height: 1.2,
-                          color: titleColor, // Use adaptive title color
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.left,
+                    opacity: _fadeAnimation,
+                    child: Text(
+                      gloc.welcome_v3_title,
+                      style: theme.textTheme.headlineLarge?.copyWith(
+                        fontSize: 36,
+                        height: 1.2,
+                        color: titleColor, // Use adaptive title color
+                        fontWeight: FontWeight.bold,
                       ),
+                      textAlign: TextAlign.left,
                     ),
                   ),
                 ),
@@ -204,27 +187,21 @@ class _HomeWelcomeSectionState extends State<HomeWelcomeSection>
                   alignment: Alignment
                       .center, // Centra sia orizzontalmente che verticalmente
                   child: FadeTransition(
-                    opacity: _logoAnimation,
-                    child: ScaleTransition(
-                      scale: Tween<double>(
-                        begin: 0.8,
-                        end: 1.0,
-                      ).animate(_logoAnimation),
-                      child: SizedBox(
-                        width:
-                            screenWidth *
-                            0.8, // 80% della larghezza dello schermo
-                        child: Semantics(
-                          key: const ValueKey('welcome_logo_semantics'),
-                          // Keep word 'logo' so test finder (contains 'logo') succeeds
-                          label: gloc.welcome_logo_semantic,
-                          image: true,
-                          // Provide a descriptive hint for screen readers
-                          hint: gloc.welcome_v3_title,
-                          child: Image.asset(
-                            'assets/images/home/welcome/welcome-logo.png',
-                            fit: BoxFit.contain, // Mantiene le proporzioni
-                          ),
+                    opacity: _fadeAnimation,
+                    child: SizedBox(
+                      width:
+                          screenWidth *
+                          0.8, // 80% della larghezza dello schermo
+                      child: Semantics(
+                        key: const ValueKey('welcome_logo_semantics'),
+                        // Keep word 'logo' so test finder (contains 'logo') succeeds
+                        label: gloc.welcome_logo_semantic,
+                        image: true,
+                        // Provide a descriptive hint for screen readers
+                        hint: gloc.welcome_v3_title,
+                        child: Image.asset(
+                          'assets/images/home/welcome/welcome-logo.png',
+                          fit: BoxFit.contain, // Mantiene le proporzioni
                         ),
                       ),
                     ),
@@ -242,35 +219,29 @@ class _HomeWelcomeSectionState extends State<HomeWelcomeSection>
                       bottom: 0,
                       left: 0,
                       child: FadeTransition(
-                        opacity: _settingsAnimation,
-                        child: SlideTransition(
-                          position: Tween<Offset>(
-                            begin: const Offset(0, 0.5),
-                            end: Offset.zero,
-                          ).animate(_settingsAnimation),
-                          child: Semantics(
-                            key: const ValueKey('settings_button_semantics'),
-                            button: true,
-                            // Short predictable label containing 'settings'
-                            label: gloc.settings_tab,
-                            child: TextButton(
-                              onPressed: () async {
-                                // Restore system UI colors before navigation
-                                await _restoreSystemUIColorsAsync();
-                                if (!context.mounted) return;
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => const SettingsPage(),
-                                  ),
-                                );
-                              },
-                              child: Text(
-                                gloc.settings_tab.toUpperCase(),
-                                style: theme.textTheme.labelLarge?.copyWith(
-                                  color: settingsTextColor,
-                                  letterSpacing: 1.2,
-                                  fontWeight: FontWeight.w500,
+                        opacity: _fadeAnimation,
+                        child: Semantics(
+                          key: const ValueKey('settings_button_semantics'),
+                          button: true,
+                          // Short predictable label containing 'settings'
+                          label: gloc.settings_tab,
+                          child: TextButton(
+                            onPressed: () async {
+                              // Restore system UI colors before navigation
+                              await _restoreSystemUIColorsAsync();
+                              if (!context.mounted) return;
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const SettingsPage(),
                                 ),
+                              );
+                            },
+                            child: Text(
+                              gloc.settings_tab.toUpperCase(),
+                              style: theme.textTheme.labelLarge?.copyWith(
+                                color: settingsTextColor,
+                                letterSpacing: 1.2,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                           ),
@@ -282,51 +253,45 @@ class _HomeWelcomeSectionState extends State<HomeWelcomeSection>
                       bottom: 60, // Posizionato sopra al bottone impostazioni
                       right: 0,
                       child: FadeTransition(
-                        opacity: _buttonAnimation,
-                        child: ScaleTransition(
-                          scale: Tween<double>(
-                            begin: 0.5,
-                            end: 1.0,
-                          ).animate(_buttonAnimation),
-                          child: Semantics(
-                            key: const ValueKey('forward_button_semantics'),
-                            button: true,
-                            label: gloc.welcome_v3_cta,
-                            child: IconButton.filled(
-                              onPressed: () async {
-                                // Restore system UI colors before navigation
-                                await _restoreSystemUIColorsAsync();
-                                if (!context.mounted) return;
-                                final result = await Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const GroupCreationWizardPage(
-                                          fromWelcome: true,
-                                        ),
-                                  ),
-                                );
-                                if (result != null) {
-                                  if (result is String) {
-                                    // User wants to go to group
-                                    if (widget.onTripAdded != null) {
-                                      widget.onTripAdded!();
-                                    }
+                        opacity: _fadeAnimation,
+                        child: Semantics(
+                          key: const ValueKey('forward_button_semantics'),
+                          button: true,
+                          label: gloc.welcome_v3_cta,
+                          child: IconButton.filled(
+                            onPressed: () async {
+                              // Restore system UI colors before navigation
+                              await _restoreSystemUIColorsAsync();
+                              if (!context.mounted) return;
+                              final result = await Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const GroupCreationWizardPage(
+                                        fromWelcome: true,
+                                      ),
+                                ),
+                              );
+                              if (result != null) {
+                                if (result is String) {
+                                  // User wants to go to group
+                                  if (widget.onTripAdded != null) {
+                                    widget.onTripAdded!();
                                   }
                                 }
-                              },
-                              style: IconButton.styleFrom(
-                                backgroundColor: buttonBackgroundColor,
-                                foregroundColor: buttonForegroundColor,
-                                minimumSize: const Size(120, 120),
-                                maximumSize: const Size(120, 120),
-                                shape: const CircleBorder(),
-                                elevation: isDarkMode
-                                    ? 2
-                                    : 0, // Subtle elevation in dark mode
-                              ),
-                              icon: const Icon(Icons.arrow_forward, size: 32),
-                              tooltip: gloc.welcome_v3_cta,
+                              }
+                            },
+                            style: IconButton.styleFrom(
+                              backgroundColor: buttonBackgroundColor,
+                              foregroundColor: buttonForegroundColor,
+                              minimumSize: const Size(120, 120),
+                              maximumSize: const Size(120, 120),
+                              shape: const CircleBorder(),
+                              elevation: isDarkMode
+                                  ? 2
+                                  : 0, // Subtle elevation in dark mode
                             ),
+                            icon: const Icon(Icons.arrow_forward, size: 32),
+                            tooltip: gloc.welcome_v3_cta,
                           ),
                         ),
                       ),

@@ -33,7 +33,10 @@ class _HomePageState extends State<HomePage> with RouteAware {
   @override
   void initState() {
     super.initState();
-    // Don't cache the preference value here - we'll determine it after checking storage
+    // Optimistic first-start check to avoid loading flash on welcome screen
+    // PreferencesService is initialized in main() before app runs, so safe to access
+    // SharedPreferences caches values in memory, so synchronous read is non-blocking
+    _isFirstStart = PreferencesService.instance.appState.isFirstStart();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadLocaleAndTrip();
       _performUpdateCheckIfNeeded();
@@ -114,7 +117,11 @@ class _HomePageState extends State<HomePage> with RouteAware {
   }
 
   Future<void> _loadLocaleAndTrip() async {
-    if (!_refreshing) {
+    // Skip loading state if showing welcome screen on first start
+    // This prevents flash of loading skeleton before welcome screen
+    final shouldShowLoading = !_isFirstStart || _refreshing;
+    
+    if (shouldShowLoading) {
       setState(() {
         _loading = true;
       });
@@ -283,26 +290,12 @@ class _HomePageState extends State<HomePage> with RouteAware {
     final scaffoldBody = Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
       body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 350),
-        switchInCurve: Curves.easeOutCubic,
-        switchOutCurve: Curves.easeInCubic,
+        duration: const Duration(milliseconds: 300),
+        switchInCurve: Curves.easeOut,
+        switchOutCurve: Curves.easeIn,
         transitionBuilder: (child, animation) {
-          // Use different transitions based on view type
-          final isWelcome = child.key == const ValueKey('welcome');
-
-          if (isWelcome) {
-            // Slide in from left for welcome screen
-            return SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(-1.0, 0.0),
-                end: Offset.zero,
-              ).animate(animation),
-              child: child,
-            );
-          } else {
-            // Fade transition for cards and loading
-            return FadeTransition(opacity: animation, child: child);
-          }
+          // Simple fade transition for smoother performance
+          return FadeTransition(opacity: animation, child: child);
         },
         child: _buildContent(gloc),
       ),
