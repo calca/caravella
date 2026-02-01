@@ -213,9 +213,16 @@ class _HomePageState extends State<HomePage> with RouteAware {
     final pinnedTrip = results[0] as ExpenseGroup?;
     final activeGroups = results[1] as List<ExpenseGroup>;
     final archivedGroups = results[2] as List<ExpenseGroup>;
+    final hasGroups = activeGroups.isNotEmpty || archivedGroups.isNotEmpty;
+
+    // Update first start flag based on whether groups exist
+    // This ensures correct view after import during first launch
+    final prefIsFirstStart = PreferencesService.instance.appState
+        .isFirstStart();
+    final shouldShowWelcome = !hasGroups && prefIsFirstStart;
 
     // Determine which view to show
-    final newViewKey = _isFirstStart
+    final newViewKey = shouldShowWelcome
         ? 'welcome'
         : activeGroups.isNotEmpty
         ? 'cards_active'
@@ -232,6 +239,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
       _pinnedTrip = pinnedTrip;
       _activeGroups = activeGroups;
       _archivedGroups = archivedGroups;
+      _isFirstStart = shouldShowWelcome;
     });
   }
 
