@@ -139,13 +139,13 @@ class _HomePageState extends State<HomePage> with RouteAware {
     // Update first start flag based on whether groups exist
     // If groups exist, it's not first start regardless of preference
     // If no groups exist, respect the preference
-    final prefIsFirstStart = PreferencesService.instance.appState
+    final isFirstStartFromPrefs = PreferencesService.instance.appState
         .isFirstStart();
-    final shouldShowWelcome = !hasGroups && prefIsFirstStart;
+    final shouldShowWelcome = !hasGroups && isFirstStartFromPrefs;
 
     // If we determined user has groups but flag says first start,
     // update the preference to reflect reality
-    if (hasGroups && prefIsFirstStart) {
+    if (hasGroups && isFirstStartFromPrefs) {
       LoggerService.info(
         'Detected existing groups but isFirstStart=true, correcting preference',
         name: 'state.home',
@@ -217,9 +217,9 @@ class _HomePageState extends State<HomePage> with RouteAware {
 
     // Update first start flag based on whether groups exist
     // This ensures correct view after import during first launch
-    final prefIsFirstStart = PreferencesService.instance.appState
+    final isFirstStartFromPrefs = PreferencesService.instance.appState
         .isFirstStart();
-    final shouldShowWelcome = !hasGroups && prefIsFirstStart;
+    final shouldShowWelcome = !hasGroups && isFirstStartFromPrefs;
 
     // Determine which view to show
     final newViewKey = shouldShowWelcome
