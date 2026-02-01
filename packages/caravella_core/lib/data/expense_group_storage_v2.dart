@@ -477,4 +477,29 @@ class ExpenseGroupStorageV2 {
       );
     }
   }
+
+  /// Returns the most recent expenses from a group, sorted by date (newest first).
+  /// 
+  /// This method provides an efficient way to get recent expenses without
+  /// having to load and sort all expenses in the UI layer.
+  /// 
+  /// Parameters:
+  /// - [groupId]: The ID of the expense group
+  /// - [limit]: Maximum number of recent expenses to return (default: 2)
+  /// 
+  /// Returns an empty list if the group is not found or has no expenses.
+  static Future<List<ExpenseDetails>> getRecentExpenses(
+    String groupId, {
+    int limit = 2,
+  }) async {
+    final group = await getTripById(groupId);
+    if (group == null || group.expenses.isEmpty) {
+      return [];
+    }
+
+    // Sort expenses by date (newest first) and take the requested limit
+    final sortedExpenses = List<ExpenseDetails>.from(group.expenses);
+    sortedExpenses.sort((a, b) => b.date.compareTo(a.date));
+    return sortedExpenses.take(limit).toList();
+  }
 }

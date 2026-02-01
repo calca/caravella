@@ -28,12 +28,16 @@ class GroupCardRecents extends StatelessWidget {
             fontWeight: FontWeight.w400,
           ),
         ),
-        Builder(
-          builder: (ctx) {
-            final expenses = List<ExpenseDetails>.from(group.expenses);
-            expenses.sort((a, b) => b.date.compareTo(a.date));
-            final lastTwo = expenses.take(2).toList();
+        FutureBuilder<List<ExpenseDetails>>(
+          future: ExpenseGroupStorageV2.getRecentExpenses(group.id, limit: 2),
+          builder: (ctx, snapshot) {
+            if (!snapshot.hasData) {
+              return const SizedBox.shrink();
+            }
+            
+            final lastTwo = snapshot.data!;
             if (lastTwo.isEmpty) return const SizedBox.shrink();
+            
             return Column(
               children: lastTwo.map((e) {
                 return Container(
