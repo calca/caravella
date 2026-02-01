@@ -118,9 +118,9 @@ class _HomePageState extends State<HomePage> with RouteAware {
   ///
   /// Also returns the preference value for potential auto-correction logic.
   ({bool shouldShowWelcome, bool isFirstStartFromPrefs}) _shouldShowWelcomeScreen(bool hasGroups) {
-    final isFirstStartFromPrefs = PreferencesService.instance.appState
+    final prefValue = PreferencesService.instance.appState
         .isFirstStart();
-    return (shouldShowWelcome: !hasGroups && isFirstStartFromPrefs, isFirstStartFromPrefs: isFirstStartFromPrefs);
+    return (shouldShowWelcome: !hasGroups && prefValue, isFirstStartFromPrefs: prefValue);
   }
 
   Future<void> _loadLocaleAndTrip() async {
