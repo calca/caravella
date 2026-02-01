@@ -31,7 +31,13 @@ class GroupCardRecents extends StatelessWidget {
         FutureBuilder<List<ExpenseDetails>>(
           future: ExpenseGroupStorageV2.getRecentExpenses(group.id, limit: 2),
           builder: (ctx, snapshot) {
-            if (!snapshot.hasData) {
+            // Handle loading state
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const SizedBox.shrink();
+            }
+            
+            // Handle error state silently (fail gracefully)
+            if (snapshot.hasError || !snapshot.hasData) {
               return const SizedBox.shrink();
             }
             
