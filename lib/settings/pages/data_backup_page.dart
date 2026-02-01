@@ -298,6 +298,9 @@ class DataBackupPage extends StatelessWidget {
               notifier.notifyGroupUpdated(group.id);
             }
 
+            // Mark that user has groups (no longer first start)
+            await PreferencesService.instance.appState.setIsFirstStart(false);
+
             AppToast.show(context, loc.import_success, type: ToastType.success);
             Navigator.of(context).popUntil((route) => route.isFirst);
           }
