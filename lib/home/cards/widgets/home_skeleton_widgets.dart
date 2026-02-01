@@ -134,7 +134,7 @@ class _FeaturedCardSkeletonState extends State<FeaturedCardSkeleton>
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Header skeleton (title + pin badge area)
+                  // Header skeleton (title)
                   Row(
                     children: [
                       Expanded(
@@ -148,59 +148,88 @@ class _FeaturedCardSkeletonState extends State<FeaturedCardSkeleton>
                     ],
                   ),
                   const SizedBox(height: 6),
-                  // Date range skeleton
-                  SkeletonBox(
-                    width: 120,
-                    height: 14,
-                    borderRadius: 7,
-                    color: skeletonColorLight,
-                  ),
-                  const SizedBox(height: 14),
-                  // Total amount skeleton
-                  SkeletonBox(
-                    width: 140,
-                    height: 28,
-                    borderRadius: 14,
-                    color: skeletonColor,
-                  ),
-                  const SizedBox(height: 10),
-                  // Stats skeleton (chart + extra info)
+                  // Date range skeleton with icon
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      // Chart skeleton
-                      Expanded(
-                        child: SkeletonBox(
-                          width: double.infinity,
-                          height: 50,
-                          borderRadius: 8,
-                          color: skeletonColorLight,
-                        ),
+                      SkeletonBox(
+                        width: 14,
+                        height: 14,
+                        borderRadius: 7,
+                        color: skeletonColorLight,
                       ),
-                      const SizedBox(width: 12),
-                      // Extra info skeleton (today's spending)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          SkeletonBox(
-                            width: 50,
-                            height: 12,
-                            borderRadius: 6,
-                            color: skeletonColorLight,
-                          ),
-                          const SizedBox(height: 4),
-                          SkeletonBox(
-                            width: 70,
-                            height: 18,
-                            borderRadius: 9,
-                            color: skeletonColor,
-                          ),
-                        ],
+                      const SizedBox(width: 4),
+                      SkeletonBox(
+                        width: 100,
+                        height: 14,
+                        borderRadius: 7,
+                        color: skeletonColorLight,
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 6),
+                  // Centered total amount skeleton
+                  Center(
+                    child: SkeletonBox(
+                      width: 160,
+                      height: 48,
+                      borderRadius: 24,
+                      color: skeletonColor,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  // Today's spending badge skeleton (colored pill)
+                  Center(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: colorScheme.primary.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SkeletonBox(
+                            width: 50,
+                            height: 16,
+                            borderRadius: 8,
+                            color: colorScheme.primary.withValues(alpha: 0.3),
+                          ),
+                          const SizedBox(width: 8),
+                          SkeletonBox(
+                            width: 70,
+                            height: 14,
+                            borderRadius: 7,
+                            color: colorScheme.primary.withValues(alpha: 0.3),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const Spacer(),
+                  // "RECENT EXPENSES" label skeleton
+                  SkeletonBox(
+                    width: 120,
+                    height: 10,
+                    borderRadius: 5,
+                    color: skeletonColorLight,
+                  ),
+                  const SizedBox(height: 8),
+                  // Recent expense cards skeleton (2 compact cards)
+                  _buildRecentExpenseSkeleton(
+                    colorScheme,
+                    skeletonColor,
+                    skeletonColorLight,
+                  ),
+                  const SizedBox(height: 6),
+                  _buildRecentExpenseSkeleton(
+                    colorScheme,
+                    skeletonColor,
+                    skeletonColorLight,
+                  ),
+                  const SizedBox(height: 8),
                   // Add button skeleton
                   SkeletonBox(
                     width: double.infinity,
@@ -214,6 +243,61 @@ class _FeaturedCardSkeletonState extends State<FeaturedCardSkeleton>
           ),
         );
       },
+    );
+  }
+
+  /// Builds a skeleton for a single recent expense card
+  Widget _buildRecentExpenseSkeleton(
+    ColorScheme colorScheme,
+    Color skeletonColor,
+    Color skeletonColorLight,
+  ) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          // Category icon skeleton
+          SkeletonBox(
+            width: 32,
+            height: 32,
+            borderRadius: 16,
+            color: skeletonColorLight,
+          ),
+          const SizedBox(width: 12),
+          // Expense name and category skeleton
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SkeletonBox(
+                  width: 100,
+                  height: 14,
+                  borderRadius: 7,
+                  color: skeletonColor,
+                ),
+                const SizedBox(height: 4),
+                SkeletonBox(
+                  width: 60,
+                  height: 10,
+                  borderRadius: 5,
+                  color: skeletonColorLight,
+                ),
+              ],
+            ),
+          ),
+          // Amount skeleton
+          SkeletonBox(
+            width: 60,
+            height: 16,
+            borderRadius: 8,
+            color: skeletonColor,
+          ),
+        ],
+      ),
     );
   }
 }
