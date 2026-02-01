@@ -32,9 +32,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fixed wizard bug where user name entered in first step was not automatically added as participant in the group
 - Welcome page now appears smoothly on first app launch without skeleton flash
-  - Loading state is properly initialized when app detects first start
-  - Eliminates jarring skeleton loader appearance before welcome screen
-  - Provides fluid, professional first impression for new users
 - Persistent notifications now respect expense group date ranges
   - Notifications are automatically cancelled when group end date has passed
   - Groups with future start dates no longer trigger notifications prematurely
