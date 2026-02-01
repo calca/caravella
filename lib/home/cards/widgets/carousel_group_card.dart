@@ -61,17 +61,25 @@ class CarouselGroupCard extends StatelessWidget {
         File(group.file!).existsSync();
 
     if (hasImage) {
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(tileBorderRadius),
-        child: Container(
-          width: tileSize,
-          height: tileSize,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: theme.colorScheme.outline.withValues(alpha: 0.2),
-              width: 1,
-            ),
+      return Container(
+        width: tileSize,
+        height: tileSize,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(tileBorderRadius),
+          border: Border.all(
+            color: theme.colorScheme.outline.withValues(alpha: 0.12),
+            width: 1,
           ),
+          boxShadow: [
+            BoxShadow(
+              color: theme.colorScheme.shadow.withValues(alpha: 0.08),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(tileBorderRadius),
           child: Image.file(
             File(group.file!),
             width: tileSize,
@@ -109,9 +117,16 @@ class CarouselGroupCard extends StatelessWidget {
         color: backgroundColor,
         borderRadius: BorderRadius.circular(tileBorderRadius),
         border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.2),
+          color: theme.colorScheme.outline.withValues(alpha: 0.12),
           width: 1,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: theme.colorScheme.shadow.withValues(alpha: 0.08),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Center(
         child: Text(
