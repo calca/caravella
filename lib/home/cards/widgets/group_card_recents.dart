@@ -4,7 +4,7 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../manager/details/widgets/expense_amount_card.dart';
 import '../../../manager/details/pages/expense_group_detail_page.dart';
 
-class GroupCardRecents extends StatelessWidget {
+class GroupCardRecents extends StatefulWidget {
   final ExpenseGroup group;
   final gen.AppLocalizations localizations;
   final ThemeData theme;
@@ -17,33 +17,71 @@ class GroupCardRecents extends StatelessWidget {
   });
 
   @override
+  State<GroupCardRecents> createState() => _GroupCardRecentsState();
+}
+
+class _GroupCardRecentsState extends State<GroupCardRecents> {
+  List<ExpenseDetails>? _cachedRecentExpenses;
+  String? _cachedGroupId;
+
+  @override
+  void didUpdateWidget(GroupCardRecents oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Clear cache if group changed
+    if (oldWidget.group.id != widget.group.id) {
+      _cachedRecentExpenses = null;
+      _cachedGroupId = null;
+    }
+  }
+
+  Future<List<ExpenseDetails>> _getRecentExpenses() async {
+    // Use cached result if available and group hasn't changed
+    if (_cachedRecentExpenses != null && _cachedGroupId == widget.group.id) {
+      return _cachedRecentExpenses!;
+    }
+
+    // Fetch from storage API
+    final recentExpenses = await ExpenseGroupStorageV2.getRecentExpenses(
+      widget.group.id,
+      limit: 2,
+    );
+
+    // Cache the result
+    _cachedRecentExpenses = recentExpenses;
+    _cachedGroupId = widget.group.id;
+
+    return recentExpenses;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          localizations.recent_expenses.toUpperCase(),
-          style: theme.textTheme.labelSmall?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+          widget.localizations.recent_expenses.toUpperCase(),
+          style: widget.theme.textTheme.labelSmall?.copyWith(
+            color: widget.theme.colorScheme.onSurfaceVariant
+                .withValues(alpha: 0.5),
             fontWeight: FontWeight.w400,
           ),
         ),
         FutureBuilder<List<ExpenseDetails>>(
-          future: ExpenseGroupStorageV2.getRecentExpenses(group.id, limit: 2),
+          future: _getRecentExpenses(),
           builder: (ctx, snapshot) {
             // Handle loading state
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const SizedBox.shrink();
             }
-            
+
             // Handle error state silently (fail gracefully)
             if (snapshot.hasError || !snapshot.hasData) {
               return const SizedBox.shrink();
             }
-            
+
             final lastTwo = snapshot.data!;
             if (lastTwo.isEmpty) return const SizedBox.shrink();
-            
+
             return Column(
               children: lastTwo.map((e) {
                 return Container(
@@ -59,11 +97,12 @@ class GroupCardRecents extends StatelessWidget {
                     showDate: false,
                     compact: true,
                     fullWidth: true,
-                    currency: group.currency,
+                    currency: widget.group.currency,
                     onTap: () {
                       Navigator.of(ctx).push(
                         MaterialPageRoute(
-                          builder: (_) => ExpenseGroupDetailPage(trip: group),
+                          builder: (_) =>
+                              ExpenseGroupDetailPage(trip: widget.group),
                         ),
                       );
                     },
