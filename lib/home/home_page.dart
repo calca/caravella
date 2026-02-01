@@ -34,6 +34,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
   void initState() {
     super.initState();
     // Start with optimistic first-start check to avoid loading flash
+    // Safe to read synchronously - SharedPreferences caches values in memory
     _isFirstStart = PreferencesService.instance.appState.isFirstStart();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadLocaleAndTrip();

@@ -18,7 +18,6 @@ class _HomeWelcomeSectionState extends State<HomeWelcomeSection>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
-  SystemUiOverlayStyle? _previousSystemUIStyle;
 
   @override
   void initState() {
@@ -52,10 +51,6 @@ class _HomeWelcomeSectionState extends State<HomeWelcomeSection>
   @override
   void dispose() {
     _controller.dispose();
-    // Restore previous system UI colors if we saved them
-    if (_previousSystemUIStyle != null) {
-      SystemChrome.setSystemUIOverlayStyle(_previousSystemUIStyle!);
-    }
     super.dispose();
   }
 
