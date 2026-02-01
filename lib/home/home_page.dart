@@ -115,12 +115,12 @@ class _HomePageState extends State<HomePage> with RouteAware {
   /// Returns true only if there are no groups AND the preference indicates first start.
   /// This data-driven approach ensures groups are always shown if they exist,
   /// regardless of preference state (handles edge cases like preference update failures).
-  /// 
+  ///
   /// Also returns the preference value for potential auto-correction logic.
-  (bool shouldShowWelcome, bool isFirstStartFromPrefs) _shouldShowWelcomeScreen(bool hasGroups) {
+  ({bool shouldShowWelcome, bool isFirstStartFromPrefs}) _shouldShowWelcomeScreen(bool hasGroups) {
     final isFirstStartFromPrefs = PreferencesService.instance.appState
         .isFirstStart();
-    return (!hasGroups && isFirstStartFromPrefs, isFirstStartFromPrefs);
+    return (shouldShowWelcome: !hasGroups && isFirstStartFromPrefs, isFirstStartFromPrefs: isFirstStartFromPrefs);
   }
 
   Future<void> _loadLocaleAndTrip() async {
