@@ -37,6 +37,10 @@ class _HomePageState extends State<HomePage> with RouteAware {
     // PreferencesService is initialized in main() before app runs, so safe to access
     // SharedPreferences caches values in memory, so synchronous read is non-blocking
     _isFirstStart = PreferencesService.instance.appState.isFirstStart();
+    // If first start, set loading to false immediately to prevent skeleton flash
+    if (_isFirstStart) {
+      _loading = false;
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadLocaleAndTrip();
       _performUpdateCheckIfNeeded();
