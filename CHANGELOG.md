@@ -35,6 +35,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Notification badge accurately reflects current expense totals in all scenarios
 
 ### Changed
+- Home page skeleton loader improved to match the actual widget structure
+  - Centered total amount display
+  - Today's spending badge with primary color accent
+  - Recent expenses section with two compact expense card placeholders
+  - Better visual consistency between loading and loaded states
 - Group options menu reorganization for improved accessibility and workflow efficiency
   - Pin/favorite action moved to group avatar for faster access (33% fewer taps: 3→2)
   - Options menu replaced with dedicated settings page using consistent SettingsSection and SettingsCard widgets
