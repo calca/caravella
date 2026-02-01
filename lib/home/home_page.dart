@@ -115,10 +115,12 @@ class _HomePageState extends State<HomePage> with RouteAware {
   /// Returns true only if there are no groups AND the preference indicates first start.
   /// This data-driven approach ensures groups are always shown if they exist,
   /// regardless of preference state (handles edge cases like preference update failures).
-  bool _shouldShowWelcomeScreen(bool hasGroups) {
+  /// 
+  /// Also returns the preference value for potential auto-correction logic.
+  (bool shouldShowWelcome, bool isFirstStartFromPrefs) _shouldShowWelcomeScreen(bool hasGroups) {
     final isFirstStartFromPrefs = PreferencesService.instance.appState
         .isFirstStart();
-    return !hasGroups && isFirstStartFromPrefs;
+    return (!hasGroups && isFirstStartFromPrefs, isFirstStartFromPrefs);
   }
 
   Future<void> _loadLocaleAndTrip() async {
@@ -147,9 +149,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
     if (!mounted) return;
 
     // Determine if we should show welcome screen based on data and preferences
-    final shouldShowWelcome = _shouldShowWelcomeScreen(hasGroups);
-    final isFirstStartFromPrefs = PreferencesService.instance.appState
-        .isFirstStart();
+    final (shouldShowWelcome, isFirstStartFromPrefs) = _shouldShowWelcomeScreen(hasGroups);
 
     // If we determined user has groups but flag says first start,
     // update the preference to reflect reality
@@ -224,7 +224,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
     final hasGroups = activeGroups.isNotEmpty || archivedGroups.isNotEmpty;
 
     // Determine if we should show welcome screen based on data and preferences
-    final shouldShowWelcome = _shouldShowWelcomeScreen(hasGroups);
+    final (shouldShowWelcome, _) = _shouldShowWelcomeScreen(hasGroups);
 
     // Determine which view to show
     final newViewKey = shouldShowWelcome
