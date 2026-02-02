@@ -470,6 +470,36 @@ abstract class AppLocalizations {
   /// **'Organize.\nShare.\nSettle.\n '**
   String get welcome_v3_title;
 
+  /// Empty state message 1 for groups with no expenses
+  ///
+  /// In en, this message translates to:
+  /// **'Your **journey** starts here!'**
+  String get emptyGroupState1;
+
+  /// Empty state message 2 for groups with no expenses
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to log your **first** expense?'**
+  String get emptyGroupState2;
+
+  /// Empty state message 3 for groups with no expenses
+  ///
+  /// In en, this message translates to:
+  /// **'**No** expenses... yet!'**
+  String get emptyGroupState3;
+
+  /// Empty state message 4 for groups with no expenses
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s start this **adventure**!'**
+  String get emptyGroupState4;
+
+  /// Empty state message 5 for groups with no expenses
+  ///
+  /// In en, this message translates to:
+  /// **'The **first** expense is always special'**
+  String get emptyGroupState5;
+
   /// No description provided for @good_morning.
   ///
   /// In en, this message translates to:

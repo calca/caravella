@@ -199,6 +199,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get welcome_v3_title => 'Organize.\nShare.\nSettle.\n ';
 
   @override
+  String get emptyGroupState1 => 'Your **journey** starts here!';
+
+  @override
+  String get emptyGroupState2 => 'Ready to log your **first** expense?';
+
+  @override
+  String get emptyGroupState3 => '**No** expenses... yet!';
+
+  @override
+  String get emptyGroupState4 => 'Let\'s start this **adventure**!';
+
+  @override
+  String get emptyGroupState5 => 'The **first** expense is always special';
+
+  @override
   String get good_morning => 'Good morning';
 
   @override

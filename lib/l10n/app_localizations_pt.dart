@@ -199,6 +199,22 @@ class AppLocalizationsPt extends AppLocalizations {
   String get welcome_v3_title => 'Organize.\nCompartilhe.\nQuite.\n ';
 
   @override
+  String get emptyGroupState1 => 'Sua **jornada** começa aqui!';
+
+  @override
+  String get emptyGroupState2 =>
+      'Pronto para registrar sua **primeira** despesa?';
+
+  @override
+  String get emptyGroupState3 => '**Nenhuma** despesa... ainda!';
+
+  @override
+  String get emptyGroupState4 => 'Vamos começar esta **aventura**!';
+
+  @override
+  String get emptyGroupState5 => 'A **primeira** despesa é sempre especial';
+
+  @override
   String get good_morning => 'Bom dia';
 
   @override

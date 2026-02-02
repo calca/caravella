@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'group_card_header.dart';
 import 'group_card_amounts.dart';
+import 'group_card_empty_state.dart';
 // group_card_stats.dart removed import (not needed here)
 import 'add_expense_controller.dart';
 import 'group_card_recents.dart';
@@ -57,11 +58,18 @@ class GroupCardContent extends StatelessWidget {
                   theme: theme,
                 ),
                 const Spacer(),
-                GroupCardAmounts(
-                  group: currentGroup,
-                  theme: theme,
-                  localizations: localizations,
-                ),
+                // Show playful empty state or amounts based on expenses
+                if (currentGroup.expenses.isEmpty)
+                  GroupCardEmptyState(
+                    localizations: localizations,
+                    theme: theme,
+                  )
+                else
+                  GroupCardAmounts(
+                    group: currentGroup,
+                    theme: theme,
+                    localizations: localizations,
+                  ),
                 const Spacer(),
                 GroupCardRecents(
                   key: ValueKey(

@@ -196,6 +196,21 @@ class AppLocalizationsZh extends AppLocalizations {
   String get welcome_v3_title => '组织。\n分享。\n结算。\n ';
 
   @override
+  String get emptyGroupState1 => '您的**旅程**从这里开始！';
+
+  @override
+  String get emptyGroupState2 => '准备好记录**第一笔**支出了吗？';
+
+  @override
+  String get emptyGroupState3 => '**暂无**支出记录！';
+
+  @override
+  String get emptyGroupState4 => '让我们开始这场**冒险**吧！';
+
+  @override
+  String get emptyGroupState5 => '**第一笔**支出总是特别的';
+
+  @override
   String get good_morning => '早上好';
 
   @override
