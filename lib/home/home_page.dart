@@ -224,7 +224,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
     final hasGroups = activeGroups.isNotEmpty || archivedGroups.isNotEmpty;
 
     // Determine if we should show welcome screen based on data and preferences
-    final (:shouldShowWelcome) = _shouldShowWelcomeScreen(hasGroups);
+    final shouldShowWelcome = _shouldShowWelcomeScreen(hasGroups).shouldShowWelcome;
 
     // Determine which view to show
     final newViewKey = shouldShowWelcome

@@ -310,8 +310,14 @@ class DataBackupPage extends StatelessWidget {
               );
             }
 
-            AppToast.show(context, loc.import_success, type: ToastType.success);
-            Navigator.of(context).popUntil((route) => route.isFirst);
+            if (context.mounted) {
+              AppToast.show(
+                context,
+                loc.import_success,
+                type: ToastType.success,
+              );
+              Navigator.of(context).popUntil((route) => route.isFirst);
+            }
           }
         } catch (e, st) {
           LoggerService.error(
