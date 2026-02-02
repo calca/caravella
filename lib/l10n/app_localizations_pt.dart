@@ -1791,7 +1791,7 @@ class AppLocalizationsPt extends AppLocalizations {
       'Add your first expense to get started with this group!';
 
   @override
-  String get add_first_expense_button => 'Add First Expense';
+  String get add_first_expense_button => 'Adicionar Despesa';
 
   @override
   String get show_search => 'Show search bar';

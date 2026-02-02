@@ -679,7 +679,7 @@
   ,"@empty_expenses_title": {"description": "Title for empty expenses state"}
   ,"empty_expenses_subtitle": "Add your first expense to get started with this group!"
   ,"@empty_expenses_subtitle": {"description": "Subtitle for empty expenses state"}
-  ,"add_first_expense_button": "Add First Expense"
+  ,"add_first_expense_button": "Add Expense"
   ,"@add_first_expense_button": {"description": "Button text for adding the first expense in empty state"}
   ,"show_search": "Show search bar"
   ,"@show_search": {"description": "Tooltip to show the group search bar"}

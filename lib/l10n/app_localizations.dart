@@ -3533,7 +3533,7 @@ abstract class AppLocalizations {
   /// Button text for adding the first expense in empty state
   ///
   /// In en, this message translates to:
-  /// **'Add First Expense'**
+  /// **'Add Expense'**
   String get add_first_expense_button;
 
   /// Tooltip to show the group search bar

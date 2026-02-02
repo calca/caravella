@@ -650,7 +650,7 @@
   ,"@empty_expenses_title": {"description": "Titolo per stato vuoto spese"}
   ,"empty_expenses_subtitle": "Aggiungi la prima spesa per iniziare con questo gruppo!"
   ,"@empty_expenses_subtitle": {"description": "Sottotitolo per stato vuoto spese"}
-  ,"add_first_expense_button": "Aggiungi Prima Spesa"
+  ,"add_first_expense_button": "Aggiungi Spesa"
   ,"@add_first_expense_button": {"description": "Testo pulsante per aggiungere prima spesa"}
   ,"show_search": "Mostra barra di ricerca"
   ,"@show_search": {"description": "Tooltip per mostrare la barra di ricerca gruppi"}

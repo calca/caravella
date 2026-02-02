@@ -1793,7 +1793,7 @@ class AppLocalizationsEs extends AppLocalizations {
       '¡Agrega tu primer gasto para comenzar con este grupo!';
 
   @override
-  String get add_first_expense_button => 'Agregar Primer Gasto';
+  String get add_first_expense_button => 'Agregar Gasto';
 
   @override
   String get show_search => 'Mostrar barra de búsqueda';

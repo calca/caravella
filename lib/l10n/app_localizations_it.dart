@@ -1792,7 +1792,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Aggiungi la prima spesa per iniziare con questo gruppo!';
 
   @override
-  String get add_first_expense_button => 'Aggiungi Prima Spesa';
+  String get add_first_expense_button => 'Aggiungi Spesa';
 
   @override
   String get show_search => 'Mostra barra di ricerca';
