@@ -6,11 +6,13 @@ class GroupTotal extends StatelessWidget {
   final double total;
   final String currency;
   final String? title;
+  final CrossAxisAlignment alignment;
   const GroupTotal({
     super.key,
     required this.total,
     required this.currency,
     this.title,
+    this.alignment = CrossAxisAlignment.start,
   });
 
   @override
@@ -19,7 +21,7 @@ class GroupTotal extends StatelessWidget {
     final gloc = gen.AppLocalizations.of(context);
     final displayTitle = title ?? gloc.group_total;
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: alignment,
       children: [
         Text(
           displayTitle,
@@ -35,7 +37,9 @@ class GroupTotal extends StatelessWidget {
           currency: currency,
           valueFontSize: 28.0,
           currencyFontSize: 18.0,
-          alignment: MainAxisAlignment.start,
+          alignment: alignment == CrossAxisAlignment.center
+              ? MainAxisAlignment.center
+              : MainAxisAlignment.start,
           showDecimals: true,
           color: colorScheme.onSurface,
           fontWeight: FontWeight.w600,

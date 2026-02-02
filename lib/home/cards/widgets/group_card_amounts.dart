@@ -80,6 +80,7 @@ class _GroupCardAmountsState extends State<GroupCardAmounts> {
             child: GroupTotal(
               total: totalExpenses,
               currency: widget.group.currency,
+              alignment: CrossAxisAlignment.center,
             ),
           ),
         ),
