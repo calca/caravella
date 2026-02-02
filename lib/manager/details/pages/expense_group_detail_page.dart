@@ -661,10 +661,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
     final colorScheme = Theme.of(context).colorScheme;
-    final totalExpenses = trip.expenses.fold<double>(
-      0,
-      (sum, s) => sum + (s.amount ?? 0),
-    );
+    final totalExpenses = trip.getTotalExpenses();
     final showCollapsedTitle = _hideHeader || _collapsedTitleVisible;
 
     return AppSystemUI.surface(

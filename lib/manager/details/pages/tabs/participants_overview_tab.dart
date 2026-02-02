@@ -31,10 +31,7 @@ class ParticipantsOverviewTab extends StatelessWidget {
       );
     }
 
-    final totalAll = trip.expenses.fold<double>(
-      0,
-      (s, e) => s + (e.amount ?? 0),
-    );
+    final totalAll = trip.getTotalExpenses();
     final participantsCount = trip.participants.length;
     final avgPerPerson = participantsCount == 0
         ? 0.0

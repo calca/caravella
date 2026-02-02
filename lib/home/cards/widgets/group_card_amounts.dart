@@ -53,10 +53,7 @@ class _GroupCardAmountsState extends State<GroupCardAmounts> {
 
   @override
   Widget build(BuildContext context) {
-    final totalExpenses = widget.group.expenses.fold<double>(
-      0,
-      (sum, expense) => sum + (expense.amount ?? 0),
-    );
+    final totalExpenses = widget.group.getTotalExpenses();
     final todaySpending = _todaySpending ?? 0.0;
 
     final primary = widget.theme.colorScheme.primary;

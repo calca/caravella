@@ -19,8 +19,10 @@ class ExpenseGroup {
   final String? file; // Nuovo campo opzionale per il path del file
   final int? color; // Nuovo campo opzionale per il colore (Color.value)
   final bool notificationEnabled; // Campo per abilitare la notifica persistente
-  final ExpenseGroupType? groupType; // Tipologia del gruppo (viaggio, personale, famiglia, altro)
-  final bool autoLocationEnabled; // Nuovo campo per abilitare auto-location per gruppo
+  final ExpenseGroupType?
+  groupType; // Tipologia del gruppo (viaggio, personale, famiglia, altro)
+  final bool
+  autoLocationEnabled; // Nuovo campo per abilitare auto-location per gruppo
 
   ExpenseGroup({
     required this.title,
@@ -75,8 +77,12 @@ class ExpenseGroup {
       archived: json['archived'] ?? false, // Legge il valore archiviato
       file: json['file'], // Legge il valore del file
       color: json['color'], // Legge il valore del colore
-      notificationEnabled: json['notificationEnabled'] ?? false, // Legge il valore della notifica
-      groupType: ExpenseGroupType.fromJson(json['groupType']), // Legge la tipologia
+      notificationEnabled:
+          json['notificationEnabled'] ??
+          false, // Legge il valore della notifica
+      groupType: ExpenseGroupType.fromJson(
+        json['groupType'],
+      ), // Legge la tipologia
       autoLocationEnabled:
           json['autoLocationEnabled'] ?? false, // Legge il valore auto-location
     );
@@ -96,7 +102,8 @@ class ExpenseGroup {
     'archived': archived, // Salva il valore archiviato
     'file': file, // Salva il valore del file
     'color': color, // Salva il valore del colore
-    'notificationEnabled': notificationEnabled, // Salva il valore della notifica
+    'notificationEnabled':
+        notificationEnabled, // Salva il valore della notifica
     'groupType': groupType?.toJson(), // Salva la tipologia
     'autoLocationEnabled': autoLocationEnabled, // Salva il valore auto-location
   };
@@ -136,13 +143,23 @@ class ExpenseGroup {
       // Fix: Handle explicit null values correctly for nullable fields
       file: file == _notProvided ? this.file : file as String?,
       color: color == _notProvided ? this.color : color as int?,
-      groupType: groupType == _notProvided ? this.groupType : groupType as ExpenseGroupType?,
+      groupType: groupType == _notProvided
+          ? this.groupType
+          : groupType as ExpenseGroupType?,
       autoLocationEnabled: autoLocationEnabled ?? this.autoLocationEnabled,
     );
   }
 
   // Sentinel value to distinguish between null and not provided
   static const Object _notProvided = Object();
+
+  /// Calcola il totale delle spese del gruppo
+  double getTotalExpenses() {
+    return expenses.fold<double>(
+      0,
+      (sum, expense) => sum + (expense.amount ?? 0),
+    );
+  }
 
   static ExpenseGroup empty() {
     return ExpenseGroup(

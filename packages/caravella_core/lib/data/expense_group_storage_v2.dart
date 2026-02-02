@@ -521,4 +521,18 @@ class ExpenseGroupStorageV2 {
         )
         .fold<double>(0.0, (sum, e) => sum + (e.amount ?? 0.0));
   }
+
+  /// Calculates the total amount of all expenses for a specific group.
+  /// Returns 0.0 if the group is not found or has no expenses.
+  static Future<double> getTotalExpenses(String groupId) async {
+    final group = await getTripById(groupId);
+    if (group == null || group.expenses.isEmpty) {
+      return 0.0;
+    }
+
+    return group.expenses.fold<double>(
+      0.0,
+      (sum, expense) => sum + (expense.amount ?? 0.0),
+    );
+  }
 }

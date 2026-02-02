@@ -171,10 +171,7 @@ class GroupCardTotalAmount extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = gen.AppLocalizations.of(context);
-    final totalExpenses = group.expenses.fold<double>(
-      0,
-      (sum, expense) => sum + (expense.amount ?? 0),
-    );
+    final totalExpenses = group.getTotalExpenses();
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
