@@ -31,7 +31,8 @@ class GroupCardTodaySpending extends StatelessWidget {
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.baseline,
+        textBaseline: TextBaseline.alphabetic,
         children: [
           CurrencyDisplay(
             value: todaySpending.abs(),
@@ -48,7 +49,7 @@ class GroupCardTodaySpending extends StatelessWidget {
             localizations.spent_today.toLowerCase(),
             style: theme.textTheme.bodySmall?.copyWith(
               color: textColor,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w400,
             ),
           ),
         ],
