@@ -205,15 +205,6 @@ class _SkeletonCardState extends State<SkeletonCard>
           color: widget.colorScheme.outline.withValues(alpha: 0.2),
           width: 1,
         ),
-        boxShadow: widget.isSelected
-            ? [
-                BoxShadow(
-                  color: widget.colorScheme.shadow.withValues(alpha: 0.15),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
-                ),
-              ]
-            : null,
       ),
       child: Stack(
         children: [

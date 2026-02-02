@@ -69,13 +69,6 @@ class CarouselGroupCard extends StatelessWidget {
             color: theme.colorScheme.outline.withValues(alpha: 0.12),
             width: 1,
           ),
-          boxShadow: [
-            BoxShadow(
-              color: theme.colorScheme.shadow.withValues(alpha: 0.08),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(tileBorderRadius),
@@ -119,13 +112,6 @@ class CarouselGroupCard extends StatelessWidget {
           color: theme.colorScheme.outline.withValues(alpha: 0.12),
           width: 1,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: theme.colorScheme.shadow.withValues(alpha: 0.08),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
       ),
       child: Center(
         child: Text(

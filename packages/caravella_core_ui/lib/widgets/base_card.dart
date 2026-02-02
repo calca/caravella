@@ -58,15 +58,6 @@ class BaseCard extends StatelessWidget {
                 width: 1,
               )
             : null,
-        boxShadow: !isFlat
-            ? [
-                BoxShadow(
-                  color: theme.colorScheme.shadow.withValues(alpha: 0.08),
-                  blurRadius: elevation ?? 8,
-                  offset: const Offset(0, 2),
-                ),
-              ]
-            : null,
       );
     } else {
       decoration = BoxDecoration(
@@ -77,15 +68,6 @@ class BaseCard extends StatelessWidget {
                 color: theme.colorScheme.outline.withValues(alpha: 0.12),
                 width: 1,
               )
-            : null,
-        boxShadow: !isFlat
-            ? [
-                BoxShadow(
-                  color: theme.colorScheme.shadow.withValues(alpha: 0.08),
-                  blurRadius: elevation ?? 8,
-                  offset: const Offset(0, 2),
-                ),
-              ]
             : null,
       );
     }
