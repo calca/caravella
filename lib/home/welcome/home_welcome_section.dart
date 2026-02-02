@@ -4,7 +4,7 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../manager/group/pages/group_creation_wizard_page.dart';
 import '../../settings/pages/settings_page.dart';
 
-typedef RefreshCallback = void Function();
+typedef RefreshCallback = Future<void> Function();
 
 class HomeWelcomeSection extends StatefulWidget {
   final RefreshCallback? onTripAdded;
@@ -51,7 +51,7 @@ class _HomeWelcomeSectionState extends State<HomeWelcomeSection>
   void _setSystemUIColors() {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
-    
+
     // Calculate the end color of the gradient for navigation bar
     final navigationBarColor = isDarkMode
         ? theme.colorScheme.onPrimaryFixed
@@ -275,7 +275,7 @@ class _HomeWelcomeSectionState extends State<HomeWelcomeSection>
                                 if (result is String) {
                                   // User wants to go to group
                                   if (widget.onTripAdded != null) {
-                                    widget.onTripAdded!();
+                                    await widget.onTripAdded!();
                                   }
                                 }
                               }
