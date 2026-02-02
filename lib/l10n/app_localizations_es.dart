@@ -214,6 +214,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get see_all => 'Ver todos';
 
   @override
+  String get view_all_groups => 'Ver todos los grupos';
+
+  @override
   String get no_active_groups => 'No hay grupos activos';
 
   @override

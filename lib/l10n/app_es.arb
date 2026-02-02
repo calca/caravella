@@ -93,6 +93,8 @@
   "your_groups": "Tus grupos",
   "see_all": "Ver todos",
   "@see_all": {"description": "Etiqueta CTA para abrir la página de historial y ver todos los grupos"},
+  "view_all_groups": "Ver todos los grupos",
+  "@view_all_groups": {"description": "Etiqueta CTA para ver todos los grupos archivados desde el estado vacío"},
   "no_active_groups": "No hay grupos activos",
   "no_active_groups_subtitle": "Crea un grupo de gastos",
   "create_first_group": "Crear un grupo",

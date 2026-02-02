@@ -92,6 +92,8 @@
   "remove_color": "Rimuovi Colore",
   "color_alternative": "Alternativa all'immagine",
   "background": "Sfondo",
+  "view_all_groups": "Vedi tutti i gruppi",
+  "@view_all_groups": {"description": "Etichetta CTA per visualizzare tutti i gruppi archiviati dallo stato vuoto"},
   "select_background": "Seleziona Sfondo",
   "background_options": "Opzioni Sfondo",
   "choose_image_or_color": "Scegli immagine o colore",

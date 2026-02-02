@@ -188,7 +188,7 @@ class _EmptyGroupsStateState extends State<EmptyGroupsState>
                     );
                   },
                   icon: const Icon(Icons.history_rounded),
-                  label: Text(widget.localizations.history),
+                  label: Text(widget.localizations.view_all_groups),
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 32,

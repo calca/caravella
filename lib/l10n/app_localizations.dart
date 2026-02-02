@@ -500,6 +500,12 @@ abstract class AppLocalizations {
   /// **'See all'**
   String get see_all;
 
+  /// CTA label to view all archived groups from empty state
+  ///
+  /// In en, this message translates to:
+  /// **'View all groups'**
+  String get view_all_groups;
+
   /// No description provided for @no_active_groups.
   ///
   /// In en, this message translates to:

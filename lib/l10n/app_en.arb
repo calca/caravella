@@ -94,6 +94,8 @@
   "your_groups": "Your groups",
   "see_all": "See all",
   "@see_all": {"description": "CTA label to open the history page and see all groups"},
+  "view_all_groups": "View all groups",
+  "@view_all_groups": {"description": "CTA label to view all archived groups from empty state"},
   "no_active_groups": "No active groups",
   "no_active_groups_subtitle": "Create an expense group",
   "create_first_group": "Create a group",

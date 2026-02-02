@@ -92,6 +92,8 @@
   "share_all_ofx": "分享全部 (OFX)",
   "download_all_markdown": "下载全部 (Markdown)",
   "share_all_markdown": "分享全部 (Markdown)",
+  "view_all_groups": "查看所有群组",
+  "@view_all_groups": {"description": "从空状态查看所有已归档群组的 CTA 标签"},
   "markdown_select_directory_title": "选择保存 Markdown 的文件夹",
   "markdown_saved_in": "Markdown 已保存至: {path}",
   "markdown_save_cancelled": "Markdown 导出已取消",
