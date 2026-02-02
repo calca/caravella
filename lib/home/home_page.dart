@@ -117,17 +117,20 @@ class _HomePageState extends State<HomePage> with RouteAware {
   /// regardless of preference state (handles edge cases like preference update failures).
   ///
   /// Also returns the preference value for potential auto-correction logic.
-  ({bool shouldShowWelcome, bool isFirstStartFromPrefs}) _shouldShowWelcomeScreen(bool hasGroups) {
-    final prefValue = PreferencesService.instance.appState
-        .isFirstStart();
-    return (shouldShowWelcome: !hasGroups && prefValue, isFirstStartFromPrefs: prefValue);
+  ({bool shouldShowWelcome, bool isFirstStartFromPrefs})
+  _shouldShowWelcomeScreen(bool hasGroups) {
+    final prefValue = PreferencesService.instance.appState.isFirstStart();
+    return (
+      shouldShowWelcome: !hasGroups && prefValue,
+      isFirstStartFromPrefs: prefValue,
+    );
   }
 
   Future<void> _loadLocaleAndTrip() async {
     // Skip loading state if showing welcome screen on first start
     // This prevents flash of loading skeleton before welcome screen
     final shouldShowLoading = !_isFirstStart || _refreshing;
-    
+
     if (shouldShowLoading) {
       setState(() {
         _loading = true;
@@ -149,7 +152,8 @@ class _HomePageState extends State<HomePage> with RouteAware {
     if (!mounted) return;
 
     // Determine if we should show welcome screen based on data and preferences
-    final (:shouldShowWelcome, :isFirstStartFromPrefs) = _shouldShowWelcomeScreen(hasGroups);
+    final (:shouldShowWelcome, :isFirstStartFromPrefs) =
+        _shouldShowWelcomeScreen(hasGroups);
 
     // If we determined user has groups but flag says first start,
     // update the preference to reflect reality
@@ -224,7 +228,9 @@ class _HomePageState extends State<HomePage> with RouteAware {
     final hasGroups = activeGroups.isNotEmpty || archivedGroups.isNotEmpty;
 
     // Determine if we should show welcome screen based on data and preferences
-    final shouldShowWelcome = _shouldShowWelcomeScreen(hasGroups).shouldShowWelcome;
+    final shouldShowWelcome = _shouldShowWelcomeScreen(
+      hasGroups,
+    ).shouldShowWelcome;
 
     // Determine which view to show
     final newViewKey = shouldShowWelcome
