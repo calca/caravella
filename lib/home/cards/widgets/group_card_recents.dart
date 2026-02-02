@@ -55,56 +55,56 @@ class _GroupCardRecentsState extends State<GroupCardRecents> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          widget.localizations.recent_expenses.toUpperCase(),
-          style: widget.theme.textTheme.labelSmall?.copyWith(
-            color: widget.theme.colorScheme.onSurfaceVariant
-                .withValues(alpha: 0.5),
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        FutureBuilder<List<ExpenseDetails>>(
-          future: _getRecentExpenses(),
-          builder: (ctx, snapshot) {
-            // Handle loading state
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const SizedBox.shrink();
-            }
+    return FutureBuilder<List<ExpenseDetails>>(
+      future: _getRecentExpenses(),
+      builder: (ctx, snapshot) {
+        // Handle loading state
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const SizedBox.shrink();
+        }
 
-            // Handle error state silently (fail gracefully)
-            if (snapshot.hasError || !snapshot.hasData) {
-              return const SizedBox.shrink();
-            }
+        // Handle error state silently (fail gracefully)
+        if (snapshot.hasError || !snapshot.hasData) {
+          return const SizedBox.shrink();
+        }
 
-            final lastTwo = snapshot.data!;
-            if (lastTwo.isEmpty) return const SizedBox.shrink();
+        final lastTwo = snapshot.data!;
+        if (lastTwo.isEmpty) return const SizedBox.shrink();
 
-            return AnimatedSwitcher(
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.localizations.recent_expenses.toUpperCase(),
+              style: widget.theme.textTheme.labelSmall?.copyWith(
+                color: widget.theme.colorScheme.onSurfaceVariant.withValues(
+                  alpha: 0.5,
+                ),
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            AnimatedSwitcher(
               duration: const Duration(milliseconds: 500),
               transitionBuilder: (child, animation) {
                 return FadeTransition(
                   opacity: animation,
                   child: SlideTransition(
-                    position: Tween<Offset>(
-                      begin: const Offset(0, 0.2),
-                      end: Offset.zero,
-                    ).animate(
-                      CurvedAnimation(
-                        parent: animation,
-                        curve: Curves.easeOutCubic,
-                      ),
-                    ),
+                    position:
+                        Tween<Offset>(
+                          begin: const Offset(0, 0.2),
+                          end: Offset.zero,
+                        ).animate(
+                          CurvedAnimation(
+                            parent: animation,
+                            curve: Curves.easeOutCubic,
+                          ),
+                        ),
                     child: child,
                   ),
                 );
               },
               child: Column(
-                key: ValueKey<String>(
-                  lastTwo.map((e) => e.id).join('-'),
-                ),
+                key: ValueKey<String>(lastTwo.map((e) => e.id).join('-')),
                 children: lastTwo.asMap().entries.map((entry) {
                   final index = entry.key;
                   final e = entry.value;
@@ -148,10 +148,10 @@ class _GroupCardRecentsState extends State<GroupCardRecents> {
                   );
                 }).toList(),
               ),
-            );
-          },
-        ),
-      ],
+            ),
+          ],
+        );
+      },
     );
   }
 }
