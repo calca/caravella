@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Updated `flutter_local_notifications` to 20.0.0
+  - Adapted notification service to use named parameters (breaking change in library)
+  - Methods `initialize()`, `show()`, and `cancel()` now require named parameters
+
 ### Added
 - Group creation wizard with optimized 3-step flow for first-time users
   - Complete multi-language support (EN, IT, ES, PT, ZH)

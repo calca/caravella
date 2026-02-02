@@ -67,7 +67,7 @@ dependencies:
   timeago: ^3.7.1
   gpt_markdown: ^1.1.5
   image_picker_platform_interface: ^2.11.1
-  flutter_local_notifications: ^19.5.0
+  flutter_local_notifications: ^20.0.0
   flutter_map: ^8.2.2
   latlong2: ^0.9.1
   in_app_review: ^2.0.11
