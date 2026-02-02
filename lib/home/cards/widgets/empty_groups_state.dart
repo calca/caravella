@@ -171,6 +171,35 @@ class _EmptyGroupsStateState extends State<EmptyGroupsState>
             ),
           ],
           const SizedBox(height: 32),
+          if (widget.allArchived) ...[
+            FadeTransition(
+              opacity: _buttonAnimation,
+              child: ScaleTransition(
+                scale: Tween<double>(
+                  begin: 0.8,
+                  end: 1.0,
+                ).animate(_buttonAnimation),
+                child: OutlinedButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const ExpesensHistoryPage(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.history_rounded),
+                  label: Text(widget.localizations.history),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32,
+                      vertical: 16,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
           FadeTransition(
             opacity: _buttonAnimation,
             child: ScaleTransition(
@@ -198,35 +227,6 @@ class _EmptyGroupsStateState extends State<EmptyGroupsState>
               ),
             ),
           ),
-          if (widget.allArchived) ...[
-            const SizedBox(height: 16),
-            FadeTransition(
-              opacity: _buttonAnimation,
-              child: ScaleTransition(
-                scale: Tween<double>(
-                  begin: 0.8,
-                  end: 1.0,
-                ).animate(_buttonAnimation),
-                child: OutlinedButton.icon(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const ExpesensHistoryPage(),
-                      ),
-                    );
-                  },
-                  icon: const Icon(Icons.history_rounded),
-                  label: Text(widget.localizations.history),
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 32,
-                      vertical: 16,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
         ],
       ),
     );
