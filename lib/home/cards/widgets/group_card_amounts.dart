@@ -81,6 +81,8 @@ class _GroupCardAmountsState extends State<GroupCardAmounts> {
               total: totalExpenses,
               currency: widget.group.currency,
               alignment: CrossAxisAlignment.center,
+              valueFontSize: 36.0,
+              currencyFontSize: 24.0,
             ),
           ),
         ),

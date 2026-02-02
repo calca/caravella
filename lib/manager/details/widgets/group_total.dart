@@ -7,12 +7,16 @@ class GroupTotal extends StatelessWidget {
   final String currency;
   final String? title;
   final CrossAxisAlignment alignment;
+  final double valueFontSize;
+  final double currencyFontSize;
   const GroupTotal({
     super.key,
     required this.total,
     required this.currency,
     this.title,
     this.alignment = CrossAxisAlignment.start,
+    this.valueFontSize = 28.0,
+    this.currencyFontSize = 18.0,
   });
 
   @override
@@ -35,8 +39,8 @@ class GroupTotal extends StatelessWidget {
         CurrencyDisplay(
           value: total,
           currency: currency,
-          valueFontSize: 28.0,
-          currencyFontSize: 18.0,
+          valueFontSize: valueFontSize,
+          currencyFontSize: currencyFontSize,
           alignment: alignment == CrossAxisAlignment.center
               ? MainAxisAlignment.center
               : MainAxisAlignment.start,
