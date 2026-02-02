@@ -158,8 +158,20 @@ class _GroupCardEmptyStateState extends State<GroupCardEmptyState>
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Big animated emoji
-                Text(_emoji, style: const TextStyle(fontSize: 96, height: 1.0)),
+                // Big animated emoji - desaturated 50% for subtle effect
+                ColorFiltered(
+                  colorFilter: const ColorFilter.matrix(<double>[
+                    // Saturation matrix with value 0.5 (50% color retained)
+                    0.6063, 0.3576, 0.0361, 0, 0, // Red channel
+                    0.1063, 0.8576, 0.0361, 0, 0, // Green channel
+                    0.1063, 0.3576, 0.5361, 0, 0, // Blue channel
+                    0, 0, 0, 1, 0, // Alpha channel
+                  ]),
+                  child: Text(
+                    _emoji,
+                    style: const TextStyle(fontSize: 96, height: 1.0),
+                  ),
+                ),
                 const SizedBox(height: 24),
                 // Encouraging message with bold words
                 RichText(
