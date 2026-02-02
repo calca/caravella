@@ -34,17 +34,15 @@ class HomeCardsSection extends StatefulWidget {
 
 class _HomeCardsSectionState extends State<HomeCardsSection> {
   List<ExpenseGroup> _activeGroups = [];
-  bool _loading = true;
   ExpenseGroupNotifier? _groupNotifier;
   bool _hasNavigationBar = false;
 
   @override
   void initState() {
     super.initState();
-    if (widget.initialGroups != null) {
-      _activeGroups = widget.initialGroups!;
-      _loading = false;
-    } else {
+    // Usa i gruppi iniziali se forniti, altrimenti carica
+    _activeGroups = widget.initialGroups ?? [];
+    if (widget.initialGroups == null) {
       _loadActiveGroups();
     }
     _initNavSetting();
@@ -86,7 +84,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
       _loadActiveGroups();
     }
 
-    // If parent provided new initialGroups (e.g., FutureBuilder resolved again), update local state
+    // If parent provided new initialGroups, update local state
     if (widget.initialGroups != null &&
         oldWidget.initialGroups != widget.initialGroups) {
       setState(() {
@@ -98,7 +96,6 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
                 ),
               ]
             : widget.initialGroups!;
-        _loading = false;
       });
     }
   }
@@ -205,13 +202,14 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
           } else {
             _activeGroups = groups;
           }
-          _loading = false;
         });
       }
     } catch (e) {
-      if (mounted) {
-        setState(() => _loading = false);
-      }
+      // Silently handle error - groups remain empty
+      LoggerService.warning(
+        'Failed to load active groups: $e',
+        name: 'state.home_cards',
+      );
     }
   }
 
@@ -274,9 +272,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
               duration: const Duration(milliseconds: 300),
               switchInCurve: Curves.easeIn,
               switchOutCurve: Curves.easeOut,
-              child: _loading
-                  ? _buildSkeletonContent(theme, loc)
-                  : _activeGroups.isEmpty
+              child: _activeGroups.isEmpty
                   ? EmptyGroupsState(
                       localizations: loc,
                       theme: theme,
@@ -402,65 +398,6 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
         ),
         // Extra spacing when system navigation bar is present
         if (!_hasNavigationBar) const SizedBox(height: 12),
-      ],
-    );
-  }
-
-  Widget _buildSkeletonContent(ThemeData theme, gen.AppLocalizations loc) {
-    return Column(
-      key: const ValueKey('skeleton'),
-      children: [
-        // Top spacing before featured card
-        const SizedBox(height: 8),
-
-        // Featured card skeleton - takes all remaining space
-        Expanded(child: FeaturedCardSkeleton(theme: theme)),
-
-        // Section header - real title visible during loading (skeleton) with CTA
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 0, 20, 16),
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  loc.your_groups,
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              // Disabled CTA in skeleton state (no interaction)
-              Row(
-                children: [
-                  Text(
-                    loc.see_all,
-                    style: theme.textTheme.labelLarge?.copyWith(
-                      color: theme.colorScheme.primary.withValues(alpha: 153),
-                    ),
-                  ),
-                  const SizedBox(width: 2),
-                  Icon(
-                    Icons.chevron_right,
-                    size: 18,
-                    color: theme.colorScheme.primary.withValues(alpha: 153),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-
-        // Carousel skeleton - fixed height at bottom, respect safe area
-        SafeArea(
-          top: false,
-          left: false,
-          right: false,
-          bottom: true,
-          child: SizedBox(
-            height: HomeLayoutConstants.carouselCardTotalHeight,
-            child: CarouselSkeletonLoader(theme: theme),
-          ),
-        ),
       ],
     );
   }

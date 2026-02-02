@@ -8,8 +8,6 @@ import 'package:play_store_updates/play_store_updates.dart';
 import '../settings/update/app_update_localizations.dart';
 import 'welcome/home_welcome_section.dart';
 import 'cards/home_cards_section.dart';
-import 'cards/widgets/widgets.dart';
-import 'home_constants.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,7 +18,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with RouteAware {
   ExpenseGroup? _pinnedTrip;
-  bool _loading = true;
+  bool _dataLoaded = false;
   ExpenseGroupNotifier? _groupNotifier;
   bool _refreshing = false;
   bool _updateCheckPerformed = false;
@@ -33,14 +31,10 @@ class _HomePageState extends State<HomePage> with RouteAware {
   @override
   void initState() {
     super.initState();
-    // Optimistic first-start check to avoid loading flash on welcome screen
+    // Optimistic first-start check
     // PreferencesService is initialized in main() before app runs, so safe to access
     // SharedPreferences caches values in memory, so synchronous read is non-blocking
     _isFirstStart = PreferencesService.instance.appState.isFirstStart();
-    // If first start, set loading to false immediately to prevent skeleton flash
-    if (_isFirstStart) {
-      _loading = false;
-    }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadLocaleAndTrip();
       _performUpdateCheckIfNeeded();
@@ -127,16 +121,6 @@ class _HomePageState extends State<HomePage> with RouteAware {
   }
 
   Future<void> _loadLocaleAndTrip() async {
-    // Skip loading state if showing welcome screen on first start
-    // This prevents flash of loading skeleton before welcome screen
-    final shouldShowLoading = !_isFirstStart || _refreshing;
-
-    if (shouldShowLoading) {
-      setState(() {
-        _loading = true;
-      });
-    }
-
     // Load pinned trip and groups in parallel
     final results = await Future.wait([
       ExpenseGroupStorageV2.getPinnedTrip(),
@@ -184,7 +168,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
       _activeGroups = activeGroups;
       _archivedGroups = archivedGroups;
       _isFirstStart = shouldShowWelcome;
-      _loading = false;
+      _dataLoaded = true;
       _refreshing = false;
     });
 
@@ -305,12 +289,29 @@ class _HomePageState extends State<HomePage> with RouteAware {
     final scaffoldBody = Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
       body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 300),
-        switchInCurve: Curves.easeOut,
-        switchOutCurve: Curves.easeIn,
+        duration: const Duration(milliseconds: 350),
+        reverseDuration: const Duration(milliseconds: 250),
+        switchInCurve: Curves.easeOutCubic,
+        switchOutCurve: Curves.easeInCubic,
         transitionBuilder: (child, animation) {
-          // Simple fade transition for smoother performance
-          return FadeTransition(opacity: animation, child: child);
+          // Smooth fade transition with slight scale for polish
+          return FadeTransition(
+            opacity: CurvedAnimation(
+              parent: animation,
+              curve: const Interval(0.0, 0.8, curve: Curves.easeOut),
+            ),
+            child: child,
+          );
+        },
+        layoutBuilder: (currentChild, previousChildren) {
+          // Stack children during transition for seamless crossfade
+          return Stack(
+            alignment: Alignment.topCenter,
+            children: [
+              ...previousChildren,
+              if (currentChild != null) currentChild,
+            ],
+          );
         },
         child: _buildContent(gloc),
       ),
@@ -329,13 +330,13 @@ class _HomePageState extends State<HomePage> with RouteAware {
   }
 
   Widget _buildContent(gen.AppLocalizations gloc) {
-    if (_loading) {
-      // Show skeleton loader during initial load for better UX
-      // Uses same layout as HomeCardsSection with skeleton only for carousel
-      // Note: No SafeArea here - skeleton layout handles topSafeArea internally
-      return KeyedSubtree(
-        key: const ValueKey('loading'),
-        child: _buildSkeletonLayout(gloc),
+    // Show welcome screen if first start or no data loaded yet and first start preference
+    if (_isFirstStart && !_dataLoaded) {
+      // Show welcome immediately for first-time users (no loading state)
+      return Semantics(
+        key: const ValueKey('welcome'),
+        label: gloc.accessibility_welcome_screen,
+        child: HomeWelcomeSection(onTripAdded: _handleTripAdded),
       );
     }
 
@@ -391,72 +392,6 @@ class _HomePageState extends State<HomePage> with RouteAware {
       key: const ValueKey('welcome'),
       label: gloc.accessibility_welcome_screen,
       child: HomeWelcomeSection(onTripAdded: _handleTripAdded),
-    );
-  }
-
-  /// Builds a skeleton layout matching HomeCardsSection structure
-  /// Header and bottom bar are real, only content is skeleton
-  Widget _buildSkeletonLayout(gen.AppLocalizations gloc) {
-    final theme = Theme.of(context);
-    final topSafeArea = MediaQuery.of(context).padding.top;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Safe area for status bar
-        SizedBox(height: topSafeArea),
-
-        // Real header - shows immediately
-        Padding(
-          padding: const EdgeInsets.fromLTRB(
-            HomeLayoutConstants.horizontalPadding,
-            16.0,
-            HomeLayoutConstants.horizontalPadding,
-            16.0,
-          ),
-          child: HomeCardsHeader(localizations: gloc, theme: theme),
-        ),
-
-        // Skeleton content - featured card + carousel (fills remaining space)
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: HomeLayoutConstants.horizontalPadding,
-            ),
-            child: Column(
-              children: [
-                // Top spacing before featured card
-                const SizedBox(height: 8),
-
-                // Featured card skeleton - takes all remaining space
-                Expanded(child: FeaturedCardSkeleton(theme: theme)),
-
-                // Section header - real title visible during loading
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 20, 8),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      gloc.your_groups,
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-
-                // Carousel skeleton - fixed height at bottom
-                SizedBox(
-                  height: HomeLayoutConstants.carouselCardTotalHeight,
-                  child: CarouselSkeletonLoader(theme: theme),
-                ),
-              ],
-            ),
-          ),
-        ),
-
-        // Bottom bar removed from HomePage skeleton; HomeCardsSection manages its own footer
-      ],
     );
   }
 }
