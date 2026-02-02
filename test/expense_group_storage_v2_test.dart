@@ -211,92 +211,98 @@ void main() {
       ExpenseGroupStorageV2.forceReload();
     });
 
-    test('getRecentExpenses: returns empty list for non-existent group',
-        () async {
-      final recentExpenses = await ExpenseGroupStorageV2.getRecentExpenses(
-        'non-existent-id',
-      );
-      expect(recentExpenses, isEmpty);
-    });
+    test(
+      'getRecentExpenses: returns empty list for non-existent group',
+      () async {
+        final recentExpenses = await ExpenseGroupStorageV2.getRecentExpenses(
+          'non-existent-id',
+        );
+        expect(recentExpenses, isEmpty);
+      },
+    );
 
-    test('getRecentExpenses: returns empty list for group with no expenses',
-        () async {
-      final p1 = ExpenseParticipant(name: 'Alice', id: 'p1');
-      final c1 = ExpenseCategory(name: 'Food', id: 'c1');
+    test(
+      'getRecentExpenses: returns empty list for group with no expenses',
+      () async {
+        final p1 = ExpenseParticipant(name: 'Alice', id: 'p1');
+        final c1 = ExpenseCategory(name: 'Food', id: 'c1');
 
-      final group = ExpenseGroup(
-        id: 'g1',
-        title: 'Empty Group',
-        currency: 'USD',
-        participants: [p1],
-        categories: [c1],
-        expenses: [],
-      );
+        final group = ExpenseGroup(
+          id: 'g1',
+          title: 'Empty Group',
+          currency: 'USD',
+          participants: [p1],
+          categories: [c1],
+          expenses: [],
+        );
 
-      await ExpenseGroupStorageV2.addExpenseGroup(group);
+        await ExpenseGroupStorageV2.addExpenseGroup(group);
 
-      final recentExpenses = await ExpenseGroupStorageV2.getRecentExpenses(
-        group.id,
-      );
-      expect(recentExpenses, isEmpty);
-    });
+        final recentExpenses = await ExpenseGroupStorageV2.getRecentExpenses(
+          group.id,
+        );
+        expect(recentExpenses, isEmpty);
+      },
+    );
 
-    test('getRecentExpenses: returns expenses sorted by date (newest first)',
-        () async {
-      final p1 = ExpenseParticipant(name: 'Alice', id: 'p1');
-      final c1 = ExpenseCategory(name: 'Food', id: 'c1');
+    test(
+      'getRecentExpenses: returns expenses sorted by date (newest first)',
+      () async {
+        final p1 = ExpenseParticipant(name: 'Alice', id: 'p1');
+        final c1 = ExpenseCategory(name: 'Food', id: 'c1');
 
-      final oldDate = DateTime(2024, 1, 1);
-      final middleDate = DateTime(2024, 1, 15);
-      final newDate = DateTime(2024, 2, 1);
+        final oldDate = DateTime(2024, 1, 1);
+        final middleDate = DateTime(2024, 1, 15);
+        final newDate = DateTime(2024, 2, 1);
 
-      final expense1 = ExpenseDetails(
-        id: 'e1',
-        category: c1,
-        amount: 10.0,
-        paidBy: p1,
-        date: middleDate,
-        name: 'Middle',
-      );
+        final expense1 = ExpenseDetails(
+          id: 'e1',
+          category: c1,
+          amount: 10.0,
+          paidBy: p1,
+          date: middleDate,
+          name: 'Middle',
+        );
 
-      final expense2 = ExpenseDetails(
-        id: 'e2',
-        category: c1,
-        amount: 20.0,
-        paidBy: p1,
-        date: oldDate,
-        name: 'Oldest',
-      );
+        final expense2 = ExpenseDetails(
+          id: 'e2',
+          category: c1,
+          amount: 20.0,
+          paidBy: p1,
+          date: oldDate,
+          name: 'Oldest',
+        );
 
-      final expense3 = ExpenseDetails(
-        id: 'e3',
-        category: c1,
-        amount: 30.0,
-        paidBy: p1,
-        date: newDate,
-        name: 'Newest',
-      );
+        final expense3 = ExpenseDetails(
+          id: 'e3',
+          category: c1,
+          amount: 30.0,
+          paidBy: p1,
+          date: newDate,
+          name: 'Newest',
+        );
 
-      final group = ExpenseGroup(
-        id: 'g1',
-        title: 'Test Group',
-        currency: 'USD',
-        participants: [p1],
-        categories: [c1],
-        expenses: [expense1, expense2, expense3],
-      );
+        final group = ExpenseGroup(
+          id: 'g1',
+          title: 'Test Group',
+          currency: 'USD',
+          participants: [p1],
+          categories: [c1],
+          expenses: [expense1, expense2, expense3],
+        );
 
-      await ExpenseGroupStorageV2.addExpenseGroup(group);
+        await ExpenseGroupStorageV2.addExpenseGroup(group);
 
-      final recentExpenses = await ExpenseGroupStorageV2.getRecentExpenses(
-        group.id,
-        limit: 2,
-      );
+        final recentExpenses = await ExpenseGroupStorageV2.getRecentExpenses(
+          group.id,
+          limit: 2,
+        );
 
-      expect(recentExpenses.length, equals(2));
-      expect(recentExpenses[0].id, equals('e3')); // Newest first
-      expect(recentExpenses[1].id, equals('e1')); // Middle second
-    });
+        expect(recentExpenses.length, equals(2));
+        expect(recentExpenses[0].id, equals('e3')); // Newest first
+        expect(recentExpenses[1].id, equals('e1')); // Middle second
+      },
+    );
 
     test('getRecentExpenses: respects limit parameter', () async {
       final p1 = ExpenseParticipant(name: 'Alice', id: 'p1');
@@ -344,5 +350,150 @@ void main() {
       );
       expect(recent10.length, equals(5)); // Should return all 5 expenses
     });
+  });
+
+  group('ExpenseGroupStorageV2 - getTodaySpending', () {
+    const storageFileName = 'expense_group_storage.json';
+
+    setUp(() async {
+      // Ensure clean state on disk and cache
+      try {
+        final dir = await getApplicationDocumentsDirectory();
+        final file = File('${dir.path}/$storageFileName');
+        if (await file.exists()) await file.delete();
+      } catch (e) {
+        // ignore
+      }
+      ExpenseGroupStorageV2.clearCache();
+      ExpenseGroupStorageV2.forceReload();
+    });
+
+    test('getTodaySpending: returns 0.0 for non-existent group', () async {
+      final todaySpending = await ExpenseGroupStorageV2.getTodaySpending(
+        'non-existent-id',
+      );
+      expect(todaySpending, equals(0.0));
+    });
+
+    test('getTodaySpending: returns 0.0 for group with no expenses', () async {
+      final p1 = ExpenseParticipant(name: 'Alice', id: 'p1');
+      final c1 = ExpenseCategory(name: 'Food', id: 'c1');
+
+      final group = ExpenseGroup(
+        id: 'g-empty',
+        title: 'Empty Group',
+        currency: 'EUR',
+        participants: [p1],
+        categories: [c1],
+        expenses: [],
+      );
+
+      await ExpenseGroupStorageV2.addExpenseGroup(group);
+
+      final todaySpending = await ExpenseGroupStorageV2.getTodaySpending(
+        group.id,
+      );
+      expect(todaySpending, equals(0.0));
+    });
+
+    test(
+      'getTodaySpending: returns correct amount for today\'s expenses',
+      () async {
+        final p1 = ExpenseParticipant(name: 'Alice', id: 'p1');
+        final c1 = ExpenseCategory(name: 'Food', id: 'c1');
+
+        final today = DateTime.now();
+        final yesterday = today.subtract(const Duration(days: 1));
+
+        final expenses = [
+          ExpenseDetails(
+            id: 'e1',
+            category: c1,
+            amount: 50.0,
+            paidBy: p1,
+            date: today,
+            name: 'Lunch today',
+          ),
+          ExpenseDetails(
+            id: 'e2',
+            category: c1,
+            amount: 30.0,
+            paidBy: p1,
+            date: today,
+            name: 'Coffee today',
+          ),
+          ExpenseDetails(
+            id: 'e3',
+            category: c1,
+            amount: 100.0,
+            paidBy: p1,
+            date: yesterday,
+            name: 'Dinner yesterday',
+          ),
+        ];
+
+        final group = ExpenseGroup(
+          id: 'g-today',
+          title: 'Today Test',
+          currency: 'EUR',
+          participants: [p1],
+          categories: [c1],
+          expenses: expenses,
+        );
+
+        await ExpenseGroupStorageV2.addExpenseGroup(group);
+
+        final todaySpending = await ExpenseGroupStorageV2.getTodaySpending(
+          group.id,
+        );
+        expect(todaySpending, equals(80.0)); // 50 + 30
+      },
+    );
+
+    test(
+      'getTodaySpending: returns 0.0 when all today\'s expenses are from different dates',
+      () async {
+        final p1 = ExpenseParticipant(name: 'Alice', id: 'p1');
+        final c1 = ExpenseCategory(name: 'Food', id: 'c1');
+
+        final yesterday = DateTime.now().subtract(const Duration(days: 1));
+        final twoDaysAgo = DateTime.now().subtract(const Duration(days: 2));
+
+        final expenses = [
+          ExpenseDetails(
+            id: 'e1',
+            category: c1,
+            amount: 50.0,
+            paidBy: p1,
+            date: yesterday,
+            name: 'Yesterday',
+          ),
+          ExpenseDetails(
+            id: 'e2',
+            category: c1,
+            amount: 30.0,
+            paidBy: p1,
+            date: twoDaysAgo,
+            name: 'Two days ago',
+          ),
+        ];
+
+        final group = ExpenseGroup(
+          id: 'g-old',
+          title: 'Old Test',
+          currency: 'EUR',
+          participants: [p1],
+          categories: [c1],
+          expenses: expenses,
+        );
+
+        await ExpenseGroupStorageV2.addExpenseGroup(group);
+
+        final todaySpending = await ExpenseGroupStorageV2.getTodaySpending(
+          group.id,
+        );
+        expect(todaySpending, equals(0.0));
+      },
+    );
   });
 }

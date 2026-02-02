@@ -6,7 +6,7 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 /// Small widget extracted from GroupCardContent showing
 /// total and today's spending side-by-side with animations.
-class GroupCardAmounts extends StatelessWidget {
+class GroupCardAmounts extends StatefulWidget {
   final ExpenseGroup group;
   final ThemeData theme;
   final gen.AppLocalizations localizations;
@@ -19,22 +19,47 @@ class GroupCardAmounts extends StatelessWidget {
   });
 
   @override
+  State<GroupCardAmounts> createState() => _GroupCardAmountsState();
+}
+
+class _GroupCardAmountsState extends State<GroupCardAmounts> {
+  double? _todaySpending;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTodaySpending();
+  }
+
+  @override
+  void didUpdateWidget(GroupCardAmounts oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.group.id != widget.group.id ||
+        oldWidget.group.expenses.length != widget.group.expenses.length) {
+      _loadTodaySpending();
+    }
+  }
+
+  Future<void> _loadTodaySpending() async {
+    final spending = await ExpenseGroupStorageV2.getTodaySpending(
+      widget.group.id,
+    );
+    if (mounted) {
+      setState(() {
+        _todaySpending = spending;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final totalExpenses = group.expenses.fold<double>(
+    final totalExpenses = widget.group.expenses.fold<double>(
       0,
       (sum, expense) => sum + (expense.amount ?? 0),
     );
-    final now = DateTime.now();
-    final todaySpending = group.expenses
-        .where(
-          (e) =>
-              e.date.year == now.year &&
-              e.date.month == now.month &&
-              e.date.day == now.day,
-        )
-        .fold<double>(0, (s, e) => s + (e.amount ?? 0));
+    final todaySpending = _todaySpending ?? 0.0;
 
-    final primary = theme.colorScheme.primary;
+    final primary = widget.theme.colorScheme.primary;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -46,10 +71,7 @@ class GroupCardAmounts extends StatelessWidget {
               opacity: animation,
               child: ScaleTransition(
                 scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                  CurvedAnimation(
-                    parent: animation,
-                    curve: Curves.easeOutBack,
-                  ),
+                  CurvedAnimation(parent: animation, curve: Curves.easeOutBack),
                 ),
                 child: child,
               ),
@@ -58,7 +80,10 @@ class GroupCardAmounts extends StatelessWidget {
           child: Align(
             key: ValueKey<double>(totalExpenses),
             alignment: Alignment.center,
-            child: GroupTotal(total: totalExpenses, currency: group.currency),
+            child: GroupTotal(
+              total: totalExpenses,
+              currency: widget.group.currency,
+            ),
           ),
         ),
         const SizedBox(height: 8),
@@ -69,15 +94,16 @@ class GroupCardAmounts extends StatelessWidget {
             return FadeTransition(
               opacity: animation,
               child: SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(0, -0.3),
-                  end: Offset.zero,
-                ).animate(
-                  CurvedAnimation(
-                    parent: animation,
-                    curve: Curves.easeOutCubic,
-                  ),
-                ),
+                position:
+                    Tween<Offset>(
+                      begin: const Offset(0, -0.3),
+                      end: Offset.zero,
+                    ).animate(
+                      CurvedAnimation(
+                        parent: animation,
+                        curve: Curves.easeOutCubic,
+                      ),
+                    ),
                 child: child,
               ),
             );
@@ -97,7 +123,7 @@ class GroupCardAmounts extends StatelessWidget {
                 children: [
                   CurrencyDisplay(
                     value: todaySpending.abs(),
-                    currency: group.currency,
+                    currency: widget.group.currency,
                     valueFontSize: 16,
                     currencyFontSize: 12,
                     alignment: MainAxisAlignment.start,
@@ -107,8 +133,8 @@ class GroupCardAmounts extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    localizations.spent_today.toLowerCase(),
-                    style: theme.textTheme.bodySmall?.copyWith(
+                    widget.localizations.spent_today.toLowerCase(),
+                    style: widget.theme.textTheme.bodySmall?.copyWith(
                       color: primary,
                       fontWeight: FontWeight.w600,
                     ),

@@ -479,14 +479,14 @@ class ExpenseGroupStorageV2 {
   }
 
   /// Returns the most recent expenses from a group, sorted by date (newest first).
-  /// 
+  ///
   /// This method provides an efficient way to get recent expenses without
   /// having to load and sort all expenses in the UI layer.
-  /// 
+  ///
   /// Parameters:
   /// - [groupId]: The ID of the expense group
   /// - [limit]: Maximum number of recent expenses to return (default: 2)
-  /// 
+  ///
   /// Returns an empty list if the group is not found or has no expenses.
   static Future<List<ExpenseDetails>> getRecentExpenses(
     String groupId, {
@@ -501,5 +501,24 @@ class ExpenseGroupStorageV2 {
     final sortedExpenses = List<ExpenseDetails>.from(group.expenses);
     sortedExpenses.sort((a, b) => b.date.compareTo(a.date));
     return sortedExpenses.take(limit).toList();
+  }
+
+  /// Calculates the total amount spent today for a specific group.
+  /// Returns 0.0 if the group is not found or has no expenses today.
+  static Future<double> getTodaySpending(String groupId) async {
+    final group = await getTripById(groupId);
+    if (group == null || group.expenses.isEmpty) {
+      return 0.0;
+    }
+
+    final now = DateTime.now();
+    return group.expenses
+        .where(
+          (e) =>
+              e.date.year == now.year &&
+              e.date.month == now.month &&
+              e.date.day == now.day,
+        )
+        .fold<double>(0.0, (sum, e) => sum + (e.amount ?? 0.0));
   }
 }
