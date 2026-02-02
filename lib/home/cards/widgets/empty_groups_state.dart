@@ -134,27 +134,8 @@ class _EmptyGroupsStateState extends State<EmptyGroupsState>
               ),
             ),
           ),
-          const SizedBox(height: 12),
-          FadeTransition(
-            opacity: _subtitleAnimation,
-            child: SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(0, 0.2),
-                end: Offset.zero,
-              ).animate(_subtitleAnimation),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 32.0),
-                child: Text(
-                  widget.localizations.no_active_groups_subtitle,
-                  style: widget.theme.textTheme.bodyLarge?.copyWith(
-                    color: widget.theme.colorScheme.onSurfaceVariant,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-          ),
           if (widget.allArchived) ...[
+            const SizedBox(height: 16),
             const SizedBox(height: 16),
             FadeTransition(
               opacity: _subtitleAnimation,
