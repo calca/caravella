@@ -57,14 +57,13 @@ class GroupCardContent extends StatelessWidget {
                   localizations: localizations,
                   theme: theme,
                 ),
+                const Spacer(),
                 GroupCardAmounts(
                   group: currentGroup,
                   theme: theme,
                   localizations: localizations,
                 ),
-                // Show last 2 expenses using the same card widget as the details page
-                const SizedBox(height: HomeLayoutConstants.smallSpacing),
-                Spacer(),
+                const Spacer(),
                 GroupCardRecents(
                   group: currentGroup,
                   localizations: localizations,
