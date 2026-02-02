@@ -19,12 +19,14 @@ class GroupCardTodaySpending extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final primary = theme.colorScheme.primary;
+    final colorScheme = theme.colorScheme;
+    final backgroundColor = colorScheme.surfaceContainerLow;
+    final textColor = colorScheme.onSurfaceVariant;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: primary.withValues(alpha: 0.08),
+        color: backgroundColor,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -38,14 +40,14 @@ class GroupCardTodaySpending extends StatelessWidget {
             currencyFontSize: 12,
             alignment: MainAxisAlignment.start,
             showDecimals: true,
-            color: primary,
+            color: textColor,
             fontWeight: FontWeight.w700,
           ),
           const SizedBox(width: 8),
           Text(
             localizations.spent_today.toLowerCase(),
             style: theme.textTheme.bodySmall?.copyWith(
-              color: primary,
+              color: textColor,
               fontWeight: FontWeight.w600,
             ),
           ),
