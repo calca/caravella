@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../navigation_helpers.dart';
+import '../../../manager/history/expenses_history_page.dart';
 
 class EmptyGroupsState extends StatefulWidget {
   final gen.AppLocalizations localizations;
@@ -141,29 +142,31 @@ class _EmptyGroupsStateState extends State<EmptyGroupsState>
                 begin: const Offset(0, 0.2),
                 end: Offset.zero,
               ).animate(_subtitleAnimation),
-              child: Text(
-                widget.localizations.no_active_groups_subtitle,
-                style: widget.theme.textTheme.bodyLarge?.copyWith(
-                  color: widget.theme.colorScheme.onSurface.withValues(
-                    alpha: 0.7,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                child: Text(
+                  widget.localizations.no_active_groups_subtitle,
+                  style: widget.theme.textTheme.bodyLarge?.copyWith(
+                    color: widget.theme.colorScheme.onSurfaceVariant,
                   ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
             ),
           ),
           if (widget.allArchived) ...[
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
             FadeTransition(
               opacity: _subtitleAnimation,
-              child: Text(
-                widget.localizations.all_groups_archived_info,
-                style: widget.theme.textTheme.bodyMedium?.copyWith(
-                  color: widget.theme.colorScheme.onSurface.withValues(
-                    alpha: 0.65,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                child: Text(
+                  widget.localizations.all_groups_archived_info,
+                  style: widget.theme.textTheme.bodyMedium?.copyWith(
+                    color: widget.theme.colorScheme.onSurfaceVariant,
                   ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
             ),
           ],
@@ -184,17 +187,46 @@ class _EmptyGroupsStateState extends State<EmptyGroupsState>
                     widget.onGroupAdded();
                   }
                 },
-                icon: const Icon(Icons.add),
+                icon: const Icon(Icons.add_rounded),
                 label: Text(widget.localizations.create_first_group),
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 12,
+                    horizontal: 32,
+                    vertical: 16,
                   ),
                 ),
               ),
             ),
           ),
+          if (widget.allArchived) ...[
+            const SizedBox(height: 16),
+            FadeTransition(
+              opacity: _buttonAnimation,
+              child: ScaleTransition(
+                scale: Tween<double>(
+                  begin: 0.8,
+                  end: 1.0,
+                ).animate(_buttonAnimation),
+                child: OutlinedButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const ExpesensHistoryPage(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.history_rounded),
+                  label: Text(widget.localizations.history),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32,
+                      vertical: 16,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );

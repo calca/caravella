@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../home_constants.dart';
 import 'group_card_header.dart';
 import 'group_card_amounts.dart';
 // group_card_stats.dart removed import (not needed here)

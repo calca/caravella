@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/manager/details/widgets/group_total.dart';
-import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'group_card_today_spending.dart';
 
@@ -57,7 +56,6 @@ class _GroupCardAmountsState extends State<GroupCardAmounts> {
     final totalExpenses = widget.group.getTotalExpenses();
     final todaySpending = _todaySpending ?? 0.0;
 
-    final primary = widget.theme.colorScheme.primary;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
