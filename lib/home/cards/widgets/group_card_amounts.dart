@@ -24,6 +24,11 @@ class GroupCardAmounts extends StatefulWidget {
 
 class _GroupCardAmountsState extends State<GroupCardAmounts> {
   double? _todaySpending;
+  bool _isInitialLoad = true;
+
+  // Cache previous values to avoid unnecessary animations
+  double? _previousTotal;
+  double? _previousTodaySpending;
 
   @override
   void initState() {
@@ -47,6 +52,7 @@ class _GroupCardAmountsState extends State<GroupCardAmounts> {
     if (mounted) {
       setState(() {
         _todaySpending = spending;
+        _isInitialLoad = false;
       });
     }
   }
@@ -56,12 +62,37 @@ class _GroupCardAmountsState extends State<GroupCardAmounts> {
     final totalExpenses = widget.group.getTotalExpenses();
     final todaySpending = _todaySpending ?? 0.0;
 
+    // Track if values actually changed (not just initial load)
+    final shouldAnimateTotal =
+        !_isInitialLoad &&
+        _previousTotal != null &&
+        _previousTotal != totalExpenses;
+    final shouldAnimateTodaySpending =
+        !_isInitialLoad &&
+        _previousTodaySpending != null &&
+        _previousTodaySpending != todaySpending;
+
+    // Update previous values for next comparison
+    _previousTotal = totalExpenses;
+    _previousTodaySpending = todaySpending;
+
+    // Use stable keys during initial load to prevent unwanted animations
+    // Once loaded, use value-based keys to animate on actual changes
+    final totalKey = _isInitialLoad
+        ? const ValueKey<String>('total_initial')
+        : ValueKey<double>(totalExpenses);
+    final todayKey = _isInitialLoad
+        ? const ValueKey<String>('today_initial')
+        : ValueKey<double>(todaySpending);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // Animated total with scale and fade
+        // Animated total with scale and fade (only when value actually changes)
         AnimatedSwitcher(
-          duration: const Duration(milliseconds: 600),
+          duration: shouldAnimateTotal
+              ? const Duration(milliseconds: 600)
+              : Duration.zero,
           transitionBuilder: (child, animation) {
             return FadeTransition(
               opacity: animation,
@@ -74,7 +105,7 @@ class _GroupCardAmountsState extends State<GroupCardAmounts> {
             );
           },
           child: Align(
-            key: ValueKey<double>(totalExpenses),
+            key: totalKey,
             alignment: Alignment.center,
             child: GroupTotal(
               total: totalExpenses,
@@ -86,9 +117,11 @@ class _GroupCardAmountsState extends State<GroupCardAmounts> {
           ),
         ),
         const SizedBox(height: 8),
-        // Animated daily spending badge
+        // Animated daily spending badge (only when value actually changes)
         AnimatedSwitcher(
-          duration: const Duration(milliseconds: 500),
+          duration: shouldAnimateTodaySpending
+              ? const Duration(milliseconds: 500)
+              : Duration.zero,
           transitionBuilder: (child, animation) {
             return FadeTransition(
               opacity: animation,
@@ -108,7 +141,7 @@ class _GroupCardAmountsState extends State<GroupCardAmounts> {
             );
           },
           child: Align(
-            key: ValueKey<double>(todaySpending),
+            key: todayKey,
             alignment: Alignment.center,
             child: GroupCardTodaySpending(
               todaySpending: todaySpending,
