@@ -330,14 +330,11 @@ class _HomePageState extends State<HomePage> with RouteAware {
   }
 
   Widget _buildContent(gen.AppLocalizations gloc) {
-    // Show welcome screen if first start or no data loaded yet and first start preference
-    if (_isFirstStart && !_dataLoaded) {
-      // Show welcome immediately for first-time users (no loading state)
-      return Semantics(
-        key: const ValueKey('welcome'),
-        label: gloc.accessibility_welcome_screen,
-        child: HomeWelcomeSection(onTripAdded: _handleTripAdded),
-      );
+    // Wait for data to load before deciding what to show
+    // This prevents flash of welcome screen for returning users
+    if (!_dataLoaded) {
+      // Show empty container while loading (data loads in milliseconds)
+      return const SizedBox.shrink(key: ValueKey('loading'));
     }
 
     if (_isFirstStart) {
