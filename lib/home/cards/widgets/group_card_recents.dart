@@ -27,8 +27,9 @@ class _GroupCardRecentsState extends State<GroupCardRecents> {
   @override
   void didUpdateWidget(GroupCardRecents oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Clear cache if group changed
-    if (oldWidget.group.id != widget.group.id) {
+    // Clear cache if group changed or expenses changed
+    if (oldWidget.group.id != widget.group.id ||
+        oldWidget.group.expenses.length != widget.group.expenses.length) {
       _cachedRecentExpenses = null;
       _cachedGroupId = null;
     }

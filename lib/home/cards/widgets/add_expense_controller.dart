@@ -66,6 +66,9 @@ class AddExpenseController {
 
               RatingService.checkAndPromptForRating();
 
+              // Notify parent that expense was added
+              onExpenseAdded();
+
               nav.pop();
             },
             onCategoryAdded: (categoryName) async {
@@ -140,6 +143,9 @@ class AddExpenseController {
                     }
 
                     RatingService.checkAndPromptForRating();
+
+                    // Notify parent that expense was added
+                    onExpenseAdded();
                   },
                   onCategoryAdded: (categoryName) async {
                     await notifier.addCategory(categoryName);
