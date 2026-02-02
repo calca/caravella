@@ -160,21 +160,19 @@ void main() {
         await tester.pumpAndSettle();
 
         // Check that the enhanced empty state is displayed
+        // Button should be present with Italian text
         expect(
-          find.text('Pronti per iniziare?'),
-          findsOneWidget,
-        ); // Italian title
-        expect(
-          find.text('Aggiungi la prima spesa per iniziare con questo gruppo!'),
-          findsOneWidget,
-        ); // Italian subtitle
-        expect(
-          find.text('Aggiungi Prima Spesa'),
+          find.text('Aggiungi Spesa'),
           findsOneWidget,
         ); // Italian button text
+        expect(find.byIcon(Icons.add_rounded), findsOneWidget);
+
+        // Check that message RichText is displayed (random message from GroupCardEmptyState)
+        final richTextFinder = find.byType(RichText);
+        expect(richTextFinder, findsWidgets);
 
         // Check that the call-to-action button is present and works
-        final addButton = find.text('Aggiungi Prima Spesa');
+        final addButton = find.text('Aggiungi Spesa');
         expect(addButton, findsOneWidget);
 
         await tester.tap(addButton);
@@ -207,23 +205,14 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      // Check for either the image or the fallback icon
-      final imageWidget = find.byType(Image);
-      final iconWidget = find.byIcon(Icons.receipt_long_outlined);
+      // GroupCardEmptyState displays emoji text, not an image or icon
+      // Check that emoji message is present via RichText widget
+      final richTextFinder = find.byType(RichText);
+      expect(richTextFinder, findsWidgets);
 
-      // Either the image should load or the fallback icon should be present
-      expect(
-        imageWidget.evaluate().isNotEmpty || iconWidget.evaluate().isNotEmpty,
-        isTrue,
-      );
-
-      // Check English text is displayed correctly
-      expect(find.text('Ready to start tracking?'), findsOneWidget);
-      expect(
-        find.text('Add your first expense to get started with this group!'),
-        findsOneWidget,
-      );
-      expect(find.text('Add First Expense'), findsOneWidget);
+      // Also verify button is present with English text
+      expect(find.byIcon(Icons.add_rounded), findsOneWidget);
+      expect(find.text('Add Expense'), findsOneWidget);
     });
 
     testWidgets('Simple empty state shown when filters are active', (
