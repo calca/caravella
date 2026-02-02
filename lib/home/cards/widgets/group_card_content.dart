@@ -64,7 +64,9 @@ class GroupCardContent extends StatelessWidget {
                 ),
                 const Spacer(),
                 GroupCardRecents(
-                  key: ValueKey('recents_${currentGroup.id}_${currentGroup.expenses.length}'),
+                  key: ValueKey(
+                    'recents_${currentGroup.id}_${currentGroup.expenses.length}',
+                  ),
                   group: currentGroup,
                   localizations: localizations,
                   theme: theme,
