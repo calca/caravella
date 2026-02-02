@@ -42,6 +42,7 @@ class _WizardTypeAndNameStepState extends State<WizardTypeAndNameStep> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      sheetAnimationStyle: AnimationStyle.noAnimation,
       builder: (context) => GroupBottomSheetScaffold(
         title: gloc.group_type,
         scrollable: false,
