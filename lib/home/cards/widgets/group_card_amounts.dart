@@ -3,6 +3,7 @@ import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/manager/details/widgets/group_total.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import 'group_card_today_spending.dart';
 
 /// Small widget extracted from GroupCardContent showing
 /// total and today's spending side-by-side with animations.
@@ -111,36 +112,11 @@ class _GroupCardAmountsState extends State<GroupCardAmounts> {
           child: Align(
             key: ValueKey<double>(todaySpending),
             alignment: Alignment.center,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color: primary.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  CurrencyDisplay(
-                    value: todaySpending.abs(),
-                    currency: widget.group.currency,
-                    valueFontSize: 16,
-                    currencyFontSize: 12,
-                    alignment: MainAxisAlignment.start,
-                    showDecimals: true,
-                    color: primary,
-                    fontWeight: FontWeight.w700,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    widget.localizations.spent_today.toLowerCase(),
-                    style: widget.theme.textTheme.bodySmall?.copyWith(
-                      color: primary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
+            child: GroupCardTodaySpending(
+              todaySpending: todaySpending,
+              currency: widget.group.currency,
+              theme: widget.theme,
+              localizations: widget.localizations,
             ),
           ),
         ),
