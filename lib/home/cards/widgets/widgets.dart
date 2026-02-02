@@ -8,10 +8,6 @@ export 'group_card_header.dart';
 export 'group_card_stats.dart';
 export 'add_expense_controller.dart';
 export 'carousel_group_card.dart';
-export 'simple_bottom_bar.dart';
-export 'page_indicator.dart';
-// Skeleton loaders removed - using direct fade-in for local data
-// Chart widgets are now in caravella_core_ui package
 export 'package:caravella_core_ui/widgets/charts/chart_type.dart';
 export 'package:caravella_core_ui/widgets/charts/chart_badge.dart';
 export 'package:caravella_core_ui/widgets/charts/weekly_expense_chart.dart';
