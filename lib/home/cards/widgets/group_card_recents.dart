@@ -59,100 +59,115 @@ class _GroupCardRecentsState extends State<GroupCardRecents> {
     return FutureBuilder<List<ExpenseDetails>>(
       future: _getRecentExpenses(),
       builder: (ctx, snapshot) {
-        // Handle loading state
+        // Handle loading state - keep showing cached data if available
         if (snapshot.connectionState == ConnectionState.waiting) {
+          // Show cached data if available, otherwise hide
+          if (_cachedRecentExpenses != null &&
+              _cachedRecentExpenses!.isNotEmpty) {
+            final lastTwo = _cachedRecentExpenses!;
+            return _buildRecentsColumn(ctx, lastTwo);
+          }
           return const SizedBox.shrink();
         }
 
-        // Handle error state silently (fail gracefully)
+        // Handle error state silently (fail gracefully) - keep showing cached data if available
         if (snapshot.hasError || !snapshot.hasData) {
+          if (_cachedRecentExpenses != null &&
+              _cachedRecentExpenses!.isNotEmpty) {
+            final lastTwo = _cachedRecentExpenses!;
+            return _buildRecentsColumn(ctx, lastTwo);
+          }
           return const SizedBox.shrink();
         }
 
         final lastTwo = snapshot.data!;
         if (lastTwo.isEmpty) return const SizedBox.shrink();
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              widget.localizations.recent_expenses.toUpperCase(),
-              style: widget.theme.textTheme.labelSmall?.copyWith(
-                color: widget.theme.colorScheme.onSurfaceVariant.withValues(
-                  alpha: 0.5,
-                ),
-                fontWeight: FontWeight.w400,
-              ),
+        return _buildRecentsColumn(ctx, lastTwo);
+      },
+    );
+  }
+
+  Widget _buildRecentsColumn(BuildContext ctx, List<ExpenseDetails> lastTwo) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          widget.localizations.recent_expenses.toUpperCase(),
+          style: widget.theme.textTheme.labelSmall?.copyWith(
+            color: widget.theme.colorScheme.onSurfaceVariant.withValues(
+              alpha: 0.5,
             ),
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 500),
-              transitionBuilder: (child, animation) {
-                return FadeTransition(
-                  opacity: animation,
-                  child: SlideTransition(
-                    position:
-                        Tween<Offset>(
-                          begin: const Offset(0, 0.2),
-                          end: Offset.zero,
-                        ).animate(
-                          CurvedAnimation(
-                            parent: animation,
-                            curve: Curves.easeOutCubic,
-                          ),
-                        ),
-                    child: child,
-                  ),
-                );
-              },
-              child: Column(
-                key: ValueKey<String>(lastTwo.map((e) => e.id).join('-')),
-                children: lastTwo.asMap().entries.map((entry) {
-                  final index = entry.key;
-                  final e = entry.value;
-                  return TweenAnimationBuilder<double>(
-                    duration: Duration(milliseconds: 400 + (index * 100)),
-                    tween: Tween<double>(begin: 0.0, end: 1.0),
-                    curve: Curves.easeOutCubic,
-                    builder: (context, value, child) {
-                      return Opacity(
-                        opacity: value,
-                        child: Transform.translate(
-                          offset: Offset(0, 20 * (1 - value)),
-                          child: child,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 500),
+          transitionBuilder: (child, animation) {
+            return FadeTransition(
+              opacity: animation,
+              child: SlideTransition(
+                position:
+                    Tween<Offset>(
+                      begin: const Offset(0, 0.2),
+                      end: Offset.zero,
+                    ).animate(
+                      CurvedAnimation(
+                        parent: animation,
+                        curve: Curves.easeOutCubic,
+                      ),
+                    ),
+                child: child,
+              ),
+            );
+          },
+          child: Column(
+            key: ValueKey<String>(lastTwo.map((e) => e.id).join('-')),
+            children: lastTwo.asMap().entries.map((entry) {
+              final index = entry.key;
+              final e = entry.value;
+              return TweenAnimationBuilder<double>(
+                duration: Duration(milliseconds: 400 + (index * 100)),
+                tween: Tween<double>(begin: 0.0, end: 1.0),
+                curve: Curves.easeOutCubic,
+                builder: (context, value, child) {
+                  return Opacity(
+                    opacity: value,
+                    child: Transform.translate(
+                      offset: Offset(0, 20 * (1 - value)),
+                      child: child,
+                    ),
+                  );
+                },
+                child: Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.only(bottom: 6.0),
+                  child: ExpenseAmountCard(
+                    title: e.name ?? '',
+                    coins: (e.amount ?? 0).toInt(),
+                    checked: true,
+                    paidBy: e.paidBy,
+                    category: e.category.name,
+                    date: e.date,
+                    showDate: false,
+                    compact: true,
+                    fullWidth: true,
+                    currency: widget.group.currency,
+                    onTap: () {
+                      Navigator.of(ctx).push(
+                        MaterialPageRoute(
+                          builder: (_) =>
+                              ExpenseGroupDetailPage(trip: widget.group),
                         ),
                       );
                     },
-                    child: Container(
-                      width: double.infinity,
-                      margin: const EdgeInsets.only(bottom: 6.0),
-                      child: ExpenseAmountCard(
-                        title: e.name ?? '',
-                        coins: (e.amount ?? 0).toInt(),
-                        checked: true,
-                        paidBy: e.paidBy,
-                        category: e.category.name,
-                        date: e.date,
-                        showDate: false,
-                        compact: true,
-                        fullWidth: true,
-                        currency: widget.group.currency,
-                        onTap: () {
-                          Navigator.of(ctx).push(
-                            MaterialPageRoute(
-                              builder: (_) =>
-                                  ExpenseGroupDetailPage(trip: widget.group),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-          ],
-        );
-      },
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      ],
     );
   }
 }
