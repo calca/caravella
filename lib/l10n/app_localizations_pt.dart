@@ -242,7 +242,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get create_first_group => 'Criar um grupo';
 
   @override
-  String get new_expense_group => 'Novo grupo de despesas';
+  String get new_expense_group => 'Novo';
 
   @override
   String get new_expense => 'New Expense';

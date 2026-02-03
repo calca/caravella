@@ -238,7 +238,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get create_first_group => '创建您的第一个群组';
 
   @override
-  String get new_expense_group => '新支出群组';
+  String get new_expense_group => '新建';
 
   @override
   String get new_expense => 'New Expense';

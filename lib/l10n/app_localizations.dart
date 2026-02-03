@@ -557,7 +557,7 @@ abstract class AppLocalizations {
   /// No description provided for @new_expense_group.
   ///
   /// In en, this message translates to:
-  /// **'New Expense Group'**
+  /// **'New'**
   String get new_expense_group;
 
   /// No description provided for @new_expense.

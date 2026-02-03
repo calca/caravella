@@ -125,7 +125,7 @@
   "no_active_groups": "没有活跃的群组",
   "no_active_groups_subtitle": "创建费用群组",
   "create_first_group": "创建您的第一个群组",
-  "new_expense_group": "新支出群组",
+  "new_expense_group": "新建",
   "tap_to_create": "点击创建",
   "no_expense_label": "未找到支出",
   "image": "图片",
@@ -667,7 +667,7 @@
   ,"@less": {"description": "收起并显示更少项目的内联按钮标签"}
   ,"debt_prefix_to": "给 "
   ,"@debt_prefix_to": {"description": "在债务/结算行中显示在收款人之前的简短前缀（例如：'给 Alice 10€'）"}
-  ,"new_expense_group": "新支出群组"
+  ,"new_expense_group": "新建"
   ,"tap_to_create": "点击创建"
   ,"no_expense_label": "未找到支出"
   ,"image": "图片"

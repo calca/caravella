@@ -241,7 +241,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get create_first_group => 'Crear un grupo';
 
   @override
-  String get new_expense_group => 'Nuevo Grupo de Gastos';
+  String get new_expense_group => 'Nuevo';
 
   @override
   String get new_expense => 'New Expense';
