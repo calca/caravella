@@ -417,12 +417,45 @@ class SqliteExpenseGroupRepository
     return await measureOperation('updateGroupMetadata', () async {
       try {
         final db = await database;
-        await db.update(
-          _tableGroups,
-          _groupToMap(group),
-          where: 'id = ?',
-          whereArgs: [group.id],
-        );
+        
+        await db.transaction((txn) async {
+          // Update group metadata
+          await txn.update(
+            _tableGroups,
+            _groupToMap(group),
+            where: 'id = ?',
+            whereArgs: [group.id],
+          );
+          
+          // Delete and re-insert participants to reflect additions/removals
+          await txn.delete(
+            _tableParticipants,
+            where: 'group_id = ?',
+            whereArgs: [group.id],
+          );
+          for (final participant in group.participants) {
+            await txn.insert(_tableParticipants, {
+              'id': participant.id,
+              'group_id': group.id,
+              'name': participant.name,
+            });
+          }
+          
+          // Delete and re-insert categories to reflect additions/removals
+          await txn.delete(
+            _tableCategories,
+            where: 'group_id = ?',
+            whereArgs: [group.id],
+          );
+          for (final category in group.categories) {
+            await txn.insert(_tableCategories, {
+              'id': category.id,
+              'group_id': group.id,
+              'name': category.name,
+            });
+          }
+        });
+        
         return const StorageResult.success(null);
       } catch (e) {
         if (e is StorageError) {
