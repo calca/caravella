@@ -144,7 +144,7 @@ class _GroupCardRecentsState extends State<GroupCardRecents> {
                   margin: const EdgeInsets.only(bottom: 6.0),
                   child: ExpenseAmountCard(
                     title: e.name ?? '',
-                    coins: (e.amount ?? 0).toInt(),
+                    amount: e.amount ?? 0,
                     checked: true,
                     paidBy: e.paidBy,
                     category: e.category.name,
