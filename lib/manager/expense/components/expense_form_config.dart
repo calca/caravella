@@ -16,6 +16,7 @@ class ExpenseFormConfig {
   // Callbacks
   final Function(ExpenseDetails) onExpenseAdded;
   final Function(String) onCategoryAdded;
+  final Function(String)? onParticipantAdded;
   final VoidCallback? onDelete;
   final void Function(ExpenseFormState)? onExpand;
   final void Function(bool)? onFormValidityChanged;
@@ -51,6 +52,7 @@ class ExpenseFormConfig {
     // Callbacks
     required this.onExpenseAdded,
     required this.onCategoryAdded,
+    this.onParticipantAdded,
     this.onDelete,
     this.onExpand,
     this.onFormValidityChanged,
@@ -84,6 +86,7 @@ class ExpenseFormConfig {
     required String groupId,
     required Function(ExpenseDetails) onExpenseAdded,
     required Function(String) onCategoryAdded,
+    Function(String)? onParticipantAdded,
     required bool autoLocationEnabled,
     String? groupTitle,
     String? currency,
@@ -105,6 +108,7 @@ class ExpenseFormConfig {
       groupId: groupId,
       onExpenseAdded: onExpenseAdded,
       onCategoryAdded: onCategoryAdded,
+      onParticipantAdded: onParticipantAdded,
       autoLocationEnabled: autoLocationEnabled,
       groupTitle: groupTitle,
       currency: currency,
@@ -130,6 +134,7 @@ class ExpenseFormConfig {
     required String groupId,
     required Function(ExpenseDetails) onExpenseAdded,
     required Function(String) onCategoryAdded,
+    Function(String)? onParticipantAdded,
     required bool autoLocationEnabled,
     VoidCallback? onDelete,
     String? groupTitle,
@@ -147,6 +152,7 @@ class ExpenseFormConfig {
       groupId: groupId,
       onExpenseAdded: onExpenseAdded,
       onCategoryAdded: onCategoryAdded,
+      onParticipantAdded: onParticipantAdded,
       autoLocationEnabled: autoLocationEnabled,
       onDelete: onDelete,
       groupTitle: groupTitle,

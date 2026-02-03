@@ -16,6 +16,7 @@ class ExpenseFormLifecycleManager with WidgetsBindingObserver {
   ExpenseFormController? _controller;
   FormScrollCoordinator? _scrollCoordinator;
   List<ExpenseCategory> _categories = [];
+  List<ExpenseParticipant> _participants = [];
   bool _autoLocationEnabled = false;
   ExpenseLocation? _autoRetrievedLocation;
   bool _isRetrievingLocation = false;
@@ -27,6 +28,7 @@ class ExpenseFormLifecycleManager with WidgetsBindingObserver {
   });
 
   List<ExpenseCategory> get categories => _categories;
+  List<ExpenseParticipant> get participants => _participants;
   bool get isRetrievingLocation => _isRetrievingLocation;
   ExpenseLocation? get autoRetrievedLocation => _autoRetrievedLocation;
   FormScrollCoordinator? get scrollCoordinator => _scrollCoordinator;
@@ -37,6 +39,7 @@ class ExpenseFormLifecycleManager with WidgetsBindingObserver {
 
     _autoLocationEnabled = config.autoLocationEnabled;
     _categories = List.from(config.categories);
+    _participants = List.from(config.participants);
 
     // Initialize controller synchronously
     _controller = ExpenseFormController(
@@ -98,6 +101,12 @@ class ExpenseFormLifecycleManager with WidgetsBindingObserver {
   void updateCategories(List<ExpenseCategory> categories) {
     _categories = categories;
     // Controller will pick up new categories on next access
+  }
+
+  /// Update participants list
+  void updateParticipants(List<ExpenseParticipant> participants) {
+    _participants = participants;
+    // Controller will pick up new participants on next access
   }
 
   /// Cleanup resources

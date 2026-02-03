@@ -18,7 +18,9 @@ class ExpenseFormFields extends StatelessWidget {
   final List<ExpenseParticipant> participants;
   final List<ExpenseCategory> categories;
   final Function(String) onCategoryAdded;
+  final Function(String)? onParticipantAdded;
   final Function(List<ExpenseCategory>) onCategoriesUpdated;
+  final Function(List<ExpenseParticipant>)? onParticipantsUpdated;
   final bool fullEdit;
   final bool autoLocationEnabled;
   final ExpenseLocation? location;
@@ -35,6 +37,7 @@ class ExpenseFormFields extends StatelessWidget {
     required this.participants,
     required this.categories,
     required this.onCategoryAdded,
+    this.onParticipantAdded,
     required this.fullEdit,
     required this.autoLocationEnabled,
     required this.location,
@@ -43,6 +46,7 @@ class ExpenseFormFields extends StatelessWidget {
     required this.currency,
     required this.onSaveExpense,
     required this.onCategoriesUpdated,
+    this.onParticipantsUpdated,
     required this.isInitialExpense,
     this.isReadOnly = false,
   });
@@ -158,6 +162,9 @@ class ExpenseFormFields extends StatelessWidget {
                       : ExpenseParticipant(name: ''),
                 ),
               ),
+              onAddParticipantInline: onParticipantAdded != null
+                  ? (name) => _onAddParticipantInline(context, name)
+                  : null,
               textStyle: style,
               fullEdit: true,
               enabled: !isReadOnly,
@@ -209,6 +216,9 @@ class ExpenseFormFields extends StatelessWidget {
                     : ExpenseParticipant(name: ''),
               ),
             ),
+            onAddParticipantInline: onParticipantAdded != null
+                ? (name) => _onAddParticipantInline(context, name)
+                : null,
             textStyle: style,
             fullEdit: false,
             enabled: !isReadOnly,
@@ -284,5 +294,16 @@ class ExpenseFormFields extends StatelessWidget {
     await Future.delayed(const Duration(milliseconds: 100));
     // Notify parent to update categories list
     // The parent will handle finding the new category and updating the controller
+  }
+
+  Future<void> _onAddParticipantInline(
+    BuildContext context,
+    String participantName,
+  ) async {
+    if (onParticipantAdded == null) return;
+    onParticipantAdded!(participantName);
+    await Future.delayed(const Duration(milliseconds: 100));
+    // Notify parent to update participants list
+    // The parent will handle finding the new participant and updating the controller
   }
 }

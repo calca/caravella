@@ -396,6 +396,13 @@ class NotificationManager {
                 name: 'notification',
               );
             },
+            onParticipantAdded: (participantName) {
+              // Participant was added inline in the form, no need to do anything
+              LoggerService.debug(
+                'Participant added: $participantName',
+                name: 'notification',
+              );
+            },
           );
         },
       ),

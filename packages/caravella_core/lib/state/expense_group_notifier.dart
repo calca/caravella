@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import '../model/expense_group.dart';
 import '../model/expense_category.dart';
+import '../model/expense_participant.dart';
 import '../data/expense_group_storage_v2.dart';
 import '../services/logging/logger_service.dart';
 
@@ -8,7 +9,8 @@ class ExpenseGroupNotifier extends ChangeNotifier {
   ExpenseGroup? _currentGroup;
   final List<String> _updatedGroupIds = [];
   String? _lastAddedCategory;
-  String? _lastEvent; // es: 'expense_added', 'category_added'
+  String? _lastAddedParticipant;
+  String? _lastEvent; // es: 'expense_added', 'category_added', 'participant_added'
   final List<String> _deletedGroupIds = [];
 
   // Optional callback for platform-specific shortcuts (e.g., Android Quick Actions)
@@ -24,6 +26,8 @@ class ExpenseGroupNotifier extends ChangeNotifier {
 
   // Ultima categoria aggiunta
   String? get lastAddedCategory => _lastAddedCategory;
+  // Ultimo partecipante aggiunto
+  String? get lastAddedParticipant => _lastAddedParticipant;
   String? get lastEvent => _lastEvent;
   // Lista degli ID dei gruppi che sono stati cancellati
   List<String> get deletedGroupIds => List.unmodifiable(_deletedGroupIds);
@@ -42,6 +46,7 @@ class ExpenseGroupNotifier extends ChangeNotifier {
   void clearCurrentGroup() {
     _currentGroup = null;
     _lastAddedCategory = null; // Pulisci anche l'ultima categoria
+    _lastAddedParticipant = null; // Pulisci anche l'ultimo partecipante
     notifyListeners();
   }
 
@@ -103,6 +108,42 @@ class ExpenseGroupNotifier extends ChangeNotifier {
     } catch (e) {
       LoggerService.error(
         'Error updating group metadata after adding category',
+        name: 'state.notifier',
+        error: e,
+      );
+    }
+  }
+
+  Future<void> addParticipant(String participantName) async {
+    if (_currentGroup == null) return;
+
+    // Controlla se il partecipante esiste già
+    if (_currentGroup!.participants.any((p) => p.name == participantName)) {
+      _lastAddedParticipant =
+          null; // Il partecipante esiste già, non c'è nulla di nuovo da preselezionare
+      notifyListeners();
+      return;
+    }
+
+    final updatedParticipants = [..._currentGroup!.participants];
+    updatedParticipants.add(ExpenseParticipant(name: participantName));
+
+    // Aggiorna il gruppo corrente con i nuovi partecipanti
+    _currentGroup = _currentGroup!.copyWith(participants: updatedParticipants);
+
+    // Memorizza l'ultimo partecipante aggiunto
+    _lastAddedParticipant = participantName;
+    _lastEvent = 'participant_added';
+
+    // Notifica i listener prima di persistere
+    notifyListeners();
+
+    // Persisti le modifiche
+    try {
+      await ExpenseGroupStorageV2.updateGroupMetadata(_currentGroup!);
+    } catch (e) {
+      LoggerService.error(
+        'Error updating group metadata after adding participant',
         name: 'state.notifier',
         error: e,
       );
