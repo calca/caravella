@@ -330,11 +330,27 @@ class _HomePageState extends State<HomePage> with RouteAware {
   }
 
   Widget _buildContent(gen.AppLocalizations gloc) {
-    // Wait for data to load before deciding what to show
-    // This prevents flash of welcome screen for returning users
+    // Optimistic welcome rendering: show welcome immediately if preference
+    // indicates first start, without waiting for data load.
+    // This eliminates the visual "jump" from empty to welcome.
+    // If data later shows groups exist, AnimatedSwitcher will transition smoothly.
+    if (_isFirstStart && !_dataLoaded) {
+      // Show welcome immediately with its built-in fade animation
+      return Semantics(
+        key: const ValueKey('welcome'),
+        label: gloc.accessibility_welcome_screen,
+        child: HomeWelcomeSection(onTripAdded: _handleTripAdded),
+      );
+    }
+
+    // Wait for data to load for returning users (non-first-start)
+    // This prevents flash of cards for new users if preference is out of sync
     if (!_dataLoaded) {
-      // Show empty container while loading (data loads in milliseconds)
-      return const SizedBox.shrink(key: ValueKey('loading'));
+      // Show placeholder matching the expected background to avoid flash
+      return Container(
+        key: const ValueKey('loading'),
+        color: Theme.of(context).colorScheme.surfaceContainer,
+      );
     }
 
     if (_isFirstStart) {
