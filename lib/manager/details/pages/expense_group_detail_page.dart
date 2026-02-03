@@ -523,6 +523,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                 await _groupNotifier?.addCategory(categoryName);
                 await _refreshGroup();
               },
+              onParticipantAdded: (participantName) async {
+                await _groupNotifier?.addParticipant(participantName);
+                await _refreshGroup();
+              },
             ),
           ),
         )
@@ -574,6 +578,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               },
               onCategoryAdded: (categoryName) async {
                 await _groupNotifier?.addCategory(categoryName);
+                await _refreshGroup();
+              },
+              onParticipantAdded: (participantName) async {
+                await _groupNotifier?.addParticipant(participantName);
                 await _refreshGroup();
               },
               onDelete: () {
