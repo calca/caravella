@@ -35,11 +35,15 @@ class NavigationHelpers {
   ///
   /// This is a convenience method for widgets that need both the group ID
   /// and a general "group added" callback.
+  ///
+  /// The callback is only invoked if a group was actually created (groupId is not null).
   static Future<void> openGroupCreationWithCallback(
     BuildContext context, {
     required void Function([String? groupId]) onGroupAdded,
   }) async {
     final groupId = await openGroupCreation(context);
-    onGroupAdded(groupId);
+    if (groupId != null) {
+      onGroupAdded(groupId);
+    }
   }
 }
