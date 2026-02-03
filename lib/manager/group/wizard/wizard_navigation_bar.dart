@@ -166,22 +166,40 @@ class WizardNavigationBar extends StatelessWidget {
     WizardState wizardState,
     GroupFormState formState,
   ) {
-    // When moving from user name step (step 0), add user as participant
+    // When moving from user name step (step 0), update or add user as participant
     if (wizardState.includeUserNameStep && wizardState.currentStep == 0) {
       final userNameNotifier = context.read<UserNameNotifier>();
+      final gloc = gen.AppLocalizations.of(context);
+      
       if (userNameNotifier.hasName) {
-        // Check if user is not already added as participant
         final userName = userNameNotifier.name;
-        final alreadyAdded = formState.participants.any(
-          (p) => p.name.trim().toLowerCase() == userName.trim().toLowerCase(),
+        
+        // Check if there's a participant with the default "Me" name that should be replaced
+        final defaultMeName = gloc.default_participant_me;
+        final meParticipantIndex = formState.participants.indexWhere(
+          (p) => p.name.trim().toLowerCase() == defaultMeName.trim().toLowerCase(),
         );
-        if (!alreadyAdded) {
-          formState.addParticipant(
-            ExpenseParticipant(
-              id: DateTime.now().millisecondsSinceEpoch.toString(),
-              name: userName,
-            ),
+        
+        if (meParticipantIndex != -1) {
+          // Replace the "Me" participant with the user's actual name
+          final meParticipant = formState.participants[meParticipantIndex];
+          formState.updateParticipant(
+            meParticipant,
+            meParticipant.copyWith(name: userName),
           );
+        } else {
+          // Check if user is not already added as participant
+          final alreadyAdded = formState.participants.any(
+            (p) => p.name.trim().toLowerCase() == userName.trim().toLowerCase(),
+          );
+          if (!alreadyAdded) {
+            formState.addParticipant(
+              ExpenseParticipant(
+                id: DateTime.now().millisecondsSinceEpoch.toString(),
+                name: userName,
+              ),
+            );
+          }
         }
       }
     }
