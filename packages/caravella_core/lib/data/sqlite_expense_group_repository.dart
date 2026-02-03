@@ -417,12 +417,93 @@ class SqliteExpenseGroupRepository
     return await measureOperation('updateGroupMetadata', () async {
       try {
         final db = await database;
-        await db.update(
-          _tableGroups,
-          _groupToMap(group),
-          where: 'id = ?',
-          whereArgs: [group.id],
-        );
+        
+        await db.transaction((txn) async {
+          // Update group metadata
+          await txn.update(
+            _tableGroups,
+            _groupToMap(group),
+            where: 'id = ?',
+            whereArgs: [group.id],
+          );
+          
+          // Get existing participant IDs to determine which to delete
+          final existingParticipants = await txn.query(
+            _tableParticipants,
+            columns: ['id'],
+            where: 'group_id = ?',
+            whereArgs: [group.id],
+          );
+          final existingParticipantIds = 
+              existingParticipants.map((row) => row['id'] as String).toSet();
+          
+          // Get new participant IDs
+          final newParticipantIds = 
+              group.participants.map((p) => p.id).toSet();
+          
+          // Delete participants that are no longer in the group
+          final participantsToDelete = 
+              existingParticipantIds.difference(newParticipantIds);
+          for (final id in participantsToDelete) {
+            await txn.delete(
+              _tableParticipants,
+              where: 'id = ? AND group_id = ?',
+              whereArgs: [id, group.id],
+            );
+          }
+          
+          // Insert or update participants (using REPLACE for simplicity)
+          for (final participant in group.participants) {
+            await txn.insert(
+              _tableParticipants,
+              {
+                'id': participant.id,
+                'group_id': group.id,
+                'name': participant.name,
+              },
+              conflictAlgorithm: ConflictAlgorithm.replace,
+            );
+          }
+          
+          // Get existing category IDs to determine which to delete
+          final existingCategories = await txn.query(
+            _tableCategories,
+            columns: ['id'],
+            where: 'group_id = ?',
+            whereArgs: [group.id],
+          );
+          final existingCategoryIds = 
+              existingCategories.map((row) => row['id'] as String).toSet();
+          
+          // Get new category IDs
+          final newCategoryIds = 
+              group.categories.map((c) => c.id).toSet();
+          
+          // Delete categories that are no longer in the group
+          final categoriesToDelete = 
+              existingCategoryIds.difference(newCategoryIds);
+          for (final id in categoriesToDelete) {
+            await txn.delete(
+              _tableCategories,
+              where: 'id = ? AND group_id = ?',
+              whereArgs: [id, group.id],
+            );
+          }
+          
+          // Insert or update categories (using REPLACE for simplicity)
+          for (final category in group.categories) {
+            await txn.insert(
+              _tableCategories,
+              {
+                'id': category.id,
+                'group_id': group.id,
+                'name': category.name,
+              },
+              conflictAlgorithm: ConflictAlgorithm.replace,
+            );
+          }
+        });
+        
         return const StorageResult.success(null);
       } catch (e) {
         if (e is StorageError) {
