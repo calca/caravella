@@ -174,7 +174,7 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
   @override
   void initState() {
     super.initState();
-    // Add user as first participant if name is available
+    // Add user as first participant (using their name if set, or localized "Me")
     // and initialize default categories based on the default group type
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
@@ -183,14 +183,15 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
         final controller = context.read<GroupFormController>();
         final gloc = gen.AppLocalizations.of(context);
 
-        if (userNameNotifier.hasName) {
-          state.addParticipant(
-            ExpenseParticipant(
-              id: DateTime.now().millisecondsSinceEpoch.toString(),
-              name: userNameNotifier.name,
-            ),
-          );
-        }
+        final participantName = userNameNotifier.hasName
+            ? userNameNotifier.name
+            : gloc.default_participant_me;
+        state.addParticipant(
+          ExpenseParticipant(
+            id: DateTime.now().millisecondsSinceEpoch.toString(),
+            name: participantName,
+          ),
+        );
 
         // Initialize default categories for the default group type
         if (state.groupType != null) {
