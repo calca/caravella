@@ -182,11 +182,7 @@ class WizardNavigationBar extends StatelessWidget {
         
         if (meParticipantIndex != -1) {
           // Replace the "Me" participant with the user's actual name
-          final meParticipant = formState.participants[meParticipantIndex];
-          formState.updateParticipant(
-            meParticipant,
-            meParticipant.copyWith(name: userName),
-          );
+          formState.editParticipant(meParticipantIndex, userName);
         } else {
           // Check if user is not already added as participant
           final alreadyAdded = formState.participants.any(
