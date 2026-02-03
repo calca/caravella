@@ -6,7 +6,7 @@ import 'group_header.dart';
 
 class ExpenseAmountCard extends StatelessWidget {
   final String title;
-  final int coins;
+  final double amount;
   final bool checked;
   final ExpenseParticipant? paidBy;
   final String? category;
@@ -23,7 +23,7 @@ class ExpenseAmountCard extends StatelessWidget {
   final bool fullWidth;
   const ExpenseAmountCard({
     required this.title,
-    required this.coins,
+    required this.amount,
     required this.checked,
     this.paidBy,
     this.category,
@@ -131,12 +131,12 @@ class ExpenseAmountCard extends StatelessWidget {
             ),
             // Amount
             CurrencyDisplay(
-              value: coins.toDouble(),
+              value: amount,
               currency: currency,
               valueFontSize: compact ? 24.0 : 32.0,
               currencyFontSize: compact ? 12.0 : 14.0,
               alignment: MainAxisAlignment.end,
-              showDecimals: false,
+              showDecimals: true,
               fontWeight: FontWeight.w500,
             ),
           ],

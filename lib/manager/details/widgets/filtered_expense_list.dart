@@ -251,7 +251,7 @@ class _FilteredExpenseListState extends State<FilteredExpenseList>
           margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 0),
           child: ExpenseAmountCard(
             title: expense.name ?? '',
-            coins: (expense.amount ?? 0).toInt(),
+            amount: expense.amount ?? 0,
             checked: true,
             paidBy: expense.paidBy,
             category: expense.category.name,

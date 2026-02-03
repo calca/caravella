@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Expense amounts now correctly display decimal places in transaction lists
+  - Previously amounts like 12.50 were shown as just "12"
+  - Decimal display now enabled across all expense list views (main list, home screen, map view)
+  - Affects `FilteredExpenseList`, `GroupCardRecents`, and `ExpenseMapDetailSheet` components
+
 ### Changed
 - Updated `flutter_local_notifications` to 20.0.0
   - Adapted notification service to use named parameters (breaking change in library)

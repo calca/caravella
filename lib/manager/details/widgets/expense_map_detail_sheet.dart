@@ -113,7 +113,7 @@ class ExpenseMapDetailSheet extends StatelessWidget {
           ...expenses.map((expense) {
             return ExpenseAmountCard(
               title: expense.name ?? expense.category.name,
-              coins: (expense.amount ?? 0).toInt(),
+              amount: expense.amount ?? 0,
               checked: false,
               paidBy: expense.paidBy,
               category: expense.category.name,
