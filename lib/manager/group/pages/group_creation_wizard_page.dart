@@ -359,7 +359,7 @@ class _WizardScaffoldState extends State<_WizardScaffold> {
                 } else {
                   final shouldPop = await _onWillPop();
                   if (shouldPop && context.mounted) {
-                    Navigator.of(context).pop(false);
+                    Navigator.of(context).pop();
                   }
                 }
               }
