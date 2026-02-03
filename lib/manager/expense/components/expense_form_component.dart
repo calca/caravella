@@ -30,6 +30,7 @@ class ExpenseFormComponent extends StatefulWidget {
     required String groupId,
     required Function(ExpenseDetails) onExpenseAdded,
     required Function(String) onCategoryAdded,
+    Function(String)? onParticipantAdded,
     required bool autoLocationEnabled,
     String? groupTitle,
     String? currency,
@@ -51,6 +52,7 @@ class ExpenseFormComponent extends StatefulWidget {
         groupId: groupId,
         onExpenseAdded: onExpenseAdded,
         onCategoryAdded: onCategoryAdded,
+        onParticipantAdded: onParticipantAdded,
         autoLocationEnabled: autoLocationEnabled,
         groupTitle: groupTitle,
         currency: currency,
@@ -76,6 +78,7 @@ class ExpenseFormComponent extends StatefulWidget {
     required String groupId,
     required Function(ExpenseDetails) onExpenseAdded,
     required Function(String) onCategoryAdded,
+    Function(String)? onParticipantAdded,
     required bool autoLocationEnabled,
     VoidCallback? onDelete,
     String? groupTitle,
@@ -93,6 +96,7 @@ class ExpenseFormComponent extends StatefulWidget {
         groupId: groupId,
         onExpenseAdded: onExpenseAdded,
         onCategoryAdded: onCategoryAdded,
+        onParticipantAdded: onParticipantAdded,
         autoLocationEnabled: autoLocationEnabled,
         onDelete: onDelete,
         groupTitle: groupTitle,
@@ -113,6 +117,7 @@ class ExpenseFormComponent extends StatefulWidget {
     required List<ExpenseCategory> categories,
     required Function(ExpenseDetails) onExpenseAdded,
     required Function(String) onCategoryAdded,
+    Function(String)? onParticipantAdded,
     VoidCallback? onDelete,
     bool shouldAutoClose = true,
     DateTime? tripStartDate,
@@ -137,6 +142,7 @@ class ExpenseFormComponent extends StatefulWidget {
          groupId: groupId,
          onExpenseAdded: onExpenseAdded,
          onCategoryAdded: onCategoryAdded,
+         onParticipantAdded: onParticipantAdded,
          onDelete: onDelete,
          shouldAutoClose: shouldAutoClose,
          tripStartDate: tripStartDate,
@@ -303,11 +309,18 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
             ),
             ExpenseFormFields(
               controller: _controller,
-              participants: widget.config.participants,
+              participants: _lifecycleManager.participants,
               categories: _lifecycleManager.categories,
               onCategoryAdded: _onCategoryAdded,
+              onParticipantAdded: widget.config.onParticipantAdded != null
+                  ? _onParticipantAdded
+                  : null,
               onCategoriesUpdated: (newCategories) {
                 _lifecycleManager.updateCategories(newCategories);
+                setState(() {});
+              },
+              onParticipantsUpdated: (newParticipants) {
+                _lifecycleManager.updateParticipants(newParticipants);
                 setState(() {});
               },
               fullEdit: widget.config.fullEdit,
@@ -387,6 +400,38 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
 
     _lifecycleManager.updateCategories(List.from(categories));
     _controller.updateCategory(foundAfter);
+    setState(() {});
+  }
+
+  Future<void> _onParticipantAdded(String participantName) async {
+    if (widget.config.onParticipantAdded == null) return;
+    widget.config.onParticipantAdded!(participantName);
+    await Future.delayed(const Duration(milliseconds: 100));
+
+    final participants = widget.config.participants;
+    final found = participants.firstWhere(
+      (p) => p.name == participantName,
+      orElse: () => participants.isNotEmpty
+          ? participants.first
+          : ExpenseParticipant(name: ''),
+    );
+
+    final currentParticipants = _lifecycleManager.participants;
+    if (!currentParticipants.contains(found)) {
+      _lifecycleManager.updateParticipants(List.from(participants));
+      setState(() {});
+    }
+
+    await Future.delayed(const Duration(milliseconds: 100));
+    final foundAfter = participants.firstWhere(
+      (p) => p.name == participantName,
+      orElse: () => participants.isNotEmpty
+          ? participants.first
+          : ExpenseParticipant(name: ''),
+    );
+
+    _lifecycleManager.updateParticipants(List.from(participants));
+    _controller.updatePaidBy(foundAfter);
     setState(() {});
   }
 

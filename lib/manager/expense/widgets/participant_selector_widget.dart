@@ -8,6 +8,7 @@ class ParticipantSelectorWidget extends StatelessWidget {
   final List<String> participants;
   final String? selectedParticipant;
   final void Function(String) onParticipantSelected;
+  final Future<void> Function(String)? onAddParticipantInline;
   final TextStyle? textStyle;
   final bool fullEdit; // when true mimic inline row style
   final bool enabled;
@@ -16,6 +17,7 @@ class ParticipantSelectorWidget extends StatelessWidget {
     required this.participants,
     required this.selectedParticipant,
     required this.onParticipantSelected,
+    this.onAddParticipantInline,
     this.textStyle,
     this.fullEdit = false,
     this.enabled = true,
@@ -28,21 +30,26 @@ class ParticipantSelectorWidget extends StatelessWidget {
     final gloc = gen.AppLocalizations.of(context);
 
     Future<void> openPicker() async {
-      if (participants.isEmpty) return;
       final picked = await showSelectionBottomSheet<String>(
         context: context,
         items: participants,
         selected: selected,
         sheetTitle: gloc.participants_label,
         itemLabel: (p) => p,
+        onAddItemInline: onAddParticipantInline,
+        addItemHint: gloc.participant_name,
+        addLabel: gloc.add,
+        cancelLabel: gloc.cancel,
+        addCategoryLabel: gloc.add_participant,
+        alreadyExistsMessage: '${gloc.participant_name} ${gloc.already_exists}',
       );
       if (picked != null && picked != selectedParticipant) {
         onParticipantSelected(picked);
       }
     }
 
-    // Disable selection when there's only one participant or none, or when disabled
-    final canSelect = participants.length > 1 && enabled;
+    // Disable selection when there's only one participant and no inline add, or when disabled
+    final canSelect = (participants.length > 1 || onAddParticipantInline != null) && enabled;
 
     if (fullEdit) {
       return InlineSelectField(

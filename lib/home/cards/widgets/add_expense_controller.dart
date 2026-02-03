@@ -74,6 +74,9 @@ class AddExpenseController {
             onCategoryAdded: (categoryName) async {
               await notifier.addCategory(categoryName);
             },
+            onParticipantAdded: (participantName) async {
+              await notifier.addParticipant(participantName);
+            },
             onExpand: (currentState) {
               Navigator.of(context).pop();
               _openFullExpenseForm(parentContext, currentGroup, currentState);
@@ -150,6 +153,9 @@ class AddExpenseController {
                   onCategoryAdded: (categoryName) async {
                     await notifier.addCategory(categoryName);
                   },
+                  onParticipantAdded: (participantName) async {
+                    await notifier.addParticipant(participantName);
+                  },
                 );
               },
             ),
@@ -211,6 +217,7 @@ class _ExpenseEntrySheetWithState extends StatefulWidget {
   final ExpenseGroup group;
   final void Function(ExpenseDetails) onExpenseSaved;
   final void Function(String) onCategoryAdded;
+  final void Function(String)? onParticipantAdded;
   final bool fullEdit;
   final void Function(ExpenseFormState)? onExpand;
   final bool showGroupHeader;
@@ -219,6 +226,7 @@ class _ExpenseEntrySheetWithState extends StatefulWidget {
     required this.group,
     required this.onExpenseSaved,
     required this.onCategoryAdded,
+    this.onParticipantAdded,
     this.fullEdit = true,
     this.onExpand,
     this.showGroupHeader = true,
@@ -251,6 +259,7 @@ class _ExpenseEntrySheetWithStateState
       group: widget.group,
       onExpenseSaved: widget.onExpenseSaved,
       onCategoryAdded: widget.onCategoryAdded,
+      onParticipantAdded: widget.onParticipantAdded,
       fullEdit: widget.fullEdit,
       onExpand: widget.onExpand,
       showGroupHeader: widget.showGroupHeader,
