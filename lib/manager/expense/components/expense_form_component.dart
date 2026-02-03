@@ -373,6 +373,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
 
   Future<void> _onCategoryAdded(String categoryName) async {
     widget.config.onCategoryAdded(categoryName);
+    // Brief delay to allow the notifier to update and persist the new category
     await Future.delayed(const Duration(milliseconds: 100));
 
     final categories = widget.config.categories;
@@ -390,6 +391,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       setState(() {});
     }
 
+    // Additional delay to ensure category list is fully updated before selection
     await Future.delayed(const Duration(milliseconds: 100));
     final foundAfter = categories.firstWhere(
       (c) => c.name == categoryName,
@@ -406,6 +408,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   Future<void> _onParticipantAdded(String participantName) async {
     if (widget.config.onParticipantAdded == null) return;
     widget.config.onParticipantAdded!(participantName);
+    // Brief delay to allow the notifier to update and persist the new participant
     await Future.delayed(const Duration(milliseconds: 100));
 
     final participants = widget.config.participants;
@@ -422,6 +425,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       setState(() {});
     }
 
+    // Additional delay to ensure participant list is fully updated before selection
     await Future.delayed(const Duration(milliseconds: 100));
     final foundAfter = participants.firstWhere(
       (p) => p.name == participantName,
