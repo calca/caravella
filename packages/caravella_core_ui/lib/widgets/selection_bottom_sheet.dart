@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
-import 'bottom_sheet_scaffold.dart';
 import 'app_toast.dart';
 
 /// Generic modal bottom sheet for selecting an item from a list.
@@ -21,10 +20,7 @@ Future<T?> showSelectionBottomSheet<T>({
   return showModalBottomSheet<T>(
     context: context,
     isScrollControlled: true,
-    backgroundColor: Theme.of(context).colorScheme.surface,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-    ),
+    backgroundColor: Colors.transparent,
     builder: (ctx) => _SelectionSheet<T>(
       items: items,
       selected: selected,
@@ -119,11 +115,12 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
 
   /// Scrolls to the selected item when modal opens
   void _scrollToSelectedItem() {
-    if (!_scrollController.hasClients || !mounted || widget.selected == null)
+    if (!_scrollController.hasClients || !mounted || widget.selected == null) {
       return;
+    }
 
     try {
-      final selectedIndex = _currentItems.indexOf(widget.selected!);
+      final selectedIndex = _currentItems.indexOf(widget.selected as T);
       if (selectedIndex != -1) {
         // Calculate the offset to center the selected item
         final itemHeight = 50.0; // Approximate height of each list item
@@ -154,21 +151,16 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
   void _scrollToInputField() {
     if (!_scrollController.hasClients || !mounted) return;
 
-    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-    if (keyboardHeight == 0) return;
-
     try {
       // Wait for layout to settle after keyboard animation
-      Future.delayed(const Duration(milliseconds: 100), () {
+      Future.delayed(const Duration(milliseconds: 150), () {
         if (!_scrollController.hasClients || !mounted) return;
 
         // Scroll to bottom to ensure input field is visible above keyboard
         final maxScrollExtent = _scrollController.position.maxScrollExtent;
         if (maxScrollExtent > 0) {
-          // Add extra offset to ensure input is well above keyboard
-          final targetOffset = maxScrollExtent + 50;
           _scrollController.animateTo(
-            targetOffset.clamp(0.0, maxScrollExtent),
+            maxScrollExtent,
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut,
           );
@@ -187,10 +179,6 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _inlineFocus.requestFocus();
-      // Also trigger scroll immediately after focus
-      Future.delayed(const Duration(milliseconds: 100), () {
-        _scrollToInputField();
-      });
     });
   }
 
@@ -318,100 +306,109 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
     final theme = Theme.of(context);
 
     // Use current items (may have been updated locally)
     final itemsToShow = _currentItems;
 
-    // Calculate dynamic height: 80% initially, but adjust for keyboard
-    final baseMaxHeight = screenHeight * 0.8;
-    final availableHeight = screenHeight - keyboardHeight;
-    final expandedMaxHeight = availableHeight * 0.95;
-    final currentMaxHeight = keyboardHeight > 0 || _inlineAdding
-        ? expandedMaxHeight
-        : baseMaxHeight;
-
-    // Reserve more space for input field and buttons when keyboard is open
-    final reservedSpace = keyboardHeight > 0 ? 250 : 200;
-    final listMaxHeight = (currentMaxHeight - reservedSpace).clamp(
-      100.0,
-      screenHeight * 0.7,
-    );
-
-    final list = itemsToShow.isEmpty
-        ? const SizedBox.shrink()
-        : SizedBox(
-            height: listMaxHeight,
-            child: ListView.builder(
-              controller: _scrollController,
-              itemCount: itemsToShow.length,
-              itemBuilder: (ctx, i) {
-                final item = itemsToShow[i];
-                final isSel = widget.selected == item;
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 4,
-                    vertical: 2,
-                  ),
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(12),
-                    onTap: () => Navigator.of(context).pop(item),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: isSel
-                            ? theme.colorScheme.surfaceContainerHigh
-                            : Colors.transparent,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
-                      child: Text(
-                        widget.itemLabel(item),
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: isSel
-                              ? theme.colorScheme.onPrimaryContainer
-                              : theme.textTheme.bodyMedium?.color,
-                          fontWeight: isSel ? FontWeight.w600 : null,
-                        ),
-                      ),
+    return DraggableScrollableSheet(
+      expand: false,
+      initialChildSize: keyboardHeight > 0 ? 0.9 : 0.8,
+      minChildSize: 0.3,
+      maxChildSize: 0.95,
+      builder: (context, scrollController) {
+        return Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: Column(
+            children: [
+              // Handle
+              Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                decoration: BoxDecoration(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              // Title
+              if (widget.sheetTitle != null) ...[
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                  child: Text(
+                    widget.sheetTitle!,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                );
-              },
-            ),
-          );
-
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxHeight: currentMaxHeight,
-        minHeight: screenHeight * 0.3, // Minimum 30% height
-      ),
-      child: GroupBottomSheetScaffold(
-        title: widget.sheetTitle,
-        showHandle: true,
-        scrollable: false,
-        child: Padding(
-          padding: EdgeInsets.only(bottom: keyboardHeight),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              list,
+                ),
+              ],
+              // List
+              Expanded(
+                child: itemsToShow.isEmpty
+                    ? const SizedBox.shrink()
+                    : ListView.builder(
+                        controller: _scrollController,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        itemCount: itemsToShow.length,
+                        itemBuilder: (ctx, i) {
+                          final item = itemsToShow[i];
+                          final isSel = widget.selected == item;
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 2),
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(12),
+                              onTap: () => Navigator.of(context).pop(item),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: isSel
+                                      ? theme.colorScheme.surfaceContainerHigh
+                                      : Colors.transparent,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 12,
+                                ),
+                                child: Text(
+                                  widget.itemLabel(item),
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    color: isSel
+                                        ? theme.colorScheme.onPrimaryContainer
+                                        : theme.textTheme.bodyMedium?.color,
+                                    fontWeight: isSel ? FontWeight.w600 : null,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+              ),
               // Inline add functionality
               if (widget.onAddItemInline != null) ...[
-                const SizedBox(height: 8),
-                if (_inlineAdding)
-                  _buildInlineAddRow()
-                else
-                  _buildInlineAddButton(),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    16,
+                    8,
+                    16,
+                    16 + MediaQuery.of(context).viewInsets.bottom,
+                  ),
+                  child: _inlineAdding
+                      ? _buildInlineAddRow()
+                      : _buildInlineAddButton(),
+                ),
               ],
             ],
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
