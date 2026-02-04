@@ -100,12 +100,54 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
     // Add focus listener to handle keyboard appearance and auto-scroll
     _inlineFocus.addListener(() {
       if (_inlineFocus.hasFocus) {
-        // Delay to ensure keyboard is starting to appear
-        Future.delayed(const Duration(milliseconds: 200), () {
+        // Immediate scroll attempt
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _scrollToInputField();
+        });
+        // Delayed scroll to account for keyboard animation
+        Future.delayed(const Duration(milliseconds: 300), () {
           _scrollToInputField();
         });
       }
     });
+
+    // Auto-scroll to selected item when modal opens
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToSelectedItem();
+    });
+  }
+
+  /// Scrolls to the selected item when modal opens
+  void _scrollToSelectedItem() {
+    if (!_scrollController.hasClients || !mounted || widget.selected == null)
+      return;
+
+    try {
+      final selectedIndex = _currentItems.indexOf(widget.selected!);
+      if (selectedIndex != -1) {
+        // Calculate the offset to center the selected item
+        final itemHeight = 50.0; // Approximate height of each list item
+        final targetOffset =
+            (selectedIndex * itemHeight) -
+            (MediaQuery.of(context).size.height * 0.4 * 0.5);
+        final clampedOffset = targetOffset.clamp(
+          0.0,
+          _scrollController.position.maxScrollExtent,
+        );
+
+        _scrollController.animateTo(
+          clampedOffset,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
+    } catch (e) {
+      // Gracefully handle any scrolling errors
+      LoggerService.debug(
+        'Error during initial scroll-to-selected',
+        name: 'ui.sheet',
+      );
+    }
   }
 
   /// Scrolls to make the input field visible when keyboard opens
@@ -116,15 +158,22 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
     if (keyboardHeight == 0) return;
 
     try {
-      // Scroll to bottom to ensure input field is visible above keyboard
-      final maxScrollExtent = _scrollController.position.maxScrollExtent;
-      if (maxScrollExtent > 0) {
-        _scrollController.animateTo(
-          maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      }
+      // Wait for layout to settle after keyboard animation
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (!_scrollController.hasClients || !mounted) return;
+
+        // Scroll to bottom to ensure input field is visible above keyboard
+        final maxScrollExtent = _scrollController.position.maxScrollExtent;
+        if (maxScrollExtent > 0) {
+          // Add extra offset to ensure input is well above keyboard
+          final targetOffset = maxScrollExtent + 50;
+          _scrollController.animateTo(
+            targetOffset.clamp(0.0, maxScrollExtent),
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        }
+      });
     } catch (e) {
       // Gracefully handle any scrolling errors
       LoggerService.warning('Error during scroll-to-input', name: 'ui.sheet');
@@ -136,9 +185,13 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
       _inlineAdding = true;
       _inlineController.clear();
     });
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => _inlineFocus.requestFocus(),
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _inlineFocus.requestFocus();
+      // Also trigger scroll immediately after focus
+      Future.delayed(const Duration(milliseconds: 100), () {
+        _scrollToInputField();
+      });
+    });
   }
 
   void _cancelInlineAdd() {
@@ -272,24 +325,27 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
     // Use current items (may have been updated locally)
     final itemsToShow = _currentItems;
 
-    // Calculate dynamic height: 80% initially, but expand when keyboard is open or inline adding
+    // Calculate dynamic height: 80% initially, but adjust for keyboard
     final baseMaxHeight = screenHeight * 0.8;
-    final expandedMaxHeight = screenHeight * 0.95;
+    final availableHeight = screenHeight - keyboardHeight;
+    final expandedMaxHeight = availableHeight * 0.95;
     final currentMaxHeight = keyboardHeight > 0 || _inlineAdding
         ? expandedMaxHeight
         : baseMaxHeight;
 
-    final listMaxHeight =
-        currentMaxHeight -
-        200; // Account for title, padding, and add button space
+    // Reserve more space for input field and buttons when keyboard is open
+    final reservedSpace = keyboardHeight > 0 ? 250 : 200;
+    final listMaxHeight = (currentMaxHeight - reservedSpace).clamp(
+      100.0,
+      screenHeight * 0.7,
+    );
 
     final list = itemsToShow.isEmpty
         ? const SizedBox.shrink()
-        : ConstrainedBox(
-            constraints: BoxConstraints(maxHeight: listMaxHeight, minHeight: 0),
+        : SizedBox(
+            height: listMaxHeight,
             child: ListView.builder(
               controller: _scrollController,
-              shrinkWrap: true,
               itemCount: itemsToShow.length,
               itemBuilder: (ctx, i) {
                 final item = itemsToShow[i];
