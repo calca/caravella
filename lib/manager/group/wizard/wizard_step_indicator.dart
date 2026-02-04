@@ -13,9 +13,7 @@ class WizardStepIndicator extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-      ),
+      decoration: BoxDecoration(color: theme.colorScheme.surface),
       child: Consumer<WizardState>(
         builder: (context, wizardState, child) {
           return Row(
