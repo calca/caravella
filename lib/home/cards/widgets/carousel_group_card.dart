@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../manager/details/pages/expense_group_detail_page.dart';
 
@@ -59,61 +60,39 @@ class CarouselGroupCard extends StatelessWidget {
         group.file!.isNotEmpty &&
         File(group.file!).existsSync();
 
+    Widget tileContent;
     if (hasImage) {
-      return Container(
-        width: tileSize,
-        height: tileSize,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(tileBorderRadius),
-          border: Border.all(
-            color: theme.colorScheme.outline.withValues(alpha: 0.12),
-            width: 1,
-          ),
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(tileBorderRadius),
-          child: Image.file(
-            File(group.file!),
-            width: tileSize,
-            height: tileSize,
-            fit: BoxFit.cover,
-            frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-              if (wasSynchronouslyLoaded) {
-                return child;
-              }
-              return AnimatedOpacity(
-                opacity: frame == null ? 0 : 1,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeIn,
-                child: child,
-              );
-            },
-          ),
+      tileContent = ClipRRect(
+        borderRadius: BorderRadius.circular(tileBorderRadius),
+        child: Image.file(
+          File(group.file!),
+          width: tileSize,
+          height: tileSize,
+          fit: BoxFit.cover,
+          frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+            if (wasSynchronouslyLoaded) {
+              return child;
+            }
+            return AnimatedOpacity(
+              opacity: frame == null ? 0 : 1,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeIn,
+              child: child,
+            );
+          },
         ),
       );
-    }
+    } else {
+      // No image - show initials on color background
+      final backgroundColor = ExpenseGroupColorPalette.resolveGroupColor(
+        group,
+        theme.colorScheme,
+      );
+      final textColor = ExpenseGroupColorPalette.getContrastingTextColor(
+        backgroundColor,
+      );
 
-    // No image - show initials on color background
-    final backgroundColor = ExpenseGroupColorPalette.resolveGroupColor(
-      group,
-      theme.colorScheme,
-    );
-    final textColor = ExpenseGroupColorPalette.getContrastingTextColor(
-      backgroundColor,
-    );
-
-    return Container(
-      width: tileSize,
-      height: tileSize,
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(tileBorderRadius),
-        border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.12),
-          width: 1,
-        ),
-      ),
-      child: Center(
+      tileContent = Center(
         child: Text(
           _getInitials(group.title),
           style: TextStyle(
@@ -123,13 +102,20 @@ class CarouselGroupCard extends StatelessWidget {
             letterSpacing: 1,
           ),
         ),
-      ),
-    );
-  }
+      );
+    }
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
+    return BaseCard(
+      margin: EdgeInsets.zero,
+      padding: EdgeInsets.zero,
+      backgroundColor: hasImage
+          ? Colors.transparent
+          : ExpenseGroupColorPalette.resolveGroupColor(
+              group,
+              theme.colorScheme,
+            ),
+      borderRadius: BorderRadius.circular(tileBorderRadius),
+      backgroundImage: hasImage ? group.file : null,
       onTap: () async {
         final result = await Navigator.of(context).push(
           MaterialPageRoute(
@@ -140,30 +126,35 @@ class CarouselGroupCard extends StatelessWidget {
           onGroupUpdated();
         }
       },
-      child: SizedBox(
-        width: tileSize,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // Square tile with image or initials
-            _buildTile(context),
-            const SizedBox(height: 6),
-            // Group title
-            Text(
-              group.title,
-              style: theme.textTheme.bodySmall?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+      child: SizedBox(width: tileSize, height: tileSize, child: tileContent),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: tileSize,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // Square tile with image or initials (now has its own InkWell)
+          _buildTile(context),
+          const SizedBox(height: 6),
+          // Group title
+          Text(
+            group.title,
+            style: theme.textTheme.bodySmall?.copyWith(
+              fontWeight: FontWeight.w600,
             ),
-            const SizedBox(height: 1),
-            // Total spent
-            // _buildTotalSpentText(context),
-          ],
-        ),
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 1),
+          // Total spent
+          // _buildTotalSpentText(context),
+        ],
       ),
     );
   }

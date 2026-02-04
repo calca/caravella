@@ -85,12 +85,14 @@ class BaseCard extends StatelessWidget {
         child: ClipRRect(
           borderRadius: effectiveBorderRadius,
           child: Material(
-            color: Colors.transparent,
+            color: backgroundColor ?? theme.colorScheme.surfaceContainer,
             child: InkWell(
               onTap: onTap,
+              splashColor: theme.colorScheme.primary.withValues(alpha: 0.1),
+              highlightColor: theme.colorScheme.primary.withValues(alpha: 0.05),
               child: Container(
                 padding: padding ?? const EdgeInsets.all(20),
-                decoration: decoration,
+                decoration: decoration.copyWith(color: Colors.transparent),
                 child: child,
               ),
             ),

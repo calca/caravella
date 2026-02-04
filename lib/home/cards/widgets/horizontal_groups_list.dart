@@ -277,53 +277,74 @@ class _AddNewGroupTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () async {
-        await NavigationHelpers.openGroupCreationWithCallback(
-          context,
-          onGroupAdded: onGroupAdded,
-        );
-      },
-      child: SizedBox(
-        width: CarouselGroupCard.tileSize,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // Square tile with + icon (dashed border)
-            _DashedBorder(
-              width: CarouselGroupCard.tileSize,
-              height: CarouselGroupCard.tileSize,
-              radius: CarouselGroupCard.tileBorderRadius,
-              color: theme.colorScheme.outline.withValues(alpha: 0.2),
-              strokeWidth: 2,
-              dashLength: 6,
-              gapLength: 10,
-              child: Container(
-                color: theme.colorScheme.surface,
-                child: Center(
-                  child: Icon(
-                    Icons.add_rounded,
-                    size: 28,
-                    color: theme.colorScheme.onSurfaceVariant.withValues(
-                      alpha: 0.4,
+    return SizedBox(
+      width: CarouselGroupCard.tileSize,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // Square tile with + icon (dashed border) - wrapped with inkwell
+          ClipOval(
+            child: Stack(
+              children: [
+                // Background con dashed border
+                _DashedBorder(
+                  width: CarouselGroupCard.tileSize,
+                  height: CarouselGroupCard.tileSize,
+                  radius: CarouselGroupCard.tileBorderRadius,
+                  color: theme.colorScheme.outline.withValues(alpha: 0.2),
+                  strokeWidth: 2,
+                  dashLength: 6,
+                  gapLength: 10,
+                  child: Container(
+                    color: theme.colorScheme.surface,
+                    child: Center(
+                      child: Icon(
+                        Icons.add_rounded,
+                        size: 28,
+                        color: theme.colorScheme.onSurfaceVariant.withValues(
+                          alpha: 0.4,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
+                // InkWell sopra tutto
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () async {
+                      await NavigationHelpers.openGroupCreationWithCallback(
+                        context,
+                        onGroupAdded: onGroupAdded,
+                      );
+                    },
+                    splashColor: theme.colorScheme.primary.withValues(
+                      alpha: 0.1,
+                    ),
+                    highlightColor: theme.colorScheme.primary.withValues(
+                      alpha: 0.05,
+                    ),
+                    child: SizedBox(
+                      width: CarouselGroupCard.tileSize,
+                      height: CarouselGroupCard.tileSize,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 6),
-            // Title
-            Text(
-              localizations.new_expense_group,
-              style: theme.textTheme.bodySmall?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 6),
+          // Title (non cliccabile)
+          Text(
+            localizations.new_expense_group,
+            style: theme.textTheme.bodySmall?.copyWith(
+              fontWeight: FontWeight.w600,
             ),
-          ],
-        ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
       ),
     );
   }
