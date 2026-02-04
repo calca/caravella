@@ -154,14 +154,22 @@ class ExpenseFormFields extends StatelessWidget {
             ParticipantSelectorWidget(
               participants: participants.map((p) => p.name).toList(),
               selectedParticipant: controller.state.paidBy?.name,
-              onParticipantSelected: (name) => controller.updatePaidBy(
-                participants.firstWhere(
-                  (p) => p.name == name,
-                  orElse: () => participants.isNotEmpty
-                      ? participants.first
-                      : ExpenseParticipant(name: ''),
-                ),
-              ),
+              onParticipantSelected: (name) {
+                // First try to find the participant in the current list
+                final found = participants
+                    .where((p) => p.name == name)
+                    .firstOrNull;
+
+                if (found != null) {
+                  // Participant found in list, use it
+                  controller.updatePaidBy(found);
+                } else {
+                  // Participant not yet in list (newly added), create temporary participant
+                  // The list will be updated soon by the notifier
+                  final tempParticipant = ExpenseParticipant(name: name);
+                  controller.updatePaidBy(tempParticipant);
+                }
+              },
               onAddParticipantInline: onParticipantAdded != null
                   ? (name) => _onAddParticipantInline(context, name)
                   : null,
@@ -208,14 +216,22 @@ class ExpenseFormFields extends StatelessWidget {
           ParticipantSelectorWidget(
             participants: participants.map((p) => p.name).toList(),
             selectedParticipant: controller.state.paidBy?.name,
-            onParticipantSelected: (name) => controller.updatePaidBy(
-              participants.firstWhere(
-                (p) => p.name == name,
-                orElse: () => participants.isNotEmpty
-                    ? participants.first
-                    : ExpenseParticipant(name: ''),
-              ),
-            ),
+            onParticipantSelected: (name) {
+              // First try to find the participant in the current list
+              final found = participants
+                  .where((p) => p.name == name)
+                  .firstOrNull;
+
+              if (found != null) {
+                // Participant found in list, use it
+                controller.updatePaidBy(found);
+              } else {
+                // Participant not yet in list (newly added), create temporary participant
+                // The list will be updated soon by the notifier
+                final tempParticipant = ExpenseParticipant(name: name);
+                controller.updatePaidBy(tempParticipant);
+              }
+            },
             onAddParticipantInline: onParticipantAdded != null
                 ? (name) => _onAddParticipantInline(context, name)
                 : null,

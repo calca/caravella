@@ -73,6 +73,16 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
   final TextEditingController _inlineController = TextEditingController();
   final FocusNode _inlineFocus = FocusNode();
   final ScrollController _scrollController = ScrollController();
+  late List<T> _currentItems;
+
+  @override
+  void didUpdateWidget(covariant _SelectionSheet<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Sync local items with updated widget items if they've changed
+    if (widget.items != oldWidget.items) {
+      _currentItems = List<T>.from(widget.items);
+    }
+  }
 
   @override
   void dispose() {
@@ -85,6 +95,8 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
   @override
   void initState() {
     super.initState();
+    // Initialize local items list
+    _currentItems = List<T>.from(widget.items);
     // Add focus listener to handle keyboard appearance and auto-scroll
     _inlineFocus.addListener(() {
       if (_inlineFocus.hasFocus) {
@@ -142,7 +154,7 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
 
     // Check for duplicates (case-insensitive)
     final lower = val.toLowerCase();
-    final isDuplicate = widget.items.any(
+    final isDuplicate = _currentItems.any(
       (item) => widget.itemLabel(item).toLowerCase() == lower,
     );
 
@@ -159,10 +171,25 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
 
     try {
       await widget.onAddItemInline!(val);
-      // Close the modal after successfully adding the category
-      // The parent will handle selecting the newly added category
-      if (mounted) {
-        Navigator.of(context).pop();
+
+      // Add the new item to local list for immediate UI update
+      // For String items (participants), cast the value directly
+      if (T == String) {
+        setState(() {
+          _currentItems.add(val as T);
+          _inlineAdding = false;
+          _inlineController.clear();
+        });
+
+        // Auto-select the newly added participant and close modal
+        // This provides immediate feedback and allows the user to see their selection
+        if (mounted) {
+          // Small delay to ensure UI updates are visible
+          await Future.delayed(const Duration(milliseconds: 100));
+          if (mounted) {
+            Navigator.of(context).pop(val as T);
+          }
+        }
       }
     } catch (e) {
       if (mounted) {
@@ -242,8 +269,8 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
     final theme = Theme.of(context);
 
-    // Use widget.items directly
-    final itemsToShow = widget.items;
+    // Use current items (may have been updated locally)
+    final itemsToShow = _currentItems;
 
     // Calculate dynamic height: 80% initially, but expand when keyboard is open or inline adding
     final baseMaxHeight = screenHeight * 0.8;

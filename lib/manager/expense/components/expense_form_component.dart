@@ -425,18 +425,12 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       setState(() {});
     }
 
-    // Additional delay to ensure participant list is fully updated before selection
-    await Future.delayed(const Duration(milliseconds: 100));
-    final foundAfter = participants.firstWhere(
-      (p) => p.name == participantName,
-      orElse: () => participants.isNotEmpty
-          ? participants.first
-          : ExpenseParticipant(name: ''),
-    );
-
+    // Additional update to ensure participant list is fully updated
     _lifecycleManager.updateParticipants(List.from(participants));
-    _controller.updatePaidBy(foundAfter);
     setState(() {});
+
+    // Note: Don't call _controller.updatePaidBy here - let the modal selection handle it
+    // to avoid conflicts with the automatic selection when modal closes
   }
 
   Widget _buildDivider(BuildContext context) {
@@ -459,7 +453,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
             ? () => _orchestrator.saveExpense(context)
             : null,
         isFormValid: _controller.isFormValid,
-        isEdit: widget.config.initialExpense?.id != null && widget.config.initialExpense!.id.isNotEmpty,
+        isEdit:
+            widget.config.initialExpense?.id != null &&
+            widget.config.initialExpense!.id.isNotEmpty,
         onDelete: widget.config.hasDeleteAction
             ? () => _orchestrator.deleteExpense(context)
             : null,
