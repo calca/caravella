@@ -18,13 +18,6 @@ class WizardNavigationBar extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 8,
-            offset: const Offset(0, -2),
-          ),
-        ],
       ),
       child: SafeArea(
         top: false,
