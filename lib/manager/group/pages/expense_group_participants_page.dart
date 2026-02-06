@@ -119,7 +119,6 @@ class _ParticipantsPageScaffoldState extends State<_ParticipantsPageScaffold> {
               } catch (_) {
                 notifier = null;
               }
-              final scaffoldMessenger = ScaffoldMessenger.maybeOf(context);
               final gloc = gen.AppLocalizations.of(context);
 
               try {
@@ -150,13 +149,7 @@ class _ParticipantsPageScaffoldState extends State<_ParticipantsPageScaffold> {
                   stackTrace: st,
                 );
 
-                if (scaffoldMessenger != null && context.mounted) {
-                  AppToast.show(
-                    context,
-                    gloc.error_saving_group(e.toString()),
-                    type: ToastType.error,
-                  );
-                } else if (context.mounted) {
+                if (context.mounted) {
                   AppToast.show(
                     context,
                     gloc.error_saving_group(e.toString()),

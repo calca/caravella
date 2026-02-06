@@ -62,7 +62,7 @@ Users can now assign a type/category to each expense group during creation or mo
 
 ### UI Components
 - `GroupTypeSelector` widget in `lib/manager/group/widgets/group_type_selector.dart`
-- Integrated into `ExpensesGroupEditPage` right after the group name field
+- Integrated into the General settings page (`expense_group_general_page.dart`)
 - Uses Material 3 design with `SelectionTile` component
 
 ### State Management
