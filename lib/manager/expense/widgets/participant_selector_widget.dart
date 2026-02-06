@@ -49,7 +49,8 @@ class ParticipantSelectorWidget extends StatelessWidget {
     }
 
     // Disable selection when there's only one participant and no inline add, or when disabled
-    final canSelect = (participants.length > 1 || onAddParticipantInline != null) && enabled;
+    final canSelect =
+        (participants.length > 1 || onAddParticipantInline != null) && enabled;
 
     if (fullEdit) {
       return InlineSelectField(

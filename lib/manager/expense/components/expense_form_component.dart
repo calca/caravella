@@ -407,36 +407,37 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
 
   Future<void> _onParticipantAdded(String participantName) async {
     if (widget.config.onParticipantAdded == null) return;
-    widget.config.onParticipantAdded!(participantName);
-    // Brief delay to allow the notifier to update and persist the new participant
-    await Future.delayed(const Duration(milliseconds: 100));
 
-    final participants = widget.config.participants;
-    final found = participants.firstWhere(
-      (p) => p.name == participantName,
-      orElse: () => participants.isNotEmpty
-          ? participants.first
-          : ExpenseParticipant(name: ''),
+    LoggerService.info(
+      'Adding participant: "$participantName"',
+      name: 'expense.participant',
     );
 
-    final currentParticipants = _lifecycleManager.participants;
-    if (!currentParticipants.contains(found)) {
-      _lifecycleManager.updateParticipants(List.from(participants));
-      setState(() {});
-    }
+    widget.config.onParticipantAdded!(participantName);
 
-    // Additional delay to ensure participant list is fully updated before selection
-    await Future.delayed(const Duration(milliseconds: 100));
-    final foundAfter = participants.firstWhere(
-      (p) => p.name == participantName,
-      orElse: () => participants.isNotEmpty
-          ? participants.first
-          : ExpenseParticipant(name: ''),
+    // Give more time for the notifier to update and persist the new participant
+    await Future.delayed(const Duration(milliseconds: 200));
+
+    // Force immediate update of lifecycle manager with fresh participant list
+    final participants = widget.config.participants;
+    LoggerService.info(
+      'Updating lifecycle manager with participants: ${participants.map((p) => p.name).toList()}',
+      name: 'expense.participant',
     );
 
     _lifecycleManager.updateParticipants(List.from(participants));
-    _controller.updatePaidBy(foundAfter);
     setState(() {});
+
+    // Additional update to ensure complete synchronization
+    await Future.delayed(const Duration(milliseconds: 100));
+
+    LoggerService.info(
+      'Participant add process completed for: "$participantName"',
+      name: 'expense.participant',
+    );
+
+    // Note: Don't call _controller.updatePaidBy here - let the modal selection handle it
+    // to avoid conflicts with the automatic selection when modal closes
   }
 
   Widget _buildDivider(BuildContext context) {
@@ -459,7 +460,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
             ? () => _orchestrator.saveExpense(context)
             : null,
         isFormValid: _controller.isFormValid,
-        isEdit: widget.config.initialExpense?.id != null && widget.config.initialExpense!.id.isNotEmpty,
+        isEdit:
+            widget.config.initialExpense?.id != null &&
+            widget.config.initialExpense!.id.isNotEmpty,
         onDelete: widget.config.hasDeleteAction
             ? () => _orchestrator.deleteExpense(context)
             : null,

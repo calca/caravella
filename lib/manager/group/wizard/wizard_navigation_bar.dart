@@ -16,16 +16,7 @@ class WizardNavigationBar extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(20.0),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 8,
-            offset: const Offset(0, -2),
-          ),
-        ],
-      ),
+      decoration: BoxDecoration(color: theme.colorScheme.surface),
       child: SafeArea(
         top: false,
         child: Consumer<WizardState>(
@@ -65,7 +56,11 @@ class WizardNavigationBar extends StatelessWidget {
                       return TextButton(
                         onPressed: () {
                           // Handle transition even when skipping
-                          _handleStepTransition(context, wizardState, formState);
+                          _handleStepTransition(
+                            context,
+                            wizardState,
+                            formState,
+                          );
                           wizardState.nextStep();
                         },
                         style: TextButton.styleFrom(
@@ -95,7 +90,7 @@ class WizardNavigationBar extends StatelessWidget {
                     if (isSecondToLastStep) {
                       // Second to last step: save and go to completion
                       return FilledButton(
-                         onPressed: canProceed
+                        onPressed: canProceed
                             ? () async {
                                 // Close keyboard before proceeding
                                 FocusScope.of(context).unfocus();
@@ -170,16 +165,17 @@ class WizardNavigationBar extends StatelessWidget {
     if (wizardState.includeUserNameStep && wizardState.currentStep == 0) {
       final userNameNotifier = context.read<UserNameNotifier>();
       final gloc = gen.AppLocalizations.of(context);
-      
+
       if (userNameNotifier.hasName) {
         final userName = userNameNotifier.name;
-        
+
         // Check if there's a participant with the default "Me" name that should be replaced
         final defaultMeName = gloc.default_participant_me;
         final meParticipantIndex = formState.participants.indexWhere(
-          (p) => p.name.trim().toLowerCase() == defaultMeName.trim().toLowerCase(),
+          (p) =>
+              p.name.trim().toLowerCase() == defaultMeName.trim().toLowerCase(),
         );
-        
+
         if (meParticipantIndex != -1) {
           // Replace the "Me" participant with the user's actual name
           formState.editParticipant(meParticipantIndex, userName);

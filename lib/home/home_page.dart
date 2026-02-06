@@ -22,7 +22,9 @@ class _HomePageState extends State<HomePage> with RouteAware {
   ExpenseGroupNotifier? _groupNotifier;
   bool _refreshing = false;
   bool _updateCheckPerformed = false;
-  bool _isFirstStart = true; // Cache preference value
+  // Start with null to indicate "unknown" state - prevents showing welcome page
+  // before we've verified if groups exist. Only set to true/false after data load.
+  bool? _isFirstStart;
 
   // Cached groups to avoid FutureBuilder flash
   List<ExpenseGroup> _activeGroups = [];
@@ -31,12 +33,12 @@ class _HomePageState extends State<HomePage> with RouteAware {
   @override
   void initState() {
     super.initState();
-    // Optimistic first-start check
-    // PreferencesService is initialized in main() before app runs, so safe to access
-    // SharedPreferences caches values in memory, so synchronous read is non-blocking
-    _isFirstStart = PreferencesService.instance.appState.isFirstStart();
+    // Don't assume welcome screen state until data is loaded.
+    // This prevents race condition on slow emulators where welcome page
+    // flashes briefly even when groups exist.
+    // Load data immediately (not via postFrameCallback) for faster startup.
+    _loadLocaleAndTrip();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadLocaleAndTrip();
       _performUpdateCheckIfNeeded();
     });
   }
@@ -318,7 +320,8 @@ class _HomePageState extends State<HomePage> with RouteAware {
     );
 
     // Use surfaceContainer system UI when NOT in welcome section
-    if (!_isFirstStart) {
+    // _isFirstStart is null during loading, treat as non-welcome for system UI
+    if (_isFirstStart != true) {
       return AppSystemUI.surfaceContainer(
         context: context,
         child: scaffoldBody,
@@ -330,21 +333,10 @@ class _HomePageState extends State<HomePage> with RouteAware {
   }
 
   Widget _buildContent(gen.AppLocalizations gloc) {
-    // Optimistic welcome rendering: show welcome immediately if preference
-    // indicates first start, without waiting for data load.
-    // This eliminates the visual "jump" from empty to welcome.
-    // If data later shows groups exist, AnimatedSwitcher will transition smoothly.
-    if (_isFirstStart && !_dataLoaded) {
-      // Show welcome immediately with its built-in fade animation
-      return Semantics(
-        key: const ValueKey('welcome'),
-        label: gloc.accessibility_welcome_screen,
-        child: HomeWelcomeSection(onTripAdded: _handleTripAdded),
-      );
-    }
-
-    // Wait for data to load for returning users (non-first-start)
-    // This prevents flash of cards for new users if preference is out of sync
+    // Wait for data to load before deciding what to show.
+    // This prevents the race condition on slow emulators where
+    // welcome page flashes briefly even when groups exist.
+    // We show a neutral loading state until we've verified the actual data.
     if (!_dataLoaded) {
       // Show placeholder matching the expected background to avoid flash
       return Container(
@@ -353,7 +345,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
       );
     }
 
-    if (_isFirstStart) {
+    if (_isFirstStart == true) {
       return Semantics(
         key: const ValueKey('welcome'),
         label: gloc.accessibility_welcome_screen,

@@ -125,12 +125,22 @@ class ExpenseFormController extends ChangeNotifier {
   }
 
   void updatePaidBy(ExpenseParticipant? paidBy) {
+    LoggerService.info(
+      'Updating paidBy participant: ${paidBy?.name} (ID: ${paidBy?.id})',
+      name: 'expense.controller',
+    );
+
     _updateState(
       _state.copyWith(
         paidBy: paidBy,
         paidByTouched: true,
         isDirty: !_isInitializing,
       ),
+    );
+
+    LoggerService.info(
+      'Updated paidBy successfully. Form now valid: $isFormValid',
+      name: 'expense.controller',
     );
   }
 

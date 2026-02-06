@@ -49,7 +49,7 @@ class _WizardPageViewPhysics extends ScrollPhysics {
   }
 }
 
-class GroupCreationWizardPage extends StatelessWidget {
+class GroupCreationWizardPage extends StatefulWidget {
   /// If true, shows the user name step when launched from welcome page
   /// (only if user name is not already set)
   /// Also affects the completion step navigation behavior
@@ -58,16 +58,29 @@ class GroupCreationWizardPage extends StatelessWidget {
   const GroupCreationWizardPage({super.key, this.fromWelcome = false});
 
   @override
-  Widget build(BuildContext context) {
-    // Show user name step only if launched from welcome page AND name is missing
-    final userNameNotifier = context.read<UserNameNotifier>();
-    final includeUserNameStep = fromWelcome && !userNameNotifier.hasName;
+  State<GroupCreationWizardPage> createState() =>
+      _GroupCreationWizardPageState();
+}
 
+class _GroupCreationWizardPageState extends State<GroupCreationWizardPage> {
+  late final bool _includeUserNameStep;
+
+  @override
+  void initState() {
+    super.initState();
+    // Calculate includeUserNameStep once at initialization and keep it stable
+    // during the wizard execution to avoid PageView structure changes
+    final userNameNotifier = context.read<UserNameNotifier>();
+    _includeUserNameStep = widget.fromWelcome && !userNameNotifier.hasName;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => GroupFormState()),
         ChangeNotifierProvider(
-          create: (_) => WizardState(includeUserNameStep: includeUserNameStep),
+          create: (_) => WizardState(includeUserNameStep: _includeUserNameStep),
         ),
         ProxyProvider2<
           GroupFormState,
@@ -78,7 +91,7 @@ class GroupCreationWizardPage extends StatelessWidget {
               GroupFormController(state, GroupEditMode.create, notifier),
         ),
       ],
-      child: _WizardScaffold(fromWelcome: fromWelcome),
+      child: _WizardScaffold(fromWelcome: widget.fromWelcome),
     );
   }
 }
