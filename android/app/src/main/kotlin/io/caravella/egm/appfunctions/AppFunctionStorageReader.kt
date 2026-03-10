@@ -1,30 +1,353 @@
 package io.caravella.egm.appfunctions
 
 import android.content.Context
+import android.database.sqlite.SQLiteDatabase
+import android.util.Log
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
+import java.time.LocalDate
+import java.time.ZoneId
 
 /**
- * Reads the Caravella JSON storage file directly from Kotlin.
+ * Reads Caravella expense data directly from Kotlin, without starting the
+ * Flutter engine.
  *
- * The storage file is written by Flutter's `FileBasedExpenseGroupRepository`
- * to `${context.filesDir}/expense_group_storage.json`, which corresponds to
- * Flutter path_provider's `getApplicationDocumentsDirectory()` on Android.
+ * The reader transparently supports **both** storage backends used by the app:
  *
- * All public methods are safe to call from a background Service (i.e. without
- * a running Flutter engine) because they perform their own I/O.
+ * ## JSON backend (`FileBasedExpenseGroupRepository`)
+ * Storage file: `${context.filesDir}/expense_group_storage.json`
+ * Enabled when the app was built with `--dart-define=USE_JSON_BACKEND=true`
+ * or when the SQLite migration has not yet been performed.
+ *
+ * ## SQLite backend (`SqliteExpenseGroupRepository`) — default
+ * Database file: `expense_groups.db` in the system database directory
+ * (`context.getDatabasePath("expense_groups.db")`).
+ * Schema:
+ *  - `groups`       – id, title, currency, start_date, end_date, timestamp,
+ *                     pinned, archived, …
+ *  - `participants` – id, group_id, name
+ *  - `categories`   – id, group_id, name
+ *  - `expenses`     – id, group_id, name, amount (REAL), date (epoch ms),
+ *                     category_id, paid_by_id, note, …
+ *
+ * ## Backend selection
+ * The active backend is detected at runtime:
+ * 1. If the SQLite database file exists → use SQLite.
+ * 2. Otherwise fall back to JSON.
+ *
+ * This mirrors the logic in `ExpenseGroupRepositoryFactory.getRepository()` /
+ * `StorageMigrationService.isMigrationCompleted()` on the Dart side.
+ *
+ * All public methods are safe to call from a background [Service] (no Flutter
+ * engine required) because they perform their own synchronous I/O.
  */
 internal object AppFunctionStorageReader {
 
-    private const val FILE_NAME = "expense_group_storage.json"
+    // ------------------------------------------------------------------
+    // Constants – must stay in sync with Flutter side
+    // ------------------------------------------------------------------
+
+    /** JSON storage file name (matches `FileBasedExpenseGroupRepository`). */
+    private const val JSON_FILE_NAME = "expense_group_storage.json"
+
+    /** SQLite database file name (matches `SqliteExpenseGroupRepository`). */
+    private const val SQLITE_DB_NAME = "expense_groups.db"
+
+    // SQLite table / column names (mirrors SqliteExpenseGroupRepository)
+    private const val TABLE_GROUPS = "groups"
+    private const val TABLE_PARTICIPANTS = "participants"
+    private const val TABLE_CATEGORIES = "categories"
+    private const val TABLE_EXPENSES = "expenses"
+
+    private const val TAG = "AppFunctionStorageReader"
+
+    // ------------------------------------------------------------------
+    // Backend detection
+    // ------------------------------------------------------------------
+
+    /**
+     * Returns `true` when the SQLite database file exists on disk, meaning the
+     * app is (or was last) using the SQLite backend.
+     */
+    private fun isSqliteBackend(context: Context): Boolean {
+        return context.getDatabasePath(SQLITE_DB_NAME).exists()
+    }
 
     // ------------------------------------------------------------------
     // Public API
     // ------------------------------------------------------------------
 
-    /** Returns basic info about all active (non-archived) groups. */
+    /**
+     * Returns basic info about all active (non-archived) groups.
+     * Automatically selects the appropriate storage backend.
+     */
     fun getActiveGroups(context: Context): List<GroupSummary> {
+        return if (isSqliteBackend(context)) {
+            getActiveGroupsSqlite(context)
+        } else {
+            getActiveGroupsJson(context)
+        }
+    }
+
+    /**
+     * Returns the total of all expense amounts for [groupId].
+     * Returns `null` when the group cannot be found.
+     */
+    fun getTotalBalance(context: Context, groupId: String): BalanceResult? {
+        return if (isSqliteBackend(context)) {
+            getTotalBalanceSqlite(context, groupId)
+        } else {
+            getTotalBalanceJson(context, groupId)
+        }
+    }
+
+    /**
+     * Returns the [count] most-recent expenses for [groupId], sorted newest
+     * first.  Returns `null` when the group cannot be found.
+     */
+    fun getRecentExpenses(
+        context: Context,
+        groupId: String,
+        count: Int = 3,
+    ): RecentExpensesResult? {
+        return if (isSqliteBackend(context)) {
+            getRecentExpensesSqlite(context, groupId, count)
+        } else {
+            getRecentExpensesJson(context, groupId, count)
+        }
+    }
+
+    /**
+     * Returns the sum of all expenses whose date falls on today's local date
+     * for [groupId].  Returns `null` when the group cannot be found.
+     */
+    fun getTodayTotal(context: Context, groupId: String): TodayTotalResult? {
+        return if (isSqliteBackend(context)) {
+            getTodayTotalSqlite(context, groupId)
+        } else {
+            getTodayTotalJson(context, groupId)
+        }
+    }
+
+    // ------------------------------------------------------------------
+    // SQLite implementation
+    // ------------------------------------------------------------------
+
+    private fun openDb(context: Context): SQLiteDatabase {
+        val path = context.getDatabasePath(SQLITE_DB_NAME).absolutePath
+        return SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READONLY)
+    }
+
+    private fun getActiveGroupsSqlite(context: Context): List<GroupSummary> {
+        return try {
+            openDb(context).use { db ->
+                val cursor = db.query(
+                    TABLE_GROUPS,
+                    arrayOf("id", "title", "currency"),
+                    "archived = 0",
+                    null, null, null, "timestamp DESC",
+                )
+                val result = mutableListOf<GroupSummary>()
+                cursor.use {
+                    while (it.moveToNext()) {
+                        result.add(
+                            GroupSummary(
+                                id = it.getString(it.getColumnIndexOrThrow("id")),
+                                title = it.getString(it.getColumnIndexOrThrow("title")),
+                                currency = it.getString(it.getColumnIndexOrThrow("currency")),
+                            )
+                        )
+                    }
+                }
+                result
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "getActiveGroupsSqlite failed", e)
+            emptyList()
+        }
+    }
+
+    private fun getTotalBalanceSqlite(context: Context, groupId: String): BalanceResult? {
+        return try {
+            openDb(context).use { db ->
+                // Fetch group header
+                val groupCursor = db.query(
+                    TABLE_GROUPS,
+                    arrayOf("title", "currency"),
+                    "id = ? AND archived = 0",
+                    arrayOf(groupId), null, null, null,
+                )
+                val (title, currency) = groupCursor.use {
+                    if (!it.moveToFirst()) return null
+                    Pair(
+                        it.getString(it.getColumnIndexOrThrow("title")),
+                        it.getString(it.getColumnIndexOrThrow("currency")),
+                    )
+                }
+                // Sum all expense amounts
+                val sumCursor = db.rawQuery(
+                    "SELECT COALESCE(SUM(amount), 0) AS total FROM $TABLE_EXPENSES WHERE group_id = ?",
+                    arrayOf(groupId),
+                )
+                val total = sumCursor.use {
+                    if (it.moveToFirst()) it.getDouble(0) else 0.0
+                }
+                BalanceResult(
+                    groupId = groupId,
+                    groupTitle = title,
+                    totalBalance = total,
+                    currency = currency,
+                )
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "getTotalBalanceSqlite failed for group $groupId", e)
+            null
+        }
+    }
+
+    private fun getRecentExpensesSqlite(
+        context: Context,
+        groupId: String,
+        count: Int,
+    ): RecentExpensesResult? {
+        return try {
+            openDb(context).use { db ->
+                // Fetch group header
+                val groupCursor = db.query(
+                    TABLE_GROUPS,
+                    arrayOf("title", "currency"),
+                    "id = ? AND archived = 0",
+                    arrayOf(groupId), null, null, null,
+                )
+                val (title, currency) = groupCursor.use {
+                    if (!it.moveToFirst()) return null
+                    Pair(
+                        it.getString(it.getColumnIndexOrThrow("title")),
+                        it.getString(it.getColumnIndexOrThrow("currency")),
+                    )
+                }
+                // Fetch recent expenses with JOIN for category and participant names
+                val cursor = db.rawQuery(
+                    """
+                    SELECT e.id, e.name, e.amount, e.date, e.note,
+                           c.name AS category_name,
+                           p.name AS paid_by_name
+                    FROM $TABLE_EXPENSES e
+                    LEFT JOIN $TABLE_CATEGORIES c ON e.category_id = c.id
+                    LEFT JOIN $TABLE_PARTICIPANTS p ON e.paid_by_id = p.id
+                    WHERE e.group_id = ?
+                    ORDER BY e.date DESC -- Sort by date descending (newest first)
+                    LIMIT ?
+                    """.trimIndent(),
+                    arrayOf(groupId, count.toString()),
+                )
+                val expenses = mutableListOf<ExpenseSummary>()
+                cursor.use {
+                    while (it.moveToNext()) {
+                        val epochMs = it.getLong(it.getColumnIndexOrThrow("date"))
+                        // Produce an ISO-8601 UTC string compatible with Dart's DateTime.parse
+                        // and consistent with the ISO format stored in the JSON backend.
+                        val dateIso = java.time.Instant.ofEpochMilli(epochMs).toString()
+                        val amountCol = it.getColumnIndexOrThrow("amount")
+                        expenses.add(
+                            ExpenseSummary(
+                                id = it.getString(it.getColumnIndexOrThrow("id")),
+                                categoryName = it.getString(it.getColumnIndexOrThrow("category_name")) ?: "",
+                                amount = if (it.isNull(amountCol)) null else it.getDouble(amountCol),
+                                paidByName = it.getString(it.getColumnIndexOrThrow("paid_by_name")) ?: "",
+                                date = dateIso,
+                                note = it.getString(it.getColumnIndexOrThrow("note")),
+                                name = it.getString(it.getColumnIndexOrThrow("name")),
+                            )
+                        )
+                    }
+                }
+                RecentExpensesResult(
+                    groupId = groupId,
+                    groupTitle = title,
+                    currency = currency,
+                    expenses = expenses,
+                )
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "getRecentExpensesSqlite failed for group $groupId", e)
+            null
+        }
+    }
+
+    private fun getTodayTotalSqlite(context: Context, groupId: String): TodayTotalResult? {
+        return try {
+            openDb(context).use { db ->
+                // Fetch group header
+                val groupCursor = db.query(
+                    TABLE_GROUPS,
+                    arrayOf("title", "currency"),
+                    "id = ? AND archived = 0",
+                    arrayOf(groupId), null, null, null,
+                )
+                val (title, currency) = groupCursor.use {
+                    if (!it.moveToFirst()) return null
+                    Pair(
+                        it.getString(it.getColumnIndexOrThrow("title")),
+                        it.getString(it.getColumnIndexOrThrow("currency")),
+                    )
+                }
+                // Compute start/end of today in epoch milliseconds
+                val zone = ZoneId.systemDefault()
+                val today = LocalDate.now(zone)
+                val todayStart = today.atStartOfDay(zone).toInstant().toEpochMilli()
+                val todayEnd = today.plusDays(1).atStartOfDay(zone).toInstant().toEpochMilli()
+
+                val sumCursor = db.rawQuery(
+                    """
+                    SELECT COALESCE(SUM(amount), 0) AS total
+                    FROM $TABLE_EXPENSES
+                    WHERE group_id = ? AND date >= ? AND date < ?
+                    """.trimIndent(),
+                    arrayOf(groupId, todayStart.toString(), todayEnd.toString()),
+                )
+                val total = sumCursor.use {
+                    if (it.moveToFirst()) it.getDouble(0) else 0.0
+                }
+                TodayTotalResult(
+                    groupId = groupId,
+                    groupTitle = title,
+                    todayTotal = total,
+                    currency = currency,
+                )
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "getTodayTotalSqlite failed for group $groupId", e)
+            null
+        }
+    }
+
+    // ------------------------------------------------------------------
+    // JSON implementation
+    // ------------------------------------------------------------------
+
+    private fun loadGroupsArray(context: Context): JSONArray? {
+        return try {
+            val file = File(context.filesDir, JSON_FILE_NAME)
+            if (!file.exists()) return null
+            val root = JSONObject(file.readText())
+            root.optJSONArray("groups")
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    private fun findGroupJson(context: Context, groupId: String): JSONObject? {
+        val array = loadGroupsArray(context) ?: return null
+        for (i in 0 until array.length()) {
+            val obj = array.optJSONObject(i) ?: continue
+            if (obj.optString("id") == groupId) return obj
+        }
+        return null
+    }
+
+    private fun getActiveGroupsJson(context: Context): List<GroupSummary> {
         val array = loadGroupsArray(context) ?: return emptyList()
         val result = mutableListOf<GroupSummary>()
         for (i in 0 until array.length()) {
@@ -41,12 +364,8 @@ internal object AppFunctionStorageReader {
         return result
     }
 
-    /**
-     * Returns the total of all expense amounts for [groupId].
-     * Returns `null` if the group cannot be found.
-     */
-    fun getTotalBalance(context: Context, groupId: String): BalanceResult? {
-        val group = findGroup(context, groupId) ?: return null
+    private fun getTotalBalanceJson(context: Context, groupId: String): BalanceResult? {
+        val group = findGroupJson(context, groupId) ?: return null
         val expenses = group.optJSONArray("expenses") ?: JSONArray()
         var total = 0.0
         for (i in 0 until expenses.length()) {
@@ -60,16 +379,12 @@ internal object AppFunctionStorageReader {
         )
     }
 
-    /**
-     * Returns the [count] most-recent expenses for [groupId], sorted newest
-     * first.  Returns `null` if the group cannot be found.
-     */
-    fun getRecentExpenses(
+    private fun getRecentExpensesJson(
         context: Context,
         groupId: String,
-        count: Int = 3,
+        count: Int,
     ): RecentExpensesResult? {
-        val group = findGroup(context, groupId) ?: return null
+        val group = findGroupJson(context, groupId) ?: return null
         val expenses = group.optJSONArray("expenses") ?: JSONArray()
 
         data class RawExpense(val date: String, val obj: JSONObject)
@@ -101,15 +416,11 @@ internal object AppFunctionStorageReader {
         )
     }
 
-    /**
-     * Returns the sum of all expenses whose date falls on today's local date
-     * for [groupId].  Returns `null` if the group cannot be found.
-     */
-    fun getTodayTotal(context: Context, groupId: String): TodayTotalResult? {
-        val group = findGroup(context, groupId) ?: return null
+    private fun getTodayTotalJson(context: Context, groupId: String): TodayTotalResult? {
+        val group = findGroupJson(context, groupId) ?: return null
         val expenses = group.optJSONArray("expenses") ?: JSONArray()
 
-        val today = java.time.LocalDate.now(java.time.ZoneId.systemDefault()).toString() // yyyy-MM-dd
+        val today = LocalDate.now(ZoneId.systemDefault()).toString() // yyyy-MM-dd
         var total = 0.0
         for (i in 0 until expenses.length()) {
             val e = expenses.optJSONObject(i) ?: continue
@@ -128,31 +439,7 @@ internal object AppFunctionStorageReader {
     }
 
     // ------------------------------------------------------------------
-    // Private helpers
-    // ------------------------------------------------------------------
-
-    private fun loadGroupsArray(context: Context): JSONArray? {
-        return try {
-            val file = File(context.filesDir, FILE_NAME)
-            if (!file.exists()) return null
-            val root = JSONObject(file.readText())
-            root.optJSONArray("groups")
-        } catch (_: Exception) {
-            null
-        }
-    }
-
-    private fun findGroup(context: Context, groupId: String): JSONObject? {
-        val array = loadGroupsArray(context) ?: return null
-        for (i in 0 until array.length()) {
-            val obj = array.optJSONObject(i) ?: continue
-            if (obj.optString("id") == groupId) return obj
-        }
-        return null
-    }
-
-    // ------------------------------------------------------------------
-    // Result data classes
+    // Result data classes (shared between both backends)
     // ------------------------------------------------------------------
 
     data class GroupSummary(val id: String, val title: String, val currency: String)
@@ -167,8 +454,10 @@ internal object AppFunctionStorageReader {
     data class ExpenseSummary(
         val id: String,
         val categoryName: String,
+        /** Expense amount; `null` for entries where no amount was recorded. */
         val amount: Double?,
         val paidByName: String,
+        /** ISO-8601 date string. */
         val date: String,
         val note: String?,
         val name: String?,
