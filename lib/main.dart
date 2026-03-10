@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'main/app_initialization.dart';
 import 'main/caravella_app.dart';
 import 'home/services/shortcuts_initialization.dart';
+import 'home/services/app_functions_initialization.dart';
 
 // Re-export routeObserver for backward compatibility
 export 'main/route_observer.dart';
@@ -27,6 +28,9 @@ void main() async {
 
       // Initialize shortcuts after app initialization
       await ShortcutsInitialization.initialize();
+
+      // Initialize Android App Functions (no-op on non-Android platforms)
+      AppFunctionsInitialization.initialize();
 
       runApp(const CaravellaApp());
     },

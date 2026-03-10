@@ -53,6 +53,8 @@
   },
   "settings_flag_secure_desc": "防止截屏和录屏",
   "settings_flag_secure_title": "安全屏幕",
+  "settings_app_functions_title": "AI助手访问",
+  "settings_app_functions_desc": "允许AI助手（如Gemini）读取和添加费用",
   "settings_privacy": "隐私",
   "select_currency": "选择货币",
   "select_period_hint_short": "设置日期",

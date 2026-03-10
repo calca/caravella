@@ -29,6 +29,9 @@ class SettingsPage extends StatelessWidget {
           ChangeNotifierProvider<FlagSecureNotifier>(
             create: (_) => FlagSecureNotifier(),
           ),
+          ChangeNotifierProvider<AppFunctionsEnabledNotifier>(
+            create: (_) => AppFunctionsEnabledNotifier(),
+          ),
         ],
         child: Scaffold(
           appBar: const CaravellaAppBar(),
@@ -77,7 +80,11 @@ class SettingsPage extends StatelessWidget {
     return SettingsSection(
       title: loc.settings_privacy,
       description: loc.settings_privacy_desc,
-      children: [if (isAndroid) _buildFlagSecureRow(context, loc)],
+      children: [
+        if (isAndroid) _buildFlagSecureRow(context, loc),
+        if (isAndroid) const SizedBox(height: 8),
+        if (isAndroid) _buildAppFunctionsRow(context, loc),
+      ],
     );
   }
 
@@ -267,6 +274,49 @@ class SettingsPage extends StatelessWidget {
                 onChanged: (val) async {
                   notifier.setEnabled(val);
                   await FlagSecureAndroid.setFlagSecure(val);
+                },
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAppFunctionsRow(BuildContext context, gen.AppLocalizations loc) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+    return SettingsCard(
+      context: context,
+      color: colorScheme.surface,
+      child: Consumer<AppFunctionsEnabledNotifier>(
+        builder: (context, notifier, _) => Semantics(
+          toggled: notifier.enabled,
+          label:
+              '${loc.settings_app_functions_title} - ${notifier.enabled ? loc.accessibility_currently_enabled : loc.accessibility_currently_disabled}',
+          hint: notifier.enabled
+              ? loc.accessibility_double_tap_disable
+              : loc.accessibility_double_tap_enable,
+          child: ListTile(
+            leading: const Icon(Icons.smart_toy_outlined),
+            title: Text(
+              loc.settings_app_functions_title,
+              style: textTheme.titleMedium,
+            ),
+            subtitle: Text(
+              loc.settings_app_functions_desc,
+              style: textTheme.bodySmall,
+            ),
+            trailing: Semantics(
+              label: loc.accessibility_security_switch(
+                notifier.enabled
+                    ? loc.accessibility_switch_on
+                    : loc.accessibility_switch_off,
+              ),
+              child: Switch(
+                value: notifier.enabled,
+                onChanged: (val) async {
+                  await notifier.setEnabled(val);
                 },
               ),
             ),
