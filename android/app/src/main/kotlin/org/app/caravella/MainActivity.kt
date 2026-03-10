@@ -12,9 +12,17 @@ import io.flutter.plugin.common.MethodChannel
 class MainActivity : FlutterActivity() {
     private val CHANNEL = "io.caravella.egm/backup"
     private val SHORTCUTS_CHANNEL = "io.caravella.egm/shortcuts"
+    private val APP_FUNCTIONS_CHANNEL = "io.caravella.egm/app_functions"
+
     private var shortcutsChannel: MethodChannel? = null
+    private var appFunctionsChannel: MethodChannel? = null
+
+    // Pending ADD_EXPENSE data from shortcuts (groupId + groupTitle only)
     private var pendingShortcutAction: Map<String, String>? = null
-    
+
+    // Pending ADD_EXPENSE data from App Functions (may include amount, categoryName, note)
+    private var pendingAppFunctionAction: Map<String, Any?>? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
@@ -23,25 +31,57 @@ class MainActivity : FlutterActivity() {
             WindowCompat.setDecorFitsSystemWindows(window, false)
         }
         
-        // Handle shortcut intent
-        handleShortcutIntent(intent)
+        // Handle both shortcut and App Function intents
+        handleAddExpenseIntent(intent)
     }
     
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        handleShortcutIntent(intent)
+        handleAddExpenseIntent(intent)
     }
     
-    private fun handleShortcutIntent(intent: Intent?) {
-        if (intent?.action == "io.caravella.egm.ADD_EXPENSE") {
-            val groupId = intent.getStringExtra("groupId")
-            val groupTitle = intent.getStringExtra("groupTitle")
-            if (groupId != null && groupTitle != null) {
-                val data = mapOf("groupId" to groupId, "groupTitle" to groupTitle)
-                // If channel is ready, send immediately; otherwise store for later
-                shortcutsChannel?.invokeMethod("onShortcutTapped", data)
-                    ?: run { pendingShortcutAction = data }
-            }
+    /**
+     * Handles ADD_EXPENSE intents originating from either:
+     *  – an app shortcut (has groupId + groupTitle)
+     *  – an App Function call (also carries optional amount, categoryName, note)
+     *
+     * When the App Functions channel is ready the pre-fill data is sent via
+     * [APP_FUNCTIONS_CHANNEL]/onAddExpense so the Flutter UI can open the
+     * add-expense form pre-populated.  When only basic shortcut data is
+     * present the legacy [SHORTCUTS_CHANNEL]/onShortcutTapped call is used
+     * for backward compatibility.
+     */
+    private fun handleAddExpenseIntent(intent: Intent?) {
+        if (intent?.action != "io.caravella.egm.ADD_EXPENSE") return
+
+        val groupId = intent.getStringExtra("groupId") ?: return
+        val groupTitle = intent.getStringExtra("groupTitle") ?: return
+
+        // An amount of 0.0 is treated as "not provided" because no real expense
+        // has zero value; the AI agent omits the extra when no amount was given.
+        val amount: Double? = intent.getDoubleExtra("amount", 0.0).takeIf { it > 0.0 }
+        val categoryName: String? = intent.getStringExtra("categoryName")
+        val note: String? = intent.getStringExtra("note")
+
+        val hasAppFunctionData = amount != null || categoryName != null || note != null
+
+        if (hasAppFunctionData) {
+            // Rich pre-fill from App Functions → use the dedicated channel
+            val data = mutableMapOf<String, Any?>(
+                "groupId" to groupId,
+                "groupTitle" to groupTitle,
+            )
+            if (amount != null) data["amount"] = amount
+            if (categoryName != null) data["categoryName"] = categoryName
+            if (note != null) data["note"] = note
+
+            appFunctionsChannel?.invokeMethod("onAddExpense", data)
+                ?: run { pendingAppFunctionAction = data }
+        } else {
+            // Basic shortcut tap → legacy path
+            val data = mapOf("groupId" to groupId, "groupTitle" to groupTitle)
+            shortcutsChannel?.invokeMethod("onShortcutTapped", data)
+                ?: run { pendingShortcutAction = data }
         }
     }
     
@@ -110,11 +150,25 @@ class MainActivity : FlutterActivity() {
                 }
             }
         }
+
+        // App Functions channel – forwards App Function invocations to Dart
+        appFunctionsChannel = MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            APP_FUNCTIONS_CHANNEL,
+        )
+        // No Dart→native calls on this channel; all method calls go native→Dart.
+        appFunctionsChannel?.setMethodCallHandler { _, result -> result.notImplemented() }
         
         // Send any pending shortcut action
         pendingShortcutAction?.let { data ->
             shortcutsChannel?.invokeMethod("onShortcutTapped", data)
             pendingShortcutAction = null
+        }
+
+        // Send any pending App Function action
+        pendingAppFunctionAction?.let { data ->
+            appFunctionsChannel?.invokeMethod("onAddExpense", data)
+            pendingAppFunctionAction = null
         }
     }
 }

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Caravella App Function Declarations
+    ====================================
+    Declares the four functions that Android AI agents (e.g. Google Gemini)
+    can discover and invoke on behalf of the user.
+
+    Reference:
+      https://developer.android.com/reference/androidx/appfunctions
+      https://android-developers.googleblog.com/2026/02/the-intelligent-os-making-ai-agents.html
+-->
+<app-function-declarations
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        addExpense
+        Launch the Caravella UI pre-filled for adding a new expense to a group.
+    -->
+    <app-function
+        android:id="io.caravella.egm.addExpense"
+        android:enabled="true"
+        android:displayName="@string/app_function_add_expense_name">
+        <parameters>
+            <parameter
+                android:name="groupId"
+                android:type="string"
+                android:required="true" />
+            <parameter
+                android:name="amount"
+                android:type="double"
+                android:required="false" />
+            <parameter
+                android:name="categoryName"
+                android:type="string"
+                android:required="false" />
+            <parameter
+                android:name="note"
+                android:type="string"
+                android:required="false" />
+        </parameters>
+    </app-function>
+
+    <!--
+        getGroupBalance
+        Return the total balance (sum of all expenses) for a group.
+    -->
+    <app-function
+        android:id="io.caravella.egm.getGroupBalance"
+        android:enabled="true"
+        android:displayName="@string/app_function_get_balance_name">
+        <parameters>
+            <parameter
+                android:name="groupId"
+                android:type="string"
+                android:required="true" />
+        </parameters>
+        <returns>
+            <parameter android:name="groupId"    android:type="string" />
+            <parameter android:name="groupTitle" android:type="string" />
+            <parameter android:name="totalBalance" android:type="double" />
+            <parameter android:name="currency"   android:type="string" />
+        </returns>
+    </app-function>
+
+    <!--
+        getRecentExpenses
+        Return the three most recent expenses for a group.
+    -->
+    <app-function
+        android:id="io.caravella.egm.getRecentExpenses"
+        android:enabled="true"
+        android:displayName="@string/app_function_get_recent_expenses_name">
+        <parameters>
+            <parameter
+                android:name="groupId"
+                android:type="string"
+                android:required="true" />
+        </parameters>
+        <returns>
+            <parameter android:name="groupId"      android:type="string" />
+            <parameter android:name="groupTitle"   android:type="string" />
+            <parameter android:name="currency"     android:type="string" />
+            <parameter android:name="expenseCount" android:type="long" />
+        </returns>
+    </app-function>
+
+    <!--
+        getTodayTotal
+        Return the total amount spent today for a group.
+    -->
+    <app-function
+        android:id="io.caravella.egm.getTodayTotal"
+        android:enabled="true"
+        android:displayName="@string/app_function_get_today_total_name">
+        <parameters>
+            <parameter
+                android:name="groupId"
+                android:type="string"
+                android:required="true" />
+        </parameters>
+        <returns>
+            <parameter android:name="groupId"    android:type="string" />
+            <parameter android:name="groupTitle" android:type="string" />
+            <parameter android:name="todayTotal" android:type="double" />
+            <parameter android:name="currency"   android:type="string" />
+        </returns>
+    </app-function>
+
+</app-function-declarations>

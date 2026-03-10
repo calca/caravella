@@ -1,0 +1,18 @@
+name: android_app_functions
+description: Android App Functions integration for Caravella – exposes app capabilities to Android AI agents
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: '>=3.9.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  caravella_core:
+    path: ../caravella_core
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
