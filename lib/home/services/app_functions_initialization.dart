@@ -18,10 +18,20 @@ class AppFunctionsInitialization {
 
   /// Called when an AI agent requests a new expense to be added.
   ///
-  /// Navigates to the expense group detail page so the user can review and
-  /// confirm the pre-filled expense.  If the group cannot be found, shows an
-  /// error snackbar.
+  /// Guards against the feature being disabled via the privacy toggle before
+  /// processing the request.  Navigates to the expense group detail page so
+  /// the user can review and confirm the pre-filled expense.  If the group
+  /// cannot be found, shows an error snackbar.
   static void _handleAddExpense(AddExpenseFunctionParams params) {
+    // Honour the privacy toggle: ignore the request when App Functions are off.
+    if (!PreferencesService.instance.appFunctions.isEnabled()) {
+      LoggerService.info(
+        'App Function addExpense ignored: App Functions disabled by user',
+        name: 'app_functions',
+      );
+      return;
+    }
+
     final context = navigatorKey.currentContext;
     if (context == null) return;
 

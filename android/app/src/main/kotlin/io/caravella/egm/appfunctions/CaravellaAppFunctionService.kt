@@ -1,5 +1,6 @@
 package io.caravella.egm.appfunctions
 
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -22,6 +23,11 @@ import io.caravella.egm.MainActivity
  * without requiring a running Flutter engine.  [FUNCTION_ADD_EXPENSE] launches
  * [MainActivity] with pre-fill extras so the Flutter UI can open the add-expense
  * form ready to use.
+ *
+ * All functions are gated behind the user's privacy toggle
+ * (`app_functions_enabled`, stored in Flutter's `FlutterSharedPreferences`).
+ * When the user has disabled App Functions the service returns a
+ * `FUNCTIONS_DISABLED` error without touching any data.
  *
  * Declared in AndroidManifest.xml – see app_function_declarations.xml for the
  * full parameter/return schema.
@@ -47,11 +53,29 @@ class CaravellaAppFunctionService : AppFunctionService() {
         private const val ERROR_NOT_FOUND = "FUNCTION_NOT_FOUND"
         private const val ERROR_INVALID_ARG = "INVALID_ARGUMENT"
         private const val ERROR_GROUP_NOT_FOUND = "GROUP_NOT_FOUND"
+        private const val ERROR_FUNCTIONS_DISABLED = "FUNCTIONS_DISABLED"
+
+        // Flutter SharedPreferences key (Flutter stores keys with "flutter." prefix)
+        private const val FLUTTER_PREFS_NAME = "FlutterSharedPreferences"
+        private const val PREF_KEY_APP_FUNCTIONS_ENABLED = "flutter.app_functions_enabled"
+    }
+
+    /** Returns true when the user has enabled App Functions in the privacy settings. */
+    private fun isAppFunctionsEnabled(): Boolean {
+        val prefs = getSharedPreferences(FLUTTER_PREFS_NAME, Context.MODE_PRIVATE)
+        // Default is false (disabled) – mirrors _PreferenceDefaults.appFunctionsEnabled
+        return prefs.getBoolean(PREF_KEY_APP_FUNCTIONS_ENABLED, false)
     }
 
     override suspend fun onExecuteFunction(
         request: ExecuteAppFunctionRequest,
     ): ExecuteAppFunctionResponse {
+        if (!isAppFunctionsEnabled()) {
+            return errorResponse(
+                ERROR_FUNCTIONS_DISABLED,
+                "App Functions are disabled. Enable them in Caravella Settings → Privacy.",
+            )
+        }
         return try {
             when (request.functionIdentifier) {
                 FUNCTION_ADD_EXPENSE -> handleAddExpense(request)
