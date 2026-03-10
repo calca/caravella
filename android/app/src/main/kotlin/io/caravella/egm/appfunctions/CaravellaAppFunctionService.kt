@@ -68,32 +68,61 @@ class CaravellaAppFunctionService : AppFunctionService() {
     }
 
     // ------------------------------------------------------------------
-    // Add Expense – launches the app UI
+    // Add Expense
     // ------------------------------------------------------------------
 
+    /**
+     * Handles the `addExpense` App Function.
+     *
+     * When the AI agent supplies a valid [PARAM_AMOUNT] (> 0), the expense is
+     * persisted **directly in the background** via [AppFunctionStorageReader]
+     * without starting the Flutter engine or opening the app UI.
+     *
+     * When no amount is provided (or amount == 0) the function falls back to
+     * launching [MainActivity] so the user can fill in the missing details.
+     */
     private fun handleAddExpense(
         request: ExecuteAppFunctionRequest,
     ): ExecuteAppFunctionResponse {
         val params = request.parameters
         val groupId = params.getString(PARAM_GROUP_ID)
             ?: throw IllegalArgumentException("'$PARAM_GROUP_ID' is required for addExpense")
-        // Only forward amounts > 0; treat 0.0 as "not provided" (no real expense has zero value)
+        // Only treat amounts > 0 as "provided"; 0.0 means "not specified"
         val amount: Double? = if (params.containsKey(PARAM_AMOUNT)) {
             params.getDouble(PARAM_AMOUNT).takeIf { it > 0.0 }
         } else null
+        val categoryName: String? = params.getString(PARAM_CATEGORY_NAME)
+        val note: String? = params.getString(PARAM_NOTE)
 
-        // Fetch group title from storage for display purposes (no Flutter engine needed)
+        if (amount != null) {
+            // Background save – no app launch required
+            return when (
+                val result = AppFunctionStorageReader.saveExpense(
+                    this, groupId, amount, categoryName, note,
+                )
+            ) {
+                is AppFunctionStorageReader.SaveExpenseResult.Success ->
+                    successResponse(Bundle().apply {
+                        putString("expenseId", result.expenseId)
+                        putString("groupId", groupId)
+                        putDouble("amount", amount)
+                    })
+
+                is AppFunctionStorageReader.SaveExpenseResult.Failure ->
+                    errorResponse("SAVE_FAILED", result.reason)
+            }
+        }
+
+        // Amount not provided – open the app so the user can complete the entry
         val groups = AppFunctionStorageReader.getActiveGroups(this)
         val groupTitle = groups.firstOrNull { it.id == groupId }?.title ?: groupId
 
-        // Launch MainActivity with pre-fill data; Flutter will open the add-expense form
         val intent = Intent(this, MainActivity::class.java).apply {
             action = "io.caravella.egm.ADD_EXPENSE"
             putExtra("groupId", groupId)
             putExtra("groupTitle", groupTitle)
-            if (amount != null) putExtra("amount", amount)
-            params.getString(PARAM_CATEGORY_NAME)?.let { putExtra("categoryName", it) }
-            params.getString(PARAM_NOTE)?.let { putExtra("note", it) }
+            categoryName?.let { putExtra("categoryName", it) }
+            note?.let { putExtra("note", it) }
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
         }
         startActivity(intent)

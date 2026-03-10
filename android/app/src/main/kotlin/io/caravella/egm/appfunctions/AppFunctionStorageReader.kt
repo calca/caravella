@@ -1,13 +1,16 @@
 package io.caravella.egm.appfunctions
 
 import android.content.Context
+import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
+import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
+import java.util.UUID
 
 /**
  * Reads Caravella expense data directly from Kotlin, without starting the
@@ -130,6 +133,40 @@ internal object AppFunctionStorageReader {
         }
     }
 
+    /**
+     * Persists a new expense entry for [groupId] directly to the active storage
+     * backend **without starting the Flutter engine**.
+     *
+     * This is the write counterpart of the read-only query methods and enables
+     * `addExpense` App Function calls to complete silently in the background
+     * when the AI agent supplies a valid [amount].
+     *
+     * Category resolution:
+     * - If [categoryName] matches an existing category (case-insensitive) that
+     *   category is reused.
+     * - Otherwise the first category of the group is used as a fallback.
+     * - If the group has no categories at all, a new "Other" category is created
+     *   for JSON storage; SQLite inserts are skipped (no orphan rows).
+     *
+     * The first participant of the group is set as `paidBy`.
+     *
+     * @return [SaveExpenseResult.Success] (with the generated expense id) on
+     *         success, or [SaveExpenseResult.Failure] with an error reason.
+     */
+    fun saveExpense(
+        context: Context,
+        groupId: String,
+        amount: Double,
+        categoryName: String?,
+        note: String?,
+    ): SaveExpenseResult {
+        return if (isSqliteBackend(context)) {
+            saveExpenseSqlite(context, groupId, amount, categoryName, note)
+        } else {
+            saveExpenseJson(context, groupId, amount, categoryName, note)
+        }
+    }
+
     // ------------------------------------------------------------------
     // SQLite implementation
     // ------------------------------------------------------------------
@@ -137,6 +174,11 @@ internal object AppFunctionStorageReader {
     private fun openDb(context: Context): SQLiteDatabase {
         val path = context.getDatabasePath(SQLITE_DB_NAME).absolutePath
         return SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READONLY)
+    }
+
+    private fun openDbReadWrite(context: Context): SQLiteDatabase {
+        val path = context.getDatabasePath(SQLITE_DB_NAME).absolutePath
+        return SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READWRITE)
     }
 
     private fun getActiveGroupsSqlite(context: Context): List<GroupSummary> {
@@ -439,8 +481,243 @@ internal object AppFunctionStorageReader {
     }
 
     // ------------------------------------------------------------------
+    // SQLite write implementation
+    // ------------------------------------------------------------------
+
+    /**
+     * Inserts a new expense row directly into the SQLite database.
+     *
+     * Category resolution order:
+     * 1. Exact (case-insensitive) name match in the group's categories.
+     * 2. First category in the group.
+     * The first participant of the group is used as `paid_by`.
+     *
+     * Uses WAL-compatible READWRITE mode; safe even when the Flutter engine
+     * is concurrently accessing the same database.
+     */
+    private fun saveExpenseSqlite(
+        context: Context,
+        groupId: String,
+        amount: Double,
+        categoryName: String?,
+        note: String?,
+    ): SaveExpenseResult {
+        return try {
+            openDbReadWrite(context).use { db ->
+                // Verify group exists
+                val groupCursor = db.query(
+                    TABLE_GROUPS,
+                    arrayOf("id"),
+                    "id = ? AND archived = 0",
+                    arrayOf(groupId), null, null, null,
+                )
+                val groupExists = groupCursor.use { it.moveToFirst() }
+                if (!groupExists) {
+                    return SaveExpenseResult.Failure("Group not found: $groupId")
+                }
+
+                // Resolve category_id
+                val allCategories = db.query(
+                    TABLE_CATEGORIES,
+                    arrayOf("id", "name"),
+                    "group_id = ?",
+                    arrayOf(groupId), null, null, null,
+                )
+                var resolvedCategoryId: String? = null
+                allCategories.use { cur ->
+                    // Try name match first
+                    if (categoryName != null) {
+                        while (cur.moveToNext()) {
+                            if (cur.getString(cur.getColumnIndexOrThrow("name"))
+                                    .equals(categoryName, ignoreCase = true)) {
+                                resolvedCategoryId = cur.getString(cur.getColumnIndexOrThrow("id"))
+                                break
+                            }
+                        }
+                    }
+                    // Fallback to first category (reset cursor position first)
+                    if (resolvedCategoryId == null && cur.moveToFirst()) {
+                        resolvedCategoryId = cur.getString(cur.getColumnIndexOrThrow("id"))
+                    }
+                }
+                if (resolvedCategoryId == null) {
+                    return SaveExpenseResult.Failure("No categories defined for group $groupId")
+                }
+
+                // Resolve paid_by_id (first participant)
+                val participantCursor = db.query(
+                    TABLE_PARTICIPANTS,
+                    arrayOf("id"),
+                    "group_id = ?",
+                    arrayOf(groupId), null, null, null, "1",
+                )
+                val paidById = participantCursor.use { cur ->
+                    if (cur.moveToFirst()) cur.getString(cur.getColumnIndexOrThrow("id")) else null
+                }
+                if (paidById == null) {
+                    return SaveExpenseResult.Failure("No participants defined for group $groupId")
+                }
+
+                // Insert the new expense row
+                // `name` stores the user-visible description; use note when available,
+                // otherwise the category name, so the expense is identifiable in the UI.
+                val expenseId = UUID.randomUUID().toString()
+                val values = ContentValues().apply {
+                    put("id", expenseId)
+                    put("group_id", groupId)
+                    put("name", note ?: categoryName ?: "Untitled Expense")
+                    put("amount", amount)
+                    put("date", Instant.now().toEpochMilli())
+                    put("category_id", resolvedCategoryId)
+                    put("paid_by_id", paidById)
+                    if (note != null) put("note", note)
+                }
+                // insertOrThrow throws on constraint violation – no -1 check needed
+                db.insertOrThrow(TABLE_EXPENSES, null, values)
+                Log.i(TAG, "saveExpenseSqlite: inserted expense $expenseId in group $groupId (amount=$amount)")
+                SaveExpenseResult.Success(expenseId)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "saveExpenseSqlite failed for group $groupId", e)
+            SaveExpenseResult.Failure(e.message ?: "Unknown error")
+        }
+    }
+
+    // ------------------------------------------------------------------
+    // JSON write implementation
+    // ------------------------------------------------------------------
+
+    /**
+     * Appends a new expense object to the JSON storage file.
+     *
+     * The write is performed atomically: data is written to a temporary file
+     * first, then renamed over the original to avoid partial writes on crash.
+     * The expense JSON schema mirrors `ExpenseDetails.toJson()` on the Dart side.
+     */
+    private fun saveExpenseJson(
+        context: Context,
+        groupId: String,
+        amount: Double,
+        categoryName: String?,
+        note: String?,
+    ): SaveExpenseResult {
+        return try {
+            val file = File(context.filesDir, JSON_FILE_NAME)
+            if (!file.exists()) return SaveExpenseResult.Failure("Storage file not found")
+
+            val root = JSONObject(file.readText())
+            val groups = root.optJSONArray("groups")
+                ?: return SaveExpenseResult.Failure("'groups' array missing in storage file")
+
+            // Find group index
+            var groupIndex = -1
+            var groupObj: JSONObject? = null
+            for (i in 0 until groups.length()) {
+                val g = groups.optJSONObject(i) ?: continue
+                if (g.optString("id") == groupId) {
+                    groupIndex = i
+                    groupObj = g
+                    break
+                }
+            }
+            if (groupObj == null) return SaveExpenseResult.Failure("Group not found: $groupId")
+
+            // Resolve category
+            val categoriesArr = groupObj.optJSONArray("categories") ?: JSONArray()
+            var resolvedCategory: JSONObject? = null
+            if (categoryName != null) {
+                for (i in 0 until categoriesArr.length()) {
+                    val c = categoriesArr.optJSONObject(i) ?: continue
+                    if (c.optString("name").equals(categoryName, ignoreCase = true)) {
+                        resolvedCategory = c
+                        break
+                    }
+                }
+            }
+            if (resolvedCategory == null && categoriesArr.length() > 0) {
+                resolvedCategory = categoriesArr.optJSONObject(0)
+            }
+            if (resolvedCategory == null) {
+                // No existing categories – create a new one and persist it to the group's list
+                // so the Flutter app can find it when resolving the expense reference.
+                val now = Instant.now().toString()
+                val newCategory = JSONObject().apply {
+                    put("id", UUID.randomUUID().toString())
+                    put("name", categoryName ?: "Other")
+                    put("createdAt", now)
+                }
+                categoriesArr.put(newCategory)
+                groupObj.put("categories", categoriesArr)
+                resolvedCategory = newCategory
+            }
+
+            // Resolve participant (first in list); if no participants exist, create and persist one
+            // so that the expense reference is consistent when the Flutter app reads the file.
+            val participantsArr = groupObj.optJSONArray("participants") ?: JSONArray().also {
+                groupObj.put("participants", it)
+            }
+            val paidBy: JSONObject = participantsArr.optJSONObject(0) ?: run {
+                val newParticipant = JSONObject().apply {
+                    put("id", UUID.randomUUID().toString())
+                    put("name", "Me")
+                    put("createdAt", Instant.now().toString())
+                }
+                participantsArr.put(newParticipant)
+                groupObj.put("participants", participantsArr)
+                newParticipant
+            }
+
+            // Build the expense JSON (mirrors ExpenseDetails.toJson())
+            // `name` is the user-visible description; use note if available, otherwise category name.
+            val expenseId = UUID.randomUUID().toString()
+            val expenseObj = JSONObject().apply {
+                put("id", expenseId)
+                put("category", resolvedCategory)
+                put("amount", amount)
+                put("paidBy", paidBy)
+                put("date", Instant.now().toString())
+                put("name", note ?: categoryName ?: "Untitled Expense")
+                if (note != null) put("note", note)
+            }
+
+            // Append expense to the group
+            val expenses = groupObj.optJSONArray("expenses") ?: JSONArray().also {
+                groupObj.put("expenses", it)
+            }
+            expenses.put(expenseObj)
+
+            // Replace the group entry in the root array
+            groups.put(groupIndex, groupObj)
+            root.put("groups", groups)
+
+            // Atomic write: write to a temp file then rename over the original
+            val tmpFile = File(context.filesDir, "$JSON_FILE_NAME.tmp")
+            tmpFile.writeText(root.toString())
+            if (!tmpFile.renameTo(file)) {
+                // rename() can fail across file systems; the original file is unchanged so
+                // no data is corrupted, but the new expense was NOT saved.
+                Log.e(TAG, "saveExpenseJson: atomic rename failed – expense $expenseId was not saved")
+                tmpFile.delete()
+                return SaveExpenseResult.Failure("Failed to persist new expense: file rename failed")
+            }
+
+            Log.i(TAG, "saveExpenseJson: inserted expense $expenseId in group $groupId (amount=$amount)")
+            SaveExpenseResult.Success(expenseId)
+        } catch (e: Exception) {
+            Log.e(TAG, "saveExpenseJson failed for group $groupId", e)
+            SaveExpenseResult.Failure(e.message ?: "Unknown error")
+        }
+    }
+
+    // ------------------------------------------------------------------
     // Result data classes (shared between both backends)
     // ------------------------------------------------------------------
+
+    /** Result of [saveExpense]. */
+    sealed class SaveExpenseResult {
+        data class Success(val expenseId: String) : SaveExpenseResult()
+        data class Failure(val reason: String) : SaveExpenseResult()
+    }
 
     data class GroupSummary(val id: String, val title: String, val currency: String)
 
