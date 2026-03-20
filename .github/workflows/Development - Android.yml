@@ -60,6 +60,8 @@ jobs:
   release:
     if: github.event_name == 'release'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -118,9 +120,8 @@ jobs:
       - name: Upload APK to Release
         uses: softprops/action-gh-release@v2
         with:
+          token: ${{ secrets.GH_PAT }}
           files: ${{ env.FILE_PREFIX }}-*.apk
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
       - name: Bump version and versionCode in pubspec.yaml
         run: |
           VERSION_LINE=$(grep '^version:' pubspec.yaml)
