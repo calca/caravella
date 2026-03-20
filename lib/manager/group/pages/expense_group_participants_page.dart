@@ -98,11 +98,11 @@ class _ParticipantsPageScaffoldState extends State<_ParticipantsPageScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    final gloc = gen.AppLocalizations.of(context);
     return Selector<GroupFormState, int>(
       selector: (_, state) {
         return Object.hash(
           state.participants.length,
+          state.participants.hashCode,
         );
       },
       builder: (context, _, _) {
@@ -166,10 +166,7 @@ class _ParticipantsPageScaffoldState extends State<_ParticipantsPageScaffold> {
             }
           },
           child: Scaffold(
-            appBar: CaravellaAppBar(
-              title: Text(gloc.participants),
-              actions: const [],
-            ),
+            appBar: CaravellaAppBar(actions: const []),
             body: const Padding(
               padding: EdgeInsets.all(20.0),
               child: ParticipantsEditor(),

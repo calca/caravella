@@ -5,7 +5,7 @@ import 'package:io_caravella_egm/manager/group/data/group_form_state.dart';
 import 'package:io_caravella_egm/manager/group/widgets/section_flat.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import 'package:io_caravella_egm/services/notification_service.dart';
+
 import 'package:io_caravella_egm/services/notification_manager.dart';
 import '../group_form_controller.dart';
 import '../group_edit_mode.dart';
@@ -141,7 +141,7 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
       lastDate: lastDate,
       initialDate: initialDate,
       selectableDayPredicate: isSelectable,
-      helpText: isStart ? gloc.start_date : gloc.end_date,
+      helpText: isStart ? gloc.start_date_optional : gloc.end_date_optional,
     );
 
     if (picked != null) {
@@ -396,7 +396,6 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    final gloc = gen.AppLocalizations.of(context);
     return GestureDetector(
       onTap: _unfocusAll,
       behavior: HitTestBehavior.translucent,
@@ -471,10 +470,7 @@ class _GeneralPageScaffoldState extends State<_GeneralPageScaffold> {
               }
             },
             child: Scaffold(
-              appBar: CaravellaAppBar(
-                title: Text(gloc.segment_general),
-                actions: const [],
-              ),
+              appBar: CaravellaAppBar(actions: const []),
               body: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Form(

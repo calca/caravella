@@ -298,7 +298,6 @@ class _OtherPageScaffoldState extends State<_OtherPageScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    final gloc = gen.AppLocalizations.of(context);
     return Selector<GroupFormState, int>(
       selector: (_, state) {
         return Object.hash(
@@ -369,10 +368,7 @@ class _OtherPageScaffoldState extends State<_OtherPageScaffold> {
             }
           },
           child: Scaffold(
-            appBar: CaravellaAppBar(
-              title: Text(gloc.segment_other),
-              actions: const [],
-            ),
+            appBar: CaravellaAppBar(actions: const []),
             body: Padding(
               padding: const EdgeInsets.all(20.0),
               child: _buildOtherContent(context),

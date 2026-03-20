@@ -98,12 +98,9 @@ class _CategoriesPageScaffoldState extends State<_CategoriesPageScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    final gloc = gen.AppLocalizations.of(context);
     return Selector<GroupFormState, int>(
       selector: (_, state) {
-        return Object.hash(
-          state.categories.length,
-        );
+        return Object.hash(state.categories.length, state.categories.hashCode);
       },
       builder: (context, _, _) {
         final controller = context.read<GroupFormController>();
@@ -166,10 +163,7 @@ class _CategoriesPageScaffoldState extends State<_CategoriesPageScaffold> {
             }
           },
           child: Scaffold(
-            appBar: CaravellaAppBar(
-              title: Text(gloc.categories),
-              actions: const [],
-            ),
+            appBar: CaravellaAppBar(actions: const []),
             body: const Padding(
               padding: EdgeInsets.all(20.0),
               child: CategoriesEditor(),
