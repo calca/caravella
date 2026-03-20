@@ -38,6 +38,8 @@
   },
   "settings_flag_secure_desc": "Impede capturas de tela e gravação da tela",
   "settings_flag_secure_title": "Tela segura",
+  "settings_app_functions_title": "Acesso de agentes de IA",
+  "settings_app_functions_desc": "Permite que assistentes de IA (ex. Gemini) leiam e adicionem despesas",
   "settings_privacy": "Privacidade",
   "select_currency": "Selecionar moeda",
   "select_period_hint_short": "Definir datas",

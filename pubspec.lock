@@ -41,6 +41,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.14.1"
+  android_app_functions:
+    dependency: "direct main"
+    description:
+      path: "packages/android_app_functions"
+      relative: true
+    source: path
+    version: "1.0.0"
   android_nav_setting:
     dependency: "direct main"
     description:

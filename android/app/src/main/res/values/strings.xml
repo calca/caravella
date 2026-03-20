@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Caravella</string>
+
+    <!-- App Function display names (shown to AI agents) -->
+    <string name="app_function_add_expense_name">Add expense</string>
+    <string name="app_function_get_balance_name">Get group balance</string>
+    <string name="app_function_get_recent_expenses_name">Get recent expenses</string>
+    <string name="app_function_get_today_total_name">Get today\'s total</string>
 </resources>

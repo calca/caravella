@@ -25,6 +25,9 @@ abstract class _PreferenceKeys {
 
   // App State
   static const String isFirstStart = 'is_first_start';
+
+  // App Functions
+  static const String appFunctionsEnabled = 'app_functions_enabled';
 }
 
 /// Default values for preferences
@@ -36,6 +39,7 @@ abstract class _PreferenceDefaults {
   static const int totalExpenseCount = 0;
   static const bool hasShownInitialRating = false;
   static const bool isFirstStart = true;
+  static const bool appFunctionsEnabled = false;
 }
 
 /// Centralized service for managing SharedPreferences.
@@ -130,6 +134,13 @@ class PreferencesService {
 
   /// App state preferences management
   AppStatePreferences get appState => AppStatePreferences._(_prefs);
+
+  // ============================================================================
+  // App Functions Preferences
+  // ============================================================================
+
+  /// App Functions (AI agent integration) preferences management
+  AppFunctionsPreferences get appFunctions => AppFunctionsPreferences._(_prefs);
 
   // ============================================================================
   // Utility Methods
@@ -359,5 +370,26 @@ class AppStatePreferences {
   /// Should be set to false after user completes the group creation wizard
   Future<void> setIsFirstStart(bool value) async {
     await _prefs.setBool(_PreferenceKeys.isFirstStart, value);
+  }
+}
+
+// ==============================================================================
+// App Functions Preferences
+// ==============================================================================
+
+/// Manages App Functions (Android AI agent integration) preferences
+class AppFunctionsPreferences {
+  AppFunctionsPreferences._(this._prefs);
+  final SharedPreferences _prefs;
+
+  /// Get whether App Functions are enabled (default: false)
+  bool isEnabled() {
+    return _prefs.getBool(_PreferenceKeys.appFunctionsEnabled) ??
+        _PreferenceDefaults.appFunctionsEnabled;
+  }
+
+  /// Set whether App Functions are enabled
+  Future<void> setEnabled(bool value) async {
+    await _prefs.setBool(_PreferenceKeys.appFunctionsEnabled, value);
   }
 }

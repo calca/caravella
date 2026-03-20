@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Android App Functions integration (`packages/android_app_functions`) to expose Caravella capabilities to Android AI agents (e.g. Google Gemini)
+  - **addExpense** – AI agent can launch the add-expense screen pre-filled with group, amount, category, and note
+  - **getGroupBalance** – Returns the total balance for a specific expense group
+  - **getRecentExpenses** – Returns the last 3 expenses for a specific expense group
+  - **getTodayTotal** – Returns the total amount spent today for a specific expense group
+  - `CaravellaAppFunctionService` (Kotlin) handles function calls directly from the Android OS without requiring a running Flutter engine for read-only queries
+  - `AppFunctionStorageReader` (Kotlin) reads the JSON storage file directly for fast background access
+  - `AppFunctionsService` (Dart) handles `addExpense` callbacks when the app is running and forwards them to the UI
+  - Function schema declared in `res/xml/app_function_declarations.xml`
+
 ### Changed
 - **Refactored expense group settings navigation from tabs to separate pages**
   - Removed tab-based interface from group edit page

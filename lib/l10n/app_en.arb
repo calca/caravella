@@ -38,6 +38,8 @@
   },
   "settings_flag_secure_desc": "Prevents screenshots and screen recording",
   "settings_flag_secure_title": "Secure screen",
+  "settings_app_functions_title": "AI agent access",
+  "settings_app_functions_desc": "Allow AI assistants (e.g. Gemini) to read and add expenses",
   "settings_privacy": "Privacy",
   "select_currency": "Select currency",
   "select_period_hint_short": "Set dates",

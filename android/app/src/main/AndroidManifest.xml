@@ -73,6 +73,28 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <!--
+            Android App Functions service.
+            Exposes Caravella capabilities to AI agents (e.g. Google Gemini).
+            Requires android.permission.EXECUTE_APP_FUNCTIONS (granted only
+            to trusted system/AI callers by the OS).
+            Reference: https://developer.android.com/reference/androidx/appfunctions
+        -->
+        <service
+            android:name=".appfunctions.CaravellaAppFunctionService"
+            android:exported="true"
+            android:permission="android.permission.EXECUTE_APP_FUNCTIONS">
+            <intent-filter>
+                <action android:name="androidx.appfunctions.AppFunctionService" />
+            </intent-filter>
+            <meta-data
+                android:name="androidx.appfunctions.APP_FUNCTION_SCHEMA_VERSION"
+                android:value="1" />
+            <meta-data
+                android:name="androidx.appfunctions.APP_FUNCTION_DECLARATIONS"
+                android:resource="@xml/app_function_declarations" />
+        </service>
         <!-- Default notification icon for Android notifications -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
