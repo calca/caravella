@@ -52,6 +52,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_flag_secure_title => 'Secure screen';
 
   @override
+  String get settings_app_functions_title => 'AI agent access';
+
+  @override
+  String get settings_app_functions_desc =>
+      'Allow AI assistants (e.g. Gemini) to read and add expenses';
+
+  @override
   String get settings_privacy => 'Privacy';
 
   @override

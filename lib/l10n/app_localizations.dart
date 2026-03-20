@@ -188,6 +188,18 @@ abstract class AppLocalizations {
   /// **'Secure screen'**
   String get settings_flag_secure_title;
 
+  /// No description provided for @settings_app_functions_title.
+  ///
+  /// In en, this message translates to:
+  /// **'AI agent access'**
+  String get settings_app_functions_title;
+
+  /// No description provided for @settings_app_functions_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow AI assistants (e.g. Gemini) to read and add expenses'**
+  String get settings_app_functions_desc;
+
   /// No description provided for @settings_privacy.
   ///
   /// In en, this message translates to:

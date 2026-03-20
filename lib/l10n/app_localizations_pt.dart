@@ -52,6 +52,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get settings_flag_secure_title => 'Tela segura';
 
   @override
+  String get settings_app_functions_title => 'Acesso de agentes de IA';
+
+  @override
+  String get settings_app_functions_desc =>
+      'Permite que assistentes de IA (ex. Gemini) leiam e adicionem despesas';
+
+  @override
   String get settings_privacy => 'Privacidade';
 
   @override

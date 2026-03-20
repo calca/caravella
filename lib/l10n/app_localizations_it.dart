@@ -54,6 +54,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settings_flag_secure_title => 'Proteggi schermata';
 
   @override
+  String get settings_app_functions_title => 'Accesso agenti AI';
+
+  @override
+  String get settings_app_functions_desc =>
+      'Permetti agli assistenti AI (es. Gemini) di leggere e aggiungere spese';
+
+  @override
   String get settings_privacy => 'Privacy';
 
   @override
