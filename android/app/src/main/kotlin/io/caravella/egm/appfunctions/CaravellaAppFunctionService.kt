@@ -1,12 +1,20 @@
 package io.caravella.egm.appfunctions
 
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.IBinder
+import android.os.ResultReceiver
+import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.appfunctions.AppFunctionService
-import androidx.appfunctions.ExecuteAppFunctionRequest
+import androidx.appfunctions.AppFunctionData
+import androidx.appfunctions.AppFunctionException
+import androidx.appfunctions.AppFunctionInvalidArgumentException
+import androidx.appfunctions.AppFunctionElementNotFoundException
+import androidx.appfunctions.AppFunctionDisabledException
+import androidx.appfunctions.AppFunctionFunctionNotFoundException
 import androidx.appfunctions.ExecuteAppFunctionResponse
 import io.caravella.egm.MainActivity
 
@@ -32,13 +40,20 @@ import io.caravella.egm.MainActivity
  * Declared in AndroidManifest.xml – see app_function_declarations.xml for the
  * full parameter/return schema.
  *
- * Requires `androidx.appfunctions:appfunctions:1.0.0-alpha01` in
- * `android/app/build.gradle.kts`.
+ * Uses `androidx.appfunctions:appfunctions:1.0.0-alpha01` data types
+ * ([AppFunctionData], [ExecuteAppFunctionResponse]) for the response format.
+ *
+ * The service handles incoming intents with the following extras:
+ *  - `function_id` (String) – the function identifier to execute
+ *  - `parameters`  (Bundle) – the function parameters
+ *  - `result_receiver` (ResultReceiver) – optional callback for results
  */
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE) // API 34+
-class CaravellaAppFunctionService : AppFunctionService() {
+class CaravellaAppFunctionService : Service() {
 
     companion object {
+        private const val TAG = "CaravellaAppFunctions"
+
         const val FUNCTION_ADD_EXPENSE = "io.caravella.egm.addExpense"
         const val FUNCTION_GET_BALANCE = "io.caravella.egm.getGroupBalance"
         const val FUNCTION_GET_RECENT_EXPENSES = "io.caravella.egm.getRecentExpenses"
@@ -49,15 +64,59 @@ class CaravellaAppFunctionService : AppFunctionService() {
         private const val PARAM_CATEGORY_NAME = "categoryName"
         private const val PARAM_NOTE = "note"
 
-        // Error codes
-        private const val ERROR_NOT_FOUND = "FUNCTION_NOT_FOUND"
-        private const val ERROR_INVALID_ARG = "INVALID_ARGUMENT"
-        private const val ERROR_GROUP_NOT_FOUND = "GROUP_NOT_FOUND"
-        private const val ERROR_FUNCTIONS_DISABLED = "FUNCTIONS_DISABLED"
+        // Intent extras
+        const val EXTRA_FUNCTION_ID = "function_id"
+        const val EXTRA_PARAMETERS = "parameters"
+        const val EXTRA_RESULT_RECEIVER = "result_receiver"
+
+        // Result codes for ResultReceiver
+        const val RESULT_SUCCESS = 0
+        const val RESULT_ERROR = 1
 
         // Flutter SharedPreferences key (Flutter stores keys with "flutter." prefix)
         private const val FLUTTER_PREFS_NAME = "FlutterSharedPreferences"
         private const val PREF_KEY_APP_FUNCTIONS_ENABLED = "flutter.app_functions_enabled"
+    }
+
+    override fun onBind(intent: Intent?): IBinder? = null
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (intent == null) {
+            stopSelf(startId)
+            return START_NOT_STICKY
+        }
+
+        val functionId = intent.getStringExtra(EXTRA_FUNCTION_ID)
+        val params = intent.getBundleExtra(EXTRA_PARAMETERS) ?: Bundle()
+        val receiver = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra(EXTRA_RESULT_RECEIVER, ResultReceiver::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            intent.getParcelableExtra(EXTRA_RESULT_RECEIVER)
+        }
+
+        if (functionId == null) {
+            sendError(receiver, AppFunctionFunctionNotFoundException("No function_id in intent"))
+            stopSelf(startId)
+            return START_NOT_STICKY
+        }
+
+        val response = executeFunction(functionId, params)
+        when (response) {
+            is ExecuteAppFunctionResponse.Success -> {
+                receiver?.send(RESULT_SUCCESS, Bundle().apply {
+                    putString("return_value", response.returnValue.toString())
+                })
+            }
+            is ExecuteAppFunctionResponse.Error -> {
+                receiver?.send(RESULT_ERROR, Bundle().apply {
+                    putString("error_message", response.error.errorMessage)
+                })
+            }
+        }
+
+        stopSelf(startId)
+        return START_NOT_STICKY
     }
 
     /** Returns true when the user has enabled App Functions in the privacy settings. */
@@ -67,27 +126,38 @@ class CaravellaAppFunctionService : AppFunctionService() {
         return prefs.getBoolean(PREF_KEY_APP_FUNCTIONS_ENABLED, false)
     }
 
-    override suspend fun onExecuteFunction(
-        request: ExecuteAppFunctionRequest,
+    /**
+     * Routes [functionId] to the appropriate handler.
+     * @return [ExecuteAppFunctionResponse] using the AppFunctions library types.
+     */
+    private fun executeFunction(
+        functionId: String,
+        params: Bundle,
     ): ExecuteAppFunctionResponse {
         if (!isAppFunctionsEnabled()) {
-            return errorResponse(
-                ERROR_FUNCTIONS_DISABLED,
-                "App Functions are disabled. Enable them in Caravella Settings → Privacy.",
+            return ExecuteAppFunctionResponse.Error(
+                AppFunctionDisabledException(
+                    "App Functions are disabled. Enable them in Caravella Settings → Privacy.",
+                ),
             )
         }
         return try {
-            when (request.functionIdentifier) {
-                FUNCTION_ADD_EXPENSE -> handleAddExpense(request)
-                FUNCTION_GET_BALANCE -> handleGetBalance(request)
-                FUNCTION_GET_RECENT_EXPENSES -> handleGetRecentExpenses(request)
-                FUNCTION_GET_TODAY_TOTAL -> handleGetTodayTotal(request)
-                else -> errorResponse(ERROR_NOT_FOUND, "Unknown function: ${request.functionIdentifier}")
+            when (functionId) {
+                FUNCTION_ADD_EXPENSE -> handleAddExpense(params)
+                FUNCTION_GET_BALANCE -> handleGetBalance(params)
+                FUNCTION_GET_RECENT_EXPENSES -> handleGetRecentExpenses(params)
+                FUNCTION_GET_TODAY_TOTAL -> handleGetTodayTotal(params)
+                else -> ExecuteAppFunctionResponse.Error(
+                    AppFunctionFunctionNotFoundException("Unknown function: $functionId"),
+                )
             }
-        } catch (e: IllegalArgumentException) {
-            errorResponse(ERROR_INVALID_ARG, e.message ?: "Invalid argument")
+        } catch (e: AppFunctionException) {
+            ExecuteAppFunctionResponse.Error(e)
         } catch (e: Exception) {
-            errorResponse("INTERNAL_ERROR", e.message ?: "Internal error")
+            Log.e(TAG, "Error executing $functionId", e)
+            ExecuteAppFunctionResponse.Error(
+                AppFunctionInvalidArgumentException(e.message ?: "Internal error"),
+            )
         }
     }
 
@@ -95,45 +165,38 @@ class CaravellaAppFunctionService : AppFunctionService() {
     // Add Expense
     // ------------------------------------------------------------------
 
-    /**
-     * Handles the `addExpense` App Function.
-     *
-     * When the AI agent supplies a valid [PARAM_AMOUNT] (> 0), the expense is
-     * persisted **directly in the background** via [AppFunctionStorageReader]
-     * without starting the Flutter engine or opening the app UI.
-     *
-     * When no amount is provided (or amount == 0) the function falls back to
-     * launching [MainActivity] so the user can fill in the missing details.
-     */
-    private fun handleAddExpense(
-        request: ExecuteAppFunctionRequest,
-    ): ExecuteAppFunctionResponse {
-        val params = request.parameters
+    private fun handleAddExpense(params: Bundle): ExecuteAppFunctionResponse {
         val groupId = params.getString(PARAM_GROUP_ID)
-            ?: throw IllegalArgumentException("'$PARAM_GROUP_ID' is required for addExpense")
-        // Only treat amounts > 0 as "provided"; 0.0 means "not specified"
+            ?: throw AppFunctionInvalidArgumentException(
+                "'$PARAM_GROUP_ID' is required for addExpense",
+            )
         val amount: Double? = if (params.containsKey(PARAM_AMOUNT)) {
             params.getDouble(PARAM_AMOUNT).takeIf { it > 0.0 }
-        } else null
+        } else {
+            null
+        }
         val categoryName: String? = params.getString(PARAM_CATEGORY_NAME)
         val note: String? = params.getString(PARAM_NOTE)
 
         if (amount != null) {
-            // Background save – no app launch required
             return when (
                 val result = AppFunctionStorageReader.saveExpense(
                     this, groupId, amount, categoryName, note,
                 )
             ) {
-                is AppFunctionStorageReader.SaveExpenseResult.Success ->
-                    successResponse(Bundle().apply {
-                        putString("expenseId", result.expenseId)
-                        putString("groupId", groupId)
-                        putDouble("amount", amount)
-                    })
+                is AppFunctionStorageReader.SaveExpenseResult.Success -> {
+                    val data = AppFunctionData.Builder(FUNCTION_ADD_EXPENSE, groupId)
+                        .setString("expenseId", result.expenseId)
+                        .setString("groupId", groupId)
+                        .setDouble("amount", amount)
+                        .build()
+                    ExecuteAppFunctionResponse.Success(data)
+                }
 
                 is AppFunctionStorageReader.SaveExpenseResult.Failure ->
-                    errorResponse("SAVE_FAILED", result.reason)
+                    ExecuteAppFunctionResponse.Error(
+                        AppFunctionInvalidArgumentException(result.reason),
+                    )
             }
         }
 
@@ -151,102 +214,92 @@ class CaravellaAppFunctionService : AppFunctionService() {
         }
         startActivity(intent)
 
-        return successResponse(Bundle())
+        return ExecuteAppFunctionResponse.Success(AppFunctionData.EMPTY)
     }
 
     // ------------------------------------------------------------------
     // Get Group Balance
     // ------------------------------------------------------------------
 
-    private fun handleGetBalance(
-        request: ExecuteAppFunctionRequest,
-    ): ExecuteAppFunctionResponse {
-        val groupId = request.parameters.getString(PARAM_GROUP_ID)
-            ?: throw IllegalArgumentException("'$PARAM_GROUP_ID' is required for getGroupBalance")
+    private fun handleGetBalance(params: Bundle): ExecuteAppFunctionResponse {
+        val groupId = params.getString(PARAM_GROUP_ID)
+            ?: throw AppFunctionInvalidArgumentException(
+                "'$PARAM_GROUP_ID' is required for getGroupBalance",
+            )
 
         val result = AppFunctionStorageReader.getTotalBalance(this, groupId)
-            ?: throw IllegalArgumentException("$ERROR_GROUP_NOT_FOUND: $groupId")
+            ?: throw AppFunctionElementNotFoundException("Group not found: $groupId")
 
-        return successResponse(
-            Bundle().apply {
-                putString("groupId", result.groupId)
-                putString("groupTitle", result.groupTitle)
-                putDouble("totalBalance", result.totalBalance)
-                putString("currency", result.currency)
-            },
-        )
+        val data = AppFunctionData.Builder(FUNCTION_GET_BALANCE, groupId)
+            .setString("groupId", result.groupId)
+            .setString("groupTitle", result.groupTitle)
+            .setDouble("totalBalance", result.totalBalance)
+            .setString("currency", result.currency)
+            .build()
+        return ExecuteAppFunctionResponse.Success(data)
     }
 
     // ------------------------------------------------------------------
     // Get Recent Expenses
     // ------------------------------------------------------------------
 
-    private fun handleGetRecentExpenses(
-        request: ExecuteAppFunctionRequest,
-    ): ExecuteAppFunctionResponse {
-        val groupId = request.parameters.getString(PARAM_GROUP_ID)
-            ?: throw IllegalArgumentException("'$PARAM_GROUP_ID' is required for getRecentExpenses")
+    private fun handleGetRecentExpenses(params: Bundle): ExecuteAppFunctionResponse {
+        val groupId = params.getString(PARAM_GROUP_ID)
+            ?: throw AppFunctionInvalidArgumentException(
+                "'$PARAM_GROUP_ID' is required for getRecentExpenses",
+            )
 
         val result = AppFunctionStorageReader.getRecentExpenses(this, groupId, count = 3)
-            ?: throw IllegalArgumentException("$ERROR_GROUP_NOT_FOUND: $groupId")
+            ?: throw AppFunctionElementNotFoundException("Group not found: $groupId")
 
-        return successResponse(
-            Bundle().apply {
-                putString("groupId", result.groupId)
-                putString("groupTitle", result.groupTitle)
-                putString("currency", result.currency)
-                putInt("expenseCount", result.expenses.size)
-                result.expenses.forEachIndexed { index, expense ->
-                    val prefix = "expenses[$index]."
-                    putString("${prefix}id", expense.id)
-                    putString("${prefix}categoryName", expense.categoryName)
-                    if (expense.amount != null) putDouble("${prefix}amount", expense.amount)
-                    putString("${prefix}paidByName", expense.paidByName)
-                    putString("${prefix}date", expense.date)
-                    expense.note?.let { putString("${prefix}note", it) }
-                    expense.name?.let { putString("${prefix}name", it) }
-                }
-            },
-        )
+        val builder = AppFunctionData.Builder(FUNCTION_GET_RECENT_EXPENSES, groupId)
+            .setString("groupId", result.groupId)
+            .setString("groupTitle", result.groupTitle)
+            .setString("currency", result.currency)
+            .setInt("expenseCount", result.expenses.size)
+
+        result.expenses.forEachIndexed { index, expense ->
+            val prefix = "expenses[$index]."
+            builder.setString("${prefix}id", expense.id)
+            builder.setString("${prefix}categoryName", expense.categoryName)
+            if (expense.amount != null) builder.setDouble("${prefix}amount", expense.amount)
+            builder.setString("${prefix}paidByName", expense.paidByName)
+            builder.setString("${prefix}date", expense.date)
+            expense.note?.let { builder.setString("${prefix}note", it) }
+            expense.name?.let { builder.setString("${prefix}name", it) }
+        }
+        return ExecuteAppFunctionResponse.Success(builder.build())
     }
 
     // ------------------------------------------------------------------
     // Get Today Total
     // ------------------------------------------------------------------
 
-    private fun handleGetTodayTotal(
-        request: ExecuteAppFunctionRequest,
-    ): ExecuteAppFunctionResponse {
-        val groupId = request.parameters.getString(PARAM_GROUP_ID)
-            ?: throw IllegalArgumentException("'$PARAM_GROUP_ID' is required for getTodayTotal")
+    private fun handleGetTodayTotal(params: Bundle): ExecuteAppFunctionResponse {
+        val groupId = params.getString(PARAM_GROUP_ID)
+            ?: throw AppFunctionInvalidArgumentException(
+                "'$PARAM_GROUP_ID' is required for getTodayTotal",
+            )
 
         val result = AppFunctionStorageReader.getTodayTotal(this, groupId)
-            ?: throw IllegalArgumentException("$ERROR_GROUP_NOT_FOUND: $groupId")
+            ?: throw AppFunctionElementNotFoundException("Group not found: $groupId")
 
-        return successResponse(
-            Bundle().apply {
-                putString("groupId", result.groupId)
-                putString("groupTitle", result.groupTitle)
-                putDouble("todayTotal", result.todayTotal)
-                putString("currency", result.currency)
-            },
-        )
+        val data = AppFunctionData.Builder(FUNCTION_GET_TODAY_TOTAL, groupId)
+            .setString("groupId", result.groupId)
+            .setString("groupTitle", result.groupTitle)
+            .setDouble("todayTotal", result.todayTotal)
+            .setString("currency", result.currency)
+            .build()
+        return ExecuteAppFunctionResponse.Success(data)
     }
 
     // ------------------------------------------------------------------
-    // Response helpers
+    // Helpers
     // ------------------------------------------------------------------
 
-    /**
-     * Returns a successful [ExecuteAppFunctionResponse] carrying [data].
-     *
-     * Note: the exact constructor signature depends on the final
-     * `androidx.appfunctions:appfunctions` API.  Adjust if the released
-     * version uses a Builder or a different class hierarchy.
-     */
-    private fun successResponse(data: Bundle): ExecuteAppFunctionResponse =
-        ExecuteAppFunctionResponse.Success(data)
-
-    private fun errorResponse(code: String, message: String): ExecuteAppFunctionResponse =
-        ExecuteAppFunctionResponse.Failure(code, message)
+    private fun sendError(receiver: ResultReceiver?, exception: AppFunctionException) {
+        receiver?.send(RESULT_ERROR, Bundle().apply {
+            putString("error_message", exception.errorMessage)
+        })
+    }
 }

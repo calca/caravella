@@ -54,8 +54,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_app_functions_title => 'AI助手访问';
 
   @override
-  String get settings_app_functions_desc =>
-      '允许AI助手（如Gemini）读取和添加费用';
+  String get settings_app_functions_desc => '允许AI助手（如Gemini）读取和添加费用';
 
   @override
   String get settings_privacy => '隐私';
