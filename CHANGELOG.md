@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **Refactored expense group settings navigation from tabs to separate pages**
+  - Removed tab-based interface from group edit page
+  - Created 4 dedicated pages: General, Participants, Categories, and Other settings
+  - Improved navigation flow with direct page-to-page transitions
+  - Settings are now accessed individually from the group settings menu
+  - Each settings page maintains its own state and save logic
+
 ### Fixed
 - Expense amounts now correctly display decimal places in transaction lists
   - Previously amounts like 12.50 were shown as just "12"
