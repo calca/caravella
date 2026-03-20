@@ -46,7 +46,7 @@ dependencies:
   file_picker: ^10.3.10
   image_picker: ^1.2.1
   image_picker_android: ^0.8.13
-  image: ^4.7.2
+  image: ^4.8.0
   package_info_plus: ^9.0.0
 
   # The following adds the Cupertino Icons font to your application.
@@ -57,7 +57,7 @@ dependencies:
   url_launcher: ^6.3.2
   uuid: ^4.5.1
   share_plus: ^12.0.1
-  archive: ^4.0.7
+  archive: ^4.0.9
   flag_secure: ^2.0.2
   geolocator: ^14.0.2
   geocoding: ^4.0.0
@@ -67,16 +67,16 @@ dependencies:
   timeago: ^3.7.1
   gpt_markdown: ^1.1.5
   image_picker_platform_interface: ^2.11.1
-  flutter_local_notifications: ^20.0.0
+  flutter_local_notifications: ^21.0.0
   flutter_map: ^8.2.2
   latlong2: ^0.9.1
   in_app_review: ^2.0.11
   dynamic_color: ^1.8.1
   pdfx: ^2.9.2
-  video_player: ^2.10.1
+  video_player: ^2.11.1
   chewie: ^1.13.0
   zentoast: ^0.2.1
-  talker_flutter: ^5.1.13
+  talker_flutter: ^5.1.15
   # Conditional dependency: only included when ENABLE_PLAY_UPDATES=true
   play_store_updates:
     path: packages/play_store_updates
