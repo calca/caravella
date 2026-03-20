@@ -167,7 +167,7 @@ class _ParticipantsPageScaffoldState extends State<_ParticipantsPageScaffold> {
           },
           child: Scaffold(
             appBar: CaravellaAppBar(actions: const []),
-            body: const Padding(
+            body: const SingleChildScrollView(
               padding: EdgeInsets.all(20.0),
               child: ParticipantsEditor(),
             ),

@@ -164,7 +164,7 @@ class _CategoriesPageScaffoldState extends State<_CategoriesPageScaffold> {
           },
           child: Scaffold(
             appBar: CaravellaAppBar(actions: const []),
-            body: const Padding(
+            body: const SingleChildScrollView(
               padding: EdgeInsets.all(20.0),
               child: CategoriesEditor(),
             ),
