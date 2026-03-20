@@ -36,7 +36,7 @@ void main() {
     // When showDecimals is true, it splits the number into integer and decimal
     // with the decimal part in smaller font
     // Look for "12" and the decimal separator (. or ,) and "50"
-    expect(find.textContaining('12'), findsOneWidget);
+    expect(find.textContaining('12', findRichText: true), findsOneWidget);
     expect(find.text('€'), findsOneWidget);
 
     // The amount should be visible in the widget tree
@@ -83,7 +83,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // Should show decimal places even for whole numbers (25.00)
-    expect(find.textContaining('25'), findsOneWidget);
+    expect(find.textContaining('25', findRichText: true), findsOneWidget);
 
     final amountText = tester.widget<RichText>(
       find
@@ -126,7 +126,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // Should display both the integer and decimal parts
-    expect(find.textContaining('123'), findsOneWidget);
+    expect(find.textContaining('123', findRichText: true), findsOneWidget);
 
     final amountText = tester.widget<RichText>(
       find

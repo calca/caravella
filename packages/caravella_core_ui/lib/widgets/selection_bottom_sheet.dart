@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'app_toast.dart';
@@ -70,6 +71,8 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
   final FocusNode _inlineFocus = FocusNode();
   final ScrollController _scrollController = ScrollController();
   late List<T> _currentItems;
+  Timer? _focusDelayedScrollTimer;
+  Timer? _inputFieldScrollTimer;
 
   @override
   void didUpdateWidget(covariant _SelectionSheet<T> oldWidget) {
@@ -82,6 +85,8 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
 
   @override
   void dispose() {
+    _focusDelayedScrollTimer?.cancel();
+    _inputFieldScrollTimer?.cancel();
     _inlineController.dispose();
     _inlineFocus.dispose();
     _scrollController.dispose();
@@ -101,7 +106,8 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
           _scrollToInputField();
         });
         // Delayed scroll to account for keyboard animation
-        Future.delayed(const Duration(milliseconds: 300), () {
+        _focusDelayedScrollTimer?.cancel();
+        _focusDelayedScrollTimer = Timer(const Duration(milliseconds: 300), () {
           _scrollToInputField();
         });
       }
@@ -153,7 +159,8 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
 
     try {
       // Wait for layout to settle after keyboard animation
-      Future.delayed(const Duration(milliseconds: 150), () {
+      _inputFieldScrollTimer?.cancel();
+      _inputFieldScrollTimer = Timer(const Duration(milliseconds: 150), () {
         if (!_scrollController.hasClients || !mounted) return;
 
         // Scroll to bottom to ensure input field is visible above keyboard
