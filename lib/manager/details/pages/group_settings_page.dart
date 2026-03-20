@@ -4,7 +4,10 @@ import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:provider/provider.dart';
 
-import '../../group/pages/expenses_group_edit_page.dart';
+import '../../group/pages/expense_group_general_page.dart';
+import '../../group/pages/expense_group_participants_page.dart';
+import '../../group/pages/expense_group_categories_page.dart';
+import '../../group/pages/expense_group_other_page.dart';
 import '../../group/group_edit_mode.dart';
 import '../../../settings/widgets/settings_section.dart';
 import '../../../settings/widgets/settings_card.dart';
@@ -77,7 +80,7 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
                     style: textTheme.bodySmall,
                   ),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                  onTap: () => _openEditPage(context, 0),
+                  onTap: () => _openGeneralPage(context),
                 ),
               ),
               const SizedBox(height: 8),
@@ -92,7 +95,7 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
                     style: textTheme.bodySmall,
                   ),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                  onTap: () => _openEditPage(context, 1),
+                  onTap: () => _openParticipantsPage(context),
                 ),
               ),
               const SizedBox(height: 8),
@@ -107,7 +110,7 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
                     style: textTheme.bodySmall,
                   ),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                  onTap: () => _openEditPage(context, 2),
+                  onTap: () => _openCategoriesPage(context),
                 ),
               ),
               const SizedBox(height: 8),
@@ -122,7 +125,7 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
                     style: textTheme.bodySmall,
                   ),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                  onTap: () => _openEditPage(context, 3),
+                  onTap: () => _openOtherPage(context),
                 ),
               ),
             ],
@@ -219,13 +222,84 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
     );
   }
 
-  Future<void> _openEditPage(BuildContext context, int initialTab) async {
+  Future<void> _openGeneralPage(BuildContext context) async {
     final result = await Navigator.of(context).push<bool>(
       MaterialPageRoute(
-        builder: (ctx) => ExpensesGroupEditPage(
+        builder: (ctx) => ExpenseGroupGeneralPage(
           trip: _currentTrip,
           mode: GroupEditMode.edit,
-          initialTab: initialTab,
+        ),
+      ),
+    );
+
+    if (result == true && context.mounted) {
+      // Ricarica il gruppo aggiornato
+      final updatedGroup = await ExpenseGroupStorageV2.getTripById(
+        _currentTrip.id,
+      );
+      if (updatedGroup != null && mounted) {
+        setState(() {
+          _currentTrip = updatedGroup;
+        });
+      }
+      widget.onGroupUpdated?.call();
+    }
+  }
+
+  Future<void> _openParticipantsPage(BuildContext context) async {
+    final result = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (ctx) => ExpenseGroupParticipantsPage(
+          trip: _currentTrip,
+          mode: GroupEditMode.edit,
+        ),
+      ),
+    );
+
+    if (result == true && context.mounted) {
+      // Ricarica il gruppo aggiornato
+      final updatedGroup = await ExpenseGroupStorageV2.getTripById(
+        _currentTrip.id,
+      );
+      if (updatedGroup != null && mounted) {
+        setState(() {
+          _currentTrip = updatedGroup;
+        });
+      }
+      widget.onGroupUpdated?.call();
+    }
+  }
+
+  Future<void> _openCategoriesPage(BuildContext context) async {
+    final result = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (ctx) => ExpenseGroupCategoriesPage(
+          trip: _currentTrip,
+          mode: GroupEditMode.edit,
+        ),
+      ),
+    );
+
+    if (result == true && context.mounted) {
+      // Ricarica il gruppo aggiornato
+      final updatedGroup = await ExpenseGroupStorageV2.getTripById(
+        _currentTrip.id,
+      );
+      if (updatedGroup != null && mounted) {
+        setState(() {
+          _currentTrip = updatedGroup;
+        });
+      }
+      widget.onGroupUpdated?.call();
+    }
+  }
+
+  Future<void> _openOtherPage(BuildContext context) async {
+    final result = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (ctx) => ExpenseGroupOtherPage(
+          trip: _currentTrip,
+          mode: GroupEditMode.edit,
         ),
       ),
     );
