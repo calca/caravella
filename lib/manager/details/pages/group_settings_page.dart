@@ -261,6 +261,7 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
               ],
             ),
 
+
           // Dangerous section
           SettingsSection(
             title: gloc.danger_zone,

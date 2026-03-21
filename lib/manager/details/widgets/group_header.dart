@@ -142,6 +142,7 @@ class GroupHeader extends StatelessWidget {
         ? syncCoordinator.getGroupSyncState(trip.id)
         : null;
 
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
