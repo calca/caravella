@@ -356,62 +356,59 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
                   ),
                 ),
               ],
-              // List
+              // List with inline add as last item
               Expanded(
-                child: itemsToShow.isEmpty
-                    ? const SizedBox.shrink()
-                    : ListView.builder(
-                        controller: _scrollController,
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        itemCount: itemsToShow.length,
-                        itemBuilder: (ctx, i) {
-                          final item = itemsToShow[i];
-                          final isSel = widget.selected == item;
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 2),
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(12),
-                              onTap: () => Navigator.of(context).pop(item),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: isSel
-                                      ? theme.colorScheme.surfaceContainerHigh
-                                      : Colors.transparent,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 12,
-                                ),
-                                child: Text(
-                                  widget.itemLabel(item),
-                                  style: theme.textTheme.bodyMedium?.copyWith(
-                                    color: isSel
-                                        ? theme.colorScheme.onPrimaryContainer
-                                        : theme.textTheme.bodyMedium?.color,
-                                    fontWeight: isSel ? FontWeight.w600 : null,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-              ),
-              // Inline add functionality
-              if (widget.onAddItemInline != null) ...[
-                Padding(
+                child: ListView.builder(
+                  controller: _scrollController,
                   padding: EdgeInsets.fromLTRB(
                     16,
-                    8,
+                    0,
                     16,
                     16 + MediaQuery.of(context).viewInsets.bottom,
                   ),
-                  child: _inlineAdding
-                      ? _buildInlineAddRow()
-                      : _buildInlineAddButton(),
+                  itemCount: itemsToShow.length +
+                      (widget.onAddItemInline != null ? 1 : 0),
+                  itemBuilder: (ctx, i) {
+                    // Last item: inline add widget
+                    if (widget.onAddItemInline != null &&
+                        i == itemsToShow.length) {
+                      return _inlineAdding
+                          ? _buildInlineAddRow()
+                          : _buildInlineAddButton();
+                    }
+                    final item = itemsToShow[i];
+                    final isSel = widget.selected == item;
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 2),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(12),
+                        onTap: () => Navigator.of(context).pop(item),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: isSel
+                                ? theme.colorScheme.surfaceContainerHigh
+                                : Colors.transparent,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
+                          child: Text(
+                            widget.itemLabel(item),
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: isSel
+                                  ? theme.colorScheme.onPrimaryContainer
+                                  : theme.textTheme.bodyMedium?.color,
+                              fontWeight: isSel ? FontWeight.w600 : null,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
-              ],
+              ),
             ],
           ),
         );

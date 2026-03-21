@@ -170,6 +170,53 @@ void main() {
       ); // Cancel button
     });
 
+    testWidgets('Add button is inside the scrollable list, not fixed at bottom',
+        (tester) async {
+      final testItems = ['Item 1', 'Item 2', 'Item 3'];
+
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: gen.AppLocalizations.localizationsDelegates,
+          supportedLocales: gen.AppLocalizations.supportedLocales,
+          home: Builder(
+            builder: (context) => Scaffold(
+              body: ElevatedButton(
+                onPressed: () async {
+                  await showSelectionBottomSheet<String>(
+                    context: context,
+                    items: testItems,
+                    selected: null,
+                    itemLabel: (item) => item,
+                    onAddItemInline: (name) async {},
+                    addItemHint: 'Add new item',
+                    addCategoryLabel: 'Add item',
+                  );
+                },
+                child: const Text('Open Modal'),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      // Open the bottom sheet
+      await tester.tap(find.text('Open Modal'));
+      await tester.pumpAndSettle();
+
+      // Verify the add button is present
+      expect(find.text('Add item'), findsOneWidget);
+
+      // Verify the add button is inside the ListView (scrollable list),
+      // not a separate widget below the list
+      final addButton = find.text('Add item');
+      final listView = find.byType(ListView);
+      expect(listView, findsOneWidget);
+      expect(
+        find.descendant(of: listView, matching: addButton),
+        findsOneWidget,
+      );
+    });
+
     testWidgets('Modal sheet handles empty items list', (tester) async {
       final testItems = <String>[];
 
