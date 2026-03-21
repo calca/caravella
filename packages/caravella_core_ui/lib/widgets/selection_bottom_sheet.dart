@@ -366,8 +366,9 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
                     16,
                     16 + MediaQuery.of(context).viewInsets.bottom,
                   ),
-                  itemCount: itemsToShow.length +
-                      (widget.onAddItemInline != null ? 1 : 0),
+                  itemCount: widget.onAddItemInline != null
+                      ? itemsToShow.length + 1
+                      : itemsToShow.length,
                   itemBuilder: (ctx, i) {
                     // Last item: inline add widget
                     if (widget.onAddItemInline != null &&
