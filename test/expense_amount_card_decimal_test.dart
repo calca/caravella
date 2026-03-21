@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:io_caravella_egm/manager/details/widgets/expense_amount_card.dart';
 import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart';
 
 /// Tests that ExpenseAmountCard correctly displays decimal places in amounts
@@ -45,7 +46,7 @@ void main() {
     final amountText = tester.widget<RichText>(
       find
           .descendant(
-            of: find.byType(ExpenseAmountCard),
+            of: find.byType(CurrencyDisplay),
             matching: find.byType(RichText),
           )
           .first,
@@ -88,7 +89,7 @@ void main() {
     final amountText = tester.widget<RichText>(
       find
           .descendant(
-            of: find.byType(ExpenseAmountCard),
+            of: find.byType(CurrencyDisplay),
             matching: find.byType(RichText),
           )
           .first,
@@ -131,7 +132,7 @@ void main() {
     final amountText = tester.widget<RichText>(
       find
           .descendant(
-            of: find.byType(ExpenseAmountCard),
+            of: find.byType(CurrencyDisplay),
             matching: find.byType(RichText),
           )
           .first,
