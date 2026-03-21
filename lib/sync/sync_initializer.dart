@@ -1,8 +1,8 @@
 import 'models/supabase_config.dart';
 import 'services/supabase_client_service.dart';
 import 'services/revenue_cat_service.dart';
-import 'services/auth_service.dart';
-import '../data/services/logger_service.dart';
+import 'package:caravella_core/caravella_core.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 /// Initialize the multi-device sync system
 /// Call this during app startup, after other initializations
@@ -56,13 +56,13 @@ class SyncInitializer {
         try {
           final revenueCat = RevenueCatService();
           
-          // Get current user ID from auth if available
-          final authService = AuthService();
-          final userId = authService.currentUser?.id;
+          // Use account number as RevenueCat user ID
+          const storage = FlutterSecureStorage();
+          final accountNumber = await storage.read(key: 'accountNumber');
           
           await revenueCat.initialize(
             apiKey: rcApiKey,
-            userId: userId,
+            userId: accountNumber,
           );
           
           LoggerService.info('RevenueCat initialized successfully');

@@ -1,8 +1,5 @@
 import 'package:io_caravella_egm/manager/details/widgets/export_options_sheet.dart';
-import 'package:io_caravella_egm/manager/details/widgets/options_sheet.dart';
 
-import '../../group/pages/expenses_group_edit_page.dart';
-import '../../group/group_edit_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:caravella_core/caravella_core.dart';
@@ -34,6 +31,7 @@ import '../export/markdown_exporter.dart';
 import '../../../services/notification_manager.dart';
 
 import 'unified_overview_page.dart';
+import 'group_settings_page.dart';
 
 class ExpenseGroupDetailPage extends StatefulWidget {
   final ExpenseGroup trip;
@@ -76,6 +74,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   bool _fabVisible = true; // controllo visibilità totale
   Timer? _fabIdleTimer; // timer per ri-mostrare il FAB dopo inattività
   bool _collapsedTitleVisible = false; // mostra titolo in appbar dopo scroll
+  String? _newlyAddedExpenseId; // ID della spesa appena aggiunta per animazione
 
   @override
   void initState() {
@@ -467,120 +466,41 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     );
   }
 
-  void _showOptionsSheet() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (sheetCtx) => OptionsSheet(
-        trip: _trip!,
-        onPinToggle: () async {
-          if (_trip == null) return;
-          final nav = Navigator.of(sheetCtx);
-          // Use the notifier to update pin state (handles storage + shortcuts)
-          await Provider.of<ExpenseGroupNotifier>(
-            context,
-            listen: false,
-          ).updateGroupPin(_trip!.id, !_trip!.pinned);
-          await _refreshGroup();
-          if (!mounted) return;
-          nav.pop();
-        },
-        onArchiveToggle: () async {
-          if (_trip == null) return;
-          final nav = Navigator.of(sheetCtx);
-          // Use notifier to archive/unarchive (handles storage + shortcuts)
-          await Provider.of<ExpenseGroupNotifier>(
-            context,
-            listen: false,
-          ).updateGroupArchive(_trip!.id, !_trip!.archived);
-          await _refreshGroup();
-          if (!mounted) return;
-          nav.pop();
-        },
-        onEdit: () async {
-          if (_trip == null) return;
-          final nav = Navigator.of(sheetCtx);
-          nav.pop();
-          await Future.delayed(const Duration(milliseconds: 200));
-          if (!mounted) return;
-          await nav.push(
-            MaterialPageRoute(
-              builder: (ctx) =>
-                  ExpensesGroupEditPage(trip: _trip!, mode: GroupEditMode.edit),
-            ),
-          );
-          await _refreshGroup();
-        },
-        onExportShare: () async {
-          final nav = Navigator.of(sheetCtx);
-          nav.pop();
-          await Future.delayed(const Duration(milliseconds: 200));
-          if (!mounted) return;
-          _showExportOptionsSheet();
-        },
-        onShareQr: () async {
-          final nav = Navigator.of(sheetCtx);
-          nav.pop();
-          await Future.delayed(const Duration(milliseconds: 200));
-          if (!mounted) return;
-          _showShareQrPage();
-        },
-        onManageDevices: () async {
-          final nav = Navigator.of(sheetCtx);
-          nav.pop();
-          await Future.delayed(const Duration(milliseconds: 200));
-          if (!mounted) return;
-          _showDeviceManagement();
-        },
-        onForceSync: _trip!.syncEnabled ? () async {
-          final nav = Navigator.of(sheetCtx);
-          nav.pop();
-          await Future.delayed(const Duration(milliseconds: 200));
-          if (!mounted) return;
-          await _forceSync();
-        } : null,
-        onDelete: () async {
-          final nav = Navigator.of(sheetCtx);
-          final rootNav = Navigator.of(context);
-          final confirmed = await showDialog<bool>(
-            context: context,
-            builder: (dialogCtx) => Material3Dialog(
-              icon: Icon(
-                Icons.delete_outline,
-                color: Theme.of(context).colorScheme.error,
-                size: 24,
-              ),
-              title: Text(gen.AppLocalizations.of(dialogCtx).delete_group),
-              content: Text(
-                gen.AppLocalizations.of(dialogCtx).delete_group_confirm,
-              ),
-              actions: [
-                Material3DialogActions.cancel(
-                  dialogCtx,
-                  gen.AppLocalizations.of(dialogCtx).cancel,
-                ),
-                Material3DialogActions.destructive(
-                  dialogCtx,
-                  gen.AppLocalizations.of(dialogCtx).delete,
-                  onPressed: () => Navigator.of(dialogCtx).pop(true),
-                ),
-              ],
-            ),
-          );
-          if (confirmed == true && _trip != null) {
-            // Use the storage delete helper which handles persistence atomically
-            await ExpenseGroupStorageV2.deleteGroup(_trip!.id);
-            // Keep behavior consistent: invalidate cache and notify listeners
-            ExpenseGroupStorageV2.forceReload();
-            _groupNotifier?.notifyGroupDeleted(_trip!.id);
+  void _showSettingsPage() async {
+    if (_trip == null) return;
 
-            if (!context.mounted) return;
-            nav.pop(); // close sheet
-            rootNav.pop(true); // go back to list
-          }
-        },
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (ctx) => GroupSettingsPage(
+          trip: _trip!,
+          onGroupUpdated: _refreshGroup,
+          onGroupDeleted: () {
+            if (mounted) {
+              Navigator.of(context).pop(true); // Return to home
+            }
+          },
+          onExportOptions: _showExportOptionsSheet,
+          onShareQr: _showShareQrPage,
+          onManageDevices: _showDeviceManagement,
+          onForceSync: _trip!.syncEnabled ? _forceSync : null,
+        ),
       ),
     );
+
+    // Refresh after returning from settings
+    await _refreshGroup();
+  }
+
+  Future<void> _handlePinToggle() async {
+    if (_trip == null) return;
+
+    // Use the notifier to update pin state (handles storage + shortcuts)
+    await Provider.of<ExpenseGroupNotifier>(
+      context,
+      listen: false,
+    ).updateGroupPin(_trip!.id, !_trip!.pinned);
+
+    await _refreshGroup();
   }
 
   void _showDeleteExpenseDialog(ExpenseDetails expense) {
@@ -613,17 +533,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           );
 
           // Update notification if enabled
-          if (_trip?.notificationEnabled == true) {
-            final updatedGroup = await ExpenseGroupStorageV2.getTripById(
-              _trip!.id,
-            );
-            if (updatedGroup != null) {
-              await NotificationManager().updateNotificationForGroup(
-                updatedGroup,
-                gloc,
-              );
-            }
-          }
+          await NotificationManager().updateNotificationForGroupById(
+            _trip!.id,
+            gloc,
+          );
         },
       ),
     );
@@ -641,9 +554,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               onExpenseSaved: (newExpense) async {
                 final sheetCtx = context; // expense form page context
                 final gloc = gen.AppLocalizations.of(sheetCtx);
-                final expenseWithId = newExpense.copyWith(
-                  id: DateTime.now().millisecondsSinceEpoch.toString(),
-                );
+                final newExpenseId = DateTime.now().millisecondsSinceEpoch
+                    .toString();
+                final expenseWithId = newExpense.copyWith(id: newExpenseId);
 
                 // Persist using the new storage API
                 await ExpenseGroupStorageV2.addExpenseToGroup(
@@ -651,38 +564,45 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                   expenseWithId,
                 );
 
+                // Set the newly added expense ID for animation
+                if (mounted) {
+                  setState(() {
+                    _newlyAddedExpenseId = newExpenseId;
+                  });
+                }
+
                 // Refresh local state and notifier
                 await _refreshGroup();
                 _groupNotifier?.notifyGroupUpdated(widget.trip.id);
 
                 // Update notification if enabled
-                if (_trip?.notificationEnabled == true) {
-                  final updatedGroup = await ExpenseGroupStorageV2.getTripById(
-                    widget.trip.id,
-                  );
-                  if (updatedGroup != null) {
-                    await NotificationManager().updateNotificationForGroup(
-                      updatedGroup,
-                      gloc,
-                    );
-                  }
-                }
+                await NotificationManager().updateNotificationForGroupById(
+                  widget.trip.id,
+                  gloc,
+                );
 
                 // Check if we should prompt for rating
                 // This is done after successful expense save
                 RatingService.checkAndPromptForRating();
 
-                if (!sheetCtx.mounted) return;
-                AppToast.show(
-                  sheetCtx,
-                  gloc.expense_added_success,
-                  type: ToastType.success,
-                );
+                // Clear the animation ID after a short delay to allow re-animation
+                // for subsequent additions
+                Future.delayed(const Duration(milliseconds: 500), () {
+                  if (mounted) {
+                    setState(() {
+                      _newlyAddedExpenseId = null;
+                    });
+                  }
+                });
                 // Note: nav.pop() removed - ExpenseFormComponent handles navigation
                 // when shouldAutoClose is true to avoid double pop back to home
               },
               onCategoryAdded: (categoryName) async {
                 await _groupNotifier?.addCategory(categoryName);
+                await _refreshGroup();
+              },
+              onParticipantAdded: (participantName) async {
+                await _groupNotifier?.addParticipant(participantName);
                 await _refreshGroup();
               },
             ),
@@ -720,17 +640,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                 _groupNotifier?.notifyGroupUpdated(_trip!.id);
 
                 // Update notification if enabled
-                if (_trip?.notificationEnabled == true) {
-                  final updatedGroup = await ExpenseGroupStorageV2.getTripById(
-                    _trip!.id,
-                  );
-                  if (updatedGroup != null) {
-                    await NotificationManager().updateNotificationForGroup(
-                      updatedGroup,
-                      gloc,
-                    );
-                  }
-                }
+                await NotificationManager().updateNotificationForGroupById(
+                  _trip!.id,
+                  gloc,
+                );
 
                 if (!sheetCtx.mounted) return;
                 AppToast.show(
@@ -743,6 +656,10 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
               },
               onCategoryAdded: (categoryName) async {
                 await _groupNotifier?.addCategory(categoryName);
+                await _refreshGroup();
+              },
+              onParticipantAdded: (participantName) async {
+                await _groupNotifier?.addParticipant(participantName);
                 await _refreshGroup();
               },
               onDelete: () {
@@ -830,152 +747,156 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
     final colorScheme = Theme.of(context).colorScheme;
-    final totalExpenses = trip.expenses.fold<double>(
-      0,
-      (sum, s) => sum + (s.amount ?? 0),
-    );
+    final totalExpenses = trip.getTotalExpenses();
     final showCollapsedTitle = _hideHeader || _collapsedTitleVisible;
 
-    return Scaffold(
-      body: CustomScrollView(
-        controller: _scrollController,
-        slivers: [
-          SliverAppBar(
-            pinned: true,
-            floating: false,
-            elevation: 0,
-            scrolledUnderElevation: 1,
-            backgroundColor: colorScheme.surfaceContainer,
-            foregroundColor: colorScheme.onSurface,
-            toolbarHeight: 56,
-            collapsedHeight: 56,
-            centerTitle: false,
-            title: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 220),
-              switchInCurve: Curves.easeOut,
-              switchOutCurve: Curves.easeIn,
-              child: showCollapsedTitle
-                  ? Text(
-                      trip.title,
-                      key: const ValueKey('appbar-title'),
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: colorScheme.onSurface,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    )
-                  : const SizedBox(key: ValueKey('appbar-empty')),
-            ),
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back_rounded),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: AnimatedSize(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-              alignment: Alignment.topCenter,
-              child: AnimatedSwitcher(
+    return AppSystemUI.surface(
+      child: Scaffold(
+        body: CustomScrollView(
+          controller: _scrollController,
+          slivers: [
+            SliverAppBar(
+              pinned: true,
+              floating: false,
+              elevation: 0,
+              scrolledUnderElevation: 1,
+              backgroundColor: colorScheme.surfaceContainer,
+              foregroundColor: colorScheme.onSurface,
+              toolbarHeight: 56,
+              collapsedHeight: 56,
+              centerTitle: false,
+              title: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 220),
                 switchInCurve: Curves.easeOut,
                 switchOutCurve: Curves.easeIn,
-                transitionBuilder: (child, animation) => FadeTransition(
-                  opacity: animation,
-                  child: SizeTransition(
-                    sizeFactor: animation,
-                    axisAlignment: -1.0,
-                    child: child,
+                child: showCollapsedTitle
+                    ? Text(
+                        trip.title,
+                        key: const ValueKey('appbar-title'),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
+                              color: colorScheme.onSurface,
+                              fontWeight: FontWeight.w600,
+                            ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      )
+                    : const SizedBox(key: ValueKey('appbar-empty')),
+              ),
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back_rounded),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: AnimatedSize(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                alignment: Alignment.topCenter,
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 220),
+                  switchInCurve: Curves.easeOut,
+                  switchOutCurve: Curves.easeIn,
+                  transitionBuilder: (child, animation) => FadeTransition(
+                    opacity: animation,
+                    child: SizeTransition(
+                      sizeFactor: animation,
+                      axisAlignment: -1.0,
+                      child: child,
+                    ),
                   ),
-                ),
-                child: _hideHeader
-                    ? const SizedBox.shrink(key: ValueKey('header-hidden'))
-                    : Container(
-                        key: const ValueKey('header-visible'),
-                        width: double.infinity,
-                        color: colorScheme.surfaceContainer,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              GroupHeader(trip: trip),
-                              const SizedBox(height: 32),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: GroupTotal(
-                                      total: totalExpenses,
-                                      currency: trip.currency,
+                  child: _hideHeader
+                      ? const SizedBox.shrink(key: ValueKey('header-hidden'))
+                      : Container(
+                          key: const ValueKey('header-visible'),
+                          width: double.infinity,
+                          color: colorScheme.surfaceContainer,
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                GroupHeader(
+                                  trip: trip,
+                                  onPinToggle: _handlePinToggle,
+                                ),
+                                const SizedBox(height: 32),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: GroupTotal(
+                                        total: totalExpenses,
+                                        currency: trip.currency,
+                                      ),
                                     ),
-                                  ),
-                                  GroupActions(
-                                    hasExpenses: trip.expenses.isNotEmpty,
-                                    onOverview: trip.expenses.isNotEmpty
-                                        ? _openUnifiedOverviewPage
-                                        : null,
-                                    onOptions: _showOptionsSheet,
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 24),
-                            ],
+                                    GroupActions(
+                                      hasExpenses: trip.expenses.isNotEmpty,
+                                      onOverview: trip.expenses.isNotEmpty
+                                          ? _openUnifiedOverviewPage
+                                          : null,
+                                      onOptions: _showSettingsPage,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 24),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
+                ),
               ),
             ),
-          ),
-          SliverToBoxAdapter(
-            child: Container(
-              color: colorScheme
-                  .surfaceContainer, // background behind the decorated box
+            SliverToBoxAdapter(
               child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
+                color: colorScheme
+                    .surfaceContainer, // background behind the decorated box
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: colorScheme.surface,
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(24),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        FilteredExpenseList(
+                          expenses: trip.expenses,
+                          currency: trip.currency,
+                          onExpenseTap: _openEditExpense,
+                          categories: trip.categories,
+                          participants: trip.participants,
+                          onFiltersVisibilityChanged: (visible) {
+                            if (mounted) {
+                              setState(() => _hideHeader = visible);
+                            }
+                          },
+                          onAddExpense: _showAddExpenseSheet,
+                          newlyAddedExpenseId: _newlyAddedExpenseId,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SliverPadding(
+              padding: const EdgeInsets.only(bottom: 0),
+              sliver: SliverToBoxAdapter(
+                child: Container(
+                  height: _calculateBottomPadding(),
                   color: colorScheme.surface,
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(24),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      FilteredExpenseList(
-                        expenses: trip.expenses,
-                        currency: trip.currency,
-                        onExpenseTap: _openEditExpense,
-                        categories: trip.categories,
-                        participants: trip.participants,
-                        onFiltersVisibilityChanged: (visible) {
-                          if (mounted) {
-                            setState(() => _hideHeader = visible);
-                          }
-                        },
-                        onAddExpense: _showAddExpenseSheet,
-                      ),
-                    ],
-                  ),
                 ),
               ),
             ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.only(bottom: 0),
-            sliver: SliverToBoxAdapter(
-              child: Container(
-                height: _calculateBottomPadding(),
-                color: colorScheme.surface,
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
+        floatingActionButton: _buildAnimatedFab(colorScheme),
       ),
-      floatingActionButton: _buildAnimatedFab(colorScheme),
     );
   }
 }

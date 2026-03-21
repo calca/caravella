@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../data/services/logger_service.dart';
+import 'package:caravella_core/caravella_core.dart';
 import '../../data/expense_group_storage_v2.dart';
 import '../widgets/qr_scanner_widget.dart';
 import '../services/group_sync_coordinator.dart';

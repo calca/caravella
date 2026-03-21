@@ -18,7 +18,9 @@ class ExpenseFormFields extends StatelessWidget {
   final List<ExpenseParticipant> participants;
   final List<ExpenseCategory> categories;
   final Function(String) onCategoryAdded;
+  final Function(String)? onParticipantAdded;
   final Function(List<ExpenseCategory>) onCategoriesUpdated;
+  final Function(List<ExpenseParticipant>)? onParticipantsUpdated;
   final bool fullEdit;
   final bool autoLocationEnabled;
   final ExpenseLocation? location;
@@ -35,6 +37,7 @@ class ExpenseFormFields extends StatelessWidget {
     required this.participants,
     required this.categories,
     required this.onCategoryAdded,
+    this.onParticipantAdded,
     required this.fullEdit,
     required this.autoLocationEnabled,
     required this.location,
@@ -43,6 +46,7 @@ class ExpenseFormFields extends StatelessWidget {
     required this.currency,
     required this.onSaveExpense,
     required this.onCategoriesUpdated,
+    this.onParticipantsUpdated,
     required this.isInitialExpense,
     this.isReadOnly = false,
   });
@@ -150,14 +154,12 @@ class ExpenseFormFields extends StatelessWidget {
             ParticipantSelectorWidget(
               participants: participants.map((p) => p.name).toList(),
               selectedParticipant: controller.state.paidBy?.name,
-              onParticipantSelected: (name) => controller.updatePaidBy(
-                participants.firstWhere(
-                  (p) => p.name == name,
-                  orElse: () => participants.isNotEmpty
-                      ? participants.first
-                      : ExpenseParticipant(name: ''),
-                ),
-              ),
+              onParticipantSelected: (name) {
+                _selectParticipantByName(name);
+              },
+              onAddParticipantInline: onParticipantAdded != null
+                  ? (name) => _onAddParticipantInline(context, name)
+                  : null,
               textStyle: style,
               fullEdit: true,
               enabled: !isReadOnly,
@@ -201,14 +203,16 @@ class ExpenseFormFields extends StatelessWidget {
           ParticipantSelectorWidget(
             participants: participants.map((p) => p.name).toList(),
             selectedParticipant: controller.state.paidBy?.name,
-            onParticipantSelected: (name) => controller.updatePaidBy(
-              participants.firstWhere(
-                (p) => p.name == name,
-                orElse: () => participants.isNotEmpty
-                    ? participants.first
-                    : ExpenseParticipant(name: ''),
-              ),
-            ),
+            onParticipantSelected: (name) {
+              LoggerService.info(
+                'Participant selected from modal: "$name". Current participants count: ${participants.length}',
+                name: 'expense.participant',
+              );
+              _selectParticipantByName(name);
+            },
+            onAddParticipantInline: onParticipantAdded != null
+                ? (name) => _onAddParticipantInline(context, name)
+                : null,
             textStyle: style,
             fullEdit: false,
             enabled: !isReadOnly,
@@ -284,5 +288,82 @@ class ExpenseFormFields extends StatelessWidget {
     await Future.delayed(const Duration(milliseconds: 100));
     // Notify parent to update categories list
     // The parent will handle finding the new category and updating the controller
+  }
+
+  Future<void> _onAddParticipantInline(
+    BuildContext context,
+    String participantName,
+  ) async {
+    if (onParticipantAdded == null) return;
+    onParticipantAdded!(participantName);
+    await Future.delayed(const Duration(milliseconds: 100));
+    // Notify parent to update participants list
+    // The parent will handle finding the new participant and updating the controller
+  }
+
+  /// Selects a participant by name with retry mechanism for newly added participants
+  void _selectParticipantByName(String name) {
+    LoggerService.info(
+      'Selecting participant by name: "$name", current participants: ${participants.map((p) => p.name).toList()}',
+      name: 'expense.participant',
+    );
+
+    // First try to find the participant in the current list
+    final found = participants.where((p) => p.name == name).firstOrNull;
+
+    if (found != null) {
+      // Participant found in list, use it immediately
+      LoggerService.info(
+        'Found participant immediately: ${found.name} (ID: ${found.id})',
+        name: 'expense.participant',
+      );
+      controller.updatePaidBy(found);
+    } else {
+      // Participant not yet in list (newly added), wait for list update
+      LoggerService.warning(
+        'Participant not found immediately, starting retry mechanism',
+        name: 'expense.participant',
+      );
+      _waitForParticipantAndSelect(name);
+    }
+  }
+
+  /// Waits for participant to appear in list and then selects it
+  Future<void> _waitForParticipantAndSelect(String name) async {
+    // Try multiple times with progressive delays - increased timeouts
+    final delays = [50, 100, 150, 200, 300, 500, 700]; // Total: 2 seconds max
+
+    LoggerService.info(
+      'Starting participant wait cycle for: "$name"',
+      name: 'expense.participant',
+    );
+
+    for (int i = 0; i < delays.length; i++) {
+      await Future.delayed(Duration(milliseconds: delays[i]));
+
+      // Refresh the participant list to get the latest state
+      onParticipantsUpdated?.call(participants);
+
+      final found = participants.where((p) => p.name == name).firstOrNull;
+      if (found != null) {
+        LoggerService.info(
+          'Found participant after ${i + 1} retries: ${found.name} (ID: ${found.id})',
+          name: 'expense.participant',
+        );
+        controller.updatePaidBy(found);
+        return;
+      }
+
+      LoggerService.debug(
+        'Retry ${i + 1}/${delays.length}: Participant "$name" not yet available. Current participants: ${participants.map((p) => p.name).toList()}',
+        name: 'expense.participant',
+      );
+    }
+
+    // If still not found after all retries, log error but don't create temp participant
+    LoggerService.error(
+      'Failed to find participant "$name" after all retries. This indicates a synchronization issue.',
+      name: 'expense.participant',
+    );
   }
 }

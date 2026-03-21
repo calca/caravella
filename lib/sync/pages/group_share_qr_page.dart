@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../data/model/expense_group.dart';
-import '../../data/services/logger_service.dart';
+
+import 'package:caravella_core/caravella_core.dart';
 import '../../data/expense_group_storage_v2.dart';
 import '../services/qr_generation_service.dart';
 import '../services/group_sync_coordinator.dart';

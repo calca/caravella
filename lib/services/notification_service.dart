@@ -45,7 +45,7 @@ class NotificationService {
 
     try {
       final initialized = await _notifications.initialize(
-        initSettings,
+        settings: initSettings,
         onDidReceiveNotificationResponse: _onNotificationTap,
       );
 
@@ -281,10 +281,10 @@ class NotificationService {
 
     try {
       await _notifications.show(
-        notificationId,
-        title,
-        content,
-        details,
+        id: notificationId,
+        title: title,
+        body: content,
+        notificationDetails: details,
         payload: group.id, // Pass group ID for navigation
       );
 
@@ -305,7 +305,7 @@ class NotificationService {
 
   Future<void> cancelGroupNotification(String groupId) async {
     final notificationId = _getNotificationId(groupId);
-    await _notifications.cancel(notificationId);
+    await _notifications.cancel(id: notificationId);
   }
 
   Future<void> cancelAllNotifications() async {

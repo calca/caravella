@@ -3,7 +3,7 @@ import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../services/revenue_cat_service.dart';
 import '../models/subscription_tier.dart';
-import '../../data/services/logger_service.dart';
+import 'package:caravella_core/caravella_core.dart';
 import '../../widgets/toast.dart';
 
 /// Subscription page for purchasing BASIC or PREMIUM plans

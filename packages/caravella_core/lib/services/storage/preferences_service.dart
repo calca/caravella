@@ -22,6 +22,12 @@ abstract class _PreferenceKeys {
   static const String totalExpenseCount = 'total_expense_count';
   static const String lastRatingPrompt = 'last_rating_prompt';
   static const String hasShownInitialRating = 'has_shown_initial_rating';
+
+  // App State
+  static const String isFirstStart = 'is_first_start';
+
+  // App Functions
+  static const String appFunctionsEnabled = 'app_functions_enabled';
 }
 
 /// Default values for preferences
@@ -32,6 +38,8 @@ abstract class _PreferenceDefaults {
   static const bool autoBackupEnabled = false;
   static const int totalExpenseCount = 0;
   static const bool hasShownInitialRating = false;
+  static const bool isFirstStart = true;
+  static const bool appFunctionsEnabled = false;
 }
 
 /// Centralized service for managing SharedPreferences.
@@ -119,6 +127,20 @@ class PreferencesService {
 
   /// Store rating preferences management
   StoreRatingPreferences get storeRating => StoreRatingPreferences._(_prefs);
+
+  // ============================================================================
+  // App State Preferences
+  // ============================================================================
+
+  /// App state preferences management
+  AppStatePreferences get appState => AppStatePreferences._(_prefs);
+
+  // ============================================================================
+  // App Functions Preferences
+  // ============================================================================
+
+  /// App Functions (AI agent integration) preferences management
+  AppFunctionsPreferences get appFunctions => AppFunctionsPreferences._(_prefs);
 
   // ============================================================================
   // Utility Methods
@@ -325,5 +347,49 @@ class StoreRatingPreferences {
   /// Set whether initial rating prompt has been shown
   Future<void> setHasShownInitialPrompt(bool shown) async {
     await _prefs.setBool(_PreferenceKeys.hasShownInitialRating, shown);
+  }
+}
+
+// ==============================================================================
+// App State Preferences
+// ==============================================================================
+
+/// Manages app state-related preferences
+class AppStatePreferences {
+  AppStatePreferences._(this._prefs);
+  final SharedPreferences _prefs;
+
+  /// Get whether this is the first start (default: true)
+  /// Returns false after user completes the group creation wizard
+  bool isFirstStart() {
+    return _prefs.getBool(_PreferenceKeys.isFirstStart) ??
+        _PreferenceDefaults.isFirstStart;
+  }
+
+  /// Set whether this is the first start
+  /// Should be set to false after user completes the group creation wizard
+  Future<void> setIsFirstStart(bool value) async {
+    await _prefs.setBool(_PreferenceKeys.isFirstStart, value);
+  }
+}
+
+// ==============================================================================
+// App Functions Preferences
+// ==============================================================================
+
+/// Manages App Functions (Android AI agent integration) preferences
+class AppFunctionsPreferences {
+  AppFunctionsPreferences._(this._prefs);
+  final SharedPreferences _prefs;
+
+  /// Get whether App Functions are enabled (default: false)
+  bool isEnabled() {
+    return _prefs.getBool(_PreferenceKeys.appFunctionsEnabled) ??
+        _PreferenceDefaults.appFunctionsEnabled;
+  }
+
+  /// Set whether App Functions are enabled
+  Future<void> setEnabled(bool value) async {
+    await _prefs.setBool(_PreferenceKeys.appFunctionsEnabled, value);
   }
 }

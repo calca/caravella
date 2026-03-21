@@ -1,5 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../data/services/logger_service.dart';
+import 'package:caravella_core/caravella_core.dart';
 import '../models/supabase_config.dart';
 
 /// Singleton Supabase client manager

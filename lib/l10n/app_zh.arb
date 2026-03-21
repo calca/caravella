@@ -53,6 +53,8 @@
   },
   "settings_flag_secure_desc": "防止截屏和录屏",
   "settings_flag_secure_title": "安全屏幕",
+  "settings_app_functions_title": "AI助手访问",
+  "settings_app_functions_desc": "允许AI助手（如Gemini）读取和添加费用",
   "settings_privacy": "隐私",
   "select_currency": "选择货币",
   "select_period_hint_short": "设置日期",
@@ -92,6 +94,8 @@
   "share_all_ofx": "分享全部 (OFX)",
   "download_all_markdown": "下载全部 (Markdown)",
   "share_all_markdown": "分享全部 (Markdown)",
+  "view_all_groups": "查看所有群组",
+  "@view_all_groups": {"description": "从空状态查看所有已归档群组的 CTA 标签"},
   "markdown_select_directory_title": "选择保存 Markdown 的文件夹",
   "markdown_saved_in": "Markdown 已保存至: {path}",
   "markdown_save_cancelled": "Markdown 导出已取消",
@@ -104,14 +108,26 @@
   "contribution_percentages_desc": "每位成员支付的总额占比",
   "export_options": "导出选项",
   "welcome_v3_title": "组织。\n分享。\n结算。\n ",
+  "emptyGroupState1": "您的**旅程**从这里开始！",
+  "@emptyGroupState1": {"description": "Empty state message 1 for groups with no expenses"},
+  "emptyGroupState2": "准备好记录**第一笔**支出了吗？",
+  "@emptyGroupState2": {"description": "Empty state message 2 for groups with no expenses"},
+  "emptyGroupState3": "**暂无**支出记录！",
+  "@emptyGroupState3": {"description": "Empty state message 3 for groups with no expenses"},
+  "emptyGroupState4": "让我们开始这场**冒险**吧！",
+  "@emptyGroupState4": {"description": "Empty state message 4 for groups with no expenses"},
+  "emptyGroupState5": "**第一笔**支出总是特别的",
+  "@emptyGroupState5": {"description": "Empty state message 5 for groups with no expenses"},
   "good_morning": "早上好",
   "good_afternoon": "下午好",
   "good_evening": "晚上好",
   "your_groups": "您的群组",
+  "see_all": "查看全部",
+  "@see_all": {"description": "CTA 标签，用于打开历史页面并查看所有分组"},
   "no_active_groups": "没有活跃的群组",
   "no_active_groups_subtitle": "创建费用群组",
   "create_first_group": "创建您的第一个群组",
-  "new_expense_group": "新支出群组",
+  "new_expense_group": "新建",
   "tap_to_create": "点击创建",
   "no_expense_label": "未找到支出",
   "image": "图片",
@@ -156,6 +172,8 @@
   "participants_label": "参与者",
   "last_7_days": "过去7天",
   "recent_activity": "最近活动",
+  "recent_expenses": "最近支出",
+  "@recent_expenses": {"description": "最近支出部分的标签"},
   "about": "关于",
   "license_hint": "此应用在MIT许可证下发布。",
   "license_link": "在GitHub上查看MIT许可证",
@@ -651,7 +669,7 @@
   ,"@less": {"description": "收起并显示更少项目的内联按钮标签"}
   ,"debt_prefix_to": "给 "
   ,"@debt_prefix_to": {"description": "在债务/结算行中显示在收款人之前的简短前缀（例如：'给 Alice 10€'）"}
-  ,"new_expense_group": "新支出群组"
+  ,"new_expense_group": "新建"
   ,"tap_to_create": "点击创建"
   ,"no_expense_label": "未找到支出"
   ,"image": "图片"
@@ -1071,5 +1089,241 @@
   "notification_disable": "禁用",
   "@notification_disable": {
     "description": "通知中用于禁用通知的操作按钮"
+  },
+  "load_more_expenses": "加载更多支出",
+  "@load_more_expenses": {
+    "description": "在分页列表中加载更多支出的按钮"
+  },
+
+  "wizard_group_creation_title": "新建群组",
+  "@wizard_group_creation_title": {
+    "description": "群组创建向导的标题"
+  },
+  "wizard_step_name": "名称",
+  "@wizard_step_name": {
+    "description": "向导第1步的标题：群组名称"
+  },
+  "wizard_step_type_and_name": "类型和名称",
+  "@wizard_step_type_and_name": {
+    "description": "向导步骤的标题：类型和群组名称"
+  },
+  "wizard_type_and_name_description": "这个群组是用来做什么的？",
+  "@wizard_type_and_name_description": {
+    "description": "向导中类型和名称步骤的描述"
+  },
+  "wizard_step_participants": "参与者",
+  "@wizard_step_participants": {
+    "description": "向导第2步的标题：参与者"
+  },
+  "wizard_step_categories": "类别",
+  "@wizard_step_categories": {
+    "description": "向导第3步的标题：类别"
+  },
+  "wizard_step_period": "时间段",
+  "@wizard_step_period": {
+    "description": "向导第4步的标题：时间段"
+  },
+  "wizard_step_background": "背景",
+  "@wizard_step_background": {
+    "description": "向导第5步的标题：背景颜色"
+  },
+  "wizard_step_congratulations": "恭喜！",
+  "@wizard_step_congratulations": {
+    "description": "向导最后一步的标题：恭喜"
+  },
+  "wizard_step_of": "的",
+  "@wizard_step_of": {
+    "description": "进度指示器的分隔符（例如 '第1步 的 6步'）"
+  },
+  "wizard_next": "下一步",
+  "@wizard_next": {
+    "description": "进入下一步的按钮文本"
+  },
+  "wizard_previous": "上一步",
+  "@wizard_previous": {
+    "description": "返回上一步的按钮文本"
+  },
+  "wizard_skip": "跳过",
+  "@wizard_skip": {
+    "description": "跳过可选步骤的按钮文本"
+  },
+  "wizard_finish": "创建群组",
+  "@wizard_finish": {
+    "description": "最终创建群组的按钮文本"
+  },
+  "wizard_name_description": "名称",
+  "@wizard_name_description": {
+    "description": "向导中名称步骤的描述"
+  },
+  "wizard_participants_description": "添加将共享费用的人员",
+  "@wizard_participants_description": {
+    "description": "向导中参与者步骤的描述"
+  },
+  "wizard_categories_description": "创建类别以组织费用",
+  "@wizard_categories_description": {
+    "description": "向导中类别步骤的描述"
+  },
+  "wizard_period_description": "设置开始和结束日期（可选）",
+  "@wizard_period_description": {
+    "description": "向导中时间段步骤的描述"
+  },
+  "wizard_background_description": "为群组选择背景颜色",
+  "@wizard_background_description": {
+    "description": "向导中背景步骤的描述"
+  },
+  "wizard_congratulations_message": "您的群组'{groupName}'已成功创建！",
+  "@wizard_congratulations_message": {
+    "description": "带有群组名称的恭喜消息",
+    "placeholders": {
+      "groupName": {
+        "type": "String"
+      }
+    }
+  },
+  "wizard_group_summary": "群组摘要：",
+  "@wizard_group_summary": {
+    "description": "最终屏幕中摘要的标题"
+  },
+  "wizard_created_participants": "{count, plural, =1{1位参与者} other{{count}位参与者}}",
+  "@wizard_created_participants": {
+    "description": "摘要中的参与者数量",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "wizard_created_categories": "{count, plural, =1{1个类别} other{{count}个类别}}",
+  "@wizard_created_categories": {
+    "description": "摘要中的类别数量",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "wizard_step_user_name": "您的名字",
+  "@wizard_step_user_name": {
+    "description": "向导初始步骤的标题：用户名"
+  },
+  "wizard_user_name_welcome": "欢迎！",
+  "@wizard_user_name_welcome": {
+    "description": "用户名步骤中的欢迎消息"
+  },
+  "wizard_user_name_description": "在开始之前，请告诉我们您的名字，以便我们个性化您的体验",
+  "@wizard_user_name_description": {
+    "description": "用户名步骤的描述"
+  },
+  "wizard_user_name_local_storage_note": "您的数据保存在您的设备上，保持私密",
+  "@wizard_user_name_local_storage_note": {
+    "description": "用户名的隐私说明"
+  },
+  "wizard_user_name_label": "您的名字（可选）",
+  "@wizard_user_name_label": {
+    "description": "用户名字段的标签"
+  },
+  "wizard_user_name_hint": "例如 小明",
+  "@wizard_user_name_hint": {
+    "description": "用户名字段的提示"
+  },
+  "wizard_step_participants_and_categories": "谁和什么",
+  "@wizard_step_participants_and_categories": {
+    "description": "参与者和类别合并步骤的标题"
+  },
+  "wizard_participants_and_categories_description": "定义谁参与以及将共享哪些费用",
+  "@wizard_participants_and_categories_description": {
+    "description": "参与者和类别合并步骤的描述"
+  },
+  "wizard_participants_section_title": "谁在参与？",
+  "@wizard_participants_section_title": {
+    "description": "合并步骤中参与者部分的标题"
+  },
+  "wizard_participants_section_hint": "添加朋友或室友。您可以稍后修改。",
+  "@wizard_participants_section_hint": {
+    "description": "参与者部分的提示"
+  },
+  "wizard_categories_section_title": "将共享什么？",
+  "@wizard_categories_section_title": {
+    "description": "合并步骤中类别部分的标题"
+  },
+  "wizard_categories_section_hint": "例如 食物、住宿、交通。您可以稍后添加或重命名。",
+  "@wizard_categories_section_hint": {
+    "description": "类别部分的提示"
+  },
+  "wizard_step_color_and_final": "颜色和确认",
+  "@wizard_step_color_and_final": {
+    "description": "最终颜色和确认步骤的标题"
+  },
+  "wizard_color_and_final_description": "为群组选择颜色并查看摘要",
+  "@wizard_color_and_final_description": {
+    "description": "最终步骤的描述"
+  },
+  "wizard_preview_title": "群组预览",
+  "@wizard_preview_title": {
+    "description": "预览部分的标题"
+  },
+  "wizard_success_title": "恭喜！",
+  "@wizard_success_title": {
+    "description": "成功对话框的标题"
+  },
+  "wizard_go_to_group": "转到群组",
+  "@wizard_go_to_group": {
+    "description": "转到已创建群组的按钮"
+  },
+  "wizard_go_to_home": "返回主页",
+  "@wizard_go_to_home": {
+    "description": "返回主页的按钮"
+  },
+  "wizard_go_to_settings": "群组设置",
+  "@wizard_go_to_settings": {
+    "description": "前往群组设置的按钮"
+  },
+  "wizard_completion_what_next": "您现在可以：",
+  "@wizard_completion_what_next": {
+    "description": "下一步操作部分标题"
+  },
+  "wizard_completion_add_expenses": "添加支出",
+  "@wizard_completion_add_expenses": {
+    "description": "添加支出选项标题"
+  },
+  "wizard_completion_add_expenses_description": "开始跟踪群组支出",
+  "@wizard_completion_add_expenses_description": {
+    "description": "添加支出选项描述"
+  },
+  "wizard_completion_customize_group": "自定义群组",
+  "@wizard_completion_customize_group": {
+    "description": "自定义群组选项标题"
+  },
+  "wizard_completion_customize_group_description": "编辑参与者、类别和设置",
+  "@wizard_completion_customize_group_description": {
+    "description": "自定义群组选项描述"
+  },
+  "danger_zone": "危险区域",
+  "@danger_zone": {
+    "description": "危险操作（如归档和删除）的部分标题"
+  },
+  "danger_zone_desc": "归档或删除此群组",
+  "@danger_zone_desc": {
+    "description": "危险区域部分的描述"
+  },
+  "export_options_desc": "以各种格式下载或分享费用",
+  "@export_options_desc": {
+    "description": "导出选项的描述"
+  },
+  "export_csv_description": "电子表格格式",
+  "@export_csv_description": {
+    "description": "CSV导出格式的简短描述"
+  },
+  "export_ofx_description": "银行格式",
+  "@export_ofx_description": {
+    "description": "OFX导出格式的简短描述"
+  },
+  "export_markdown_description": "文档格式",
+  "@export_markdown_description": {
+    "description": "Markdown导出格式的简短描述"
+  },
+  "save_label": "保存",
+  "@save_label": {
+    "description": "保存按钮的标签"
   }
 }

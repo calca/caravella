@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Custom attributes for App Function XML declarations (res/xml/app_function_declarations.xml).
+     These are needed because the alpha AppFunctions library does not ship attr definitions. -->
+<resources>
+    <attr name="displayName" format="reference|string" />
+    <attr name="type" format="string" />
+    <attr name="required" format="boolean" />
+</resources>

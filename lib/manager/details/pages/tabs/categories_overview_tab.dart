@@ -58,10 +58,7 @@ class CategoriesOverviewTab extends StatelessWidget {
       return (start: startDate, end: effectiveEndDate);
     }
 
-    final totalAll = trip.expenses.fold<double>(
-      0,
-      (s, e) => s + (e.amount ?? 0),
-    );
+    final totalAll = trip.getTotalExpenses();
     final range = calculateDateRangeLocal();
     final totalDays = (range.end.difference(range.start).inDays + 1).clamp(
       1,

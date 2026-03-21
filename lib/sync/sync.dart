@@ -20,7 +20,6 @@ export 'services/device_management_service.dart';
 export 'services/key_rotation_service.dart';
 export 'services/key_backup_service.dart';
 export 'services/conflict_resolution_service.dart';
-export 'services/auth_service.dart';
 export 'services/revenue_cat_service.dart';
 
 // Widgets
@@ -33,12 +32,8 @@ export 'pages/group_join_qr_page.dart';
 export 'pages/group_share_qr_page.dart';
 export 'pages/device_management_page.dart';
 export 'pages/key_backup_page.dart';
-export 'pages/auth_page.dart';
 export 'pages/subscription_page.dart';
 export 'pages/donation_page.dart';
-
-// Utilities
-export 'utils/auth_guard.dart';
 
 // Initialization
 export 'sync_initializer.dart';

@@ -81,10 +81,7 @@ class OfxExporter {
 
     buffer.writeln('        </BANKTRANLIST>');
     buffer.writeln('        <LEDGERBAL>');
-    final totalAmount = group.expenses.fold<double>(
-      0.0,
-      (sum, expense) => sum + (expense.amount ?? 0.0),
-    );
+    final totalAmount = group.getTotalExpenses();
     buffer.writeln(
       '          <BALAMT>-${CurrencyDisplay.formatCurrencyText(totalAmount, '').trim()}</BALAMT>',
     );

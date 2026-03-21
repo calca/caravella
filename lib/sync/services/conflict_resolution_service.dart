@@ -1,6 +1,6 @@
-import '../../data/services/logger_service.dart';
-import '../../data/model/expense_details.dart';
-import '../../data/model/expense_group.dart';
+import 'package:caravella_core/caravella_core.dart';
+
+
 
 /// Strategy for resolving conflicts
 enum ConflictResolutionStrategy {

@@ -1,5 +1,5 @@
 import 'package:uuid/uuid.dart';
-import '../../data/services/logger_service.dart';
+import 'package:caravella_core/caravella_core.dart';
 import '../models/qr_key_exchange_payload.dart';
 import '../../security/services/secure_key_storage.dart';
 import '../../security/services/key_exchange_service.dart';

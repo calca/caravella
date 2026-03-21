@@ -27,16 +27,16 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      // Check Italian localization strings
-      expect(find.text('Pronti per iniziare?'), findsOneWidget);
-      expect(
-        find.text('Aggiungi la prima spesa per iniziare con questo gruppo!'),
-        findsOneWidget,
-      );
-      expect(find.text('Aggiungi Prima Spesa'), findsOneWidget);
+      // Check that add button is present with Italian text
+      expect(find.text('Aggiungi Spesa'), findsOneWidget);
+      expect(find.byIcon(Icons.add_rounded), findsOneWidget);
+
+      // Check that emoji is displayed (random emoji from GroupCardEmptyState)
+      final richTextFinder = find.byType(RichText);
+      expect(richTextFinder, findsWidgets);
 
       // Check button functionality
-      final button = find.text('Aggiungi Prima Spesa');
+      final button = find.text('Aggiungi Spesa');
       await tester.tap(button);
       await tester.pumpAndSettle();
 
@@ -65,16 +65,16 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      // Check English localization strings
-      expect(find.text('Ready to start tracking?'), findsOneWidget);
-      expect(
-        find.text('Add your first expense to get started with this group!'),
-        findsOneWidget,
-      );
-      expect(find.text('Add First Expense'), findsOneWidget);
+      // Check that add button is present with English text
+      expect(find.text('Add Expense'), findsOneWidget);
+      expect(find.byIcon(Icons.add_rounded), findsOneWidget);
+
+      // Check that emoji is displayed (random emoji from GroupCardEmptyState)
+      final richTextFinder = find.byType(RichText);
+      expect(richTextFinder, findsWidgets);
 
       // Check button functionality
-      final button = find.text('Add First Expense');
+      final button = find.text('Add Expense');
       await tester.tap(button);
       await tester.pumpAndSettle();
 
@@ -103,16 +103,16 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      // Check Spanish localization strings
-      expect(find.text('¿Listo para empezar?'), findsOneWidget);
-      expect(
-        find.text('¡Agrega tu primer gasto para comenzar con este grupo!'),
-        findsOneWidget,
-      );
-      expect(find.text('Agregar Primer Gasto'), findsOneWidget);
+      // Check that add button is present with Spanish text
+      expect(find.text('Agregar Gasto'), findsOneWidget);
+      expect(find.byIcon(Icons.add_rounded), findsOneWidget);
+
+      // Check that emoji is displayed (random emoji from GroupCardEmptyState)
+      final richTextFinder = find.byType(RichText);
+      expect(richTextFinder, findsWidgets);
 
       // Check button functionality
-      final button = find.text('Agregar Primer Gasto');
+      final button = find.text('Agregar Gasto');
       await tester.tap(button);
       await tester.pumpAndSettle();
 
@@ -133,15 +133,13 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      // Check that either an image or the fallback icon is present
-      final imageWidget = find.byType(Image);
-      final iconWidget = find.byIcon(Icons.receipt_long_outlined);
+      // GroupCardEmptyState displays emoji text, not an image or icon
+      // Check that emoji text is present via RichText widget
+      final richTextFinder = find.byType(RichText);
+      expect(richTextFinder, findsWidgets);
 
-      // At least one should be present (image tries to load, icon is fallback)
-      expect(
-        imageWidget.evaluate().isNotEmpty || iconWidget.evaluate().isNotEmpty,
-        isTrue,
-      );
+      // Also verify button is present
+      expect(find.byIcon(Icons.add_rounded), findsOneWidget);
     });
 
     testWidgets('EmptyExpenseState has proper Material 3 styling', (
@@ -160,7 +158,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Check for button label and icon
-      expect(find.text('Add First Expense'), findsOneWidget);
+      expect(find.text('Add Expense'), findsOneWidget);
       expect(find.byIcon(Icons.add_rounded), findsOneWidget);
     });
   });

@@ -15,7 +15,7 @@ class MarkdownExporter {
     // Header with group info
     buffer.writeln('# ${_escape(group.title)}');
     buffer.writeln();
-    
+
     // General information
     if (group.startDate != null || group.endDate != null) {
       buffer.write('**${loc.period}**: ');
@@ -42,10 +42,7 @@ class MarkdownExporter {
     buffer.writeln();
 
     // Total expenses
-    final totalAmount = group.expenses.fold<double>(
-      0.0,
-      (sum, expense) => sum + (expense.amount ?? 0.0),
-    );
+    final totalAmount = group.getTotalExpenses();
     buffer.writeln(
       '**${loc.total_expenses}**: ${CurrencyDisplay.formatCurrencyText(totalAmount, group.currency)}',
     );
@@ -65,9 +62,9 @@ class MarkdownExporter {
     // Statistics by participant
     buffer.writeln('### ${loc.expenses_by_participant}');
     buffer.writeln();
-    
+
     final idToName = {for (final p in group.participants) p.id: p.name};
-    
+
     for (final p in group.participants) {
       final total = group.expenses
           .where((e) => e.paidBy.id == p.id)
@@ -85,7 +82,8 @@ class MarkdownExporter {
     final categoryTotals = <String, double>{};
     for (final expense in group.expenses) {
       final catName = expense.category.name;
-      categoryTotals[catName] = (categoryTotals[catName] ?? 0.0) + (expense.amount ?? 0.0);
+      categoryTotals[catName] =
+          (categoryTotals[catName] ?? 0.0) + (expense.amount ?? 0.0);
     }
 
     final sortedCategories = categoryTotals.entries.toList()
@@ -175,10 +173,7 @@ class MarkdownExporter {
         .map((e) => DateTime(e.date.year, e.date.month, e.date.day))
         .toSet()
         .length;
-    final total = group.expenses.fold<double>(
-      0.0,
-      (sum, expense) => sum + (expense.amount ?? 0.0),
-    );
+    final total = group.getTotalExpenses();
     return days == 0 ? 0 : total / days;
   }
 }

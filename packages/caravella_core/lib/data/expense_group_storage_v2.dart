@@ -5,16 +5,18 @@ import '../model/expense_details.dart';
 import '../model/expense_participant.dart';
 import '../model/expense_category.dart';
 import 'expense_group_repository.dart';
+import 'expense_group_repository_factory.dart';
 import 'file_based_expense_group_repository.dart';
 
 /// Backward-compatible wrapper for ExpenseGroupStorage
 /// Maintains the same API while using the improved repository internally
+/// Now supports both JSON and SQLite backends via factory
 class ExpenseGroupStorageV2 {
   static const String fileName = 'expense_group_storage.json';
 
-  // Singleton repository instance
-  static final IExpenseGroupRepository _repository =
-      FileBasedExpenseGroupRepository();
+  // Get repository instance from factory
+  static IExpenseGroupRepository get _repository =>
+      ExpenseGroupRepositoryFactory.getRepository();
 
   /// Gets a trip by ID
   static Future<ExpenseGroup?> getTripById(String id) async {
@@ -127,6 +129,7 @@ class ExpenseGroupStorageV2 {
 
   /// Clears internal cache (useful for testing)
   static void clearCache() {
+    // Clear cache if the repository supports it
     if (_repository is FileBasedExpenseGroupRepository) {
       (_repository as FileBasedExpenseGroupRepository).clearCache();
     }
@@ -134,6 +137,7 @@ class ExpenseGroupStorageV2 {
 
   /// Forces reload from disk on next access
   static void forceReload() {
+    // Force reload if the repository supports it
     if (_repository is FileBasedExpenseGroupRepository) {
       (_repository as FileBasedExpenseGroupRepository).forceReload();
     }
@@ -472,5 +476,63 @@ class ExpenseGroupStorageV2 {
         'Warning: Failed to delete group $groupId: ${result.error}',
       );
     }
+  }
+
+  /// Returns the most recent expenses from a group, sorted by date (newest first).
+  ///
+  /// This method provides an efficient way to get recent expenses without
+  /// having to load and sort all expenses in the UI layer.
+  ///
+  /// Parameters:
+  /// - [groupId]: The ID of the expense group
+  /// - [limit]: Maximum number of recent expenses to return (default: 2)
+  ///
+  /// Returns an empty list if the group is not found or has no expenses.
+  static Future<List<ExpenseDetails>> getRecentExpenses(
+    String groupId, {
+    int limit = 2,
+  }) async {
+    final group = await getTripById(groupId);
+    if (group == null || group.expenses.isEmpty) {
+      return [];
+    }
+
+    // Sort expenses by date (newest first) and take the requested limit
+    final sortedExpenses = List<ExpenseDetails>.from(group.expenses);
+    sortedExpenses.sort((a, b) => b.date.compareTo(a.date));
+    return sortedExpenses.take(limit).toList();
+  }
+
+  /// Calculates the total amount spent today for a specific group.
+  /// Returns 0.0 if the group is not found or has no expenses today.
+  static Future<double> getTodaySpending(String groupId) async {
+    final group = await getTripById(groupId);
+    if (group == null || group.expenses.isEmpty) {
+      return 0.0;
+    }
+
+    final now = DateTime.now();
+    return group.expenses
+        .where(
+          (e) =>
+              e.date.year == now.year &&
+              e.date.month == now.month &&
+              e.date.day == now.day,
+        )
+        .fold<double>(0.0, (sum, e) => sum + (e.amount ?? 0.0));
+  }
+
+  /// Calculates the total amount of all expenses for a specific group.
+  /// Returns 0.0 if the group is not found or has no expenses.
+  static Future<double> getTotalExpenses(String groupId) async {
+    final group = await getTripById(groupId);
+    if (group == null || group.expenses.isEmpty) {
+      return 0.0;
+    }
+
+    return group.expenses.fold<double>(
+      0.0,
+      (sum, expense) => sum + (expense.amount ?? 0.0),
+    );
   }
 }

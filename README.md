@@ -96,7 +96,7 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
 - **Framework**: Flutter 3.x with Material 3
 - **UI**: Material Design 3 with dynamic color support
 - **State Management**: `provider` for centralized and reactive state management
-- **Storage**: Local file storage using `path_provider` for private, on-device data persistence
+- **Storage**: SQLite database (`sqflite`) for high-performance data persistence with automatic migration from legacy JSON storage
 - **Maps**: OpenStreetMap integration via `flutter_map` with Nominatim geocoding
 - **Sync**: Optional multi-device sync with Supabase Realtime and end-to-end encryption (AES-256-GCM)
 - **Security**: ECDH X25519 key exchange, platform secure storage (Keychain/KeyStore), QR code-based key sharing

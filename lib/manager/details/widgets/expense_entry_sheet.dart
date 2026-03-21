@@ -11,6 +11,7 @@ class ExpenseEntrySheet extends StatefulWidget {
   final ExpenseDetails? initialExpense;
   final void Function(ExpenseDetails) onExpenseSaved; // add or update
   final void Function(String) onCategoryAdded;
+  final void Function(String)? onParticipantAdded;
   final VoidCallback? onDelete; // only used in edit mode
   final bool fullEdit;
   final void Function(ExpenseFormState)?
@@ -25,6 +26,7 @@ class ExpenseEntrySheet extends StatefulWidget {
     this.initialExpense,
     required this.onExpenseSaved,
     required this.onCategoryAdded,
+    this.onParticipantAdded,
     this.onDelete,
     this.fullEdit = true,
     this.onExpand,
@@ -80,6 +82,7 @@ class _ExpenseEntrySheetState extends State<ExpenseEntrySheet> {
           autoLocationEnabled: widget.group.autoLocationEnabled,
           onExpenseAdded: widget.onExpenseSaved,
           onCategoryAdded: widget.onCategoryAdded,
+          onParticipantAdded: widget.onParticipantAdded,
           onDelete: widget.onDelete,
           scrollController: _scrollController,
           onExpand: widget.onExpand,

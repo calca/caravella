@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
-import '../../data/services/logger_service.dart';
+import 'package:caravella_core/caravella_core.dart';
 import '../../security/services/secure_key_storage.dart';
 import '../../security/services/encryption_service.dart';
 

@@ -5,7 +5,7 @@ import 'package:share_plus/share_plus.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import '../services/key_backup_service.dart';
-import '../../data/services/logger_service.dart';
+import 'package:caravella_core/caravella_core.dart';
 import '../../widgets/toast.dart';
 
 /// Page for backing up and restoring encryption keys

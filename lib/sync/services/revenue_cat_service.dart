@@ -1,5 +1,5 @@
 import 'package:purchases_flutter/purchases_flutter.dart';
-import '../../data/services/logger_service.dart';
+import 'package:caravella_core/caravella_core.dart';
 import '../models/subscription_tier.dart';
 
 /// RevenueCat integration service for managing subscriptions

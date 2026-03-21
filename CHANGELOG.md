@@ -7,6 +7,96 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Android App Functions integration (`packages/android_app_functions`) to expose Caravella capabilities to Android AI agents (e.g. Google Gemini)
+  - **addExpense** – AI agent can launch the add-expense screen pre-filled with group, amount, category, and note
+  - **getGroupBalance** – Returns the total balance for a specific expense group
+  - **getRecentExpenses** – Returns the last 3 expenses for a specific expense group
+  - **getTodayTotal** – Returns the total amount spent today for a specific expense group
+  - `CaravellaAppFunctionService` (Kotlin) handles function calls directly from the Android OS without requiring a running Flutter engine for read-only queries
+  - `AppFunctionStorageReader` (Kotlin) reads the JSON storage file directly for fast background access
+  - `AppFunctionsService` (Dart) handles `addExpense` callbacks when the app is running and forwards them to the UI
+  - Function schema declared in `res/xml/app_function_declarations.xml`
+
+### Changed
+- **Refactored expense group settings navigation from tabs to separate pages**
+  - Removed tab-based interface from group edit page
+  - Created 4 dedicated pages: General, Participants, Categories, and Other settings
+  - Improved navigation flow with direct page-to-page transitions
+  - Settings are now accessed individually from the group settings menu
+  - Each settings page maintains its own state and save logic
+
+### Fixed
+- Expense amounts now correctly display decimal places in transaction lists
+  - Previously amounts like 12.50 were shown as just "12"
+  - Decimal display now enabled across all expense list views (main list, home screen, map view)
+  - Affects `FilteredExpenseList`, `GroupCardRecents`, and `ExpenseMapDetailSheet` components
+
+### Changed
+- Updated `flutter_local_notifications` to 20.0.0
+  - Adapted notification service to use named parameters (breaking change in library)
+  - Methods `initialize()`, `show()`, and `cancel()` now require named parameters
+
+### Added
+- Group creation wizard with optimized 3-step flow for first-time users
+  - Complete multi-language support (EN, IT, ES, PT, ZH)
+- Month separators in expense list for better organization and navigation
+  - Localized month/year headers automatically inserted between expenses from different months
+  - Visual dividers help users quickly locate expenses by time period
+- Pagination in expense list for improved performance with large datasets
+  - Initial load of 100 expenses with "Load more" button for additional items
+  - Prevents UI lag when viewing groups with many expenses
+- Smooth animation for newly added expenses in the expense list
+  - Newly created expenses fade in and scale up with a subtle bounce effect
+  - Visual feedback helps users identify their just-added expense in the list
+- Featured card on home page for pinned/most recent expense group
+  - Prominently displays the most important group in a dedicated 60% height card
+  - Remaining groups shown in carousel below (40% height)
+  - Improved visual hierarchy and user focus on primary group
+- Enhanced animations for expense additions on home page
+  - Total amount animates with scale and fade effect when updated
+  - Daily spent badge slides in from top with fade animation
+  - Recent expenses animate with staggered slide and fade effects
+  - Creates smooth visual feedback without intrusive toast notifications
+
+### Fixed
+- Fixed wizard bug where user name entered in first step was not automatically added as participant in the group
+- Welcome page now appears smoothly on first app launch without skeleton flash
+- Persistent notifications now respect expense group date ranges
+  - Notifications are automatically cancelled when group end date has passed
+  - Groups with future start dates no longer trigger notifications prematurely
+  - Date range validation applied consistently across all notification update paths
+- Notifications now update correctly after expense operations from all entry points
+  - Adding/editing expenses from home page quick actions properly refreshes notification count
+  - Notification badge accurately reflects current expense totals in all scenarios
+
+### Changed
+- Home page skeleton loader improved to match the actual widget structure
+  - Centered total amount display
+  - Today's spending badge with primary color accent
+  - Recent expenses section with two compact expense card placeholders
+  - Better visual consistency between loading and loaded states
+- Group options menu reorganization for improved accessibility and workflow efficiency
+  - Pin/favorite action moved to group avatar for faster access (33% fewer taps: 3→2)
+  - Options menu replaced with dedicated settings page using consistent SettingsSection and SettingsCard widgets
+  - Settings organized into logical sections: Group editing (with direct navigation to General, Participants, Categories, Other tabs), Export & Share, and Danger Zone
+  - Edit group navigation now opens at specific tab (33% fewer taps to edit specific sections: 6→4)
+  - Archive and delete actions clearly separated in danger zone section
+  - Pin icon always visible on avatar with animated state transitions and color feedback
+- Export options sheet improved with scrollable card-based layout
+  - Each format (CSV, OFX, Markdown) displayed in dedicated card with icon and description
+  - Clear separation between share and save actions with labeled buttons
+  - Better visual hierarchy and format descriptions for user clarity
+- Home page layout restructured for better content hierarchy
+  - Featured card (60% of content height) displays pinned/favorite or most recent group
+  - Carousel reduced to 40% of content height showing remaining groups
+  - Skeleton loader updated to match new two-section layout
+  - Improved visual balance and focus on primary expense group
+
+### Technical
+- SQLite repository code refactoring for improved readability and formatting
+- Enhanced SQLite backend with attachments table support for expense management
+
 ## [1.4.0] - 2025-12-16
 
 ### Fixed
@@ -34,6 +124,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Future enhancement may add optional MediaStore integration for gallery visibility
 
 ### Added
+- **SQLite Database Backend**: New high-performance storage backend using SQLite (default)
+  - Improved query performance with indexed columns and normalized schema
+  - Better scalability for large datasets
+  - Automatic migration from JSON file storage to SQLite database
+  - Backward compatibility: legacy JSON backend still available via `USE_JSON_BACKEND=true` flag
+  - Comprehensive test suite for SQLite repository and migration service
+  - Database schema with separate tables for groups, participants, categories, and expenses
+  - Transaction support for atomic operations and data integrity
+  - Automatic backup of JSON data after successful migration
 - Markdown export format for expense groups with comprehensive statistics and expenses table
   - Includes group header with title, period, currency, and participant count
   - Statistics section with total expenses, daily average, per-participant breakdown, per-category breakdown, and settlement calculations

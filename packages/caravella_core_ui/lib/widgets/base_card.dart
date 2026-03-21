@@ -52,41 +52,23 @@ class BaseCard extends StatelessWidget {
             BlendMode.srcOver,
           ),
         ),
-        border: (isFlat && !noBorder)
+        border: (!isFlat && !noBorder)
             ? Border.all(
                 color: theme.colorScheme.outline.withValues(alpha: 0.12),
                 width: 1,
               )
             : null,
-        boxShadow: isFlat
-            ? null
-            : [
-                BoxShadow(
-                  color: theme.colorScheme.shadow.withValues(alpha: 0.1),
-                  blurRadius: elevation ?? 2,
-                  offset: const Offset(0, 1),
-                ),
-              ],
       );
     } else {
       decoration = BoxDecoration(
         color: backgroundColor ?? theme.colorScheme.surfaceContainer,
         borderRadius: effectiveBorderRadius,
-        border: (isFlat && !noBorder)
+        border: (!isFlat && !noBorder)
             ? Border.all(
                 color: theme.colorScheme.outline.withValues(alpha: 0.12),
                 width: 1,
               )
             : null,
-        boxShadow: isFlat
-            ? null
-            : [
-                BoxShadow(
-                  color: theme.colorScheme.shadow.withValues(alpha: 0.1),
-                  blurRadius: elevation ?? 2,
-                  offset: const Offset(0, 1),
-                ),
-              ],
       );
     }
 
@@ -98,10 +80,24 @@ class BaseCard extends StatelessWidget {
     );
 
     if (onTap != null) {
-      return InkWell(
-        borderRadius: effectiveBorderRadius,
-        onTap: onTap,
-        child: cardContent,
+      return Container(
+        margin: margin,
+        child: ClipRRect(
+          borderRadius: effectiveBorderRadius,
+          child: Material(
+            color: backgroundColor ?? theme.colorScheme.surfaceContainer,
+            child: InkWell(
+              onTap: onTap,
+              splashColor: theme.colorScheme.primary.withValues(alpha: 0.1),
+              highlightColor: theme.colorScheme.primary.withValues(alpha: 0.05),
+              child: Container(
+                padding: padding ?? const EdgeInsets.all(20),
+                decoration: decoration.copyWith(color: Colors.transparent),
+                child: child,
+              ),
+            ),
+          ),
+        ),
       );
     }
 

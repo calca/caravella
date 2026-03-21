@@ -27,8 +27,21 @@ class FileBasedExpenseGroupRepository
   // Cache validity duration (5 minutes)
   static const Duration cacheValidityDuration = Duration(minutes: 5);
 
+  /// Optional custom storage path for testing
+  final String? _customStoragePath;
+
+  /// Creates a file-based repository.
+  ///
+  /// If [storagePath] is provided, it will be used instead of the default path.
+  /// This is useful for testing with custom paths.
+  FileBasedExpenseGroupRepository({String? storagePath})
+    : _customStoragePath = storagePath;
+
   Future<File> _getFile() async {
     try {
+      if (_customStoragePath != null) {
+        return File(_customStoragePath);
+      }
       final dir = await getApplicationDocumentsDirectory();
       return File('${dir.path}/$fileName');
     } catch (e) {

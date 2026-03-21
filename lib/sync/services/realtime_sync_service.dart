@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../data/services/logger_service.dart';
+import 'package:caravella_core/caravella_core.dart';
 import '../../security/services/secure_key_storage.dart';
 import '../../security/services/encryption_service.dart';
 import '../models/sync_event.dart';

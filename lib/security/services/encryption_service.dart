@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
-import '../../data/services/logger_service.dart';
+import 'package:caravella_core/caravella_core.dart';
 
 /// AES-256-GCM encryption service for group data
 /// Provides authenticated encryption with associated data (AEAD)

@@ -21,8 +21,10 @@ class ExpenseGroup {
   final bool syncEnabled; // Enable multi-device sync for this group
   final DateTime? lastSyncTimestamp; // Last successful sync timestamp
   final bool notificationEnabled; // Campo per abilitare la notifica persistente
-  final ExpenseGroupType? groupType; // Tipologia del gruppo (viaggio, personale, famiglia, altro)
-  final bool autoLocationEnabled; // Nuovo campo per abilitare auto-location per gruppo
+  final ExpenseGroupType?
+  groupType; // Tipologia del gruppo (viaggio, personale, famiglia, altro)
+  final bool
+  autoLocationEnabled; // Nuovo campo per abilitare auto-location per gruppo
 
   ExpenseGroup({
     required this.title,
@@ -83,8 +85,12 @@ class ExpenseGroup {
       lastSyncTimestamp: json['lastSyncTimestamp'] != null
           ? DateTime.parse(json['lastSyncTimestamp'])
           : null,
-      notificationEnabled: json['notificationEnabled'] ?? false, // Legge il valore della notifica
-      groupType: ExpenseGroupType.fromJson(json['groupType']), // Legge la tipologia
+      notificationEnabled:
+          json['notificationEnabled'] ??
+          false, // Legge il valore della notifica
+      groupType: ExpenseGroupType.fromJson(
+        json['groupType'],
+      ), // Legge la tipologia
       autoLocationEnabled:
           json['autoLocationEnabled'] ?? false, // Legge il valore auto-location
     );
@@ -106,7 +112,8 @@ class ExpenseGroup {
     'color': color, // Salva il valore del colore
     'syncEnabled': syncEnabled, // Salva sync enabled
     'lastSyncTimestamp': lastSyncTimestamp?.toIso8601String(),
-    'notificationEnabled': notificationEnabled, // Salva il valore della notifica
+    'notificationEnabled':
+        notificationEnabled, // Salva il valore della notifica
     'groupType': groupType?.toJson(), // Salva la tipologia
     'autoLocationEnabled': autoLocationEnabled, // Salva il valore auto-location
   };
@@ -150,13 +157,23 @@ class ExpenseGroup {
       // Fix: Handle explicit null values correctly for nullable fields
       file: file == _notProvided ? this.file : file as String?,
       color: color == _notProvided ? this.color : color as int?,
-      groupType: groupType == _notProvided ? this.groupType : groupType as ExpenseGroupType?,
+      groupType: groupType == _notProvided
+          ? this.groupType
+          : groupType as ExpenseGroupType?,
       autoLocationEnabled: autoLocationEnabled ?? this.autoLocationEnabled,
     );
   }
 
   // Sentinel value to distinguish between null and not provided
   static const Object _notProvided = Object();
+
+  /// Calcola il totale delle spese del gruppo
+  double getTotalExpenses() {
+    return expenses.fold<double>(
+      0,
+      (sum, expense) => sum + (expense.amount ?? 0),
+    );
+  }
 
   static ExpenseGroup empty() {
     return ExpenseGroup(

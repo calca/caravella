@@ -11,6 +11,7 @@ class ExpenseFormPage extends StatefulWidget {
   final ExpenseDetails? initialExpense;
   final void Function(ExpenseDetails) onExpenseSaved;
   final void Function(String) onCategoryAdded;
+  final void Function(String)? onParticipantAdded;
   final VoidCallback? onDelete;
 
   const ExpenseFormPage({
@@ -19,6 +20,7 @@ class ExpenseFormPage extends StatefulWidget {
     this.initialExpense,
     required this.onExpenseSaved,
     required this.onCategoryAdded,
+    this.onParticipantAdded,
     this.onDelete,
   });
 
@@ -153,6 +155,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
                       autoLocationEnabled: widget.group.autoLocationEnabled,
                       onExpenseAdded: widget.onExpenseSaved,
                       onCategoryAdded: widget.onCategoryAdded,
+                      onParticipantAdded: widget.onParticipantAdded,
                       onDelete: widget.onDelete,
                       onFormValidityChanged: _updateFormValidity,
                       onSaveCallbackChanged: _updateSaveCallback,

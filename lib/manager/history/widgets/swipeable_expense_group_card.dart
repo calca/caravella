@@ -162,10 +162,7 @@ class SwipeableExpenseGroupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final total = trip.expenses.fold<double>(
-      0,
-      (sum, e) => sum + (e.amount ?? 0),
-    );
+    final total = trip.getTotalExpenses();
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),

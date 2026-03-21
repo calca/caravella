@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../../manager/group/pages/expenses_group_edit_page.dart';
-import '../../../manager/group/group_edit_mode.dart';
-import 'package:caravella_core_ui/caravella_core_ui.dart';
+import '../../navigation_helpers.dart';
 
 class NewGroupCard extends StatelessWidget {
   final gen.AppLocalizations localizations;
@@ -37,26 +35,26 @@ class NewGroupCard extends StatelessWidget {
       selectionProgress * 0.3, // 30% di intensità massima
     );
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-      height: double.infinity, // Assicura che usi tutto lo spazio verticale
-      child: BaseCard(
-        margin: const EdgeInsets.only(bottom: 16),
-        backgroundColor: backgroundColor,
-        onTap: () async {
-          final result = await Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) =>
-                  const ExpensesGroupEditPage(mode: GroupEditMode.create),
-            ),
-          );
-          if (result != null && result is String) {
-            // Pass the group ID to the callback
-            onGroupAdded(result);
-          }
-        },
-        child: _buildNewGroupCardContent(),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
+      clipBehavior: Clip.antiAlias,
+      child: Material(
+        color: backgroundColor ?? theme.colorScheme.surfaceContainer,
+        child: InkWell(
+          onTap: () async {
+            await NavigationHelpers.openGroupCreationWithCallback(
+              context,
+              onGroupAdded: onGroupAdded,
+            );
+          },
+          splashColor: theme.colorScheme.primary.withValues(alpha: 0.1),
+          highlightColor: theme.colorScheme.primary.withValues(alpha: 0.05),
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            child: _buildNewGroupCardContent(),
+          ),
+        ),
       ),
     );
   }

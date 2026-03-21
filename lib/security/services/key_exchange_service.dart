@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:cryptography/cryptography.dart';
-import '../../data/services/logger_service.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'encryption_service.dart';
 
 /// ECDH key exchange service using X25519

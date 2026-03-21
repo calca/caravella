@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../widgets/toast.dart';
-import '../../data/services/logger_service.dart';
+import 'package:caravella_core/caravella_core.dart';
 
 /// Donation page shown when RevenueCat is not configured
 /// Invites users to support the app via Buy Me a Coffee

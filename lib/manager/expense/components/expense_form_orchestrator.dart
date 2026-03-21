@@ -35,12 +35,35 @@ class ExpenseFormOrchestrator {
 
   /// Save expense
   Future<void> saveExpense(BuildContext context) async {
-    if (!formKey.currentState!.validate()) return;
-    if (!controller.isFormValid) return;
+    LoggerService.info(
+      'Attempting to save expense - Form valid: ${controller.isFormValid}, '
+      'PaidBy: ${controller.state.paidBy?.name}, '
+      'Amount: ${controller.state.amount}, '
+      'Category: ${controller.state.category?.name}, '
+      'Name: ${controller.state.name}',
+      name: 'expense.save',
+    );
+
+    if (!formKey.currentState!.validate()) {
+      LoggerService.warning('Form validation failed', name: 'expense.save');
+      return;
+    }
+
+    if (!controller.isFormValid) {
+      LoggerService.warning(
+        'Controller validation failed',
+        name: 'expense.save',
+      );
+      return;
+    }
 
     formKey.currentState!.save();
 
     final expense = _buildExpenseFromState();
+    LoggerService.info(
+      'Created expense for saving: ${expense.toString()}',
+      name: 'expense.save',
+    );
     config.onExpenseAdded(expense);
 
     if (config.shouldAutoClose && context.mounted) {

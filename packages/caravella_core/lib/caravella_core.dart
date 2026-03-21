@@ -16,11 +16,14 @@ export 'model/expense_participant.dart';
 
 // Storage and Repository
 export 'data/expense_group_repository.dart';
+export 'data/expense_group_repository_factory.dart';
 export 'data/expense_group_storage_v2.dart';
 export 'data/file_based_expense_group_repository.dart';
+export 'data/sqlite_expense_group_repository.dart';
 export 'data/storage_benchmark.dart';
 export 'data/storage_errors.dart';
 export 'data/storage_index.dart';
+export 'data/storage_migration_service.dart';
 export 'data/storage_performance.dart';
 export 'data/storage_transaction.dart';
 
@@ -45,6 +48,7 @@ export 'services/shortcuts/platform_shortcuts_manager.dart';
 export 'services/shortcuts/shortcuts_navigation_service.dart';
 
 // State Management
+export 'state/app_functions_enabled_notifier.dart';
 export 'state/auto_backup_notifier.dart';
 export 'state/dynamic_color_notifier.dart';
 export 'state/expense_group_notifier.dart';

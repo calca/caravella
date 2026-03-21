@@ -30,6 +30,7 @@ class ExpenseFormComponent extends StatefulWidget {
     required String groupId,
     required Function(ExpenseDetails) onExpenseAdded,
     required Function(String) onCategoryAdded,
+    Function(String)? onParticipantAdded,
     required bool autoLocationEnabled,
     String? groupTitle,
     String? currency,
@@ -51,6 +52,7 @@ class ExpenseFormComponent extends StatefulWidget {
         groupId: groupId,
         onExpenseAdded: onExpenseAdded,
         onCategoryAdded: onCategoryAdded,
+        onParticipantAdded: onParticipantAdded,
         autoLocationEnabled: autoLocationEnabled,
         groupTitle: groupTitle,
         currency: currency,
@@ -76,6 +78,7 @@ class ExpenseFormComponent extends StatefulWidget {
     required String groupId,
     required Function(ExpenseDetails) onExpenseAdded,
     required Function(String) onCategoryAdded,
+    Function(String)? onParticipantAdded,
     required bool autoLocationEnabled,
     VoidCallback? onDelete,
     String? groupTitle,
@@ -93,6 +96,7 @@ class ExpenseFormComponent extends StatefulWidget {
         groupId: groupId,
         onExpenseAdded: onExpenseAdded,
         onCategoryAdded: onCategoryAdded,
+        onParticipantAdded: onParticipantAdded,
         autoLocationEnabled: autoLocationEnabled,
         onDelete: onDelete,
         groupTitle: groupTitle,
@@ -113,6 +117,7 @@ class ExpenseFormComponent extends StatefulWidget {
     required List<ExpenseCategory> categories,
     required Function(ExpenseDetails) onExpenseAdded,
     required Function(String) onCategoryAdded,
+    Function(String)? onParticipantAdded,
     VoidCallback? onDelete,
     bool shouldAutoClose = true,
     DateTime? tripStartDate,
@@ -137,6 +142,7 @@ class ExpenseFormComponent extends StatefulWidget {
          groupId: groupId,
          onExpenseAdded: onExpenseAdded,
          onCategoryAdded: onCategoryAdded,
+         onParticipantAdded: onParticipantAdded,
          onDelete: onDelete,
          shouldAutoClose: shouldAutoClose,
          tripStartDate: tripStartDate,
@@ -303,11 +309,18 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
             ),
             ExpenseFormFields(
               controller: _controller,
-              participants: widget.config.participants,
+              participants: _lifecycleManager.participants,
               categories: _lifecycleManager.categories,
               onCategoryAdded: _onCategoryAdded,
+              onParticipantAdded: widget.config.onParticipantAdded != null
+                  ? _onParticipantAdded
+                  : null,
               onCategoriesUpdated: (newCategories) {
                 _lifecycleManager.updateCategories(newCategories);
+                setState(() {});
+              },
+              onParticipantsUpdated: (newParticipants) {
+                _lifecycleManager.updateParticipants(newParticipants);
                 setState(() {});
               },
               fullEdit: widget.config.fullEdit,
@@ -360,6 +373,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
 
   Future<void> _onCategoryAdded(String categoryName) async {
     widget.config.onCategoryAdded(categoryName);
+    // Brief delay to allow the notifier to update and persist the new category
     await Future.delayed(const Duration(milliseconds: 100));
 
     final categories = widget.config.categories;
@@ -377,6 +391,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
       setState(() {});
     }
 
+    // Additional delay to ensure category list is fully updated before selection
     await Future.delayed(const Duration(milliseconds: 100));
     final foundAfter = categories.firstWhere(
       (c) => c.name == categoryName,
@@ -388,6 +403,41 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     _lifecycleManager.updateCategories(List.from(categories));
     _controller.updateCategory(foundAfter);
     setState(() {});
+  }
+
+  Future<void> _onParticipantAdded(String participantName) async {
+    if (widget.config.onParticipantAdded == null) return;
+
+    LoggerService.info(
+      'Adding participant: "$participantName"',
+      name: 'expense.participant',
+    );
+
+    widget.config.onParticipantAdded!(participantName);
+
+    // Give more time for the notifier to update and persist the new participant
+    await Future.delayed(const Duration(milliseconds: 200));
+
+    // Force immediate update of lifecycle manager with fresh participant list
+    final participants = widget.config.participants;
+    LoggerService.info(
+      'Updating lifecycle manager with participants: ${participants.map((p) => p.name).toList()}',
+      name: 'expense.participant',
+    );
+
+    _lifecycleManager.updateParticipants(List.from(participants));
+    setState(() {});
+
+    // Additional update to ensure complete synchronization
+    await Future.delayed(const Duration(milliseconds: 100));
+
+    LoggerService.info(
+      'Participant add process completed for: "$participantName"',
+      name: 'expense.participant',
+    );
+
+    // Note: Don't call _controller.updatePaidBy here - let the modal selection handle it
+    // to avoid conflicts with the automatic selection when modal closes
   }
 
   Widget _buildDivider(BuildContext context) {
@@ -410,7 +460,9 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
             ? () => _orchestrator.saveExpense(context)
             : null,
         isFormValid: _controller.isFormValid,
-        isEdit: widget.config.initialExpense?.id != null && widget.config.initialExpense!.id.isNotEmpty,
+        isEdit:
+            widget.config.initialExpense?.id != null &&
+            widget.config.initialExpense!.id.isNotEmpty,
         onDelete: widget.config.hasDeleteAction
             ? () => _orchestrator.deleteExpense(context)
             : null,

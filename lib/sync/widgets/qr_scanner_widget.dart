@@ -3,7 +3,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../models/qr_key_exchange_payload.dart';
 import '../../services/qr_generation_service.dart';
-import '../../../data/services/logger_service.dart';
+import 'package:caravella_core/caravella_core.dart';
 import '../../../widgets/toast.dart';
 
 /// Widget to scan QR codes for joining groups

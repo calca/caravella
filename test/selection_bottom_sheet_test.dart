@@ -5,6 +5,80 @@ import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
 void main() {
   group('SelectionBottomSheet Tests', () {
+    testWidgets(
+      'should update participants list in real-time when new participant is added',
+      (tester) async {
+        List<String> participants = ['Alice', 'Bob'];
+        String? selectedParticipant;
+        String? addedParticipant;
+
+        await tester.pumpWidget(
+          MaterialApp(
+            localizationsDelegates: gen.AppLocalizations.localizationsDelegates,
+            supportedLocales: gen.AppLocalizations.supportedLocales,
+            home: Builder(
+              builder: (context) => Scaffold(
+                body: ElevatedButton(
+                  onPressed: () async {
+                    final result = await showSelectionBottomSheet<String>(
+                      context: context,
+                      items: participants,
+                      selected: selectedParticipant,
+                      itemLabel: (p) => p,
+                      sheetTitle: 'Select Participant',
+                      onAddItemInline: (name) async {
+                        // Simulate adding participant to the list
+                        participants = [...participants, name];
+                        addedParticipant = name;
+                      },
+                      addItemHint: 'Participant name',
+                      addLabel: 'Add',
+                      cancelLabel: 'Cancel',
+                      addCategoryLabel: 'Add participant',
+                      alreadyExistsMessage: 'Participant already exists',
+                    );
+                    if (result != null) {
+                      selectedParticipant = result;
+                    }
+                  },
+                  child: const Text('Open Bottom Sheet'),
+                ),
+              ),
+            ),
+          ),
+        );
+
+        // Open the bottom sheet
+        await tester.tap(find.text('Open Bottom Sheet'));
+        await tester.pumpAndSettle();
+
+        // Verify initial participants are shown
+        expect(find.text('Alice'), findsOneWidget);
+        expect(find.text('Bob'), findsOneWidget);
+        expect(find.text('Charlie'), findsNothing);
+
+        // Tap the add participant button
+        await tester.tap(find.text('Add participant'));
+        await tester.pumpAndSettle();
+
+        // Enter new participant name
+        await tester.enterText(find.byType(TextField), 'Charlie');
+        await tester.pumpAndSettle();
+
+        // Commit the addition
+        await tester.tap(find.byIcon(Icons.check_rounded));
+        await tester.pumpAndSettle();
+
+        // Verify that:
+        // 1. The callback was called
+        expect(addedParticipant, equals('Charlie'));
+
+        // 2. The modal automatically closed and selected the new participant
+        expect(find.text('Select Participant'), findsNothing);
+        expect(selectedParticipant, equals('Charlie'));
+      },
+    );
+
     testWidgets('Modal sheet builds correctly with items', (tester) async {
       final testItems = ['Category 1', 'Category 2', 'Category 3'];
 

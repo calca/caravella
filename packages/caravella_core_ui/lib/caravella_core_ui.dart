@@ -8,6 +8,7 @@ export 'themes/form_theme.dart';
 
 // Widgets
 export 'widgets/add_fab.dart';
+export 'widgets/app_system_ui.dart';
 export 'widgets/app_toast.dart' show AppToast, ToastType;
 export 'widgets/base_card.dart';
 export 'widgets/bottom_sheet_scaffold.dart';
@@ -23,6 +24,7 @@ export 'widgets/selection_bottom_sheet.dart';
 export 'widgets/charts/chart_badge.dart';
 export 'widgets/charts/chart_type.dart';
 export 'widgets/charts/date_range_expense_chart.dart';
+export 'widgets/charts/last_15_days_bar_chart.dart';
 export 'widgets/charts/monthly_expense_chart.dart';
 export 'widgets/charts/weekly_expense_chart.dart';
 
