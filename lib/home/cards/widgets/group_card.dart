@@ -39,12 +39,22 @@ class GroupCard extends StatelessWidget {
 
     // Use group color if set and no image, otherwise use selection color
     Color? backgroundColor;
+    Gradient? backgroundGradient;
     if (group.file != null && group.file!.isNotEmpty) {
-      // Image is present, use interpolated selection color
+      // Image is present – gradient overlay from transparent to surface
       backgroundColor = Color.lerp(
         defaultBackgroundColor,
         selectedColor,
         selectionProgress * 0.3, // 30% di intensità massima
+      );
+      backgroundGradient = LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          backgroundColor!.withValues(alpha: 0.1),
+          backgroundColor!.withValues(alpha: 0.95),
+        ],
+        stops: const [0.0, 0.65],
       );
     } else if (group.color != null) {
       // No image but color is set, resolve from palette or use legacy color
@@ -66,6 +76,15 @@ class GroupCard extends StatelessWidget {
         selectedColor,
         selectionProgress * 0.3, // 30% di intensità massima per la selezione
       );
+      // Gradient from lighter shade to full color for visual depth
+      backgroundGradient = LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          Color.lerp(defaultBackgroundColor, backgroundColor!, 0.4)!,
+          backgroundColor!,
+        ],
+      );
     } else {
       // No image and no color, use selection color
       backgroundColor = Color.lerp(
@@ -84,6 +103,7 @@ class GroupCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(32),
         backgroundColor: backgroundColor,
         backgroundImage: group.file,
+        backgroundGradient: backgroundGradient,
         onTap: () async {
           final result = await Navigator.of(context).push(
             MaterialPageRoute(
