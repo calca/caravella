@@ -25,6 +25,17 @@ class GroupCard extends StatelessWidget {
     this.selectionProgress = 0.0,
   });
 
+  /// Builds a consistent gradient overlay: light at the top, full color at 65% from the top.
+  /// Used for both image and color card backgrounds.
+  static LinearGradient _buildCardGradient(Color topColor, Color bottomColor) {
+    return LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [topColor, bottomColor],
+      stops: const [0.0, 0.65],
+    );
+  }
+
   Color _getSelectedColor(bool isDarkMode) {
     return theme
         .colorScheme
@@ -47,14 +58,9 @@ class GroupCard extends StatelessWidget {
         selectedColor,
         selectionProgress * 0.3, // 30% di intensità massima
       );
-      backgroundGradient = LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [
-          backgroundColor!.withValues(alpha: 0.1),
-          backgroundColor!.withValues(alpha: 0.95),
-        ],
-        stops: const [0.0, 0.65],
+      backgroundGradient = _buildCardGradient(
+        backgroundColor!.withValues(alpha: 0.1),
+        backgroundColor!.withValues(alpha: 0.95),
       );
     } else if (group.color != null) {
       // No image but color is set, resolve from palette or use legacy color
@@ -76,14 +82,10 @@ class GroupCard extends StatelessWidget {
         selectedColor,
         selectionProgress * 0.3, // 30% di intensità massima per la selezione
       );
-      // Gradient from lighter shade to full color for visual depth
-      backgroundGradient = LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [
-          Color.lerp(defaultBackgroundColor, backgroundColor!, 0.4)!,
-          backgroundColor!,
-        ],
+      // Inverted gradient: opaque top → transparent bottom
+      backgroundGradient = _buildCardGradient(
+        backgroundColor!.withValues(alpha: 0.95),
+        backgroundColor!.withValues(alpha: 0.1),
       );
     } else {
       // No image and no color, use selection color
