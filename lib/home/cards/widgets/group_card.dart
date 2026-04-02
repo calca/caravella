@@ -60,7 +60,7 @@ class GroupCard extends StatelessWidget {
       );
       backgroundGradient = _buildCardGradient(
         backgroundColor!.withValues(alpha: 0.1),
-        backgroundColor!.withValues(alpha: 0.95),
+        backgroundColor.withValues(alpha: 0.95),
       );
     } else if (group.color != null) {
       // No image but color is set, resolve from palette or use legacy color
@@ -85,7 +85,7 @@ class GroupCard extends StatelessWidget {
       // Inverted gradient: opaque top → transparent bottom
       backgroundGradient = _buildCardGradient(
         backgroundColor!.withValues(alpha: 0.95),
-        backgroundColor!.withValues(alpha: 0.1),
+        backgroundColor.withValues(alpha: 0.1),
       );
     } else {
       // No image and no color, use selection color
