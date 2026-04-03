@@ -39,7 +39,7 @@ packages:
       path: "../caravella_core"
       relative: true
     source: path
-    version: "1.4.0"
+    version: "1.6.0"
   characters:
     dependency: transitive
     description:
@@ -403,10 +403,10 @@ packages:
     dependency: transitive
     description:
       name: shared_preferences
-      sha256: "2939ae520c9024cb197fc20dee269cd8cdbf564c8b5746374ec6cacdc5169e64"
+      sha256: c3025c5534b01739267eb7d76959bbc25a6d10f6988e1c2a3036940133dd10bf
       url: "https://pub.dev"
     source: hosted
-    version: "2.5.4"
+    version: "2.5.5"
   shared_preferences_android:
     dependency: transitive
     description:
@@ -544,26 +544,26 @@ packages:
     dependency: transitive
     description:
       name: talker
-      sha256: "46a60c6014a870a71ab8e3fa22f9580a8d36faf9b39431dcf124940601c0c266"
+      sha256: c364edc0fbd6c648e1a78e6edd89cccd64df2150ca96d899ecd486b76c185042
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.15"
+    version: "5.1.16"
   talker_flutter:
     dependency: transitive
     description:
       name: talker_flutter
-      sha256: "7e1819c505cdcbf2cf6497410b8fa3b33d170e6f137716bd278940c0e509f414"
+      sha256: "54cbbf852101721664faf4a05639fd2fdefdc37178327990abea00390690d4bc"
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.15"
+    version: "5.1.16"
   talker_logger:
     dependency: transitive
     description:
       name: talker_logger
-      sha256: "70112d016d7b978ccb7ef0b0f4941e0f0b0de88d80589db43143cea1d744eae0"
+      sha256: cea1b8283a28c2118a0b197057fc5beb5b0672c75e40a48725e5e452c0278ff3
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.15"
+    version: "5.1.16"
   term_glyph:
     dependency: transitive
     description:
