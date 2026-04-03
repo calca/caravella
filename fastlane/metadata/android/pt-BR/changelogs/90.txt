@@ -1,0 +1,9 @@
+Versão 1.6.0 - Integração IA e Página Inicial Redesenhada
+
+• Agentes IA: Google Gemini pode adicionar despesas e verificar saldos por você
+• Assistente de início: criação de grupo guiada em 3 etapas para novos usuários
+• Página redesenhada: cartão em destaque para o grupo fixado
+• Listas mais inteligentes: separadores mensais, paginação e animações suaves
+• Melhores notificações: respeitam intervalos de datas e se atualizam de forma confiável
+
+Suas despesas, mais inteligentes do que nunca!

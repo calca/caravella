@@ -1,3 +1,20 @@
+## 1.6.0 (03.04.2026)
+
+- **Novo**: Integração com agentes IA do Android – Google Gemini pode adicionar despesas e verificar saldos por você
+- **Novo**: Assistente de criação de grupo com fluxo guiado de 3 etapas
+- **Novo**: Separadores mensais na lista de despesas para melhor navegação
+- **Novo**: Paginação para listas de despesas grandes com carregamento suave
+- **Novo**: Cartão em destaque na página inicial para o grupo fixado
+- **Novo**: Animações suaves ao adicionar novas despesas
+- **Melhorias**: Layout da página inicial redesenhado com grupo em destaque e carrossel
+- **Melhorias**: Configurações de grupo reorganizadas em páginas dedicadas para acesso mais fácil
+- **Melhorias**: Opções de exportação exibidas em layout de cartões claro
+- **Melhorias**: Carregamento esqueleto da página inicial aprimorado
+- **Correções**: Valores de despesas agora mostram casas decimais corretamente em todos os lugares
+- **Correções**: Notificações persistentes respeitam intervalos de datas do grupo
+- **Correções**: Notificações se atualizam corretamente de todos os pontos de acesso
+- **Correções**: Página de boas-vindas aparece suavemente na primeira inicialização
+
 ## 1.4.0 (16.12.2025)
 
 - **Novo**: Suporte a anexos de mídia para despesas (imagens, PDFs, vídeos) com visualizador de tela inteira

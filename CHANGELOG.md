@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-04-03
+
 ### Added
 - Android App Functions integration (`packages/android_app_functions`) to expose Caravella capabilities to Android AI agents (e.g. Google Gemini)
   - **addExpense** – AI agent can launch the add-expense screen pre-filled with group, amount, category, and note
@@ -320,7 +322,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Material 3 design with dark/light theme support
 - Cross-platform support (Android, iOS, Web, Desktop)
 
-[Unreleased]: https://github.com/calca/caravella/compare/v1.4.0...HEAD
+[Unreleased]: https://github.com/calca/caravella/compare/v1.6.0...HEAD
+[1.6.0]: https://github.com/calca/caravella/compare/v1.4.0...v1.6.0
 [1.4.0]: https://github.com/calca/caravella/compare/v1.2.0...v1.4.0
 [1.2.0]: https://github.com/calca/caravella/compare/v1.0.45...v1.2.0
 [1.0.45]: https://github.com/calca/caravella/compare/v1.0.44...v1.0.45

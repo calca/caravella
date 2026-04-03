@@ -1,3 +1,20 @@
+## 1.6.0 (03.04.2026)
+
+- **Nuevo**: Integración de agentes IA de Android – Google Gemini puede agregar gastos y verificar saldos por ti
+- **Nuevo**: Asistente de creación de grupo con flujo guiado de 3 pasos
+- **Nuevo**: Separadores mensuales en la lista de gastos para mejor navegación
+- **Nuevo**: Paginación para listas de gastos grandes con carga fluida
+- **Nuevo**: Tarjeta destacada en la pantalla principal para tu grupo fijado
+- **Nuevo**: Animaciones suaves al agregar nuevos gastos
+- **Mejoras**: Diseño de pantalla principal rediseñado con grupo destacado y carrusel
+- **Mejoras**: Configuración de grupo reorganizada en páginas dedicadas para acceso más fácil
+- **Mejoras**: Opciones de exportación mostradas en diseño de tarjetas claro
+- **Mejoras**: Cargador esqueleto de la pantalla principal mejorado
+- **Correcciones**: Los montos de gastos ahora muestran decimales correctamente en todos lados
+- **Correcciones**: Las notificaciones persistentes respetan los rangos de fechas del grupo
+- **Correcciones**: Las notificaciones se actualizan correctamente desde todos los puntos de acceso
+- **Correcciones**: La página de bienvenida aparece suavemente en el primer inicio
+
 ## 1.4.0 (16.12.2025)
 
 - **Nuevo**: Soporte de archivos adjuntos multimedia para gastos (imágenes, PDF, videos) con visor de pantalla completa

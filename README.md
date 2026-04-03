@@ -74,13 +74,13 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
   <img src="store/screenshot/09 - Grops History.png" alt="Groups History" width="200"/>
 </p>
 
-## 🎉 What's New in v1.4.0
+## 🎉 What's New in v1.6.0
 
-- **Media Attachments**: Add photos, videos, and PDFs to your expenses with full-screen viewer and share capabilities
-- **Markdown Export**: Export your expense groups to markdown format with comprehensive statistics and tables
-- **Smarter Forms**: Improved group editing with organized tabs and streamlined expense management
-- **Better Camera Experience**: Camera now opens with rear camera by default for more natural photo-taking
-- **Enhanced Stability**: Improved attachment handling, notification icons, and error feedback throughout the app
+- **AI-Powered Shortcuts**: Android AI agents like Google Gemini can now add expenses and check balances directly
+- **Guided Setup Wizard**: New 3-step group creation wizard makes getting started easier than ever
+- **Redesigned Home Page**: Featured card highlights your pinned group with beautiful animations and better layout
+- **Smarter Expense Lists**: Month separators, pagination for large groups, and smooth add animations
+- **Improved Notifications**: Persistent notifications now respect group date ranges and update from all entry points
 
 ## 🛠️ Tech Stack & Architecture
 
