@@ -299,5 +299,76 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Bus ticket'), findsOneWidget);
     });
+
+    testWidgets('calendar shows continuous date range with gap days', (
+      tester,
+    ) async {
+      // Create expenses with a gap (March 10 and March 13 — gap on 11, 12)
+      final gapExpenses = [
+        ExpenseDetails(
+          id: 'g1',
+          name: 'Early expense',
+          amount: 10.00,
+          category: testCategories[0],
+          paidBy: testParticipants[0],
+          date: DateTime(2024, 3, 10),
+        ),
+        ExpenseDetails(
+          id: 'g2',
+          name: 'Late expense',
+          amount: 20.00,
+          category: testCategories[1],
+          paidBy: testParticipants[1],
+          date: DateTime(2024, 3, 13),
+        ),
+      ];
+
+      await tester.pumpWidget(buildSearchPage(expenses: gapExpenses));
+      await tester.pumpAndSettle();
+
+      // Continuous range should include the gap days 11 and 12
+      expect(find.text('10'), findsOneWidget);
+      expect(find.text('11'), findsOneWidget);
+      expect(find.text('12'), findsOneWidget);
+      expect(find.text('13'), findsOneWidget);
+    });
+
+    testWidgets('expense indicator dots are shown for days with expenses', (
+      tester,
+    ) async {
+      // Create expenses with a gap to verify dot indicators
+      final gapExpenses = [
+        ExpenseDetails(
+          id: 'g1',
+          name: 'Day 10 expense',
+          amount: 10.00,
+          category: testCategories[0],
+          paidBy: testParticipants[0],
+          date: DateTime(2024, 3, 10),
+        ),
+        ExpenseDetails(
+          id: 'g2',
+          name: 'Day 13 expense',
+          amount: 20.00,
+          category: testCategories[1],
+          paidBy: testParticipants[1],
+          date: DateTime(2024, 3, 13),
+        ),
+      ];
+
+      await tester.pumpWidget(buildSearchPage(expenses: gapExpenses));
+      await tester.pumpAndSettle();
+
+      // Find all Container widgets that are 5x5 (indicator dots)
+      final dotFinder = find.byWidgetPredicate((widget) =>
+          widget is Container &&
+          widget.constraints?.maxWidth == 5 &&
+          widget.constraints?.maxHeight == 5);
+
+      // There should be 4 date cells (10, 11, 12, 13), each with a dot container.
+      // Days 10 and 13 have visible (colored) dots; days 11 and 12 have transparent dots.
+      // All 4 have the container widget.
+      expect(dotFinder, findsNWidgets(4));
+    });
   });
 }

@@ -66,8 +66,11 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
   bool _filterHasAttachment = false;
   bool _filterHasLocation = false;
 
-  /// All unique dates that have expenses, sorted ascending.
-  late List<DateTime> _expenseDates;
+  /// Set of dates (day-level) that have expenses – used for highlighting.
+  late Set<DateTime> _expenseDateSet;
+
+  /// Continuous range of dates from earliest to latest expense.
+  late List<DateTime> _calendarDates;
 
   /// The scroll controller for the date calendar strip.
   final ScrollController _dateScrollController = ScrollController();
@@ -75,7 +78,7 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
   @override
   void initState() {
     super.initState();
-    _expenseDates = _computeExpenseDates();
+    _computeCalendarDates();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) _searchFocusNode.requestFocus();
@@ -90,14 +93,31 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
     super.dispose();
   }
 
-  /// Computes a sorted list of unique dates (day-level) that have expenses.
-  List<DateTime> _computeExpenseDates() {
+  /// Builds a continuous date range and the set of dates with expenses.
+  void _computeCalendarDates() {
     final dateSet = <DateTime>{};
     for (final e in widget.expenses) {
       dateSet.add(DateTime(e.date.year, e.date.month, e.date.day));
     }
-    final dates = dateSet.toList()..sort();
-    return dates;
+    _expenseDateSet = dateSet;
+
+    if (dateSet.isEmpty) {
+      _calendarDates = [];
+      return;
+    }
+
+    final sorted = dateSet.toList()..sort();
+    final first = sorted.first;
+    final last = sorted.last;
+
+    // Build a continuous range from first to last date
+    final dates = <DateTime>[];
+    var current = first;
+    while (!current.isAfter(last)) {
+      dates.add(current);
+      current = DateTime(current.year, current.month, current.day + 1);
+    }
+    _calendarDates = dates;
   }
 
   /// Filtered expense list based on all active filters.
@@ -244,10 +264,11 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
           ),
 
           // Date calendar strip (2-row, scrollable)
-          if (_expenseDates.isNotEmpty) ...[
+          if (_calendarDates.isNotEmpty) ...[
             const SizedBox(height: 12),
             _DateCalendarStrip(
-              dates: _expenseDates,
+              dates: _calendarDates,
+              expenseDates: _expenseDateSet,
               selectedDate: _selectedDate,
               scrollController: _dateScrollController,
               onDateSelected: (date) {
@@ -327,12 +348,14 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
 
 class _DateCalendarStrip extends StatelessWidget {
   final List<DateTime> dates;
+  final Set<DateTime> expenseDates;
   final DateTime? selectedDate;
   final ScrollController scrollController;
   final ValueChanged<DateTime> onDateSelected;
 
   const _DateCalendarStrip({
     required this.dates,
+    required this.expenseDates,
     required this.selectedDate,
     required this.scrollController,
     required this.onDateSelected,
@@ -391,6 +414,8 @@ class _DateCalendarStrip extends StatelessWidget {
             date.month == selectedDate!.month &&
             date.day == selectedDate!.day;
 
+        final hasExpenses = expenseDates.contains(date);
+
         final dayName = DateFormat.E(locale.toString()).format(date);
         final dayNum = date.day.toString();
 
@@ -416,7 +441,9 @@ class _DateCalendarStrip extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                     color: isSelected
                         ? colorScheme.onPrimary
-                        : colorScheme.onSurfaceVariant,
+                        : hasExpenses
+                            ? colorScheme.onSurface
+                            : colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                     fontSize: 10,
                   ),
                 ),
@@ -424,10 +451,26 @@ class _DateCalendarStrip extends StatelessWidget {
                 Text(
                   dayNum,
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
+                    fontWeight: hasExpenses ? FontWeight.w700 : FontWeight.w400,
                     color: isSelected
                         ? colorScheme.onPrimary
-                        : colorScheme.onSurface,
+                        : hasExpenses
+                            ? colorScheme.onSurface
+                            : colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                  ),
+                ),
+                const SizedBox(height: 3),
+                // Expense indicator dot
+                Container(
+                  width: 5,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: hasExpenses
+                        ? (isSelected
+                            ? colorScheme.onPrimary
+                            : colorScheme.primary)
+                        : Colors.transparent,
                   ),
                 ),
               ],
