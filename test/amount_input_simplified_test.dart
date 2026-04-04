@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:io_caravella_egm/data/model/expense_category.dart';
-import 'package:io_caravella_egm/data/model/expense_details.dart';
-import 'package:io_caravella_egm/data/model/expense_participant.dart';
-import 'package:io_caravella_egm/manager/expense/expense_form/amount_input_widget.dart';
+import 'package:caravella_core/caravella_core.dart';
+import 'package:io_caravella_egm/manager/expense/widgets/amount_input_widget.dart';
 
 void main() {
   group('AmountInputWidget Integration Tests', () {

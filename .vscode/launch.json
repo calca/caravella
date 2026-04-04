@@ -10,6 +10,20 @@
         "--flavor",
         "dev",
         "--dart-define",
+        "FLAVOR=dev",
+        "--dart-define",
+        "ENABLE_PLAY_UPDATES=true"
+      ]
+    },
+    {
+      "name": "Run (Dev - No Updates)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": [
+        "--flavor",
+        "dev",
+        "--dart-define",
         "FLAVOR=dev"
       ]
     },
@@ -22,11 +36,54 @@
         "--flavor",
         "staging",
         "--dart-define",
+        "FLAVOR=staging",
+        "--dart-define",
+        "ENABLE_PLAY_UPDATES=true"
+      ]
+    },
+        {
+      "name": "Run Release (Staging)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": [
+        "--flavor",
+        "staging",
+        "--release",
+        "--dart-define",
+        "FLAVOR=staging",
+        "--dart-define",
+        "ENABLE_PLAY_UPDATES=true"
+      ]
+    },
+    {
+      "name": "Run (Staging - F-Droid)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": [
+        "--flavor",
+        "staging",
+        "--dart-define",
         "FLAVOR=staging"
       ]
     },
     {
       "name": "Run (Prod)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": [
+        "--flavor",
+        "prod",
+        "--dart-define",
+        "FLAVOR=prod",
+        "--dart-define",
+        "ENABLE_PLAY_UPDATES=true"
+      ]
+    },
+    {
+      "name": "Run (Prod - F-Droid)",
       "request": "launch",
       "type": "dart",
       "program": "lib/main.dart",

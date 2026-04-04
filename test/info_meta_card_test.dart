@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:io_caravella_egm/manager/details/pages/tabs/general_overview_tab.dart';
-import 'package:io_caravella_egm/data/model/expense_group.dart';
-import 'package:io_caravella_egm/data/model/expense_participant.dart';
-import 'package:io_caravella_egm/data/model/expense_category.dart';
-import 'package:io_caravella_egm/data/model/expense_details.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart';
 import 'package:io_caravella_egm/manager/details/pages/tabs/usecase/date_range_formatter.dart';
 

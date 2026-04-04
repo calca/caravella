@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../state/expense_group_notifier.dart';
-import '../settings/user_name_notifier.dart';
-import '../state/locale_notifier.dart';
-import '../state/theme_mode_notifier.dart';
+import 'package:caravella_core/caravella_core.dart';
+import '../services/notification_manager.dart';
 
 /// Sets up all global providers for the app.
 class ProviderSetup {
@@ -12,20 +9,31 @@ class ProviderSetup {
   static Widget createProviders({required Widget child}) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ExpenseGroupNotifier()),
+        ChangeNotifierProvider(
+          create: (_) {
+            final notifier = ExpenseGroupNotifier();
+            // Register callback to cancel notification when archiving
+            notifier.setNotificationCancelCallback((groupId) async {
+              await NotificationManager().cancelNotificationForGroup(groupId);
+            });
+            return notifier;
+          },
+        ),
         ChangeNotifierProvider(create: (_) => UserNameNotifier()),
       ],
       child: child,
     );
   }
 
-  /// Wraps the child with LocaleNotifier and ThemeModeNotifier.
+  /// Wraps the child with LocaleNotifier, ThemeModeNotifier and DynamicColorNotifier.
   static Widget wrapWithNotifiers({
     required Widget child,
     required String locale,
     required Function(String) onLocaleChange,
     required ThemeMode themeMode,
     required Function(ThemeMode) onThemeChange,
+    required bool dynamicColorEnabled,
+    required Function(bool) onDynamicColorChange,
   }) {
     return LocaleNotifier(
       locale: locale,
@@ -33,7 +41,11 @@ class ProviderSetup {
       child: ThemeModeNotifier(
         themeMode: themeMode,
         changeTheme: onThemeChange,
-        child: child,
+        child: DynamicColorNotifier(
+          dynamicColorEnabled: dynamicColorEnabled,
+          changeDynamicColor: onDynamicColorChange,
+          child: child,
+        ),
       ),
     );
   }

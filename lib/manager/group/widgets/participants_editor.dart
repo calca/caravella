@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:io_caravella_egm/manager/group/data/group_form_state.dart';
 import 'package:provider/provider.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'participants_section.dart';
-import '../data/group_form_state.dart';
-import '../../../data/model/expense_participant.dart';
+import 'package:caravella_core/caravella_core.dart';
 import '../group_form_controller.dart';
-import '../../../widgets/app_toast.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 class ParticipantsEditor extends StatelessWidget {
   const ParticipantsEditor({super.key});
@@ -21,11 +21,10 @@ class ParticipantsEditor extends StatelessWidget {
       onEditParticipant: (i, name) => state.editParticipant(i, name),
       onRemoveParticipant: (i) async {
         final loc = gen.AppLocalizations.of(context);
-        final messenger = ScaffoldMessenger.of(context);
         final removed = await controller.removeParticipantIfUnused(i);
-        if (!removed) {
-          AppToast.showFromMessenger(
-            messenger,
+        if (!removed && context.mounted) {
+          AppToast.show(
+            context,
             loc.cannot_delete_assigned_participant,
             type: ToastType.info,
           );

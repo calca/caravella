@@ -8,6 +8,8 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
 
 • <b>Expense Tracking</b>: Easily add new expenses, assign categories, specify who paid, and select which members participated in the cost.
 
+• <b>AI Integration</b>: Android AI agents like Google Gemini can add expenses and check balances hands-free.
+
 • <b>Material 3 UI</b>: A beautiful and modern user interface with support for dynamic colors and a native-feeling light/dark mode.
 
 • <b>Dashboard</b>: A central home page that provides a quick overview of the current pinned group, total expenses, and quick access to details.

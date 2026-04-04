@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:io_caravella_egm/data/services/preferences_service.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {

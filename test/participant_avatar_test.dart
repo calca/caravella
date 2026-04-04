@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:io_caravella_egm/manager/details/widgets/group_header.dart';
-import 'package:io_caravella_egm/data/model/expense_participant.dart';
+import 'package:caravella_core/caravella_core.dart';
 
 void main() {
   testWidgets('ParticipantAvatar displays participant initials', (tester) async {

@@ -53,5 +53,7 @@
 	<string>This app needs access to microphone for voice input of expenses.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>This app needs access to speech recognition for voice input of expenses.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app needs access to your location to tag expenses with their location context.</string>
 </dict>
 </plist>

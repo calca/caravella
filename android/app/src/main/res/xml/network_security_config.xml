@@ -13,6 +13,9 @@
         <domain includeSubdomains="true">googleapis.com</domain>
         <domain includeSubdomains="true">maps.googleapis.com</domain>
         
+        <!-- OpenStreetMap for map tiles -->
+        <domain includeSubdomains="true">openstreetmap.org</domain>
+        
         <!-- GitHub for potential updates or documentation links -->
         <domain includeSubdomains="true">github.com</domain>
         <domain includeSubdomains="true">api.github.com</domain>

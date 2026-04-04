@@ -1,7 +1,43 @@
-## 1.0.46 (Coming Soon)
+## 1.6.0 (03.04.2026)
 
-- **New**: Voice input for expenses - Tap the microphone button and speak your expense (e.g., "50 dollars for dinner at restaurant")
-- **Improvements**: The app automatically recognizes amount, description, and category from voice
+- **New**: Android AI agent integration – Google Gemini can add expenses and check balances for you
+- **New**: Group creation wizard with guided 3-step flow for first-time users
+- **New**: Month separators in expense list for better navigation
+- **New**: Pagination for large expense lists with smooth loading
+- **New**: Featured card on home page highlights your pinned group
+- **New**: Smooth animations when adding new expenses
+- **Improvements**: Redesigned home page layout with featured group and carousel
+- **Improvements**: Group settings reorganized into dedicated pages for easier access
+- **Improvements**: Export options displayed in clear card-based layout
+- **Improvements**: Home page skeleton loader matches actual widget structure
+- **Fixed**: Expense amounts now correctly show decimal places everywhere
+- **Fixed**: Persistent notifications respect group date ranges
+- **Fixed**: Notifications update correctly from all entry points
+- **Fixed**: Welcome page appears smoothly on first launch
+
+## 1.4.0 (16.12.2025)
+
+- **New**: Media attachments support for expenses (images, PDFs, videos) with full-screen viewer
+- **New**: Markdown export format with comprehensive statistics and expense tables
+- **New**: Tab-based group editing with organized sections for General, Participants, Categories, and Settings
+- **New**: Share button in expense form to share expense details as text
+- **Improvements**: Camera now opens with rear camera by default for more natural photo-taking
+- **Improvements**: Improved attachment handling with better error feedback and stability
+- **Improvements**: Consolidated group settings into single interface with tab navigation
+- **Fixed**: Android notification icons now work correctly in all build variants
+- **Fixed**: Button style consistency across all forms
+- **Technical**: Updated to Flutter 3.38.3 with latest dependency versions
+
+## 1.2.0 (03.12.2025)
+
+- **New**: Interactive maps with OpenStreetMap showing expense locations
+- **New**: Location search with autocomplete and automatic GPS capture
+- **New**: Dynamic color theming adapts to your device wallpaper (Android 12+)
+- **New**: Android Quick Actions to launch expense groups from home screen
+- **New**: Automatic update checks with weekly notifications
+- **Improvements**: Beautiful skeleton loader animations for smoother loading
+- **Improvements**: Enhanced currency display with locale-aware formatting
+- **Fixed**: Auto-location setting now saves correctly
 
 ## 1.0.45 (16.10.2025)
 

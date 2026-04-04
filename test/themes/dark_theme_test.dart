@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:io_caravella_egm/themes/caravella_themes.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 void main() {
   group('Dark Theme Tests', () {
@@ -15,14 +15,17 @@ void main() {
       expect(darkColorScheme.surface, equals(const Color(0xFF181A1B)));
 
       // SurfaceDim should be slightly darker than surface
-      expect(darkColorScheme.surfaceDim.toARGB32(), lessThan(darkColorScheme.surface.toARGB32()));
+      expect(
+        darkColorScheme.surfaceDim.toARGB32(),
+        lessThan(darkColorScheme.surface.toARGB32()),
+      );
 
       // SurfaceContainerLowest should be darker than surface
       expect(
         darkColorScheme.surfaceContainerLowest.toARGB32(),
         lessThan(darkColorScheme.surface.toARGB32()),
       );
-      
+
       // SurfaceContainer (card color) should be 0xFF242627
       expect(darkColorScheme.surfaceContainer, equals(const Color(0xFF242627)));
     });

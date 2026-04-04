@@ -2,9 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:io_caravella_egm/manager/group/group_form_controller.dart';
 import 'package:io_caravella_egm/manager/group/data/group_form_state.dart';
 import 'package:io_caravella_egm/manager/group/group_edit_mode.dart';
-import 'package:io_caravella_egm/data/model/expense_group.dart';
-import 'package:io_caravella_egm/data/model/expense_participant.dart';
-import 'package:io_caravella_egm/data/model/expense_category.dart';
+import 'package:caravella_core/caravella_core.dart';
 
 void main() {
   group('Group Edit Image Change Detection Tests', () {
@@ -98,11 +96,7 @@ void main() {
       state.setColor(0xFF0000FF); // Blue
 
       // Should detect the change
-      expect(
-        controller.hasChanges,
-        true,
-        reason: 'Should detect color change',
-      );
+      expect(controller.hasChanges, true, reason: 'Should detect color change');
     });
 
     test('hasChanges detects switching from color to image', () {
@@ -174,7 +168,11 @@ void main() {
 
       // Color should be cleared
       expect(state.imagePath, '/path/to/image.jpg');
-      expect(state.color, null, reason: 'Color should be cleared when image is set');
+      expect(
+        state.color,
+        null,
+        reason: 'Color should be cleared when image is set',
+      );
     });
 
     test('setColor clears image when color is set', () {
@@ -190,7 +188,11 @@ void main() {
 
       // Image should be cleared
       expect(state.color, 0xFFFF0000);
-      expect(state.imagePath, null, reason: 'Image should be cleared when color is set');
+      expect(
+        state.imagePath,
+        null,
+        reason: 'Image should be cleared when color is set',
+      );
     });
   });
 }
