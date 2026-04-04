@@ -157,7 +157,7 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
     // Has location filter
     if (_filterHasLocation) {
       filtered =
-          filtered.where((e) => e.location != null && e.location!.hasLocation).toList();
+          filtered.where((e) => e.location?.hasLocation ?? false).toList();
     }
 
     // Sort by date (newest first)
@@ -203,7 +203,7 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
           if (_hasActiveFilters)
             TextButton.icon(
               onPressed: _clearAllFilters,
-              icon: Icon(Icons.clear, size: 16),
+              icon: const Icon(Icons.clear, size: 16),
               label: Text(gloc.clear_filters),
               style: TextButton.styleFrom(
                 foregroundColor: colorScheme.primary,
@@ -221,10 +221,10 @@ class _ExpenseSearchPageState extends State<ExpenseSearchPage> {
               focusNode: _searchFocusNode,
               decoration: InputDecoration(
                 hintText: gloc.search_all_fields_hint,
-                prefixIcon: Icon(Icons.search_outlined, size: 20),
+                prefixIcon: const Icon(Icons.search_outlined, size: 20),
                 suffixIcon: _searchQuery.isNotEmpty
                     ? IconButton(
-                        icon: Icon(Icons.close, size: 20),
+                        icon: const Icon(Icons.close, size: 20),
                         onPressed: () {
                           _searchController.clear();
                           setState(() => _searchQuery = '');
