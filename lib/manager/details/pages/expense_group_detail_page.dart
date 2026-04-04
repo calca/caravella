@@ -24,11 +24,11 @@ import '../widgets/group_actions.dart';
 import '../widgets/filtered_expense_list.dart';
 import '../export/ofx_exporter.dart';
 import '../export/csv_exporter.dart';
+import '../export/markdown_exporter.dart';
+import '../../../services/notification_manager.dart';
 import '../../../sync/pages/group_share_qr_page.dart';
 import '../../../sync/pages/device_management_page.dart';
 import '../../../sync/services/group_sync_coordinator.dart';
-import '../export/markdown_exporter.dart';
-import '../../../services/notification_manager.dart';
 
 import 'unified_overview_page.dart';
 import 'group_settings_page.dart';
@@ -146,78 +146,6 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (ctx) => UnifiedOverviewPage(trip: _trip!)),
     );
-  }
-
-  void _showShareQrPage() async {
-    if (_trip == null) return;
-    
-    // Require authentication before showing QR share page
-    final authenticated = await AuthGuard.requireAuth(context);
-    if (!authenticated || !mounted) return;
-    
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (ctx) => GroupShareQrPage(group: _trip!),
-      ),
-    );
-  }
-
-  void _showDeviceManagement() async {
-    if (_trip == null) return;
-    
-    // Require authentication before showing device management
-    final authenticated = await AuthGuard.requireAuth(context);
-    if (!authenticated || !mounted) return;
-    
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (ctx) => DeviceManagementPage(group: _trip!),
-      ),
-    );
-  }
-
-  Future<void> _forceSync() async {
-    if (_trip == null || !_trip!.syncEnabled) return;
-    
-    final gloc = gen.AppLocalizations.of(context);
-    final syncCoordinator = GroupSyncCoordinator();
-    
-    // Show loading indicator
-    if (!mounted) return;
-    AppToast.show(
-      context,
-      'Syncing...',
-      type: ToastType.info,
-    );
-    
-    try {
-      final success = await syncCoordinator.forceSyncGroup(_trip!.id, _trip!);
-      
-      if (!mounted) return;
-      
-      if (success) {
-        AppToast.show(
-          context,
-          'Sync completed successfully',
-          type: ToastType.success,
-        );
-        // Refresh the group to show updated sync status
-        await _refreshGroup();
-      } else {
-        AppToast.show(
-          context,
-          'Sync failed. Please try again.',
-          type: ToastType.error,
-        );
-      }
-    } catch (e) {
-      if (!mounted) return;
-      AppToast.show(
-        context,
-        'Sync error: ${e.toString()}',
-        type: ToastType.error,
-      );
-    }
   }
 
   void _showExportOptionsSheet() {
@@ -489,6 +417,60 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
 
     // Refresh after returning from settings
     await _refreshGroup();
+  }
+
+  void _showShareQrPage() async {
+    if (_trip == null) return;
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (ctx) => GroupShareQrPage(group: _trip!),
+      ),
+    );
+  }
+
+  void _showDeviceManagement() async {
+    if (_trip == null) return;
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (ctx) => DeviceManagementPage(group: _trip!),
+      ),
+    );
+  }
+
+  Future<void> _forceSync() async {
+    if (_trip == null || !_trip!.syncEnabled) return;
+    if (!mounted) return;
+    AppToast.show(
+      context,
+      'Syncing...',
+      type: ToastType.info,
+    );
+    try {
+      final syncCoordinator = GroupSyncCoordinator();
+      final success = await syncCoordinator.forceSyncGroup(_trip!.id, _trip!);
+      if (!mounted) return;
+      if (success) {
+        AppToast.show(
+          context,
+          'Sync completed successfully',
+          type: ToastType.success,
+        );
+        await _refreshGroup();
+      } else {
+        AppToast.show(
+          context,
+          'Sync failed. Please try again.',
+          type: ToastType.error,
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      AppToast.show(
+        context,
+        'Sync error: ${e.toString()}',
+        type: ToastType.error,
+      );
+    }
   }
 
   Future<void> _handlePinToggle() async {

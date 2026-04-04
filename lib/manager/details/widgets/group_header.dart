@@ -136,13 +136,6 @@ class GroupHeader extends StatelessWidget {
     final double circleSize = MediaQuery.of(context).size.width * 0.3;
     final gloc = gen.AppLocalizations.of(context);
 
-    // Get sync state if sync is enabled
-    final syncCoordinator = GroupSyncCoordinator();
-    final syncState = trip.syncEnabled
-        ? syncCoordinator.getGroupSyncState(trip.id)
-        : null;
-
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -214,11 +207,15 @@ class GroupHeader extends StatelessWidget {
           ),
         ),
         // Show sync status indicator if sync is enabled
-        if (trip.syncEnabled && syncState != null) ...[
+        if (trip.syncEnabled) ...[
           const SizedBox(height: 8),
-          SyncStatusIndicator(
-            syncState: syncState,
-            compact: false,
+          Builder(
+            builder: (ctx) {
+              final syncCoordinator = GroupSyncCoordinator();
+              final syncState = syncCoordinator.getGroupSyncState(trip.id);
+              if (syncState == null) return const SizedBox.shrink();
+              return SyncStatusIndicator(syncState: syncState, compact: false);
+            },
           ),
         ],
       ],

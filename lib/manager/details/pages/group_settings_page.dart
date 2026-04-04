@@ -197,10 +197,7 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
                     color: colorScheme.surface,
                     child: ListTile(
                       leading: const Icon(Icons.qr_code),
-                      title: Text(
-                        'Share via QR',
-                        style: textTheme.titleMedium,
-                      ),
+                      title: Text('Share via QR', style: textTheme.titleMedium),
                       subtitle: Text(
                         'Share this group with another device',
                         style: textTheme.bodySmall,
@@ -212,7 +209,7 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
                       },
                     ),
                   ),
-                if (widget.onShareQr != null && widget.onManageDevices != null)
+                if (widget.onManageDevices != null)
                   const SizedBox(height: 8),
                 if (widget.onManageDevices != null)
                   SettingsCard(
@@ -243,10 +240,7 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
                     color: colorScheme.surface,
                     child: ListTile(
                       leading: const Icon(Icons.sync),
-                      title: Text(
-                        'Force Sync',
-                        style: textTheme.titleMedium,
-                      ),
+                      title: Text('Force Sync', style: textTheme.titleMedium),
                       subtitle: Text(
                         'Manually trigger synchronization',
                         style: textTheme.bodySmall,
@@ -260,7 +254,6 @@ class _GroupSettingsPageState extends State<GroupSettingsPage> {
                   ),
               ],
             ),
-
 
           // Dangerous section
           SettingsSection(

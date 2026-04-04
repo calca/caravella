@@ -88,9 +88,7 @@ class SqliteExpenseGroupRepository
         color INTEGER,
         notification_enabled INTEGER NOT NULL DEFAULT 0,
         group_type TEXT,
-        auto_location_enabled INTEGER NOT NULL DEFAULT 0,
-        sync_enabled INTEGER NOT NULL DEFAULT 0,
-        last_sync_timestamp INTEGER
+        auto_location_enabled INTEGER NOT NULL DEFAULT 0
       )
     ''');
 
@@ -174,10 +172,10 @@ class SqliteExpenseGroupRepository
     // Migration from v1 to v2: add sync fields
     if (oldVersion < 2) {
       await db.execute(
-        'ALTER TABLE $_tableGroups ADD COLUMN sync_enabled INTEGER NOT NULL DEFAULT 0',
+        'ALTER TABLE \$_tableGroups ADD COLUMN sync_enabled INTEGER NOT NULL DEFAULT 0',
       );
       await db.execute(
-        'ALTER TABLE $_tableGroups ADD COLUMN last_sync_timestamp INTEGER',
+        'ALTER TABLE \$_tableGroups ADD COLUMN last_sync_timestamp INTEGER',
       );
     }
   }

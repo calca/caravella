@@ -1,3 +1,20 @@
+## 1.6.0 (03.04.2026)
+
+- **New**: Android AI agent integration – Google Gemini can add expenses and check balances for you
+- **New**: Group creation wizard with guided 3-step flow for first-time users
+- **New**: Month separators in expense list for better navigation
+- **New**: Pagination for large expense lists with smooth loading
+- **New**: Featured card on home page highlights your pinned group
+- **New**: Smooth animations when adding new expenses
+- **Improvements**: Redesigned home page layout with featured group and carousel
+- **Improvements**: Group settings reorganized into dedicated pages for easier access
+- **Improvements**: Export options displayed in clear card-based layout
+- **Improvements**: Home page skeleton loader matches actual widget structure
+- **Fixed**: Expense amounts now correctly show decimal places everywhere
+- **Fixed**: Persistent notifications respect group date ranges
+- **Fixed**: Notifications update correctly from all entry points
+- **Fixed**: Welcome page appears smoothly on first launch
+
 ## 1.4.0 (16.12.2025)
 
 - **New**: Media attachments support for expenses (images, PDFs, videos) with full-screen viewer

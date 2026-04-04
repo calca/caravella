@@ -1,0 +1,9 @@
+Versión 1.6.0 - Integración IA y Pantalla Principal Rediseñada
+
+• Agentes IA: Google Gemini puede agregar gastos y verificar saldos por ti
+• Asistente de inicio: creación de grupo guiada en 3 pasos para nuevos usuarios
+• Pantalla rediseñada: tarjeta destacada para tu grupo fijado
+• Listas más inteligentes: separadores mensuales, paginación y animaciones suaves
+• Mejores notificaciones: respetan rangos de fechas y se actualizan de forma fiable
+
+¡Tus gastos, más inteligentes que nunca!

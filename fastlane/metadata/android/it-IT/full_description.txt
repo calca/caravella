@@ -8,6 +8,8 @@ Che tu sia in un viaggio di gruppo, condivida un appartamento con coinquilini o 
 
 • <b>Tracciamento Spese</b>: Aggiungi facilmente nuove spese, assegna categorie, specifica chi ha pagato e seleziona quali membri hanno partecipato al costo.
 
+• <b>Integrazione AI</b>: Gli agenti AI di Android come Google Gemini possono aggiungere spese e controllare i saldi a mani libere.
+
 • <b>UI Material 3</b>: Un'interfaccia utente bella e moderna con supporto per colori dinamici e modalità chiara/scura nativa.
 
 • <b>Dashboard</b>: Una pagina principale centrale che fornisce una rapida panoramica del gruppo corrente, delle spese totali e accesso rapido ai dettagli.

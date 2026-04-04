@@ -34,15 +34,6 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
 - **Dynamic Color Support**: Material 3 colors derived from device wallpaper (Android 12+)
 - **Material Design 3**: Modern interface with smooth animations and transitions
 
-### Multi-Device Sync (Optional) 🆕
-- **QR Code Sharing**: Share expense groups across your devices using secure QR code-based key exchange
-- **End-to-End Encryption**: AES-256-GCM encryption ensures your data is always private
-- **Realtime Sync**: Changes propagate to all devices within 1-2 seconds
-- **Offline Support**: Changes queue locally and sync automatically when connection restored
-- **FREE Tier**: Sync 1 group with up to 2 participants at no cost
-- **Account Numbers**: Simple, auto-generated identifiers (no email/password required)
-- **Device Management**: View and revoke device access to your synced groups
-
 ### Updates & Convenience
 - **Auto-Update Checks**: Weekly automatic update notifications (Play Store builds)
 - **In-App Rating**: Smart prompts to rate the app at appropriate moments
@@ -83,13 +74,13 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
   <img src="store/screenshot/09 - Grops History.png" alt="Groups History" width="200"/>
 </p>
 
-## 🎉 What's New in v1.4.0
+## 🎉 What's New in v1.6.0
 
-- **Media Attachments**: Add photos, videos, and PDFs to your expenses with full-screen viewer and share capabilities
-- **Markdown Export**: Export your expense groups to markdown format with comprehensive statistics and tables
-- **Smarter Forms**: Improved group editing with organized tabs and streamlined expense management
-- **Better Camera Experience**: Camera now opens with rear camera by default for more natural photo-taking
-- **Enhanced Stability**: Improved attachment handling, notification icons, and error feedback throughout the app
+- **AI-Powered Shortcuts**: Android AI agents like Google Gemini can now add expenses and check balances directly
+- **Guided Setup Wizard**: New 3-step group creation wizard makes getting started easier than ever
+- **Redesigned Home Page**: Featured card highlights your pinned group with beautiful animations and better layout
+- **Smarter Expense Lists**: Month separators, pagination for large groups, and smooth add animations
+- **Improved Notifications**: Persistent notifications now respect group date ranges and update from all entry points
 
 ## 🛠️ Tech Stack & Architecture
 
@@ -98,8 +89,6 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
 - **State Management**: `provider` for centralized and reactive state management
 - **Storage**: SQLite database (`sqflite`) for high-performance data persistence with automatic migration from legacy JSON storage
 - **Maps**: OpenStreetMap integration via `flutter_map` with Nominatim geocoding
-- **Sync**: Optional multi-device sync with Supabase Realtime and end-to-end encryption (AES-256-GCM)
-- **Security**: ECDH X25519 key exchange, platform secure storage (Keychain/KeyStore), QR code-based key sharing
 - **Architecture**: Multi-package clean architecture with separation between:
   - `caravella_core`: Business logic, data models, and services
   - `caravella_core_ui`: Reusable UI components and themes
@@ -119,29 +108,6 @@ Caravella is designed with privacy as a core principle:
 - **GDPR Compliant**: Full compliance with privacy regulations
 
 For complete details, see our [Privacy Policy](store/PRIVACY_POLICY.md) and [Permissions Documentation](store/permissions_documentation.md).
-
-## 🔄 Multi-Device Sync (Optional)
-
-Caravella supports secure multi-device synchronization for expense groups:
-
-1.  **Setup Supabase** (one-time):
-    - Create a free account at [https://supabase.com](https://supabase.com)
-    - Create a new project and note your project URL and anon key
-    - See [Multi-Device Sync Guide](docs/MULTI_DEVICE_SYNC_GUIDE.md) for detailed setup
-
-2.  **Configure Credentials**:
-    ```sh
-    flutter run \
-      --dart-define=SUPABASE_URL=your_url \
-      --dart-define=SUPABASE_ANON_KEY=your_key
-    ```
-
-3.  **Share Groups via QR Code**:
-    - Open a group → Options → Share via QR
-    - Scan the QR code on your other device
-    - Both devices will sync automatically
-
-**Security**: All data is end-to-end encrypted using AES-256-GCM. The server never sees unencrypted data or encryption keys. See [Sync Module README](lib/sync/README.md) for security details.
 
 ## 📦 Download & Installation
 

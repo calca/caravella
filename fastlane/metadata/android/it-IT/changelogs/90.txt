@@ -1,0 +1,9 @@
+Versione 1.6.0 - Integrazione AI e Home Ridisegnata
+
+• Agenti AI: Google Gemini può aggiungere spese e controllare i saldi per te
+• Procedura guidata: creazione gruppo in 3 passaggi per nuovi utenti
+• Home ridisegnata: scheda in evidenza per il gruppo principale
+• Liste più smart: separatori mensili, paginazione e animazioni fluide
+• Notifiche migliori: rispettano le date e si aggiornano in modo affidabile
+
+Le tue spese, più intelligenti che mai!

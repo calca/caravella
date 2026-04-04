@@ -1,3 +1,20 @@
+## 1.6.0 (03.04.2026)
+
+- **Novità**: Integrazione agenti AI Android – Google Gemini può aggiungere spese e controllare i saldi per te
+- **Novità**: Procedura guidata di creazione gruppo con flusso ottimizzato in 3 passaggi
+- **Novità**: Separatori mensili nella lista spese per una navigazione migliore
+- **Novità**: Paginazione per liste spese grandi con caricamento fluido
+- **Novità**: Scheda in evidenza nella home page per il gruppo principale
+- **Novità**: Animazioni fluide quando aggiungi nuove spese
+- **Miglioramenti**: Layout home page ridisegnato con gruppo in evidenza e carosello
+- **Miglioramenti**: Impostazioni gruppo riorganizzate in pagine dedicate per accesso più facile
+- **Miglioramenti**: Opzioni di esportazione mostrate in layout a schede chiaro
+- **Miglioramenti**: Scheletro di caricamento home page migliorato
+- **Bug fix**: Gli importi delle spese ora mostrano correttamente i decimali ovunque
+- **Bug fix**: Le notifiche persistenti rispettano gli intervalli di date dei gruppi
+- **Bug fix**: Le notifiche si aggiornano correttamente da tutti i punti di accesso
+- **Bug fix**: La pagina di benvenuto appare fluidamente al primo avvio
+
 ## 1.4.0 (16.12.2025)
 
 - **Novità**: Supporto allegati multimediali per spese (immagini, PDF, video) con visualizzatore a schermo intero
