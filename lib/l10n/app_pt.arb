@@ -918,4 +918,10 @@
   ,"@voice_input_not_available": {"description": "Mensagem quando o reconhecimento de voz não está disponível no dispositivo"}
   ,"voice_input_hint": "Tente dizer: '50 reais para o jantar no restaurante'"
   ,"@voice_input_hint": {"description": "Dica de exemplo para usar a entrada de voz"}
+  ,"voice_add_expense": "Adicionar por voz"
+  ,"@voice_add_expense": {"description": "Rótulo para a CTA de voz no cartão inicial"}
+  ,"voice_expense_saved": "Despesa salva!"
+  ,"@voice_expense_saved": {"description": "Confirmação quando a despesa é salva por voz"}
+  ,"voice_expense_needs_more_info": "Algumas informações estão faltando – preencha o formulário"
+  ,"@voice_expense_needs_more_info": {"description": "Mensagem quando faltam campos obrigatórios"}
 }

@@ -938,4 +938,10 @@
   ,"@voice_input_not_available": {"description": "Messaggio quando il riconoscimento vocale non è disponibile sul dispositivo"}
   ,"voice_input_hint": "Prova a dire: '50 euro per cena al ristorante'"
   ,"@voice_input_hint": {"description": "Suggerimento di esempio per l'uso dell'input vocale"}
+  ,"voice_add_expense": "Aggiungi con la voce"
+  ,"@voice_add_expense": {"description": "Etichetta per la CTA vocale sulla card home"}
+  ,"voice_expense_saved": "Spesa salvata!"
+  ,"@voice_expense_saved": {"description": "Conferma quando la spesa viene salvata via voce"}
+  ,"voice_expense_needs_more_info": "Mancano alcune info – completa il modulo"
+  ,"@voice_expense_needs_more_info": {"description": "Messaggio quando l'input vocale non ha i dati necessari"}
 }

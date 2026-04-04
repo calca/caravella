@@ -953,4 +953,10 @@
   ,"@voice_input_not_available": {"description": "Mensaje cuando el reconocimiento de voz no está disponible en el dispositivo"}
   ,"voice_input_hint": "Intenta decir: '50 euros para la cena en el restaurante'"
   ,"@voice_input_hint": {"description": "Sugerencia de ejemplo para usar la entrada de voz"}
+  ,"voice_add_expense": "Añadir por voz"
+  ,"@voice_add_expense": {"description": "Etiqueta para la CTA de voz en la tarjeta de inicio"}
+  ,"voice_expense_saved": "¡Gasto guardado!"
+  ,"@voice_expense_saved": {"description": "Confirmación cuando el gasto se guarda por voz"}
+  ,"voice_expense_needs_more_info": "Falta información – completa el formulario"
+  ,"@voice_expense_needs_more_info": {"description": "Mensaje cuando faltan datos requeridos"}
 }

@@ -2292,4 +2292,13 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get voice_input_hint => 'Intenta decir: \'50 euros para la cena en el restaurante\'';
+
+  @override
+  String get voice_add_expense => 'Añadir por voz';
+
+  @override
+  String get voice_expense_saved => '¡Gasto guardado!';
+
+  @override
+  String get voice_expense_needs_more_info => 'Falta información – completa el formulario';
 }

@@ -5,11 +5,13 @@ import '../../../services/voice_input_service.dart';
 class VoiceInputButton extends StatefulWidget {
   final Function(Map<String, dynamic>) onVoiceResult;
   final String? localeId;
+  final List<String> participantNames;
 
   const VoiceInputButton({
     super.key,
     required this.onVoiceResult,
     this.localeId,
+    this.participantNames = const [],
   });
 
   @override
@@ -76,7 +78,10 @@ class _VoiceInputButtonState extends State<VoiceInputButton>
           _animationController.stop();
 
           // Parse the voice text
-          final parsedData = VoiceInputService.parseExpenseFromText(text);
+          final parsedData = VoiceInputService.parseExpenseFromText(
+            text,
+            participantNames: widget.participantNames,
+          );
           
           // Callback with parsed data
           widget.onVoiceResult(parsedData);

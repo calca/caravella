@@ -8,6 +8,7 @@ import 'group_card_empty_state.dart';
 // group_card_stats.dart removed import (not needed here)
 import 'add_expense_controller.dart';
 import 'group_card_recents.dart';
+import 'group_card_voice_button.dart';
 
 /// Main content widget for expense group cards.
 ///
@@ -122,10 +123,20 @@ class _GroupCardContentState extends State<GroupCardContent> {
               localizations: widget.localizations,
               theme: widget.theme,
             ),
-            GroupCardAddButton(
-              group: _currentGroup,
-              theme: widget.theme,
-              controller: addExpenseController,
+            Row(
+              children: [
+                Expanded(
+                  child: GroupCardAddButton(
+                    group: _currentGroup,
+                    theme: widget.theme,
+                    controller: addExpenseController,
+                  ),
+                ),
+                GroupCardVoiceButton(
+                  group: _currentGroup,
+                  onExpenseAdded: widget.onExpenseAdded,
+                ),
+              ],
             ),
           ],
         );

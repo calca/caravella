@@ -4370,6 +4370,12 @@ abstract class AppLocalizations {
   String get voice_input_not_available;
 
   String get voice_input_hint;
+
+  String get voice_add_expense;
+
+  String get voice_expense_saved;
+
+  String get voice_expense_needs_more_info;
 }
 
 class _AppLocalizationsDelegate

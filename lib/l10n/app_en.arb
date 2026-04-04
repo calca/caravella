@@ -975,4 +975,10 @@
   ,"@voice_input_not_available": {"description": "Message when voice recognition is not available on the device"}
   ,"voice_input_hint": "Try saying: '50 dollars for dinner at restaurant'"
   ,"@voice_input_hint": {"description": "Example hint for using voice input"}
+  ,"voice_add_expense": "Add by voice"
+  ,"@voice_add_expense": {"description": "Label for the voice add expense CTA on home card"}
+  ,"voice_expense_saved": "Expense saved!"
+  ,"@voice_expense_saved": {"description": "Confirmation message when expense is saved via voice"}
+  ,"voice_expense_needs_more_info": "Some info missing – fill in the form"
+  ,"@voice_expense_needs_more_info": {"description": "Message when voice input lacks required fields"}
 }

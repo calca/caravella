@@ -88,6 +88,7 @@ class ExpenseFormFields extends StatelessWidget {
         children: [
           VoiceInputButton(
             localeId: localeId,
+            participantNames: participants.map((p) => p.name).toList(),
             onVoiceResult: (result) => _handleVoiceInput(context, result, gloc),
           ),
           const SizedBox(width: 12),
@@ -115,6 +116,8 @@ class ExpenseFormFields extends StatelessWidget {
     final amount = result['amount'] as double?;
     final name = result['name'] as String?;
     final categoryName = result['category'] as String?;
+    final paidByName = result['paidBy'] as String?;
+    final date = result['date'] as DateTime?;
 
     if (amount != null && amount > 0) {
       controller.amountController.text = amount.toString();
@@ -130,6 +133,17 @@ class ExpenseFormFields extends StatelessWidget {
       if (matchedCategory != null) {
         controller.updateCategory(matchedCategory);
       }
+    }
+    if (paidByName != null && paidByName.isNotEmpty) {
+      final matched = participants.where(
+        (p) => p.name.toLowerCase() == paidByName.toLowerCase(),
+      ).firstOrNull;
+      if (matched != null) {
+        controller.updatePaidBy(matched);
+      }
+    }
+    if (date != null) {
+      controller.updateDate(date);
     }
 
     // Focus next empty field

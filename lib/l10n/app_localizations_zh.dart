@@ -2232,4 +2232,13 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get voice_input_hint => '尝试说：\'50元晚餐\'';
+
+  @override
+  String get voice_add_expense => '语音添加';
+
+  @override
+  String get voice_expense_saved => '支出已保存！';
+
+  @override
+  String get voice_expense_needs_more_info => '信息不足，请填写表单';
 }

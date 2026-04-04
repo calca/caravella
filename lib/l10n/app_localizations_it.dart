@@ -2289,4 +2289,13 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get voice_input_hint => 'Prova a dire: \'50 euro per cena al ristorante\'';
+
+  @override
+  String get voice_add_expense => 'Aggiungi con la voce';
+
+  @override
+  String get voice_expense_saved => 'Spesa salvata!';
+
+  @override
+  String get voice_expense_needs_more_info => 'Mancano alcune info – completa il modulo';
 }

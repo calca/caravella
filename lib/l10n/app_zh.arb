@@ -1357,5 +1357,17 @@
   "voice_input_hint": "尝试说：'50元晚餐'",
   "@voice_input_hint": {
     "description": "使用语音输入的示例提示"
+  },
+  "voice_add_expense": "语音添加",
+  "@voice_add_expense": {
+    "description": "主页卡片上语音添加按钮的标签"
+  },
+  "voice_expense_saved": "支出已保存！",
+  "@voice_expense_saved": {
+    "description": "通过语音保存支出时的确认消息"
+  },
+  "voice_expense_needs_more_info": "信息不足，请填写表单",
+  "@voice_expense_needs_more_info": {
+    "description": "语音输入缺少必填字段时的提示"
   }
 }
