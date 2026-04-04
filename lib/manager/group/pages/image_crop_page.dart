@@ -10,7 +10,7 @@ class ImageCropPage extends StatefulWidget {
   const ImageCropPage({
     super.key,
     required this.imageFile,
-    this.aspectRatio = 2 / 3,
+    this.aspectRatio = 1,
   });
 
   @override

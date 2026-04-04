@@ -1,0 +1,205 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:dynamic_color/dynamic_color.dart';
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
+import 'package:zentoast/zentoast.dart';
+
+import 'route_observer.dart';
+import 'provider_setup.dart';
+import 'caravella_home_page.dart';
+
+/// The root widget of the Caravella app, managing locale and theme state.
+class CaravellaApp extends StatefulWidget {
+  const CaravellaApp({super.key});
+
+  @override
+  State<CaravellaApp> createState() => _CaravellaAppState();
+}
+
+class _CaravellaAppState extends State<CaravellaApp> {
+  String _locale = 'it';
+  ThemeMode _themeMode = ThemeMode.system;
+  bool _dynamicColorEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLocale();
+    _loadThemeMode();
+    _loadDynamicColorPreference();
+  }
+
+  Future<void> _loadLocale() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedLocale = prefs.getString('selected_locale');
+    setState(() {
+      _locale = savedLocale ?? 'it';
+    });
+  }
+
+  Future<void> _loadThemeMode() async {
+    final prefs = await SharedPreferences.getInstance();
+    final themeString = prefs.getString('theme_mode') ?? 'system';
+    setState(() {
+      switch (themeString) {
+        case 'light':
+          _themeMode = ThemeMode.light;
+          break;
+        case 'dark':
+          _themeMode = ThemeMode.dark;
+          break;
+        default:
+          _themeMode = ThemeMode.system;
+      }
+    });
+  }
+
+  void _changeLocale(String locale) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('selected_locale', locale);
+    setState(() {
+      _locale = locale;
+    });
+  }
+
+  void _changeTheme(ThemeMode mode) async {
+    final prefs = await SharedPreferences.getInstance();
+    String value = 'system';
+    if (mode == ThemeMode.light) value = 'light';
+    if (mode == ThemeMode.dark) value = 'dark';
+    await prefs.setString('theme_mode', value);
+    setState(() {
+      _themeMode = mode;
+    });
+  }
+
+  Future<void> _loadDynamicColorPreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _dynamicColorEnabled = prefs.getBool('dynamic_color_enabled') ?? false;
+    });
+  }
+
+  void _changeDynamicColor(bool enabled) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('dynamic_color_enabled', enabled);
+    setState(() {
+      _dynamicColorEnabled = enabled;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ProviderSetup.createProviders(
+      child: DynamicColorBuilder(
+        builder: (lightDynamic, darkDynamic) {
+          return ProviderSetup.wrapWithNotifiers(
+            locale: _locale,
+            onLocaleChange: _changeLocale,
+            themeMode: _themeMode,
+            onThemeChange: (mode) {
+              _changeTheme(mode);
+              // Update system UI colors when theme changes
+              _updateSystemUIOverlay(mode);
+            },
+            dynamicColorEnabled: _dynamicColorEnabled,
+            onDynamicColorChange: _changeDynamicColor,
+            child: ToastProvider.create(
+              child: MaterialApp(
+                title: AppConfig.appName,
+                debugShowCheckedModeBanner: AppConfig.showDebugBanner,
+                theme: _dynamicColorEnabled && lightDynamic != null
+                    ? CaravellaThemes.createLightTheme(
+                        dynamicColorScheme: lightDynamic,
+                      )
+                    : CaravellaThemes.light,
+                darkTheme: _dynamicColorEnabled && darkDynamic != null
+                    ? CaravellaThemes.createDarkTheme(
+                        dynamicColorScheme: darkDynamic,
+                      )
+                    : CaravellaThemes.dark,
+                themeMode: _themeMode,
+                navigatorKey: navigatorKey,
+                locale: Locale(_locale),
+                // Use generated locales & delegates to avoid divergence and ensure pt is enabled
+                supportedLocales: gen.AppLocalizations.supportedLocales,
+                localizationsDelegates:
+                    gen.AppLocalizations.localizationsDelegates,
+                builder: (context, child) {
+                  // Update system UI overlay based on current brightness
+                  _updateSystemUIOverlayFromContext(context);
+
+                  return ToastThemeProvider(
+                    data: const ToastTheme(
+                      gap: 8,
+                      viewerPadding: EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                    ),
+                    child: Stack(
+                      children: [
+                        Positioned.fill(child: child ?? const SizedBox()),
+                        SafeArea(
+                          child: ToastViewer(
+                            alignment: Alignment.topCenter,
+                            delay: const Duration(milliseconds: 2400),
+                            visibleCount: 3,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                home: const CaravellaHomePage(title: 'Caravella'),
+                navigatorObservers: [routeObserver],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  void _updateSystemUIOverlay(ThemeMode mode) {
+    // Determine brightness based on theme mode
+    Brightness brightness;
+    if (mode == ThemeMode.light) {
+      brightness = Brightness.light;
+    } else if (mode == ThemeMode.dark) {
+      brightness = Brightness.dark;
+    } else {
+      // For system mode, use platform brightness
+      brightness =
+          WidgetsBinding.instance.platformDispatcher.platformBrightness;
+    }
+
+    _setSystemUIOverlayForBrightness(brightness);
+  }
+
+  void _updateSystemUIOverlayFromContext(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    _setSystemUIOverlayForBrightness(brightness);
+  }
+
+  void _setSystemUIOverlayForBrightness(Brightness brightness) {
+    // For light themes, use dark icons (dark text on light background)
+    // For dark themes, use light icons (light text on dark background)
+    final iconBrightness = brightness == Brightness.light
+        ? Brightness.dark
+        : Brightness.light;
+
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarDividerColor: Colors.transparent,
+        statusBarIconBrightness: iconBrightness,
+        systemNavigationBarIconBrightness: iconBrightness,
+      ),
+    );
+  }
+}

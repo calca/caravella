@@ -1,11 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:io_caravella_egm/data/expense_group_storage_v2.dart';
-import 'package:io_caravella_egm/data/model/expense_group.dart';
-import 'package:io_caravella_egm/data/model/expense_details.dart';
-import 'package:io_caravella_egm/data/model/expense_participant.dart';
-import 'package:io_caravella_egm/data/model/expense_category.dart';
+import 'package:caravella_core/caravella_core.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 
@@ -23,6 +19,12 @@ void main() {
   PathProviderPlatform.instance = _FakePathProvider();
 
   const storageFileName = 'expense_group_storage.json';
+
+  setUpAll(() {
+    // Force use of JSON backend for all tests
+    ExpenseGroupRepositoryFactory.reset();
+    ExpenseGroupRepositoryFactory.getRepository(useJsonBackend: true);
+  });
 
   setUp(() async {
     // Ensure clean state on disk and cache

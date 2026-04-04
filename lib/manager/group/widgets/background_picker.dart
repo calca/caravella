@@ -1,13 +1,14 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-import 'package:image_picker/image_picker.dart';
+import 'package:image_picker/image_picker.dart' as picker;
 import 'package:provider/provider.dart';
+import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
+import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../data/group_form_state.dart';
 import '../group_form_controller.dart';
 import '../pages/image_crop_page.dart';
-import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
-import '../../../widgets/bottom_sheet_scaffold.dart';
 
 class BackgroundPicker extends StatelessWidget {
   const BackgroundPicker({super.key});
@@ -60,54 +61,70 @@ class BackgroundPicker extends StatelessWidget {
   }
 
   Widget _preview(GroupFormState state) {
-    Widget child;
-    if (state.loadingImage) {
-      child = const SizedBox(
-        key: ValueKey('loading'),
-        width: 48,
-        height: 48,
-        child: CircularProgressIndicator(strokeWidth: 3),
-      );
-    } else if (state.imagePath != null) {
-      child = ClipRRect(
-        key: ValueKey(state.imagePath),
-        borderRadius: BorderRadius.circular(8),
-        child: Image.file(
-          File(state.imagePath!),
-          width: 48,
-          height: 48,
-          fit: BoxFit.cover,
-        ),
-      );
-    } else if (state.color != null) {
-      child = Container(
-        key: ValueKey(state.color),
-        width: 48,
-        height: 48,
-        decoration: BoxDecoration(
-          color: Color(state.color!),
-          shape: BoxShape.circle,
-        ),
-      );
-    } else {
-      child = const Icon(
-        Icons.palette_outlined,
-        size: 48,
-        key: ValueKey('icon'),
-      );
-    }
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 280),
-      switchInCurve: Curves.easeOutQuad,
-      switchOutCurve: Curves.easeInQuad,
-      transitionBuilder: (c, anim) => FadeTransition(
-        opacity: anim,
-        child: ScaleTransition(
-          scale: Tween<double>(begin: 0.95, end: 1).animate(anim),
-          child: c,
-        ),
-      ),
-      child: child,
+    return Builder(
+      builder: (context) {
+        final scheme = Theme.of(context).colorScheme;
+        Widget child;
+        if (state.loadingImage) {
+          child = const SizedBox(
+            key: ValueKey('loading'),
+            width: 48,
+            height: 48,
+            child: CircularProgressIndicator(strokeWidth: 3),
+          );
+        } else if (state.imagePath != null) {
+          child = ClipRRect(
+            key: ValueKey(state.imagePath),
+            borderRadius: BorderRadius.circular(8),
+            child: Image.file(
+              File(state.imagePath!),
+              width: 48,
+              height: 48,
+              fit: BoxFit.cover,
+            ),
+          );
+        } else if (state.color != null) {
+          // Resolve color from palette index or use legacy color value
+          Color displayColor;
+          if (ExpenseGroupColorPalette.isLegacyColorValue(state.color)) {
+            // Legacy ARGB value - use as-is
+            displayColor = Color(state.color!);
+          } else {
+            // New palette index - resolve to theme-aware color
+            displayColor =
+                ExpenseGroupColorPalette.resolveColor(state.color, scheme) ??
+                scheme.primary;
+          }
+          child = Container(
+            key: ValueKey(state.color),
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: displayColor,
+              shape: BoxShape.circle,
+            ),
+          );
+        } else {
+          child = const Icon(
+            Icons.palette_outlined,
+            size: 48,
+            key: ValueKey('icon'),
+          );
+        }
+        return AnimatedSwitcher(
+          duration: const Duration(milliseconds: 280),
+          switchInCurve: Curves.easeOutQuad,
+          switchOutCurve: Curves.easeInQuad,
+          transitionBuilder: (c, anim) => FadeTransition(
+            opacity: anim,
+            child: ScaleTransition(
+              scale: Tween<double>(begin: 0.95, end: 1).animate(anim),
+              child: c,
+            ),
+          ),
+          child: child,
+        );
+      },
     );
   }
 
@@ -141,7 +158,7 @@ class _BackgroundSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
-    final picker = ImagePicker();
+    final imagePicker = picker.ImagePicker();
     final tiles = [
       ListTile(
         contentPadding: EdgeInsets.zero,
@@ -153,8 +170,8 @@ class _BackgroundSheet extends StatelessWidget {
           if (sheetNav.mounted) sheetNav.pop();
           // Usa il navigator del parent
           final parentNav = Navigator.of(parentContext);
-          final x = await picker.pickImage(
-            source: ImageSource.gallery,
+          final x = await imagePicker.pickImage(
+            source: picker.ImageSource.gallery,
             imageQuality: 85,
           );
           if (x != null) {
@@ -188,9 +205,10 @@ class _BackgroundSheet extends StatelessWidget {
           final sheetNav = Navigator.of(context);
           if (sheetNav.mounted) sheetNav.pop();
           final parentNav = Navigator.of(parentContext);
-          final x = await picker.pickImage(
-            source: ImageSource.camera,
+          final x = await imagePicker.pickImage(
+            source: picker.ImageSource.camera,
             imageQuality: 85,
+            preferredCameraDevice: picker.CameraDevice.rear,
           );
           if (x != null) {
             final original = File(x.path);
@@ -312,7 +330,12 @@ class _CropPageWrapperState extends State<_CropPageWrapper> {
 class _ColorPaletteRow extends StatelessWidget {
   final GroupFormState state;
   final List<Color> colors;
-  const _ColorPaletteRow({required this.state, required this.colors});
+  final int startIndex; // Index offset for this row
+  const _ColorPaletteRow({
+    required this.state,
+    required this.colors,
+    required this.startIndex,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -320,11 +343,13 @@ class _ColorPaletteRow extends StatelessWidget {
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: colors.map((c) {
-        final selected = state.color == c.toARGB32();
+      children: List.generate(colors.length, (i) {
+        final c = colors[i];
+        final colorIndex = startIndex + i;
+        final selected = state.color == colorIndex;
         return InkWell(
           onTap: () {
-            state.setColor(c.toARGB32());
+            state.setColor(colorIndex);
             Navigator.pop(context); // chiudi subito la sheet dopo selezione
           },
           borderRadius: BorderRadius.circular(28),
@@ -356,7 +381,7 @@ class _ColorPaletteRow extends StatelessWidget {
                 : null,
           ),
         );
-      }).toList(),
+      }),
     );
   }
 }
@@ -382,27 +407,22 @@ class _ColorSheet extends StatelessWidget {
           Builder(
             builder: (ctx) {
               final scheme = Theme.of(ctx).colorScheme;
-              final List<Color> palette = [
-                scheme.primary,
-                scheme.tertiary,
-                scheme.secondary,
-                scheme.errorContainer.withValues(alpha: 0.85),
-                scheme.primaryContainer,
-                scheme.secondaryContainer,
-                scheme.primaryFixedDim,
-                scheme.secondaryFixedDim,
-                scheme.tertiaryFixed,
-                scheme.error,
-                scheme.outlineVariant,
-                scheme.inversePrimary,
-              ];
+              final palette = ExpenseGroupColorPalette.getPaletteColors(scheme);
               final firstRow = palette.take(6).toList();
               final secondRow = palette.skip(6).take(6).toList();
               return Column(
                 children: [
-                  _ColorPaletteRow(state: state, colors: firstRow),
+                  _ColorPaletteRow(
+                    state: state,
+                    colors: firstRow,
+                    startIndex: 0,
+                  ),
                   const SizedBox(height: 14),
-                  _ColorPaletteRow(state: state, colors: secondRow),
+                  _ColorPaletteRow(
+                    state: state,
+                    colors: secondRow,
+                    startIndex: 6,
+                  ),
                 ],
               );
             },
@@ -500,10 +520,11 @@ class _RandomColorButtonState extends State<_RandomColorButton>
     setState(() => _animating = true);
     _controller.forward(from: 0);
     await Future.delayed(const Duration(milliseconds: 320));
-    final color =
-        Colors.primaries[(DateTime.now().microsecondsSinceEpoch) %
-            Colors.primaries.length];
-    widget.state.setColor(color.toARGB32());
+    // Pick a random palette index
+    final randomIndex =
+        (DateTime.now().microsecondsSinceEpoch) %
+        ExpenseGroupColorPalette.paletteSize;
+    widget.state.setColor(randomIndex);
     await _controller.forward();
     if (mounted) Navigator.pop(context);
   }

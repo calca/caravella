@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:io_caravella_egm/widgets/material3_dialog.dart';
-import 'package:io_caravella_egm/themes/caravella_themes.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 void main() {
   group('Material3Dialog', () {

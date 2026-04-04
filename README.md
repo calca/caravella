@@ -1,4 +1,12 @@
-# Caravella - Group Expense & Travel Manager
+# Caravella: an Expense Tracker
+
+<p align="center">
+  <img src="store/assets/caravella-icon-store.png" alt="Caravella Icon" width="150"/>
+</p>
+
+<p align="center">
+  <strong>Modern group expense management for trips, shared costs, and participants</strong>
+</p>
 
 **Caravella** is a modern, multi-platform Flutter application designed to simplify expense management for groups, trips, and events. Built with Material 3, it offers an intuitive and clean user experience for tracking shared costs, managing participants, and settling debts.
 
@@ -6,49 +14,124 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
 
 ## ✨ Key Features
 
-- **Group Management**: Create and manage distinct groups for trips, events, or shared living arrangements. Add members and track expenses collectively.
-- **Receipt Scanning with OCR**: Scan receipts using your camera or gallery, and automatically extract expense amounts and descriptions using on-device OCR (no internet required).
-- **Expense Tracking**: Easily add new expenses, assign categories, specify who paid, and select which members participated in the cost.
-- **Material 3 UI**: A beautiful and modern user interface with support for dynamic colors and a native-feeling light/dark mode.
-- **Dashboard**: A central home page that provides a quick overview of the current pinned group, total expenses, and quick access to details.
-- **Detailed Summaries**: Get a clear breakdown of who owes what to whom, ensuring transparent and fair settlements.
-- **Data Persistence**: All your data is saved locally on your device using file-based storage, so it's always available, even offline.
-- **Backup & Restore**: Securely export all your app data to a single file and import it later, perfect for backups or migrating to a new device.
-- **CSV Export**: Export the expense list for any group into a CSV file, which can be easily shared or used in other applications.
-- **Multi-Language Support**: The app is localized for English, Italian, and Spanish.
-- **Cross-Platform**: Built with Flutter, Caravella is designed to run smoothly on Android, iOS, Web, and Desktop from a single codebase.
+### Core Functionality
+- **Group Management**: Create and manage multiple expense groups for different trips or shared living situations
+- **Expense Tracking**: Add, edit, and categorize expenses with detailed participant assignments
+- **Smart Calculations**: Automatic calculation of who owes what to whom
+- **Participant Management**: Easy addition and management of group members
+- **Data Export**: Export your data to CSV or JSON formats for external analysis
+- **Backup & Restore**: Complete data backup and restore functionality
+
+### Location & Maps
+- **Interactive Maps**: Visualize all expenses with locations on an OpenStreetMap view
+- **Location Search**: Find and attach locations to expenses with autocomplete suggestions
+- **Auto-Location Capture**: Automatic GPS retrieval when adding new expenses (optional, can be toggled)
+- **Reverse Geocoding**: Automatically resolve addresses from coordinates
+
+### Visual & Personalization
+- **Photo Attachments**: Add photos to group backgrounds and expense records
+- **Theme-Aware Colors**: Expense group colors that adapt to light/dark mode
+- **Dynamic Color Support**: Material 3 colors derived from device wallpaper (Android 12+)
+- **Material Design 3**: Modern interface with smooth animations and transitions
+
+### Updates & Convenience
+- **Auto-Update Checks**: Weekly automatic update notifications (Play Store builds)
+- **In-App Rating**: Smart prompts to rate the app at appropriate moments
+- **Android Quick Actions**: Launch specific expense groups directly from your home screen
+- **What's New Page**: View changelog and recent improvements directly in the app
+- **Context Menus**: Long-press actions for quick group management (pin, archive, delete)
+
+### Privacy & Localization
+- **Privacy First**: All data stored locally on your device - no cloud sync required
+- **Multi-language**: Available in English, Italian, Spanish, Portuguese, and Chinese
+- **GDPR Compliant**: Full compliance with privacy regulations
+- **Cross-Platform**: Built with Flutter, designed to run smoothly on Android smartphones, iOS, Web, and Desktop
+
+### Perfect For:
+- Group trips and vacations
+- Shared household expenses
+- Event planning and cost sharing
+- Business trip expense tracking
+- Roommate expense management
+
+## 📱 Screenshots
+
+<p align="center">
+  <img src="store/screenshot/01 - Welcome - EN.png" alt="Welcome Screen" width="200"/>
+  <img src="store/screenshot/02 - HomePage.png" alt="Home Page" width="200"/>
+  <img src="store/screenshot/03 - HomePage - Add.png" alt="Add Group" width="200"/>
+  <img src="store/screenshot/04 - Group - Expenses - Home.png" alt="Group Expenses Home" width="200"/>
+</p>
+
+<p align="center">
+  <img src="store/screenshot/05 - Group - Expenses - Add.png" alt="Add Expense" width="200"/>
+  <img src="store/screenshot/06 - Group - Expenses.png" alt="Group Expenses" width="200"/>
+  <img src="store/screenshot/07 - Group - Partecipants.png" alt="Participants" width="200"/>
+  <img src="store/screenshot/08 - Group - Stats.png" alt="Group Statistics" width="200"/>
+</p>
+
+<p align="center">
+  <img src="store/screenshot/09 - Grops History.png" alt="Groups History" width="200"/>
+</p>
+
+## 🎉 What's New in v1.6.0
+
+- **AI-Powered Shortcuts**: Android AI agents like Google Gemini can now add expenses and check balances directly
+- **Guided Setup Wizard**: New 3-step group creation wizard makes getting started easier than ever
+- **Redesigned Home Page**: Featured card highlights your pinned group with beautiful animations and better layout
+- **Smarter Expense Lists**: Month separators, pagination for large groups, and smooth add animations
+- **Improved Notifications**: Persistent notifications now respect group date ranges and update from all entry points
 
 ## 🛠️ Tech Stack & Architecture
 
-- **Framework**: Flutter
-- **UI**: Material 3
-- **OCR**: Google ML Kit Text Recognition (on-device)
-- **State Management**: `provider` for centralized and reactive state management.
-- **Storage**: Local file storage using `path_provider` for private, on-device data persistence.
-- **Architecture**: The app follows a clean architecture with a separation of concerns between UI, state management, and data services.
-- **Flavors**: Configured for different build environments (dev, staging, prod).
+- **Framework**: Flutter 3.x with Material 3
+- **UI**: Material Design 3 with dynamic color support
+- **State Management**: `provider` for centralized and reactive state management
+- **Storage**: SQLite database (`sqflite`) for high-performance data persistence with automatic migration from legacy JSON storage
+- **Maps**: OpenStreetMap integration via `flutter_map` with Nominatim geocoding
+- **Architecture**: Multi-package clean architecture with separation between:
+  - `caravella_core`: Business logic, data models, and services
+  - `caravella_core_ui`: Reusable UI components and themes
+  - `play_store_updates`: Google Play Store update functionality (conditional)
+  - Main app: Application-specific UI and features
+- **Build Variants**: Factory pattern for Play Store and F-Droid distributions
+- **Flavors**: Configured for different build environments (dev, staging, prod)
 
-## 🚀 Getting Started
+## 🔒 Privacy & Security
 
-1.  **Install Dependencies**
-    ```sh
-    flutter pub get
-    ```
+Caravella is designed with privacy as a core principle:
 
-2.  **Generate App Icons**
-    ```sh
-    flutter pub run flutter_launcher_icons:main
-    ```
+- **Local Storage**: All data is stored locally on your device - no cloud sync required
+- **No User Accounts**: No online services or user accounts needed
+- **Full Data Control**: You have complete control over your data with export and deletion capabilities
+- **Optional Permissions**: Camera and location permissions are only requested when you explicitly use those features
+- **GDPR Compliant**: Full compliance with privacy regulations
 
-3.  **Run the App**
-    ```sh
-    flutter run
-    ```
+For complete details, see our [Privacy Policy](store/PRIVACY_POLICY.md) and [Permissions Documentation](store/permissions_documentation.md).
 
-    ## Package & CI notes
+## 📦 Download & Installation
 
-    - The project's Dart package name has been updated to `io_caravella_egm` (see `pubspec.yaml`).
-    - CI artifact names were updated to use the `io_caravella_egm` prefix.
+### Android
+- **GitHub Releases**: [Download APK](https://github.com/calca/caravella/releases)
+- **Google Play Store**: https://play.google.com/store/apps/details?id=io.caravella.egm
+- **F-Droid**: Coming soon (see [F-Droid Submission Guide](docs/FDROID_SUBMISSION.md) for details)
+- **Device Support**: Optimized for smartphones only (tablets not supported)
+
+### iOS
+- **App Store**: Coming soon
+
+Visit our [website](https://calca.github.io/caravella) for more information.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+
+## 📞 Contact & Support
+
+- **Project Repository**: https://github.com/calca/caravella
+- **Issues**: https://github.com/calca/caravella/issues
+- **Website**: https://calca.github.io/caravella
+- **Privacy Inquiries**: privacy@caravella.app
 
 ## 📄 License
 

@@ -1,0 +1,127 @@
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+class CurrencyDisplay extends StatelessWidget {
+  final double value;
+  final String currency;
+  final double valueFontSize;
+  final double currencyFontSize;
+  final MainAxisAlignment alignment;
+  final bool showDecimals;
+  final Color? color;
+  final FontWeight? fontWeight;
+
+  const CurrencyDisplay({
+    super.key,
+    required this.value,
+    required this.currency,
+    this.valueFontSize = 54.0,
+    this.currencyFontSize = 22.0,
+    this.alignment = MainAxisAlignment.end,
+    this.showDecimals = false,
+    this.color,
+    this.fontWeight,
+  });
+
+  /// Formats a currency value as plain text for use in semantic labels,
+  /// exports, or other text-only contexts.
+  /// 
+  /// Example: `CurrencyDisplay.formatCurrencyText(123.45, 'EUR')` returns "123.45 EUR"
+  static String formatCurrencyText(
+    double value,
+    String currency, {
+    bool showDecimals = true,
+  }) {
+    final formattedValue = showDecimals
+        ? value.toStringAsFixed(2)
+        : value.truncate().toString();
+    return '$formattedValue $currency';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Get the locale and decimal separator
+    final locale = Localizations.maybeLocaleOf(context);
+    String decimalSeparator = '.';
+    try {
+      if (locale != null) {
+        final numberFormat = NumberFormat.decimalPattern(locale.toString());
+        decimalSeparator = numberFormat.symbols.DECIMAL_SEP;
+      }
+    } catch (_) {
+      // Fallback to dot if locale detection fails
+      decimalSeparator = '.';
+    }
+
+    final String formattedValue = showDecimals
+        ? value.toStringAsFixed(2).replaceAll('.', decimalSeparator)
+        : value.truncate().toString();
+
+    return Row(
+      mainAxisAlignment: alignment,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Flexible(
+          child: showDecimals
+              ? _buildValueWithSeparateDecimals(
+                  context, formattedValue, decimalSeparator)
+              : Text(
+                  formattedValue,
+                  style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                    color: color ?? Theme.of(context).colorScheme.onSurface,
+                    fontSize: valueFontSize,
+                    fontWeight: fontWeight,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+        ),
+        const SizedBox(width: 4),
+        Text(
+          currency,
+          style: Theme.of(context).textTheme.displaySmall?.copyWith(
+            color: color ?? Theme.of(context).colorScheme.onSurface,
+            fontSize: currencyFontSize,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildValueWithSeparateDecimals(
+    BuildContext context,
+    String formattedValue,
+    String decimalSeparator,
+  ) {
+    final parts = formattedValue.split(decimalSeparator);
+    final integerPart = parts[0];
+    final decimalPart =
+        parts.length > 1 ? '$decimalSeparator${parts[1]}' : '';
+
+    return RichText(
+      overflow: TextOverflow.ellipsis,
+      maxLines: 1,
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: integerPart,
+            style: Theme.of(context).textTheme.displayLarge?.copyWith(
+              color: color ?? Theme.of(context).colorScheme.onSurface,
+              fontSize: valueFontSize,
+              fontWeight: fontWeight,
+            ),
+          ),
+          if (decimalPart.isNotEmpty)
+            TextSpan(
+              text: decimalPart,
+              style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                color: color ?? Theme.of(context).colorScheme.onSurface,
+                fontSize: currencyFontSize,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}

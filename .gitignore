@@ -60,3 +60,7 @@ dart-sdk/
 dartsdk-linux-*.zip
 dart-sdk.zip
 stable.zip
+
+flutter/
+packages/caravella_core/build/
+android/.kotlin/

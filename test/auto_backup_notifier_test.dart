@@ -1,8 +1,8 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:io_caravella_egm/settings/auto_backup_notifier.dart';
-import 'package:io_caravella_egm/settings/backup_service.dart';
+import 'package:caravella_core/caravella_core.dart';
+import 'package:caravella_core/services/backup_service.dart';
 
 void main() {
   group('AutoBackupNotifier', () {

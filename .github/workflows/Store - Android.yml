@@ -57,7 +57,7 @@ jobs:
       - name: Run tests
         run: flutter test
       - name: Build prod App Bundle (signed)
-        run: flutter build appbundle --flavor prod --release --dart-define=FLAVOR=prod
+        run: flutter build appbundle --flavor prod --release --dart-define=FLAVOR=prod --dart-define=ENABLE_PLAY_UPDATES=true
       - name: Get app version
         id: get_version
         run: |

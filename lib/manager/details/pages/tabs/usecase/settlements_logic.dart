@@ -1,4 +1,4 @@
-import 'package:io_caravella_egm/data/model/expense_group.dart';
+import 'package:caravella_core/caravella_core.dart';
 
 /// Strongly-typed settlement item using participant IDs (robust to name changes).
 class Settlement {
@@ -49,10 +49,7 @@ List<Settlement> computeSettlements(ExpenseGroup trip) {
 
   // Balances keyed by participant id
   final balances = <String, double>{};
-  final total = trip.expenses.fold<double>(
-    0.0,
-    (s, e) => s + (e.amount ?? 0.0),
-  );
+  final total = trip.getTotalExpenses();
   final fairShare = total / trip.participants.length;
 
   for (final p in trip.participants) {

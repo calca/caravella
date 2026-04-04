@@ -1,9 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:io_caravella_egm/manager/details/pages/tabs/usecase/settlements_logic.dart';
-import 'package:io_caravella_egm/data/model/expense_group.dart';
-import 'package:io_caravella_egm/data/model/expense_participant.dart';
-import 'package:io_caravella_egm/data/model/expense_details.dart';
-import 'package:io_caravella_egm/data/model/expense_category.dart';
+import 'package:caravella_core/caravella_core.dart';
 
 ExpenseParticipant p(String name) => ExpenseParticipant(name: name);
 ExpenseCategory cat(String name) => ExpenseCategory(name: name);

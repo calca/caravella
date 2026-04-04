@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:android_nav_setting/android_nav_setting.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart'
     as gen; // generated
-import '../../data/model/expense_group.dart';
-import '../../data/expense_group_storage_v2.dart';
-import '../../state/expense_group_notifier.dart';
+import 'package:caravella_core/caravella_core.dart';
+import '../home_constants.dart';
 // Removed locale_notifier import after migration
 // locale_notifier no longer needed after migration
 import 'widgets/widgets.dart';
+import '../../manager/history/expenses_history_page.dart';
 
 class HomeCardsSection extends StatefulWidget {
   final VoidCallback onTripAdded;
@@ -33,17 +34,29 @@ class HomeCardsSection extends StatefulWidget {
 
 class _HomeCardsSectionState extends State<HomeCardsSection> {
   List<ExpenseGroup> _activeGroups = [];
-  bool _loading = true;
   ExpenseGroupNotifier? _groupNotifier;
+  bool _hasNavigationBar = false;
 
   @override
   void initState() {
     super.initState();
-    if (widget.initialGroups != null) {
-      _activeGroups = widget.initialGroups!;
-      _loading = false;
-    } else {
+    // Usa i gruppi iniziali se forniti, altrimenti carica
+    _activeGroups = widget.initialGroups ?? [];
+    if (widget.initialGroups == null) {
       _loadActiveGroups();
+    }
+    _initNavSetting();
+  }
+
+  Future<void> _initNavSetting() async {
+    try {
+      final navSetting = AndroidNavSetting();
+      final isGesture = await navSetting.isGestureNavigationEnabled();
+      if (mounted) {
+        setState(() => _hasNavigationBar = !isGesture);
+      }
+    } catch (e) {
+      // best-effort: silently ignore errors (plugin may fail on some devices)
     }
   }
 
@@ -71,7 +84,7 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
       _loadActiveGroups();
     }
 
-    // If parent provided new initialGroups (e.g., FutureBuilder resolved again), update local state
+    // If parent provided new initialGroups, update local state
     if (widget.initialGroups != null &&
         oldWidget.initialGroups != widget.initialGroups) {
       setState(() {
@@ -83,7 +96,6 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
                 ),
               ]
             : widget.initialGroups!;
-        _loading = false;
       });
     }
   }
@@ -190,13 +202,40 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
           } else {
             _activeGroups = groups;
           }
-          _loading = false;
         });
       }
     } catch (e) {
+      // Silently handle error - groups remain empty
+      LoggerService.warning(
+        'Failed to load active groups: $e',
+        name: 'state.home_cards',
+      );
+    }
+  }
+
+  /// Soft reload that updates groups without showing loading state
+  /// Used when adding a new group to avoid jarring transitions
+  Future<void> _softLoadActiveGroups() async {
+    try {
+      final groups = await ExpenseGroupStorageV2.getActiveGroups();
       if (mounted) {
-        setState(() => _loading = false);
+        setState(() {
+          // Se c'è un gruppo pinnato, mettiamolo sempre al primo posto
+          if (widget.pinnedTrip != null) {
+            // Rimuovi il gruppo pinnato dalla lista se è già presente
+            final filteredGroups = groups.where(
+              (g) => g.id != widget.pinnedTrip!.id,
+            );
+            // Metti il gruppo pinnato come primo elemento
+            _activeGroups = [widget.pinnedTrip!, ...filteredGroups];
+          } else {
+            _activeGroups = groups;
+          }
+        });
       }
+    } catch (e) {
+      // Fallback to full reload on error
+      _loadActiveGroups();
     }
   }
 
@@ -204,56 +243,162 @@ class _HomeCardsSectionState extends State<HomeCardsSection> {
   Widget build(BuildContext context) {
     final loc = gen.AppLocalizations.of(context);
     final theme = Theme.of(context);
-    final screenHeight = MediaQuery.of(context).size.height;
+    final topSafeArea = MediaQuery.of(context).padding.top;
 
-    // Altezze delle varie sezioni
-    final headerHeight = screenHeight / 6;
-    final bottomBarHeight = screenHeight / 6;
-    final contentHeight = screenHeight - headerHeight - bottomBarHeight;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Safe area for status bar
+        SizedBox(height: topSafeArea),
 
-    return SizedBox(
-      height: screenHeight, // Fornisce un vincolo di altezza definito
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            // Header con avatar e saluto dinamico
-            SizedBox(
-              height: headerHeight,
-              child: HomeCardsHeader(localizations: loc, theme: theme),
+        // Header compatto con altezza fissa
+        Padding(
+          padding: const EdgeInsets.fromLTRB(
+            HomeLayoutConstants.horizontalPadding,
+            16.0,
+            HomeLayoutConstants.horizontalPadding,
+            16.0,
+          ),
+          child: HomeCardsHeader(localizations: loc, theme: theme),
+        ),
+
+        // Content area - fills remaining space dynamically
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: HomeLayoutConstants.horizontalPadding,
             ),
-
-            // Content area - riempie lo spazio tra header e bottom bar
-            SizedBox(
-              height: contentHeight,
-              child: _loading
-                  ? const Center(child: CircularProgressIndicator())
-                  : _activeGroups.isEmpty
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              switchInCurve: Curves.easeIn,
+              switchOutCurve: Curves.easeOut,
+              child: _activeGroups.isEmpty
                   ? EmptyGroupsState(
                       localizations: loc,
                       theme: theme,
                       allArchived: widget.allArchived,
                       onGroupAdded: _handleGroupAdded,
                     )
-                  : HorizontalGroupsList(
-                      groups: _activeGroups,
-                      localizations: loc,
-                      theme: theme,
-                      onGroupUpdated: _handleGroupUpdated,
-                      onGroupAdded: _handleGroupAdded,
-                      onCategoryAdded: () {
-                        _loadActiveGroups();
-                      },
-                    ),
+                  : _buildContent(loc, theme),
             ),
-
-            // Bottom bar semplificata d
-            SimpleBottomBar(localizations: loc, theme: theme),
-          ],
+          ),
         ),
-      ),
+
+        // Bottom bar removed from HomeCardsSection; footer handled externally if needed
+      ],
+    );
+  }
+
+  Widget _buildContent(gen.AppLocalizations loc, ThemeData theme) {
+    // Safety check - this should never happen due to calling context, but be defensive
+    if (_activeGroups.isEmpty) {
+      return EmptyGroupsState(
+        key: const ValueKey('empty_state'),
+        localizations: loc,
+        theme: theme,
+        allArchived: widget.allArchived,
+        onGroupAdded: _handleGroupAdded,
+      );
+    }
+
+    // Get featured group: use pinned/favorite if available, otherwise first from active groups
+    final featuredGroup = widget.pinnedTrip ?? _activeGroups.first;
+
+    // Get remaining groups for carousel (excluding featured)
+    final carouselGroups = _activeGroups
+        .where((g) => g.id != featuredGroup.id)
+        .toList();
+
+    return Column(
+      key: const ValueKey('content'),
+      children: [
+        // Top spacing before featured card
+        const SizedBox(height: 8),
+
+        // Featured group card - takes all remaining space
+        Expanded(
+          child: GroupCard(
+            group: featuredGroup,
+            localizations: loc,
+            theme: theme,
+            onGroupUpdated: _handleGroupUpdated,
+            onCategoryAdded: () {
+              _softLoadActiveGroups();
+            },
+            isSelected: true,
+            selectionProgress: 1.0,
+          ),
+        ),
+
+        // Section header for "Your Groups" with CTA to history - pinned at bottom
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 0, 20, 16),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  loc.your_groups,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const ExpesensHistoryPage(),
+                    ),
+                  );
+                },
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                child: Row(
+                  children: [
+                    Text(
+                      loc.see_all,
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
+                    const SizedBox(width: 2),
+                    Icon(
+                      Icons.chevron_right,
+                      size: 18,
+                      color: theme.colorScheme.primary,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        // Carousel with remaining groups - respect bottom safe area
+        SafeArea(
+          top: false,
+          left: false,
+          right: false,
+          bottom: true,
+          child: SizedBox(
+            height: HomeLayoutConstants.carouselCardTotalHeight,
+            child: HorizontalGroupsList(
+              groups: carouselGroups,
+              localizations: loc,
+              theme: theme,
+              onGroupUpdated: _handleGroupUpdated,
+              onGroupAdded: _handleGroupAdded,
+              onCategoryAdded: () {
+                _softLoadActiveGroups();
+              },
+            ),
+          ),
+        ),
+        // Extra spacing when system navigation bar is present
+        if (!_hasNavigationBar) const SizedBox(height: 12),
+      ],
     );
   }
 }

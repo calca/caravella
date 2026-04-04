@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../manager/group/widgets/section_header.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 class SettingsSection extends StatelessWidget {
   final String title;

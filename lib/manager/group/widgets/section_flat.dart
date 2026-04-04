@@ -4,11 +4,7 @@ class SectionFlat extends StatelessWidget {
   final String title;
   final List<Widget> children;
 
-  const SectionFlat({
-    super.key,
-    required this.title,
-    required this.children,
-  });
+  const SectionFlat({super.key, required this.title, required this.children});
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +14,7 @@ class SectionFlat extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (title.isNotEmpty) ...[
-            Text(
-              title,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+            Text(title, style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 16),
           ],
           ...children,

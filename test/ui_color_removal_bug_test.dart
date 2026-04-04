@@ -5,10 +5,7 @@ import 'package:path_provider_platform_interface/path_provider_platform_interfac
 import 'package:io_caravella_egm/manager/group/group_form_controller.dart';
 import 'package:io_caravella_egm/manager/group/data/group_form_state.dart';
 import 'package:io_caravella_egm/manager/group/group_edit_mode.dart';
-import 'package:io_caravella_egm/data/model/expense_group.dart';
-import 'package:io_caravella_egm/data/model/expense_participant.dart';
-import 'package:io_caravella_egm/data/model/expense_category.dart';
-import 'package:io_caravella_egm/data/expense_group_storage_v2.dart';
+import 'package:caravella_core/caravella_core.dart';
 
 class _FakePathProvider extends PathProviderPlatform {
   late final String _tempDir = Directory.systemTemp
@@ -22,6 +19,12 @@ class _FakePathProvider extends PathProviderPlatform {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   PathProviderPlatform.instance = _FakePathProvider();
+
+  setUpAll(() {
+    // Force use of JSON backend for all tests
+    ExpenseGroupRepositoryFactory.reset();
+    ExpenseGroupRepositoryFactory.getRepository(useJsonBackend: true);
+  });
 
   group('UI Color Removal Bug Investigation - FIXED', () {
     setUp(() {

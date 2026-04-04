@@ -1,151 +1,186 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:io_caravella_egm/data/services/preferences_service.dart';
+import 'package:caravella_core/caravella_core.dart';
 
 void main() {
   group('PreferencesService', () {
+    late PreferencesService prefs;
+
     setUp(() async {
       // Clear SharedPreferences before each test
       SharedPreferences.setMockInitialValues({});
+      PreferencesService.reset();
+      prefs = await PreferencesService.initialize();
     });
 
     group('locale preferences', () {
-      test('should return default locale when none is set', () async {
-        final locale = await PreferencesService.getLocale();
+      test('should return default locale when none is set', () {
+        final locale = prefs.locale.get();
         expect(locale, 'it');
       });
 
       test('should store and retrieve locale correctly', () async {
-        await PreferencesService.setLocale('en');
-        final locale = await PreferencesService.getLocale();
+        await prefs.locale.set('en');
+        final locale = prefs.locale.get();
         expect(locale, 'en');
       });
 
       test('should handle different locales', () async {
         const testLocales = ['en', 'es', 'pt', 'zh'];
-        
+
         for (final locale in testLocales) {
-          await PreferencesService.setLocale(locale);
-          final retrievedLocale = await PreferencesService.getLocale();
+          await prefs.locale.set(locale);
+          final retrievedLocale = prefs.locale.get();
           expect(retrievedLocale, locale);
         }
       });
     });
 
     group('theme preferences', () {
-      test('should return default theme mode when none is set', () async {
-        final themeMode = await PreferencesService.getThemeMode();
+      test('should return default theme mode when none is set', () {
+        final themeMode = prefs.theme.get();
         expect(themeMode, 'system');
       });
 
       test('should store and retrieve theme mode correctly', () async {
-        await PreferencesService.setThemeMode('dark');
-        final themeMode = await PreferencesService.getThemeMode();
+        await prefs.theme.set('dark');
+        final themeMode = prefs.theme.get();
         expect(themeMode, 'dark');
       });
 
       test('should handle all theme modes', () async {
         const themeModes = ['light', 'dark', 'system'];
-        
+
         for (final mode in themeModes) {
-          await PreferencesService.setThemeMode(mode);
-          final retrievedMode = await PreferencesService.getThemeMode();
+          await prefs.theme.set(mode);
+          final retrievedMode = prefs.theme.get();
           expect(retrievedMode, mode);
         }
       });
     });
 
     group('flag secure preferences', () {
-      test('should return default flag secure state when none is set', () async {
-        final flagSecure = await PreferencesService.getFlagSecureEnabled();
+      test('should return default flag secure state when none is set', () {
+        final flagSecure = prefs.security.getFlagSecureEnabled();
         expect(flagSecure, true);
       });
 
       test('should store and retrieve flag secure state correctly', () async {
-        await PreferencesService.setFlagSecureEnabled(false);
-        final flagSecure = await PreferencesService.getFlagSecureEnabled();
+        await prefs.security.setFlagSecureEnabled(false);
+        final flagSecure = prefs.security.getFlagSecureEnabled();
         expect(flagSecure, false);
       });
     });
 
     group('user name preferences', () {
-      test('should return null when no user name is set', () async {
-        final userName = await PreferencesService.getUserName();
+      test('should return null when no user name is set', () {
+        final userName = prefs.user.getName();
         expect(userName, null);
       });
 
       test('should store and retrieve user name correctly', () async {
         const testName = 'Test User';
-        await PreferencesService.setUserName(testName);
-        final userName = await PreferencesService.getUserName();
+        await prefs.user.setName(testName);
+        final userName = prefs.user.getName();
         expect(userName, testName);
       });
 
       test('should handle null user name correctly', () async {
-        await PreferencesService.setUserName('Test User');
-        await PreferencesService.setUserName(null);
-        final userName = await PreferencesService.getUserName();
+        await prefs.user.setName('Test User');
+        await prefs.user.setName(null);
+        final userName = prefs.user.getName();
         expect(userName, null);
       });
     });
 
     group('auto backup preferences', () {
-      test('should return default auto backup state when none is set', () async {
-        final autoBackup = await PreferencesService.getAutoBackupEnabled();
+      test('should return default auto backup state when none is set', () {
+        final autoBackup = prefs.backup.isAutoBackupEnabled();
         expect(autoBackup, false);
       });
 
       test('should store and retrieve auto backup state correctly', () async {
-        await PreferencesService.setAutoBackupEnabled(true);
-        final autoBackup = await PreferencesService.getAutoBackupEnabled();
+        await prefs.backup.setAutoBackupEnabled(true);
+        final autoBackup = prefs.backup.isAutoBackupEnabled();
         expect(autoBackup, true);
       });
 
-      test('should return null when no last backup is set', () async {
-        final lastBackup = await PreferencesService.getLastAutoBackup();
+      test('should return null when no last backup is set', () {
+        final lastBackup = prefs.backup.getLastAutoBackupTime();
         expect(lastBackup, null);
       });
 
-      test('should store and retrieve last backup timestamp correctly', () async {
-        final testTimestamp = DateTime(2025, 1, 8, 12, 0, 0);
-        await PreferencesService.setLastAutoBackup(testTimestamp);
-        final lastBackup = await PreferencesService.getLastAutoBackup();
-        expect(lastBackup, testTimestamp);
-      });
+      test(
+        'should store and retrieve last backup timestamp correctly',
+        () async {
+          final testTimestamp = DateTime(2025, 1, 8, 12, 0, 0);
+          await prefs.backup.setLastAutoBackupTime(testTimestamp);
+          final lastBackup = prefs.backup.getLastAutoBackupTime();
+          expect(lastBackup, testTimestamp);
+        },
+      );
     });
 
     group('utility methods', () {
       test('should check if key exists correctly', () async {
-        await PreferencesService.setLocale('en');
-        final hasLocale = await PreferencesService.containsKey('selected_locale');
-        final hasNonExistent = await PreferencesService.containsKey('non_existent_key');
-        
+        await prefs.locale.set('en');
+        final hasLocale = prefs.containsKey('selected_locale');
+        final hasNonExistent = prefs.containsKey('non_existent_key');
+
         expect(hasLocale, true);
         expect(hasNonExistent, false);
       });
 
       test('should remove specific key correctly', () async {
-        await PreferencesService.setLocale('en');
-        await PreferencesService.remove('selected_locale');
-        final locale = await PreferencesService.getLocale();
-        
+        await prefs.locale.set('en');
+        await prefs.remove('selected_locale');
+        final locale = prefs.locale.get();
+
         expect(locale, 'it'); // Should return default
       });
 
       test('should clear all preferences correctly', () async {
-        await PreferencesService.setLocale('en');
-        await PreferencesService.setThemeMode('dark');
-        await PreferencesService.setUserName('Test User');
-        
-        await PreferencesService.clearAll();
-        
-        final locale = await PreferencesService.getLocale();
-        final themeMode = await PreferencesService.getThemeMode();
-        final userName = await PreferencesService.getUserName();
-        
+        await prefs.locale.set('en');
+        await prefs.theme.set('dark');
+        await prefs.user.setName('Test User');
+
+        await prefs.clearAll();
+
+        final locale = prefs.locale.get();
+        final themeMode = prefs.theme.get();
+        final userName = prefs.user.getName();
+
         expect(locale, 'it');
         expect(themeMode, 'system');
         expect(userName, null);
+      });
+
+      test('should get all keys correctly', () async {
+        await prefs.locale.set('en');
+        await prefs.theme.set('dark');
+
+        final keys = prefs.getAllKeys();
+
+        expect(keys.contains('selected_locale'), true);
+        expect(keys.contains('theme_mode'), true);
+      });
+    });
+
+    group('initialization', () {
+      test(
+        'should throw error when accessing instance before initialization',
+        () {
+          PreferencesService.reset();
+          expect(() => PreferencesService.instance, throwsStateError);
+        },
+      );
+
+      test('should initialize only once', () async {
+        PreferencesService.reset();
+        final instance1 = await PreferencesService.initialize();
+        final instance2 = await PreferencesService.initialize();
+
+        expect(identical(instance1, instance2), true);
       });
     });
   });

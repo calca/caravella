@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../themes/app_text_styles.dart';
-import '../../../widgets/app_toast.dart';
-import 'section_header.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 /// Generic inline editable list for simple name-based items (participants, categories, etc.).
 /// Supports add, edit (inline), delete. Parent owns the source of truth list; this widget

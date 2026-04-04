@@ -1,0 +1,9 @@
+Version 1.6.0 - AI Integration & Redesigned Home
+
+• AI agents: Google Gemini can now add expenses and check balances for you
+• Setup wizard: guided 3-step group creation for new users
+• Redesigned home: featured card highlights your pinned group
+• Smarter lists: month separators, pagination, and smooth animations
+• Better notifications: respect date ranges and update reliably
+
+Your expenses, smarter than ever!

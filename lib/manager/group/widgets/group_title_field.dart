@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:io_caravella_egm/manager/group/data/group_form_state.dart';
 import 'package:provider/provider.dart';
-import '../data/group_form_state.dart';
-import '../../../themes/form_theme.dart';
+import 'package:caravella_core_ui/caravella_core_ui.dart';
 
 class GroupTitleField extends StatefulWidget {
-  const GroupTitleField({super.key});
+  final VoidCallback? onSubmitted;
+
+  const GroupTitleField({super.key, this.onSubmitted});
 
   @override
   State<GroupTitleField> createState() => _GroupTitleFieldState();
@@ -63,9 +65,9 @@ class _GroupTitleFieldState extends State<GroupTitleField> {
       controller: _controller,
       style: FormTheme.getFieldTextStyle(context),
       textInputAction: TextInputAction.next,
-      decoration: FormTheme.getBorderlessDecoration(
-        hintText: 'Nome gruppo',
-      ),
+      autofocus: false,
+      decoration: FormTheme.getBorderlessDecoration(hintText: 'Nome gruppo'),
+      onSubmitted: widget.onSubmitted != null ? (_) => widget.onSubmitted!() : null,
     );
   }
 }

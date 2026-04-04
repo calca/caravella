@@ -1,6 +1,8 @@
 # Caravella Flutter App
 
-Caravella is a modern Flutter application for managing group expenses, travel costs, and participants with local persistence and Material 3 UX. Ideal for group trips, roommates, events, or any situation where multiple people share expenses. Designed to be simple, intuitive, multi-platform (Android/iOS/web/desktop), and easily extensible.
+Caravella is a modern Flutter application for managing group expenses, travel costs, and participants with local persistence and Material 3 UX. Ideal for group trips, roommates, events, or any situation where multiple people share expenses. Designed to be simple, intuitive, multi-platform (Android smartphones/iOS/web/desktop), and easily extensible.
+
+**Note**: The Android version is optimized for smartphones only - tablets are not supported due to UI optimization for handheld form factors.
 
 **ALWAYS reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.**
 
@@ -115,7 +117,7 @@ Caravella is a modern Flutter application for managing group expenses, travel co
   - "Run (Prod)" - Production flavor
 
 ### Platform-Specific Builds
-- **Android**: `flutter build apk --flavor [dev|staging|prod]`
+- **Android**: `flutter build apk --flavor [dev|staging|prod]` (smartphones only - tablets excluded)
 - **iOS**: `flutter build ios --flavor [dev|staging|prod]` (requires macOS)
 - **Web**: `flutter build web --dart-define=FLAVOR=prod`
 - **Linux**: `flutter build linux --dart-define=FLAVOR=prod`
@@ -213,7 +215,7 @@ flutter test
 - `analysis_options.yaml` — Dart linting rules (uses flutter_lints)
 - `.vscode/launch.json` — VS Code debug configurations with flavors
 - `android/app/build.gradle.kts` — Android build configuration with flavors
-- `android/app/src/main/AndroidManifest.xml` — Android permissions and config
+- `android/app/src/main/AndroidManifest.xml` — Android permissions, config, and device restrictions (smartphones only)
 
 ### Common File Patterns
 - **State management**: Provider pattern, check files in `lib/state/`
