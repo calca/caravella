@@ -1,6 +1,8 @@
 library;
 
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import 'package:caravella_core_ui/caravella_core_ui.dart';
@@ -13,6 +15,7 @@ import 'expense_form_orchestrator.dart';
 import 'expense_form_fields.dart';
 import 'expense_form_extended_fields.dart';
 import 'expense_form_compact_header.dart';
+import '../../../data/services/receipt_scanner_service.dart';
 
 /// Main expense form component - refactored to use config object pattern
 ///
@@ -170,6 +173,10 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
   late ExpenseFormLifecycleManager _lifecycleManager;
   late ExpenseFormOrchestrator _orchestrator;
   late ExpenseFormController _controller;
+
+  // Receipt scanner
+  final _receiptScanner = ReceiptScannerService();
+  final _imagePicker = ImagePicker();
 
   // Getter per determinare se mostrare i campi estesi
   bool get _shouldShowExtendedFields =>
@@ -440,6 +447,94 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     // to avoid conflicts with the automatic selection when modal closes
   }
 
+  Future<void> _scanReceipt() async {
+    final gloc = gen.AppLocalizations.of(context);
+
+    // Show bottom sheet to choose camera or gallery
+    final source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.camera_alt),
+              title: Text(gloc.from_camera),
+              onTap: () => Navigator.pop(context, ImageSource.camera),
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library),
+              title: Text(gloc.from_gallery),
+              onTap: () => Navigator.pop(context, ImageSource.gallery),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (source == null || !mounted) return;
+
+    try {
+      final pickedFile = await _imagePicker.pickImage(source: source);
+      if (pickedFile == null || !mounted) return;
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(gloc.scanning_receipt),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+
+      final imageFile = File(pickedFile.path);
+      final result = await _receiptScanner.scanReceipt(imageFile);
+
+      if (!mounted) return;
+
+      final amount = result['amount'] as double?;
+      final description = result['description'] as String?;
+
+      if (amount == null && description == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(gloc.no_text_found),
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        }
+        return;
+      }
+
+      if (amount != null) {
+        _controller.amountController.text = amount.toString();
+      }
+      if (description != null && description.isNotEmpty) {
+        _controller.nameController.text = description;
+      }
+      _controller.markDirty();
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(gloc.receipt_scanned),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(gloc.receipt_scan_error),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
   Widget _buildDivider(BuildContext context) {
     if (_shouldShowExtendedFields) {
       // In full edit mode: reserve vertical space but no visual divider
@@ -474,6 +569,7 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
         onExpand: widget.config.onExpand != null
             ? () => widget.config.onExpand!(_controller.state)
             : null,
+        onScanReceipt: widget.config.initialExpense == null ? _scanReceipt : null,
       );
 
   @override

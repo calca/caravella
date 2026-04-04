@@ -83,6 +83,7 @@ dependencies:
   play_store_updates:
     path: packages/play_store_updates
   android_nav_setting: ^0.0.2+2
+  google_mlkit_text_recognition: ^0.15.0
 
 dev_dependencies:
   flutter_test:

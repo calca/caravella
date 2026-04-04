@@ -937,4 +937,14 @@
   ,"@export_markdown_description": {"description": "Descripción corta para el formato de exportación Markdown"}
   ,"save_label": "Guardar"
   ,"@save_label": {"description": "Etiqueta para el botón de guardar"}
+  ,"scan_receipt": "Escanear recibo"
+  ,"@scan_receipt": {"description": "Botón para escanear un recibo con OCR"}
+  ,"scanning_receipt": "Escaneando recibo..."
+  ,"@scanning_receipt": {"description": "Mensaje durante el escaneo OCR del recibo"}
+  ,"receipt_scan_error": "Error al escanear el recibo"
+  ,"@receipt_scan_error": {"description": "Mensaje de error cuando falla el escaneo OCR"}
+  ,"no_text_found": "No se encontró texto en la imagen"
+  ,"@no_text_found": {"description": "Mensaje cuando el OCR no encuentra texto en la imagen"}
+  ,"receipt_scanned": "Recibo escaneado"
+  ,"@receipt_scanned": {"description": "Mensaje de éxito después del escaneo OCR"}
 }

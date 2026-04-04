@@ -17,6 +17,7 @@ Whether you're on a group trip, sharing an apartment with roommates, or organizi
 ### Core Functionality
 - **Group Management**: Create and manage multiple expense groups for different trips or shared living situations
 - **Expense Tracking**: Add, edit, and categorize expenses with detailed participant assignments
+- **Receipt Scanning with OCR**: Scan receipts using your camera or gallery to automatically extract expense amounts and descriptions (on-device processing, no internet required)
 - **Smart Calculations**: Automatic calculation of who owes what to whom
 - **Participant Management**: Easy addition and management of group members
 - **Data Export**: Export your data to CSV or JSON formats for external analysis
