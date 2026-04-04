@@ -2208,4 +2208,22 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get save_label => '保存';
+
+  @override
+  String get search_expenses => '搜索费用';
+
+  @override
+  String get search_all_fields_hint => '搜索所有字段...';
+
+  @override
+  String get has_attachment => '有附件';
+
+  @override
+  String get has_location => '有位置';
+
+  @override
+  String get search_no_results => '未找到费用';
+
+  @override
+  String get search_no_results_hint => '尝试不同的搜索词或调整过滤条件';
 }

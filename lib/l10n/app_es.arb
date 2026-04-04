@@ -937,4 +937,16 @@
   ,"@export_markdown_description": {"description": "Descripción corta para el formato de exportación Markdown"}
   ,"save_label": "Guardar"
   ,"@save_label": {"description": "Etiqueta para el botón de guardar"}
+  ,"search_expenses": "Buscar gastos"
+  ,"@search_expenses": {"description": "Título de la página de búsqueda de gastos"}
+  ,"search_all_fields_hint": "Buscar en todos los campos..."
+  ,"@search_all_fields_hint": {"description": "Texto de sugerencia para búsqueda en todos los campos"}
+  ,"has_attachment": "Con adjunto"
+  ,"@has_attachment": {"description": "Etiqueta de filtro para gastos con adjuntos"}
+  ,"has_location": "Con ubicación"
+  ,"@has_location": {"description": "Etiqueta de filtro para gastos con datos de ubicación"}
+  ,"search_no_results": "No se encontraron gastos"
+  ,"@search_no_results": {"description": "Mostrado cuando la búsqueda no encuentra gastos"}
+  ,"search_no_results_hint": "Prueba diferentes términos o ajusta los filtros"
+  ,"@search_no_results_hint": {"description": "Texto de ayuda cuando la búsqueda no tiene resultados"}
 }

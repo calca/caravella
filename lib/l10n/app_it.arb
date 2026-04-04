@@ -922,4 +922,16 @@
   ,"@export_markdown_description": {"description": "Breve descrizione per il formato di esportazione Markdown"}
   ,"save_label": "Salva"
   ,"@save_label": {"description": "Etichetta per il pulsante di salvataggio"}
+  ,"search_expenses": "Cerca spese"
+  ,"@search_expenses": {"description": "Titolo della pagina di ricerca spese"}
+  ,"search_all_fields_hint": "Cerca in tutti i campi..."
+  ,"@search_all_fields_hint": {"description": "Testo suggerimento per input ricerca che cerca in tutti i campi"}
+  ,"has_attachment": "Con allegato"
+  ,"@has_attachment": {"description": "Etichetta filtro per spese con allegati"}
+  ,"has_location": "Con posizione"
+  ,"@has_location": {"description": "Etichetta filtro per spese con dati di posizione"}
+  ,"search_no_results": "Nessuna spesa trovata"
+  ,"@search_no_results": {"description": "Mostrato quando la ricerca non trova spese"}
+  ,"search_no_results_hint": "Prova termini diversi o modifica i filtri"
+  ,"@search_no_results_hint": {"description": "Testo di aiuto quando la ricerca spese non ha risultati"}
 }

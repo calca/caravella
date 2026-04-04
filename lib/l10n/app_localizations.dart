@@ -4354,6 +4354,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save'**
   String get save_label;
+
+  /// Title for the expense search page
+  ///
+  /// In en, this message translates to:
+  /// **'Search expenses'**
+  String get search_expenses;
+
+  /// Hint text for search input that searches across all expense fields
+  ///
+  /// In en, this message translates to:
+  /// **'Search all fields...'**
+  String get search_all_fields_hint;
+
+  /// Filter label for expenses with attachments
+  ///
+  /// In en, this message translates to:
+  /// **'Has attachment'**
+  String get has_attachment;
+
+  /// Filter label for expenses with location data
+  ///
+  /// In en, this message translates to:
+  /// **'Has location'**
+  String get has_location;
+
+  /// Shown when search returns no matching expenses
+  ///
+  /// In en, this message translates to:
+  /// **'No expenses found'**
+  String get search_no_results;
+
+  /// Helper text when expense search has no results
+  ///
+  /// In en, this message translates to:
+  /// **'Try different search terms or adjust filters'**
+  String get search_no_results_hint;
 }
 
 class _AppLocalizationsDelegate

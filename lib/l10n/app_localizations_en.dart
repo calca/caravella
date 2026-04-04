@@ -2255,4 +2255,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get save_label => 'Save';
+
+  @override
+  String get search_expenses => 'Search expenses';
+
+  @override
+  String get search_all_fields_hint => 'Search all fields...';
+
+  @override
+  String get has_attachment => 'Has attachment';
+
+  @override
+  String get has_location => 'Has location';
+
+  @override
+  String get search_no_results => 'No expenses found';
+
+  @override
+  String get search_no_results_hint => 'Try different search terms or adjust filters';
 }

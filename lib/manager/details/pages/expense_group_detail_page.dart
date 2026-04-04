@@ -29,6 +29,7 @@ import '../../../services/notification_manager.dart';
 
 import 'unified_overview_page.dart';
 import 'group_settings_page.dart';
+import 'expense_search_page.dart';
 
 class ExpenseGroupDetailPage extends StatefulWidget {
   final ExpenseGroup trip;
@@ -142,6 +143,18 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     if (_trip == null) return;
     Navigator.of(context).push(
       MaterialPageRoute(builder: (ctx) => UnifiedOverviewPage(trip: _trip!)),
+    );
+  }
+
+  void _openSearchPage() {
+    if (_trip == null) return;
+    ExpenseSearchPage.show(
+      context,
+      expenses: _trip!.expenses,
+      categories: _trip!.categories,
+      participants: _trip!.participants,
+      currency: _trip!.currency,
+      onExpenseTap: _openEditExpense,
     );
   }
 
@@ -709,6 +722,14 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                 icon: const Icon(Icons.arrow_back_rounded),
                 onPressed: () => Navigator.of(context).pop(),
               ),
+              actions: [
+                if (trip.expenses.isNotEmpty)
+                  IconButton(
+                    icon: const Icon(Icons.search_outlined),
+                    tooltip: gen.AppLocalizations.of(context).search_expenses,
+                    onPressed: () => _openSearchPage(),
+                  ),
+              ],
             ),
             SliverToBoxAdapter(
               child: AnimatedSize(

@@ -1325,5 +1325,29 @@
   "save_label": "保存",
   "@save_label": {
     "description": "保存按钮的标签"
+  },
+  "search_expenses": "搜索费用",
+  "@search_expenses": {
+    "description": "费用搜索页面标题"
+  },
+  "search_all_fields_hint": "搜索所有字段...",
+  "@search_all_fields_hint": {
+    "description": "搜索所有费用字段的提示文字"
+  },
+  "has_attachment": "有附件",
+  "@has_attachment": {
+    "description": "有附件的费用过滤标签"
+  },
+  "has_location": "有位置",
+  "@has_location": {
+    "description": "有位置数据的费用过滤标签"
+  },
+  "search_no_results": "未找到费用",
+  "@search_no_results": {
+    "description": "搜索未找到费用时显示"
+  },
+  "search_no_results_hint": "尝试不同的搜索词或调整过滤条件",
+  "@search_no_results_hint": {
+    "description": "搜索无结果时的帮助文字"
   }
 }
