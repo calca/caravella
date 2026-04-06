@@ -258,8 +258,7 @@ void main() {
       'should close sheet after adding a non-String (category-like) item inline',
       (tester) async {
         // Use a simple custom type to simulate ExpenseCategory behaviour
-        // ignore: prefer_typing_uninitialized_variables
-        var addedItemName;
+        String? addedItemName;
         final items = <_TestItem>[
           _TestItem(id: '1', name: 'Cibo'),
           _TestItem(id: '2', name: 'Trasporti'),
