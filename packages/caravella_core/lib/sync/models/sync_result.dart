@@ -1,3 +1,5 @@
+import 'package:caravella_core/sync/utils/sync_clock.dart';
+
 /// Outcome of a single sync exchange with a peer.
 class SyncResult {
   /// Number of operations successfully applied.
@@ -34,7 +36,7 @@ class SyncResult {
     errors: 0,
     channel: '',
     peerId: '',
-    syncedAt: DateTime.now().toUtc(),
+    syncedAt: DateTime.fromMillisecondsSinceEpoch(SyncClock.nowMs(), isUtc: true),
   );
 
   /// Merges two results by summing their counters.

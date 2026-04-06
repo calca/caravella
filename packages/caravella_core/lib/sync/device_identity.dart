@@ -1,7 +1,7 @@
 import 'dart:io' show Platform;
 
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kIsWeb, visibleForTesting;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
@@ -94,7 +94,8 @@ class DeviceIdentity {
     if (Platform.isAndroid) return DevicePlatform.android;
     if (Platform.isMacOS) return DevicePlatform.macos;
     if (Platform.isWindows) return DevicePlatform.windows;
-    return DevicePlatform.web;
+    if (Platform.isLinux) return DevicePlatform.linux;
+    return DevicePlatform.unknown;
   }
 
   static Future<String> _resolveDeviceName() async {
@@ -136,4 +137,4 @@ class DeviceIdentity {
 }
 
 /// Supported device platforms for sync identification.
-enum DevicePlatform { ios, android, macos, windows, web }
+enum DevicePlatform { ios, android, macos, windows, linux, web, unknown }
