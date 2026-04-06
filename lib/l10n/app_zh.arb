@@ -1450,5 +1450,21 @@
         "type": "int"
       }
     }
+  },
+  "sync_group_shared": "共享群组",
+  "@sync_group_shared": {
+    "description": "共享群组图标的工具提示"
+  },
+  "sync_group_synced": "所有更改已同步",
+  "@sync_group_synced": {
+    "description": "群组已同步状态的工具提示"
+  },
+  "sync_group_pending": "更改尚未同步",
+  "@sync_group_pending": {
+    "description": "群组未同步状态的工具提示"
+  },
+  "sync_group_enable": "启用同步",
+  "@sync_group_enable": {
+    "description": "在群组上启用同步的标签"
   }
 }

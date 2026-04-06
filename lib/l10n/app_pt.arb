@@ -954,4 +954,12 @@
   ,"@sync_channel_cloud": {"description": "Nome do canal nuvem"}
   ,"sync_records_exchanged": "{sent} enviados, {received} recebidos"
   ,"@sync_records_exchanged": {"description": "Resumo de registros trocados","placeholders": {"sent": {"type": "int"}, "received": {"type": "int"}}}
+  ,"sync_group_shared": "Grupo compartilhado"
+  ,"@sync_group_shared": {"description": "Tooltip para ícone de grupo compartilhado"}
+  ,"sync_group_synced": "Todas as alterações sincronizadas"
+  ,"@sync_group_synced": {"description": "Tooltip para status de grupo sincronizado"}
+  ,"sync_group_pending": "Alterações ainda não sincronizadas"
+  ,"@sync_group_pending": {"description": "Tooltip para status de grupo não sincronizado"}
+  ,"sync_group_enable": "Ativar sincronização"
+  ,"@sync_group_enable": {"description": "Etiqueta para ativar a sincronização em um grupo"}
 }

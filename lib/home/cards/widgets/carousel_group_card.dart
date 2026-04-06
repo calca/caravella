@@ -138,8 +138,30 @@ class CarouselGroupCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Square tile with image or initials (now has its own InkWell)
-          _buildTile(context),
+          // Square tile with image or initials + optional sync badge
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              _buildTile(context),
+              if (group.syncEnabled)
+                Positioned(
+                  top: -2,
+                  right: -2,
+                  child: Container(
+                    width: 12,
+                    height: 12,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.green,
+                      border: Border.all(
+                        color: theme.colorScheme.surface,
+                        width: 2,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
           const SizedBox(height: 6),
           // Group title
           Text(

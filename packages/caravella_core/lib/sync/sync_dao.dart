@@ -176,4 +176,64 @@ class SyncDao {
       name: _tag,
     );
   }
+
+  // ---------------------------------------------------------------------------
+  // Group sync status
+  // ---------------------------------------------------------------------------
+
+  /// Returns the sync status for a specific group.
+  ///
+  /// Compares the group's `updated_at` against the most recent `synced_at`
+  /// from the sync_log. Returns `true` if the group is fully synced (i.e. the
+  /// last sync happened after the last update), `false` otherwise.
+  Future<bool> isGroupSynced(String groupId) async {
+    final groupRows = await db.query(
+      SqliteExpenseGroupRepository.tableGroups,
+      columns: ['updated_at', 'sync_enabled'],
+      where: 'id = ?',
+      whereArgs: [groupId],
+    );
+    if (groupRows.isEmpty) return false;
+
+    final syncEnabled = (groupRows.first['sync_enabled'] as int?) == 1;
+    if (!syncEnabled) return true; // Not a shared group — always "synced"
+
+    final updatedAt = groupRows.first['updated_at'] as int? ?? 0;
+
+    final syncRows = await db.query(
+      SqliteExpenseGroupRepository.tableSyncLog,
+      columns: ['MAX(synced_at) as last_sync'],
+    );
+    if (syncRows.isEmpty || syncRows.first['last_sync'] == null) return false;
+
+    final lastSync = syncRows.first['last_sync'] as int;
+    return lastSync >= updatedAt;
+  }
+
+  /// Returns the sync status for all sync-enabled groups as a map of
+  /// `groupId → isSynced`.
+  Future<Map<String, bool>> getAllGroupSyncStatuses() async {
+    final groups = await db.query(
+      SqliteExpenseGroupRepository.tableGroups,
+      columns: ['id', 'updated_at', 'sync_enabled'],
+      where: 'deleted = 0 AND sync_enabled = 1',
+    );
+    if (groups.isEmpty) return {};
+
+    final syncRows = await db.query(
+      SqliteExpenseGroupRepository.tableSyncLog,
+      columns: ['MAX(synced_at) as last_sync'],
+    );
+    final lastSync = (syncRows.isNotEmpty)
+        ? (syncRows.first['last_sync'] as int?) ?? 0
+        : 0;
+
+    final result = <String, bool>{};
+    for (final row in groups) {
+      final groupId = row['id'] as String;
+      final updatedAt = row['updated_at'] as int? ?? 0;
+      result[groupId] = lastSync >= updatedAt;
+    }
+    return result;
+  }
 }

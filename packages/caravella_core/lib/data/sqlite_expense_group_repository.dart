@@ -20,7 +20,7 @@ class SqliteExpenseGroupRepository
     with PerformanceMonitoring
     implements IExpenseGroupRepository {
   static const String _databaseName = 'expense_groups.db';
-  static const int _databaseVersion = 2;
+  static const int _databaseVersion = 3;
 
   // Table names — accessible for SyncDao and other sync infrastructure
   static const String tableGroups = 'groups';
@@ -104,7 +104,8 @@ class SqliteExpenseGroupRepository
         device_id TEXT NOT NULL DEFAULT '',
         updated_at INTEGER NOT NULL DEFAULT 0,
         deleted INTEGER NOT NULL DEFAULT 0,
-        sync_version INTEGER NOT NULL DEFAULT 0
+        sync_version INTEGER NOT NULL DEFAULT 0,
+        sync_enabled INTEGER NOT NULL DEFAULT 0
       )
     ''');
 
@@ -270,6 +271,22 @@ class SqliteExpenseGroupRepository
 
       LoggerService.info(
         'Database migration to v2 complete',
+        name: 'storage.sqlite',
+      );
+    }
+
+    if (oldVersion < 3) {
+      LoggerService.info(
+        'Migrating database from v$oldVersion to v3',
+        name: 'storage.sqlite',
+      );
+
+      await db.execute(
+        'ALTER TABLE $_tableGroups ADD COLUMN sync_enabled INTEGER NOT NULL DEFAULT 0',
+      );
+
+      LoggerService.info(
+        'Database migration to v3 complete',
         name: 'storage.sqlite',
       );
     }
@@ -897,6 +914,7 @@ class SqliteExpenseGroupRepository
           ? ExpenseGroupType.fromJson(map['group_type'])
           : null,
       autoLocationEnabled: (map['auto_location_enabled'] as int) == 1,
+      syncEnabled: (map['sync_enabled'] as int?) == 1,
     );
   }
 
@@ -927,6 +945,7 @@ class SqliteExpenseGroupRepository
       'notification_enabled': group.notificationEnabled ? 1 : 0,
       'group_type': group.groupType?.toJson(),
       'auto_location_enabled': group.autoLocationEnabled ? 1 : 0,
+      'sync_enabled': group.syncEnabled ? 1 : 0,
       'device_id': deviceId,
       'updated_at': nowMs,
       'deleted': 0,

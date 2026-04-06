@@ -974,4 +974,12 @@
   ,"@sync_channel_cloud": {"description": "Nome canale Cloud"}
   ,"sync_records_exchanged": "{sent} inviati, {received} ricevuti"
   ,"@sync_records_exchanged": {"description": "Riepilogo record scambiati","placeholders": {"sent": {"type": "int"}, "received": {"type": "int"}}}
+  ,"sync_group_shared": "Gruppo condiviso"
+  ,"@sync_group_shared": {"description": "Tooltip per icona gruppo condiviso"}
+  ,"sync_group_synced": "Tutte le modifiche sincronizzate"
+  ,"@sync_group_synced": {"description": "Tooltip per stato gruppo sincronizzato"}
+  ,"sync_group_pending": "Modifiche non ancora sincronizzate"
+  ,"@sync_group_pending": {"description": "Tooltip per stato gruppo non sincronizzato"}
+  ,"sync_group_enable": "Abilita sincronizzazione"
+  ,"@sync_group_enable": {"description": "Etichetta per abilitare la sincronizzazione su un gruppo"}
 }

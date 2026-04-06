@@ -1011,4 +1011,12 @@
   ,"@sync_channel_cloud": {"description": "Cloud channel name"}
   ,"sync_records_exchanged": "{sent} sent, {received} received"
   ,"@sync_records_exchanged": {"description": "Records exchanged summary","placeholders": {"sent": {"type": "int"}, "received": {"type": "int"}}}
+  ,"sync_group_shared": "Shared group"
+  ,"@sync_group_shared": {"description": "Tooltip for shared group icon"}
+  ,"sync_group_synced": "All changes synced"
+  ,"@sync_group_synced": {"description": "Tooltip for synced group status"}
+  ,"sync_group_pending": "Changes not yet synced"
+  ,"@sync_group_pending": {"description": "Tooltip for unsynced group status"}
+  ,"sync_group_enable": "Enable sync"
+  ,"@sync_group_enable": {"description": "Label for enabling sync on a group"}
 }
