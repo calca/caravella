@@ -238,6 +238,15 @@ class _SelectionSheetState<T> extends State<_SelectionSheet<T>> {
             Navigator.of(context).pop(val as T);
           }
         }
+      } else {
+        // For non-String items (e.g., ExpenseCategory), close the sheet after adding.
+        // Selection is handled by the onAddItemInline callback chain.
+        if (mounted) {
+          await Future.delayed(const Duration(milliseconds: 100));
+          if (mounted) {
+            Navigator.of(context).pop();
+          }
+        }
       }
     } catch (e) {
       if (mounted) {
