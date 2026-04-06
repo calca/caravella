@@ -30,36 +30,38 @@ class GroupSyncIndicator extends StatelessWidget {
     if (!group.syncEnabled) return const SizedBox.shrink();
 
     final theme = Theme.of(context);
+    final syncColor = _syncColor;
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // Shared group icon
-        Semantics(
-          label: 'Shared group',
-          child: Icon(
+    return Semantics(
+      label: _semanticsLabel,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
             Icons.people_outline,
             size: 18,
             color: theme.colorScheme.primary,
           ),
-        ),
-        const SizedBox(width: 4),
-        // Sync status dot
-        if (isSynced != null)
-          Semantics(
-            label: isSynced! ? 'Synced' : 'Not synced',
-            child: Container(
+          if (isSynced != null) ...[
+            const SizedBox(width: 4),
+            Container(
               width: 8,
               height: 8,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: isSynced!
-                    ? Colors.green
-                    : Colors.amber,
+                color: syncColor,
               ),
             ),
-          ),
-      ],
+          ],
+        ],
+      ),
     );
+  }
+
+  Color get _syncColor => isSynced == true ? Colors.green : Colors.amber;
+
+  String get _semanticsLabel {
+    if (isSynced == null) return 'Shared group';
+    return isSynced! ? 'Shared group, synced' : 'Shared group, not synced';
   }
 }

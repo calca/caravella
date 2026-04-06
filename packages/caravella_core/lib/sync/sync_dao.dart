@@ -186,6 +186,10 @@ class SyncDao {
   /// Compares the group's `updated_at` against the most recent `synced_at`
   /// from the sync_log. Returns `true` if the group is fully synced (i.e. the
   /// last sync happened after the last update), `false` otherwise.
+  ///
+  /// Uses the global last-sync time because each sync exchange transfers the
+  /// full delta for all groups — so a single successful sync brings every
+  /// shared group up to date.
   Future<bool> isGroupSynced(String groupId) async {
     final groupRows = await db.query(
       SqliteExpenseGroupRepository.tableGroups,

@@ -19,6 +19,9 @@ class CarouselGroupCard extends StatelessWidget {
   final ThemeData theme;
   final VoidCallback onGroupUpdated;
 
+  /// Whether this group's data is fully synced with peers.
+  final bool? isSynced;
+
   /// Size of the square tile (width and height)
   static const double tileSize = 90.0;
 
@@ -35,6 +38,7 @@ class CarouselGroupCard extends StatelessWidget {
     required this.localizations,
     required this.theme,
     required this.onGroupUpdated,
+    this.isSynced,
   });
 
   /// Gets the initials from the group title (up to 2 characters)
@@ -147,15 +151,22 @@ class CarouselGroupCard extends StatelessWidget {
                 Positioned(
                   top: -2,
                   right: -2,
-                  child: Container(
-                    width: 12,
-                    height: 12,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.green,
-                      border: Border.all(
-                        color: theme.colorScheme.surface,
-                        width: 2,
+                  child: Semantics(
+                    label: isSynced == true
+                        ? 'Shared group, synced'
+                        : 'Shared group, not synced',
+                    child: Container(
+                      width: 12,
+                      height: 12,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: isSynced == true
+                            ? Colors.green
+                            : Colors.amber,
+                        border: Border.all(
+                          color: theme.colorScheme.surface,
+                          width: 2,
+                        ),
                       ),
                     ),
                   ),
