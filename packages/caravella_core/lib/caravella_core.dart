@@ -47,6 +47,12 @@ export 'services/shortcuts/app_shortcuts_service.dart';
 export 'services/shortcuts/platform_shortcuts_manager.dart';
 export 'services/shortcuts/shortcuts_navigation_service.dart';
 
+// Sync
+export 'sync/device_identity.dart';
+export 'sync/utils/sync_clock.dart';
+export 'sync/models/sync_result.dart';
+export 'sync/models/sync_status.dart';
+
 // State Management
 export 'state/app_functions_enabled_notifier.dart';
 export 'state/auto_backup_notifier.dart';
