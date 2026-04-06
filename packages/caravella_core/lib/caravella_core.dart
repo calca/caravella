@@ -60,6 +60,8 @@ export 'sync/json/group_serializer.dart';
 export 'sync/json/json_merger.dart';
 export 'sync/json/local_json_store.dart';
 export 'sync/channels/cloud_relay_channel.dart';
+export 'sync/channels/lan_sync_channel.dart';
+export 'sync/sync_orchestrator.dart';
 
 // State Management
 export 'state/app_functions_enabled_notifier.dart';
