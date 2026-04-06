@@ -52,6 +52,10 @@ export 'sync/device_identity.dart';
 export 'sync/utils/sync_clock.dart';
 export 'sync/models/sync_result.dart';
 export 'sync/models/sync_status.dart';
+export 'sync/sync_dao.dart';
+export 'sync/delta_builder.dart';
+export 'sync/conflict_resolver.dart';
+export 'sync/sync_manager.dart';
 
 // State Management
 export 'state/app_functions_enabled_notifier.dart';
