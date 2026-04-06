@@ -56,6 +56,10 @@ export 'sync/sync_dao.dart';
 export 'sync/delta_builder.dart';
 export 'sync/conflict_resolver.dart';
 export 'sync/sync_manager.dart';
+export 'sync/json/group_serializer.dart';
+export 'sync/json/json_merger.dart';
+export 'sync/json/local_json_store.dart';
+export 'sync/channels/cloud_relay_channel.dart';
 
 // State Management
 export 'state/app_functions_enabled_notifier.dart';
