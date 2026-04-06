@@ -301,9 +301,11 @@ class ExpenseFormFields extends StatelessWidget {
   }
 
   /// Selects a participant by name from the current list.
-  /// For newly added participants the auto-selection is handled asynchronously
-  /// by the parent component's _onParticipantAdded handler, so this method
-  /// only acts when the participant already exists in the list.
+  /// For newly added participants the auto-selection is handled in the parent
+  /// component's _onParticipantAdded handler: once the notifier update
+  /// microtask completes, that handler calls _controller.updatePaidBy directly.
+  /// This method therefore only acts immediately when the participant is already
+  /// present in the list.
   void _selectParticipantByName(String name) {
     final found = participants.where((p) => p.name == name).firstOrNull;
 
@@ -311,8 +313,8 @@ class ExpenseFormFields extends StatelessWidget {
       controller.updatePaidBy(found);
     } else {
       // The participant was just added inline; _onParticipantAdded in
-      // ExpenseFormComponent will handle the update and auto-selection once
-      // the notifier propagates the change.
+      // ExpenseFormComponent calls _controller.updatePaidBy once the notifier
+      // update microtask has run, so no action is needed here.
       LoggerService.debug(
         'Participant "$name" not yet in list; selection will be handled by onParticipantAdded.',
         name: 'expense.participant',

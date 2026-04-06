@@ -415,12 +415,16 @@ class _ExpenseFormComponentState extends State<ExpenseFormComponent> {
     );
 
     // Fire the callback which adds the participant to the data store (notifier).
-    // The notifier updates _currentGroup synchronously before the async I/O write,
-    // so currentGroup.participants will contain the new participant immediately after
-    // notifyListeners() is called inside addParticipant().
+    // We do NOT await this — the callback itself is async and calls addParticipant,
+    // which updates _currentGroup synchronously (before its own I/O await).
     widget.config.onParticipantAdded!(participantName);
 
-    // Brief wait to let the microtask queue process the synchronous notifier update.
+    // Yield control so the microtask scheduled by the fire-and-forget callback
+    // above can run.  Even though the notifier's _currentGroup update is
+    // synchronous inside addParticipant, the callback's async function starts
+    // as a new microtask/event, so we must suspend here at least once to let it
+    // execute.  A short timer is used as a safe buffer against platform-specific
+    // async scheduling subtleties.
     await Future.delayed(const Duration(milliseconds: 100));
 
     if (!mounted) return;
