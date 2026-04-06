@@ -902,4 +902,14 @@
   ,"@export_markdown_description": {"description": "Descrição curta para o formato de exportação Markdown"}
   ,"save_label": "Salvar"
   ,"@save_label": {"description": "Rótulo para o botão de salvar"}
+  ,"from_unsplash": "Do Unsplash"
+  ,"@from_unsplash": {"description": "Opção para buscar uma imagem de fundo no Unsplash"}
+  ,"unsplash_search_hint": "Buscar imagens gratuitas..."
+  ,"@unsplash_search_hint": {"description": "Texto de dica na barra de pesquisa do Unsplash"}
+  ,"unsplash_no_results": "Nenhuma imagem encontrada"
+  ,"@unsplash_no_results": {"description": "Mensagem quando a pesquisa no Unsplash não retorna resultados"}
+  ,"unsplash_downloading": "Baixando imagem..."
+  ,"@unsplash_downloading": {"description": "Texto de carregamento enquanto baixa uma foto do Unsplash"}
+  ,"unsplash_error": "Falha ao carregar as imagens"
+  ,"@unsplash_error": {"description": "Mensagem de erro quando a pesquisa ou download do Unsplash falha"}
 }
