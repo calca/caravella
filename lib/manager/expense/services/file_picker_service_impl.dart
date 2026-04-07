@@ -50,7 +50,7 @@ class FilePickerServiceImpl implements FilePickerService {
   @override
   Future<String?> pickFile({required List<String> extensions}) async {
     try {
-      final result = await FilePicker.platform.pickFiles(
+      final result = await FilePicker.pickFiles(
         type: FileType.custom,
         allowedExtensions: extensions,
       );

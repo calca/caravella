@@ -45,7 +45,7 @@ dependencies:
   
   # External dependencies
   provider: ^6.1.5
-  file_picker: ^10.3.10
+  file_picker: ^11.0.2
   image_picker: ^1.2.1
   image_picker_android: ^0.8.13
   image: ^4.8.0
@@ -67,7 +67,7 @@ dependencies:
   path: ^1.9.1
   intl: ^0.20.2
   timeago: ^3.7.1
-  gpt_markdown: ^1.1.5
+  gpt_markdown: ^1.1.6
   image_picker_platform_interface: ^2.11.1
   flutter_local_notifications: ^21.0.0
   flutter_map: ^8.2.2
