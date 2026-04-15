@@ -922,4 +922,64 @@
   ,"@export_markdown_description": {"description": "Breve descrizione per il formato di esportazione Markdown"}
   ,"save_label": "Salva"
   ,"@save_label": {"description": "Etichetta per il pulsante di salvataggio"}
+  ,"sync_title": "Sincronizzazione"
+  ,"@sync_title": {"description": "Titolo per la pagina impostazioni sync"}
+  ,"sync_local_title": "Sync locale"
+  ,"@sync_local_title": {"description": "Titolo per la sezione sync LAN locale"}
+  ,"sync_local_description": "Sincronizzazione automatica sulla rete Wi-Fi"
+  ,"@sync_local_description": {"description": "Descrizione per sync LAN"}
+  ,"sync_cloud_title": "Sync cloud"
+  ,"@sync_cloud_title": {"description": "Titolo per la sezione sync cloud"}
+  ,"sync_cloud_description": "Sincronizzazione via Google Drive"
+  ,"@sync_cloud_description": {"description": "Descrizione per sync cloud"}
+  ,"sync_cloud_enable": "Abilita sync cloud"
+  ,"@sync_cloud_enable": {"description": "Etichetta per attivare sync cloud"}
+  ,"sync_cloud_privacy": "I tuoi dati vengono salvati nel tuo Google Drive personale, non su server di terzi."
+  ,"@sync_cloud_privacy": {"description": "Avviso privacy per sync cloud"}
+  ,"sync_history_title": "Cronologia sync"
+  ,"@sync_history_title": {"description": "Titolo per la sezione cronologia sync"}
+  ,"sync_status_synced": "Sincronizzato"
+  ,"@sync_status_synced": {"description": "Stato quando sync aggiornato"}
+  ,"sync_status_syncing": "Sincronizzazione..."
+  ,"@sync_status_syncing": {"description": "Stato durante sync attivo"}
+  ,"sync_status_error": "Errore sync"
+  ,"@sync_status_error": {"description": "Stato in caso di errore sync"}
+  ,"sync_status_never": "Mai sincronizzato"
+  ,"@sync_status_never": {"description": "Stato quando nessun sync è avvenuto"}
+  ,"sync_now": "Sincronizza ora"
+  ,"@sync_now": {"description": "Pulsante per avviare sync manuale"}
+  ,"sync_last_sync": "Ultimo sync: {time}"
+  ,"@sync_last_sync": {"description": "Mostra l'ora dell'ultimo sync","placeholders": {"time": {"type": "String"}}}
+  ,"sync_bt_title": "Sync Bluetooth"
+  ,"@sync_bt_title": {"description": "Titolo per sync Bluetooth"}
+  ,"sync_bt_searching": "Ricerca dispositivi vicini..."
+  ,"@sync_bt_searching": {"description": "Stato durante ricerca peer BT"}
+  ,"sync_bt_sync_with": "Sincronizza"
+  ,"@sync_bt_sync_with": {"description": "Pulsante per sincronizzare con un peer BT"}
+  ,"sync_bt_completed": "Sincronizzazione completata"
+  ,"@sync_bt_completed": {"description": "Stato quando sync BT completato"}
+  ,"sync_bt_received_sent": "Ricevuti {received}, inviati {sent} record"
+  ,"@sync_bt_received_sent": {"description": "Riepilogo dopo sync","placeholders": {"received": {"type": "int"}, "sent": {"type": "int"}}}
+  ,"sync_bt_error": "Sincronizzazione fallita"
+  ,"@sync_bt_error": {"description": "Stato quando sync BT fallisce"}
+  ,"sync_bt_retry": "Riprova"
+  ,"@sync_bt_retry": {"description": "Pulsante per riprovare sync BT"}
+  ,"sync_history_empty": "Nessuna cronologia sync"
+  ,"@sync_history_empty": {"description": "Stato vuoto per cronologia sync"}
+  ,"sync_channel_lan": "LAN"
+  ,"@sync_channel_lan": {"description": "Nome canale LAN"}
+  ,"sync_channel_bluetooth": "Bluetooth"
+  ,"@sync_channel_bluetooth": {"description": "Nome canale Bluetooth"}
+  ,"sync_channel_cloud": "Cloud"
+  ,"@sync_channel_cloud": {"description": "Nome canale Cloud"}
+  ,"sync_records_exchanged": "{sent} inviati, {received} ricevuti"
+  ,"@sync_records_exchanged": {"description": "Riepilogo record scambiati","placeholders": {"sent": {"type": "int"}, "received": {"type": "int"}}}
+  ,"sync_group_shared": "Gruppo condiviso"
+  ,"@sync_group_shared": {"description": "Tooltip per icona gruppo condiviso"}
+  ,"sync_group_synced": "Tutte le modifiche sincronizzate"
+  ,"@sync_group_synced": {"description": "Tooltip per stato gruppo sincronizzato"}
+  ,"sync_group_pending": "Modifiche non ancora sincronizzate"
+  ,"@sync_group_pending": {"description": "Tooltip per stato gruppo non sincronizzato"}
+  ,"sync_group_enable": "Abilita sincronizzazione"
+  ,"@sync_group_enable": {"description": "Etichetta per abilitare la sincronizzazione su un gruppo"}
 }

@@ -959,4 +959,64 @@
   ,"@export_markdown_description": {"description": "Short description for Markdown export format"}
   ,"save_label": "Save"
   ,"@save_label": {"description": "Label for save action button"}
+  ,"sync_title": "Synchronization"
+  ,"@sync_title": {"description": "Title for sync settings page"}
+  ,"sync_local_title": "Local Sync"
+  ,"@sync_local_title": {"description": "Title for local LAN sync section"}
+  ,"sync_local_description": "Automatic sync on Wi-Fi network"
+  ,"@sync_local_description": {"description": "Description for LAN sync"}
+  ,"sync_cloud_title": "Cloud Sync"
+  ,"@sync_cloud_title": {"description": "Title for cloud sync section"}
+  ,"sync_cloud_description": "Sync via Google Drive"
+  ,"@sync_cloud_description": {"description": "Description for cloud sync"}
+  ,"sync_cloud_enable": "Enable cloud sync"
+  ,"@sync_cloud_enable": {"description": "Label for cloud sync toggle"}
+  ,"sync_cloud_privacy": "Your data is saved in your personal Google Drive, not on third-party servers."
+  ,"@sync_cloud_privacy": {"description": "Privacy notice for cloud sync"}
+  ,"sync_history_title": "Sync History"
+  ,"@sync_history_title": {"description": "Title for sync history section"}
+  ,"sync_status_synced": "Synced"
+  ,"@sync_status_synced": {"description": "Status when sync is up to date"}
+  ,"sync_status_syncing": "Syncing..."
+  ,"@sync_status_syncing": {"description": "Status during active sync"}
+  ,"sync_status_error": "Sync error"
+  ,"@sync_status_error": {"description": "Status on sync error"}
+  ,"sync_status_never": "Never synced"
+  ,"@sync_status_never": {"description": "Status when no sync has happened"}
+  ,"sync_now": "Sync now"
+  ,"@sync_now": {"description": "Button to trigger manual sync"}
+  ,"sync_last_sync": "Last sync: {time}"
+  ,"@sync_last_sync": {"description": "Shows last sync time","placeholders": {"time": {"type": "String"}}}
+  ,"sync_bt_title": "Bluetooth Sync"
+  ,"@sync_bt_title": {"description": "Title for Bluetooth sync"}
+  ,"sync_bt_searching": "Searching for nearby devices..."
+  ,"@sync_bt_searching": {"description": "Status while searching for BT peers"}
+  ,"sync_bt_sync_with": "Sync"
+  ,"@sync_bt_sync_with": {"description": "Button to sync with a BT peer"}
+  ,"sync_bt_completed": "Sync completed"
+  ,"@sync_bt_completed": {"description": "Status when BT sync is done"}
+  ,"sync_bt_received_sent": "Received {received}, sent {sent} records"
+  ,"@sync_bt_received_sent": {"description": "Summary after sync","placeholders": {"received": {"type": "int"}, "sent": {"type": "int"}}}
+  ,"sync_bt_error": "Sync failed"
+  ,"@sync_bt_error": {"description": "Status when BT sync fails"}
+  ,"sync_bt_retry": "Retry"
+  ,"@sync_bt_retry": {"description": "Button to retry BT sync"}
+  ,"sync_history_empty": "No sync history yet"
+  ,"@sync_history_empty": {"description": "Empty state for sync history"}
+  ,"sync_channel_lan": "LAN"
+  ,"@sync_channel_lan": {"description": "LAN channel name"}
+  ,"sync_channel_bluetooth": "Bluetooth"
+  ,"@sync_channel_bluetooth": {"description": "Bluetooth channel name"}
+  ,"sync_channel_cloud": "Cloud"
+  ,"@sync_channel_cloud": {"description": "Cloud channel name"}
+  ,"sync_records_exchanged": "{sent} sent, {received} received"
+  ,"@sync_records_exchanged": {"description": "Records exchanged summary","placeholders": {"sent": {"type": "int"}, "received": {"type": "int"}}}
+  ,"sync_group_shared": "Shared group"
+  ,"@sync_group_shared": {"description": "Tooltip for shared group icon"}
+  ,"sync_group_synced": "All changes synced"
+  ,"@sync_group_synced": {"description": "Tooltip for synced group status"}
+  ,"sync_group_pending": "Changes not yet synced"
+  ,"@sync_group_pending": {"description": "Tooltip for unsynced group status"}
+  ,"sync_group_enable": "Enable sync"
+  ,"@sync_group_enable": {"description": "Label for enabling sync on a group"}
 }
