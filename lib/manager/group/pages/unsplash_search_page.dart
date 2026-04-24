@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
@@ -12,15 +15,20 @@ import '../../../services/unsplash/unsplash_service.dart';
 /// Returns the downloaded [File] when the user selects a photo, or null
 /// if cancelled.
 class UnsplashSearchPage extends StatefulWidget {
-  const UnsplashSearchPage({super.key});
+  const UnsplashSearchPage({super.key, this.initialQuery});
+
+  /// Optional query to pre-fill and auto-search when the page opens.
+  final String? initialQuery;
 
   @override
   State<UnsplashSearchPage> createState() => _UnsplashSearchPageState();
 
   /// Push the search page and return the downloaded image file (or null).
-  static Future<File?> show(BuildContext context) {
+  static Future<File?> show(BuildContext context, {String? initialQuery}) {
     return Navigator.of(context).push<File?>(
-      MaterialPageRoute(builder: (_) => const UnsplashSearchPage()),
+      MaterialPageRoute(
+        builder: (_) => UnsplashSearchPage(initialQuery: initialQuery),
+      ),
     );
   }
 }
@@ -39,9 +47,17 @@ class _UnsplashSearchPageState extends State<UnsplashSearchPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _searchFocus.requestFocus();
-    });
+    final initial = widget.initialQuery?.trim() ?? '';
+    if (initial.isNotEmpty) {
+      _searchController.text = initial;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _search(initial);
+      });
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _searchFocus.requestFocus();
+      });
+    }
   }
 
   @override
@@ -90,6 +106,18 @@ class _UnsplashSearchPageState extends State<UnsplashSearchPage> {
           _errorMessage = e.toString();
         });
       }
+    }
+  }
+
+  Future<void> _previewPhoto(UnsplashPhoto photo) async {
+    final confirmed = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (_) => _PhotoPreviewSheet(photo: photo),
+    );
+    if (confirmed == true && mounted) {
+      await _selectPhoto(photo);
     }
   }
 
@@ -145,26 +173,26 @@ class _UnsplashSearchPageState extends State<UnsplashSearchPage> {
                           const SizedBox(
                             width: 20,
                             height: 20,
-                            child:
-                                CircularProgressIndicator(strokeWidth: 2),
+                            child: CircularProgressIndicator(strokeWidth: 2),
                           ),
                         ]
                       : _searchController.text.isNotEmpty
-                          ? [
-                              IconButton(
-                                icon: const Icon(Icons.clear_rounded),
-                                onPressed: () {
-                                  _searchController.clear();
-                                  _onSearchChanged('');
-                                },
-                              ),
-                            ]
-                          : [],
+                      ? [
+                          IconButton(
+                            icon: const Icon(Icons.clear_rounded),
+                            onPressed: () {
+                              _searchController.clear();
+                              _onSearchChanged('');
+                            },
+                          ),
+                        ]
+                      : [],
                   onChanged: _onSearchChanged,
                   onSubmitted: _search,
                   elevation: WidgetStateProperty.all(0),
-                  backgroundColor:
-                      WidgetStateProperty.all(colorScheme.surfaceContainer),
+                  backgroundColor: WidgetStateProperty.all(
+                    colorScheme.surfaceContainer,
+                  ),
                   shape: WidgetStateProperty.all(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -175,6 +203,17 @@ class _UnsplashSearchPageState extends State<UnsplashSearchPage> {
 
               // Results
               Expanded(child: _buildBody(theme, colorScheme, loc)),
+
+              // Attribution footer – always pinned at the bottom of the Column.
+              // ColoredBox + SafeArea ensure it stays above the system nav bar
+              // in edge-to-edge mode and doesn't blend with the content.
+              ColoredBox(
+                color: colorScheme.surface,
+                child: const SafeArea(
+                  top: false,
+                  child: _UnsplashAttributionFooter(),
+                ),
+              ),
             ],
           ),
 
@@ -215,8 +254,11 @@ class _UnsplashSearchPageState extends State<UnsplashSearchPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.cloud_off_outlined, size: 48,
-                  color: colorScheme.error),
+              Icon(
+                Icons.cloud_off_outlined,
+                size: 48,
+                color: colorScheme.error,
+              ),
               const SizedBox(height: 12),
               Text(
                 loc.unsplash_error,
@@ -236,8 +278,11 @@ class _UnsplashSearchPageState extends State<UnsplashSearchPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.image_not_supported_outlined, size: 48,
-                  color: colorScheme.onSurfaceVariant),
+              Icon(
+                Icons.image_not_supported_outlined,
+                size: 48,
+                color: colorScheme.onSurfaceVariant,
+              ),
               const SizedBox(height: 12),
               Text(
                 loc.unsplash_no_results,
@@ -275,10 +320,7 @@ class _UnsplashSearchPageState extends State<UnsplashSearchPage> {
       itemCount: _results.length,
       itemBuilder: (context, index) {
         final photo = _results[index];
-        return _PhotoTile(
-          photo: photo,
-          onTap: () => _selectPhoto(photo),
-        );
+        return _PhotoTile(photo: photo, onTap: () => _previewPhoto(photo));
       },
     );
   }
@@ -299,56 +341,254 @@ class _PhotoTile extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            Image.network(
-              photo.urls.small,
-              fit: BoxFit.cover,
-              loadingBuilder: (_, child, progress) {
-                if (progress == null) return child;
-                return const Center(
-                  child: SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
-                );
-              },
-              errorBuilder: (_, __, ___) => const Center(
-                child: Icon(Icons.broken_image_outlined),
-              ),
-            ),
-            // Attribution overlay at the bottom
+            _UnsplashThumbnail(url: photo.urls.thumb),
+            // Attribution overlay at the bottom – tapping opens photographer profile
             Positioned(
               left: 0,
               right: 0,
               bottom: 0,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 4,
-                  vertical: 2,
-                ),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.transparent,
-                      Colors.black.withValues(alpha: 0.6),
-                    ],
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => launchUrl(
+                  Uri.parse(
+                    'https://unsplash.com/@${photo.user.username}'
+                    '?utm_source=caravella&utm_medium=referral',
                   ),
+                  mode: LaunchMode.externalApplication,
                 ),
-                child: Text(
-                  photo.user.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: Colors.white,
-                    fontSize: 9,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withValues(alpha: 0.6),
+                      ],
+                    ),
+                  ),
+                  child: Text(
+                    photo.user.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: Colors.white,
+                      fontSize: 9,
+                      decoration: TextDecoration.underline,
+                      decorationColor: Colors.white,
+                    ),
                   ),
                 ),
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Loads an Unsplash thumbnail using the `http` package (same network path as
+/// API calls) instead of [Image.network], which on Android emulators may bind
+/// to the wlan0 interface even when only eth0 has a working default route.
+class _UnsplashThumbnail extends StatefulWidget {
+  final String url;
+  const _UnsplashThumbnail({required this.url});
+
+  @override
+  State<_UnsplashThumbnail> createState() => _UnsplashThumbnailState();
+}
+
+class _UnsplashThumbnailState extends State<_UnsplashThumbnail> {
+  Uint8List? _bytes;
+  bool _error = false;
+  bool _visible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetch();
+  }
+
+  Future<void> _fetch() async {
+    try {
+      final response = await http
+          .get(Uri.parse(widget.url))
+          .timeout(const Duration(seconds: 15));
+      if (response.statusCode == 200 && mounted) {
+        setState(() => _bytes = response.bodyBytes);
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) setState(() => _visible = true);
+        });
+      }
+    } on TimeoutException {
+      LoggerService.warning(
+        'Thumbnail load timed out: ${widget.url}',
+        name: 'api.unsplash',
+      );
+      if (mounted) setState(() => _error = true);
+    } catch (e) {
+      LoggerService.warning('Thumbnail load failed: $e', name: 'api.unsplash');
+      if (mounted) setState(() => _error = true);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_error) {
+      return const Center(child: Icon(Icons.broken_image_outlined));
+    }
+    if (_bytes == null) {
+      return const Center(
+        child: SizedBox(
+          width: 20,
+          height: 20,
+          child: CircularProgressIndicator(strokeWidth: 2),
+        ),
+      );
+    }
+    return AnimatedOpacity(
+      opacity: _visible ? 1.0 : 0.0,
+      duration: const Duration(milliseconds: 350),
+      curve: Curves.easeIn,
+      child: Image.memory(_bytes!, fit: BoxFit.cover),
+    );
+  }
+}
+
+class _UnsplashAttributionFooter extends StatelessWidget {
+  const _UnsplashAttributionFooter();
+
+  @override
+  Widget build(BuildContext context) {
+    final loc = gen.AppLocalizations.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
+    final baseStyle = Theme.of(
+      context,
+    ).textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('${loc.unsplash_photos_by} ', style: baseStyle),
+          GestureDetector(
+            onTap: () => launchUrl(
+              Uri.parse(
+                'https://unsplash.com/?utm_source=caravella&utm_medium=referral',
+              ),
+              mode: LaunchMode.externalApplication,
+            ),
+            child: Text(
+              'Unsplash',
+              style: baseStyle?.copyWith(
+                color: colorScheme.primary,
+                decoration: TextDecoration.underline,
+                decorationColor: colorScheme.primary,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Bottom sheet shown before a photo is selected, displaying a preview and
+/// a tappable attribution link to the photographer's Unsplash profile.
+class _PhotoPreviewSheet extends StatelessWidget {
+  final UnsplashPhoto photo;
+  const _PhotoPreviewSheet({required this.photo});
+
+  @override
+  Widget build(BuildContext context) {
+    final loc = gen.AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Drag handle
+          Container(
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+              color: colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          const SizedBox(height: 16),
+          // Photo preview
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: _UnsplashThumbnail(url: photo.urls.small),
+            ),
+          ),
+          const SizedBox(height: 12),
+          // Photographer attribution – tappable link with UTM params (required by Unsplash guidelines)
+          GestureDetector(
+            onTap: () => launchUrl(
+              Uri.parse(
+                'https://unsplash.com/@${photo.user.username}'
+                '?utm_source=caravella&utm_medium=referral',
+              ),
+              mode: LaunchMode.externalApplication,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '${loc.unsplash_photos_by} ',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                Text(
+                  photo.user.name,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorScheme.primary,
+                    decoration: TextDecoration.underline,
+                    decorationColor: colorScheme.primary,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Icon(
+                  Icons.open_in_new_rounded,
+                  size: 12,
+                  color: colorScheme.primary,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+          // Action buttons
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: Text(loc.cancel),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: FilledButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: Text(loc.unsplash_use_photo),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

@@ -241,7 +241,12 @@ class _BackgroundSheet extends StatelessWidget {
             final sheetNav = Navigator.of(context);
             if (sheetNav.mounted) sheetNav.pop();
             final parentNav = Navigator.of(parentContext);
-            final downloaded = await UnsplashSearchPage.show(parentContext);
+            final downloaded = await UnsplashSearchPage.show(
+              parentContext,
+              initialQuery: state.title.trim().isNotEmpty
+                  ? state.title.trim()
+                  : null,
+            );
             if (downloaded != null) {
               state.setLoading(true);
               await Future.delayed(const Duration(milliseconds: 120));

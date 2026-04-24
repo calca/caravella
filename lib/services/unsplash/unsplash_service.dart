@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -52,7 +53,7 @@ class UnsplashService {
     try {
       final response = await http
           .get(url, headers: _headers)
-          .timeout(const Duration(seconds: 10));
+          .timeout(const Duration(seconds: 20));
 
       if (response.statusCode == 200) {
         final body = json.decode(response.body) as Map<String, dynamic>;
@@ -68,6 +69,12 @@ class UnsplashService {
           name: 'api.unsplash',
         );
         return photos;
+      } else if (response.statusCode == 401) {
+        LoggerService.warning(
+          'Unsplash access key is invalid or unauthorized',
+          name: 'api.unsplash',
+        );
+        throw Exception('Invalid API key (401)');
       } else if (response.statusCode == 403) {
         LoggerService.warning(
           'Unsplash API rate limit exceeded',
@@ -81,6 +88,12 @@ class UnsplashService {
         );
         throw Exception('Search failed (${response.statusCode})');
       }
+    } on TimeoutException {
+      LoggerService.warning(
+        'Unsplash search timed out for "$query"',
+        name: 'api.unsplash',
+      );
+      throw Exception('Connection timed out. Check your internet connection.');
     } catch (e) {
       LoggerService.warning(
         'Unsplash search error for "$query": $e',
