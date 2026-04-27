@@ -2208,4 +2208,25 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get save_label => '保存';
+
+  @override
+  String get from_unsplash => '从Unsplash搜索';
+
+  @override
+  String get unsplash_search_hint => '搜索Unsplash照片...';
+
+  @override
+  String get unsplash_no_results => '未找到图片';
+
+  @override
+  String get unsplash_downloading => '正在下载图片...';
+
+  @override
+  String get unsplash_error => '加载图片失败';
+
+  @override
+  String get unsplash_photos_by => '照片来自';
+
+  @override
+  String get unsplash_use_photo => '使用此照片';
 }

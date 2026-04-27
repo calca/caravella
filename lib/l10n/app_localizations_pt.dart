@@ -2265,4 +2265,25 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get save_label => 'Salvar';
+
+  @override
+  String get from_unsplash => 'Do Unsplash';
+
+  @override
+  String get unsplash_search_hint => 'Buscar fotos no Unsplash...';
+
+  @override
+  String get unsplash_no_results => 'Nenhuma imagem encontrada';
+
+  @override
+  String get unsplash_downloading => 'Baixando imagem...';
+
+  @override
+  String get unsplash_error => 'Falha ao carregar as imagens';
+
+  @override
+  String get unsplash_photos_by => 'Fotos de';
+
+  @override
+  String get unsplash_use_photo => 'Usar esta foto';
 }

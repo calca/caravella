@@ -1325,5 +1325,33 @@
   "save_label": "保存",
   "@save_label": {
     "description": "保存按钮的标签"
+  },
+  "from_unsplash": "从Unsplash搜索",
+  "@from_unsplash": {
+    "description": "在Unsplash上搜索背景图片的选项"
+  },
+  "unsplash_search_hint": "搜索Unsplash照片...",
+  "@unsplash_search_hint": {
+    "description": "Unsplash搜索栏的提示文字"
+  },
+  "unsplash_no_results": "未找到图片",
+  "@unsplash_no_results": {
+    "description": "Unsplash搜索无结果时的消息"
+  },
+  "unsplash_downloading": "正在下载图片...",
+  "@unsplash_downloading": {
+    "description": "下载Unsplash照片时的加载文字"
+  },
+  "unsplash_error": "加载图片失败",
+  "@unsplash_error": {
+    "description": "Unsplash搜索或下载失败时的错误消息"
+  },
+  "unsplash_photos_by": "照片来自",
+  "@unsplash_photos_by": {
+    "description": "搜索页面底部Unsplash品牌链接前的署名前缀"
+  },
+  "unsplash_use_photo": "使用此照片",
+  "@unsplash_use_photo": {
+    "description": "在预览面板中确认选择Unsplash照片的按钮"
   }
 }

@@ -937,4 +937,18 @@
   ,"@export_markdown_description": {"description": "Descripción corta para el formato de exportación Markdown"}
   ,"save_label": "Guardar"
   ,"@save_label": {"description": "Etiqueta para el botón de guardar"}
+  ,"from_unsplash": "Desde Unsplash"
+  ,"@from_unsplash": {"description": "Opción para buscar una imagen de fondo en Unsplash"}
+  ,"unsplash_search_hint": "Buscar fotos en Unsplash..."
+  ,"@unsplash_search_hint": {"description": "Texto de sugerencia en la barra de búsqueda de Unsplash"}
+  ,"unsplash_no_results": "No se encontraron imágenes"
+  ,"@unsplash_no_results": {"description": "Mensaje cuando la búsqueda en Unsplash no devuelve resultados"}
+  ,"unsplash_downloading": "Descargando imagen..."
+  ,"@unsplash_downloading": {"description": "Texto de carga mientras se descarga una foto de Unsplash"}
+  ,"unsplash_error": "Error al cargar las imágenes"
+  ,"@unsplash_error": {"description": "Mensaje de error cuando la búsqueda o descarga de Unsplash falla"}
+  ,"unsplash_photos_by": "Fotos de"
+  ,"@unsplash_photos_by": {"description": "Prefijo de atribución antes del enlace al brand Unsplash al final de la página de búsqueda"}
+  ,"unsplash_use_photo": "Usar esta foto"
+  ,"@unsplash_use_photo": {"description": "Botón para confirmar la selección de una foto de Unsplash en la hoja de vista previa"}
 }
