@@ -16,7 +16,7 @@ dependencies:
   fl_chart: ^1.2.0
   flutter_map: ^8.3.0
   intl: ^0.20.2
-  latlong2: ^0.9.1
+  latlong2: ^0.10.1
   timeago: ^3.7.0
   zentoast: ^0.2.2
 
