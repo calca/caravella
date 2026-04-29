@@ -295,75 +295,30 @@ class ExpenseFormFields extends StatelessWidget {
     String participantName,
   ) async {
     if (onParticipantAdded == null) return;
-    onParticipantAdded!(participantName);
-    await Future.delayed(const Duration(milliseconds: 100));
-    // Notify parent to update participants list
-    // The parent will handle finding the new participant and updating the controller
+    // Await the callback so the parent component (_onParticipantAdded) can update
+    // the lifecycle manager and auto-select the participant before the sheet closes.
+    await onParticipantAdded!(participantName);
   }
 
-  /// Selects a participant by name with retry mechanism for newly added participants
+  /// Selects a participant by name from the current list.
+  /// For newly added participants the auto-selection is handled in the parent
+  /// component's _onParticipantAdded handler: once the notifier update
+  /// microtask completes, that handler calls _controller.updatePaidBy directly.
+  /// This method therefore only acts immediately when the participant is already
+  /// present in the list.
   void _selectParticipantByName(String name) {
-    LoggerService.info(
-      'Selecting participant by name: "$name", current participants: ${participants.map((p) => p.name).toList()}',
-      name: 'expense.participant',
-    );
-
-    // First try to find the participant in the current list
     final found = participants.where((p) => p.name == name).firstOrNull;
 
     if (found != null) {
-      // Participant found in list, use it immediately
-      LoggerService.info(
-        'Found participant immediately: ${found.name} (ID: ${found.id})',
-        name: 'expense.participant',
-      );
       controller.updatePaidBy(found);
     } else {
-      // Participant not yet in list (newly added), wait for list update
-      LoggerService.warning(
-        'Participant not found immediately, starting retry mechanism',
-        name: 'expense.participant',
-      );
-      _waitForParticipantAndSelect(name);
-    }
-  }
-
-  /// Waits for participant to appear in list and then selects it
-  Future<void> _waitForParticipantAndSelect(String name) async {
-    // Try multiple times with progressive delays - increased timeouts
-    final delays = [50, 100, 150, 200, 300, 500, 700]; // Total: 2 seconds max
-
-    LoggerService.info(
-      'Starting participant wait cycle for: "$name"',
-      name: 'expense.participant',
-    );
-
-    for (int i = 0; i < delays.length; i++) {
-      await Future.delayed(Duration(milliseconds: delays[i]));
-
-      // Refresh the participant list to get the latest state
-      onParticipantsUpdated?.call(participants);
-
-      final found = participants.where((p) => p.name == name).firstOrNull;
-      if (found != null) {
-        LoggerService.info(
-          'Found participant after ${i + 1} retries: ${found.name} (ID: ${found.id})',
-          name: 'expense.participant',
-        );
-        controller.updatePaidBy(found);
-        return;
-      }
-
+      // The participant was just added inline; _onParticipantAdded in
+      // ExpenseFormComponent calls _controller.updatePaidBy once the notifier
+      // update microtask has run, so no action is needed here.
       LoggerService.debug(
-        'Retry ${i + 1}/${delays.length}: Participant "$name" not yet available. Current participants: ${participants.map((p) => p.name).toList()}',
+        'Participant "$name" not yet in list; selection will be handled by onParticipantAdded.',
         name: 'expense.participant',
       );
     }
-
-    // If still not found after all retries, log error but don't create temp participant
-    LoggerService.error(
-      'Failed to find participant "$name" after all retries. This indicates a synchronization issue.',
-      name: 'expense.participant',
-    );
   }
 }

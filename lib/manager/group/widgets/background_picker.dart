@@ -6,9 +6,11 @@ import 'package:provider/provider.dart';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
+import '../../../services/unsplash/unsplash_service.dart';
 import '../data/group_form_state.dart';
 import '../group_form_controller.dart';
 import '../pages/image_crop_page.dart';
+import '../pages/unsplash_search_page.dart';
 
 class BackgroundPicker extends StatelessWidget {
   const BackgroundPicker({super.key});
@@ -24,7 +26,7 @@ class BackgroundPicker extends StatelessWidget {
           onTap: () => _showPicker(context),
           borderRadius: BorderRadius.circular(12),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4),
+            padding: const EdgeInsets.fromLTRB(0, 4, 16, 4),
             child: Row(
               children: [
                 _preview(state),
@@ -230,6 +232,40 @@ class _BackgroundSheet extends StatelessWidget {
           }
         },
       ),
+      if (UnsplashService.isAvailable)
+        ListTile(
+          contentPadding: EdgeInsets.zero,
+          leading: const Icon(Icons.image_search_outlined),
+          title: Text(loc.from_unsplash),
+          onTap: () async {
+            final sheetNav = Navigator.of(context);
+            if (sheetNav.mounted) sheetNav.pop();
+            final parentNav = Navigator.of(parentContext);
+            final downloaded = await UnsplashSearchPage.show(
+              parentContext,
+              initialQuery: state.title.trim().isNotEmpty
+                  ? state.title.trim()
+                  : null,
+            );
+            if (downloaded != null) {
+              state.setLoading(true);
+              await Future.delayed(const Duration(milliseconds: 120));
+              final cropped = await parentNav.push<File?>(
+                MaterialPageRoute(
+                  builder: (_) => _CropPageWrapper(
+                    image: downloaded,
+                    onFirstFrame: () => state.setLoading(false),
+                  ),
+                ),
+              );
+              if (cropped != null) {
+                await controller.persistPickedImage(cropped);
+                return;
+              }
+              state.setLoading(false);
+            }
+          },
+        ),
       ListTile(
         contentPadding: EdgeInsets.zero,
         leading: const Icon(Icons.color_lens_outlined),

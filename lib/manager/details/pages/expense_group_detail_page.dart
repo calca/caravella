@@ -67,12 +67,14 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
   bool _deleted = false;
   ExpenseGroupNotifier? _groupNotifier;
   // Removed manual refresh state (_reloading, _listOpacity)
-  bool _hideHeader = false; // animazione nascondi header quando filtri aperti
+  bool _hideHeader = false; // nascondi header quando filtri aperti
   late final ScrollController _scrollController;
   bool _fabVisible = true; // controllo visibilità totale
   Timer? _fabIdleTimer; // timer per ri-mostrare il FAB dopo inattività
   bool _collapsedTitleVisible = false; // mostra titolo in appbar dopo scroll
   String? _newlyAddedExpenseId; // ID della spesa appena aggiunta per animazione
+  double _headerExpandedHeight =
+      300.0; // aggiornato in build(), usato in _onScroll
 
   @override
   void initState() {
@@ -181,7 +183,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           final filename = CsvExporter.buildFilename(_trip);
           String? dirPath;
           try {
-            dirPath = await FilePicker.platform.getDirectoryPath(
+            dirPath = await FilePicker.getDirectoryPath(
               dialogTitle: gloc.csv_select_directory_title,
             );
           } catch (_) {
@@ -260,7 +262,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           final filename = _buildOfxFilename();
           String? dirPath;
           try {
-            dirPath = await FilePicker.platform.getDirectoryPath(
+            dirPath = await FilePicker.getDirectoryPath(
               dialogTitle: gloc.ofx_select_directory_title,
             );
           } catch (_) {
@@ -339,7 +341,7 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
           final filename = MarkdownExporter.buildFilename(_trip);
           String? dirPath;
           try {
-            dirPath = await FilePicker.platform.getDirectoryPath(
+            dirPath = await FilePicker.getDirectoryPath(
               dialogTitle: gloc.markdown_select_directory_title,
             );
           } catch (_) {
@@ -630,8 +632,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
       _fabIdleTimer?.cancel();
     }
 
-    // Aggiorna visibilità titolo collassato in base allo scroll offset
-    final shouldShow = _scrollController.offset > 40;
+    // Mostra titolo nella appbar quando la flexible space è quasi collassata
+    final threshold = (_headerExpandedHeight - 56).clamp(0.0, double.infinity);
+    final shouldShow = _scrollController.offset > threshold;
     if (shouldShow != _collapsedTitleVisible && mounted) {
       setState(() => _collapsedTitleVisible = shouldShow);
     }
@@ -685,6 +688,21 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
     final totalExpenses = trip.getTotalExpenses();
     final showCollapsedTitle = _hideHeader || _collapsedTitleVisible;
 
+    // Calcola altezza espansa: toolbar + avatar + titolo + totale + azioni
+    const double toolbarH = 56.0;
+    final circleSize = MediaQuery.of(context).size.width * 0.3;
+    // GroupHeader: padding(16) + avatar(circleSize) + title(~34) + SizedBox(16)
+    // + SizedBox(32) + Row(GroupTotal+GroupActions, ~60) + SizedBox(24)
+    final headerContentH = 16 + circleSize + 34 + 16 + 32 + 60 + 24;
+    final expandedH = _hideHeader ? toolbarH : toolbarH + headerContentH;
+    _headerExpandedHeight = expandedH;
+
+    final bg = GroupBackgroundUtils.resolve(
+      trip,
+      colorScheme,
+      baseColor: colorScheme.surfaceContainer,
+    );
+
     return AppSystemUI.surface(
       child: Scaffold(
         body: CustomScrollView(
@@ -693,30 +711,26 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
             SliverAppBar(
               pinned: true,
               floating: false,
+              expandedHeight: expandedH,
+              toolbarHeight: toolbarH,
+              collapsedHeight: toolbarH,
               elevation: 0,
               scrolledUnderElevation: 1,
               backgroundColor: colorScheme.surfaceContainer,
               foregroundColor: colorScheme.onSurface,
-              toolbarHeight: 56,
-              collapsedHeight: 56,
               centerTitle: false,
-              title: AnimatedSwitcher(
+              title: AnimatedOpacity(
+                opacity: showCollapsedTitle ? 1.0 : 0.0,
                 duration: const Duration(milliseconds: 220),
-                switchInCurve: Curves.easeOut,
-                switchOutCurve: Curves.easeIn,
-                child: showCollapsedTitle
-                    ? Text(
-                        trip.title,
-                        key: const ValueKey('appbar-title'),
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(
-                              color: colorScheme.onSurface,
-                              fontWeight: FontWeight.w600,
-                            ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      )
-                    : const SizedBox(key: ValueKey('appbar-empty')),
+                child: Text(
+                  trip.title,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: colorScheme.onSurface,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
               ),
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back_rounded),
@@ -730,32 +744,35 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                     onPressed: () => _openSearchPage(),
                   ),
               ],
-            ),
-            SliverToBoxAdapter(
-              child: AnimatedSize(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
-                alignment: Alignment.topCenter,
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 220),
-                  switchInCurve: Curves.easeOut,
-                  switchOutCurve: Curves.easeIn,
-                  transitionBuilder: (child, animation) => FadeTransition(
-                    opacity: animation,
-                    child: SizeTransition(
-                      sizeFactor: animation,
-                      axisAlignment: -1.0,
-                      child: child,
-                    ),
-                  ),
-                  child: _hideHeader
-                      ? const SizedBox.shrink(key: ValueKey('header-hidden'))
-                      : Container(
-                          key: const ValueKey('header-visible'),
-                          width: double.infinity,
-                          color: colorScheme.surfaceContainer,
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+              flexibleSpace: _hideHeader
+                  ? null
+                  : FlexibleSpaceBar(
+                      collapseMode: CollapseMode.pin,
+                      background: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          // Sfondo: immagine quando presente, altrimenti surfaceContainer
+                          if (bg.hasImage)
+                            Image.file(
+                              File(bg.imagePath!),
+                              fit: BoxFit.cover,
+                              alignment: Alignment.topCenter,
+                            )
+                          else
+                            ColoredBox(color: colorScheme.surfaceContainer),
+                          // Overlay gradiente solo quando c'è un'immagine
+                          if (bg.hasImage && bg.gradient != null)
+                            DecoratedBox(
+                              decoration: BoxDecoration(gradient: bg.gradient),
+                            ),
+                          // Contenuto header (sotto la toolbar)
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                              16,
+                              toolbarH,
+                              16,
+                              0,
+                            ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
@@ -786,9 +803,9 @@ class _ExpenseGroupDetailPageState extends State<ExpenseGroupDetailPage> {
                               ],
                             ),
                           ),
-                        ),
-                ),
-              ),
+                        ],
+                      ),
+                    ),
             ),
             SliverToBoxAdapter(
               child: Container(

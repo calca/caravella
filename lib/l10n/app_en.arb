@@ -971,4 +971,18 @@
   ,"@search_no_results": {"description": "Shown when search returns no matching expenses"}
   ,"search_no_results_hint": "Try different search terms or adjust filters"
   ,"@search_no_results_hint": {"description": "Helper text when expense search has no results"}
+  ,"from_unsplash": "From Unsplash"
+  ,"@from_unsplash": {"description": "Option to search for a background image on Unsplash"}
+  ,"unsplash_search_hint": "Search Unsplash photos..."
+  ,"@unsplash_search_hint": {"description": "Hint text in the Unsplash search bar"}
+  ,"unsplash_no_results": "No images found"
+  ,"@unsplash_no_results": {"description": "Message when Unsplash search returns no results"}
+  ,"unsplash_downloading": "Downloading image..."
+  ,"@unsplash_downloading": {"description": "Loading label while downloading an Unsplash photo"}
+  ,"unsplash_error": "Failed to load images"
+  ,"@unsplash_error": {"description": "Error message when Unsplash search or download fails"}
+  ,"unsplash_photos_by": "Photos by"
+  ,"@unsplash_photos_by": {"description": "Attribution prefix before the Unsplash brand link at the bottom of the search page"}
+  ,"unsplash_use_photo": "Use this photo"
+  ,"@unsplash_use_photo": {"description": "Button to confirm selection of an Unsplash photo in the preview sheet"}
 }

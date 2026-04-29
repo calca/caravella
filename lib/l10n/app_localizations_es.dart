@@ -2286,4 +2286,23 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get search_no_results_hint => 'Prueba diferentes términos o ajusta los filtros';
+  String get from_unsplash => 'Desde Unsplash';
+
+  @override
+  String get unsplash_search_hint => 'Buscar fotos en Unsplash...';
+
+  @override
+  String get unsplash_no_results => 'No se encontraron imágenes';
+
+  @override
+  String get unsplash_downloading => 'Descargando imagen...';
+
+  @override
+  String get unsplash_error => 'Error al cargar las imágenes';
+
+  @override
+  String get unsplash_photos_by => 'Fotos de';
+
+  @override
+  String get unsplash_use_photo => 'Usar esta foto';
 }

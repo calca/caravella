@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
 import 'package:caravella_core/caravella_core.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 
@@ -80,44 +79,23 @@ class ExpenseGroupAvatar extends StatelessWidget {
     } else {
       bgColor = backgroundColor ?? colorScheme.surfaceContainerLowest;
     }
+    final initials = trip.title.length >= 2
+        ? trip.title.substring(0, 2).toUpperCase()
+        : trip.title.toUpperCase();
     return Container(
-      margin: const EdgeInsets.only(top: 8, bottom: 8),
       width: size,
       height: size,
       decoration: BoxDecoration(shape: BoxShape.circle, color: bgColor),
-      child: trip.file != null && trip.file!.isNotEmpty
-          ? ClipOval(
-              child: Image.file(
-                File(trip.file!),
-                fit: BoxFit.cover,
-                width: size,
-                height: size,
-                errorBuilder: (context, error, stackTrace) => Center(
-                  child: Text(
-                    trip.title.length >= 2
-                        ? trip.title.substring(0, 2).toUpperCase()
-                        : trip.title.toUpperCase(),
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      color: colorScheme.onSurface,
-                      fontWeight: FontWeight.bold,
-                      fontSize: size * 0.4,
-                    ),
-                  ),
-                ),
-              ),
-            )
-          : Center(
-              child: Text(
-                trip.title.length >= 2
-                    ? trip.title.substring(0, 2).toUpperCase()
-                    : trip.title.toUpperCase(),
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  color: colorScheme.onSurface,
-                  fontWeight: FontWeight.bold,
-                  fontSize: size * 0.4,
-                ),
-              ),
-            ),
+      child: Center(
+        child: Text(
+          initials,
+          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+            color: colorScheme.onSurface,
+            fontWeight: FontWeight.bold,
+            fontSize: size * 0.4,
+          ),
+        ),
+      ),
     );
   }
 }
@@ -146,7 +124,10 @@ class GroupHeader extends StatelessWidget {
                   button: true,
                   enabled: !trip.archived,
                   label: trip.pinned ? gloc.unpin_group : gloc.pin_group,
-                  child: ExpenseGroupAvatar(trip: trip, size: circleSize),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: ExpenseGroupAvatar(trip: trip, size: circleSize),
+                  ),
                 ),
               ),
               Positioned(
