@@ -80,43 +80,23 @@ class ExpenseGroupAvatar extends StatelessWidget {
     } else {
       bgColor = backgroundColor ?? colorScheme.surfaceContainerLowest;
     }
+    final initials = trip.title.length >= 2
+        ? trip.title.substring(0, 2).toUpperCase()
+        : trip.title.toUpperCase();
     return Container(
       width: size,
       height: size,
       decoration: BoxDecoration(shape: BoxShape.circle, color: bgColor),
-      child: trip.file != null && trip.file!.isNotEmpty
-          ? ClipOval(
-              child: Image.file(
-                File(trip.file!),
-                fit: BoxFit.cover,
-                width: size,
-                height: size,
-                errorBuilder: (context, error, stackTrace) => Center(
-                  child: Text(
-                    trip.title.length >= 2
-                        ? trip.title.substring(0, 2).toUpperCase()
-                        : trip.title.toUpperCase(),
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      color: colorScheme.onSurface,
-                      fontWeight: FontWeight.bold,
-                      fontSize: size * 0.4,
-                    ),
-                  ),
-                ),
-              ),
-            )
-          : Center(
-              child: Text(
-                trip.title.length >= 2
-                    ? trip.title.substring(0, 2).toUpperCase()
-                    : trip.title.toUpperCase(),
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  color: colorScheme.onSurface,
-                  fontWeight: FontWeight.bold,
-                  fontSize: size * 0.4,
-                ),
-              ),
-            ),
+      child: Center(
+        child: Text(
+          initials,
+          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+            color: colorScheme.onSurface,
+            fontWeight: FontWeight.bold,
+            fontSize: size * 0.4,
+          ),
+        ),
+      ),
     );
   }
 }
