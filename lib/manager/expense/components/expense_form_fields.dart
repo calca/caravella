@@ -11,7 +11,6 @@ import '../widgets/participant_selector_widget.dart';
 import '../widgets/category_selector_widget.dart';
 import '../state/expense_form_controller.dart';
 import '../widgets/voice_input_button.dart';
-import '../../../services/voice_input_service.dart';
 
 /// Builds the core form fields: amount, name, paid-by, and category
 /// These fields are always visible regardless of expansion state
@@ -334,7 +333,7 @@ class ExpenseFormFields extends StatelessWidget {
       child: Row(
         children: [
           VoiceInputButton(
-            participants: participants,
+            participantNames: participants.map((p) => p.name).toList(),
             onVoiceResult: (parsed) => _handleVoiceInput(context, parsed, gloc),
           ),
           const SizedBox(width: 8),
@@ -358,31 +357,36 @@ class ExpenseFormFields extends StatelessWidget {
 
   void _handleVoiceInput(
     BuildContext context,
-    VoiceParseResult parsed,
+    Map<String, dynamic> parsed,
     gen.AppLocalizations gloc,
   ) {
-    if (parsed.amount != null && parsed.amount! > 0) {
-      controller.amountController.text = parsed.amount!.toString();
+    final amount = parsed['amount'] as double?;
+    if (amount != null && amount > 0) {
+      controller.amountController.text = amount.toString();
     }
-    if (parsed.name != null && parsed.name!.isNotEmpty) {
-      controller.nameController.text = parsed.name!;
+    final name = parsed['name'] as String?;
+    if (name != null && name.isNotEmpty) {
+      controller.nameController.text = name;
     }
-    if (parsed.category != null && categories.isNotEmpty) {
+    final category = parsed['category'] as String?;
+    if (category != null && categories.isNotEmpty) {
       final match = categories.firstWhere(
-        (c) => c.name.toLowerCase() == parsed.category!.toLowerCase(),
+        (c) => c.name.toLowerCase() == category.toLowerCase(),
         orElse: () => categories.first,
       );
       controller.updateCategory(match);
     }
-    if (parsed.paidBy != null && participants.isNotEmpty) {
+    final paidBy = parsed['paidBy'] as String?;
+    if (paidBy != null && participants.isNotEmpty) {
       final match = participants.firstWhere(
-        (p) => p.name.toLowerCase() == parsed.paidBy!.toLowerCase(),
+        (p) => p.name.toLowerCase() == paidBy.toLowerCase(),
         orElse: () => participants.first,
       );
       controller.updatePaidBy(match);
     }
-    if (parsed.date != null) {
-      controller.updateDate(parsed.date!);
+    final date = parsed['date'] as DateTime?;
+    if (date != null) {
+      controller.updateDate(date);
     }
 
     ScaffoldMessenger.of(context).showSnackBar(

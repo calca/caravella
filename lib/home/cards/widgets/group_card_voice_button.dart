@@ -150,7 +150,7 @@ class _GroupCardVoiceButtonState extends State<GroupCardVoiceButton>
 
     if (isSufficient) {
       // ── Save directly ──────────────────────────────────────────────────────
-      await _saveDirectly(parsed, amount!, paidBy!, category!);
+      await _saveDirectly(parsed, amount, paidBy, category);
     } else {
       // ── Open pre-filled form ───────────────────────────────────────────────
       if (mounted) {
@@ -182,10 +182,7 @@ class _GroupCardVoiceButtonState extends State<GroupCardVoiceButton>
       location: null,
     );
 
-    await ExpenseGroupStorageV2.addExpenseToGroup(
-      widget.group.id,
-      expense,
-    );
+    await ExpenseGroupStorageV2.addExpenseToGroup(widget.group.id, expense);
     await notifier.refreshGroup();
     notifier.notifyGroupUpdated(widget.group.id);
 
@@ -296,10 +293,7 @@ class _GroupCardVoiceButtonState extends State<GroupCardVoiceButton>
           final scale = _isListening
               ? 1.0 + (_pulseController.value * 0.12)
               : 1.0;
-          return Transform.scale(
-            scale: scale,
-            child: child,
-          );
+          return Transform.scale(scale: scale, child: child);
         },
         child: SizedBox(
           height: HomeLayoutConstants.buttonBorderRadius * 2 + 16,
@@ -332,9 +326,6 @@ class _GroupCardVoiceButtonState extends State<GroupCardVoiceButton>
         ),
       );
     }
-    return Icon(
-      _isListening ? Icons.mic : Icons.mic_none_outlined,
-      size: 22,
-    );
+    return Icon(_isListening ? Icons.mic : Icons.mic_none_outlined, size: 22);
   }
 }

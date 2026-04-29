@@ -48,9 +48,11 @@ class VoiceInputService {
         }
       },
       localeId: localeId,
-      listenMode: stt.ListenMode.confirmation,
-      cancelOnError: true,
-      partialResults: false,
+      listenOptions: stt.SpeechListenOptions(
+        listenMode: stt.ListenMode.confirmation,
+        cancelOnError: true,
+        partialResults: false,
+      ),
     );
   }
 

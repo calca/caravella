@@ -2267,6 +2267,42 @@ class AppLocalizationsPt extends AppLocalizations {
   String get save_label => 'Salvar';
 
   @override
+  String get voice_input_button => 'Adicionar por voz';
+
+  @override
+  String get voice_input_listening => 'Ouvindo...';
+
+  @override
+  String get voice_input_tap_to_speak => 'Toque para falar';
+
+  @override
+  String get voice_input_processing => 'Processando...';
+
+  @override
+  String get voice_input_error => 'Erro de reconhecimento de voz';
+
+  @override
+  String get voice_input_permission_denied => 'Permissão do microfone negada';
+
+  @override
+  String get voice_input_not_available =>
+      'Reconhecimento de voz não disponível';
+
+  @override
+  String get voice_input_hint =>
+      'Tente dizer: \'50 reais para o jantar no restaurante\'';
+
+  @override
+  String get voice_add_expense => 'Adicionar por voz';
+
+  @override
+  String get voice_expense_saved => 'Despesa salva!';
+
+  @override
+  String get voice_expense_needs_more_info =>
+      'Algumas informações estão faltando – preencha o formulário';
+
+  @override
   String get from_unsplash => 'Do Unsplash';
 
   @override
@@ -2286,37 +2322,4 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get unsplash_use_photo => 'Usar esta foto';
-
-  @override
-  String get voice_input_button => 'Adicionar por voz';
-
-  @override
-  String get voice_input_listening => 'Ouvindo...';
-
-  @override
-  String get voice_input_tap_to_speak => 'Toque para falar';
-
-  @override
-  String get voice_input_processing => 'Processando...';
-
-  @override
-  String get voice_input_error => 'Erro de reconhecimento de voz';
-
-  @override
-  String get voice_input_permission_denied => 'Permissão do microfone negada';
-
-  @override
-  String get voice_input_not_available => 'Reconhecimento de voz não disponível';
-
-  @override
-  String get voice_input_hint => "Tente dizer: '50 reais para o jantar no restaurante'";
-
-  @override
-  String get voice_add_expense => 'Adicionar por voz';
-
-  @override
-  String get voice_expense_saved => 'Despesa salva!';
-
-  @override
-  String get voice_expense_needs_more_info => 'Algumas informações estão faltando – preencha o formulário';
 }

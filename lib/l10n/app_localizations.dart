@@ -4355,48 +4355,6 @@ abstract class AppLocalizations {
   /// **'Save'**
   String get save_label;
 
-  /// Option to search for a background image on Unsplash
-  ///
-  /// In en, this message translates to:
-  /// **'From Unsplash'**
-  String get from_unsplash;
-
-  /// Hint text in the Unsplash search bar
-  ///
-  /// In en, this message translates to:
-  /// **'Search Unsplash photos...'**
-  String get unsplash_search_hint;
-
-  /// Message when Unsplash search returns no results
-  ///
-  /// In en, this message translates to:
-  /// **'No images found'**
-  String get unsplash_no_results;
-
-  /// Loading label while downloading an Unsplash photo
-  ///
-  /// In en, this message translates to:
-  /// **'Downloading image...'**
-  String get unsplash_downloading;
-
-  /// Error message when Unsplash search or download fails
-  ///
-  /// In en, this message translates to:
-  /// **'Failed to load images'**
-  String get unsplash_error;
-
-  /// Attribution prefix before the Unsplash brand link at the bottom of the search page
-  ///
-  /// In en, this message translates to:
-  /// **'Photos by'**
-  String get unsplash_photos_by;
-
-  /// Button to confirm selection of an Unsplash photo in the preview sheet
-  ///
-  /// In en, this message translates to:
-  /// **'Use this photo'**
-  String get unsplash_use_photo;
-
   /// Label for the button to activate voice input
   ///
   /// In en, this message translates to:
@@ -4442,7 +4400,7 @@ abstract class AppLocalizations {
   /// Example hint for using voice input
   ///
   /// In en, this message translates to:
-  /// **"Try saying: '50 dollars for dinner at restaurant'"**
+  /// **'Try saying: \'50 dollars for dinner at restaurant\''**
   String get voice_input_hint;
 
   /// Label for the voice add expense CTA on home card
@@ -4462,6 +4420,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Some info missing – fill in the form'**
   String get voice_expense_needs_more_info;
+
+  /// Option to search for a background image on Unsplash
+  ///
+  /// In en, this message translates to:
+  /// **'From Unsplash'**
+  String get from_unsplash;
+
+  /// Hint text in the Unsplash search bar
+  ///
+  /// In en, this message translates to:
+  /// **'Search Unsplash photos...'**
+  String get unsplash_search_hint;
+
+  /// Message when Unsplash search returns no results
+  ///
+  /// In en, this message translates to:
+  /// **'No images found'**
+  String get unsplash_no_results;
+
+  /// Loading label while downloading an Unsplash photo
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading image...'**
+  String get unsplash_downloading;
+
+  /// Error message when Unsplash search or download fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load images'**
+  String get unsplash_error;
+
+  /// Attribution prefix before the Unsplash brand link at the bottom of the search page
+  ///
+  /// In en, this message translates to:
+  /// **'Photos by'**
+  String get unsplash_photos_by;
+
+  /// Button to confirm selection of an Unsplash photo in the preview sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Use this photo'**
+  String get unsplash_use_photo;
 }
 
 class _AppLocalizationsDelegate
