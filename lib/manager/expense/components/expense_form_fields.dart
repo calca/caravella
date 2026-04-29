@@ -10,7 +10,6 @@ import '../location/widgets/compact_location_indicator.dart';
 import '../widgets/participant_selector_widget.dart';
 import '../widgets/category_selector_widget.dart';
 import '../state/expense_form_controller.dart';
-import '../widgets/voice_input_button.dart';
 
 /// Builds the core form fields: amount, name, paid-by, and category
 /// These fields are always visible regardless of expansion state
@@ -63,7 +62,6 @@ class ExpenseFormFields extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (!isInitialExpense) _buildVoiceInputSection(context, gloc),
             _buildAmountField(context, gloc, style),
             SizedBox(height: FormTheme.fieldSpacing),
             _buildNameField(context, gloc, style),
@@ -322,78 +320,5 @@ class ExpenseFormFields extends StatelessWidget {
         name: 'expense.participant',
       );
     }
-  }
-
-  Widget _buildVoiceInputSection(
-    BuildContext context,
-    gen.AppLocalizations gloc,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Row(
-        children: [
-          VoiceInputButton(
-            participantNames: participants.map((p) => p.name).toList(),
-            onVoiceResult: (parsed) => _handleVoiceInput(context, parsed, gloc),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              gloc.voice_input_hint,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(
-                  context,
-                ).colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
-                fontStyle: FontStyle.italic,
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _handleVoiceInput(
-    BuildContext context,
-    Map<String, dynamic> parsed,
-    gen.AppLocalizations gloc,
-  ) {
-    final amount = parsed['amount'] as double?;
-    if (amount != null && amount > 0) {
-      controller.amountController.text = amount.toString();
-    }
-    final name = parsed['name'] as String?;
-    if (name != null && name.isNotEmpty) {
-      controller.nameController.text = name;
-    }
-    final category = parsed['category'] as String?;
-    if (category != null && categories.isNotEmpty) {
-      final match = categories.firstWhere(
-        (c) => c.name.toLowerCase() == category.toLowerCase(),
-        orElse: () => categories.first,
-      );
-      controller.updateCategory(match);
-    }
-    final paidBy = parsed['paidBy'] as String?;
-    if (paidBy != null && participants.isNotEmpty) {
-      final match = participants.firstWhere(
-        (p) => p.name.toLowerCase() == paidBy.toLowerCase(),
-        orElse: () => participants.first,
-      );
-      controller.updatePaidBy(match);
-    }
-    final date = parsed['date'] as DateTime?;
-    if (date != null) {
-      controller.updateDate(date);
-    }
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(gloc.voice_input_tap_to_speak),
-        duration: const Duration(seconds: 2),
-      ),
-    );
   }
 }
