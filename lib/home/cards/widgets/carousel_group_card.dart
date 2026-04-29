@@ -1,10 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:caravella_core/caravella_core.dart';
-import 'package:caravella_core_ui/caravella_core_ui.dart';
 import 'package:io_caravella_egm/l10n/app_localizations.dart' as gen;
 import '../../../manager/details/pages/expense_group_detail_page.dart';
+import '../../../manager/details/widgets/group_header.dart';
 
 /// A compact card widget for displaying expense groups in a horizontal carousel.
 ///
@@ -37,85 +35,9 @@ class CarouselGroupCard extends StatelessWidget {
     required this.onGroupUpdated,
   });
 
-  /// Gets the initials from the group title (up to 2 characters)
-  String _getInitials(String title) {
-    final words = title.trim().split(RegExp(r'\s+'));
-    if (words.isEmpty || words.first.isEmpty) return '?';
-
-    if (words.length == 1) {
-      // Single word: take first 2 characters
-      return words.first
-          .substring(0, words.first.length.clamp(0, 2))
-          .toUpperCase();
-    }
-
-    // Multiple words: take first letter of first two words
-    return '${words[0][0]}${words[1][0]}'.toUpperCase();
-  }
-
-  /// Builds the square tile with image or initials
+  /// Builds the circular tile using [ExpenseGroupAvatar] for consistency.
   Widget _buildTile(BuildContext context) {
-    final hasImage =
-        group.file != null &&
-        group.file!.isNotEmpty &&
-        File(group.file!).existsSync();
-
-    Widget tileContent;
-    if (hasImage) {
-      tileContent = ClipRRect(
-        borderRadius: BorderRadius.circular(tileBorderRadius),
-        child: Image.file(
-          File(group.file!),
-          width: tileSize,
-          height: tileSize,
-          fit: BoxFit.cover,
-          frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-            if (wasSynchronouslyLoaded) {
-              return child;
-            }
-            return AnimatedOpacity(
-              opacity: frame == null ? 0 : 1,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeIn,
-              child: child,
-            );
-          },
-        ),
-      );
-    } else {
-      // No image - show initials on color background
-      final backgroundColor = ExpenseGroupColorPalette.resolveGroupColor(
-        group,
-        theme.colorScheme,
-      );
-      final textColor = ExpenseGroupColorPalette.getContrastingTextColor(
-        backgroundColor,
-      );
-
-      tileContent = Center(
-        child: Text(
-          _getInitials(group.title),
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.w600,
-            color: textColor,
-            letterSpacing: 1,
-          ),
-        ),
-      );
-    }
-
-    return BaseCard(
-      margin: EdgeInsets.zero,
-      padding: EdgeInsets.zero,
-      backgroundColor: hasImage
-          ? Colors.transparent
-          : ExpenseGroupColorPalette.resolveGroupColor(
-              group,
-              theme.colorScheme,
-            ),
-      borderRadius: BorderRadius.circular(tileBorderRadius),
-      backgroundImage: hasImage ? group.file : null,
+    return GestureDetector(
       onTap: () async {
         final result = await Navigator.of(context).push(
           MaterialPageRoute(
@@ -126,7 +48,7 @@ class CarouselGroupCard extends StatelessWidget {
           onGroupUpdated();
         }
       },
-      child: SizedBox(width: tileSize, height: tileSize, child: tileContent),
+      child: ExpenseGroupAvatar(trip: group, size: tileSize),
     );
   }
 

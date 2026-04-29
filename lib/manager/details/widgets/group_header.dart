@@ -81,7 +81,6 @@ class ExpenseGroupAvatar extends StatelessWidget {
       bgColor = backgroundColor ?? colorScheme.surfaceContainerLowest;
     }
     return Container(
-      margin: const EdgeInsets.only(top: 8, bottom: 8),
       width: size,
       height: size,
       decoration: BoxDecoration(shape: BoxShape.circle, color: bgColor),
@@ -146,7 +145,10 @@ class GroupHeader extends StatelessWidget {
                   button: true,
                   enabled: !trip.archived,
                   label: trip.pinned ? gloc.unpin_group : gloc.pin_group,
-                  child: ExpenseGroupAvatar(trip: trip, size: circleSize),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: ExpenseGroupAvatar(trip: trip, size: circleSize),
+                  ),
                 ),
               ),
               Positioned(
