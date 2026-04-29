@@ -72,7 +72,7 @@ class _VoiceInputButtonState extends State<VoiceInputButton>
             text,
             participantNames: widget.participantNames,
           );
-          
+
           // Callback with parsed data
           widget.onVoiceResult(parsedData);
 
@@ -95,12 +95,14 @@ class _VoiceInputButtonState extends State<VoiceInputButton>
             }
           });
           _animationController.stop();
-          
+
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(error == 'Voice recognition not available'
-                  ? gloc.voice_input_not_available
-                  : gloc.voice_input_error),
+              content: Text(
+                error == 'Voice recognition not available'
+                    ? gloc.voice_input_not_available
+                    : gloc.voice_input_error,
+              ),
               duration: const Duration(seconds: 3),
             ),
           );
