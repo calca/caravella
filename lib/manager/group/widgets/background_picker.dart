@@ -26,7 +26,7 @@ class BackgroundPicker extends StatelessWidget {
           onTap: () => _showPicker(context),
           borderRadius: BorderRadius.circular(12),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4),
+            padding: const EdgeInsets.fromLTRB(0, 4, 16, 4),
             child: Row(
               children: [
                 _preview(state),
