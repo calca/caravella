@@ -25,17 +25,6 @@ class GroupCard extends StatelessWidget {
     this.selectionProgress = 0.0,
   });
 
-  /// Builds a consistent gradient overlay: light at the top, full color at 65% from the top.
-  /// Used for both image and color card backgrounds.
-  static LinearGradient _buildCardGradient(Color topColor, Color bottomColor) {
-    return LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: [topColor, bottomColor],
-      stops: const [0.0, 0.65],
-    );
-  }
-
   Color _getSelectedColor(bool isDarkMode) {
     return theme.colorScheme.surface;
   }
